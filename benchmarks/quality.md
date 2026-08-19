@@ -36,3 +36,11 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 | fixed 32k | 4.14256 | 105,951 | reject |
 | fixed 16k | 3.86934 | 89,493 | keep |
 | fixed 8k | 3.79849 | 74,198 | reject |
+
+## architecture
+
+| shape | parameters | validation loss | tokens/s | decision |
+| --- | ---: | ---: | ---: | --- |
+| 24x384 | 50,055,552 | 3.86934 | 89,493 | reject |
+| 15x512 | 49,823,232 | 3.82319 | 107,613 | reject |
+| 10x640 | 49,984,640 | 3.80685 | 113,455 | keep |
