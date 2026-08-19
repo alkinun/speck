@@ -22,14 +22,19 @@ class Config:
     rms_norm_eps: float = 1e-5
     rope_theta: float = 10000.0
     initializer_range: float = 0.02
+    mlp: str = "swiglu"
 
     def __post_init__(self):
         if self.hidden_size != self.num_attention_heads * self.head_dim:
             raise ValueError("hidden size must equal attention heads times head dimension")
         if self.num_attention_heads % self.num_key_value_heads:
             raise ValueError("query heads must be divisible by kv heads")
+        if self.mlp not in ("swiglu", "relu_squared"):
+            raise ValueError(f"unsupported mlp: {self.mlp}")
 
     def export(self):
+        if self.mlp != "swiglu":
+            raise ValueError("only swiglu models can be exported as llama")
         return {
             "architectures": ["LlamaForCausalLM"],
             "attention_bias": False,
@@ -162,11 +167,15 @@ class Attention(nn.Module):
 class MLP(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.gate_proj = Linear(config.hidden_size, config.intermediate_size, bias=False)
+        self.mlp = config.mlp
+        if self.mlp == "swiglu":
+            self.gate_proj = Linear(config.hidden_size, config.intermediate_size, bias=False)
         self.up_proj = Linear(config.hidden_size, config.intermediate_size, bias=False)
         self.down_proj = Linear(config.intermediate_size, config.hidden_size, bias=False)
 
     def forward(self, x):
+        if self.mlp == "relu_squared":
+            return self.down_proj(F.relu(self.up_proj(x)).square())
         return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
 
 

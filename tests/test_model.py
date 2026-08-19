@@ -34,6 +34,23 @@ def test_llama_structure_and_tied_embeddings():
     assert model.lm_head.weight is model.model.embed_tokens.weight
 
 
+def test_relu_squared_mlp():
+    config = Config(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=48,
+        num_hidden_layers=2,
+        num_attention_heads=4,
+        num_key_value_heads=2,
+        head_dim=4,
+        max_position_embeddings=32,
+        mlp="relu_squared",
+    )
+    model = Llama(config)
+    assert not hasattr(model.model.layers[0].mlp, "gate_proj")
+    assert model(torch.randint(0, 32, (2, 8))).shape == (2, 8, 32)
+
+
 def test_forward_loss_and_optimizer():
     model = tiny_model()
     tokens = torch.randint(0, 32, (2, 8))
