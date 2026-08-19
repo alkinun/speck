@@ -16,7 +16,7 @@ results use an rtx 3090, pytorch 2.9.1, cuda 12.8, five warmup steps, and twenty
 | `6f62b12` | weight cache, rejected | 118,561 | 11.98 gb |
 | `f1042bb` | production | 132,696 | 3.49 gb |
 
-the optimized end-to-end result is 127,963 tokens/s.
+the production end-to-end result is 133,369 tokens/s, or 20.8 hours for 10b training tokens before validation and checkpoint overhead.
 
 ```bash
 python -m scripts.benchmark --mode compute --steps 20 --warmup-steps 5 --peak-tflops 142
