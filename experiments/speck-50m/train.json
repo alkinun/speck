@@ -11,6 +11,7 @@
   "log_every": 10,
   "lr": 0.0006,
   "min_lr": 0.1,
+  "optimizer": "adamw",
   "output_dir": null,
   "run": "speck-50m-10b",
   "save_every": 1907,

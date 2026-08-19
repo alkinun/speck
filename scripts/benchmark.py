@@ -105,7 +105,7 @@ def run(args):
     ).to(device)
     model.init_weights()
     parameters = tuple(model.parameters())
-    optimizer = model.optimizer(train["lr"], train["weight_decay"])
+    optimizer = model.optimizer(train["lr"], train["weight_decay"], train["optimizer"])
     train_model = model if args.no_compile else torch.compile(
         model, dynamic=False, mode="max-autotune-no-cudagraphs"
     )

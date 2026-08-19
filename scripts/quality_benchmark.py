@@ -31,6 +31,7 @@ def arguments():
     parser.add_argument("--eval-every", type=int, default=24)
     parser.add_argument("--eval-batch-size", type=int, default=4)
     parser.add_argument("--warmup-steps", type=int, default=2)
+    parser.add_argument("--optimizer", choices=("adamw", "muon"), default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", default=None)
@@ -74,7 +75,8 @@ def run(args):
     ).to(device)
     model.init_weights()
     parameters = tuple(model.parameters())
-    optimizer = model.optimizer(train["lr"], train["weight_decay"])
+    optimizer_name = args.optimizer or train["optimizer"]
+    optimizer = model.optimizer(train["lr"], train["weight_decay"], optimizer_name)
     compiled_model = model if args.no_compile else torch.compile(
         model, dynamic=False, mode="max-autotune-no-cudagraphs"
     )
@@ -149,6 +151,7 @@ def run(args):
             "seed": args.seed,
             "compiled": not args.no_compile,
             "loss": "torch",
+            "optimizer": optimizer_name,
         },
         "geometry": {
             "batch_size": args.batch_size,

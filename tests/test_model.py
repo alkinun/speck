@@ -46,6 +46,15 @@ def test_forward_loss_and_optimizer():
     optimizer.step()
 
 
+def test_muon_optimizer_covers_every_parameter():
+    model = tiny_model()
+    optimizer = model.optimizer(name="muon")
+    parameters = [parameter for group in optimizer.param_groups for parameter in group["params"]]
+    assert {id(parameter) for parameter in parameters} == {id(parameter) for parameter in model.parameters()}
+    state = optimizer.state_dict()
+    optimizer.load_state_dict(state)
+
+
 def test_cached_decode_matches_full_forward():
     model = tiny_model().eval()
     tokens = torch.randint(0, 32, (1, 7))

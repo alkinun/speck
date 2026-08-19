@@ -74,6 +74,35 @@ class RMSNorm(nn.Module):
         return F.rms_norm(x.float(), (x.size(-1),), eps=self.eps).to(x.dtype) * self.weight.to(x.dtype)
 
 
+class CombinedOptimizer:
+    def __init__(self, **optimizers):
+        self.optimizers = optimizers
+
+    @property
+    def param_groups(self):
+        return [group for optimizer in self.optimizers.values() for group in optimizer.param_groups]
+
+    def zero_grad(self, set_to_none=True):
+        for optimizer in self.optimizers.values():
+            optimizer.zero_grad(set_to_none=set_to_none)
+
+    def step(self):
+        for optimizer in self.optimizers.values():
+            optimizer.step()
+
+    def state_dict(self):
+        return {
+            "format_version": 1,
+            "optimizers": {name: optimizer.state_dict() for name, optimizer in self.optimizers.items()},
+        }
+
+    def load_state_dict(self, state):
+        if state.get("format_version") != 1:
+            raise ValueError("unsupported combined optimizer state")
+        for name, optimizer in self.optimizers.items():
+            optimizer.load_state_dict(state["optimizers"][name])
+
+
 def rotate(x, cos, sin):
     x1, x2 = x.chunk(2, dim=-1)
     return x * cos + torch.cat((-x2, x1), dim=-1) * sin
@@ -218,11 +247,29 @@ class Llama(nn.Module):
             dtype,
         )
 
-    def optimizer(self, lr=6e-4, weight_decay=0.1):
+    def optimizer(self, lr=6e-4, weight_decay=0.1, name="adamw"):
         embedding = self.model.embed_tokens.weight
         decay, no_decay = [], []
         for parameter in self.parameters():
             (no_decay if parameter is embedding or parameter.ndim < 2 else decay).append(parameter)
+        if name == "muon":
+            return CombinedOptimizer(
+                muon=torch.optim.Muon(
+                    decay,
+                    lr=lr,
+                    weight_decay=weight_decay,
+                    adjust_lr_fn="match_rms_adamw",
+                ),
+                adamw=torch.optim.AdamW(
+                    no_decay,
+                    lr=lr,
+                    weight_decay=0.0,
+                    betas=(0.9, 0.95),
+                    eps=1e-8,
+                ),
+            )
+        if name != "adamw":
+            raise ValueError(f"unsupported optimizer: {name}")
         return torch.optim.AdamW(
             [{"params": decay, "weight_decay": weight_decay}, {"params": no_decay, "weight_decay": 0.0}],
             lr=lr,
