@@ -60,3 +60,9 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 | --- | ---: | ---: | ---: | --- |
 | swiglu | 50,095,872 | 3.82444 | 129,888 | keep |
 | relu squared | 50,095,872 | 3.84696 | 131,965 | reject |
+
+## production
+
+| parameters | batch tokens | validation loss | tokens/s |
+| ---: | ---: | ---: | ---: |
+| 50,095,872 | 16,384 | 3.82848 | 130,205 |
