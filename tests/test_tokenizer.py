@@ -17,8 +17,11 @@ class Processor:
     def eos_id(self):
         return 2
 
-    def encode(self, text, out_type=int):
-        return [byte + 3 for byte in text.encode()]
+    def encode(self, text, out_type=int, add_bos=False, add_eos=False, num_threads=None):
+        if isinstance(text, list):
+            return [self.encode(row, out_type, add_bos, add_eos) for row in text]
+        tokens = [byte + 3 for byte in text.encode()]
+        return ([1] if add_bos else []) + tokens + ([2] if add_eos else [])
 
     def decode(self, tokens):
         return bytes(token - 3 for token in tokens).decode()
@@ -32,6 +35,7 @@ def test_mistral_tokenizer_roundtrip_and_load(tmp_path, monkeypatch):
     assert tokenizer.bos_id == 1 and tokenizer.eos_id == 2
     assert tokenizer.decode(tokenizer.encode("hello")) == "hello"
     assert tokenizer.encode("hello", bos=True, eos=True)[::6] == [1, 2]
+    assert tokenizer.encode_batch(["hello", "world"], bos=True, eos=True)[0][::6] == [1, 2]
     (tmp_path / "tokenizer_metadata.json").write_text(json.dumps({
         "fingerprint": tokenizer.fingerprint()
     }))

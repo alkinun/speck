@@ -224,22 +224,42 @@ def prepare_dataset(
         documents = document_iterator
     document_count = 0
     source_counts = {}
+    done = False
 
+    def process(batch):
+        nonlocal document_count
+        rows = []
+        for document in batch:
+            is_validation = _is_validation_document(document["content"], seed, validation_fraction)
+            writer = val_writer if is_validation else train_writer
+            target = validation_tokens if is_validation else train_tokens
+            if writer.total_tokens < target:
+                rows.append((document, writer, target))
+        if not rows:
+            return
+        token_rows = tokenizer.encode_batch([row[0]["content"] for row in rows], bos=True, eos=True)
+        for (document, writer, target), token_ids in zip(rows, token_rows):
+            if writer.total_tokens >= target:
+                continue
+            writer.write(token_ids)
+            document_count += 1
+            source = document.get("source", "unknown")
+            source_counts[source] = source_counts.get(source, 0) + 1
+
+    batch = []
     for document in documents:
-        content = document["content"]
-        is_validation = _is_validation_document(content, seed, validation_fraction)
-        writer = val_writer if is_validation else train_writer
-        target = validation_tokens if is_validation else train_tokens
-        if writer.total_tokens >= target:
+        batch.append(document)
+        if len(batch) < 2048:
             continue
-        token_ids = tokenizer.encode(content, bos=True, eos=True)
-        writer.write(token_ids)
-        document_count += 1
-        source = document.get("source", "unknown")
-        source_counts[source] = source_counts.get(source, 0) + 1
+        process(batch)
+        batch.clear()
         if train_writer.total_tokens >= train_tokens and val_writer.total_tokens >= validation_tokens:
+            done = True
             break
-    else:
+    if batch and not done:
+        process(batch)
+        done = train_writer.total_tokens >= train_tokens and val_writer.total_tokens >= validation_tokens
+    if not done:
         raise RuntimeError("ultra-fineweb was exhausted before reaching the requested token budgets")
 
     manifest = {

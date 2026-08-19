@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+from typing import cast
 
 import sentencepiece as sentencepiece
 from huggingface_hub import hf_hub_download
@@ -48,10 +49,17 @@ class Tokenizer:
         return self.processor.eos_id()
 
     def encode(self, text, bos=False, eos=False):
-        if isinstance(text, str):
-            tokens = self.processor.encode(text, out_type=int)
-            return ([self.bos_id] if bos else []) + tokens + ([self.eos_id] if eos else [])
-        return [self.encode(row, bos, eos) for row in text]
+        tokens = self.processor.encode(text, out_type=int)
+        return ([self.bos_id] if bos else []) + tokens + ([self.eos_id] if eos else [])
+
+    def encode_batch(self, texts, bos=False, eos=False):
+        return cast(list[list[int]], self.processor.encode(
+            texts,
+            out_type=int,
+            add_bos=bos,
+            add_eos=eos,
+            num_threads=min(8, os.cpu_count() or 1),
+        ))
 
     def decode(self, tokens):
         return self.processor.decode(tokens)

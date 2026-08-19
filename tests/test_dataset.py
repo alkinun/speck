@@ -17,6 +17,9 @@ class FakeTokenizer:
         tokens = [byte + 3 for byte in text.encode()]
         return ([1] if bos else []) + tokens + ([2] if eos else [])
 
+    def encode_batch(self, texts, bos=False, eos=False):
+        return [self.encode(text, bos, eos) for text in texts]
+
     def fingerprint(self):
         return "test-tokenizer"
 
