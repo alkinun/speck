@@ -201,7 +201,17 @@ class Llama(nn.Module):
             x = layer(x, cos, sin, cache, layer_index)
         if cache is not None:
             cache.position += length
-        logits = self.lm_head(self.model.norm(x)).float()
+        x = self.model.norm(x)
+        if targets is not None and tokens.is_cuda:
+            from cut_cross_entropy import linear_cross_entropy
+
+            return linear_cross_entropy(
+                x,
+                self.lm_head.weight.to(x.dtype),
+                targets,
+                impl="cce",
+            )
+        logits = self.lm_head(x).float()
         if targets is None:
             return logits
         return F.cross_entropy(logits.flatten(0, 1), targets.flatten())
