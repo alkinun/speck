@@ -18,8 +18,6 @@ def sequence_length_for_step(step, steps, final_length, enabled):
     if not enabled:
         return final_length
     if step * 4 < steps:
-        return final_length // 4
-    if step * 2 < steps:
         return final_length // 2
     return final_length
 

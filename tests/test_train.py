@@ -11,7 +11,7 @@ def test_lr_scale():
 
 
 def test_sequence_length_curriculum():
-    assert [sequence_length_for_step(step, 8, 2048, True) for step in (0, 2, 4)] == [512, 1024, 2048]
+    assert [sequence_length_for_step(step, 8, 2048, True) for step in (0, 2)] == [1024, 2048]
     assert sequence_length_for_step(0, 9, 2048, False) == 2048
 
 
