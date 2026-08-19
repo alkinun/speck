@@ -28,6 +28,7 @@ def arguments():
     parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-50m"))
     parser.add_argument("--steps", type=int, default=95)
     parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--batch-tokens", type=int, default=None)
     parser.add_argument("--eval-every", type=int, default=24)
     parser.add_argument("--eval-batch-size", type=int, default=4)
     parser.add_argument("--warmup-steps", type=int, default=2)
@@ -84,9 +85,12 @@ def run(args):
 
     sequence_length = train["sequence_length"]
     micro_tokens = args.batch_size * sequence_length
-    if train["batch_tokens"] % micro_tokens:
+    fixed_batch_tokens = args.batch_tokens or train["batch_tokens"]
+    if fixed_batch_tokens % micro_tokens:
         raise ValueError("batch tokens must be divisible by micro batch tokens")
-    accumulation = train["batch_tokens"] // micro_tokens
+    if args.batch_curriculum and args.batch_tokens:
+        raise ValueError("batch tokens cannot override the batch curriculum")
+    accumulation = fixed_batch_tokens // micro_tokens
     trained_tokens = args.steps * train["batch_tokens"]
     if manifest["splits"]["train"]["tokens"] <= trained_tokens + micro_tokens:
         raise ValueError("packed dataset is too small for this benchmark")
@@ -132,7 +136,7 @@ def run(args):
         elif args.batch_curriculum and trained_tokens_done < 2 * quarter_tokens:
             batch_tokens = train["batch_tokens"] // 2
         else:
-            batch_tokens = train["batch_tokens"]
+            batch_tokens = fixed_batch_tokens
         accumulation = batch_tokens // micro_tokens
         schedule_step = trained_tokens_done / train["batch_tokens"]
         scale = lr_scale(schedule_step, args.steps, args.warmup_steps, train["min_lr"])
@@ -175,7 +179,7 @@ def run(args):
             "batch_size": args.batch_size,
             "sequence_length": sequence_length,
             "accumulation": accumulation,
-            "tokens_per_step": train["batch_tokens"],
+            "tokens_per_step": fixed_batch_tokens,
             "trained_tokens": trained_tokens,
             "eval_batch_size": args.eval_batch_size,
             "eval_tokens": eval_tokens,
