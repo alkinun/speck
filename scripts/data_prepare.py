@@ -13,6 +13,7 @@ parser.add_argument("--validation-fraction", type=float, default=0.002)
 parser.add_argument("--min-score", type=float, default=0.8)
 parser.add_argument("--seed", type=int, default=42)
 parser.add_argument("--output-dir", default=None)
+parser.add_argument("--restart", action="store_true")
 args = parser.parse_args()
 
 prepare_dataset(
@@ -23,4 +24,5 @@ prepare_dataset(
     min_score=args.min_score,
     seed=args.seed,
     output_dir=args.output_dir,
+    restart=args.restart,
 )

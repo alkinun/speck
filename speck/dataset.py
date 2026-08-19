@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import random
+import shutil
 import time
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,7 @@ from typing import Any
 import numpy as np
 import pyarrow.parquet as pq
 import requests
+from tqdm.auto import tqdm
 
 from speck.common import base_dir
 from speck.tokenizer import get_tokenizer
@@ -35,7 +37,7 @@ def get_dataset_revision():
     return response.json()["sha"]
 
 
-def _download_file(url, destination, attempts=5):
+def _download_file(url, destination, description, attempts=5):
     destination = Path(destination)
     temporary = destination.with_suffix(destination.suffix + ".tmp")
     for attempt in range(attempts):
@@ -43,17 +45,18 @@ def _download_file(url, destination, attempts=5):
             with requests.get(url, stream=True, timeout=60) as response:
                 response.raise_for_status()
                 total = int(response.headers.get("content-length", 0))
-                downloaded = 0
-                reported = 0
                 with temporary.open("wb") as handle:
-                    for chunk in response.iter_content(8 * 1024 * 1024):
-                        if chunk:
-                            handle.write(chunk)
-                            downloaded += len(chunk)
-                            if downloaded - reported >= 256 * 1024 * 1024:
-                                reported = downloaded
-                                suffix = f"/{total / 2**30:.1f}gb" if total else "gb"
-                                print(f"downloaded {downloaded / 2**30:.1f}{suffix}")
+                    with tqdm(
+                        total=total or None,
+                        desc=description,
+                        unit="b",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                    ) as progress:
+                        for chunk in response.iter_content(8 * 1024 * 1024):
+                            if chunk:
+                                handle.write(chunk)
+                                progress.update(len(chunk))
             temporary.replace(destination)
             return
         except (OSError, requests.RequestException):
@@ -83,8 +86,7 @@ def iter_documents(
         cache_key = hashlib.sha256(url.encode()).hexdigest()[:20]
         local_path = cache_dir / f"{cache_key}.parquet"
         if not local_path.exists():
-            print(f"downloading ultra-fineweb shard {shard_index + 1}/{len(urls)}")
-            _download_file(url, local_path)
+            _download_file(url, local_path, f"ultra-fineweb {shard_index + 1}/{len(urls)}")
         try:
             parquet = pq.ParquetFile(local_path)
             available = set(parquet.schema_arrow.names)
@@ -191,6 +193,7 @@ def prepare_dataset(
     min_score=0.8,
     output_dir=None,
     document_iterator=None,
+    restart=False,
 ):
     tokenizer = get_tokenizer()
     if tokenizer.vocab_size > 65536:
@@ -202,7 +205,9 @@ def prepare_dataset(
         output_dir.rmdir()
     staging = output_dir.with_name(output_dir.name + ".building")
     if staging.exists():
-        raise FileExistsError(f"incomplete dataset build exists: {staging}")
+        if not restart:
+            raise FileExistsError(f"incomplete dataset build exists: {staging}; pass --restart to replace it")
+        shutil.rmtree(staging)
     staging.mkdir(parents=True)
     train_writer = TokenShardWriter(staging, "train", shard_tokens)
     val_writer = TokenShardWriter(staging, "val", shard_tokens)
