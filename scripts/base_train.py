@@ -27,7 +27,7 @@ def arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", default="speck-50m-10b")
     parser.add_argument("--wandb-project", default="speck")
-    parser.add_argument("--hf-repo", default=None)
+    parser.add_argument("--hf-repo", default="specklabs/speck00-50m")
     parser.add_argument("--hf-private", action="store_true")
     parser.add_argument("--hf-upload-optimizer", action="store_true")
     parser.add_argument("--device", default=None)

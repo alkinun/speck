@@ -51,10 +51,10 @@ python -m scripts.base_train \
   --sequence-length=2048 \
   --train-tokens=10000000000 \
   --batch-tokens=524288 \
-  --hf-repo=owner/repo
+  --hf-repo=specklabs/speck00-50m
 ```
 
-omit `--hf-repo` to keep checkpoints local. use `--hf-upload-optimizer` to include optimizer state in hf commits.
+checkpoints upload to `specklabs/speck00-50m` by default. pass `--hf-repo=` to keep checkpoints local. use `--hf-upload-optimizer` to include optimizer state in hf commits.
 
 for distributed training:
 
@@ -62,7 +62,7 @@ for distributed training:
 torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
   --run=speck-50m-10b \
   --device-batch-size=4 \
-  --hf-repo=owner/repo
+  --hf-repo=specklabs/speck00-50m
 ```
 
 ## resume
@@ -71,7 +71,7 @@ torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
 python -m scripts.base_train \
   --run=speck-50m-10b \
   --device-batch-size=16 \
-  --hf-repo=owner/repo \
+  --hf-repo=specklabs/speck00-50m \
   --resume=1907
 ```
 
