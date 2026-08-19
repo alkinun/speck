@@ -1,0 +1,93 @@
+{
+  "benchmark": {
+    "batch_curriculum": false,
+    "compiled": true,
+    "kind": "training_quality",
+    "label": "wide-6-batch-8k",
+    "loss": "torch",
+    "optimizer": "muon",
+    "seed": 42,
+    "steps": 6080
+  },
+  "dataset": {
+    "manifest": "e506660d50240066805b69cd6e08cf0769d4c0988b4a1b8e4b823ec2f99ac59a",
+    "path": "/home/alkin/.cache/speck/benchmark-50m"
+  },
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "git_dirty": false,
+    "git_revision": "960a60d",
+    "recorded_at": "2026-08-19T22:51:30.682680+00:00",
+    "torch": "2.9.1+cu128"
+  },
+  "experiment": {
+    "fingerprint": "095fabd3c0b97074c4bc07520523799a185bb145f75f64e32b9c2c2cb0183804",
+    "path": "/home/alkin/Desktop/speck/experiments/speck-50m"
+  },
+  "geometry": {
+    "accumulation": 1,
+    "batch_size": 4,
+    "eval_batch_size": 4,
+    "eval_tokens": 98304,
+    "sequence_length": 2048,
+    "tokens_per_step": 8192,
+    "trained_tokens": 49807360
+  },
+  "model": {
+    "config": {
+      "architecture": "llama",
+      "expected_parameters": 50095872,
+      "head_dim": 64,
+      "hidden_size": 768,
+      "initializer_range": 0.02,
+      "intermediate_size": 1248,
+      "max_position_embeddings": 4096,
+      "num_attention_heads": 12,
+      "num_hidden_layers": 6,
+      "num_key_value_heads": 2,
+      "rms_norm_eps": 1e-05,
+      "rope_theta": 10000.0
+    },
+    "parameters": 50095872
+  },
+  "performance": {
+    "peak_allocated_bytes": 2887005696,
+    "step_seconds_median": 0.07419466998544522,
+    "tokens_per_second": 110559.43465158797
+  },
+  "quality": {
+    "best_validation_loss": 3.804610013961792,
+    "final_perplexity": 44.90773330858294,
+    "train_loss_first": 10.512062072753906,
+    "train_loss_last": 4.0198869705200195,
+    "validation": [
+      {
+        "loss": 10.518153190612793,
+        "step": 0,
+        "tokens": 0
+      },
+      {
+        "loss": 4.492879390716553,
+        "step": 1536,
+        "tokens": 12582912
+      },
+      {
+        "loss": 4.078179836273193,
+        "step": 3072,
+        "tokens": 25165824
+      },
+      {
+        "loss": 3.8878517150878906,
+        "step": 4608,
+        "tokens": 37748736
+      },
+      {
+        "loss": 3.804610013961792,
+        "step": 6080,
+        "tokens": 49807360
+      }
+    ]
+  }
+}

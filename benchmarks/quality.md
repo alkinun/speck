@@ -47,6 +47,13 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 | 6x768 | 50,095,872 | 3.82444 | 129,888 | keep |
 | 4x896 | 49,782,656 | 3.87434 | 142,710 | reject |
 
+## selected batch
+
+| batch tokens | validation loss | tokens/s | decision |
+| ---: | ---: | ---: | --- |
+| 16,384 | 3.82444 | 129,888 | keep |
+| 8,192 | 3.80461 | 110,559 | reject |
+
 ## mlp
 
 | mlp | parameters | validation loss | tokens/s | decision |
