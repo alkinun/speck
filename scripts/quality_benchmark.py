@@ -34,6 +34,7 @@ def arguments():
     parser.add_argument("--warmup-steps", type=int, default=2)
     parser.add_argument("--optimizer", choices=("adamw", "muon"), default=None)
     parser.add_argument("--batch-curriculum", action="store_true")
+    parser.add_argument("--model-config", default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", default=None)
@@ -65,6 +66,8 @@ def run(args):
     if args.steps < 1 or args.batch_size < 1 or args.eval_batch_size < 1:
         raise ValueError("steps and batch sizes must be positive")
     configs = load_experiment(args.experiment, "tokenizer", "model", "train")
+    if args.model_config:
+        configs["model"] = json.loads(Path(args.model_config).read_text(encoding="utf-8"))
     train = configs["train"]
     tokenizer = get_tokenizer(**configs["tokenizer"])
     manifest = load_manifest(args.data_dir)
