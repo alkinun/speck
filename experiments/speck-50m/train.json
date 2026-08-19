@@ -1,8 +1,9 @@
 {
   "batch_tokens": 524288,
   "device_batch_size": 32,
-  "eval_every": 250,
-  "eval_tokens": 20000000,
+  "eval_every": 1000,
+  "eval_tokens": 5000000,
+  "final_eval_tokens": 20000000,
   "grad_clip": 1.0,
   "hf_private": false,
   "hf_repo": "specklabs/speck00-50m",

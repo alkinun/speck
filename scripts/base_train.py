@@ -161,18 +161,20 @@ def main():
         data_dir=args.data_dir,
     )
     inputs, targets, data_state = next(train_data)
-    train_model: Any = model if args.no_compile else torch.compile(
+    compiled_model: Any = model if args.no_compile else torch.compile(
         model, dynamic=False, mode="max-autotune-no-cudagraphs"
     )
+    train_model = compiled_model
     if distributed:
         train_model = DistributedDataParallel(train_model, device_ids=[local_rank])
     flops = model.flops_per_token(args.sequence_length)
 
     def validation(step):
         tokens_per_step = args.device_batch_size * args.sequence_length * world_size
-        val_steps = max(1, min(args.eval_tokens, manifest["splits"]["val"]["tokens"]) // tokens_per_step)
+        eval_tokens = args.final_eval_tokens if step == steps else args.eval_tokens
+        val_steps = max(1, min(eval_tokens, manifest["splits"]["val"]["tokens"]) // tokens_per_step)
         loader = packed_loader(tokenizer, args.device_batch_size, args.sequence_length, "val", device=device, data_dir=args.data_dir)
-        loss = validate(model, loader, val_steps, world_size)
+        loss = validate(compiled_model, loader, val_steps, world_size)
         run.log({"progress/step": step, "progress/tokens": step * args.batch_tokens, "validation/loss": loss, "validation/perplexity": math.exp(min(loss, 20))})
         print0(f"step {step:,} | validation loss {loss:.5f}")
         return loss
