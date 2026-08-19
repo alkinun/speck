@@ -45,7 +45,7 @@ hf auth login
 python -m scripts.base_train experiments/speck-50m
 ```
 
-The experiment directory is the unit of configuration:
+the experiment directory is the unit of configuration:
 
 ```text
 data.json       source, filters, splits, token budgets, and packed output
@@ -54,7 +54,7 @@ model.json      architecture and dimensions
 train.json      optimization, batching, logging, and checkpoints
 ```
 
-Copy the directory to start another experiment. JSON keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. The checked-in experiment uploads checkpoints to `specklabs/speck00-50m`; set `hf_repo` to an empty string to keep them local.
+copy the directory to start another experiment. json keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. the checked-in experiment uploads checkpoints to `specklabs/speck00-50m`; set `hf_repo` to an empty string to keep them local.
 
 for distributed training:
 
@@ -102,4 +102,4 @@ uv run --extra cpu --group dev python -m pytest -q
 uvx pyright
 ```
 
-Use `--device`, `--resume`, and `--no-compile` for runtime-only training overrides. Everything that defines an experiment lives in its config directory.
+use `--device`, `--resume`, and `--no-compile` for runtime-only training overrides. everything that defines an experiment lives in its config directory.
