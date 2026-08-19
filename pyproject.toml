@@ -1,39 +1,32 @@
 [project]
-name = "nanochat"
+name = "speck"
 version = "0.1.0"
-description = "the minimal full-stack ChatGPT clone"
-readme = "README.md"
+description = "a compact research harness for pretraining small language models"
 requires-python = ">=3.10"
 dependencies = [
-    "filelock>=3.19.0",
-    "kernels>=0.11.7",
     "numpy>=1.26.0",
-    "psutil>=7.1.0",
     "pyarrow>=21.0.0",
-    "rustbpe>=0.1.0",
-    "tiktoken>=0.11.0",
+    "huggingface-hub>=0.34.0",
+    "requests>=2.32.0",
+    "sentencepiece>=0.2.0",
     "torch==2.9.1",
     "wandb>=0.21.3",
 ]
 
 [dependency-groups]
 dev = [
-    "ipykernel>=7.1.0",
-    "matplotlib>=3.10.8",
     "pytest>=8.0.0",
-    "python-dotenv>=1.2.1",
 ]
 
 [tool.pytest.ini_options]
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-]
 testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
 
-# target torch to cuda 12.8 or CPU
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.10"
+
+# target torch to cuda 12.8 or cpu
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "cpu" },
@@ -52,7 +45,6 @@ explicit = true
 
 [project.optional-dependencies]
 cpu = [
-    "setuptools>=65.0.0",
     "torch==2.9.1",
 ]
 gpu = [

@@ -1,13 +1,10 @@
 .venv/
 __pycache__/
 *.pyc
-dev-ignore/
-report.md
-eval_bundle/
+.pytest_cache/
 
-# Secrets
+# secrets
 .env
 
-# Local setup
-CLAUDE.md
+# experiment logs
 wandb/
