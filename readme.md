@@ -74,6 +74,27 @@ python -m scripts.base_train experiments/speck-50m --resume=1907
 python -m scripts.infer "the meaning of life is" --experiment experiments/speck-50m
 ```
 
+## benchmarking
+
+measure the production optimization step with synthetic tokens:
+
+```bash
+python -m scripts.benchmark experiments/speck-50m \
+  --mode compute \
+  --output benchmarks/baseline-compute.json
+```
+
+include the packed data path in the measurement:
+
+```bash
+python -m scripts.benchmark experiments/speck-50m \
+  --mode end-to-end \
+  --data-dir ~/.cache/speck/benchmark-50m \
+  --output benchmarks/baseline-end-to-end.json
+```
+
+warmup is reported separately. use `--peak-tflops` to include model flops utilization and `--no-compile` to measure eager execution.
+
 ## checks
 
 ```bash

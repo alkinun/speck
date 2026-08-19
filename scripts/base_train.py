@@ -5,7 +5,6 @@ import json
 import math
 import os
 import time
-from contextlib import nullcontext
 from dataclasses import asdict
 from pathlib import Path
 from types import SimpleNamespace
@@ -24,6 +23,7 @@ from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.hub import upload
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
+from speck.train import optimization_step
 
 
 def arguments():
@@ -92,6 +92,7 @@ def main():
     ).to(device)
     config = model.config
     model.init_weights()
+    parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay)
 
     micro_tokens = args.device_batch_size * args.sequence_length * world_size
@@ -204,33 +205,26 @@ def main():
     validation_loss = metadata.get("validation_loss") if metadata else validation(0)
     synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
     for step in range(start_step, steps):
-        optimizer.zero_grad(set_to_none=True)
         synchronize()
         started = time.perf_counter()
-        loss_sum = torch.zeros((), device=device)
-        for micro_step in range(accumulation):
-            context = train_model.no_sync() if distributed and micro_step + 1 < accumulation else nullcontext()
-            with context:
-                loss = train_model(inputs, targets)
-                (loss / accumulation).backward()
-            loss_sum += loss.detach()
-            inputs, targets, data_state = next(train_data)
-        finite = torch.isfinite(loss_sum).to(torch.int32)
-        if distributed:
-            dist.all_reduce(finite, op=dist.ReduceOp.MIN)
-        if not finite.item():
-            raise FloatingPointError("non-finite training loss")
         scale = lr_scale(step, steps, args.warmup_steps, args.min_lr)
-        for group in optimizer.param_groups:
-            group["lr"] = args.lr * scale
-        grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip, error_if_nonfinite=True)
-        optimizer.step()
+        loss_sum, grad_norm, batch = optimization_step(
+            train_model,
+            parameters,
+            optimizer,
+            train_data,
+            (inputs, targets, data_state),
+            accumulation,
+            args.grad_clip,
+            args.lr * scale,
+            distributed,
+        )
+        inputs, targets, data_state = batch
         synchronize()
         duration = time.perf_counter() - started
         completed = step + 1
         if completed > 10:
             elapsed_training += duration
-        loss_sum /= accumulation
         if distributed:
             dist.all_reduce(loss_sum, op=dist.ReduceOp.AVG)
         if completed == 1 or completed % args.log_every == 0:
