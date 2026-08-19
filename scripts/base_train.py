@@ -161,7 +161,9 @@ def main():
         data_dir=args.data_dir,
     )
     inputs, targets, data_state = next(train_data)
-    train_model: Any = model if args.no_compile else torch.compile(model, dynamic=False)
+    train_model: Any = model if args.no_compile else torch.compile(
+        model, dynamic=False, mode="max-autotune-no-cudagraphs"
+    )
     if distributed:
         train_model = DistributedDataParallel(train_model, device_ids=[local_rank])
     flops = model.flops_per_token(args.sequence_length)
