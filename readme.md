@@ -95,6 +95,12 @@ python -m scripts.benchmark experiments/speck-50m \
 
 warmup is reported separately. use `--peak-tflops` to include model flops utilization and `--no-compile` to measure eager execution.
 
+compare short real-data training runs:
+
+```bash
+python -m scripts.quality_benchmark --label cce --loss cce
+```
+
 ## checks
 
 ```bash

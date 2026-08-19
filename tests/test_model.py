@@ -46,6 +46,18 @@ def test_forward_loss_and_optimizer():
     optimizer.step()
 
 
+def test_loss_implementation_validation():
+    model = tiny_model()
+    model.set_loss_impl("torch")
+    assert model.loss_impl == "torch"
+    try:
+        model.set_loss_impl("unknown")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("invalid loss implementation was accepted")
+
+
 def test_cuda_loss_matches_reference():
     if not torch.cuda.is_available():
         return

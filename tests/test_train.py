@@ -1,7 +1,13 @@
 import torch
 
 from speck.model import Config, Llama
-from speck.train import optimization_step
+from speck.train import lr_scale, optimization_step
+
+
+def test_lr_scale():
+    assert lr_scale(0, 10, 2, 0.1) == 0.5
+    assert lr_scale(1, 10, 2, 0.1) == 1.0
+    assert lr_scale(10, 10, 2, 0.1) == 0.1
 
 
 def test_optimization_step_advances_the_loader():

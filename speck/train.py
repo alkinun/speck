@@ -1,9 +1,17 @@
 """shared training-step mechanics."""
 
 from contextlib import nullcontext
+import math
 
 import torch
 import torch.distributed as dist
+
+
+def lr_scale(step, steps, warmup, minimum):
+    if step < warmup:
+        return (step + 1) / warmup
+    progress = min(1.0, (step - warmup) / max(1, steps - warmup))
+    return minimum + (1 - minimum) * 0.5 * (1 + math.cos(math.pi * progress))
 
 
 def optimization_step(

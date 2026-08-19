@@ -23,7 +23,7 @@ from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.hub import upload
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
-from speck.train import optimization_step
+from speck.train import lr_scale, optimization_step
 
 
 def arguments():
@@ -33,13 +33,6 @@ def arguments():
     parser.add_argument("--resume", type=int, default=None)
     parser.add_argument("--no-compile", action="store_true")
     return parser.parse_args()
-
-
-def lr_scale(step, steps, warmup, minimum):
-    if step < warmup:
-        return (step + 1) / warmup
-    progress = min(1.0, (step - warmup) / max(1, steps - warmup))
-    return minimum + (1 - minimum) * 0.5 * (1 + math.cos(math.pi * progress))
 
 
 @torch.no_grad()
@@ -92,6 +85,7 @@ def main():
     ).to(device)
     config = model.config
     model.init_weights()
+    model.set_loss_impl(args.loss)
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay)
 
@@ -132,7 +126,7 @@ def main():
         "consumed_tokens": consumed_tokens,
     }
     if metadata:
-        immutable = ("sequence_length", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "world_size")
+        immutable = ("sequence_length", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "loss", "world_size")
         changed = [key for key in immutable if metadata["resolved"].get(key) != resolved.get(key)]
         if changed:
             raise ValueError(f"resume settings changed: {', '.join(changed)}")

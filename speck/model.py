@@ -169,6 +169,7 @@ class Llama(nn.Module):
     def __init__(self, config=Config()):
         super().__init__()
         self.config = config
+        self.loss_impl = "cce"
         self.model = Backbone(config)
         self.lm_head = Linear(config.hidden_size, config.vocab_size, bias=False)
         self.lm_head.weight = self.model.embed_tokens.weight
@@ -202,19 +203,24 @@ class Llama(nn.Module):
         if cache is not None:
             cache.position += length
         x = self.model.norm(x)
-        if targets is not None and tokens.is_cuda:
+        if targets is not None and tokens.is_cuda and self.loss_impl != "torch":
             from cut_cross_entropy import linear_cross_entropy
 
             return linear_cross_entropy(
                 x,
                 self.lm_head.weight.to(x.dtype),
                 targets,
-                impl="cce",
+                impl=self.loss_impl,
             )
         logits = self.lm_head(x).float()
         if targets is None:
             return logits
         return F.cross_entropy(logits.flatten(0, 1), targets.flatten())
+
+    def set_loss_impl(self, implementation):
+        if implementation not in {"cce", "cce_exact", "torch"}:
+            raise ValueError(f"unsupported loss implementation: {implementation}")
+        self.loss_impl = implementation
 
     def cache(self, batch_size=1, length=None):
         parameter = next(self.parameters())

@@ -9,6 +9,7 @@
   "hf_repo": "specklabs/speck00-50m",
   "hf_upload_optimizer": false,
   "log_every": 10,
+  "loss": "cce",
   "lr": 0.0006,
   "min_lr": 0.1,
   "output_dir": null,
