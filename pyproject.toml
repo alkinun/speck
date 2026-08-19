@@ -48,7 +48,6 @@ cpu = [
     "torch==2.9.1",
 ]
 gpu = [
-    "cut-cross-entropy @ git+https://github.com/apple/ml-cross-entropy.git@b7a02791b234e187b524fb1dba6a812d521b203a",
     "torch==2.9.1",
 ]
 

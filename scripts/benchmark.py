@@ -104,7 +104,6 @@ def run(args):
         configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
     ).to(device)
     model.init_weights()
-    model.set_loss_impl(train["loss"])
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(train["lr"], train["weight_decay"])
     train_model = model if args.no_compile else torch.compile(

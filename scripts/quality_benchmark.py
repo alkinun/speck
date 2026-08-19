@@ -31,7 +31,6 @@ def arguments():
     parser.add_argument("--eval-every", type=int, default=24)
     parser.add_argument("--eval-batch-size", type=int, default=4)
     parser.add_argument("--warmup-steps", type=int, default=2)
-    parser.add_argument("--loss", choices=("cce", "cce_exact", "torch"), default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", default=None)
@@ -74,8 +73,6 @@ def run(args):
         configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
     ).to(device)
     model.init_weights()
-    loss_impl = args.loss or train["loss"]
-    model.set_loss_impl(loss_impl)
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(train["lr"], train["weight_decay"])
     compiled_model = model if args.no_compile else torch.compile(
@@ -151,7 +148,7 @@ def run(args):
             "steps": args.steps,
             "seed": args.seed,
             "compiled": not args.no_compile,
-            "loss": loss_impl,
+            "loss": "torch",
         },
         "geometry": {
             "batch_size": args.batch_size,

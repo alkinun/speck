@@ -98,7 +98,7 @@ warmup is reported separately. use `--peak-tflops` to include model flops utiliz
 compare short real-data training runs:
 
 ```bash
-python -m scripts.quality_benchmark --label cce --loss cce
+python -m scripts.quality_benchmark --label baseline
 ```
 
 ## checks

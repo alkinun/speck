@@ -46,28 +46,6 @@ def test_forward_loss_and_optimizer():
     optimizer.step()
 
 
-def test_loss_implementation_validation():
-    model = tiny_model()
-    model.set_loss_impl("torch")
-    assert model.loss_impl == "torch"
-    try:
-        model.set_loss_impl("unknown")
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("invalid loss implementation was accepted")
-
-
-def test_cuda_loss_matches_reference():
-    if not torch.cuda.is_available():
-        return
-    model = tiny_model().cuda()
-    tokens = torch.randint(0, 32, (2, 8), device="cuda")
-    targets = torch.randint(0, 32, (2, 8), device="cuda")
-    expected = torch.nn.functional.cross_entropy(model(tokens).flatten(0, 1), targets.flatten())
-    torch.testing.assert_close(model(tokens, targets), expected, atol=1e-4, rtol=1e-4)
-
-
 def test_cached_decode_matches_full_forward():
     model = tiny_model().eval()
     tokens = torch.randint(0, 32, (1, 7))

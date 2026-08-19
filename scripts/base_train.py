@@ -85,7 +85,6 @@ def main():
     ).to(device)
     config = model.config
     model.init_weights()
-    model.set_loss_impl(args.loss)
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay)
 
@@ -126,7 +125,7 @@ def main():
         "consumed_tokens": consumed_tokens,
     }
     if metadata:
-        immutable = ("sequence_length", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "loss", "world_size")
+        immutable = ("sequence_length", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "world_size")
         changed = [key for key in immutable if metadata["resolved"].get(key) != resolved.get(key)]
         if changed:
             raise ValueError(f"resume settings changed: {', '.join(changed)}")
