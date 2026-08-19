@@ -32,6 +32,7 @@ def arguments():
     parser.add_argument("--eval-batch-size", type=int, default=4)
     parser.add_argument("--warmup-steps", type=int, default=2)
     parser.add_argument("--optimizer", choices=("adamw", "muon"), default=None)
+    parser.add_argument("--batch-curriculum", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", default=None)
@@ -102,7 +103,7 @@ def run(args):
     validation = []
 
     def record_validation(step):
-        loss, tokens = evaluate(
+        loss, evaluated_tokens = evaluate(
             compiled_model,
             tokenizer,
             args.data_dir,
@@ -111,17 +112,30 @@ def run(args):
             sequence_length,
             device,
         )
-        validation.append({"step": step, "tokens": step * train["batch_tokens"], "loss": loss})
+        validation.append({"step": step, "tokens": trained_tokens_done, "loss": loss})
         print(f"step {step:,} | validation loss {loss:.5f}")
-        return tokens
+        return evaluated_tokens
 
+    trained_tokens_done = 0
     eval_tokens = record_validation(0)
     durations = []
+    duration_tokens = []
     train_losses = []
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
-    for step in range(args.steps):
-        scale = lr_scale(step, args.steps, args.warmup_steps, train["min_lr"])
+    step = 0
+    next_eval_tokens = args.eval_every * train["batch_tokens"]
+    quarter_tokens = math.ceil(args.steps / 4) * train["batch_tokens"]
+    while trained_tokens_done < trained_tokens:
+        if args.batch_curriculum and trained_tokens_done < quarter_tokens:
+            batch_tokens = train["batch_tokens"] // 4
+        elif args.batch_curriculum and trained_tokens_done < 2 * quarter_tokens:
+            batch_tokens = train["batch_tokens"] // 2
+        else:
+            batch_tokens = train["batch_tokens"]
+        accumulation = batch_tokens // micro_tokens
+        schedule_step = trained_tokens_done / train["batch_tokens"]
+        scale = lr_scale(schedule_step, args.steps, args.warmup_steps, train["min_lr"])
         synchronize(device)
         started = time.perf_counter()
         loss, _, batch = optimization_step(
@@ -136,22 +150,26 @@ def run(args):
         )
         synchronize(device)
         durations.append(time.perf_counter() - started)
+        duration_tokens.append(batch_tokens)
         train_losses.append(loss.item())
-        completed = step + 1
-        if completed % args.eval_every == 0 or completed == args.steps:
-            record_validation(completed)
+        step += 1
+        trained_tokens_done += batch_tokens
+        if trained_tokens_done >= next_eval_tokens or trained_tokens_done == trained_tokens:
+            record_validation(step)
+            next_eval_tokens += args.eval_every * train["batch_tokens"]
 
     measured_seconds = sum(durations[1:])
-    measured_tokens = max(0, args.steps - 1) * train["batch_tokens"]
+    measured_tokens = sum(duration_tokens[1:])
     result = {
         "benchmark": {
             "kind": "training_quality",
             "label": args.label,
-            "steps": args.steps,
+            "steps": step,
             "seed": args.seed,
             "compiled": not args.no_compile,
             "loss": "torch",
             "optimizer": optimizer_name,
+            "batch_curriculum": args.batch_curriculum,
         },
         "geometry": {
             "batch_size": args.batch_size,
