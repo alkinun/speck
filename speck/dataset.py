@@ -59,7 +59,7 @@ def _download_file(url, destination, description, attempts=5):
                 revision=revision,
                 cache_dir=cache_dir,
             )
-            shutil.move(downloaded, destination)
+            shutil.move(Path(downloaded).resolve(), destination)
             shutil.rmtree(cache_dir, ignore_errors=True)
             return
         except (OSError, HfHubHTTPError):

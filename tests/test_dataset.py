@@ -34,9 +34,13 @@ def test_download_uses_revision_pinned_hf_xet(tmp_path, monkeypatch):
 
     def download(**kwargs):
         calls.update(kwargs)
-        path = Path(kwargs["cache_dir"]) / "blobs" / "shard"
+        cache = Path(kwargs["cache_dir"])
+        blob = cache / "blobs" / "shard"
+        blob.parent.mkdir(parents=True)
+        blob.write_bytes(b"parquet")
+        path = cache / "snapshots" / "abc123" / "data" / "shard.parquet"
         path.parent.mkdir(parents=True)
-        path.write_bytes(b"parquet")
+        path.symlink_to(blob)
         return str(path)
 
     monkeypatch.setattr(dataset, "hf_hub_download", download)
