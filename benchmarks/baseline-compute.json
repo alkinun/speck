@@ -3,17 +3,17 @@
     "compiled": true,
     "mode": "compute",
     "seed": 42,
-    "steps": 5,
-    "warmup_seconds": 12.541765737987589,
-    "warmup_steps": 2
+    "steps": 20,
+    "warmup_seconds": 28.811281791015062,
+    "warmup_steps": 5
   },
   "environment": {
     "cuda": "12.8",
     "device": "cuda",
     "device_name": "NVIDIA GeForce RTX 3090",
-    "git_dirty": true,
-    "git_revision": "933ddaa",
-    "recorded_at": "2026-08-19T17:24:41.212723+00:00",
+    "git_dirty": false,
+    "git_revision": "39109de",
+    "recorded_at": "2026-08-19T18:31:16.405460+00:00",
     "torch": "2.9.1+cu128"
   },
   "experiment": {
@@ -36,13 +36,13 @@
     "parameters": 50055552
   },
   "performance": {
-    "loss_first": 10.111818313598633,
-    "loss_last": 9.310022354125977,
-    "model_flops_utilization": 0.359147811184759,
-    "step_seconds_mean": 5.414797854999779,
-    "step_seconds_median": 5.4179420589935035,
-    "step_seconds_p90": 5.432100136007648,
-    "tflops": 50.99898918823578,
-    "tokens_per_second": 96825.03650914619
+    "loss_first": 9.504579544067383,
+    "loss_last": 7.558221340179443,
+    "model_flops_utilization": 0.3550128936008146,
+    "step_seconds_mean": 5.477865262600244,
+    "step_seconds_median": 5.479252514007385,
+    "step_seconds_p90": 5.509236301004421,
+    "tflops": 50.411830891315674,
+    "tokens_per_second": 95710.27669839581
   }
 }
