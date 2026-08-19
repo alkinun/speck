@@ -14,6 +14,13 @@ def lr_scale(step, steps, warmup, minimum):
     return minimum + (1 - minimum) * 0.5 * (1 + math.cos(math.pi * progress))
 
 
+def sequence_length_for_step(step, steps, final_length, enabled):
+    if not enabled:
+        return final_length
+    stage = min(2, step * 3 // steps)
+    return final_length // (4, 2, 1)[stage]
+
+
 def optimization_step(
     train_model,
     parameters,

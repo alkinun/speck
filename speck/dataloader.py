@@ -64,6 +64,7 @@ def packed_loader(
     device: str | torch.device = "cuda",
     resume_state_dict=None,
     data_dir=None,
+    allow_geometry_change=False,
 ):
     """yield losslessly packed batches and the exact start cursor for each batch."""
     if split not in {"train", "val"}:
@@ -86,7 +87,11 @@ def packed_loader(
     if resume_state_dict is not None:
         if resume_state_dict.get("manifest") != dataset_hash:
             raise ValueError("cannot resume with a different packed dataset")
-        if resume_state_dict.get("sequence_length") != sequence_length or resume_state_dict.get("batch_size") != batch_size:
+        geometry_changed = (
+            resume_state_dict.get("sequence_length") != sequence_length
+            or resume_state_dict.get("batch_size") != batch_size
+        )
+        if geometry_changed and not allow_geometry_change:
             raise ValueError("cannot resume with different batch geometry")
         if resume_state_dict.get("world_size") != world_size:
             raise ValueError("cannot resume with a different world size")

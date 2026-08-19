@@ -18,7 +18,7 @@ from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, verify_shards
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
-from speck.train import lr_scale, optimization_step
+from speck.train import lr_scale, optimization_step, sequence_length_for_step
 
 
 def arguments():
@@ -32,6 +32,7 @@ def arguments():
     parser.add_argument("--eval-batch-size", type=int, default=4)
     parser.add_argument("--warmup-steps", type=int, default=2)
     parser.add_argument("--optimizer", choices=("adamw", "muon"), default=None)
+    parser.add_argument("--sequence-curriculum", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", default=None)
@@ -90,10 +91,15 @@ def run(args):
     if manifest["splits"]["train"]["tokens"] <= trained_tokens + micro_tokens:
         raise ValueError("packed dataset is too small for this benchmark")
 
+    sequence_curriculum = args.sequence_curriculum
+    train_sequence_length = sequence_length_for_step(
+        0, args.steps, sequence_length, sequence_curriculum
+    )
+    train_batch_size = args.batch_size * sequence_length // train_sequence_length
     loader = packed_loader(
         tokenizer,
-        args.batch_size,
-        sequence_length,
+        train_batch_size,
+        train_sequence_length,
         "train",
         device=device,
         data_dir=args.data_dir,
@@ -117,10 +123,29 @@ def run(args):
 
     eval_tokens = record_validation(0)
     durations = []
+    stage_starts = {0}
     train_losses = []
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
     for step in range(args.steps):
+        next_sequence_length = sequence_length_for_step(
+            step, args.steps, sequence_length, sequence_curriculum
+        )
+        if next_sequence_length != train_sequence_length:
+            train_sequence_length = next_sequence_length
+            train_batch_size = args.batch_size * sequence_length // train_sequence_length
+            loader = packed_loader(
+                tokenizer,
+                train_batch_size,
+                train_sequence_length,
+                "train",
+                device=device,
+                resume_state_dict=batch[2],
+                data_dir=args.data_dir,
+                allow_geometry_change=True,
+            )
+            batch = next(loader)
+            stage_starts.add(step)
         scale = lr_scale(step, args.steps, args.warmup_steps, train["min_lr"])
         synchronize(device)
         started = time.perf_counter()
@@ -141,8 +166,9 @@ def run(args):
         if completed % args.eval_every == 0 or completed == args.steps:
             record_validation(completed)
 
-    measured_seconds = sum(durations[1:])
-    measured_tokens = max(0, args.steps - 1) * train["batch_tokens"]
+    measured_durations = [duration for step, duration in enumerate(durations) if step not in stage_starts]
+    measured_seconds = sum(measured_durations)
+    measured_tokens = len(measured_durations) * train["batch_tokens"]
     result = {
         "benchmark": {
             "kind": "training_quality",
@@ -152,6 +178,7 @@ def run(args):
             "compiled": not args.no_compile,
             "loss": "torch",
             "optimizer": optimizer_name,
+            "sequence_curriculum": sequence_curriculum,
         },
         "geometry": {
             "batch_size": args.batch_size,
@@ -171,7 +198,7 @@ def run(args):
         },
         "performance": {
             "tokens_per_second": measured_tokens / measured_seconds if measured_seconds else None,
-            "step_seconds_median": statistics.median(durations[1:]) if len(durations) > 1 else durations[0],
+            "step_seconds_median": statistics.median(measured_durations) if measured_durations else durations[0],
             "peak_allocated_bytes": torch.cuda.max_memory_allocated(device) if device.type == "cuda" else None,
         },
         "dataset": {

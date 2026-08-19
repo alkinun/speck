@@ -15,6 +15,7 @@
   "output_dir": null,
   "run": "speck-50m-10b",
   "save_every": 1907,
+  "sequence_curriculum": false,
   "sequence_length": 2048,
   "train_tokens": 10000000000,
   "wandb_project": "speck",

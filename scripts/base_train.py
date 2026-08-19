@@ -23,7 +23,7 @@ from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.hub import upload
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
-from speck.train import lr_scale, optimization_step
+from speck.train import lr_scale, optimization_step, sequence_length_for_step
 
 
 def arguments():
@@ -125,7 +125,7 @@ def main():
         "consumed_tokens": consumed_tokens,
     }
     if metadata:
-        immutable = ("sequence_length", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "optimizer", "world_size")
+        immutable = ("sequence_length", "sequence_curriculum", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "optimizer", "world_size")
         changed = [key for key in immutable if metadata["resolved"].get(key) != resolved.get(key)]
         if changed:
             raise ValueError(f"resume settings changed: {', '.join(changed)}")
@@ -144,14 +144,19 @@ def main():
     else:
         run = NullRun()
 
+    train_sequence_length = sequence_length_for_step(
+        start_step, steps, args.sequence_length, args.sequence_curriculum
+    )
+    train_batch_size = args.device_batch_size * args.sequence_length // train_sequence_length
     train_data = packed_loader(
         tokenizer,
-        args.device_batch_size,
-        args.sequence_length,
+        train_batch_size,
+        train_sequence_length,
         "train",
         device=device,
         resume_state_dict=data_state,
         data_dir=args.data_dir,
+        allow_geometry_change=args.sequence_curriculum,
     )
     inputs, targets, data_state = next(train_data)
     compiled_model: Any = model if args.no_compile else torch.compile(
@@ -162,7 +167,6 @@ def main():
         train_model = DistributedDataParallel(
             train_model, device_ids=[local_rank], broadcast_buffers=False
         )
-    flops = model.flops_per_token(args.sequence_length)
 
     def validation(step):
         tokens_per_step = args.device_batch_size * args.sequence_length * world_size
@@ -204,6 +208,23 @@ def main():
     validation_loss = metadata.get("validation_loss") if metadata else validation(0)
     synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
     for step in range(start_step, steps):
+        next_sequence_length = sequence_length_for_step(
+            step, steps, args.sequence_length, args.sequence_curriculum
+        )
+        if next_sequence_length != train_sequence_length:
+            train_sequence_length = next_sequence_length
+            train_batch_size = args.device_batch_size * args.sequence_length // train_sequence_length
+            train_data = packed_loader(
+                tokenizer,
+                train_batch_size,
+                train_sequence_length,
+                "train",
+                device=device,
+                resume_state_dict=data_state,
+                data_dir=args.data_dir,
+                allow_geometry_change=True,
+            )
+            inputs, targets, data_state = next(train_data)
         synchronize()
         started = time.perf_counter()
         scale = lr_scale(step, steps, args.warmup_steps, args.min_lr)
@@ -235,7 +256,8 @@ def main():
                 "train/lr": optimizer.param_groups[0]["lr"],
                 "train/grad_norm": float(grad_norm),
                 "performance/tokens_per_second": args.batch_tokens / duration,
-                "performance/tflops": flops * args.batch_tokens / duration / 1e12,
+                "performance/tflops": model.flops_per_token(train_sequence_length) * args.batch_tokens / duration / 1e12,
+                "performance/sequence_length": train_sequence_length,
                 "data/epoch": data_state["epoch"],
                 "data/shard": data_state["shard"],
             }
