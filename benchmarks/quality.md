@@ -14,3 +14,10 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 | --- | ---: | ---: | --- |
 | adamw | 7.10396 | 117,365 | reject |
 | muon | 6.44581 | 116,945 | keep |
+
+## sequence
+
+| schedule | validation loss | tokens/s | decision |
+| --- | ---: | ---: | --- |
+| full context | 6.44581 | 116,945 | keep |
+| equal thirds | 6.50428 | 129,936 | reject |
