@@ -5,6 +5,7 @@
 ```text
 speck/    model, tokenizer, data, checkpoints, and runtime helpers
 scripts/  tokenizer setup, data preparation, training, and inference
+experiments/  self-contained experiment configurations
 tests/    focused unit tests
 ```
 
@@ -21,10 +22,10 @@ use `--extra cpu` instead of `--extra gpu` for a cpu environment.
 
 ## tokenizer
 
-download and verify the pinned mistral tokenizer:
+download and verify the tokenizer selected by an experiment:
 
 ```bash
-python -m scripts.tokenizer_prepare
+python -m scripts.tokenizer_prepare experiments/speck-50m
 ```
 
 ## data
@@ -32,11 +33,7 @@ python -m scripts.tokenizer_prepare
 stream ultra-fineweb and create local packed token shards:
 
 ```bash
-python -m scripts.data_prepare \
-  --train-tokens=10000524288 \
-  --validation-tokens=20000000 \
-  --min-score=0.8 \
-  --seed=42
+python -m scripts.data_prepare experiments/speck-50m
 ```
 
 ## training
@@ -45,40 +42,36 @@ python -m scripts.data_prepare \
 wandb login
 hf auth login
 
-python -m scripts.base_train \
-  --run=speck-50m-10b \
-  --device-batch-size=16 \
-  --sequence-length=2048 \
-  --train-tokens=10000000000 \
-  --batch-tokens=524288 \
-  --hf-repo=specklabs/speck00-50m
+python -m scripts.base_train experiments/speck-50m
 ```
 
-checkpoints upload to `specklabs/speck00-50m` by default. pass `--hf-repo=` to keep checkpoints local. use `--hf-upload-optimizer` to include optimizer state in hf commits.
+The experiment directory is the unit of configuration:
+
+```text
+data.json       source, filters, splits, token budgets, and packed output
+tokenizer.json  tokenizer artifact and local directory
+model.json      architecture and dimensions
+train.json      optimization, batching, logging, and checkpoints
+```
+
+Copy the directory to start another experiment. JSON keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. The checked-in experiment uploads checkpoints to `specklabs/speck00-50m`; set `hf_repo` to an empty string to keep them local.
 
 for distributed training:
 
 ```bash
-torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
-  --run=speck-50m-10b \
-  --device-batch-size=4 \
-  --hf-repo=specklabs/speck00-50m
+torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- experiments/speck-50m
 ```
 
 ## resume
 
 ```bash
-python -m scripts.base_train \
-  --run=speck-50m-10b \
-  --device-batch-size=16 \
-  --hf-repo=specklabs/speck00-50m \
-  --resume=1907
+python -m scripts.base_train experiments/speck-50m --resume=1907
 ```
 
 ## inference
 
 ```bash
-python -m scripts.infer "the meaning of life is"
+python -m scripts.infer "the meaning of life is" --experiment experiments/speck-50m
 ```
 
 ## checks
@@ -88,4 +81,4 @@ uv run --extra cpu --group dev python -m pytest -q
 uvx pyright
 ```
 
-use `python -m scripts.base_train --help` and `python -m scripts.data_prepare --help` for all options.
+Use `--device`, `--resume`, and `--no-compile` for runtime-only training overrides. Everything that defines an experiment lives in its config directory.

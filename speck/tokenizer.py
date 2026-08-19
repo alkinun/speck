@@ -1,4 +1,4 @@
-"""pinned mistral sentencepiece tokenizer."""
+"""sentencepiece tokenizer preparation and loading."""
 
 import hashlib
 import json
@@ -11,29 +11,30 @@ from huggingface_hub import hf_hub_download
 from speck.common import base_dir
 
 
-repo = "mistralai/Mistral-7B-v0.1"
-revision = "27d67f1b5f57dc0953326b2601d68371d40ea8da"
+default_repo = "mistralai/Mistral-7B-v0.1"
+default_revision = "27d67f1b5f57dc0953326b2601d68371d40ea8da"
 
 
 class Tokenizer:
     def __init__(self, model_path):
         self.model_path = str(model_path)
         self.processor = sentencepiece.SentencePieceProcessor(model_file=self.model_path)
-        if self.vocab_size != 32000 or self.bos_id != 1 or self.eos_id != 2:
-            raise ValueError("unexpected mistral tokenizer configuration")
-
     @classmethod
-    def load(cls, directory=None):
+    def load(cls, directory=None, repo=None, revision=None, filename="tokenizer.model"):
         directory = directory or os.path.join(base_dir(), "tokenizer")
-        model_path = os.path.join(directory, "tokenizer.model")
+        model_path = os.path.join(directory, filename)
         metadata_path = os.path.join(directory, "tokenizer_metadata.json")
         if not os.path.exists(model_path) or not os.path.exists(metadata_path):
-            raise FileNotFoundError("mistral tokenizer is not prepared; run scripts.tokenizer_prepare")
+            raise FileNotFoundError("tokenizer is not prepared; run scripts.tokenizer_prepare")
         tokenizer = cls(model_path)
         with open(metadata_path, encoding="utf-8") as handle:
             metadata = json.load(handle)
         if metadata["fingerprint"] != tokenizer.fingerprint():
             raise ValueError("tokenizer fingerprint mismatch")
+        if repo is not None and metadata.get("repo") != repo:
+            raise ValueError("prepared tokenizer repository does not match the experiment")
+        if revision is not None and metadata.get("revision") != revision:
+            raise ValueError("prepared tokenizer revision does not match the experiment")
         return tokenizer
 
     @property
@@ -69,14 +70,15 @@ class Tokenizer:
             return hashlib.sha256(handle.read()).hexdigest()
 
 
-def prepare(directory=None):
+def prepare(directory=None, repo=default_repo, revision=default_revision, filename="tokenizer.model"):
     directory = directory or os.path.join(base_dir(), "tokenizer")
     os.makedirs(directory, exist_ok=True)
-    model_path = hf_hub_download(repo, "tokenizer.model", revision=revision, local_dir=directory)
+    model_path = hf_hub_download(repo, filename, revision=revision, local_dir=directory)
     tokenizer = Tokenizer(model_path)
     metadata = {
         "repo": repo,
         "revision": revision,
+        "filename": filename,
         "vocab_size": tokenizer.vocab_size,
         "fingerprint": tokenizer.fingerprint(),
     }
@@ -85,5 +87,5 @@ def prepare(directory=None):
     return tokenizer
 
 
-def get_tokenizer():
-    return Tokenizer.load()
+def get_tokenizer(**config):
+    return Tokenizer.load(**config)

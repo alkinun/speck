@@ -1,0 +1,21 @@
+{
+  "batch_tokens": 524288,
+  "device_batch_size": 4,
+  "eval_every": 250,
+  "eval_tokens": 20000000,
+  "grad_clip": 1.0,
+  "hf_private": false,
+  "hf_repo": "specklabs/speck00-50m",
+  "hf_upload_optimizer": false,
+  "log_every": 10,
+  "lr": 0.0006,
+  "min_lr": 0.1,
+  "output_dir": null,
+  "run": "speck-50m-10b",
+  "save_every": 1907,
+  "sequence_length": 2048,
+  "train_tokens": 10000000000,
+  "wandb_project": "speck",
+  "warmup_steps": 400,
+  "weight_decay": 0.1
+}

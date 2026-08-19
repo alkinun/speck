@@ -20,31 +20,49 @@ from speck.common import base_dir
 from speck.tokenizer import get_tokenizer
 
 
-dataset_repo = "openbmb/Ultra-FineWeb"
-dataset_language = "en"
-dataset_parts = 2048
 format_version = 1
 default_data_dir = Path(base_dir()) / "ultra_fineweb"
+default_source = {
+    "repo": "openbmb/Ultra-FineWeb",
+    "revision": None,
+    "file_pattern": "data/ultrafineweb_en/ultrafineweb-en-part-{index:04d}-of-2048.parquet",
+    "parts": 2048,
+    "content_column": "content",
+    "score_column": "score",
+    "source_column": "source",
+    "language": "en",
+}
 
 
-def get_parquet_urls(revision=None):
-    revision = revision or get_dataset_revision()
-    root = f"https://huggingface.co/datasets/{dataset_repo}/resolve/{revision}/data/ultrafineweb_en"
-    return [f"{root}/ultrafineweb-en-part-{index:04d}-of-{dataset_parts}.parquet" for index in range(1, dataset_parts + 1)]
+def _source(config=None):
+    source = {**default_source, **(config or {})}
+    unknown = set(source) - set(default_source)
+    if unknown:
+        raise ValueError(f"unknown data source settings: {', '.join(sorted(unknown))}")
+    return source
 
 
-def get_dataset_revision():
-    response = requests.get(f"https://huggingface.co/api/datasets/{dataset_repo}", timeout=60)
+def get_parquet_urls(revision=None, source=None):
+    source = _source(source)
+    revision = revision or source["revision"] or get_dataset_revision(source["repo"])
+    root = f"https://huggingface.co/datasets/{source['repo']}/resolve/{revision}"
+    return [f"{root}/{source['file_pattern'].format(index=index)}" for index in range(1, source["parts"] + 1)]
+
+
+def get_dataset_revision(repo=default_source["repo"]):
+    response = requests.get(f"https://huggingface.co/api/datasets/{repo}", timeout=60)
     response.raise_for_status()
     return response.json()["sha"]
 
 
-def _download_file(url, destination, description, attempts=5):
+def _download_file(url, destination, description, attempts=5, repo=None):
     destination = Path(destination)
     destination.with_suffix(destination.suffix + ".tmp").unlink(missing_ok=True)
     path = unquote(urlparse(url).path)
     try:
-        revision, filename = path.split("/resolve/", 1)[1].split("/", 1)
+        prefix, resolved = path.split("/resolve/", 1)
+        revision, filename = resolved.split("/", 1)
+        repo = repo or prefix.split("/datasets/", 1)[1]
     except (IndexError, ValueError) as error:
         raise ValueError(f"unexpected hugging face dataset url: {url}") from error
     cache_dir = destination.parent / f".{destination.stem}.download"
@@ -53,7 +71,7 @@ def _download_file(url, destination, description, attempts=5):
         try:
             print(f"{description}: {filename}")
             downloaded = hf_hub_download(
-                repo_id=dataset_repo,
+                repo_id=repo,
                 filename=filename,
                 repo_type="dataset",
                 revision=revision,
@@ -78,9 +96,11 @@ def iter_documents(
     cache_dir=None,
     keep_raw=False,
     urls=None,
+    source=None,
 ):
     """yield filtered documents while keeping at most one remote parquet shard locally."""
-    urls = list(get_parquet_urls() if urls is None else urls)
+    source = _source(source)
+    urls = list(get_parquet_urls(source=source) if urls is None else urls)
     random.Random(seed).shuffle(urls)
     cache_dir = Path(cache_dir or default_data_dir / "raw")
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -89,25 +109,28 @@ def iter_documents(
         cache_key = hashlib.sha256(url.encode()).hexdigest()[:20]
         local_path = cache_dir / f"{cache_key}.parquet"
         if not local_path.exists():
-            _download_file(url, local_path, f"ultra-fineweb {shard_index + 1}/{len(urls)}")
+            _download_file(url, local_path, f"dataset {shard_index + 1}/{len(urls)}", repo=source["repo"])
         try:
             parquet = pq.ParquetFile(local_path)
             available = set(parquet.schema_arrow.names)
-            required = {"content", "score", "source"}
+            columns = [source["content_column"]]
+            columns += [column for column in (source["score_column"], source["source_column"]) if column]
+            required = set(columns)
             if not required.issubset(available):
-                raise ValueError(f"unexpected ultra-fineweb columns: {sorted(available)}")
-            for batch in parquet.iter_batches(columns=["content", "score", "source"], batch_size=2048):
-                contents = batch.column(0).to_pylist()
-                scores = batch.column(1).to_pylist()
-                sources = batch.column(2).to_pylist()
-                for content, score, source in zip(contents, scores, sources):
+                raise ValueError(f"dataset is missing configured columns: {sorted(required - available)}")
+            for batch in parquet.iter_batches(columns=columns, batch_size=2048):
+                values = {column: batch.column(index).to_pylist() for index, column in enumerate(columns)}
+                contents = values[source["content_column"]]
+                scores = values.get(source["score_column"], [1.0] * len(contents))
+                sources = values.get(source["source_column"], ["unknown"] * len(contents))
+                for content, score, source_name in zip(contents, scores, sources):
                     if not isinstance(content, str) or not content:
                         continue
                     if score is None or float(score) < min_score:
                         continue
                     if not min_chars <= len(content) <= max_chars:
                         continue
-                    yield {"content": content, "score": float(score), "source": source or "unknown"}
+                    yield {"content": content, "score": float(score), "source": source_name or "unknown"}
         finally:
             if not keep_raw:
                 local_path.unlink(missing_ok=True)
@@ -197,8 +220,10 @@ def prepare_dataset(
     output_dir=None,
     document_iterator=None,
     restart=False,
+    source=None,
+    tokenizer=None,
 ):
-    tokenizer = get_tokenizer()
+    tokenizer = tokenizer or get_tokenizer()
     if tokenizer.vocab_size > 65536:
         raise ValueError("packed uint16 data requires vocab_size <= 65536")
     output_dir = Path(output_dir or default_data_dir / "packed")
@@ -217,10 +242,11 @@ def prepare_dataset(
     bos = tokenizer.bos_id
     eos = tokenizer.eos_id
     if document_iterator is None:
-        source_revision = get_dataset_revision()
-        parquet_urls = get_parquet_urls(source_revision)
+        source = _source(source)
+        source_revision = source["revision"] or get_dataset_revision(source["repo"])
+        parquet_urls = get_parquet_urls(source_revision, source)
         parquet_list_hash = hashlib.sha256("\n".join(parquet_urls).encode()).hexdigest()
-        documents = iter_documents(seed=seed, min_score=min_score, urls=parquet_urls)
+        documents = iter_documents(seed=seed, min_score=min_score, urls=parquet_urls, source=source)
     else:
         source_revision = "injected"
         parquet_list_hash = None
@@ -270,8 +296,8 @@ def prepare_dataset(
         "format_version": format_version,
         "dtype": "<u2",
         "dataset": {
-            "repo": dataset_repo,
-            "language": dataset_language,
+            "repo": source["repo"] if source else "injected",
+            "language": source["language"] if source else None,
             "revision": source_revision,
             "parquet_list_hash": parquet_list_hash,
             "seed": seed,

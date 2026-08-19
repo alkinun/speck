@@ -7,6 +7,8 @@ import os
 import time
 from contextlib import nullcontext
 from dataclasses import asdict
+from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import torch
@@ -16,36 +18,18 @@ from torch.nn.parallel import DistributedDataParallel
 
 from speck.checkpoint import latest, load, save
 from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
+from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.hub import upload
-from speck.model import Config, Llama
+from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 
 
 def arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--run", default="speck-50m-10b")
-    parser.add_argument("--wandb-project", default="speck")
-    parser.add_argument("--hf-repo", default="specklabs/speck00-50m")
-    parser.add_argument("--hf-private", action="store_true")
-    parser.add_argument("--hf-upload-optimizer", action="store_true")
+    parser.add_argument("experiment", nargs="?", default="experiments/speck-50m")
     parser.add_argument("--device", default=None)
-    parser.add_argument("--data-dir", default=str(default_data_dir / "packed"))
-    parser.add_argument("--output-dir", default=None)
-    parser.add_argument("--sequence-length", type=int, default=2048)
-    parser.add_argument("--device-batch-size", type=int, default=4)
-    parser.add_argument("--batch-tokens", type=int, default=524288)
-    parser.add_argument("--train-tokens", type=int, default=10_000_000_000)
-    parser.add_argument("--lr", type=float, default=6e-4)
-    parser.add_argument("--weight-decay", type=float, default=0.1)
-    parser.add_argument("--warmup-steps", type=int, default=400)
-    parser.add_argument("--min-lr", type=float, default=0.1)
-    parser.add_argument("--grad-clip", type=float, default=1.0)
-    parser.add_argument("--eval-every", type=int, default=250)
-    parser.add_argument("--eval-tokens", type=int, default=20_000_000)
-    parser.add_argument("--save-every", type=int, default=1907)
-    parser.add_argument("--log-every", type=int, default=10)
     parser.add_argument("--resume", type=int, default=None)
     parser.add_argument("--no-compile", action="store_true")
     return parser.parse_args()
@@ -73,14 +57,20 @@ def validate(model, loader, steps, world_size):
 
 
 def main():
-    args = arguments()
+    cli = arguments()
+    configs = load_experiment(cli.experiment, "data", "tokenizer", "model", "train")
+    args = SimpleNamespace(**configs["train"])
+    args.device = cli.device
+    args.resume = cli.resume
+    args.no_compile = cli.no_compile
+    args.data_dir = configs["data"].get("output_dir") or str(default_data_dir / "packed")
     args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
     if args.resume is None and latest(args.output_dir) is not None:
         raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume")
     rank, local_rank, world_size, device = init_runtime(args.device)
     distributed = world_size > 1
     master = rank == 0
-    tokenizer = get_tokenizer()
+    tokenizer = get_tokenizer(**configs["tokenizer"])
     manifest = load_manifest(args.data_dir)
     manifest_hash = manifest_fingerprint(manifest)
     if manifest["tokenizer"]["fingerprint"] != tokenizer.fingerprint():
@@ -97,11 +87,11 @@ def main():
     if error[0]:
         raise ValueError(error[0])
 
-    config = Config(vocab_size=tokenizer.vocab_size)
-    model = Llama(config).to(device)
+    model = build_model(
+        configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
+    ).to(device)
+    config = model.config
     model.init_weights()
-    if model.parameter_count() != 50_055_552:
-        raise ValueError(f"unexpected parameter count: {model.parameter_count():,}")
     optimizer = model.optimizer(args.lr, args.weight_decay)
 
     micro_tokens = args.device_batch_size * args.sequence_length * world_size
@@ -129,6 +119,8 @@ def main():
 
     resolved = {
         **vars(args),
+        "experiment": str(Path(cli.experiment).resolve()),
+        "tokenizer": configs["tokenizer"],
         "model": config.export(),
         "parameters": model.parameter_count(),
         "manifest": manifest_hash,

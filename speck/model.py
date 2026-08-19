@@ -1,4 +1,4 @@
-"""the 50m llama model used by speck."""
+"""compact llama model."""
 
 from dataclasses import dataclass
 
@@ -10,6 +10,8 @@ import torch.nn.functional as F
 @dataclass(frozen=True)
 class Config:
     vocab_size: int = 32000
+    bos_token_id: int = 1
+    eos_token_id: int = 2
     hidden_size: int = 384
     intermediate_size: int = 1024
     num_hidden_layers: int = 24
@@ -32,9 +34,9 @@ class Config:
             "architectures": ["LlamaForCausalLM"],
             "attention_bias": False,
             "attention_dropout": 0.0,
-            "bos_token_id": 1,
+            "bos_token_id": self.bos_token_id,
             "dtype": "bfloat16",
-            "eos_token_id": 2,
+            "eos_token_id": self.eos_token_id,
             "head_dim": self.head_dim,
             "hidden_act": "silu",
             "hidden_size": self.hidden_size,
@@ -234,3 +236,20 @@ class Llama(nn.Module):
         linear = sum(module.weight.numel() for module in self.modules() if isinstance(module, Linear))
         attention = 12 * self.config.num_hidden_layers * self.config.hidden_size * sequence_length
         return 6 * linear + attention
+
+
+def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2):
+    settings = dict(settings)
+    architecture = settings.pop("architecture", "llama")
+    if architecture != "llama":
+        raise ValueError(f"unsupported model architecture: {architecture}")
+    expected_parameters = settings.pop("expected_parameters", None)
+    model = Llama(Config(
+        vocab_size=vocab_size,
+        bos_token_id=bos_token_id,
+        eos_token_id=eos_token_id,
+        **settings,
+    ))
+    if expected_parameters is not None and model.parameter_count() != expected_parameters:
+        raise ValueError(f"unexpected parameter count: {model.parameter_count():,}")
+    return model
