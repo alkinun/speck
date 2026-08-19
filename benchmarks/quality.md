@@ -23,3 +23,10 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 | equal thirds | 6.50428 | 129,936 | reject |
 | quarter stages | 6.50510 | 126,229 | reject |
 | 1024 warmup | 6.47792 | 120,418 | reject |
+
+## batch
+
+| schedule | validation loss | tokens/s | decision |
+| --- | ---: | ---: | --- |
+| fixed 524k | 6.44581 | 116,945 | reject |
+| 131k to 262k to 524k | 5.60311 | 116,163 | keep |
