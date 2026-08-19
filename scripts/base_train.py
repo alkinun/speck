@@ -166,7 +166,9 @@ def main():
     )
     train_model = compiled_model
     if distributed:
-        train_model = DistributedDataParallel(train_model, device_ids=[local_rank])
+        train_model = DistributedDataParallel(
+            train_model, device_ids=[local_rank], broadcast_buffers=False
+        )
     flops = model.flops_per_token(args.sequence_length)
 
     def validation(step):
@@ -229,9 +231,10 @@ def main():
         completed = step + 1
         if completed > 10:
             elapsed_training += duration
-        if distributed:
+        should_log = completed == 1 or completed % args.log_every == 0
+        if distributed and should_log:
             dist.all_reduce(loss_sum, op=dist.ReduceOp.AVG)
-        if completed == 1 or completed % args.log_every == 0:
+        if should_log:
             metrics = {
                 "progress/step": completed,
                 "progress/tokens": completed * args.batch_tokens,
