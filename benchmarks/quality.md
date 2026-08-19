@@ -29,4 +29,10 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 | schedule | validation loss | tokens/s | decision |
 | --- | ---: | ---: | --- |
 | fixed 524k | 6.44581 | 116,945 | reject |
-| 131k to 262k to 524k | 5.60311 | 116,163 | keep |
+| 131k to 262k to 524k | 5.60311 | 116,163 | reject |
+| fixed 262k | 5.75040 | 116,099 | reject |
+| fixed 131k | 5.18771 | 114,341 | reject |
+| fixed 65k | 4.60778 | 111,524 | reject |
+| fixed 32k | 4.14256 | 105,951 | reject |
+| fixed 16k | 3.86934 | 89,493 | keep |
+| fixed 8k | 3.79849 | 74,198 | reject |
