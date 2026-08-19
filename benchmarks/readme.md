@@ -13,6 +13,7 @@ results use an rtx 3090, pytorch 2.9.1, cuda 12.8, five warmup steps, and twenty
 | `92b8c7b` | packed qkv, rejected | 124,509 | 20.56 gb |
 | `828b4d3` | packed mlp inputs, rejected | 122,298 | 19.08 gb |
 | `35d5f0d` | optimized | 124,469 | 18.97 gb |
+| `6f62b12` | weight cache, rejected | 118,561 | 11.98 gb |
 
 the optimized end-to-end result is 127,963 tokens/s.
 
