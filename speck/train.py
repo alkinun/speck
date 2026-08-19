@@ -17,8 +17,11 @@ def lr_scale(step, steps, warmup, minimum):
 def sequence_length_for_step(step, steps, final_length, enabled):
     if not enabled:
         return final_length
-    stage = min(2, step * 3 // steps)
-    return final_length // (4, 2, 1)[stage]
+    if step * 4 < steps:
+        return final_length // 4
+    if step * 2 < steps:
+        return final_length // 2
+    return final_length
 
 
 def optimization_step(
