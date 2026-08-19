@@ -1,7 +1,6 @@
 """shared training-step mechanics."""
 
-from collections.abc import Callable
-from contextlib import AbstractContextManager, nullcontext
+from contextlib import nullcontext
 import math
 
 import torch
@@ -25,18 +24,16 @@ def optimization_step(
     grad_clip,
     lr,
     distributed=False,
-    weight_context: Callable[[], AbstractContextManager] = nullcontext,
 ):
     optimizer.zero_grad(set_to_none=True)
     loss_sum = torch.zeros((), device=batch[0].device)
-    with weight_context():
-        for micro_step in range(accumulation):
-            context = train_model.no_sync() if distributed and micro_step + 1 < accumulation else nullcontext()
-            with context:
-                loss = train_model(batch[0], batch[1])
-                (loss / accumulation).backward()
-            loss_sum += loss.detach()
-            batch = next(loader)
+    for micro_step in range(accumulation):
+        context = train_model.no_sync() if distributed and micro_step + 1 < accumulation else nullcontext()
+        with context:
+            loss = train_model(batch[0], batch[1])
+            (loss / accumulation).backward()
+        loss_sum += loss.detach()
+        batch = next(loader)
 
     finite = torch.isfinite(loss_sum).to(torch.int32)
     if distributed:

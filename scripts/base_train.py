@@ -217,7 +217,6 @@ def main():
             args.grad_clip,
             args.lr * scale,
             distributed,
-            model.cached_weights,
         )
         inputs, targets, data_state = batch
         synchronize()

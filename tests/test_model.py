@@ -1,6 +1,6 @@
 import torch
 
-from speck.model import Config, Llama, Linear, MLP, RMSNorm
+from speck.model import Config, Llama, MLP, RMSNorm
 
 
 def tiny_model():
@@ -44,20 +44,6 @@ def test_forward_loss_and_optimizer():
     parameters = [parameter for group in optimizer.param_groups for parameter in group["params"]]
     assert {id(parameter) for parameter in parameters} == {id(parameter) for parameter in model.parameters()}
     optimizer.step()
-
-
-def test_weight_cache_is_scoped():
-    model = tiny_model()
-    enabled = torch.cuda.is_available()
-    if enabled:
-        model.cuda()
-    with model.cached_weights():
-        assert all(
-            (module.cached_weight is not None) == enabled
-            for module in model.modules()
-            if isinstance(module, (Linear, RMSNorm))
-        )
-    assert all(module.cached_weight is None for module in model.modules() if isinstance(module, (Linear, RMSNorm)))
 
 
 def test_cached_decode_matches_full_forward():

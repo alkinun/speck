@@ -1,6 +1,5 @@
 """compact llama model."""
 
-from contextlib import contextmanager
 from dataclasses import dataclass
 
 import torch
@@ -61,25 +60,18 @@ class Config:
 
 
 class Linear(nn.Linear):
-    cached_weight: torch.Tensor | None = None
-
     def forward(self, input):
-        weight = self.cached_weight
-        return F.linear(input, weight if weight is not None else self.weight.to(input.dtype))
+        return F.linear(input, self.weight.to(input.dtype))
 
 
 class RMSNorm(nn.Module):
     def __init__(self, size, eps):
         super().__init__()
         self.weight = nn.Parameter(torch.ones(size))
-        self.cached_weight: torch.Tensor | None = None
         self.eps = eps
 
     def forward(self, x):
-        weight = self.cached_weight
-        if weight is None:
-            weight = self.weight.to(x.dtype)
-        return F.rms_norm(x.float(), (x.size(-1),), eps=self.eps).to(x.dtype) * weight
+        return F.rms_norm(x.float(), (x.size(-1),), eps=self.eps).to(x.dtype) * self.weight.to(x.dtype)
 
 
 def rotate(x, cos, sin):
@@ -225,20 +217,6 @@ class Llama(nn.Module):
             parameter.device,
             dtype,
         )
-
-    @contextmanager
-    def cached_weights(self):
-        if not next(self.parameters()).is_cuda:
-            yield
-            return
-        modules = [module for module in self.modules() if isinstance(module, (Linear, RMSNorm))]
-        for module in modules:
-            module.cached_weight = module.weight.to(torch.bfloat16)
-        try:
-            yield
-        finally:
-            for module in modules:
-                module.cached_weight = None
 
     def optimizer(self, lr=6e-4, weight_decay=0.1):
         embedding = self.model.embed_tokens.weight

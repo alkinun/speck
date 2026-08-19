@@ -137,7 +137,6 @@ def run(args):
             accumulation,
             train["grad_clip"],
             train["lr"],
-            weight_context=model.cached_weights,
         )
     synchronize(device)
     warmup_seconds = time.perf_counter() - started
@@ -158,7 +157,6 @@ def run(args):
             accumulation,
             train["grad_clip"],
             train["lr"],
-            weight_context=model.cached_weights,
         )
         synchronize(device)
         durations.append(time.perf_counter() - started)
