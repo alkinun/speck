@@ -227,7 +227,6 @@ class Llama(nn.Module):
             lr=lr,
             betas=(0.9, 0.95),
             eps=1e-8,
-            fused=embedding.is_cuda,
         )
 
     def parameter_count(self):
