@@ -138,7 +138,9 @@ class MLP(nn.Module):
         self.down_proj = Linear(config.intermediate_size, config.hidden_size, bias=False)
 
     def forward(self, x):
-        return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
+        weight = torch.cat((self.gate_proj.weight, self.up_proj.weight)).to(x.dtype)
+        gate, up = F.linear(x, weight).chunk(2, dim=-1)
+        return self.down_proj(F.silu(gate) * up)
 
 
 class Block(nn.Module):
