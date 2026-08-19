@@ -103,9 +103,14 @@ class Attention(nn.Module):
 
     def forward(self, x, cos, sin, cache=None, layer_index=None):
         batch, length, _ = x.shape
-        q = self.q_proj(x).view(batch, length, self.q_heads, self.head_dim).transpose(1, 2)
-        k = self.k_proj(x).view(batch, length, self.kv_heads, self.head_dim).transpose(1, 2)
-        v = self.v_proj(x).view(batch, length, self.kv_heads, self.head_dim).transpose(1, 2)
+        weight = torch.cat((self.q_proj.weight, self.k_proj.weight, self.v_proj.weight)).to(x.dtype)
+        q, k, v = F.linear(x, weight).split(
+            (self.q_heads * self.head_dim, self.kv_heads * self.head_dim, self.kv_heads * self.head_dim),
+            dim=-1,
+        )
+        q = q.view(batch, length, self.q_heads, self.head_dim).transpose(1, 2)
+        k = k.view(batch, length, self.kv_heads, self.head_dim).transpose(1, 2)
+        v = v.view(batch, length, self.kv_heads, self.head_dim).transpose(1, 2)
         q, k = rotate(q, cos, sin), rotate(k, cos, sin)
         causal = True
         mask = None
