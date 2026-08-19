@@ -8,11 +8,13 @@ import shutil
 import time
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 import numpy as np
 import pyarrow.parquet as pq
 import requests
-from tqdm.auto import tqdm
+from huggingface_hub import hf_hub_download
+from huggingface_hub.errors import HfHubHTTPError
 
 from speck.common import base_dir
 from speck.tokenizer import get_tokenizer
@@ -39,28 +41,29 @@ def get_dataset_revision():
 
 def _download_file(url, destination, description, attempts=5):
     destination = Path(destination)
-    temporary = destination.with_suffix(destination.suffix + ".tmp")
+    destination.with_suffix(destination.suffix + ".tmp").unlink(missing_ok=True)
+    path = unquote(urlparse(url).path)
+    try:
+        revision, filename = path.split("/resolve/", 1)[1].split("/", 1)
+    except (IndexError, ValueError) as error:
+        raise ValueError(f"unexpected hugging face dataset url: {url}") from error
+    cache_dir = destination.parent / f".{destination.stem}.download"
+    os.environ.setdefault("HF_XET_HIGH_PERFORMANCE", "1")
     for attempt in range(attempts):
         try:
-            with requests.get(url, stream=True, timeout=60) as response:
-                response.raise_for_status()
-                total = int(response.headers.get("content-length", 0))
-                with temporary.open("wb") as handle:
-                    with tqdm(
-                        total=total or None,
-                        desc=description,
-                        unit="b",
-                        unit_scale=True,
-                        unit_divisor=1024,
-                    ) as progress:
-                        for chunk in response.iter_content(8 * 1024 * 1024):
-                            if chunk:
-                                handle.write(chunk)
-                                progress.update(len(chunk))
-            temporary.replace(destination)
+            print(f"{description}: {filename}")
+            downloaded = hf_hub_download(
+                repo_id=dataset_repo,
+                filename=filename,
+                repo_type="dataset",
+                revision=revision,
+                cache_dir=cache_dir,
+            )
+            shutil.move(downloaded, destination)
+            shutil.rmtree(cache_dir, ignore_errors=True)
             return
-        except (OSError, requests.RequestException):
-            temporary.unlink(missing_ok=True)
+        except (OSError, HfHubHTTPError):
+            shutil.rmtree(cache_dir, ignore_errors=True)
             if attempt + 1 == attempts:
                 raise
             time.sleep(2 ** attempt)

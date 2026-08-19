@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -26,6 +27,32 @@ class FakeTokenizer:
 
 def make_tokenizer():
     return FakeTokenizer()
+
+
+def test_download_uses_revision_pinned_hf_xet(tmp_path, monkeypatch):
+    calls = {}
+
+    def download(**kwargs):
+        calls.update(kwargs)
+        path = Path(kwargs["cache_dir"]) / "blobs" / "shard"
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"parquet")
+        return str(path)
+
+    monkeypatch.setattr(dataset, "hf_hub_download", download)
+    destination = tmp_path / "raw" / "shard.parquet"
+    destination.parent.mkdir()
+    dataset._download_file(
+        "https://huggingface.co/datasets/openbmb/Ultra-FineWeb/resolve/abc123/data/shard.parquet",
+        destination,
+        "test shard",
+    )
+
+    assert destination.read_bytes() == b"parquet"
+    assert calls["repo_id"] == "openbmb/Ultra-FineWeb"
+    assert calls["repo_type"] == "dataset"
+    assert calls["revision"] == "abc123"
+    assert calls["filename"] == "data/shard.parquet"
 
 
 def test_prepare_and_resume_packed_dataset(tmp_path, monkeypatch):
