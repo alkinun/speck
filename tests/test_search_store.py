@@ -1,3 +1,5 @@
+import pytest
+
 from speck.model import Config, LayerConfig
 from speck.search.evolution import SelectionMetrics
 from speck.search.store import StudyStore
@@ -15,6 +17,8 @@ def test_store_tracks_candidates_ancestry_and_frontier(tmp_path):
     store = StudyStore(tmp_path / "study.sqlite3")
     assert store.initialize({"population_size": 2}, {"device": "cpu"})
     assert not store.initialize({"population_size": 2}, {"device": "cpu"})
+    with pytest.raises(ValueError, match="provenance"):
+        store.initialize({"population_size": 2}, {"device": "cuda"})
     parent = store.add_candidate(config(), 1, {"operator": "seed"})
     child = store.add_candidate(
         config(12),

@@ -100,6 +100,8 @@ class StudyStore:
         if row is not None:
             if json.loads(row["config_json"]) != config:
                 raise ValueError("study configuration changed")
+            if json.loads(row["provenance_json"]) != provenance:
+                raise ValueError("study provenance changed")
             return False
         now = _now()
         self.connection.execute(
@@ -289,6 +291,17 @@ class StudyStore:
         ).fetchone()
         return row["count"]
 
+    def running_attempt(self, candidate_id):
+        row = self.connection.execute(
+            """
+            select id from attempts
+            where candidate_id = ? and status = 'running'
+            order by id desc limit 1
+            """,
+            (candidate_id,),
+        ).fetchone()
+        return row["id"] if row else None
+
     def update_selection(self, population_ids, frontier_ids, metrics):
         with self.connection:
             self.connection.execute(
@@ -324,9 +337,9 @@ class StudyStore:
 
     def frontier(self):
         rows = self.connection.execute(
-            "select * from candidates where is_frontier = 1 order by id"
+            "select id from candidates where is_frontier = 1 order by id"
         ).fetchall()
-        return [self._candidate_dict(row) for row in rows]
+        return [self.candidate(row["id"]) for row in rows]
 
     def lineage(self, candidate_id):
         seen = set()
