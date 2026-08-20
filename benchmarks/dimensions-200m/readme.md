@@ -6,7 +6,7 @@ validation uses the same fixed 1,048,576-token sample at 0m, 50m, 100m, 150m, an
 
 | shape | parameters | validation loss | tokens/s | decision |
 | --- | ---: | ---: | ---: | --- |
-| 6x768 | 50,095,872 | pending | pending | pending |
+| 6x768 | 50,095,872 | 3.65317 | 130,126 | pending |
 | 10x640 | 49,984,640 | pending | pending | pending |
 | 15x512 | 49,823,232 | pending | pending | pending |
 | 24x384 | 50,055,552 | pending | pending | pending |
