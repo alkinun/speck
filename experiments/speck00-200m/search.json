@@ -16,7 +16,7 @@
   "quality": {
     "batch_tokens": 16384,
     "compile": false,
-    "data_dir": "~/.cache/speck/benchmark-200m",
+    "data_dir": "~/.cache/speck/ultra_fineweb/packed",
     "device_batch_size": 2,
     "eval_batch_size": 2,
     "eval_every_tokens": 393216,
