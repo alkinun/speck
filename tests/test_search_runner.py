@@ -2,6 +2,7 @@ from speck.model import Config, LayerConfig
 from speck.search.runner import (
     SearchSettings,
     generate_offspring,
+    run_search,
     search_objectives,
     seed_candidates,
     update_selection,
@@ -95,4 +96,30 @@ def test_seed_selection_and_offspring(tmp_path):
     offspring = generate_offspring(store, settings())
     assert store.candidate(offspring)["parents"]
     assert store.candidate(offspring)["status"] == "pending"
+    store.close()
+
+
+def test_search_lifecycle_and_resume(tmp_path, monkeypatch):
+    store = StudyStore(tmp_path / "study.sqlite3")
+    store.initialize(settings().export(), {})
+
+    def evaluate(store, study_dir, candidate, tokenizer, search, device):
+        attempt = store.start_attempt(candidate["id"])
+        store.complete_attempt(candidate["id"], attempt, result(candidate["id"]))
+        return True
+
+    monkeypatch.setattr(
+        "speck.search.runner.evaluate_candidate_process", evaluate
+    )
+    run_search(store, tmp_path, baseline(), {}, settings(), "cpu")
+    assert store.summary()["candidates"] == {"completed": 4}
+    assert store.summary()["study"]["status"] == "completed"
+    assert len(store.frontier()) == 1
+    assert any(
+        store.candidate(candidate["id"])["parents"]
+        for candidate in store.candidates()[1:]
+    )
+
+    run_search(store, tmp_path, baseline(), {}, settings(), "cpu")
+    assert len(store.candidates()) == 4
     store.close()
