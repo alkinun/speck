@@ -1,0 +1,141 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from transformers import PreTrainedModel
+from transformers.generation import GenerationMixin
+from transformers.modeling_outputs import CausalLMOutput
+
+from .configuration_speck import SpeckConfig
+
+
+class RMSNorm(nn.Module):
+    def __init__(self, size, eps):
+        super().__init__()
+        self.weight = nn.Parameter(torch.ones(size))
+        self.eps = eps
+
+    def forward(self, x):
+        return F.rms_norm(x.float(), (x.size(-1),), eps=self.eps).to(x.dtype) * self.weight.to(x.dtype)
+
+
+def rotate(x, cos, sin):
+    x1, x2 = x.chunk(2, dim=-1)
+    return x * cos + torch.cat((-x2, x1), dim=-1) * sin
+
+
+class Attention(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        q = config.num_attention_heads * config.head_dim
+        kv = config.num_key_value_heads * config.head_dim
+        self.q_proj = nn.Linear(config.hidden_size, q, bias=False)
+        self.k_proj = nn.Linear(config.hidden_size, kv, bias=False)
+        self.v_proj = nn.Linear(config.hidden_size, kv, bias=False)
+        self.o_proj = nn.Linear(q, config.hidden_size, bias=False)
+        self.q_norm = RMSNorm(config.head_dim, config.rms_norm_eps)
+        self.k_norm = RMSNorm(config.head_dim, config.rms_norm_eps)
+        self.q_heads = config.num_attention_heads
+        self.kv_heads = config.num_key_value_heads
+        self.head_dim = config.head_dim
+
+    def forward(self, x, cos, sin):
+        batch, length, _ = x.shape
+        q = self.q_proj(x).view(batch, length, self.q_heads, self.head_dim).transpose(1, 2)
+        k = self.k_proj(x).view(batch, length, self.kv_heads, self.head_dim).transpose(1, 2)
+        v = self.v_proj(x).view(batch, length, self.kv_heads, self.head_dim).transpose(1, 2)
+        q = rotate(self.q_norm(q), cos, sin)
+        k = rotate(self.k_norm(k), cos, sin)
+        y = F.scaled_dot_product_attention(q, k, v, is_causal=True, enable_gqa=self.q_heads != self.kv_heads)
+        return self.o_proj(y.transpose(1, 2).contiguous().view(batch, length, -1))
+
+
+class MLP(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.gate_proj = nn.Linear(config.hidden_size, config.intermediate_size, bias=False)
+        self.up_proj = nn.Linear(config.hidden_size, config.intermediate_size, bias=False)
+        self.down_proj = nn.Linear(config.intermediate_size, config.hidden_size, bias=False)
+
+    def forward(self, x):
+        return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
+
+
+class Block(nn.Module):
+    def __init__(self, config, has_attention):
+        super().__init__()
+        self.self_attn = Attention(config) if has_attention else None
+        self.mlp = MLP(config)
+        if self.self_attn is not None:
+            self.attention_norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+        self.mlp_norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+
+    def forward(self, x, cos, sin):
+        if self.self_attn is not None:
+            x = x + self.self_attn(self.attention_norm(x), cos, sin)
+        return x + self.mlp(self.mlp_norm(x))
+
+
+class Backbone(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
+        self.layers = nn.ModuleList([
+            Block(config, index % config.attention_every == 0)
+            for index in range(config.num_hidden_layers)
+        ])
+        self.norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+
+
+class SpeckForCausalLM(PreTrainedModel, GenerationMixin):
+    config_class = SpeckConfig
+    _tied_weights_keys = ["lm_head.weight"]
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.model = Backbone(config)
+        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+        self.lm_head.weight = self.model.embed_tokens.weight
+        frequency = 1 / (
+            config.rope_theta
+            ** (torch.arange(0, config.head_dim, 2, dtype=torch.float32) / config.head_dim)
+        )
+        positions = torch.arange(config.max_position_embeddings, dtype=torch.float32)
+        angles = torch.outer(positions, frequency).repeat(1, 2)
+        self.register_buffer("cos", angles.cos()[None, None], persistent=False)
+        self.register_buffer("sin", angles.sin()[None, None], persistent=False)
+
+    def _init_weights(self, module):
+        if isinstance(module, (nn.Linear, nn.Embedding)):
+            nn.init.normal_(module.weight, std=self.config.initializer_range)
+        elif isinstance(module, RMSNorm):
+            nn.init.ones_(module.weight)
+
+    def get_input_embeddings(self):
+        return self.model.embed_tokens
+
+    def set_input_embeddings(self, value):
+        self.model.embed_tokens = value
+
+    def get_output_embeddings(self):
+        return self.lm_head
+
+    def set_output_embeddings(self, value):
+        self.lm_head = value
+
+    def prepare_inputs_for_generation(self, input_ids, **kwargs):
+        return {"input_ids": input_ids}
+
+    def forward(self, input_ids=None, labels=None, **kwargs):
+        length = input_ids.size(1)
+        if length > self.config.max_position_embeddings:
+            raise ValueError("sequence exceeds max_position_embeddings")
+        x = self.model.embed_tokens(input_ids)
+        cos = self.cos[..., :length, :].to(x.dtype)
+        sin = self.sin[..., :length, :].to(x.dtype)
+        for layer in self.model.layers:
+            x = layer(x, cos, sin)
+        logits = self.lm_head(self.model.norm(x)).float()
+        loss = None
+        if labels is not None:
+            loss = F.cross_entropy(logits[:, :-1].flatten(0, 1), labels[:, 1:].flatten())
+        return CausalLMOutput(loss=loss, logits=logits)

@@ -8,7 +8,7 @@ from speck.tokenizer import get_tokenizer
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("experiment", nargs="?", default="experiments/speck-50m")
+parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
 parser.add_argument("--restart", action="store_true")
 args = parser.parse_args()
 

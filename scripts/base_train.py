@@ -28,7 +28,7 @@ from speck.train import lr_scale, optimization_step
 
 def arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("experiment", nargs="?", default="experiments/speck-50m")
+    parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
     parser.add_argument("--device", default=None)
     parser.add_argument("--resume", type=int, default=None)
     parser.add_argument("--no-compile", action="store_true")

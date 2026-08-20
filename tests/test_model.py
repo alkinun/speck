@@ -1,6 +1,6 @@
 import torch
 
-from speck.model import Config, Llama, MLP, RMSNorm
+from speck.model import Attention, Config, MLP, RMSNorm, SpeckForCausalLM
 
 
 def tiny_model():
@@ -14,23 +14,26 @@ def tiny_model():
         head_dim=4,
         max_position_embeddings=32,
     )
-    model = Llama(config)
+    model = SpeckForCausalLM(config)
     model.init_weights()
     return model
 
 
-def test_default_model_is_exactly_50m():
+def test_default_model_is_exactly_200m():
     with torch.device("meta"):
-        model = Llama()
-    assert model.parameter_count() == 50_055_552
-    assert model.config.export()["architectures"] == ["LlamaForCausalLM"]
+        model = SpeckForCausalLM()
+    assert model.parameter_count() == 199_511_808
+    assert model.config.export()["architectures"] == ["SpeckForCausalLM"]
 
 
-def test_llama_structure_and_tied_embeddings():
+def test_sparse_attention_structure_and_tied_embeddings():
     model = tiny_model()
-    layer = model.model.layers[0]
-    assert isinstance(layer.input_layernorm, RMSNorm)
-    assert isinstance(layer.mlp, MLP)
+    attention_layer, mlp_layer = model.model.layers
+    assert isinstance(attention_layer.attention_norm, RMSNorm)
+    assert isinstance(attention_layer.self_attn, Attention)
+    assert attention_layer.self_attn.q_norm.weight.shape == (4,)
+    assert mlp_layer.self_attn is None
+    assert isinstance(mlp_layer.mlp, MLP)
     assert model.lm_head.weight is model.model.embed_tokens.weight
 
 

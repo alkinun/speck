@@ -23,9 +23,9 @@ from speck.train import lr_scale, optimization_step
 
 def arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("experiment", nargs="?", default="experiments/speck-50m")
+    parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
     parser.add_argument("--label", required=True)
-    parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-50m"))
+    parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-200m"))
     parser.add_argument("--steps", type=int, default=95)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--batch-tokens", type=int, default=None)

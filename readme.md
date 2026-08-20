@@ -1,5 +1,25 @@
 # speck
 
+speck ships one model: `speck00-200m`, a 199,511,808-parameter decoder language model.
+
+## model
+
+- 12 blocks, width 1024, and swiglu width 4096
+- mlp in every block and grouped-query attention in alternating blocks
+- 16 query heads and 4 kv heads with head dimension 64
+- qk-norm, rope, rmsnorm, and tied input/output embeddings
+- 32k mistral tokenizer
+
+| component | parameters |
+| --- | ---: |
+| tied token embedding | 32,768,000 |
+| 12 swiglu mlps | 150,994,944 |
+| 6 grouped-query attention layers | 15,728,640 |
+| block rmsnorms | 18,432 |
+| qk-norms | 768 |
+| final rmsnorm | 1,024 |
+| total | 199,511,808 |
+
 ## layout
 
 ```text
@@ -25,7 +45,7 @@ use `--extra cpu` instead of `--extra gpu` for a cpu environment.
 download and verify the tokenizer selected by an experiment:
 
 ```bash
-python -m scripts.tokenizer_prepare experiments/speck-50m
+python -m scripts.tokenizer_prepare experiments/speck00-200m
 ```
 
 ## data
@@ -33,7 +53,7 @@ python -m scripts.tokenizer_prepare experiments/speck-50m
 stream ultra-fineweb and create local packed token shards:
 
 ```bash
-python -m scripts.data_prepare experiments/speck-50m
+python -m scripts.data_prepare experiments/speck00-200m
 ```
 
 ## training
@@ -42,7 +62,7 @@ python -m scripts.data_prepare experiments/speck-50m
 wandb login
 hf auth login
 
-python -m scripts.base_train experiments/speck-50m
+python -m scripts.base_train experiments/speck00-200m
 ```
 
 the experiment directory is the unit of configuration:
@@ -54,24 +74,24 @@ model.json      architecture and dimensions
 train.json      optimization, batching, logging, and checkpoints
 ```
 
-copy the directory to start another experiment. json keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. the checked-in experiment uploads checkpoints to `specklabs/speck00-50m`; set `hf_repo` to an empty string to keep them local.
+copy the directory to start another experiment. json keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. the checked-in experiment uploads checkpoints to `specklabs/speck00-200m`; set `hf_repo` to an empty string to keep them local.
 
 for distributed training:
 
 ```bash
-torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- experiments/speck-50m
+torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- experiments/speck00-200m
 ```
 
 ## resume
 
 ```bash
-python -m scripts.base_train experiments/speck-50m --resume=1907
+python -m scripts.base_train experiments/speck00-200m --resume=30518
 ```
 
 ## inference
 
 ```bash
-python -m scripts.infer "the meaning of life is" --experiment experiments/speck-50m
+python -m scripts.infer "the meaning of life is" --experiment experiments/speck00-200m
 ```
 
 ## benchmarking
@@ -79,7 +99,7 @@ python -m scripts.infer "the meaning of life is" --experiment experiments/speck-
 measure the production optimization step with synthetic tokens:
 
 ```bash
-python -m scripts.benchmark experiments/speck-50m \
+python -m scripts.benchmark experiments/speck00-200m \
   --mode compute \
   --output benchmarks/baseline-compute.json
 ```
@@ -87,9 +107,9 @@ python -m scripts.benchmark experiments/speck-50m \
 include the packed data path in the measurement:
 
 ```bash
-python -m scripts.benchmark experiments/speck-50m \
+python -m scripts.benchmark experiments/speck00-200m \
   --mode end-to-end \
-  --data-dir ~/.cache/speck/benchmark-50m \
+  --data-dir ~/.cache/speck/benchmark-200m \
   --output benchmarks/baseline-end-to-end.json
 ```
 

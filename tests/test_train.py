@@ -1,6 +1,6 @@
 import torch
 
-from speck.model import Config, Llama
+from speck.model import Config, SpeckForCausalLM
 from speck.train import lr_scale, optimization_step
 
 
@@ -21,7 +21,7 @@ def test_optimization_step_advances_the_loader():
         head_dim=4,
         max_position_embeddings=8,
     )
-    model = Llama(config)
+    model = SpeckForCausalLM(config)
     model.init_weights()
     optimizer = model.optimizer()
     first = (torch.randint(0, 16, (1, 4)), torch.randint(0, 16, (1, 4)), {"batch": 0})

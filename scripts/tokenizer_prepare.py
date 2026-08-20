@@ -7,7 +7,7 @@ from speck.tokenizer import prepare
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("experiment", nargs="?", default="experiments/speck-50m")
+parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
 args = parser.parse_args()
 
 config = load_experiment(args.experiment, "tokenizer")["tokenizer"]

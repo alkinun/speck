@@ -25,6 +25,25 @@ def upload(repo, checkpoint_dir, step, metadata, private=False, optimizer=False)
             path_in_repo="training/state.json",
             path_or_fileobj=json.dumps(metadata, indent=2).encode(),
         ),
+        CommitOperationAdd(
+            path_in_repo="configuration_speck.py",
+            path_or_fileobj=os.path.join(os.path.dirname(__file__), "export", "configuration_speck.py.txt"),
+        ),
+        CommitOperationAdd(
+            path_in_repo="modeling_speck.py",
+            path_or_fileobj=os.path.join(os.path.dirname(__file__), "export", "modeling_speck.py.txt"),
+        ),
+        CommitOperationAdd(
+            path_in_repo="tokenizer_config.json",
+            path_or_fileobj=json.dumps({
+                "bos_token": "<s>",
+                "eos_token": "</s>",
+                "legacy": False,
+                "model_max_length": metadata["resolved"]["model"]["max_position_embeddings"],
+                "tokenizer_class": "LlamaTokenizer",
+                "unk_token": "<unk>",
+            }, indent=2).encode(),
+        ),
     ]
     tokenizer_dir = os.path.join(base_dir(), "tokenizer")
     for local_name, remote_name in (

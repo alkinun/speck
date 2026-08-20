@@ -32,7 +32,10 @@ def test_checkpoint_commit_payload(tmp_path, monkeypatch):
 
     monkeypatch.setattr(hub, "CommitOperationAdd", Operation)
     monkeypatch.setattr(hub, "HfApi", Api)
-    metadata = {"resolved": {"model": {"model_type": "llama"}}, "step": 3}
+    metadata = {
+        "resolved": {"model": {"max_position_embeddings": 4096, "model_type": "speck"}},
+        "step": 3,
+    }
     url = hub.upload("owner/model", checkpoint_dir, 3, metadata, optimizer=True)
     assert url.endswith("/commit/1")
     paths = {operation.path_in_repo for operation in operations}
@@ -41,8 +44,14 @@ def test_checkpoint_commit_payload(tmp_path, monkeypatch):
         "config.json",
         "training/state.json",
         "training/optimizer.pt",
+        "configuration_speck.py",
+        "modeling_speck.py",
         "tokenizer.model",
+        "tokenizer_config.json",
         "artifacts/tokenizer_metadata.json",
     }
     config = next(operation for operation in operations if operation.path_in_repo == "config.json")
-    assert json.loads(config.path_or_fileobj) == {"model_type": "llama"}
+    assert json.loads(config.path_or_fileobj) == {
+        "max_position_embeddings": 4096,
+        "model_type": "speck",
+    }

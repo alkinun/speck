@@ -22,9 +22,9 @@ from speck.train import optimization_step
 
 def arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("experiment", nargs="?", default="experiments/speck-50m")
+    parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
     parser.add_argument("--mode", choices=("compute", "end-to-end"), default="compute")
-    parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-50m"))
+    parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-200m"))
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--steps", type=int, default=50)
     parser.add_argument("--warmup-steps", type=int, default=10)

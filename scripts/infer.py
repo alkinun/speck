@@ -8,13 +8,13 @@ import torch
 from speck.checkpoint import latest, load
 from speck.common import base_dir
 from speck.config import load_experiment
-from speck.model import Config, Llama
+from speck.model import Config, SpeckForCausalLM
 from speck.tokenizer import get_tokenizer
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("prompt")
-parser.add_argument("--experiment", default="experiments/speck-50m")
+parser.add_argument("--experiment", default="experiments/speck00-200m")
 parser.add_argument("--checkpoint-dir", default=None)
 parser.add_argument("--step", type=int, default=None)
 parser.add_argument("--max-tokens", type=int, default=128)
@@ -32,7 +32,7 @@ if step is None:
     raise FileNotFoundError(f"no checkpoint found in {args.checkpoint_dir}")
 device = torch.device(args.device)
 model_state, _, metadata = load(args.checkpoint_dir, step, device)
-model = Llama(Config(**metadata["config"])).to(device)
+model = SpeckForCausalLM(Config(**metadata["config"])).to(device)
 model.load_state_dict(model_state)
 model.eval()
 tokenizer = get_tokenizer(**configs["tokenizer"])
