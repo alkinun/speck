@@ -1,6 +1,6 @@
 """compact speck language model."""
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, field
 
 import torch
 import torch.nn as nn
@@ -8,33 +8,106 @@ import torch.nn.functional as F
 
 
 @dataclass(frozen=True)
+class LayerConfig:
+    hidden_size: int = 1024
+    intermediate_size: int = 4096
+    num_key_value_heads: int | None = 4
+
+    def __post_init__(self):
+        if self.hidden_size < 1 or self.intermediate_size < 1:
+            raise ValueError("layer dimensions must be positive")
+        if self.num_key_value_heads is not None and self.num_key_value_heads < 1:
+            raise ValueError("kv heads must be positive")
+
+
+def default_layers():
+    return tuple(
+        LayerConfig(num_key_value_heads=4 if index % 2 == 0 else None)
+        for index in range(12)
+    )
+
+
+@dataclass(frozen=True)
 class Config:
     vocab_size: int = 32000
     bos_token_id: int = 1
     eos_token_id: int = 2
-    hidden_size: int = 1024
-    intermediate_size: int = 4096
-    num_hidden_layers: int = 12
-    num_attention_heads: int = 16
-    num_key_value_heads: int = 4
+    layers: tuple[LayerConfig, ...] = field(default_factory=default_layers)
     head_dim: int = 64
-    attention_every: int = 2
     max_position_embeddings: int = 4096
     rms_norm_eps: float = 1e-5
     rope_theta: float = 10000.0
     initializer_range: float = 0.02
 
     def __post_init__(self):
-        if self.hidden_size != self.num_attention_heads * self.head_dim:
-            raise ValueError("hidden size must equal attention heads times head dimension")
-        if self.num_attention_heads % self.num_key_value_heads:
-            raise ValueError("query heads must be divisible by kv heads")
-        if self.attention_every < 1:
-            raise ValueError("attention every must be positive")
+        layers = tuple(
+            layer if isinstance(layer, LayerConfig) else LayerConfig(**layer)
+            for layer in self.layers
+        )
+        object.__setattr__(self, "layers", layers)
+        if not layers:
+            raise ValueError("model must contain at least one layer")
+        if self.head_dim < 2 or self.head_dim % 2:
+            raise ValueError("head dimension must be positive and even")
+        if self.max_position_embeddings < 1:
+            raise ValueError("maximum position embeddings must be positive")
+        for layer in layers:
+            if layer.hidden_size % self.head_dim:
+                raise ValueError("layer hidden size must be divisible by head dimension")
+            query_heads = layer.hidden_size // self.head_dim
+            if layer.num_key_value_heads is not None and query_heads % layer.num_key_value_heads:
+                raise ValueError("query heads must be divisible by kv heads")
+
+    @classmethod
+    def from_dict(cls, settings):
+        settings = dict(settings)
+        settings.pop("architecture", None)
+        if "layers" in settings:
+            layers = tuple(LayerConfig(**layer) for layer in settings.pop("layers"))
+        else:
+            hidden_size = settings.pop("hidden_size", 1024)
+            intermediate_size = settings.pop("intermediate_size", 4096)
+            num_hidden_layers = settings.pop("num_hidden_layers", 12)
+            num_attention_heads = settings.pop("num_attention_heads", 16)
+            num_key_value_heads = settings.pop("num_key_value_heads", 4)
+            attention_every = settings.pop("attention_every", 2)
+            head_dim = settings.get("head_dim", 64)
+            if hidden_size != num_attention_heads * head_dim:
+                raise ValueError("hidden size must equal attention heads times head dimension")
+            if num_hidden_layers < 1 or attention_every < 1:
+                raise ValueError("layer count and attention interval must be positive")
+            layers = tuple(
+                LayerConfig(
+                    hidden_size=hidden_size,
+                    intermediate_size=intermediate_size,
+                    num_key_value_heads=(
+                        num_key_value_heads if index % attention_every == 0 else None
+                    ),
+                )
+                for index in range(num_hidden_layers)
+            )
+        return cls(layers=layers, **settings)
 
     @property
     def num_attention_layers(self):
-        return len(range(0, self.num_hidden_layers, self.attention_every))
+        return sum(layer.num_key_value_heads is not None for layer in self.layers)
+
+    @property
+    def embedding_size(self):
+        return self.layers[0].hidden_size
+
+    def settings(self):
+        return {
+            "vocab_size": self.vocab_size,
+            "bos_token_id": self.bos_token_id,
+            "eos_token_id": self.eos_token_id,
+            "layers": [asdict(layer) for layer in self.layers],
+            "head_dim": self.head_dim,
+            "max_position_embeddings": self.max_position_embeddings,
+            "rms_norm_eps": self.rms_norm_eps,
+            "rope_theta": self.rope_theta,
+            "initializer_range": self.initializer_range,
+        }
 
     def export(self):
         return {
@@ -43,7 +116,6 @@ class Config:
                 "AutoConfig": "configuration_speck.SpeckConfig",
                 "AutoModelForCausalLM": "modeling_speck.SpeckForCausalLM",
             },
-            "attention_every": self.attention_every,
             "attention_bias": False,
             "attention_dropout": 0.0,
             "bos_token_id": self.bos_token_id,
@@ -51,15 +123,23 @@ class Config:
             "eos_token_id": self.eos_token_id,
             "head_dim": self.head_dim,
             "hidden_act": "silu",
-            "hidden_size": self.hidden_size,
+            "hidden_size": self.embedding_size,
             "initializer_range": self.initializer_range,
-            "intermediate_size": self.intermediate_size,
+            "intermediate_size": self.layers[0].intermediate_size,
+            "layers": [asdict(layer) for layer in self.layers],
             "max_position_embeddings": self.max_position_embeddings,
             "mlp_bias": False,
             "model_type": "speck",
-            "num_attention_heads": self.num_attention_heads,
-            "num_hidden_layers": self.num_hidden_layers,
-            "num_key_value_heads": self.num_key_value_heads,
+            "num_attention_heads": self.embedding_size // self.head_dim,
+            "num_hidden_layers": len(self.layers),
+            "num_key_value_heads": next(
+                (
+                    layer.num_key_value_heads
+                    for layer in self.layers
+                    if layer.num_key_value_heads is not None
+                ),
+                1,
+            ),
             "pad_token_id": None,
             "rms_norm_eps": self.rms_norm_eps,
             "qk_norm": True,
@@ -122,26 +202,36 @@ def rotate(x, cos, sin):
 
 class KVCache:
     def __init__(self, config, batch_size, length, device, dtype):
-        shape = (batch_size, config.num_key_value_heads, length, config.head_dim)
-        self.keys = [torch.empty(shape, device=device, dtype=dtype) for _ in range(config.num_attention_layers)]
-        self.values = [torch.empty(shape, device=device, dtype=dtype) for _ in range(config.num_attention_layers)]
+        shapes = [
+            (batch_size, layer.num_key_value_heads, length, config.head_dim)
+            for layer in config.layers
+            if layer.num_key_value_heads is not None
+        ]
+        self.keys = [torch.empty(shape, device=device, dtype=dtype) for shape in shapes]
+        self.values = [torch.empty(shape, device=device, dtype=dtype) for shape in shapes]
         self.position = 0
         self.length = length
 
+    def bytes_per_token(self):
+        return sum(
+            tensor.size(0) * tensor.size(1) * tensor.size(3) * tensor.element_size()
+            for tensor in self.keys + self.values
+        )
+
 
 class Attention(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, layer):
         super().__init__()
-        q = config.num_attention_heads * config.head_dim
-        kv = config.num_key_value_heads * config.head_dim
-        self.q_proj = Linear(config.hidden_size, q, bias=False)
-        self.k_proj = Linear(config.hidden_size, kv, bias=False)
-        self.v_proj = Linear(config.hidden_size, kv, bias=False)
-        self.o_proj = Linear(q, config.hidden_size, bias=False)
+        q = layer.hidden_size
+        kv = layer.num_key_value_heads * config.head_dim
+        self.q_proj = Linear(layer.hidden_size, q, bias=False)
+        self.k_proj = Linear(layer.hidden_size, kv, bias=False)
+        self.v_proj = Linear(layer.hidden_size, kv, bias=False)
+        self.o_proj = Linear(q, layer.hidden_size, bias=False)
         self.q_norm = RMSNorm(config.head_dim, config.rms_norm_eps)
         self.k_norm = RMSNorm(config.head_dim, config.rms_norm_eps)
-        self.q_heads = config.num_attention_heads
-        self.kv_heads = config.num_key_value_heads
+        self.q_heads = layer.hidden_size // config.head_dim
+        self.kv_heads = layer.num_key_value_heads
         self.head_dim = config.head_dim
 
     def forward(self, x, cos, sin, cache=None, attention_index=None):
@@ -175,27 +265,34 @@ class Attention(nn.Module):
 
 
 class MLP(nn.Module):
-    def __init__(self, config):
+    def __init__(self, layer):
         super().__init__()
-        self.gate_proj = Linear(config.hidden_size, config.intermediate_size, bias=False)
-        self.up_proj = Linear(config.hidden_size, config.intermediate_size, bias=False)
-        self.down_proj = Linear(config.intermediate_size, config.hidden_size, bias=False)
+        self.gate_proj = Linear(layer.hidden_size, layer.intermediate_size, bias=False)
+        self.up_proj = Linear(layer.hidden_size, layer.intermediate_size, bias=False)
+        self.down_proj = Linear(layer.intermediate_size, layer.hidden_size, bias=False)
 
     def forward(self, x):
         return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
 
 
 class Block(nn.Module):
-    def __init__(self, config, attention_index=None):
+    def __init__(self, config, layer, input_size, attention_index=None):
         super().__init__()
         self.attention_index = attention_index
-        self.self_attn = Attention(config) if attention_index is not None else None
-        self.mlp = MLP(config)
+        self.input_projection = (
+            Linear(input_size, layer.hidden_size, bias=False)
+            if input_size != layer.hidden_size
+            else None
+        )
+        self.self_attn = Attention(config, layer) if attention_index is not None else None
+        self.mlp = MLP(layer)
         if self.self_attn is not None:
-            self.attention_norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
-        self.mlp_norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+            self.attention_norm = RMSNorm(layer.hidden_size, config.rms_norm_eps)
+        self.mlp_norm = RMSNorm(layer.hidden_size, config.rms_norm_eps)
 
     def forward(self, x, cos, sin, cache=None):
+        if self.input_projection is not None:
+            x = self.input_projection(x)
         if self.self_attn is not None:
             x = x + self.self_attn(
                 self.attention_norm(x), cos, sin, cache, self.attention_index
@@ -206,15 +303,29 @@ class Block(nn.Module):
 class Backbone(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
+        self.embed_tokens = nn.Embedding(config.vocab_size, config.embedding_size)
         attention_index = 0
         layers = []
-        for layer_index in range(config.num_hidden_layers):
-            has_attention = layer_index % config.attention_every == 0
-            layers.append(Block(config, attention_index if has_attention else None))
+        input_size = config.embedding_size
+        for layer in config.layers:
+            has_attention = layer.num_key_value_heads is not None
+            layers.append(
+                Block(
+                    config,
+                    layer,
+                    input_size,
+                    attention_index if has_attention else None,
+                )
+            )
             attention_index += has_attention
+            input_size = layer.hidden_size
         self.layers = nn.ModuleList(layers)
-        self.norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+        self.norm = RMSNorm(config.layers[-1].hidden_size, config.rms_norm_eps)
+        self.output_projection = (
+            Linear(config.layers[-1].hidden_size, config.embedding_size, bias=False)
+            if config.layers[-1].hidden_size != config.embedding_size
+            else None
+        )
 
 
 class SpeckForCausalLM(nn.Module):
@@ -225,7 +336,7 @@ class SpeckForCausalLM(nn.Module):
         super().__init__()
         self.config = config
         self.model = Backbone(config)
-        self.lm_head = Linear(config.hidden_size, config.vocab_size, bias=False)
+        self.lm_head = Linear(config.embedding_size, config.vocab_size, bias=False)
         self.lm_head.weight = self.model.embed_tokens.weight
         frequency = 1 / (
             config.rope_theta
@@ -257,6 +368,8 @@ class SpeckForCausalLM(nn.Module):
         if cache is not None:
             cache.position += length
         x = self.model.norm(x)
+        if self.model.output_projection is not None:
+            x = self.model.output_projection(x)
         logits = self.lm_head(x).float()
         if targets is None:
             return logits
@@ -308,7 +421,11 @@ class SpeckForCausalLM(nn.Module):
 
     def flops_per_token(self, sequence_length):
         linear = sum(module.weight.numel() for module in self.modules() if isinstance(module, Linear))
-        attention = 12 * self.config.num_attention_layers * self.config.hidden_size * sequence_length
+        attention = 12 * sequence_length * sum(
+            layer.hidden_size
+            for layer in self.config.layers
+            if layer.num_key_value_heads is not None
+        )
         return 6 * linear + attention
 
 
@@ -318,12 +435,12 @@ def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2):
     if architecture != "speck":
         raise ValueError(f"unsupported model architecture: {architecture}")
     expected_parameters = settings.pop("expected_parameters", None)
-    model = SpeckForCausalLM(Config(
+    settings.update(
         vocab_size=vocab_size,
         bos_token_id=bos_token_id,
         eos_token_id=eos_token_id,
-        **settings,
-    ))
+    )
+    model = SpeckForCausalLM(Config.from_dict(settings))
     if expected_parameters is not None and model.parameter_count() != expected_parameters:
         raise ValueError(f"unexpected parameter count: {model.parameter_count():,}")
     return model

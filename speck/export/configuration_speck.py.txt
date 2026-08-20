@@ -14,6 +14,7 @@ class SpeckConfig(PretrainedConfig):
         num_key_value_heads=4,
         head_dim=64,
         attention_every=2,
+        layers=None,
         max_position_embeddings=4096,
         rms_norm_eps=1e-5,
         rope_theta=10000.0,
@@ -29,6 +30,14 @@ class SpeckConfig(PretrainedConfig):
         self.num_key_value_heads = num_key_value_heads
         self.head_dim = head_dim
         self.attention_every = attention_every
+        self.layers = layers or [
+            {
+                "hidden_size": hidden_size,
+                "intermediate_size": intermediate_size,
+                "num_key_value_heads": num_key_value_heads if index % attention_every == 0 else None,
+            }
+            for index in range(num_hidden_layers)
+        ]
         self.max_position_embeddings = max_position_embeddings
         self.rms_norm_eps = rms_norm_eps
         self.rope_theta = rope_theta

@@ -1,16 +1,15 @@
 import torch
 
-from speck.model import Attention, Config, MLP, RMSNorm, SpeckForCausalLM
+from speck.model import Attention, Config, LayerConfig, MLP, RMSNorm, SpeckForCausalLM
 
 
 def tiny_model():
     config = Config(
         vocab_size=32,
-        hidden_size=16,
-        intermediate_size=32,
-        num_hidden_layers=2,
-        num_attention_heads=4,
-        num_key_value_heads=2,
+        layers=(
+            LayerConfig(hidden_size=16, intermediate_size=32, num_key_value_heads=2),
+            LayerConfig(hidden_size=16, intermediate_size=32, num_key_value_heads=None),
+        ),
         head_dim=4,
         max_position_embeddings=32,
     )
@@ -66,3 +65,42 @@ def test_cached_decode_matches_full_forward():
     model(tokens[:, :6], cache=cache)
     actual = model(tokens[:, 6:], cache=cache)[:, -1]
     torch.testing.assert_close(actual, expected, atol=2e-5, rtol=2e-5)
+
+
+def test_heterogeneous_layers_project_and_cache():
+    config = Config(
+        vocab_size=32,
+        layers=(
+            LayerConfig(hidden_size=16, intermediate_size=32, num_key_value_heads=2),
+            LayerConfig(hidden_size=8, intermediate_size=24, num_key_value_heads=1),
+        ),
+        head_dim=4,
+        max_position_embeddings=16,
+    )
+    model = SpeckForCausalLM(config)
+    model.init_weights()
+    input_projection = model.model.layers[1].input_projection
+    output_projection = model.model.output_projection
+    assert isinstance(input_projection, torch.nn.Linear)
+    assert isinstance(output_projection, torch.nn.Linear)
+    assert input_projection.weight.shape == (8, 16)
+    assert output_projection.weight.shape == (16, 8)
+    cache = model.cache(length=8)
+    assert cache.keys[0].shape == (1, 2, 8, 4)
+    assert cache.keys[1].shape == (1, 1, 8, 4)
+    assert cache.bytes_per_token() == 96
+    tokens = torch.randint(0, 32, (1, 4))
+    assert model(tokens, cache=cache).shape == (1, 4, 32)
+
+
+def test_legacy_config_expands_to_layers():
+    config = Config.from_dict({
+        "hidden_size": 16,
+        "intermediate_size": 32,
+        "num_hidden_layers": 3,
+        "num_attention_heads": 4,
+        "num_key_value_heads": 2,
+        "head_dim": 4,
+        "attention_every": 2,
+    })
+    assert [layer.num_key_value_heads for layer in config.layers] == [2, None, 2]

@@ -24,18 +24,18 @@ def rotate(x, cos, sin):
 
 
 class Attention(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, layer):
         super().__init__()
-        q = config.num_attention_heads * config.head_dim
-        kv = config.num_key_value_heads * config.head_dim
-        self.q_proj = nn.Linear(config.hidden_size, q, bias=False)
-        self.k_proj = nn.Linear(config.hidden_size, kv, bias=False)
-        self.v_proj = nn.Linear(config.hidden_size, kv, bias=False)
-        self.o_proj = nn.Linear(q, config.hidden_size, bias=False)
+        q = layer["hidden_size"]
+        kv = layer["num_key_value_heads"] * config.head_dim
+        self.q_proj = nn.Linear(layer["hidden_size"], q, bias=False)
+        self.k_proj = nn.Linear(layer["hidden_size"], kv, bias=False)
+        self.v_proj = nn.Linear(layer["hidden_size"], kv, bias=False)
+        self.o_proj = nn.Linear(q, layer["hidden_size"], bias=False)
         self.q_norm = RMSNorm(config.head_dim, config.rms_norm_eps)
         self.k_norm = RMSNorm(config.head_dim, config.rms_norm_eps)
-        self.q_heads = config.num_attention_heads
-        self.kv_heads = config.num_key_value_heads
+        self.q_heads = layer["hidden_size"] // config.head_dim
+        self.kv_heads = layer["num_key_value_heads"]
         self.head_dim = config.head_dim
 
     def forward(self, x, cos, sin):
@@ -50,26 +50,33 @@ class Attention(nn.Module):
 
 
 class MLP(nn.Module):
-    def __init__(self, config):
+    def __init__(self, layer):
         super().__init__()
-        self.gate_proj = nn.Linear(config.hidden_size, config.intermediate_size, bias=False)
-        self.up_proj = nn.Linear(config.hidden_size, config.intermediate_size, bias=False)
-        self.down_proj = nn.Linear(config.intermediate_size, config.hidden_size, bias=False)
+        self.gate_proj = nn.Linear(layer["hidden_size"], layer["intermediate_size"], bias=False)
+        self.up_proj = nn.Linear(layer["hidden_size"], layer["intermediate_size"], bias=False)
+        self.down_proj = nn.Linear(layer["intermediate_size"], layer["hidden_size"], bias=False)
 
     def forward(self, x):
         return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
 
 
 class Block(nn.Module):
-    def __init__(self, config, has_attention):
+    def __init__(self, config, layer, input_size):
         super().__init__()
-        self.self_attn = Attention(config) if has_attention else None
-        self.mlp = MLP(config)
+        self.input_projection = (
+            nn.Linear(input_size, layer["hidden_size"], bias=False)
+            if input_size != layer["hidden_size"]
+            else None
+        )
+        self.self_attn = Attention(config, layer) if layer["num_key_value_heads"] is not None else None
+        self.mlp = MLP(layer)
         if self.self_attn is not None:
-            self.attention_norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
-        self.mlp_norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+            self.attention_norm = RMSNorm(layer["hidden_size"], config.rms_norm_eps)
+        self.mlp_norm = RMSNorm(layer["hidden_size"], config.rms_norm_eps)
 
     def forward(self, x, cos, sin):
+        if self.input_projection is not None:
+            x = self.input_projection(x)
         if self.self_attn is not None:
             x = x + self.self_attn(self.attention_norm(x), cos, sin)
         return x + self.mlp(self.mlp_norm(x))
@@ -78,12 +85,20 @@ class Block(nn.Module):
 class Backbone(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
-        self.layers = nn.ModuleList([
-            Block(config, index % config.attention_every == 0)
-            for index in range(config.num_hidden_layers)
-        ])
-        self.norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
+        embedding_size = config.layers[0]["hidden_size"]
+        self.embed_tokens = nn.Embedding(config.vocab_size, embedding_size)
+        layers = []
+        input_size = embedding_size
+        for layer in config.layers:
+            layers.append(Block(config, layer, input_size))
+            input_size = layer["hidden_size"]
+        self.layers = nn.ModuleList(layers)
+        self.norm = RMSNorm(config.layers[-1]["hidden_size"], config.rms_norm_eps)
+        self.output_projection = (
+            nn.Linear(config.layers[-1]["hidden_size"], embedding_size, bias=False)
+            if config.layers[-1]["hidden_size"] != embedding_size
+            else None
+        )
 
 
 class SpeckForCausalLM(PreTrainedModel, GenerationMixin):
@@ -93,7 +108,7 @@ class SpeckForCausalLM(PreTrainedModel, GenerationMixin):
     def __init__(self, config):
         super().__init__(config)
         self.model = Backbone(config)
-        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+        self.lm_head = nn.Linear(config.layers[0]["hidden_size"], config.vocab_size, bias=False)
         self.lm_head.weight = self.model.embed_tokens.weight
         frequency = 1 / (
             config.rope_theta
@@ -134,7 +149,10 @@ class SpeckForCausalLM(PreTrainedModel, GenerationMixin):
         sin = self.sin[..., :length, :].to(x.dtype)
         for layer in self.model.layers:
             x = layer(x, cos, sin)
-        logits = self.lm_head(self.model.norm(x)).float()
+        x = self.model.norm(x)
+        if self.model.output_projection is not None:
+            x = self.model.output_projection(x)
+        logits = self.lm_head(x).float()
         loss = None
         if labels is not None:
             loss = F.cross_entropy(logits[:, :-1].flatten(0, 1), labels[:, 1:].flatten())

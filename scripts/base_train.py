@@ -5,7 +5,6 @@ import json
 import math
 import os
 import time
-from dataclasses import asdict
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -21,7 +20,7 @@ from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.hub import upload
-from speck.model import build_model
+from speck.model import Config, build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, optimization_step
 
@@ -103,7 +102,8 @@ def main():
     metadata = None
     if args.resume is not None:
         model_state, optimizer_state, metadata = load(args.output_dir, args.resume, device)
-        if metadata["config"] != asdict(config) or metadata["manifest"] != manifest_hash:
+        stored_config = Config.from_dict(metadata["config"]).settings()
+        if stored_config != config.settings() or metadata["manifest"] != manifest_hash:
             raise ValueError("checkpoint does not match the model or dataset")
         model.load_state_dict(model_state)
         optimizer.load_state_dict(optimizer_state)
@@ -178,7 +178,7 @@ def main():
         if master:
             state = {
                 "step": step,
-                "config": asdict(config),
+                "config": config.settings(),
                 "resolved": resolved,
                 "manifest": manifest_hash,
                 "data_state": data_state,

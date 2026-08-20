@@ -32,7 +32,7 @@ if step is None:
     raise FileNotFoundError(f"no checkpoint found in {args.checkpoint_dir}")
 device = torch.device(args.device)
 model_state, _, metadata = load(args.checkpoint_dir, step, device)
-model = SpeckForCausalLM(Config(**metadata["config"])).to(device)
+model = SpeckForCausalLM(Config.from_dict(metadata["config"])).to(device)
 model.load_state_dict(model_state)
 model.eval()
 tokenizer = get_tokenizer(**configs["tokenizer"])
