@@ -13,7 +13,7 @@
   "min_lr": 0.1,
   "optimizer": "muon",
   "output_dir": null,
-  "run": "speck-50m-10b",
+  "run": "speck-50m-24x384-10b",
   "save_every": 30518,
   "sequence_length": 2048,
   "train_tokens": 10000000000,
