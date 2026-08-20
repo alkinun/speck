@@ -23,8 +23,8 @@ speck ships one model: `speck00-200m`, a 199,511,808-parameter decoder language 
 ## layout
 
 ```text
-speck/    model, tokenizer, data, checkpoints, and runtime helpers
-scripts/  tokenizer setup, data preparation, training, and inference
+speck/    model, tokenizer, data, checkpoints, runtime, and search helpers
+scripts/  tokenizer setup, data preparation, training, inference, and search
 experiments/  self-contained experiment configurations
 tests/    focused unit tests
 ```
@@ -72,6 +72,7 @@ data.json       source, filters, splits, token budgets, and packed output
 tokenizer.json  tokenizer artifact and local directory
 model.json      architecture and dimensions
 train.json      optimization, batching, logging, and checkpoints
+search.json     architecture space, proxy budget, objectives, and evolution
 ```
 
 copy the directory to start another experiment. json keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. the checked-in experiment uploads checkpoints to `specklabs/speck00-200m`; set `hf_repo` to an empty string to keep them local.
@@ -120,6 +121,34 @@ compare short real-data training runs:
 ```bash
 python -m scripts.quality_benchmark --label baseline
 ```
+
+## architecture search
+
+search model architectures with completion-driven multi-objective evolution:
+
+```bash
+python -m scripts.architecture_search run experiments/speck00-200m \
+  --study speck00-search \
+  --device cuda
+```
+
+the coordinator evaluates one isolated candidate subprocess at a time. rerunning the same command resumes the study. study state, worker logs, complete loss curves, ancestry, and results are stored under `~/.cache/speck/search/<study>`.
+
+the search keeps every objective separate. it minimizes final validation nll after the fixed proxy token budget, batch-1 prefill and decode latency at each configured context, kv cache bytes per token, inference peak memory at each context, and estimated packed quantized weight bytes. raw parameter count is recorded but is not an objective.
+
+the model genotype contains an explicit specification for every layer. hidden size, swiglu width, attention presence, and kv head count can vary by layer. learned projections connect adjacent layers with different hidden sizes, and attention placement can move independently of depth.
+
+the search uses nondominated rank, objective-space crowding, and architectural novelty as separate selection criteria. it never stores a permanent scalar score. exact pareto membership is maintained across all completed candidates while a bounded diverse population supplies parents.
+
+inspect a running or completed study:
+
+```bash
+python -m scripts.architecture_search status speck00-search
+python -m scripts.architecture_search frontier speck00-search
+python -m scripts.architecture_search lineage speck00-search 17
+```
+
+`search.json` defines all comparison-sensitive settings. changing the proxy data, token budget, runtime, hardware, objective contexts, quantized layout, or search space requires a new study name. the default packed quantized byte objective uses symmetric 4-bit groups of 128 with fp16 scales; it is a storage estimate and does not alter latency measurements.
 
 ## checks
 

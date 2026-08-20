@@ -1,0 +1,63 @@
+{
+  "initial_population": 16,
+  "inference": {
+    "cache_dtype_bytes": 2,
+    "contexts": [
+      512,
+      2048
+    ],
+    "samples": 20,
+    "warmup_samples": 5
+  },
+  "max_evaluations": 128,
+  "max_generation_attempts": 100,
+  "max_worker_retries": 1,
+  "population_size": 32,
+  "quality": {
+    "batch_tokens": 16384,
+    "compile": false,
+    "data_dir": "~/.cache/speck/benchmark-200m",
+    "device_batch_size": 2,
+    "eval_batch_size": 2,
+    "eval_every_tokens": 393216,
+    "eval_tokens": 262144,
+    "grad_clip": 1.0,
+    "lr": 0.0006,
+    "min_lr": 0.1,
+    "optimizer": "muon",
+    "sequence_length": 512,
+    "train_tokens": 1572864,
+    "warmup_steps": 8,
+    "weight_decay": 0.1
+  },
+  "quantization": {
+    "bits": 4,
+    "group_size": 128,
+    "scale_bytes": 2,
+    "unquantized_bytes": 2
+  },
+  "seed": 42,
+  "space": {
+    "cache_dtype_bytes": 2,
+    "hidden_size_max": 1280,
+    "hidden_size_min": 768,
+    "hidden_size_step": 64,
+    "intermediate_size_max": 5120,
+    "intermediate_size_min": 2048,
+    "intermediate_size_step": 256,
+    "kv_heads": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "max_attention_layers": 12,
+    "max_kv_bytes_per_token": 16384,
+    "max_layers": 16,
+    "max_parameters": 320000000,
+    "min_attention_layers": 2,
+    "min_layers": 8,
+    "min_parameters": 80000000
+  }
+}
