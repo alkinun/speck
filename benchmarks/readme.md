@@ -17,7 +17,7 @@ results use an rtx 3090, pytorch 2.9.1, cuda 12.8, five warmup steps, and twenty
 | `f1042bb` | six-layer candidate | 132,696 | 3.49 gb |
 | `77e154e` | ten-layer production | 117,250 | 4.09 gb |
 
-the six-layer candidate reached 133,369 end-to-end tokens/s. production uses the higher-quality ten-layer model; its final throughput is measured separately.
+the ten-layer production model reaches 117,455 end-to-end tokens/s, or 23.6 hours for 10b training tokens before validation and checkpoint overhead.
 
 ```bash
 python -m scripts.benchmark --mode compute --steps 20 --warmup-steps 5 --peak-tflops 142
