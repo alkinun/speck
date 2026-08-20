@@ -41,9 +41,9 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 
 | shape | parameters | validation loss | tokens/s | decision |
 | --- | ---: | ---: | ---: | --- |
-| 24x384 | 50,055,552 | 3.86934 | 89,493 | reject |
+| 24x384 | 50,055,552 | 3.86934 | 89,493 | keep |
 | 15x512 | 49,823,232 | 3.82319 | 107,613 | reject |
-| 10x640 | 49,984,640 | 3.80685 | 113,455 | keep |
+| 10x640 | 49,984,640 | 3.80685 | 113,455 | reject |
 | 6x768 | 50,095,872 | 3.82444 | 129,888 | reject |
 | 4x896 | 49,782,656 | 3.87434 | 142,710 | reject |
 
@@ -51,8 +51,8 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 
 | batch tokens | validation loss | tokens/s | decision |
 | ---: | ---: | ---: | --- |
-| 16,384 | 3.82444 | 129,888 | keep |
-| 8,192 | 3.80461 | 110,559 | reject |
+| 16,384 | 3.86934 | 89,493 | keep |
+| 8,192 | 3.79849 | 74,198 | reject |
 
 ## mlp
 
@@ -65,4 +65,4 @@ results use 49,807,360 training tokens and 98,304 fixed validation tokens.
 
 | parameters | batch tokens | validation loss | tokens/s |
 | ---: | ---: | ---: | ---: |
-| 49,984,640 | 16,384 | 3.80685 | 113,455 |
+| 50,055,552 | 16,384 | 3.86934 | 89,493 |
