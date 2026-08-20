@@ -421,6 +421,9 @@ def evaluate_candidate_process(
     settings,
     device_name,
 ):
+    expected_git = store.study()["provenance"]["git"]
+    if _git_state() != expected_git:
+        raise RuntimeError("study code changed after initialization")
     attempt_id = store.start_attempt(candidate["id"])
     paths = _artifact_paths(study_dir, candidate["id"], attempt_id)
     paths["directory"].mkdir(parents=True, exist_ok=True)

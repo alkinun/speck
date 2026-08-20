@@ -1,7 +1,10 @@
+import pytest
+
 from speck.model import Config, LayerConfig
 from speck.search.runner import (
     SearchSettings,
     _ingest_output,
+    evaluate_candidate_process,
     generate_offspring,
     run_search,
     search_objectives,
@@ -196,4 +199,25 @@ def test_evicted_candidate_does_not_reenter_population(tmp_path):
     update_selection(store, settings())
     assert evicted not in store.population()
     assert store.candidate(evicted)["pareto_rank"] is None
+    store.close()
+
+
+def test_candidate_evaluation_rejects_code_changes(tmp_path, monkeypatch):
+    store = StudyStore(tmp_path / "study.sqlite3")
+    store.initialize(settings().export(), {"git": {"revision": "one"}})
+    candidate_id = store.add_candidate(baseline(), 1, {"operator": "seed"})
+    assert candidate_id is not None
+    monkeypatch.setattr(
+        "speck.search.runner._git_state", lambda: {"revision": "two"}
+    )
+    with pytest.raises(RuntimeError, match="code changed"):
+        evaluate_candidate_process(
+            store,
+            tmp_path,
+            store.candidate(candidate_id),
+            {},
+            settings(),
+            "cpu",
+        )
+    assert store.candidate(candidate_id)["status"] == "pending"
     store.close()
