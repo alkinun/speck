@@ -105,3 +105,8 @@ def test_legacy_config_expands_to_layers():
         "expected_parameters": 123,
     })
     assert [layer.num_key_value_heads for layer in config.layers] == [2, None, 2]
+
+
+def test_exported_config_round_trips():
+    config = Config(rope_theta=500000.0)
+    assert Config.from_dict(config.export()).settings() == config.settings()

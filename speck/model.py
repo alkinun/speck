@@ -63,8 +63,20 @@ class Config:
         settings = dict(settings)
         settings.pop("architecture", None)
         settings.pop("expected_parameters", None)
+        rope_parameters = settings.pop("rope_parameters", None)
+        if rope_parameters and "rope_theta" not in settings:
+            settings["rope_theta"] = rope_parameters.get("rope_theta", 10000.0)
         if "layers" in settings:
             layers = tuple(LayerConfig(**layer) for layer in settings.pop("layers"))
+            for key in (
+                "hidden_size",
+                "intermediate_size",
+                "num_hidden_layers",
+                "num_attention_heads",
+                "num_key_value_heads",
+                "attention_every",
+            ):
+                settings.pop(key, None)
         else:
             hidden_size = settings.pop("hidden_size", 1024)
             intermediate_size = settings.pop("intermediate_size", 4096)
@@ -87,6 +99,22 @@ class Config:
                 )
                 for index in range(num_hidden_layers)
             )
+        for key in (
+            "architectures",
+            "auto_map",
+            "attention_bias",
+            "attention_dropout",
+            "dtype",
+            "hidden_act",
+            "mlp_bias",
+            "model_type",
+            "pad_token_id",
+            "qk_norm",
+            "tie_word_embeddings",
+            "transformers_version",
+            "use_cache",
+        ):
+            settings.pop(key, None)
         return cls(layers=layers, **settings)
 
     @property
@@ -144,6 +172,7 @@ class Config:
             "pad_token_id": None,
             "rms_norm_eps": self.rms_norm_eps,
             "qk_norm": True,
+            "rope_theta": self.rope_theta,
             "rope_parameters": {"rope_theta": self.rope_theta, "rope_type": "default"},
             "tie_word_embeddings": True,
             "transformers_version": "5.14.1",

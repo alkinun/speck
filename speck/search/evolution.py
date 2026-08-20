@@ -85,12 +85,12 @@ def crowding_distance(candidates, objective_names):
         return {candidate.id: math.inf for candidate in candidates}
     for name in objective_names:
         ordered = sorted(candidates, key=lambda candidate: (candidate.objectives[name], candidate.id))
-        distances[ordered[0].id] = math.inf
-        distances[ordered[-1].id] = math.inf
         minimum = ordered[0].objectives[name]
         maximum = ordered[-1].objectives[name]
         if maximum == minimum:
             continue
+        distances[ordered[0].id] = math.inf
+        distances[ordered[-1].id] = math.inf
         for index in range(1, len(ordered) - 1):
             if math.isinf(distances[ordered[index].id]):
                 continue

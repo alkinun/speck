@@ -106,6 +106,10 @@ def run(args):
         },
         "geometry": {
             **quality["geometry"],
+            "batch_size": args.batch_size,
+            "accumulation": quality["geometry"]["final_accumulation"],
+            "tokens_per_step": fixed_batch_tokens,
+            "trained_tokens": trained_tokens,
             "eval_batch_size": args.eval_batch_size,
         },
         "quality": {

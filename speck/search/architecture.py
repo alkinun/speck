@@ -54,7 +54,11 @@ class SearchSpace:
         object.__setattr__(self, "kv_heads", kv_heads)
         if not kv_heads or kv_heads[0] < 1:
             raise ValueError("kv head choices must be positive")
-        maximum_attention = self.max_attention_layers or self.max_layers
+        maximum_attention = (
+            self.max_attention_layers
+            if self.max_attention_layers is not None
+            else self.max_layers
+        )
         object.__setattr__(self, "max_attention_layers", maximum_attention)
         if not 0 <= self.min_attention_layers <= self.min_layers:
             raise ValueError("minimum attention layers exceed minimum depth")
@@ -215,6 +219,12 @@ def repair(config, space):
             layers[index] = replace(layers[index], num_key_value_heads=None)
             repairs.append({"kind": "disable_attention", "index": index})
 
+    attention_count = sum(
+        layer.num_key_value_heads is not None for layer in layers
+    )
+    if not space.min_attention_layers <= attention_count <= space.max_attention_layers:
+        raise ValueError("candidate cannot satisfy the attention layer range")
+
     repaired = _with_layers(config, layers)
     parameters = parameter_count(repaired)
     cache_bytes = kv_bytes_per_token(repaired, space.cache_dtype_bytes)
@@ -288,6 +298,7 @@ def mutate(config, space, seed, operator=None):
         raise ValueError(f"mutation is not available: {operator}")
     layers = list(config.layers)
     mutation = {"operator": operator, "seed": seed}
+    mutation_repairs = []
 
     if operator == "add_layer":
         index = rng.randrange(len(layers) + 1)
@@ -309,7 +320,23 @@ def mutate(config, space, seed, operator=None):
         )
         value = _neighbor(layers[index].hidden_size, choices, rng)
         mutation.update(index=index, old=layers[index].hidden_size, new=value)
-        layers[index] = replace(layers[index], hidden_size=value)
+        updated = replace(layers[index], hidden_size=value)
+        if updated.num_key_value_heads is not None:
+            kv_choices = _valid_kv_heads(updated, config, space)
+            if not kv_choices:
+                raise ValueError("no valid kv heads for the mutated hidden size")
+            kv_heads = _nearest(updated.num_key_value_heads, kv_choices)
+            if kv_heads != updated.num_key_value_heads:
+                mutation_repairs.append({
+                    "kind": "repair_layer",
+                    "index": index,
+                    "num_key_value_heads": {
+                        "from": updated.num_key_value_heads,
+                        "to": kv_heads,
+                    },
+                })
+                updated = replace(updated, num_key_value_heads=kv_heads)
+        layers[index] = updated
     elif operator == "change_ffn_width":
         index = rng.randrange(len(layers))
         choices = _grid(
@@ -357,12 +384,27 @@ def mutate(config, space, seed, operator=None):
         source = rng.choice(sources)
         target = rng.choice(targets)
         kv_heads = layers[source].num_key_value_heads
+        target_choices = _valid_kv_heads(layers[target], config, space)
+        if not target_choices:
+            raise ValueError("no valid kv heads for the attention target")
+        repaired_kv_heads = _nearest(kv_heads, target_choices)
         layers[source] = replace(layers[source], num_key_value_heads=None)
-        layers[target] = replace(layers[target], num_key_value_heads=kv_heads)
+        layers[target] = replace(
+            layers[target], num_key_value_heads=repaired_kv_heads
+        )
         mutation.update(source=source, target=target, kv_heads=kv_heads)
+        if repaired_kv_heads != kv_heads:
+            mutation_repairs.append({
+                "kind": "repair_layer",
+                "index": target,
+                "num_key_value_heads": {
+                    "from": kv_heads,
+                    "to": repaired_kv_heads,
+                },
+            })
 
     repaired, repairs = repair(_with_layers(config, layers), space)
-    return MutationResult(repaired, mutation, repairs)
+    return MutationResult(repaired, mutation, tuple(mutation_repairs) + repairs)
 
 
 def architecture_distance(left, right, space):

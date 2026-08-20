@@ -272,6 +272,12 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
             while next_validation <= trained_tokens:
                 next_validation += settings.eval_every_tokens
 
+    measured_durations = durations[1:] or durations
+    measured_tokens = (
+        settings.train_tokens - train_curve[0]["tokens"]
+        if len(train_curve) > 1
+        else settings.train_tokens
+    )
     return {
         "validation_nll": validation_curve[-1]["loss"],
         "train_curve": train_curve,
@@ -287,7 +293,7 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
         },
         "performance": {
             "training_seconds": sum(durations),
-            "tokens_per_second": settings.train_tokens / sum(durations),
+            "tokens_per_second": measured_tokens / sum(measured_durations),
             "step_seconds": durations,
         },
     }

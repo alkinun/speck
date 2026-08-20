@@ -102,3 +102,76 @@ def test_architecture_distance_and_novelty():
     assert architecture_distance(candidate, changed, space()) > 0
     assert novelty(candidate, [], space()) == 1
     assert novelty(candidate, [changed], space()) > 0
+
+
+def test_hidden_and_placement_mutations_repair_kv_heads():
+    candidate = Config(
+        vocab_size=32,
+        layers=(
+            LayerConfig(16, 16, 2),
+            LayerConfig(12, 16, None),
+        ),
+        head_dim=4,
+    )
+    search_space = SearchSpace(
+        min_layers=2,
+        max_layers=2,
+        hidden_size_min=12,
+        hidden_size_max=16,
+        hidden_size_step=4,
+        intermediate_size_min=16,
+        intermediate_size_max=16,
+        intermediate_size_step=1,
+        kv_heads=(1, 2),
+    )
+    hidden = mutate(
+        Config(
+            vocab_size=32,
+            layers=(LayerConfig(16, 16, 2), LayerConfig(16, 16, None)),
+            head_dim=4,
+        ),
+        search_space,
+        seed=3,
+        operator="change_hidden_size",
+    )
+    placement = mutate(
+        candidate,
+        search_space,
+        seed=3,
+        operator="alter_attention_placement",
+    )
+    assert hidden.config.layers[0].num_key_value_heads == 1
+    assert placement.config.layers[1].num_key_value_heads == 1
+    assert hidden.repairs and placement.repairs
+
+
+def test_repair_enforces_zero_and_impossible_attention_bounds():
+    no_attention_space = SearchSpace(
+        **{
+            **space().__dict__,
+            "min_attention_layers": 0,
+            "max_attention_layers": 0,
+        }
+    )
+    repaired, _ = repair(config(), no_attention_space)
+    assert all(layer.num_key_value_heads is None for layer in repaired.layers)
+
+    impossible_space = SearchSpace(
+        min_layers=2,
+        max_layers=2,
+        hidden_size_min=12,
+        hidden_size_max=12,
+        hidden_size_step=1,
+        intermediate_size_min=16,
+        intermediate_size_max=16,
+        intermediate_size_step=1,
+        kv_heads=(2,),
+        min_attention_layers=1,
+    )
+    impossible = Config(
+        vocab_size=32,
+        layers=(LayerConfig(12, 16, None), LayerConfig(12, 16, None)),
+        head_dim=4,
+    )
+    with pytest.raises(ValueError, match="attention layer range"):
+        repair(impossible, impossible_space)

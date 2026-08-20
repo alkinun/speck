@@ -79,3 +79,8 @@ def test_invalid_objective_is_rejected():
     invalid = candidate(1, 1, math.nan)
     with pytest.raises(ValueError, match="invalid objective"):
         nondominated_sort((invalid,), objectives)
+
+
+def test_constant_objective_does_not_create_boundaries():
+    candidates = tuple(candidate(index, 1, 1) for index in range(1, 4))
+    assert crowding_distance(candidates, objectives) == {1: 0.0, 2: 0.0, 3: 0.0}
