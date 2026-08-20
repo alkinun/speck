@@ -31,6 +31,7 @@ def arguments():
     parser.add_argument("--batch-tokens", type=int, default=None)
     parser.add_argument("--eval-every", type=int, default=24)
     parser.add_argument("--eval-batch-size", type=int, default=4)
+    parser.add_argument("--eval-tokens", type=int, default=None)
     parser.add_argument("--warmup-steps", type=int, default=2)
     parser.add_argument("--optimizer", choices=("adamw", "muon"), default=None)
     parser.add_argument("--batch-curriculum", action="store_true")
@@ -47,11 +48,14 @@ def synchronize(device):
 
 
 @torch.no_grad()
-def evaluate(model, tokenizer, data_dir, manifest, batch_size, sequence_length, device):
+def evaluate(model, tokenizer, data_dir, manifest, batch_size, sequence_length, device, token_limit=None):
     loader = packed_loader(
         tokenizer, batch_size, sequence_length, "val", device=device, data_dir=data_dir
     )
-    steps = manifest["splits"]["val"]["tokens"] // (batch_size * sequence_length)
+    tokens = manifest["splits"]["val"]["tokens"]
+    if token_limit is not None:
+        tokens = min(tokens, token_limit)
+    steps = max(1, tokens // (batch_size * sequence_length))
     loss = torch.zeros((), device=device)
     model.eval()
     for _ in range(steps):
@@ -65,6 +69,8 @@ def evaluate(model, tokenizer, data_dir, manifest, batch_size, sequence_length, 
 def run(args):
     if args.steps < 1 or args.batch_size < 1 or args.eval_batch_size < 1:
         raise ValueError("steps and batch sizes must be positive")
+    if args.eval_tokens is not None and args.eval_tokens < 1:
+        raise ValueError("eval tokens must be positive")
     configs = load_experiment(args.experiment, "tokenizer", "model", "train")
     if args.model_config:
         configs["model"] = json.loads(Path(args.model_config).read_text(encoding="utf-8"))
@@ -118,6 +124,7 @@ def run(args):
             args.eval_batch_size,
             sequence_length,
             device,
+            args.eval_tokens,
         )
         validation.append({"step": step, "tokens": trained_tokens_done, "loss": loss})
         print(f"step {step:,} | validation loss {loss:.5f}")
