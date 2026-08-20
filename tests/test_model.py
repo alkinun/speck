@@ -102,5 +102,6 @@ def test_legacy_config_expands_to_layers():
         "num_key_value_heads": 2,
         "head_dim": 4,
         "attention_every": 2,
+        "expected_parameters": 123,
     })
     assert [layer.num_key_value_heads for layer in config.layers] == [2, None, 2]

@@ -62,6 +62,7 @@ class Config:
     def from_dict(cls, settings):
         settings = dict(settings)
         settings.pop("architecture", None)
+        settings.pop("expected_parameters", None)
         if "layers" in settings:
             layers = tuple(LayerConfig(**layer) for layer in settings.pop("layers"))
         else:
