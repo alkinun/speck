@@ -14,7 +14,7 @@
   "optimizer": "muon",
   "output_dir": null,
   "run": "speck-50m-10b",
-  "save_every": 61024,
+  "save_every": 30518,
   "sequence_length": 2048,
   "train_tokens": 10000000000,
   "wandb_project": "speck",
