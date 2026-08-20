@@ -1,11 +1,16 @@
 """single-device steady-state architecture search coordinator."""
 
 import gc
+import fcntl
+import hashlib
 import json
+import math
 import os
+import signal
 import subprocess
 import sys
 import traceback
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,7 +36,7 @@ from speck.search.evaluate import (
     objective_values,
     quantized_weight_bytes,
 )
-from speck.search.evolution import select_parent, select_survivors
+from speck.search.evolution import nondominated_sort, select_parent, select_survivors
 from speck.search.store import StudyStore
 from speck.tokenizer import get_tokenizer
 
@@ -48,13 +53,19 @@ class SearchSettings:
     quantization: QuantizationSettings
     max_generation_attempts: int = 100
     max_worker_retries: int = 1
+    worker_timeout_seconds: float = 7200
 
     def __post_init__(self):
         if self.population_size < 1 or self.initial_population < 1:
             raise ValueError("population sizes must be positive")
         if self.initial_population > self.max_evaluations:
             raise ValueError("initial population exceeds maximum evaluations")
-        if self.max_generation_attempts < 1 or self.max_worker_retries < 0:
+        if (
+            self.max_generation_attempts < 1
+            or self.max_worker_retries < 0
+            or not math.isfinite(self.worker_timeout_seconds)
+            or self.worker_timeout_seconds <= 0
+        ):
             raise ValueError("invalid search retry settings")
 
     @classmethod
@@ -96,19 +107,27 @@ def _candidate_seed(settings, ordinal, attempt=0):
 
 
 def seed_candidates(store, baseline, settings):
-    if store.candidates():
-        return
     baseline, repairs = repair(baseline, settings.space)
-    baseline_id = store.add_candidate(
-        baseline,
-        settings.seed,
-        {"operator": "seed", "seed": settings.seed},
-        repairs,
-    )
-    if baseline_id is None:
-        raise RuntimeError("could not create the baseline candidate")
+    candidates = store.candidates()
+    if candidates:
+        seeds = [
+            candidate for candidate in candidates
+            if candidate["mutation"].get("operator") == "seed"
+        ]
+        if len(seeds) != 1:
+            raise RuntimeError("study does not contain exactly one baseline candidate")
+        baseline_id = seeds[0]["id"]
+    else:
+        baseline_id = store.add_candidate(
+            baseline,
+            settings.seed,
+            {"operator": "seed", "seed": settings.seed},
+            repairs,
+        )
+        if baseline_id is None:
+            raise RuntimeError("could not create the baseline candidate")
     target = min(settings.initial_population, settings.max_evaluations)
-    ordinal = 1
+    ordinal = len(store.candidates())
     while len(store.candidates()) < target:
         added = False
         for attempt in range(settings.max_generation_attempts):
@@ -143,11 +162,22 @@ def update_selection(store, settings):
     if not candidates:
         store.update_selection((), (), {})
         return {}, ()
-    selected, metrics, frontier = select_survivors(
-        candidates,
-        min(settings.population_size, len(candidates)),
+    by_id = {candidate.id: candidate for candidate in candidates}
+    pool_ids = set(store.population()) | set(store.selection_pending())
+    if not pool_ids:
+        pool_ids = set(by_id)
+    pool = [by_id[candidate_id] for candidate_id in sorted(pool_ids)]
+    selected, metrics, _ = select_survivors(
+        pool,
+        min(settings.population_size, len(pool)),
         search_objectives(settings),
         settings.space,
+    )
+    frontier = tuple(
+        candidate.id
+        for candidate in nondominated_sort(
+            candidates, search_objectives(settings)
+        )[0]
     )
     store.update_selection(selected, frontier, metrics)
     return metrics, selected
@@ -160,11 +190,9 @@ def generate_offspring(store, settings):
     if not population:
         raise RuntimeError("no successful candidate is available as a parent")
     ordinal = len(store.candidates()) + 1
-    parent = select_parent(
-        population, metrics, seed=_candidate_seed(settings, ordinal)
-    )
     for attempt in range(settings.max_generation_attempts):
         seed = _candidate_seed(settings, ordinal, attempt)
+        parent = select_parent(population, metrics, seed=seed)
         try:
             offspring = mutate(parent.config, settings.space, seed=seed)
         except ValueError:
@@ -189,6 +217,12 @@ def _atomic_json(path, value):
     os.replace(temporary, path)
 
 
+def _output_text(value):
+    if isinstance(value, bytes):
+        return value.decode(errors="replace")
+    return value or ""
+
+
 def _environment(device):
     return {
         "device": str(device),
@@ -201,13 +235,47 @@ def _environment(device):
 
 
 def _git_state():
+    repository = Path(__file__).resolve().parents[2]
     revision = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, check=False, text=True
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        check=False,
+        text=True,
+        cwd=repository,
     ).stdout.strip()
-    dirty = subprocess.run(
-        ["git", "status", "--porcelain"], capture_output=True, check=False, text=True
-    ).stdout.strip()
-    return {"revision": revision or None, "dirty": bool(dirty)}
+    status = subprocess.run(
+        ["git", "status", "--porcelain=v1", "-z"],
+        capture_output=True,
+        check=False,
+        cwd=repository,
+    ).stdout
+    difference = subprocess.run(
+        ["git", "diff", "--binary", "HEAD"],
+        capture_output=True,
+        check=False,
+        cwd=repository,
+    ).stdout
+    fingerprint = hashlib.sha256(status + difference).hexdigest()
+    return {
+        "revision": revision or None,
+        "dirty": bool(status),
+        "working_tree": fingerprint,
+    }
+
+
+@contextmanager
+def study_lock(study_dir):
+    path = Path(study_dir) / "coordinator.lock"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+", encoding="utf-8") as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise RuntimeError("study already has a running coordinator") from error
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
 
 
 def evaluate_payload(payload, device):
@@ -231,10 +299,14 @@ def evaluate_payload(payload, device):
         payload["evaluation_seed"],
     )
     objectives = objective_values(quality, inference, quantization)
-    missing = [name for name, value in objectives.items() if value is None]
-    if missing:
+    invalid = [
+        name
+        for name, value in objectives.items()
+        if not isinstance(value, (int, float)) or not math.isfinite(value)
+    ]
+    if invalid:
         raise ValueError(
-            f"objectives are unavailable on this device: {', '.join(sorted(missing))}"
+            f"objectives are unavailable or non-finite: {', '.join(sorted(invalid))}"
         )
     return {
         "objectives": objectives,
@@ -256,10 +328,17 @@ def run_worker(input_path, output_path, device_name):
     payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
     try:
         result = evaluate_payload(payload, torch.device(device_name))
-        output = {"status": "completed", "result": result}
+        output = {
+            "status": "completed",
+            "candidate_id": payload["candidate_id"],
+            "attempt_id": payload["attempt_id"],
+            "result": result,
+        }
     except Exception as error:
         output = {
             "status": "failed",
+            "candidate_id": payload["candidate_id"],
+            "attempt_id": payload["attempt_id"],
             "error": str(error),
             "error_type": type(error).__name__,
             "traceback": traceback.format_exc(),
@@ -270,10 +349,11 @@ def run_worker(input_path, output_path, device_name):
 
 def _artifact_paths(study_dir, candidate_id, attempt_id=None):
     directory = Path(study_dir) / "candidates" / f"{candidate_id:06d}"
+    prefix = f"attempt-{attempt_id:03d}" if attempt_id is not None else "candidate"
     paths = {
         "directory": directory,
-        "input": directory / "input.json",
-        "result": directory / "result.json",
+        "input": directory / f"{prefix}.input.json",
+        "result": directory / f"{prefix}.result.json",
     }
     if attempt_id is not None:
         paths["stdout"] = directory / f"attempt-{attempt_id:03d}.stdout.txt"
@@ -281,9 +361,10 @@ def _artifact_paths(study_dir, candidate_id, attempt_id=None):
     return paths
 
 
-def _payload(candidate, tokenizer_settings, settings):
+def _payload(candidate, attempt_id, tokenizer_settings, settings):
     return {
         "candidate_id": candidate["id"],
+        "attempt_id": attempt_id,
         "config": candidate["config"],
         "tokenizer": tokenizer_settings,
         "quality": asdict(settings.quality),
@@ -293,26 +374,42 @@ def _payload(candidate, tokenizer_settings, settings):
     }
 
 
-def _ingest_output(store, candidate_id, attempt_id, output):
+def _ingest_output(store, candidate_id, attempt_id, output, settings):
+    if output.get("candidate_id") != candidate_id or output.get("attempt_id") != attempt_id:
+        raise ValueError("worker result does not match its attempt")
     if output.get("status") == "completed":
         store.complete_attempt(candidate_id, attempt_id, output["result"])
         return True
     error = f"{output.get('error_type', 'error')}: {output.get('error', 'unknown error')}"
-    store.fail_attempt(candidate_id, attempt_id, error)
+    retry = store.failed_attempt_count(candidate_id) < settings.max_worker_retries
+    store.fail_attempt(candidate_id, attempt_id, error, retry=retry)
     return False
 
 
-def recover_results(store, study_dir):
+def recover_results(store, study_dir, settings):
     for candidate in store.candidates("running"):
         attempt_id = store.running_attempt(candidate["id"])
-        result_path = _artifact_paths(study_dir, candidate["id"])["result"]
-        if attempt_id is None or not result_path.is_file():
+        if attempt_id is None:
+            continue
+        result_path = _artifact_paths(
+            study_dir, candidate["id"], attempt_id
+        )["result"]
+        if not result_path.is_file():
             continue
         try:
             output = json.loads(result_path.read_text(encoding="utf-8"))
-            _ingest_output(store, candidate["id"], attempt_id, output)
+            _ingest_output(
+                store, candidate["id"], attempt_id, output, settings
+            )
         except (KeyError, ValueError, json.JSONDecodeError):
             continue
+    for attempt in store.running_attempts():
+        if attempt["pid"] is not None:
+            try:
+                if os.getpgid(attempt["pid"]) == attempt["pid"]:
+                    os.killpg(attempt["pid"], signal.SIGTERM)
+            except ProcessLookupError:
+                pass
     return store.recover_running()
 
 
@@ -328,33 +425,52 @@ def evaluate_candidate_process(
     paths = _artifact_paths(study_dir, candidate["id"], attempt_id)
     paths["directory"].mkdir(parents=True, exist_ok=True)
     paths["result"].unlink(missing_ok=True)
-    _atomic_json(paths["input"], _payload(candidate, tokenizer_settings, settings))
-    process = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "scripts.architecture_search",
-            "_evaluate",
-            str(paths["input"]),
-            str(paths["result"]),
-            "--device",
-            device_name,
-        ],
-        capture_output=True,
-        check=False,
-        text=True,
+    _atomic_json(
+        paths["input"],
+        _payload(candidate, attempt_id, tokenizer_settings, settings),
     )
-    paths["stdout"].write_text(process.stdout, encoding="utf-8")
-    paths["stderr"].write_text(process.stderr, encoding="utf-8")
+    command = [
+        sys.executable,
+        "-m",
+        "scripts.architecture_search",
+        "_evaluate",
+        str(paths["input"]),
+        str(paths["result"]),
+        "--device",
+        device_name,
+    ]
+    process = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
+    store.set_attempt_pid(attempt_id, process.pid)
+    try:
+        stdout, stderr = process.communicate(
+            timeout=settings.worker_timeout_seconds
+        )
+        message = f"worker exited with status {process.returncode}"
+    except subprocess.TimeoutExpired:
+        os.killpg(process.pid, signal.SIGTERM)
+        try:
+            stdout, stderr = process.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            stdout, stderr = process.communicate()
+        message = f"worker exceeded {settings.worker_timeout_seconds:g} seconds"
+    paths["stdout"].write_text(_output_text(stdout), encoding="utf-8")
+    paths["stderr"].write_text(_output_text(stderr), encoding="utf-8")
     if paths["result"].is_file():
         try:
             output = json.loads(paths["result"].read_text(encoding="utf-8"))
-            return _ingest_output(store, candidate["id"], attempt_id, output)
+            return _ingest_output(
+                store, candidate["id"], attempt_id, output, settings
+            )
         except (KeyError, ValueError, json.JSONDecodeError) as error:
             message = f"invalid worker result: {error}"
-    else:
-        message = f"worker exited with status {process.returncode}"
-    retry = store.attempt_count(candidate["id"]) <= settings.max_worker_retries
+    retry = store.failed_attempt_count(candidate["id"]) < settings.max_worker_retries
     store.fail_attempt(candidate["id"], attempt_id, message, retry=retry)
     return False
 
@@ -367,10 +483,11 @@ def run_search(
     settings,
     device_name,
 ):
-    recover_results(store, study_dir)
-    seed_candidates(store, baseline, settings)
     store.set_study_status("running")
     try:
+        recover_results(store, study_dir, settings)
+        seed_candidates(store, baseline, settings)
+        update_selection(store, settings)
         while True:
             candidates = store.candidates()
             terminal = sum(
@@ -406,6 +523,12 @@ def run_search(
 
 
 def prepare_study(store, experiment, configs, baseline, tokenizer, settings, device):
+    if settings.quality.sequence_length > baseline.max_position_embeddings:
+        raise ValueError("quality sequence exceeds the baseline context")
+    if settings.inference.contexts[-1] + 1 > baseline.max_position_embeddings:
+        raise ValueError("inference context exceeds the baseline context")
+    if settings.space.cache_dtype_bytes != settings.inference.cache_dtype_bytes:
+        raise ValueError("search and inference cache dtypes do not match")
     manifest = load_manifest(settings.quality.data_dir)
     verify_shards(settings.quality.data_dir, manifest)
     if manifest["tokenizer"]["fingerprint"] != tokenizer.fingerprint():

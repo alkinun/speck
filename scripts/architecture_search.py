@@ -14,6 +14,7 @@ from speck.search.runner import (
     prepare_study,
     run_search,
     run_worker,
+    study_lock,
 )
 from speck.search.store import StudyStore
 from speck.tokenizer import get_tokenizer
@@ -72,32 +73,36 @@ def run_command(args):
     if device.type != "cuda":
         raise ValueError("architecture search requires cuda for peak memory objectives")
     directory = study_dir(args.study)
-    store = StudyStore(directory / "study.sqlite3")
-    try:
-        prepare_study(
-            store,
-            args.experiment,
-            configs,
-            baseline,
-            tokenizer,
-            settings,
-            device,
-        )
-        run_search(
-            store,
-            directory,
-            baseline,
-            configs["tokenizer"],
-            settings,
-            args.device,
-        )
-        display(store.summary())
-    finally:
-        store.close()
+    with study_lock(directory):
+        store = StudyStore(directory / "study.sqlite3")
+        try:
+            prepare_study(
+                store,
+                args.experiment,
+                configs,
+                baseline,
+                tokenizer,
+                settings,
+                device,
+            )
+            run_search(
+                store,
+                directory,
+                baseline,
+                configs["tokenizer"],
+                settings,
+                args.device,
+            )
+            display(store.summary())
+        finally:
+            store.close()
 
 
 def query_command(args):
-    store = StudyStore(study_dir(args.study) / "study.sqlite3")
+    database = study_dir(args.study) / "study.sqlite3"
+    if not database.is_file():
+        raise FileNotFoundError(f"search study not found: {args.study}")
+    store = StudyStore(database)
     try:
         if args.command == "status":
             value = store.summary()

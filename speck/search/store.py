@@ -1,16 +1,21 @@
 """transactional study storage for architecture search."""
 
 import json
+import math
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
 from speck.model import Config
 from speck.search.architecture import architecture_hash, canonical_settings
-from speck.search.evolution import EvaluatedCandidate, SelectionMetrics
+from speck.search.evolution import (
+    EvaluatedCandidate,
+    SelectionMetrics,
+    nondominated_sort,
+)
 
 
-schema_version = 1
+schema_version = 3
 
 
 def _now():
@@ -64,6 +69,7 @@ class StudyStore:
                 pareto_rank integer,
                 crowding real,
                 novelty real,
+                selection_pending integer not null default 0,
                 created_at text not null,
                 started_at text,
                 completed_at text
@@ -79,6 +85,7 @@ class StudyStore:
                 status text not null,
                 started_at text not null,
                 completed_at text,
+                pid integer,
                 error text
             );
             """
@@ -89,6 +96,21 @@ class StudyStore:
         if row is None:
             self.connection.execute(
                 "insert into metadata(key, value) values ('schema_version', ?)",
+                (str(schema_version),),
+            )
+        elif int(row["value"]) == 1:
+            self.connection.execute(
+                "alter table candidates add column selection_pending integer not null default 0"
+            )
+            self.connection.execute("alter table attempts add column pid integer")
+            self.connection.execute(
+                "update metadata set value = ? where key = 'schema_version'",
+                (str(schema_version),),
+            )
+        elif int(row["value"]) == 2:
+            self.connection.execute("alter table attempts add column pid integer")
+            self.connection.execute(
+                "update metadata set value = ? where key = 'schema_version'",
                 (str(schema_version),),
             )
         elif int(row["value"]) != schema_version:
@@ -193,7 +215,11 @@ class StudyStore:
             "in_population": bool(row["in_population"]),
             "is_frontier": bool(row["is_frontier"]),
             "pareto_rank": row["pareto_rank"],
-            "crowding": row["crowding"],
+            "crowding": (
+                row["crowding"]
+                if row["crowding"] is None or math.isfinite(row["crowding"])
+                else None
+            ),
             "novelty": row["novelty"],
             "created_at": row["created_at"],
             "started_at": row["started_at"],
@@ -207,7 +233,18 @@ class StudyStore:
             rows = self.connection.execute(
                 "select * from candidates where status = ? order by id", (status,)
             ).fetchall()
-        return [self._candidate_dict(row) for row in rows]
+        values = []
+        for row in rows:
+            parent_rows = self.connection.execute(
+                "select parent_id from parents where candidate_id = ? order by parent_id",
+                (row["id"],),
+            ).fetchall()
+            values.append(
+                self._candidate_dict(
+                    row, [parent["parent_id"] for parent in parent_rows]
+                )
+            )
+        return values
 
     def evaluated_candidates(self):
         values = []
@@ -224,19 +261,21 @@ class StudyStore:
 
     def start_attempt(self, candidate_id):
         now = _now()
-        cursor = self.connection.execute(
-            "insert into attempts(candidate_id, status, started_at) values (?, 'running', ?)",
-            (candidate_id, now),
-        )
-        self.connection.execute(
-            """
-            update candidates
-            set status = 'running', started_at = ?, completed_at = null, error = null
-            where id = ?
-            """,
-            (now, candidate_id),
-        )
-        self.connection.commit()
+        with self.connection:
+            claim = self.connection.execute(
+                """
+                update candidates
+                set status = 'running', started_at = ?, completed_at = null, error = null
+                where id = ? and status = 'pending'
+                """,
+                (now, candidate_id),
+            )
+            if claim.rowcount != 1:
+                raise RuntimeError("candidate is not pending")
+            cursor = self.connection.execute(
+                "insert into attempts(candidate_id, status, started_at) values (?, 'running', ?)",
+                (candidate_id, now),
+            )
         return cursor.lastrowid
 
     def complete_attempt(self, candidate_id, attempt_id, result):
@@ -249,7 +288,8 @@ class StudyStore:
             self.connection.execute(
                 """
                 update candidates
-                set status = 'completed', result_json = ?, completed_at = ?, error = null
+                set status = 'completed', result_json = ?, completed_at = ?,
+                    error = null, selection_pending = 1
                 where id = ?
                 """,
                 (_json(result), now, candidate_id),
@@ -291,6 +331,31 @@ class StudyStore:
         ).fetchone()
         return row["count"]
 
+    def failed_attempt_count(self, candidate_id):
+        row = self.connection.execute(
+            """
+            select count(*) as count from attempts
+            where candidate_id = ? and status = 'failed'
+            """,
+            (candidate_id,),
+        ).fetchone()
+        return row["count"]
+
+    def set_attempt_pid(self, attempt_id, pid):
+        with self.connection:
+            cursor = self.connection.execute(
+                "update attempts set pid = ? where id = ? and status = 'running'",
+                (pid, attempt_id),
+            )
+            if cursor.rowcount != 1:
+                raise RuntimeError("attempt is not running")
+
+    def running_attempts(self):
+        rows = self.connection.execute(
+            "select id, candidate_id, pid from attempts where status = 'running' order by id"
+        ).fetchall()
+        return [dict(row) for row in rows]
+
     def running_attempt(self, candidate_id):
         row = self.connection.execute(
             """
@@ -308,7 +373,8 @@ class StudyStore:
                 """
                 update candidates
                 set in_population = 0, is_frontier = 0,
-                    pareto_rank = null, crowding = null, novelty = null
+                    pareto_rank = null, crowding = null, novelty = null,
+                    selection_pending = 0
                 """
             )
             for candidate_id, values in metrics.items():
@@ -335,11 +401,23 @@ class StudyStore:
         ).fetchall()
         return [row["id"] for row in rows]
 
-    def frontier(self):
+    def selection_pending(self):
         rows = self.connection.execute(
-            "select id from candidates where is_frontier = 1 order by id"
+            """
+            select id from candidates
+            where status = 'completed' and selection_pending = 1
+            order by id
+            """
         ).fetchall()
-        return [self.candidate(row["id"]) for row in rows]
+        return [row["id"] for row in rows]
+
+    def frontier(self):
+        candidates = self.evaluated_candidates()
+        if not candidates:
+            return []
+        objective_names = tuple(candidates[0].objectives)
+        front = nondominated_sort(candidates, objective_names)[0]
+        return [self.candidate(candidate.id) for candidate in front]
 
     def lineage(self, candidate_id):
         seen = set()

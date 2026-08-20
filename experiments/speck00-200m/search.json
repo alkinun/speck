@@ -59,5 +59,6 @@
     "min_attention_layers": 2,
     "min_layers": 8,
     "min_parameters": 80000000
-  }
+  },
+  "worker_timeout_seconds": 7200
 }

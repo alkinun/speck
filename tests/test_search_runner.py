@@ -1,6 +1,7 @@
 from speck.model import Config, LayerConfig
 from speck.search.runner import (
     SearchSettings,
+    _ingest_output,
     generate_offspring,
     run_search,
     search_objectives,
@@ -122,4 +123,77 @@ def test_search_lifecycle_and_resume(tmp_path, monkeypatch):
 
     run_search(store, tmp_path, baseline(), {}, settings(), "cpu")
     assert len(store.candidates()) == 4
+    store.close()
+
+
+def test_structured_worker_failure_retries_once(tmp_path):
+    store = StudyStore(tmp_path / "study.sqlite3")
+    store.initialize(settings().export(), {})
+    candidate_id = store.add_candidate(baseline(), 1, {"operator": "seed"})
+    assert candidate_id is not None
+
+    first_attempt = store.start_attempt(candidate_id)
+    output = {
+        "status": "failed",
+        "candidate_id": candidate_id,
+        "attempt_id": first_attempt,
+        "error_type": "RuntimeError",
+        "error": "transient",
+    }
+    assert not _ingest_output(
+        store, candidate_id, first_attempt, output, settings()
+    )
+    assert store.candidate(candidate_id)["status"] == "pending"
+
+    second_attempt = store.start_attempt(candidate_id)
+    output["attempt_id"] = second_attempt
+    assert not _ingest_output(
+        store, candidate_id, second_attempt, output, settings()
+    )
+    assert store.candidate(candidate_id)["status"] == "failed"
+    store.close()
+
+
+def test_evicted_candidate_does_not_reenter_population(tmp_path):
+    store = StudyStore(tmp_path / "study.sqlite3")
+    store.initialize(settings().export(), {})
+    candidate_ids = []
+    for index, (hidden, intermediate) in enumerate(
+        ((8, 16), (12, 16), (8, 24)), start=1
+    ):
+        candidate = Config(
+            vocab_size=16,
+            layers=(LayerConfig(hidden, intermediate, 1),),
+            head_dim=4,
+            max_position_embeddings=10,
+        )
+        candidate_id = store.add_candidate(
+            candidate,
+            index,
+            {"operator": "seed" if index == 1 else "change_hidden_size"},
+        )
+        assert candidate_id is not None
+        attempt = store.start_attempt(candidate_id)
+        store.complete_attempt(candidate_id, attempt, result(index))
+        update_selection(store, settings())
+        candidate_ids.append(candidate_id)
+
+    evicted = candidate_ids[2]
+    assert evicted not in store.population()
+
+    fourth = Config(
+        vocab_size=16,
+        layers=(LayerConfig(12, 24, 1),),
+        head_dim=4,
+        max_position_embeddings=10,
+    )
+    fourth_id = store.add_candidate(
+        fourth, 4, {"operator": "change_ffn_width"}
+    )
+    assert fourth_id is not None
+    attempt = store.start_attempt(fourth_id)
+    store.complete_attempt(fourth_id, attempt, result(4))
+    update_selection(store, settings())
+    assert evicted not in store.population()
+    assert store.candidate(evicted)["pareto_rank"] is None
     store.close()
