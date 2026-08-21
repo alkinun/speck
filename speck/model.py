@@ -461,6 +461,23 @@ class SpeckForCausalLM(nn.Module):
 
 def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2):
     settings = dict(settings)
+    if settings.get("architecture_version") == 3:
+        from speck.architecture import ArchitectureConfig
+        from speck.model_v3 import SpeckV3ForCausalLM
+
+        settings.update(
+            vocab_size=vocab_size,
+            bos_token_id=bos_token_id,
+            eos_token_id=eos_token_id,
+        )
+        config = ArchitectureConfig.from_dict(settings)
+        model = SpeckV3ForCausalLM(config)
+        if (
+            config.expected_parameters is not None
+            and model.parameter_count() != config.expected_parameters
+        ):
+            raise ValueError(f"unexpected parameter count: {model.parameter_count():,}")
+        return model
     architecture = settings.pop("architecture", "speck")
     if architecture != "speck":
         raise ValueError(f"unsupported model architecture: {architecture}")
