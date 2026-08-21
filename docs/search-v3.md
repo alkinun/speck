@@ -248,6 +248,14 @@ python -m scripts.segment_plan ~/.cache/speck/ultra_fineweb/packed \
 
 the packed dataset must contain the format-two document index.
 
+an existing format-one packed corpus can be upgraded without rewriting token shards:
+
+```bash
+python -m scripts.upgrade_document_index ~/.cache/speck/ultra_fineweb/packed
+```
+
+the upgrader verifies every shard while recovering reserved bos/eos boundaries, preserves `manifest.v1.json`, derives document identities from the verified original dataset plus split token ranges, and atomically publishes `documents.jsonl` before the format-two manifest.
+
 `experiments/speck00-200m/search-v3.example.json` records the initial moderate-panel configuration. it is an example rather than an active experiment until its segment-plan digest is frozen and the worker workflow is complete.
 
 after an active configuration records the emitted segment-plan digest, initialize and inspect a study with:
