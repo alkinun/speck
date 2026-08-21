@@ -66,7 +66,7 @@ class QualityBase:
     compile: bool = False
     batch_curriculum: bool = False
 
-    def settings(self, rung):
+    def settings(self, rung, schedule_steps=None):
         return QualitySettings(
             data_dir=self.data_dir,
             train_tokens=rung.train_tokens,
@@ -84,6 +84,7 @@ class QualityBase:
             optimizer=self.optimizer,
             compile=self.compile,
             batch_curriculum=self.batch_curriculum,
+            schedule_steps=schedule_steps,
         )
 
 

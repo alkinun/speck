@@ -8,7 +8,7 @@ from typing import Any
 
 import torch
 
-from speck.dataloader import packed_loader
+from speck.dataloader import PackedTokenSplit, packed_loader
 from speck.dataset import load_manifest
 from speck.model import Config, SpeckForCausalLM
 from speck.search.architecture import kv_bytes_per_token, parameter_count
@@ -33,6 +33,7 @@ class QualitySettings:
     optimizer: str
     compile: bool = True
     batch_curriculum: bool = False
+    schedule_steps: int | None = None
 
     def __post_init__(self):
         positive = (
@@ -60,6 +61,9 @@ class QualitySettings:
                 raise ValueError("curriculum batches must be divisible by micro batch tokens")
         if self.warmup_steps < 0:
             raise ValueError("warmup steps cannot be negative")
+        steps = self.train_tokens // self.batch_tokens
+        if self.schedule_steps is not None and self.schedule_steps < steps:
+            raise ValueError("schedule steps cannot be shorter than the quality run")
 
     @classmethod
     def from_dict(cls, settings):
@@ -151,27 +155,37 @@ def _validation_loss(
     sequence_length,
     token_limit,
     device,
+    offset_tokens=0,
 ):
-    loader = packed_loader(
-        tokenizer,
-        batch_size,
-        sequence_length,
-        "val",
-        device=device,
-        data_dir=data_dir,
-    )
-    tokens = min(manifest["splits"]["val"]["tokens"], token_limit)
+    packed = PackedTokenSplit(data_dir, "val", manifest)
+    available = packed.total_tokens - offset_tokens - 1
+    tokens = min(available, token_limit)
+    if offset_tokens < 0 or tokens < batch_size * sequence_length:
+        raise ValueError("validation slice is outside the packed split")
     steps = max(1, tokens // (batch_size * sequence_length))
     loss = torch.zeros((), device=device)
     model.eval()
-    for _ in range(steps):
-        inputs, targets, _ = next(loader)
+    for step in range(steps):
+        start = offset_tokens + step * batch_size * sequence_length
+        flat = torch.from_numpy(
+            packed.read(start, batch_size * sequence_length + 1)
+        )
+        rows = flat.unfold(0, sequence_length + 1, sequence_length)
+        inputs = rows[:, :-1].contiguous().to(device)
+        targets = rows[:, 1:].contiguous().to(device)
         loss += model(inputs, targets)
     model.train()
     return (loss / steps).item(), steps * batch_size * sequence_length
 
 
-def evaluate_quality(config, tokenizer, settings, device, seed):
+def evaluate_quality(
+    config,
+    tokenizer,
+    settings,
+    device,
+    seed,
+    validation_slices=None,
+):
     if settings.sequence_length > config.max_position_embeddings:
         raise ValueError("quality sequence exceeds model context")
     manifest = load_manifest(settings.data_dir)
@@ -205,25 +219,54 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
     )
     batch = next(loader)
     nominal_steps = settings.train_tokens // settings.batch_tokens
+    schedule_steps = settings.schedule_steps or nominal_steps
     quarter_tokens = math.ceil(nominal_steps / 4) * settings.batch_tokens
     train_curve = []
     validation_curve = []
 
-    def validate(step, tokens):
-        loss, evaluated_tokens = _validation_loss(
-            train_model,
-            tokenizer,
-            settings.data_dir,
-            manifest,
-            settings.eval_batch_size,
-            settings.sequence_length,
-            settings.eval_tokens,
-            device,
-        )
-        validation_curve.append({"step": step, "tokens": tokens, "loss": loss})
-        return evaluated_tokens
+    slices = validation_slices or (
+        {"name": "main", "offset_tokens": 0, "objective": True},
+    )
 
-    evaluated_tokens = validate(0, 0)
+    def validate(step, tokens):
+        losses = {}
+        evaluated_tokens = None
+        for item in slices:
+            if isinstance(item, dict):
+                name = item["name"]
+                offset = item.get("offset_tokens", 0)
+                objective = item.get("objective", True)
+            else:
+                name = item.name
+                offset = item.offset_tokens
+                objective = item.objective
+            loss, slice_tokens = _validation_loss(
+                train_model,
+                tokenizer,
+                settings.data_dir,
+                manifest,
+                settings.eval_batch_size,
+                settings.sequence_length,
+                settings.eval_tokens,
+                device,
+                offset,
+            )
+            losses[name] = {
+                "loss": loss,
+                "tokens": slice_tokens,
+                "offset_tokens": offset,
+                "objective": objective,
+            }
+            evaluated_tokens = slice_tokens
+        primary = next(
+            value["loss"] for value in losses.values() if value["objective"]
+        )
+        validation_curve.append(
+            {"step": step, "tokens": tokens, "loss": primary, "slices": losses}
+        )
+        return evaluated_tokens, losses
+
+    evaluated_tokens, final_validation = validate(0, 0)
     next_validation = settings.eval_every_tokens
     durations = []
     trained_tokens = 0
@@ -240,7 +283,7 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
         accumulation = batch_tokens // micro_tokens
         schedule_step = trained_tokens / settings.batch_tokens
         scale = lr_scale(
-            schedule_step, nominal_steps, settings.warmup_steps, settings.min_lr
+            schedule_step, schedule_steps, settings.warmup_steps, settings.min_lr
         )
         _synchronize(device)
         started = time.perf_counter()
@@ -268,7 +311,7 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
             }
         )
         if trained_tokens >= next_validation or trained_tokens == settings.train_tokens:
-            evaluated_tokens = validate(step, trained_tokens)
+            evaluated_tokens, final_validation = validate(step, trained_tokens)
             while next_validation <= trained_tokens:
                 next_validation += settings.eval_every_tokens
 
@@ -280,6 +323,15 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
     )
     return {
         "validation_nll": validation_curve[-1]["loss"],
+        "validation": {
+            name: {
+                "nll": value["loss"],
+                "tokens": value["tokens"],
+                "offset_tokens": value["offset_tokens"],
+                "objective": value["objective"],
+            }
+            for name, value in final_validation.items()
+        },
         "train_curve": train_curve,
         "validation_curve": validation_curve,
         "geometry": {
@@ -290,6 +342,7 @@ def evaluate_quality(config, tokenizer, settings, device, seed):
             "final_accumulation": settings.batch_tokens // micro_tokens,
             "eval_tokens": evaluated_tokens,
             "batch_curriculum": settings.batch_curriculum,
+            "schedule_steps": schedule_steps,
         },
         "performance": {
             "training_seconds": sum(durations),
@@ -412,8 +465,18 @@ def quantized_weight_bytes(config, settings):
 
 
 def objective_values(quality, inference, quantization):
+    validation = quality.get("validation")
+    quality_objectives = (
+        {
+            f"quality.validation_nll.{name}": value["nll"]
+            for name, value in validation.items()
+            if value["objective"]
+        }
+        if validation
+        else {"quality.validation_nll": quality["validation_nll"]}
+    )
     objectives = {
-        "quality.validation_nll": quality["validation_nll"],
+        **quality_objectives,
         "memory.kv_cache_bytes_per_token": inference["kv_cache_bytes_per_token"],
         "memory.quantized_weight_bytes": quantization["total_bytes"],
     }

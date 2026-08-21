@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 from speck.model import Config, LayerConfig
 from speck.search.evaluate import (
@@ -62,3 +63,48 @@ def test_objective_values_keep_contexts_separate():
     assert "prefill.ms.context_4" in objectives
     assert "decode.ms_per_token.context_4" in objectives
     assert objectives["memory.inference_peak_bytes.context_4"] is None
+
+
+def test_validation_slice_reads_the_requested_offset(tmp_path):
+    from speck.search.evaluate import _validation_loss
+
+    tokens = np.arange(32, dtype=np.uint16)
+    tokens.tofile(tmp_path / "val.bin")
+    manifest = {
+        "splits": {
+            "val": {
+                "tokens": len(tokens),
+                "shards": [{"path": "val.bin", "tokens": len(tokens)}],
+            }
+        }
+    }
+
+    class Model:
+        def __init__(self):
+            self.starts = []
+
+        def eval(self):
+            pass
+
+        def train(self):
+            pass
+
+        def __call__(self, inputs, targets):
+            self.starts.append(inputs[0, 0].item())
+            return torch.tensor(0.0)
+
+    model = Model()
+    loss, evaluated = _validation_loss(
+        model,
+        None,
+        tmp_path,
+        manifest,
+        batch_size=1,
+        sequence_length=4,
+        token_limit=8,
+        device=torch.device("cpu"),
+        offset_tokens=8,
+    )
+    assert loss == 0
+    assert evaluated == 8
+    assert model.starts == [8, 12]
