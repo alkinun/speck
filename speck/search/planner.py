@@ -134,31 +134,26 @@ def commit_plan(study, decision):
         decision, PlanningDecision
     ):
         raise TypeError("committing a plan needs a v3 study and planning decision")
-    event = study.record_event(
-        "planning_decision",
-        {
-            "decision_digest": decision.digest,
-            "decision": decision.export(),
-        },
-    )
-    action_ids = []
+    actions = []
     for action in decision.selected:
         payload = {
             **action.proposal.payload,
             "architecture_digest": action.proposal.architecture_digest,
-            "planning_decision_digest": decision.digest,
-            "planning_event": event,
             "proposal_digest": action.proposal.digest,
         }
-        action_ids.append(
-            study.add_action(
-                action.proposal.kind,
-                action.priority,
-                action.proposal.estimated_cost,
-                payload,
-            )
+        actions.append(
+            {
+                "estimated_cost": action.proposal.estimated_cost,
+                "kind": action.proposal.kind,
+                "payload": payload,
+                "priority": action.priority,
+            }
         )
-    return tuple(action_ids)
+    return study.commit_planning_decision(
+        decision.digest,
+        decision.export(),
+        actions,
+    )
 
 
 def posterior_information(covariance, reduction):

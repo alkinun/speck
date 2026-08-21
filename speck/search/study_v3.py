@@ -2,6 +2,7 @@
 
 import json
 import math
+import re
 import secrets
 import sqlite3
 from dataclasses import asdict
@@ -24,7 +25,7 @@ from speck.search.protocol import (
 )
 
 
-database_schema_version = 3
+database_schema_version = 4
 
 
 def _now():
@@ -217,6 +218,18 @@ class V3Study:
                 created_at text not null,
                 unique(architecture_digest, scenario_digest, repetition)
             );
+            create table if not exists planning_decisions (
+                digest text primary key,
+                definition_json text not null,
+                event_sequence integer not null references events(sequence),
+                created_at text not null
+            );
+            create table if not exists planning_actions (
+                decision_digest text not null references planning_decisions(digest),
+                position integer not null,
+                action_id integer not null unique references actions(id),
+                primary key(decision_digest, position)
+            );
             create table if not exists events (
                 sequence integer primary key autoincrement,
                 kind text not null,
@@ -367,6 +380,67 @@ class V3Study:
     def record_event(self, kind, payload):
         with self.connection:
             return self._record_event(kind, payload)
+
+    def commit_planning_decision(self, decision_digest, definition, actions):
+        if not re.fullmatch(r"[0-9a-f]{64}", decision_digest):
+            raise ValueError("planning decision digests must be lowercase sha256")
+        actions = tuple(actions)
+        encoded = canonical_json(definition)
+        self.connection.execute("begin immediate")
+        try:
+            row = self.connection.execute(
+                "select definition_json from planning_decisions where digest = ?",
+                (decision_digest,),
+            ).fetchone()
+            if row is not None:
+                if row["definition_json"] != encoded:
+                    raise ValueError("planning decision digest collision")
+                action_ids = tuple(
+                    item["action_id"]
+                    for item in self.connection.execute(
+                        """
+                        select action_id from planning_actions
+                        where decision_digest = ? order by position
+                        """,
+                        (decision_digest,),
+                    )
+                )
+                self.connection.rollback()
+                return action_ids
+            event = self._record_event(
+                "planning_decision",
+                {
+                    "decision": definition,
+                    "decision_digest": decision_digest,
+                },
+            )
+            self.connection.execute(
+                "insert into planning_decisions values (?, ?, ?, ?)",
+                (decision_digest, encoded, event, _timestamp()),
+            )
+            action_ids = []
+            for position, action in enumerate(actions):
+                payload = {
+                    **action["payload"],
+                    "planning_decision_digest": decision_digest,
+                    "planning_event": event,
+                }
+                action_id = self._insert_action(
+                    action["kind"],
+                    action["priority"],
+                    action["estimated_cost"],
+                    payload,
+                )
+                self.connection.execute(
+                    "insert into planning_actions values (?, ?, ?)",
+                    (decision_digest, position, action_id),
+                )
+                action_ids.append(action_id)
+            self.connection.commit()
+            return tuple(action_ids)
+        except Exception:
+            self.connection.rollback()
+            raise
 
     def events(self, after=0):
         return [

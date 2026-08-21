@@ -1,9 +1,12 @@
+import pytest
+
 from speck.search.planner import (
     ActionProposal,
     commit_plan,
     plan_actions,
     posterior_information,
 )
+from speck.search.protocol import content_digest
 from speck.search.study_v3 import V3Study
 
 
@@ -66,6 +69,9 @@ def test_plans_commit_as_replayable_worker_actions(tmp_path):
     assert study.events()[-3]["kind"] == "planning_decision"
     for action in study.actions("pending"):
         assert action["payload"]["planning_decision_digest"] == decision.digest
+    event_count = len(study.events())
+    assert commit_plan(study, decision) == action_ids
+    assert len(study.events()) == event_count
     study.close()
 
 
@@ -76,3 +82,26 @@ def test_posterior_information_tracks_expected_variance_reduction():
     assert posterior_information(covariance, 1.0) == (
         2 * posterior_information(covariance, 0.5)
     )
+
+
+def test_planning_batch_rolls_back_as_one_transaction(tmp_path):
+    study = V3Study(tmp_path / "study.sqlite3")
+    study.initialize({}, {})
+    events = len(study.events())
+    definition = {"seed": 1}
+    with pytest.raises(ValueError, match="positive"):
+        study.commit_planning_decision(
+            content_digest(definition),
+            definition,
+            (
+                {
+                    "kind": "profile",
+                    "priority": 1.0,
+                    "estimated_cost": 0.0,
+                    "payload": {},
+                },
+            ),
+        )
+    assert study.actions() == []
+    assert len(study.events()) == events
+    study.close()
