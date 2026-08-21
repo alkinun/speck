@@ -80,6 +80,9 @@ def test_prepare_and_resume_packed_dataset(tmp_path, monkeypatch):
     )
     assert manifest["splits"]["train"]["tokens"] >= 200
     assert manifest["splits"]["val"]["tokens"] >= 80
+    assert manifest["format_version"] == 2
+    assert manifest["document_index"]["records"] == manifest["documents"]
+    assert (tmp_path / manifest["document_index"]["path"]).is_file()
     for split in ("train", "val"):
         for shard in manifest["splits"][split]["shards"]:
             values = np.memmap(tmp_path / shard["path"], mode="r", dtype="<u2")

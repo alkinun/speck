@@ -20,7 +20,8 @@ from speck.common import base_dir
 from speck.tokenizer import get_tokenizer
 
 
-format_version = 1
+format_version = 2
+supported_format_versions = {1, format_version}
 default_data_dir = Path(base_dir()) / "ultra_fineweb"
 default_source = {
     "repo": "openbmb/Ultra-FineWeb",
@@ -239,6 +240,9 @@ def prepare_dataset(
     staging.mkdir(parents=True)
     train_writer = TokenShardWriter(staging, "train", shard_tokens)
     val_writer = TokenShardWriter(staging, "val", shard_tokens)
+    document_index_path = staging / "documents.jsonl.tmp"
+    document_index = document_index_path.open("w", encoding="utf-8")
+    document_index_hash = hashlib.sha256()
     bos = tokenizer.bos_id
     eos = tokenizer.eos_id
     if document_iterator is None:
@@ -270,7 +274,19 @@ def prepare_dataset(
         for (document, writer, target), token_ids in zip(rows, token_rows):
             if writer.total_tokens >= target:
                 continue
-            writer.write(token_ids)
+            start_token = writer.total_tokens
+            written = writer.write(token_ids)
+            record = {
+                "content_hash": hashlib.sha256(document["content"].encode()).hexdigest(),
+                "end_token": start_token + written,
+                "score": document.get("score"),
+                "source": document.get("source", "unknown"),
+                "split": "val" if writer is val_writer else "train",
+                "start_token": start_token,
+            }
+            line = json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n"
+            document_index.write(line)
+            document_index_hash.update(line.encode())
             document_count += 1
             source = document.get("source", "unknown")
             source_counts[source] = source_counts.get(source, 0) + 1
@@ -290,6 +306,11 @@ def prepare_dataset(
         done = train_writer.total_tokens >= train_tokens and val_writer.total_tokens >= validation_tokens
     if not done:
         raise RuntimeError("ultra-fineweb was exhausted before reaching the requested token budgets")
+    document_index.flush()
+    os.fsync(document_index.fileno())
+    document_index.close()
+    final_document_index = document_index_path.with_suffix("")
+    document_index_path.replace(final_document_index)
 
     manifest = {
         "format": "speck_packed_tokens",
@@ -311,6 +332,11 @@ def prepare_dataset(
             "eos_token_id": eos,
         },
         "documents": document_count,
+        "document_index": {
+            "path": final_document_index.name,
+            "records": document_count,
+            "sha256": document_index_hash.hexdigest(),
+        },
         "sources": source_counts,
         "splits": {
             "train": {"tokens": train_writer.total_tokens, "shards": train_writer.finish()},
@@ -334,7 +360,7 @@ def load_manifest(data_dir=None):
     if not manifest_path.exists():
         raise FileNotFoundError(f"packed dataset not found: {manifest_path}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("format_version") != format_version:
+    if manifest.get("format_version") not in supported_format_versions:
         raise ValueError(f"unsupported packed dataset version: {manifest.get('format_version')}")
     return manifest
 
