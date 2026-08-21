@@ -14,6 +14,7 @@ from speck.search.segments import (
     build_segment_plan,
     load_document_index,
     load_segment_plan,
+    segment_evaluation_batches,
     segment_loader,
     validate_segment_plan,
 )
@@ -220,3 +221,23 @@ def test_segment_loader_replays_its_exact_cursor(tmp_path):
                 resume_state_dict=second[2],
             )
         )
+
+
+def test_segment_evaluation_covers_every_next_token_once(tmp_path):
+    plan = packed_segment_data(tmp_path)
+    batches = tuple(
+        segment_evaluation_batches(
+            FakeTokenizer(),
+            plan,
+            "train",
+            2,
+            4,
+            device="cpu",
+            data_dir=tmp_path,
+        )
+    )
+    assert sum(labels.numel() for _, labels in batches) == 23
+    assert all(
+        torch.equal(inputs[:, 1:], labels[:, :-1])
+        for inputs, labels in batches
+    )

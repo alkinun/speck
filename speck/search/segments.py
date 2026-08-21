@@ -333,6 +333,74 @@ def segment_loader(
         logical_offset += stride
 
 
+def segment_evaluation_batches(
+    tokenizer,
+    plan,
+    partition_name,
+    batch_size,
+    sequence_length,
+    *,
+    device="cuda",
+    data_dir=None,
+):
+    if not isinstance(plan, SegmentPlan):
+        raise TypeError("segment evaluation needs a segment plan")
+    if min(batch_size, sequence_length) < 1:
+        raise ValueError("segment evaluation dimensions must be positive")
+    rank, _, world_size = dist_info()
+    if rank != 0 or world_size != 1:
+        raise ValueError("segment evaluation currently requires world size one")
+    data_dir = Path(data_dir)
+    manifest = load_manifest(data_dir)
+    if tokenizer.vocab_size != manifest["tokenizer"]["vocab_size"]:
+        raise ValueError("packed dataset vocabulary does not match tokenizer")
+    if tokenizer.fingerprint() != manifest["tokenizer"]["fingerprint"]:
+        raise ValueError("packed dataset was created with a different tokenizer")
+    if plan.dataset_digest != manifest_fingerprint(manifest):
+        raise ValueError("segment plan belongs to a different packed dataset")
+    validate_segment_plan(
+        plan,
+        load_document_index(data_dir, manifest),
+        (partition_name,),
+    )
+    partitions = {
+        partition.name: partition for partition in plan.partitions
+    }
+    if partition_name not in partitions:
+        raise ValueError(f"unknown segment partition: {partition_name}")
+    partition = partitions[partition_name]
+    reader = SegmentTokenReader(
+        PackedTokenSplit(data_dir, partition.split, manifest),
+        partition.spans,
+    )
+    if reader.total_tokens < 2:
+        raise ValueError("segment evaluation needs at least two tokens")
+    device = torch.device(device)
+    offset = 0
+    remaining = reader.total_tokens - 1
+    while remaining:
+        if remaining >= sequence_length:
+            rows = min(batch_size, remaining // sequence_length)
+            length = sequence_length
+        else:
+            rows = 1
+            length = remaining
+        targets = rows * length
+        flat = torch.from_numpy(reader.read(offset, targets + 1))
+        windows = flat.unfold(0, length + 1, length)
+        inputs = windows[:, :-1].contiguous()
+        labels = windows[:, 1:].contiguous()
+        if device.type == "cuda":
+            inputs = inputs.pin_memory().to(device, non_blocking=True)
+            labels = labels.pin_memory().to(device, non_blocking=True)
+        else:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+        yield inputs, labels
+        offset += targets
+        remaining -= targets
+
+
 def load_document_index(data_dir, manifest=None):
     data_dir = Path(data_dir)
     manifest = manifest or load_manifest(data_dir)

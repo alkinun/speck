@@ -57,7 +57,7 @@ def objectives():
     return ObjectiveSet(
         "gpu_short",
         (
-            ObjectiveSpec("quality.nll", "minimize", "quality"),
+            ObjectiveSpec("quality.target_nll", "minimize", "quality"),
             ObjectiveSpec("gpu.decode", "minimize", "efficiency"),
         ),
     )
@@ -82,7 +82,7 @@ def test_v3_study_normalizes_runs_and_observations(tmp_path):
     observation = study.add_observation(
         config.digest,
         objectives().digest,
-        "quality.nll",
+        "quality.target_nll",
         2.0,
         run_id=run,
         variance=0.01,
@@ -186,6 +186,7 @@ def test_v3_study_rejects_other_databases_without_modifying_them(tmp_path):
 def test_v3_study_commits_quality_checkpoints_atomically(tmp_path):
     study = V3Study(tmp_path / "study.sqlite3")
     study.initialize({}, {})
+    study.add_objective_set(objectives())
     config, seeds, run_id = quality_run(study)
     store = ArtifactStore(tmp_path / "artifacts")
 
@@ -211,6 +212,23 @@ def test_v3_study_commits_quality_checkpoints_atomically(tmp_path):
     assert study.run(run_id)["checkpoint_digest"] == first.artifact.digest
     assert study.checkpoint(first.artifact.digest) == first
     assert study.checkpoints(run_id) == (first,)
+
+    evaluation_action = study.add_evaluation_action(
+        run_id,
+        (objectives().digest,),
+        10,
+        1.0,
+        1.0,
+    )
+    evaluation_claim = study.claim_action("evaluator", kind="evaluate")
+    evaluation_artifact = store.put_json("quality_evaluation", {"nll": 2.0})
+    study.commit_quality_evaluation(
+        evaluation_action,
+        evaluation_claim["claim_token"],
+        2.0,
+        10,
+        evaluation_artifact,
+    )
 
     second_action = study.add_quality_action(run_id, 2.0, 3.0)
     second_claim = study.claim_action("trainer", kind="continue")

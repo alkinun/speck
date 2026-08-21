@@ -31,6 +31,17 @@ def test_v3_search_cli_parses_explicit_initialization_inputs():
         ]
     )
     assert profile.profile == "cpu_short"
+    evaluation = parser().parse_args(
+        [
+            "schedule-evaluation",
+            "calibration",
+            "--run",
+            "1",
+            "--estimated-cost",
+            "30",
+        ]
+    )
+    assert evaluation.run == 1
 
 
 def test_v3_search_cli_reports_normalized_status(tmp_path, monkeypatch, capsys):

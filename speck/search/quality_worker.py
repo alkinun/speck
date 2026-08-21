@@ -301,6 +301,7 @@ def run_quality_worker(
             owner,
             lease_seconds=lease_seconds,
             kind="continue",
+            device_type=torch.device(device).type,
         )
     finally:
         study.close()

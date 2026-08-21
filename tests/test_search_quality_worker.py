@@ -15,7 +15,13 @@ from speck.architecture import (
 from speck.dataloader import manifest_fingerprint
 from speck.search.artifacts import ArtifactStore
 from speck.search.checkpoints import load_run_checkpoint
-from speck.search.protocol import SeedBundle, TrainingProtocol
+from speck.search.evaluation_worker import run_evaluation_worker
+from speck.search.protocol import (
+    ObjectiveSet,
+    ObjectiveSpec,
+    SeedBundle,
+    TrainingProtocol,
+)
 from speck.search.quality_worker import run_quality_worker
 from speck.search.segments import (
     SegmentPartition,
@@ -67,9 +73,9 @@ def quality_data(tmp_path, monkeypatch):
         document_iterator=iter(documents),
         tokenizer=tokenizer,
     )
-    records = tuple(
-        record for record in load_document_index(data_dir, manifest) if record.split == "train"
-    )
+    records = load_document_index(data_dir, manifest)
+    training = tuple(record for record in records if record.split == "train")
+    monitor = tuple(record for record in records if record.split == "val")
     plan = SegmentPlan(
         manifest_fingerprint(manifest),
         42,
@@ -79,7 +85,15 @@ def quality_data(tmp_path, monkeypatch):
                 "train",
                 tuple(
                     TokenSpan(record.content_hash, record.start_token, record.end_token)
-                    for record in records
+                    for record in training
+                ),
+            ),
+            SegmentPartition(
+                "monitor",
+                "val",
+                tuple(
+                    TokenSpan(record.content_hash, record.start_token, record.end_token)
+                    for record in monitor
                 ),
             ),
         ),
@@ -122,6 +136,21 @@ def protocol(plan, checkpoints):
     )
 
 
+def quality_objectives():
+    return ObjectiveSet(
+        "cpu_short",
+        (
+            ObjectiveSpec("quality.target_nll", "minimize", "quality"),
+            ObjectiveSpec(
+                "quality.procedural_score",
+                "maximize",
+                "reporting",
+                required_for_selection=False,
+            ),
+        ),
+    )
+
+
 def prepare_study(path, artifact_root, data_dir, plan, plan_path, run_protocol):
     artifacts = ArtifactStore(artifact_root)
     segment_artifact = artifacts.put_json("segment_plan", plan.export())
@@ -135,6 +164,7 @@ def prepare_study(path, artifact_root, data_dir, plan, plan_path, run_protocol):
             "segment_plan": {"digest": plan.digest, "path": str(plan_path)},
             "tokenizer": {},
         },
+        objective_sets=(quality_objectives(),),
         architecture=architecture(),
         artifacts=(segment_artifact,),
     )
@@ -176,6 +206,26 @@ def test_quality_worker_resume_matches_uninterrupted_training(tmp_path, monkeypa
         captured_git=git,
     )
     assert first["status"] == "paused"
+    monitor_tokens = next(
+        partition.tokens for partition in plan.partitions if partition.name == "monitor"
+    ) - 1
+    study = V3Study(resumed_path)
+    study.add_evaluation_action(
+        run_id,
+        (quality_objectives().digest,),
+        monitor_tokens,
+        1.0,
+        1.0,
+    )
+    study.close()
+    run_evaluation_worker(
+        resumed_path,
+        resumed_artifacts,
+        owner="evaluator",
+        device="cpu",
+        tokenizer=tokenizer,
+        captured_git=git,
+    )
     study = V3Study(resumed_path)
     study.add_quality_action(run_id, 1.0, 1.0)
     study.close()
@@ -257,4 +307,70 @@ def test_quality_worker_returns_failed_setup_to_a_resumable_run(tmp_path, monkey
     study = V3Study(study_path, readonly=True)
     assert study.action(action_id)["status"] == "failed"
     assert study.run(run_id)["status"] == "pending"
+    study.close()
+
+
+def test_evaluation_worker_observes_the_whole_monitor_partition(
+    tmp_path, monkeypatch
+):
+    data_dir, plan, plan_path, tokenizer = quality_data(tmp_path, monkeypatch)
+    study_path = tmp_path / "study.sqlite3"
+    artifact_root = tmp_path / "artifacts"
+    git, run_id = prepare_study(
+        study_path,
+        artifact_root,
+        data_dir,
+        plan,
+        plan_path,
+        protocol(plan, (4,)),
+    )
+    study = V3Study(study_path)
+    study.add_quality_action(run_id, 1.0, 1.0)
+    study.close()
+    run_quality_worker(
+        study_path,
+        artifact_root,
+        owner="trainer",
+        device="cpu",
+        tokenizer=tokenizer,
+        captured_git=git,
+    )
+    monitor_tokens = next(
+        partition.tokens for partition in plan.partitions if partition.name == "monitor"
+    ) - 1
+    study = V3Study(study_path)
+    action_id = study.add_evaluation_action(
+        run_id,
+        (quality_objectives().digest,),
+        monitor_tokens,
+        1.0,
+        1.0,
+    )
+    study.close()
+    result = run_evaluation_worker(
+        study_path,
+        artifact_root,
+        owner="evaluator",
+        device="cpu",
+        tokenizer=tokenizer,
+        captured_git=git,
+    )
+    assert result["action_id"] == action_id
+    assert result["evaluated_tokens"] == monitor_tokens
+    assert result["nll"] > 0
+    study = V3Study(study_path, readonly=True)
+    run = study.run(run_id)
+    assert run["status"] == "completed"
+    evaluation = study.quality_evaluation(run_id, run["checkpoint_digest"])
+    assert evaluation["evaluated_tokens"] == monitor_tokens
+    observations = study.observations(
+        architecture().digest,
+        quality_objectives().digest,
+    )
+    assert [item["objective_name"] for item in observations] == [
+        "quality.target_nll"
+    ]
+    assert [item.name for item in quality_objectives().selection] == [
+        "quality.target_nll"
+    ]
     study.close()

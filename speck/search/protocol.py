@@ -170,6 +170,8 @@ class TrainingProtocol:
     dtype: str = "float32"
     compile_model: bool = False
     world_size: int = 1
+    evaluation_partition: str = "monitor"
+    evaluation_batch_size: int = 1
 
     def __post_init__(self):
         if not re.fullmatch(r"[a-z0-9_]+", self.name):
@@ -213,6 +215,10 @@ class TrainingProtocol:
             raise ValueError("training dtype must be float32 or bfloat16")
         if self.world_size != 1:
             raise ValueError("v3 quality training currently requires world size one")
+        if not re.fullmatch(r"[a-z0-9_]+", self.evaluation_partition):
+            raise ValueError("evaluation partitions must be lowercase identifiers")
+        if self.evaluation_batch_size < 1:
+            raise ValueError("evaluation batch sizes must be positive")
         if not self.checkpoint_tokens:
             raise ValueError("checkpoint tokens cannot be empty")
         if tuple(sorted(set(self.checkpoint_tokens))) != self.checkpoint_tokens:

@@ -21,7 +21,8 @@
         {
           "direction": "maximize",
           "name": "quality.procedural_score",
-          "role": "quality"
+          "required_for_selection": false,
+          "role": "reporting"
         },
         {
           "direction": "minimize",
@@ -61,7 +62,8 @@
         {
           "direction": "maximize",
           "name": "quality.procedural_score",
-          "role": "quality"
+          "required_for_selection": false,
+          "role": "reporting"
         },
         {
           "direction": "minimize",
@@ -167,6 +169,8 @@
     "device_batch_size": 2,
     "device_type": "cuda",
     "dtype": "float32",
+    "evaluation_batch_size": 2,
+    "evaluation_partition": "monitor",
     "gradient_clip": 1.0,
     "learning_rate": 0.0015,
     "minimum_learning_rate_scale": 0.1,

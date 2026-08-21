@@ -46,6 +46,8 @@ class QualityProtocolTemplate:
     dtype: str = "float32"
     compile_model: bool = False
     world_size: int = 1
+    evaluation_partition: str = "monitor"
+    evaluation_batch_size: int = 1
 
     def __post_init__(self):
         self.resolve("dataset", "tokenizer", "segments")
@@ -70,6 +72,8 @@ class QualityProtocolTemplate:
             dtype=self.dtype,
             compile_model=self.compile_model,
             world_size=self.world_size,
+            evaluation_partition=self.evaluation_partition,
+            evaluation_batch_size=self.evaluation_batch_size,
         )
 
 

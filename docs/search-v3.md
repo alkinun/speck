@@ -226,6 +226,7 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | v3 configuration | `speck/search/spec_v3.py` |
 | study initialization | `speck/search/initialize_v3.py` |
 | quality worker | `speck/search/quality_worker.py` |
+| evaluation worker | `speck/search/evaluation_worker.py` |
 | profile worker | `speck/search/profile_worker.py` |
 | profiling | `speck/profile/` |
 
@@ -271,7 +272,19 @@ python -m scripts.architecture_search_v3 worker calibration-v3 \
 
 each scheduling call targets only the immediate next protocol checkpoint. repeating the call with the same seed index resumes the same run from its latest immutable checkpoint. the segment-plan seed fixes partition membership; the run data seed fixes a deterministic document order within that membership.
 
-the worker heartbeats through model construction, training, and checkpoint serialization. it writes the content-addressed checkpoint first, then atomically fences the expected parent, registers lineage, advances the run, and completes the action. expired or reclaimed workers cannot publish progress. the initial worker is single-device, requires `compile_model` to be false, and records training state only; quality evaluation remains a separate future action so training loss cannot be mislabeled as target nll.
+the worker heartbeats through model construction, training, and checkpoint serialization. it writes the content-addressed checkpoint first, then atomically fences the expected parent, registers lineage, advances the run, and completes the action. expired or reclaimed workers cannot publish progress. the initial worker is single-device, requires `compile_model` to be false, and records training state only; quality evaluation remains a separate action so training loss cannot be mislabeled as target nll.
+
+evaluate a completed checkpoint with:
+
+```bash
+python -m scripts.architecture_search_v3 schedule-evaluation calibration-v3 \
+  --run 1 \
+  --estimated-cost 300
+python -m scripts.architecture_search_v3 evaluation-worker calibration-v3 \
+  --device cuda
+```
+
+the evaluation protocol covers every next-token target in the frozen `monitor` partition exactly once, including a final partial batch. its partition and batch geometry are part of the immutable training protocol. `quality.procedural_score` is reporting-only and excluded from selection until a pinned benchmark and scoring artifact exist.
 
 schedule the configured independent profile repetitions with:
 

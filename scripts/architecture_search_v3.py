@@ -13,10 +13,12 @@ import torch
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.profile.schema import ProfileScenario
+from speck.search.evaluation_worker import run_evaluation_worker
 from speck.search.initialize_v3 import initialize_study
 from speck.search.profile_worker import backend_plugin, run_profile_worker
 from speck.search.protocol import SeedBundle, TrainingProtocol, derive_seed
 from speck.search.quality_worker import run_quality_worker
+from speck.search.segments import load_segment_plan
 from speck.search.spec_v3 import V3SearchSettings
 from speck.search.study_v3 import V3Study
 from speck.tokenizer import get_tokenizer
@@ -52,6 +54,12 @@ def parser():
     schedule_profile.add_argument("--priority", type=float, default=1.0)
     schedule_profile.add_argument("--estimated-cost", type=float, required=True)
 
+    schedule_evaluation = commands.add_parser("schedule-evaluation")
+    schedule_evaluation.add_argument("study")
+    schedule_evaluation.add_argument("--run", type=int, required=True)
+    schedule_evaluation.add_argument("--priority", type=float, default=1.0)
+    schedule_evaluation.add_argument("--estimated-cost", type=float, required=True)
+
     worker = commands.add_parser("worker")
     worker.add_argument("study")
     worker.add_argument(
@@ -77,6 +85,18 @@ def parser():
         default="cuda" if torch.cuda.is_available() else "cpu",
     )
     profile_worker.add_argument("--lease-seconds", type=int, default=300)
+
+    evaluation_worker = commands.add_parser("evaluation-worker")
+    evaluation_worker.add_argument("study")
+    evaluation_worker.add_argument(
+        "--owner",
+        default=f"{socket.gethostname()}:{os.getpid()}",
+    )
+    evaluation_worker.add_argument(
+        "--device",
+        default="cuda" if torch.cuda.is_available() else "cpu",
+    )
+    evaluation_worker.add_argument("--lease-seconds", type=int, default=300)
     return value
 
 
@@ -275,6 +295,56 @@ def profile_worker_command(args):
     display({"completed": result})
 
 
+def schedule_evaluation_command(args):
+    path = study_dir(args.study) / "study.sqlite3"
+    study = V3Study(path)
+    try:
+        stored = study.study()
+        settings = V3SearchSettings.from_dict(stored["config"])
+        run = study.run(args.run)
+        plan = load_segment_plan(stored["provenance"]["segment_plan"]["path"])
+        partition = next(
+            (
+                partition
+                for partition in plan.partitions
+                if partition.name == run["protocol"].evaluation_partition
+            ),
+            None,
+        )
+        if partition is None:
+            raise ValueError("evaluation partition is not in the segment plan")
+        objective_sets = tuple(
+            objectives.digest
+            for objectives in settings.objective_sets
+            if any(
+                objective.name == "quality.target_nll"
+                for objective in objectives.objectives
+            )
+        )
+        action_id = study.add_evaluation_action(
+            args.run,
+            objective_sets,
+            partition.tokens - 1,
+            args.priority,
+            args.estimated_cost,
+        )
+    finally:
+        study.close()
+    display({"action_id": action_id, "run_id": args.run})
+
+
+def evaluation_worker_command(args):
+    directory = study_dir(args.study)
+    result = run_evaluation_worker(
+        directory / "study.sqlite3",
+        directory / "artifacts",
+        owner=args.owner,
+        device=args.device,
+        lease_seconds=args.lease_seconds,
+    )
+    display({"completed": result})
+
+
 def main():
     args = parser().parse_args()
     if args.command == "init":
@@ -287,8 +357,12 @@ def main():
         worker_command(args)
     elif args.command == "schedule-profile":
         schedule_profile_command(args)
-    else:
+    elif args.command == "profile-worker":
         profile_worker_command(args)
+    elif args.command == "schedule-evaluation":
+        schedule_evaluation_command(args)
+    else:
+        evaluation_worker_command(args)
 
 
 if __name__ == "__main__":

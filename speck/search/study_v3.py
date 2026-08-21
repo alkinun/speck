@@ -25,7 +25,7 @@ from speck.search.protocol import (
 )
 
 
-database_schema_version = 4
+database_schema_version = 5
 
 
 def _now():
@@ -181,8 +181,9 @@ class V3Study:
                 architecture_digest text references architectures(digest),
                 profile_scenario_digest text,
                 profile_backend text,
-                profile_device_type text,
+                required_device_type text,
                 profile_repetition integer,
+                evaluation_checkpoint_digest text,
                 kind text not null,
                 status text not null,
                 priority real not null,
@@ -230,6 +231,16 @@ class V3Study:
                 action_id integer not null unique references actions(id),
                 primary key(decision_digest, position)
             );
+            create table if not exists quality_evaluations (
+                action_id integer primary key references actions(id),
+                artifact_digest text not null references artifacts(digest),
+                run_id integer not null references runs(id),
+                checkpoint_digest text not null references run_checkpoints(artifact_digest),
+                evaluated_tokens integer not null,
+                nll real not null,
+                created_at text not null,
+                unique(run_id, checkpoint_digest)
+            );
             create table if not exists events (
                 sequence integer primary key autoincrement,
                 kind text not null,
@@ -261,6 +272,10 @@ class V3Study:
             create unique index if not exists actions_profile_identity
                 on actions(architecture_digest, profile_scenario_digest, profile_repetition)
                 where kind = 'profile' and status in ('pending', 'running', 'completed');
+            create unique index if not exists actions_evaluation_identity
+                on actions(run_id, evaluation_checkpoint_digest)
+                where kind = 'evaluate'
+                    and status in ('pending', 'running', 'completed');
             create index if not exists observations_architecture
                 on observations(architecture_digest, objective_set_digest, objective_name);
             create index if not exists runs_status on runs(status, id);
@@ -707,8 +722,9 @@ class V3Study:
         architecture_digest=None,
         profile_scenario_digest=None,
         profile_backend=None,
-        profile_device_type=None,
+        required_device_type=None,
         profile_repetition=None,
+        evaluation_checkpoint_digest=None,
     ):
         if not kind or kind.lower() != kind:
             raise ValueError("action kinds must be lowercase")
@@ -723,18 +739,20 @@ class V3Study:
             """
             insert into actions(
                 run_id, architecture_digest, profile_scenario_digest,
-                profile_backend, profile_device_type, profile_repetition,
+                profile_backend, required_device_type, profile_repetition,
+                evaluation_checkpoint_digest,
                 kind, status, priority, estimated_cost, payload_json,
                 decision_digest, created_at
-            ) values (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)
             """,
             (
                 run_id,
                 architecture_digest,
                 profile_scenario_digest,
                 profile_backend,
-                profile_device_type,
+                required_device_type,
                 profile_repetition,
+                evaluation_checkpoint_digest,
                 kind,
                 priority,
                 estimated_cost,
@@ -775,6 +793,18 @@ class V3Study:
                 raise KeyError(run_id)
             if row["status"] not in {"pending", "paused"}:
                 raise ValueError("quality actions need a pending or paused run")
+            if row["checkpoint_digest"] is not None:
+                evaluated = self.connection.execute(
+                    """
+                    select 1 from quality_evaluations
+                    where run_id = ? and checkpoint_digest = ?
+                    """,
+                    (run_id, row["checkpoint_digest"]),
+                ).fetchone()
+                if evaluated is None:
+                    raise ValueError(
+                        "quality continuation needs the current checkpoint evaluation"
+                    )
             protocol = TrainingProtocol.from_dict(_decode(row["protocol_json"]))
             remaining = tuple(
                 tokens for tokens in protocol.checkpoint_tokens if tokens > row["tokens"]
@@ -801,6 +831,7 @@ class V3Study:
                     estimated_cost,
                     payload,
                     run_id=run_id,
+                    required_device_type=protocol.device_type,
                 )
             except sqlite3.IntegrityError as error:
                 raise ValueError("quality run already has an active action") from error
@@ -851,7 +882,7 @@ class V3Study:
                     architecture_digest=architecture_digest,
                     profile_scenario_digest=scenario.digest,
                     profile_backend=scenario.backend.name,
-                    profile_device_type=device_type,
+                    required_device_type=device_type,
                     profile_repetition=repetition,
                 )
             except sqlite3.IntegrityError as error:
@@ -876,12 +907,95 @@ class V3Study:
                     ) from error
                 return row["id"]
 
+    def add_evaluation_action(
+        self,
+        run_id,
+        objective_set_digests,
+        expected_evaluation_tokens,
+        priority,
+        estimated_cost,
+    ):
+        objective_set_digests = tuple(sorted(set(objective_set_digests)))
+        if not objective_set_digests:
+            raise ValueError("quality evaluation needs objective sets")
+        if expected_evaluation_tokens < 1:
+            raise ValueError("quality evaluation token counts must be positive")
+        with self.connection:
+            row = self.connection.execute(
+                "select * from runs where id = ?",
+                (run_id,),
+            ).fetchone()
+            if row is None:
+                raise KeyError(run_id)
+            if row["status"] not in {"paused", "completed"}:
+                raise ValueError("quality evaluation needs a checkpointed run")
+            if row["checkpoint_digest"] is None:
+                raise ValueError("quality evaluation needs a checkpoint")
+            for digest in objective_set_digests:
+                objectives = self.connection.execute(
+                    "select definition_json from objective_sets where digest = ?",
+                    (digest,),
+                ).fetchone()
+                if objectives is None:
+                    raise KeyError(digest)
+                names = {
+                    item["name"]
+                    for item in _decode(objectives["definition_json"])["objectives"]
+                }
+                if "quality.target_nll" not in names:
+                    raise ValueError(
+                        "quality evaluation objective sets need quality.target_nll"
+                    )
+            payload = {
+                "architecture_digest": row["architecture_digest"],
+                "checkpoint_digest": row["checkpoint_digest"],
+                "expected_evaluation_tokens": expected_evaluation_tokens,
+                "objective_set_digests": objective_set_digests,
+                "run_id": run_id,
+                "training_tokens": row["tokens"],
+                "worker_protocol_version": worker_protocol_version,
+            }
+            try:
+                return self._insert_action(
+                    "evaluate",
+                    priority,
+                    estimated_cost,
+                    payload,
+                    run_id=run_id,
+                    architecture_digest=row["architecture_digest"],
+                    required_device_type=TrainingProtocol.from_dict(
+                        _decode(row["protocol_json"])
+                    ).device_type,
+                    evaluation_checkpoint_digest=row["checkpoint_digest"],
+                )
+            except sqlite3.IntegrityError as error:
+                existing = self.connection.execute(
+                    """
+                    select id, payload_json, priority, estimated_cost from actions
+                    where run_id = ? and evaluation_checkpoint_digest = ?
+                        and kind = 'evaluate'
+                        and status in ('pending', 'running', 'completed')
+                    """,
+                    (run_id, row["checkpoint_digest"]),
+                ).fetchone()
+                if existing is None:
+                    raise
+                if (
+                    existing["payload_json"] != canonical_json(payload)
+                    or existing["priority"] != priority
+                    or existing["estimated_cost"] != estimated_cost
+                ):
+                    raise ValueError(
+                        "quality checkpoint already has a different evaluation action"
+                    ) from error
+                return existing["id"]
+
     def release_expired_actions(self, now=None):
         now = _timestamp(now)
         with self.connection:
             rows = self.connection.execute(
                 """
-                select id, run_id from actions where status = 'running'
+                select id, run_id, kind from actions where status = 'running'
                     and lease_expires_at < ?
                 """,
                 (now,),
@@ -895,7 +1009,7 @@ class V3Study:
                     """,
                     (row["id"],),
                 )
-                if row["run_id"] is not None:
+                if row["run_id"] is not None and row["kind"] == "continue":
                     self.connection.execute(
                         """
                         update runs set status = case when tokens = 0 then 'pending'
@@ -935,11 +1049,11 @@ class V3Study:
                 where += " and profile_backend = ?"
                 values.append(backend)
             if device_type is not None:
-                where += " and profile_device_type = ?"
+                where += " and required_device_type = ?"
                 values.append(device_type)
             row = self.connection.execute(
                 f"""
-                select id, run_id from actions where {where}
+                select id, run_id, kind from actions where {where}
                 order by priority desc, id limit 1
                 """,
                 values,
@@ -960,7 +1074,7 @@ class V3Study:
                     row["id"],
                 ),
             )
-            if row["run_id"] is not None:
+            if row["run_id"] is not None and row["kind"] == "continue":
                 cursor = self.connection.execute(
                     """
                     update runs set status = 'running', updated_at = ?
@@ -1027,7 +1141,8 @@ class V3Study:
         with self.connection:
             action = self.connection.execute(
                 """
-                select run_id from actions
+                select run_id, kind, profile_scenario_digest,
+                    evaluation_checkpoint_digest from actions
                 where id = ? and status = 'running' and claim_token = ?
                     and lease_expires_at >= ?
                 """,
@@ -1035,8 +1150,13 @@ class V3Study:
             ).fetchone()
             if action is None:
                 raise RuntimeError("stale action completion")
-            if action["run_id"] is not None and error is None:
-                raise ValueError("quality actions need an atomic checkpoint completion")
+            normalized_result = (
+                action["kind"] == "continue" and action["run_id"] is not None
+            ) or action["profile_scenario_digest"] is not None or (
+                action["evaluation_checkpoint_digest"] is not None
+            )
+            if normalized_result and error is None:
+                raise ValueError("normalized actions need an atomic result completion")
             self.connection.execute(
                 """
                 update actions set status = ?, result_json = ?, error = ?,
@@ -1051,7 +1171,7 @@ class V3Study:
                     action_id,
                 ),
             )
-            if action["run_id"] is not None:
+            if action["kind"] == "continue":
                 self.connection.execute(
                     """
                     update runs set status = case when tokens = 0 then 'pending'
@@ -1257,7 +1377,7 @@ class V3Study:
                 scenario != stored_scenario
                 or scenario.digest != row["profile_scenario_digest"]
                 or scenario.backend.name != row["profile_backend"]
-                or scenario.device.split(":", 1)[0] != row["profile_device_type"]
+                or scenario.device.split(":", 1)[0] != row["required_device_type"]
             ):
                 raise ValueError("profile scenario does not match its action")
             if (
@@ -1353,6 +1473,134 @@ class V3Study:
         except Exception:
             self.connection.rollback()
             raise
+
+    def commit_quality_evaluation(
+        self,
+        action_id,
+        claim_token,
+        nll,
+        evaluated_tokens,
+        artifact,
+    ):
+        if not math.isfinite(nll) or nll < 0:
+            raise ValueError("quality evaluation nll must be finite and nonnegative")
+        if evaluated_tokens < 1:
+            raise ValueError("quality evaluation tokens must be positive")
+        if (
+            not isinstance(artifact, ArtifactRecord)
+            or artifact.kind != "quality_evaluation"
+        ):
+            raise TypeError("quality evaluation commits need an evaluation artifact")
+        now = _now()
+        timestamp = _timestamp(now)
+        self.connection.execute("begin immediate")
+        try:
+            row = self.connection.execute(
+                """
+                select actions.*, runs.checkpoint_digest as run_checkpoint_digest,
+                    runs.tokens as run_tokens
+                from actions join runs on runs.id = actions.run_id
+                where actions.id = ? and actions.kind = 'evaluate'
+                    and actions.status = 'running' and actions.claim_token = ?
+                    and actions.lease_expires_at >= ?
+                """,
+                (action_id, claim_token, timestamp),
+            ).fetchone()
+            if row is None:
+                raise RuntimeError("stale quality evaluation completion")
+            payload = _decode(row["payload_json"])
+            if (
+                row["evaluation_checkpoint_digest"]
+                != payload["checkpoint_digest"]
+                or row["run_checkpoint_digest"] != payload["checkpoint_digest"]
+                or row["run_tokens"] != payload["training_tokens"]
+            ):
+                raise ValueError("quality evaluation checkpoint changed")
+            if evaluated_tokens != payload["expected_evaluation_tokens"]:
+                raise ValueError("quality evaluation did not cover its full partition")
+            self._register_artifact(artifact)
+            self.connection.execute(
+                """
+                insert into quality_evaluations(
+                    action_id, artifact_digest, run_id, checkpoint_digest,
+                    evaluated_tokens, nll, created_at
+                ) values (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    action_id,
+                    artifact.digest,
+                    row["run_id"],
+                    payload["checkpoint_digest"],
+                    evaluated_tokens,
+                    nll,
+                    timestamp,
+                ),
+            )
+            observation_ids = []
+            for objective_set_digest in payload["objective_set_digests"]:
+                cursor = self.connection.execute(
+                    """
+                    insert into observations(
+                        run_id, architecture_digest, objective_set_digest,
+                        objective_name, value, variance, tokens, source,
+                        artifact_digest, created_at
+                    ) values (?, ?, ?, 'quality.target_nll', ?, null, ?,
+                        'quality_evaluation', ?, ?)
+                    """,
+                    (
+                        row["run_id"],
+                        row["architecture_digest"],
+                        objective_set_digest,
+                        nll,
+                        payload["training_tokens"],
+                        artifact.digest,
+                        timestamp,
+                    ),
+                )
+                observation_ids.append(cursor.lastrowid)
+                self._record_event(
+                    "observation_added",
+                    {
+                        "id": cursor.lastrowid,
+                        "objective_name": "quality.target_nll",
+                    },
+                )
+            action_result = {
+                "artifact_digest": artifact.digest,
+                "evaluated_tokens": evaluated_tokens,
+                "nll": nll,
+                "observation_ids": observation_ids,
+            }
+            self.connection.execute(
+                """
+                update actions set status = 'completed', result_json = ?,
+                    completed_at = ?, lease_expires_at = null where id = ?
+                """,
+                (canonical_json(action_result), timestamp, action_id),
+            )
+            self._record_event(
+                "quality_evaluation_committed",
+                {"action_id": action_id, "run_id": row["run_id"], **action_result},
+            )
+            self._record_event(
+                "action_finished",
+                {"action_id": action_id, "status": "completed"},
+            )
+            self.connection.commit()
+            return tuple(observation_ids)
+        except Exception:
+            self.connection.rollback()
+            raise
+
+    def quality_evaluation(self, run_id, checkpoint_digest):
+        row = self.connection.execute(
+            """
+            select * from quality_evaluations
+            where run_id = ? and checkpoint_digest = ?
+            """,
+            (run_id, checkpoint_digest),
+        ).fetchone()
+        return dict(row) if row is not None else None
 
     def _register_artifact(self, artifact):
         encoded = (
