@@ -6,9 +6,12 @@ from speck.model import Config, LayerConfig
 from speck.search.architecture import SearchSpace
 from speck.search.evolution import (
     EvaluatedCandidate,
+    OperatorOutcome,
+    aggregate_trials,
     crowding_distance,
     dominates,
     nondominated_sort,
+    operator_probabilities,
     select_parent,
     select_survivors,
 )
@@ -84,3 +87,33 @@ def test_invalid_objective_is_rejected():
 def test_constant_objective_does_not_create_boundaries():
     candidates = tuple(candidate(index, 1, 1) for index in range(1, 4))
     assert crowding_distance(candidates, objectives) == {1: 0.0, 2: 0.0, 3: 0.0}
+
+
+def test_trial_aggregation_has_confidence_and_static_values():
+    estimates = aggregate_trials(
+        (
+            {"objectives": {"quality": 2.0, "latency": 4.0}},
+            {"objectives": {"quality": 2.2, "latency": 4.2}},
+        ),
+        {"memory": 100},
+        ("quality", "latency", "memory"),
+    )
+    assert estimates["quality"].mean == pytest.approx(2.1)
+    assert estimates["quality"].lower < 2.1 < estimates["quality"].upper
+    assert estimates["memory"].n == 0
+    assert estimates["memory"].lower == estimates["memory"].upper == 100
+
+
+def test_operator_probabilities_adapt_with_an_exploration_floor():
+    probabilities = operator_probabilities(
+        (
+            OperatorOutcome("remove_layer", True),
+            OperatorOutcome("remove_layer", True),
+            OperatorOutcome("change_hidden_size", False),
+        ),
+        ("remove_layer", "change_hidden_size"),
+        probability_floor=0.1,
+    )
+    assert sum(probabilities.values()) == pytest.approx(1)
+    assert probabilities["remove_layer"] > probabilities["change_hidden_size"]
+    assert min(probabilities.values()) >= 0.1

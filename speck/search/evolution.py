@@ -2,6 +2,7 @@
 
 import math
 import random
+import statistics
 from dataclasses import dataclass
 
 from speck.model import Config
@@ -20,6 +21,107 @@ class SelectionMetrics:
     rank: int
     crowding: float
     novelty: float
+
+
+@dataclass(frozen=True)
+class ObjectiveEstimate:
+    n: int
+    mean: float
+    stdev: float
+    lower: float
+    upper: float
+
+
+@dataclass(frozen=True)
+class EvaluatedArchitecture:
+    id: int
+    architecture_hash: str
+    config: Config
+    objectives: dict[str, ObjectiveEstimate]
+
+
+@dataclass(frozen=True)
+class OperatorOutcome:
+    operator: str
+    success: bool
+
+
+def aggregate_trials(results, static_objectives, objective_names, confidence_z=1.645):
+    estimates = {}
+    for name in objective_names:
+        if name in static_objectives:
+            value = float(static_objectives[name])
+            estimates[name] = ObjectiveEstimate(0, value, 0.0, value, value)
+            continue
+        values = [float(result["objectives"][name]) for result in results]
+        if not values or any(not math.isfinite(value) for value in values):
+            raise ValueError(f"cannot aggregate objective: {name}")
+        mean = statistics.mean(values)
+        stdev = statistics.stdev(values) if len(values) > 1 else 0.0
+        if name.startswith("quality."):
+            floor = 0.03
+        elif name.startswith(("prefill.", "decode.")):
+            floor = abs(mean) * 0.01
+        elif name.startswith("memory.inference_peak"):
+            floor = abs(mean) * 0.005
+        else:
+            floor = 0.0
+        standard_error = max(
+            stdev / math.sqrt(len(values)) if len(values) > 1 else 0.0,
+            floor / math.sqrt(len(values)),
+        )
+        half_width = confidence_z * standard_error
+        estimates[name] = ObjectiveEstimate(
+            len(values),
+            mean,
+            stdev,
+            max(0.0, mean - half_width),
+            mean + half_width,
+        )
+    return estimates
+
+
+def estimated_candidates(candidates, bound="mean"):
+    if bound not in {"mean", "lower", "upper"}:
+        raise ValueError("objective estimate bound must be mean, lower, or upper")
+    return tuple(
+        EvaluatedCandidate(
+            candidate.id,
+            candidate.config,
+            {
+                name: getattr(estimate, bound)
+                for name, estimate in candidate.objectives.items()
+            },
+        )
+        for candidate in candidates
+    )
+
+
+def operator_probabilities(
+    outcomes,
+    operators,
+    prior_success=1.0,
+    prior_failure=1.0,
+    probability_floor=0.04,
+):
+    if not operators:
+        raise ValueError("at least one operator is required")
+    if probability_floor * len(operators) >= 1:
+        raise ValueError("operator probability floor is too large")
+    counts = {operator: [prior_success, prior_failure] for operator in operators}
+    for outcome in outcomes:
+        if outcome.operator in counts:
+            counts[outcome.operator][0 if outcome.success else 1] += 1
+    rates = {
+        operator: success / (success + failure)
+        for operator, (success, failure) in counts.items()
+    }
+    available = 1 - probability_floor * len(operators)
+    total = sum(rates.values())
+    return {
+        operator: probability_floor + available * rates[operator] / total
+        for operator in operators
+    }
 
 
 def _validate(candidates, objective_names):

@@ -407,6 +407,35 @@ def mutate(config, space, seed, operator=None):
     return MutationResult(repaired, mutation, tuple(mutation_repairs) + repairs)
 
 
+def crossover(left, right, space, seed):
+    left_settings = left.settings()
+    right_settings = right.settings()
+    left_layers = left_settings.pop("layers")
+    right_layers = right_settings.pop("layers")
+    if left_settings != right_settings:
+        raise ValueError("crossover parents must share global model settings")
+    if len(left.layers) < 2 or len(right.layers) < 2:
+        raise ValueError("crossover parents must contain at least two layers")
+    rng = random.Random(seed)
+    left_cut = rng.randrange(1, len(left.layers))
+    ratio = left_cut / len(left.layers)
+    right_cut = min(
+        len(right.layers) - 1,
+        max(1, round(ratio * len(right.layers))),
+    )
+    layers = left.layers[:left_cut] + right.layers[right_cut:]
+    repaired, repairs = repair(_with_layers(left, layers), space)
+    operation = {
+        "operator": "crossover",
+        "seed": seed,
+        "left_hash": architecture_hash(left),
+        "right_hash": architecture_hash(right),
+        "left_cut": left_cut,
+        "right_cut": right_cut,
+    }
+    return MutationResult(repaired, operation, repairs)
+
+
 def architecture_distance(left, right, space):
     hidden_span = max(1, space.hidden_size_max - space.hidden_size_min)
     intermediate_span = max(

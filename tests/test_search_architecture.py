@@ -6,6 +6,7 @@ from speck.search.architecture import (
     SearchSpace,
     architecture_distance,
     architecture_hash,
+    crossover,
     kv_bytes_per_token,
     mutate,
     mutation_operators,
@@ -175,3 +176,23 @@ def test_repair_enforces_zero_and_impossible_attention_bounds():
     )
     with pytest.raises(ValueError, match="attention layer range"):
         repair(impossible, impossible_space)
+
+
+def test_crossover_is_deterministic_and_valid():
+    left = config()
+    right = Config(
+        vocab_size=32,
+        layers=(
+            LayerConfig(16, 32, None),
+            LayerConfig(16, 32, 2),
+            LayerConfig(16, 32, None),
+            LayerConfig(16, 32, 2),
+        ),
+        head_dim=4,
+        max_position_embeddings=16,
+    )
+    first = crossover(left, right, space(), seed=9)
+    second = crossover(left, right, space(), seed=9)
+    assert first == second
+    assert first.mutation["operator"] == "crossover"
+    assert 2 <= len(first.config.layers) <= 4
