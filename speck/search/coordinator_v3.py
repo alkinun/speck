@@ -107,14 +107,14 @@ def coordinate_bootstrap(
     study,
     settings,
     *,
-    quality_cost,
-    evaluation_cost,
+    quality_tokens_per_cost,
+    evaluation_tokens_per_cost,
     profile_cost,
     artifact_root=None,
 ):
-    costs = (quality_cost, evaluation_cost, profile_cost)
+    costs = (quality_tokens_per_cost, evaluation_tokens_per_cost, profile_cost)
     if any(not math.isfinite(value) or value <= 0 for value in costs):
-        raise ValueError("coordinator action costs must be finite and positive")
+        raise ValueError("coordinator rates and costs must be finite and positive")
     stored = study.study()
     baseline = study.architecture(stored["provenance"]["model_digest"])["config"]
     protocol = TrainingProtocol.from_dict(
@@ -132,6 +132,7 @@ def coordinate_bootstrap(
     if partition is None:
         raise ValueError("coordinator evaluation partition is missing")
     evaluation_tokens = partition.tokens - 1
+    evaluation_action_cost = evaluation_tokens / evaluation_tokens_per_cost
     configs = _ensure_broad_panel(study, settings, baseline)
     panel_runs = _panel_runs(study, settings, configs, protocol)
     runs = {run["id"]: run for run in study.runs()}
@@ -182,16 +183,22 @@ def coordinate_bootstrap(
         ) is None:
             candidates.append(
                 {
-                    "cost": evaluation_cost,
+                    "cost": evaluation_action_cost,
                     "key": (0, slot, run_id),
                     "kind": "evaluate",
                     "run_id": run_id,
                 }
             )
         elif run["tokens"] < target_tokens:
+            next_tokens = next(
+                tokens
+                for tokens in protocol.checkpoint_tokens
+                if run["tokens"] < tokens <= target_tokens
+            )
             candidates.append(
                 {
-                    "cost": quality_cost,
+                    "cost": (next_tokens - run["tokens"])
+                    / quality_tokens_per_cost,
                     "key": (1, slot, run_id),
                     "kind": "continue",
                     "run_id": run_id,
@@ -285,7 +292,12 @@ def coordinate_bootstrap(
                 configs,
                 artifact_root,
                 anchor_cost=remaining_checkpoints
-                * (quality_cost + evaluation_cost),
+                * evaluation_action_cost
+                + (
+                    settings.calibration.anchor_tokens
+                    - settings.calibration.broad_tokens
+                )
+                / quality_tokens_per_cost,
             )
             posterior = study.posterior_report(shadow["evidence_digest"])
             anchors = set(posterior["anchors"])

@@ -101,8 +101,8 @@ def parser():
 
     coordinate = commands.add_parser("coordinate")
     coordinate.add_argument("study")
-    coordinate.add_argument("--quality-cost", type=float, required=True)
-    coordinate.add_argument("--evaluation-cost", type=float, required=True)
+    coordinate.add_argument("--quality-tokens-per-cost", type=float, required=True)
+    coordinate.add_argument("--evaluation-tokens-per-cost", type=float, required=True)
     coordinate.add_argument("--profile-cost", type=float, required=True)
     return value
 
@@ -361,8 +361,8 @@ def coordinate_command(args):
             result = coordinate_bootstrap(
                 study,
                 settings,
-                quality_cost=args.quality_cost,
-                evaluation_cost=args.evaluation_cost,
+                quality_tokens_per_cost=args.quality_tokens_per_cost,
+                evaluation_tokens_per_cost=args.evaluation_tokens_per_cost,
                 profile_cost=args.profile_cost,
                 artifact_root=directory / "artifacts",
             )

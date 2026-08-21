@@ -185,8 +185,8 @@ def test_bootstrap_coordinator_builds_panel_and_respects_action_slots(tmp_path):
     first = coordinate_bootstrap(
         study,
         parsed,
-        quality_cost=2.0,
-        evaluation_cost=1.0,
+        quality_tokens_per_cost=2.0,
+        evaluation_tokens_per_cost=8.0,
         profile_cost=1.0,
     )
     assert first["phase"] == "bootstrap"
@@ -199,8 +199,8 @@ def test_bootstrap_coordinator_builds_panel_and_respects_action_slots(tmp_path):
     second = coordinate_bootstrap(
         study,
         parsed,
-        quality_cost=2.0,
-        evaluation_cost=1.0,
+        quality_tokens_per_cost=2.0,
+        evaluation_tokens_per_cost=8.0,
         profile_cost=1.0,
     )
     assert second["scheduled_actions"] == []
@@ -252,8 +252,8 @@ def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
     initial = coordinate_bootstrap(
         study,
         parsed,
-        quality_cost=2.0,
-        evaluation_cost=1.0,
+        quality_tokens_per_cost=2.0,
+        evaluation_tokens_per_cost=8.0,
         profile_cost=1.0,
         artifact_root=artifact_root,
     )
@@ -277,8 +277,8 @@ def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
     evaluations = coordinate_bootstrap(
         study,
         parsed,
-        quality_cost=2.0,
-        evaluation_cost=1.0,
+        quality_tokens_per_cost=2.0,
+        evaluation_tokens_per_cost=8.0,
         profile_cost=1.0,
         artifact_root=artifact_root,
     )
@@ -298,8 +298,8 @@ def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
     shadow = coordinate_bootstrap(
         study,
         parsed,
-        quality_cost=2.0,
-        evaluation_cost=1.0,
+        quality_tokens_per_cost=2.0,
+        evaluation_tokens_per_cost=8.0,
         profile_cost=1.0,
         artifact_root=artifact_root,
     )
@@ -309,8 +309,8 @@ def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
     anchors = coordinate_bootstrap(
         study,
         parsed,
-        quality_cost=2.0,
-        evaluation_cost=1.0,
+        quality_tokens_per_cost=2.0,
+        evaluation_tokens_per_cost=8.0,
         profile_cost=1.0,
         artifact_root=artifact_root,
     )

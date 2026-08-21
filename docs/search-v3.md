@@ -313,12 +313,12 @@ the bootstrap coordinator creates the deterministic broad panel, crosses the con
 
 ```bash
 python -m scripts.architecture_search_v3 coordinate calibration-v3 \
-  --quality-cost 3600 \
-  --evaluation-cost 300 \
+  --quality-tokens-per-cost 1000 \
+  --evaluation-tokens-per-cost 3000 \
   --profile-cost 60
 ```
 
-costs use the configuration's declared `cost_unit` and are charged once per action. repeated coordinator ticks are idempotent: architecture, run, profile-repetition, and checkpoint-evaluation identities prevent duplicate work after interruption. every checkpoint is evaluated before that run can continue.
+rates and costs use the configuration's declared `cost_unit`; with `wall_seconds`, the two rates are measured tokens per second and profile cost is seconds per isolated repetition. continuation cost is derived from its exact token delta, while evaluation cost covers the complete monitor partition. repeated coordinator ticks are idempotent: architecture, run, profile-repetition, and checkpoint-evaluation identities prevent duplicate work after interruption. every checkpoint is evaluated before that run can continue.
 
 after the noise and broad trajectories plus all configured profiles complete, the coordinator writes an immutable shadow report. it contains the raw observation identities, initialization/data-order/numerical variance decomposition, stable architecture features, per-objective normalization, grouped bootstrap surrogate states, cross-fitted rank and frontier calibration, joint posterior pareto probabilities, and the exact budgeted random-scalarization decision. measured seed variance is added to posterior quality covariance. objective normalization prevents units such as bytes from dominating information value. no quality, latency, memory, cache, or size threshold is introduced.
 

@@ -46,15 +46,15 @@ def test_v3_search_cli_parses_explicit_initialization_inputs():
         [
             "coordinate",
             "calibration",
-            "--quality-cost",
+            "--quality-tokens-per-cost",
             "60",
-            "--evaluation-cost",
+            "--evaluation-tokens-per-cost",
             "10",
             "--profile-cost",
             "30",
         ]
     )
-    assert coordinate.quality_cost == 60
+    assert coordinate.quality_tokens_per_cost == 60
 
 
 def test_v3_search_cli_reports_normalized_status(tmp_path, monkeypatch, capsys):
