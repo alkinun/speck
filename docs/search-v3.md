@@ -324,6 +324,8 @@ after the noise and broad trajectories plus all configured profiles complete, th
 
 the report's selected canonical runs are the only architectures advanced from the broad horizon to `anchor_tokens`. each intermediate anchor checkpoint still requires whole-monitor evaluation before continuation. the coordinator reports `anchor_complete` only after all selected long-horizon checkpoints are evaluated.
 
+checkpoint retention is evidence gated. a payload is never pruned before its whole-monitor evaluation commits. superseded parent payloads are removed only after child checkpoint metadata exists; noncanonical noise payloads are archived after their configured horizon; unselected broad payloads remain available until the posterior report is immutable; selected anchors retain only their latest resumable payload until final evaluation. hashes, lineage, run metadata, evaluation artifacts, and explicit pruning events remain in the study after payload removal.
+
 remaining implementation sequence:
 
 1. execute the noise-decomposition calibration study

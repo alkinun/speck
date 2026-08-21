@@ -249,6 +249,42 @@ def test_v3_study_commits_quality_checkpoints_atomically(tmp_path):
     ) == "completed"
     assert study.run(run_id)["status"] == "completed"
     assert study.architecture(config.digest)["config"].digest == config.digest
+    second_evaluation = study.add_evaluation_action(
+        run_id,
+        (objectives().digest,),
+        10,
+        1.0,
+        1.0,
+    )
+    second_evaluation_claim = study.claim_action("evaluator", kind="evaluate")
+    second_evaluation_artifact = store.put_json(
+        "quality_evaluation", {"nll": 1.5}
+    )
+    study.commit_quality_evaluation(
+        second_evaluation,
+        second_evaluation_claim["claim_token"],
+        1.5,
+        10,
+        second_evaluation_artifact,
+    )
+    assert study.prune_checkpoint_payload(
+        run_id,
+        first.artifact.digest,
+        store,
+        "superseded",
+    )
+    assert not store.path(first.artifact).exists()
+    assert study.checkpoint_payload_pruned(first.artifact.digest)
+    assert study.checkpoint(first.artifact.digest) == first
+    assert study.prune_checkpoint_payload(
+        run_id,
+        second.artifact.digest,
+        store,
+        "trajectory_complete",
+        archive_run=True,
+    )
+    assert study.run(run_id)["status"] == "archived"
+    assert not store.path(second.artifact).exists()
     study.close()
 
 

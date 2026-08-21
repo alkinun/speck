@@ -11,7 +11,7 @@ from pathlib import Path
 
 from speck.architecture import ArchitectureConfig
 from speck.profile.schema import ProfileResult, ProfileScenario
-from speck.search.artifacts import ArtifactEdge, ArtifactRecord
+from speck.search.artifacts import ArtifactEdge, ArtifactRecord, ArtifactStore
 from speck.search.checkpoints import RunCheckpoint
 from speck.search.protocol import (
     ObjectiveSet,
@@ -25,7 +25,7 @@ from speck.search.protocol import (
 )
 
 
-database_schema_version = 6
+database_schema_version = 7
 
 
 def _now():
@@ -254,6 +254,12 @@ class V3Study:
                 architecture_digest text not null references architectures(digest),
                 primary key(report_digest, position),
                 unique(report_digest, architecture_digest)
+            );
+            create table if not exists pruned_checkpoint_payloads (
+                artifact_digest text primary key references artifacts(digest),
+                run_id integer not null references runs(id),
+                reason text not null,
+                pruned_at text not null
             );
             create table if not exists events (
                 sequence integer primary key autoincrement,
@@ -1824,6 +1830,109 @@ class V3Study:
                 (run_id,),
             )
         )
+
+    def prune_checkpoint_payload(
+        self,
+        run_id,
+        checkpoint_digest,
+        store,
+        reason,
+        *,
+        archive_run=False,
+    ):
+        if not isinstance(store, ArtifactStore):
+            raise TypeError("checkpoint pruning needs an artifact store")
+        if not re.fullmatch(r"[a-z0-9_]+", reason):
+            raise ValueError("checkpoint pruning reasons must be lowercase identifiers")
+        self.connection.execute("begin immediate")
+        try:
+            row = self.connection.execute(
+                """
+                select run_checkpoints.*, runs.checkpoint_digest,
+                    runs.status as run_status, artifacts.kind, artifacts.size,
+                    artifacts.uri, artifacts.media_type
+                from run_checkpoints
+                join runs on runs.id = run_checkpoints.run_id
+                join artifacts on artifacts.digest = run_checkpoints.artifact_digest
+                where run_checkpoints.run_id = ?
+                    and run_checkpoints.artifact_digest = ?
+                """,
+                (run_id, checkpoint_digest),
+            ).fetchone()
+            if row is None:
+                raise KeyError(checkpoint_digest)
+            evaluated = self.connection.execute(
+                """
+                select 1 from quality_evaluations
+                where run_id = ? and checkpoint_digest = ?
+                """,
+                (run_id, checkpoint_digest),
+            ).fetchone()
+            if evaluated is None:
+                raise ValueError("checkpoint payload cannot be pruned before evaluation")
+            current = row["checkpoint_digest"] == checkpoint_digest
+            if current and not archive_run:
+                raise ValueError("current checkpoint pruning must archive its run")
+            if not current:
+                child = self.connection.execute(
+                    """
+                    select 1 from run_checkpoints
+                    where run_id = ? and parent_digest = ?
+                    """,
+                    (run_id, checkpoint_digest),
+                ).fetchone()
+                if child is None:
+                    raise ValueError("superseded checkpoint has no retained child metadata")
+            existing = self.connection.execute(
+                """
+                select reason from pruned_checkpoint_payloads
+                where artifact_digest = ?
+                """,
+                (checkpoint_digest,),
+            ).fetchone()
+            created = existing is None
+            if existing is not None and existing["reason"] != reason:
+                raise ValueError("checkpoint payload already has a different retention reason")
+            if created:
+                self.connection.execute(
+                    "insert into pruned_checkpoint_payloads values (?, ?, ?, ?)",
+                    (checkpoint_digest, run_id, reason, _timestamp()),
+                )
+                if current:
+                    self.connection.execute(
+                        "update runs set status = 'archived', updated_at = ? where id = ?",
+                        (_timestamp(), run_id),
+                    )
+                self._record_event(
+                    "checkpoint_payload_pruned",
+                    {
+                        "artifact_digest": checkpoint_digest,
+                        "archive_run": archive_run,
+                        "reason": reason,
+                        "run_id": run_id,
+                    },
+                )
+            self.connection.commit()
+        except Exception:
+            self.connection.rollback()
+            raise
+        artifact = ArtifactRecord(
+            kind=row["kind"],
+            digest=checkpoint_digest,
+            size=row["size"],
+            uri=row["uri"],
+            media_type=row["media_type"],
+        )
+        store.path(artifact).unlink(missing_ok=True)
+        return created
+
+    def checkpoint_payload_pruned(self, checkpoint_digest):
+        return self.connection.execute(
+            """
+            select 1 from pruned_checkpoint_payloads where artifact_digest = ?
+            """,
+            (checkpoint_digest,),
+        ).fetchone() is not None
 
     def _add_artifact_edge(self, edge):
         known = {

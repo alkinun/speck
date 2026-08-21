@@ -306,6 +306,7 @@ def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
     assert shadow["phase"] == "anchors"
     assert shadow["posterior_report"] is not None
     assert len(shadow["anchors"]) == 1
+    assert len(shadow["pruned_checkpoint_payloads"]) == 1
     anchors = coordinate_bootstrap(
         study,
         parsed,
@@ -315,6 +316,7 @@ def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
         artifact_root=artifact_root,
     )
     assert len(anchors["scheduled_actions"]) == 1
+    assert len(anchors["pruned_checkpoint_payloads"]) == 2
     action = study.action(anchors["scheduled_actions"][0])
     assert action["kind"] == "continue"
     assert action["payload"]["target_tokens"] == 8

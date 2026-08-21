@@ -8,6 +8,7 @@ from speck.search.architecture_v3 import (
     quantized_weight_bytes,
     sample_architecture,
 )
+from speck.search.artifacts import ArtifactStore
 from speck.search.profile_worker import backend_plugin
 from speck.search.posterior_v3 import build_posterior_shadow
 from speck.search.protocol import SeedBundle, TrainingProtocol, derive_seed
@@ -103,6 +104,74 @@ def _profile_scenarios(settings):
     return tuple(scenarios)
 
 
+def _apply_checkpoint_retention(
+    study,
+    settings,
+    configs,
+    panel_runs,
+    runs,
+    active_runs,
+    anchors,
+    artifact_root,
+):
+    if artifact_root is None:
+        return ()
+    store = ArtifactStore(artifact_root)
+    pruned = []
+    for slot, run_id, target_tokens, seeds in panel_runs:
+        if run_id in active_runs:
+            continue
+        run = runs[run_id]
+        checkpoints = study.checkpoints(run_id)
+        for checkpoint in checkpoints:
+            digest = checkpoint.artifact.digest
+            if (
+                digest != run["checkpoint_digest"]
+                and not study.checkpoint_payload_pruned(digest)
+                and study.quality_evaluation(run_id, digest) is not None
+            ):
+                study.prune_checkpoint_payload(
+                    run_id,
+                    digest,
+                    store,
+                    "superseded",
+                )
+                pruned.append(digest)
+        current = run["checkpoint_digest"]
+        if (
+            current is None
+            or study.checkpoint_payload_pruned(current)
+            or study.quality_evaluation(run_id, current) is None
+        ):
+            continue
+        canonical = (
+            seeds.initialization_index == 0
+            and seeds.data_index == 0
+            and seeds.numerical_repeat == 0
+        )
+        architecture_digest = configs[slot].digest
+        reason = None
+        if not canonical and run["tokens"] >= target_tokens:
+            reason = "noise_trajectory_complete"
+        elif anchors and architecture_digest not in anchors and run["tokens"] >= target_tokens:
+            reason = "unselected_broad_complete"
+        elif (
+            architecture_digest in anchors
+            and run["tokens"] >= settings.calibration.anchor_tokens
+        ):
+            reason = "anchor_trajectory_complete"
+        if reason is not None:
+            study.prune_checkpoint_payload(
+                run_id,
+                current,
+                store,
+                reason,
+                archive_run=True,
+            )
+            pruned.append(current)
+    return tuple(pruned)
+
+
 def coordinate_bootstrap(
     study,
     settings,
@@ -145,6 +214,18 @@ def coordinate_bootstrap(
     active_runs = {
         action["run_id"] for action in active if action["run_id"] is not None
     }
+    pruned = _apply_checkpoint_retention(
+        study,
+        settings,
+        configs,
+        panel_runs,
+        runs,
+        active_runs,
+        anchors,
+        artifact_root,
+    )
+    if pruned:
+        runs = {run["id"]: run for run in study.runs()}
     existing_profiles = {
         (
             action["architecture_digest"],
@@ -328,6 +409,7 @@ def coordinate_bootstrap(
         "available_cost": available_cost,
         "phase": phase,
         "posterior_report": posterior["digest"] if posterior is not None else None,
+        "pruned_checkpoint_payloads": pruned,
         "runs": len(panel_runs),
         "scheduled_actions": scheduled,
         "shadow": shadow,
