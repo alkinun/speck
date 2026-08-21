@@ -241,6 +241,8 @@ python -m scripts.segment_plan ~/.cache/speck/ultra_fineweb/packed \
 
 the packed dataset must contain the format-two document index.
 
+`experiments/speck00-200m/search-v3.example.json` records the initial moderate-panel configuration. it is an example rather than an active experiment until its segment-plan digest is frozen and the worker workflow is complete.
+
 remaining implementation sequence:
 
 1. add a version three experiment and search configuration schema
