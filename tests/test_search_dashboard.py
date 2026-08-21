@@ -1,4 +1,4 @@
-from scripts.search_dashboard import _pareto_ranks, candidate, snapshot
+from scripts.search_dashboard import _pareto_ranks, candidate, dashboard, snapshot
 from speck.model import Config, LayerConfig
 from speck.search.store import StudyStore
 from speck.search.study import SearchStudy
@@ -33,6 +33,9 @@ def test_dashboard_reads_study_without_writing(tmp_path):
 
     state = snapshot(database)
     assert state["counts"] == {"completed": 1}
+    assert state["generated"] == state["screened"] == 1
+    assert state["data_revision"] == state["updated_at"]
+    assert state["candidates"][0]["comparison_status"] == "completed"
     assert state["frontier"][0]["parameters"] == 123
     assert state["objectives"] == ["quality.validation_nll"]
     detail = candidate(database, candidate_id)
@@ -154,8 +157,16 @@ def test_dashboard_projects_v2_architectures_rungs_and_trials(tmp_path):
     assert state["screened"] == 1
     assert state["frontier_rung"] == 0
     assert not state["frontier_closed"]
+    assert state["available_rungs"] == [0, 1]
+    assert state["rungs"][1]["trial_counts"] == {"completed": 1}
     assert state["frontier"][0]["parameters"] == 123
     assert state["objectives"] == ["quality.validation_nll.main"]
+    verify_state = snapshot(database, rung=1)
+    assert verify_state["frontier_rung"] == 1
+    assert verify_state["candidates"][0]["comparison_status"] == "completed"
+    assert verify_state["frontier"][0]["objectives"] == {
+        "quality.validation_nll.main": 1.8
+    }
     detail = candidate(database, architecture_id)
     assert detail["mutation"] == {"operator": "seed"}
     assert detail["rungs"][0]["aggregate"]["objectives"]
@@ -171,4 +182,25 @@ def test_dashboard_projects_v2_architectures_rungs_and_trials(tmp_path):
     study = SearchStudy(database)
     study.update_rung(architecture_id, 1, "failed")
     study.close()
-    assert snapshot(database)["architecture_counts"] == {"failed": 1}
+    failed_state = snapshot(database)
+    assert failed_state["architecture_counts"] == {"failed": 1}
+    assert failed_state["candidates"][0]["comparison_status"] == "completed"
+
+
+def test_dashboard_asset_has_responsive_operator_views():
+    for landmark in (
+        'id="overview-grid"',
+        'id="rung-pipeline"',
+        'id="recommendations"',
+        'id="trend-chart"',
+        'id="pareto-chart"',
+        'id="history-table"',
+        'id="inspector"',
+    ):
+        assert landmark in dashboard
+    assert "@media (max-width: 760px)" in dashboard
+    assert "data-architecture" in dashboard
+    assert "?rung=" in dashboard
+    assert "AbortController" in dashboard
+    assert "scrollIntoView" in dashboard
+    assert "role=\"button\"" in dashboard

@@ -8,10 +8,10 @@ import sqlite3
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 
-dashboard = r"""<!doctype html>
+_fallback_dashboard = r"""<!doctype html>
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -45,6 +45,13 @@ async function refresh(){try{render(await fetch('/api/state',{cache:'no-store'})
 $('objective').onchange=drawTrend;refresh();
 </script>
 </html>"""
+
+dashboard_path = Path(__file__).with_name("search_dashboard.html")
+dashboard = (
+    dashboard_path.read_text(encoding="utf-8")
+    if dashboard_path.is_file()
+    else _fallback_dashboard
+)
 
 
 def _connect(path):
@@ -121,7 +128,9 @@ def _v1_snapshot(connection, path):
         config = _load(row["architecture_json"])
         candidates.append({
             "id": row["id"],
+            "architecture_hash": row["architecture_hash"],
             "status": row["status"],
+            "comparison_status": row["status"],
             "mutation": _load(row["mutation_json"]),
             "parents": parents.get(row["id"], []),
             "parameters": result.get("model", {}).get("parameters") if result else None,
@@ -137,13 +146,30 @@ def _v1_snapshot(connection, path):
             "started_at": row["started_at"],
             "completed_at": row["completed_at"],
         })
+    revision = max(
+        [study["updated_at"]]
+        + [
+            value
+            for row in rows
+            for value in (row["created_at"], row["started_at"], row["completed_at"])
+            if value
+        ]
+    )
     return _clean({
         "format_version": 1,
         "path": str(Path(path).parent),
         "status": study["status"],
+        "created_at": study["created_at"],
+        "updated_at": revision,
+        "data_revision": revision,
         "config": _load(study["config_json"]),
         "provenance": _load(study["provenance_json"]),
         "counts": counts,
+        "architecture_counts": counts,
+        "trial_counts": counts,
+        "generated": len(candidates),
+        "screened": counts.get("completed", 0) + counts.get("failed", 0),
+        "primary_quality": "quality.validation_nll",
         "objectives": sorted(objectives),
         "candidates": candidates,
         "frontier": [candidate for candidate in candidates if candidate["is_frontier"]],
@@ -175,6 +201,35 @@ def _v2_status(architecture_id, rungs, trials):
     if highest["aggregate_json"]:
         return "completed"
     return "pending"
+
+
+def _v2_rung_status(architecture_id, rung, rungs, trials):
+    selected = next(
+        (
+            item
+            for item in rungs
+            if item["architecture_id"] == architecture_id and item["rung"] == rung
+        ),
+        None,
+    )
+    if selected is None:
+        return None
+    selected_trials = [
+        item
+        for item in trials
+        if item["architecture_id"] == architecture_id and item["rung"] == rung
+    ]
+    if any(item["status"] == "running" for item in selected_trials):
+        return "running"
+    if any(item["status"] == "pending" for item in selected_trials):
+        return "pending"
+    if selected["status"] == "failed" or any(
+        item["status"] == "failed" for item in selected_trials
+    ):
+        return "failed"
+    if selected["aggregate_json"]:
+        return "completed"
+    return selected["status"]
 
 
 def _v2_rung_closed(rungs, config, rung):
@@ -226,7 +281,7 @@ def _pareto_ranks(values):
     return ranks
 
 
-def _v2_snapshot(connection, path):
+def _v2_snapshot(connection, path, requested_rung=None):
     study = connection.execute("select * from study where id = 1").fetchone()
     study_config = _load(study["config_json"])
     architectures = connection.execute(
@@ -254,11 +309,15 @@ def _v2_snapshot(connection, path):
         for rung in available_rungs
         if _v2_rung_closed(rungs, study_config, rung)
     ]
-    frontier_rung = (
-        closed_rungs[-1]
-        if closed_rungs
-        else available_rungs[0] if available_rungs else None
-    )
+    if requested_rung is not None and requested_rung not in available_rungs:
+        raise ValueError("rung has no completed architectures")
+    frontier_rung = requested_rung
+    if frontier_rung is None:
+        frontier_rung = (
+            closed_rungs[-1]
+            if closed_rungs
+            else available_rungs[0] if available_rungs else None
+        )
     by_architecture_rung = {
         (row["architecture_id"], row["rung"]): row for row in rungs
     }
@@ -306,14 +365,22 @@ def _v2_snapshot(connection, path):
         ]
         candidates.append({
             "id": row["id"],
+            "architecture_hash": row["architecture_hash"],
+            "cohort": row["cohort"],
+            "slot": row["slot"],
             "status": architecture_status,
+            "comparison_status": (
+                _v2_rung_status(row["id"], frontier_rung, rungs, trials)
+                if frontier_rung is not None
+                else None
+            ),
             "mutation": _load(row["operation_json"]),
             "parents": [item["id"] for item in parents.get(row["id"], [])],
             "parameters": _load(row["static_json"]).get("parameters"),
             "layers": len(_load(row["architecture_json"]).get("layers", [])),
             "objectives": values,
             "estimates": estimates,
-            "rung": frontier_rung,
+            "rung": frontier_rung if aggregate else None,
             "in_population": False,
             "is_frontier": row["id"] in frontier_ids,
             "pareto_rank": pareto_ranks.get(row["id"]),
@@ -338,6 +405,12 @@ def _v2_snapshot(connection, path):
     rung_summary = []
     for rung in sorted({row["rung"] for row in rungs}):
         selected = [row for row in rungs if row["rung"] == rung]
+        selected_trials = [row for row in trials if row["rung"] == rung]
+        selected_trial_counts = {}
+        for trial in selected_trials:
+            selected_trial_counts[trial["status"]] = (
+                selected_trial_counts.get(trial["status"], 0) + 1
+            )
         rung_summary.append({
             "rung": rung,
             "name": study_config["rungs"][rung]["name"],
@@ -346,6 +419,7 @@ def _v2_snapshot(connection, path):
             "active": sum(row["status"] == "active" for row in selected),
             "successful": sum(bool(row["aggregate_json"]) for row in selected),
             "failed": sum(row["status"] == "failed" for row in selected),
+            "trial_counts": selected_trial_counts,
         })
     primary_quality = next(
         (
@@ -355,19 +429,45 @@ def _v2_snapshot(connection, path):
         ),
         None,
     )
+    revision = max(
+        [study["updated_at"]]
+        + [row["created_at"] for row in architectures]
+        + [
+            value
+            for row in rungs
+            for value in (row["created_at"], row["completed_at"])
+            if value
+        ]
+        + [
+            value
+            for row in trials
+            for value in (row["created_at"], row["started_at"], row["completed_at"])
+            if value
+        ]
+    )
     return _clean({
         "format_version": 2,
         "path": str(Path(path).parent),
         "status": study["status"],
+        "created_at": study["created_at"],
+        "updated_at": revision,
+        "data_revision": revision,
         "config": study_config,
         "provenance": _load(study["provenance_json"]),
         "recommendations": _load(study["recommendations_json"]),
         "counts": architecture_counts,
         "architecture_counts": architecture_counts,
         "trial_counts": trial_counts,
+        "generated": len(candidates),
         "screened": screened,
         "rungs": rung_summary,
         "frontier_rung": frontier_rung,
+        "frontier_rung_name": (
+            study_config["rungs"][frontier_rung]["name"]
+            if frontier_rung is not None
+            else None
+        ),
+        "available_rungs": available_rungs,
         "frontier_closed": (
             _v2_rung_closed(rungs, study_config, frontier_rung)
             if frontier_rung is not None
@@ -380,13 +480,15 @@ def _v2_snapshot(connection, path):
     })
 
 
-def snapshot(path) -> dict[str, Any]:
+def snapshot(path, rung=None) -> dict[str, Any]:
     connection = _connect(path)
     connection.row_factory = sqlite3.Row
     try:
         connection.execute("begin")
         if _study_format(connection) == 2:
-            return _v2_snapshot(connection, path)
+            return _v2_snapshot(connection, path, rung)
+        if rung is not None:
+            raise ValueError("legacy studies do not contain rungs")
         return _v1_snapshot(connection, path)
     finally:
         connection.close()
@@ -545,12 +647,15 @@ def handler(database):
             self.wfile.write(data)
 
         def do_GET(self):
-            path = urlparse(self.path).path
+            parsed = urlparse(self.path)
+            path = parsed.path
             try:
                 if path == "/":
                     self.send(dashboard.encode(), "text/html")
                 elif path == "/api/state":
-                    self.send(snapshot(database))
+                    values = parse_qs(parsed.query).get("rung")
+                    rung = int(values[0]) if values else None
+                    self.send(snapshot(database, rung))
                 elif path.startswith("/api/candidate/"):
                     self.send(candidate(database, int(path.rsplit("/", 1)[-1])))
                 else:
