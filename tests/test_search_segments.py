@@ -5,6 +5,7 @@ import numpy as np
 import pytest
 import torch
 
+import speck.search.segments as segments_module
 from speck.dataloader import manifest_fingerprint
 from speck.search.segments import (
     DocumentRecord,
@@ -179,13 +180,23 @@ def packed_segment_data(tmp_path):
     return plan
 
 
-def test_segment_loader_replays_its_exact_cursor(tmp_path):
+def test_segment_loader_replays_its_exact_cursor(tmp_path, monkeypatch):
     plan = packed_segment_data(tmp_path)
+    calls = 0
+    original = segments_module._ordered_spans
+
+    def ordered_spans(*args):
+        nonlocal calls
+        calls += 1
+        return original(*args)
+
+    monkeypatch.setattr(segments_module, "_ordered_spans", ordered_spans)
     loader = segment_loader(
         FakeTokenizer(), plan, "train", 7, 1, 3, device="cpu", data_dir=tmp_path
     )
     first = next(loader)
     second = next(loader)
+    assert calls == 1
     resumed = segment_loader(
         FakeTokenizer(),
         plan,

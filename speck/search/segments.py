@@ -1,5 +1,6 @@
 """document-aligned data plans for calibrated search runs."""
 
+import bisect
 import hashlib
 import json
 import random
@@ -182,14 +183,28 @@ def _ordered_spans(partition, data_seed, epoch):
     spans = list(partition.spans)
     seed = derive_seed(data_seed, "segment_order", partition.name, epoch)
     random.Random(seed).shuffle(spans)
-    return tuple(spans)
+    return spans
+
+
+def _span_order_digest(spans):
+    digest = hashlib.sha256()
+    for span in spans:
+        digest.update(bytes.fromhex(span.content_hash))
+        digest.update(span.start_token.to_bytes(8, "big"))
+        digest.update(span.end_token.to_bytes(8, "big"))
+    return digest.hexdigest()
 
 
 class SegmentTokenReader:
     def __init__(self, packed, spans):
         self.packed = packed
         self.spans = spans
-        self.total_tokens = sum(span.tokens for span in spans)
+        self.ends = []
+        total = 0
+        for span in spans:
+            total += span.tokens
+            self.ends.append(total)
+        self.total_tokens = total
 
     def read(self, start, count):
         if start < 0 or count < 0 or start + count > self.total_tokens:
@@ -197,12 +212,11 @@ class SegmentTokenReader:
         if count == 0:
             return np.empty(0, dtype=np.int64)
         pieces = []
-        position = start
+        span_index = bisect.bisect_right(self.ends, start)
+        span_start = 0 if span_index == 0 else self.ends[span_index - 1]
+        position = start - span_start
         remaining = count
-        for span in self.spans:
-            if position >= span.tokens:
-                position -= span.tokens
-                continue
+        for span in self.spans[span_index:]:
             take = min(remaining, span.tokens - position)
             pieces.append(self.packed.read(span.start_token + position, take))
             remaining -= take
@@ -227,6 +241,7 @@ def segment_loader(
     device="cuda",
     resume_state_dict=None,
     data_dir=None,
+    validate_documents=True,
 ):
     if not isinstance(plan, SegmentPlan):
         raise TypeError("segment loaders need a segment plan")
@@ -244,11 +259,6 @@ def segment_loader(
     manifest_digest = manifest_fingerprint(manifest)
     if plan.dataset_digest != manifest_digest:
         raise ValueError("segment plan belongs to a different packed dataset")
-    validate_segment_plan(
-        plan,
-        load_document_index(data_dir, manifest),
-        (partition_name,),
-    )
     partitions = {
         partition.name: partition for partition in plan.partitions
     }
@@ -256,6 +266,14 @@ def segment_loader(
         raise ValueError(f"unknown segment partition: {partition_name}")
     partition = partitions[partition_name]
     packed = PackedTokenSplit(data_dir, partition.split, manifest)
+    if validate_documents:
+        validate_segment_plan(
+            plan,
+            load_document_index(data_dir, manifest),
+            (partition_name,),
+        )
+    elif any(span.end_token > packed.total_tokens for span in partition.spans):
+        raise ValueError("segment partition is outside its packed split")
     required = batch_size * sequence_length + 1
     if required > partition.tokens:
         raise ValueError("segment partition is smaller than one batch")
@@ -288,21 +306,22 @@ def segment_loader(
             raise ValueError("segment resume cursor cannot be negative")
     device = torch.device(device)
     stride = batch_size * sequence_length
+    reader = None
+    permutation = None
+    reader_epoch = None
     while True:
-        spans = _ordered_spans(partition, data_seed, epoch)
-        reader = SegmentTokenReader(packed, spans)
+        if reader_epoch != epoch:
+            spans = _ordered_spans(partition, data_seed, epoch)
+            reader = SegmentTokenReader(packed, spans)
+            permutation = _span_order_digest(spans)
+            reader_epoch = epoch
+        assert reader is not None and permutation is not None
         if logical_offset + stride + 1 > reader.total_tokens:
             if resuming:
                 raise ValueError("segment resume cursor is outside its partition")
             logical_offset = 0
             epoch += 1
             continue
-        permutation = content_digest(
-            tuple(
-                (span.content_hash, span.start_token, span.end_token)
-                for span in spans
-            )
-        )
         if resuming and resume_state_dict.get("permutation") != permutation:
             raise ValueError("segment resume permutation does not match")
         resuming = False
@@ -342,6 +361,7 @@ def segment_evaluation_batches(
     *,
     device="cuda",
     data_dir=None,
+    validate_documents=True,
 ):
     if not isinstance(plan, SegmentPlan):
         raise TypeError("segment evaluation needs a segment plan")
@@ -358,11 +378,6 @@ def segment_evaluation_batches(
         raise ValueError("packed dataset was created with a different tokenizer")
     if plan.dataset_digest != manifest_fingerprint(manifest):
         raise ValueError("segment plan belongs to a different packed dataset")
-    validate_segment_plan(
-        plan,
-        load_document_index(data_dir, manifest),
-        (partition_name,),
-    )
     partitions = {
         partition.name: partition for partition in plan.partitions
     }
@@ -373,6 +388,14 @@ def segment_evaluation_batches(
         PackedTokenSplit(data_dir, partition.split, manifest),
         partition.spans,
     )
+    if validate_documents:
+        validate_segment_plan(
+            plan,
+            load_document_index(data_dir, manifest),
+            (partition_name,),
+        )
+    elif any(span.end_token > reader.packed.total_tokens for span in partition.spans):
+        raise ValueError("segment partition is outside its packed split")
     if reader.total_tokens < 2:
         raise ValueError("segment evaluation needs at least two tokens")
     device = torch.device(device)

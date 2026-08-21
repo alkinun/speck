@@ -167,6 +167,7 @@ def _execute_quality_action(
         device=device,
         resume_state_dict=resume_state,
         data_dir=data_dir,
+        validate_documents=False,
     )
     batch = next(loader)
     if payload is None:

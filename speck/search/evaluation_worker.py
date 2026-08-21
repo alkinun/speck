@@ -84,6 +84,7 @@ def execute_evaluation_action(
                 protocol.sequence_length,
                 device=device,
                 data_dir=stored["provenance"]["dataset_dir"],
+                validate_documents=False,
             ):
                 logits = model(inputs)
                 loss = F.cross_entropy(
