@@ -350,7 +350,7 @@ class SpeckV3ForCausalLM(nn.Module):
     def state(self, batch_size=1, length=None, device=None, dtype=None):
         parameter = next(self.parameters())
         device = torch.device(device or parameter.device)
-        dtype = dtype or (torch.bfloat16 if device.type == "cuda" else torch.float32)
+        dtype = dtype or parameter.dtype
         length = length or self.config.max_position_embeddings
         if length < 1 or length > self.config.max_position_embeddings:
             raise ValueError("state length is outside the model context")
@@ -401,7 +401,7 @@ class SpeckV3ForCausalLM(nn.Module):
             x = self.embed_tokens(tokens)
         else:
             x = inputs_embeds
-        x = x.to(torch.bfloat16 if x.is_cuda else torch.float32)
+        x = x.to(self.embed_tokens.weight.dtype)
         length = x.size(1)
         position = state.position if state is not None else 0
         maximum = state.length if state is not None else self.config.max_position_embeddings
