@@ -225,6 +225,7 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | v3 study store | `speck/search/study_v3.py` |
 | v3 configuration | `speck/search/spec_v3.py` |
 | study initialization | `speck/search/initialize_v3.py` |
+| quality worker | `speck/search/quality_worker.py` |
 | profiling | `speck/profile/` |
 
 ## next implementation sequence
@@ -256,13 +257,27 @@ python -m scripts.architecture_search_v3 status calibration-v3
 
 initialization verifies all packed shards, the tokenizer identity, every selected document span, partition coverage, the full quality horizon, baseline context limits, and exact parameter accounting before atomically registering the study bundle. the example configuration is intentionally rejected while its segment digest is null.
 
+schedule and execute one checkpoint continuation with:
+
+```bash
+python -m scripts.architecture_search_v3 schedule-quality calibration-v3 \
+  --seed-index 0 \
+  --estimated-cost 3600
+python -m scripts.architecture_search_v3 worker calibration-v3 \
+  --device cuda \
+  --once
+```
+
+each scheduling call targets only the immediate next protocol checkpoint. repeating the call with the same seed index resumes the same run from its latest immutable checkpoint. the segment-plan seed fixes partition membership; the run data seed fixes a deterministic document order within that membership.
+
+the worker heartbeats through model construction, training, and checkpoint serialization. it writes the content-addressed checkpoint first, then atomically fences the expected parent, registers lineage, advances the run, and completes the action. expired or reclaimed workers cannot publish progress. the initial worker is single-device, requires `compile_model` to be false, and records training state only; quality evaluation remains a separate future action so training loss cannot be mislabeled as target nll.
+
 remaining implementation sequence:
 
-1. add a resumable quality-run worker using the shared training loop
-2. add isolated gpu and cpu profiling workers
-3. add the event-driven coordinator and worker command line interface
-4. add surrogate shadow-mode proposal generation
-5. execute the noise-decomposition calibration study
-6. execute the broad 100m panel and long-horizon anchors
-7. freeze the first calibration artifact
-8. start the first production version three search
+1. add isolated gpu and cpu profiling workers
+2. add the event-driven coordinator command line interface
+3. add surrogate shadow-mode proposal generation
+4. execute the noise-decomposition calibration study
+5. execute the broad 100m panel and long-horizon anchors
+6. freeze the first calibration artifact
+7. start the first production version three search

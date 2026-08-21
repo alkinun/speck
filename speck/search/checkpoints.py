@@ -62,12 +62,12 @@ def capture_rng_state():
 def restore_rng_state(state):
     random.setstate(state["python"])
     np.random.set_state(state["numpy"])
-    torch.set_rng_state(state["torch"])
+    torch.set_rng_state(state["torch"].cpu())
     cuda = state.get("cuda", [])
     if cuda:
         if not torch.cuda.is_available() or len(cuda) != torch.cuda.device_count():
             raise ValueError("checkpoint cuda rng state does not match this worker")
-        torch.cuda.set_rng_state_all(cuda)
+        torch.cuda.set_rng_state_all([value.cpu() for value in cuda])
 
 
 def save_run_checkpoint(

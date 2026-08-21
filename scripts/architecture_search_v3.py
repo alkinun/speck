@@ -3,12 +3,18 @@
 import argparse
 import fcntl
 import json
+import os
+import socket
 from contextlib import contextmanager
 from pathlib import Path
+
+import torch
 
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.search.initialize_v3 import initialize_study
+from speck.search.protocol import SeedBundle, TrainingProtocol
+from speck.search.quality_worker import run_quality_worker
 from speck.search.spec_v3 import V3SearchSettings
 from speck.search.study_v3 import V3Study
 from speck.tokenizer import get_tokenizer
@@ -27,6 +33,27 @@ def parser():
     status = commands.add_parser("status")
     status.add_argument("study")
     status.add_argument("--output", default=None)
+
+    schedule = commands.add_parser("schedule-quality")
+    schedule.add_argument("study")
+    schedule.add_argument("--architecture", default=None)
+    schedule.add_argument("--seed-index", type=int, required=True)
+    schedule.add_argument("--numerical-repeat", type=int, default=0)
+    schedule.add_argument("--priority", type=float, default=1.0)
+    schedule.add_argument("--estimated-cost", type=float, required=True)
+
+    worker = commands.add_parser("worker")
+    worker.add_argument("study")
+    worker.add_argument(
+        "--owner",
+        default=f"{socket.gethostname()}:{os.getpid()}",
+    )
+    worker.add_argument(
+        "--device",
+        default="cuda" if torch.cuda.is_available() else "cpu",
+    )
+    worker.add_argument("--lease-seconds", type=int, default=300)
+    worker.add_argument("--once", action="store_true")
     return value
 
 
@@ -108,12 +135,62 @@ def status_command(args):
     display(result, args.output)
 
 
+def schedule_quality_command(args):
+    path = study_dir(args.study) / "study.sqlite3"
+    study = V3Study(path)
+    try:
+        stored = study.study()
+        architecture_digest = (
+            args.architecture or stored["provenance"]["model_digest"]
+        )
+        protocol = TrainingProtocol.from_dict(
+            stored["provenance"]["resolved_protocol"]
+        )
+        seeds = SeedBundle.create(
+            stored["config"]["seed"],
+            args.seed_index,
+            args.numerical_repeat,
+        )
+        run_id = study.add_run(architecture_digest, protocol, seeds)
+        action_id = study.add_quality_action(
+            run_id,
+            args.priority,
+            args.estimated_cost,
+        )
+    finally:
+        study.close()
+    display({"action_id": action_id, "run_id": run_id})
+
+
+def worker_command(args):
+    directory = study_dir(args.study)
+    results = []
+    while True:
+        result = run_quality_worker(
+            directory / "study.sqlite3",
+            directory / "artifacts",
+            owner=args.owner,
+            device=args.device,
+            lease_seconds=args.lease_seconds,
+        )
+        if result is None:
+            break
+        results.append(result)
+        if args.once:
+            break
+    display({"completed": results})
+
+
 def main():
     args = parser().parse_args()
     if args.command == "init":
         initialize_command(args)
-    else:
+    elif args.command == "status":
         status_command(args)
+    elif args.command == "schedule-quality":
+        schedule_quality_command(args)
+    else:
+        worker_command(args)
 
 
 if __name__ == "__main__":
