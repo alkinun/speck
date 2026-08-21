@@ -1,14 +1,20 @@
 import hashlib
 import json
 
+import numpy as np
 import pytest
+import torch
 
+from speck.dataloader import manifest_fingerprint
 from speck.search.segments import (
     DocumentRecord,
+    SegmentPartition,
     SegmentPlan,
+    TokenSpan,
     build_segment_plan,
     load_document_index,
     load_segment_plan,
+    segment_loader,
     validate_segment_plan,
 )
 
@@ -97,3 +103,120 @@ def test_segment_plan_loads_and_matches_document_index(tmp_path):
         validate_segment_plan(loaded, records(), ("audit",))
     with pytest.raises(ValueError, match="does not match"):
         validate_segment_plan(loaded, records()[:1], ("train", "monitor"))
+
+
+class FakeTokenizer:
+    vocab_size = 32
+
+    def fingerprint(self):
+        return "1" * 64
+
+
+def packed_segment_data(tmp_path):
+    values = np.arange(1, 25, dtype="<u2")
+    shards = []
+    for index, shard_values in enumerate((values[:11], values[11:])):
+        path = tmp_path / f"train_{index:05d}.bin"
+        path.write_bytes(shard_values.tobytes())
+        shards.append(
+            {
+                "path": path.name,
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "tokens": len(shard_values),
+            }
+        )
+    indexed = [
+        record(f"document-{index}", "train", index * 6, index * 6 + 6)
+        for index in range(4)
+    ]
+    lines = "".join(
+        json.dumps(
+            {
+                "content_hash": item.content_hash,
+                "end_token": item.end_token,
+                "score": item.score,
+                "source": item.source,
+                "split": item.split,
+                "start_token": item.start_token,
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+        for item in indexed
+    )
+    (tmp_path / "documents.jsonl").write_text(lines)
+    manifest = {
+        "document_index": {
+            "path": "documents.jsonl",
+            "records": len(indexed),
+            "sha256": hashlib.sha256(lines.encode()).hexdigest(),
+        },
+        "format": "speck_packed_tokens",
+        "format_version": 2,
+        "splits": {
+            "train": {"shards": shards, "tokens": len(values)},
+            "val": {"shards": shards, "tokens": len(values)},
+        },
+        "tokenizer": {"fingerprint": "1" * 64, "vocab_size": 32},
+    }
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
+    plan = SegmentPlan(
+        manifest_fingerprint(manifest),
+        42,
+        (
+            SegmentPartition(
+                "train",
+                "train",
+                tuple(
+                    TokenSpan(item.content_hash, item.start_token, item.end_token)
+                    for item in indexed
+                ),
+            ),
+        ),
+    )
+    return plan
+
+
+def test_segment_loader_replays_its_exact_cursor(tmp_path):
+    plan = packed_segment_data(tmp_path)
+    loader = segment_loader(
+        FakeTokenizer(), plan, "train", 7, 1, 3, device="cpu", data_dir=tmp_path
+    )
+    first = next(loader)
+    second = next(loader)
+    resumed = segment_loader(
+        FakeTokenizer(),
+        plan,
+        "train",
+        7,
+        1,
+        3,
+        device="cpu",
+        data_dir=tmp_path,
+        resume_state_dict=second[2],
+    )
+    replayed = next(resumed)
+    assert torch.equal(second[0], replayed[0])
+    assert torch.equal(second[1], replayed[1])
+    assert second[2] == replayed[2]
+    alternate = next(
+        segment_loader(
+            FakeTokenizer(), plan, "train", 8, 1, 3, device="cpu", data_dir=tmp_path
+        )
+    )
+    assert first[2]["permutation"] != alternate[2]["permutation"]
+    with pytest.raises(ValueError, match="changed segment state"):
+        next(
+            segment_loader(
+                FakeTokenizer(),
+                plan,
+                "train",
+                8,
+                1,
+                3,
+                device="cpu",
+                data_dir=tmp_path,
+                resume_state_dict=second[2],
+            )
+        )

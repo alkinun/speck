@@ -42,6 +42,10 @@ class QualityProtocolTemplate:
     weight_decay: float
     gradient_clip: float
     checkpoint_tokens: tuple[int, ...]
+    device_type: str = "cuda"
+    dtype: str = "float32"
+    compile_model: bool = False
+    world_size: int = 1
 
     def __post_init__(self):
         self.resolve("dataset", "tokenizer", "segments")
@@ -62,6 +66,10 @@ class QualityProtocolTemplate:
             weight_decay=self.weight_decay,
             gradient_clip=self.gradient_clip,
             checkpoint_tokens=self.checkpoint_tokens,
+            device_type=self.device_type,
+            dtype=self.dtype,
+            compile_model=self.compile_model,
+            world_size=self.world_size,
         )
 
 

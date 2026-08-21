@@ -6,9 +6,13 @@ import random
 from dataclasses import dataclass
 from pathlib import Path
 
-from speck.dataloader import manifest_fingerprint
+import numpy as np
+import torch
+
+from speck.common import dist_info
+from speck.dataloader import PackedTokenSplit, manifest_fingerprint
 from speck.dataset import load_manifest
-from speck.search.protocol import canonical_json, content_digest
+from speck.search.protocol import canonical_json, content_digest, derive_seed
 
 
 @dataclass(frozen=True)
@@ -172,6 +176,161 @@ def validate_segment_plan(plan, records, required_partitions=()):
                     f"segment partition {partition.name} does not match the document index"
                 )
     return True
+
+
+def _ordered_spans(partition, data_seed, epoch):
+    spans = list(partition.spans)
+    seed = derive_seed(data_seed, "segment_order", partition.name, epoch)
+    random.Random(seed).shuffle(spans)
+    return tuple(spans)
+
+
+class SegmentTokenReader:
+    def __init__(self, packed, spans):
+        self.packed = packed
+        self.spans = spans
+        self.total_tokens = sum(span.tokens for span in spans)
+
+    def read(self, start, count):
+        if start < 0 or count < 0 or start + count > self.total_tokens:
+            raise IndexError("segment token read is out of range")
+        if count == 0:
+            return np.empty(0, dtype=np.int64)
+        pieces = []
+        position = start
+        remaining = count
+        for span in self.spans:
+            if position >= span.tokens:
+                position -= span.tokens
+                continue
+            take = min(remaining, span.tokens - position)
+            pieces.append(self.packed.read(span.start_token + position, take))
+            remaining -= take
+            if remaining == 0:
+                break
+            position = 0
+        if remaining:
+            raise IndexError("segment token read is incomplete")
+        if len(pieces) == 1:
+            return pieces[0]
+        return np.concatenate(pieces)
+
+
+def segment_loader(
+    tokenizer,
+    plan,
+    partition_name,
+    data_seed,
+    batch_size,
+    sequence_length,
+    *,
+    device="cuda",
+    resume_state_dict=None,
+    data_dir=None,
+):
+    if not isinstance(plan, SegmentPlan):
+        raise TypeError("segment loaders need a segment plan")
+    if data_seed < 0 or min(batch_size, sequence_length) < 1:
+        raise ValueError("segment loader dimensions and seeds must be positive")
+    rank, _, world_size = dist_info()
+    if rank != 0 or world_size != 1:
+        raise ValueError("segment loaders currently require world size one")
+    data_dir = Path(data_dir)
+    manifest = load_manifest(data_dir)
+    if tokenizer.vocab_size != manifest["tokenizer"]["vocab_size"]:
+        raise ValueError("packed dataset vocabulary does not match tokenizer")
+    if tokenizer.fingerprint() != manifest["tokenizer"]["fingerprint"]:
+        raise ValueError("packed dataset was created with a different tokenizer")
+    manifest_digest = manifest_fingerprint(manifest)
+    if plan.dataset_digest != manifest_digest:
+        raise ValueError("segment plan belongs to a different packed dataset")
+    validate_segment_plan(
+        plan,
+        load_document_index(data_dir, manifest),
+        (partition_name,),
+    )
+    partitions = {
+        partition.name: partition for partition in plan.partitions
+    }
+    if partition_name not in partitions:
+        raise ValueError(f"unknown segment partition: {partition_name}")
+    partition = partitions[partition_name]
+    packed = PackedTokenSplit(data_dir, partition.split, manifest)
+    required = batch_size * sequence_length + 1
+    if required > partition.tokens:
+        raise ValueError("segment partition is smaller than one batch")
+    epoch = 0
+    logical_offset = 0
+    resuming = resume_state_dict is not None
+    if resume_state_dict is not None:
+        expected = {
+            "batch_size": batch_size,
+            "data_seed": data_seed,
+            "format_version": 1,
+            "manifest": manifest_digest,
+            "partition": partition_name,
+            "plan": plan.digest,
+            "sequence_length": sequence_length,
+            "world_size": 1,
+        }
+        changed = [
+            name
+            for name, value in expected.items()
+            if resume_state_dict.get(name) != value
+        ]
+        if changed:
+            raise ValueError(
+                f"cannot resume with changed segment state: {', '.join(changed)}"
+            )
+        epoch = resume_state_dict["epoch"]
+        logical_offset = resume_state_dict["logical_offset"]
+        if epoch < 0 or logical_offset < 0:
+            raise ValueError("segment resume cursor cannot be negative")
+    device = torch.device(device)
+    stride = batch_size * sequence_length
+    while True:
+        spans = _ordered_spans(partition, data_seed, epoch)
+        reader = SegmentTokenReader(packed, spans)
+        if logical_offset + stride + 1 > reader.total_tokens:
+            if resuming:
+                raise ValueError("segment resume cursor is outside its partition")
+            logical_offset = 0
+            epoch += 1
+            continue
+        permutation = content_digest(
+            tuple(
+                (span.content_hash, span.start_token, span.end_token)
+                for span in spans
+            )
+        )
+        if resuming and resume_state_dict.get("permutation") != permutation:
+            raise ValueError("segment resume permutation does not match")
+        resuming = False
+        state = {
+            "batch_size": batch_size,
+            "data_seed": data_seed,
+            "epoch": epoch,
+            "format_version": 1,
+            "logical_offset": logical_offset,
+            "manifest": manifest_digest,
+            "partition": partition_name,
+            "permutation": permutation,
+            "plan": plan.digest,
+            "sequence_length": sequence_length,
+            "world_size": 1,
+        }
+        flat = torch.from_numpy(reader.read(logical_offset, required))
+        rows = flat.unfold(0, sequence_length + 1, sequence_length)
+        inputs = rows[:, :-1].contiguous()
+        targets = rows[:, 1:].contiguous()
+        if device.type == "cuda":
+            inputs = inputs.pin_memory().to(device, non_blocking=True)
+            targets = targets.pin_memory().to(device, non_blocking=True)
+        else:
+            inputs = inputs.to(device)
+            targets = targets.to(device)
+        yield inputs, targets, state
+        logical_offset += stride
 
 
 def load_document_index(data_dir, manifest=None):

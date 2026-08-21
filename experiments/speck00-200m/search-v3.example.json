@@ -163,7 +163,10 @@
       301989888,
       1006632960
     ],
+    "compile_model": false,
     "device_batch_size": 2,
+    "device_type": "cuda",
+    "dtype": "float32",
     "gradient_clip": 1.0,
     "learning_rate": 0.0015,
     "minimum_learning_rate_scale": 0.1,
@@ -171,7 +174,8 @@
     "optimizer": "muon",
     "sequence_length": 2048,
     "warmup_steps": 512,
-    "weight_decay": 0.1
+    "weight_decay": 0.1,
+    "world_size": 1
   },
   "seed": 42,
   "segment_plan": {
