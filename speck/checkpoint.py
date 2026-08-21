@@ -45,3 +45,10 @@ def load(directory, step, device):
     with open(os.path.join(directory, f"metadata_{step:06d}.json"), encoding="utf-8") as handle:
         metadata = json.load(handle)
     return model, optimizer, metadata
+
+
+def load_model(directory, step, device):
+    if not os.path.exists(os.path.join(directory, f"complete_{step:06d}")):
+        raise FileNotFoundError(f"checkpoint {step} is incomplete")
+    path = os.path.join(directory, f"model_{step:06d}.pt")
+    return torch.load(path, map_location=device)

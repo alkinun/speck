@@ -2,7 +2,7 @@ import json
 
 import torch
 
-from speck.checkpoint import latest, load, save
+from speck.checkpoint import latest, load, load_model, save
 
 
 def test_checkpoint_is_visible_only_after_completion(tmp_path):
@@ -18,6 +18,7 @@ def test_checkpoint_is_visible_only_after_completion(tmp_path):
     assert model["weight"].item() == 1.0
     assert optimizer == {"state": "optimizer"}
     assert metadata == {"step": 3}
+    assert load_model(tmp_path, 3, "cpu")["weight"].item() == 1.0
 
     torch.save({"weight": torch.tensor([2.0])}, tmp_path / "model_000004.pt")
     (tmp_path / "metadata_000004.json").write_text(json.dumps({"step": 4}))
