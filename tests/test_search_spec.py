@@ -98,3 +98,10 @@ def test_search_settings_reject_partial_initial_cohort():
     settings["initial_population"] = 5
     with pytest.raises(ValueError, match="complete cohorts"):
         SearchSettings.from_dict(settings)
+
+
+def test_search_settings_reject_partial_evaluation_batch():
+    settings = values()
+    settings["rungs"][1]["eval_tokens"] = 15
+    with pytest.raises(ValueError, match="complete batches"):
+        SearchSettings.from_dict(settings)

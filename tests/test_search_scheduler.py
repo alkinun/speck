@@ -1,6 +1,6 @@
 from speck.model import Config, LayerConfig
 from speck.search.architecture import mutate
-from speck.search.scheduler import _add_architecture, advance
+from speck.search.scheduler import _add_architecture, advance, rung_frontier
 from speck.search.spec import SearchSettings
 from speck.search.study import SearchStudy
 
@@ -136,6 +136,10 @@ def test_scheduler_runs_all_rungs_and_recommends(tmp_path):
     assert len({trial["seed"] for trial in study.trials(rung=1)}) == 2
     assert study.study()["status"] == "completed"
     assert study.study()["recommendations"]["balanced"]["id"]
+    frontier = rung_frontier(study, settings())
+    assert frontier["rung"] == 1
+    assert frontier["closed"]
+    assert frontier["completed"] == 2
     study.close()
 
 

@@ -514,6 +514,55 @@ def _recommendations(study, settings):
     }
 
 
+def rung_frontier(study, settings, rung=None):
+    if rung is None:
+        available = [
+            index
+            for index in range(len(settings.rungs))
+            if _evaluated(study, index)
+        ]
+        if not available:
+            return {
+                "rung": None,
+                "closed": False,
+                "scheduled": 0,
+                "completed": 0,
+                "architectures": [],
+            }
+        closed = [
+            index for index in available if _rung_closed(study, settings, index)
+        ]
+        rung = closed[-1] if closed else available[0]
+    if not 0 <= rung < len(settings.rungs):
+        raise ValueError("rung is outside the search configuration")
+    candidates = _evaluated(study, rung)
+    details = {
+        "rung": rung,
+        "name": settings.rungs[rung].name,
+        "closed": _rung_closed(study, settings, rung),
+        "scheduled": len(study.rungs(rung=rung)),
+        "completed": len(candidates),
+    }
+    if not candidates:
+        return {**details, "architectures": []}
+    points = estimated_candidates(candidates)
+    front = nondominated_sort(points, objective_names(settings))[0]
+    values = []
+    for candidate in front:
+        architecture = study.architecture(candidate.id)
+        aggregate = study.rung(candidate.id, rung)["aggregate"]
+        values.append({
+            "id": candidate.id,
+            "architecture_hash": architecture["architecture_hash"],
+            "config": architecture["config"],
+            "objectives": candidate.objectives,
+            "estimates": aggregate["objectives"],
+            "operation": architecture["operation"],
+            "parents": architecture["parents"],
+        })
+    return {**details, "architectures": values}
+
+
 def advance(study, baseline, settings):
     if study.study()["status"] in {"completed", "failed"}:
         return False

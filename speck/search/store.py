@@ -27,17 +27,43 @@ def _json(value):
 
 
 class StudyStore:
-    def __init__(self, path):
+    def __init__(self, path, readonly=False):
         self.path = Path(path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(self.path)
+        if readonly:
+            self.connection = sqlite3.connect(
+                f"{self.path.resolve().as_uri()}?mode=ro", uri=True
+            )
+        else:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.connection = sqlite3.connect(self.path)
         self.connection.row_factory = sqlite3.Row
-        self.connection.execute("pragma foreign_keys = on")
-        self.connection.execute("pragma journal_mode = wal")
-        self._create_schema()
+        try:
+            if readonly:
+                self._validate_schema()
+            else:
+                self.connection.execute("pragma foreign_keys = on")
+                self.connection.execute("pragma journal_mode = wal")
+                self._create_schema()
+        except Exception:
+            self.connection.close()
+            raise
 
     def close(self):
         self.connection.close()
+
+    def _validate_schema(self):
+        candidates = self.connection.execute(
+            "select name from sqlite_master where type = 'table' and name = 'candidates'"
+        ).fetchone()
+        row = self.connection.execute(
+            "select value from metadata where key = 'schema_version'"
+        ).fetchone()
+        if (
+            candidates is None
+            or row is None
+            or int(row["value"]) not in {1, 2, schema_version}
+        ):
+            raise ValueError("unsupported search database schema")
 
     def _create_schema(self):
         self.connection.executescript(

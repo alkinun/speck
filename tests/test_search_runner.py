@@ -1,25 +1,34 @@
+import json
+from types import SimpleNamespace
+
 import pytest
 
+from scripts.architecture_search import query_command
 from speck.model import Config, LayerConfig
 from speck.search.runner import (
-    SearchSettings,
+    _artifact_paths,
     _ingest_output,
-    evaluate_candidate_process,
-    generate_offspring,
+    _payload,
+    _validate_payload,
+    evaluate_trial_process,
+    recover_results,
     run_search,
-    search_objectives,
-    seed_candidates,
-    update_selection,
+    study_lock,
 )
-from speck.search.store import StudyStore
+from speck.search.scheduler import advance
+from speck.search.spec import SearchSettings, objective_names
+from speck.search.study import SearchStudy
 
 
 def settings():
     return SearchSettings.from_dict({
-        "population_size": 2,
-        "initial_population": 2,
-        "max_evaluations": 4,
+        "format_version": 2,
         "seed": 7,
+        "max_architectures": 4,
+        "initial_population": 2,
+        "population_size": 2,
+        "cohort_size": 2,
+        "confidence_z": 1.645,
         "space": {
             "min_layers": 1,
             "max_layers": 2,
@@ -33,13 +42,9 @@ def settings():
         },
         "quality": {
             "data_dir": "~/data",
-            "train_tokens": 16,
             "batch_tokens": 8,
             "device_batch_size": 1,
-            "sequence_length": 4,
-            "eval_every_tokens": 8,
             "eval_batch_size": 1,
-            "eval_tokens": 4,
             "lr": 0.001,
             "min_lr": 0.1,
             "warmup_steps": 1,
@@ -48,8 +53,38 @@ def settings():
             "optimizer": "adamw",
             "compile": False,
         },
-        "inference": {"contexts": [4, 8], "warmup_samples": 0, "samples": 1},
+        "validation_slices": [
+            {"name": "main", "offset_tokens": 0, "objective": True},
+            {"name": "audit", "offset_tokens": 32, "objective": False},
+        ],
+        "inference": {
+            "contexts": [4, 8],
+            "warmup_samples": 0,
+            "samples": 9,
+        },
         "quantization": {"bits": 4, "group_size": 4},
+        "rungs": [
+            {
+                "name": "screen",
+                "architecture_limit": 4,
+                "seed_count": 1,
+                "train_tokens": 16,
+                "sequence_length": 4,
+                "eval_every_tokens": 8,
+                "eval_tokens": 8,
+                "inference_samples": 1,
+            },
+            {
+                "name": "verify",
+                "architecture_limit": 2,
+                "seed_count": 2,
+                "train_tokens": 32,
+                "sequence_length": 8,
+                "eval_every_tokens": 16,
+                "eval_tokens": 16,
+                "inference_samples": 3,
+            },
+        ],
     })
 
 
@@ -65,7 +100,7 @@ def baseline():
 def result(value):
     return {
         "objectives": {
-            "quality.validation_nll": value,
+            "quality.validation_nll.main": value,
             "memory.kv_cache_bytes_per_token": value,
             "memory.quantized_weight_bytes": value,
             "prefill.ms.context_4": value,
@@ -78,146 +113,276 @@ def result(value):
     }
 
 
-def test_search_settings_and_objectives():
-    search = settings()
-    assert search.quality.data_dir.endswith("/data")
-    assert len(search_objectives(search)) == 9
-    assert search.export()["inference"]["contexts"] == [4, 8]
-
-
-def test_seed_selection_and_offspring(tmp_path):
-    store = StudyStore(tmp_path / "study.sqlite3")
-    store.initialize(settings().export(), {})
-    seed_candidates(store, baseline(), settings())
-    candidates = store.candidates()
-    assert len(candidates) == 2
-    for index, candidate in enumerate(candidates):
-        attempt = store.start_attempt(candidate["id"])
-        store.complete_attempt(candidate["id"], attempt, result(index + 1))
-    metrics, selected = update_selection(store, settings())
-    assert len(metrics) == 2
-    assert len(selected) == 2
-    offspring = generate_offspring(store, settings())
-    assert store.candidate(offspring)["parents"]
-    assert store.candidate(offspring)["status"] == "pending"
-    store.close()
-
-
-def test_search_lifecycle_and_resume(tmp_path, monkeypatch):
-    store = StudyStore(tmp_path / "study.sqlite3")
-    store.initialize(settings().export(), {})
-
-    def evaluate(store, study_dir, candidate, tokenizer, search, device):
-        attempt = store.start_attempt(candidate["id"])
-        store.complete_attempt(candidate["id"], attempt, result(candidate["id"]))
-        return True
-
-    monkeypatch.setattr(
-        "speck.search.runner.evaluate_candidate_process", evaluate
-    )
-    run_search(store, tmp_path, baseline(), {}, settings(), "cpu")
-    assert store.summary()["candidates"] == {"completed": 4}
-    assert store.summary()["study"]["status"] == "completed"
-    assert len(store.frontier()) == 1
-    assert any(
-        store.candidate(candidate["id"])["parents"]
-        for candidate in store.candidates()[1:]
-    )
-
-    run_search(store, tmp_path, baseline(), {}, settings(), "cpu")
-    assert len(store.candidates()) == 4
-    store.close()
-
-
-def test_structured_worker_failure_retries_once(tmp_path):
-    store = StudyStore(tmp_path / "study.sqlite3")
-    store.initialize(settings().export(), {})
-    candidate_id = store.add_candidate(baseline(), 1, {"operator": "seed"})
-    assert candidate_id is not None
-
-    first_attempt = store.start_attempt(candidate_id)
-    output = {
-        "status": "failed",
-        "candidate_id": candidate_id,
-        "attempt_id": first_attempt,
+def output(trial, attempt_id, status="failed"):
+    return {
+        "status": status,
+        "architecture_id": trial["architecture_id"],
+        "trial_id": trial["id"],
+        "rung": trial["rung"],
+        "seed_index": trial["seed_index"],
+        "attempt_id": attempt_id,
+        "payload_digest": "test-payload",
         "error_type": "RuntimeError",
         "error": "transient",
     }
-    assert not _ingest_output(
-        store, candidate_id, first_attempt, output, settings()
+
+
+def test_trial_payload_resolves_rung_fidelity_and_identity(tmp_path):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(
+        settings().export(), {"git": {"revision": "test"}}
     )
-    assert store.candidate(candidate_id)["status"] == "pending"
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    payload = _payload(study, trial, attempt_id, {"kind": "test"}, settings())
+    assert payload["trial_id"] == trial["id"]
+    assert payload["evaluation_seed"] == trial["seed"]
+    assert payload["quality"]["train_tokens"] == 16
+    assert payload["quality"]["schedule_steps"] == 4
+    assert payload["inference"]["samples"] == 1
+    assert payload["validation_slices"][1]["name"] == "audit"
+    assert payload["expected_objectives"] == list(objective_names(settings()))
+    study.close()
 
-    second_attempt = store.start_attempt(candidate_id)
-    output["attempt_id"] = second_attempt
-    assert not _ingest_output(
-        store, candidate_id, second_attempt, output, settings()
-    )
-    assert store.candidate(candidate_id)["status"] == "failed"
-    store.close()
 
+def test_search_lifecycle_and_resume(tmp_path, monkeypatch):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {})
 
-def test_evicted_candidate_does_not_reenter_population(tmp_path):
-    store = StudyStore(tmp_path / "study.sqlite3")
-    store.initialize(settings().export(), {})
-    candidate_ids = []
-    for index, (hidden, intermediate) in enumerate(
-        ((8, 16), (12, 16), (8, 24)), start=1
-    ):
-        candidate = Config(
-            vocab_size=16,
-            layers=(LayerConfig(hidden, intermediate, 1),),
-            head_dim=4,
-            max_position_embeddings=10,
+    def evaluate(study, study_dir, trial, tokenizer, search, device):
+        attempt_id = study.start_attempt(trial["id"])
+        study.complete_attempt(
+            trial["id"], attempt_id, result(float(trial["architecture_id"]))
         )
-        candidate_id = store.add_candidate(
-            candidate,
-            index,
-            {"operator": "seed" if index == 1 else "change_hidden_size"},
+        return True
+
+    monkeypatch.setattr("speck.search.runner.evaluate_trial_process", evaluate)
+    run_search(study, tmp_path, baseline(), {}, settings(), "cpu")
+    assert study.summary()["trials"] == {"completed": 8}
+    assert study.study()["status"] == "completed"
+    assert study.study()["recommendations"]["balanced"]["id"]
+    assert len(study.rungs(rung=1)) == 2
+
+    run_search(study, tmp_path, baseline(), {}, settings(), "cpu")
+    assert len(study.architectures()) == 4
+    study.close()
+
+
+def test_structured_worker_failure_retries_once(tmp_path):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+
+    first_attempt = study.start_attempt(trial["id"])
+    assert not _ingest_output(
+        study,
+        trial,
+        first_attempt,
+        output(trial, first_attempt),
+        settings(),
+        "test-payload",
+    )
+    assert study.trial(trial["id"])["status"] == "pending"
+
+    second_attempt = study.start_attempt(trial["id"])
+    assert not _ingest_output(
+        study,
+        trial,
+        second_attempt,
+        output(trial, second_attempt),
+        settings(),
+        "test-payload",
+    )
+    assert study.trial(trial["id"])["status"] == "failed"
+    study.close()
+
+
+def test_worker_preflight_rejection_does_not_consume_retry(tmp_path):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    worker_output = output(trial, attempt_id, "interrupted")
+    assert not _ingest_output(
+        study,
+        trial,
+        attempt_id,
+        worker_output,
+        settings(),
+        "test-payload",
+    )
+    assert study.trial(trial["id"])["status"] == "pending"
+    assert study.failed_attempt_count(trial["id"]) == 0
+    study.close()
+
+
+def test_worker_output_rejects_mismatched_trial_identity(tmp_path):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    worker_output = output(trial, attempt_id)
+    worker_output["architecture_id"] += 1
+    with pytest.raises(ValueError, match="does not match"):
+        _ingest_output(
+            study,
+            trial,
+            attempt_id,
+            worker_output,
+            settings(),
+            "test-payload",
         )
-        assert candidate_id is not None
-        attempt = store.start_attempt(candidate_id)
-        store.complete_attempt(candidate_id, attempt, result(index))
-        update_selection(store, settings())
-        candidate_ids.append(candidate_id)
-
-    evicted = candidate_ids[2]
-    assert evicted not in store.population()
-
-    fourth = Config(
-        vocab_size=16,
-        layers=(LayerConfig(12, 24, 1),),
-        head_dim=4,
-        max_position_embeddings=10,
-    )
-    fourth_id = store.add_candidate(
-        fourth, 4, {"operator": "change_ffn_width"}
-    )
-    assert fourth_id is not None
-    attempt = store.start_attempt(fourth_id)
-    store.complete_attempt(fourth_id, attempt, result(4))
-    update_selection(store, settings())
-    assert evicted not in store.population()
-    assert store.candidate(evicted)["pareto_rank"] is None
-    store.close()
+    assert study.trial(trial["id"])["status"] == "running"
+    study.close()
 
 
-def test_candidate_evaluation_rejects_code_changes(tmp_path, monkeypatch):
-    store = StudyStore(tmp_path / "study.sqlite3")
-    store.initialize(settings().export(), {"git": {"revision": "one"}})
-    candidate_id = store.add_candidate(baseline(), 1, {"operator": "seed"})
-    assert candidate_id is not None
+def test_trial_evaluation_rejects_code_changes(tmp_path, monkeypatch):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {"git": {"revision": "one"}})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
     monkeypatch.setattr(
         "speck.search.runner._git_state", lambda: {"revision": "two"}
     )
     with pytest.raises(RuntimeError, match="code changed"):
-        evaluate_candidate_process(
-            store,
+        evaluate_trial_process(
+            study,
             tmp_path,
-            store.candidate(candidate_id),
+            trial,
             {},
             settings(),
             "cpu",
         )
-    assert store.candidate(candidate_id)["status"] == "pending"
-    store.close()
+    assert study.trial(trial["id"])["status"] == "pending"
+    study.close()
+
+
+def test_trial_launch_failure_returns_attempt_to_pending(tmp_path, monkeypatch):
+    git = {"revision": "same"}
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {"git": git})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    monkeypatch.setattr("speck.search.runner._git_state", lambda: git)
+
+    def fail_launch(*args, **kwargs):
+        raise OSError("cannot launch")
+
+    monkeypatch.setattr("speck.search.runner.subprocess.Popen", fail_launch)
+    with pytest.raises(OSError, match="cannot launch"):
+        evaluate_trial_process(
+            study,
+            tmp_path,
+            trial,
+            {},
+            settings(),
+            "cpu",
+        )
+    assert study.trial(trial["id"])["status"] == "pending"
+    assert study.failed_attempt_count(trial["id"]) == 0
+    assert not study.running_attempts()
+    study.close()
+
+
+def test_payload_digest_detects_fidelity_changes(tmp_path, monkeypatch):
+    git = {"revision": "same"}
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {"git": git})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    payload = _payload(study, trial, attempt_id, {}, settings())
+    monkeypatch.setattr("speck.search.runner._git_state", lambda: git)
+    _validate_payload(payload)
+    payload["quality"]["train_tokens"] += 8
+    with pytest.raises(ValueError, match="digest"):
+        _validate_payload(payload)
+    study.close()
+
+
+def test_completed_output_rejects_boolean_objective(tmp_path):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    worker_output = output(trial, attempt_id, "completed")
+    worker_output["result"] = result(1.0)
+    worker_output["result"]["objectives"]["quality.validation_nll.main"] = True
+    with pytest.raises(ValueError, match="non-finite"):
+        _ingest_output(
+            study,
+            trial,
+            attempt_id,
+            worker_output,
+            settings(),
+            "test-payload",
+        )
+    study.close()
+
+
+def test_recovery_ingests_a_completed_trial_artifact(tmp_path):
+    git = {"revision": "same"}
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {"git": git})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    payload = _payload(study, trial, attempt_id, {}, settings())
+    study.set_attempt_payload(attempt_id, payload["payload_digest"])
+    paths = _artifact_paths(tmp_path, trial, attempt_id)
+    paths["directory"].mkdir(parents=True)
+    paths["input"].write_text(json.dumps(payload), encoding="utf-8")
+    worker_output = output(trial, attempt_id, "completed")
+    worker_output["payload_digest"] = payload["payload_digest"]
+    worker_output["result"] = result(1.0)
+    paths["result"].write_text(json.dumps(worker_output), encoding="utf-8")
+    assert recover_results(study, tmp_path, settings()) == 0
+    assert study.trial(trial["id"])["status"] == "completed"
+    study.close()
+
+
+def test_recovery_handles_a_missing_input_artifact(tmp_path):
+    study = SearchStudy(tmp_path / "study.sqlite3")
+    study.initialize(settings().export(), {})
+    advance(study, baseline(), settings())
+    trial = study.trials(status="pending")[0]
+    attempt_id = study.start_attempt(trial["id"])
+    study.set_attempt_payload(attempt_id, "missing")
+    paths = _artifact_paths(tmp_path, trial, attempt_id)
+    paths["directory"].mkdir(parents=True)
+    paths["result"].write_text("{}", encoding="utf-8")
+    assert recover_results(study, tmp_path, settings()) == 0
+    assert study.trial(trial["id"])["status"] == "pending"
+    assert not study.running_attempts()
+    study.close()
+
+
+def test_cli_status_reads_v2_study(tmp_path, monkeypatch, capsys):
+    database = tmp_path / "study.sqlite3"
+    study = SearchStudy(database)
+    study.initialize(settings().export(), {"device": "cpu"})
+    study.close()
+    monkeypatch.setattr(
+        "scripts.architecture_search.study_dir", lambda name: tmp_path
+    )
+    query_command(
+        SimpleNamespace(
+            command="status", study="test", output=None, rung=None
+        )
+    )
+    value = json.loads(capsys.readouterr().out)
+    assert value["study"]["status"] == "running"
+
+
+def test_study_lock_rejects_a_second_coordinator(tmp_path):
+    with study_lock(tmp_path):
+        with pytest.raises(RuntimeError, match="running coordinator"):
+            with study_lock(tmp_path):
+                pass
+    with study_lock(tmp_path):
+        pass

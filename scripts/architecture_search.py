@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import sqlite3
 from pathlib import Path
 
 import torch
@@ -10,13 +11,15 @@ from speck.common import base_dir
 from speck.config import load_experiment
 from speck.model import build_model
 from speck.search.runner import (
-    SearchSettings,
     prepare_study,
     run_search,
     run_worker,
     study_lock,
 )
+from speck.search.scheduler import rung_frontier
+from speck.search.spec import SearchSettings
 from speck.search.store import StudyStore
+from speck.search.study import SearchStudy
 from speck.tokenizer import get_tokenizer
 
 
@@ -29,10 +32,14 @@ def arguments():
     run.add_argument("--study", required=True)
     run.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
 
-    for name in ("status", "frontier"):
-        command = commands.add_parser(name)
-        command.add_argument("study")
-        command.add_argument("--output", default=None)
+    status = commands.add_parser("status")
+    status.add_argument("study")
+    status.add_argument("--output", default=None)
+
+    frontier = commands.add_parser("frontier")
+    frontier.add_argument("study")
+    frontier.add_argument("--rung", type=int, default=None)
+    frontier.add_argument("--output", default=None)
 
     lineage = commands.add_parser("lineage")
     lineage.add_argument("study")
@@ -43,6 +50,7 @@ def arguments():
     worker.add_argument("input")
     worker.add_argument("output")
     worker.add_argument("--device", required=True)
+    worker.add_argument("--start-gate", default=None)
     return parser.parse_args()
 
 
@@ -74,7 +82,7 @@ def run_command(args):
         raise ValueError("architecture search requires cuda for peak memory objectives")
     directory = study_dir(args.study)
     with study_lock(directory):
-        store = StudyStore(directory / "study.sqlite3")
+        store = SearchStudy(directory / "study.sqlite3")
         try:
             prepare_study(
                 store,
@@ -102,32 +110,58 @@ def query_command(args):
     database = study_dir(args.study) / "study.sqlite3"
     if not database.is_file():
         raise FileNotFoundError(f"search study not found: {args.study}")
-    store = StudyStore(database)
+    connection = sqlite3.connect(
+        f"{database.resolve().as_uri()}?mode=ro", uri=True
+    )
     try:
-        if args.command == "status":
-            value = store.summary()
-        elif args.command == "frontier":
-            value = [
-                {
-                    "id": candidate["id"],
-                    "config": candidate["config"],
-                    "objectives": candidate["result"]["objectives"],
-                    "mutation": candidate["mutation"],
-                    "parents": candidate["parents"],
-                }
-                for candidate in store.frontier()
-            ]
-        else:
-            value = store.lineage(args.candidate)
-        display(value, args.output)
+        legacy = connection.execute(
+            "select 1 from sqlite_master where type = 'table' and name = 'candidates'"
+        ).fetchone()
     finally:
-        store.close()
+        connection.close()
+    if legacy:
+        if args.command == "frontier" and args.rung is not None:
+            raise ValueError("legacy studies do not contain rungs")
+        store = StudyStore(database, readonly=True)
+        try:
+            if args.command == "status":
+                value = store.summary()
+            elif args.command == "frontier":
+                value = [
+                    {
+                        "id": item["id"],
+                        "config": item["config"],
+                        "objectives": item["result"]["objectives"],
+                        "mutation": item["mutation"],
+                        "parents": item["parents"],
+                    }
+                    for item in store.frontier()
+                ]
+            else:
+                value = store.lineage(args.candidate)
+        finally:
+            store.close()
+    else:
+        store = SearchStudy(database, readonly=True)
+        try:
+            if args.command == "status":
+                value = store.summary()
+            elif args.command == "frontier":
+                settings = SearchSettings.from_dict(store.study()["config"])
+                value = rung_frontier(store, settings, args.rung)
+            else:
+                value = store.lineage(args.candidate)
+        finally:
+            store.close()
+    display(value, args.output)
 
 
 def main():
     args = arguments()
     if args.command == "_evaluate":
-        success = run_worker(args.input, args.output, args.device)
+        success = run_worker(
+            args.input, args.output, args.device, args.start_gate
+        )
         raise SystemExit(0 if success else 1)
     if args.command == "run":
         run_command(args)

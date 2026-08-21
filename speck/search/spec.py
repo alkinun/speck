@@ -161,6 +161,11 @@ class SearchSettings:
             rung_quality = self.quality.settings(rung)
             if rung_quality.sequence_length > 4096:
                 raise ValueError("rung sequence exceeds supported model context")
+            evaluation_batch_tokens = (
+                self.quality.eval_batch_size * rung.sequence_length
+            )
+            if rung.eval_tokens % evaluation_batch_tokens:
+                raise ValueError("rung evaluation tokens must contain complete batches")
 
     @classmethod
     def from_dict(cls, settings):

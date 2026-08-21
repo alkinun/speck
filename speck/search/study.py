@@ -11,7 +11,7 @@ from speck.search.architecture import architecture_hash, canonical_settings
 
 
 format_version = 2
-schema_version = 1
+schema_version = 2
 
 
 def _now():
@@ -29,17 +29,95 @@ def _clean(value):
 
 
 class SearchStudy:
-    def __init__(self, path):
+    def __init__(self, path, readonly=False):
         self.path = Path(path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(self.path)
+        if readonly:
+            self.connection = sqlite3.connect(
+                f"{self.path.resolve().as_uri()}?mode=ro", uri=True
+            )
+        else:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.connection = sqlite3.connect(self.path)
         self.connection.row_factory = sqlite3.Row
-        self.connection.execute("pragma foreign_keys = on")
-        self.connection.execute("pragma journal_mode = wal")
-        self._create_schema()
+        try:
+            self._preflight()
+            if readonly:
+                self._validate_schema()
+            else:
+                self.connection.execute("pragma foreign_keys = on")
+                self.connection.execute("pragma journal_mode = wal")
+                self._migrate_schema()
+                self._create_schema()
+        except Exception:
+            self.connection.close()
+            raise
 
     def close(self):
         self.connection.close()
+
+    def _preflight(self):
+        tables = {
+            row["name"]
+            for row in self.connection.execute(
+                "select name from sqlite_master where type = 'table' and name not like 'sqlite_%'"
+            )
+        }
+        if "candidates" in tables:
+            raise ValueError("legacy search study requires a new study name")
+        if not tables:
+            return
+        if "metadata" not in tables:
+            raise ValueError("database is not an architecture search study")
+        stored_format = self.connection.execute(
+            "select value from metadata where key = 'search_format_version'"
+        ).fetchone()
+        if stored_format is None:
+            raise ValueError("database is not an architecture search study")
+        if int(stored_format["value"]) != format_version:
+            raise ValueError("unsupported search study format")
+        stored_schema = self.connection.execute(
+            "select value from metadata where key = 'schema_version'"
+        ).fetchone()
+        if stored_schema is None or int(stored_schema["value"]) not in {1, schema_version}:
+            raise ValueError("unsupported search database schema")
+
+    def _validate_schema(self):
+        stored_format = self.connection.execute(
+            "select value from metadata where key = 'search_format_version'"
+        ).fetchone()
+        if stored_format is None or int(stored_format["value"]) != format_version:
+            raise ValueError("unsupported search study format")
+        stored_schema = self.connection.execute(
+            "select value from metadata where key = 'schema_version'"
+        ).fetchone()
+        if stored_schema is None or int(stored_schema["value"]) not in {1, schema_version}:
+            raise ValueError("unsupported search database schema")
+
+    def _migrate_schema(self):
+        metadata = self.connection.execute(
+            "select name from sqlite_master where type = 'table' and name = 'metadata'"
+        ).fetchone()
+        if metadata is None:
+            return
+        stored = self.connection.execute(
+            "select value from metadata where key = 'schema_version'"
+        ).fetchone()
+        if stored is None or int(stored["value"]) != 1:
+            return
+        with self.connection:
+            self.connection.execute(
+                "alter table attempts add column pid_start_time integer"
+            )
+            self.connection.execute(
+                "alter table attempts add column pid_boot_id text"
+            )
+            self.connection.execute(
+                "alter table attempts add column payload_digest text"
+            )
+            self.connection.execute(
+                "update metadata set value = ? where key = 'schema_version'",
+                (str(schema_version),),
+            )
 
     def _create_schema(self):
         self.connection.executescript(
@@ -112,6 +190,9 @@ class SearchStudy:
                 trial_id integer not null references trials(id) on delete cascade,
                 status text not null,
                 pid integer,
+                pid_start_time integer,
+                pid_boot_id text,
+                payload_digest text,
                 error text,
                 started_at text not null,
                 completed_at text
@@ -135,11 +216,6 @@ class SearchStudy:
             "select value from metadata where key = 'search_format_version'"
         ).fetchone()
         if stored_format is None:
-            legacy = self.connection.execute(
-                "select name from sqlite_master where type = 'table' and name = 'candidates'"
-            ).fetchone()
-            if legacy is not None:
-                raise ValueError("legacy search study requires a new study name")
             self.connection.executemany(
                 "insert into metadata(key, value) values (?, ?)",
                 (
@@ -559,11 +635,26 @@ class SearchStudy:
             )
         return cursor.lastrowid
 
-    def set_attempt_pid(self, attempt_id, pid):
+    def set_attempt_payload(self, attempt_id, payload_digest):
         with self.connection:
             cursor = self.connection.execute(
-                "update attempts set pid = ? where id = ? and status = 'running'",
-                (pid, attempt_id),
+                """
+                update attempts set payload_digest = ?
+                where id = ? and status = 'running'
+                """,
+                (payload_digest, attempt_id),
+            )
+            if cursor.rowcount != 1:
+                raise RuntimeError("attempt is not running")
+
+    def set_attempt_process(self, attempt_id, pid, pid_start_time, pid_boot_id):
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                update attempts set pid = ?, pid_start_time = ?, pid_boot_id = ?
+                where id = ? and status = 'running'
+                """,
+                (pid, pid_start_time, pid_boot_id, attempt_id),
             )
             if cursor.rowcount != 1:
                 raise RuntimeError("attempt is not running")
@@ -611,6 +702,26 @@ class SearchStudy:
             if attempt.rowcount != 1 or trial.rowcount != 1:
                 raise RuntimeError("stale trial failure")
 
+    def interrupt_attempt(self, trial_id, attempt_id, error):
+        now = _now()
+        with self.connection:
+            attempt = self.connection.execute(
+                """
+                update attempts set status = 'interrupted', completed_at = ?, error = ?
+                where id = ? and trial_id = ? and status = 'running'
+                """,
+                (now, error, attempt_id, trial_id),
+            )
+            trial = self.connection.execute(
+                """
+                update trials set status = 'pending', error = ?
+                where id = ? and status = 'running'
+                """,
+                (error, trial_id),
+            )
+            if attempt.rowcount != 1 or trial.rowcount != 1:
+                raise RuntimeError("stale trial interruption")
+
     def failed_attempt_count(self, trial_id):
         row = self.connection.execute(
             "select count(*) as count from attempts where trial_id = ? and status = 'failed'",
@@ -622,7 +733,11 @@ class SearchStudy:
         return [
             dict(row)
             for row in self.connection.execute(
-                "select id, trial_id, pid from attempts where status = 'running' order by id"
+                """
+                select id, trial_id, pid, pid_start_time, pid_boot_id,
+                    payload_digest
+                from attempts where status = 'running' order by id
+                """
             )
         ]
 
