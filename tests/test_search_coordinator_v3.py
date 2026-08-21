@@ -9,6 +9,7 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.search.artifacts import ArtifactStore
+from speck.search.checkpoints import save_run_checkpoint
 from speck.search.coordinator_v3 import coordinate_bootstrap
 from speck.search.segments import SegmentPartition, SegmentPlan, TokenSpan
 from speck.search.spec_v3 import V3SearchSettings
@@ -205,4 +206,117 @@ def test_bootstrap_coordinator_builds_panel_and_respects_action_slots(tmp_path):
     assert second["scheduled_actions"] == []
     assert [item["digest"] for item in study.architectures()] == architecture_digests
     assert len(study.runs()) == 3
+    study.close()
+
+
+def test_coordinator_selects_and_advances_posterior_anchors(tmp_path):
+    digest = hashlib.sha256(b"monitor").hexdigest()
+    plan = SegmentPlan(
+        "dataset",
+        42,
+        (SegmentPartition("monitor", "val", (TokenSpan(digest, 0, 9),)),),
+    )
+    plan_path = tmp_path / "segments.json"
+    plan_path.write_text(json.dumps(plan.export()), encoding="utf-8")
+    value = settings(plan_path, plan.digest).export()
+    value["calibration"].update(
+        broad_architectures=3,
+        noise_architectures=1,
+        anchor_architectures=1,
+        initialization_seeds=2,
+    )
+    value["planner"]["max_actions_per_event"] = 10
+    for objectives in value["objective_sets"]:
+        objectives["objectives"] = objectives["objectives"][:1]
+    value["profiles"][0]["name"] = "cpu_reporting"
+    value["profiles"][1]["name"] = "gpu_reporting"
+    parsed = V3SearchSettings.from_dict(value)
+    protocol = parsed.quality.resolve("dataset", "tokenizer", plan.digest)
+    baseline = architecture()
+    artifact_root = tmp_path / "artifacts"
+    artifacts = ArtifactStore(artifact_root)
+    segment_artifact = artifacts.put_json("segment_plan", plan.export())
+    study = V3Study(tmp_path / "study.sqlite3")
+    study.initialize_bundle(
+        parsed.export(),
+        {
+            "model_digest": baseline.digest,
+            "resolved_protocol": protocol.__dict__,
+            "resolved_protocol_digest": protocol.digest,
+            "segment_plan": {"digest": plan.digest, "path": str(plan_path)},
+        },
+        objective_sets=parsed.objective_sets,
+        architecture=baseline,
+        artifacts=(segment_artifact,),
+    )
+    initial = coordinate_bootstrap(
+        study,
+        parsed,
+        quality_cost=2.0,
+        evaluation_cost=1.0,
+        profile_cost=1.0,
+        artifact_root=artifact_root,
+    )
+    assert len(initial["scheduled_actions"]) == 4
+    while action := study.claim_action("trainer", kind="continue"):
+        run = study.run(action["run_id"])
+        checkpoint = save_run_checkpoint(
+            artifacts,
+            architecture_digest=run["architecture_digest"],
+            protocol_digest=run["protocol_digest"],
+            seed_bundle_digest=run["seed_bundle_digest"],
+            steps=1,
+            tokens=4,
+            model_state={},
+            optimizer_state={},
+            data_state={},
+        )
+        study.commit_quality_checkpoint(
+            action["id"], action["claim_token"], checkpoint
+        )
+    evaluations = coordinate_bootstrap(
+        study,
+        parsed,
+        quality_cost=2.0,
+        evaluation_cost=1.0,
+        profile_cost=1.0,
+        artifact_root=artifact_root,
+    )
+    assert len(evaluations["scheduled_actions"]) == 4
+    while action := study.claim_action("evaluator", kind="evaluate"):
+        artifact = artifacts.put_json(
+            "quality_evaluation",
+            {"run_id": action["run_id"]},
+        )
+        study.commit_quality_evaluation(
+            action["id"],
+            action["claim_token"],
+            2.0 + action["run_id"] * 0.1,
+            8,
+            artifact,
+        )
+    shadow = coordinate_bootstrap(
+        study,
+        parsed,
+        quality_cost=2.0,
+        evaluation_cost=1.0,
+        profile_cost=1.0,
+        artifact_root=artifact_root,
+    )
+    assert shadow["phase"] == "anchors"
+    assert shadow["posterior_report"] is not None
+    assert len(shadow["anchors"]) == 1
+    anchors = coordinate_bootstrap(
+        study,
+        parsed,
+        quality_cost=2.0,
+        evaluation_cost=1.0,
+        profile_cost=1.0,
+        artifact_root=artifact_root,
+    )
+    assert len(anchors["scheduled_actions"]) == 1
+    action = study.action(anchors["scheduled_actions"][0])
+    assert action["kind"] == "continue"
+    assert action["payload"]["target_tokens"] == 8
+    assert action["architecture_digest"] in set(shadow["anchors"])
     study.close()

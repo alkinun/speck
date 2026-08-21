@@ -54,7 +54,7 @@ def search_settings(segment_path, segment_digest):
                 "anchor_architectures": 1,
                 "initialization_seeds": 1,
                 "data_seeds": 1,
-                "numerical_repeats": 1,
+                "numerical_repeats": 2,
                 "noise_tokens": 8,
                 "broad_tokens": 8,
                 "anchor_tokens": 16,

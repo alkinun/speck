@@ -9,6 +9,7 @@ from speck.search.architecture_v3 import (
     sample_architecture,
 )
 from speck.search.profile_worker import backend_plugin
+from speck.search.posterior_v3 import build_posterior_shadow
 from speck.search.protocol import SeedBundle, TrainingProtocol, derive_seed
 from speck.search.segments import load_segment_plan
 
@@ -109,6 +110,7 @@ def coordinate_bootstrap(
     quality_cost,
     evaluation_cost,
     profile_cost,
+    artifact_root=None,
 ):
     costs = (quality_cost, evaluation_cost, profile_cost)
     if any(not math.isfinite(value) or value <= 0 for value in costs):
@@ -133,6 +135,8 @@ def coordinate_bootstrap(
     configs = _ensure_broad_panel(study, settings, baseline)
     panel_runs = _panel_runs(study, settings, configs, protocol)
     runs = {run["id"]: run for run in study.runs()}
+    posterior = study.posterior_report()
+    anchors = set(posterior["anchors"]) if posterior is not None else set()
     actions = study.actions()
     active = tuple(
         action for action in actions if action["status"] in {"pending", "running"}
@@ -162,8 +166,15 @@ def coordinate_bootstrap(
         )
     )
     candidates = []
-    for slot, run_id, target_tokens, _ in panel_runs:
+    for slot, run_id, target_tokens, seeds in panel_runs:
         run = runs[run_id]
+        canonical = (
+            seeds.initialization_index == 0
+            and seeds.data_index == 0
+            and seeds.numerical_repeat == 0
+        )
+        if canonical and configs[slot].digest in anchors:
+            target_tokens = settings.calibration.anchor_tokens
         if run_id in active_runs:
             continue
         if run["checkpoint_digest"] is not None and study.quality_evaluation(
@@ -256,19 +267,58 @@ def coordinate_bootstrap(
     )
     profiles_complete = not any(
         candidate["kind"] == "profile" for candidate in candidates
+    ) and not any(
+        action["kind"] == "profile" for action in active
     )
-    phase = (
-        "awaiting_anchor_posterior"
-        if panel_complete and profiles_complete
-        else "bootstrap"
-    )
+    shadow = None
+    if panel_complete and profiles_complete and posterior is None:
+        if artifact_root is None:
+            phase = "awaiting_anchor_posterior"
+        else:
+            remaining_checkpoints = sum(
+                tokens > settings.calibration.broad_tokens
+                for tokens in protocol.checkpoint_tokens
+            )
+            shadow = build_posterior_shadow(
+                study,
+                settings,
+                configs,
+                artifact_root,
+                anchor_cost=remaining_checkpoints
+                * (quality_cost + evaluation_cost),
+            )
+            posterior = study.posterior_report(shadow["evidence_digest"])
+            anchors = set(posterior["anchors"])
+            phase = "anchors"
+    elif not panel_complete or not profiles_complete:
+        phase = "bootstrap"
+    else:
+        anchor_runs = tuple(
+            (run_id, runs[run_id])
+            for slot, run_id, _, seeds in panel_runs
+            if configs[slot].digest in anchors
+            and seeds.initialization_index == 0
+            and seeds.data_index == 0
+            and seeds.numerical_repeat == 0
+        )
+        anchors_complete = all(
+            run["tokens"] >= settings.calibration.anchor_tokens
+            and run["checkpoint_digest"] is not None
+            and study.quality_evaluation(run_id, run["checkpoint_digest"])
+            is not None
+            for run_id, run in anchor_runs
+        )
+        phase = "anchor_complete" if anchors_complete else "anchors"
     result = {
         "active_actions": len(active),
+        "anchors": tuple(sorted(anchors)),
         "architectures": len(configs),
         "available_cost": available_cost,
         "phase": phase,
+        "posterior_report": posterior["digest"] if posterior is not None else None,
         "runs": len(panel_runs),
         "scheduled_actions": scheduled,
+        "shadow": shadow,
     }
     study.record_event("coordinator_tick", result)
     return result

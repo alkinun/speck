@@ -1,5 +1,6 @@
 """search operators and exact accounting for version three architectures."""
 
+import math
 import random
 from dataclasses import dataclass, replace
 
@@ -32,6 +33,30 @@ mutation_operators = (
     "change_swiglu_width",
     "change_repeat",
     "toggle_weight_sharing",
+)
+
+architecture_feature_names = (
+    "logical_depth",
+    "block_groups",
+    "unique_parameter_blocks",
+    "log_parameters",
+    "embedding_size",
+    "hidden_mean",
+    "hidden_min",
+    "hidden_max",
+    "attention_fraction",
+    "global_attention_fraction",
+    "sliding_attention_fraction",
+    "convolution_fraction",
+    "swiglu_fraction",
+    "parallel_stage_fraction",
+    "shared_invocation_fraction",
+    "head_dim_mean",
+    "kv_heads_mean",
+    "sliding_window_mean",
+    "conv_kernel_mean",
+    "conv_inner_mean",
+    "intermediate_mean",
 )
 
 
@@ -269,6 +294,78 @@ def parameter_count(config):
     if input_size != config.embedding_size:
         total += input_size * config.embedding_size
     return total
+
+
+def architecture_features(config):
+    if not isinstance(config, ArchitectureConfig):
+        raise TypeError("architecture features need an architecture config")
+    invocations = config.execution_plan
+    hidden = tuple(invocation.block.hidden_size for invocation in invocations)
+    operations = tuple(
+        operation
+        for invocation in invocations
+        for stage in invocation.block.stages
+        for operation in stage.branches
+    )
+    attentions = tuple(
+        operation for operation in operations if isinstance(operation, AttentionSpec)
+    )
+    convolutions = tuple(
+        operation
+        for operation in operations
+        if isinstance(operation, GatedCausalConvSpec)
+    )
+    mlps = tuple(
+        operation for operation in operations if isinstance(operation, SwiGLUSpec)
+    )
+    stages = tuple(
+        stage for invocation in invocations for stage in invocation.block.stages
+    )
+
+    def mean(values):
+        return sum(values) / len(values) if values else 0.0
+
+    count = len(invocations)
+    attention_count = len(attentions)
+    shared = sum(
+        invocation.repeat_index > 0
+        and invocation.weight_key
+        == invocations[invocation.occurrence_index - 1].weight_key
+        for invocation in invocations
+        if invocation.occurrence_index > 0
+    )
+    values = (
+        float(config.logical_depth),
+        float(len(config.blocks)),
+        float(config.unique_parameter_blocks),
+        math.log1p(parameter_count(config)),
+        float(config.embedding_size),
+        mean(hidden),
+        float(min(hidden)),
+        float(max(hidden)),
+        attention_count / count,
+        sum(value.scope == "global" for value in attentions) / count,
+        sum(value.scope == "sliding" for value in attentions) / count,
+        len(convolutions) / count,
+        len(mlps) / count,
+        sum(len(stage.branches) > 1 for stage in stages) / max(1, len(stages)),
+        shared / count,
+        mean(tuple(value.head_dim for value in attentions)),
+        mean(tuple(value.num_key_value_heads for value in attentions)),
+        mean(
+            tuple(
+                value.window_size
+                for value in attentions
+                if value.scope == "sliding"
+            )
+        ),
+        mean(tuple(value.kernel_size for value in convolutions)),
+        mean(tuple(value.inner_size for value in convolutions)),
+        mean(tuple(value.intermediate_size for value in mlps)),
+    )
+    if len(values) != len(architecture_feature_names):
+        raise RuntimeError("architecture feature schema is inconsistent")
+    return tuple(float(value) for value in values)
 
 
 def state_bytes(config, context, batch_size=1, dtype_bytes=2):

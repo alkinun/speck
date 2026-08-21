@@ -181,8 +181,6 @@ def calibration_report(predicted, observed, top_k=None, bootstrap_samples=1_000,
         indices = rng.integers(0, len(architectures), len(architectures))
         left = tuple(predicted_values[index] for index in indices)
         right = tuple(observed_values[index] for index in indices)
-        if len(set(left)) < 2 or len(set(right)) < 2:
-            continue
         bootstrap_spearman.append(spearman(left, right))
         bootstrap_kendall.append(kendall_tau_b(left, right))
     return CalibrationReport(

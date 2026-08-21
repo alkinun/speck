@@ -364,6 +364,7 @@ def coordinate_command(args):
                 quality_cost=args.quality_cost,
                 evaluation_cost=args.evaluation_cost,
                 profile_cost=args.profile_cost,
+                artifact_root=directory / "artifacts",
             )
         finally:
             study.close()

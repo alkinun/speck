@@ -98,6 +98,8 @@ class CalibrationSettings:
             raise ValueError("noise panel cannot exceed the broad panel")
         if self.anchor_architectures > self.broad_architectures:
             raise ValueError("anchor panel cannot exceed the broad panel")
+        if self.initialization_seeds * self.data_seeds * self.numerical_repeats < 2:
+            raise ValueError("noise calibration needs at least two seed combinations")
         if not self.noise_tokens <= self.broad_tokens <= self.anchor_tokens:
             raise ValueError("calibration token horizons must be increasing")
 

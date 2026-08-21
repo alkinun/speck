@@ -15,6 +15,8 @@ from speck.architecture import (
 from speck.model_v3 import SpeckV3ForCausalLM
 from speck.search.architecture_v3 import (
     V3SearchSpace,
+    architecture_feature_names,
+    architecture_features,
     architecture_distance,
     available_mutations,
     crossover,
@@ -74,6 +76,15 @@ def test_v3_static_parameter_count_matches_the_runtime():
     with torch.device("meta"):
         model = SpeckV3ForCausalLM(config)
     assert parameter_count(config) == model.parameter_count() == 182_206_848
+
+
+def test_v3_architecture_features_are_stable_and_structural():
+    original = architecture_features(base())
+    changed = architecture_features(sample_architecture(base(), space(), 9))
+    assert len(original) == len(architecture_feature_names)
+    assert original == architecture_features(base())
+    assert original != changed
+    assert all(torch.isfinite(torch.tensor(original)))
 
 
 def test_shared_weights_reduce_parameters_but_not_state():

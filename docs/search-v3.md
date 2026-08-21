@@ -229,6 +229,7 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | evaluation worker | `speck/search/evaluation_worker.py` |
 | profile worker | `speck/search/profile_worker.py` |
 | bootstrap coordinator | `speck/search/coordinator_v3.py` |
+| posterior shadow report | `speck/search/posterior_v3.py` |
 | profiling | `speck/profile/` |
 
 ## next implementation sequence
@@ -309,12 +310,16 @@ python -m scripts.architecture_search_v3 coordinate calibration-v3 \
   --profile-cost 60
 ```
 
-costs use the configuration's declared `cost_unit` and are charged once per action. repeated coordinator ticks are idempotent: architecture, run, profile-repetition, and checkpoint-evaluation identities prevent duplicate work after interruption. every checkpoint is evaluated before that run can continue. after the noise and broad trajectories plus all configured profiles complete, the coordinator reports `awaiting_anchor_posterior`; it does not choose long-horizon anchors until the calibrated posterior policy is implemented.
+costs use the configuration's declared `cost_unit` and are charged once per action. repeated coordinator ticks are idempotent: architecture, run, profile-repetition, and checkpoint-evaluation identities prevent duplicate work after interruption. every checkpoint is evaluated before that run can continue.
+
+after the noise and broad trajectories plus all configured profiles complete, the coordinator writes an immutable shadow report. it contains the raw observation identities, initialization/data-order/numerical variance decomposition, stable architecture features, per-objective normalization, grouped bootstrap surrogate states, cross-fitted rank and frontier calibration, joint posterior pareto probabilities, and the exact budgeted random-scalarization decision. measured seed variance is added to posterior quality covariance. objective normalization prevents units such as bytes from dominating information value. no quality, latency, memory, cache, or size threshold is introduced.
+
+the report's selected canonical runs are the only architectures advanced from the broad horizon to `anchor_tokens`. each intermediate anchor checkpoint still requires whole-monitor evaluation before continuation. the coordinator reports `anchor_complete` only after all selected long-horizon checkpoints are evaluated.
 
 remaining implementation sequence:
 
-1. add calibrated posterior anchor selection and shadow-mode proposals
-2. execute the noise-decomposition calibration study
-3. execute the broad 100m panel and long-horizon anchors
-4. freeze the first calibration artifact
+1. execute the noise-decomposition calibration study
+2. execute the broad 100m panel and long-horizon anchors
+3. review and freeze the first calibration artifact
+4. add production mutation and crossover proposals
 5. start the first production version three search

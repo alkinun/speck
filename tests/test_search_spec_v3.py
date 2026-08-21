@@ -125,6 +125,14 @@ def test_v3_search_settings_reject_invalid_calibration_panels():
     value["calibration"]["anchor_architectures"] = 17
     with pytest.raises(ValueError, match="anchor"):
         V3SearchSettings.from_dict(value)
+    value = settings()
+    value["calibration"].update(
+        initialization_seeds=1,
+        data_seeds=1,
+        numerical_repeats=1,
+    )
+    with pytest.raises(ValueError, match="seed combinations"):
+        V3SearchSettings.from_dict(value)
 
 
 def test_checked_v3_example_is_valid():

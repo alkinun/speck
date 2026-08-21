@@ -25,7 +25,7 @@ from speck.search.protocol import (
 )
 
 
-database_schema_version = 5
+database_schema_version = 6
 
 
 def _now():
@@ -240,6 +240,20 @@ class V3Study:
                 nll real not null,
                 created_at text not null,
                 unique(run_id, checkpoint_digest)
+            );
+            create table if not exists posterior_reports (
+                digest text primary key,
+                evidence_digest text not null unique,
+                artifact_digest text not null references artifacts(digest),
+                definition_json text not null,
+                created_at text not null
+            );
+            create table if not exists posterior_anchors (
+                report_digest text not null references posterior_reports(digest),
+                position integer not null,
+                architecture_digest text not null references architectures(digest),
+                primary key(report_digest, position),
+                unique(report_digest, architecture_digest)
             );
             create table if not exists events (
                 sequence integer primary key autoincrement,
@@ -839,6 +853,7 @@ class V3Study:
                     estimated_cost,
                     payload,
                     run_id=run_id,
+                    architecture_digest=row["architecture_digest"],
                     required_device_type=protocol.device_type,
                 )
             except sqlite3.IntegrityError as error:
@@ -1609,6 +1624,120 @@ class V3Study:
             (run_id, checkpoint_digest),
         ).fetchone()
         return dict(row) if row is not None else None
+
+    def register_posterior_report(
+        self,
+        report_digest,
+        evidence_digest,
+        artifact,
+        definition,
+        anchors,
+    ):
+        for name, digest in (
+            ("report", report_digest),
+            ("evidence", evidence_digest),
+        ):
+            if not re.fullmatch(r"[0-9a-f]{64}", digest):
+                raise ValueError(f"posterior {name} digests must be lowercase sha256")
+        if not isinstance(artifact, ArtifactRecord) or artifact.kind != "posterior_shadow":
+            raise TypeError("posterior reports need a shadow artifact")
+        anchors = tuple(anchors)
+        if not anchors or len(set(anchors)) != len(anchors):
+            raise ValueError("posterior anchors must be nonempty and unique")
+        encoded = canonical_json(definition)
+        self.connection.execute("begin immediate")
+        try:
+            row = self.connection.execute(
+                "select * from posterior_reports where evidence_digest = ?",
+                (evidence_digest,),
+            ).fetchone()
+            if row is not None:
+                stored_anchors = tuple(
+                    item["architecture_digest"]
+                    for item in self.connection.execute(
+                        """
+                        select architecture_digest from posterior_anchors
+                        where report_digest = ? order by position
+                        """,
+                        (row["digest"],),
+                    )
+                )
+                stored = (
+                    row["digest"],
+                    row["artifact_digest"],
+                    row["definition_json"],
+                    stored_anchors,
+                )
+                expected = (report_digest, artifact.digest, encoded, anchors)
+                if stored != expected:
+                    raise ValueError("posterior evidence already has a different report")
+                self.connection.rollback()
+                return False
+            known = {
+                item["digest"]
+                for item in self.connection.execute(
+                    f"select digest from architectures where digest in ({','.join('?' for _ in anchors)})",
+                    anchors,
+                )
+            }
+            if known != set(anchors):
+                raise KeyError("posterior anchors reference unknown architectures")
+            self._register_artifact(artifact)
+            self.connection.execute(
+                "insert into posterior_reports values (?, ?, ?, ?, ?)",
+                (
+                    report_digest,
+                    evidence_digest,
+                    artifact.digest,
+                    encoded,
+                    _timestamp(),
+                ),
+            )
+            for position, architecture_digest in enumerate(anchors):
+                self.connection.execute(
+                    "insert into posterior_anchors values (?, ?, ?)",
+                    (report_digest, position, architecture_digest),
+                )
+            self._record_event(
+                "posterior_report_registered",
+                {
+                    "anchors": anchors,
+                    "artifact_digest": artifact.digest,
+                    "evidence_digest": evidence_digest,
+                    "report_digest": report_digest,
+                },
+            )
+            self.connection.commit()
+            return True
+        except Exception:
+            self.connection.rollback()
+            raise
+
+    def posterior_report(self, evidence_digest=None):
+        if evidence_digest is None:
+            row = self.connection.execute(
+                "select * from posterior_reports order by created_at desc, digest desc limit 1"
+            ).fetchone()
+        else:
+            row = self.connection.execute(
+                "select * from posterior_reports where evidence_digest = ?",
+                (evidence_digest,),
+            ).fetchone()
+        if row is None:
+            return None
+        value = dict(row)
+        value["definition"] = _decode(value.pop("definition_json"))
+        value["anchors"] = tuple(
+            item["architecture_digest"]
+            for item in self.connection.execute(
+                """
+                select architecture_digest from posterior_anchors
+                where report_digest = ? order by position
+                """,
+                (row["digest"],),
+            )
+        )
+        return value
 
     def _register_artifact(self, artifact):
         encoded = (
