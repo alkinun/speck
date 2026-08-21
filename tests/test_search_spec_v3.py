@@ -135,13 +135,16 @@ def test_v3_search_settings_reject_invalid_calibration_panels():
         V3SearchSettings.from_dict(value)
 
 
-def test_checked_v3_example_is_valid():
+def test_checked_v3_configuration_is_valid():
     path = (
         Path(__file__).parents[1]
         / "experiments"
         / "speck00-200m"
-        / "search-v3.example.json"
+        / "search-v3.json"
     )
     parsed = V3SearchSettings.from_dict(json.loads(path.read_text()))
     assert parsed.calibration.broad_architectures == 32
     assert parsed.quality.checkpoint_tokens[-1] == 1_006_632_960
+    assert parsed.segment_plan.expected_digest == (
+        "15ead3be616688c404b0c994ec682656a9de9ade04f07e9f5174453999ab67a1"
+    )

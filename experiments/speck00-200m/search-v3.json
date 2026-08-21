@@ -186,7 +186,7 @@
   },
   "seed": 42,
   "segment_plan": {
-    "expected_digest": null,
+    "expected_digest": "15ead3be616688c404b0c994ec682656a9de9ade04f07e9f5174453999ab67a1",
     "path": "~/.cache/speck/search/segments-v3.json"
   },
   "space": {

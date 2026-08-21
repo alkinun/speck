@@ -256,7 +256,7 @@ python -m scripts.upgrade_document_index ~/.cache/speck/ultra_fineweb/packed
 
 the upgrader verifies every shard while recovering reserved bos/eos boundaries, preserves `manifest.v1.json`, derives document identities from the verified original dataset plus split token ranges, and atomically publishes `documents.jsonl` before the format-two manifest.
 
-`experiments/speck00-200m/search-v3.example.json` records the initial moderate-panel configuration. it is an example rather than an active experiment until its segment-plan digest is frozen and the worker workflow is complete.
+`experiments/speck00-200m/search-v3.json` records the active moderate-panel configuration and pins the checked segment-plan digest.
 
 after an active configuration records the emitted segment-plan digest, initialize and inspect a study with:
 
@@ -267,7 +267,7 @@ python -m scripts.architecture_search_v3 init experiments/speck00-200m \
 python -m scripts.architecture_search_v3 status calibration-v3
 ```
 
-initialization verifies all packed shards, the tokenizer identity, every selected document span, partition coverage, the full quality horizon, baseline context limits, and exact parameter accounting before atomically registering the study bundle. the example configuration is intentionally rejected while its segment digest is null.
+initialization verifies all packed shards, the tokenizer identity, every selected document span, partition coverage, the full quality horizon, baseline context limits, and exact parameter accounting before atomically registering the study bundle.
 
 schedule and execute one checkpoint continuation with:
 
