@@ -82,9 +82,10 @@ def _load_identity(study, action, artifacts, tokenizer):
     provenance = stored["provenance"]
     protocol = run["protocol"]
     plan = load_segment_plan(provenance["segment_plan"]["path"])
-    if plan.digest != protocol.segment_plan_digest:
+    plan_digest = plan.digest
+    if plan_digest != protocol.segment_plan_digest:
         raise ValueError("quality run segment plan identity changed")
-    artifacts.verify(study.artifact(plan.digest))
+    artifacts.verify(study.artifact(plan_digest))
     if tokenizer.fingerprint() != protocol.tokenizer_digest:
         raise ValueError("quality run tokenizer identity changed")
     if action["payload"]["target_tokens"] not in protocol.checkpoint_tokens:

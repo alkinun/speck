@@ -216,7 +216,8 @@ class SegmentTokenReader:
         span_start = 0 if span_index == 0 else self.ends[span_index - 1]
         position = start - span_start
         remaining = count
-        for span in self.spans[span_index:]:
+        for index in range(span_index, len(self.spans)):
+            span = self.spans[index]
             take = min(remaining, span.tokens - position)
             pieces.append(self.packed.read(span.start_token + position, take))
             remaining -= take
@@ -259,6 +260,7 @@ def segment_loader(
     manifest_digest = manifest_fingerprint(manifest)
     if plan.dataset_digest != manifest_digest:
         raise ValueError("segment plan belongs to a different packed dataset")
+    plan_digest = plan.digest
     partitions = {
         partition.name: partition for partition in plan.partitions
     }
@@ -287,7 +289,7 @@ def segment_loader(
             "format_version": 1,
             "manifest": manifest_digest,
             "partition": partition_name,
-            "plan": plan.digest,
+            "plan": plan_digest,
             "sequence_length": sequence_length,
             "world_size": 1,
         }
@@ -334,7 +336,7 @@ def segment_loader(
             "manifest": manifest_digest,
             "partition": partition_name,
             "permutation": permutation,
-            "plan": plan.digest,
+            "plan": plan_digest,
             "sequence_length": sequence_length,
             "world_size": 1,
         }
