@@ -21,6 +21,14 @@ class RuntimeSession(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def reset_peak_memory(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def peak_memory_bytes(self):
+        raise NotImplementedError
+
+    @abstractmethod
     def close(self):
         raise NotImplementedError
 

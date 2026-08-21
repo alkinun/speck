@@ -90,3 +90,6 @@ def test_native_profile_runs_growing_decode_and_keeps_raw_samples():
     )
     assert result.state_bytes == 2 * 1 * 3 * 4 * 4
     assert result.weight_bytes == artifact.weight_bytes
+    assert result.peak_memory_bytes > 0
+    assert type(result).from_dict(result.export()) == result
+    assert type(profile).from_dict(profile.export()) == profile

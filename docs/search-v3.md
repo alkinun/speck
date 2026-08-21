@@ -226,6 +226,7 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | v3 configuration | `speck/search/spec_v3.py` |
 | study initialization | `speck/search/initialize_v3.py` |
 | quality worker | `speck/search/quality_worker.py` |
+| profile worker | `speck/search/profile_worker.py` |
 | profiling | `speck/profile/` |
 
 ## next implementation sequence
@@ -272,12 +273,24 @@ each scheduling call targets only the immediate next protocol checkpoint. repeat
 
 the worker heartbeats through model construction, training, and checkpoint serialization. it writes the content-addressed checkpoint first, then atomically fences the expected parent, registers lineage, advances the run, and completes the action. expired or reclaimed workers cannot publish progress. the initial worker is single-device, requires `compile_model` to be false, and records training state only; quality evaluation remains a separate future action so training loss cannot be mislabeled as target nll.
 
+schedule the configured independent profile repetitions with:
+
+```bash
+python -m scripts.architecture_search_v3 schedule-profile calibration-v3 \
+  --profile gpu_short \
+  --estimated-cost 60
+python -m scripts.architecture_search_v3 profile-worker calibration-v3 \
+  --backend torch_native \
+  --device cuda
+```
+
+`profile-worker` claims exactly one capability-matched action and then exits, so each configured process repetition starts in a fresh process. profile artifacts preserve every raw request and decode sample, the exact backend identity, peak rss or vram, resident weight bytes, and allocated sequence-state bytes. result registration, normalized observations, and action completion share one lease-fenced transaction.
+
 remaining implementation sequence:
 
-1. add isolated gpu and cpu profiling workers
-2. add the event-driven coordinator command line interface
-3. add surrogate shadow-mode proposal generation
-4. execute the noise-decomposition calibration study
-5. execute the broad 100m panel and long-horizon anchors
-6. freeze the first calibration artifact
-7. start the first production version three search
+1. add the event-driven coordinator command line interface
+2. add surrogate shadow-mode proposal generation
+3. execute the noise-decomposition calibration study
+4. execute the broad 100m panel and long-horizon anchors
+5. freeze the first calibration artifact
+6. start the first production version three search

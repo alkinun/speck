@@ -7,7 +7,7 @@ from dataclasses import asdict, dataclass
 from speck.search.protocol import content_digest
 
 
-profile_schema_version = 1
+profile_schema_version = 2
 
 
 @dataclass(frozen=True)
@@ -21,6 +21,10 @@ class BackendIdentity:
             raise ValueError("backend names must be lowercase identifiers")
         if not self.version or not self.options_digest:
             raise ValueError("backend identity values cannot be empty")
+
+    @classmethod
+    def from_dict(cls, value):
+        return cls(**value)
 
 
 @dataclass(frozen=True)
@@ -57,6 +61,15 @@ class ProfileScenario:
     def digest(self):
         return content_digest(self)
 
+    def export(self):
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, value):
+        value = dict(value)
+        value["backend"] = BackendIdentity.from_dict(value["backend"])
+        return cls(**value)
+
 
 @dataclass(frozen=True)
 class SampleSummary:
@@ -73,6 +86,12 @@ class SampleSummary:
         if any(not math.isfinite(value) or value < 0 for value in self.samples):
             raise ValueError("latency samples must be finite and nonnegative")
 
+    @classmethod
+    def from_dict(cls, value):
+        value = dict(value)
+        value["samples"] = tuple(value["samples"])
+        return cls(**value)
+
 
 @dataclass(frozen=True)
 class ProfileResult:
@@ -84,12 +103,13 @@ class ProfileResult:
     request_ms: SampleSummary
     weight_bytes: int
     state_bytes: int
+    peak_memory_bytes: int
     schema_version: int = profile_schema_version
 
     def __post_init__(self):
         if not self.scenario_digest or not self.architecture_digest:
             raise ValueError("profile result identities cannot be empty")
-        if self.weight_bytes < 0 or self.state_bytes < 0:
+        if min(self.weight_bytes, self.state_bytes, self.peak_memory_bytes) < 0:
             raise ValueError("profile memory values cannot be negative")
 
     @property
@@ -98,3 +118,15 @@ class ProfileResult:
 
     def export(self):
         return asdict(self)
+
+    @classmethod
+    def from_dict(cls, value):
+        value = dict(value)
+        for name in (
+            "model_prefill_ms",
+            "first_decode_ms",
+            "decode_ms",
+            "request_ms",
+        ):
+            value[name] = SampleSummary.from_dict(value[name])
+        return cls(**value)

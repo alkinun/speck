@@ -1,5 +1,6 @@
 """resident-dtype native torch profiling backend."""
 
+import resource
 from dataclasses import dataclass
 
 import torch
@@ -52,6 +53,15 @@ class TorchSession(RuntimeSession):
     def synchronize(self):
         if self.device.type == "cuda":
             torch.cuda.synchronize(self.device)
+
+    def reset_peak_memory(self):
+        if self.device.type == "cuda":
+            torch.cuda.reset_peak_memory_stats(self.device)
+
+    def peak_memory_bytes(self):
+        if self.device.type == "cuda":
+            return torch.cuda.max_memory_allocated(self.device)
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
 
     def close(self):
         self.model = None

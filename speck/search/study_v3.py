@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from speck.architecture import ArchitectureConfig
+from speck.profile.schema import ProfileResult, ProfileScenario
 from speck.search.artifacts import ArtifactEdge, ArtifactRecord
 from speck.search.checkpoints import RunCheckpoint
 from speck.search.protocol import (
@@ -23,7 +24,7 @@ from speck.search.protocol import (
 )
 
 
-database_schema_version = 2
+database_schema_version = 3
 
 
 def _now():
@@ -36,6 +37,25 @@ def _timestamp(value=None):
 
 def _decode(value):
     return json.loads(value) if value is not None else None
+
+
+def _profile_metrics(scenario, result):
+    prefix = scenario.name
+    device_type = scenario.device.split(":", 1)[0]
+    peak_name = "peak_vram" if device_type == "cuda" else "peak_rss"
+    return {
+        f"{prefix}.decode_p50": result.decode_ms.p50,
+        f"{prefix}.decode_p95": result.decode_ms.p95,
+        f"{prefix}.first_decode_p50": result.first_decode_ms.p50,
+        f"{prefix}.first_decode_p95": result.first_decode_ms.p95,
+        f"{prefix}.{peak_name}": float(result.peak_memory_bytes),
+        f"{prefix}.prefill_p50": result.model_prefill_ms.p50,
+        f"{prefix}.prefill_p95": result.model_prefill_ms.p95,
+        f"{prefix}.request_p50": result.request_ms.p50,
+        f"{prefix}.request_p95": result.request_ms.p95,
+        "memory.state_bytes": float(result.state_bytes),
+        "memory.weight_bytes": float(result.weight_bytes),
+    }
 
 
 def _preflight(path):
@@ -157,6 +177,11 @@ class V3Study:
             create table if not exists actions (
                 id integer primary key autoincrement,
                 run_id integer references runs(id),
+                architecture_digest text references architectures(digest),
+                profile_scenario_digest text,
+                profile_backend text,
+                profile_device_type text,
+                profile_repetition integer,
                 kind text not null,
                 status text not null,
                 priority real not null,
@@ -181,6 +206,16 @@ class V3Study:
                 format_version integer not null,
                 created_at text not null,
                 unique(run_id, tokens)
+            );
+            create table if not exists profile_results (
+                action_id integer primary key references actions(id),
+                artifact_digest text not null references artifacts(digest),
+                architecture_digest text not null references architectures(digest),
+                scenario_digest text not null,
+                repetition integer not null,
+                result_digest text not null,
+                created_at text not null,
+                unique(architecture_digest, scenario_digest, repetition)
             );
             create table if not exists events (
                 sequence integer primary key autoincrement,
@@ -210,6 +245,9 @@ class V3Study:
             create unique index if not exists actions_active_run
                 on actions(run_id)
                 where run_id is not null and status in ('pending', 'running');
+            create unique index if not exists actions_profile_identity
+                on actions(architecture_digest, profile_scenario_digest, profile_repetition)
+                where kind = 'profile' and status in ('pending', 'running', 'completed');
             create index if not exists observations_architecture
                 on observations(architecture_digest, objective_set_digest, objective_name);
             create index if not exists runs_status on runs(status, id);
@@ -592,6 +630,11 @@ class V3Study:
         payload,
         *,
         run_id=None,
+        architecture_digest=None,
+        profile_scenario_digest=None,
+        profile_backend=None,
+        profile_device_type=None,
+        profile_repetition=None,
     ):
         if not kind or kind.lower() != kind:
             raise ValueError("action kinds must be lowercase")
@@ -605,12 +648,19 @@ class V3Study:
         cursor = self.connection.execute(
             """
             insert into actions(
-                run_id, kind, status, priority, estimated_cost, payload_json,
+                run_id, architecture_digest, profile_scenario_digest,
+                profile_backend, profile_device_type, profile_repetition,
+                kind, status, priority, estimated_cost, payload_json,
                 decision_digest, created_at
-            ) values (?, ?, 'pending', ?, ?, ?, ?, ?)
+            ) values (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)
             """,
             (
                 run_id,
+                architecture_digest,
+                profile_scenario_digest,
+                profile_backend,
+                profile_device_type,
+                profile_repetition,
                 kind,
                 priority,
                 estimated_cost,
@@ -681,6 +731,77 @@ class V3Study:
             except sqlite3.IntegrityError as error:
                 raise ValueError("quality run already has an active action") from error
 
+    def add_profile_action(
+        self,
+        architecture_digest,
+        scenario,
+        objective_set_digest,
+        repetition,
+        prompt_seed,
+        priority,
+        estimated_cost,
+    ):
+        if not isinstance(scenario, ProfileScenario):
+            raise TypeError("profile actions need a profile scenario")
+        if not 0 <= repetition < scenario.process_repetitions:
+            raise ValueError("profile repetition is outside its scenario")
+        if prompt_seed < 0:
+            raise ValueError("profile prompt seeds cannot be negative")
+        device_type = scenario.device.split(":", 1)[0]
+        with self.connection:
+            if self.connection.execute(
+                "select 1 from architectures where digest = ?",
+                (architecture_digest,),
+            ).fetchone() is None:
+                raise KeyError(architecture_digest)
+            if self.connection.execute(
+                "select 1 from objective_sets where digest = ?",
+                (objective_set_digest,),
+            ).fetchone() is None:
+                raise KeyError(objective_set_digest)
+            payload = {
+                "architecture_digest": architecture_digest,
+                "objective_set_digest": objective_set_digest,
+                "prompt_seed": prompt_seed,
+                "repetition": repetition,
+                "scenario": scenario.export(),
+                "scenario_digest": scenario.digest,
+                "worker_protocol_version": worker_protocol_version,
+            }
+            try:
+                return self._insert_action(
+                    "profile",
+                    priority,
+                    estimated_cost,
+                    payload,
+                    architecture_digest=architecture_digest,
+                    profile_scenario_digest=scenario.digest,
+                    profile_backend=scenario.backend.name,
+                    profile_device_type=device_type,
+                    profile_repetition=repetition,
+                )
+            except sqlite3.IntegrityError as error:
+                row = self.connection.execute(
+                    """
+                    select id, payload_json, priority, estimated_cost from actions
+                    where architecture_digest = ? and profile_scenario_digest = ?
+                        and profile_repetition = ?
+                        and status in ('pending', 'running', 'completed')
+                    """,
+                    (architecture_digest, scenario.digest, repetition),
+                ).fetchone()
+                if row is None:
+                    raise
+                if (
+                    row["payload_json"] != canonical_json(payload)
+                    or row["priority"] != priority
+                    or row["estimated_cost"] != estimated_cost
+                ):
+                    raise ValueError(
+                        "profile repetition already has a different action"
+                    ) from error
+                return row["id"]
+
     def release_expired_actions(self, now=None):
         now = _timestamp(now)
         with self.connection:
@@ -711,11 +832,22 @@ class V3Study:
                 self._record_event("action_released", {"action_id": row["id"]})
         return len(rows)
 
-    def claim_action(self, owner, lease_seconds=300, kind=None):
+    def claim_action(
+        self,
+        owner,
+        lease_seconds=300,
+        kind=None,
+        backend=None,
+        device_type=None,
+    ):
         if not owner or lease_seconds <= 0:
             raise ValueError("action claims need an owner and positive lease")
         if kind is not None and (not kind or kind.lower() != kind):
             raise ValueError("action claim filters must be lowercase")
+        if backend is not None and (not backend or backend.lower() != backend):
+            raise ValueError("profile backend filters must be lowercase")
+        if device_type is not None and device_type not in {"cpu", "cuda"}:
+            raise ValueError("profile device filters must be cpu or cuda")
         now = _now()
         token = secrets.token_hex(16)
         self.connection.execute("begin immediate")
@@ -725,6 +857,12 @@ class V3Study:
             if kind is not None:
                 where += " and kind = ?"
                 values.append(kind)
+            if backend is not None:
+                where += " and profile_backend = ?"
+                values.append(backend)
+            if device_type is not None:
+                where += " and profile_device_type = ?"
+                values.append(device_type)
             row = self.connection.execute(
                 f"""
                 select id, run_id from actions where {where}
@@ -861,7 +999,9 @@ class V3Study:
         try:
             row = self.connection.execute(
                 """
-                select actions.*, runs.architecture_digest, runs.protocol_digest,
+                select actions.*,
+                    runs.architecture_digest as run_architecture_digest,
+                    runs.protocol_digest,
                     runs.seed_bundle_digest, runs.protocol_json,
                     runs.checkpoint_digest as run_checkpoint_digest,
                     runs.steps as run_steps, runs.tokens as run_tokens
@@ -876,7 +1016,7 @@ class V3Study:
                 raise RuntimeError("stale quality checkpoint completion")
             payload = _decode(row["payload_json"])
             identity = (
-                row["architecture_digest"],
+                row["run_architecture_digest"],
                 row["protocol_digest"],
                 row["seed_bundle_digest"],
             )
@@ -1005,6 +1145,137 @@ class V3Study:
             )
             self.connection.commit()
             return run_status
+        except Exception:
+            self.connection.rollback()
+            raise
+
+    def commit_profile_result(
+        self,
+        action_id,
+        claim_token,
+        scenario,
+        result,
+        artifact,
+    ):
+        if not isinstance(scenario, ProfileScenario):
+            raise TypeError("profile commits need a profile scenario")
+        if not isinstance(result, ProfileResult):
+            raise TypeError("profile commits need a profile result")
+        if not isinstance(artifact, ArtifactRecord) or artifact.kind != "profile_result":
+            raise TypeError("profile commits need a profile result artifact")
+        now = _now()
+        timestamp = _timestamp(now)
+        self.connection.execute("begin immediate")
+        try:
+            row = self.connection.execute(
+                """
+                select * from actions where id = ? and kind = 'profile'
+                    and status = 'running' and claim_token = ?
+                    and lease_expires_at >= ?
+                """,
+                (action_id, claim_token, timestamp),
+            ).fetchone()
+            if row is None:
+                raise RuntimeError("stale profile result completion")
+            payload = _decode(row["payload_json"])
+            stored_scenario = ProfileScenario.from_dict(payload["scenario"])
+            if (
+                scenario != stored_scenario
+                or scenario.digest != row["profile_scenario_digest"]
+                or scenario.backend.name != row["profile_backend"]
+                or scenario.device.split(":", 1)[0] != row["profile_device_type"]
+            ):
+                raise ValueError("profile scenario does not match its action")
+            if (
+                result.scenario_digest != scenario.digest
+                or result.architecture_digest != row["architecture_digest"]
+            ):
+                raise ValueError("profile result identity does not match its action")
+            objectives = self.connection.execute(
+                "select definition_json from objective_sets where digest = ?",
+                (payload["objective_set_digest"],),
+            ).fetchone()
+            if objectives is None:
+                raise KeyError(payload["objective_set_digest"])
+            names = {
+                item["name"]
+                for item in _decode(objectives["definition_json"])["objectives"]
+            }
+            metrics = {
+                name: value
+                for name, value in _profile_metrics(scenario, result).items()
+                if name in names
+            }
+            if not metrics:
+                raise ValueError("profile result has no objectives in its objective set")
+            self._register_artifact(artifact)
+            self.connection.execute(
+                """
+                insert into profile_results(
+                    action_id, artifact_digest, architecture_digest,
+                    scenario_digest, repetition, result_digest, created_at
+                ) values (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    action_id,
+                    artifact.digest,
+                    row["architecture_digest"],
+                    scenario.digest,
+                    row["profile_repetition"],
+                    result.digest,
+                    timestamp,
+                ),
+            )
+            observation_ids = []
+            for name, value in sorted(metrics.items()):
+                cursor = self.connection.execute(
+                    """
+                    insert into observations(
+                        run_id, architecture_digest, objective_set_digest,
+                        objective_name, value, variance, tokens, source,
+                        artifact_digest, created_at
+                    ) values (null, ?, ?, ?, ?, null, null, 'profile', ?, ?)
+                    """,
+                    (
+                        row["architecture_digest"],
+                        payload["objective_set_digest"],
+                        name,
+                        value,
+                        artifact.digest,
+                        timestamp,
+                    ),
+                )
+                observation_ids.append(cursor.lastrowid)
+                self._record_event(
+                    "observation_added",
+                    {"id": cursor.lastrowid, "objective_name": name},
+                )
+            action_result = {
+                "artifact_digest": artifact.digest,
+                "observation_ids": observation_ids,
+                "result_digest": result.digest,
+            }
+            self.connection.execute(
+                """
+                update actions set status = 'completed', result_json = ?,
+                    completed_at = ?, lease_expires_at = null where id = ?
+                """,
+                (canonical_json(action_result), timestamp, action_id),
+            )
+            self._record_event(
+                "profile_result_committed",
+                {
+                    "action_id": action_id,
+                    "architecture_digest": row["architecture_digest"],
+                    **action_result,
+                },
+            )
+            self._record_event(
+                "action_finished",
+                {"action_id": action_id, "status": "completed"},
+            )
+            self.connection.commit()
+            return tuple(observation_ids)
         except Exception:
             self.connection.rollback()
             raise

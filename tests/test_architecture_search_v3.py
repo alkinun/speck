@@ -20,6 +20,17 @@ def test_v3_search_cli_parses_explicit_initialization_inputs():
     )
     assert args.command == "init"
     assert args.config == "search.json"
+    profile = parser().parse_args(
+        [
+            "schedule-profile",
+            "calibration",
+            "--profile",
+            "cpu_short",
+            "--estimated-cost",
+            "30",
+        ]
+    )
+    assert profile.profile == "cpu_short"
 
 
 def test_v3_search_cli_reports_normalized_status(tmp_path, monkeypatch, capsys):

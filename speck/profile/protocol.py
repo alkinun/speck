@@ -39,6 +39,7 @@ def profile_session(session, scenario, architecture_digest, prompt, generated, w
         raise ValueError("profile decode shape does not match the scenario")
     for _ in range(scenario.warmup_requests):
         _request(session, scenario, prompt, generated)
+    session.reset_peak_memory()
     prefills = []
     first_decode = []
     decode = []
@@ -68,4 +69,5 @@ def profile_session(session, scenario, architecture_digest, prompt, generated, w
         request_ms=summarize(requests),
         weight_bytes=weight_bytes,
         state_bytes=state_bytes or 0,
+        peak_memory_bytes=session.peak_memory_bytes(),
     )
