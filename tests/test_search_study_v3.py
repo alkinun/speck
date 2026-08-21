@@ -1,7 +1,9 @@
+import sqlite3
 from datetime import datetime, timedelta, timezone
 
 import pytest
 
+import speck.search.study_v3 as study_module
 from speck.architecture import (
     ArchitectureConfig,
     BlockConfig,
@@ -10,6 +12,7 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.search.artifacts import ArtifactEdge, ArtifactStore
+from speck.search.checkpoints import save_run_checkpoint
 from speck.search.protocol import (
     ObjectiveSet,
     ObjectiveSpec,
@@ -60,6 +63,13 @@ def objectives():
     )
 
 
+def quality_run(study):
+    config = architecture()
+    study.add_architecture(config)
+    seeds = SeedBundle.create(7, 0)
+    return config, seeds, study.add_run(config.digest, protocol(), seeds)
+
+
 def test_v3_study_normalizes_runs_and_observations(tmp_path):
     study = V3Study(tmp_path / "study.sqlite3")
     assert study.initialize({"name": "test"}, {"device": "cpu"})
@@ -68,7 +78,7 @@ def test_v3_study_normalizes_runs_and_observations(tmp_path):
     assert study.add_architecture(config, {"parameters": 100})
     run = study.add_run(config.digest, protocol(), SeedBundle.create(7, 0))
     assert study.add_run(config.digest, protocol(), SeedBundle.create(7, 0)) == run
-    study.update_run(run, "running", 1, 32, "checkpoint")
+    assert study.run(run)["protocol"] == protocol()
     observation = study.add_observation(
         config.digest,
         objectives().digest,
@@ -148,3 +158,123 @@ def test_v3_study_identity_is_immutable(tmp_path):
     with pytest.raises(ValueError, match="identity changed"):
         resumed.initialize({"name": "second"}, {})
     resumed.close()
+
+
+def test_v3_study_rejects_other_databases_without_modifying_them(tmp_path):
+    path = tmp_path / "v2.sqlite3"
+    connection = sqlite3.connect(path)
+    connection.execute("create table metadata (key text primary key, value text)")
+    connection.execute("insert into metadata values ('schema_version', '2')")
+    connection.commit()
+    connection.close()
+    before = path.read_bytes()
+    with pytest.raises(ValueError, match="unsupported v3 study"):
+        V3Study(path)
+    assert path.read_bytes() == before
+
+
+def test_v3_study_commits_quality_checkpoints_atomically(tmp_path):
+    study = V3Study(tmp_path / "study.sqlite3")
+    study.initialize({}, {})
+    config, seeds, run_id = quality_run(study)
+    store = ArtifactStore(tmp_path / "artifacts")
+
+    first_action = study.add_quality_action(run_id, 2.0, 3.0)
+    study.add_action("profile", 3.0, 1.0, {})
+    claim = study.claim_action("trainer", kind="continue")
+    assert claim["id"] == first_action
+    assert study.run(run_id)["status"] == "running"
+    first = save_run_checkpoint(
+        store,
+        architecture_digest=config.digest,
+        protocol_digest=protocol().digest,
+        seed_bundle_digest=seeds.digest,
+        steps=1,
+        tokens=32,
+        model_state={},
+        optimizer_state={},
+        data_state={"offset": 32},
+    )
+    assert study.commit_quality_checkpoint(
+        first_action, claim["claim_token"], first
+    ) == "paused"
+    assert study.run(run_id)["checkpoint_digest"] == first.artifact.digest
+    assert study.checkpoint(first.artifact.digest) == first
+    assert study.checkpoints(run_id) == (first,)
+
+    second_action = study.add_quality_action(run_id, 2.0, 3.0)
+    second_claim = study.claim_action("trainer", kind="continue")
+    second = save_run_checkpoint(
+        store,
+        architecture_digest=config.digest,
+        protocol_digest=protocol().digest,
+        seed_bundle_digest=seeds.digest,
+        steps=2,
+        tokens=64,
+        model_state={},
+        optimizer_state={},
+        data_state={"offset": 64},
+        parent=first,
+    )
+    assert study.commit_quality_checkpoint(
+        second_action, second_claim["claim_token"], second
+    ) == "completed"
+    assert study.run(run_id)["status"] == "completed"
+    assert study.architecture(config.digest)["config"].digest == config.digest
+    study.close()
+
+
+def test_v3_study_rolls_back_invalid_quality_checkpoint(tmp_path):
+    study = V3Study(tmp_path / "study.sqlite3")
+    study.initialize({}, {})
+    _, seeds, run_id = quality_run(study)
+    action_id = study.add_quality_action(run_id, 1.0, 1.0)
+    claim = study.claim_action("trainer", kind="continue")
+    checkpoint = save_run_checkpoint(
+        ArtifactStore(tmp_path / "artifacts"),
+        architecture_digest="different",
+        protocol_digest=protocol().digest,
+        seed_bundle_digest=seeds.digest,
+        steps=1,
+        tokens=32,
+        model_state={},
+        optimizer_state={},
+        data_state={},
+    )
+    with pytest.raises(ValueError, match="identity"):
+        study.commit_quality_checkpoint(action_id, claim["claim_token"], checkpoint)
+    with pytest.raises(KeyError):
+        study.artifact(checkpoint.artifact.digest)
+    assert study.action(action_id)["status"] == "running"
+    assert study.run(run_id)["tokens"] == 0
+    study.finish_action(action_id, claim["claim_token"], error="invalid checkpoint")
+    assert study.run(run_id)["status"] == "pending"
+    study.close()
+
+
+def test_v3_study_rejects_work_after_lease_expiration(tmp_path, monkeypatch):
+    current = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    monkeypatch.setattr(study_module, "_now", lambda: current)
+    study = V3Study(tmp_path / "study.sqlite3")
+    study.initialize({}, {})
+    _, _, run_id = quality_run(study)
+    action_id = study.add_quality_action(run_id, 1.0, 1.0)
+    claim = study.claim_action("trainer", lease_seconds=1, kind="continue")
+    current += timedelta(seconds=2)
+    with pytest.raises(RuntimeError, match="stale"):
+        study.heartbeat_action(action_id, claim["claim_token"])
+    with pytest.raises(RuntimeError, match="stale"):
+        study.finish_action(action_id, claim["claim_token"], error="late")
+    assert study.release_expired_actions(current) == 1
+    assert study.run(run_id)["status"] == "pending"
+    study.close()
+
+
+def test_v3_study_allows_one_active_quality_action_per_run(tmp_path):
+    study = V3Study(tmp_path / "study.sqlite3")
+    study.initialize({}, {})
+    _, _, run_id = quality_run(study)
+    study.add_quality_action(run_id, 1.0, 1.0)
+    with pytest.raises(ValueError, match="active action"):
+        study.add_quality_action(run_id, 1.0, 1.0)
+    study.close()

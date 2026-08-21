@@ -49,6 +49,10 @@ class VersionSet:
     def digest(self):
         return content_digest(self)
 
+    @classmethod
+    def from_dict(cls, value):
+        return cls(**value)
+
 
 @dataclass(frozen=True)
 class SeedBundle:
@@ -81,6 +85,10 @@ class SeedBundle:
     def digest(self):
         return content_digest(self)
 
+    @classmethod
+    def from_dict(cls, value):
+        return cls(**value)
+
 
 @dataclass(frozen=True)
 class ObjectiveSpec:
@@ -98,6 +106,10 @@ class ObjectiveSpec:
             raise ValueError("invalid objective role")
         if self.role == "reporting" and self.required_for_selection:
             raise ValueError("reporting objectives cannot be required for selection")
+
+    @classmethod
+    def from_dict(cls, value):
+        return cls(**value)
 
 
 @dataclass(frozen=True)
@@ -127,6 +139,15 @@ class ObjectiveSet:
     @property
     def digest(self):
         return content_digest(self)
+
+    @classmethod
+    def from_dict(cls, value):
+        return cls(
+            name=value["name"],
+            objectives=tuple(
+                ObjectiveSpec.from_dict(item) for item in value["objectives"]
+            ),
+        )
 
 
 @dataclass(frozen=True)
@@ -199,3 +220,9 @@ class TrainingProtocol:
     @property
     def digest(self):
         return content_digest(self)
+
+    @classmethod
+    def from_dict(cls, value):
+        value = dict(value)
+        value["checkpoint_tokens"] = tuple(value["checkpoint_tokens"])
+        return cls(**value)

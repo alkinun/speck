@@ -26,6 +26,8 @@ class RunCheckpoint:
     format_version: int = checkpoint_format_version
 
     def __post_init__(self):
+        if self.format_version != checkpoint_format_version:
+            raise ValueError("unsupported checkpoint format version")
         digests = (
             self.architecture_digest,
             self.protocol_digest,
@@ -40,6 +42,12 @@ class RunCheckpoint:
 
     def export(self):
         return asdict(self)
+
+    @classmethod
+    def from_dict(cls, value):
+        value = dict(value)
+        value["artifact"] = ArtifactRecord(**value["artifact"])
+        return cls(**value)
 
 
 def capture_rng_state():
@@ -78,6 +86,21 @@ def save_run_checkpoint(
 ):
     if not isinstance(store, ArtifactStore):
         raise TypeError("checkpoint store must be an artifact store")
+    if parent is not None:
+        identity = (
+            architecture_digest,
+            protocol_digest,
+            seed_bundle_digest,
+        )
+        parent_identity = (
+            parent.architecture_digest,
+            parent.protocol_digest,
+            parent.seed_bundle_digest,
+        )
+        if identity != parent_identity:
+            raise ValueError("checkpoint parent identity does not match")
+        if steps <= parent.steps or tokens <= parent.tokens:
+            raise ValueError("checkpoint progress must advance its parent")
     parent_digest = parent.artifact.digest if parent is not None else None
     identity = {
         "architecture_digest": architecture_digest,

@@ -5,7 +5,7 @@ import pytest
 import torch
 
 from speck.search.artifacts import ArtifactStore
-from speck.search.checkpoints import load_run_checkpoint, save_run_checkpoint
+from speck.search.checkpoints import RunCheckpoint, load_run_checkpoint, save_run_checkpoint
 
 
 def optimization_step(model, optimizer):
@@ -74,6 +74,35 @@ def test_run_checkpoint_records_parent_lineage(tmp_path):
     )
     assert child.parent_digest == parent.artifact.digest
     assert child.artifact.digest != parent.artifact.digest
+    assert RunCheckpoint.from_dict(child.export()) == child
+
+
+def test_run_checkpoint_rejects_incompatible_parent(tmp_path):
+    store = ArtifactStore(tmp_path / "artifacts")
+    parent = save_run_checkpoint(
+        store,
+        architecture_digest="architecture",
+        protocol_digest="protocol",
+        seed_bundle_digest="seeds",
+        steps=1,
+        tokens=32,
+        model_state={},
+        optimizer_state={},
+        data_state={},
+    )
+    with pytest.raises(ValueError, match="parent identity"):
+        save_run_checkpoint(
+            store,
+            architecture_digest="different",
+            protocol_digest="protocol",
+            seed_bundle_digest="seeds",
+            steps=2,
+            tokens=64,
+            model_state={},
+            optimizer_state={},
+            data_state={},
+            parent=parent,
+        )
 
 
 def test_run_checkpoint_rejects_protocol_mismatch(tmp_path):

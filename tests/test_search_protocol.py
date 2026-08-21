@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 import pytest
 
 from speck.search.protocol import (
@@ -79,6 +81,7 @@ def test_training_protocol_requires_resumable_checkpoints():
     protocol = training_protocol()
     assert protocol.target_tokens == 128
     assert protocol.digest == content_digest(protocol)
+    assert TrainingProtocol.from_dict(asdict(protocol)) == protocol
     with pytest.raises(ValueError, match="align"):
         training_protocol(checkpoint_tokens=(32, 63))
 
