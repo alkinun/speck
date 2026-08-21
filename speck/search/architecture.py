@@ -289,6 +289,10 @@ def _available_operators(config, space):
     return tuple(available)
 
 
+def available_mutations(config, space):
+    return _available_operators(config, space)
+
+
 def mutate(config, space, seed, operator=None):
     rng = random.Random(seed)
     available = _available_operators(config, space)

@@ -203,6 +203,70 @@ class SearchStudy:
         )
         self.connection.commit()
 
+    def finalize(self, status, recommendations=None):
+        recommendations_json = (
+            _json(recommendations) if recommendations is not None else None
+        )
+        current = self.connection.execute(
+            "select status, recommendations_json from study where id = 1"
+        ).fetchone()
+        if current is None:
+            raise ValueError("study is not initialized")
+        if (
+            current["status"] == status
+            and current["recommendations_json"] == recommendations_json
+        ):
+            return False
+        with self.connection:
+            self.connection.execute(
+                """
+                update study set status = ?, recommendations_json = ?, updated_at = ?
+                where id = 1
+                """,
+                (status, recommendations_json, _now()),
+            )
+        return True
+
+    def _insert_architecture(
+        self,
+        config,
+        static,
+        cohort,
+        slot,
+        generation_seed,
+        operation,
+        repairs,
+        parents,
+    ):
+        cursor = self.connection.execute(
+            """
+            insert into architectures(
+                architecture_hash, architecture_json, static_json,
+                cohort, slot, generation_seed, operator,
+                operation_json, repairs_json, created_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                architecture_hash(config),
+                _json(canonical_settings(config)),
+                _json(static),
+                cohort,
+                slot,
+                generation_seed,
+                operation["operator"],
+                _json(operation),
+                _json(repairs),
+                _now(),
+            ),
+        )
+        architecture_id = cursor.lastrowid
+        for role, parent_id in parents:
+            self.connection.execute(
+                "insert into architecture_parents values (?, ?, ?)",
+                (architecture_id, parent_id, role),
+            )
+        return architecture_id
+
     def add_architecture(
         self,
         config,
@@ -214,39 +278,50 @@ class SearchStudy:
         repairs=(),
         parents=(),
     ):
-        operator = operation["operator"]
         try:
             with self.connection:
-                cursor = self.connection.execute(
-                    """
-                    insert into architectures(
-                        architecture_hash, architecture_json, static_json,
-                        cohort, slot, generation_seed, operator,
-                        operation_json, repairs_json, created_at
-                    ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        architecture_hash(config),
-                        _json(canonical_settings(config)),
-                        _json(static),
-                        cohort,
-                        slot,
-                        generation_seed,
-                        operator,
-                        _json(operation),
-                        _json(repairs),
-                        _now(),
-                    ),
+                return self._insert_architecture(
+                    config,
+                    static,
+                    cohort,
+                    slot,
+                    generation_seed,
+                    operation,
+                    repairs,
+                    parents,
                 )
-                architecture_id = cursor.lastrowid
-                for role, parent_id in parents:
-                    self.connection.execute(
-                        "insert into architecture_parents values (?, ?, ?)",
-                        (architecture_id, parent_id, role),
-                    )
         except sqlite3.IntegrityError:
             return None
-        return architecture_id
+
+    def add_architecture_with_rung(
+        self,
+        config,
+        static,
+        cohort,
+        slot,
+        generation_seed,
+        operation,
+        repairs,
+        parents,
+        rung,
+        seeds,
+    ):
+        try:
+            with self.connection:
+                architecture_id = self._insert_architecture(
+                    config,
+                    static,
+                    cohort,
+                    slot,
+                    generation_seed,
+                    operation,
+                    repairs,
+                    parents,
+                )
+                self._insert_rung(architecture_id, rung, seeds)
+                return architecture_id
+        except sqlite3.IntegrityError:
+            return None
 
     def _architecture(self, row):
         parent_rows = self.connection.execute(
@@ -288,38 +363,61 @@ class SearchStudy:
         ).fetchall()
         return [self._architecture(row) for row in rows]
 
+    def _insert_rung(self, architecture_id, rung, seeds):
+        now = _now()
+        cursor = self.connection.execute(
+            """
+            insert into architecture_rungs(
+                architecture_id, rung, status, created_at
+            ) values (?, ?, 'active', ?)
+            """,
+            (architecture_id, rung, now),
+        )
+        architecture_rung_id = cursor.lastrowid
+        self.connection.executemany(
+            """
+            insert into trials(
+                architecture_rung_id, architecture_id, rung,
+                seed_index, seed, status, created_at
+            ) values (?, ?, ?, ?, ?, 'pending', ?)
+            """,
+            (
+                (
+                    architecture_rung_id,
+                    architecture_id,
+                    rung,
+                    seed_index,
+                    seed,
+                    now,
+                )
+                for seed_index, seed in enumerate(seeds)
+            ),
+        )
+
     def add_rung(self, architecture_id, rung, seeds):
+        try:
+            with self.connection:
+                self._insert_rung(architecture_id, rung, seeds)
+        except sqlite3.IntegrityError:
+            return False
+        return True
+
+    def promote(self, architecture_id, source_rung, destination_rung, seeds, decision):
         now = _now()
         try:
             with self.connection:
-                cursor = self.connection.execute(
+                source = self.connection.execute(
                     """
-                    insert into architecture_rungs(
-                        architecture_id, rung, status, created_at
-                    ) values (?, ?, 'active', ?)
+                    update architecture_rungs
+                    set status = 'promoted', decision_json = ?,
+                        completed_at = coalesce(completed_at, ?)
+                    where architecture_id = ? and rung = ? and status = 'complete'
                     """,
-                    (architecture_id, rung, now),
+                    (_json(decision), now, architecture_id, source_rung),
                 )
-                architecture_rung_id = cursor.lastrowid
-                self.connection.executemany(
-                    """
-                    insert into trials(
-                        architecture_rung_id, architecture_id, rung,
-                        seed_index, seed, status, created_at
-                    ) values (?, ?, ?, ?, ?, 'pending', ?)
-                    """,
-                    (
-                        (
-                            architecture_rung_id,
-                            architecture_id,
-                            rung,
-                            seed_index,
-                            seed,
-                            now,
-                        )
-                        for seed_index, seed in enumerate(seeds)
-                    ),
-                )
+                if source.rowcount != 1:
+                    raise RuntimeError("source rung is not promotable")
+                self._insert_rung(architecture_id, destination_rung, seeds)
         except sqlite3.IntegrityError:
             return False
         return True

@@ -7,7 +7,7 @@ import os
 import re
 from dataclasses import asdict, dataclass
 
-from speck.search.architecture import SearchSpace
+from speck.search.architecture import SearchSpace, mutation_operators
 from speck.search.evaluate import InferenceSettings, QualitySettings, QuantizationSettings
 
 
@@ -125,6 +125,8 @@ class SearchSettings:
             raise ValueError("initial population exceeds architecture budget")
         if self.cohort_size > self.max_architectures:
             raise ValueError("cohort size exceeds architecture budget")
+        if self.initial_population % self.cohort_size:
+            raise ValueError("initial population must contain complete cohorts")
         if not self.rungs or self.rungs[0].architecture_limit != self.max_architectures:
             raise ValueError("first rung must contain the full architecture budget")
         for previous, following in zip(self.rungs, self.rungs[1:]):
@@ -142,7 +144,7 @@ class SearchSettings:
             raise ValueError("validation slices must be nonempty and unique")
         if not any(item.objective for item in self.validation_slices):
             raise ValueError("at least one validation slice must be an objective")
-        operators = 8
+        operators = len(mutation_operators)
         if not 0 <= self.operator_probability_floor < 1 / operators:
             raise ValueError("operator probability floor is too large")
         if self.operator_prior_success <= 0 or self.operator_prior_failure <= 0:
@@ -153,6 +155,8 @@ class SearchSettings:
             raise ValueError("invalid retry settings")
         if not math.isfinite(self.worker_timeout_seconds) or self.worker_timeout_seconds <= 0:
             raise ValueError("worker timeout must be finite and positive")
+        if self.space.cache_dtype_bytes != self.inference.cache_dtype_bytes:
+            raise ValueError("search and inference cache dtypes do not match")
         for rung in self.rungs:
             rung_quality = self.quality.settings(rung)
             if rung_quality.sequence_length > 4096:
@@ -182,3 +186,26 @@ class SearchSettings:
 def deterministic_seed(study_seed, *parts):
     payload = json.dumps((study_seed, *parts), separators=(",", ":")).encode()
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big") & ((1 << 63) - 1)
+
+
+def objective_names(settings):
+    names = [
+        f"quality.validation_nll.{item.name}"
+        for item in settings.validation_slices
+        if item.objective
+    ]
+    names.extend(
+        (
+            "memory.kv_cache_bytes_per_token",
+            "memory.quantized_weight_bytes",
+        )
+    )
+    for context in settings.inference.contexts:
+        names.extend(
+            (
+                f"prefill.ms.context_{context}",
+                f"decode.ms_per_token.context_{context}",
+                f"memory.inference_peak_bytes.context_{context}",
+            )
+        )
+    return tuple(names)

@@ -84,3 +84,17 @@ def test_search_settings_reject_nonincreasing_fidelity():
     settings["rungs"][1]["train_tokens"] = 16
     with pytest.raises(ValueError, match="training budgets"):
         SearchSettings.from_dict(settings)
+
+
+def test_search_settings_reject_cache_dtype_mismatch():
+    settings = values()
+    settings["inference"]["cache_dtype_bytes"] = 1
+    with pytest.raises(ValueError, match="cache dtypes"):
+        SearchSettings.from_dict(settings)
+
+
+def test_search_settings_reject_partial_initial_cohort():
+    settings = values()
+    settings["initial_population"] = 5
+    with pytest.raises(ValueError, match="complete cohorts"):
+        SearchSettings.from_dict(settings)
