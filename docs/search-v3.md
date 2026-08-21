@@ -223,6 +223,8 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | surrogate | `speck/search/surrogate.py` |
 | budget planner | `speck/search/planner.py` |
 | v3 study store | `speck/search/study_v3.py` |
+| v3 configuration | `speck/search/spec_v3.py` |
+| study initialization | `speck/search/initialize_v3.py` |
 | profiling | `speck/profile/` |
 
 ## next implementation sequence
@@ -232,25 +234,35 @@ the segment-plan preparation command is available:
 ```bash
 python -m scripts.segment_plan ~/.cache/speck/ultra_fineweb/packed \
   ~/.cache/speck/search/segments-v3.json \
-  --train-tokens 1000000000 \
-  --monitor-tokens 5000000 \
-  --promotion-tokens 20000000 \
-  --audit-tokens 20000000 \
-  --final-tokens 20000000
+  --train-tokens 1010000000 \
+  --monitor-tokens 1000000 \
+  --promotion-tokens 5000000 \
+  --audit-tokens 5000000 \
+  --final-tokens 5000000
 ```
 
 the packed dataset must contain the format-two document index.
 
 `experiments/speck00-200m/search-v3.example.json` records the initial moderate-panel configuration. it is an example rather than an active experiment until its segment-plan digest is frozen and the worker workflow is complete.
 
+after an active configuration records the emitted segment-plan digest, initialize and inspect a study with:
+
+```bash
+python -m scripts.architecture_search_v3 init experiments/speck00-200m \
+  --study calibration-v3 \
+  --config experiments/speck00-200m/search-v3.json
+python -m scripts.architecture_search_v3 status calibration-v3
+```
+
+initialization verifies all packed shards, the tokenizer identity, every selected document span, partition coverage, the full quality horizon, baseline context limits, and exact parameter accounting before atomically registering the study bundle. the example configuration is intentionally rejected while its segment digest is null.
+
 remaining implementation sequence:
 
-1. add a version three experiment and search configuration schema
-2. add a resumable quality-run worker using the shared training loop
-3. add isolated gpu and cpu profiling workers
-4. add the event-driven coordinator and worker command line interface
-5. add surrogate shadow-mode proposal generation
-6. execute the noise-decomposition calibration study
-7. execute the broad 100m panel and long-horizon anchors
-8. freeze the first calibration artifact
-9. start the first production version three search
+1. add a resumable quality-run worker using the shared training loop
+2. add isolated gpu and cpu profiling workers
+3. add the event-driven coordinator and worker command line interface
+4. add surrogate shadow-mode proposal generation
+5. execute the noise-decomposition calibration study
+6. execute the broad 100m panel and long-horizon anchors
+7. freeze the first calibration artifact
+8. start the first production version three search

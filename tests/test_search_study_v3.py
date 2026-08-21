@@ -160,6 +160,16 @@ def test_v3_study_identity_is_immutable(tmp_path):
     resumed.close()
 
 
+def test_v3_study_bundle_initialization_rolls_back_as_one_transaction(tmp_path):
+    study = V3Study(tmp_path / "study.sqlite3")
+    with pytest.raises(TypeError, match="objective set"):
+        study.initialize_bundle({}, {}, objective_sets=(object(),))
+    with pytest.raises(ValueError, match="not initialized"):
+        study.study()
+    assert study.events() == []
+    study.close()
+
+
 def test_v3_study_rejects_other_databases_without_modifying_them(tmp_path):
     path = tmp_path / "v2.sqlite3"
     connection = sqlite3.connect(path)

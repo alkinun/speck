@@ -240,6 +240,24 @@ class V3Study:
                 raise ValueError(f"unsupported v3 study {key}")
 
     def initialize(self, config, provenance, versions=None):
+        return self.initialize_bundle(
+            config,
+            provenance,
+            versions=versions,
+        )
+
+    def initialize_bundle(
+        self,
+        config,
+        provenance,
+        *,
+        versions=None,
+        objective_sets=(),
+        architecture=None,
+        static=None,
+        operation=None,
+        artifacts=(),
+    ):
         versions = versions or VersionSet()
         values = (
             canonical_json(config),
@@ -249,6 +267,7 @@ class V3Study:
         self.connection.execute("begin immediate")
         try:
             row = self.connection.execute("select * from study where id = 1").fetchone()
+            initialized = row is None
             if row is not None:
                 stored = (
                     row["config_json"],
@@ -257,19 +276,29 @@ class V3Study:
                 )
                 if stored != values:
                     raise ValueError("v3 study identity changed")
-                self.connection.rollback()
-                return False
-            now = _timestamp()
-            self.connection.execute(
-                "insert into study values (1, ?, ?, ?, 'running', ?, ?)",
-                (*values, now, now),
-            )
-            self._record_event("study_initialized", {"versions": asdict(versions)})
+            else:
+                now = _timestamp()
+                self.connection.execute(
+                    "insert into study values (1, ?, ?, ?, 'running', ?, ?)",
+                    (*values, now, now),
+                )
+                self._record_event(
+                    "study_initialized",
+                    {"versions": asdict(versions)},
+                )
+            for artifact in artifacts:
+                if not isinstance(artifact, ArtifactRecord):
+                    raise TypeError("study bundle artifacts need artifact records")
+                self._register_artifact(artifact)
+            for objectives in objective_sets:
+                self._add_objective_set(objectives)
+            if architecture is not None:
+                self._add_architecture(architecture, static, operation)
             self.connection.commit()
         except Exception:
             self.connection.rollback()
             raise
-        return True
+        return initialized
 
     def study(self):
         row = self.connection.execute("select * from study where id = 1").fetchone()
@@ -316,28 +345,31 @@ class V3Study:
             )
         ]
 
-    def add_objective_set(self, objectives):
+    def _add_objective_set(self, objectives):
         if not isinstance(objectives, ObjectiveSet):
             raise TypeError("objective definition must be an objective set")
         encoded = canonical_json(objectives)
-        with self.connection:
-            row = self.connection.execute(
-                "select definition_json from objective_sets where digest = ?",
-                (objectives.digest,),
-            ).fetchone()
-            if row is not None:
-                if row["definition_json"] != encoded:
-                    raise ValueError("objective set digest collision")
-                return False
-            self.connection.execute(
-                "insert into objective_sets values (?, ?, ?, ?)",
-                (objectives.digest, objectives.name, encoded, _timestamp()),
-            )
-            self._record_event(
-                "objective_set_added",
-                {"digest": objectives.digest, "name": objectives.name},
-            )
+        row = self.connection.execute(
+            "select definition_json from objective_sets where digest = ?",
+            (objectives.digest,),
+        ).fetchone()
+        if row is not None:
+            if row["definition_json"] != encoded:
+                raise ValueError("objective set digest collision")
+            return False
+        self.connection.execute(
+            "insert into objective_sets values (?, ?, ?, ?)",
+            (objectives.digest, objectives.name, encoded, _timestamp()),
+        )
+        self._record_event(
+            "objective_set_added",
+            {"digest": objectives.digest, "name": objectives.name},
+        )
         return True
+
+    def add_objective_set(self, objectives):
+        with self.connection:
+            return self._add_objective_set(objectives)
 
     def objective_set(self, digest):
         row = self.connection.execute(
@@ -348,34 +380,44 @@ class V3Study:
             raise KeyError(digest)
         return ObjectiveSet.from_dict(_decode(row["definition_json"]))
 
-    def add_architecture(self, config, static=None, operation=None):
+    def _add_architecture(self, config, static=None, operation=None):
         if not isinstance(config, ArchitectureConfig):
             raise TypeError("v3 study architectures need an architecture config")
         encoded = canonical_json(config.settings())
-        with self.connection:
-            row = self.connection.execute(
-                "select architecture_json, static_json from architectures where digest = ?",
-                (config.digest,),
-            ).fetchone()
-            if row is not None:
-                if (
-                    row["architecture_json"] != encoded
-                    or row["static_json"] != canonical_json(static or {})
-                ):
-                    raise ValueError("architecture digest collision")
-                return False
-            self.connection.execute(
-                "insert into architectures values (?, ?, ?, ?, ?)",
-                (
-                    config.digest,
-                    encoded,
-                    canonical_json(static or {}),
-                    canonical_json(operation) if operation is not None else None,
-                    _timestamp(),
-                ),
+        row = self.connection.execute(
+            """
+            select architecture_json, static_json, operation_json
+            from architectures where digest = ?
+            """,
+            (config.digest,),
+        ).fetchone()
+        encoded_operation = (
+            canonical_json(operation) if operation is not None else None
+        )
+        if row is not None:
+            if (
+                row["architecture_json"] != encoded
+                or row["static_json"] != canonical_json(static or {})
+                or row["operation_json"] != encoded_operation
+            ):
+                raise ValueError("architecture digest collision")
+            return False
+        self.connection.execute(
+            "insert into architectures values (?, ?, ?, ?, ?)",
+            (
+                config.digest,
+                encoded,
+                canonical_json(static or {}),
+                encoded_operation,
+                _timestamp(),
             )
-            self._record_event("architecture_added", {"digest": config.digest})
+        )
+        self._record_event("architecture_added", {"digest": config.digest})
         return True
+
+    def add_architecture(self, config, static=None, operation=None):
+        with self.connection:
+            return self._add_architecture(config, static, operation)
 
     def architecture(self, digest):
         row = self.connection.execute(
@@ -456,6 +498,17 @@ class V3Study:
             _decode(value.pop("seed_bundle_json"))
         )
         return value
+
+    def runs(self, status=None):
+        where = " where status = ?" if status is not None else ""
+        values = (status,) if status is not None else ()
+        return [
+            self.run(row["id"])
+            for row in self.connection.execute(
+                f"select id from runs{where} order by id",
+                values,
+            )
+        ]
 
     def add_observation(
         self,

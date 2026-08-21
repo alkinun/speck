@@ -23,8 +23,10 @@ class SegmentPlanSettings:
     def __post_init__(self):
         if not self.path:
             raise ValueError("segment plan path cannot be empty")
-        if self.expected_digest is not None and len(self.expected_digest) != 64:
-            raise ValueError("expected segment plan digest must be sha256")
+        if self.expected_digest is not None and not re.fullmatch(
+            r"[0-9a-f]{64}", self.expected_digest
+        ):
+            raise ValueError("expected segment plan digest must be lowercase sha256")
 
 
 @dataclass(frozen=True)

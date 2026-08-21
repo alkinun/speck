@@ -131,6 +131,49 @@ class SegmentPlan:
         return cls(**value)
 
 
+def load_segment_plan(path):
+    path = Path(path).expanduser()
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError("segment plan must be an object")
+    return SegmentPlan.from_dict(value)
+
+
+def validate_segment_plan(plan, records, required_partitions=()):
+    if not isinstance(plan, SegmentPlan):
+        raise TypeError("segment validation needs a segment plan")
+    partitions = {partition.name for partition in plan.partitions}
+    missing = set(required_partitions) - partitions
+    if missing:
+        raise ValueError(
+            f"segment plan is missing partitions: {', '.join(sorted(missing))}"
+        )
+    documents = {
+        (
+            record.split,
+            record.start_token,
+            record.end_token,
+            record.content_hash,
+        )
+        for record in records
+    }
+    if len(documents) != len(records):
+        raise ValueError("document index contains duplicate token ranges")
+    for partition in plan.partitions:
+        for span in partition.spans:
+            identity = (
+                partition.split,
+                span.start_token,
+                span.end_token,
+                span.content_hash,
+            )
+            if identity not in documents:
+                raise ValueError(
+                    f"segment partition {partition.name} does not match the document index"
+                )
+    return True
+
+
 def load_document_index(data_dir, manifest=None):
     data_dir = Path(data_dir)
     manifest = manifest or load_manifest(data_dir)

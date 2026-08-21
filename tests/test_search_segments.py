@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 import pytest
 
@@ -7,6 +8,8 @@ from speck.search.segments import (
     SegmentPlan,
     build_segment_plan,
     load_document_index,
+    load_segment_plan,
+    validate_segment_plan,
 )
 
 
@@ -81,3 +84,16 @@ def test_document_index_detects_tampering(tmp_path):
     path.write_text(line.replace('"end_token":2', '"end_token":3'))
     with pytest.raises(ValueError, match="checksum"):
         load_document_index(tmp_path, manifest)
+
+
+def test_segment_plan_loads_and_matches_document_index(tmp_path):
+    plan = build_segment_plan(records(), "dataset", 42, 20, {"monitor": 10})
+    path = tmp_path / "segments.json"
+    path.write_text(json.dumps(plan.export()))
+    loaded = load_segment_plan(path)
+    assert loaded == plan
+    assert validate_segment_plan(loaded, records(), ("train", "monitor"))
+    with pytest.raises(ValueError, match="missing partitions"):
+        validate_segment_plan(loaded, records(), ("audit",))
+    with pytest.raises(ValueError, match="does not match"):
+        validate_segment_plan(loaded, records()[:1], ("train", "monitor"))

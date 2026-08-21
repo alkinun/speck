@@ -106,6 +106,7 @@ def test_v3_search_settings_resolve_an_immutable_training_protocol():
     assert protocol.target_tokens == 128
     assert protocol.sequence_length == 8
     assert parsed.export()["format_version"] == 3
+    assert V3SearchSettings.from_dict(parsed.export()) == parsed
     assert parsed.segment_plan.path.endswith("segments.json")
 
 
