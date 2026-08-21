@@ -13,6 +13,7 @@ import torch
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.profile.schema import ProfileScenario
+from speck.search.coordinator_v3 import coordinate_bootstrap
 from speck.search.evaluation_worker import run_evaluation_worker
 from speck.search.initialize_v3 import initialize_study
 from speck.search.profile_worker import backend_plugin, run_profile_worker
@@ -97,6 +98,12 @@ def parser():
         default="cuda" if torch.cuda.is_available() else "cpu",
     )
     evaluation_worker.add_argument("--lease-seconds", type=int, default=300)
+
+    coordinate = commands.add_parser("coordinate")
+    coordinate.add_argument("study")
+    coordinate.add_argument("--quality-cost", type=float, required=True)
+    coordinate.add_argument("--evaluation-cost", type=float, required=True)
+    coordinate.add_argument("--profile-cost", type=float, required=True)
     return value
 
 
@@ -345,6 +352,24 @@ def evaluation_worker_command(args):
     display({"completed": result})
 
 
+def coordinate_command(args):
+    directory = study_dir(args.study)
+    with study_lock(directory):
+        study = V3Study(directory / "study.sqlite3")
+        try:
+            settings = V3SearchSettings.from_dict(study.study()["config"])
+            result = coordinate_bootstrap(
+                study,
+                settings,
+                quality_cost=args.quality_cost,
+                evaluation_cost=args.evaluation_cost,
+                profile_cost=args.profile_cost,
+            )
+        finally:
+            study.close()
+    display(result)
+
+
 def main():
     args = parser().parse_args()
     if args.command == "init":
@@ -361,8 +386,10 @@ def main():
         profile_worker_command(args)
     elif args.command == "schedule-evaluation":
         schedule_evaluation_command(args)
-    else:
+    elif args.command == "evaluation-worker":
         evaluation_worker_command(args)
+    else:
+        coordinate_command(args)
 
 
 if __name__ == "__main__":

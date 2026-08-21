@@ -85,6 +85,9 @@ class CalibrationSettings:
     initialization_seeds: int
     data_seeds: int
     numerical_repeats: int
+    noise_tokens: int
+    broad_tokens: int
+    anchor_tokens: int
     bootstrap_samples: int = 1_000
 
     def __post_init__(self):
@@ -95,6 +98,8 @@ class CalibrationSettings:
             raise ValueError("noise panel cannot exceed the broad panel")
         if self.anchor_architectures > self.broad_architectures:
             raise ValueError("anchor panel cannot exceed the broad panel")
+        if not self.noise_tokens <= self.broad_tokens <= self.anchor_tokens:
+            raise ValueError("calibration token horizons must be increasing")
 
 
 @dataclass(frozen=True)
@@ -181,6 +186,15 @@ class V3SearchSettings:
         profile_devices = {profile.device.split(":", 1)[0] for profile in self.profiles}
         if not {"cuda", "cpu"} <= profile_devices:
             raise ValueError("v3 search needs native gpu and cpu profile templates")
+        horizons = (
+            self.calibration.noise_tokens,
+            self.calibration.broad_tokens,
+            self.calibration.anchor_tokens,
+        )
+        if any(value not in self.quality.checkpoint_tokens for value in horizons):
+            raise ValueError("calibration horizons must be quality checkpoints")
+        if self.calibration.anchor_tokens != self.quality.checkpoint_tokens[-1]:
+            raise ValueError("anchor calibration must reach the quality target")
 
     @classmethod
     def from_dict(cls, value):

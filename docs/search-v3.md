@@ -228,6 +228,7 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | quality worker | `speck/search/quality_worker.py` |
 | evaluation worker | `speck/search/evaluation_worker.py` |
 | profile worker | `speck/search/profile_worker.py` |
+| bootstrap coordinator | `speck/search/coordinator_v3.py` |
 | profiling | `speck/profile/` |
 
 ## next implementation sequence
@@ -299,11 +300,21 @@ python -m scripts.architecture_search_v3 profile-worker calibration-v3 \
 
 `profile-worker` claims exactly one capability-matched action and then exits, so each configured process repetition starts in a fresh process. profile artifacts preserve every raw request and decode sample, the exact backend identity, peak rss or vram, resident weight bytes, and allocated sequence-state bytes. result registration, normalized observations, and action completion share one lease-fenced transaction.
 
+the bootstrap coordinator creates the deterministic broad panel, crosses the configured initialization, data-order, and numerical seeds for the noise subset, and keeps at most `max_actions_per_event` work items active:
+
+```bash
+python -m scripts.architecture_search_v3 coordinate calibration-v3 \
+  --quality-cost 3600 \
+  --evaluation-cost 300 \
+  --profile-cost 60
+```
+
+costs use the configuration's declared `cost_unit` and are charged once per action. repeated coordinator ticks are idempotent: architecture, run, profile-repetition, and checkpoint-evaluation identities prevent duplicate work after interruption. every checkpoint is evaluated before that run can continue. after the noise and broad trajectories plus all configured profiles complete, the coordinator reports `awaiting_anchor_posterior`; it does not choose long-horizon anchors until the calibrated posterior policy is implemented.
+
 remaining implementation sequence:
 
-1. add the event-driven coordinator command line interface
-2. add surrogate shadow-mode proposal generation
-3. execute the noise-decomposition calibration study
-4. execute the broad 100m panel and long-horizon anchors
-5. freeze the first calibration artifact
-6. start the first production version three search
+1. add calibrated posterior anchor selection and shadow-mode proposals
+2. execute the noise-decomposition calibration study
+3. execute the broad 100m panel and long-horizon anchors
+4. freeze the first calibration artifact
+5. start the first production version three search

@@ -61,9 +61,20 @@ class SeedBundle:
     data_seed: int
     numerical_seed: int
     numerical_repeat: int = 0
+    initialization_index: int | None = None
+    data_index: int | None = None
 
     def __post_init__(self):
-        if self.index < 0 or self.numerical_repeat < 0:
+        if self.initialization_index is None:
+            object.__setattr__(self, "initialization_index", self.index)
+        if self.data_index is None:
+            object.__setattr__(self, "data_index", self.index)
+        if min(
+            self.index,
+            self.numerical_repeat,
+            self.initialization_index,
+            self.data_index,
+        ) < 0:
             raise ValueError("seed bundle indices cannot be negative")
         seeds = (self.initialization_seed, self.data_seed, self.numerical_seed)
         if any(seed < 0 for seed in seeds):
@@ -71,14 +82,41 @@ class SeedBundle:
 
     @classmethod
     def create(cls, study_seed, index, numerical_repeat=0):
+        return cls.create_panel(
+            study_seed,
+            index,
+            index,
+            numerical_repeat,
+        )
+
+    @classmethod
+    def create_panel(
+        cls,
+        study_seed,
+        initialization_index,
+        data_index,
+        numerical_repeat=0,
+    ):
+        diagonal = initialization_index + data_index
+        index = diagonal * (diagonal + 1) // 2 + data_index
         return cls(
             index=index,
-            initialization_seed=derive_seed(study_seed, "initialization", index),
-            data_seed=derive_seed(study_seed, "data", index),
+            initialization_seed=derive_seed(
+                study_seed,
+                "initialization",
+                initialization_index,
+            ),
+            data_seed=derive_seed(study_seed, "data", data_index),
             numerical_seed=derive_seed(
-                study_seed, "numerical", index, numerical_repeat
+                study_seed,
+                "numerical",
+                initialization_index,
+                data_index,
+                numerical_repeat,
             ),
             numerical_repeat=numerical_repeat,
+            initialization_index=initialization_index,
+            data_index=data_index,
         )
 
     @property

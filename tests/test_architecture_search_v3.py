@@ -42,6 +42,19 @@ def test_v3_search_cli_parses_explicit_initialization_inputs():
         ]
     )
     assert evaluation.run == 1
+    coordinate = parser().parse_args(
+        [
+            "coordinate",
+            "calibration",
+            "--quality-cost",
+            "60",
+            "--evaluation-cost",
+            "10",
+            "--profile-cost",
+            "30",
+        ]
+    )
+    assert coordinate.quality_cost == 60
 
 
 def test_v3_search_cli_reports_normalized_status(tmp_path, monkeypatch, capsys):

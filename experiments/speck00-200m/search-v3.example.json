@@ -1,11 +1,14 @@
 {
   "calibration": {
+    "anchor_tokens": 1006632960,
     "anchor_architectures": 10,
     "bootstrap_samples": 2000,
+    "broad_tokens": 100663296,
     "broad_architectures": 32,
     "data_seeds": 2,
     "initialization_seeds": 2,
     "noise_architectures": 8,
+    "noise_tokens": 3145728,
     "numerical_repeats": 2
   },
   "format_version": 3,

@@ -31,6 +31,9 @@ def settings():
             "initialization_seeds": 2,
             "data_seeds": 2,
             "numerical_repeats": 1,
+            "noise_tokens": 32,
+            "broad_tokens": 64,
+            "anchor_tokens": 128,
             "bootstrap_samples": 100,
         },
         "planner": {

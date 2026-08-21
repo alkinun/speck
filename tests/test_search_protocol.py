@@ -49,6 +49,10 @@ def test_seed_bundles_separate_randomness_sources():
     assert first.numerical_seed != repeated.numerical_seed
     assert first.initialization_seed != second.initialization_seed
     assert first.data_seed != second.data_seed
+    crossed = SeedBundle.create_panel(42, 0, 1)
+    assert crossed.initialization_seed == first.initialization_seed
+    assert crossed.data_seed == second.data_seed
+    assert crossed.digest not in {first.digest, second.digest}
 
 
 def test_objective_sets_separate_selection_and_reporting():

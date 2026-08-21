@@ -561,6 +561,14 @@ class V3Study:
             "static": _decode(row["static_json"]),
         }
 
+    def architectures(self):
+        return [
+            self.architecture(row["digest"])
+            for row in self.connection.execute(
+                "select digest from architectures order by created_at, digest"
+            )
+        ]
+
     def add_run(self, architecture_digest, protocol, seed_bundle):
         if not isinstance(protocol, TrainingProtocol) or not isinstance(
             seed_bundle, SeedBundle

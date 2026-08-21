@@ -55,6 +55,9 @@ def search_settings(segment_path, segment_digest):
                 "initialization_seeds": 1,
                 "data_seeds": 1,
                 "numerical_repeats": 1,
+                "noise_tokens": 8,
+                "broad_tokens": 8,
+                "anchor_tokens": 16,
                 "bootstrap_samples": 10,
             },
             "planner": {
