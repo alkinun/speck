@@ -34,6 +34,11 @@ def arguments():
     parser.add_argument("--peak-tflops", type=float, default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-compile", action="store_true")
+    parser.add_argument(
+        "--compile-mode",
+        default="max-autotune-no-cudagraphs",
+        choices=("default", "reduce-overhead", "max-autotune", "max-autotune-no-cudagraphs"),
+    )
     parser.add_argument("--output", default=None)
     return parser.parse_args()
 
@@ -99,6 +104,8 @@ def run(args):
         raise ValueError("accumulation must be positive")
     device = torch.device(args.device)
     torch.manual_seed(args.seed)
+    if device.type == "cuda":
+        torch.set_float32_matmul_precision("high")
 
     model = build_model(
         configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
@@ -107,7 +114,7 @@ def run(args):
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(train["lr"], train["weight_decay"], train["optimizer"])
     train_model = model if args.no_compile else torch.compile(
-        model, dynamic=False, mode="max-autotune-no-cudagraphs"
+        model, dynamic=False, mode=args.compile_mode
     )
 
     manifest_hash = None
@@ -173,6 +180,7 @@ def run(args):
             "warmup_steps": args.warmup_steps,
             "warmup_seconds": warmup_seconds,
             "compiled": not args.no_compile,
+            "compile_mode": None if args.no_compile else args.compile_mode,
             "seed": args.seed,
         },
         "geometry": {

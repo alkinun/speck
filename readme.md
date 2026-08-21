@@ -84,7 +84,8 @@ search.json     architecture space, fidelity rungs, objectives, and evolution
 
 copy the directory to start another experiment. json keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. the checked-in experiment uploads checkpoints to `specklabs/speck00-200m`; set `hf_repo` to an empty string to keep them local.
 
-for distributed training:
+for distributed training, copy the experiment and set `device_batch_size` and
+`batch_tokens` for the target world size before launching:
 
 ```bash
 torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- experiments/speck00-200m

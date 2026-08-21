@@ -31,6 +31,8 @@ def arguments():
     parser.add_argument("--eval-tokens", type=int, default=None)
     parser.add_argument("--warmup-steps", type=int, default=2)
     parser.add_argument("--optimizer", choices=("adamw", "muon"), default=None)
+    parser.add_argument("--lr", type=float, default=None)
+    parser.add_argument("--min-lr", type=float, default=None)
     parser.add_argument("--batch-curriculum", action="store_true")
     parser.add_argument("--model-config", default=None)
     parser.add_argument("--seed", type=int, default=42)
@@ -87,8 +89,8 @@ def run(args):
             eval_tokens=args.eval_tokens or train.get(
                 "eval_tokens", manifest["splits"]["val"]["tokens"]
             ),
-            lr=train["lr"],
-            min_lr=train["min_lr"],
+            lr=train["lr"] if args.lr is None else args.lr,
+            min_lr=train["min_lr"] if args.min_lr is None else args.min_lr,
             warmup_steps=args.warmup_steps,
             weight_decay=train["weight_decay"],
             grad_clip=train["grad_clip"],
