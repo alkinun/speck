@@ -1,6 +1,17 @@
+import json
+from pathlib import Path
+
 import torch
 
-from speck.model import Attention, Config, LayerConfig, MLP, RMSNorm, SpeckForCausalLM
+from speck.model import (
+    Attention,
+    Config,
+    LayerConfig,
+    MLP,
+    RMSNorm,
+    SpeckForCausalLM,
+    build_model,
+)
 
 
 def tiny_model():
@@ -23,6 +34,20 @@ def test_default_model_is_exactly_200m():
         model = SpeckForCausalLM()
     assert model.parameter_count() == 199_511_808
     assert model.config.export()["architectures"] == ["SpeckForCausalLM"]
+
+
+def test_main_experiment_uses_selected_architecture_86():
+    path = Path(__file__).parents[1] / "experiments" / "speck00-200m" / "model.json"
+    settings = json.loads(path.read_text(encoding="utf-8"))
+    with torch.device("meta"):
+        model = build_model(settings, 32000)
+    assert model.parameter_count() == 182_206_848
+    assert len(model.config.layers) == 11
+    assert [
+        (index, layer.hidden_size, layer.num_key_value_heads)
+        for index, layer in enumerate(model.config.layers)
+        if layer.num_key_value_heads is not None
+    ] == [(3, 1024, 4), (5, 1024, 4), (7, 960, 1), (9, 1024, 4)]
 
 
 def test_sparse_attention_structure_and_tied_embeddings():

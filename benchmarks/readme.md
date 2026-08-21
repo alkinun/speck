@@ -1,11 +1,15 @@
 # benchmarks
 
-results in this directory apply only to `speck00-200m`.
+results in this directory are historical and apply only to the model configuration recorded by each result file. rerun benchmarks after architecture or training changes.
 
 ## smoke test
 
-an rtx 3090 compiled training step with device batch 2, sequence length 2048, and accumulation 4 reaches 35,727 synthetic tokens/s and 35,916 end-to-end tokens/s with 5.04 gb peak allocated memory.
+run a short local benchmark before relying on throughput or memory numbers:
 
 ```bash
-python -m scripts.benchmark --mode compute --steps 20 --warmup-steps 5 --peak-tflops 142
+python -m scripts.benchmark experiments/speck00-200m \
+  --mode compute \
+  --steps 20 \
+  --warmup-steps 5 \
+  --peak-tflops 142
 ```

@@ -1,24 +1,31 @@
 # speck
 
-speck ships one model: `speck00-200m`, a 199,511,808-parameter decoder language model.
+speck ships one main model configuration: `speck00-200m`, a 182,206,848-parameter decoder language model selected by architecture search.
 
 ## model
 
-- 12 blocks, width 1024, and swiglu width 4096
-- mlp in every block and grouped-query attention in alternating blocks
-- 16 query heads and 4 kv heads with head dimension 64
+- 11 blocks with swiglu width 4096
+- hidden width 1024 except for width 960 at block 7
+- grouped-query attention at blocks 3, 5, 7, and 9
+- kv head counts 4, 4, 1, and 4 respectively, with head dimension 64
 - qk-norm, rope, rmsnorm, and tied input/output embeddings
 - 32k mistral tokenizer
 
-| component | parameters |
-| --- | ---: |
-| tied token embedding | 32,768,000 |
-| 12 swiglu mlps | 150,994,944 |
-| 6 grouped-query attention layers | 15,728,640 |
-| block rmsnorms | 18,432 |
-| qk-norms | 768 |
-| final rmsnorm | 1,024 |
-| total | 199,511,808 |
+block indices are zero-based. `experiments/speck00-200m/model.json` is the exact architecture definition.
+
+## architecture selection
+
+the completed `speck00-search-v2` study evaluated 128 architectures and 216 trials without failures. these are the most useful final-rung tradeoffs measured on an rtx 3090:
+
+| id | role | validation nll | parameters | 4-bit size | kv bytes/token | prefill 2048 | decode 2048 |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 21 | best quality | 5.7359 | 199.5m | 98.1 mib | 6144 | 20.29 ms | 2.835 ms |
+| 62 | quality/size | 5.7443 | 184.8m | 90.9 mib | 6144 | 18.53 ms | 2.578 ms |
+| **86** | **selected main model** | **5.7589** | **182.2m** | **89.6 mib** | **3328** | **17.70 ms** | **2.473 ms** |
+| 104 | fastest compact | 5.8606 | 157.0m | 77.2 mib | 5120 | 15.53 ms | 2.201 ms |
+| 126 | lowest balanced regret | 5.8637 | 159.4m | 78.4 mib | 3840 | 16.25 ms | 2.324 ms |
+
+architecture 86 is selected because its quality estimate overlaps the top quality tier while materially reducing parameter count, latency, peak memory, and kv cache use. full training remains the final validation of the selection.
 
 ## layout
 
@@ -86,7 +93,7 @@ torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- experiments/sp
 ## resume
 
 ```bash
-python -m scripts.base_train experiments/speck00-200m --resume=30518
+python -m scripts.base_train experiments/speck00-200m --resume <checkpoint-step>
 ```
 
 ## inference
@@ -102,7 +109,7 @@ measure the production optimization step with synthetic tokens:
 ```bash
 python -m scripts.benchmark experiments/speck00-200m \
   --mode compute \
-  --output benchmarks/baseline-compute.json
+  --output benchmarks/selected-compute.json
 ```
 
 include the packed data path in the measurement:
@@ -111,7 +118,7 @@ include the packed data path in the measurement:
 python -m scripts.benchmark experiments/speck00-200m \
   --mode end-to-end \
   --data-dir ~/.cache/speck/benchmark-200m \
-  --output benchmarks/baseline-end-to-end.json
+  --output benchmarks/selected-end-to-end.json
 ```
 
 warmup is reported separately. use `--peak-tflops` to include model flops utilization and `--no-compile` to measure eager execution.
@@ -119,40 +126,28 @@ warmup is reported separately. use `--peak-tflops` to include model flops utiliz
 compare short real-data training runs:
 
 ```bash
-python -m scripts.quality_benchmark --label baseline
+python -m scripts.quality_benchmark --label architecture-86
 ```
 
 ## architecture search
 
-search model architectures with reproducible multi-fidelity evolution:
+start a new study from the selected architecture:
 
 ```bash
 python -m scripts.architecture_search run experiments/speck00-200m \
-  --study speck00-search-v2 \
+  --study speck00-search-next \
   --device cuda
 ```
 
-the coordinator evaluates one isolated trial subprocess at a time. an architecture is immutable; training trials are identified independently by architecture, rung, and common deterministic seed. rerunning the same command resumes interrupted work after verifying the study configuration, repository state, worker payload, and process identity. study state, worker logs, complete loss curves, ancestry, promotions, confidence estimates, and recommendations are stored under `~/.cache/speck/search/<study>`.
-
-the search keeps every objective separate. it minimizes named validation nll slices, batch-1 prefill and decode latency at each configured context, kv cache bytes per token, inference peak memory at each context, and estimated packed quantized weight bytes. raw parameter count and non-objective audit slices are recorded without entering pareto comparisons.
-
-the model genotype contains an explicit specification for every layer. hidden size, swiglu width, attention presence, and kv head count can vary by layer. learned projections connect adjacent layers with different hidden sizes, and attention placement can move independently of depth.
-
-each rung has its own exact pareto frontier. promoted rungs increase training tokens, sequence length, validation budget, inference samples, and shared seed count. immutable promotions rotate through conservative, optimistic, mean, and diversity confidence lanes. nondominated rank, objective-space crowding, and architectural novelty remain separate; the search never stores a permanent scalar score. mutation probabilities adapt from cohort outcomes, and motif crossover can combine two selected parents.
-
-the checked `speck00-200m` schedule has an upper bound of 216 fresh trials: 128 screen trials, 64 develop trials, and 24 verify trials. that is 226,492,416 training tokens and 171,966,464 validation tokens before failures or retries. each rung restarts training; lower rungs use prefixes of the final learning-rate horizon rather than retained checkpoints.
-
-inspect a running or completed study:
+inspect the study:
 
 ```bash
 python -m scripts.architecture_search status speck00-search-v2
 python -m scripts.architecture_search frontier speck00-search-v2
-python -m scripts.architecture_search frontier speck00-search-v2 --rung 1
-python -m scripts.architecture_search lineage speck00-search-v2 17
 python -m scripts.search_dashboard speck00-search-v2
 ```
 
-`search.json` defines all comparison-sensitive settings, including validation slices and rung budgets. changing the proxy data, fidelity schedule, runtime, hardware, objective contexts, quantized layout, or search space requires a new study name. v1 databases remain readable by the cli and dashboard but cannot be resumed as v2 studies. the default packed quantized byte objective uses symmetric 4-bit groups of 128 with fp16 scales; it is a storage estimate and does not alter latency measurements.
+study state and worker artifacts are stored under `~/.cache/speck/search/<study>`. changing comparison-sensitive search settings requires a new study name.
 
 ## checks
 
