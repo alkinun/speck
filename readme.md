@@ -136,6 +136,8 @@ the quality benchmark inherits the experiment's packed data path, physical batch
 
 ## architecture search
 
+version three search development and its reliability contract are documented in `docs/search-v3.md`. the checked-in experiment and completed study remain version two until the calibration workflow is operational.
+
 start a new study from the selected architecture:
 
 ```bash
