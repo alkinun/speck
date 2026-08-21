@@ -3,7 +3,6 @@
 import argparse
 import json
 import math
-import os
 import statistics
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,7 +12,7 @@ import torch
 from scripts.benchmark import config_fingerprint, git_dirty, git_revision
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint
-from speck.dataset import load_manifest, verify_shards
+from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.model import build_model
 from speck.search.evaluate import QualitySettings, evaluate_quality
 from speck.tokenizer import get_tokenizer
@@ -23,9 +22,9 @@ def arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
     parser.add_argument("--label", required=True)
-    parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-200m"))
+    parser.add_argument("--data-dir", default=None)
     parser.add_argument("--steps", type=int, default=95)
-    parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--batch-tokens", type=int, default=None)
     parser.add_argument("--eval-every", type=int, default=24)
     parser.add_argument("--eval-batch-size", type=int, default=4)
@@ -41,17 +40,25 @@ def arguments():
 
 
 def run(args):
-    if args.steps < 1 or args.batch_size < 1 or args.eval_batch_size < 1:
+    if args.steps < 1 or args.eval_batch_size < 1:
+        raise ValueError("steps and batch sizes must be positive")
+    if args.batch_size is not None and args.batch_size < 1:
         raise ValueError("steps and batch sizes must be positive")
     if args.eval_tokens is not None and args.eval_tokens < 1:
         raise ValueError("eval tokens must be positive")
-    configs = load_experiment(args.experiment, "tokenizer", "model", "train")
+    configs = load_experiment(args.experiment, "tokenizer", "model", "train", "data")
     if args.model_config:
         configs["model"] = json.loads(Path(args.model_config).read_text(encoding="utf-8"))
     train = configs["train"]
+    batch_size = args.batch_size or train["device_batch_size"]
+    data_dir = (
+        args.data_dir
+        or configs["data"].get("output_dir")
+        or str(default_data_dir / "packed")
+    )
     tokenizer = get_tokenizer(**configs["tokenizer"])
-    manifest = load_manifest(args.data_dir)
-    verify_shards(args.data_dir, manifest)
+    manifest = load_manifest(data_dir)
+    verify_shards(data_dir, manifest)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     with torch.device("meta"):
         model = build_model(
@@ -63,21 +70,23 @@ def run(args):
     fixed_batch_tokens = args.batch_tokens or train["batch_tokens"]
     if args.batch_curriculum and args.batch_tokens:
         raise ValueError("batch tokens cannot override the batch curriculum")
-    trained_tokens = args.steps * train["batch_tokens"]
+    trained_tokens = args.steps * fixed_batch_tokens
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
     quality = evaluate_quality(
         config,
         tokenizer,
         QualitySettings(
-            data_dir=args.data_dir,
+            data_dir=data_dir,
             train_tokens=trained_tokens,
             batch_tokens=fixed_batch_tokens,
-            device_batch_size=args.batch_size,
+            device_batch_size=batch_size,
             sequence_length=sequence_length,
-            eval_every_tokens=args.eval_every * train["batch_tokens"],
+            eval_every_tokens=args.eval_every * fixed_batch_tokens,
             eval_batch_size=args.eval_batch_size,
-            eval_tokens=args.eval_tokens or manifest["splits"]["val"]["tokens"],
+            eval_tokens=args.eval_tokens or train.get(
+                "eval_tokens", manifest["splits"]["val"]["tokens"]
+            ),
             lr=train["lr"],
             min_lr=train["min_lr"],
             warmup_steps=args.warmup_steps,
@@ -106,7 +115,7 @@ def run(args):
         },
         "geometry": {
             **quality["geometry"],
-            "batch_size": args.batch_size,
+            "batch_size": batch_size,
             "accumulation": quality["geometry"]["final_accumulation"],
             "tokens_per_step": fixed_batch_tokens,
             "trained_tokens": trained_tokens,
@@ -127,7 +136,7 @@ def run(args):
             "peak_allocated_bytes": torch.cuda.max_memory_allocated(device) if device.type == "cuda" else None,
         },
         "dataset": {
-            "path": str(Path(args.data_dir).resolve()),
+            "path": str(Path(data_dir).resolve()),
             "manifest": manifest_fingerprint(manifest),
         },
         "model": {

@@ -126,8 +126,12 @@ warmup is reported separately. use `--peak-tflops` to include model flops utiliz
 compare short real-data training runs:
 
 ```bash
-python -m scripts.quality_benchmark --label architecture-86
+python -m scripts.quality_benchmark experiments/speck00-200m \
+  --label architecture-86 \
+  --output benchmarks/architecture-86-quality.json
 ```
+
+the quality benchmark inherits the experiment's packed data path, physical batch size, optimizer batch, and recurring evaluation budget unless they are overridden.
 
 ## architecture search
 
