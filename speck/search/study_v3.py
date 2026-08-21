@@ -577,6 +577,17 @@ class V3Study:
         value["result"] = _decode(value.pop("result_json"))
         return value
 
+    def actions(self, status=None):
+        where = " where status = ?" if status is not None else ""
+        values = (status,) if status is not None else ()
+        return [
+            self.action(row["id"])
+            for row in self.connection.execute(
+                f"select id from actions{where} order by id",
+                values,
+            )
+        ]
+
     def finish_action(self, action_id, claim_token, result=None, error=None):
         status = "failed" if error is not None else "completed"
         with self.connection:
