@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 import pytest
 
 from speck.search.spec import SearchSettings, deterministic_seed
@@ -105,3 +108,40 @@ def test_search_settings_reject_partial_evaluation_batch():
     settings["rungs"][1]["eval_tokens"] = 15
     with pytest.raises(ValueError, match="complete batches"):
         SearchSettings.from_dict(settings)
+
+
+def test_checked_experiment_uses_multi_fidelity_search():
+    experiment = Path(__file__).parents[1] / "experiments" / "speck00-200m"
+    path = experiment / "search.json"
+    settings = SearchSettings.from_dict(json.loads(path.read_text(encoding="utf-8")))
+    assert settings.format_version == 2
+    assert [rung.name for rung in settings.rungs] == ["screen", "develop", "verify"]
+    assert [rung.seed_count for rung in settings.rungs] == [1, 2, 3]
+    assert [rung.sequence_length for rung in settings.rungs] == [256, 512, 1024]
+    assert sum(
+        rung.architecture_limit * rung.seed_count for rung in settings.rungs
+    ) == 216
+    assert sum(
+        rung.architecture_limit * rung.seed_count * rung.train_tokens
+        for rung in settings.rungs
+    ) == 226_492_416
+    assert sum(
+        rung.architecture_limit
+        * rung.seed_count
+        * (rung.train_tokens // rung.eval_every_tokens + 1)
+        * rung.eval_tokens
+        * len(settings.validation_slices)
+        for rung in settings.rungs
+    ) == 171_966_464
+    model = json.loads((experiment / "model.json").read_text(encoding="utf-8"))
+    data = json.loads((experiment / "data.json").read_text(encoding="utf-8"))
+    assert settings.inference.contexts[-1] + 1 <= model["max_position_embeddings"]
+    assert all(
+        rung.sequence_length <= model["max_position_embeddings"]
+        for rung in settings.rungs
+    )
+    assert all(
+        item.offset_tokens + rung.eval_tokens + 1 <= data["validation_tokens"]
+        for item in settings.validation_slices
+        for rung in settings.rungs
+    )

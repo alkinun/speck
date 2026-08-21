@@ -72,7 +72,7 @@ data.json       source, filters, splits, token budgets, and packed output
 tokenizer.json  tokenizer artifact and local directory
 model.json      architecture and dimensions
 train.json      optimization, batching, logging, and checkpoints
-search.json     architecture space, proxy budget, objectives, and evolution
+search.json     architecture space, fidelity rungs, objectives, and evolution
 ```
 
 copy the directory to start another experiment. json keeps each run explicit and diffable; `null` output directories use `~/.cache/speck`. the checked-in experiment uploads checkpoints to `specklabs/speck00-200m`; set `hf_repo` to an empty string to keep them local.
@@ -124,31 +124,35 @@ python -m scripts.quality_benchmark --label baseline
 
 ## architecture search
 
-search model architectures with completion-driven multi-objective evolution:
+search model architectures with reproducible multi-fidelity evolution:
 
 ```bash
 python -m scripts.architecture_search run experiments/speck00-200m \
-  --study speck00-search \
+  --study speck00-search-v2 \
   --device cuda
 ```
 
-the coordinator evaluates one isolated candidate subprocess at a time. rerunning the same command resumes the study. study state, worker logs, complete loss curves, ancestry, and results are stored under `~/.cache/speck/search/<study>`.
+the coordinator evaluates one isolated trial subprocess at a time. an architecture is immutable; training trials are identified independently by architecture, rung, and common deterministic seed. rerunning the same command resumes interrupted work after verifying the study configuration, repository state, worker payload, and process identity. study state, worker logs, complete loss curves, ancestry, promotions, confidence estimates, and recommendations are stored under `~/.cache/speck/search/<study>`.
 
-the search keeps every objective separate. it minimizes final validation nll after the fixed proxy token budget, batch-1 prefill and decode latency at each configured context, kv cache bytes per token, inference peak memory at each context, and estimated packed quantized weight bytes. raw parameter count is recorded but is not an objective.
+the search keeps every objective separate. it minimizes named validation nll slices, batch-1 prefill and decode latency at each configured context, kv cache bytes per token, inference peak memory at each context, and estimated packed quantized weight bytes. raw parameter count and non-objective audit slices are recorded without entering pareto comparisons.
 
 the model genotype contains an explicit specification for every layer. hidden size, swiglu width, attention presence, and kv head count can vary by layer. learned projections connect adjacent layers with different hidden sizes, and attention placement can move independently of depth.
 
-the search uses nondominated rank, objective-space crowding, and architectural novelty as separate selection criteria. it never stores a permanent scalar score. exact pareto membership is maintained across all completed candidates while a bounded diverse population supplies parents.
+each rung has its own exact pareto frontier. promoted rungs increase training tokens, sequence length, validation budget, inference samples, and shared seed count. immutable promotions rotate through conservative, optimistic, mean, and diversity confidence lanes. nondominated rank, objective-space crowding, and architectural novelty remain separate; the search never stores a permanent scalar score. mutation probabilities adapt from cohort outcomes, and motif crossover can combine two selected parents.
+
+the checked `speck00-200m` schedule has an upper bound of 216 fresh trials: 128 screen trials, 64 develop trials, and 24 verify trials. that is 226,492,416 training tokens and 171,966,464 validation tokens before failures or retries. each rung restarts training; lower rungs use prefixes of the final learning-rate horizon rather than retained checkpoints.
 
 inspect a running or completed study:
 
 ```bash
-python -m scripts.architecture_search status speck00-search
-python -m scripts.architecture_search frontier speck00-search
-python -m scripts.architecture_search lineage speck00-search 17
+python -m scripts.architecture_search status speck00-search-v2
+python -m scripts.architecture_search frontier speck00-search-v2
+python -m scripts.architecture_search frontier speck00-search-v2 --rung 1
+python -m scripts.architecture_search lineage speck00-search-v2 17
+python -m scripts.search_dashboard speck00-search-v2
 ```
 
-`search.json` defines all comparison-sensitive settings. changing the proxy data, token budget, runtime, hardware, objective contexts, quantized layout, or search space requires a new study name. the default packed quantized byte objective uses symmetric 4-bit groups of 128 with fp16 scales; it is a storage estimate and does not alter latency measurements.
+`search.json` defines all comparison-sensitive settings, including validation slices and rung budgets. changing the proxy data, fidelity schedule, runtime, hardware, objective contexts, quantized layout, or search space requires a new study name. v1 databases remain readable by the cli and dashboard but cannot be resumed as v2 studies. the default packed quantized byte objective uses symmetric 4-bit groups of 128 with fp16 scales; it is a storage estimate and does not alter latency measurements.
 
 ## checks
 

@@ -1,5 +1,7 @@
 {
-  "initial_population": 16,
+  "cohort_size": 16,
+  "confidence_z": 1.645,
+  "format_version": 2,
   "inference": {
     "cache_dtype_bytes": 2,
     "contexts": [
@@ -9,7 +11,8 @@
     "samples": 20,
     "warmup_samples": 5
   },
-  "max_evaluations": 128,
+  "initial_population": 16,
+  "max_architectures": 128,
   "max_generation_attempts": 100,
   "max_worker_retries": 1,
   "population_size": 32,
@@ -19,14 +22,10 @@
     "data_dir": "~/.cache/speck/ultra_fineweb/packed",
     "device_batch_size": 2,
     "eval_batch_size": 2,
-    "eval_every_tokens": 393216,
-    "eval_tokens": 262144,
     "grad_clip": 1.0,
     "lr": 0.0006,
     "min_lr": 0.1,
     "optimizer": "muon",
-    "sequence_length": 512,
-    "train_tokens": 1572864,
     "warmup_steps": 8,
     "weight_decay": 0.1
   },
@@ -36,6 +35,38 @@
     "scale_bytes": 2,
     "unquantized_bytes": 2
   },
+  "rungs": [
+    {
+      "architecture_limit": 128,
+      "eval_every_tokens": 196608,
+      "eval_tokens": 65536,
+      "inference_samples": 5,
+      "name": "screen",
+      "seed_count": 1,
+      "sequence_length": 256,
+      "train_tokens": 393216
+    },
+    {
+      "architecture_limit": 32,
+      "eval_every_tokens": 393216,
+      "eval_tokens": 262144,
+      "inference_samples": 10,
+      "name": "develop",
+      "seed_count": 2,
+      "sequence_length": 512,
+      "train_tokens": 1572864
+    },
+    {
+      "architecture_limit": 8,
+      "eval_every_tokens": 786432,
+      "eval_tokens": 524288,
+      "inference_samples": 20,
+      "name": "verify",
+      "seed_count": 3,
+      "sequence_length": 1024,
+      "train_tokens": 3145728
+    }
+  ],
   "seed": 42,
   "space": {
     "cache_dtype_bytes": 2,
@@ -60,5 +91,12 @@
     "min_layers": 8,
     "min_parameters": 80000000
   },
+  "validation_slices": [
+    {
+      "name": "main",
+      "objective": true,
+      "offset_tokens": 0
+    }
+  ],
   "worker_timeout_seconds": 7200
 }
