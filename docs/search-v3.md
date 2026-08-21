@@ -227,13 +227,28 @@ quality checkpoints are content addressed and include exact rng and data state. 
 
 ## next implementation sequence
 
+the segment-plan preparation command is available:
+
+```bash
+python -m scripts.segment_plan ~/.cache/speck/ultra_fineweb/packed \
+  ~/.cache/speck/search/segments-v3.json \
+  --train-tokens 1000000000 \
+  --monitor-tokens 5000000 \
+  --promotion-tokens 20000000 \
+  --audit-tokens 20000000 \
+  --final-tokens 20000000
+```
+
+the packed dataset must contain the format-two document index.
+
+remaining implementation sequence:
+
 1. add a version three experiment and search configuration schema
-2. add a segment-plan preparation command
-3. add a resumable quality-run worker using the shared training loop
-4. add isolated gpu and cpu profiling workers
-5. add the event-driven coordinator and worker command line interface
-6. add surrogate shadow-mode proposal generation
-7. execute the noise-decomposition calibration study
-8. execute the broad 100m panel and long-horizon anchors
-9. freeze the first calibration artifact
-10. start the first production version three search
+2. add a resumable quality-run worker using the shared training loop
+3. add isolated gpu and cpu profiling workers
+4. add the event-driven coordinator and worker command line interface
+5. add surrogate shadow-mode proposal generation
+6. execute the noise-decomposition calibration study
+7. execute the broad 100m panel and long-horizon anchors
+8. freeze the first calibration artifact
+9. start the first production version three search
