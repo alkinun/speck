@@ -1476,6 +1476,10 @@ def open_study(
         if stored_settings != settings.settings():
             raise ValueError("comparison-sensitive search settings changed")
         state = store.state()
+        if state.get("active_since") is not None:
+            state["active_since"] = None
+            state["updated_at"] = utc_now()
+            atomic_json(store.state_path, state)
         if state["experiment"] != experiment:
             raise ValueError("study experiment changed")
         if state.get("provenance", {}) != provenance:

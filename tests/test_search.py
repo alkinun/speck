@@ -393,6 +393,20 @@ def test_partial_study_initialization_and_provenance_resume(tmp_path):
     state["active_since"] = time.time() - 10
     store.write_state(state)
     assert status_snapshot(store)["elapsed_seconds"] >= 9
+    state = store.state()
+    state["elapsed_seconds"] = 5.0
+    state["active_since"] = time.time() - 100
+    atomic_json(store.state_path, state)
+    open_study(
+        directory,
+        tmp_path,
+        settings,
+        generations=2,
+        provenance=provenance,
+    )
+    resumed = store.state()
+    assert resumed["active_since"] is None
+    assert resumed["elapsed_seconds"] == 5.0
 
 
 def test_completed_checkpoint_reconciles_result(tmp_path, monkeypatch):
@@ -648,6 +662,10 @@ def fake_child(command):
         trained_tokens=target,
         nll_curve=sorted(curve, key=lambda point: point["tokens"]),
     )
+    checkpoint = store.candidate_path(candidate_id) / "checkpoint"
+    checkpoint.mkdir(exist_ok=True)
+    step = target // store.settings()["training"]["batch_tokens"]
+    (checkpoint / f"complete_{step:06d}").write_text("complete\n")
     return {"complete": True, "trained_tokens": target}
 
 

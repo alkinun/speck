@@ -38,6 +38,7 @@ from speck.search import (
     percentile_ranks,
     promotion_for_rung,
     prune_checkpoints,
+    retained_checkpoint_candidates,
     score_candidates,
     select_finalists,
     status_snapshot,
@@ -1019,12 +1020,34 @@ def _run_phase(store, settings, generation, phase, device):
         settings["final_tokens"],
         update_current=True,
     )
+    confirmed = [
+        result for result in store.results() if result["status"] == "confirmed"
+    ]
+    retained = retained_checkpoint_candidates(confirmed)
     for result in store.results():
         if result["status"] != "confirmed":
             continue
         checkpoint_dir = store.candidate_path(result["candidate_id"]) / "checkpoint"
         step = latest(checkpoint_dir)
-        keep = {step} if step is not None else set()
+        if result["candidate_id"] in retained and step is None:
+            run_child(
+                _child_command(
+                    "train",
+                    store,
+                    result["candidate_id"],
+                    device,
+                    settings["rungs"][-1],
+                )
+            )
+            store.update_result(result["candidate_id"], status="confirmed")
+            step = latest(checkpoint_dir)
+            if step is None:
+                raise RuntimeError("retained archive candidate has no checkpoint")
+        keep = (
+            {step}
+            if result["candidate_id"] in retained and step is not None
+            else set()
+        )
         prune_checkpoints(checkpoint_dir, keep)
     state = store.state()
     state["phase"] = "complete"
