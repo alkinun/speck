@@ -657,6 +657,7 @@ def test_one_tiny_study_and_stable_status(tmp_path, monkeypatch):
     studies = tmp_path / "studies"
     monkeypatch.setattr(search_script, "study_directory", lambda name: studies / name)
     monkeypatch.setattr(search_script, "_study_inputs", fake_study_inputs)
+    monkeypatch.setattr(search_script, "_verify_inputs", lambda inputs: None)
     monkeypatch.setattr(search_script, "run_child", fake_child)
     monkeypatch.setattr(search_script, "_check_generation_space", lambda *args: None)
     snapshot = search_script.run_study(
@@ -679,6 +680,7 @@ def test_final_role_selection_and_two_seed_aggregation(tmp_path, monkeypatch):
     studies = tmp_path / "studies"
     monkeypatch.setattr(search_script, "study_directory", lambda name: studies / name)
     monkeypatch.setattr(search_script, "_study_inputs", fake_study_inputs)
+    monkeypatch.setattr(search_script, "_verify_inputs", lambda inputs: None)
     monkeypatch.setattr(search_script, "run_child", fake_child)
     monkeypatch.setattr(search_script, "_check_generation_space", lambda *args: None)
     search_script.run_study(

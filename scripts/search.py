@@ -19,7 +19,7 @@ from speck.checkpoint import latest, load, load_model, save
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
-from speck.dataset import default_data_dir, load_manifest
+from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.model import SpeckForCausalLM
 from speck.search import (
     StudyStore,
@@ -104,6 +104,13 @@ def _study_inputs(experiment):
         "data_dir": str(Path(data_dir).resolve()),
     }
     return configs, provenance
+
+
+def _verify_inputs(inputs):
+    manifest = load_manifest(inputs["data_dir"])
+    if manifest_fingerprint(manifest) != inputs["manifest"]:
+        raise ValueError("packed dataset manifest changed")
+    verify_shards(inputs["data_dir"], manifest)
 
 
 def _verify_runtime(state, settings, device):
@@ -1014,6 +1021,7 @@ def run_study(experiment, name, hours, generations, device):
     directory = study_directory(name)
     settings = load_search_settings(Path(experiment) / "search.json")
     configs, inputs = _study_inputs(experiment)
+    _verify_inputs(inputs)
     provenance = {
         "inputs": inputs,
         "runtime": _runtime_contract(settings, torch.device(device)),
@@ -1173,6 +1181,7 @@ def finalize_study(name, device):
     with study_lock(directory):
         store = StudyStore(directory)
         settings = store.settings()
+        _verify_inputs(store.state()["provenance"]["inputs"])
         roles_before = select_finalists(store.results())
         candidates = {}
         for candidate_id in sorted(set(roles_before.values())):
