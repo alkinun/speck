@@ -1022,6 +1022,53 @@ def _install_checkpoint(source, destination, step):
     os.replace(temporary, complete)
 
 
+def _ensure_archive_checkpoint(store, result, settings, device, deadline=None):
+    candidate = store.candidate_path(result["candidate_id"])
+    checkpoint_dir = candidate / "checkpoint"
+    rebuild_root = candidate / "rebuild"
+    rebuild_dir = rebuild_root / "checkpoint"
+    final_tokens = settings["rungs"][-1]
+    final_step = final_tokens // settings["training"]["batch_tokens"]
+    if _checkpoint_ready(
+        checkpoint_dir,
+        final_step,
+        result["digest"],
+        final_tokens,
+    ):
+        if rebuild_root.exists():
+            shutil.rmtree(rebuild_root)
+        return True
+    command = _child_command(
+        "rebuild",
+        store,
+        result["candidate_id"],
+        device,
+        final_tokens,
+    )
+    if deadline is not None:
+        command.extend(("--deadline", str(deadline)))
+    rebuilt = run_child(command)
+    if not rebuilt["complete"]:
+        return False
+    if not _checkpoint_ready(
+        rebuild_dir,
+        final_step,
+        result["digest"],
+        final_tokens,
+    ):
+        raise RuntimeError("archive rebuild produced an invalid checkpoint")
+    _install_checkpoint(rebuild_dir, checkpoint_dir, final_step)
+    if not _checkpoint_ready(
+        checkpoint_dir,
+        final_step,
+        result["digest"],
+        final_tokens,
+    ):
+        raise RuntimeError("archive checkpoint installation failed")
+    shutil.rmtree(rebuild_root)
+    return True
+
+
 def _run_phase(store, settings, generation, phase, device):
     index = {"screen": 0, "develop": 1, "confirm": 2}[phase]
     target = settings["rungs"][index]
@@ -1078,44 +1125,19 @@ def _run_phase(store, settings, generation, phase, device):
         if result["status"] != "confirmed":
             continue
         checkpoint_dir = store.candidate_path(result["candidate_id"]) / "checkpoint"
-        step = latest(checkpoint_dir)
-        if result["candidate_id"] in retained and not _checkpoint_ready(
-            checkpoint_dir,
-            final_step,
-            result["digest"],
-            settings["rungs"][-1],
-        ):
-            command = _child_command(
-                "rebuild",
+        if result["candidate_id"] in retained:
+            if not _ensure_archive_checkpoint(
                 store,
-                result["candidate_id"],
+                result,
+                settings,
                 device,
-                settings["rungs"][-1],
-            )
-            deadline = _deadline(store)
-            if deadline is not None:
-                command.extend(("--deadline", str(deadline)))
-            rebuilt = run_child(command)
-            if not rebuilt["complete"]:
+                _deadline(store),
+            ):
                 return False
-            rebuild_dir = store.candidate_path(result["candidate_id"]) / "rebuild" / "checkpoint"
-            if not _checkpoint_ready(
-                rebuild_dir,
-                final_step,
-                result["digest"],
-                settings["rungs"][-1],
-            ):
-                raise RuntimeError("archive rebuild produced an invalid checkpoint")
-            _install_checkpoint(rebuild_dir, checkpoint_dir, final_step)
-            if not _checkpoint_ready(
-                checkpoint_dir,
-                final_step,
-                result["digest"],
-                settings["rungs"][-1],
-            ):
-                raise RuntimeError("archive checkpoint installation failed")
-            shutil.rmtree(store.candidate_path(result["candidate_id"]) / "rebuild")
-            step = final_step
+        else:
+            rebuild_root = store.candidate_path(result["candidate_id"]) / "rebuild"
+            if rebuild_root.exists():
+                shutil.rmtree(rebuild_root)
         keep = (
             {final_step}
             if result["candidate_id"] in retained
@@ -1294,6 +1316,14 @@ def finalize_study(name, device):
         candidates = {}
         for candidate_id in sorted(set(roles_before.values())):
             candidate = store.candidate_path(candidate_id)
+            search_result = _record(store, candidate_id)
+            if not _ensure_archive_checkpoint(
+                store,
+                search_result,
+                settings,
+                device,
+            ):
+                raise RuntimeError("finalist checkpoint rebuild did not complete")
             for run_name in ("continuation", "independent"):
                 result_path = candidate / "final" / run_name / "result.json"
                 complete = (
@@ -1346,7 +1376,6 @@ def finalize_study(name, device):
                 )
                 for run_name in ("continuation", "independent")
             }
-            search_result = _record(store, candidate_id)
             candidates[candidate_id] = {
                 "candidate_id": candidate_id,
                 "digest": search_result["digest"],

@@ -1634,7 +1634,7 @@ def checkpoint_disk_usage(store):
     total = 0
     if not store.candidates_path.is_dir():
         return total
-    for path in store.candidates_path.glob("*/checkpoint/*"):
+    for path in store.candidates_path.glob("**/checkpoint/*"):
         if path.is_file():
             total += path.stat().st_size
     return total
