@@ -204,10 +204,32 @@ class SearchSettings:
         )
         for key in probability_keys:
             values[key] = _probabilities(values[key], key)
-        if tuple(values["mutation_probabilities"]) != MUTATIONS:
-            raise ValueError("mutation probabilities must define every mutation in order")
-        if set(values["parent_lane_probabilities"]) != {"quality", "balanced", "efficiency"}:
-            raise ValueError("parent probabilities must define the three selection lanes")
+
+        def ordered(key, order):
+            if set(values[key]) != {str(item) for item in order}:
+                raise ValueError(f"{key} does not match its search choices")
+            values[key] = {
+                str(item): values[key][str(item)]
+                for item in order
+            }
+
+        ordered("mutation_probabilities", MUTATIONS)
+        ordered("depth_probabilities", sorted(int(key) for key in values["depth_probabilities"]))
+        ordered(
+            "embedding_width_probabilities",
+            sorted(int(key) for key in values["embedding_width_probabilities"]),
+        )
+        ordered("block_width_probabilities", ("same", "narrower", "wider"))
+        ordered("mixer_probabilities", ("attention", "convolution", "none"))
+        ordered("swiglu_probabilities", ("enabled", "disabled"))
+        ordered("attention_scope_probabilities", ("global", "sliding"))
+        ordered("attention_head_dimension_probabilities", values["head_dimensions"])
+        ordered("kv_head_probabilities", values["kv_heads"])
+        ordered("convolution_ratio_probabilities", values["convolution_ratios"])
+        ordered("convolution_kernel_probabilities", values["convolution_kernels"])
+        ordered("swiglu_ratio_probabilities", values["swiglu_ratios"])
+        ordered("repeat_count_probabilities", values["repeat_counts"])
+        ordered("parent_lane_probabilities", ("quality", "balanced", "efficiency"))
         return cls(values)
 
     def settings(self):
