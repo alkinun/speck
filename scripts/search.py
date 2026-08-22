@@ -129,6 +129,8 @@ def check_candidate(study, candidate_id, device_name):
             ],
             dim=1,
         )
+    if not torch.isfinite(full).all() or not torch.isfinite(cached).all():
+        raise FloatingPointError("model produced non-finite feasibility outputs")
     tolerance = settings["final_profile"]
     if not torch.allclose(
         full,
