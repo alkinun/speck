@@ -3,6 +3,7 @@
 import argparse
 import fcntl
 import json
+import resource
 import shutil
 import statistics
 import subprocess
@@ -14,7 +15,7 @@ from pathlib import Path
 import torch
 
 from speck.architecture import ArchitectureConfig
-from speck.checkpoint import latest, load, save
+from speck.checkpoint import latest, load, load_model, save
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
@@ -22,7 +23,9 @@ from speck.dataset import default_data_dir, load_manifest
 from speck.model import SpeckForCausalLM
 from speck.search import (
     StudyStore,
+    aggregate_final_runs,
     architecture_metrics,
+    atomic_json,
     initial_generation,
     later_generation,
     load_search_settings,
@@ -30,10 +33,12 @@ from speck.search import (
     materialize_generation,
     normalize_baseline,
     open_study,
+    percentile_ranks,
     promotion_for_rung,
     prune_checkpoints,
     retained_checkpoint_candidates,
     score_candidates,
+    select_finalists,
     status_snapshot,
     utc_now,
     validation_slices,
@@ -172,13 +177,7 @@ def _distribution(values):
     }
 
 
-def profile_candidate(study, candidate_id, device_name):
-    store, settings, state, configs, candidate, architecture = _context(
-        study, candidate_id
-    )
-    profile = settings["profile"]
-    device = _runtime(device_name, profile["seed"])
-    model = _model(architecture, device, profile["seed"])
+def _measure_profile(model, architecture, profile, device):
     model.eval()
     maximum_prompt = max(profile["prompt_lengths"])
     generated_tokens = profile["generated_tokens"]
@@ -219,11 +218,8 @@ def profile_candidate(study, candidate_id, device_name):
                 if prompt_length == maximum_prompt:
                     samples["decode_2048"].append(measured["first_decode"])
                     samples["steady_decode_64"].append(measured["steady_decode"])
-    result = store.results()
-    current = next(value for value in result if value["candidate_id"] == candidate_id)
-    candidate_profile = dict(current.get("profile") or {})
-    candidate_profile.update(
-        contract={
+    return {
+        "contract": {
             "device": str(device),
             "device_name": torch.cuda.get_device_name(device)
             if device.type == "cuda"
@@ -234,14 +230,28 @@ def profile_candidate(study, candidate_id, device_name):
             "requests": profile["requests"],
             "seed": profile["seed"],
         },
-        latency={name: _distribution(values) for name, values in samples.items()},
-        memory={
+        "latency": {name: _distribution(values) for name, values in samples.items()},
+        "memory": {
             "resident_vram_bytes": resident,
             "peak_vram_bytes": torch.cuda.max_memory_allocated(device)
             if device.type == "cuda"
             else None,
         },
+    }
+
+
+def profile_candidate(study, candidate_id, device_name):
+    store, settings, state, configs, candidate, architecture = _context(
+        study, candidate_id
     )
+    profile = settings["profile"]
+    device = _runtime(device_name, profile["seed"])
+    model = _model(architecture, device, profile["seed"])
+    measured = _measure_profile(model, architecture, profile, device)
+    result = store.results()
+    current = next(value for value in result if value["candidate_id"] == candidate_id)
+    candidate_profile = dict(current.get("profile") or {})
+    candidate_profile.update(measured)
     store.update_result(candidate_id, profile=candidate_profile)
     return candidate_profile
 
@@ -286,11 +296,23 @@ def _curve_with(curve, tokens, nll):
     return sorted(values, key=lambda point: point["tokens"])
 
 
-def train_candidate(study, candidate_id, target_tokens, device_name, deadline=None):
+def train_candidate(
+    study,
+    candidate_id,
+    target_tokens,
+    device_name,
+    deadline=None,
+    run_name=None,
+):
     store, settings, state, configs, candidate, architecture = _context(
         study, candidate_id
     )
-    device = _runtime(device_name, settings["seed"])
+    if run_name not in {None, "continuation", "independent"}:
+        raise ValueError("unknown final training run")
+    seed = settings["seed"]
+    if run_name == "independent":
+        seed += settings["final_seed_offset"]
+    device = _runtime(device_name, seed)
     tokenizer = get_tokenizer(**configs["tokenizer"])
     if (
         tokenizer.vocab_size != architecture.vocab_size
@@ -302,35 +324,63 @@ def train_candidate(study, candidate_id, target_tokens, device_name, deadline=No
     manifest = load_manifest(data_dir)
     manifest_hash = manifest_fingerprint(manifest)
     training = settings["training"]
-    if target_tokens not in settings["rungs"]:
+    if run_name is None and target_tokens not in settings["rungs"]:
         raise ValueError("search training target is not a rung")
+    if run_name is not None and target_tokens != settings["final_tokens"]:
+        raise ValueError("final training target must match the final horizon")
     if target_tokens % training["batch_tokens"]:
         raise ValueError("training target must align with optimizer batches")
 
-    model = _model(architecture, device, settings["seed"])
+    model = _model(architecture, device, seed)
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(
         training["learning_rate"],
         training["weight_decay"],
         training["optimizer"],
     )
-    checkpoint_dir = candidate / "checkpoint"
+    result_path = None
+    if run_name is None:
+        checkpoint_dir = candidate / "checkpoint"
+        result = next(
+            value for value in store.results() if value["candidate_id"] == candidate_id
+        )
+    else:
+        run_directory = candidate / "final" / run_name
+        checkpoint_dir = run_directory / "checkpoint"
+        result_path = run_directory / "result.json"
+        result = (
+            json.loads(result_path.read_text(encoding="utf-8"))
+            if result_path.is_file()
+            else {
+                "format_version": 1,
+                "run": run_name,
+                "seed": seed,
+                "status": "pending",
+                "trained_tokens": 0,
+                "nll_curve": [],
+                "final_nll": None,
+            }
+        )
     checkpoint_step = latest(checkpoint_dir)
+    load_directory = checkpoint_dir
+    if checkpoint_step is None and run_name == "continuation":
+        load_directory = candidate / "checkpoint"
+        checkpoint_step = latest(load_directory)
+        if checkpoint_step is None:
+            raise FileNotFoundError("final continuation requires a retained search checkpoint")
     start_step = 0
     data_state = None
     elapsed_training = 0.0
-    result = next(
-        value for value in store.results() if value["candidate_id"] == candidate_id
-    )
     curve = list(result.get("nll_curve", []))
     if checkpoint_step is not None:
         model_state, optimizer_state, metadata = load(
-            checkpoint_dir, checkpoint_step, device
+            load_directory, checkpoint_step, device
         )
         if (
             metadata["architecture_digest"] != architecture.digest
             or metadata["manifest"] != manifest_hash
             or metadata["training"] != training
+            or metadata.get("seed", settings["seed"]) != seed
         ):
             raise ValueError("candidate checkpoint does not match the study")
         model.load_state_dict(model_state)
@@ -357,9 +407,12 @@ def train_candidate(study, candidate_id, target_tokens, device_name, deadline=No
         data_dir=data_dir,
     )
     batch = next(train_data)
+    checkpoint_tokens = list(training["checkpoints"])
+    if run_name is not None:
+        checkpoint_tokens.extend((2 * settings["rungs"][-1], settings["final_tokens"]))
     checkpoints = {
         tokens // training["batch_tokens"]
-        for tokens in training["checkpoints"]
+        for tokens in checkpoint_tokens
         if start_step * training["batch_tokens"] < tokens <= target_tokens
     }
     checkpoints.add(target_step)
@@ -400,6 +453,17 @@ def train_candidate(study, candidate_id, target_tokens, device_name, deadline=No
             device,
         )
         curve = _curve_with(curve, trained_tokens, nll)
+        final_nll = result.get("final_nll")
+        if run_name is not None and trained_tokens == settings["final_tokens"]:
+            final_nll = evaluate_nll(
+                model,
+                tokenizer,
+                settings,
+                data_dir,
+                slices["final"]["offset"],
+                slices["final"]["tokens"],
+                device,
+            )
         metadata = {
             "format_version": 1,
             "step": completed,
@@ -409,7 +473,10 @@ def train_candidate(study, candidate_id, target_tokens, device_name, deadline=No
             "manifest": manifest_hash,
             "data_state": batch[2],
             "training": training,
+            "seed": seed,
+            "run": run_name,
             "nll_curve": curve,
+            "final_nll": final_nll,
             "training_seconds": elapsed_training,
         }
         save(
@@ -421,18 +488,122 @@ def train_candidate(study, candidate_id, target_tokens, device_name, deadline=No
         )
         prune_checkpoints(checkpoint_dir, {completed})
         complete = completed == target_step
-        store.update_result(
-            candidate_id,
-            status="ready" if complete else "running",
-            rung=trained_tokens if complete else result.get("rung", 0),
-            trained_tokens=trained_tokens,
-            nll_curve=curve,
-            training_seconds=elapsed_training,
-        )
-        if not complete and deadline is not None and time.time() >= deadline:
+        if run_name is None:
+            store.update_result(
+                candidate_id,
+                status="ready" if complete else "running",
+                rung=trained_tokens if complete else result.get("rung", 0),
+                trained_tokens=trained_tokens,
+                nll_curve=curve,
+                training_seconds=elapsed_training,
+            )
+        else:
+            result.update(
+                status="completed" if complete else "running",
+                trained_tokens=trained_tokens,
+                nll_curve=curve,
+                final_nll=final_nll,
+                training_seconds=elapsed_training,
+            )
+            atomic_json(result_path, result)
+        if run_name is None and not complete and deadline is not None and time.time() >= deadline:
             store.update_result(candidate_id, status="pending")
             return {"complete": False, "trained_tokens": trained_tokens}
     return {"complete": True, "trained_tokens": target_tokens}
+
+
+def final_profile_candidate(study, candidate_id, device_name):
+    store, settings, state, configs, candidate, architecture = _context(
+        study, candidate_id
+    )
+    device = _runtime(device_name, settings["profile"]["seed"])
+    if device.type != "cuda":
+        raise ValueError("final gpu profiles require cuda")
+    checkpoint_dir = candidate / "final" / "continuation" / "checkpoint"
+    step = latest(checkpoint_dir)
+    if step is None:
+        raise FileNotFoundError("final continuation checkpoint is missing")
+    model_state = load_model(checkpoint_dir, step, device)
+    model = SpeckForCausalLM(architecture).to(device)
+    model.load_state_dict(model_state)
+    final = settings["final_profile"]
+    gpu_contract = {
+        **settings["profile"],
+        "warmups": final["warmups"],
+        "requests": final["gpu_requests"],
+    }
+    eager = _measure_profile(model, architecture, gpu_contract, device)
+
+    length = min(32, architecture.max_position_embeddings)
+    fixture = torch.randint(
+        architecture.vocab_size,
+        (1, length),
+        device=device,
+        generator=torch.Generator(device=device).manual_seed(gpu_contract["seed"]),
+    )
+    model.eval()
+    with torch.inference_mode():
+        eager_output = model(fixture)
+        compiled = torch.compile(
+            model,
+            dynamic=False,
+            mode=final["compile_mode"],
+        )
+        synchronize(device)
+        started = time.perf_counter()
+        compiled_output = compiled(fixture)
+        synchronize(device)
+        compilation_seconds = time.perf_counter() - started
+    equivalent = torch.allclose(
+        eager_output,
+        compiled_output,
+        atol=final["absolute_tolerance"],
+        rtol=final["relative_tolerance"],
+    )
+    if not equivalent:
+        raise ValueError("eager and compiled finalist outputs differ")
+    compiled_profile = _measure_profile(
+        compiled, architecture, gpu_contract, device
+    )
+
+    cpu_threads = torch.get_num_threads()
+    torch.set_num_threads(final["cpu_threads"])
+    try:
+        cpu_model = SpeckForCausalLM(architecture)
+        cpu_model.load_state_dict(
+            {name: value.detach().cpu() for name, value in model_state.items()}
+        )
+        cpu_contract = {
+            **settings["profile"],
+            "device": "cpu",
+            "compute_dtype": "float32",
+            "warmups": final["warmups"],
+            "requests": final["cpu_requests"],
+        }
+        baseline_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        cpu = _measure_profile(
+            cpu_model,
+            architecture,
+            cpu_contract,
+            torch.device("cpu"),
+        )
+        peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        cpu["memory"].update(
+            baseline_rss_bytes=baseline_rss,
+            peak_rss_bytes=peak_rss,
+        )
+    finally:
+        torch.set_num_threads(cpu_threads)
+    result = {
+        "format_version": 1,
+        "eager_gpu": eager,
+        "compiled_gpu": compiled_profile,
+        "cpu": cpu,
+        "compilation_seconds": compilation_seconds,
+        "outputs_equivalent": equivalent,
+    }
+    atomic_json(candidate / "final" / "profile.json", result)
+    return result
 
 
 def study_directory(name):
@@ -806,6 +977,135 @@ def human_status(snapshot):
     return "\n".join(lines)
 
 
+def _final_efficiency(candidates):
+    paths = {
+        "prefill_512": ("profile", "eager_gpu", "latency", "prefill_512", "p50_seconds"),
+        "prefill_2048": ("profile", "eager_gpu", "latency", "prefill_2048", "p50_seconds"),
+        "decode_2048": ("profile", "eager_gpu", "latency", "decode_2048", "p50_seconds"),
+        "weight_bytes": ("search_profile", "static", "weight_bytes"),
+        "state_bytes": ("search_profile", "static", "state_bytes", "2048"),
+        "peak_vram": ("profile", "eager_gpu", "memory", "peak_vram_bytes"),
+    }
+
+    def value(candidate, path):
+        result = candidate
+        for key in path:
+            result = result[key]
+        return result
+
+    ranks = {
+        name: percentile_ranks(
+            {
+                candidate_id: value(candidate, path)
+                for candidate_id, candidate in candidates.items()
+            }
+        )
+        for name, path in paths.items()
+    }
+    scores = {}
+    for candidate_id in candidates:
+        latency = statistics.mean(
+            ranks[name][candidate_id]
+            for name in ("prefill_512", "prefill_2048", "decode_2048")
+        )
+        memory = statistics.mean(
+            ranks[name][candidate_id]
+            for name in ("weight_bytes", "state_bytes", "peak_vram")
+        )
+        scores[candidate_id] = (latency + memory) / 2
+    return scores
+
+
+def finalize_study(name, device):
+    directory = study_directory(name)
+    with study_lock(directory):
+        store = StudyStore(directory)
+        settings = store.settings()
+        roles_before = select_finalists(store.results())
+        candidates = {}
+        for candidate_id in sorted(set(roles_before.values())):
+            candidate = store.candidate_path(candidate_id)
+            for run_name in ("continuation", "independent"):
+                result_path = candidate / "final" / run_name / "result.json"
+                complete = (
+                    result_path.is_file()
+                    and json.loads(result_path.read_text(encoding="utf-8")).get("status")
+                    == "completed"
+                )
+                if not complete:
+                    run_child(
+                        _child_command(
+                            "final_train",
+                            store,
+                            candidate_id,
+                            device,
+                            run_name,
+                            settings["final_tokens"],
+                        )
+                    )
+            profile_path = candidate / "final" / "profile.json"
+            if not profile_path.is_file():
+                run_child(
+                    _child_command("final_profile", store, candidate_id, device)
+                )
+            runs = {
+                run_name: json.loads(
+                    (candidate / "final" / run_name / "result.json").read_text(
+                        encoding="utf-8"
+                    )
+                )
+                for run_name in ("continuation", "independent")
+            }
+            search_result = _record(store, candidate_id)
+            candidates[candidate_id] = {
+                "candidate_id": candidate_id,
+                "digest": search_result["digest"],
+                "search_scores": search_result["scores"],
+                "search_profile": search_result["profile"],
+                "verification": aggregate_final_runs(
+                    runs, settings["final_tokens"]
+                ),
+                "profile": json.loads(profile_path.read_text(encoding="utf-8")),
+            }
+
+        quality_values = {
+            candidate_id: candidate["verification"]["mean_final_nll"]
+            for candidate_id, candidate in candidates.items()
+        }
+        quality_ranks = percentile_ranks(quality_values)
+        efficiency = _final_efficiency(candidates)
+        balanced = {
+            candidate_id: (quality_ranks[candidate_id] + efficiency[candidate_id]) / 2
+            for candidate_id in candidates
+        }
+        roles_after = {
+            "quality": min(quality_values, key=lambda key: (quality_values[key], key)),
+            "balanced": min(balanced, key=lambda key: (balanced[key], key)),
+            "efficiency": min(efficiency, key=lambda key: (efficiency[key], key)),
+        }
+        report = {
+            "format_version": 1,
+            "generated_at": utc_now(),
+            "roles_before": roles_before,
+            "roles_after": roles_after,
+            "role_changes": {
+                lane: {
+                    "before": roles_before[lane],
+                    "after": roles_after[lane],
+                    "changed": roles_before[lane] != roles_after[lane],
+                }
+                for lane in ("quality", "balanced", "efficiency")
+            },
+            "candidates": candidates,
+        }
+        atomic_json(directory / "finalists.json", report)
+        state = store.state()
+        state["status"] = "finalized"
+        state["phase"] = "finalized"
+        store.write_state(state)
+        return report
+
+
 def parser():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -818,6 +1118,9 @@ def parser():
     status = commands.add_parser("status")
     status.add_argument("name")
     status.add_argument("--json", action="store_true")
+    finalize = commands.add_parser("finalize")
+    finalize.add_argument("name")
+    finalize.add_argument("--device", default="cuda")
     check = commands.add_parser("_check")
     check.add_argument("study")
     check.add_argument("candidate")
@@ -832,6 +1135,16 @@ def parser():
     train.add_argument("target", type=int)
     train.add_argument("--device", required=True)
     train.add_argument("--deadline", type=float, default=None)
+    final_train = commands.add_parser("_final_train")
+    final_train.add_argument("study")
+    final_train.add_argument("candidate")
+    final_train.add_argument("run", choices=("continuation", "independent"))
+    final_train.add_argument("target", type=int)
+    final_train.add_argument("--device", required=True)
+    final_profile = commands.add_parser("_final_profile")
+    final_profile.add_argument("study")
+    final_profile.add_argument("candidate")
+    final_profile.add_argument("--device", required=True)
     return parser
 
 
@@ -851,11 +1164,15 @@ def main():
         result = status_snapshot(StudyStore(study_directory(args.name)))
         print(json.dumps(result, indent=2, sort_keys=True) if args.json else human_status(result))
         return
+    if args.command == "finalize":
+        result = finalize_study(args.name, args.device)
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return
     if args.command == "_check":
         result = check_candidate(args.study, args.candidate, args.device)
     elif args.command == "_profile":
         result = profile_candidate(args.study, args.candidate, args.device)
-    else:
+    elif args.command == "_train":
         result = train_candidate(
             args.study,
             args.candidate,
@@ -863,6 +1180,16 @@ def main():
             args.device,
             args.deadline,
         )
+    elif args.command == "_final_train":
+        result = train_candidate(
+            args.study,
+            args.candidate,
+            args.target,
+            args.device,
+            run_name=args.run,
+        )
+    else:
+        result = final_profile_candidate(args.study, args.candidate, args.device)
     print(json.dumps(result, indent=2, sort_keys=True))
 
 
