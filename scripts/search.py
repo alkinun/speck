@@ -1,23 +1,41 @@
 """run resumable architecture searches."""
 
 import argparse
+import fcntl
 import json
+import shutil
 import statistics
+import subprocess
+import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import torch
 
 from speck.architecture import ArchitectureConfig
 from speck.checkpoint import latest, load, save
+from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import default_data_dir, load_manifest
 from speck.model import SpeckForCausalLM
 from speck.search import (
     StudyStore,
+    architecture_metrics,
+    initial_generation,
+    later_generation,
+    load_search_settings,
     loader_state,
+    materialize_generation,
+    normalize_baseline,
+    open_study,
+    promotion_for_rung,
     prune_checkpoints,
+    retained_checkpoint_candidates,
+    score_candidates,
+    status_snapshot,
+    utc_now,
     validation_slices,
 )
 from speck.tokenizer import get_tokenizer
@@ -417,9 +435,389 @@ def train_candidate(study, candidate_id, target_tokens, device_name, deadline=No
     return {"complete": True, "trained_tokens": target_tokens}
 
 
-def private_parser():
+def study_directory(name):
+    if not name or Path(name).name != name:
+        raise ValueError("study name must be one path component")
+    return Path(base_dir()) / "search" / name
+
+
+@contextmanager
+def study_lock(directory):
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / ".lock"
+    with path.open("a+", encoding="utf-8") as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise RuntimeError("study already has a running coordinator") from error
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def run_child(command):
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.returncode:
+        error = subprocess.CalledProcessError(
+            result.returncode,
+            command,
+            output=result.stdout,
+            stderr=result.stderr,
+        )
+        raise error
+    return json.loads(result.stdout)
+
+
+def _child_command(action, store, candidate_id, device, *arguments):
+    return [
+        sys.executable,
+        "-m",
+        "scripts.search",
+        f"_{action}",
+        str(store.directory),
+        candidate_id,
+        *(str(argument) for argument in arguments),
+        "--device",
+        device,
+    ]
+
+
+def _failure(error):
+    text = "\n".join(
+        value
+        for value in (
+            getattr(error, "stderr", None),
+            getattr(error, "stdout", None),
+            str(error),
+        )
+        if value
+    ).strip()
+    lowered = text.lower()
+    if "out of memory" in lowered:
+        kind = "oom"
+    elif "non-finite" in lowered or "not finite" in lowered:
+        kind = "non_finite"
+    else:
+        kind = "runtime"
+    return {
+        "type": kind,
+        "message": text[-8000:],
+        "recorded_at": utc_now(),
+    }
+
+
+def _deadline(store, started):
+    state = store.state()
+    hours = state["limits"].get("hours", 0)
+    if not hours:
+        return None
+    remaining = hours * 3600 - state["elapsed_seconds"]
+    return time.time() + max(0.0, remaining - (time.perf_counter() - started))
+
+
+def _budget_expired(store, started):
+    state = store.state()
+    hours = state["limits"].get("hours", 0)
+    return bool(
+        hours
+        and state["elapsed_seconds"] + time.perf_counter() - started >= hours * 3600
+    )
+
+
+def _record(store, candidate_id):
+    return next(
+        result
+        for result in store.results()
+        if result["candidate_id"] == candidate_id
+    )
+
+
+def _run_candidate(store, candidate_id, target, device, started):
+    state = store.state()
+    state["current_candidate"] = candidate_id
+    store.write_state(state)
+    current = _record(store, candidate_id)
+    store.update_result(candidate_id, status="running", error=None)
+    try:
+        if current.get("feasibility", {}).get("status") != "passed":
+            run_child(_child_command("check", store, candidate_id, device))
+        current = _record(store, candidate_id)
+        if "latency" not in (current.get("profile") or {}):
+            run_child(_child_command("profile", store, candidate_id, device))
+        command = _child_command("train", store, candidate_id, device, target)
+        deadline = _deadline(store, started)
+        if deadline is not None:
+            command.extend(("--deadline", str(deadline)))
+        run_child(command)
+    except (subprocess.CalledProcessError, RuntimeError, ValueError) as error:
+        store.update_result(candidate_id, status="failed", error=_failure(error))
+        prune_checkpoints(store.candidate_path(candidate_id) / "checkpoint")
+    finally:
+        state = store.state()
+        state["current_candidate"] = None
+        store.write_state(state)
+    return _record(store, candidate_id)
+
+
+def _generation_results(store, generation):
+    return [
+        result
+        for result in store.results()
+        if result["generation"] == generation
+    ]
+
+
+def _check_generation_space(store, plans, settings):
+    checkpoint_bytes = sum(
+        architecture_metrics(plan.architecture, settings)["weight_bytes"] * 4
+        for plan in plans
+    )
+    free = shutil.disk_usage(store.directory).free
+    if free < checkpoint_bytes:
+        raise OSError(
+            f"search generation needs {checkpoint_bytes} checkpoint bytes but only {free} are free"
+        )
+
+
+def _plan_generation(store, baseline, settings, generation):
+    all_results = store.results()
+    current = _generation_results(store, generation)
+    if len(current) == settings["generation_size"]:
+        state = store.state()
+        state["phase"] = "screen"
+        store.write_state(state)
+        return current
+    existing = [
+        result for result in all_results if result["generation"] != generation
+    ]
+    if generation == 0:
+        plans = initial_generation(
+            baseline,
+            settings,
+            existing_digests=(result["digest"] for result in existing),
+        )
+    else:
+        architectures = store.architectures()
+        archive = []
+        for result in existing:
+            if result.get("trained_tokens", 0) >= settings["rungs"][1]:
+                archive.append(
+                    {
+                        **result,
+                        "architecture": architectures[result["candidate_id"]].settings(),
+                    }
+                )
+        plans = later_generation(
+            normalize_baseline(baseline, settings),
+            archive,
+            settings,
+            generation,
+            existing_digests=(result["digest"] for result in existing),
+        )
+    _check_generation_space(store, plans, settings)
+    return materialize_generation(store, plans, generation, settings)
+
+
+def _score_rung(store, generation, rung, next_horizon):
+    cohort = [
+        result
+        for result in _generation_results(store, generation)
+        if result["status"] != "failed" and result.get("rung", 0) >= rung
+    ]
+    scored = score_candidates(cohort, next_horizon)
+    for result in scored:
+        scores_by_rung = dict(result.get("scores_by_rung", {}))
+        scores_by_rung[str(rung)] = result["scores"]
+        store.update_result(
+            result["candidate_id"],
+            forecast=result.get("forecast"),
+            scores=result["scores"],
+            scores_by_rung=scores_by_rung,
+        )
+    return [_record(store, result["candidate_id"]) for result in scored]
+
+
+def _promote(store, cohort, winners):
+    winner_ids = {result["candidate_id"] for result in winners}
+    for result in cohort:
+        candidate_id = result["candidate_id"]
+        if candidate_id in winner_ids:
+            store.update_result(candidate_id, status="pending")
+        else:
+            store.update_result(candidate_id, status="completed")
+            prune_checkpoints(store.candidate_path(candidate_id) / "checkpoint")
+
+
+def _run_phase(store, settings, generation, phase, device, started):
+    index = {"screen": 0, "develop": 1, "confirm": 2}[phase]
+    target = settings["rungs"][index]
+    candidates = _generation_results(store, generation)
+    for result in candidates:
+        if result["status"] == "failed" or result.get("rung", 0) >= target:
+            continue
+        if result["status"] not in {"pending", "running"}:
+            continue
+        if _budget_expired(store, started):
+            return False
+        updated = _run_candidate(
+            store, result["candidate_id"], target, device, started
+        )
+        if updated["status"] == "pending" and updated.get("rung", 0) < target:
+            return False
+    candidates = _generation_results(store, generation)
+    if any(
+        result["status"] in {"pending", "running"}
+        and result.get("rung", 0) < target
+        for result in candidates
+    ):
+        return False
+    next_horizon = (
+        settings["rungs"][index + 1]
+        if index + 1 < len(settings["rungs"])
+        else settings["final_tokens"]
+    )
+    scored = _score_rung(store, generation, target, next_horizon)
+    if phase != "confirm":
+        winners = promotion_for_rung(scored, settings, target)
+        _promote(store, scored, winners)
+        state = store.state()
+        state["phase"] = "develop" if phase == "screen" else "confirm"
+        store.write_state(state)
+        return True
+    for result in scored:
+        store.update_result(result["candidate_id"], status="confirmed")
+    retained = retained_checkpoint_candidates(
+        [result for result in store.results() if result["status"] == "confirmed"]
+    )
+    for result in store.results():
+        if result["status"] != "confirmed":
+            continue
+        checkpoint_dir = store.candidate_path(result["candidate_id"]) / "checkpoint"
+        step = latest(checkpoint_dir)
+        keep = {step} if result["candidate_id"] in retained and step is not None else set()
+        prune_checkpoints(checkpoint_dir, keep)
+    state = store.state()
+    state["phase"] = "complete"
+    state["completed_generations"] = state.get("completed_generations", 0) + 1
+    store.write_state(state)
+    return True
+
+
+def run_study(experiment, name, hours, generations, device):
+    directory = study_directory(name)
+    settings = load_search_settings(Path(experiment) / "search.json")
+    configs = load_experiment(experiment, "model")
+    baseline = ArchitectureConfig.from_dict(configs["model"])
+    started = time.perf_counter()
+    with study_lock(directory):
+        store = open_study(directory, experiment, settings, hours, generations)
+        state = store.state()
+        state["status"] = "running"
+        state.setdefault("completed_generations", 0)
+        store.write_state(state)
+        try:
+            while True:
+                state = store.state()
+                if _budget_expired(store, started):
+                    state["status"] = "stopped"
+                    store.write_state(state)
+                    break
+                generation_limit = state["limits"].get("generations", 0)
+                if state["phase"] == "complete":
+                    if generation_limit and state["completed_generations"] >= generation_limit:
+                        state["status"] = "stopped"
+                        store.write_state(state)
+                        break
+                    state["generation"] += 1
+                    state["phase"] = "planning"
+                    store.write_state(state)
+                if state["phase"] == "planning":
+                    _plan_generation(store, baseline, settings, state["generation"])
+                    continue
+                if state["phase"] in {"screen", "develop", "confirm"}:
+                    progressed = _run_phase(
+                        store,
+                        settings,
+                        state["generation"],
+                        state["phase"],
+                        device,
+                        started,
+                    )
+                    if not progressed:
+                        state = store.state()
+                        state["status"] = "stopped"
+                        store.write_state(state)
+                        break
+                    continue
+                raise RuntimeError(f"unknown search phase: {state['phase']}")
+        except BaseException:
+            state = store.state()
+            state["status"] = "failed"
+            state["current_candidate"] = None
+            store.write_state(state)
+            raise
+        finally:
+            state = store.state()
+            state["elapsed_seconds"] += time.perf_counter() - started
+            store.write_state(state)
+    return status_snapshot(store)
+
+
+def human_status(snapshot):
+    lines = [
+        f"study {snapshot['status']} | phase {snapshot['phase']} | {snapshot['elapsed_seconds'] / 3600:.2f} hours",
+        f"generation {snapshot['generation']} | current {snapshot['current_candidate']['candidate_id'] if snapshot['current_candidate'] else 'none'}",
+    ]
+    status_counts = ", ".join(
+        f"{name} {count}" for name, count in snapshot["counts"]["status"].items()
+    )
+    rung_counts = ", ".join(
+        f"{name} {count}" for name, count in snapshot["counts"]["rung"].items()
+    )
+    lines.append(f"status counts | {status_counts or 'none'}")
+    lines.append(f"rung counts | {rung_counts or 'none'}")
+    for lane in ("quality", "balanced", "efficiency"):
+        leader = snapshot["leaders"].get(lane)
+        if leader:
+            lines.append(
+                f"{lane} leader | {leader['candidate_id']} | score {leader['score']:.4f}"
+            )
+    current = snapshot["current_candidate"]
+    if current:
+        if current.get("nll_curve"):
+            point = current["nll_curve"][-1]
+            lines.append(f"current nll | {point['nll']:.5f} at {point['tokens']} tokens")
+        if current.get("forecast"):
+            lines.append(
+                f"projected nll | {current['forecast']['projected_nll']:.5f} at {current['forecast']['projected_tokens']} tokens"
+            )
+        profile = current.get("profile") or {}
+        if "latency" in profile:
+            lines.append(
+                f"prefill 2048 p50 | {profile['latency']['prefill_2048']['p50_seconds']:.6f} seconds"
+            )
+        if profile.get("memory", {}).get("peak_vram_bytes") is not None:
+            lines.append(
+                f"peak vram | {profile['memory']['peak_vram_bytes']} bytes"
+            )
+    lines.append(f"retained checkpoints | {snapshot['checkpoint_bytes']} bytes")
+    return "\n".join(lines)
+
+
+def parser():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    run = commands.add_parser("run")
+    run.add_argument("experiment")
+    run.add_argument("--name", required=True)
+    run.add_argument("--hours", type=float, default=None)
+    run.add_argument("--generations", type=int, default=None)
+    run.add_argument("--device", default="cuda")
+    status = commands.add_parser("status")
+    status.add_argument("name")
+    status.add_argument("--json", action="store_true")
     check = commands.add_parser("_check")
     check.add_argument("study")
     check.add_argument("candidate")
@@ -438,7 +836,21 @@ def private_parser():
 
 
 def main():
-    args = private_parser().parse_args()
+    args = parser().parse_args()
+    if args.command == "run":
+        result = run_study(
+            args.experiment,
+            args.name,
+            args.hours,
+            args.generations,
+            args.device,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return
+    if args.command == "status":
+        result = status_snapshot(StudyStore(study_directory(args.name)))
+        print(json.dumps(result, indent=2, sort_keys=True) if args.json else human_status(result))
+        return
     if args.command == "_check":
         result = check_candidate(args.study, args.candidate, args.device)
     elif args.command == "_profile":
