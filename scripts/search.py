@@ -374,6 +374,7 @@ def train_candidate(
     data_state = None
     elapsed_training = 0.0
     curve = list(result.get("nll_curve", []))
+    metadata = None
     if checkpoint_step is not None:
         model_state, optimizer_state, metadata = load(
             load_directory, checkpoint_step, device
@@ -399,6 +400,31 @@ def train_candidate(
     target_step = target_tokens // training["batch_tokens"]
     if start_step > target_step:
         raise ValueError("candidate checkpoint exceeds the requested rung")
+    if metadata is not None:
+        trained_tokens = metadata["trained_tokens"]
+        complete = start_step == target_step
+        if run_name is None:
+            result = store.update_result(
+                candidate_id,
+                status="ready" if complete else "running",
+                rung=trained_tokens
+                if trained_tokens in settings["rungs"]
+                else result.get("rung", 0),
+                trained_tokens=trained_tokens,
+                nll_curve=curve,
+                training_seconds=elapsed_training,
+            )
+        else:
+            result.update(
+                status="completed" if complete else "running",
+                trained_tokens=trained_tokens,
+                nll_curve=curve,
+                final_nll=metadata.get("final_nll"),
+                training_seconds=elapsed_training,
+            )
+            atomic_json(result_path, result)
+        if complete:
+            return {"complete": True, "trained_tokens": trained_tokens}
     train_data = packed_loader(
         tokenizer,
         training["device_batch_size"],
