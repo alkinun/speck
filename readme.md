@@ -87,4 +87,4 @@ Use `--mode end-to-end` with `--data-dir` to include packed-data loading. Warmup
 uv run --extra cpu --group dev pytest -q
 ```
 
-Architecture search is intentionally absent while a smaller evolutionary design is specified.
+Architecture search is intentionally absent while the compact evolutionary design in `docs/search.md` is reviewed and implemented.
