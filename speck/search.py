@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import random
+import statistics
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -1032,5 +1033,311 @@ def initial_generation(baseline, settings, existing_digests=()):
         )
     while len(plans) < settings["generation_size"]:
         architecture = _unique_random(normalized, settings, rng, seen)
+        plans.append(CandidatePlan(architecture, None, {"name": "random"}))
+    return tuple(plans)
+
+
+def _regression(points):
+    if len(points) < 3:
+        raise ValueError("learning-curve regression requires three points")
+    selected = sorted(points, key=lambda point: point["tokens"])[-3:]
+    x = [math.log2(point["tokens"]) for point in selected]
+    y = [float(point["nll"]) for point in selected]
+    if any(not math.isfinite(value) for value in y):
+        raise ValueError("learning-curve nll values must be finite")
+    x_mean = statistics.mean(x)
+    y_mean = statistics.mean(y)
+    denominator = sum((value - x_mean) ** 2 for value in x)
+    slope = sum((x_value - x_mean) * (y_value - y_mean) for x_value, y_value in zip(x, y))
+    slope /= denominator
+    intercept = y_mean - slope * x_mean
+    residual = sum(
+        (y_value - (intercept + slope * x_value)) ** 2
+        for x_value, y_value in zip(x, y)
+    )
+    total = sum((value - y_mean) ** 2 for value in y)
+    r_squared = 0.0 if total == 0 else max(0.0, min(1.0, 1 - residual / total))
+    return {
+        "measured_slope": slope,
+        "r_squared": r_squared,
+        "current_tokens": selected[-1]["tokens"],
+        "current_nll": y[-1],
+        "fit_tokens": [point["tokens"] for point in selected],
+    }
+
+
+def project_learning_curve(points, next_horizon, median_slope):
+    estimate = _regression(points)
+    effective_slope = (
+        estimate["r_squared"] * estimate["measured_slope"]
+        + (1 - estimate["r_squared"]) * median_slope
+    )
+    projected_nll = estimate["current_nll"] + effective_slope * math.log2(
+        next_horizon / estimate["current_tokens"]
+    )
+    return {
+        **estimate,
+        "median_slope": median_slope,
+        "effective_slope": effective_slope,
+        "projected_tokens": next_horizon,
+        "projected_nll": projected_nll,
+    }
+
+
+def percentile_ranks(values):
+    if not values:
+        return {}
+    if len(values) == 1:
+        return {next(iter(values)): 0.0}
+    ranks = {}
+    for key, value in values.items():
+        lower = sum(other < value for other in values.values())
+        tied = sum(other == value for other in values.values())
+        ranks[key] = (lower + (tied - 1) / 2) / (len(values) - 1)
+    return ranks
+
+
+def _record_key(record):
+    return str(record.get("candidate_id", record.get("id")))
+
+
+def _metric(record, *path):
+    value = record
+    for key in path:
+        if not isinstance(value, dict) or key not in value:
+            return None
+        value = value[key]
+    if not isinstance(value, (int, float)) or not math.isfinite(value):
+        return None
+    return float(value)
+
+
+def score_candidates(records, next_horizon):
+    scored = [_copy_json(record) for record in records]
+    estimates = {}
+    for record in scored:
+        if record.get("status") == "failed":
+            continue
+        curve = record.get("nll_curve", [])
+        if len(curve) >= 3:
+            estimates[_record_key(record)] = _regression(curve)
+    if not estimates:
+        return scored
+    median_slope = statistics.median(
+        estimate["measured_slope"] for estimate in estimates.values()
+    )
+    for record in scored:
+        key = _record_key(record)
+        if key in estimates:
+            record["forecast"] = project_learning_curve(
+                record["nll_curve"], next_horizon, median_slope
+            )
+
+    current = {
+        _record_key(record): record["forecast"]["current_nll"]
+        for record in scored
+        if "forecast" in record
+    }
+    projected = {
+        _record_key(record): record["forecast"]["projected_nll"]
+        for record in scored
+        if "forecast" in record
+    }
+    current_ranks = percentile_ranks(current)
+    projected_ranks = percentile_ranks(projected)
+    for record in scored:
+        key = _record_key(record)
+        if key in current_ranks:
+            record.setdefault("scores", {})["quality"] = (
+                current_ranks[key] + projected_ranks[key]
+            ) / 2
+
+    profile_metrics = {
+        "prefill_512": ("profile", "latency", "prefill_512", "p50_seconds"),
+        "prefill_2048": ("profile", "latency", "prefill_2048", "p50_seconds"),
+        "decode_2048": ("profile", "latency", "decode_2048", "p50_seconds"),
+        "weight_bytes": ("profile", "static", "weight_bytes"),
+        "state_bytes_2048": ("profile", "static", "state_bytes", "2048"),
+        "peak_vram": ("profile", "memory", "peak_vram_bytes"),
+    }
+    ranks = {}
+    for name, path in profile_metrics.items():
+        values = {
+            _record_key(record): value
+            for record in scored
+            if (value := _metric(record, *path)) is not None
+        }
+        ranks[name] = percentile_ranks(values)
+
+    for record in scored:
+        key = _record_key(record)
+        if not all(key in ranks[name] for name in profile_metrics):
+            continue
+        latency = statistics.mean(
+            ranks[name][key]
+            for name in ("prefill_512", "prefill_2048", "decode_2048")
+        )
+        memory = statistics.mean(
+            ranks[name][key]
+            for name in ("weight_bytes", "state_bytes_2048", "peak_vram")
+        )
+        scores = record.setdefault("scores", {})
+        scores.update(
+            latency=latency,
+            memory=memory,
+            efficiency=(latency + memory) / 2,
+        )
+        if "quality" in scores:
+            scores["balanced"] = (scores["quality"] + scores["efficiency"]) / 2
+    return scored
+
+
+def _eligible_records(records, lane):
+    return [
+        record
+        for record in records
+        if record.get("status") != "failed"
+        and math.isfinite(record.get("scores", {}).get(lane, math.nan))
+    ]
+
+
+def lane_leaders(records):
+    leaders = {}
+    for lane in ("quality", "balanced", "efficiency"):
+        eligible = _eligible_records(records, lane)
+        if eligible:
+            leaders[lane] = min(
+                eligible,
+                key=lambda record: (record["scores"][lane], _record_key(record)),
+            )
+    return leaders
+
+
+def select_promotions(records, lane_counts):
+    requested = sum(lane_counts.values())
+    winners = []
+    for lane in ("quality", "balanced", "efficiency"):
+        ordered = sorted(
+            _eligible_records(records, lane),
+            key=lambda record: (record["scores"][lane], _record_key(record)),
+        )
+        winners.extend(ordered[: lane_counts.get(lane, 0)])
+    selected = []
+    selected_keys = set()
+    for record in winners:
+        key = _record_key(record)
+        if key not in selected_keys:
+            selected.append(record)
+            selected_keys.add(key)
+    balanced = sorted(
+        _eligible_records(records, "balanced"),
+        key=lambda record: (record["scores"]["balanced"], _record_key(record)),
+    )
+    for record in balanced:
+        if len(selected) == requested:
+            break
+        key = _record_key(record)
+        if key not in selected_keys:
+            selected.append(record)
+            selected_keys.add(key)
+    if len(selected) != requested:
+        raise RuntimeError("not enough eligible candidates for promotion")
+    return tuple(selected)
+
+
+def promotion_for_rung(records, settings, rung):
+    if rung == settings["rungs"][0]:
+        return select_promotions(records, {"quality": 2, "balanced": 1, "efficiency": 1})
+    if rung == settings["rungs"][1]:
+        return select_promotions(records, {"quality": 1, "balanced": 1, "efficiency": 1})
+    raise ValueError("the final search rung is not promoted")
+
+
+def _parent_scores(record, parent_rung):
+    stored = record.get("scores_by_rung", {}).get(str(parent_rung))
+    return stored if stored is not None else record.get("scores", {})
+
+
+def select_parent(records, settings, seed):
+    rng = _rng(seed)
+    parent_rung = settings["rungs"][1]
+    eligible = [
+        record
+        for record in records
+        if record.get("status") != "failed"
+        and record.get("trained_tokens", record.get("rung", 0)) >= parent_rung
+        and all(
+            math.isfinite(_parent_scores(record, parent_rung).get(lane, math.nan))
+            for lane in ("quality", "balanced", "efficiency")
+        )
+    ]
+    if not eligible:
+        raise RuntimeError("the parent pool has no eligible candidates")
+    lane = _weighted_choice(rng, settings["parent_lane_probabilities"])
+    ordered = sorted(
+        eligible,
+        key=lambda record: (
+            _parent_scores(record, parent_rung)[lane],
+            _record_key(record),
+        ),
+    )
+    top_half = ordered[: max(1, math.ceil(len(ordered) / 2))]
+    tournament = [rng.choice(top_half) for _ in range(3)]
+    parent = min(
+        tournament,
+        key=lambda record: (
+            _parent_scores(record, parent_rung)[lane],
+            _record_key(record),
+        ),
+    )
+    return parent, lane
+
+
+def _record_architecture(record):
+    architecture = record["architecture"]
+    return (
+        architecture
+        if isinstance(architecture, ArchitectureConfig)
+        else ArchitectureConfig.from_dict(architecture)
+    )
+
+
+def later_generation(template, archive, settings, generation, existing_digests=()):
+    if generation < 1:
+        raise ValueError("later generations begin at one")
+    rng = random.Random(derived_seed(settings["seed"], "generation", generation))
+    seen = set(existing_digests)
+    seen.update(record["digest"] for record in archive)
+    plans = []
+    child_count = settings["generation_size"] - settings["random_immigrants"]
+    for _ in range(child_count):
+        result = None
+        parent = None
+        lane = None
+        for _ in range(settings["mutation_attempts"]):
+            parent, lane = select_parent(archive, settings, rng)
+            try:
+                candidate = mutate_architecture(
+                    _record_architecture(parent), settings, rng, attempts=1
+                )
+            except InapplicableMutation:
+                continue
+            if candidate.architecture.digest not in seen:
+                result = candidate
+                break
+        if result is None:
+            architecture = _unique_random(template, settings, rng, seen)
+            plans.append(CandidatePlan(architecture, None, {"name": "random"}))
+            continue
+        seen.add(result.architecture.digest)
+        plans.append(
+            CandidatePlan(
+                result.architecture,
+                parent["digest"],
+                {"name": result.name, "parent_lane": lane, **result.details},
+            )
+        )
+    for _ in range(settings["random_immigrants"]):
+        architecture = _unique_random(template, settings, rng, seen)
         plans.append(CandidatePlan(architecture, None, {"name": "random"}))
     return tuple(plans)
