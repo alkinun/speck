@@ -1,0 +1,20 @@
+{
+  "batch_tokens": 40960,
+  "device_batch_size": 10,
+  "eval_every": 488,
+  "eval_tokens": 5000000,
+  "final_eval_tokens": 20000000,
+  "grad_clip": 1.0,
+  "log_every": 10,
+  "lr": 0.0015,
+  "min_lr": 0.1,
+  "optimizer": "muon",
+  "output_dir": null,
+  "run": "speck01-50m",
+  "save_every": 4883,
+  "sequence_length": 2048,
+  "train_tokens": 2400000000,
+  "wandb_project": "speck",
+  "warmup_steps": 512,
+  "weight_decay": 0.1
+}
