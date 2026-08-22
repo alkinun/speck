@@ -36,9 +36,11 @@ source .venv/bin/activate.fish
 
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
-- `experiments/speck00-200m` is the 182,206,848-parameter baseline and architecture-search configuration.
-- `experiments/speck00-50m` is the 48,769,856-parameter efficiency finalist.
-- `experiments/speck00-160m` is the 156,984,832-parameter balanced finalist.
+- `experiments/Speck1-200M` is the 182,206,848-parameter baseline and architecture-search configuration.
+- `experiments/Speck1-50M` is the 48,769,856-parameter efficiency finalist.
+- `experiments/Speck1-160M` is the 156,984,832-parameter balanced finalist.
+
+Model names follow `Speck<generation>-<size>`, with an optional decimal generation for intermediate families. For example, the convention extends naturally from `Speck1-50M` to `Speck1.5-50M`.
 
 A search-capable experiment directory contains five JSON files:
 
@@ -61,7 +63,7 @@ Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak
 Download and verify the tokenizer configured by an experiment:
 
 ```bash
-python -m scripts.tokenizer_prepare experiments/speck00-50m
+python -m scripts.tokenizer_prepare experiments/Speck1-50M
 ```
 
 ## Data
@@ -69,7 +71,7 @@ python -m scripts.tokenizer_prepare experiments/speck00-50m
 Download, filter, tokenize, and pack the configured dataset:
 
 ```bash
-python -m scripts.data_prepare experiments/speck00-50m
+python -m scripts.data_prepare experiments/Speck1-50M
 ```
 
 Preparation writes train and validation shards plus a manifest. If an incomplete `.building` directory exists, pass `--restart` to replace that partial build. A completed output directory is not overwritten.
@@ -80,7 +82,7 @@ Authenticate with Weights & Biases, then start a single-GPU run:
 
 ```bash
 wandb login
-python -m scripts.base_train experiments/speck00-50m
+python -m scripts.base_train experiments/Speck1-50M
 ```
 
 Weights & Biases logging is enabled unless `train.run` is `dummy`. Checkpoints remain local; Speck does not upload training checkpoints to Hugging Face.
@@ -89,7 +91,7 @@ Launch distributed data-parallel training with `torchrun`:
 
 ```bash
 torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
-  experiments/speck00-50m
+  experiments/Speck1-50M
 ```
 
 `train.batch_tokens` must be divisible by `device_batch_size * sequence_length * world_size`. Adjust the training configuration for the available devices before launching.
@@ -97,7 +99,7 @@ torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
 Existing checkpoints are never resumed implicitly. A run fails rather than overwrite them unless an exact checkpoint step is supplied:
 
 ```bash
-python -m scripts.base_train experiments/speck00-50m --resume <checkpoint-step>
+python -m scripts.base_train experiments/Speck1-50M --resume <checkpoint-step>
 ```
 
 Resume validates the architecture, packed-data manifest, optimizer settings, batch geometry, training horizon, and world size. It restores the optimizer, data position, elapsed time, and W&B run identity.
@@ -108,7 +110,7 @@ Generate from the latest checkpoint, or select one with `--step`:
 
 ```bash
 python -m scripts.infer "The meaning of life is" \
-  --experiment experiments/speck00-50m
+  --experiment experiments/Speck1-50M
 ```
 
 Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, and `--checkpoint-dir`.
@@ -118,7 +120,7 @@ Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, 
 Measure compiled optimization steps with synthetic input:
 
 ```bash
-python -m scripts.benchmark experiments/speck00-50m \
+python -m scripts.benchmark experiments/Speck1-50M \
   --mode compute \
   --output benchmark.json
 ```
@@ -136,7 +138,7 @@ uv run --extra cpu --group dev pytest -q
 Search uses the baseline experiment and stores a resumable study under `~/.cache/speck/search/<name>`:
 
 ```bash
-python -m scripts.search run experiments/speck00-200m \
+python -m scripts.search run experiments/Speck1-200M \
   --name evolution-01 \
   --hours 3
 

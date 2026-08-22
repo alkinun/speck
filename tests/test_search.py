@@ -51,7 +51,7 @@ from speck.search import (
 )
 
 root = Path(__file__).parents[1]
-experiment = root / "experiments" / "speck00-200m"
+experiment = root / "experiments" / "Speck1-200M"
 
 
 def tiny_settings():

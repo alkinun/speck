@@ -13,7 +13,7 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 
-experiment = Path(__file__).parents[1] / "experiments" / "speck00-200m"
+experiment = Path(__file__).parents[1] / "experiments" / "Speck1-200M"
 
 
 def test_main_architecture_round_trips():

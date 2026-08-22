@@ -14,7 +14,7 @@ from speck.architecture import (
 )
 from speck.model import CombinedOptimizer, SpeckForCausalLM, build_model
 
-experiment = Path(__file__).parents[1] / "experiments" / "speck00-200m"
+experiment = Path(__file__).parents[1] / "experiments" / "Speck1-200M"
 
 
 def model_with(*stages, repeat=1, sharing="none"):
