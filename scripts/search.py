@@ -810,6 +810,30 @@ def _score_rung(store, generation, rung, next_horizon):
     return [_record(store, result["candidate_id"]) for result in scored]
 
 
+def _rescore_archive(store, rung, next_horizon, update_current=False):
+    evidence = []
+    for result in store.results():
+        if result["status"] == "failed" or result.get("trained_tokens", 0) < rung:
+            continue
+        value = json.loads(json.dumps(result))
+        value["nll_curve"] = [
+            point for point in value["nll_curve"] if point["tokens"] <= rung
+        ]
+        evidence.append(value)
+    scored = score_candidates(evidence, next_horizon)
+    for result in scored:
+        scores_by_rung = dict(result.get("scores_by_rung", {}))
+        scores_by_rung[str(rung)] = result["scores"]
+        changes = {"scores_by_rung": scores_by_rung}
+        if update_current:
+            changes.update(
+                forecast=result.get("forecast"),
+                scores=result["scores"],
+            )
+        store.update_result(result["candidate_id"], **changes)
+    return scored
+
+
 def _promote(store, cohort, winners):
     winner_ids = {result["candidate_id"] for result in winners}
     for result in cohort:
@@ -859,6 +883,17 @@ def _run_phase(store, settings, generation, phase, device, started):
         return True
     for result in scored:
         store.update_result(result["candidate_id"], status="confirmed")
+    _rescore_archive(
+        store,
+        settings["rungs"][1],
+        settings["rungs"][2],
+    )
+    _rescore_archive(
+        store,
+        settings["rungs"][2],
+        settings["final_tokens"],
+        update_current=True,
+    )
     retained = retained_checkpoint_candidates(
         [result for result in store.results() if result["status"] == "confirmed"]
     )
