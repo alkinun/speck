@@ -12,7 +12,11 @@ The model is defined as groups of residual blocks. Blocks contain ordered stages
 - immediate repetition with optional weight sharing
 - heterogeneous block widths and attention head dimensions
 
-`experiments/speck00-200m/model.json` defines the checked-in 182,206,848-parameter model.
+checked-in experiments use `speck<version>-<size>` names. `00` is the initial architecture-family version and the size is the approximate parameter class:
+
+- `experiments/speck00-50m` contains the 48,769,856-parameter efficiency finalist
+- `experiments/speck00-160m` contains the 156,984,832-parameter balanced finalist
+- `experiments/speck00-200m` contains the original 182,206,848-parameter baseline and search configuration
 
 ## setup
 
@@ -39,8 +43,11 @@ python -m scripts.data_prepare experiments/speck00-200m
 
 ```bash
 wandb login
-python -m scripts.base_train experiments/speck00-200m
+python -m scripts.base_train experiments/speck00-50m
+python -m scripts.base_train experiments/speck00-160m
 ```
+
+run one experiment at a time on a single gpu. checkpoints use the matching names under `~/.cache/speck/checkpoints/`.
 
 Experiment configuration is split into four explicit JSON files:
 
@@ -87,4 +94,15 @@ Use `--mode end-to-end` with `--data-dir` to include packed-data loading. Warmup
 uv run --extra cpu --group dev pytest -q
 ```
 
-Architecture search is intentionally absent while the compact evolutionary design in `docs/search.md` is reviewed and implemented.
+## architecture search
+
+```bash
+python -m scripts.search run experiments/speck00-200m \
+  --name evolution-01 \
+  --hours 3
+
+python -m scripts.search status evolution-01
+python -m scripts.search finalize evolution-01
+```
+
+the search implementation and comparison protocol are documented in `docs/search.md`.

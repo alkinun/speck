@@ -10,7 +10,7 @@
   "min_lr": 0.1,
   "optimizer": "muon",
   "output_dir": null,
-  "run": "speck02-160m",
+  "run": "speck00-160m",
   "save_every": 4883,
   "sequence_length": 2048,
   "train_tokens": 2400000000,
