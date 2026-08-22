@@ -3,8 +3,11 @@
 import hashlib
 import json
 import math
+import os
 import random
+import re
 import statistics
+from datetime import datetime, timezone
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -1341,3 +1344,326 @@ def later_generation(template, archive, settings, generation, existing_digests=(
         architecture = _unique_random(template, settings, rng, seen)
         plans.append(CandidatePlan(architecture, None, {"name": "random"}))
     return tuple(plans)
+
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def atomic_json(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    text = json.dumps(value, allow_nan=False, indent=2, sort_keys=True) + "\n"
+    with temporary.open("w", encoding="utf-8") as handle:
+        handle.write(text)
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
+
+
+def read_json(path):
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+@dataclass(frozen=True)
+class StudyStore:
+    directory: Path
+
+    def __init__(self, directory):
+        object.__setattr__(self, "directory", Path(directory))
+
+    @property
+    def search_path(self):
+        return self.directory / "search.json"
+
+    @property
+    def state_path(self):
+        return self.directory / "state.json"
+
+    @property
+    def candidates_path(self):
+        return self.directory / "candidates"
+
+    def candidate_path(self, candidate_id):
+        return self.candidates_path / f"{int(candidate_id):06d}"
+
+    def settings(self):
+        return SearchSettings.from_dict(read_json(self.search_path))
+
+    def state(self):
+        return read_json(self.state_path)
+
+    def write_state(self, state):
+        value = _copy_json(state)
+        value["updated_at"] = utc_now()
+        atomic_json(self.state_path, value)
+        return value
+
+    def results(self):
+        if not self.candidates_path.is_dir():
+            return []
+        values = []
+        for directory in sorted(self.candidates_path.iterdir()):
+            path = directory / "result.json"
+            if directory.is_dir() and path.is_file():
+                values.append(read_json(path))
+        return values
+
+    def architectures(self):
+        return {
+            result["candidate_id"]: ArchitectureConfig.from_dict(
+                read_json(self.candidate_path(result["candidate_id"]) / "architecture.json")
+            )
+            for result in self.results()
+        }
+
+    def update_result(self, candidate_id, **changes):
+        path = self.candidate_path(candidate_id) / "result.json"
+        result = read_json(path)
+        result.update(_copy_json(changes))
+        result["updated_at"] = utc_now()
+        atomic_json(path, result)
+        return result
+
+
+def open_study(directory, experiment, settings, hours=None, generations=None):
+    store = StudyStore(directory)
+    experiment = str(Path(experiment).resolve())
+    if store.search_path.exists():
+        stored_settings = read_json(store.search_path)
+        if stored_settings != settings.settings():
+            raise ValueError("comparison-sensitive search settings changed")
+        state = store.state()
+        if state["experiment"] != experiment:
+            raise ValueError("study experiment changed")
+        limits = dict(state["limits"])
+        for name, value in (("hours", hours), ("generations", generations)):
+            if value is None:
+                continue
+            if value < limits.get(name, 0):
+                raise ValueError(f"cumulative {name} limit cannot decrease")
+            limits[name] = value
+        if limits != state["limits"]:
+            state["limits"] = limits
+            store.write_state(state)
+        return store
+
+    if hours is None and generations is None:
+        raise ValueError("a new study requires an hour or generation limit")
+    if hours is not None and hours <= 0:
+        raise ValueError("hour limit must be positive")
+    if generations is not None and generations < 1:
+        raise ValueError("generation limit must be positive")
+    store.candidates_path.mkdir(parents=True, exist_ok=False)
+    atomic_json(store.search_path, settings.settings())
+    now = utc_now()
+    state = {
+        "format_version": 1,
+        "status": "running",
+        "phase": "planning",
+        "experiment": experiment,
+        "generation": 0,
+        "next_candidate_id": 1,
+        "seed": settings["seed"],
+        "elapsed_seconds": 0.0,
+        "current_candidate": None,
+        "limits": {
+            "hours": hours or 0,
+            "generations": generations or 0,
+        },
+        "started_at": now,
+        "updated_at": now,
+    }
+    atomic_json(store.state_path, state)
+    return store
+
+
+def _parent_id(results, digest):
+    if digest is None:
+        return None
+    matches = [result["candidate_id"] for result in results if result["digest"] == digest]
+    if len(matches) != 1:
+        raise RuntimeError("candidate parent digest is not unique in the study")
+    return matches[0]
+
+
+def materialize_generation(store, plans, generation, settings):
+    state = store.state()
+    results = store.results()
+    if results:
+        state["next_candidate_id"] = max(
+            state["next_candidate_id"],
+            max(int(result["candidate_id"]) for result in results) + 1,
+        )
+    by_digest = {result["digest"]: result for result in results}
+    generation_results = []
+    for plan in plans:
+        if plan.architecture.digest in by_digest:
+            existing = by_digest[plan.architecture.digest]
+            if existing["generation"] != generation:
+                raise RuntimeError("generation plan duplicates an earlier candidate")
+            generation_results.append(existing)
+            continue
+        candidate_id = f"{state['next_candidate_id']:06d}"
+        directory = store.candidate_path(candidate_id)
+        directory.mkdir(parents=True, exist_ok=True)
+        architecture_path = directory / "architecture.json"
+        result_path = directory / "result.json"
+        if architecture_path.exists():
+            existing = ArchitectureConfig.from_dict(read_json(architecture_path))
+            if existing.digest != plan.architecture.digest:
+                raise RuntimeError("candidate id collides with another architecture")
+        else:
+            atomic_json(architecture_path, plan.architecture.settings())
+        now = utc_now()
+        result = {
+            "format_version": 1,
+            "candidate_id": candidate_id,
+            "digest": plan.architecture.digest,
+            "generation": generation,
+            "parent": _parent_id(results, plan.parent_digest),
+            "parent_digest": plan.parent_digest,
+            "mutation": plan.mutation,
+            "status": "pending",
+            "rung": 0,
+            "trained_tokens": 0,
+            "nll_curve": [],
+            "forecast": None,
+            "profile": {"static": architecture_metrics(plan.architecture, settings)},
+            "scores": {},
+            "scores_by_rung": {},
+            "error": None,
+            "created_at": now,
+            "updated_at": now,
+        }
+        atomic_json(result_path, result)
+        results.append(result)
+        by_digest[result["digest"]] = result
+        generation_results.append(result)
+        state["next_candidate_id"] += 1
+        store.write_state(state)
+    state["generation"] = generation
+    state["phase"] = "screen"
+    store.write_state(state)
+    return tuple(generation_results)
+
+
+def first_incomplete_candidate(results):
+    incomplete = [
+        result
+        for result in results
+        if result.get("status") in {"pending", "running"}
+    ]
+    return min(incomplete, key=lambda result: result["candidate_id"]) if incomplete else None
+
+
+def prune_checkpoints(directory, keep_steps=()):
+    directory = Path(directory)
+    if not directory.is_dir():
+        return 0
+    keep = {int(step) for step in keep_steps}
+    entries = []
+    for path in directory.iterdir():
+        match = re.fullmatch(
+            r"(?:model|optimizer|metadata|complete)_(\d+)(?:\.pt|\.json)?",
+            path.name,
+        )
+        if match and int(match.group(1)) not in keep:
+            entries.append(path)
+        elif path.name.endswith(".tmp"):
+            entries.append(path)
+    removed = sum(path.stat().st_size for path in entries if path.is_file())
+    for path in entries:
+        path.unlink(missing_ok=True)
+    return removed
+
+
+def checkpoint_disk_usage(store):
+    total = 0
+    if not store.candidates_path.is_dir():
+        return total
+    for path in store.candidates_path.glob("*/checkpoint/*"):
+        if path.is_file():
+            total += path.stat().st_size
+    return total
+
+
+def retained_checkpoint_candidates(records, per_lane=2):
+    retained = set()
+    for lane in ("quality", "balanced", "efficiency"):
+        eligible = sorted(
+            _eligible_records(records, lane),
+            key=lambda record: (record["scores"][lane], _record_key(record)),
+        )
+        retained.update(record["candidate_id"] for record in eligible[:per_lane])
+    return retained
+
+
+def validation_slices(settings):
+    evaluation = settings["evaluation"]
+    monitor = {
+        "offset": evaluation["monitor_offset"],
+        "tokens": evaluation["monitor_tokens"],
+    }
+    final = {
+        "offset": evaluation["final_offset"],
+        "tokens": evaluation["final_tokens"],
+    }
+    if monitor["offset"] + monitor["tokens"] > final["offset"]:
+        raise ValueError("monitor and final evaluation slices overlap")
+    return {"monitor": monitor, "final": final}
+
+
+def loader_state(manifest, offset, sequence_length, batch_size, world_size=1):
+    if offset < 0 or offset % (sequence_length * batch_size * world_size):
+        raise ValueError("evaluation offset must align with loader batches")
+    return {
+        "format_version": 1,
+        "manifest": manifest,
+        "global_offset": offset,
+        "epoch": 0,
+        "shard": 0,
+        "sequence_length": sequence_length,
+        "batch_size": batch_size,
+        "world_size": world_size,
+    }
+
+
+def status_snapshot(store):
+    state = store.state()
+    results = store.results()
+    statuses = {}
+    rungs = {}
+    for result in results:
+        statuses[result["status"]] = statuses.get(result["status"], 0) + 1
+        key = str(result.get("rung", 0))
+        rungs[key] = rungs.get(key, 0) + 1
+    leaders = {
+        lane: {
+            "candidate_id": record["candidate_id"],
+            "score": record["scores"][lane],
+        }
+        for lane, record in lane_leaders(results).items()
+    }
+    current = None
+    if state.get("current_candidate") is not None:
+        current = next(
+            (
+                result
+                for result in results
+                if result["candidate_id"] == state["current_candidate"]
+            ),
+            None,
+        )
+    return {
+        "format_version": 1,
+        "status": state["status"],
+        "phase": state["phase"],
+        "elapsed_seconds": state["elapsed_seconds"],
+        "generation": state["generation"],
+        "current_candidate": current,
+        "counts": {"status": dict(sorted(statuses.items())), "rung": dict(sorted(rungs.items()))},
+        "leaders": leaders,
+        "checkpoint_bytes": checkpoint_disk_usage(store),
+    }
