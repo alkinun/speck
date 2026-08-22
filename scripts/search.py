@@ -14,7 +14,7 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 
 import torch
 
@@ -93,6 +93,7 @@ def _runtime_contract(settings, device):
         "parameter_dtype": settings["profile"]["parameter_dtype"],
         "compute_dtype": settings["profile"]["compute_dtype"],
         "deterministic_algorithms": settings["training"]["deterministic"],
+        "cublas_workspace_config": os.environ["CUBLAS_WORKSPACE_CONFIG"],
     }
 
 
@@ -308,6 +309,7 @@ def _measure_profile(model, architecture, profile, device):
             "torch": torch.__version__,
             "cuda": torch.version.cuda,
             "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            "cublas_workspace_config": os.environ["CUBLAS_WORKSPACE_CONFIG"],
         },
         "latency": {name: _distribution(values) for name, values in samples.items()},
         "memory": {

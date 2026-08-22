@@ -34,6 +34,7 @@
     "schedule_tokens": 100663296,
     "minimum_learning_rate_scale": 0.1,
     "deterministic": true,
+    "cublas_workspace_config": ":4096:8",
     "checkpoints": [
       524288,
       1048576,

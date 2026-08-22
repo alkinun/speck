@@ -88,6 +88,7 @@ def tiny_settings():
         "schedule_tokens": 64,
         "minimum_learning_rate_scale": 0.1,
         "deterministic": True,
+        "cublas_workspace_config": ":4096:8",
         "checkpoints": [2, 4, 8, 16, 32],
     }
     values["evaluation"] = {
