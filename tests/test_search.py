@@ -1,6 +1,7 @@
 import json
 import math
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,8 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.model import SpeckForCausalLM
+from speck.checkpoint import save
+from speck.dataloader import manifest_fingerprint
 from speck.search import (
     MUTATIONS,
     CandidatePlan,
@@ -364,6 +367,120 @@ def test_atomic_records_resume_and_checkpoint_pruning(tmp_path):
     assert (checkpoint / "complete_000002").exists()
 
 
+def test_partial_study_initialization_and_provenance_resume(tmp_path):
+    settings = tiny_settings()
+    directory = tmp_path / "study"
+    (directory / "candidates").mkdir(parents=True)
+    atomic_json(directory / "search.json", settings.settings())
+    provenance = {"inputs": {"fixture": "one"}, "runtime": {"device": "cpu"}}
+    store = open_study(
+        directory,
+        tmp_path,
+        settings,
+        generations=1,
+        provenance=provenance,
+    )
+    assert store.state()["provenance"] == provenance
+    with pytest.raises(ValueError, match="inputs or runtime"):
+        open_study(
+            directory,
+            tmp_path,
+            settings,
+            generations=1,
+            provenance={"inputs": {"fixture": "two"}},
+        )
+    state = store.state()
+    state["active_since"] = time.time() - 10
+    store.write_state(state)
+    assert status_snapshot(store)["elapsed_seconds"] >= 9
+
+
+def test_completed_checkpoint_reconciles_result(tmp_path, monkeypatch):
+    settings = tiny_settings()
+    runtime = search_script._runtime_contract(settings, torch.device("cpu"))
+    store = open_study(
+        tmp_path / "study",
+        tmp_path,
+        settings,
+        generations=1,
+        provenance={"inputs": {}, "runtime": runtime},
+    )
+    architecture = rich_architecture()
+    materialize_generation(
+        store,
+        (CandidatePlan(architecture, None, None),),
+        0,
+        settings,
+    )
+    store.update_result("000001", status="running")
+    torch.manual_seed(settings["seed"])
+    model = SpeckForCausalLM(architecture)
+    model.init_weights()
+    optimizer = model.optimizer(
+        settings["training"]["learning_rate"],
+        settings["training"]["weight_decay"],
+        settings["training"]["optimizer"],
+    )
+    manifest = {"fixture": "packed"}
+    metadata = {
+        "format_version": 1,
+        "step": 4,
+        "trained_tokens": 8,
+        "config": architecture.settings(),
+        "architecture_digest": architecture.digest,
+        "manifest": manifest_fingerprint(manifest),
+        "data_state": {"offset": 8},
+        "training": settings["training"],
+        "seed": settings["seed"],
+        "run": None,
+        "nll_curve": [
+            {"tokens": 2, "nll": 5.0},
+            {"tokens": 4, "nll": 4.5},
+            {"tokens": 8, "nll": 4.0},
+        ],
+        "final_nll": None,
+        "training_seconds": 1.0,
+    }
+    save(
+        store.candidate_path("000001") / "checkpoint",
+        4,
+        model.state_dict(),
+        optimizer.state_dict(),
+        metadata,
+    )
+
+    class Tokenizer:
+        vocab_size = 16
+        bos_id = 1
+        eos_id = 2
+
+    monkeypatch.setattr(
+        search_script,
+        "_context",
+        lambda study, candidate: (
+            store,
+            settings,
+            store.state(),
+            {"data": {}, "tokenizer": {}},
+            store.candidate_path(candidate),
+            architecture,
+        ),
+    )
+    monkeypatch.setattr(search_script, "get_tokenizer", lambda **config: Tokenizer())
+    monkeypatch.setattr(search_script, "load_manifest", lambda path: manifest)
+    result = search_script.train_candidate(
+        store.directory,
+        "000001",
+        8,
+        "cpu",
+    )
+    stored = next(value for value in store.results() if value["candidate_id"] == "000001")
+    assert result == {"complete": True, "trained_tokens": 8}
+    assert stored["status"] == "ready"
+    assert stored["rung"] == 8
+    assert stored["nll_curve"] == metadata["nll_curve"]
+
+
 def test_monitor_and_final_slices_are_fixed_and_disjoint():
     settings = tiny_settings()
     slices = validation_slices(settings)
@@ -399,6 +516,86 @@ def test_non_finite_and_oom_failures_are_classified():
     )
     assert search_script._failure(non_finite)["type"] == "non_finite"
     assert search_script._failure(oom)["type"] == "oom"
+
+
+def test_worker_failure_is_recorded_and_excluded(tmp_path, monkeypatch):
+    settings = tiny_settings()
+    store = open_study(tmp_path / "study", tmp_path, settings, generations=1)
+    materialize_generation(
+        store,
+        (CandidatePlan(rich_architecture(), None, None),),
+        0,
+        settings,
+    )
+    error = subprocess.CalledProcessError(
+        1,
+        ["worker"],
+        stderr="cuda out of memory",
+    )
+    monkeypatch.setattr(
+        search_script,
+        "run_child",
+        lambda command: (_ for _ in ()).throw(error),
+    )
+    result = search_script._run_candidate(store, "000001", 8, "cpu")
+    assert result["status"] == "failed"
+    assert result["error"]["type"] == "oom"
+    assert select_finalists(
+        [
+            {
+                "candidate_id": "eligible",
+                "status": "confirmed",
+                "scores": {"quality": 0, "balanced": 0, "efficiency": 0},
+            },
+            result,
+        ]
+    ) == {
+        "quality": "eligible",
+        "balanced": "eligible",
+        "efficiency": "eligible",
+    }
+
+
+def test_archive_rescoring_compares_generations(tmp_path):
+    settings = tiny_settings()
+    store = open_study(tmp_path / "study", tmp_path, settings, generations=2)
+    first = rich_architecture()
+    second = mutate_architecture(first, settings, 2, "change_embedding_width").architecture
+    materialize_generation(
+        store,
+        (CandidatePlan(first, None, None),),
+        0,
+        settings,
+    )
+    materialize_generation(
+        store,
+        (CandidatePlan(second, None, None),),
+        1,
+        settings,
+    )
+    for candidate_id, offset in (("000001", 1.0), ("000002", 0.0)):
+        result = next(
+            value for value in store.results() if value["candidate_id"] == candidate_id
+        )
+        candidate_profile = dict(result["profile"])
+        candidate_profile.update(profile(1.0))
+        store.update_result(
+            candidate_id,
+            status="confirmed",
+            trained_tokens=32,
+            rung=32,
+            nll_curve=[
+                {"tokens": tokens, "nll": offset + 5 - math.log2(tokens) / 4}
+                for tokens in (2, 4, 8, 16, 32)
+            ],
+            profile=candidate_profile,
+        )
+    search_script._rescore_archive(store, 16, 32)
+    values = {result["candidate_id"]: result for result in store.results()}
+    assert (
+        values["000002"]["scores_by_rung"]["16"]["quality"]
+        < values["000001"]["scores_by_rung"]["16"]["quality"]
+    )
 
 
 def write_tiny_experiment(path):
