@@ -436,7 +436,7 @@ def test_completed_checkpoint_reconciles_result(tmp_path, monkeypatch):
         "config": architecture.settings(),
         "architecture_digest": architecture.digest,
         "manifest": manifest_fingerprint(manifest),
-        "data_state": {"offset": 8},
+        "data_state": {"global_consumed_tokens": 8},
         "training": settings["training"],
         "seed": settings["seed"],
         "run": None,
@@ -513,10 +513,38 @@ def test_monitor_and_final_slices_are_fixed_and_disjoint():
         "monitor": {"offset": 0, "tokens": 2},
         "final": {"offset": 2, "tokens": 4},
     }
-    state = loader_state("digest", 2, 1, 2)
-    assert state["global_offset"] == slices["final"]["offset"]
+    manifest = {
+        "requested_train_tokens": 100,
+        "mixture": {
+            "phases": [
+                {"end_tokens": 100, "weights": {"a": 50, "b": 50}},
+            ]
+        },
+        "sources": [
+            {
+                "id": source_id,
+                "splits": {
+                    "val": {
+                        "tokens": 100,
+                        "shards": [
+                            {
+                                "path": f"sources/{source_id}/val.bin",
+                                "tokens": 100,
+                            }
+                        ],
+                    }
+                },
+            }
+            for source_id in ("a", "b")
+        ],
+    }
+    state = loader_state(manifest, 2, 1, 2)
+    assert state["format_version"] == 2
+    assert state["global_consumed_tokens"] == slices["final"]["offset"]
+    assert state["selected_source"] == "b"
+    assert state["source_offsets"] == {"a": 2, "b": 0}
     with pytest.raises(ValueError, match="align"):
-        loader_state("digest", 1, 1, 2)
+        loader_state(manifest, 1, 1, 2)
 
 
 def test_search_genome_cached_decode_matches_full_sequence():

@@ -48,7 +48,7 @@ from speck.search import (
     validation_slices,
 )
 from speck.tokenizer import get_tokenizer
-from speck.train import lr_scale, optimization_step
+from speck.train import lr_scale, optimization_step, validate_loader_progress
 
 
 def percentile(values, fraction):
@@ -335,7 +335,7 @@ def evaluate_nll(model, tokenizer, settings, data_dir, offset, target_tokens, de
         raise ValueError("evaluation targets must align with evaluation batches")
     manifest = load_manifest(data_dir)
     state = loader_state(
-        manifest_fingerprint(manifest),
+        manifest,
         offset,
         training["sequence_length"],
         training["device_batch_size"],
@@ -459,6 +459,10 @@ def train_candidate(
         optimizer.load_state_dict(optimizer_state)
         start_step = metadata["step"]
         data_state = metadata["data_state"]
+        expected_tokens = start_step * training["batch_tokens"]
+        if metadata.get("trained_tokens") != expected_tokens:
+            raise ValueError("candidate checkpoint step and trained tokens differ")
+        validate_loader_progress(data_state, expected_tokens)
         elapsed_training = metadata["training_seconds"]
         curve = metadata["nll_curve"]
 

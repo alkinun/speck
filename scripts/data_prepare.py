@@ -1,4 +1,4 @@
-"""Prepare packed Ultra-FineWeb training and validation shards."""
+"""Prepare source-separated packed training and validation shards."""
 
 import argparse
 
@@ -21,8 +21,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 configs = load_experiment(args.experiment, "data", "tokenizer")
-data = dict(configs["data"])
-source = data.pop("source", None)
 prepare_dataset(
-    **data, source=source, tokenizer=get_tokenizer(**configs["tokenizer"]), restart=args.restart
+    **configs["data"],
+    tokenizer=get_tokenizer(**configs["tokenizer"]),
+    restart=args.restart,
 )

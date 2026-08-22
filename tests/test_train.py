@@ -9,13 +9,23 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.model import SpeckForCausalLM
-from speck.train import lr_scale, optimization_step
+from speck.train import lr_scale, optimization_step, validate_loader_progress
 
 
 def test_lr_scale():
     assert lr_scale(0, 10, 2, 0.1) == 0.5
     assert lr_scale(1, 10, 2, 0.1) == 1.0
     assert lr_scale(10, 10, 2, 0.1) == 0.1
+
+
+def test_checkpoint_loader_progress_matches_next_batch_offset():
+    validate_loader_progress({"global_consumed_tokens": 65_536}, 65_536)
+    try:
+        validate_loader_progress({"global_consumed_tokens": 32_768}, 65_536)
+    except ValueError as error:
+        assert "does not match training progress" in str(error)
+    else:
+        raise AssertionError("mismatched loader progress was accepted")
 
 
 def test_optimization_step_advances_the_loader():

@@ -22,7 +22,7 @@ from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import default_data_dir, load_manifest, verify_shards
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
-from speck.train import lr_scale, optimization_step
+from speck.train import lr_scale, optimization_step, validate_loader_progress
 
 
 def arguments():
@@ -127,8 +127,22 @@ def main():
         optimizer.load_state_dict(optimizer_state)
         start_step = metadata["step"]
         data_state = metadata["data_state"]
+        validate_loader_progress(data_state, start_step * args.batch_tokens)
         elapsed_training = metadata["training_seconds"]
 
+    dataset_provenance = {
+        "requested_train_tokens": manifest["requested_train_tokens"],
+        "mixture": manifest["mixture"],
+        "sources": [
+            {
+                "id": source["id"],
+                "repo": source["repo"],
+                "revision": source["revision"],
+                "file_list_sha256": source["file_list_sha256"],
+            }
+            for source in manifest["sources"]
+        ],
+    }
     resolved = {
         **vars(args),
         "experiment": str(Path(cli.experiment).resolve()),
@@ -136,7 +150,7 @@ def main():
         "model": config.export(),
         "parameters": model.parameter_count(),
         "manifest": manifest_hash,
-        "dataset": manifest["dataset"],
+        "dataset": dataset_provenance,
         "world_size": world_size,
         "accumulation_steps": accumulation,
         "steps": steps,
@@ -271,8 +285,12 @@ def main():
                 "train/grad_norm": float(grad_norm),
                 "performance/tokens_per_second": args.batch_tokens / duration,
                 "performance/tflops": flops * args.batch_tokens / duration / 1e12,
-                "data/epoch": data_state["epoch"],
-                "data/shard": data_state["shard"],
+                "data/next_source": data_state["selected_source"],
+                "data/next_source_epoch": data_state["source_epochs"][
+                    data_state["selected_source"]
+                ],
+                "data/next_phase": data_state["phase"],
+                "data/next_shard": data_state["shard"]["index"],
             }
             run.log(metrics)
             print0(

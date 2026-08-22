@@ -45,12 +45,12 @@ A search-capable experiment directory contains five JSON files:
 ```text
 model.json      Architecture and dimensions.
 tokenizer.json  Tokenizer artifact and local directory.
-data.json       Source, filters, token budgets, splits, and packed output.
+data.json       Sources, phased mixture, filters, dedup, shards, and packed output.
 train.json      Optimization, batching, logging, and checkpoints.
 search.json     Search space, training rungs, scoring, and profiling contract.
 ```
 
-Artifacts use `~/.cache/speck` by default. Checkpoints are written to `~/.cache/speck/checkpoints/<train.run>`. The current packed-data implementation writes to `~/.cache/speck/ultra_fineweb/packed` when `data.output_dir` is `null`; set `data.output_dir` to `~/.cache/speck/packed` if a top-level packed-data directory is required. Set `speck_base_dir` to move the cache root.
+Artifacts use `~/.cache/speck` by default. Checkpoints are written to `~/.cache/speck/checkpoints/<train.run>`, and packed data is written to `~/.cache/speck/data/packed` when `data.output_dir` is `null`. Set `speck_base_dir` to move the cache root.
 
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an absolute learning rate. For example, `0.1` ends the schedule at 10% of the peak rate.
 
@@ -64,13 +64,29 @@ python -m scripts.tokenizer_prepare experiments/Speck1-140M
 
 ## Data
 
-Download, filter, tokenize, and pack the configured dataset:
+Resolve, stream, filter, deduplicate, tokenize, and pack the configured sources:
 
 ```bash
 python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
-Preparation writes train and validation shards plus a manifest. If an incomplete `.building` directory exists, pass `--restart` to replace that partial build. A completed output directory is not overwritten.
+The sole checked-in experiment requests 5,000,000,000 training tokens. Its phase schedule is:
+
+| Phase end | ultra_fineweb | dclm | cosmopedia_v2 | finemath_4plus | ultrafineweb_l3 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 3,500,000,000 | 45% | 35% | 12% | 8% | 0% |
+| 4,500,000,000 | 30% | 25% | 15% | 12% | 18% |
+| 5,000,000,000 | 20% | 15% | 20% | 15% | 30% |
+
+The phase durations and integer weights derive source targets of 1.975B, 1.55B, 670M, 475M, and 330M tokens respectively. Preparation adds a derived 262,144-token per-source loader reserve for the configured maximum 65,536-token distributed microbatch, then reports each requested target, reserve, and actual full-document result. Actual packed training data can exceed 5B only by these configured reserves and one final full-document overshoot per source.
+
+Repository revisions are resolved once and pinned, and recursive Parquet discovery uses the Hugging Face repository tree rather than datasets-server previews. Files are deterministically shuffled per source. Preparation downloads and reads only one remote Parquet file at a time, removes it immediately, and writes train and validation shards under `sources/<source-id>/`. Validation reserves 5M tokens per source and the loader schedules those streams equally.
+
+Exact global deduplication normalizes text with Unicode NFKC, lowercasing, and whitespace collapse before recording a 128-bit BLAKE2 hash. The expected roughly 6M hashes remain practical in memory and are journaled compactly at 16 bytes each. A collision is treated as a duplicate; fuzzy and LSH deduplication are intentionally excluded. Tokenizer calls are bounded to 1,024 documents and 2,000,000 aggregate input characters.
+
+Preparation performs a live disk-space preflight before creating staged data. The current estimate includes about 10.05GB of packed uint16 data, a 20GiB temporary raw-shard allowance, and at least 5GiB of dedup/index headroom, for about 36.9GB total required capacity. The command reports required and currently free bytes and credits reusable staged bytes on resume.
+
+Preparation builds under the sibling `.building` directory and atomically publishes the final directory. Every completed remote Parquet file closes and checkpoints packed shards, source-local index bytes, and the dedup journal with checksums. A retry validates those boundaries, removes only partial work from the interrupted file, and resumes at the next file. Pass `--restart` to discard all staged state. A completed output directory is never overwritten.
 
 ## Training
 
@@ -90,7 +106,7 @@ torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
   experiments/Speck1-140M
 ```
 
-`train.batch_tokens` must be divisible by `device_batch_size * sequence_length * world_size`. Adjust the training configuration for the available devices before launching.
+The configured 65,536-token optimizer batch is divisible by `device_batch_size * sequence_length * world_size` for world sizes 1, 2, 4, and 8. Since 5B is not batch-aligned, training performs 76,294 optimizer steps and consumes 5,000,003,584 tokens. Mixture phases are selected from each global microbatch's starting token position, so a microbatch that begins before a phase boundary remains in that phase even if it straddles the boundary.
 
 Existing checkpoints are never resumed implicitly. A run fails rather than overwrite them unless an exact checkpoint step is supplied:
 
@@ -98,7 +114,7 @@ Existing checkpoints are never resumed implicitly. A run fails rather than overw
 python -m scripts.base_train experiments/Speck1-140M --resume <checkpoint-step>
 ```
 
-Resume validates the architecture, packed-data manifest, optimizer settings, batch geometry, training horizon, and world size. It restores the optimizer, data position, elapsed time, and W&B run identity.
+Resume validates the architecture, packed-data manifest, optimizer settings, batch geometry, training horizon, world size, and that the next-batch loader offset exactly equals completed optimizer-step tokens. It restores the optimizer, data position, elapsed time, and W&B run identity.
 
 ## Inference
 
@@ -121,7 +137,7 @@ python -m scripts.benchmark experiments/Speck1-140M \
   --output benchmark.json
 ```
 
-Use `--mode end-to-end --data-dir ~/.cache/speck/ultra_fineweb/packed` to include packed-data loading. Warmup is reported separately. `--peak-tflops` reports model FLOPs utilization, and `--no-compile` measures eager execution.
+Use `--mode end-to-end --data-dir ~/.cache/speck/data/packed` to include packed-data loading. Warmup is reported separately. `--peak-tflops` reports model FLOPs utilization, and `--no-compile` measures eager execution.
 
 ## Tests
 

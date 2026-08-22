@@ -7,6 +7,19 @@ import torch
 import torch.distributed as dist
 
 
+def validate_loader_progress(data_state, trained_tokens):
+    """Require a next-batch loader cursor at the checkpoint's trained-token boundary."""
+
+    if not isinstance(data_state, dict):
+        raise ValueError("checkpoint is missing packed loader state")
+    offset = data_state.get("global_consumed_tokens")
+    if offset != trained_tokens:
+        raise ValueError(
+            "checkpoint loader offset does not match training progress: "
+            f"expected {trained_tokens:,}, got {offset!r}"
+        )
+
+
 def lr_scale(step, steps, warmup, minimum):
     if step < warmup:
         return (step + 1) / warmup

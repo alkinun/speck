@@ -1678,18 +1678,21 @@ def validation_slices(settings):
 
 
 def loader_state(manifest, offset, sequence_length, batch_size, world_size=1):
-    if offset < 0 or offset % (sequence_length * batch_size * world_size):
-        raise ValueError("evaluation offset must align with loader batches")
-    return {
-        "format_version": 1,
-        "manifest": manifest,
-        "global_offset": offset,
-        "epoch": 0,
-        "shard": 0,
-        "sequence_length": sequence_length,
-        "batch_size": batch_size,
-        "world_size": world_size,
-    }
+    from speck.dataloader import loader_state_for_offset
+
+    try:
+        return loader_state_for_offset(
+            manifest,
+            "val",
+            offset,
+            sequence_length,
+            batch_size,
+            world_size,
+        )
+    except ValueError as error:
+        if "align" in str(error):
+            raise ValueError("evaluation offset must align with loader batches") from error
+        raise
 
 
 def status_snapshot(store):
