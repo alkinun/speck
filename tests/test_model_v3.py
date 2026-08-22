@@ -71,6 +71,33 @@ def test_v3_convolution_state_matches_full_forward():
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
 
 
+def test_v3_muon_optimizer_routes_convolution_parameters_to_adamw():
+    model = model_with(GatedCausalConvSpec(8, 3), SwiGLUSpec(16))
+    optimizer = model.optimizer(name="muon")
+    muon_parameters = {
+        id(parameter)
+        for group in optimizer.optimizers["muon"].param_groups
+        for parameter in group["params"]
+    }
+    adamw_parameters = {
+        id(parameter)
+        for group in optimizer.optimizers["adamw"].param_groups
+        for parameter in group["params"]
+    }
+    convolution_parameters = {id(parameter) for parameter in model.parameters() if parameter.ndim == 3}
+
+    assert muon_parameters.isdisjoint(adamw_parameters)
+    assert muon_parameters | adamw_parameters == {id(parameter) for parameter in model.parameters()}
+    assert convolution_parameters <= adamw_parameters
+    assert optimizer.optimizers["adamw"].param_groups[0]["weight_decay"] == 0.1
+
+    tokens = torch.randint(0, 16, (2, 8))
+    model(tokens, tokens).backward()
+    optimizer.step()
+    state = optimizer.state_dict()
+    optimizer.load_state_dict(state)
+
+
 def test_v3_shared_blocks_keep_occurrence_state_separate():
     torch.manual_seed(4)
     model = model_with(

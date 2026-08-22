@@ -430,21 +430,28 @@ class SpeckV3ForCausalLM(nn.Module):
 
     def optimizer(self, lr=6e-4, weight_decay=0.1, name="adamw"):
         embedding = self.embed_tokens.weight
-        decay, no_decay = [], []
+        matrices, other_decay, no_decay = [], [], []
         for parameter in self.parameters():
-            (no_decay if parameter is embedding or parameter.ndim < 2 else decay).append(parameter)
+            if parameter is embedding or parameter.ndim < 2:
+                no_decay.append(parameter)
+            elif parameter.ndim == 2:
+                matrices.append(parameter)
+            else:
+                other_decay.append(parameter)
         if name == "muon":
             return CombinedOptimizer(
                 muon=torch.optim.Muon(
-                    decay,
+                    matrices,
                     lr=lr,
                     weight_decay=weight_decay,
                     adjust_lr_fn="match_rms_adamw",
                 ),
                 adamw=torch.optim.AdamW(
-                    no_decay,
+                    [
+                        {"params": other_decay, "weight_decay": weight_decay},
+                        {"params": no_decay, "weight_decay": 0.0},
+                    ],
                     lr=lr,
-                    weight_decay=0.0,
                     betas=(0.9, 0.95),
                     eps=1e-8,
                 ),
@@ -453,7 +460,7 @@ class SpeckV3ForCausalLM(nn.Module):
             raise ValueError(f"unsupported optimizer: {name}")
         return torch.optim.AdamW(
             [
-                {"params": decay, "weight_decay": weight_decay},
+                {"params": matrices + other_decay, "weight_decay": weight_decay},
                 {"params": no_decay, "weight_decay": 0.0},
             ],
             lr=lr,
