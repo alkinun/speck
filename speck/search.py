@@ -1419,6 +1419,10 @@ class StudyStore:
 
     def write_state(self, state):
         value = _copy_json(state)
+        now = time.time()
+        if value.get("active_since") is not None:
+            value["elapsed_seconds"] += max(0.0, now - value["active_since"])
+            value["active_since"] = now
         value["updated_at"] = utc_now()
         atomic_json(self.state_path, value)
         return value
@@ -1685,12 +1689,22 @@ def status_snapshot(store):
         statuses[result["status"]] = statuses.get(result["status"], 0) + 1
         key = str(result.get("rung", 0))
         rungs[key] = rungs.get(key, 0) + 1
+    comparable = [result for result in results if result.get("status") == "confirmed"]
+    if not comparable:
+        eligible = [
+            result
+            for result in results
+            if result.get("status") != "failed" and result.get("scores")
+        ]
+        if eligible:
+            rung = max(result.get("rung", 0) for result in eligible)
+            comparable = [result for result in eligible if result.get("rung", 0) == rung]
     leaders = {
         lane: {
             "candidate_id": record["candidate_id"],
             "score": record["scores"][lane],
         }
-        for lane, record in lane_leaders(results).items()
+        for lane, record in lane_leaders(comparable).items()
     }
     current = None
     if state.get("current_candidate") is not None:

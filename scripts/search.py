@@ -582,6 +582,7 @@ def train_candidate(
                 nll_curve=curve,
                 training_seconds=elapsed_training,
             )
+            store.write_state(store.state())
         else:
             result.update(
                 status="completed" if complete else "running",
@@ -1037,10 +1038,6 @@ def run_study(experiment, name, hours, generations, device):
             provenance,
         )
         state = store.state()
-        if state.get("active_since") is not None:
-            state["elapsed_seconds"] += max(
-                0.0, time.time() - state["active_since"]
-            )
         state["active_since"] = time.time()
         state["status"] = "running"
         state.setdefault("completed_generations", 0)
