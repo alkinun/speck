@@ -1,9 +1,16 @@
-"""versioned block grammar for speck model architectures."""
+"""block grammar for speck model architectures."""
 
+import hashlib
 import json
 from dataclasses import asdict, dataclass, field, replace
 
-from speck.search.protocol import architecture_schema_version, canonical_json, content_digest
+
+def canonical_json(value):
+    return json.dumps(value, allow_nan=False, separators=(",", ":"), sort_keys=True)
+
+
+def content_digest(value):
+    return hashlib.sha256(canonical_json(value).encode()).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -144,7 +151,6 @@ class BlockInvocation:
 class ArchitectureConfig:
     blocks: tuple[BlockGroup, ...]
     embedding_size: int
-    default_head_dim: int = 64
     vocab_size: int = 32_000
     bos_token_id: int = 1
     eos_token_id: int = 2
@@ -153,20 +159,12 @@ class ArchitectureConfig:
     rms_norm_eps: float = 1e-5
     initializer_range: float = 0.02
     expected_parameters: int | None = None
-    architecture: str = "speck"
-    architecture_version: int = architecture_schema_version
 
     def __post_init__(self):
-        if self.architecture != "speck":
-            raise ValueError("architecture must be speck")
-        if self.architecture_version != architecture_schema_version:
-            raise ValueError("unsupported architecture version")
         if not self.blocks:
             raise ValueError("architectures need at least one block")
         if self.embedding_size < 1 or self.vocab_size < 1:
             raise ValueError("embedding and vocabulary sizes must be positive")
-        if self.default_head_dim < 2 or self.default_head_dim % 2:
-            raise ValueError("default head dimensions must be positive and even")
         if self.max_position_embeddings < 1:
             raise ValueError("maximum positions must be positive")
         if self.rope_theta <= 0 or self.rms_norm_eps <= 0 or self.initializer_range <= 0:
@@ -206,29 +204,19 @@ class ArchitectureConfig:
         return len({invocation.weight_key for invocation in self.execution_plan})
 
     def settings(self):
-        groups = []
-        for group in self.blocks:
-            normalized = replace(
+        groups = tuple(
+            replace(
                 group,
-                weight_sharing=(
-                    "none" if group.repeat == 1 else group.weight_sharing
-                ),
+                weight_sharing="none" if group.repeat == 1 else group.weight_sharing,
             )
-            if normalized.weight_sharing == "none" and normalized.repeat > 1:
-                groups.extend(replace(normalized, repeat=1) for _ in range(normalized.repeat))
-            else:
-                groups.append(normalized)
-        values = asdict(replace(self, blocks=tuple(groups)))
+            for group in self.blocks
+        )
+        values = asdict(replace(self, blocks=groups))
         values.pop("expected_parameters")
         return json.loads(canonical_json(values))
 
     def export(self):
         values = self.settings()
-        values.update(
-            hidden_size=self.embedding_size,
-            num_hidden_layers=self.logical_depth,
-            tie_word_embeddings=True,
-        )
         if self.expected_parameters is not None:
             values["expected_parameters"] = self.expected_parameters
         return values
@@ -238,103 +226,7 @@ class ArchitectureConfig:
         return content_digest(self.settings())
 
     @classmethod
-    def from_v2(cls, config):
-        blocks = []
-        for layer in config.layers:
-            stages = []
-            if layer.num_key_value_heads is not None:
-                stages.append(
-                    StageConfig((AttentionSpec(config.head_dim, layer.num_key_value_heads),))
-                )
-            stages.append(StageConfig((SwiGLUSpec(layer.intermediate_size),)))
-            blocks.append(BlockGroup(BlockConfig(layer.hidden_size, tuple(stages))))
-        return cls(
-            architecture=getattr(config, "architecture", "speck"),
-            blocks=tuple(blocks),
-            embedding_size=config.embedding_size,
-            default_head_dim=config.head_dim,
-            vocab_size=config.vocab_size,
-            bos_token_id=config.bos_token_id,
-            eos_token_id=config.eos_token_id,
-            max_position_embeddings=config.max_position_embeddings,
-            rope_theta=config.rope_theta,
-            rms_norm_eps=config.rms_norm_eps,
-            initializer_range=config.initializer_range,
-            expected_parameters=getattr(config, "expected_parameters", None),
-        )
-
-    def to_v2(self):
-        from speck.model import Config, LayerConfig
-
-        if any(
-            group.weight_sharing == "all" and group.repeat > 1
-            for group in self.blocks
-        ):
-            raise ValueError("shared blocks cannot be represented by v2")
-        head_dimensions = set()
-        layers = []
-        for invocation in self.execution_plan:
-            stages = invocation.block.stages
-            if any(len(stage.branches) != 1 for stage in stages):
-                raise ValueError("parallel stages cannot be represented by v2")
-            operations = tuple(stage.branches[0] for stage in stages)
-            attention = tuple(
-                operation for operation in operations if isinstance(operation, AttentionSpec)
-            )
-            convolutions = tuple(
-                operation
-                for operation in operations
-                if isinstance(operation, GatedCausalConvSpec)
-            )
-            mlps = tuple(
-                operation for operation in operations if isinstance(operation, SwiGLUSpec)
-            )
-            expected_order = attention + mlps
-            if convolutions or len(attention) > 1 or len(mlps) != 1 or operations != expected_order:
-                raise ValueError("v3 block cannot be represented by v2")
-            if attention and attention[0].scope != "global":
-                raise ValueError("local attention cannot be represented by v2")
-            if attention:
-                head_dimensions.add(attention[0].head_dim)
-            layers.append(
-                LayerConfig(
-                    invocation.block.hidden_size,
-                    mlps[0].intermediate_size,
-                    attention[0].num_key_value_heads if attention else None,
-                )
-            )
-        if len(head_dimensions) > 1:
-            raise ValueError("heterogeneous head dimensions cannot be represented by v2")
-        head_dim = next(iter(head_dimensions), self.default_head_dim)
-        return Config(
-            vocab_size=self.vocab_size,
-            bos_token_id=self.bos_token_id,
-            eos_token_id=self.eos_token_id,
-            layers=tuple(layers),
-            head_dim=head_dim,
-            max_position_embeddings=self.max_position_embeddings,
-            rope_theta=self.rope_theta,
-            rms_norm_eps=self.rms_norm_eps,
-            initializer_range=self.initializer_range,
-        )
-
-    @classmethod
     def from_dict(cls, value):
-        if value.get("architecture_version") != architecture_schema_version:
-            from speck.model import Config
-
-            converted = cls.from_v2(Config.from_dict(value))
-            return replace(
-                converted,
-                architecture=value.get("architecture", "speck"),
-                expected_parameters=value.get("expected_parameters"),
-            )
         values = dict(value)
-        for key in (
-            "hidden_size",
-            "num_hidden_layers",
-            "tie_word_embeddings",
-        ):
-            values.pop(key, None)
         values["blocks"] = tuple(BlockGroup.from_dict(block) for block in values["blocks"])
         return cls(**values)

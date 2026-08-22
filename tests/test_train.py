@@ -1,6 +1,7 @@
 import torch
 
-from speck.model import Config, LayerConfig, SpeckForCausalLM
+from speck.architecture import ArchitectureConfig, AttentionSpec, BlockConfig, BlockGroup, StageConfig, SwiGLUSpec
+from speck.model import SpeckForCausalLM
 from speck.train import lr_scale, optimization_step
 
 
@@ -11,10 +12,20 @@ def test_lr_scale():
 
 
 def test_optimization_step_advances_the_loader():
-    config = Config(
+    config = ArchitectureConfig(
+        (
+            BlockGroup(
+                BlockConfig(
+                    8,
+                    (
+                        StageConfig((AttentionSpec(4, 1),)),
+                        StageConfig((SwiGLUSpec(16),)),
+                    ),
+                )
+            ),
+        ),
+        embedding_size=8,
         vocab_size=16,
-        layers=(LayerConfig(hidden_size=8, intermediate_size=16, num_key_value_heads=1),),
-        head_dim=4,
         max_position_embeddings=8,
     )
     model = SpeckForCausalLM(config)

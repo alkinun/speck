@@ -14,13 +14,13 @@ import torch.distributed as dist
 import wandb
 from torch.nn.parallel import DistributedDataParallel
 
+from speck.architecture import ArchitectureConfig
 from speck.checkpoint import latest, load, save
 from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import default_data_dir, load_manifest, verify_shards
-from speck.hub import upload
-from speck.model import Config, build_model
+from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, optimization_step
 
@@ -102,7 +102,7 @@ def main():
     metadata = None
     if args.resume is not None:
         model_state, optimizer_state, metadata = load(args.output_dir, args.resume, device)
-        stored_config = Config.from_dict(metadata["config"]).settings()
+        stored_config = ArchitectureConfig.from_dict(metadata["config"]).settings()
         if stored_config != config.settings() or metadata["manifest"] != manifest_hash:
             raise ValueError("checkpoint does not match the model or dataset")
         model.load_state_dict(model_state)
@@ -187,17 +187,6 @@ def main():
                 "wandb_id": run.id,
             }
             save(args.output_dir, step, model.state_dict(), optimizer.state_dict(), state)
-            if args.hf_repo:
-                commit_url = upload(
-                    args.hf_repo,
-                    args.output_dir,
-                    step,
-                    state,
-                    private=args.hf_private,
-                    optimizer=args.hf_upload_optimizer,
-                )
-                run.log({"progress/step": step, "artifacts/hf_commit": commit_url})
-                print0(f"uploaded checkpoint: {commit_url}")
         if distributed:
             dist.barrier()
 

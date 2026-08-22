@@ -1,4 +1,4 @@
-"""minimal kv-cached text generation from a training checkpoint."""
+"""minimal state-cached text generation from a training checkpoint."""
 
 import argparse
 import os
@@ -6,9 +6,10 @@ import os
 import torch
 
 from speck.checkpoint import latest, load
+from speck.architecture import ArchitectureConfig
 from speck.common import base_dir
 from speck.config import load_experiment
-from speck.model import Config, SpeckForCausalLM
+from speck.model import SpeckForCausalLM
 from speck.tokenizer import get_tokenizer
 
 
@@ -32,7 +33,7 @@ if step is None:
     raise FileNotFoundError(f"no checkpoint found in {args.checkpoint_dir}")
 device = torch.device(args.device)
 model_state, _, metadata = load(args.checkpoint_dir, step, device)
-model = SpeckForCausalLM(Config.from_dict(metadata["config"])).to(device)
+model = SpeckForCausalLM(ArchitectureConfig.from_dict(metadata["config"])).to(device)
 model.load_state_dict(model_state)
 model.eval()
 tokenizer = get_tokenizer(**configs["tokenizer"])
@@ -41,8 +42,12 @@ if len(tokens) + args.max_tokens > model.config.max_position_embeddings:
     raise ValueError("prompt and generated tokens exceed the model context")
 
 with torch.inference_mode():
-    cache = model.cache(length=len(tokens) + args.max_tokens)
-    logits = model(torch.tensor([tokens], device=device), cache=cache)[:, -1]
+    state = model.state(length=len(tokens) + args.max_tokens)
+    logits = model(
+        torch.tensor([tokens], device=device),
+        state=state,
+        last_token_only=True,
+    )[:, -1]
     generated = []
     for _ in range(args.max_tokens):
         if args.temperature == 0:
@@ -55,6 +60,6 @@ with torch.inference_mode():
         if token_id == tokenizer.eos_id:
             break
         generated.append(token_id)
-        logits = model(token[:, None], cache=cache)[:, -1]
+        logits = model(token[:, None], state=state, last_token_only=True)[:, -1]
 
 print(tokenizer.decode(generated))

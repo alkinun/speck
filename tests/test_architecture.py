@@ -12,26 +12,23 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
-from speck.model import Config
 
 
 experiment = Path(__file__).parents[1] / "experiments" / "speck00-200m"
 
 
-def test_v2_architecture_round_trips_through_v3():
+def test_main_architecture_round_trips():
     raw = json.loads((experiment / "model.json").read_text())
-    v2 = Config.from_dict(raw)
-    v3 = ArchitectureConfig.from_dict(raw)
-    assert v3.logical_depth == 11
-    assert v3.unique_parameter_blocks == 11
-    assert v3.expected_parameters == 182_206_848
-    assert v3.to_v2().settings() == v2.settings()
-    assert ArchitectureConfig.from_dict(v3.export()) == v3
-    assert v3.execution_plan[0].block.stages[0].branches[0].kind == "swiglu"
-    assert v3.execution_plan[3].block.stages[0].branches[0].kind == "attention"
+    config = ArchitectureConfig.from_dict(raw)
+    assert config.logical_depth == 11
+    assert config.unique_parameter_blocks == 11
+    assert config.expected_parameters == 182_206_848
+    assert ArchitectureConfig.from_dict(config.export()).settings() == config.settings()
+    assert config.execution_plan[0].block.stages[0].branches[0].kind == "swiglu"
+    assert config.execution_plan[3].block.stages[0].branches[0].kind == "attention"
 
 
-def test_unshared_repetitions_have_one_canonical_identity():
+def test_unshared_repetitions_preserve_grouping_identity():
     block = BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),))
     repeated = ArchitectureConfig((BlockGroup(block, repeat=2),), 8, vocab_size=16)
     expanded = ArchitectureConfig(
@@ -39,8 +36,9 @@ def test_unshared_repetitions_have_one_canonical_identity():
         8,
         vocab_size=16,
     )
-    assert repeated.digest == expanded.digest
-    assert repeated.settings() == expanded.settings()
+    assert repeated.digest != expanded.digest
+    assert repeated.settings() != expanded.settings()
+    assert ArchitectureConfig.from_dict(repeated.settings()) == repeated
 
 
 def test_shared_blocks_keep_distinct_execution_state_identity():
@@ -73,8 +71,6 @@ def test_focused_hybrid_grammar_round_trips():
     )
     config = ArchitectureConfig((BlockGroup(block),), 16, vocab_size=32)
     assert ArchitectureConfig.from_dict(config.export()) == config
-    with pytest.raises(ValueError, match="cannot be represented"):
-        config.to_v2()
 
 
 def test_attention_shape_invariants_are_strict():

@@ -21,7 +21,6 @@ from speck.tokenizer import get_tokenizer
 
 
 format_version = 2
-supported_format_versions = {1, format_version}
 default_data_dir = Path(base_dir()) / "ultra_fineweb"
 default_source = {
     "repo": "openbmb/Ultra-FineWeb",
@@ -360,7 +359,7 @@ def load_manifest(data_dir=None):
     if not manifest_path.exists():
         raise FileNotFoundError(f"packed dataset not found: {manifest_path}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("format_version") not in supported_format_versions:
+    if manifest.get("format_version") != format_version:
         raise ValueError(f"unsupported packed dataset version: {manifest.get('format_version')}")
     return manifest
 
