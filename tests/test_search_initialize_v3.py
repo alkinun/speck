@@ -209,6 +209,11 @@ def test_v3_initialization_registers_a_validated_baseline_bundle(
         **arguments,
     )
     assert result["initialized"]
+    assert result["evaluation_tokens"] == next(
+        partition.tokens - 1
+        for partition in values["plan"].partitions
+        if partition.name == "monitor"
+    )
     study = V3Study(study_path, readonly=True)
     assert study.study()["provenance"]["resolved_protocol_digest"] == result[
         "protocol_digest"

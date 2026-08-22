@@ -102,7 +102,7 @@
     "posterior_samples": 2000,
     "surrogate_models": 32,
     "surrogate_ridge": 0.001,
-    "total_cost": 1200000
+    "total_cost": 1800000
   },
   "profiles": [
     {

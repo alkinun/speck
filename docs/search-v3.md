@@ -29,6 +29,7 @@ the repository currently contains the version three foundations:
 - leased worker actions and append-only decision events
 - budgeted posterior action planning without product thresholds
 - a read-only dashboard with objective-set, token-horizon, run, action, checkpoint, profile, and posterior views
+- a portable calibration launcher with safe interruption, resumption, worker draining, and dashboard lifecycle management
 
 the following work is intentionally not presented as complete:
 
@@ -119,7 +120,7 @@ version three stores immutable objects by content digest and records artifact li
 
 ### operation and dashboard differences
 
-version two has one integrated `run` command and stores studies below `~/.cache/speck/search/`. version three stores studies below `~/.cache/speck/search-v3/` and currently uses explicit coordinator, quality-worker, evaluation-worker, and profile-worker commands.
+version two has one integrated `run` command and stores studies below `~/.cache/speck/search/`. version three stores studies below `~/.cache/speck/search-v3/`. `scripts/run_search_v3.sh` orchestrates the current calibration workflow; the underlying coordinator, `worker`, `evaluation-worker`, and `profile-worker` commands remain independently available.
 
 the shared dashboard detects all three study formats. for v3 it adds:
 
@@ -355,6 +356,27 @@ the upgrader verifies every shard while recovering reserved bos/eos boundaries, 
 
 `experiments/speck00-200m/search-v3.json` records the active moderate-panel configuration and pins the checked segment-plan digest.
 
+run or resume the complete calibration workflow from any shell, including fish:
+
+```bash
+./scripts/run_search_v3.sh --study calibration-v3
+```
+
+the launcher initializes the study idempotently, prepares the cuda environment, starts the read-only dashboard at `http://127.0.0.1:8000`, coordinates bounded action batches, drains quality and evaluation work, runs every gpu and cpu profile repetition in a fresh process, and stops at `anchor_complete`. `Ctrl-C` stops the dashboard child and exits; committed checkpoints and observations remain resumable by running the same command again.
+
+the checked-in planner budget is 1,800,000 wall-seconds. this covers the approximately 1,368,000-second minimum implied by the measured default rates, required cpu/gpu profile repetitions, broad panel, and ten long-horizon anchors, while retaining headroom for variance and retries. the launcher exits with a diagnostic instead of spinning if the coordinator has no active or schedulable work before `anchor_complete`.
+
+use `--no-dashboard`, `--host`, `--port`, `--experiment`, or `--config` when needed. calibrated scheduling defaults can be overridden without editing the script:
+
+```bash
+SPECK_QUALITY_TOKENS_PER_COST=10000 \
+SPECK_EVALUATION_TOKENS_PER_COST=30000 \
+SPECK_PROFILE_COST=600 \
+./scripts/run_search_v3.sh --study calibration-v3
+```
+
+`./scripts/run_search_v3.sh --help` lists every launcher option. the lower-level commands below are retained for debugging and manual operation.
+
 after an active configuration records the emitted segment-plan digest, initialize and inspect a study with:
 
 ```bash
@@ -419,9 +441,9 @@ the bootstrap coordinator creates the deterministic broad panel, crosses the con
 
 ```bash
 python -m scripts.architecture_search_v3 coordinate calibration-v3 \
-  --quality-tokens-per-cost 1000 \
-  --evaluation-tokens-per-cost 3000 \
-  --profile-cost 60
+  --quality-tokens-per-cost 10000 \
+  --evaluation-tokens-per-cost 30000 \
+  --profile-cost 600
 ```
 
 rates and costs use the configuration's declared `cost_unit`; with `wall_seconds`, the two rates are measured tokens per second and profile cost is seconds per isolated repetition. continuation cost is derived from its exact token delta, while evaluation cost covers the complete monitor partition. repeated coordinator ticks are idempotent: architecture, run, profile-repetition, and checkpoint-evaluation identities prevent duplicate work after interruption. every checkpoint is evaluated before that run can continue.

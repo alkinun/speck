@@ -138,6 +138,14 @@ the quality benchmark inherits the experiment's packed data path, physical batch
 
 version three search, its reliability contract, its differences from version two, and its operator workflow are documented in `docs/search-v3.md`. version two studies retain their original schema and semantics; version three studies use a separate configuration and study root.
 
+run or resume the v3 calibration workflow, including its live dashboard, from bash, fish, or another terminal with:
+
+```bash
+./scripts/run_search_v3.sh --study speck00-v3-search
+```
+
+interrupting the launcher is safe; running the same command resumes committed study state. use `./scripts/run_search_v3.sh --help` for dashboard, experiment, configuration, and scheduling-rate options.
+
 start a new study from the selected architecture:
 
 ```bash

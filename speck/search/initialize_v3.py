@@ -199,6 +199,11 @@ def initialize_study(
     return {
         "architecture_digest": baseline.digest,
         "dataset_digest": dataset_digest,
+        "evaluation_tokens": next(
+            partition.tokens - 1
+            for partition in plan.partitions
+            if partition.name == protocol.evaluation_partition
+        ),
         "initialized": initialized,
         "protocol_digest": protocol.digest,
         "segment_plan_digest": plan.digest,
