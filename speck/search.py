@@ -1667,3 +1667,46 @@ def status_snapshot(store):
         "leaders": leaders,
         "checkpoint_bytes": checkpoint_disk_usage(store),
     }
+
+
+def select_finalists(records):
+    confirmed = [record for record in records if record.get("status") == "confirmed"]
+    leaders = lane_leaders(confirmed)
+    missing = [
+        lane
+        for lane in ("quality", "balanced", "efficiency")
+        if lane not in leaders
+    ]
+    if missing:
+        raise RuntimeError(f"confirmed archive has no {', '.join(missing)} finalist")
+    return {
+        lane: leaders[lane]["candidate_id"]
+        for lane in ("quality", "balanced", "efficiency")
+    }
+
+
+def aggregate_final_runs(runs, final_tokens):
+    if set(runs) != {"continuation", "independent"}:
+        raise ValueError("final aggregation requires continuation and independent runs")
+    monitor = {}
+    final = {}
+    for name, run in runs.items():
+        point = next(
+            (
+                point
+                for point in run.get("nll_curve", [])
+                if point["tokens"] == final_tokens
+            ),
+            None,
+        )
+        if point is None or not math.isfinite(point["nll"]):
+            raise ValueError(f"{name} run has no finite final monitor nll")
+        if not math.isfinite(run.get("final_nll", math.nan)):
+            raise ValueError(f"{name} run has no finite untouched final nll")
+        monitor[name] = point["nll"]
+        final[name] = run["final_nll"]
+    return {
+        "runs": _copy_json(runs),
+        "mean_monitor_nll": statistics.mean(monitor.values()),
+        "mean_final_nll": statistics.mean(final.values()),
+    }
