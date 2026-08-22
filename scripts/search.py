@@ -645,44 +645,67 @@ def final_profile_candidate(study, candidate_id, device_name):
     compiled_profile = _measure_profile(
         compiled, architecture, gpu_contract, device
     )
+    profile_path = candidate / "final" / "profile.json"
+    result = (
+        json.loads(profile_path.read_text(encoding="utf-8"))
+        if profile_path.is_file()
+        else {"format_version": 1}
+    )
+    result.update({
+        "format_version": 1,
+        "eager_gpu": eager,
+        "compiled_gpu": compiled_profile,
+        "compilation_seconds": compilation_seconds,
+        "outputs_equivalent": equivalent,
+    })
+    atomic_json(profile_path, result)
+    return result
 
-    cpu_threads = torch.get_num_threads()
+
+def final_cpu_profile_candidate(study, candidate_id):
+    store, settings, state, configs, candidate, architecture = _context(
+        study, candidate_id
+    )
+    baseline_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    checkpoint_dir = candidate / "final" / "continuation" / "checkpoint"
+    step = latest(checkpoint_dir)
+    if step is None:
+        raise FileNotFoundError("final continuation checkpoint is missing")
+    model_state = load_model(checkpoint_dir, step, "cpu")
+    model = SpeckForCausalLM(architecture)
+    model.load_state_dict(model_state)
+    final = settings["final_profile"]
+    cpu_contract = {
+        **settings["profile"],
+        "device": "cpu",
+        "compute_dtype": "float32",
+        "warmups": final["warmups"],
+        "requests": final["cpu_requests"],
+    }
+    previous_threads = torch.get_num_threads()
     torch.set_num_threads(final["cpu_threads"])
     try:
-        cpu_model = SpeckForCausalLM(architecture)
-        cpu_model.load_state_dict(
-            {name: value.detach().cpu() for name, value in model_state.items()}
-        )
-        cpu_contract = {
-            **settings["profile"],
-            "device": "cpu",
-            "compute_dtype": "float32",
-            "warmups": final["warmups"],
-            "requests": final["cpu_requests"],
-        }
-        baseline_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
         cpu = _measure_profile(
-            cpu_model,
+            model,
             architecture,
             cpu_contract,
             torch.device("cpu"),
         )
-        peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
-        cpu["memory"].update(
-            baseline_rss_bytes=baseline_rss,
-            peak_rss_bytes=peak_rss,
-        )
     finally:
-        torch.set_num_threads(cpu_threads)
-    result = {
-        "format_version": 1,
-        "eager_gpu": eager,
-        "compiled_gpu": compiled_profile,
-        "cpu": cpu,
-        "compilation_seconds": compilation_seconds,
-        "outputs_equivalent": equivalent,
-    }
-    atomic_json(candidate / "final" / "profile.json", result)
+        torch.set_num_threads(previous_threads)
+    peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    cpu["memory"].update(
+        baseline_rss_bytes=baseline_rss,
+        peak_rss_bytes=peak_rss,
+    )
+    profile_path = candidate / "final" / "profile.json"
+    result = (
+        json.loads(profile_path.read_text(encoding="utf-8"))
+        if profile_path.is_file()
+        else {"format_version": 1}
+    )
+    result["cpu"] = cpu
+    atomic_json(profile_path, result)
     return result
 
 
@@ -1177,9 +1200,21 @@ def finalize_study(name, device):
                         )
                     )
             profile_path = candidate / "final" / "profile.json"
-            if not profile_path.is_file():
+            stored_profile = (
+                json.loads(profile_path.read_text(encoding="utf-8"))
+                if profile_path.is_file()
+                else {}
+            )
+            if not {"eager_gpu", "compiled_gpu"} <= stored_profile.keys():
                 run_child(
                     _child_command("final_profile", store, candidate_id, device)
+                )
+                stored_profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            if "cpu" not in stored_profile:
+                run_child(
+                    _child_command(
+                        "final_cpu_profile", store, candidate_id, "cpu"
+                    )
                 )
             runs = {
                 run_name: json.loads(
@@ -1278,6 +1313,10 @@ def parser():
     final_profile.add_argument("study")
     final_profile.add_argument("candidate")
     final_profile.add_argument("--device", required=True)
+    final_cpu_profile = commands.add_parser("_final_cpu_profile")
+    final_cpu_profile.add_argument("study")
+    final_cpu_profile.add_argument("candidate")
+    final_cpu_profile.add_argument("--device", required=True)
     return parser
 
 
@@ -1321,8 +1360,10 @@ def main():
             args.device,
             run_name=args.run,
         )
-    else:
+    elif args.command == "_final_profile":
         result = final_profile_candidate(args.study, args.candidate, args.device)
+    else:
+        result = final_cpu_profile_candidate(args.study, args.candidate)
     print(json.dumps(result, indent=2, sort_keys=True))
 
 
