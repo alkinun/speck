@@ -14,6 +14,8 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+
 import torch
 
 from speck.architecture import ArchitectureConfig
@@ -64,8 +66,11 @@ def _runtime(device_name, seed):
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("cuda is required but unavailable")
     torch.manual_seed(seed)
+    torch.use_deterministic_algorithms(True)
     if device.type == "cuda":
         torch.cuda.manual_seed(seed)
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
         torch.set_float32_matmul_precision("high")
     return device
 
@@ -87,6 +92,7 @@ def _runtime_contract(settings, device):
         "cuda": torch.version.cuda,
         "parameter_dtype": settings["profile"]["parameter_dtype"],
         "compute_dtype": settings["profile"]["compute_dtype"],
+        "deterministic_algorithms": settings["training"]["deterministic"],
     }
 
 
@@ -301,6 +307,7 @@ def _measure_profile(model, architecture, profile, device):
             "seed": profile["seed"],
             "torch": torch.__version__,
             "cuda": torch.version.cuda,
+            "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
         },
         "latency": {name: _distribution(values) for name, values in samples.items()},
         "memory": {

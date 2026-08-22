@@ -87,6 +87,7 @@ def tiny_settings():
         "warmup_tokens": 2,
         "schedule_tokens": 64,
         "minimum_learning_rate_scale": 0.1,
+        "deterministic": True,
         "checkpoints": [2, 4, 8, 16, 32],
     }
     values["evaluation"] = {

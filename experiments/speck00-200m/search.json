@@ -33,6 +33,7 @@
     "warmup_tokens": 1048576,
     "schedule_tokens": 100663296,
     "minimum_learning_rate_scale": 0.1,
+    "deterministic": true,
     "checkpoints": [
       524288,
       1048576,

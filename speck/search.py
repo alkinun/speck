@@ -165,10 +165,13 @@ class SearchSettings:
             "warmup_tokens",
             "schedule_tokens",
             "minimum_learning_rate_scale",
+            "deterministic",
             "checkpoints",
         }
         if training_required - training.keys():
             raise ValueError("training settings are incomplete")
+        if training["deterministic"] is not True:
+            raise ValueError("search training must use deterministic algorithms")
         micro_tokens = training["sequence_length"] * training["device_batch_size"]
         if micro_tokens < 1 or training["batch_tokens"] % micro_tokens:
             raise ValueError("training batch tokens must divide into whole micro batches")
