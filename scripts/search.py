@@ -210,8 +210,8 @@ def check_candidate(study, candidate_id, device_name):
     if not torch.allclose(
         full,
         cached,
-        atol=tolerance["absolute_tolerance"],
-        rtol=tolerance["relative_tolerance"],
+        atol=tolerance["cache_absolute_tolerance"],
+        rtol=tolerance["cache_relative_tolerance"],
     ):
         raise ValueError("full-sequence and cached decoding outputs differ")
     store.update_result(candidate_id, feasibility={"status": "passed"})

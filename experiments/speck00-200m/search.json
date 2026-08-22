@@ -167,6 +167,8 @@
     "cpu_requests": 20,
     "cpu_threads": 1,
     "compile_mode": "max-autotune-no-cudagraphs",
+    "cache_absolute_tolerance": 0.125,
+    "cache_relative_tolerance": 0.02,
     "absolute_tolerance": 0.01,
     "relative_tolerance": 0.01
   },

@@ -193,6 +193,31 @@ class SearchSettings:
         if evaluation.get("monitor_tokens", 0) < 1 or evaluation.get("final_tokens", 0) < 1:
             raise ValueError("evaluation slices must contain targets")
 
+        final_profile = values["final_profile"]
+        final_profile_required = {
+            "warmups",
+            "gpu_requests",
+            "cpu_requests",
+            "cpu_threads",
+            "compile_mode",
+            "cache_absolute_tolerance",
+            "cache_relative_tolerance",
+            "absolute_tolerance",
+            "relative_tolerance",
+        }
+        if final_profile_required - final_profile.keys():
+            raise ValueError("final profile settings are incomplete")
+        if any(
+            final_profile[key] <= 0
+            for key in (
+                "cache_absolute_tolerance",
+                "cache_relative_tolerance",
+                "absolute_tolerance",
+                "relative_tolerance",
+            )
+        ):
+            raise ValueError("profile tolerances must be positive")
+
         probability_keys = (
             "mutation_probabilities",
             "depth_probabilities",
