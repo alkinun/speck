@@ -68,11 +68,57 @@ def _runtime(device_name, seed):
     return device
 
 
+def _runtime_contract(settings, device):
+    device = torch.device(device)
+    expected = settings["profile"]["device"]
+    if device.type != expected:
+        raise ValueError(f"search profile requires {expected}, not {device.type}")
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("cuda is required but unavailable")
+    return {
+        "device": str(device),
+        "device_type": device.type,
+        "device_name": torch.cuda.get_device_name(device)
+        if device.type == "cuda"
+        else "cpu",
+        "torch": torch.__version__,
+        "cuda": torch.version.cuda,
+        "parameter_dtype": settings["profile"]["parameter_dtype"],
+        "compute_dtype": settings["profile"]["compute_dtype"],
+    }
+
+
+def _study_inputs(experiment):
+    configs = load_experiment(experiment, "model", "data", "tokenizer")
+    tokenizer = get_tokenizer(**configs["tokenizer"])
+    data_dir = configs["data"].get("output_dir") or str(default_data_dir / "packed")
+    manifest = load_manifest(data_dir)
+    provenance = {
+        "configs": configs,
+        "tokenizer": {
+            "fingerprint": tokenizer.fingerprint(),
+            "vocab_size": tokenizer.vocab_size,
+            "bos_token_id": tokenizer.bos_id,
+            "eos_token_id": tokenizer.eos_id,
+        },
+        "manifest": manifest_fingerprint(manifest),
+        "data_dir": str(Path(data_dir).resolve()),
+    }
+    return configs, provenance
+
+
+def _verify_runtime(state, settings, device):
+    if state["provenance"]["runtime"] != _runtime_contract(settings, device):
+        raise ValueError("study runtime contract changed")
+
+
 def _context(study, candidate_id):
     store = StudyStore(study)
     settings = store.settings()
     state = store.state()
-    configs = load_experiment(state["experiment"], "data", "tokenizer")
+    configs, inputs = _study_inputs(state["experiment"])
+    if state["provenance"]["inputs"] != inputs:
+        raise ValueError("study comparison inputs changed")
     candidate = store.candidate_path(candidate_id)
     architecture = ArchitectureConfig.from_dict(
         json.loads((candidate / "architecture.json").read_text(encoding="utf-8"))
@@ -94,6 +140,7 @@ def check_candidate(study, candidate_id, device_name):
         study, candidate_id
     )
     device = _runtime(device_name, settings["seed"])
+    _verify_runtime(state, settings, device)
     model = _model(architecture, device, settings["seed"])
     generator = torch.Generator(device=device).manual_seed(settings["seed"])
     tokens = torch.randint(
@@ -231,6 +278,8 @@ def _measure_profile(model, architecture, profile, device):
             "warmups": profile["warmups"],
             "requests": profile["requests"],
             "seed": profile["seed"],
+            "torch": torch.__version__,
+            "cuda": torch.version.cuda,
         },
         "latency": {name: _distribution(values) for name, values in samples.items()},
         "memory": {
@@ -248,6 +297,7 @@ def profile_candidate(study, candidate_id, device_name):
     )
     profile = settings["profile"]
     device = _runtime(device_name, profile["seed"])
+    _verify_runtime(state, settings, device)
     model = _model(architecture, device, profile["seed"])
     measured = _measure_profile(model, architecture, profile, device)
     result = store.results()
@@ -315,6 +365,7 @@ def train_candidate(
     if run_name == "independent":
         seed += settings["final_seed_offset"]
     device = _runtime(device_name, seed)
+    _verify_runtime(state, settings, device)
     tokenizer = get_tokenizer(**configs["tokenizer"])
     if (
         tokenizer.vocab_size != architecture.vocab_size
@@ -545,6 +596,7 @@ def final_profile_candidate(study, candidate_id, device_name):
         study, candidate_id
     )
     device = _runtime(device_name, settings["profile"]["seed"])
+    _verify_runtime(state, settings, device)
     if device.type != "cuda":
         raise ValueError("final gpu profiles require cuda")
     checkpoint_dir = candidate / "final" / "continuation" / "checkpoint"
@@ -942,11 +994,22 @@ def _run_phase(store, settings, generation, phase, device, started):
 def run_study(experiment, name, hours, generations, device):
     directory = study_directory(name)
     settings = load_search_settings(Path(experiment) / "search.json")
-    configs = load_experiment(experiment, "model")
+    configs, inputs = _study_inputs(experiment)
+    provenance = {
+        "inputs": inputs,
+        "runtime": _runtime_contract(settings, torch.device(device)),
+    }
     baseline = ArchitectureConfig.from_dict(configs["model"])
     started = time.perf_counter()
     with study_lock(directory):
-        store = open_study(directory, experiment, settings, hours, generations)
+        store = open_study(
+            directory,
+            experiment,
+            settings,
+            hours,
+            generations,
+            provenance,
+        )
         state = store.state()
         state["status"] = "running"
         state.setdefault("completed_generations", 0)

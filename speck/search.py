@@ -1449,9 +1449,17 @@ class StudyStore:
         return result
 
 
-def open_study(directory, experiment, settings, hours=None, generations=None):
+def open_study(
+    directory,
+    experiment,
+    settings,
+    hours=None,
+    generations=None,
+    provenance=None,
+):
     store = StudyStore(directory)
     experiment = str(Path(experiment).resolve())
+    provenance = _copy_json(provenance or {})
     if store.search_path.exists():
         stored_settings = read_json(store.search_path)
         if stored_settings != settings.settings():
@@ -1459,6 +1467,8 @@ def open_study(directory, experiment, settings, hours=None, generations=None):
         state = store.state()
         if state["experiment"] != experiment:
             raise ValueError("study experiment changed")
+        if state.get("provenance", {}) != provenance:
+            raise ValueError("study comparison inputs or runtime changed")
         limits = dict(state["limits"])
         for name, value in (("hours", hours), ("generations", generations)):
             if value is None:
@@ -1485,6 +1495,7 @@ def open_study(directory, experiment, settings, hours=None, generations=None):
         "status": "running",
         "phase": "planning",
         "experiment": experiment,
+        "provenance": provenance,
         "generation": 0,
         "next_candidate_id": 1,
         "seed": settings["seed"],
