@@ -30,7 +30,7 @@ def arguments():
     parser.add_argument(
         "experiment",
         nargs="?",
-        default="experiments/Speck1-200M",
+        default="experiments/Speck1-140M",
         help="experiment directory (default: %(default)s)",
     )
     parser.add_argument(

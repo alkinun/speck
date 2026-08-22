@@ -18,9 +18,7 @@
   "logical_depth_bounds": [6, 24],
   "baseline_normalization": {
     "expand_unshared_repetitions": true,
-    "width_replacements": {
-      "960": 1024
-    }
+    "width_replacements": {}
   },
   "training": {
     "sequence_length": 2048,

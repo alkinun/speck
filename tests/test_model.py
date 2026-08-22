@@ -14,7 +14,7 @@ from speck.architecture import (
 )
 from speck.model import CombinedOptimizer, SpeckForCausalLM, build_model
 
-experiment = Path(__file__).parents[1] / "experiments" / "Speck1-200M"
+experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
 
 
 def model_with(*stages, repeat=1, sharing="none"):
@@ -43,7 +43,7 @@ def test_main_model_parameter_count():
     settings = json.loads((experiment / "model.json").read_text())
     config = ArchitectureConfig.from_dict(settings)
     model = SpeckForCausalLM(config)
-    assert model.parameter_count() == 182_206_848
+    assert model.parameter_count() == 140_652_288
 
 
 def test_global_attention_cache_matches_full_forward():

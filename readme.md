@@ -36,11 +36,9 @@ source .venv/bin/activate.fish
 
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
-- `experiments/Speck1-200M` is the 182,206,848-parameter baseline and architecture-search configuration.
-- `experiments/Speck1-50M` is the 48,769,856-parameter efficiency finalist.
-- `experiments/Speck1-160M` is the 156,984,832-parameter balanced finalist.
+- `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
 
-Model names follow `Speck<generation>-<size>`, with an optional decimal generation for intermediate families. For example, the convention extends naturally from `Speck1-50M` to `Speck1.5-50M`.
+Model names follow `Speck<generation>-<size>`, with an optional decimal generation for intermediate families.
 
 A search-capable experiment directory contains five JSON files:
 
@@ -52,8 +50,6 @@ train.json      Optimization, batching, logging, and checkpoints.
 search.json     Search space, training rungs, scoring, and profiling contract.
 ```
 
-Finalist directories intentionally omit `search.json`; they are complete configurations for ordinary preparation, training, benchmarking, and inference.
-
 Artifacts use `~/.cache/speck` by default. Checkpoints are written to `~/.cache/speck/checkpoints/<train.run>`. The current packed-data implementation writes to `~/.cache/speck/ultra_fineweb/packed` when `data.output_dir` is `null`; set `data.output_dir` to `~/.cache/speck/packed` if a top-level packed-data directory is required. Set `speck_base_dir` to move the cache root.
 
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an absolute learning rate. For example, `0.1` ends the schedule at 10% of the peak rate.
@@ -63,7 +59,7 @@ Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak
 Download and verify the tokenizer configured by an experiment:
 
 ```bash
-python -m scripts.tokenizer_prepare experiments/Speck1-50M
+python -m scripts.tokenizer_prepare experiments/Speck1-140M
 ```
 
 ## Data
@@ -71,7 +67,7 @@ python -m scripts.tokenizer_prepare experiments/Speck1-50M
 Download, filter, tokenize, and pack the configured dataset:
 
 ```bash
-python -m scripts.data_prepare experiments/Speck1-50M
+python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
 Preparation writes train and validation shards plus a manifest. If an incomplete `.building` directory exists, pass `--restart` to replace that partial build. A completed output directory is not overwritten.
@@ -82,7 +78,7 @@ Authenticate with Weights & Biases, then start a single-GPU run:
 
 ```bash
 wandb login
-python -m scripts.base_train experiments/Speck1-50M
+python -m scripts.base_train experiments/Speck1-140M
 ```
 
 Weights & Biases logging is enabled unless `train.run` is `dummy`. Checkpoints remain local; Speck does not upload training checkpoints to Hugging Face.
@@ -91,7 +87,7 @@ Launch distributed data-parallel training with `torchrun`:
 
 ```bash
 torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
-  experiments/Speck1-50M
+  experiments/Speck1-140M
 ```
 
 `train.batch_tokens` must be divisible by `device_batch_size * sequence_length * world_size`. Adjust the training configuration for the available devices before launching.
@@ -99,7 +95,7 @@ torchrun --standalone --nproc_per_node=8 -m scripts.base_train -- \
 Existing checkpoints are never resumed implicitly. A run fails rather than overwrite them unless an exact checkpoint step is supplied:
 
 ```bash
-python -m scripts.base_train experiments/Speck1-50M --resume <checkpoint-step>
+python -m scripts.base_train experiments/Speck1-140M --resume <checkpoint-step>
 ```
 
 Resume validates the architecture, packed-data manifest, optimizer settings, batch geometry, training horizon, and world size. It restores the optimizer, data position, elapsed time, and W&B run identity.
@@ -110,7 +106,7 @@ Generate from the latest checkpoint, or select one with `--step`:
 
 ```bash
 python -m scripts.infer "The meaning of life is" \
-  --experiment experiments/Speck1-50M
+  --experiment experiments/Speck1-140M
 ```
 
 Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, and `--checkpoint-dir`.
@@ -120,7 +116,7 @@ Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, 
 Measure compiled optimization steps with synthetic input:
 
 ```bash
-python -m scripts.benchmark experiments/Speck1-50M \
+python -m scripts.benchmark experiments/Speck1-140M \
   --mode compute \
   --output benchmark.json
 ```
@@ -138,7 +134,7 @@ uv run --extra cpu --group dev pytest -q
 Search uses the baseline experiment and stores a resumable study under `~/.cache/speck/search/<name>`:
 
 ```bash
-python -m scripts.search run experiments/Speck1-200M \
+python -m scripts.search run experiments/Speck1-140M \
   --name evolution-01 \
   --hours 3
 

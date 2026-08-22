@@ -8,8 +8,8 @@ Install the GPU environment and prepare the tokenizer and packed data used by th
 
 ```bash
 uv sync --extra gpu
-python -m scripts.tokenizer_prepare experiments/Speck1-200M
-python -m scripts.data_prepare experiments/Speck1-200M
+python -m scripts.tokenizer_prepare experiments/Speck1-140M
+python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
 The checked-in search profile requires CUDA. Ensure the configured packed dataset is complete, its manifest and shards are readable, and the study filesystem has enough space for a generation's checkpoints. Search does not use W&B.
@@ -19,13 +19,13 @@ The checked-in search profile requires CUDA. Ensure the configured packed datase
 The public entry point is:
 
 ```bash
-python -m scripts.search run experiments/Speck1-200M --name <name>
+python -m scripts.search run experiments/Speck1-140M --name <name>
 ```
 
 A new study also requires at least one cumulative limit:
 
 ```bash
-python -m scripts.search run experiments/Speck1-200M \
+python -m scripts.search run experiments/Speck1-140M \
   --name evolution-01 \
   --hours 3 \
   --generations 2 \
@@ -55,7 +55,7 @@ The study uses deterministic seeds, deterministic PyTorch algorithms, fixed vali
 Run the same command with the same name to continue from saved state:
 
 ```bash
-python -m scripts.search run experiments/Speck1-200M --name evolution-01
+python -m scripts.search run experiments/Speck1-140M --name evolution-01
 ```
 
 Candidate checkpoints include model, optimizer, training metadata, and loader position. Interrupted candidate training resumes from its retained checkpoint. Study state and candidate results are written atomically, and elapsed time is cumulative across coordinator runs.

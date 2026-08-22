@@ -13,18 +13,22 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 
-experiment = Path(__file__).parents[1] / "experiments" / "Speck1-200M"
+experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
 
 
 def test_main_architecture_round_trips():
     raw = json.loads((experiment / "model.json").read_text())
     config = ArchitectureConfig.from_dict(raw)
-    assert config.logical_depth == 11
-    assert config.unique_parameter_blocks == 11
-    assert config.expected_parameters == 182_206_848
+    assert config.logical_depth == 18
+    assert config.unique_parameter_blocks == 18
+    assert config.expected_parameters == 140_652_288
+    assert config.embedding_size == 640
     assert ArchitectureConfig.from_dict(config.export()).settings() == config.settings()
-    assert config.execution_plan[0].block.stages[0].branches[0].kind == "swiglu"
-    assert config.execution_plan[3].block.stages[0].branches[0].kind == "attention"
+    mixers = [invocation.block.stages[0].branches[0].kind for invocation in config.execution_plan]
+    assert mixers.count("attention") == 8
+    assert mixers.count("gated_causal_conv") == 10
+    assert config.execution_plan[0].block.stages[0].branches[0].kind == "gated_causal_conv"
+    assert config.execution_plan[1].block.stages[0].branches[0].kind == "attention"
 
 
 def test_unshared_repetitions_preserve_grouping_identity():
