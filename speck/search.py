@@ -1,0 +1,1036 @@
+"""deterministic architecture search mechanics."""
+
+import hashlib
+import json
+import math
+import random
+from dataclasses import dataclass, replace
+from pathlib import Path
+
+from speck.architecture import (
+    ArchitectureConfig,
+    AttentionSpec,
+    BlockConfig,
+    BlockGroup,
+    GatedCausalConvSpec,
+    StageConfig,
+    SwiGLUSpec,
+)
+
+
+MUTATIONS = (
+    "insert_block",
+    "delete_block",
+    "duplicate_independent_block",
+    "move_block",
+    "change_block_width",
+    "change_embedding_width",
+    "replace_mixer",
+    "toggle_attention_scope",
+    "change_sliding_window",
+    "change_attention_head_dimension",
+    "change_kv_heads",
+    "change_convolution_width",
+    "change_convolution_kernel",
+    "toggle_swiglu",
+    "change_swiglu_expansion",
+    "change_shared_repetition",
+)
+
+
+class InapplicableMutation(ValueError):
+    pass
+
+
+def _copy_json(value):
+    return json.loads(json.dumps(value, allow_nan=False))
+
+
+def _probabilities(values, name):
+    if not isinstance(values, dict) or not values:
+        raise ValueError(f"{name} must be a nonempty probability table")
+    probabilities = {str(key): float(value) for key, value in values.items()}
+    if any(value < 0 or not math.isfinite(value) for value in probabilities.values()):
+        raise ValueError(f"{name} contains an invalid probability")
+    if not math.isclose(sum(probabilities.values()), 1.0, abs_tol=1e-9):
+        raise ValueError(f"{name} probabilities must sum to one")
+    return probabilities
+
+
+@dataclass(frozen=True)
+class SearchSettings:
+    values: dict
+
+    @classmethod
+    def from_dict(cls, value):
+        values = _copy_json(value)
+        required = {
+            "format_version",
+            "seed",
+            "generation_size",
+            "controlled_mutations",
+            "random_immigrants",
+            "mutation_attempts",
+            "random_attempts",
+            "parameter_bounds",
+            "logical_depth_bounds",
+            "baseline_normalization",
+            "training",
+            "evaluation",
+            "rungs",
+            "final_tokens",
+            "widths",
+            "head_dimensions",
+            "kv_heads",
+            "sliding_windows",
+            "convolution_ratios",
+            "convolution_kernels",
+            "swiglu_ratios",
+            "repeat_counts",
+            "mutation_probabilities",
+            "depth_probabilities",
+            "embedding_width_probabilities",
+            "block_width_probabilities",
+            "mixer_probabilities",
+            "swiglu_probabilities",
+            "attention_scope_probabilities",
+            "attention_head_dimension_probabilities",
+            "kv_head_probabilities",
+            "convolution_ratio_probabilities",
+            "convolution_kernel_probabilities",
+            "swiglu_ratio_probabilities",
+            "repeat_count_probabilities",
+            "parent_lane_probabilities",
+            "profile",
+            "final_profile",
+            "final_seed_offset",
+        }
+        missing = sorted(required - values.keys())
+        if missing:
+            raise ValueError(f"search settings are missing: {', '.join(missing)}")
+        if values["format_version"] != 1:
+            raise ValueError("unsupported search settings format")
+
+        positive = (
+            "generation_size",
+            "mutation_attempts",
+            "random_attempts",
+            "final_tokens",
+        )
+        if any(int(values[key]) < 1 for key in positive):
+            raise ValueError("search counts and horizons must be positive")
+        if not 0 <= int(values["random_immigrants"]) < int(values["generation_size"]):
+            raise ValueError("random immigrants must fit in a generation")
+        if len(values["controlled_mutations"]) + 1 > int(values["generation_size"]):
+            raise ValueError("controlled mutations must fit in generation zero")
+        if any(name not in MUTATIONS for name in values["controlled_mutations"]):
+            raise ValueError("controlled mutations contain an unknown mutation")
+
+        for key in (
+            "widths",
+            "head_dimensions",
+            "kv_heads",
+            "sliding_windows",
+            "convolution_ratios",
+            "convolution_kernels",
+            "swiglu_ratios",
+            "repeat_counts",
+            "rungs",
+        ):
+            sequence = values[key]
+            if not sequence or sequence != sorted(set(sequence)) or any(item <= 0 for item in sequence):
+                raise ValueError(f"{key} must contain sorted unique positive values")
+
+        for key in ("parameter_bounds", "logical_depth_bounds"):
+            bounds = values[key]
+            if len(bounds) != 2 or bounds[0] < 1 or bounds[0] > bounds[1]:
+                raise ValueError(f"{key} must contain valid lower and upper bounds")
+        if values["rungs"][-1] >= values["final_tokens"]:
+            raise ValueError("final tokens must exceed the final search rung")
+
+        training = values["training"]
+        training_required = {
+            "sequence_length",
+            "device_batch_size",
+            "batch_tokens",
+            "optimizer",
+            "learning_rate",
+            "weight_decay",
+            "gradient_clip",
+            "warmup_tokens",
+            "schedule_tokens",
+            "minimum_learning_rate_scale",
+            "checkpoints",
+        }
+        if training_required - training.keys():
+            raise ValueError("training settings are incomplete")
+        micro_tokens = training["sequence_length"] * training["device_batch_size"]
+        if micro_tokens < 1 or training["batch_tokens"] % micro_tokens:
+            raise ValueError("training batch tokens must divide into whole micro batches")
+        if any(tokens % training["batch_tokens"] for tokens in training["checkpoints"]):
+            raise ValueError("training checkpoints must align with optimizer batches")
+        if any(rung not in training["checkpoints"] for rung in values["rungs"]):
+            raise ValueError("every rung must be a training checkpoint")
+        if training["schedule_tokens"] != values["final_tokens"]:
+            raise ValueError("training schedule and final horizons must match")
+
+        evaluation = values["evaluation"]
+        if evaluation.get("monitor_offset") != 0:
+            raise ValueError("the monitor slice must begin at zero")
+        if evaluation.get("final_offset") != evaluation.get("monitor_tokens"):
+            raise ValueError("the final slice must immediately follow the monitor slice")
+        if evaluation.get("monitor_tokens", 0) < 1 or evaluation.get("final_tokens", 0) < 1:
+            raise ValueError("evaluation slices must contain targets")
+
+        probability_keys = (
+            "mutation_probabilities",
+            "depth_probabilities",
+            "embedding_width_probabilities",
+            "block_width_probabilities",
+            "mixer_probabilities",
+            "swiglu_probabilities",
+            "attention_scope_probabilities",
+            "attention_head_dimension_probabilities",
+            "kv_head_probabilities",
+            "convolution_ratio_probabilities",
+            "convolution_kernel_probabilities",
+            "swiglu_ratio_probabilities",
+            "repeat_count_probabilities",
+            "parent_lane_probabilities",
+        )
+        for key in probability_keys:
+            values[key] = _probabilities(values[key], key)
+        if tuple(values["mutation_probabilities"]) != MUTATIONS:
+            raise ValueError("mutation probabilities must define every mutation in order")
+        if set(values["parent_lane_probabilities"]) != {"quality", "balanced", "efficiency"}:
+            raise ValueError("parent probabilities must define the three selection lanes")
+        return cls(values)
+
+    def settings(self):
+        return _copy_json(self.values)
+
+    def __getitem__(self, key):
+        return self.values[key]
+
+
+def load_search_settings(path):
+    return SearchSettings.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+
+
+def derived_seed(seed, *parts):
+    payload = ":".join((str(seed), *(str(part) for part in parts))).encode()
+    return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big")
+
+
+def _rng(value):
+    return value if isinstance(value, random.Random) else random.Random(value)
+
+
+def _weighted_choice(rng, probabilities, allowed=None):
+    items = [
+        (key, probability)
+        for key, probability in probabilities.items()
+        if allowed is None or key in allowed
+    ]
+    total = sum(probability for _, probability in items)
+    if total <= 0:
+        raise ValueError("no weighted choices are available")
+    target = rng.random() * total
+    cumulative = 0.0
+    for key, probability in items:
+        cumulative += probability
+        if target < cumulative:
+            return key
+    return items[-1][0]
+
+
+def _numeric_choice(rng, probabilities, cast, allowed=None):
+    allowed_keys = None if allowed is None else {str(value) for value in allowed}
+    return cast(_weighted_choice(rng, probabilities, allowed_keys))
+
+
+def _parts(block):
+    if any(len(stage.branches) != 1 for stage in block.stages):
+        raise ValueError("search stages must contain one operation")
+    operations = tuple(stage.branches[0] for stage in block.stages)
+    if not operations or len(operations) > 2:
+        raise ValueError("search blocks contain at most a mixer and swiglu")
+    if len(operations) == 1:
+        mixer = None if isinstance(operations[0], SwiGLUSpec) else operations[0]
+        swiglu = operations[0] if isinstance(operations[0], SwiGLUSpec) else None
+    else:
+        mixer, swiglu = operations
+    if mixer is not None and not isinstance(
+        mixer, (AttentionSpec, GatedCausalConvSpec)
+    ):
+        raise ValueError("search blocks contain one supported mixer")
+    if swiglu is not None and not isinstance(swiglu, SwiGLUSpec):
+        raise ValueError("swiglu must follow the mixer")
+    return mixer, swiglu
+
+
+def _block(hidden_size, mixer, swiglu):
+    operations = tuple(operation for operation in (mixer, swiglu) if operation is not None)
+    return BlockConfig(hidden_size, tuple(StageConfig((operation,)) for operation in operations))
+
+
+def _closest(values, target):
+    return min(values, key=lambda value: (abs(value - target), value))
+
+
+def normalize_baseline(config, settings):
+    normalization = settings["baseline_normalization"]
+    replacements = {
+        int(source): int(target)
+        for source, target in normalization.get("width_replacements", {}).items()
+    }
+    groups = []
+    for group in config.blocks:
+        old_width = group.block.hidden_size
+        new_width = replacements.get(old_width, old_width)
+        mixer, swiglu = _parts(group.block)
+        if isinstance(mixer, GatedCausalConvSpec):
+            ratio = _closest(settings["convolution_ratios"], mixer.inner_size / old_width)
+            mixer = replace(mixer, inner_size=round(new_width * ratio))
+        if swiglu is not None:
+            ratio = _closest(settings["swiglu_ratios"], swiglu.intermediate_size / old_width)
+            swiglu = replace(swiglu, intermediate_size=round(new_width * ratio))
+        normalized = BlockGroup(
+            _block(new_width, mixer, swiglu),
+            repeat=group.repeat,
+            weight_sharing=group.weight_sharing,
+        )
+        if (
+            normalization.get("expand_unshared_repetitions")
+            and normalized.repeat > 1
+            and normalized.weight_sharing == "none"
+        ):
+            groups.extend(BlockGroup(normalized.block) for _ in range(normalized.repeat))
+        else:
+            groups.append(
+                replace(
+                    normalized,
+                    weight_sharing="all" if normalized.repeat > 1 else "none",
+                )
+            )
+    embedding_size = replacements.get(config.embedding_size, config.embedding_size)
+    normalized = replace(
+        config,
+        blocks=tuple(groups),
+        embedding_size=embedding_size,
+        expected_parameters=None,
+    )
+    validate_architecture(normalized, settings)
+    return normalized
+
+
+def parameter_count(config):
+    total = config.vocab_size * config.embedding_size
+    counted = set()
+    input_size = config.embedding_size
+    for invocation in config.execution_plan:
+        hidden_size = invocation.block.hidden_size
+        if input_size != hidden_size:
+            total += input_size * hidden_size
+        if invocation.weight_key not in counted:
+            for stage in invocation.block.stages:
+                for operation in stage.branches:
+                    total += hidden_size
+                    if isinstance(operation, AttentionSpec):
+                        kv_size = operation.num_key_value_heads * operation.head_dim
+                        total += 2 * hidden_size * hidden_size
+                        total += 2 * hidden_size * kv_size
+                        total += 2 * operation.head_dim
+                    elif isinstance(operation, GatedCausalConvSpec):
+                        total += 4 * hidden_size * operation.inner_size
+                        total += operation.inner_size * operation.kernel_size
+                    else:
+                        total += 3 * hidden_size * operation.intermediate_size
+            counted.add(invocation.weight_key)
+        input_size = hidden_size
+    total += input_size
+    if input_size != config.embedding_size:
+        total += input_size * config.embedding_size
+    return total
+
+
+def sequence_state_bytes(config, length, batch_size=1, element_size=2):
+    total = 0
+    for invocation in config.execution_plan:
+        for stage in invocation.block.stages:
+            for operation in stage.branches:
+                if isinstance(operation, AttentionSpec):
+                    capacity = length
+                    if operation.scope == "sliding":
+                        capacity = min(length, operation.window_size)
+                    total += (
+                        2
+                        * batch_size
+                        * operation.num_key_value_heads
+                        * capacity
+                        * operation.head_dim
+                        * element_size
+                    )
+                elif isinstance(operation, GatedCausalConvSpec):
+                    total += (
+                        batch_size
+                        * operation.inner_size
+                        * (operation.kernel_size - 1)
+                        * element_size
+                    )
+    return total
+
+
+def flops_per_token(config, sequence_length):
+    linear = config.vocab_size * config.embedding_size
+    attention = 0
+    input_size = config.embedding_size
+    for invocation in config.execution_plan:
+        hidden_size = invocation.block.hidden_size
+        if input_size != hidden_size:
+            linear += input_size * hidden_size
+        for stage in invocation.block.stages:
+            for operation in stage.branches:
+                if isinstance(operation, AttentionSpec):
+                    kv_size = operation.num_key_value_heads * operation.head_dim
+                    linear += 2 * hidden_size * hidden_size + 2 * hidden_size * kv_size
+                    context = sequence_length
+                    if operation.scope == "sliding":
+                        context = min(sequence_length, operation.window_size)
+                    attention += 12 * context * hidden_size
+                elif isinstance(operation, GatedCausalConvSpec):
+                    linear += 4 * hidden_size * operation.inner_size
+                    linear += operation.inner_size * operation.kernel_size
+                else:
+                    linear += 3 * hidden_size * operation.intermediate_size
+        input_size = hidden_size
+    if input_size != config.embedding_size:
+        linear += input_size * config.embedding_size
+    return 6 * linear + attention
+
+
+def architecture_metrics(config, settings):
+    executions = {"attention": 0, "convolution": 0, "swiglu": 0}
+    for invocation in config.execution_plan:
+        for stage in invocation.block.stages:
+            for operation in stage.branches:
+                if isinstance(operation, AttentionSpec):
+                    executions["attention"] += 1
+                elif isinstance(operation, GatedCausalConvSpec):
+                    executions["convolution"] += 1
+                else:
+                    executions["swiglu"] += 1
+    parameters = parameter_count(config)
+    sequence_length = settings["training"]["sequence_length"]
+    return {
+        "parameters": parameters,
+        "weight_bytes": parameters * 4,
+        "flops_per_token": flops_per_token(config, sequence_length),
+        "state_bytes": {
+            str(length): sequence_state_bytes(config, length)
+            for length in (512, 2048, 4096)
+        },
+        "logical_depth": config.logical_depth,
+        "unique_parameter_blocks": config.unique_parameter_blocks,
+        "executions": executions,
+    }
+
+
+def validate_architecture(config, settings):
+    if config.embedding_size not in settings["widths"]:
+        raise ValueError("embedding width is outside the search space")
+    minimum_depth, maximum_depth = settings["logical_depth_bounds"]
+    if not minimum_depth <= config.logical_depth <= maximum_depth:
+        raise ValueError("logical depth is outside the search bounds")
+    for group in config.blocks:
+        if group.repeat not in settings["repeat_counts"]:
+            raise ValueError("shared repetition is outside the search space")
+        expected_sharing = "all" if group.repeat > 1 else "none"
+        if group.weight_sharing != expected_sharing:
+            raise ValueError("search repetitions must use canonical sharing")
+        block = group.block
+        if block.hidden_size not in settings["widths"]:
+            raise ValueError("block width is outside the search space")
+        mixer, swiglu = _parts(block)
+        if isinstance(mixer, AttentionSpec):
+            if mixer.head_dim not in settings["head_dimensions"]:
+                raise ValueError("attention head dimension is outside the search space")
+            if mixer.num_key_value_heads not in settings["kv_heads"]:
+                raise ValueError("attention kv heads are outside the search space")
+            if mixer.scope == "sliding" and mixer.window_size not in settings["sliding_windows"]:
+                raise ValueError("sliding window is outside the search space")
+        elif isinstance(mixer, GatedCausalConvSpec):
+            ratio = mixer.inner_size / block.hidden_size
+            if not any(math.isclose(ratio, value) for value in settings["convolution_ratios"]):
+                raise ValueError("convolution ratio is outside the search space")
+            if mixer.kernel_size not in settings["convolution_kernels"]:
+                raise ValueError("convolution kernel is outside the search space")
+        if swiglu is not None:
+            ratio = swiglu.intermediate_size / block.hidden_size
+            if not any(math.isclose(ratio, value) for value in settings["swiglu_ratios"]):
+                raise ValueError("swiglu ratio is outside the search space")
+        if mixer is None and swiglu is None:
+            raise ValueError("a search block requires a mixer or swiglu")
+    parameters = parameter_count(config)
+    lower, upper = settings["parameter_bounds"]
+    if not lower <= parameters <= upper:
+        raise ValueError("parameter count is outside the search bounds")
+    return architecture_metrics(config, settings)
+
+
+def _step(values, current, rng):
+    index = values.index(current)
+    choices = []
+    if index:
+        choices.append(values[index - 1])
+    if index + 1 < len(values):
+        choices.append(values[index + 1])
+    if not choices:
+        raise InapplicableMutation("numeric value has no adjacent choice")
+    return rng.choice(choices)
+
+
+def _random_width(previous, settings, rng):
+    direction = _weighted_choice(rng, settings["block_width_probabilities"])
+    widths = settings["widths"]
+    index = widths.index(previous)
+    if direction == "narrower" and index:
+        return widths[index - 1]
+    if direction == "wider" and index + 1 < len(widths):
+        return widths[index + 1]
+    return previous
+
+
+def _valid_kv_heads(width, head_dim, settings):
+    if width % head_dim:
+        return []
+    query_heads = width // head_dim
+    return [heads for heads in settings["kv_heads"] if query_heads % heads == 0]
+
+
+def _random_group(width, remaining_depth, settings, rng):
+    mixer_name = _weighted_choice(rng, settings["mixer_probabilities"])
+    swiglu_enabled = _weighted_choice(rng, settings["swiglu_probabilities"]) == "enabled"
+    if mixer_name == "none":
+        swiglu_enabled = True
+
+    mixer = None
+    if mixer_name == "attention":
+        dimensions = [
+            value
+            for value in settings["head_dimensions"]
+            if _valid_kv_heads(width, value, settings)
+        ]
+        head_dim = _numeric_choice(
+            rng,
+            settings["attention_head_dimension_probabilities"],
+            int,
+            dimensions,
+        )
+        kv_heads = _numeric_choice(
+            rng,
+            settings["kv_head_probabilities"],
+            int,
+            _valid_kv_heads(width, head_dim, settings),
+        )
+        scope = _weighted_choice(rng, settings["attention_scope_probabilities"])
+        window = rng.choice(settings["sliding_windows"]) if scope == "sliding" else None
+        mixer = AttentionSpec(head_dim, kv_heads, scope, window)
+    elif mixer_name == "convolution":
+        ratio = _numeric_choice(
+            rng, settings["convolution_ratio_probabilities"], float
+        )
+        kernel = _numeric_choice(
+            rng, settings["convolution_kernel_probabilities"], int
+        )
+        mixer = GatedCausalConvSpec(round(width * ratio), kernel)
+
+    swiglu = None
+    if swiglu_enabled:
+        ratio = _numeric_choice(rng, settings["swiglu_ratio_probabilities"], int)
+        swiglu = SwiGLUSpec(width * ratio)
+    repeat = _numeric_choice(
+        rng,
+        settings["repeat_count_probabilities"],
+        int,
+        [value for value in settings["repeat_counts"] if value <= remaining_depth],
+    )
+    return BlockGroup(
+        _block(width, mixer, swiglu),
+        repeat=repeat,
+        weight_sharing="all" if repeat > 1 else "none",
+    )
+
+
+def random_architecture(template, settings, seed, attempts=None):
+    rng = _rng(seed)
+    attempts = attempts or settings["random_attempts"]
+    last_error = None
+    for _ in range(attempts):
+        depth = _numeric_choice(rng, settings["depth_probabilities"], int)
+        embedding_size = _numeric_choice(
+            rng, settings["embedding_width_probabilities"], int
+        )
+        groups = []
+        previous = embedding_size
+        remaining = depth
+        while remaining:
+            width = _random_width(previous, settings, rng)
+            group = _random_group(width, remaining, settings, rng)
+            groups.append(group)
+            previous = width
+            remaining -= group.repeat
+        config = replace(
+            template,
+            blocks=tuple(groups),
+            embedding_size=embedding_size,
+            expected_parameters=None,
+        )
+        try:
+            validate_architecture(config, settings)
+            return config
+        except ValueError as error:
+            last_error = error
+    raise RuntimeError("failed to generate a feasible random architecture") from last_error
+
+
+def _replace_group(config, index, group):
+    groups = list(config.blocks)
+    groups[index] = group
+    return replace(config, blocks=tuple(groups), expected_parameters=None)
+
+
+def _mutation_insert(config, settings, rng):
+    if config.logical_depth >= settings["logical_depth_bounds"][1]:
+        raise InapplicableMutation("architecture is at maximum depth")
+    index = rng.randrange(len(config.blocks) + 1)
+    previous = config.embedding_size if index == 0 else config.blocks[index - 1].block.hidden_size
+    width = _random_width(previous, settings, rng)
+    group = _random_group(width, 1, settings, rng)
+    groups = list(config.blocks)
+    groups.insert(index, group)
+    return replace(config, blocks=tuple(groups), expected_parameters=None), {"index": index}
+
+
+def _mutation_delete(config, settings, rng):
+    minimum = settings["logical_depth_bounds"][0]
+    choices = [
+        index
+        for index, group in enumerate(config.blocks)
+        if config.logical_depth - group.repeat >= minimum
+    ]
+    if not choices:
+        raise InapplicableMutation("no block can be deleted within the depth bound")
+    index = rng.choice(choices)
+    groups = list(config.blocks)
+    groups.pop(index)
+    return replace(config, blocks=tuple(groups), expected_parameters=None), {"index": index}
+
+
+def _mutation_duplicate(config, settings, rng):
+    maximum = settings["logical_depth_bounds"][1]
+    choices = [
+        index
+        for index, group in enumerate(config.blocks)
+        if config.logical_depth + group.repeat <= maximum
+    ]
+    if not choices:
+        raise InapplicableMutation("no block can be duplicated within the depth bound")
+    source = rng.choice(choices)
+    destination = rng.randrange(len(config.blocks) + 1)
+    groups = list(config.blocks)
+    groups.insert(destination, config.blocks[source])
+    return replace(config, blocks=tuple(groups), expected_parameters=None), {
+        "source": source,
+        "destination": destination,
+    }
+
+
+def _mutation_move(config, settings, rng):
+    if len(config.blocks) < 2:
+        raise InapplicableMutation("moving a block requires two groups")
+    source = rng.randrange(len(config.blocks))
+    destinations = [index for index in range(len(config.blocks)) if index != source]
+    destination = rng.choice(destinations)
+    groups = list(config.blocks)
+    group = groups.pop(source)
+    groups.insert(destination, group)
+    return replace(config, blocks=tuple(groups), expected_parameters=None), {
+        "source": source,
+        "destination": destination,
+    }
+
+
+def _mutation_block_width(config, settings, rng):
+    choices = [
+        index
+        for index, group in enumerate(config.blocks)
+        if len(settings["widths"]) > 1
+    ]
+    if not choices:
+        raise InapplicableMutation("no block width can change")
+    index = rng.choice(choices)
+    group = config.blocks[index]
+    old_width = group.block.hidden_size
+    new_width = _step(settings["widths"], old_width, rng)
+    mixer, swiglu = _parts(group.block)
+    if isinstance(mixer, GatedCausalConvSpec):
+        ratio = mixer.inner_size / old_width
+        mixer = replace(mixer, inner_size=round(new_width * ratio))
+    if swiglu is not None:
+        ratio = swiglu.intermediate_size / old_width
+        swiglu = replace(swiglu, intermediate_size=round(new_width * ratio))
+    changed = replace(group, block=_block(new_width, mixer, swiglu))
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": old_width,
+        "to": new_width,
+    }
+
+
+def _mutation_embedding_width(config, settings, rng):
+    width = _step(settings["widths"], config.embedding_size, rng)
+    return replace(config, embedding_size=width, expected_parameters=None), {
+        "from": config.embedding_size,
+        "to": width,
+    }
+
+
+def _mutation_replace_mixer(config, settings, rng):
+    index = rng.randrange(len(config.blocks))
+    group = config.blocks[index]
+    mixer, swiglu = _parts(group.block)
+    current = (
+        "attention"
+        if isinstance(mixer, AttentionSpec)
+        else "convolution"
+        if isinstance(mixer, GatedCausalConvSpec)
+        else "none"
+    )
+    choices = [name for name in ("attention", "convolution", "none") if name != current]
+    if swiglu is None:
+        choices.remove("none")
+    replacement_name = rng.choice(choices)
+    replacement = None
+    if replacement_name == "attention":
+        dimensions = [
+            value
+            for value in settings["head_dimensions"]
+            if _valid_kv_heads(group.block.hidden_size, value, settings)
+        ]
+        if not dimensions:
+            raise InapplicableMutation("block width has no valid attention head dimension")
+        replacement = AttentionSpec(dimensions[0], 1)
+    elif replacement_name == "convolution":
+        ratio = 1.0 if 1.0 in settings["convolution_ratios"] else settings["convolution_ratios"][0]
+        replacement = GatedCausalConvSpec(
+            round(group.block.hidden_size * ratio),
+            settings["convolution_kernels"][0],
+        )
+    changed = replace(group, block=_block(group.block.hidden_size, replacement, swiglu))
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": current,
+        "to": replacement_name,
+    }
+
+
+def _groups_with(config, operation_type):
+    choices = []
+    for index, group in enumerate(config.blocks):
+        mixer, swiglu = _parts(group.block)
+        operation = swiglu if operation_type is SwiGLUSpec else mixer
+        if isinstance(operation, operation_type):
+            choices.append((index, group, mixer, swiglu, operation))
+    return choices
+
+
+def _mutation_attention_scope(config, settings, rng):
+    choices = _groups_with(config, AttentionSpec)
+    if not choices:
+        raise InapplicableMutation("architecture has no attention")
+    index, group, mixer, swiglu, attention = rng.choice(choices)
+    if attention.scope == "global":
+        changed_attention = replace(
+            attention,
+            scope="sliding",
+            window_size=settings["sliding_windows"][0],
+        )
+    else:
+        changed_attention = replace(attention, scope="global", window_size=None)
+    changed = replace(group, block=_block(group.block.hidden_size, changed_attention, swiglu))
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": attention.scope,
+        "to": changed_attention.scope,
+    }
+
+
+def _mutation_sliding_window(config, settings, rng):
+    choices = [
+        choice
+        for choice in _groups_with(config, AttentionSpec)
+        if choice[4].scope == "sliding" and len(settings["sliding_windows"]) > 1
+    ]
+    if not choices:
+        raise InapplicableMutation("architecture has no mutable sliding attention")
+    index, group, mixer, swiglu, attention = rng.choice(choices)
+    window = _step(settings["sliding_windows"], attention.window_size, rng)
+    changed = replace(
+        group,
+        block=_block(group.block.hidden_size, replace(attention, window_size=window), swiglu),
+    )
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": attention.window_size,
+        "to": window,
+    }
+
+
+def _mutation_head_dimension(config, settings, rng):
+    choices = _groups_with(config, AttentionSpec)
+    if not choices or len(settings["head_dimensions"]) < 2:
+        raise InapplicableMutation("architecture has no mutable attention head dimension")
+    index, group, mixer, swiglu, attention = rng.choice(choices)
+    head_dim = _step(settings["head_dimensions"], attention.head_dim, rng)
+    changed = replace(
+        group,
+        block=_block(group.block.hidden_size, replace(attention, head_dim=head_dim), swiglu),
+    )
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": attention.head_dim,
+        "to": head_dim,
+    }
+
+
+def _mutation_kv_heads(config, settings, rng):
+    choices = _groups_with(config, AttentionSpec)
+    if not choices or len(settings["kv_heads"]) < 2:
+        raise InapplicableMutation("architecture has no mutable kv head count")
+    index, group, mixer, swiglu, attention = rng.choice(choices)
+    heads = _step(settings["kv_heads"], attention.num_key_value_heads, rng)
+    changed = replace(
+        group,
+        block=_block(
+            group.block.hidden_size,
+            replace(attention, num_key_value_heads=heads),
+            swiglu,
+        ),
+    )
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": attention.num_key_value_heads,
+        "to": heads,
+    }
+
+
+def _mutation_convolution_width(config, settings, rng):
+    choices = _groups_with(config, GatedCausalConvSpec)
+    if not choices or len(settings["convolution_ratios"]) < 2:
+        raise InapplicableMutation("architecture has no mutable convolution width")
+    index, group, mixer, swiglu, convolution = rng.choice(choices)
+    old_ratio = convolution.inner_size / group.block.hidden_size
+    ratio = _step(settings["convolution_ratios"], old_ratio, rng)
+    changed_mixer = replace(
+        convolution,
+        inner_size=round(group.block.hidden_size * ratio),
+    )
+    changed = replace(group, block=_block(group.block.hidden_size, changed_mixer, swiglu))
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": old_ratio,
+        "to": ratio,
+    }
+
+
+def _mutation_convolution_kernel(config, settings, rng):
+    choices = _groups_with(config, GatedCausalConvSpec)
+    if not choices or len(settings["convolution_kernels"]) < 2:
+        raise InapplicableMutation("architecture has no mutable convolution kernel")
+    index, group, mixer, swiglu, convolution = rng.choice(choices)
+    kernel = _step(settings["convolution_kernels"], convolution.kernel_size, rng)
+    changed = replace(
+        group,
+        block=_block(
+            group.block.hidden_size,
+            replace(convolution, kernel_size=kernel),
+            swiglu,
+        ),
+    )
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": convolution.kernel_size,
+        "to": kernel,
+    }
+
+
+def _mutation_toggle_swiglu(config, settings, rng):
+    choices = []
+    for index, group in enumerate(config.blocks):
+        mixer, swiglu = _parts(group.block)
+        if swiglu is None or mixer is not None:
+            choices.append((index, group, mixer, swiglu))
+    if not choices:
+        raise InapplicableMutation("no swiglu can be toggled")
+    index, group, mixer, swiglu = rng.choice(choices)
+    if swiglu is None:
+        ratio = 3 if 3 in settings["swiglu_ratios"] else settings["swiglu_ratios"][0]
+        changed_swiglu = SwiGLUSpec(group.block.hidden_size * ratio)
+    else:
+        changed_swiglu = None
+    changed = replace(group, block=_block(group.block.hidden_size, mixer, changed_swiglu))
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "enabled": changed_swiglu is not None,
+    }
+
+
+def _mutation_swiglu_expansion(config, settings, rng):
+    choices = _groups_with(config, SwiGLUSpec)
+    if not choices or len(settings["swiglu_ratios"]) < 2:
+        raise InapplicableMutation("architecture has no mutable swiglu expansion")
+    index, group, mixer, swiglu, operation = rng.choice(choices)
+    old_ratio = operation.intermediate_size / group.block.hidden_size
+    ratio = _step(settings["swiglu_ratios"], old_ratio, rng)
+    changed_swiglu = replace(
+        operation,
+        intermediate_size=group.block.hidden_size * ratio,
+    )
+    changed = replace(group, block=_block(group.block.hidden_size, mixer, changed_swiglu))
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": old_ratio,
+        "to": ratio,
+    }
+
+
+def _mutation_repetition(config, settings, rng):
+    choices = []
+    minimum, maximum = settings["logical_depth_bounds"]
+    for index, group in enumerate(config.blocks):
+        repeat_index = settings["repeat_counts"].index(group.repeat)
+        possible = []
+        if repeat_index:
+            possible.append(settings["repeat_counts"][repeat_index - 1])
+        if repeat_index + 1 < len(settings["repeat_counts"]):
+            possible.append(settings["repeat_counts"][repeat_index + 1])
+        possible = [
+            repeat
+            for repeat in possible
+            if minimum <= config.logical_depth - group.repeat + repeat <= maximum
+        ]
+        if possible:
+            choices.append((index, group, possible))
+    if not choices:
+        raise InapplicableMutation("no shared repetition can change within the depth bounds")
+    index, group, possible = rng.choice(choices)
+    repeat = rng.choice(possible)
+    changed = replace(group, repeat=repeat, weight_sharing="all" if repeat > 1 else "none")
+    return _replace_group(config, index, changed), {
+        "index": index,
+        "from": group.repeat,
+        "to": repeat,
+    }
+
+
+_MUTATION_FUNCTIONS = {
+    "insert_block": _mutation_insert,
+    "delete_block": _mutation_delete,
+    "duplicate_independent_block": _mutation_duplicate,
+    "move_block": _mutation_move,
+    "change_block_width": _mutation_block_width,
+    "change_embedding_width": _mutation_embedding_width,
+    "replace_mixer": _mutation_replace_mixer,
+    "toggle_attention_scope": _mutation_attention_scope,
+    "change_sliding_window": _mutation_sliding_window,
+    "change_attention_head_dimension": _mutation_head_dimension,
+    "change_kv_heads": _mutation_kv_heads,
+    "change_convolution_width": _mutation_convolution_width,
+    "change_convolution_kernel": _mutation_convolution_kernel,
+    "toggle_swiglu": _mutation_toggle_swiglu,
+    "change_swiglu_expansion": _mutation_swiglu_expansion,
+    "change_shared_repetition": _mutation_repetition,
+}
+
+
+@dataclass(frozen=True)
+class MutationResult:
+    architecture: ArchitectureConfig
+    name: str
+    details: dict
+
+
+def mutate_architecture(parent, settings, seed, mutation=None, attempts=None):
+    if mutation is not None and mutation not in MUTATIONS:
+        raise ValueError(f"unknown mutation: {mutation}")
+    rng = _rng(seed)
+    attempts = attempts or settings["mutation_attempts"]
+    last_error = None
+    for _ in range(attempts):
+        name = mutation or _weighted_choice(rng, settings["mutation_probabilities"])
+        try:
+            architecture, details = _MUTATION_FUNCTIONS[name](parent, settings, rng)
+            if architecture.digest == parent.digest:
+                raise InapplicableMutation("mutation did not change architecture identity")
+            validate_architecture(architecture, settings)
+            return MutationResult(architecture, name, details)
+        except (InapplicableMutation, ValueError) as error:
+            last_error = error
+    qualifier = mutation or "sampled"
+    raise InapplicableMutation(f"failed to apply {qualifier} mutation") from last_error
+
+
+@dataclass(frozen=True)
+class CandidatePlan:
+    architecture: ArchitectureConfig
+    parent_digest: str | None
+    mutation: dict | None
+
+
+def _unique_random(template, settings, rng, seen):
+    last_error = None
+    for _ in range(settings["random_attempts"]):
+        try:
+            architecture = random_architecture(template, settings, rng)
+        except RuntimeError as error:
+            last_error = error
+            continue
+        if architecture.digest not in seen:
+            seen.add(architecture.digest)
+            return architecture
+    raise RuntimeError("failed to generate a unique random architecture") from last_error
+
+
+def initial_generation(baseline, settings, existing_digests=()):
+    rng = random.Random(derived_seed(settings["seed"], "generation", 0))
+    normalized = normalize_baseline(baseline, settings)
+    seen = set(existing_digests)
+    if normalized.digest in seen:
+        raise RuntimeError("normalized baseline duplicates an existing candidate")
+    seen.add(normalized.digest)
+    plans = [CandidatePlan(normalized, None, None)]
+    for name in settings["controlled_mutations"]:
+        result = None
+        for _ in range(settings["mutation_attempts"]):
+            try:
+                candidate = mutate_architecture(normalized, settings, rng, name)
+            except InapplicableMutation:
+                continue
+            if candidate.architecture.digest not in seen:
+                result = candidate
+                break
+        if result is None:
+            raise RuntimeError(f"failed to create unique controlled mutation: {name}")
+        seen.add(result.architecture.digest)
+        plans.append(
+            CandidatePlan(
+                result.architecture,
+                normalized.digest,
+                {"name": result.name, **result.details},
+            )
+        )
+    while len(plans) < settings["generation_size"]:
+        architecture = _unique_random(normalized, settings, rng, seen)
+        plans.append(CandidatePlan(architecture, None, {"name": "random"}))
+    return tuple(plans)
