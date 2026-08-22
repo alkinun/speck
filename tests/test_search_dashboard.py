@@ -1,7 +1,12 @@
+import pytest
+
 from scripts.search_dashboard import _pareto_ranks, candidate, dashboard, snapshot
+from speck.architecture import ArchitectureConfig, BlockConfig, BlockGroup, StageConfig, SwiGLUSpec
 from speck.model import Config, LayerConfig
+from speck.search.protocol import ObjectiveSet, ObjectiveSpec
 from speck.search.store import StudyStore
 from speck.search.study import SearchStudy
+from speck.search.study_v3 import V3Study
 
 
 def test_dashboard_reads_study_without_writing(tmp_path):
@@ -187,6 +192,162 @@ def test_dashboard_projects_v2_architectures_rungs_and_trials(tmp_path):
     assert failed_state["candidates"][0]["comparison_status"] == "completed"
 
 
+def test_dashboard_projects_v3_objective_sets_horizons_and_native_blocks(tmp_path):
+    database = tmp_path / "study.sqlite3"
+    objectives = ObjectiveSet(
+        "gpu_short",
+        (
+            ObjectiveSpec("quality.target_nll", "minimize", "quality"),
+            ObjectiveSpec("gpu_short.throughput", "maximize", "efficiency"),
+            ObjectiveSpec(
+                "quality.procedural_score",
+                "maximize",
+                "reporting",
+                required_for_selection=False,
+            ),
+        ),
+    )
+    revised_objectives = ObjectiveSet(
+        "gpu_short",
+        (ObjectiveSpec("quality.target_nll", "minimize", "quality"),),
+    )
+    config = {
+        "format_version": 3,
+        "calibration": {
+            "noise_tokens": 4,
+            "broad_architectures": 2,
+            "broad_tokens": 8,
+            "anchor_tokens": 16,
+        },
+        "objective_sets": [
+            {
+                "name": objectives.name,
+                "objectives": [
+                    {
+                        "name": item.name,
+                        "direction": item.direction,
+                        "role": item.role,
+                        "required_for_selection": item.required_for_selection,
+                    }
+                    for item in objectives.objectives
+                ],
+            }
+        ],
+        "quality": {"checkpoint_tokens": [4, 8, 16]},
+        "planner": {"total_cost": 100},
+    }
+    first = ArchitectureConfig(
+        (BlockGroup(BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),))),),
+        embedding_size=8,
+        vocab_size=16,
+        max_position_embeddings=16,
+    )
+    second = ArchitectureConfig(
+        (BlockGroup(BlockConfig(12, (StageConfig((SwiGLUSpec(24),)),))),),
+        embedding_size=8,
+        vocab_size=16,
+        max_position_embeddings=16,
+    )
+    study = V3Study(database)
+    study.initialize_bundle(
+        config,
+        {"git": {"revision": "test"}},
+        objective_sets=(objectives,),
+        architecture=first,
+        static={"logical_depth": 1, "parameters": 100, "unique_parameter_blocks": 1},
+        operation={"operator": "baseline"},
+    )
+    study.add_architecture(
+        second,
+        {"logical_depth": 1, "parameters": 120, "unique_parameter_blocks": 1},
+        {
+            "operator": "broad_sample",
+            "parents": [{"digest": first.digest, "role": "mutation"}],
+        },
+    )
+    study.add_objective_set(revised_objectives)
+    study.add_observation(
+        first.digest,
+        objectives.digest,
+        "quality.target_nll",
+        9.0,
+        tokens=4,
+        source="measured",
+    )
+    study.add_observation(
+        first.digest,
+        objectives.digest,
+        "quality.target_nll",
+        20.0,
+        source="measured",
+    )
+    for architecture, nll, throughput in (
+        (first, 1.0, 20.0),
+        (second, 2.0, 10.0),
+    ):
+        study.add_observation(
+            architecture.digest,
+            objectives.digest,
+            "quality.target_nll",
+            nll,
+            tokens=8,
+            source="quality_evaluation",
+        )
+        study.add_observation(
+            architecture.digest,
+            objectives.digest,
+            "gpu_short.throughput",
+            throughput,
+            source="profile",
+        )
+    action_id = study.add_action(
+        "probe",
+        1.0,
+        1.0,
+        {"architecture_digest": second.digest},
+    )
+    claimed = study.claim_action("dashboard-secret-test")
+    assert claimed["id"] == action_id
+    assert claimed["claim_token"]
+    study.close()
+
+    before = database.read_bytes()
+    state = snapshot(database)
+    assert database.read_bytes() == before
+    assert state["format_version"] == 3
+    assert state["comparison_tokens"] == 8
+    assert state["active_objective_set"]["name"] == "gpu_short"
+    assert state["active_objective_set"]["digest"] == objectives.digest
+    assert len(state["objective_sets"]) == 2
+    assert all(" / " in item["label"] for item in state["objective_sets"])
+    assert state["objective_directions"]["gpu_short.throughput"] == "maximize"
+    assert state["architecture_budget"] == 2
+    assert state["frontier_closed"]
+    assert len(state["frontier"]) == 1
+    assert state["frontier"][0]["architecture_hash"] == first.digest
+    assert state["frontier"][0]["objectives"]["quality.target_nll"] == 1.0
+    assert state["frontier"][0]["pareto_rank"] == 0
+    second_summary = next(
+        item for item in state["candidates"] if item["architecture_hash"] == second.digest
+    )
+    assert second_summary["pareto_rank"] == 1
+    assert second_summary["parents"] == [state["frontier"][0]["id"]]
+
+    revised_state = snapshot(database, objective_set=revised_objectives.digest)
+    assert revised_state["active_objective_set"]["digest"] == revised_objectives.digest
+    assert revised_state["comparison_tokens"] is None
+    with pytest.raises(ValueError, match="ambiguous"):
+        snapshot(database, objective_set="gpu_short")
+
+    detail = candidate(database, second_summary["id"])
+    assert detail["format_version"] == 3
+    assert detail["config"]["blocks"][0]["block"]["stages"][0]["branches"][0]["kind"] == "swiglu"
+    assert detail["parent_roles"] == [{"id": state["frontier"][0]["id"], "role": "mutation"}]
+    assert detail["actions"][0]["owner"] == "dashboard-secret-test"
+    assert "claim_token" not in detail["actions"][0]
+    assert detail["observations"]
+
+
 def test_dashboard_asset_has_responsive_operator_views():
     for landmark in (
         'id="overview-grid"',
@@ -196,11 +357,13 @@ def test_dashboard_asset_has_responsive_operator_views():
         'id="pareto-chart"',
         'id="history-table"',
         'id="inspector"',
+        'id="objective-set-select"',
+        'id="horizon-select"',
     ):
         assert landmark in dashboard
     assert "@media (max-width: 760px)" in dashboard
     assert "data-architecture" in dashboard
-    assert "?rung=" in dashboard
+    assert "parameters.set('rung'" in dashboard
     assert "AbortController" in dashboard
     assert "scrollIntoView" in dashboard
     assert "role=\"button\"" in dashboard

@@ -136,7 +136,7 @@ the quality benchmark inherits the experiment's packed data path, physical batch
 
 ## architecture search
 
-version three search development and its reliability contract are documented in `docs/search-v3.md`. the checked-in experiment and completed study remain version two until the calibration workflow is operational.
+version three search, its reliability contract, its differences from version two, and its operator workflow are documented in `docs/search-v3.md`. version two studies retain their original schema and semantics; version three studies use a separate configuration and study root.
 
 start a new study from the selected architecture:
 
@@ -154,7 +154,14 @@ python -m scripts.architecture_search frontier speck00-search-v2
 python -m scripts.search_dashboard speck00-search-v2
 ```
 
-study state and worker artifacts are stored under `~/.cache/speck/search/<study>`. changing comparison-sensitive search settings requires a new study name.
+the same dashboard supports version three objective sets, token horizons, runs, actions, checkpoints, profiles, and posterior anchors:
+
+```bash
+PYTHONPATH=. uv run --extra gpu python -m scripts.search_dashboard calibration-v3 \
+  --host 127.0.0.1 --port 8000
+```
+
+version one and two state is stored under `~/.cache/speck/search/<study>`; version three state is stored under `~/.cache/speck/search-v3/<study>`. changing comparison-sensitive search settings requires a new study name.
 
 ## checks
 

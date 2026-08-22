@@ -28,16 +28,112 @@ the repository currently contains the version three foundations:
 - a normalized transactional version three study store
 - leased worker actions and append-only decision events
 - budgeted posterior action planning without product thresholds
+- a read-only dashboard with objective-set, token-horizon, run, action, checkpoint, profile, and posterior views
 
 the following work is intentionally not presented as complete:
 
-- no production version three command line runner exists yet
-- no calibration panel has been executed yet
+- no integrated production version three command line runner exists yet
+- no complete broad and long-horizon calibration panel has been executed yet
 - no search recommendation is calibrated to 100m or 1b tokens yet
 - no actual q4 cpu backend has been selected or implemented
 - no arm or mobile backend exists yet
 - no full-bandwidth feedback operator is part of the search
-- the checked-in experiment remains a version two model and search configuration
+- the checked-in baseline model remains version two and is converted losslessly during v3 initialization
+
+## changes from version two
+
+version three is a separate study protocol rather than an in-place database upgrade. version two studies remain readable and reproducible under their original rules.
+
+### architecture representation
+
+version two represents a model as a linear list of layers. every layer has a hidden width and swiglu width, may contain global grouped-query attention, and uses one global attention head dimension.
+
+version three represents a model as block groups:
+
+- a group controls logical repetition and optional immediate weight sharing
+- a block controls residual width and ordered stages
+- a stage may contain parallel branches
+- branches may be global or sliding grouped-query attention, gated causal convolution, or swiglu
+- attention head dimensions, kv-head counts, and windows may vary by block
+- swiglu is optional, so mixer-only blocks are representable
+
+logical depth, unique parameter blocks, and sequence-state occurrences are separate. sharing a repeated block reduces parameter bytes but does not merge its occurrence-specific attention or convolution state. version two models convert losslessly to this grammar; architectures using convolution, sliding attention, parallel branches, heterogeneous head dimensions, missing swiglu, or shared repetition generally cannot convert back to version two.
+
+the v3 runtime supports parallel branches, while the current bootstrap generator intentionally samples a narrower singleton-stage form. grammar support and currently generated search proposals are therefore not identical.
+
+### search policy and fidelity
+
+version two is an integrated evolutionary successive-halving search. it generates mutations and crossovers, trains independent trials at fixed rungs, promotes selected architectures, and emits quality, efficiency, balanced, and frontier recommendations. promotion starts a new trial from token zero with the next rung's training geometry.
+
+the current version three coordinator is a calibration bootstrap:
+
+- it creates an uncensored deterministic broad panel rather than an evolutionary population
+- it crosses initialization, data-order, and numerical seeds for explicit noise decomposition
+- it trains through one immutable sequence and batch geometry
+- it resumes exact checkpoints across token horizons instead of restarting
+- it evaluates every checkpoint before allowing continuation
+- it fits grouped, cross-validated surrogate and calibration reports only after the configured evidence is complete
+- it uses joint posterior pareto samples and cost-aware random scalarization to choose long-horizon anchors
+
+mutation and crossover operators exist for the v3 grammar, but a production proposal loop using a frozen calibration artifact remains future work. consequently, an `anchor_complete` calibration study is not the same thing as a final production-search recommendation.
+
+### objective semantics
+
+version two has one fixed objective tuple and assumes every objective is minimized. quality, latency, cache, memory, and estimated q4 size are aggregated together at a selected rung.
+
+version three has named objective sets. every objective declares:
+
+- minimize or maximize direction
+- quality, efficiency, safety, or reporting role
+- whether it is required for selection
+
+the dashboard and posterior code preserve these directions. reporting-only values such as `quality.procedural_score` cannot make an architecture incomplete or alter its pareto rank. quality comparisons use one exact training-token horizon; profile repetitions are aggregated only within the selected objective set and scenario.
+
+### quality and data isolation
+
+version two reads token slices directly and computes validation inside the trial worker. its validation limit can omit a final partial batch.
+
+version three requires a verified document index and a frozen document-aligned segment plan with disjoint `train`, `monitor`, `promotion`, `audit`, and `final` partitions. training order is deterministic per data seed. `quality.target_nll` is produced by a separate worker that evaluates every next-token target in the selected partition, including the final partial batch. checkpoint training loss is reporting metadata and is never substituted for target nll.
+
+### seeds and resumability
+
+version two derives one trial seed that combines initialization and execution randomness. it stores trial results but no resumable optimizer/data checkpoint.
+
+version three records independent initialization, data-order, and numerical seed identities. checkpoints contain model, optimizer, data cursor, Python, NumPy, Torch, and CUDA rng state plus parent and protocol identities. continuation must advance to the immediate next configured checkpoint and atomically fence the expected parent.
+
+### profiling and accounting
+
+version two profiles inside each trial and primarily exposes p50 GPU timing, analytical kv-cache bytes, peak memory, and estimated q4 bytes.
+
+version three profiles independently by backend, device, dtype, request geometry, and isolated process repetition. the native backend records raw samples and nearest-rank p50/p95 summaries for prefill, first decode, steady decode, and whole requests, plus resident weight bytes, allocated state bytes, and peak rss or vram. CPU and GPU profiles are separate evidence. q4 remains an analytical estimate until an executable packed backend exists.
+
+version three accounting counts unique shared parameters separately from logical execution and occurrence state. sliding attention state is window bounded and convolution history is kernel bounded.
+
+### workers, storage, and recovery
+
+version two's coordinator launches local subprocesses, tracks pid/process identity, ingests one result document, and retries according to fixed timeout settings.
+
+version three workers claim normalized actions transactionally using owner identities, random claim tokens, expiring leases, and heartbeats. stale workers cannot publish after reclamation. training, evaluation, and profiling use separate action kinds and atomic result commits.
+
+version three stores immutable objects by content digest and records artifact lineage, normalized observations, checkpoint ancestry, planning decisions, posterior reports, and append-only events. evaluated checkpoint payloads may be pruned while their hashes, metadata, observations, and lineage remain. archived runs are retained evidence, not failures.
+
+### operation and dashboard differences
+
+version two has one integrated `run` command and stores studies below `~/.cache/speck/search/`. version three stores studies below `~/.cache/speck/search-v3/` and currently uses explicit coordinator, quality-worker, evaluation-worker, and profile-worker commands.
+
+the shared dashboard detects all three study formats. for v3 it adds:
+
+- objective-set and exact token-horizon selectors
+- direction-aware observed pareto ranks
+- checkpoint-horizon coverage
+- raw run and action status, including archived runs
+- native block-group geometry
+- seed bundles and resumable checkpoint lineage
+- whole-monitor quality curves
+- isolated profile repetitions
+- posterior anchor, probability, expected-rank, and calibration metadata when available
+
+the dashboard is read only. it never claims actions, changes study status, or reads pruned checkpoint payloads.
 
 ## trust contract
 
@@ -231,6 +327,7 @@ quality checkpoints are content addressed and include exact rng and data state. 
 | bootstrap coordinator | `speck/search/coordinator_v3.py` |
 | posterior shadow report | `speck/search/posterior_v3.py` |
 | profiling | `speck/profile/` |
+| v1/v2/v3 dashboard | `scripts/search_dashboard.py` and `scripts/search_dashboard.html` |
 
 ## next implementation sequence
 
@@ -268,6 +365,15 @@ python -m scripts.architecture_search_v3 status calibration-v3
 ```
 
 initialization verifies all packed shards, the tokenizer identity, every selected document span, partition coverage, the full quality horizon, baseline context limits, and exact parameter accounting before atomically registering the study bundle.
+
+launch the read-only dashboard by study name:
+
+```bash
+PYTHONPATH=. uv run --extra gpu python -m scripts.search_dashboard calibration-v3 \
+  --host 127.0.0.1 --port 8000
+```
+
+then open `http://127.0.0.1:8000`. a v3 study name resolves below `~/.cache/speck/search-v3/`; v1 and v2 names continue to resolve below `~/.cache/speck/search/`. if the same name exists in both roots, pass the explicit `study.sqlite3` path to avoid ambiguity.
 
 schedule and execute one checkpoint continuation with:
 

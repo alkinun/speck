@@ -481,9 +481,17 @@
           <p>architecture generation and first-rung screening</p>
         </div>
         <div class="panel-tools" id="rung-control" hidden>
-          <label class="control">
+          <label class="control" id="rung-picker">
             <span class="control-label">comparison rung</span>
             <select id="rung-select"></select>
+          </label>
+          <label class="control" id="objective-set-picker" hidden>
+            <span class="control-label">objective set</span>
+            <select id="objective-set-select"></select>
+          </label>
+          <label class="control" id="horizon-picker" hidden>
+            <span class="control-label">quality horizon</span>
+            <select id="horizon-select"></select>
           </label>
         </div>
       </div>
@@ -608,7 +616,7 @@
     const byId = id => document.getElementById(id);
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
     const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
-    const statusClass = value => ['completed','complete','promoted','stopped','running','active','pending','failed','interrupted'].includes(value) ? value : '';
+    const statusClass = value => ['completed','complete','promoted','stopped','running','active','pending','paused','partial','archived','failed','interrupted'].includes(value) ? value : '';
     const statusPill = value => `<span class="status-pill ${statusClass(value)}">${escapeHtml(value || 'unknown')}</span>`;
     const objectiveLabel = name => String(name || '')
       .replace('quality.validation_nll.', 'nll / ')
@@ -617,6 +625,10 @@
       .replace('memory.inference_peak_bytes.', 'peak memory / ')
       .replace('decode.ms_per_token.', 'decode / ')
       .replace('prefill.ms.', 'prefill / ')
+      .replace('.decode_p95', ' / decode p95')
+      .replace('.prefill_p95', ' / prefill p95')
+      .replace('.peak_vram', ' / peak vram')
+      .replace('.peak_rss', ' / peak rss')
       .replaceAll('_', ' ');
     const compact = value => {
       if (value == null || Number.isNaN(Number(value))) return '-';
@@ -638,7 +650,7 @@
     const objectiveValue = (name, value) => {
       if (value == null) return '-';
       if (name && name.includes('bytes')) return bytes(value);
-      if (name && name.includes('.ms')) return `${Number(value).toFixed(3)} ms`;
+      if (name && (name.includes('.ms') || name.endsWith('decode_p95') || name.endsWith('prefill_p95'))) return `${Number(value).toFixed(3)} ms`;
       return compact(value);
     };
     const timestamp = value => value ? new Date(value).toLocaleString() : '-';
@@ -649,6 +661,8 @@
     let state = null;
     let selectedArchitecture = null;
     let selectedRung = null;
+    let selectedObjectiveSet = null;
+    let selectedTokens = null;
     let detailStamp = null;
     let refreshTimer = null;
     let stateRequest = 0;
@@ -677,17 +691,19 @@
       const architectureCounts = state.architecture_counts || state.counts || {};
       const trialCounts = state.trial_counts || architectureCounts;
       const generated = state.generated ?? candidates.length;
-      const maximum = state.config.max_architectures || state.config.max_evaluations || generated || 1;
-      const completedTrials = trialCounts.completed || 0;
+      const maximum = state.architecture_budget || state.config.max_architectures || state.config.max_evaluations || generated || 1;
+      const completedTrials = (trialCounts.completed || 0) + (state.format_version === 3 ? (trialCounts.archived || 0) : 0);
       const totalTrials = Object.values(trialCounts).reduce((sum, value) => sum + Number(value || 0), 0);
-      const activeTrials = (trialCounts.running || 0) + (trialCounts.pending || 0);
+      const activeTrials = state.format_version === 3
+        ? (state.action_counts?.running || 0) + (state.action_counts?.pending || 0)
+        : (trialCounts.running || 0) + (trialCounts.pending || 0);
       const cards = [
         {label: 'generated', value: generated, meta: `${maximum} architecture budget`, tone: 'blue'},
-        {label: state.format_version === 2 ? 'screened' : 'terminal', value: state.screened || 0, meta: `${percent(state.screened || 0, maximum).toFixed(1)}% of budget`, tone: 'cyan'},
-        {label: 'trials complete', value: completedTrials, meta: `${totalTrials} scheduled`, tone: 'cyan'},
-        {label: 'active trials', value: activeTrials, meta: `${trialCounts.running || 0} running`, tone: activeTrials ? 'amber' : ''},
-        {label: 'failures', value: trialCounts.failed || architectureCounts.failed || 0, meta: `${architectureCounts.failed || 0} architectures`, tone: (trialCounts.failed || architectureCounts.failed) ? 'red' : ''},
-        {label: 'frontier', value: (state.frontier || []).length, meta: state.format_version === 1 ? 'fixed fidelity' : state.frontier_rung == null ? 'no comparable rung' : `rung ${state.frontier_rung} ${state.frontier_closed ? 'closed' : 'partial'}`, tone: 'cyan'},
+        {label: state.format_version === 3 ? 'observed' : state.format_version === 2 ? 'screened' : 'terminal', value: state.screened || 0, meta: `${percent(state.screened || 0, maximum).toFixed(1)}% of budget`, tone: 'cyan'},
+        {label: state.format_version === 3 ? 'runs retained' : 'trials complete', value: completedTrials, meta: `${totalTrials} total`, tone: 'cyan'},
+        {label: state.format_version === 3 ? 'active actions' : 'active trials', value: activeTrials, meta: `${state.format_version === 3 ? state.action_counts?.running || 0 : trialCounts.running || 0} running`, tone: activeTrials ? 'amber' : ''},
+        {label: 'failures', value: state.format_version === 3 ? state.action_counts?.failed || 0 : trialCounts.failed || architectureCounts.failed || 0, meta: `${architectureCounts.failed || 0} architectures`, tone: (state.action_counts?.failed || trialCounts.failed || architectureCounts.failed) ? 'red' : ''},
+        {label: 'frontier', value: (state.frontier || []).length, meta: state.format_version === 1 ? 'fixed fidelity' : state.format_version === 3 ? `${state.comparison_phase || 'no'} horizon${state.comparison_tokens ? ` / ${compact(state.comparison_tokens)}` : ''}` : state.frontier_rung == null ? 'no comparable rung' : `rung ${state.frontier_rung} ${state.frontier_closed ? 'closed' : 'partial'}`, tone: 'cyan'},
       ];
       byId('overview-grid').innerHTML = cards.map(card => `
         <article class="metric ${card.tone}">
@@ -699,22 +715,35 @@
 
     function renderBudget() {
       const generated = state.generated ?? (state.candidates || []).length;
-      const maximum = state.config.max_architectures || state.config.max_evaluations || generated || 1;
+      const maximum = state.architecture_budget || state.config.max_architectures || state.config.max_evaluations || generated || 1;
       const screened = state.screened || 0;
       byId('generated-label').textContent = `${generated} / ${maximum}`;
       byId('screened-label').textContent = `${screened} / ${maximum}`;
       byId('generated-meter').style.width = `${percent(generated, maximum)}%`;
       byId('screened-meter').style.width = `${percent(screened, maximum)}%`;
-      const rungCopy = state.format_version === 1
+      const rungCopy = state.format_version === 3
+        ? state.comparison_tokens == null
+          ? 'waiting for the first whole-monitor quality evaluation'
+          : `comparing ${state.active_objective_set?.name || 'objective set'} at ${compact(state.comparison_tokens)} trained tokens`
+        : state.format_version === 1
         ? 'comparing the legacy fixed-fidelity results'
         : state.frontier_rung == null
         ? 'waiting for the first comparable aggregate'
         : `comparing rung ${state.frontier_rung}${state.frontier_closed ? ' after closure' : ' while partial'}`;
-      byId('budget-note').innerHTML = `<strong>${escapeHtml(rungCopy)}</strong>${escapeHtml(state.format_version === 2 ? 'all objective tables and plots use one rung at a time.' : 'legacy studies use one fixed fidelity.')}`;
+      const contextCopy = state.format_version === 3
+        ? 'quality is held to one exact token horizon; profile repetitions are aggregated only within the selected objective set.'
+        : state.format_version === 2 ? 'all objective tables and plots use one rung at a time.' : 'legacy studies use one fixed fidelity.';
+      byId('budget-note').innerHTML = `<strong>${escapeHtml(rungCopy)}</strong>${escapeHtml(contextCopy)}`;
 
       const control = byId('rung-control');
+      const rungPicker = byId('rung-picker');
+      const objectiveSetPicker = byId('objective-set-picker');
+      const horizonPicker = byId('horizon-picker');
       if (state.format_version === 2 && (state.available_rungs || []).length) {
         control.hidden = false;
+        rungPicker.hidden = false;
+        objectiveSetPicker.hidden = true;
+        horizonPicker.hidden = true;
         const rungSelect = byId('rung-select');
         setSelectOptions(
           rungSelect,
@@ -725,6 +754,20 @@
             return `rung ${value} / ${summary?.name || 'unnamed'}${summary?.closed ? ' / closed' : ' / partial'}`;
           },
         );
+      } else if (state.format_version === 3) {
+        control.hidden = false;
+        rungPicker.hidden = true;
+        objectiveSetPicker.hidden = false;
+        horizonPicker.hidden = !(state.available_horizons || []).length;
+        setSelectOptions(
+          byId('objective-set-select'),
+          (state.objective_sets || []).map(item => item.digest),
+          state.active_objective_set?.digest,
+          digest => (state.objective_sets || []).find(item => item.digest === digest)?.label || digest,
+        );
+        if ((state.available_horizons || []).length) {
+          setSelectOptions(byId('horizon-select'), state.available_horizons, state.comparison_tokens, compact);
+        }
       } else {
         control.hidden = true;
       }
@@ -732,8 +775,26 @@
 
     function renderRungs() {
       const section = byId('rung-section');
+      if (state.format_version === 3) {
+        section.hidden = false;
+        byId('rung-title').textContent = 'checkpoint pipeline';
+        section.querySelector('.section-heading p').textContent = 'whole-monitor evaluation coverage by immutable training horizon';
+        const maximum = state.architecture_budget || state.generated || 1;
+        byId('rung-pipeline').innerHTML = (state.horizons || []).map((item, index) => {
+          const classes = ['rung-card'];
+          if (item.selected) classes.push('displayed');
+          return `<article class="${classes.join(' ')}">
+            <div class="rung-top"><div><div class="rung-index">checkpoint ${index}</div><div class="rung-name">${escapeHtml(compact(item.tokens))} tokens</div></div><div class="rung-status">${escapeHtml(item.phase || 'checkpoint')}</div></div>
+            <div class="rung-count">${item.evaluated || 0} <span>/ ${maximum} evaluated</span></div>
+            <div class="meter" style="margin-top:10px"><i style="width:${percent(item.evaluated || 0, maximum)}%"></i></div>
+          </article>`;
+        }).join('');
+        return;
+      }
       if (state.format_version !== 2) { section.hidden = true; return; }
       section.hidden = false;
+      byId('rung-title').textContent = 'fidelity pipeline';
+      section.querySelector('.section-heading p').textContent = 'promotion capacity, trial health, and compute geometry by rung';
       const summaries = new Map((state.rungs || []).map(item => [Number(item.rung), item]));
       const configs = state.config.rungs || [];
       byId('rung-pipeline').innerHTML = configs.map((config, index) => {
@@ -764,8 +825,23 @@
 
     function renderRecommendations() {
       const section = byId('recommendation-section');
+      if (state.format_version === 3) {
+        const anchors = (state.anchor_ids || []).map(id => (state.candidates || []).find(item => Number(item.id) === Number(id))).filter(Boolean);
+        if (!anchors.length) { section.hidden = true; return; }
+        byId('recommendation-title').textContent = 'posterior anchors';
+        section.querySelector('.section-heading p').textContent = 'calibration candidates selected for long-horizon continuation';
+        byId('recommendations').innerHTML = anchors.map(architecture => `<button class="recommendation" data-architecture="${Number(architecture.id)}">
+          <div class="recommendation-role">anchor</div>
+          <div class="recommendation-id">architecture #${Number(architecture.id)}</div>
+          <div class="recommendation-score">frontier probability <strong>${escapeHtml(compact(architecture.posterior?.nondominated_probability))}</strong><br>expected rank ${escapeHtml(compact(architecture.posterior?.expected_rank))}</div>
+        </button>`).join('');
+        section.hidden = false;
+        return;
+      }
       const recommendations = state.recommendations;
       if (!recommendations) { section.hidden = true; return; }
+      byId('recommendation-title').textContent = 'recommended architectures';
+      section.querySelector('.section-heading p').textContent = 'final-rung choices for quality, efficiency, and balanced tradeoffs';
       const roles = [
         ['quality', 'lowest normalized quality regret'],
         ['efficiency', 'lowest normalized resource regret'],
@@ -842,9 +918,10 @@
         .sort((left, right) => left.id - right.id);
       const svg = byId('trend-chart');
       if (!values.length) { emptyChart(svg, 'no comparable objective values'); return; }
-      let best = Infinity;
+      const maximize = state.objective_directions?.[objective] === 'maximize';
+      let best = maximize ? -Infinity : Infinity;
       const points = values.map(item => {
-        best = Math.min(best, Number(item.objectives[objective]));
+        best = maximize ? Math.max(best, Number(item.objectives[objective])) : Math.min(best, Number(item.objectives[objective]));
         return {id: item.id, x: item.id, y: best};
       });
       const width = Math.max(300, Math.round(svg.clientWidth || 720));
@@ -885,7 +962,11 @@
 
     function renderFrontier() {
       const rows = state.frontier || [];
-      byId('frontier-copy').textContent = state.format_version === 1
+      byId('frontier-copy').textContent = state.format_version === 3
+        ? state.comparison_tokens == null
+          ? 'no comparable results yet'
+          : `${rows.length} nondominated architectures for ${state.active_objective_set?.name || 'selected objectives'} at ${compact(state.comparison_tokens)} tokens (${state.frontier_closed ? 'closed' : 'partial'})`
+        : state.format_version === 1
         ? `${rows.length} nondominated candidates at fixed fidelity`
         : state.frontier_rung == null
         ? 'no comparable results yet'
@@ -893,14 +974,18 @@
       const columns = [
         {label: 'id', render: row => architectureButton(row.id)},
         {label: 'overall status', render: row => statusPill(row.status)},
-        ...(state.format_version === 2 ? [{label: 'rung status', render: row => row.comparison_status ? statusPill(row.comparison_status) : '<span class="dim">-</span>'}] : []),
+        ...(state.format_version >= 2 ? [{label: state.format_version === 3 ? 'evidence' : 'rung status', render: row => row.comparison_status ? statusPill(row.comparison_status) : '<span class="dim">-</span>'}] : []),
         {label: 'operation', render: row => escapeHtml(operationName(row))},
         {label: 'parents', render: row => escapeHtml((row.parents || []).map(id => `#${id}`).join(', ') || '-')},
         {label: 'parameters', render: row => escapeHtml(compact(row.parameters))},
         ...metricColumns(),
         {label: 'rank', render: row => escapeHtml(row.pareto_rank ?? '-')},
+        ...(state.format_version === 3 && rows.some(row => row.posterior) ? [
+          {label: 'frontier probability', render: row => escapeHtml(compact(row.posterior?.nondominated_probability))},
+          {label: 'expected rank', render: row => escapeHtml(compact(row.posterior?.expected_rank))},
+        ] : []),
       ];
-      byId('frontier-table').innerHTML = table(rows, columns, 'frontier is not available at this rung');
+      byId('frontier-table').innerHTML = table(rows, columns, 'frontier is not available at this comparison horizon');
     }
 
     function renderHistoryFilters() {
@@ -925,13 +1010,14 @@
       const columns = [
         {label: 'id', render: row => architectureButton(row.id)},
         {label: 'overall status', render: row => statusPill(row.status)},
-        ...(state.format_version === 2 ? [{label: 'rung status', render: row => row.comparison_status ? statusPill(row.comparison_status) : '<span class="dim">-</span>'}] : []),
-        {label: 'rung', render: row => escapeHtml(row.rung ?? '-')},
+        ...(state.format_version >= 2 ? [{label: state.format_version === 3 ? 'evidence' : 'rung status', render: row => row.comparison_status ? statusPill(row.comparison_status) : '<span class="dim">-</span>'}] : []),
+        {label: state.format_version === 3 ? 'tokens' : 'rung', render: row => escapeHtml(state.format_version === 3 ? compact(row.comparison_tokens) : row.rung ?? '-')},
         {label: 'operation', render: row => escapeHtml(operationName(row))},
-        {label: 'shape', render: row => escapeHtml(`${row.layers || 0} layers`)},
+        {label: 'shape', render: row => escapeHtml(`${row.layers || 0} ${state.format_version === 3 ? 'logical blocks' : 'layers'}`)},
         {label: 'parameters', render: row => escapeHtml(compact(row.parameters))},
         {label: primary ? objectiveLabel(primary) : 'quality', render: row => escapeHtml(objectiveValue(primary, row.objectives?.[primary]))},
         {label: 'rank', render: row => escapeHtml(row.pareto_rank ?? '-')},
+        ...(state.format_version === 3 ? [{label: 'anchor', render: row => row.is_anchor ? 'yes' : '-'}] : []),
         {label: 'updated', render: row => escapeHtml(timestamp(row.completed_at || row.started_at || row.created_at))},
         {label: 'error', render: row => `<span class="error-copy" title="${escapeHtml(row.error || '')}">${escapeHtml(row.error || '')}</span>`},
       ];
@@ -942,6 +1028,8 @@
       const objectives = state.objectives || [];
       const primary = objectives.includes(state.primary_quality) ? state.primary_quality : objectives[0];
       const efficiency = objectives.find(name => name === 'memory.quantized_weight_bytes')
+        || objectives.find(name => name.endsWith('.decode_p95'))
+        || objectives.find(name => name === 'memory.weight_bytes')
         || objectives.find(name => name !== primary)
         || primary;
       setSelectOptions(byId('trend-objective'), objectives, byId('trend-objective').value || primary, objectiveLabel);
@@ -973,6 +1061,7 @@
     }
 
     function layerDiagram(detail) {
+      if (detail.config?.blocks?.length) return blockDiagram(detail);
       const layers = detail.config?.layers || [];
       if (!layers.length) return '<div class="muted">no layers recorded</div>';
       const maximum = Math.max(...layers.map(layer => Number(layer.hidden_size) || 0), 1);
@@ -983,6 +1072,28 @@
           <span class="layer-index">${index}</span>
           <div class="layer-track"><div class="layer-bar ${attention ? 'attention' : ''}" style="--width:${width}%"></div></div>
           <span class="layer-copy">h${layer.hidden_size} / f${layer.intermediate_size} / ${attention ? `kv${layer.num_key_value_heads}` : 'mlp'}</span>
+        </div>`;
+      }).join('')}</div>`;
+    }
+
+    function blockDiagram(detail) {
+      const groups = detail.config?.blocks || [];
+      if (!groups.length) return '<div class="muted">no blocks recorded</div>';
+      const maximum = Math.max(...groups.map(group => Number(group.block?.hidden_size) || 0), 1);
+      return `<div class="layer-stack">${groups.map((group, index) => {
+        const block = group.block || {};
+        const stages = (block.stages || []).map(stage => (stage.branches || []).map(branch => {
+          if (branch.kind === 'attention') return `${branch.scope === 'sliding' ? `sliding-${branch.window_size}` : 'global'} attn h${branch.head_dim}/kv${branch.num_key_value_heads}`;
+          if (branch.kind === 'gated_causal_conv') return `conv k${branch.kernel_size}/i${branch.inner_size}`;
+          if (branch.kind === 'swiglu') return `swiglu f${branch.intermediate_size}`;
+          return branch.kind || 'operation';
+        }).join(' + ')).join(' → ');
+        const width = Math.max(8, 100 * block.hidden_size / maximum);
+        const shared = group.repeat > 1 ? ` ×${group.repeat} / ${group.weight_sharing === 'all' ? 'shared' : 'unshared'}` : '';
+        return `<div class="layer-row">
+          <span class="layer-index">${index}</span>
+          <div class="layer-track"><div class="layer-bar attention" style="--width:${width}%"></div></div>
+          <span class="layer-copy" title="${escapeHtml(stages)}">h${escapeHtml(block.hidden_size)}${escapeHtml(shared)} / ${escapeHtml(stages)}</span>
         </div>`;
       }).join('')}</div>`;
     }
@@ -1025,6 +1136,58 @@
       return table(rows, columns, 'no attempt records', false);
     }
 
+    function detailRunTable(detail) {
+      const rows = detail.runs || [];
+      const columns = [
+        {label: 'run', render: row => escapeHtml(row.id)},
+        {label: 'status', render: row => statusPill(row.status)},
+        {label: 'tokens', render: row => escapeHtml(compact(row.tokens))},
+        {label: 'init seed', render: row => escapeHtml(row.seed_bundle?.initialization_seed ?? '-')},
+        {label: 'data seed', render: row => escapeHtml(row.seed_bundle?.data_seed ?? '-')},
+        {label: 'numeric seed', render: row => escapeHtml(row.seed_bundle?.numerical_seed ?? '-')},
+      ];
+      return table(rows, columns, 'no quality runs', false);
+    }
+
+    function detailActionTable(detail) {
+      const rows = detail.actions || [];
+      const columns = [
+        {label: 'action', render: row => escapeHtml(row.id)},
+        {label: 'kind', render: row => escapeHtml(row.kind)},
+        {label: 'status', render: row => statusPill(row.status)},
+        {label: 'device', render: row => escapeHtml(row.required_device_type || '-')},
+        {label: 'cost', render: row => escapeHtml(compact(row.estimated_cost))},
+        {label: 'completed', render: row => escapeHtml(timestamp(row.completed_at))},
+        {label: 'error', render: row => escapeHtml(row.error || '-')},
+      ];
+      return table(rows, columns, 'no worker actions', false);
+    }
+
+    function detailCheckpointTable(detail) {
+      const evaluations = new Map((detail.quality_evaluations || []).map(item => [item.checkpoint_digest, item]));
+      const rows = detail.checkpoints || [];
+      const columns = [
+        {label: 'run', render: row => escapeHtml(row.run_id)},
+        {label: 'tokens', render: row => escapeHtml(compact(row.tokens))},
+        {label: 'nll', render: row => escapeHtml(compact(evaluations.get(row.artifact_digest)?.nll))},
+        {label: 'payload', render: row => row.payload_pruned ? statusPill('archived') : statusPill('retained')},
+        {label: 'digest', render: row => `<code title="${escapeHtml(row.artifact_digest)}">${escapeHtml(row.artifact_digest.slice(0, 12))}</code>`},
+      ];
+      return table(rows, columns, 'no checkpoints', false);
+    }
+
+    function detailProfileTable(detail) {
+      const rows = detail.profile_results || [];
+      const columns = [
+        {label: 'scenario', render: row => escapeHtml(row.scenario?.name || row.scenario_digest.slice(0, 8))},
+        {label: 'device', render: row => escapeHtml(row.scenario?.device || '-')},
+        {label: 'backend', render: row => escapeHtml(row.scenario?.backend?.name || '-')},
+        {label: 'repetition', render: row => escapeHtml(row.repetition)},
+        {label: 'artifact', render: row => `<code title="${escapeHtml(row.artifact_digest)}">${escapeHtml(row.artifact_digest.slice(0, 12))}</code>`},
+      ];
+      return table(rows, columns, 'no profiles', false);
+    }
+
     function renderLossChart(detail) {
       const svg = byId('loss-chart');
       if (!svg) return;
@@ -1046,7 +1209,10 @@
     }
 
     function renderInspector(detail) {
-      const comparableRung = (detail.rungs || []).find(item => Number(item.rung) === Number(state.frontier_rung) && item.aggregate)
+      const summary = (state.candidates || []).find(item => Number(item.id) === Number(detail.id));
+      const comparableRung = state.format_version === 3 && summary?.estimates
+        ? {rung: state.comparison_tokens, aggregate: {objectives: summary.estimates}}
+        : (detail.rungs || []).find(item => Number(item.rung) === Number(state.frontier_rung) && item.aggregate)
         || [...(detail.rungs || [])].reverse().find(item => item.aggregate)
         || (detail.result?.objectives ? {
           rung: 'legacy',
@@ -1056,11 +1222,18 @@
       const parentCopy = (detail.parent_roles || []).length
         ? detail.parent_roles.map(parent => `${parent.role} #${parent.id}`).join(', ')
         : (detail.parents || []).map(id => `#${id}`).join(', ') || 'none';
-      const executionHistory = state.format_version === 2
+      const executionHistory = state.format_version === 3
+        ? `<section class="inspector-section"><h3>quality runs</h3><div class="table-wrap detail-table">${detailRunTable(detail)}</div></section>
+           <section class="inspector-section"><h3>worker actions</h3><div class="table-wrap detail-table">${detailActionTable(detail)}</div></section>
+           <section class="inspector-section"><h3>checkpoints and evaluations</h3><div class="table-wrap detail-table">${detailCheckpointTable(detail)}</div></section>
+           <section class="inspector-section"><h3>profile repetitions</h3><div class="table-wrap detail-table">${detailProfileTable(detail)}</div></section>`
+        : state.format_version === 2
         ? `<section class="inspector-section"><h3>rung history</h3><div class="table-wrap detail-table">${detailRungTable(detail)}</div></section>
            <section class="inspector-section"><h3>trial history</h3><div class="table-wrap detail-table">${detailTrialTable(detail)}</div></section>`
         : `<section class="inspector-section"><h3>attempt history</h3><div class="table-wrap detail-table">${detailAttemptTable(detail)}</div></section>`;
-      const objectiveContext = state.format_version === 2 && comparableRung
+      const objectiveContext = state.format_version === 3 && comparableRung
+        ? ` / ${state.active_objective_set?.name || 'objective set'} / ${compact(state.comparison_tokens)} tokens`
+        : state.format_version === 2 && comparableRung
         ? ` / rung ${comparableRung.rung}`
         : state.format_version === 1 ? ' / fixed fidelity' : '';
       byId('inspector').innerHTML = `
@@ -1069,10 +1242,10 @@
           <div class="architecture-subtitle">${escapeHtml(operationName(detail))} &middot; ${escapeHtml(compact(detail.parameters))} parameters &middot; parents ${escapeHtml(parentCopy)}<br><code>${escapeHtml(detail.architecture_hash || '')}</code></div>
         </div>
         <section class="inspector-section"><h3>comparable objectives${objectiveContext}</h3>${objectiveCards(comparableRung)}</section>
-        <section class="inspector-section"><h3>layer geometry</h3>${layerDiagram(detail)}</section>
+        <section class="inspector-section"><h3>${state.format_version === 3 ? 'block geometry' : 'layer geometry'}</h3>${layerDiagram(detail)}</section>
         ${executionHistory}
         <section class="inspector-section">
-          <h3>${resultTrial ? `trial curves / rung ${resultTrial.rung} / seed index ${resultTrial.seed_index}` : 'trial curves'}</h3>
+          <h3>${state.format_version === 3 ? `whole-monitor quality curve${resultTrial ? ` / run ${resultTrial.id}` : ''}` : resultTrial ? `trial curves / rung ${resultTrial.rung} / seed index ${resultTrial.seed_index}` : 'trial curves'}</h3>
           <div class="curve-key"><span>train</span><span>validation</span></div>
           <svg class="loss-chart" id="loss-chart" role="img" aria-label="training and validation loss curves"></svg>
         </section>
@@ -1108,7 +1281,16 @@
       byId('updated-at').textContent = `updated ${timestamp(state.updated_at || new Date().toISOString())}`;
       byId('connection-dot').classList.add('live');
       byId('study-version').textContent = `format v${state.format_version}`;
-      byId('raw-study').textContent = JSON.stringify({config: state.config, provenance: state.provenance, rungs: state.rungs, recommendations: state.recommendations}, null, 2);
+      byId('raw-study').textContent = JSON.stringify({
+        config: state.config,
+        provenance: state.provenance,
+        versions: state.versions,
+        rungs: state.rungs,
+        horizons: state.horizons,
+        objective_sets: state.objective_sets,
+        posterior_report: state.posterior_report,
+        recommendations: state.recommendations,
+      }, null, 2);
       renderOverview();
       renderBudget();
       renderRungs();
@@ -1123,12 +1305,16 @@
       const controller = new AbortController();
       stateController = controller;
       try {
-        const suffix = selectedRung == null ? '' : `?rung=${selectedRung}`;
+        const parameters = new URLSearchParams();
+        if (selectedRung != null) parameters.set('rung', selectedRung);
+        if (selectedObjectiveSet != null) parameters.set('objective_set', selectedObjectiveSet);
+        if (selectedTokens != null) parameters.set('tokens', selectedTokens);
+        const suffix = parameters.size ? `?${parameters}` : '';
         const response = await fetch(`/api/state${suffix}`, {cache: 'no-store', signal: controller.signal});
         if (!response.ok) throw new Error(`request failed: ${response.status}`);
         const nextState = await response.json();
         if (request !== stateRequest) return;
-        const nextStamp = `${nextState.data_revision || nextState.updated_at}:${nextState.frontier_rung}`;
+        const nextStamp = `${nextState.data_revision || nextState.updated_at}:${nextState.frontier_rung}:${nextState.active_objective_set?.digest || ''}:${nextState.comparison_tokens || ''}`;
         const changed = detailStamp !== nextStamp;
         state = nextState;
         detailStamp = nextStamp;
@@ -1164,6 +1350,15 @@
     byId('history-search').addEventListener('input', renderHistory);
     byId('rung-select').addEventListener('change', event => {
       selectedRung = Number(event.target.value);
+      refreshState();
+    });
+    byId('objective-set-select').addEventListener('change', event => {
+      selectedObjectiveSet = event.target.value;
+      selectedTokens = null;
+      refreshState();
+    });
+    byId('horizon-select').addEventListener('change', event => {
+      selectedTokens = Number(event.target.value);
       refreshState();
     });
 
