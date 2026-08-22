@@ -1,4 +1,4 @@
-"""measure the real speck optimization step."""
+"""Benchmark a Speck optimization step."""
 
 import argparse
 import hashlib
@@ -21,25 +21,87 @@ from speck.train import optimization_step
 
 
 def arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
-    parser.add_argument("--mode", choices=("compute", "end-to-end"), default="compute")
-    parser.add_argument("--data-dir", default=os.path.expanduser("~/.cache/speck/benchmark-200m"))
-    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    parser.add_argument("--steps", type=int, default=50)
-    parser.add_argument("--warmup-steps", type=int, default=10)
-    parser.add_argument("--accumulation", type=int, default=None)
-    parser.add_argument("--batch-size", type=int, default=None)
-    parser.add_argument("--sequence-length", type=int, default=None)
-    parser.add_argument("--peak-tflops", type=float, default=None)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--no-compile", action="store_true")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "experiment",
+        nargs="?",
+        default="experiments/speck00-200m",
+        help="experiment directory (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=("compute", "end-to-end"),
+        default="compute",
+        help="benchmark synthetic compute or include packed-data loading (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--data-dir",
+        default=os.path.expanduser("~/.cache/speck/benchmark-200m"),
+        help="packed dataset directory for end-to-end mode (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--device",
+        default="cuda" if torch.cuda.is_available() else "cpu",
+        help="benchmark device (default: CUDA when available, otherwise CPU)",
+    )
+    parser.add_argument(
+        "--steps",
+        type=int,
+        default=50,
+        help="number of measured optimization steps (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--warmup-steps",
+        type=int,
+        default=10,
+        help="number of warmup optimization steps (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--accumulation",
+        type=int,
+        default=None,
+        help="gradient accumulation steps; defaults to the experiment configuration",
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=None,
+        help="device batch size; defaults to the experiment configuration",
+    )
+    parser.add_argument(
+        "--sequence-length",
+        type=int,
+        default=None,
+        help="sequence length; defaults to the experiment configuration",
+    )
+    parser.add_argument(
+        "--peak-tflops",
+        type=float,
+        default=None,
+        help="theoretical peak TFLOPS used to calculate model FLOPS utilization",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="random seed (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--no-compile",
+        action="store_true",
+        help="disable torch.compile",
+    )
     parser.add_argument(
         "--compile-mode",
         default="max-autotune-no-cudagraphs",
         choices=("default", "reduce-overhead", "max-autotune", "max-autotune-no-cudagraphs"),
+        help="torch.compile mode (default: %(default)s)",
     )
-    parser.add_argument("--output", default=None)
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="optional path for the JSON benchmark report",
+    )
     return parser.parse_args()
 
 
@@ -113,8 +175,8 @@ def run(args):
     model.init_weights()
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(train["lr"], train["weight_decay"], train["optimizer"])
-    train_model = model if args.no_compile else torch.compile(
-        model, dynamic=False, mode=args.compile_mode
+    train_model = (
+        model if args.no_compile else torch.compile(model, dynamic=False, mode=args.compile_mode)
     )
 
     manifest_hash = None
@@ -200,8 +262,12 @@ def run(args):
             "loss_last": losses[-1],
         },
         "memory": {
-            "peak_allocated_bytes": torch.cuda.max_memory_allocated(device) if device.type == "cuda" else None,
-            "peak_reserved_bytes": torch.cuda.max_memory_reserved(device) if device.type == "cuda" else None,
+            "peak_allocated_bytes": torch.cuda.max_memory_allocated(device)
+            if device.type == "cuda"
+            else None,
+            "peak_reserved_bytes": torch.cuda.max_memory_reserved(device)
+            if device.type == "cuda"
+            else None,
         },
         "environment": {
             "device": str(device),

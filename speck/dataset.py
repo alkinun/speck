@@ -1,4 +1,4 @@
-"""stream ultra-fineweb and build local packed token shards."""
+"""Stream Ultra-FineWeb and build local packed uint16 token shards."""
 
 import hashlib
 import json
@@ -18,7 +18,6 @@ from huggingface_hub.errors import HfHubHTTPError
 
 from speck.common import base_dir
 from speck.tokenizer import get_tokenizer
-
 
 format_version = 2
 default_data_dir = Path(base_dir()) / "ultra_fineweb"
@@ -46,7 +45,10 @@ def get_parquet_urls(revision=None, source=None):
     source = _source(source)
     revision = revision or source["revision"] or get_dataset_revision(source["repo"])
     root = f"https://huggingface.co/datasets/{source['repo']}/resolve/{revision}"
-    return [f"{root}/{source['file_pattern'].format(index=index)}" for index in range(1, source["parts"] + 1)]
+    return [
+        f"{root}/{source['file_pattern'].format(index=index)}"
+        for index in range(1, source["parts"] + 1)
+    ]
 
 
 def get_dataset_revision(repo=default_source["repo"]):
@@ -84,7 +86,7 @@ def _download_file(url, destination, description, attempts=5, repo=None):
             shutil.rmtree(cache_dir, ignore_errors=True)
             if attempt + 1 == attempts:
                 raise
-            time.sleep(2 ** attempt)
+            time.sleep(2**attempt)
 
 
 def iter_documents(
@@ -98,7 +100,7 @@ def iter_documents(
     urls=None,
     source=None,
 ):
-    """yield filtered documents while keeping at most one remote parquet shard locally."""
+    """Yield filtered documents while retaining at most one remote Parquet shard."""
     source = _source(source)
     urls = list(get_parquet_urls(source=source) if urls is None else urls)
     random.Random(seed).shuffle(urls)
@@ -109,17 +111,25 @@ def iter_documents(
         cache_key = hashlib.sha256(url.encode()).hexdigest()[:20]
         local_path = cache_dir / f"{cache_key}.parquet"
         if not local_path.exists():
-            _download_file(url, local_path, f"dataset {shard_index + 1}/{len(urls)}", repo=source["repo"])
+            _download_file(
+                url, local_path, f"dataset {shard_index + 1}/{len(urls)}", repo=source["repo"]
+            )
         try:
             parquet = pq.ParquetFile(local_path)
             available = set(parquet.schema_arrow.names)
             columns = [source["content_column"]]
-            columns += [column for column in (source["score_column"], source["source_column"]) if column]
+            columns += [
+                column for column in (source["score_column"], source["source_column"]) if column
+            ]
             required = set(columns)
             if not required.issubset(available):
-                raise ValueError(f"dataset is missing configured columns: {sorted(required - available)}")
+                raise ValueError(
+                    f"dataset is missing configured columns: {sorted(required - available)}"
+                )
             for batch in parquet.iter_batches(columns=columns, batch_size=2048):
-                values = {column: batch.column(index).to_pylist() for index, column in enumerate(columns)}
+                values = {
+                    column: batch.column(index).to_pylist() for index, column in enumerate(columns)
+                }
                 contents = values[source["content_column"]]
                 scores = values.get(source["score_column"], [1.0] * len(contents))
                 sources = values.get(source["source_column"], ["unknown"] * len(contents))
@@ -130,13 +140,19 @@ def iter_documents(
                         continue
                     if not min_chars <= len(content) <= max_chars:
                         continue
-                    yield {"content": content, "score": float(score), "source": source_name or "unknown"}
+                    yield {
+                        "content": content,
+                        "score": float(score),
+                        "source": source_name or "unknown",
+                    }
         finally:
             if not keep_raw:
                 local_path.unlink(missing_ok=True)
 
 
 class TokenShardWriter:
+    """Write token IDs into bounded, checksummed uint16 shards."""
+
     def __init__(self, directory, split, shard_tokens):
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
@@ -168,8 +184,8 @@ class TokenShardWriter:
                 self._open()
             assert self._array is not None and self._hasher is not None
             count = min(values.size - written, self.shard_tokens - self._position)
-            chunk = values[written:written + count].astype("<u2", copy=False)
-            self._array[self._position:self._position + count] = chunk
+            chunk = values[written : written + count].astype("<u2", copy=False)
+            self._array[self._position : self._position + count] = chunk
             self._hasher.update(chunk.tobytes())
             self._position += count
             self.total_tokens += count
@@ -189,11 +205,13 @@ class TokenShardWriter:
             handle.truncate(self._position * np.dtype("<u2").itemsize)
         final_path = self._path.with_suffix("")
         self._path.replace(final_path)
-        self.shards.append({
-            "path": final_path.name,
-            "tokens": self._position,
-            "sha256": self._hasher.hexdigest(),
-        })
+        self.shards.append(
+            {
+                "path": final_path.name,
+                "tokens": self._position,
+                "sha256": self._hasher.hexdigest(),
+            }
+        )
         self._path = None
         self._position = 0
         self._hasher = None
@@ -204,7 +222,9 @@ class TokenShardWriter:
 
 
 def _is_validation_document(content, seed, fraction):
-    digest = hashlib.blake2b(content.encode("utf-8"), digest_size=8, person=str(seed).encode()[:16]).digest()
+    digest = hashlib.blake2b(
+        content.encode("utf-8"), digest_size=8, person=str(seed).encode()[:16]
+    ).digest()
     value = int.from_bytes(digest, "big") / 2**64
     return value < fraction
 
@@ -223,6 +243,8 @@ def prepare_dataset(
     source=None,
     tokenizer=None,
 ):
+    """Build packed training and validation shards with a reproducibility manifest."""
+
     tokenizer = tokenizer or get_tokenizer()
     if tokenizer.vocab_size > 65536:
         raise ValueError("packed uint16 data requires vocab_size <= 65536")
@@ -234,7 +256,9 @@ def prepare_dataset(
     staging = output_dir.with_name(output_dir.name + ".building")
     if staging.exists():
         if not restart:
-            raise FileExistsError(f"incomplete dataset build exists: {staging}; pass --restart to replace it")
+            raise FileExistsError(
+                f"incomplete dataset build exists: {staging}; pass --restart to replace it"
+            )
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
     train_writer = TokenShardWriter(staging, "train", shard_tokens)
@@ -297,14 +321,22 @@ def prepare_dataset(
             continue
         process(batch)
         batch.clear()
-        if train_writer.total_tokens >= train_tokens and val_writer.total_tokens >= validation_tokens:
+        if (
+            train_writer.total_tokens >= train_tokens
+            and val_writer.total_tokens >= validation_tokens
+        ):
             done = True
             break
     if batch and not done:
         process(batch)
-        done = train_writer.total_tokens >= train_tokens and val_writer.total_tokens >= validation_tokens
+        done = (
+            train_writer.total_tokens >= train_tokens
+            and val_writer.total_tokens >= validation_tokens
+        )
     if not done:
-        raise RuntimeError("ultra-fineweb was exhausted before reaching the requested token budgets")
+        raise RuntimeError(
+            "ultra-fineweb was exhausted before reaching the requested token budgets"
+        )
     document_index.flush()
     os.fsync(document_index.fileno())
     document_index.close()
@@ -348,7 +380,9 @@ def prepare_dataset(
     temporary.replace(manifest_path)
     staging.replace(output_dir)
     manifest_path = output_dir / "manifest.json"
-    print(f"prepared {train_writer.total_tokens:,} train and {val_writer.total_tokens:,} validation tokens")
+    print(
+        f"prepared {train_writer.total_tokens:,} train and {val_writer.total_tokens:,} validation tokens"
+    )
     print(f"manifest: {manifest_path}")
     return manifest
 

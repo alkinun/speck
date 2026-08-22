@@ -1,32 +1,65 @@
-"""minimal state-cached text generation from a training checkpoint."""
+"""Generate text from a Speck training checkpoint with state caching."""
 
 import argparse
 import os
 
 import torch
 
-from speck.checkpoint import latest, load
 from speck.architecture import ArchitectureConfig
+from speck.checkpoint import latest, load
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
 from speck.tokenizer import get_tokenizer
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("prompt")
-parser.add_argument("--experiment", default="experiments/speck00-200m")
-parser.add_argument("--checkpoint-dir", default=None)
-parser.add_argument("--step", type=int, default=None)
-parser.add_argument("--max-tokens", type=int, default=128)
-parser.add_argument("--temperature", type=float, default=0.8)
-parser.add_argument("--top-k", type=int, default=50)
-parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("prompt", help="text prompt to continue")
+parser.add_argument(
+    "--experiment",
+    default="experiments/speck00-200m",
+    help="experiment directory (default: %(default)s)",
+)
+parser.add_argument(
+    "--checkpoint-dir",
+    default=None,
+    help="checkpoint directory; defaults to the experiment output directory",
+)
+parser.add_argument(
+    "--step",
+    type=int,
+    default=None,
+    help="checkpoint step; defaults to the latest available step",
+)
+parser.add_argument(
+    "--max-tokens",
+    type=int,
+    default=128,
+    help="maximum number of tokens to generate (default: %(default)s)",
+)
+parser.add_argument(
+    "--temperature",
+    type=float,
+    default=0.8,
+    help="sampling temperature; use 0 for greedy decoding (default: %(default)s)",
+)
+parser.add_argument(
+    "--top-k",
+    type=int,
+    default=50,
+    help="number of highest-probability tokens considered during sampling (default: %(default)s)",
+)
+parser.add_argument(
+    "--device",
+    default="cuda" if torch.cuda.is_available() else "cpu",
+    help="inference device (default: CUDA when available, otherwise CPU)",
+)
 args = parser.parse_args()
 
 configs = load_experiment(args.experiment, "tokenizer", "train")
-args.checkpoint_dir = args.checkpoint_dir or configs["train"].get("output_dir") or os.path.join(
-    base_dir(), "checkpoints", configs["train"]["run"]
+args.checkpoint_dir = (
+    args.checkpoint_dir
+    or configs["train"].get("output_dir")
+    or os.path.join(base_dir(), "checkpoints", configs["train"]["run"])
 )
 step = args.step if args.step is not None else latest(args.checkpoint_dir)
 if step is None:

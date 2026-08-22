@@ -36,7 +36,7 @@ def test_mistral_tokenizer_roundtrip_and_load(tmp_path, monkeypatch):
     assert tokenizer.decode(tokenizer.encode("hello")) == "hello"
     assert tokenizer.encode("hello", bos=True, eos=True)[::6] == [1, 2]
     assert tokenizer.encode_batch(["hello", "world"], bos=True, eos=True)[0][::6] == [1, 2]
-    (tmp_path / "tokenizer_metadata.json").write_text(json.dumps({
-        "fingerprint": tokenizer.fingerprint()
-    }))
+    (tmp_path / "tokenizer_metadata.json").write_text(
+        json.dumps({"fingerprint": tokenizer.fingerprint()})
+    )
     assert Tokenizer.load(tmp_path).fingerprint() == tokenizer.fingerprint()

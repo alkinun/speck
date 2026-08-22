@@ -1,4 +1,4 @@
-"""small helpers for experiment directories."""
+"""Provide helpers for experiment directories."""
 
 import json
 from pathlib import Path

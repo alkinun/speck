@@ -1,4 +1,4 @@
-"""atomic training checkpoints."""
+"""Provide atomic training checkpoints."""
 
 import json
 import os
@@ -33,7 +33,11 @@ def save(directory, step, model, optimizer, metadata):
 def latest(directory):
     if not os.path.isdir(directory):
         return None
-    steps = [int(match.group(1)) for name in os.listdir(directory) if (match := re.fullmatch(r"complete_(\d+)", name))]
+    steps = [
+        int(match.group(1))
+        for name in os.listdir(directory)
+        if (match := re.fullmatch(r"complete_(\d+)", name))
+    ]
     return max(steps) if steps else None
 
 

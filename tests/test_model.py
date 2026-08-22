@@ -14,7 +14,6 @@ from speck.architecture import (
 )
 from speck.model import CombinedOptimizer, SpeckForCausalLM, build_model
 
-
 experiment = Path(__file__).parents[1] / "experiments" / "speck00-200m"
 
 
@@ -36,7 +35,7 @@ def cached_logits(model, tokens):
     state = model.state(length=tokens.size(1))
     values = [model(tokens[:, :1], state=state)]
     for index in range(1, tokens.size(1)):
-        values.append(model(tokens[:, index:index + 1], state=state))
+        values.append(model(tokens[:, index : index + 1], state=state))
     return torch.cat(values, dim=1)
 
 
@@ -84,7 +83,9 @@ def test_muon_optimizer_routes_convolution_parameters_to_adamw():
         for group in optimizer.optimizers["adamw"].param_groups
         for parameter in group["params"]
     }
-    convolution_parameters = {id(parameter) for parameter in model.parameters() if parameter.ndim == 3}
+    convolution_parameters = {
+        id(parameter) for parameter in model.parameters() if parameter.ndim == 3
+    }
 
     assert muon_parameters.isdisjoint(adamw_parameters)
     assert muon_parameters | adamw_parameters == {id(parameter) for parameter in model.parameters()}
@@ -134,12 +135,8 @@ def test_build_model_uses_block_config():
 def test_heterogeneous_head_dimensions_and_widths():
     config = ArchitectureConfig(
         (
-            BlockGroup(
-                BlockConfig(8, (StageConfig((AttentionSpec(4, 1),)),))
-            ),
-            BlockGroup(
-                BlockConfig(12, (StageConfig((AttentionSpec(6, 1),)),))
-            ),
+            BlockGroup(BlockConfig(8, (StageConfig((AttentionSpec(4, 1),)),))),
+            BlockGroup(BlockConfig(12, (StageConfig((AttentionSpec(6, 1),)),))),
         ),
         8,
         vocab_size=16,

@@ -1,4 +1,4 @@
-"""small runtime helpers shared by data and training."""
+"""Provide runtime helpers shared by data and training."""
 
 import os
 

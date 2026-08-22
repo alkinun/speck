@@ -1,4 +1,4 @@
-"""distributed loader for packed uint16 token shards."""
+"""Load distributed batches from packed uint16 token shards."""
 
 import bisect
 import hashlib
@@ -13,6 +13,8 @@ from speck.dataset import default_data_dir, load_manifest
 
 
 class PackedTokenSplit:
+    """Expose packed token shards as one contiguous memory-mapped split."""
+
     def __init__(self, data_dir, split, manifest):
         self.data_dir = Path(data_dir)
         split_manifest = manifest["splits"][split]
@@ -42,10 +44,12 @@ class PackedTokenSplit:
             shard_start = 0 if shard_index == 0 else self.ends[shard_index - 1]
             offset = position - shard_start
             take = min(remaining, len(self.shards[shard_index]) - offset)
-            pieces.append(self.shards[shard_index][offset:offset + take])
+            pieces.append(self.shards[shard_index][offset : offset + take])
             position += take
             remaining -= take
-        return np.array(pieces[0] if len(pieces) == 1 else np.concatenate(pieces), dtype=np.int64, copy=True)
+        return np.array(
+            pieces[0] if len(pieces) == 1 else np.concatenate(pieces), dtype=np.int64, copy=True
+        )
 
     def shard_at(self, position):
         return bisect.bisect_right(self.ends, min(position, self.total_tokens - 1))
@@ -65,7 +69,7 @@ def packed_loader(
     resume_state_dict=None,
     data_dir=None,
 ):
-    """yield losslessly packed batches and the exact start cursor for each batch."""
+    """Yield losslessly packed batches and each batch's exact start cursor."""
     if split not in {"train", "val"}:
         raise ValueError("split must be train or val")
     data_dir = Path(data_dir or default_data_dir / "packed")
@@ -86,7 +90,10 @@ def packed_loader(
     if resume_state_dict is not None:
         if resume_state_dict.get("manifest") != dataset_hash:
             raise ValueError("cannot resume with a different packed dataset")
-        if resume_state_dict.get("sequence_length") != sequence_length or resume_state_dict.get("batch_size") != batch_size:
+        if (
+            resume_state_dict.get("sequence_length") != sequence_length
+            or resume_state_dict.get("batch_size") != batch_size
+        ):
             raise ValueError("cannot resume with different batch geometry")
         if resume_state_dict.get("world_size") != world_size:
             raise ValueError("cannot resume with a different world size")

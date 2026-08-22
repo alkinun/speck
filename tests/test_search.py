@@ -17,9 +17,9 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
-from speck.model import SpeckForCausalLM
 from speck.checkpoint import save
 from speck.dataloader import manifest_fingerprint
+from speck.model import SpeckForCausalLM
 from speck.search import (
     MUTATIONS,
     CandidatePlan,
@@ -49,7 +49,6 @@ from speck.search import (
     validate_architecture,
     validation_slices,
 )
-
 
 root = Path(__file__).parents[1]
 experiment = root / "experiments" / "speck00-200m"
@@ -139,12 +138,8 @@ def rich_architecture():
                     ),
                 )
             ),
-            BlockGroup(
-                BlockConfig(16, (StageConfig((AttentionSpec(8, 1),)),))
-            ),
-            BlockGroup(
-                BlockConfig(12, (StageConfig((SwiGLUSpec(24),)),))
-            ),
+            BlockGroup(BlockConfig(16, (StageConfig((AttentionSpec(8, 1),)),))),
+            BlockGroup(BlockConfig(12, (StageConfig((SwiGLUSpec(24),)),))),
         ),
         8,
         vocab_size=16,
@@ -318,17 +313,13 @@ def test_candidate_scoring_and_lane_promotions():
                 "candidate_id": str(index),
                 "status": "ready",
                 "nll_curve": [
-                    {"tokens": tokens, "nll": nll}
-                    for tokens, nll in zip((1, 2, 4), curve)
+                    {"tokens": tokens, "nll": nll} for tokens, nll in zip((1, 2, 4), curve)
                 ],
                 "profile": profile(5 - index),
             }
         )
     scored = score_candidates(records, 8)
-    assert all(
-        {"quality", "balanced", "efficiency"} <= set(value["scores"])
-        for value in scored
-    )
+    assert all({"quality", "balanced", "efficiency"} <= set(value["scores"]) for value in scored)
     promoted = select_promotions(
         scored,
         {"quality": 2, "balanced": 1, "efficiency": 1},
@@ -608,9 +599,7 @@ def test_archive_rescoring_compares_generations(tmp_path):
         settings,
     )
     for candidate_id, offset in (("000001", 1.0), ("000002", 0.0)):
-        result = next(
-            value for value in store.results() if value["candidate_id"] == candidate_id
-        )
+        result = next(value for value in store.results() if value["candidate_id"] == candidate_id)
         candidate_profile = dict(result["profile"])
         candidate_profile.update(profile(1.0))
         store.update_result(
@@ -653,9 +642,7 @@ def fake_child(command):
     action = command[3]
     store = StudyStore(command[4])
     candidate_id = command[5]
-    result = next(
-        value for value in store.results() if value["candidate_id"] == candidate_id
-    )
+    result = next(value for value in store.results() if value["candidate_id"] == candidate_id)
     if action == "_check":
         store.update_result(candidate_id, feasibility={"status": "passed"})
         return {"status": "passed"}
@@ -772,9 +759,7 @@ def test_final_role_selection_and_two_seed_aggregation(tmp_path, monkeypatch):
         profile_path = candidate / "final" / "profile.json"
         if action == "_final_cpu_profile":
             final_profile = json.loads(profile_path.read_text(encoding="utf-8"))
-            final_profile["cpu"] = {
-                "contract": search_script._cpu_contract(local_store.settings())
-            }
+            final_profile["cpu"] = {"contract": search_script._cpu_contract(local_store.settings())}
             atomic_json(profile_path, final_profile)
             return final_profile
         value = int(candidate_id)

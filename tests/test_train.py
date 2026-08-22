@@ -1,6 +1,13 @@
 import torch
 
-from speck.architecture import ArchitectureConfig, AttentionSpec, BlockConfig, BlockGroup, StageConfig, SwiGLUSpec
+from speck.architecture import (
+    ArchitectureConfig,
+    AttentionSpec,
+    BlockConfig,
+    BlockGroup,
+    StageConfig,
+    SwiGLUSpec,
+)
 from speck.model import SpeckForCausalLM
 from speck.train import lr_scale, optimization_step
 

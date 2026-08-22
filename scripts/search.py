@@ -1,4 +1,4 @@
-"""run resumable architecture searches."""
+"""Run resumable Speck architecture searches."""
 
 import argparse
 import fcntl
@@ -85,9 +85,7 @@ def _runtime_contract(settings, device):
     return {
         "device": str(device),
         "device_type": device.type,
-        "device_name": torch.cuda.get_device_name(device)
-        if device.type == "cuda"
-        else "cpu",
+        "device_name": torch.cuda.get_device_name(device) if device.type == "cuda" else "cpu",
         "torch": torch.__version__,
         "cuda": torch.version.cuda,
         "parameter_dtype": settings["profile"]["parameter_dtype"],
@@ -164,9 +162,7 @@ def _model(architecture, device, seed):
 
 
 def check_candidate(study, candidate_id, device_name):
-    store, settings, state, configs, candidate, architecture = _context(
-        study, candidate_id
-    )
+    store, settings, state, configs, candidate, architecture = _context(study, candidate_id)
     device = _runtime(device_name, settings["seed"])
     _verify_runtime(state, settings, device)
     model = _model(architecture, device, settings["seed"])
@@ -198,10 +194,7 @@ def check_candidate(study, candidate_id, device_name):
         full = model(fixture)
         sequence_state = model.state(length=length)
         cached = torch.cat(
-            [
-                model(fixture[:, index : index + 1], state=sequence_state)
-                for index in range(length)
-            ],
+            [model(fixture[:, index : index + 1], state=sequence_state) for index in range(length)],
             dim=1,
         )
     if not torch.isfinite(full).all() or not torch.isfinite(cached).all():
@@ -298,9 +291,7 @@ def _measure_profile(model, architecture, profile, device):
     return {
         "contract": {
             "device": str(device),
-            "device_name": torch.cuda.get_device_name(device)
-            if device.type == "cuda"
-            else "cpu",
+            "device_name": torch.cuda.get_device_name(device) if device.type == "cuda" else "cpu",
             "parameter_dtype": profile["parameter_dtype"],
             "compute_dtype": profile["compute_dtype"],
             "warmups": profile["warmups"],
@@ -322,9 +313,7 @@ def _measure_profile(model, architecture, profile, device):
 
 
 def profile_candidate(study, candidate_id, device_name):
-    store, settings, state, configs, candidate, architecture = _context(
-        study, candidate_id
-    )
+    store, settings, state, configs, candidate, architecture = _context(study, candidate_id)
     profile = settings["profile"]
     device = _runtime(device_name, profile["seed"])
     _verify_runtime(state, settings, device)
@@ -386,9 +375,7 @@ def train_candidate(
     deadline=None,
     run_name=None,
 ):
-    store, settings, state, configs, candidate, architecture = _context(
-        study, candidate_id
-    )
+    store, settings, state, configs, candidate, architecture = _context(study, candidate_id)
     if run_name not in {None, "continuation", "independent", "rebuild"}:
         raise ValueError("unknown final training run")
     final_run = run_name in {"continuation", "independent"}
@@ -427,14 +414,10 @@ def train_candidate(
     result_path = None
     if run_name is None:
         checkpoint_dir = candidate / "checkpoint"
-        result = next(
-            value for value in store.results() if value["candidate_id"] == candidate_id
-        )
+        result = next(value for value in store.results() if value["candidate_id"] == candidate_id)
     else:
         run_directory = (
-            candidate / "rebuild"
-            if run_name == "rebuild"
-            else candidate / "final" / run_name
+            candidate / "rebuild" if run_name == "rebuild" else candidate / "final" / run_name
         )
         checkpoint_dir = run_directory / "checkpoint"
         result_path = run_directory / "result.json"
@@ -464,9 +447,7 @@ def train_candidate(
     curve = list(result.get("nll_curve", []))
     metadata = None
     if checkpoint_step is not None:
-        model_state, optimizer_state, metadata = load(
-            load_directory, checkpoint_step, device
-        )
+        model_state, optimizer_state, metadata = load(load_directory, checkpoint_step, device)
         if (
             metadata["architecture_digest"] != architecture.digest
             or metadata["manifest"] != manifest_hash
@@ -623,7 +604,12 @@ def train_candidate(
                 training_seconds=elapsed_training,
             )
             atomic_json(result_path, result)
-        if run_name in {None, "rebuild"} and not complete and deadline is not None and time.time() >= deadline:
+        if (
+            run_name in {None, "rebuild"}
+            and not complete
+            and deadline is not None
+            and time.time() >= deadline
+        ):
             if run_name is None:
                 store.update_result(candidate_id, status="pending")
             return {"complete": False, "trained_tokens": trained_tokens}
@@ -631,9 +617,7 @@ def train_candidate(
 
 
 def final_profile_candidate(study, candidate_id, device_name):
-    store, settings, state, configs, candidate, architecture = _context(
-        study, candidate_id
-    )
+    store, settings, state, configs, candidate, architecture = _context(study, candidate_id)
     device = _runtime(device_name, settings["profile"]["seed"])
     _verify_runtime(state, settings, device)
     if device.type != "cuda":
@@ -681,30 +665,28 @@ def final_profile_candidate(study, candidate_id, device_name):
     )
     if not equivalent:
         raise ValueError("eager and compiled finalist outputs differ")
-    compiled_profile = _measure_profile(
-        compiled, architecture, gpu_contract, device
-    )
+    compiled_profile = _measure_profile(compiled, architecture, gpu_contract, device)
     profile_path = candidate / "final" / "profile.json"
     result = (
         json.loads(profile_path.read_text(encoding="utf-8"))
         if profile_path.is_file()
         else {"format_version": 1}
     )
-    result.update({
-        "format_version": 1,
-        "eager_gpu": eager,
-        "compiled_gpu": compiled_profile,
-        "compilation_seconds": compilation_seconds,
-        "outputs_equivalent": equivalent,
-    })
+    result.update(
+        {
+            "format_version": 1,
+            "eager_gpu": eager,
+            "compiled_gpu": compiled_profile,
+            "compilation_seconds": compilation_seconds,
+            "outputs_equivalent": equivalent,
+        }
+    )
     atomic_json(profile_path, result)
     return result
 
 
 def final_cpu_profile_candidate(study, candidate_id):
-    store, settings, state, configs, candidate, architecture = _context(
-        study, candidate_id
-    )
+    store, settings, state, configs, candidate, architecture = _context(study, candidate_id)
     baseline_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
     checkpoint_dir = candidate / "final" / "continuation" / "checkpoint"
     step = latest(checkpoint_dir)
@@ -843,11 +825,7 @@ def _budget_expired(store):
 
 
 def _record(store, candidate_id):
-    return next(
-        result
-        for result in store.results()
-        if result["candidate_id"] == candidate_id
-    )
+    return next(result for result in store.results() if result["candidate_id"] == candidate_id)
 
 
 def _run_candidate(store, candidate_id, target, device):
@@ -878,17 +856,12 @@ def _run_candidate(store, candidate_id, target, device):
 
 
 def _generation_results(store, generation):
-    return [
-        result
-        for result in store.results()
-        if result["generation"] == generation
-    ]
+    return [result for result in store.results() if result["generation"] == generation]
 
 
 def _check_generation_space(store, plans, settings):
     checkpoint_bytes = sum(
-        architecture_metrics(plan.architecture, settings)["weight_bytes"] * 4
-        for plan in plans
+        architecture_metrics(plan.architecture, settings)["weight_bytes"] * 4 for plan in plans
     )
     free = shutil.disk_usage(store.directory).free
     if free < checkpoint_bytes:
@@ -905,9 +878,7 @@ def _plan_generation(store, baseline, settings, generation):
         state["phase"] = "screen"
         store.write_state(state)
         return current
-    existing = [
-        result for result in all_results if result["generation"] != generation
-    ]
+    existing = [result for result in all_results if result["generation"] != generation]
     if generation == 0:
         plans = initial_generation(
             baseline,
@@ -961,9 +932,7 @@ def _rescore_archive(store, rung, next_horizon, update_current=False):
         if result["status"] == "failed" or result.get("trained_tokens", 0) < rung:
             continue
         value = json.loads(json.dumps(result))
-        value["nll_curve"] = [
-            point for point in value["nll_curve"] if point["tokens"] <= rung
-        ]
+        value["nll_curve"] = [point for point in value["nll_curve"] if point["tokens"] <= rung]
         evidence.append(value)
     scored = score_candidates(evidence, next_horizon)
     for result in scored:
@@ -1094,8 +1063,7 @@ def _run_phase(store, settings, generation, phase, device):
             return False
     candidates = _generation_results(store, generation)
     if any(
-        result["status"] in {"pending", "running"}
-        and result.get("rung", 0) < target
+        result["status"] in {"pending", "running"} and result.get("rung", 0) < target
         for result in candidates
     ):
         return False
@@ -1125,9 +1093,7 @@ def _run_phase(store, settings, generation, phase, device):
         settings["final_tokens"],
         update_current=True,
     )
-    confirmed = [
-        result for result in store.results() if result["status"] == "confirmed"
-    ]
+    confirmed = [result for result in store.results() if result["status"] == "confirmed"]
     retained = retained_checkpoint_candidates(confirmed)
     final_step = settings["rungs"][-1] // settings["training"]["batch_tokens"]
     for result in store.results():
@@ -1147,11 +1113,7 @@ def _run_phase(store, settings, generation, phase, device):
             rebuild_root = store.candidate_path(result["candidate_id"]) / "rebuild"
             if rebuild_root.exists():
                 shutil.rmtree(rebuild_root)
-        keep = (
-            {final_step}
-            if result["candidate_id"] in retained
-            else set()
-        )
+        keep = {final_step} if result["candidate_id"] in retained else set()
         prune_checkpoints(checkpoint_dir, keep)
     state = store.state()
     state["phase"] = "complete"
@@ -1227,9 +1189,7 @@ def run_study(experiment, name, hours, generations, device):
         finally:
             state = store.state()
             if state.get("active_since") is not None:
-                state["elapsed_seconds"] += max(
-                    0.0, time.time() - state["active_since"]
-                )
+                state["elapsed_seconds"] += max(0.0, time.time() - state["active_since"])
             state["active_since"] = None
             store.write_state(state)
     return status_snapshot(store)
@@ -1243,17 +1203,13 @@ def human_status(snapshot):
     status_counts = ", ".join(
         f"{name} {count}" for name, count in snapshot["counts"]["status"].items()
     )
-    rung_counts = ", ".join(
-        f"{name} {count}" for name, count in snapshot["counts"]["rung"].items()
-    )
+    rung_counts = ", ".join(f"{name} {count}" for name, count in snapshot["counts"]["rung"].items())
     lines.append(f"status counts | {status_counts or 'none'}")
     lines.append(f"rung counts | {rung_counts or 'none'}")
     for lane in ("quality", "balanced", "efficiency"):
         leader = snapshot["leaders"].get(lane)
         if leader:
-            lines.append(
-                f"{lane} leader | {leader['candidate_id']} | score {leader['score']:.4f}"
-            )
+            lines.append(f"{lane} leader | {leader['candidate_id']} | score {leader['score']:.4f}")
     current = snapshot["current_candidate"]
     if current:
         if current.get("nll_curve"):
@@ -1269,9 +1225,7 @@ def human_status(snapshot):
                 f"prefill 2048 p50 | {profile['latency']['prefill_2048']['p50_seconds']:.6f} seconds"
             )
         if profile.get("memory", {}).get("peak_vram_bytes") is not None:
-            lines.append(
-                f"peak vram | {profile['memory']['peak_vram_bytes']} bytes"
-            )
+            lines.append(f"peak vram | {profile['memory']['peak_vram_bytes']} bytes")
     lines.append(f"retained checkpoints | {snapshot['checkpoint_bytes']} bytes")
     return "\n".join(lines)
 
@@ -1294,22 +1248,17 @@ def _final_efficiency(candidates):
 
     ranks = {
         name: percentile_ranks(
-            {
-                candidate_id: value(candidate, path)
-                for candidate_id, candidate in candidates.items()
-            }
+            {candidate_id: value(candidate, path) for candidate_id, candidate in candidates.items()}
         )
         for name, path in paths.items()
     }
     scores = {}
     for candidate_id in candidates:
         latency = statistics.mean(
-            ranks[name][candidate_id]
-            for name in ("prefill_512", "prefill_2048", "decode_2048")
+            ranks[name][candidate_id] for name in ("prefill_512", "prefill_2048", "decode_2048")
         )
         memory = statistics.mean(
-            ranks[name][candidate_id]
-            for name in ("weight_bytes", "state_bytes", "peak_vram")
+            ranks[name][candidate_id] for name in ("weight_bytes", "state_bytes", "peak_vram")
         )
         scores[candidate_id] = (latency + memory) / 2
     return scores
@@ -1358,30 +1307,19 @@ def finalize_study(name, device):
                 else {}
             )
             if not {"eager_gpu", "compiled_gpu"} <= stored_profile.keys():
-                run_child(
-                    _child_command("final_profile", store, candidate_id, device)
-                )
+                run_child(_child_command("final_profile", store, candidate_id, device))
                 stored_profile = json.loads(profile_path.read_text(encoding="utf-8"))
             expected_cpu = _cpu_contract(settings)
             stored_cpu = stored_profile.get("cpu", {}).get("contract", {})
             if any(stored_cpu.get(key) != value for key, value in expected_cpu.items()):
-                run_child(
-                    _child_command(
-                        "final_cpu_profile", store, candidate_id, "cpu"
-                    )
-                )
+                run_child(_child_command("final_cpu_profile", store, candidate_id, "cpu"))
                 stored_profile = json.loads(profile_path.read_text(encoding="utf-8"))
                 stored_cpu = stored_profile.get("cpu", {}).get("contract", {})
-                if any(
-                    stored_cpu.get(key) != value
-                    for key, value in expected_cpu.items()
-                ):
+                if any(stored_cpu.get(key) != value for key, value in expected_cpu.items()):
                     raise RuntimeError("final cpu profile contract differs from the host")
             runs = {
                 run_name: json.loads(
-                    (candidate / "final" / run_name / "result.json").read_text(
-                        encoding="utf-8"
-                    )
+                    (candidate / "final" / run_name / "result.json").read_text(encoding="utf-8")
                 )
                 for run_name in ("continuation", "independent")
             }
@@ -1390,9 +1328,7 @@ def finalize_study(name, device):
                 "digest": search_result["digest"],
                 "search_scores": search_result["scores"],
                 "search_profile": search_result["profile"],
-                "verification": aggregate_final_runs(
-                    runs, settings["final_tokens"]
-                ),
+                "verification": aggregate_final_runs(runs, settings["final_tokens"]),
                 "profile": json.loads(profile_path.read_text(encoding="utf-8")),
             }
 
@@ -1436,19 +1372,58 @@ def finalize_study(name, device):
 
 def parser():
     parser = argparse.ArgumentParser(description=__doc__)
-    commands = parser.add_subparsers(dest="command", required=True)
-    run = commands.add_parser("run")
-    run.add_argument("experiment")
-    run.add_argument("--name", required=True)
-    run.add_argument("--hours", type=float, default=None)
-    run.add_argument("--generations", type=int, default=None)
-    run.add_argument("--device", default="cuda")
-    status = commands.add_parser("status")
-    status.add_argument("name")
-    status.add_argument("--json", action="store_true")
-    finalize = commands.add_parser("finalize")
-    finalize.add_argument("name")
-    finalize.add_argument("--device", default="cuda")
+    commands = parser.add_subparsers(
+        dest="command",
+        required=True,
+        metavar="{run,status,finalize}",
+        help="search operation",
+    )
+    run = commands.add_parser(
+        "run",
+        help="start or resume a search study",
+        description="Start or resume a Speck architecture search study.",
+    )
+    run.add_argument("experiment", help="experiment directory")
+    run.add_argument("--name", required=True, help="study name")
+    run.add_argument(
+        "--hours",
+        type=float,
+        default=None,
+        help="optional total runtime limit in hours",
+    )
+    run.add_argument(
+        "--generations",
+        type=int,
+        default=None,
+        help="optional total generation limit",
+    )
+    run.add_argument(
+        "--device",
+        default="cuda",
+        help="search device (default: %(default)s)",
+    )
+    status = commands.add_parser(
+        "status",
+        help="show the current study status",
+        description="Show progress and results for a search study.",
+    )
+    status.add_argument("name", help="study name")
+    status.add_argument(
+        "--json",
+        action="store_true",
+        help="print the complete status snapshot as JSON",
+    )
+    finalize = commands.add_parser(
+        "finalize",
+        help="train, profile, and rank the study finalists",
+        description="Train, profile, and rank finalists from a completed search study.",
+    )
+    finalize.add_argument("name", help="study name")
+    finalize.add_argument(
+        "--device",
+        default="cuda",
+        help="finalization device (default: %(default)s)",
+    )
     check = commands.add_parser("_check")
     check.add_argument("study")
     check.add_argument("candidate")

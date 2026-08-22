@@ -1,7 +1,9 @@
 [project]
 name = "speck"
 version = "0.1.0"
-description = "a compact research harness for pretraining small language models"
+description = "A compact research harness for pretraining small language models"
+readme = "readme.md"
+license = { file = "license" }
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26.0",
@@ -16,9 +18,11 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",
+    "ruff>=0.15.0",
 ]
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 testpaths = ["tests"]
 
 [tool.pyright]
@@ -26,7 +30,17 @@ venvPath = "."
 venv = ".venv"
 pythonVersion = "3.10"
 
-# target torch to cuda 12.8 or cpu
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["wandb"]
+
+# Target PyTorch to CUDA 12.8 or CPU.
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "cpu" },

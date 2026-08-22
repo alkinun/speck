@@ -1,4 +1,4 @@
-"""deterministic architecture search mechanics."""
+"""Implement deterministic architecture search mechanics."""
 
 import hashlib
 import json
@@ -8,8 +8,8 @@ import random
 import re
 import statistics
 import time
-from datetime import datetime, timezone
 from dataclasses import dataclass, replace
+from datetime import datetime, timezone
 from pathlib import Path
 
 from speck.architecture import (
@@ -21,7 +21,6 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
-
 
 MUTATIONS = (
     "insert_block",
@@ -64,6 +63,8 @@ def _probabilities(values, name):
 
 @dataclass(frozen=True)
 class SearchSettings:
+    """Validate and expose deterministic architecture search settings."""
+
     values: dict
 
     @classmethod
@@ -143,7 +144,11 @@ class SearchSettings:
             "rungs",
         ):
             sequence = values[key]
-            if not sequence or sequence != sorted(set(sequence)) or any(item <= 0 for item in sequence):
+            if (
+                not sequence
+                or sequence != sorted(set(sequence))
+                or any(item <= 0 for item in sequence)
+            ):
                 raise ValueError(f"{key} must contain sorted unique positive values")
 
         for key in ("parameter_bounds", "logical_depth_bounds"):
@@ -240,10 +245,7 @@ class SearchSettings:
         def ordered(key, order):
             if set(values[key]) != {str(item) for item in order}:
                 raise ValueError(f"{key} does not match its search choices")
-            values[key] = {
-                str(item): values[key][str(item)]
-                for item in order
-            }
+            values[key] = {str(item): values[key][str(item)] for item in order}
 
         ordered("mutation_probabilities", MUTATIONS)
         ordered("depth_probabilities", sorted(int(key) for key in values["depth_probabilities"]))
@@ -318,9 +320,7 @@ def _parts(block):
         swiglu = operations[0] if isinstance(operations[0], SwiGLUSpec) else None
     else:
         mixer, swiglu = operations
-    if mixer is not None and not isinstance(
-        mixer, (AttentionSpec, GatedCausalConvSpec)
-    ):
+    if mixer is not None and not isinstance(mixer, (AttentionSpec, GatedCausalConvSpec)):
         raise ValueError("search blocks contain one supported mixer")
     if swiglu is not None and not isinstance(swiglu, SwiGLUSpec):
         raise ValueError("swiglu must follow the mixer")
@@ -485,8 +485,7 @@ def architecture_metrics(config, settings):
         "weight_bytes": parameters * 4,
         "flops_per_token": flops_per_token(config, sequence_length),
         "state_bytes": {
-            str(length): sequence_state_bytes(config, length)
-            for length in (512, 2048, 4096)
+            str(length): sequence_state_bytes(config, length) for length in (512, 2048, 4096)
         },
         "logical_depth": config.logical_depth,
         "unique_parameter_blocks": config.unique_parameter_blocks,
@@ -595,12 +594,8 @@ def _random_group(width, remaining_depth, settings, rng):
         window = rng.choice(settings["sliding_windows"]) if scope == "sliding" else None
         mixer = AttentionSpec(head_dim, kv_heads, scope, window)
     elif mixer_name == "convolution":
-        ratio = _numeric_choice(
-            rng, settings["convolution_ratio_probabilities"], float
-        )
-        kernel = _numeric_choice(
-            rng, settings["convolution_kernel_probabilities"], int
-        )
+        ratio = _numeric_choice(rng, settings["convolution_ratio_probabilities"], float)
+        kernel = _numeric_choice(rng, settings["convolution_kernel_probabilities"], int)
         mixer = GatedCausalConvSpec(round(width * ratio), kernel)
 
     swiglu = None
@@ -626,9 +621,7 @@ def random_architecture(template, settings, seed, attempts=None):
     last_error = None
     for _ in range(attempts):
         depth = _numeric_choice(rng, settings["depth_probabilities"], int)
-        embedding_size = _numeric_choice(
-            rng, settings["embedding_width_probabilities"], int
-        )
+        embedding_size = _numeric_choice(rng, settings["embedding_width_probabilities"], int)
         groups = []
         previous = embedding_size
         remaining = depth
@@ -720,11 +713,7 @@ def _mutation_move(config, settings, rng):
 
 
 def _mutation_block_width(config, settings, rng):
-    choices = [
-        index
-        for index, group in enumerate(config.blocks)
-        if len(settings["widths"]) > 1
-    ]
+    choices = [index for index, group in enumerate(config.blocks) if len(settings["widths"]) > 1]
     if not choices:
         raise InapplicableMutation("no block width can change")
     index = rng.choice(choices)
@@ -1108,10 +1097,7 @@ def _regression(points):
     slope = sum((x_value - x_mean) * (y_value - y_mean) for x_value, y_value in zip(x, y))
     slope /= denominator
     intercept = y_mean - slope * x_mean
-    residual = sum(
-        (y_value - (intercept + slope * x_value)) ** 2
-        for x_value, y_value in zip(x, y)
-    )
+    residual = sum((y_value - (intercept + slope * x_value)) ** 2 for x_value, y_value in zip(x, y))
     total = sum((value - y_mean) ** 2 for value in y)
     r_squared = 0.0 if total == 0 else max(0.0, min(1.0, 1 - residual / total))
     return {
@@ -1180,9 +1166,7 @@ def score_candidates(records, next_horizon):
             estimates[_record_key(record)] = _regression(curve)
     if not estimates:
         return scored
-    median_slope = statistics.median(
-        estimate["measured_slope"] for estimate in estimates.values()
-    )
+    median_slope = statistics.median(estimate["measured_slope"] for estimate in estimates.values())
     for record in scored:
         key = _record_key(record)
         if key in estimates:
@@ -1231,12 +1215,10 @@ def score_candidates(records, next_horizon):
         if not all(key in ranks[name] for name in profile_metrics):
             continue
         latency = statistics.mean(
-            ranks[name][key]
-            for name in ("prefill_512", "prefill_2048", "decode_2048")
+            ranks[name][key] for name in ("prefill_512", "prefill_2048", "decode_2048")
         )
         memory = statistics.mean(
-            ranks[name][key]
-            for name in ("weight_bytes", "state_bytes_2048", "peak_vram")
+            ranks[name][key] for name in ("weight_bytes", "state_bytes_2048", "peak_vram")
         )
         scores = record.setdefault("scores", {})
         scores.update(
@@ -1422,6 +1404,8 @@ def read_json(path):
 
 @dataclass(frozen=True)
 class StudyStore:
+    """Persist and update an architecture search study atomically."""
+
     directory: Path
 
     def __init__(self, directory):
@@ -1632,11 +1616,7 @@ def materialize_generation(store, plans, generation, settings):
 
 
 def first_incomplete_candidate(results):
-    incomplete = [
-        result
-        for result in results
-        if result.get("status") in {"pending", "running"}
-    ]
+    incomplete = [result for result in results if result.get("status") in {"pending", "running"}]
     return min(incomplete, key=lambda result: result["candidate_id"]) if incomplete else None
 
 
@@ -1744,11 +1724,7 @@ def status_snapshot(store):
     current = None
     if state.get("current_candidate") is not None:
         current = next(
-            (
-                result
-                for result in results
-                if result["candidate_id"] == state["current_candidate"]
-            ),
+            (result for result in results if result["candidate_id"] == state["current_candidate"]),
             None,
         )
     return {
@@ -1767,17 +1743,10 @@ def status_snapshot(store):
 def select_finalists(records):
     confirmed = [record for record in records if record.get("status") == "confirmed"]
     leaders = lane_leaders(confirmed)
-    missing = [
-        lane
-        for lane in ("quality", "balanced", "efficiency")
-        if lane not in leaders
-    ]
+    missing = [lane for lane in ("quality", "balanced", "efficiency") if lane not in leaders]
     if missing:
         raise RuntimeError(f"confirmed archive has no {', '.join(missing)} finalist")
-    return {
-        lane: leaders[lane]["candidate_id"]
-        for lane in ("quality", "balanced", "efficiency")
-    }
+    return {lane: leaders[lane]["candidate_id"] for lane in ("quality", "balanced", "efficiency")}
 
 
 def aggregate_final_runs(runs, final_tokens):
@@ -1787,11 +1756,7 @@ def aggregate_final_runs(runs, final_tokens):
     final = {}
     for name, run in runs.items():
         point = next(
-            (
-                point
-                for point in run.get("nll_curve", [])
-                if point["tokens"] == final_tokens
-            ),
+            (point for point in run.get("nll_curve", []) if point["tokens"] == final_tokens),
             None,
         )
         if point is None or not math.isfinite(point["nll"]):

@@ -1,4 +1,4 @@
-"""distributed pretraining with validation, checkpoints, and wandb."""
+"""Run distributed Speck pretraining with validation, checkpoints, and W&B logging."""
 
 import argparse
 import json
@@ -26,11 +26,29 @@ from speck.train import lr_scale, optimization_step
 
 
 def arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("experiment", nargs="?", default="experiments/speck00-200m")
-    parser.add_argument("--device", default=None)
-    parser.add_argument("--resume", type=int, default=None)
-    parser.add_argument("--no-compile", action="store_true")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "experiment",
+        nargs="?",
+        default="experiments/speck00-200m",
+        help="experiment directory (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--device",
+        default=None,
+        help="training device; defaults to automatic runtime selection",
+    )
+    parser.add_argument(
+        "--resume",
+        type=int,
+        default=None,
+        help="checkpoint step to resume",
+    )
+    parser.add_argument(
+        "--no-compile",
+        action="store_true",
+        help="disable torch.compile",
+    )
     return parser.parse_args()
 
 
@@ -125,7 +143,19 @@ def main():
         "consumed_tokens": consumed_tokens,
     }
     if metadata:
-        immutable = ("sequence_length", "device_batch_size", "batch_tokens", "train_tokens", "lr", "weight_decay", "warmup_steps", "min_lr", "grad_clip", "optimizer", "world_size")
+        immutable = (
+            "sequence_length",
+            "device_batch_size",
+            "batch_tokens",
+            "train_tokens",
+            "lr",
+            "weight_decay",
+            "warmup_steps",
+            "min_lr",
+            "grad_clip",
+            "optimizer",
+            "world_size",
+        )
         changed = [key for key in immutable if metadata["resolved"].get(key) != resolved.get(key)]
         if changed:
             raise ValueError(f"resume settings changed: {', '.join(changed)}")
@@ -154,8 +184,10 @@ def main():
         data_dir=args.data_dir,
     )
     inputs, targets, data_state = next(train_data)
-    compiled_model: Any = model if args.no_compile else torch.compile(
-        model, dynamic=False, mode="max-autotune-no-cudagraphs"
+    compiled_model: Any = (
+        model
+        if args.no_compile
+        else torch.compile(model, dynamic=False, mode="max-autotune-no-cudagraphs")
     )
     train_model = compiled_model
     if distributed:
@@ -168,9 +200,23 @@ def main():
         tokens_per_step = args.device_batch_size * args.sequence_length * world_size
         eval_tokens = args.final_eval_tokens if step == steps else args.eval_tokens
         val_steps = max(1, min(eval_tokens, manifest["splits"]["val"]["tokens"]) // tokens_per_step)
-        loader = packed_loader(tokenizer, args.device_batch_size, args.sequence_length, "val", device=device, data_dir=args.data_dir)
+        loader = packed_loader(
+            tokenizer,
+            args.device_batch_size,
+            args.sequence_length,
+            "val",
+            device=device,
+            data_dir=args.data_dir,
+        )
         loss = validate(compiled_model, loader, val_steps, world_size)
-        run.log({"progress/step": step, "progress/tokens": step * args.batch_tokens, "validation/loss": loss, "validation/perplexity": math.exp(min(loss, 20))})
+        run.log(
+            {
+                "progress/step": step,
+                "progress/tokens": step * args.batch_tokens,
+                "validation/loss": loss,
+                "validation/perplexity": math.exp(min(loss, 20)),
+            }
+        )
         print0(f"step {step:,} | validation loss {loss:.5f}")
         return loss
 
@@ -229,7 +275,9 @@ def main():
                 "data/shard": data_state["shard"],
             }
             run.log(metrics)
-            print0(f"step {completed:,}/{steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s")
+            print0(
+                f"step {completed:,}/{steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s"
+            )
         if (args.eval_every > 0 and completed % args.eval_every == 0) or completed == steps:
             validation_loss = validation(completed)
         if (args.save_every > 0 and completed % args.save_every == 0) or completed == steps:

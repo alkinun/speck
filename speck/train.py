@@ -1,7 +1,7 @@
-"""shared training-step mechanics."""
+"""Provide shared training-step mechanics."""
 
-from contextlib import nullcontext
 import math
+from contextlib import nullcontext
 
 import torch
 import torch.distributed as dist
@@ -28,7 +28,11 @@ def optimization_step(
     optimizer.zero_grad(set_to_none=True)
     loss_sum = torch.zeros((), device=batch[0].device)
     for micro_step in range(accumulation):
-        context = train_model.no_sync() if distributed and micro_step + 1 < accumulation else nullcontext()
+        context = (
+            train_model.no_sync()
+            if distributed and micro_step + 1 < accumulation
+            else nullcontext()
+        )
         with context:
             loss = train_model(batch[0], batch[1])
             (loss / accumulation).backward()

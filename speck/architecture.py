@@ -1,4 +1,4 @@
-"""block grammar for speck model architectures."""
+"""Define the block grammar for Speck model architectures."""
 
 import hashlib
 import json
@@ -104,7 +104,9 @@ class BlockConfig:
             for operation in stage.branches:
                 if isinstance(operation, AttentionSpec):
                     if self.hidden_size % operation.head_dim:
-                        raise ValueError("block width must be divisible by attention head dimension")
+                        raise ValueError(
+                            "block width must be divisible by attention head dimension"
+                        )
                     query_heads = self.hidden_size // operation.head_dim
                     if query_heads % operation.num_key_value_heads:
                         raise ValueError("query heads must be divisible by kv heads")
@@ -149,6 +151,8 @@ class BlockInvocation:
 
 @dataclass(frozen=True)
 class ArchitectureConfig:
+    """Describe a Speck model as ordered, optionally shared block groups."""
+
     blocks: tuple[BlockGroup, ...]
     embedding_size: int
     vocab_size: int = 32_000

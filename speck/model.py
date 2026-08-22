@@ -1,4 +1,4 @@
-"""hybrid decoder language model."""
+"""Implement the Speck hybrid decoder language model."""
 
 import torch
 import torch.nn as nn
@@ -29,6 +29,8 @@ class RMSNorm(nn.Module):
 
 
 class CombinedOptimizer:
+    """Present multiple optimizers through one optimizer-like interface."""
+
     def __init__(self, **optimizers):
         self.optimizers = optimizers
 
@@ -47,7 +49,9 @@ class CombinedOptimizer:
     def state_dict(self):
         return {
             "format_version": 1,
-            "optimizers": {name: optimizer.state_dict() for name, optimizer in self.optimizers.items()},
+            "optimizers": {
+                name: optimizer.state_dict() for name, optimizer in self.optimizers.items()
+            },
         }
 
     def load_state_dict(self, state):
@@ -63,6 +67,8 @@ def rotate(x, cos, sin):
 
 
 class AttentionState:
+    """Maintain a bounded key-value cache in chronological ring-buffer order."""
+
     def __init__(self, batch_size, kv_heads, capacity, head_dim, device, dtype):
         if capacity < 1:
             raise ValueError("attention state capacity must be positive")
@@ -77,26 +83,35 @@ class AttentionState:
         if self.used == 0:
             return self.keys[:, :, :0], self.values[:, :, :0]
         if self.used < self.capacity:
-            return self.keys[:, :, :self.used], self.values[:, :, :self.used]
+            return self.keys[:, :, : self.used], self.values[:, :, : self.used]
         if self.write_position == 0:
             return self.keys, self.values
         return (
-            torch.cat((self.keys[:, :, self.write_position:], self.keys[:, :, :self.write_position]), dim=2),
-            torch.cat((self.values[:, :, self.write_position:], self.values[:, :, :self.write_position]), dim=2),
+            torch.cat(
+                (self.keys[:, :, self.write_position :], self.keys[:, :, : self.write_position]),
+                dim=2,
+            ),
+            torch.cat(
+                (
+                    self.values[:, :, self.write_position :],
+                    self.values[:, :, : self.write_position],
+                ),
+                dim=2,
+            ),
         )
 
     def append(self, keys, values):
         length = keys.size(2)
         if length >= self.capacity:
-            self.keys.copy_(keys[:, :, -self.capacity:])
-            self.values.copy_(values[:, :, -self.capacity:])
+            self.keys.copy_(keys[:, :, -self.capacity :])
+            self.values.copy_(values[:, :, -self.capacity :])
             self.used = self.capacity
             self.write_position = 0
             return
         first = min(length, self.capacity - self.write_position)
         end = self.write_position + first
-        self.keys[:, :, self.write_position:end] = keys[:, :, :first]
-        self.values[:, :, self.write_position:end] = values[:, :, :first]
+        self.keys[:, :, self.write_position : end] = keys[:, :, :first]
+        self.values[:, :, self.write_position : end] = values[:, :, :first]
         remaining = length - first
         if remaining:
             self.keys[:, :, :remaining] = keys[:, :, first:]
@@ -109,6 +124,8 @@ class AttentionState:
 
 
 class ConvolutionState:
+    """Hold causal convolution history for incremental decoding."""
+
     def __init__(self, batch_size, inner_size, history, device, dtype):
         self.values = torch.zeros(batch_size, inner_size, history, device=device, dtype=dtype)
 
@@ -117,6 +134,8 @@ class ConvolutionState:
 
 
 class SequenceState:
+    """Track incremental-decoding position and per-operation caches."""
+
     def __init__(self, entries, length):
         self.entries = entries
         self.position = 0
@@ -166,12 +185,16 @@ class Attention(nn.Module):
     def forward(self, x, rotary, position, state=None):
         batch, length, hidden_size = x.shape
         q = self.q_proj(x).view(batch, length, self.q_heads, self.spec.head_dim).transpose(1, 2)
-        k = self.k_proj(x).view(
-            batch, length, self.spec.num_key_value_heads, self.spec.head_dim
-        ).transpose(1, 2)
-        v = self.v_proj(x).view(
-            batch, length, self.spec.num_key_value_heads, self.spec.head_dim
-        ).transpose(1, 2)
+        k = (
+            self.k_proj(x)
+            .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
+            .transpose(1, 2)
+        )
+        v = (
+            self.v_proj(x)
+            .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
+            .transpose(1, 2)
+        )
         cos, sin = rotary(position, length, q.dtype)
         q = rotate(self.q_norm(q), cos, sin)
         k = rotate(self.k_norm(k), cos, sin)
@@ -225,7 +248,7 @@ class GatedCausalConv(nn.Module):
             groups=self.spec.inner_size,
         )
         if state is not None:
-            state.values.copy_(transposed[:, :, -(self.spec.kernel_size - 1):])
+            state.values.copy_(transposed[:, :, -(self.spec.kernel_size - 1) :])
         return self.output_projection(second_gate * convolved.transpose(1, 2))
 
 
@@ -267,7 +290,9 @@ class Stage(nn.Module):
     def __init__(self, hidden_size, config, stage_index, stage):
         super().__init__()
         self.stage_index = stage_index
-        self.branches = nn.ModuleList(Operation(hidden_size, spec, config) for spec in stage.branches)
+        self.branches = nn.ModuleList(
+            Operation(hidden_size, spec, config) for spec in stage.branches
+        )
 
     def forward(self, x, rotary, position, state, occurrence):
         outputs = []
@@ -293,6 +318,8 @@ class BlockCore(nn.Module):
 
 
 class SpeckForCausalLM(nn.Module):
+    """Implement the configurable Speck causal language model."""
+
     def __init__(self, config):
         super().__init__()
         if not isinstance(config, ArchitectureConfig):
@@ -330,12 +357,14 @@ class SpeckForCausalLM(nn.Module):
             for branch in stage.branches
             if isinstance(branch, AttentionSpec)
         }
-        self.rotary = nn.ModuleDict({
-            str(head_dim): RotaryEmbedding(
-                head_dim, config.max_position_embeddings, config.rope_theta
-            )
-            for head_dim in head_dimensions
-        })
+        self.rotary = nn.ModuleDict(
+            {
+                str(head_dim): RotaryEmbedding(
+                    head_dim, config.max_position_embeddings, config.rope_theta
+                )
+                for head_dim in head_dimensions
+            }
+        )
 
     @torch.no_grad()
     def init_weights(self):
