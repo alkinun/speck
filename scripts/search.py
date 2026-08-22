@@ -380,8 +380,9 @@ def train_candidate(
     store, settings, state, configs, candidate, architecture = _context(
         study, candidate_id
     )
-    if run_name not in {None, "continuation", "independent"}:
+    if run_name not in {None, "continuation", "independent", "rebuild"}:
         raise ValueError("unknown final training run")
+    final_run = run_name in {"continuation", "independent"}
     seed = settings["seed"]
     if run_name == "independent":
         seed += settings["final_seed_offset"]
@@ -400,8 +401,10 @@ def train_candidate(
     training = settings["training"]
     if run_name is None and target_tokens not in settings["rungs"]:
         raise ValueError("search training target is not a rung")
-    if run_name is not None and target_tokens != settings["final_tokens"]:
+    if final_run and target_tokens != settings["final_tokens"]:
         raise ValueError("final training target must match the final horizon")
+    if run_name == "rebuild" and target_tokens != settings["rungs"][-1]:
+        raise ValueError("archive rebuild target must match the final rung")
     if target_tokens % training["batch_tokens"]:
         raise ValueError("training target must align with optimizer batches")
 
@@ -419,7 +422,11 @@ def train_candidate(
             value for value in store.results() if value["candidate_id"] == candidate_id
         )
     else:
-        run_directory = candidate / "final" / run_name
+        run_directory = (
+            candidate / "rebuild"
+            if run_name == "rebuild"
+            else candidate / "final" / run_name
+        )
         checkpoint_dir = run_directory / "checkpoint"
         result_path = run_directory / "result.json"
         result = (
@@ -508,7 +515,7 @@ def train_candidate(
     )
     batch = next(train_data)
     checkpoint_tokens = list(training["checkpoints"])
-    if run_name is not None:
+    if final_run:
         checkpoint_tokens.extend((2 * settings["rungs"][-1], settings["final_tokens"]))
     checkpoints = {
         tokens // training["batch_tokens"]
@@ -554,7 +561,7 @@ def train_candidate(
         )
         curve = _curve_with(curve, trained_tokens, nll)
         final_nll = result.get("final_nll")
-        if run_name is not None and trained_tokens == settings["final_tokens"]:
+        if final_run and trained_tokens == settings["final_tokens"]:
             final_nll = evaluate_nll(
                 model,
                 tokenizer,
@@ -607,8 +614,9 @@ def train_candidate(
                 training_seconds=elapsed_training,
             )
             atomic_json(result_path, result)
-        if run_name is None and not complete and deadline is not None and time.time() >= deadline:
-            store.update_result(candidate_id, status="pending")
+        if run_name in {None, "rebuild"} and not complete and deadline is not None and time.time() >= deadline:
+            if run_name is None:
+                store.update_result(candidate_id, status="pending")
             return {"complete": False, "trained_tokens": trained_tokens}
     return {"complete": True, "trained_tokens": target_tokens}
 
@@ -973,6 +981,47 @@ def _promote(store, cohort, winners):
             prune_checkpoints(store.candidate_path(candidate_id) / "checkpoint")
 
 
+def _checkpoint_ready(directory, step, digest, trained_tokens):
+    directory = Path(directory)
+    if latest(directory) != step:
+        return False
+    paths = (
+        directory / f"model_{step:06d}.pt",
+        directory / f"optimizer_{step:06d}.pt",
+        directory / f"metadata_{step:06d}.json",
+    )
+    if not all(path.is_file() for path in paths):
+        return False
+    try:
+        metadata = json.loads(paths[2].read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return (
+        metadata.get("trained_tokens") == trained_tokens
+        and metadata.get("architecture_digest") == digest
+    )
+
+
+def _install_checkpoint(source, destination, step):
+    source = Path(source)
+    destination = Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    prune_checkpoints(destination)
+    names = (
+        f"model_{step:06d}.pt",
+        f"optimizer_{step:06d}.pt",
+        f"metadata_{step:06d}.json",
+    )
+    for name in names:
+        temporary = destination / f"{name}.tmp"
+        shutil.copy2(source / name, temporary)
+        os.replace(temporary, destination / name)
+    complete = destination / f"complete_{step:06d}"
+    temporary = destination / f"complete_{step:06d}.tmp"
+    temporary.write_text("complete\n", encoding="utf-8")
+    os.replace(temporary, complete)
+
+
 def _run_phase(store, settings, generation, phase, device):
     index = {"screen": 0, "develop": 1, "confirm": 2}[phase]
     target = settings["rungs"][index]
@@ -1024,28 +1073,52 @@ def _run_phase(store, settings, generation, phase, device):
         result for result in store.results() if result["status"] == "confirmed"
     ]
     retained = retained_checkpoint_candidates(confirmed)
+    final_step = settings["rungs"][-1] // settings["training"]["batch_tokens"]
     for result in store.results():
         if result["status"] != "confirmed":
             continue
         checkpoint_dir = store.candidate_path(result["candidate_id"]) / "checkpoint"
         step = latest(checkpoint_dir)
-        if result["candidate_id"] in retained and step is None:
-            run_child(
-                _child_command(
-                    "train",
-                    store,
-                    result["candidate_id"],
-                    device,
-                    settings["rungs"][-1],
-                )
+        if result["candidate_id"] in retained and not _checkpoint_ready(
+            checkpoint_dir,
+            final_step,
+            result["digest"],
+            settings["rungs"][-1],
+        ):
+            command = _child_command(
+                "rebuild",
+                store,
+                result["candidate_id"],
+                device,
+                settings["rungs"][-1],
             )
-            store.update_result(result["candidate_id"], status="confirmed")
-            step = latest(checkpoint_dir)
-            if step is None:
-                raise RuntimeError("retained archive candidate has no checkpoint")
+            deadline = _deadline(store)
+            if deadline is not None:
+                command.extend(("--deadline", str(deadline)))
+            rebuilt = run_child(command)
+            if not rebuilt["complete"]:
+                return False
+            rebuild_dir = store.candidate_path(result["candidate_id"]) / "rebuild" / "checkpoint"
+            if not _checkpoint_ready(
+                rebuild_dir,
+                final_step,
+                result["digest"],
+                settings["rungs"][-1],
+            ):
+                raise RuntimeError("archive rebuild produced an invalid checkpoint")
+            _install_checkpoint(rebuild_dir, checkpoint_dir, final_step)
+            if not _checkpoint_ready(
+                checkpoint_dir,
+                final_step,
+                result["digest"],
+                settings["rungs"][-1],
+            ):
+                raise RuntimeError("archive checkpoint installation failed")
+            shutil.rmtree(store.candidate_path(result["candidate_id"]) / "rebuild")
+            step = final_step
         keep = (
-            {step}
-            if result["candidate_id"] in retained and step is not None
+            {final_step}
+            if result["candidate_id"] in retained
             else set()
         )
         prune_checkpoints(checkpoint_dir, keep)
@@ -1352,6 +1425,12 @@ def parser():
     train.add_argument("target", type=int)
     train.add_argument("--device", required=True)
     train.add_argument("--deadline", type=float, default=None)
+    rebuild = commands.add_parser("_rebuild")
+    rebuild.add_argument("study")
+    rebuild.add_argument("candidate")
+    rebuild.add_argument("target", type=int)
+    rebuild.add_argument("--device", required=True)
+    rebuild.add_argument("--deadline", type=float, default=None)
     final_train = commands.add_parser("_final_train")
     final_train.add_argument("study")
     final_train.add_argument("candidate")
@@ -1408,6 +1487,15 @@ def main():
             args.target,
             args.device,
             run_name=args.run,
+        )
+    elif args.command == "_rebuild":
+        result = train_candidate(
+            args.study,
+            args.candidate,
+            args.target,
+            args.device,
+            deadline=args.deadline,
+            run_name="rebuild",
         )
     elif args.command == "_final_profile":
         result = final_profile_candidate(args.study, args.candidate, args.device)

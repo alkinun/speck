@@ -495,6 +495,24 @@ def test_completed_checkpoint_reconciles_result(tmp_path, monkeypatch):
     assert stored["nll_curve"] == metadata["nll_curve"]
 
 
+def test_rebuilt_checkpoint_installs_with_validated_boundary(tmp_path):
+    source = tmp_path / "rebuild" / "checkpoint"
+    destination = tmp_path / "candidate" / "checkpoint"
+    source.mkdir(parents=True)
+    step = 4
+    digest = "architecture"
+    (source / "model_000004.pt").write_bytes(b"model")
+    (source / "optimizer_000004.pt").write_bytes(b"optimizer")
+    atomic_json(
+        source / "metadata_000004.json",
+        {"trained_tokens": 8, "architecture_digest": digest},
+    )
+    (source / "complete_000004").write_text("complete\n")
+    assert search_script._checkpoint_ready(source, step, digest, 8)
+    search_script._install_checkpoint(source, destination, step)
+    assert search_script._checkpoint_ready(destination, step, digest, 8)
+
+
 def test_monitor_and_final_slices_are_fixed_and_disjoint():
     settings = tiny_settings()
     slices = validation_slices(settings)
@@ -665,6 +683,15 @@ def fake_child(command):
     checkpoint = store.candidate_path(candidate_id) / "checkpoint"
     checkpoint.mkdir(exist_ok=True)
     step = target // store.settings()["training"]["batch_tokens"]
+    (checkpoint / f"model_{step:06d}.pt").write_bytes(b"model")
+    (checkpoint / f"optimizer_{step:06d}.pt").write_bytes(b"optimizer")
+    atomic_json(
+        checkpoint / f"metadata_{step:06d}.json",
+        {
+            "trained_tokens": target,
+            "architecture_digest": result["digest"],
+        },
+    )
     (checkpoint / f"complete_{step:06d}").write_text("complete\n")
     return {"complete": True, "trained_tokens": target}
 
