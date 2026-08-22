@@ -3,6 +3,8 @@
 import argparse
 import fcntl
 import json
+import os
+import platform
 import resource
 import shutil
 import statistics
@@ -116,6 +118,18 @@ def _verify_inputs(inputs):
 def _verify_runtime(state, settings, device):
     if state["provenance"]["runtime"] != _runtime_contract(settings, device):
         raise ValueError("study runtime contract changed")
+
+
+def _cpu_contract(settings):
+    return {
+        "device": "cpu",
+        "device_name": platform.processor() or platform.machine(),
+        "machine": platform.machine(),
+        "platform": platform.platform(),
+        "logical_cores": os.cpu_count(),
+        "threads": settings["final_profile"]["cpu_threads"],
+        "torch": torch.__version__,
+    }
 
 
 def _context(study, candidate_id):
@@ -705,6 +719,7 @@ def final_cpu_profile_candidate(study, candidate_id):
         baseline_rss_bytes=baseline_rss,
         peak_rss_bytes=peak_rss,
     )
+    cpu["contract"].update(_cpu_contract(settings))
     profile_path = candidate / "final" / "profile.json"
     result = (
         json.loads(profile_path.read_text(encoding="utf-8"))
@@ -1212,12 +1227,21 @@ def finalize_study(name, device):
                     _child_command("final_profile", store, candidate_id, device)
                 )
                 stored_profile = json.loads(profile_path.read_text(encoding="utf-8"))
-            if "cpu" not in stored_profile:
+            expected_cpu = _cpu_contract(settings)
+            stored_cpu = stored_profile.get("cpu", {}).get("contract", {})
+            if any(stored_cpu.get(key) != value for key, value in expected_cpu.items()):
                 run_child(
                     _child_command(
                         "final_cpu_profile", store, candidate_id, "cpu"
                     )
                 )
+                stored_profile = json.loads(profile_path.read_text(encoding="utf-8"))
+                stored_cpu = stored_profile.get("cpu", {}).get("contract", {})
+                if any(
+                    stored_cpu.get(key) != value
+                    for key, value in expected_cpu.items()
+                ):
+                    raise RuntimeError("final cpu profile contract differs from the host")
             runs = {
                 run_name: json.loads(
                     (candidate / "final" / run_name / "result.json").read_text(

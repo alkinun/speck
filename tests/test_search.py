@@ -722,6 +722,14 @@ def test_final_role_selection_and_two_seed_aggregation(tmp_path, monkeypatch):
             }
             atomic_json(candidate / "final" / run_name / "result.json", run)
             return run
+        profile_path = candidate / "final" / "profile.json"
+        if action == "_final_cpu_profile":
+            final_profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            final_profile["cpu"] = {
+                "contract": search_script._cpu_contract(local_store.settings())
+            }
+            atomic_json(profile_path, final_profile)
+            return final_profile
         value = int(candidate_id)
         final_profile = {
             "format_version": 1,
@@ -734,11 +742,10 @@ def test_final_role_selection_and_two_seed_aggregation(tmp_path, monkeypatch):
                 "memory": {"peak_vram_bytes": value},
             },
             "compiled_gpu": {},
-            "cpu": {},
             "compilation_seconds": 1.0,
             "outputs_equivalent": True,
         }
-        atomic_json(candidate / "final" / "profile.json", final_profile)
+        atomic_json(profile_path, final_profile)
         return final_profile
 
     monkeypatch.setattr(search_script, "run_child", final_child)
