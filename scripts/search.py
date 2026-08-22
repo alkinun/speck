@@ -759,22 +759,24 @@ def _failure(error):
     }
 
 
-def _deadline(store, started):
+def _deadline(store):
     state = store.state()
     hours = state["limits"].get("hours", 0)
     if not hours:
         return None
-    remaining = hours * 3600 - state["elapsed_seconds"]
-    return time.time() + max(0.0, remaining - (time.perf_counter() - started))
+    elapsed = state["elapsed_seconds"]
+    if state.get("active_since") is not None:
+        elapsed += max(0.0, time.time() - state["active_since"])
+    return time.time() + max(0.0, hours * 3600 - elapsed)
 
 
-def _budget_expired(store, started):
+def _budget_expired(store):
     state = store.state()
     hours = state["limits"].get("hours", 0)
-    return bool(
-        hours
-        and state["elapsed_seconds"] + time.perf_counter() - started >= hours * 3600
-    )
+    elapsed = state["elapsed_seconds"]
+    if state.get("active_since") is not None:
+        elapsed += max(0.0, time.time() - state["active_since"])
+    return bool(hours and elapsed >= hours * 3600)
 
 
 def _record(store, candidate_id):
@@ -785,7 +787,7 @@ def _record(store, candidate_id):
     )
 
 
-def _run_candidate(store, candidate_id, target, device, started):
+def _run_candidate(store, candidate_id, target, device):
     state = store.state()
     state["current_candidate"] = candidate_id
     store.write_state(state)
@@ -798,7 +800,7 @@ def _run_candidate(store, candidate_id, target, device, started):
         if "latency" not in (current.get("profile") or {}):
             run_child(_child_command("profile", store, candidate_id, device))
         command = _child_command("train", store, candidate_id, device, target)
-        deadline = _deadline(store, started)
+        deadline = _deadline(store)
         if deadline is not None:
             command.extend(("--deadline", str(deadline)))
         run_child(command)
@@ -925,7 +927,7 @@ def _promote(store, cohort, winners):
             prune_checkpoints(store.candidate_path(candidate_id) / "checkpoint")
 
 
-def _run_phase(store, settings, generation, phase, device, started):
+def _run_phase(store, settings, generation, phase, device):
     index = {"screen": 0, "develop": 1, "confirm": 2}[phase]
     target = settings["rungs"][index]
     candidates = _generation_results(store, generation)
@@ -934,11 +936,9 @@ def _run_phase(store, settings, generation, phase, device, started):
             continue
         if result["status"] not in {"pending", "running"}:
             continue
-        if _budget_expired(store, started):
+        if _budget_expired(store):
             return False
-        updated = _run_candidate(
-            store, result["candidate_id"], target, device, started
-        )
+        updated = _run_candidate(store, result["candidate_id"], target, device)
         if updated["status"] == "pending" and updated.get("rung", 0) < target:
             return False
     candidates = _generation_results(store, generation)
@@ -1000,7 +1000,6 @@ def run_study(experiment, name, hours, generations, device):
         "runtime": _runtime_contract(settings, torch.device(device)),
     }
     baseline = ArchitectureConfig.from_dict(configs["model"])
-    started = time.perf_counter()
     with study_lock(directory):
         store = open_study(
             directory,
@@ -1011,13 +1010,18 @@ def run_study(experiment, name, hours, generations, device):
             provenance,
         )
         state = store.state()
+        if state.get("active_since") is not None:
+            state["elapsed_seconds"] += max(
+                0.0, time.time() - state["active_since"]
+            )
+        state["active_since"] = time.time()
         state["status"] = "running"
         state.setdefault("completed_generations", 0)
         store.write_state(state)
         try:
             while True:
                 state = store.state()
-                if _budget_expired(store, started):
+                if _budget_expired(store):
                     state["status"] = "stopped"
                     store.write_state(state)
                     break
@@ -1040,7 +1044,6 @@ def run_study(experiment, name, hours, generations, device):
                         state["generation"],
                         state["phase"],
                         device,
-                        started,
                     )
                     if not progressed:
                         state = store.state()
@@ -1057,7 +1060,11 @@ def run_study(experiment, name, hours, generations, device):
             raise
         finally:
             state = store.state()
-            state["elapsed_seconds"] += time.perf_counter() - started
+            if state.get("active_since") is not None:
+                state["elapsed_seconds"] += max(
+                    0.0, time.time() - state["active_since"]
+                )
+            state["active_since"] = None
             store.write_state(state)
     return status_snapshot(store)
 

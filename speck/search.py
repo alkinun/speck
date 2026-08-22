@@ -7,6 +7,7 @@ import os
 import random
 import re
 import statistics
+import time
 from datetime import datetime, timezone
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -1460,7 +1461,13 @@ def open_study(
     store = StudyStore(directory)
     experiment = str(Path(experiment).resolve())
     provenance = _copy_json(provenance or {})
-    if store.search_path.exists():
+    if hours is not None and hours <= 0:
+        raise ValueError("hour limit must be positive")
+    if generations is not None and generations < 1:
+        raise ValueError("generation limit must be positive")
+    if store.state_path.exists() and not store.search_path.exists():
+        raise RuntimeError("study state exists without immutable settings")
+    if store.search_path.exists() and store.state_path.exists():
         stored_settings = read_json(store.search_path)
         if stored_settings != settings.settings():
             raise ValueError("comparison-sensitive search settings changed")
@@ -1483,12 +1490,14 @@ def open_study(
 
     if hours is None and generations is None:
         raise ValueError("a new study requires an hour or generation limit")
-    if hours is not None and hours <= 0:
-        raise ValueError("hour limit must be positive")
-    if generations is not None and generations < 1:
-        raise ValueError("generation limit must be positive")
-    store.candidates_path.mkdir(parents=True, exist_ok=False)
-    atomic_json(store.search_path, settings.settings())
+    store.candidates_path.mkdir(parents=True, exist_ok=True)
+    if any(store.candidates_path.iterdir()):
+        raise RuntimeError("partial study initialization contains candidates")
+    if store.search_path.exists():
+        if read_json(store.search_path) != settings.settings():
+            raise ValueError("comparison-sensitive search settings changed")
+    else:
+        atomic_json(store.search_path, settings.settings())
     now = utc_now()
     state = {
         "format_version": 1,
@@ -1500,6 +1509,7 @@ def open_study(
         "next_candidate_id": 1,
         "seed": settings["seed"],
         "elapsed_seconds": 0.0,
+        "active_since": None,
         "current_candidate": None,
         "limits": {
             "hours": hours or 0,
@@ -1666,6 +1676,9 @@ def loader_state(manifest, offset, sequence_length, batch_size, world_size=1):
 def status_snapshot(store):
     state = store.state()
     results = store.results()
+    elapsed_seconds = state["elapsed_seconds"]
+    if state.get("active_since") is not None:
+        elapsed_seconds += max(0.0, time.time() - state["active_since"])
     statuses = {}
     rungs = {}
     for result in results:
@@ -1693,7 +1706,7 @@ def status_snapshot(store):
         "format_version": 1,
         "status": state["status"],
         "phase": state["phase"],
-        "elapsed_seconds": state["elapsed_seconds"],
+        "elapsed_seconds": elapsed_seconds,
         "generation": state["generation"],
         "current_candidate": current,
         "counts": {"status": dict(sorted(statuses.items())), "rung": dict(sorted(rungs.items()))},
