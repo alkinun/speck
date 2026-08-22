@@ -36,7 +36,6 @@ from speck.search import (
     percentile_ranks,
     promotion_for_rung,
     prune_checkpoints,
-    retained_checkpoint_candidates,
     score_candidates,
     select_finalists,
     status_snapshot,
@@ -997,15 +996,12 @@ def _run_phase(store, settings, generation, phase, device):
         settings["final_tokens"],
         update_current=True,
     )
-    retained = retained_checkpoint_candidates(
-        [result for result in store.results() if result["status"] == "confirmed"]
-    )
     for result in store.results():
         if result["status"] != "confirmed":
             continue
         checkpoint_dir = store.candidate_path(result["candidate_id"]) / "checkpoint"
         step = latest(checkpoint_dir)
-        keep = {step} if result["candidate_id"] in retained and step is not None else set()
+        keep = {step} if step is not None else set()
         prune_checkpoints(checkpoint_dir, keep)
     state = store.state()
     state["phase"] = "complete"
