@@ -14,7 +14,7 @@
     "validation_samples": 1000
   },
   "device_batch_size": 4,
-  "epochs": 1,
+  "epochs": 2,
   "eval_every": 100,
   "grad_clip": 1.0,
   "keep_checkpoints": 2,

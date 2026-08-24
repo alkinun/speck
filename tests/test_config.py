@@ -35,4 +35,5 @@ def test_speck1_1_sft_experiment_uses_speckchat2_and_original_base():
         "validation_samples": 1_000,
     }
     assert updated["sft"]["pretrained"] == current["sft"]["pretrained"]
+    assert updated["sft"]["epochs"] == 2
     assert updated["sft"]["run"] == "Speck1.1-140M-Instruct"

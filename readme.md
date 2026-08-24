@@ -158,7 +158,7 @@ The `experiments/Speck1.1-140M` configuration pins the published 500,000-row Spe
 uv run --extra gpu python -m scripts.sft_prepare experiments/Speck1.1-140M
 ```
 
-Run one epoch of full-model post-training:
+Run two epochs of full-model post-training:
 
 ```bash
 uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M
