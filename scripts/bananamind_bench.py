@@ -11,6 +11,7 @@ import torch
 from huggingface_hub import hf_hub_download
 
 from speck.architecture import ArchitectureConfig
+from speck.chat import ChatTokenizer
 from speck.checkpoint import latest, load_model
 from speck.common import base_dir
 from speck.config import load_experiment
@@ -57,10 +58,11 @@ def _speck_experiment(value):
 def _parse_speck_options(argv):
     parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     parser.add_argument("--speck-checkpoint-step", type=int)
+    parser.add_argument("--speck-checkpoint-dir")
     options, remaining = parser.parse_known_args(argv)
     if options.speck_checkpoint_step is not None and options.speck_checkpoint_step < 0:
         parser.error("--speck-checkpoint-step must be non-negative")
-    return options.speck_checkpoint_step, remaining
+    return options.speck_checkpoint_step, options.speck_checkpoint_dir, remaining
 
 
 def _pin_dataset_revision(args):
@@ -69,20 +71,24 @@ def _pin_dataset_revision(args):
     return args
 
 
-def _resolve_speck_run(args, checkpoint_step):
+def _resolve_speck_run(args, checkpoint_step, checkpoint_directory=None):
     experiment = _speck_experiment(args.model)
     if experiment is None:
-        if checkpoint_step is not None:
-            raise ValueError("--speck-checkpoint-step requires a Speck experiment as --model")
+        if checkpoint_step is not None or checkpoint_directory is not None:
+            raise ValueError("Speck checkpoint options require a Speck experiment as --model")
         return None
     if args.tokenizer is not None:
         raise ValueError("Speck evaluations use the checkpoint tokenizer; omit --tokenizer")
 
     configs = load_experiment(experiment, "tokenizer", "train")
-    checkpoint_dir = Path(
-        configs["train"].get("output_dir")
-        or Path(base_dir()) / "checkpoints" / configs["train"]["run"]
-    ).expanduser()
+    checkpoint_dir = (
+        Path(checkpoint_directory).expanduser()
+        if checkpoint_directory is not None
+        else Path(
+            configs["train"].get("output_dir")
+            or Path(base_dir()) / "checkpoints" / configs["train"]["run"]
+        ).expanduser()
+    )
     step = latest(checkpoint_dir) if checkpoint_step is None else checkpoint_step
     if step is None:
         raise FileNotFoundError(f"no checkpoint found in {checkpoint_dir}")
@@ -99,12 +105,26 @@ def _resolve_speck_run(args, checkpoint_step):
     tokenizer_config = metadata.get("resolved", {}).get("tokenizer")
     if not isinstance(tokenizer_config, dict):
         raise ValueError("checkpoint metadata does not identify its tokenizer")
-    if configs["tokenizer"] != tokenizer_config:
-        raise ValueError("experiment tokenizer configuration differs from the checkpoint")
-    tokenizer = get_tokenizer(**tokenizer_config)
+    tokenizer = get_tokenizer(**configs["tokenizer"])
+    if metadata.get("training_phase") == "sft":
+        checkpoint_tokenizer = ChatTokenizer(tokenizer)
+        if tokenizer_config != checkpoint_tokenizer.metadata():
+            raise ValueError("SFT checkpoint tokenizer metadata does not match the experiment")
+    else:
+        if configs["tokenizer"] != tokenizer_config:
+            raise ValueError("experiment tokenizer configuration differs from the checkpoint")
+        checkpoint_tokenizer = tokenizer
     model_config = metadata["config"]
-    expected = (model_config["vocab_size"], model_config["bos_token_id"], model_config["eos_token_id"])
-    actual = (tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id)
+    expected = (
+        model_config["vocab_size"],
+        model_config["bos_token_id"],
+        model_config["eos_token_id"],
+    )
+    actual = (
+        checkpoint_tokenizer.vocab_size,
+        checkpoint_tokenizer.bos_id,
+        checkpoint_tokenizer.eos_id,
+    )
     if actual != expected:
         raise ValueError("checkpoint model and tokenizer IDs do not match")
 
@@ -114,9 +134,11 @@ def _resolve_speck_run(args, checkpoint_step):
         "checkpoint_step": step,
         "checkpoint_sha256": _file_sha256(model_path),
         "metadata_sha256": _file_sha256(metadata_path),
-        "tokenizer_sha256": tokenizer.fingerprint(),
-        "tokenizer_repository": tokenizer_config.get("repo"),
-        "tokenizer_revision": tokenizer_config.get("revision"),
+        "tokenizer_sha256": checkpoint_tokenizer.fingerprint(),
+        "scoring_tokenizer_sha256": tokenizer.fingerprint(),
+        "tokenizer_repository": configs["tokenizer"].get("repo"),
+        "tokenizer_revision": configs["tokenizer"].get("revision"),
+        "scoring_format": "raw_continuation",
     }
     return {
         "checkpoint_dir": checkpoint_dir,
@@ -150,9 +172,7 @@ def _add_report_identity(report_path, args):
     report["threads"] = args.threads
     if args._speck_run is not None:
         report["speck"] = args._speck_run["identity"]
-    report_path.write_text(
-        json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8"
-    )
+    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
 
 
 def main():
@@ -163,7 +183,7 @@ def main():
     official_write_outputs = official.write_outputs
 
     def parse_args():
-        checkpoint_step, remaining = _parse_speck_options(sys.argv[1:])
+        checkpoint_step, checkpoint_directory, remaining = _parse_speck_options(sys.argv[1:])
         original_argv = sys.argv[:]
         try:
             sys.argv[1:] = remaining
@@ -171,7 +191,7 @@ def main():
         finally:
             sys.argv[:] = original_argv
         _pin_dataset_revision(args)
-        args._speck_run = _resolve_speck_run(args, checkpoint_step)
+        args._speck_run = _resolve_speck_run(args, checkpoint_step, checkpoint_directory)
         return args
 
     def run_signature(args, data_sha256):
