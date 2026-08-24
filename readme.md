@@ -139,6 +139,28 @@ python -m scripts.benchmark experiments/Speck1-140M \
 
 Use `--mode end-to-end --data-dir ~/.cache/speck/data/packed` to include packed-data loading. Warmup is reported separately. `--peak-tflops` reports model FLOPs utilization, and `--no-compile` measures eager execution.
 
+Run the gated BananaMind Base Bench 1.1 continuation benchmark with its pinned official runner:
+
+```bash
+python -m scripts.bananamind_bench \
+  --model experiments/Speck1-140M \
+  --speck-checkpoint-step 76294 \
+  --device cuda \
+  --dtype bfloat16 \
+  --batch-size 32
+```
+
+Accept the dataset gate and authenticate with Hugging Face first. The wrapper verifies the runner and data checksums, pins checkpoint and tokenizer hashes in the report, and rejects resume when the checkpoint or numerical configuration changes. It delegates scoring to the official runner and requires `transformers` in the execution environment.
+
+Compare normalized prompt-prefill and cached-decoding inference speed with pinned model revisions:
+
+```bash
+python -m scripts.inference_benchmark --model speck --device cpu
+python -m scripts.inference_benchmark --model speck --device cuda
+```
+
+Select `speck`, `supra`, `gptx`, `banana`, or `smol`. CPU defaults to FP32 batch 1; CUDA defaults to BF16 batches 1 and 32. The benchmark excludes tokenization, uses eager SDPA, returns only the final-position logit, and records raw synchronized timings. External models require `transformers`.
+
 ## Tests
 
 ```bash
