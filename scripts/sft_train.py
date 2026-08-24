@@ -23,8 +23,8 @@ from speck.dataloader import manifest_fingerprint
 from speck.model import SpeckForCausalLM, build_model
 from speck.pretrained import load_pretrained
 from speck.sft import (
-    default_sft_data_dir,
     load_sft_manifest,
+    resolve_sft_data_dir,
     sft_loader,
     sft_optimization_step,
     sft_plan,
@@ -114,7 +114,7 @@ def main():
     args.device = cli.device
     args.resume = cli.resume
     args.no_compile = cli.no_compile
-    args.data_dir = args.data_dir or str(default_sft_data_dir)
+    args.data_dir = str(resolve_sft_data_dir(args.dataset, args.data_dir))
     args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
     if args.resume is None and latest(args.output_dir) is not None:
         raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume")

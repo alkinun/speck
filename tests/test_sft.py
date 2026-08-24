@@ -18,6 +18,7 @@ from speck.model import SpeckForCausalLM
 from speck.sft import (
     _truncate_conversation,
     prepare_sft_dataset,
+    resolve_sft_data_dir,
     sft_loader,
     sft_optimization_step,
     sft_plan,
@@ -41,6 +42,16 @@ class BaseTokenizer:
 
     def fingerprint(self):
         return "base-tokenizer"
+
+
+def test_default_sft_data_dir_is_isolated_by_dataset(tmp_path, monkeypatch):
+    monkeypatch.setenv("speck_base_dir", str(tmp_path))
+
+    speckchat1 = resolve_sft_data_dir({"repo": "specklabs/SpeckChat1"})
+    speckchat2 = resolve_sft_data_dir({"repo": "specklabs/SpeckChat2"})
+
+    assert speckchat1 == tmp_path / "data" / "SpeckChat1-v3"
+    assert speckchat2 == tmp_path / "data" / "SpeckChat2-v3"
 
 
 def test_long_conversation_keeps_latest_user_and_assistant(tmp_path):

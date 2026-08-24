@@ -37,6 +37,7 @@ source .venv/bin/activate.fish
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
 - `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
+- `experiments/Speck1.1-140M` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2.
 
 Model names follow `Speck<generation>-<size>`, with an optional decimal generation for intermediate families.
 
@@ -70,7 +71,7 @@ Resolve, stream, filter, deduplicate, tokenize, and pack the configured sources:
 python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
-The sole checked-in experiment requests 5,000,000,000 training tokens. Its phase schedule is:
+The base pretraining experiment requests 5,000,000,000 training tokens. Its phase schedule is:
 
 | Phase end | ultra_fineweb | dclm | cosmopedia_v2 | finemath_4plus | ultrafineweb_l3 |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -118,24 +119,13 @@ Resume validates the architecture, packed-data manifest, optimizer settings, bat
 
 ## Instruction Tuning
 
+### SpeckChat1
+
 Prepare the pinned `specklabs/SpeckChat1` dataset with the Speck chat template and assistant-only loss mask:
 
 ```bash
 python -m scripts.sft_prepare experiments/Speck1-140M
 ```
-
-Build and publish the 500,000-row `specklabs/SpeckChat2` train split with pinned source
-revisions, source-specific quality filters, exact prompt deduplication, and Speck-tokenizer length
-checks:
-
-```bash
-uv run scripts/speckchat2_prepare.py
-```
-
-The mixture contains 200K LMSYS DeepSeek conversations, 130K Magpie Llama 3.1 multi-turn
-conversations, 85K Hermes, 65K UltraChat, 10K Magpie Reasoning, 8K No Robots, and 2K
-Everyday Conversations. It uses only source training splits and intentionally publishes no
-validation or test split. Use `--output-dir <path> --no-push` to build a local dataset instead.
 
 The current SpeckChat1 post-training configuration uses `<|system|>`, `<|user|>`, and `<|assistant|>` as token IDs 32000-32002, preserves the pretrained BOS/EOS tokens, and holds out 1,000 conversations for validation. Conversations are isolated in 256-, 512-, 1,024-, or 2,048-token buckets. The per-device batches are 32, 16, 8, and 4 respectively, so every microbatch has the same 8,192-token compute budget without unnecessary 2,048-token padding. Start one epoch of full-model instruction tuning from the pinned `specklabs/Speck1-140M` release:
 
@@ -151,6 +141,30 @@ Generate from the instruction-tuned checkpoint by selecting its directory. The p
 python -m scripts.infer "Explain why the sky is blue." \
   --checkpoint-dir ~/.cache/speck/checkpoints/Speck1-140M-Instruct
 ```
+
+### SpeckChat2
+
+Rebuild and publish the 500,000-row `specklabs/SpeckChat2` train split with pinned source revisions, source-specific quality filters, exact prompt deduplication, and Speck-tokenizer length checks:
+
+```bash
+uv run scripts/speckchat2_prepare.py
+```
+
+The mixture contains 200K LMSYS DeepSeek conversations, 130K Magpie Llama 3.1 multi-turn conversations, 85K Hermes, 65K UltraChat, 10K Magpie Reasoning, 8K No Robots, and 2K Everyday Conversations. It uses only source training splits and intentionally publishes no validation or test split. Use `--output-dir <path> --no-push` to build a local dataset instead.
+
+The `experiments/Speck1.1-140M` configuration pins the published 500,000-row SpeckChat2 dataset and the original `Speck1-140M` base weights. Prepare its isolated assistant-masked data, holding out 1,000 conversations for validation:
+
+```bash
+uv run --extra gpu python -m scripts.sft_prepare experiments/Speck1.1-140M
+```
+
+Run one epoch of full-model post-training:
+
+```bash
+uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M
+```
+
+Prepared data is written under `~/.cache/speck/data/SpeckChat2-v3`, and checkpoints are written under `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct`.
 
 ## Inference
 

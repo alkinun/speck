@@ -1,0 +1,172 @@
+{
+  "blocks": [
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 5}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 5}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 5}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 5}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "gated_causal_conv", "inner_size": 384, "kernel_size": 5}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {"branches": [{"kind": "attention", "head_dim": 64, "num_key_value_heads": 3}]},
+          {"branches": [{"kind": "swiglu", "intermediate_size": 2304}]}
+        ]
+      }
+    }
+  ],
+  "embedding_size": 640,
+  "expected_parameters": 140652288,
+  "initializer_range": 0.02,
+  "max_position_embeddings": 4096,
+  "rms_norm_eps": 1e-05,
+  "rope_theta": 10000.0
+}

@@ -19,7 +19,16 @@ from speck.common import base_dir, dist_info
 from speck.dataloader import manifest_fingerprint
 
 FORMAT_VERSION = 3
-default_sft_data_dir = Path(base_dir()) / "data" / "SpeckChat1-v3"
+default_sft_data_dir = Path(base_dir()) / "data" / f"SpeckChat1-v{FORMAT_VERSION}"
+
+
+def resolve_sft_data_dir(config, output_dir=None):
+    """Resolve an explicit path or derive an isolated cache from the dataset name."""
+
+    if output_dir is not None:
+        return Path(output_dir).expanduser()
+    dataset_name = config["repo"].rsplit("/", 1)[-1]
+    return Path(base_dir()) / "data" / f"{dataset_name}-v{FORMAT_VERSION}"
 
 
 def _file_hash(path):
@@ -116,7 +125,7 @@ def prepare_sft_dataset(
         or any(not isinstance(length, int) or length < 1 for length in sequence_lengths)
     ):
         raise ValueError("SFT sequence lengths must be unique positive integers in order")
-    output_dir = Path(output_dir or default_sft_data_dir)
+    output_dir = resolve_sft_data_dir(config, output_dir)
     manifest_path = output_dir / "manifest.json"
     if manifest_path.is_file():
         manifest = load_sft_manifest(output_dir)

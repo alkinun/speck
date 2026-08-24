@@ -1,4 +1,4 @@
-"""Prepare packed assistant-masked SpeckChat1 data for instruction tuning."""
+"""Prepare packed assistant-masked chat data for instruction tuning."""
 
 import argparse
 
