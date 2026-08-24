@@ -124,7 +124,20 @@ Prepare the pinned `specklabs/SpeckChat1` dataset with the Speck chat template a
 python -m scripts.sft_prepare experiments/Speck1-140M
 ```
 
-The prepared stream uses `<|system|>`, `<|user|>`, and `<|assistant|>` as token IDs 32000-32002, preserves the pretrained BOS/EOS tokens, and holds out 1,000 conversations for validation. Conversations are isolated in 256-, 512-, 1,024-, or 2,048-token buckets. The per-device batches are 32, 16, 8, and 4 respectively, so every microbatch has the same 8,192-token compute budget without unnecessary 2,048-token padding. Start one epoch of full-model instruction tuning from the pinned `specklabs/Speck1-140M` release:
+Build and publish the 500,000-row `specklabs/SpeckChat2` train split with pinned source
+revisions, source-specific quality filters, exact prompt deduplication, and Speck-tokenizer length
+checks:
+
+```bash
+uv run scripts/speckchat2_prepare.py
+```
+
+The mixture contains 200K LMSYS DeepSeek conversations, 130K Magpie Llama 3.1 multi-turn
+conversations, 85K Hermes, 65K UltraChat, 10K Magpie Reasoning, 8K No Robots, and 2K
+Everyday Conversations. It uses only source training splits and intentionally publishes no
+validation or test split. Use `--output-dir <path> --no-push` to build a local dataset instead.
+
+The current SpeckChat1 post-training configuration uses `<|system|>`, `<|user|>`, and `<|assistant|>` as token IDs 32000-32002, preserves the pretrained BOS/EOS tokens, and holds out 1,000 conversations for validation. Conversations are isolated in 256-, 512-, 1,024-, or 2,048-token buckets. The per-device batches are 32, 16, 8, and 4 respectively, so every microbatch has the same 8,192-token compute budget without unnecessary 2,048-token padding. Start one epoch of full-model instruction tuning from the pinned `specklabs/Speck1-140M` release:
 
 ```bash
 python -m scripts.sft_train experiments/Speck1-140M
