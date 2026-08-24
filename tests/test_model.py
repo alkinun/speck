@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import pytest
 import torch
 
 from speck.architecture import (
@@ -130,6 +131,23 @@ def test_build_model_uses_block_config():
     assert isinstance(rebuilt, SpeckForCausalLM)
     assert rebuilt.parameter_count() == model.parameter_count()
     rebuilt.load_state_dict(model.state_dict())
+
+
+def test_resize_token_embeddings_preserves_and_reties_rows():
+    model = model_with(SwiGLUSpec(16))
+    original = model.embed_tokens.weight.detach().clone()
+    parameters = model.parameter_count()
+
+    model.resize_token_embeddings(19)
+
+    assert model.config.vocab_size == 19
+    assert model.config.expected_parameters is None
+    assert model.embed_tokens.weight.shape == (19, 8)
+    assert torch.equal(model.embed_tokens.weight[:16], original)
+    assert model.lm_head.weight is model.embed_tokens.weight
+    assert model.parameter_count() == parameters + 3 * 8
+    with pytest.raises(ValueError, match="cannot shrink"):
+        model.resize_token_embeddings(15)
 
 
 def test_heterogeneous_head_dimensions_and_widths():

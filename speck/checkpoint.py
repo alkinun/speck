@@ -30,15 +30,37 @@ def save(directory, step, model, optimizer, metadata):
     os.replace(paths["complete"] + ".tmp", paths["complete"])
 
 
-def latest(directory):
+def completed_steps(directory):
     if not os.path.isdir(directory):
-        return None
-    steps = [
+        return []
+    return sorted(
         int(match.group(1))
         for name in os.listdir(directory)
         if (match := re.fullmatch(r"complete_(\d+)", name))
-    ]
-    return max(steps) if steps else None
+    )
+
+
+def latest(directory):
+    steps = completed_steps(directory)
+    return steps[-1] if steps else None
+
+
+def prune(directory, keep):
+    """Keep only the newest completed checkpoints in one run directory."""
+
+    if not isinstance(keep, int) or keep < 1:
+        raise ValueError("checkpoint retention must be a positive integer")
+    for step in completed_steps(directory)[:-keep]:
+        names = (
+            f"complete_{step:06d}",
+            f"model_{step:06d}.pt",
+            f"optimizer_{step:06d}.pt",
+            f"metadata_{step:06d}.json",
+        )
+        for name in names:
+            path = os.path.join(directory, name)
+            if os.path.exists(path):
+                os.remove(path)
 
 
 def load(directory, step, device):

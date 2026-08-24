@@ -6,6 +6,7 @@ import os
 import torch
 
 from speck.architecture import ArchitectureConfig
+from speck.chat import ChatTokenizer
 from speck.checkpoint import latest, load
 from speck.common import base_dir
 from speck.config import load_experiment
@@ -53,6 +54,7 @@ parser.add_argument(
     default="cuda" if torch.cuda.is_available() else "cpu",
     help="inference device (default: CUDA when available, otherwise CPU)",
 )
+parser.add_argument("--system", default=None, help="optional system prompt for an SFT checkpoint")
 args = parser.parse_args()
 
 configs = load_experiment(args.experiment, "tokenizer", "train")
@@ -70,7 +72,19 @@ model = SpeckForCausalLM(ArchitectureConfig.from_dict(metadata["config"])).to(de
 model.load_state_dict(model_state)
 model.eval()
 tokenizer = get_tokenizer(**configs["tokenizer"])
-tokens = tokenizer.encode(args.prompt, bos=True)
+if metadata.get("training_phase") == "sft":
+    tokenizer = ChatTokenizer(tokenizer)
+    if metadata.get("resolved", {}).get("tokenizer") != tokenizer.metadata():
+        raise ValueError("SFT checkpoint and tokenizer do not match")
+    messages = []
+    if args.system:
+        messages.append({"role": "system", "content": args.system})
+    messages.append({"role": "user", "content": args.prompt})
+    tokens, _ = tokenizer.encode_messages(messages, add_generation_prompt=True)
+elif args.system:
+    raise ValueError("system prompts require an SFT checkpoint")
+else:
+    tokens = tokenizer.encode(args.prompt, bos=True)
 if len(tokens) + args.max_tokens > model.config.max_position_embeddings:
     raise ValueError("prompt and generated tokens exceed the model context")
 
@@ -95,4 +109,7 @@ with torch.inference_mode():
         generated.append(token_id)
         logits = model(token[:, None], state=state, last_token_only=True)[:, -1]
 
-print(tokenizer.decode(generated))
+if isinstance(tokenizer, ChatTokenizer):
+    print(tokenizer.decode(generated, skip_special_tokens=True))
+else:
+    print(tokenizer.decode(generated))

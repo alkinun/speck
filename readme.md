@@ -116,6 +116,29 @@ python -m scripts.base_train experiments/Speck1-140M --resume <checkpoint-step>
 
 Resume validates the architecture, packed-data manifest, optimizer settings, batch geometry, training horizon, world size, and that the next-batch loader offset exactly equals completed optimizer-step tokens. It restores the optimizer, data position, elapsed time, and W&B run identity.
 
+## Instruction Tuning
+
+Prepare the pinned `specklabs/SpeckChat1` dataset with the Speck chat template and assistant-only loss mask:
+
+```bash
+python -m scripts.sft_prepare experiments/Speck1-140M
+```
+
+The prepared stream uses `<|system|>`, `<|user|>`, and `<|assistant|>` as token IDs 32000-32002, preserves the pretrained BOS/EOS tokens, and holds out 1,000 conversations for validation. Conversations are isolated in 256-, 512-, 1,024-, or 2,048-token buckets. The per-device batches are 32, 16, 8, and 4 respectively, so every microbatch has the same 8,192-token compute budget without unnecessary 2,048-token padding. Start one epoch of full-model instruction tuning from the pinned `specklabs/Speck1-140M` release:
+
+```bash
+python -m scripts.sft_train experiments/Speck1-140M
+```
+
+Use `torchrun` as with base training for multiple GPUs. SFT checkpoints and a Hugging Face-compatible tokenizer are written under `~/.cache/speck/checkpoints/Speck1-140M-Instruct`. Resume only from an explicit SFT step with `--resume <checkpoint-step>`.
+
+Generate from the instruction-tuned checkpoint by selecting its directory. The prompt is automatically rendered as a user message when the checkpoint metadata identifies SFT:
+
+```bash
+python -m scripts.infer "Explain why the sky is blue." \
+  --checkpoint-dir ~/.cache/speck/checkpoints/Speck1-140M-Instruct
+```
+
 ## Inference
 
 Generate from the latest checkpoint, or select one with `--step`:

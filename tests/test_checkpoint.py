@@ -2,7 +2,7 @@ import json
 
 import torch
 
-from speck.checkpoint import latest, load, load_model, save
+from speck.checkpoint import completed_steps, latest, load, load_model, prune, save
 
 
 def test_checkpoint_is_visible_only_after_completion(tmp_path):
@@ -29,3 +29,15 @@ def test_checkpoint_is_visible_only_after_completion(tmp_path):
         assert "incomplete" in str(error)
     else:
         raise AssertionError("incomplete checkpoint was accepted")
+
+
+def test_checkpoint_retention_removes_only_old_complete_steps(tmp_path):
+    for step in (1, 2, 3):
+        save(tmp_path, step, {"step": step}, {}, {"step": step})
+    (tmp_path / "model_000004.pt").write_bytes(b"incomplete")
+
+    prune(tmp_path, keep=2)
+
+    assert completed_steps(tmp_path) == [2, 3]
+    assert not (tmp_path / "model_000001.pt").exists()
+    assert (tmp_path / "model_000004.pt").read_bytes() == b"incomplete"

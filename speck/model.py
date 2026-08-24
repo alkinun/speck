@@ -1,5 +1,7 @@
 """Implement the Speck hybrid decoder language model."""
 
+from dataclasses import replace
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -376,6 +378,36 @@ class SpeckForCausalLM(nn.Module):
             elif isinstance(module, GatedCausalConv):
                 nn.init.normal_(module.kernel, std=self.config.initializer_range)
 
+    @torch.no_grad()
+    def resize_token_embeddings(self, vocab_size):
+        """Grow tied token embeddings while preserving all pretrained rows."""
+
+        current = self.config.vocab_size
+        if vocab_size < current:
+            raise ValueError("token embedding resize cannot shrink the vocabulary")
+        if vocab_size == current:
+            return self.embed_tokens
+        embedding = nn.Embedding(
+            vocab_size,
+            self.config.embedding_size,
+            device=self.embed_tokens.weight.device,
+            dtype=self.embed_tokens.weight.dtype,
+        )
+        nn.init.normal_(embedding.weight, std=self.config.initializer_range)
+        embedding.weight[:current].copy_(self.embed_tokens.weight)
+        self.embed_tokens = embedding
+        self.lm_head = Linear(self.config.embedding_size, vocab_size, bias=False).to(
+            device=embedding.weight.device,
+            dtype=embedding.weight.dtype,
+        )
+        self.lm_head.weight = self.embed_tokens.weight
+        self.config = replace(
+            self.config,
+            vocab_size=vocab_size,
+            expected_parameters=None,
+        )
+        return self.embed_tokens
+
     def state(self, batch_size=1, length=None, device=None, dtype=None):
         parameter = next(self.parameters())
         device = torch.device(device or parameter.device)
@@ -420,6 +452,7 @@ class SpeckForCausalLM(nn.Module):
         inputs_embeds=None,
         return_hidden=False,
         last_token_only=False,
+        loss_reduction="mean",
     ):
         if (tokens is None) == (inputs_embeds is None):
             raise ValueError("provide exactly one of tokens or inputs embeds")
@@ -442,7 +475,7 @@ class SpeckForCausalLM(nn.Module):
         hidden = self.output_projection(self.norm(x))
         logits = self.lm_head(hidden[:, -1:] if last_token_only else hidden).float()
         output = (
-            F.cross_entropy(logits.flatten(0, 1), targets.flatten())
+            F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction=loss_reduction)
             if targets is not None
             else logits
         )
