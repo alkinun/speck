@@ -37,6 +37,7 @@ source .venv/bin/activate.fish
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
 - `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
+- `experiments/Speck1.5-140M` keeps that architecture, tokenizer, and 5B-token optimization recipe while replacing the corpus with a stationary higher-quality mixture.
 - `experiments/Speck1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1-140M-Instruct` on SpeckChat1.
 - `experiments/Speck1.1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2 for one epoch.
 - `experiments/Speck1.1-140M-Instruct-2ep` retains the corresponding two-epoch training run.
@@ -53,7 +54,7 @@ train.json      Optimization, batching, logging, and checkpoints.
 search.json     Search space, training rungs, scoring, and profiling contract.
 ```
 
-Artifacts use `~/.cache/speck` by default. Checkpoints are written to `~/.cache/speck/checkpoints/<train.run>`, and packed data is written to `~/.cache/speck/data/packed` when `data.output_dir` is `null`. Set `speck_base_dir` to move the cache root.
+Artifacts use `~/.cache/speck` by default. Checkpoints are written to `~/.cache/speck/checkpoints/<train.run>`. Packed data uses an explicit `data.output_dir`, `~/.cache/speck/data/<data.output_name>` when a name is configured, or the legacy `~/.cache/speck/data/packed` default. Set `speck_base_dir` to move the cache root.
 
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an absolute learning rate. For example, `0.1` ends the schedule at 10% of the peak rate.
 
@@ -73,6 +74,12 @@ Resolve, stream, filter, deduplicate, tokenize, and pack the configured sources:
 python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
+Prepare the isolated Speck1.5 corpus under `~/.cache/speck/data/Speck1.5-140M`:
+
+```bash
+python -m scripts.data_prepare experiments/Speck1.5-140M
+```
+
 The base pretraining experiment requests 5,000,000,000 training tokens. Its phase schedule is:
 
 | Phase end | ultra_fineweb | dclm | cosmopedia_v2 | finemath_4plus | ultrafineweb_l3 |
@@ -82,6 +89,16 @@ The base pretraining experiment requests 5,000,000,000 training tokens. Its phas
 | 5,000,000,000 | 20% | 15% | 20% | 15% | 30% |
 
 The phase durations and integer weights derive source targets of 1.975B, 1.55B, 670M, 475M, and 330M tokens respectively. Preparation adds a derived 262,144-token per-source loader reserve for the configured maximum 65,536-token distributed microbatch, then reports each requested target, reserve, and actual full-document result. Actual packed training data can exceed 5B only by these configured reserves and one final full-document overshoot per source.
+
+Speck1.5 uses one stationary phase for the full run:
+
+| Phase end | dclm_edu | ultra_fineweb | stack_v3 | math_multi_style | math_textbook_exercise | ufw_l3_multi_style | ufw_l3_qa |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 5,000,000,000 | 39% | 39% | 8% | 5% | 5% | 3% | 1% |
+
+The source targets are 1.95B DCLM-Edu, 1.95B Ultra-FineWeb, 400M Stack v3, 250M from each UltraData-Math format, 150M Ultra-FineWeb-L3 Multi-Style, and 50M Ultra-FineWeb-L3 QA tokens. DCLM-Edu uses strict raw `edu_score > 3.5`, Ultra-FineWeb uses strict `score > 0.7`, and the two mixed-language math configurations retain rows identified as English by pinned `py3langid==0.3.0`.
+
+Stack v3 is sampled as shuffled repository rows without language balancing. Its nested files are serialized in deterministic path/content order with JSON-quoted repository and file headers. Repositories above the 100,000-character document limit are split without truncation, and all parts from one repository share one train/validation assignment.
 
 Repository revisions are resolved once and pinned, and recursive Parquet discovery uses the Hugging Face repository tree rather than datasets-server previews. Files are deterministically shuffled per source. Preparation downloads and reads only one remote Parquet file at a time, removes it immediately, and writes train and validation shards under `sources/<source-id>/`. Validation reserves 5M tokens per source and the loader schedules those streams equally.
 
@@ -99,6 +116,8 @@ Authenticate with Weights & Biases, then start a single-GPU run:
 wandb login
 python -m scripts.base_train experiments/Speck1-140M
 ```
+
+Use `experiments/Speck1.5-140M` to train against its isolated packed corpus with the same command structure.
 
 Weights & Biases logging is enabled unless `train.run` is `dummy`. Checkpoints remain local; Speck does not upload training checkpoints to Hugging Face.
 
