@@ -10,6 +10,7 @@ from scripts.model_code_publish import weight_sha256
 from speck.common import base_dir
 
 LEADERBOARD_REVISION = "2eafcfc647b667e67f3b0288e9b67da497a78052"
+BANANAMIND_REVISION = "d4aade51312889e8580963e1ce960c6eaef1a450"
 CARD_SPECS = (
     {
         "repo": "specklabs/Speck1-140M",
@@ -28,33 +29,44 @@ CARD_SPECS = (
     },
 )
 
-COMPARISON_TABLE = """| Model | Params | Training tokens | Int Index | HellaSwag | ARC-Easy | ARC-Challenge | PIQA | ArithMark-3 | ArithMark-2 | CPU prefill | CPU decode | RTX 3090 prefill | RTX 3090 decode | BF16 memory @2K | BF16 state @2K |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| BananaMind-2-Pro | 139M | 100B | 24.96 | 42.78 | 53.58 | 27.82 | 67.52 | 38.20 | 32.08 | 2,190 tok/s | 43.0 tok/s | 64,060 tok/s | 140.3 tok/s | 325.1 MiB | 60.0 MiB |
-| SmolLM2-135M | 135M | ~2T | 27.13 | 43.22 | 58.63 | 29.69 | 68.44 | 39.20 | 32.68 | 2,201 tok/s | 47.4 tok/s | 64,814 tok/s | 157.7 tok/s | 301.6 MiB | 45.0 MiB |
-| GPT-X2.5-135M | 135M | 75B | 25.17 | 40.57 | 51.81 | 29.18 | 69.42 | 38.40 | - | 2,042 tok/s | 47.2 tok/s | 55,346 tok/s | 125.0 tok/s | 302.6 MiB | 45.0 MiB |
-| Supra2-100M-Base | 101M | 30B | 19.41 | 35.98 | 47.81 | 24.83 | 65.40 | 36.90 | - | **3,362 tok/s** | **56.0 tok/s** | **113,326 tok/s** | **298.1 tok/s** | **216.0 MiB** | 24.0 MiB |
-| **Speck1-140M** | **141M** | **5B** | **18.15** | **35.03** | **46.68** | **25.94** | **63.87** | **36.60** | **31.52** | 2,252 tok/s | 55.1 tok/s | 74,323 tok/s | 247.3 tok/s | 281.3 MiB | **12.0 MiB** |
-| **Speck1-140M-Instruct** | **141M** | **5B + 317M SFT** | **17.75** | **35.22** | **45.66** | **25.85** | **63.60** | **36.10** | **33.64** | 2,285 tok/s | 55.3 tok/s | 73,398 tok/s | 246.7 tok/s | 280.3 MiB | **12.0 MiB** |
-| **Speck1.1-140M-Instruct** | **141M** | **5B + 559M SFT** | **17.90** | **35.64** | **46.93** | **26.02** | **64.15** | **33.70** | **32.44** | 2,315 tok/s | **56.9 tok/s** | 74,941 tok/s | 243.6 tok/s | 280.3 MiB | **12.0 MiB** |"""
+COMPARISON_TABLE = """| Model | Params | Training tokens | Open SLM Int Index | BananaMind Base Bench 1.1 Elo | CPU prefill | CPU decode | RTX 3090 prefill | RTX 3090 decode | BF16 memory @2K | BF16 state @2K |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BananaMind-2-Pro | 139M | 100B | 24.96 | 1131 | 2,190 tok/s | 43.0 tok/s | 64,060 tok/s | 140.3 tok/s | 325.1 MiB | 60.0 MiB |
+| SmolLM2-135M | 135M | ~2T | 27.13 | 1119 | 2,201 tok/s | 47.4 tok/s | 64,814 tok/s | 157.7 tok/s | 301.6 MiB | 45.0 MiB |
+| GPT-X2.5-135M | 135M | 75B | 25.17 | 1106 | 2,042 tok/s | 47.2 tok/s | 55,346 tok/s | 125.0 tok/s | 302.6 MiB | 45.0 MiB |
+| Supra2-100M-Base | 101M | 30B | 19.41 | 1030 | **3,362 tok/s** | **56.0 tok/s** | **113,326 tok/s** | **298.1 tok/s** | **216.0 MiB** | 24.0 MiB |
+| **Speck1-140M** | **141M** | **5B** | **18.15** | **965** | 2,252 tok/s | 55.1 tok/s | 74,323 tok/s | 247.3 tok/s | 281.3 MiB | **12.0 MiB** |
+| **Speck1-140M-Instruct** | **141M** | **5B + 317M SFT** | **17.75** | **1001** | 2,285 tok/s | 55.3 tok/s | 73,398 tok/s | 246.7 tok/s | 280.3 MiB | **12.0 MiB** |
+| **Speck1.1-140M-Instruct** | **141M** | **5B + 559M SFT** | **17.90** | **1002** | 2,315 tok/s | **56.9 tok/s** | 74,941 tok/s | 243.6 tok/s | 280.3 MiB | **12.0 MiB** |"""
+
+INTELLIGENCE_INDEX_INPUTS = {
+    "BananaMind-2-Pro": (42.78, 53.58, 27.82, 67.52, 38.20),
+    "SmolLM2-135M": (43.22, 58.63, 29.69, 68.44, 39.20),
+    "GPT-X2.5-135M": (40.57, 51.81, 29.18, 69.42, 38.40),
+    "Supra2-100M-Base": (35.98, 47.81, 24.83, 65.40, 36.90),
+    "Speck1-140M": (35.03, 46.68, 25.94, 63.87, 36.60),
+    "Speck1-140M-Instruct": (35.22, 45.66, 25.85, 63.60, 36.10),
+    "Speck1.1-140M-Instruct": (35.64, 46.93, 26.02, 64.15, 33.70),
+}
 
 EVALUATION_SECTION = f"""## Evaluation
 
-The benchmark columns below are zero-shot raw-continuation scores from the
+The quality columns combine the
 [Open SLM Leaderboard](https://huggingface.co/spaces/AxiomicLabs/Open_SLM_Leaderboard)
-at revision `{LEADERBOARD_REVISION}`. HellaSwag, ARC-Easy, ARC-Challenge, PIQA, and
-ArithMark-3 use length-normalized accuracy; ArithMark-2 uses raw accuracy. Int Index is the
-leaderboard's chance-normalized aggregate of HellaSwag, combined ARC, PIQA, and ArithMark-3.
-No chat template or generation was used for the three Speck evaluations.
+at revision `{LEADERBOARD_REVISION}` and
+[BananaMind Base Bench 1.1](https://huggingface.co/datasets/BananaMind/BananaMind-Base-Bench-1.1)
+at revision `{BANANAMIND_REVISION}`. No chat template or generation was used for the three
+Speck evaluations.
 
 ### Benchmarks and speed
 
 {COMPARISON_TABLE}
 
-Reference-model Open SLM values reproduce the pinned leaderboard. A dash means that revision
-does not report the benchmark. Speed and memory values are local batch-1 measurements described
-below. Reference models saw 6-400x more pretraining tokens, so this is a parameter-adjacent
-comparison, not a compute-matched one."""
+`Open SLM Int Index` means the chance-normalized Intelligence Index reported by the Open SLM
+Leaderboard. `BananaMind Base Bench 1.1 Elo` means the overall Elo reported by BananaMind Base
+Bench 1.1. Speed and memory values are local batch-1 measurements described below. Reference
+models saw 6-400x more pretraining tokens, so this is a parameter-adjacent comparison, not a
+compute-matched one."""
 
 
 def arguments():
@@ -127,10 +139,15 @@ def _validate_intelligence_indexes():
     def normalize(value, chance):
         return 100 * (value - chance) / (100 - chance)
 
+    displayed_indexes = {}
     for row in COMPARISON_TABLE.splitlines()[2:]:
         columns = [column.strip().strip("*") for column in row.strip("|").split("|")]
-        displayed = float(columns[3])
-        hellaswag, arc_easy, arc_challenge, piqa, arithmark_3 = map(float, columns[4:9])
+        displayed_indexes[columns[0]] = float(columns[3])
+
+    if displayed_indexes.keys() != INTELLIGENCE_INDEX_INPUTS.keys():
+        raise ValueError("comparison table models do not match the Int Index inputs")
+    for model, scores in INTELLIGENCE_INDEX_INPUTS.items():
+        hellaswag, arc_easy, arc_challenge, piqa, arithmark_3 = scores
         combined_arc = (arc_easy + arc_challenge) / 2
         calculated = (
             normalize(hellaswag, 25)
@@ -138,8 +155,8 @@ def _validate_intelligence_indexes():
             + normalize(piqa, 50)
             + 0.65 * normalize(arithmark_3, 25)
         ) / 3.65
-        if round(calculated, 2) != displayed:
-            raise ValueError(f"{columns[0]} Int Index does not match its benchmark scores")
+        if round(calculated, 2) != displayed_indexes[model]:
+            raise ValueError(f"{model} Int Index does not match its benchmark scores")
 
 
 def validate_card(card):
@@ -150,8 +167,14 @@ def validate_card(card):
         "| Elo |",
         "| Accuracy |",
         "Weighted acc.",
-        "BananaMind Base Bench Elo",
+        "| BananaMind Base Bench Elo |",
         "Direct instruction probe",
+        "| HellaSwag |",
+        "| ARC-Easy |",
+        "| ARC-Challenge |",
+        "| PIQA |",
+        "| ArithMark-3 |",
+        "| ArithMark-2 |",
     )
     for value in forbidden:
         if value in card:
@@ -205,7 +228,7 @@ def publish_cards(built):
             repo_id=spec["repo"],
             repo_type="model",
             operations=[CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=path)],
-            commit_message="Add Open SLM benchmark results",
+            commit_message="Simplify benchmark comparison table",
             parent_commit=spec["revision"],
         )
         files = list(

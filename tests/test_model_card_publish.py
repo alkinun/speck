@@ -59,8 +59,13 @@ def test_update_card_keeps_only_canonical_evaluation_table():
     validate_card(card)
     assert COMPARISON_TABLE in card
     assert "model-index:" not in card
-    assert "BananaMind Base Bench Elo" not in card
+    assert "| BananaMind Base Bench Elo |" not in card
+    assert "Open SLM Int Index" in card
+    assert "BananaMind Base Bench 1.1 Elo" in card
     assert "Direct instruction probe" not in card
+    assert "HellaSwag" not in COMPARISON_TABLE
+    assert "ARC-Easy" not in COMPARISON_TABLE
+    assert "ArithMark-3" not in COMPARISON_TABLE
     assert "right-padded batches when `use_cache=False`" in card
     assert "Old evaluation provenance" not in card
 
