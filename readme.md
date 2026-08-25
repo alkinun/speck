@@ -186,6 +186,27 @@ python -m scripts.infer "The meaning of life is" \
 
 Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, and `--checkpoint-dir`.
 
+### Transformers releases
+
+Export, validate, and publish the canonical one-epoch instruction checkpoint as a BF16
+Transformers repository:
+
+```bash
+uv run --extra cpu python -m scripts.model_publish --expected-epochs 1
+```
+
+Published likelihood evaluation supports binary right-padded batches when `use_cache=False`.
+Left padding, mask gaps, and cached padded inference remain unsupported. Apply the same tracked
+compatibility code to the existing base-model repository without changing its weights:
+
+```bash
+uv run --extra cpu --with transformers==5.1.0 python -m scripts.model_code_publish
+```
+
+The code-only publisher verifies the immutable source, model-weight LFS checksum, Auto class
+loading, parameter count, padded-batch logit parity, uploaded code hashes, and unchanged remote
+weights. Use `--no-upload` to run every local validation without creating a Hub commit.
+
 ### GGUF
 
 Build BF16, Q4_K_M, Q5_K_M, and Q8_0 GGUF variants of the published instruction model,
