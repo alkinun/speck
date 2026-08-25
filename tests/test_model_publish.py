@@ -1,7 +1,19 @@
+from pathlib import Path
+
 import pytest
 import torch
 
-from scripts.model_publish import release_config, release_state
+from scripts.model_publish import (
+    CODE_FILES,
+    MODEL_FORWARD_SETUP,
+    MODEL_IMPORT,
+    MODEL_POSITION_CHECK,
+    PADDING_DESTINATION,
+    patch_modeling_source,
+    prepare_release_code,
+    release_config,
+    release_state,
+)
 
 
 def metadata():
@@ -72,3 +84,47 @@ def test_release_state_rejects_untied_head():
                 "lm_head.weight": torch.ones(2, 2),
             }
         )
+
+
+def model_source():
+    return (
+        MODEL_IMPORT
+        + "\nclass Model:\n"
+        + "    def forward(self):\n"
+        + MODEL_FORWARD_SETUP
+        + "        position = 0\n"
+        + "        expected_positions = torch.arange(position, position + length)\n"
+        + MODEL_POSITION_CHECK
+    )
+
+
+def test_modeling_patch_adds_right_padding_support():
+    result = patch_modeling_source(model_source())
+
+    assert "from .padding_speck import validate_right_padding" in result
+    assert "has_padding = validate_right_padding" in result
+    assert "right-padded inputs require use_cache=False" in result
+    assert "position_ids[valid]" in result
+    assert "Speck does not support padded inputs" not in result
+
+
+def test_modeling_patch_rejects_source_drift():
+    with pytest.raises(ValueError, match="unexpected configuration import"):
+        patch_modeling_source("changed source")
+
+
+def test_prepare_release_code_copies_patched_support(tmp_path):
+    source = tmp_path / "source"
+    output = tmp_path / "output"
+    source.mkdir()
+    output.mkdir()
+    for filename in CODE_FILES:
+        value = model_source() if filename == "modeling_speck.py" else filename
+        (source / filename).write_text(value, encoding="utf-8")
+
+    prepare_release_code(source, output)
+
+    assert "validate_right_padding" in (output / "modeling_speck.py").read_text()
+    assert (output / PADDING_DESTINATION).read_text() == Path(
+        "speck/transformers_padding.py"
+    ).read_text()

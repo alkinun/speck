@@ -32,6 +32,84 @@ TOKENIZER_FILES = (
     "tokenizer_config.json",
     "tokenizer_metadata.json",
 )
+PADDING_SOURCE = Path(__file__).resolve().parents[1] / "speck" / "transformers_padding.py"
+PADDING_DESTINATION = "padding_speck.py"
+MODEL_IMPORT = "from .configuration_speck import SpeckConfig\n"
+PATCHED_MODEL_IMPORT = MODEL_IMPORT + "from .padding_speck import validate_right_padding\n"
+MODEL_FORWARD_SETUP = """        if (input_ids is None) == (inputs_embeds is None):
+            raise ValueError("provide exactly one of input_ids or inputs_embeds")
+        if output_attentions:
+            raise ValueError("Speck does not expose attention weights")
+        if output_hidden_states:
+            raise ValueError("Speck does not expose per-layer hidden states")
+        if attention_mask is not None and not torch.all(attention_mask == 1):
+            raise ValueError("Speck does not support padded inputs")
+
+        use_cache = self.config.use_cache if use_cache is None else use_cache
+        if past_key_values is not None and not isinstance(
+            past_key_values, SequenceState
+        ):
+            raise TypeError("Speck requires its native SequenceState cache")
+        if past_key_values is not None and not use_cache:
+            raise ValueError("past_key_values requires use_cache=True")
+        batch_size = (
+            input_ids.size(0) if input_ids is not None else inputs_embeds.size(0)
+        )
+        if use_cache and past_key_values is None:
+            past_key_values = self.state(
+                batch_size=batch_size,
+                device=self.device,
+                dtype=self.dtype,
+            )
+
+        length = input_ids.size(1) if input_ids is not None else inputs_embeds.size(1)
+"""
+PATCHED_MODEL_FORWARD_SETUP = """        if (input_ids is None) == (inputs_embeds is None):
+            raise ValueError("provide exactly one of input_ids or inputs_embeds")
+        if output_attentions:
+            raise ValueError("Speck does not expose attention weights")
+        if output_hidden_states:
+            raise ValueError("Speck does not expose per-layer hidden states")
+
+        values = input_ids if input_ids is not None else inputs_embeds
+        batch_size, length = values.shape[:2]
+        has_padding = validate_right_padding(attention_mask, batch_size, length)
+        use_cache = self.config.use_cache if use_cache is None else use_cache
+        if has_padding and use_cache:
+            raise ValueError("right-padded inputs require use_cache=False")
+        if past_key_values is not None and not isinstance(
+            past_key_values, SequenceState
+        ):
+            raise TypeError("Speck requires its native SequenceState cache")
+        if past_key_values is not None and not use_cache:
+            raise ValueError("past_key_values requires use_cache=True")
+        if use_cache and past_key_values is None:
+            past_key_values = self.state(
+                batch_size=batch_size,
+                device=self.device,
+                dtype=self.dtype,
+            )
+
+"""
+MODEL_POSITION_CHECK = """        if position_ids is not None:
+            expected = expected_positions.unsqueeze(0).expand(batch_size, -1)
+            if not torch.equal(position_ids, expected):
+                raise ValueError(
+                    "position_ids does not match the unpadded Speck sequence"
+                )
+"""
+PATCHED_MODEL_POSITION_CHECK = """        if position_ids is not None:
+            expected = expected_positions.unsqueeze(0).expand(batch_size, -1)
+            valid = (
+                attention_mask.bool()
+                if has_padding
+                else torch.ones_like(expected, dtype=torch.bool)
+            )
+            if position_ids.shape != expected.shape or not torch.equal(
+                position_ids[valid], expected[valid]
+            ):
+                raise ValueError("position_ids does not match the Speck sequence")
+"""
 
 
 def arguments():
@@ -143,6 +221,33 @@ def release_state(state):
     }
 
 
+def patch_modeling_source(source):
+    replacements = (
+        (MODEL_IMPORT, PATCHED_MODEL_IMPORT, "configuration import"),
+        (MODEL_FORWARD_SETUP, PATCHED_MODEL_FORWARD_SETUP, "forward setup"),
+        (MODEL_POSITION_CHECK, PATCHED_MODEL_POSITION_CHECK, "position check"),
+    )
+    for original, replacement, label in replacements:
+        if source.count(original) != 1:
+            raise ValueError(f"pinned Transformers source has unexpected {label}")
+        source = source.replace(original, replacement)
+    compile(source, "modeling_speck.py", "exec")
+    return source
+
+
+def prepare_release_code(code_dir, output_dir):
+    for filename in CODE_FILES:
+        source = code_dir / filename
+        if not source.is_file():
+            raise FileNotFoundError(f"Transformers source is missing {filename}")
+        if filename == "modeling_speck.py":
+            patched = patch_modeling_source(source.read_text(encoding="utf-8"))
+            (output_dir / filename).write_text(patched, encoding="utf-8")
+        else:
+            shutil.copy2(source, output_dir / filename)
+    shutil.copy2(PADDING_SOURCE, output_dir / PADDING_DESTINATION)
+
+
 def prepare_export(checkpoint_dir, step, output_dir, metadata):
     building = output_dir.with_name(output_dir.name + ".building")
     if building.exists():
@@ -197,8 +302,7 @@ def prepare_export(checkpoint_dir, step, output_dir, metadata):
                 allow_patterns=list(CODE_FILES),
             )
         )
-        for filename in CODE_FILES:
-            shutil.copy2(code_dir / filename, building / filename)
+        prepare_release_code(code_dir, building)
         if (building / "README.md").exists():
             raise RuntimeError("model-card-free export unexpectedly contains README.md")
         os.replace(building, output_dir)
@@ -216,6 +320,8 @@ def validate_export(output_dir, metadata):
         raise ValueError("exported Safetensors tied-weight layout is invalid")
     if any(tensor.dtype != torch.bfloat16 for tensor in state.values()):
         raise ValueError("exported model is not entirely BF16")
+    if not (output_dir / PADDING_DESTINATION).is_file():
+        raise ValueError("export is missing Transformers padding support")
     if (output_dir / "README.md").exists():
         raise ValueError("export must not contain a model card")
 
