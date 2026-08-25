@@ -166,6 +166,14 @@ uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M
 
 Prepared data is written under `~/.cache/speck/data/SpeckChat2-v3`, and checkpoints are written under `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct`.
 
+Train the one-epoch `Speck1.1-140M-Instruct-Light` variant against the same prepared data:
+
+```bash
+uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M-Instruct-Light
+```
+
+Its checkpoints are written under `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct-Light`.
+
 ## Inference
 
 Generate from the latest checkpoint, or select one with `--step`:

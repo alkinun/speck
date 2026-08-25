@@ -37,3 +37,17 @@ def test_speck1_1_sft_experiment_uses_speckchat2_and_original_base():
     assert updated["sft"]["pretrained"] == current["sft"]["pretrained"]
     assert updated["sft"]["epochs"] == 2
     assert updated["sft"]["run"] == "Speck1.1-140M-Instruct"
+
+
+def test_speck1_1_140m_light_uses_one_epoch_without_changing_data_or_base():
+    full = load_experiment("experiments/Speck1.1-140M", "model", "tokenizer", "sft")
+    light = load_experiment(
+        "experiments/Speck1.1-140M-Instruct-Light", "model", "tokenizer", "sft"
+    )
+
+    assert light["model"] == full["model"]
+    assert light["tokenizer"] == full["tokenizer"]
+    assert light["sft"]["dataset"] == full["sft"]["dataset"]
+    assert light["sft"]["pretrained"] == full["sft"]["pretrained"]
+    assert light["sft"]["epochs"] == 1
+    assert light["sft"]["run"] == "Speck1.1-140M-Instruct-Light"
