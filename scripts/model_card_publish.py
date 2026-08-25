@@ -13,17 +13,17 @@ LEADERBOARD_REVISION = "2eafcfc647b667e67f3b0288e9b67da497a78052"
 CARD_SPECS = (
     {
         "repo": "specklabs/Speck1-140M",
-        "revision": "155b759545645cc694545fab85cd7d4c385fd965",
+        "revision": "57fe6b558b654ef91d5888ee8835048a4a0e9231",
         "weights_sha256": "199a77b5564868d0b2a03e4f59eb9e58615a2ece947c0618c4289c0ef1c6daf0",
     },
     {
         "repo": "specklabs/Speck1-140M-Instruct",
-        "revision": "686350e82db5996f9ab65bdadca70c6d41d49227",
+        "revision": "580a1ac03c8d198639ff470180c11827336664bd",
         "weights_sha256": "536eb6750ba41b8d6d88c02c09cdb5ba7411b58226b37c1883f1899e88a1ca4a",
     },
     {
         "repo": "specklabs/Speck1.1-140M-Instruct",
-        "revision": "4ed4c6824b8dd37ecaa72df5dbbc531f55871588",
+        "revision": "8a25b02e9049a29db49984968f4dc5a95c16980a",
         "weights_sha256": "5462ed5bc24361e19d506973a9267d02eda02965ff1c1c682f49c57c80752e48",
     },
 )
