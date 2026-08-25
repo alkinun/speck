@@ -1,0 +1,138 @@
+{
+  "dedup": {
+    "hash": "blake2b-128",
+    "normalization": "NFKC+lower+whitespace",
+    "scope": "global"
+  },
+  "filtering": {
+    "max_chars": 100000,
+    "min_chars": 200
+  },
+  "mixture": {
+    "phases": [
+      {
+        "end_tokens": 5000000000,
+        "weights": {
+          "dclm_edu": 39,
+          "math_multi_style": 5,
+          "math_textbook_exercise": 5,
+          "stack_v3": 8,
+          "ufw_l3_multi_style": 3,
+          "ufw_l3_qa": 1,
+          "ultra_fineweb": 39
+        }
+      }
+    ]
+  },
+  "output_dir": null,
+  "output_name": "Speck1.5-140M",
+  "requested_train_tokens": 5000000000,
+  "seed": 42,
+  "shards": {
+    "maximum_loader_microbatch_tokens": 65536,
+    "tokens": 100000000
+  },
+  "sources": [
+    {
+      "content_column": "text",
+      "filters": {
+        "language": "en",
+        "min_score": 3.5,
+        "score_operator": ">"
+      },
+      "id": "dclm_edu",
+      "language_column": "language",
+      "metadata_columns": {
+        "id": "id",
+        "url": "url"
+      },
+      "repo": "HuggingFaceTB/dclm-edu",
+      "revision": "dbad8ad71224482740cd9c9d353591adbf62fe04",
+      "score_column": "edu_score",
+      "tree_path": "data"
+    },
+    {
+      "content_column": "content",
+      "filters": {
+        "min_score": 0.7,
+        "score_operator": ">"
+      },
+      "id": "ultra_fineweb",
+      "metadata_columns": {
+        "origin": "source"
+      },
+      "repo": "openbmb/Ultra-FineWeb",
+      "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+      "score_column": "score",
+      "tree_path": "data/ultrafineweb_en"
+    },
+    {
+      "content_column": "files",
+      "content_format": "stack_v3_repository_v1",
+      "filters": {},
+      "id": "stack_v3",
+      "metadata_columns": {
+        "commit_id": "commit_id",
+        "num_files": "num_files",
+        "repo_path": "repo_path"
+      },
+      "repo": "HuggingFaceCode/stack-v3-train",
+      "revision": "df4b205fbba4cc1c2fd1f205b10d66f730798bb9",
+      "tree_path": "data"
+    },
+    {
+      "content_column": "content",
+      "filters": {
+        "language": "en"
+      },
+      "id": "math_multi_style",
+      "language_detector": "py3langid",
+      "metadata_columns": {
+        "uid": "uid"
+      },
+      "repo": "openbmb/UltraData-Math",
+      "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+      "tree_path": "data/UltraData-Math-L3/Multi-Style-Synthetic"
+    },
+    {
+      "content_column": "content",
+      "filters": {
+        "language": "en"
+      },
+      "id": "math_textbook_exercise",
+      "language_detector": "py3langid",
+      "metadata_columns": {
+        "uid": "uid"
+      },
+      "repo": "openbmb/UltraData-Math",
+      "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+      "tree_path": "data/UltraData-Math-L3/Textbook-Exercise-Synthetic"
+    },
+    {
+      "content_column": "content",
+      "filters": {},
+      "id": "ufw_l3_multi_style",
+      "metadata_columns": {
+        "style": "style",
+        "uid": "uid"
+      },
+      "repo": "openbmb/Ultra-FineWeb-L3",
+      "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+      "tree_path": "data/ultrafineweb_en_l3/multi_style"
+    },
+    {
+      "content_column": "content",
+      "filters": {},
+      "id": "ufw_l3_qa",
+      "metadata_columns": {
+        "style": "style",
+        "uid": "uid"
+      },
+      "repo": "openbmb/Ultra-FineWeb-L3",
+      "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+      "tree_path": "data/ultrafineweb_en_l3/qa"
+    }
+  ],
+  "validation_fraction": 0.02,
+  "validation_tokens_per_source": 5000000
+}
