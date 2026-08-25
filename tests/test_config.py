@@ -18,7 +18,9 @@ def test_load_experiment_requires_objects(tmp_path):
 
 def test_speck1_1_sft_experiment_uses_speckchat2_and_original_base():
     current = load_experiment("experiments/Speck1-140M", "model", "tokenizer", "sft")
-    updated = load_experiment("experiments/Speck1.1-140M", "model", "tokenizer", "sft")
+    updated = load_experiment(
+        "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
+    )
 
     assert updated["model"] == current["model"]
     assert updated["tokenizer"] == current["tokenizer"]
@@ -35,19 +37,21 @@ def test_speck1_1_sft_experiment_uses_speckchat2_and_original_base():
         "validation_samples": 1_000,
     }
     assert updated["sft"]["pretrained"] == current["sft"]["pretrained"]
-    assert updated["sft"]["epochs"] == 2
+    assert updated["sft"]["epochs"] == 1
     assert updated["sft"]["run"] == "Speck1.1-140M-Instruct"
 
 
-def test_speck1_1_140m_light_uses_one_epoch_without_changing_data_or_base():
-    full = load_experiment("experiments/Speck1.1-140M", "model", "tokenizer", "sft")
-    light = load_experiment(
-        "experiments/Speck1.1-140M-Instruct-Light", "model", "tokenizer", "sft"
+def test_speck1_1_140m_two_epoch_variant_only_changes_training_length():
+    current = load_experiment(
+        "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
+    )
+    two_epoch = load_experiment(
+        "experiments/Speck1.1-140M-Instruct-2ep", "model", "tokenizer", "sft"
     )
 
-    assert light["model"] == full["model"]
-    assert light["tokenizer"] == full["tokenizer"]
-    assert light["sft"]["dataset"] == full["sft"]["dataset"]
-    assert light["sft"]["pretrained"] == full["sft"]["pretrained"]
-    assert light["sft"]["epochs"] == 1
-    assert light["sft"]["run"] == "Speck1.1-140M-Instruct-Light"
+    assert two_epoch["model"] == current["model"]
+    assert two_epoch["tokenizer"] == current["tokenizer"]
+    assert two_epoch["sft"]["dataset"] == current["sft"]["dataset"]
+    assert two_epoch["sft"]["pretrained"] == current["sft"]["pretrained"]
+    assert two_epoch["sft"]["epochs"] == 2
+    assert two_epoch["sft"]["run"] == "Speck1.1-140M-Instruct-2ep"

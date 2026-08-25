@@ -1,0 +1,102 @@
+{
+  "benchmark": "BananaMind Base Bench 1.1",
+  "benchmark_version": "1.1",
+  "official_complete_runs": true,
+  "cases_per_model": 350,
+  "dataset_revision": "d4aade51312889e8580963e1ce960c6eaef1a450",
+  "dataset_sha256": "2f563bb46df778ca494fa20f994a8d3045d4c51fbbffeee433764e2813abea21",
+  "runner_sha256": "973a81d09d1c4075d031e1369b4278c52a7813d1ab3b11b33eef665d3247bf2c",
+  "method": {
+    "task": "four-choice base-text continuation",
+    "choice_score": "mean conditional token log-probability",
+    "scoring_format": "raw_continuation",
+    "add_bos": false,
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "batch_size": 32,
+    "threads": 16
+  },
+  "official_elo_winner": "Speck1.1-140M-Instruct-Light",
+  "models": [
+    {
+      "name": "Speck1.1-140M-Instruct-Light",
+      "checkpoint_step": 8534,
+      "overall_elo": 1002,
+      "overall_elo_unrounded": 1002.063998163818,
+      "passed": 167,
+      "accuracy": 0.47714285714285715,
+      "weighted_accuracy": 0.4824057618557665,
+      "categories": {
+        "language_completion": {"passed": 33, "accuracy": 0.66, "elo": 1046},
+        "commonsense": {"passed": 23, "accuracy": 0.46, "elo": 946},
+        "world_knowledge": {"passed": 22, "accuracy": 0.44, "elo": 920},
+        "context_tracking": {"passed": 17, "accuracy": 0.34, "elo": 884},
+        "quantitative": {"passed": 16, "accuracy": 0.32, "elo": 878},
+        "logical_reasoning": {"passed": 19, "accuracy": 0.38, "elo": 995},
+        "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1320}
+      },
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct-Light/report.json"
+    },
+    {
+      "name": "Speck1-140M-Instruct",
+      "checkpoint_step": 4835,
+      "overall_elo": 1001,
+      "overall_elo_unrounded": 1001.4836627341797,
+      "passed": 171,
+      "accuracy": 0.48857142857142855,
+      "weighted_accuracy": 0.48165746889907385,
+      "categories": {
+        "language_completion": {"passed": 32, "accuracy": 0.64, "elo": 1041},
+        "commonsense": {"passed": 25, "accuracy": 0.5, "elo": 937},
+        "world_knowledge": {"passed": 25, "accuracy": 0.5, "elo": 947},
+        "context_tracking": {"passed": 19, "accuracy": 0.38, "elo": 892},
+        "quantitative": {"passed": 16, "accuracy": 0.32, "elo": 886},
+        "logical_reasoning": {"passed": 17, "accuracy": 0.34, "elo": 970},
+        "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1314}
+      },
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1-140M-Instruct/report.json"
+    },
+    {
+      "name": "Speck1.1-140M-Instruct",
+      "checkpoint_step": 17068,
+      "overall_elo": 999,
+      "overall_elo_unrounded": 998.9729263586623,
+      "passed": 163,
+      "accuracy": 0.4657142857142857,
+      "weighted_accuracy": 0.4784211018613785,
+      "categories": {
+        "language_completion": {"passed": 30, "accuracy": 0.6, "elo": 1003},
+        "commonsense": {"passed": 23, "accuracy": 0.46, "elo": 953},
+        "world_knowledge": {"passed": 28, "accuracy": 0.56, "elo": 1001},
+        "context_tracking": {"passed": 17, "accuracy": 0.34, "elo": 892},
+        "quantitative": {"passed": 14, "accuracy": 0.28, "elo": 864},
+        "logical_reasoning": {"passed": 14, "accuracy": 0.28, "elo": 925},
+        "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1326}
+      },
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct/report.json"
+    }
+  ],
+  "paired_accuracy_checks": [
+    {
+      "first": "Speck1-140M-Instruct",
+      "second": "Speck1.1-140M-Instruct",
+      "first_only_correct": 28,
+      "second_only_correct": 20,
+      "exact_mcnemar_p": 0.3123
+    },
+    {
+      "first": "Speck1-140M-Instruct",
+      "second": "Speck1.1-140M-Instruct-Light",
+      "first_only_correct": 20,
+      "second_only_correct": 16,
+      "exact_mcnemar_p": 0.6177
+    },
+    {
+      "first": "Speck1.1-140M-Instruct",
+      "second": "Speck1.1-140M-Instruct-Light",
+      "first_only_correct": 13,
+      "second_only_correct": 17,
+      "exact_mcnemar_p": 0.5847
+    }
+  ]
+}

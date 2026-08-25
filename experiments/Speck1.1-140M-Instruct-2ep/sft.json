@@ -14,7 +14,7 @@
     "validation_samples": 1000
   },
   "device_batch_size": 4,
-  "epochs": 1,
+  "epochs": 2,
   "eval_every": 100,
   "grad_clip": 1.0,
   "keep_checkpoints": 2,
@@ -28,7 +28,7 @@
     "repo": "specklabs/Speck1-140M",
     "revision": "32675011a75e3bb3f180983a0014de10d1fa6693"
   },
-  "run": "Speck1.1-140M-Instruct-Light",
+  "run": "Speck1.1-140M-Instruct-2ep",
   "save_every": 500,
   "sequence_length": 2048,
   "sequence_lengths": [256, 512, 1024, 2048],

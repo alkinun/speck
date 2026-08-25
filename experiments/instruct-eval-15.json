@@ -1,0 +1,651 @@
+{
+  "method": {
+    "decoding": "greedy",
+    "temperature": 0,
+    "max_tokens": 64,
+    "primary_metric": "correct answers out of 15",
+    "tie_breaker": "exact-format answers out of 15",
+    "device": "cuda"
+  },
+  "models": [
+    {
+      "name": "Speck1-140M-Instruct",
+      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1-140M-Instruct",
+      "step": 4835,
+      "correct": 2,
+      "exact_format": 0,
+      "questions": 15,
+      "categories": {
+        "knowledge": {
+          "correct": 2,
+          "questions": 5
+        },
+        "reasoning": {
+          "correct": 0,
+          "questions": 5
+        },
+        "instruction": {
+          "correct": 0,
+          "questions": 5
+        }
+      },
+      "answers": [
+        {
+          "number": 1,
+          "category": "knowledge",
+          "prompt": "What is the capital of France? Answer with only the city name.",
+          "accepted": [
+            "Paris"
+          ],
+          "answer": "The capital of France is Paris.",
+          "generated_tokens": 7,
+          "correct": true,
+          "exact_format": false
+        },
+        {
+          "number": 2,
+          "category": "knowledge",
+          "prompt": "Which planet is known as the Red Planet? Answer with only the planet name.",
+          "accepted": [
+            "Mars"
+          ],
+          "answer": "The Red Planet is known as the \"Red Planet\" because it is the only planet in our solar system that is not a planet. It is the only planet that is not a planet, and it is the only planet that is not a planet.",
+          "generated_tokens": 52,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 3,
+          "category": "knowledge",
+          "prompt": "Who wrote the novel 1984? Answer with only the author's name.",
+          "accepted": [
+            "George Orwell",
+            "Orwell"
+          ],
+          "answer": "The novel 1984 was written by James Joyce.",
+          "generated_tokens": 14,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 4,
+          "category": "knowledge",
+          "prompt": "What is the chemical symbol for gold? Answer with only the symbol.",
+          "accepted": [
+            "Au"
+          ],
+          "answer": "The chemical symbol for gold is Au.",
+          "generated_tokens": 8,
+          "correct": true,
+          "exact_format": false
+        },
+        {
+          "number": 5,
+          "category": "knowledge",
+          "prompt": "What is the largest ocean on Earth? Answer with only its name.",
+          "accepted": [
+            "Pacific",
+            "Pacific Ocean"
+          ],
+          "answer": "The largest ocean on Earth is the Atlantic Ocean. It is the largest ocean on the planet, covering an area of about 1,000 square miles (2,400 square kilometers).",
+          "generated_tokens": 42,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 6,
+          "category": "reasoning",
+          "prompt": "Calculate 17 + 28. Answer with only the number.",
+          "accepted": [
+            "45"
+          ],
+          "scoring": "final_number",
+          "answer": "17 + 28 = 33.",
+          "generated_tokens": 11,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 7,
+          "category": "reasoning",
+          "prompt": "Calculate 12 multiplied by 7. Answer with only the number.",
+          "accepted": [
+            "84"
+          ],
+          "scoring": "final_number",
+          "answer": "12 multiplied by 7 is 142.",
+          "generated_tokens": 13,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 8,
+          "category": "reasoning",
+          "prompt": "Maya has 15 apples and gives away 6. How many apples remain? Answer with only the number.",
+          "accepted": [
+            "9"
+          ],
+          "scoring": "final_number",
+          "answer": "Let's assume that the number of apples that are left is x.\nSince the number of apples that are left is 15, we can set up the equation:\nx + 15 = 15\nLet's solve for x:\nx = 15 -",
+          "generated_tokens": 64,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 9,
+          "category": "reasoning",
+          "prompt": "What number comes next: 3, 6, 12, 24? Answer with only the number.",
+          "accepted": [
+            "48"
+          ],
+          "scoring": "final_number",
+          "answer": "The number 12 comes next.",
+          "generated_tokens": 8,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 10,
+          "category": "reasoning",
+          "prompt": "All tulips are flowers, and all flowers are plants. Are all tulips plants? Answer only yes or no.",
+          "accepted": [
+            "yes"
+          ],
+          "answer": "No, not all tulips are plants.",
+          "generated_tokens": 10,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 11,
+          "category": "instruction",
+          "prompt": "Give the opposite of the word 'scarce'. Answer with one word only.",
+          "accepted": [
+            "abundant",
+            "plentiful"
+          ],
+          "answer": "The opposite of scarce is 'unhappiness'.",
+          "generated_tokens": 12,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 12,
+          "category": "instruction",
+          "prompt": "Translate 'good morning' into Spanish. Answer with only the translation.",
+          "accepted": [
+            "buenos dias"
+          ],
+          "answer": "\"En este eso, el ayudado.\"",
+          "generated_tokens": 11,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 13,
+          "category": "instruction",
+          "prompt": "Put these words in alphabetical order: pear, apple, orange. Answer with only the ordered words.",
+          "accepted": [
+            "apple orange pear"
+          ],
+          "answer": "The ordered words are: pear, apple, orange.",
+          "generated_tokens": 11,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 14,
+          "category": "instruction",
+          "prompt": "In Python, what does len(['a', 'b', 'c']) return? Answer with only the number.",
+          "accepted": [
+            "3"
+          ],
+          "scoring": "final_number",
+          "answer": "The len function returns the length of a list. In Python, it is used to calculate the length of a list. The length of a list is a number that represents the number of elements in the list. For example, the list [1, 2, 3, 4, 5] is a",
+          "generated_tokens": 64,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 15,
+          "category": "instruction",
+          "prompt": "Reply with exactly these two words and nothing else: blue triangle",
+          "accepted": [
+            "blue triangle"
+          ],
+          "scoring": "exact",
+          "answer": "Blue triangle is a geometric shape that consists of three equal sides. It is a triangle with three equal angles.",
+          "generated_tokens": 22,
+          "correct": false,
+          "exact_format": false
+        }
+      ]
+    },
+    {
+      "name": "Speck1.1-140M-Instruct",
+      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct",
+      "step": 17068,
+      "correct": 3,
+      "exact_format": 2,
+      "questions": 15,
+      "categories": {
+        "knowledge": {
+          "correct": 2,
+          "questions": 5
+        },
+        "reasoning": {
+          "correct": 0,
+          "questions": 5
+        },
+        "instruction": {
+          "correct": 1,
+          "questions": 5
+        }
+      },
+      "answers": [
+        {
+          "number": 1,
+          "category": "knowledge",
+          "prompt": "What is the capital of France? Answer with only the city name.",
+          "accepted": [
+            "Paris"
+          ],
+          "answer": "Paris.",
+          "generated_tokens": 3,
+          "correct": true,
+          "exact_format": true
+        },
+        {
+          "number": 2,
+          "category": "knowledge",
+          "prompt": "Which planet is known as the Red Planet? Answer with only the planet name.",
+          "accepted": [
+            "Mars"
+          ],
+          "answer": "Venus is the planet known as the Red Planet.",
+          "generated_tokens": 13,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 3,
+          "category": "knowledge",
+          "prompt": "Who wrote the novel 1984? Answer with only the author's name.",
+          "accepted": [
+            "George Orwell",
+            "Orwell"
+          ],
+          "answer": "James Joyce.",
+          "generated_tokens": 5,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 4,
+          "category": "knowledge",
+          "prompt": "What is the chemical symbol for gold? Answer with only the symbol.",
+          "accepted": [
+            "Au"
+          ],
+          "answer": "Gold",
+          "generated_tokens": 1,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 5,
+          "category": "knowledge",
+          "prompt": "What is the largest ocean on Earth? Answer with only its name.",
+          "accepted": [
+            "Pacific",
+            "Pacific Ocean"
+          ],
+          "answer": "The largest ocean on Earth is the **Pacific Ocean**. It is the largest body of water on the planet, covering an area of approximately **100,000 square kilometers** (63,000 square miles).",
+          "generated_tokens": 51,
+          "correct": true,
+          "exact_format": false
+        },
+        {
+          "number": 6,
+          "category": "reasoning",
+          "prompt": "Calculate 17 + 28. Answer with only the number.",
+          "accepted": [
+            "45"
+          ],
+          "scoring": "final_number",
+          "answer": "17 + 28 = 40",
+          "generated_tokens": 10,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 7,
+          "category": "reasoning",
+          "prompt": "Calculate 12 multiplied by 7. Answer with only the number.",
+          "accepted": [
+            "84"
+          ],
+          "scoring": "final_number",
+          "answer": "12 \u00d7 7 = 72",
+          "generated_tokens": 9,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 8,
+          "category": "reasoning",
+          "prompt": "Maya has 15 apples and gives away 6. How many apples remain? Answer with only the number.",
+          "accepted": [
+            "9"
+          ],
+          "scoring": "final_number",
+          "answer": "Maya has 15 apples. She gives away 6 apples. So she has 15 - 6 = 9 apples left. She gives away 6 apples. So she has 9 - 6 = 3 apples left. She gives away 6 apples.",
+          "generated_tokens": 64,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 9,
+          "category": "reasoning",
+          "prompt": "What number comes next: 3, 6, 12, 24? Answer with only the number.",
+          "accepted": [
+            "48"
+          ],
+          "scoring": "final_number",
+          "answer": "3",
+          "generated_tokens": 1,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 10,
+          "category": "reasoning",
+          "prompt": "All tulips are flowers, and all flowers are plants. Are all tulips plants? Answer only yes or no.",
+          "accepted": [
+            "yes"
+          ],
+          "answer": "No.",
+          "generated_tokens": 2,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 11,
+          "category": "instruction",
+          "prompt": "Give the opposite of the word 'scarce'. Answer with one word only.",
+          "accepted": [
+            "abundant",
+            "plentiful"
+          ],
+          "answer": "Bear.",
+          "generated_tokens": 3,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 12,
+          "category": "instruction",
+          "prompt": "Translate 'good morning' into Spanish. Answer with only the translation.",
+          "accepted": [
+            "buenos dias"
+          ],
+          "answer": "\"Mi amigo\"",
+          "generated_tokens": 6,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 13,
+          "category": "instruction",
+          "prompt": "Put these words in alphabetical order: pear, apple, orange. Answer with only the ordered words.",
+          "accepted": [
+            "apple orange pear"
+          ],
+          "answer": "pear, apple, orange",
+          "generated_tokens": 6,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 14,
+          "category": "instruction",
+          "prompt": "In Python, what does len(['a', 'b', 'c']) return? Answer with only the number.",
+          "accepted": [
+            "3"
+          ],
+          "scoring": "final_number",
+          "answer": "len(['a', 'b', 'c'])",
+          "generated_tokens": 10,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 15,
+          "category": "instruction",
+          "prompt": "Reply with exactly these two words and nothing else: blue triangle",
+          "accepted": [
+            "blue triangle"
+          ],
+          "scoring": "exact",
+          "answer": "blue triangle",
+          "generated_tokens": 2,
+          "correct": true,
+          "exact_format": true
+        }
+      ]
+    },
+    {
+      "name": "Speck1.1-140M-Instruct-Light",
+      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct-Light",
+      "step": 8534,
+      "correct": 5,
+      "exact_format": 2,
+      "questions": 15,
+      "categories": {
+        "knowledge": {
+          "correct": 3,
+          "questions": 5
+        },
+        "reasoning": {
+          "correct": 0,
+          "questions": 5
+        },
+        "instruction": {
+          "correct": 2,
+          "questions": 5
+        }
+      },
+      "answers": [
+        {
+          "number": 1,
+          "category": "knowledge",
+          "prompt": "What is the capital of France? Answer with only the city name.",
+          "accepted": [
+            "Paris"
+          ],
+          "answer": "Paris.",
+          "generated_tokens": 3,
+          "correct": true,
+          "exact_format": true
+        },
+        {
+          "number": 2,
+          "category": "knowledge",
+          "prompt": "Which planet is known as the Red Planet? Answer with only the planet name.",
+          "accepted": [
+            "Mars"
+          ],
+          "answer": "The planet that is known as the Red Planet is **Jupiter**.",
+          "generated_tokens": 15,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 3,
+          "category": "knowledge",
+          "prompt": "Who wrote the novel 1984? Answer with only the author's name.",
+          "accepted": [
+            "George Orwell",
+            "Orwell"
+          ],
+          "answer": "The novel \"1984\" was written by the American author George Orwell.",
+          "generated_tokens": 18,
+          "correct": true,
+          "exact_format": false
+        },
+        {
+          "number": 4,
+          "category": "knowledge",
+          "prompt": "What is the chemical symbol for gold? Answer with only the symbol.",
+          "accepted": [
+            "Au"
+          ],
+          "answer": "Gold",
+          "generated_tokens": 1,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 5,
+          "category": "knowledge",
+          "prompt": "What is the largest ocean on Earth? Answer with only its name.",
+          "accepted": [
+            "Pacific",
+            "Pacific Ocean"
+          ],
+          "answer": "The largest ocean on Earth is the **Pacific Ocean**. It is the largest body of water on the planet, covering an area of approximately **100,000 square kilometers** (63,000 square miles).",
+          "generated_tokens": 51,
+          "correct": true,
+          "exact_format": false
+        },
+        {
+          "number": 6,
+          "category": "reasoning",
+          "prompt": "Calculate 17 + 28. Answer with only the number.",
+          "accepted": [
+            "45"
+          ],
+          "scoring": "final_number",
+          "answer": "17 + 28 = 30",
+          "generated_tokens": 10,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 7,
+          "category": "reasoning",
+          "prompt": "Calculate 12 multiplied by 7. Answer with only the number.",
+          "accepted": [
+            "84"
+          ],
+          "scoring": "final_number",
+          "answer": "12 \u00d7 7 = 144",
+          "generated_tokens": 10,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 8,
+          "category": "reasoning",
+          "prompt": "Maya has 15 apples and gives away 6. How many apples remain? Answer with only the number.",
+          "accepted": [
+            "9"
+          ],
+          "scoring": "final_number",
+          "answer": "Maya has 15 apples. 15 - 6 = 7. 7 apples remain. 7 + 7 = 11. 11 apples are left. 11 - 7 = 6. 6 apples are left. 6 +",
+          "generated_tokens": 64,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 9,
+          "category": "reasoning",
+          "prompt": "What number comes next: 3, 6, 12, 24? Answer with only the number.",
+          "accepted": [
+            "48"
+          ],
+          "scoring": "final_number",
+          "answer": "3",
+          "generated_tokens": 1,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 10,
+          "category": "reasoning",
+          "prompt": "All tulips are flowers, and all flowers are plants. Are all tulips plants? Answer only yes or no.",
+          "accepted": [
+            "yes"
+          ],
+          "answer": "No.",
+          "generated_tokens": 2,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 11,
+          "category": "instruction",
+          "prompt": "Give the opposite of the word 'scarce'. Answer with one word only.",
+          "accepted": [
+            "abundant",
+            "plentiful"
+          ],
+          "answer": "Avalanche",
+          "generated_tokens": 3,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 12,
+          "category": "instruction",
+          "prompt": "Translate 'good morning' into Spanish. Answer with only the translation.",
+          "accepted": [
+            "buenos dias"
+          ],
+          "answer": "\"Mi amo\"",
+          "generated_tokens": 6,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 13,
+          "category": "instruction",
+          "prompt": "Put these words in alphabetical order: pear, apple, orange. Answer with only the ordered words.",
+          "accepted": [
+            "apple orange pear"
+          ],
+          "answer": "pear, apple, orange",
+          "generated_tokens": 6,
+          "correct": false,
+          "exact_format": false
+        },
+        {
+          "number": 14,
+          "category": "instruction",
+          "prompt": "In Python, what does len(['a', 'b', 'c']) return? Answer with only the number.",
+          "accepted": [
+            "3"
+          ],
+          "scoring": "final_number",
+          "answer": "```python\nprint(len(a))  # Output: 3\n```",
+          "generated_tokens": 19,
+          "correct": true,
+          "exact_format": false
+        },
+        {
+          "number": 15,
+          "category": "instruction",
+          "prompt": "Reply with exactly these two words and nothing else: blue triangle",
+          "accepted": [
+            "blue triangle"
+          ],
+          "scoring": "exact",
+          "answer": "Blue triangle",
+          "generated_tokens": 2,
+          "correct": true,
+          "exact_format": true
+        }
+      ]
+    }
+  ]
+}

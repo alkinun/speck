@@ -37,7 +37,8 @@ source .venv/bin/activate.fish
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
 - `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
-- `experiments/Speck1.1-140M` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2.
+- `experiments/Speck1.1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2 for one epoch.
+- `experiments/Speck1.1-140M-Instruct-2ep` retains the corresponding two-epoch training run.
 
 Model names follow `Speck<generation>-<size>`, with an optional decimal generation for intermediate families.
 
@@ -152,27 +153,27 @@ uv run scripts/speckchat2_prepare.py
 
 The mixture contains 200K LMSYS DeepSeek conversations, 130K Magpie Llama 3.1 multi-turn conversations, 85K Hermes, 65K UltraChat, 10K Magpie Reasoning, 8K No Robots, and 2K Everyday Conversations. It uses only source training splits and intentionally publishes no validation or test split. Use `--output-dir <path> --no-push` to build a local dataset instead.
 
-The `experiments/Speck1.1-140M` configuration pins the published 500,000-row SpeckChat2 dataset and the original `Speck1-140M` base weights. Prepare its isolated assistant-masked data, holding out 1,000 conversations for validation:
+The `experiments/Speck1.1-140M-Instruct` configuration pins the published 500,000-row SpeckChat2 dataset and the original `Speck1-140M` base weights. Prepare its isolated assistant-masked data, holding out 1,000 conversations for validation:
 
 ```bash
-uv run --extra gpu python -m scripts.sft_prepare experiments/Speck1.1-140M
+uv run --extra gpu python -m scripts.sft_prepare experiments/Speck1.1-140M-Instruct
 ```
 
-Run two epochs of full-model post-training:
+Run one epoch of full-model post-training:
 
 ```bash
-uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M
+uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M-Instruct
 ```
 
 Prepared data is written under `~/.cache/speck/data/SpeckChat2-v3`, and checkpoints are written under `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct`.
 
-Train the one-epoch `Speck1.1-140M-Instruct-Light` variant against the same prepared data:
+Run the retained two-epoch variant against the same prepared data:
 
 ```bash
-uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M-Instruct-Light
+uv run --extra gpu python -m scripts.sft_train experiments/Speck1.1-140M-Instruct-2ep
 ```
 
-Its checkpoints are written under `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct-Light`.
+Its checkpoints are written under `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct-2ep`.
 
 ## Inference
 
@@ -184,6 +185,22 @@ python -m scripts.infer "The meaning of life is" \
 ```
 
 Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, and `--checkpoint-dir`.
+
+### GGUF
+
+Build BF16, Q4_K_M, Q5_K_M, and Q8_0 GGUF variants of the published instruction model,
+smoke-test each file with a pinned llama.cpp checkout, and publish them to the Hugging Face Hub:
+
+```bash
+uv run --extra cpu python -m scripts.gguf_publish
+```
+
+Generated weights and the llama.cpp checkout are kept under `~/.cache/speck`, not in this
+repository. Use `--no-upload` for a local build, repeat `--quantization <type>` to select a
+different set, or pass `--llama-cpp <path>` to use an existing checkout. The publisher resolves
+the source model to an immutable revision and uploads only after every requested file passes a
+llama.cpp load and inference smoke test. Work is capped at four concurrent jobs by default; use
+`--resume` after an interruption to validate and reuse completed files.
 
 ## Benchmarking
 
