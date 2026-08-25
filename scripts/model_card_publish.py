@@ -14,17 +14,17 @@ BANANAMIND_REVISION = "d4aade51312889e8580963e1ce960c6eaef1a450"
 CARD_SPECS = (
     {
         "repo": "specklabs/Speck1-140M",
-        "revision": "57fe6b558b654ef91d5888ee8835048a4a0e9231",
+        "revision": "db82e99d0a862f0a2f3264671ac6a77449387d8c",
         "weights_sha256": "199a77b5564868d0b2a03e4f59eb9e58615a2ece947c0618c4289c0ef1c6daf0",
     },
     {
         "repo": "specklabs/Speck1-140M-Instruct",
-        "revision": "580a1ac03c8d198639ff470180c11827336664bd",
+        "revision": "8a01c30254b4bd9e79c53190a274ea22695e76e0",
         "weights_sha256": "536eb6750ba41b8d6d88c02c09cdb5ba7411b58226b37c1883f1899e88a1ca4a",
     },
     {
         "repo": "specklabs/Speck1.1-140M-Instruct",
-        "revision": "8a25b02e9049a29db49984968f4dc5a95c16980a",
+        "revision": "e81a650d28dc3f84aa10490478a42c73d821d1f4",
         "weights_sha256": "5462ed5bc24361e19d506973a9267d02eda02965ff1c1c682f49c57c80752e48",
     },
 )
