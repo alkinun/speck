@@ -37,6 +37,7 @@ source .venv/bin/activate.fish
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
 - `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
+- `experiments/Speck1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1-140M-Instruct` on SpeckChat1.
 - `experiments/Speck1.1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2 for one epoch.
 - `experiments/Speck1.1-140M-Instruct-2ep` retains the corresponding two-epoch training run.
 
@@ -125,13 +126,13 @@ Resume validates the architecture, packed-data manifest, optimizer settings, bat
 Prepare the pinned `specklabs/SpeckChat1` dataset with the Speck chat template and assistant-only loss mask:
 
 ```bash
-python -m scripts.sft_prepare experiments/Speck1-140M
+python -m scripts.sft_prepare experiments/Speck1-140M-Instruct
 ```
 
 The current SpeckChat1 post-training configuration uses `<|system|>`, `<|user|>`, and `<|assistant|>` as token IDs 32000-32002, preserves the pretrained BOS/EOS tokens, and holds out 1,000 conversations for validation. Conversations are isolated in 256-, 512-, 1,024-, or 2,048-token buckets. The per-device batches are 32, 16, 8, and 4 respectively, so every microbatch has the same 8,192-token compute budget without unnecessary 2,048-token padding. Start one epoch of full-model instruction tuning from the pinned `specklabs/Speck1-140M` release:
 
 ```bash
-python -m scripts.sft_train experiments/Speck1-140M
+python -m scripts.sft_train experiments/Speck1-140M-Instruct
 ```
 
 Use `torchrun` as with base training for multiple GPUs. SFT checkpoints and a Hugging Face-compatible tokenizer are written under `~/.cache/speck/checkpoints/Speck1-140M-Instruct`. Resume only from an explicit SFT step with `--resume <checkpoint-step>`.
@@ -253,7 +254,7 @@ template:
 
 ```bash
 uv run --extra gpu --group open-slm python -m scripts.open_slm_eval all \
-  --config experiments/Speck1-140M/open_slm_instruct.json
+  --config experiments/Speck1-140M-Instruct/open_slm.json
 uv run --extra gpu --group open-slm python -m scripts.open_slm_eval all \
   --config experiments/Speck1.1-140M-Instruct/open_slm.json
 ```

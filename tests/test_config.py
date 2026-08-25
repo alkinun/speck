@@ -16,8 +16,21 @@ def test_load_experiment_requires_objects(tmp_path):
         load_experiment(tmp_path, "model")
 
 
-def test_speck1_1_sft_experiment_uses_speckchat2_and_original_base():
-    current = load_experiment("experiments/Speck1-140M", "model", "tokenizer", "sft")
+def test_speck1_instruct_experiment_is_separate_from_base():
+    base = load_experiment("experiments/Speck1-140M", "model", "tokenizer")
+    instruct = load_experiment(
+        "experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft"
+    )
+
+    assert instruct["model"] == base["model"]
+    assert instruct["tokenizer"] == base["tokenizer"]
+    assert instruct["sft"]["run"] == "Speck1-140M-Instruct"
+
+
+def test_speck1_1_sft_experiment_uses_speckchat2_and_original_instruct_config():
+    current = load_experiment(
+        "experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft"
+    )
     updated = load_experiment(
         "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
     )

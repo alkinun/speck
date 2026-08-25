@@ -39,7 +39,7 @@ def arguments():
     parser.add_argument(
         "experiment",
         nargs="?",
-        default="experiments/Speck1-140M",
+        default="experiments/Speck1-140M-Instruct",
         help="experiment directory (default: %(default)s)",
     )
     parser.add_argument("--device", default=None, help="training device")

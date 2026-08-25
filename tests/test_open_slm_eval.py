@@ -29,7 +29,7 @@ def test_lm_eval_command_pins_model_and_numerical_settings(tmp_path):
     ("path", "repo", "revision"),
     [
         (
-            "experiments/Speck1-140M/open_slm_instruct.json",
+            "experiments/Speck1-140M-Instruct/open_slm.json",
             "specklabs/Speck1-140M-Instruct",
             "686350e82db5996f9ab65bdadca70c6d41d49227",
         ),
