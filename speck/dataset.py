@@ -2,11 +2,13 @@
 
 import hashlib
 import json
+import math
 import os
 import random
 import shutil
 import time
 import unicodedata
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, unquote, urlparse
@@ -29,6 +31,8 @@ _SOURCE_FIELDS = {
     "revision",
     "tree_path",
     "content_column",
+    "content_format",
+    "language_detector",
     "score_column",
     "language_column",
     "metadata_columns",
@@ -44,6 +48,20 @@ _MAX_TOKENIZER_DOCUMENTS = 1024
 _MAX_TOKENIZER_CHARACTERS = 2_000_000
 _RAW_SHARD_ALLOWANCE_BYTES = 20 * 1024**3
 _MIN_INDEX_DEDUP_HEADROOM_BYTES = 5 * 1024**3
+_CONTENT_FORMATS = {"stack_v3_repository_v1"}
+_LANGUAGE_DETECTORS = {"py3langid"}
+
+
+def resolve_data_dir(output_dir=None, output_name=None):
+    """Resolve an explicit path or an isolated name under the Speck data cache."""
+
+    if output_dir is not None:
+        return Path(output_dir).expanduser()
+    if output_name is None:
+        return default_data_dir / "packed"
+    if not isinstance(output_name, str) or not output_name or Path(output_name).name != output_name:
+        raise ValueError("data output_name must be one nonempty path component")
+    return default_data_dir / output_name
 
 
 def _atomic_json(path, value):
@@ -91,9 +109,7 @@ def _integer(value, name, *, minimum=0):
 def derive_source_quotas(sources, mixture, requested_train_tokens):
     """Derive exact per-source token quotas from integer phase weights."""
 
-    requested_train_tokens = _integer(
-        requested_train_tokens, "requested_train_tokens", minimum=1
-    )
+    requested_train_tokens = _integer(requested_train_tokens, "requested_train_tokens", minimum=1)
     source_ids = [source["id"] if isinstance(source, dict) else str(source) for source in sources]
     if not source_ids or len(source_ids) != len(set(source_ids)):
         raise ValueError("data sources must have unique IDs")
@@ -118,9 +134,13 @@ def derive_source_quotas(sources, mixture, requested_train_tokens):
         unknown = set(weights) - set(source_ids)
         missing = set(source_ids) - set(weights)
         if unknown:
-            raise ValueError(f"mixture phase {index} has unknown sources: {', '.join(sorted(unknown))}")
+            raise ValueError(
+                f"mixture phase {index} has unknown sources: {', '.join(sorted(unknown))}"
+            )
         if missing:
-            raise ValueError(f"mixture phase {index} is missing sources: {', '.join(sorted(missing))}")
+            raise ValueError(
+                f"mixture phase {index} is missing sources: {', '.join(sorted(missing))}"
+            )
         ordered_weights = {}
         for source_id in source_ids:
             ordered_weights[source_id] = _integer(
@@ -164,6 +184,12 @@ def _validate_source(source):
     for key in ("score_column", "language_column", "revision"):
         if source.get(key) is not None and not isinstance(source[key], str):
             raise ValueError(f"source {source_id} {key} must be null or a string")
+    content_format = source.get("content_format")
+    if content_format is not None and content_format not in _CONTENT_FORMATS:
+        raise ValueError(f"source {source_id} has unsupported content_format")
+    language_detector = source.get("language_detector")
+    if language_detector is not None and language_detector not in _LANGUAGE_DETECTORS:
+        raise ValueError(f"source {source_id} has unsupported language_detector")
     metadata = source.get("metadata_columns", {})
     if not isinstance(metadata, dict) or any(
         not isinstance(alias, str) or not isinstance(column, str)
@@ -171,15 +197,42 @@ def _validate_source(source):
     ):
         raise ValueError(f"source {source_id} metadata_columns must map names to columns")
     filters = source.get("filters", {})
-    if not isinstance(filters, dict) or set(filters) - {"min_score", "language"}:
+    if not isinstance(filters, dict) or set(filters) - {
+        "min_score",
+        "score_operator",
+        "language",
+    }:
         raise ValueError(f"source {source_id} has unsupported filters")
     if "min_score" in filters:
         if not source.get("score_column"):
             raise ValueError(f"source {source_id} score filter requires score_column")
-        if not isinstance(filters["min_score"], (int, float)):
+        minimum = filters["min_score"]
+        if (
+            isinstance(minimum, bool)
+            or not isinstance(minimum, (int, float))
+            or not math.isfinite(minimum)
+        ):
             raise ValueError(f"source {source_id} min_score must be numeric")
-    if "language" in filters and not source.get("language_column"):
-        raise ValueError(f"source {source_id} language filter requires language_column")
+    score_operator = filters.get("score_operator")
+    if score_operator is not None:
+        if "min_score" not in filters:
+            raise ValueError(f"source {source_id} score_operator requires min_score")
+        if score_operator not in {">", ">="}:
+            raise ValueError(f"source {source_id} has unsupported score_operator")
+    if language_detector is not None and "language" not in filters:
+        raise ValueError(f"source {source_id} language_detector requires a language filter")
+    if source.get("language_column") and language_detector:
+        raise ValueError(
+            f"source {source_id} cannot use both language_column and language_detector"
+        )
+    if "language" in filters and not (source.get("language_column") or language_detector):
+        raise ValueError(
+            f"source {source_id} language filter requires language_column or language_detector"
+        )
+    if content_format == "stack_v3_repository_v1" and filters:
+        raise ValueError(f"source {source_id} Stack repository format does not support filters")
+    if content_format == "stack_v3_repository_v1" and source["content_column"] != "files":
+        raise ValueError(f"source {source_id} Stack repository content_column must be files")
     return {
         **source,
         "revision": source.get("revision"),
@@ -206,9 +259,7 @@ def validate_data_settings(
     if not isinstance(sources, list):
         raise ValueError("sources must be a list")
     normalized_sources = [_validate_source(source) for source in sources]
-    quotas, phases = derive_source_quotas(
-        normalized_sources, mixture, requested_train_tokens
-    )
+    quotas, phases = derive_source_quotas(normalized_sources, mixture, requested_train_tokens)
     validation_tokens_per_source = _integer(
         validation_tokens_per_source, "validation_tokens_per_source", minimum=1
     )
@@ -220,19 +271,20 @@ def validate_data_settings(
     max_chars = _integer(filtering["max_chars"], "filtering.max_chars", minimum=1)
     if min_chars > max_chars:
         raise ValueError("filtering.min_chars cannot exceed filtering.max_chars")
+    if any(
+        source.get("content_format") == "stack_v3_repository_v1" for source in normalized_sources
+    ):
+        if min_chars and max_chars < 2 * min_chars:
+            raise ValueError("Stack repository splitting requires max_chars >= 2 * min_chars")
     if max_chars > _MAX_TOKENIZER_CHARACTERS:
-        raise ValueError(
-            f"filtering.max_chars cannot exceed {_MAX_TOKENIZER_CHARACTERS:,}"
-        )
+        raise ValueError(f"filtering.max_chars cannot exceed {_MAX_TOKENIZER_CHARACTERS:,}")
     if dedup != _DEDUP_SETTINGS:
         raise ValueError(f"dedup must be {_DEDUP_SETTINGS}")
     if not isinstance(shards, dict) or set(shards) != {
         "tokens",
         "maximum_loader_microbatch_tokens",
     }:
-        raise ValueError(
-            "shards must contain tokens and maximum_loader_microbatch_tokens"
-        )
+        raise ValueError("shards must contain tokens and maximum_loader_microbatch_tokens")
     shard_tokens = _integer(shards["tokens"], "shards.tokens", minimum=1)
     maximum_microbatch = _integer(
         shards["maximum_loader_microbatch_tokens"],
@@ -399,11 +451,38 @@ def _metadata_value(value):
     return str(value)
 
 
+def _is_string_type(value):
+    return pa.types.is_string(value) or pa.types.is_large_string(value)
+
+
+def _score_passes(score, minimum, operator):
+    if score is None or not math.isfinite(score):
+        return False
+    return score > minimum if operator == ">" else score >= minimum
+
+
+@lru_cache(maxsize=1)
+def _py3langid_identifier():
+    from py3langid.langid import MODEL_FILE, LanguageIdentifier
+
+    return LanguageIdentifier.from_pickled_model(MODEL_FILE, norm_probs=True)
+
+
+def _detect_language(content, detector):
+    if detector == "py3langid":
+        return _py3langid_identifier().classify(content)[0]
+    raise ValueError(f"unsupported language detector: {detector}")
+
+
 def _validate_parquet_schema(parquet, source, filename):
     schema = parquet.schema_arrow
     available = set(schema.names)
     content_column = source["content_column"]
     required = {content_column}
+    companions = []
+    if source.get("content_format") == "stack_v3_repository_v1":
+        companions = ["repo_path", "commit_id", "num_files"]
+        required.update(companions)
     if source.get("language_column"):
         required.add(source["language_column"])
     if "min_score" in source["filters"]:
@@ -412,12 +491,27 @@ def _validate_parquet_schema(parquet, source, filename):
     if missing:
         raise ValueError(f"{filename} is missing configured columns: {sorted(missing)}")
     content_type = schema.field(content_column).type
-    if not (pa.types.is_string(content_type) or pa.types.is_large_string(content_type)):
+    if source.get("content_format") == "stack_v3_repository_v1":
+        if not (pa.types.is_list(content_type) or pa.types.is_large_list(content_type)):
+            raise ValueError(f"{filename} Stack files column must contain a list")
+        file_type = content_type.value_type
+        if not pa.types.is_struct(file_type):
+            raise ValueError(f"{filename} Stack files column must contain structs")
+        file_fields = {field.name: field.type for field in file_type}
+        for field in ("content", "file_path"):
+            if field not in file_fields or not _is_string_type(file_fields[field]):
+                raise ValueError(f"{filename} Stack files must contain string {field}")
+        for column in ("repo_path", "commit_id"):
+            if not _is_string_type(schema.field(column).type):
+                raise ValueError(f"{filename} {column} column must contain strings")
+        if not pa.types.is_integer(schema.field("num_files").type):
+            raise ValueError(f"{filename} num_files column must contain integers")
+    elif not _is_string_type(content_type):
         raise ValueError(f"{filename} content column must contain strings")
     language_column = source.get("language_column")
     if language_column:
         language_type = schema.field(language_column).type
-        if not (pa.types.is_string(language_type) or pa.types.is_large_string(language_type)):
+        if not _is_string_type(language_type):
             raise ValueError(f"{filename} language column must contain strings")
     score_column = source.get("score_column")
     if score_column and score_column in available:
@@ -430,12 +524,108 @@ def _validate_parquet_schema(parquet, source, filename):
             or pa.types.is_large_string(score_type)
         ):
             raise ValueError(f"{filename} score column must be numeric or numeric text")
-    columns = [content_column]
+    columns = [content_column, *companions]
     optional = [score_column, language_column, *source["metadata_columns"].values()]
     for column in optional:
         if column and column in available and column not in columns:
             columns.append(column)
     return columns
+
+
+def _split_text_fragments(fragments, min_chars, max_chars):
+    """Split a text stream without truncation while retaining valid final chunks."""
+
+    pending = None
+    buffer = ""
+    for fragment in fragments:
+        if not isinstance(fragment, str):
+            raise TypeError("serialized text fragments must be strings")
+        offset = 0
+        while offset < len(fragment):
+            take = min(max_chars - len(buffer), len(fragment) - offset)
+            buffer += fragment[offset : offset + take]
+            offset += take
+            if len(buffer) == max_chars:
+                if pending is not None:
+                    yield pending
+                pending = buffer
+                buffer = ""
+    if not buffer:
+        if pending is not None:
+            yield pending
+        return
+    if pending is None:
+        if len(buffer) >= min_chars:
+            yield buffer
+        return
+    if len(buffer) < min_chars:
+        combined = pending + buffer
+        boundary = len(combined) - min_chars
+        yield combined[:boundary]
+        yield combined[boundary:]
+        return
+    yield pending
+    yield buffer
+
+
+def _stack_v3_fragments(repo_path, files, filename, row):
+    if not isinstance(repo_path, str) or not repo_path:
+        raise ValueError(f"{filename} Stack repository at row {row} has no repo_path")
+    if not isinstance(files, list):
+        raise ValueError(f"{filename} Stack repository at row {row} has invalid files")
+    ordered = []
+    for index, file in enumerate(files):
+        if not isinstance(file, dict) or not isinstance(file.get("content"), str):
+            raise ValueError(f"{filename} Stack repository at row {row} has invalid file content")
+        path = file.get("file_path")
+        if not isinstance(path, str) or not path:
+            path = "(unknown path)"
+        content = file["content"]
+        content_id = file.get("content_id")
+        stable_id = (
+            content_id
+            if isinstance(content_id, str) and content_id
+            else hashlib.sha256(content.encode()).hexdigest()
+        )
+        ordered.append(
+            (path, stable_id, hashlib.sha256(content.encode()).hexdigest(), index, content)
+        )
+    ordered.sort(key=lambda value: value[:4])
+    yield f"Repository: {json.dumps(repo_path)}\n\n"
+    for path, _, _, _, content in ordered:
+        yield f"File: {json.dumps(path)}\n"
+        yield content
+        yield "\n\n"
+
+
+def _iter_stack_v3_documents(*, values, row_index, absolute_row, filtering, metadata, filename):
+    files = values["files"][row_index]
+    repo_path = values["repo_path"][row_index]
+    commit_id = values["commit_id"][row_index]
+    num_files = values["num_files"][row_index]
+    if (
+        isinstance(num_files, bool)
+        or not isinstance(num_files, int)
+        or num_files != len(files or [])
+    ):
+        raise ValueError(f"{filename} Stack repository at row {absolute_row} has invalid num_files")
+    if not isinstance(commit_id, str) or not commit_id:
+        raise ValueError(f"{filename} Stack repository at row {absolute_row} has no commit_id")
+    fragments = _stack_v3_fragments(repo_path, files, filename, absolute_row)
+    parts = _split_text_fragments(
+        fragments,
+        filtering["min_chars"],
+        filtering["max_chars"],
+    )
+    split_key = f"{repo_path}\0{commit_id}"
+    for part_index, content in enumerate(parts):
+        yield {
+            "content": content,
+            "metadata": {**metadata, "repository_part": part_index},
+            "file": filename,
+            "row": absolute_row,
+            "split_key": split_key,
+        }
 
 
 def iter_parquet_documents(
@@ -453,9 +643,9 @@ def iter_parquet_documents(
     source = _validate_source(source)
     cache_dir = Path(cache_dir or default_data_dir / "raw")
     cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_key = hashlib.sha256(
-        f"{source['repo']}\0{revision}\0{filename}".encode()
-    ).hexdigest()[:20]
+    cache_key = hashlib.sha256(f"{source['repo']}\0{revision}\0{filename}".encode()).hexdigest()[
+        :20
+    ]
     local_path = cache_dir / f"{cache_key}.parquet"
     if not local_path.exists():
         _download_file(
@@ -468,23 +658,31 @@ def iter_parquet_documents(
         parquet = pq.ParquetFile(local_path)
         columns = _validate_parquet_schema(parquet, source, filename)
         row_number = 0
-        for batch in parquet.iter_batches(columns=columns, batch_size=2048):
+        nested = source.get("content_format") == "stack_v3_repository_v1"
+        for batch in parquet.iter_batches(columns=columns, batch_size=1 if nested else 2048):
             values = {
-                column: batch.column(index).to_pylist()
-                for index, column in enumerate(columns)
+                column: batch.column(index).to_pylist() for index, column in enumerate(columns)
             }
             for row_index, content in enumerate(values[source["content_column"]]):
                 absolute_row = row_number + row_index
+                metadata = {
+                    alias: _metadata_value(values[column][row_index])
+                    for alias, column in source["metadata_columns"].items()
+                    if column in values and values[column][row_index] is not None
+                }
+                if nested:
+                    yield from _iter_stack_v3_documents(
+                        values=values,
+                        row_index=row_index,
+                        absolute_row=absolute_row,
+                        filtering=filtering,
+                        metadata=metadata,
+                        filename=filename,
+                    )
+                    continue
                 if not isinstance(content, str) or not content:
                     continue
                 if not filtering["min_chars"] <= len(content) <= filtering["max_chars"]:
-                    continue
-                language_column = source.get("language_column")
-                if (
-                    language_column
-                    and "language" in source["filters"]
-                    and values[language_column][row_index] != source["filters"]["language"]
-                ):
                     continue
                 score = None
                 score_column = source.get("score_column")
@@ -496,14 +694,22 @@ def iter_parquet_documents(
                         raise ValueError(
                             f"{filename} score at row {absolute_row} is not numeric"
                         ) from error
-                    minimum = source["filters"].get("min_score")
-                    if minimum is not None and (score is None or score < minimum):
+                    if score is not None and not math.isfinite(score):
                         continue
-                metadata = {
-                    alias: _metadata_value(values[column][row_index])
-                    for alias, column in source["metadata_columns"].items()
-                    if column in values and values[column][row_index] is not None
-                }
+                    minimum = source["filters"].get("min_score")
+                    if minimum is not None and not _score_passes(
+                        score,
+                        minimum,
+                        source["filters"].get("score_operator", ">="),
+                    ):
+                        continue
+                language = source["filters"].get("language")
+                language_column = source.get("language_column")
+                if language and language_column and values[language_column][row_index] != language:
+                    continue
+                detector = source.get("language_detector")
+                if language and detector and _detect_language(content, detector) != language:
+                    continue
                 yield {
                     "content": content,
                     "score": score,
@@ -632,9 +838,7 @@ def _is_validation_document(content, seed, fraction):
 
 
 def _prefixed_shards(shards, source_id):
-    return [
-        {**shard, "path": f"sources/{source_id}/{shard['path']}"} for shard in shards
-    ]
+    return [{**shard, "path": f"sources/{source_id}/{shard['path']}"} for shard in shards]
 
 
 def _sync_file(handle):
@@ -714,13 +918,10 @@ class SourceBuilder:
             for split in ("train", "val")
         }
         self._synced_shards = {
-            shard["path"]
-            for writer in self.writers.values()
-            for shard in writer.shards
+            shard["path"] for writer in self.writers.values() for shard in writer.shards
         }
         self.document_counts = {
-            split: restored_splits.get(split, {}).get("documents", 0)
-            for split in ("train", "val")
+            split: restored_splits.get(split, {}).get("documents", 0) for split in ("train", "val")
         }
         self.index_path = self.directory / "documents.jsonl"
         self.index_hash = hashlib.sha256()
@@ -742,8 +943,7 @@ class SourceBuilder:
     @property
     def complete(self):
         return all(
-            self.writers[split].total_tokens >= self.targets[split]
-            for split in self.writers
+            self.writers[split].total_tokens >= self.targets[split] for split in self.writers
         )
 
     def _process(self, batch):
@@ -756,15 +956,16 @@ class SourceBuilder:
             if not self.filtering["min_chars"] <= len(content) <= self.filtering["max_chars"]:
                 continue
             normalized = normalize_for_dedup(content)
-            digest = hashlib.blake2b(
-                normalized.encode("utf-8"), digest_size=_DEDUP_BYTES
-            ).digest()
+            digest = hashlib.blake2b(normalized.encode("utf-8"), digest_size=_DEDUP_BYTES).digest()
             digest_integer = int.from_bytes(digest, "big")
             if digest_integer in self.accepted_hashes or digest_integer in pending:
                 continue
+            partition_value = document.get("split_key", normalized)
+            if not isinstance(partition_value, str):
+                raise ValueError("document split_key must be a string")
             preferred = (
                 "val"
-                if _is_validation_document(normalized, self.seed, self.validation_fraction)
+                if _is_validation_document(partition_value, self.seed, self.validation_fraction)
                 else "train"
             )
             if self.writers[preferred].total_tokens >= self.targets[preferred]:
@@ -833,10 +1034,7 @@ class SourceBuilder:
                     return
             batch.append(document)
             characters += length
-            if (
-                len(batch) >= _MAX_TOKENIZER_DOCUMENTS
-                or characters >= _MAX_TOKENIZER_CHARACTERS
-            ):
+            if len(batch) >= _MAX_TOKENIZER_DOCUMENTS or characters >= _MAX_TOKENIZER_CHARACTERS:
                 self._process(batch)
                 batch.clear()
                 characters = 0
@@ -952,6 +1150,9 @@ class SourceBuilder:
             },
             "splits": split_summaries,
         }
+        for key in ("content_format", "language_detector"):
+            if self.source.get(key) is not None:
+                summary[key] = self.source[key]
         _atomic_json(self.directory / "source.json", summary)
         return summary
 
@@ -1107,6 +1308,7 @@ def prepare_dataset(
     shards,
     seed=42,
     output_dir=None,
+    output_name=None,
     restart=False,
     tokenizer=None,
     document_iterators=None,
@@ -1130,7 +1332,7 @@ def prepare_dataset(
     tokenizer = tokenizer or get_tokenizer()
     if tokenizer.vocab_size > 65536:
         raise ValueError("packed uint16 data requires vocab_size <= 65536")
-    output_dir = Path(output_dir or default_data_dir / "packed")
+    output_dir = resolve_data_dir(output_dir, output_name)
     if output_dir.exists():
         if any(output_dir.iterdir()):
             raise FileExistsError(f"dataset already exists: {output_dir}")
@@ -1258,9 +1460,10 @@ def prepare_dataset(
             (final_directory / "source_progress.json").unlink(missing_ok=True)
             _fsync_directory(final_directory)
             summaries[source_id] = summary
-        elif current.get("mode") == "files" and (
-            temporary_directory / "source_progress.json"
-        ).is_file():
+        elif (
+            current.get("mode") == "files"
+            and (temporary_directory / "source_progress.json").is_file()
+        ):
             progress_path = temporary_directory / "source_progress.json"
             progress = json.loads(progress_path.read_text(encoding="utf-8"))
             if progress.get("source_id") != source_id:
@@ -1384,9 +1587,7 @@ def prepare_dataset(
                 else validation_tokens_per_source * len(ordered_summaries)
             ),
             "tokens": sum(source["splits"][split]["tokens"] for source in ordered_summaries),
-            "documents": sum(
-                source["splits"][split]["documents"] for source in ordered_summaries
-            ),
+            "documents": sum(source["splits"][split]["documents"] for source in ordered_summaries),
         }
     manifest = {
         "format": "speck_packed_tokens",
@@ -1403,9 +1604,7 @@ def prepare_dataset(
             "validation_fraction": settings["validation_fraction"],
             "filtering": settings["filtering"],
             "shards": settings["shards"],
-            "train_reserve_tokens_per_source": settings[
-                "train_reserve_tokens_per_source"
-            ],
+            "train_reserve_tokens_per_source": settings["train_reserve_tokens_per_source"],
             "reserve_basis": "(phase_count + 1) * maximum_loader_microbatch_tokens",
             "tokenizer_batch": {
                 "maximum_documents": _MAX_TOKENIZER_DOCUMENTS,
@@ -1477,9 +1676,10 @@ def _validate_manifest(manifest):
             split_manifest = source.get("splits", {}).get(split)
             if not isinstance(split_manifest, dict) or split_manifest.get("tokens", 0) < 1:
                 raise ValueError(f"packed dataset source {source_id} has invalid {split} data")
-            if sum(shard.get("tokens", 0) for shard in split_manifest.get("shards", [])) != split_manifest[
-                "tokens"
-            ]:
+            if (
+                sum(shard.get("tokens", 0) for shard in split_manifest.get("shards", []))
+                != split_manifest["tokens"]
+            ):
                 raise ValueError(f"packed dataset source {source_id} has invalid {split} shards")
         if source.get("documents") != source.get("document_index", {}).get("records"):
             raise ValueError(f"packed dataset source {source_id} document index is invalid")
@@ -1487,8 +1687,7 @@ def _validate_manifest(manifest):
         if (
             journal.get("start_byte") != journal_boundary
             or journal.get("hashes") != source["documents"]
-            or journal.get("end_byte", -1) - journal_boundary
-            != source["documents"] * _DEDUP_BYTES
+            or journal.get("end_byte", -1) - journal_boundary != source["documents"] * _DEDUP_BYTES
             or not isinstance(journal.get("sha256"), str)
         ):
             raise ValueError(f"packed dataset source {source_id} dedup journal is invalid")
@@ -1544,8 +1743,5 @@ def verify_shards(data_dir=None, manifest=None):
     _verify_file(dedup_path, manifest["dedup"]["sha256"])
     for source in manifest["sources"]:
         journal = source["dedup_journal"]
-        if (
-            _slice_hash(dedup_path, journal["start_byte"], journal["end_byte"])
-            != journal["sha256"]
-        ):
+        if _slice_hash(dedup_path, journal["start_byte"], journal["end_byte"]) != journal["sha256"]:
             raise ValueError(f"packed dedup slice checksum mismatch: {source['id']}")

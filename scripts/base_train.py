@@ -19,7 +19,7 @@ from speck.checkpoint import latest, load, save
 from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
-from speck.dataset import default_data_dir, load_manifest, verify_shards
+from speck.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, optimization_step, validate_loader_progress
@@ -73,7 +73,12 @@ def main():
     args.device = cli.device
     args.resume = cli.resume
     args.no_compile = cli.no_compile
-    args.data_dir = configs["data"].get("output_dir") or str(default_data_dir / "packed")
+    args.data_dir = str(
+        resolve_data_dir(
+            configs["data"].get("output_dir"),
+            configs["data"].get("output_name"),
+        )
+    )
     args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
     if args.resume is None and latest(args.output_dir) is not None:
         raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume")

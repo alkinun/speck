@@ -1711,7 +1711,7 @@ name = "nvidia-cudnn-cu12"
 version = "9.10.2.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "extra == 'extra-5-speck-gpu' or extra != 'extra-5-speck-cpu'" },
+    { name = "nvidia-cublas-cu12", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten' and extra != 'extra-5-speck-cpu') or (python_full_version < '3.11' and sys_platform == 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-5-speck-gpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform == 'emscripten' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu') or (sys_platform == 'win32' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/41/e79269ce215c857c935fd86bcfe91a451a584dfc27f1e068f568b9ad1ab7/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:c9132cc3f8958447b4910a1720036d9eff5928cc3179b0a51fb6d167c6cc87d8", size = 705026878, upload-time = "2025-06-06T21:52:51.348Z" },
@@ -1724,7 +1724,7 @@ name = "nvidia-cufft-cu12"
 version = "11.3.3.83"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-5-speck-gpu' or extra != 'extra-5-speck-cpu'" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten' and extra != 'extra-5-speck-cpu') or (python_full_version < '3.11' and sys_platform == 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-5-speck-gpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform == 'emscripten' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu') or (sys_platform == 'win32' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/60/bc/7771846d3a0272026c416fbb7e5f4c1f146d6d80704534d0b187dd6f4800/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:848ef7224d6305cdb2a4df928759dca7b1201874787083b6e7550dd6765ce69a", size = 193109211, upload-time = "2025-03-07T01:44:56.873Z" },
@@ -1756,9 +1756,9 @@ name = "nvidia-cusolver-cu12"
 version = "11.7.3.90"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "extra == 'extra-5-speck-gpu' or extra != 'extra-5-speck-cpu'" },
-    { name = "nvidia-cusparse-cu12", marker = "extra == 'extra-5-speck-gpu' or extra != 'extra-5-speck-cpu'" },
-    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-5-speck-gpu' or extra != 'extra-5-speck-cpu'" },
+    { name = "nvidia-cublas-cu12", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten' and extra != 'extra-5-speck-cpu') or (python_full_version < '3.11' and sys_platform == 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-5-speck-gpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform == 'emscripten' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu') or (sys_platform == 'win32' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "nvidia-cusparse-cu12", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten' and extra != 'extra-5-speck-cpu') or (python_full_version < '3.11' and sys_platform == 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-5-speck-gpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform == 'emscripten' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu') or (sys_platform == 'win32' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten' and extra != 'extra-5-speck-cpu') or (python_full_version < '3.11' and sys_platform == 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-5-speck-gpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform == 'emscripten' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu') or (sys_platform == 'win32' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c8/32/f7cd6ce8a7690544d084ea21c26e910a97e077c9b7f07bf5de623ee19981/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:db9ed69dbef9715071232caa9b69c52ac7de3a95773c2db65bdba85916e4e5c0", size = 267229841, upload-time = "2025-03-07T01:46:54.356Z" },
@@ -1771,7 +1771,7 @@ name = "nvidia-cusparse-cu12"
 version = "12.5.8.93"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-5-speck-gpu' or extra != 'extra-5-speck-cpu'" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten' and extra != 'extra-5-speck-cpu') or (python_full_version < '3.11' and sys_platform == 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-5-speck-gpu') or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-5-speck-cpu') or (sys_platform == 'emscripten' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu') or (sys_platform == 'win32' and extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bc/f7/cd777c4109681367721b00a106f491e0d0d15cfa1fd59672ce580ce42a97/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:9b6c161cb130be1a07a27ea6923df8141f3c295852f4b260c65f18f3e0a091dc", size = 288117129, upload-time = "2025-03-07T01:47:40.407Z" },
@@ -2233,6 +2233,20 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/04/78/0acd37ca84ce3ddffaa92ef0f571e073faa6d8ff1f0559ab1272188ea2be/psutil-7.2.2-cp36-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:b58fabe35e80b264a4e3bb23e6b96f9e45a3df7fb7eed419ac0e5947c61e47cc", size = 148266, upload-time = "2026-01-28T18:15:31.597Z" },
     { url = "https://files.pythonhosted.org/packages/b4/90/e2159492b5426be0c1fef7acba807a03511f97c5f86b3caeda6ad92351a7/psutil-7.2.2-cp37-abi3-win_amd64.whl", hash = "sha256:eb7e81434c8d223ec4a219b5fc1c47d0417b12be7ea866e24fb5ad6e84b3d988", size = 137737, upload-time = "2026-01-28T18:15:33.849Z" },
     { url = "https://files.pythonhosted.org/packages/8c/c7/7bb2e321574b10df20cbde462a94e2b71d05f9bbda251ef27d104668306a/psutil-7.2.2-cp37-abi3-win_arm64.whl", hash = "sha256:8c233660f575a5a89e6d4cb65d9f938126312bca76d8fe087b947b3a1aaac9ee", size = 134617, upload-time = "2026-01-28T18:15:36.514Z" },
+]
+
+[[package]]
+name = "py3langid"
+version = "0.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/99/43/c3f7a3c5150c56a0ca70c3039e53cc58046698b7ce0913bb8fa86d71abcb/py3langid-0.3.0.tar.gz", hash = "sha256:0a875a031a58aaf9dbda7bb8285fd75e801a7bd276216ffabe037901d4b449ec", size = 752935, upload-time = "2024-06-18T11:31:04.301Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9d/1c/8212ea872d236af0aea37043fb6feeaa9a43449183782b19d342f8ddd343/py3langid-0.3.0-py3-none-any.whl", hash = "sha256:38f022eec31cf9a2bf6f142acb2a9b350fd7d0d5ae7762b1392c6d3567401fd3", size = 746125, upload-time = "2024-06-18T11:30:51.265Z" },
 ]
 
 [[package]]
@@ -3250,6 +3264,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
     { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "py3langid" },
     { name = "pyarrow" },
     { name = "requests" },
     { name = "safetensors" },
@@ -3284,6 +3299,7 @@ open-slm = [
 requires-dist = [
     { name = "huggingface-hub", specifier = ">=0.34.0" },
     { name = "numpy", specifier = ">=1.26.0" },
+    { name = "py3langid", specifier = "==0.3.0" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "requests", specifier = ">=2.32.0" },
     { name = "safetensors", specifier = ">=0.6.2" },

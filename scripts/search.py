@@ -23,7 +23,7 @@ from speck.checkpoint import latest, load, load_model, save
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
-from speck.dataset import default_data_dir, load_manifest, verify_shards
+from speck.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.model import SpeckForCausalLM
 from speck.search import (
     StudyStore,
@@ -98,7 +98,9 @@ def _runtime_contract(settings, device):
 def _study_inputs(experiment):
     configs = load_experiment(experiment, "model", "data", "tokenizer")
     tokenizer = get_tokenizer(**configs["tokenizer"])
-    data_dir = configs["data"].get("output_dir") or str(default_data_dir / "packed")
+    data_dir = resolve_data_dir(
+        configs["data"].get("output_dir"), configs["data"].get("output_name")
+    )
     manifest = load_manifest(data_dir)
     provenance = {
         "configs": configs,
@@ -391,7 +393,9 @@ def train_candidate(
         or tokenizer.eos_id != architecture.eos_token_id
     ):
         raise ValueError("candidate architecture and tokenizer differ")
-    data_dir = configs["data"].get("output_dir") or str(default_data_dir / "packed")
+    data_dir = resolve_data_dir(
+        configs["data"].get("output_dir"), configs["data"].get("output_name")
+    )
     manifest = load_manifest(data_dir)
     manifest_hash = manifest_fingerprint(manifest)
     training = settings["training"]

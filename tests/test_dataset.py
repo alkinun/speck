@@ -74,9 +74,7 @@ def settings(train_tokens=400, validation_tokens=32):
 def single_source_settings(train_tokens=60, validation_tokens=60, max_chars=10_000):
     return {
         "sources": [source_config("a")],
-        "mixture": {
-            "phases": [{"end_tokens": train_tokens, "weights": {"a": 100}}]
-        },
+        "mixture": {"phases": [{"end_tokens": train_tokens, "weights": {"a": 100}}]},
         "requested_train_tokens": train_tokens,
         "validation_tokens_per_source": validation_tokens,
         "validation_fraction": 0.1,
@@ -150,9 +148,7 @@ def source_values(path, source, split):
 def test_production_mixture_derives_exact_targets_and_small_reserve():
     root = Path(__file__).parents[1]
     experiment = root / "experiments" / "Speck1-140M"
-    config = json.loads(
-        (experiment / "data.json").read_text(encoding="utf-8")
-    )
+    config = json.loads((experiment / "data.json").read_text(encoding="utf-8"))
     train = json.loads((experiment / "train.json").read_text(encoding="utf-8"))
     assert train["train_tokens"] == 5_000_000_000
     assert train["batch_tokens"] == 65_536
@@ -191,8 +187,7 @@ def test_production_mixture_derives_exact_targets_and_small_reserve():
         counts = source_selection_counts(schedule_manifest, "train", consumed_tokens, stride)
         for source_id, count in counts.items():
             assert count * stride + 1 <= (
-                validated["quotas"][source_id]
-                + validated["train_reserve_tokens_per_source"]
+                validated["quotas"][source_id] + validated["train_reserve_tokens_per_source"]
             )
         for phase_index, phase in enumerate(validated["phases"][:-1]):
             end = phase["end_tokens"]
@@ -385,6 +380,202 @@ def test_score_and_language_filter_columns_are_required(tmp_path, monkeypatch):
                 cache_dir=tmp_path / "language_raw",
             )
         )
+
+
+def test_source_extensions_validate_explicit_contracts():
+    source = {**source_config("score"), "score_column": "score"}
+    with pytest.raises(ValueError, match="score_operator requires min_score"):
+        dataset._validate_source({**source, "filters": {"score_operator": ">"}})
+    with pytest.raises(ValueError, match="unsupported score_operator"):
+        dataset._validate_source({**source, "filters": {"min_score": 0.8, "score_operator": "=="}})
+    with pytest.raises(ValueError, match="min_score must be numeric"):
+        dataset._validate_source({**source, "filters": {"min_score": float("nan")}})
+    with pytest.raises(ValueError, match="language_detector requires a language filter"):
+        dataset._validate_source({**source_config("language"), "language_detector": "py3langid"})
+    with pytest.raises(ValueError, match="cannot use both"):
+        dataset._validate_source(
+            {
+                **source_config("language"),
+                "language_column": "language",
+                "language_detector": "py3langid",
+                "filters": {"language": "en"},
+            }
+        )
+    with pytest.raises(ValueError, match="content_column must be files"):
+        dataset._validate_source(
+            {**source_config("stack"), "content_format": "stack_v3_repository_v1"}
+        )
+
+
+def test_strict_score_and_detected_language_filters(tmp_path, monkeypatch):
+    fixture = tmp_path / "filtered.parquet"
+    pq.write_table(
+        pa.table(
+            {
+                "content": ["english equal", "english above", "chinese above", "not finite"],
+                "score": ["0.8", "0.81", "0.82", "nan"],
+            }
+        ),
+        fixture,
+    )
+
+    def download(url, destination, description, repo=None):
+        Path(destination).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(fixture, destination)
+
+    monkeypatch.setattr(dataset, "_download_file", download)
+    monkeypatch.setattr(
+        dataset,
+        "_detect_language",
+        lambda content, detector: "zh" if content.startswith("chinese") else "en",
+    )
+    base = {
+        **source_config("filtered"),
+        "content_column": "content",
+        "score_column": "score",
+        "metadata_columns": {},
+    }
+    inclusive = list(
+        dataset.iter_documents(
+            source={**base, "filters": {"min_score": 0.8}},
+            revision="abc123",
+            files=["data/filter.parquet"],
+            filtering={"min_chars": 0, "max_chars": 100},
+            cache_dir=tmp_path / "inclusive",
+        )
+    )
+    assert [row["content"] for row in inclusive] == [
+        "english equal",
+        "english above",
+        "chinese above",
+    ]
+    strict = list(
+        dataset.iter_documents(
+            source={
+                **base,
+                "language_detector": "py3langid",
+                "filters": {
+                    "language": "en",
+                    "min_score": 0.8,
+                    "score_operator": ">",
+                },
+            },
+            revision="abc123",
+            files=["data/filter.parquet"],
+            filtering={"min_chars": 0, "max_chars": 100},
+            cache_dir=tmp_path / "strict",
+        )
+    )
+    assert [row["content"] for row in strict] == ["english above"]
+
+
+def test_py3langid_detects_long_english_and_chinese_text():
+    english = "This chapter explains algebra with detailed examples and careful reasoning. " * 8
+    chinese = "本章通过详细的例子和严谨的推理来解释代数的基本概念。" * 8
+    assert dataset._detect_language(english, "py3langid") == "en"
+    assert dataset._detect_language(chinese, "py3langid") == "zh"
+
+
+def test_stack_repository_serialization_is_deterministic_bounded_and_grouped(tmp_path, monkeypatch):
+    file_type = pa.struct(
+        [
+            pa.field("content_id", pa.string()),
+            pa.field("content", pa.string()),
+            pa.field("file_path", pa.string()),
+        ]
+    )
+    files = [
+        {"content_id": "z", "content": "z" * 70, "file_path": "src/z.py"},
+        {"content_id": "a", "content": "a" * 70, "file_path": "src/a\n.py"},
+    ]
+    fixture = tmp_path / "stack.parquet"
+    pq.write_table(
+        pa.table(
+            {
+                "files": pa.array([files], type=pa.list_(file_type)),
+                "repo_path": ["owner/repo"],
+                "commit_id": ["abc123"],
+                "num_files": pa.array([2], type=pa.int64()),
+            }
+        ),
+        fixture,
+    )
+
+    def download(url, destination, description, repo=None):
+        Path(destination).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(fixture, destination)
+
+    monkeypatch.setattr(dataset, "_download_file", download)
+    source = {
+        "id": "stack",
+        "repo": "test/stack",
+        "revision": None,
+        "tree_path": "data",
+        "content_column": "files",
+        "content_format": "stack_v3_repository_v1",
+        "metadata_columns": {
+            "commit_id": "commit_id",
+            "repo_path": "repo_path",
+        },
+        "filters": {},
+    }
+    rows = list(
+        dataset.iter_documents(
+            source=source,
+            revision="abc123",
+            files=["data/stack.parquet"],
+            filtering={"min_chars": 20, "max_chars": 80},
+            cache_dir=tmp_path / "stack-raw",
+        )
+    )
+    expected = (
+        'Repository: "owner/repo"\n\n'
+        'File: "src/a\\n.py"\n' + "a" * 70 + '\n\nFile: "src/z.py"\n' + "z" * 70 + "\n\n"
+    )
+    assert "".join(row["content"] for row in rows) == expected
+    assert all(20 <= len(row["content"]) <= 80 for row in rows)
+    assert {row["split_key"] for row in rows} == {"owner/repo\0abc123"}
+    assert [row["metadata"]["repository_part"] for row in rows] == list(range(len(rows)))
+
+
+def test_resolve_data_dir_preserves_default_and_supports_isolated_names(tmp_path):
+    assert dataset.resolve_data_dir() == dataset.default_data_dir / "packed"
+    assert dataset.resolve_data_dir(output_name="Speck1.5-140M") == (
+        dataset.default_data_dir / "Speck1.5-140M"
+    )
+    assert dataset.resolve_data_dir(tmp_path / "explicit", "ignored") == tmp_path / "explicit"
+    with pytest.raises(ValueError, match="one nonempty path component"):
+        dataset.resolve_data_dir(output_name="nested/name")
+
+
+def test_split_key_groups_related_documents_in_one_partition(tmp_path, monkeypatch):
+    partitioned = []
+
+    def is_validation(content, seed, fraction):
+        partitioned.append(content)
+        return content == "repository"
+
+    monkeypatch.setattr(dataset, "_is_validation_document", is_validation)
+    values = [
+        {"content": "first repository part", "split_key": "repository"},
+        {"content": "second repository part", "split_key": "repository"},
+        {"content": "independent training document", "split_key": "training"},
+    ]
+    manifest = dataset.prepare_dataset(
+        **single_source_settings(train_tokens=3, validation_tokens=3),
+        output_dir=tmp_path / "grouped",
+        tokenizer=FakeTokenizer(),
+        check_disk=False,
+        document_iterators={"a": values},
+    )
+    records = [
+        json.loads(line)
+        for line in (tmp_path / "grouped" / manifest["sources"][0]["document_index"]["path"])
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert partitioned == ["repository", "repository", "training"]
+    assert [record["split"] for record in records] == ["val", "train"]
 
 
 def test_prepare_writes_nested_source_manifest_and_normalized_global_dedup(
