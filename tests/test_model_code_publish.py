@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.model_code_publish import prepare_code_update, weight_sha256
+from scripts.model_code_publish import prepare_code_update, validate_tokenizer_size, weight_sha256
 from scripts.model_publish import (
     MODEL_FORWARD_SETUP,
     MODEL_IMPORT,
@@ -35,6 +35,16 @@ def test_weight_sha256_reads_model_lfs_metadata():
 def test_weight_sha256_requires_lfs_weights():
     with pytest.raises(ValueError, match="no LFS metadata"):
         weight_sha256([SimpleNamespace(path="model.safetensors", lfs=None)])
+
+
+def test_validate_tokenizer_size_includes_added_tokens():
+    class Tokenizer:
+        vocab_size = 32000
+
+        def __len__(self):
+            return 32003
+
+    validate_tokenizer_size(Tokenizer(), 32003)
 
 
 def test_prepare_code_update_writes_patched_code(tmp_path):

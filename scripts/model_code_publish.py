@@ -59,6 +59,11 @@ def weight_sha256(files):
     return weight.lfs.sha256
 
 
+def validate_tokenizer_size(tokenizer, expected):
+    if len(tokenizer) != expected:
+        raise ValueError("model and tokenizer vocabulary sizes differ")
+
+
 def prepare_code_update(source_path, output_dir):
     output_dir.mkdir(parents=True)
     patched = patch_modeling_source(source_path.read_text(encoding="utf-8"))
@@ -91,9 +96,10 @@ def validate_transformers_snapshot(snapshot, expected_parameters):
     ).eval()
     parameters = sum(parameter.numel() for parameter in model.parameters())
     if parameters != expected_parameters:
-        raise ValueError(f"loaded model has {parameters:,} parameters, expected {expected_parameters:,}")
-    if tokenizer.vocab_size != model.config.vocab_size:
-        raise ValueError("model and tokenizer vocabulary sizes differ")
+        raise ValueError(
+            f"loaded model has {parameters:,} parameters, expected {expected_parameters:,}"
+        )
+    validate_tokenizer_size(tokenizer, model.config.vocab_size)
 
     first = torch.tensor([[1, 4, 5, 6]])
     second = torch.tensor([[1, 7]])
