@@ -1,0 +1,56 @@
+{
+  "model": {
+    "repo": "specklabs/Speck1-140M",
+    "revision": "155b759545645cc694545fab85cd7d4c385fd965",
+    "parameters": 140652288
+  },
+  "leaderboard": {
+    "repo": "AxiomicLabs/Open_SLM_Leaderboard",
+    "revision": "2eafcfc647b667e67f3b0288e9b67da497a78052"
+  },
+  "scores_percent": {
+    "hellaswag": 35.03,
+    "arc_easy": 46.68,
+    "arc_challenge": 25.94,
+    "piqa": 63.87,
+    "arithmark_2": 31.52,
+    "arithmark_3": 36.6,
+    "combined_arc": 36.31,
+    "average": 42.95,
+    "intelligence_index": 18.15
+  },
+  "samples": {
+    "hellaswag": 10042,
+    "arc_easy": 2376,
+    "arc_challenge": 1172,
+    "piqa": 1838,
+    "arithmark_2": 2500,
+    "arithmark_3": 1000
+  },
+  "metrics": {
+    "hellaswag": "acc_norm",
+    "arc_easy": "acc_norm",
+    "arc_challenge": "acc_norm",
+    "piqa": "acc_norm",
+    "arithmark_2": "acc",
+    "arithmark_3": "acc_norm"
+  },
+  "evaluation": {
+    "zero_shot": true,
+    "lm_eval_revision": "64f3d0924fc695efd6d776a5ac91f97138085516",
+    "lm_eval_version": "0.4.13.dev0",
+    "transformers_version": "5.1.0",
+    "dataset_revisions": {
+      "Rowan/hellaswag": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "allenai/ai2_arc": "210d026faf9955653af8916fad021475a3f00453",
+      "baber/piqa": "142f6d7367fd9877f0fb3b5734ea6a545f54cdd1"
+    },
+    "arithmark_2_revision": "5bd986c7305dcccec88432d630aae1ac9280a71f",
+    "arithmark_3_revision": "6f6e59dd9b7e2c63455f7af7f838f9ecc3d0a746"
+  },
+  "artifacts": {
+    "lm_eval_sha256": "3d50b494d3b1ada4ff69c73cdbd270fad858961ba0cfcf1aaebe9bd0b426111a",
+    "arithmark_2_sha256": "8352efc21bb1f695e6efe440f83a9702ce130d0a87aff8c995fa4bb3c54666ee",
+    "arithmark_3_sha256": "addb2149de21f79bf1bc8c3d89c2accbb5a2839cb2ef70a31741138ac5ca505a"
+  }
+}
