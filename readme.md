@@ -246,6 +246,19 @@ The pinned zero-shot result is recorded in `results/Speck1-140M/open_slm.json`:
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 35.03 | 46.68 | 25.94 | 63.87 | 36.60 | 18.15 | 31.52 |
 
+Evaluate both public instruct releases with the same raw-continuation tasks and no chat
+template:
+
+```bash
+uv run --extra gpu --group open-slm python -m scripts.open_slm_eval all \
+  --config experiments/Speck1-140M/open_slm_instruct.json
+uv run --extra gpu --group open-slm python -m scripts.open_slm_eval all \
+  --config experiments/Speck1.1-140M-Instruct/open_slm.json
+```
+
+The model-specific configs inherit the benchmark and dataset pins from the base evaluation
+config. Their outputs default to separate directories named after each Hub repository.
+
 Measure compiled optimization steps with synthetic input:
 
 ```bash

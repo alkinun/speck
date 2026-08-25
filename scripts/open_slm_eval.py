@@ -13,21 +13,28 @@ from huggingface_hub import HfApi, hf_hub_download
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = REPOSITORY_ROOT / "experiments" / "Speck1-140M" / "open_slm.json"
-DEFAULT_OUTPUT_DIR = (
+DEFAULT_OUTPUT_ROOT = (
     Path(os.environ.get("speck_base_dir", Path.home() / ".cache" / "speck"))
     / "evaluations"
     / "open-slm"
-    / "Speck1-140M"
 )
 
 
 def _load_config(path):
-    config = json.loads(Path(path).read_text(encoding="utf-8"))
+    path = Path(path)
+    values = json.loads(path.read_text(encoding="utf-8"))
+    parent = values.pop("extends", None)
+    config = _load_config(path.parent / parent) if parent is not None else {}
+    config.update(values)
     required = {"leaderboard", "model", "lm_eval", "arithmark_2", "arithmark_3"}
     missing = required - config.keys()
     if missing:
         raise ValueError(f"Open SLM config is missing: {', '.join(sorted(missing))}")
     return config
+
+
+def _default_output_dir(config):
+    return DEFAULT_OUTPUT_ROOT / config["model"]["repo"].rsplit("/", 1)[-1]
 
 
 def _sha256(path):
@@ -350,7 +357,7 @@ def _parse_args():
         choices=("lm-eval", "arithmark-2", "arithmark-3", "summary", "all"),
     )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     parser.add_argument("--limit", type=float, help="lm-eval smoke-test sample limit")
     args = parser.parse_args()
@@ -362,7 +369,7 @@ def _parse_args():
 def main():
     args = _parse_args()
     config = _load_config(args.config)
-    output_dir = args.output_dir.expanduser().resolve()
+    output_dir = (args.output_dir or _default_output_dir(config)).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
     if args.stage in ("lm-eval", "all"):

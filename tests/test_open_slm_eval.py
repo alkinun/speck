@@ -25,6 +25,38 @@ def test_lm_eval_command_pins_model_and_numerical_settings(tmp_path):
     assert command[command.index("--batch_size") + 1] == "32"
 
 
+@pytest.mark.parametrize(
+    ("path", "repo", "revision"),
+    [
+        (
+            "experiments/Speck1-140M/open_slm_instruct.json",
+            "specklabs/Speck1-140M-Instruct",
+            "686350e82db5996f9ab65bdadca70c6d41d49227",
+        ),
+        (
+            "experiments/Speck1.1-140M-Instruct/open_slm.json",
+            "specklabs/Speck1.1-140M-Instruct",
+            "4ed4c6824b8dd37ecaa72df5dbbc531f55871588",
+        ),
+    ],
+)
+def test_instruct_configs_inherit_benchmarks_and_select_model(path, repo, revision):
+    config = open_slm_eval._load_config(open_slm_eval.REPOSITORY_ROOT / path)
+
+    assert config["model"] == {
+        "repo": repo,
+        "revision": revision,
+        "parameters": 140654208,
+    }
+    assert config["lm_eval"]["tasks"] == [
+        "hellaswag",
+        "arc_easy",
+        "arc_challenge",
+        "piqa",
+    ]
+    assert open_slm_eval._default_output_dir(config).name == repo.rsplit("/", 1)[-1]
+
+
 def test_arithmark_2_shim_only_disables_model_cache():
     model = SimpleNamespace(config=SimpleNamespace(use_cache=True))
     tokenizer = object()

@@ -1,0 +1,8 @@
+{
+  "extends": "open_slm.json",
+  "model": {
+    "repo": "specklabs/Speck1-140M-Instruct",
+    "revision": "686350e82db5996f9ab65bdadca70c6d41d49227",
+    "parameters": 140654208
+  }
+}
