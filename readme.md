@@ -225,6 +225,21 @@ llama.cpp load and inference smoke test. Work is capped at four concurrent jobs 
 
 ## Benchmarking
 
+Run every benchmark in the pinned Open SLM Leaderboard configuration against the immutable
+`specklabs/Speck1-140M` release:
+
+```bash
+uv run --extra gpu --group open-slm python -m scripts.open_slm_eval all
+```
+
+The configuration in `experiments/Speck1-140M/open_slm.json` pins the leaderboard, model,
+lm-eval harness, standard-task datasets, and both official ArithMark repositories and file
+checksums. Results default to `~/.cache/speck/evaluations/open-slm/Speck1-140M`. Use the
+individual `lm-eval`, `arithmark-2`, `arithmark-3`, and `summary` stages to resume a run, or
+pass `--limit 2` to `lm-eval` for a smoke test. ArithMark 2.0's verified official runner
+right-pads without disabling the model cache; the wrapper leaves its scoring code unchanged
+and sets `model.config.use_cache=False` immediately after model loading.
+
 Measure compiled optimization steps with synthetic input:
 
 ```bash
