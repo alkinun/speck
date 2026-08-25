@@ -240,11 +240,13 @@ pass `--limit 2` to `lm-eval` for a smoke test. ArithMark 2.0's verified officia
 right-pads without disabling the model cache; the wrapper leaves its scoring code unchanged
 and sets `model.config.use_cache=False` immediately after model loading.
 
-The pinned zero-shot result is recorded in `results/Speck1-140M/open_slm.json`:
+Pinned zero-shot results are recorded under `results/<model>/open_slm.json`:
 
-| HellaSwag | ARC-Easy | ARC-Challenge | PIQA | ArithMark-3 | Int Index | ArithMark-2 |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 35.03 | 46.68 | 25.94 | 63.87 | 36.60 | 18.15 | 31.52 |
+| Model | HellaSwag | ARC-Easy | ARC-Challenge | PIQA | ArithMark-3 | Int Index | ArithMark-2 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Speck1-140M | 35.03 | 46.68 | 25.94 | 63.87 | 36.60 | 18.15 | 31.52 |
+| Speck1-140M-Instruct | 35.22 | 45.66 | 25.85 | 63.60 | 36.10 | 17.75 | 33.64 |
+| Speck1.1-140M-Instruct | 35.64 | 46.93 | 26.02 | 64.15 | 33.70 | 17.90 | 32.44 |
 
 Evaluate both public instruct releases with the same raw-continuation tasks and no chat
 template:
