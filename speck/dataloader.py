@@ -3,7 +3,9 @@
 import bisect
 import hashlib
 import json
+import math
 from collections import Counter
+from fractions import Fraction
 from functools import lru_cache
 from pathlib import Path
 
@@ -69,19 +71,22 @@ def _source_map(manifest):
 
 @lru_cache(maxsize=None)
 def _smooth_cycle(weight_items):
-    """Build one exact 100-step smooth weighted round-robin cycle."""
+    """Build one exact smooth weighted round-robin cycle."""
 
     source_ids = tuple(source_id for source_id, _ in weight_items)
-    weights = tuple(weight for _, weight in weight_items)
+    fractions = tuple(Fraction(str(weight)) for _, weight in weight_items)
+    scale = math.lcm(*(weight.denominator for weight in fractions))
+    weights = tuple(int(weight * scale) for weight in fractions)
+    total_weight = sum(weights)
     current = [0] * len(source_ids)
     cycle = []
-    for _ in range(100):
+    for _ in range(total_weight):
         for index, weight in enumerate(weights):
             current[index] += weight
         selected = max(range(len(source_ids)), key=current.__getitem__)
-        current[selected] -= 100
+        current[selected] -= total_weight
         cycle.append(source_ids[selected])
-    if Counter(cycle) != Counter(dict(weight_items)):
+    if Counter(cycle) != Counter(dict(zip(source_ids, weights))):
         raise ValueError("mixture weights did not produce an exact scheduling cycle")
     return tuple(cycle)
 

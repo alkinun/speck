@@ -210,6 +210,21 @@ def test_mixture_validation_rejects_bad_phases():
         dataset.validate_data_settings(**config)
 
 
+def test_half_percentage_weights_produce_exact_quotas_and_schedule():
+    sources = [source_config("a"), source_config("b")]
+    mixture = {
+        "phases": [{"end_tokens": 200, "weights": {"a": 99.5, "b": 0.5}}]
+    }
+    quotas, phases = dataset.derive_source_quotas(sources, mixture, 200)
+    assert quotas == {"a": 199, "b": 1}
+    manifest = {
+        "requested_train_tokens": 200,
+        "mixture": {"phases": phases},
+        "sources": [{"id": "a"}, {"id": "b"}],
+    }
+    assert source_selection_counts(manifest, "train", 200, 1) == {"a": 199, "b": 1}
+
+
 def test_disk_preflight_reports_required_and_available_bytes(tmp_path):
     config = single_source_settings()
     config.pop("seed")
@@ -401,10 +416,6 @@ def test_source_extensions_validate_explicit_contracts():
                 "filters": {"language": "en"},
             }
         )
-    with pytest.raises(ValueError, match="content_column must be files"):
-        dataset._validate_source(
-            {**source_config("stack"), "content_format": "stack_v3_repository_v1"}
-        )
 
 
 def test_strict_score_and_detected_language_filters(tmp_path, monkeypatch):
@@ -476,106 +487,14 @@ def test_py3langid_detects_long_english_and_chinese_text():
     assert dataset._detect_language(chinese, "py3langid") == "zh"
 
 
-def test_stack_repository_serialization_is_deterministic_bounded_and_grouped(tmp_path, monkeypatch):
-    file_type = pa.struct(
-        [
-            pa.field("content_id", pa.string()),
-            pa.field("content", pa.string()),
-            pa.field("file_path", pa.string()),
-        ]
-    )
-    files = [
-        {"content_id": "z", "content": "z" * 70, "file_path": "src/z.py"},
-        {"content_id": "a", "content": "a" * 70, "file_path": "src/a\n.py"},
-    ]
-    fixture = tmp_path / "stack.parquet"
-    pq.write_table(
-        pa.table(
-            {
-                "files": pa.array([files], type=pa.list_(file_type)),
-                "repo_path": ["owner/repo"],
-                "commit_id": ["abc123"],
-                "num_files": pa.array([2], type=pa.int64()),
-            }
-        ),
-        fixture,
-    )
-
-    def download(url, destination, description, repo=None):
-        Path(destination).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(fixture, destination)
-
-    monkeypatch.setattr(dataset, "_download_file", download)
-    source = {
-        "id": "stack",
-        "repo": "test/stack",
-        "revision": None,
-        "tree_path": "data",
-        "content_column": "files",
-        "content_format": "stack_v3_repository_v1",
-        "metadata_columns": {
-            "commit_id": "commit_id",
-            "repo_path": "repo_path",
-        },
-        "filters": {},
-    }
-    rows = list(
-        dataset.iter_documents(
-            source=source,
-            revision="abc123",
-            files=["data/stack.parquet"],
-            filtering={"min_chars": 20, "max_chars": 80},
-            cache_dir=tmp_path / "stack-raw",
-        )
-    )
-    expected = (
-        'Repository: "owner/repo"\n\n'
-        'File: "src/a\\n.py"\n' + "a" * 70 + '\n\nFile: "src/z.py"\n' + "z" * 70 + "\n\n"
-    )
-    assert "".join(row["content"] for row in rows) == expected
-    assert all(20 <= len(row["content"]) <= 80 for row in rows)
-    assert {row["split_key"] for row in rows} == {"owner/repo\0abc123"}
-    assert [row["metadata"]["repository_part"] for row in rows] == list(range(len(rows)))
-
-
 def test_resolve_data_dir_preserves_default_and_supports_isolated_names(tmp_path):
     assert dataset.resolve_data_dir() == dataset.default_data_dir / "packed"
-    assert dataset.resolve_data_dir(output_name="Speck1.5-140M") == (
-        dataset.default_data_dir / "Speck1.5-140M"
+    assert dataset.resolve_data_dir(output_name="Speck1.5-140M-corpus") == (
+        dataset.default_data_dir / "Speck1.5-140M-corpus"
     )
     assert dataset.resolve_data_dir(tmp_path / "explicit", "ignored") == tmp_path / "explicit"
     with pytest.raises(ValueError, match="one nonempty path component"):
         dataset.resolve_data_dir(output_name="nested/name")
-
-
-def test_split_key_groups_related_documents_in_one_partition(tmp_path, monkeypatch):
-    partitioned = []
-
-    def is_validation(content, seed, fraction):
-        partitioned.append(content)
-        return content == "repository"
-
-    monkeypatch.setattr(dataset, "_is_validation_document", is_validation)
-    values = [
-        {"content": "first repository part", "split_key": "repository"},
-        {"content": "second repository part", "split_key": "repository"},
-        {"content": "independent training document", "split_key": "training"},
-    ]
-    manifest = dataset.prepare_dataset(
-        **single_source_settings(train_tokens=3, validation_tokens=3),
-        output_dir=tmp_path / "grouped",
-        tokenizer=FakeTokenizer(),
-        check_disk=False,
-        document_iterators={"a": values},
-    )
-    records = [
-        json.loads(line)
-        for line in (tmp_path / "grouped" / manifest["sources"][0]["document_index"]["path"])
-        .read_text(encoding="utf-8")
-        .splitlines()
-    ]
-    assert partitioned == ["repository", "repository", "training"]
-    assert [record["split"] for record in records] == ["val", "train"]
 
 
 def test_prepare_writes_nested_source_manifest_and_normalized_global_dedup(

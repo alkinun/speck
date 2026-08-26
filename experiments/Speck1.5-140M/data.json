@@ -13,19 +13,21 @@
       {
         "end_tokens": 5000000000,
         "weights": {
-          "dclm_edu": 39,
-          "math_multi_style": 5,
-          "math_textbook_exercise": 5,
-          "stack_v3": 8,
-          "ufw_l3_multi_style": 3,
-          "ufw_l3_qa": 1,
-          "ultra_fineweb": 39
+          "cosmopedia_v2": 1,
+          "dclm_edu": 33,
+          "finemath_4plus": 7,
+          "fineweb_edu": 50,
+          "math_multi_style": 0.5,
+          "math_textbook_exercise": 1.5,
+          "pes2o": 3.5,
+          "ufw_l3_multi_style": 1,
+          "wikimedia": 2.5
         }
       }
     ]
   },
   "output_dir": null,
-  "output_name": "Speck1.5-140M",
+  "output_name": "Speck1.5-140M-corpus",
   "requested_train_tokens": 5000000000,
   "seed": 42,
   "shards": {
@@ -33,6 +35,19 @@
     "tokens": 100000000
   },
   "sources": [
+    {
+      "content_column": "text",
+      "filters": {},
+      "id": "fineweb_edu",
+      "metadata_columns": {
+        "id": "id",
+        "score": "score",
+        "url": "url"
+      },
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "tree_path": "sample/10BT"
+    },
     {
       "content_column": "text",
       "filters": {
@@ -52,47 +67,16 @@
       "tree_path": "data"
     },
     {
-      "content_column": "content",
-      "filters": {
-        "min_score": 0.7,
-        "score_operator": ">"
-      },
-      "id": "ultra_fineweb",
-      "metadata_columns": {
-        "origin": "source"
-      },
-      "repo": "openbmb/Ultra-FineWeb",
-      "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
-      "score_column": "score",
-      "tree_path": "data/ultrafineweb_en"
-    },
-    {
-      "content_column": "files",
-      "content_format": "stack_v3_repository_v1",
+      "content_column": "text",
       "filters": {},
-      "id": "stack_v3",
+      "id": "finemath_4plus",
       "metadata_columns": {
-        "commit_id": "commit_id",
-        "num_files": "num_files",
-        "repo_path": "repo_path"
+        "score": "score",
+        "url": "url"
       },
-      "repo": "HuggingFaceCode/stack-v3-train",
-      "revision": "df4b205fbba4cc1c2fd1f205b10d66f730798bb9",
-      "tree_path": "data"
-    },
-    {
-      "content_column": "content",
-      "filters": {
-        "language": "en"
-      },
-      "id": "math_multi_style",
-      "language_detector": "py3langid",
-      "metadata_columns": {
-        "uid": "uid"
-      },
-      "repo": "openbmb/UltraData-Math",
-      "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
-      "tree_path": "data/UltraData-Math-L3/Multi-Style-Synthetic"
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "tree_path": "finemath-4plus"
     },
     {
       "content_column": "content",
@@ -110,6 +94,46 @@
     },
     {
       "content_column": "content",
+      "filters": {
+        "language": "en"
+      },
+      "id": "math_multi_style",
+      "language_detector": "py3langid",
+      "metadata_columns": {
+        "uid": "uid"
+      },
+      "repo": "openbmb/UltraData-Math",
+      "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+      "tree_path": "data/UltraData-Math-L3/Multi-Style-Synthetic"
+    },
+    {
+      "content_column": "text",
+      "filters": {},
+      "id": "wikimedia",
+      "metadata_columns": {
+        "id": "id",
+        "title": "title",
+        "url": "url"
+      },
+      "repo": "wikimedia/wikipedia",
+      "revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+      "tree_path": "20231101.en"
+    },
+    {
+      "content_column": "text",
+      "filters": {},
+      "id": "pes2o",
+      "metadata_columns": {
+        "id": "id",
+        "source": "source",
+        "version": "version"
+      },
+      "repo": "allenai/peS2o",
+      "revision": "bd75175889da22754670327d1489dee0378bc549",
+      "tree_path": "v2/partial-train"
+    },
+    {
+      "content_column": "content",
       "filters": {},
       "id": "ufw_l3_multi_style",
       "metadata_columns": {
@@ -121,16 +145,16 @@
       "tree_path": "data/ultrafineweb_en_l3/multi_style"
     },
     {
-      "content_column": "content",
+      "content_column": "text",
       "filters": {},
-      "id": "ufw_l3_qa",
+      "id": "cosmopedia_v2",
       "metadata_columns": {
-        "style": "style",
-        "uid": "uid"
+        "audience": "audience",
+        "format": "format"
       },
-      "repo": "openbmb/Ultra-FineWeb-L3",
-      "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
-      "tree_path": "data/ultrafineweb_en_l3/qa"
+      "repo": "HuggingFaceTB/smollm-corpus",
+      "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+      "tree_path": "cosmopedia-v2"
     }
   ],
   "validation_fraction": 0.02,

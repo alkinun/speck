@@ -37,7 +37,7 @@ source .venv/bin/activate.fish
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
 - `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
-- `experiments/Speck1.5-140M` keeps that architecture, tokenizer, and 5B-token optimization recipe while replacing the corpus with a stationary higher-quality mixture.
+- `experiments/Speck1.5-140M` keeps that architecture, tokenizer, and 5B-token optimization recipe while using its isolated stationary corpus mixture.
 - `experiments/Speck1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1-140M-Instruct` on SpeckChat1.
 - `experiments/Speck1.1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2 for one epoch.
 - `experiments/Speck1.1-140M-Instruct-2ep` retains the corresponding two-epoch training run.
@@ -74,7 +74,7 @@ Resolve, stream, filter, deduplicate, tokenize, and pack the configured sources:
 python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
-Prepare the isolated Speck1.5 corpus under `~/.cache/speck/data/Speck1.5-140M`:
+Prepare the isolated Speck1.5 corpus under `~/.cache/speck/data/Speck1.5-140M-corpus`:
 
 ```bash
 python -m scripts.data_prepare experiments/Speck1.5-140M
@@ -90,15 +90,23 @@ The base pretraining experiment requests 5,000,000,000 training tokens. Its phas
 
 The phase durations and integer weights derive source targets of 1.975B, 1.55B, 670M, 475M, and 330M tokens respectively. Preparation adds a derived 262,144-token per-source loader reserve for the configured maximum 65,536-token distributed microbatch, then reports each requested target, reserve, and actual full-document result. Actual packed training data can exceed 5B only by these configured reserves and one final full-document overshoot per source.
 
-Speck1.5 uses one stationary phase for the full run:
+The Speck1.5 corpus uses one stationary mixture for exactly 5B requested training tokens:
 
-| Phase end | dclm_edu | ultra_fineweb | stack_v3 | math_multi_style | math_textbook_exercise | ufw_l3_multi_style | ufw_l3_qa |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 5,000,000,000 | 39% | 39% | 8% | 5% | 5% | 3% | 1% |
+| Source | Tokens | Share |
+| --- | ---: | ---: |
+| FineWeb-Edu | 2.500B | 50% |
+| DCLM-Edu | 1.650B | 33% |
+| FineMath-4+ | 350M | 7% |
+| UltraData-Math L3 Textbook-Exercise | 75M | 1.5% |
+| UltraData-Math L3 Multi-Style | 25M | 0.5% |
+| Wikimedia | 125M | 2.5% |
+| peS2o | 175M | 3.5% |
+| Ultra-FineWeb-L3 Multi-Style | 50M | 1% |
+| Cosmopedia v2 | 50M | 1% |
 
-The source targets are 1.95B DCLM-Edu, 1.95B Ultra-FineWeb, 400M Stack v3, 250M from each UltraData-Math format, 150M Ultra-FineWeb-L3 Multi-Style, and 50M Ultra-FineWeb-L3 QA tokens. DCLM-Edu uses strict raw `edu_score > 3.5`, Ultra-FineWeb uses strict `score > 0.7`, and the two mixed-language math configurations retain rows identified as English by pinned `py3langid==0.3.0`.
+The category totals are 83% natural web, 9% math, 6% knowledge/science, and 2% general synthetic. DCLM-Edu retains English rows with strict raw `edu_score > 3.5`; the two mixed-language UltraData-Math configurations retain rows identified as English by pinned `py3langid==0.3.0`. All repository revisions and dataset paths are pinned in `data.json`.
 
-Stack v3 is sampled as shuffled repository rows without language balancing. Its nested files are serialized in deterministic path/content order with JSON-quoted repository and file headers. Repositories above the 100,000-character document limit are split without truncation, and all parts from one repository share one train/validation assignment.
+The previous corpus and stopped run are obsolete and are not resumed or reused. The current corpus uses distinct packed-data and checkpoint names.
 
 Repository revisions are resolved once and pinned, and recursive Parquet discovery uses the Hugging Face repository tree rather than datasets-server previews. Files are deterministically shuffled per source. Preparation downloads and reads only one remote Parquet file at a time, removes it immediately, and writes train and validation shards under `sources/<source-id>/`. Validation reserves 5M tokens per source and the loader schedules those streams equally.
 
