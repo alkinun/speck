@@ -1,5 +1,6 @@
 """Stream, deduplicate, tokenize, and pack source-separated training data."""
 
+import gzip
 import hashlib
 import json
 import math
@@ -10,7 +11,7 @@ import time
 import unicodedata
 from fractions import Fraction
 from functools import lru_cache
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import quote, unquote, urlparse
 
@@ -32,6 +33,8 @@ _SOURCE_FIELDS = {
     "revision",
     "tree_path",
     "content_column",
+    "file_format",
+    "files",
     "language_detector",
     "score_column",
     "language_column",
@@ -49,6 +52,10 @@ _MAX_TOKENIZER_CHARACTERS = 2_000_000
 _RAW_SHARD_ALLOWANCE_BYTES = 20 * 1024**3
 _MIN_INDEX_DEDUP_HEADROOM_BYTES = 5 * 1024**3
 _LANGUAGE_DETECTORS = {"py3langid"}
+_SOURCE_FILE_SUFFIXES = {
+    "jsonl_gzip": ".json.gz",
+    "parquet": ".parquet",
+}
 
 
 def resolve_data_dir(output_dir=None, output_name=None):
@@ -191,6 +198,22 @@ def _validate_source(source):
     for key in ("score_column", "language_column", "revision"):
         if source.get(key) is not None and not isinstance(source[key], str):
             raise ValueError(f"source {source_id} {key} must be null or a string")
+    file_format = source.get("file_format", "parquet")
+    if file_format not in _SOURCE_FILE_SUFFIXES:
+        raise ValueError(f"source {source_id} has unsupported file_format")
+    files = source.get("files")
+    if files is not None:
+        if not isinstance(files, list) or not files:
+            raise ValueError(f"source {source_id} files must be a nonempty list")
+        if any(
+            not isinstance(filename, str)
+            or not filename
+            or PurePosixPath(filename).is_absolute()
+            or ".." in PurePosixPath(filename).parts
+            or not filename.lower().endswith(_SOURCE_FILE_SUFFIXES[file_format])
+            for filename in files
+        ) or len(files) != len(set(files)):
+            raise ValueError(f"source {source_id} has invalid files")
     language_detector = source.get("language_detector")
     if language_detector is not None and language_detector not in _LANGUAGE_DETECTORS:
         raise ValueError(f"source {source_id} has unsupported language_detector")
@@ -236,6 +259,8 @@ def _validate_source(source):
     return {
         **source,
         "revision": source.get("revision"),
+        "file_format": file_format,
+        "files": None if files is None else list(files),
         "score_column": source.get("score_column"),
         "language_column": source.get("language_column"),
         "metadata_columns": dict(metadata),
@@ -368,8 +393,8 @@ def _shuffle_seed(source_id, seed):
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big")
 
 
-def discover_parquet_files(source, seed, api=None):
-    """Resolve one source revision and discover its raw repository Parquet files."""
+def discover_source_files(source, seed, api=None):
+    """Resolve one source revision and discover or verify its input files."""
 
     source = _validate_source(source)
     api = api or HfApi()
@@ -382,11 +407,27 @@ def discover_parquet_files(source, seed, api=None):
         revision=revision,
         repo_type="dataset",
     )
-    files = sorted(
-        {entry.path for entry in entries if getattr(entry, "path", "").lower().endswith(".parquet")}
-    )
+    suffix = _SOURCE_FILE_SUFFIXES[source["file_format"]]
+    available = {
+        entry.path
+        for entry in entries
+        if getattr(entry, "path", "").lower().endswith(suffix)
+    }
+    files = source["files"]
+    if files is not None:
+        missing = set(files) - available
+        if missing:
+            raise RuntimeError(
+                f"source {source['id']} repository tree is missing configured files: "
+                f"{', '.join(sorted(missing))}"
+            )
+        files = list(files)
+    else:
+        files = sorted(available)
     if not files:
-        raise RuntimeError(f"source {source['id']} repository tree contains no Parquet files")
+        raise RuntimeError(
+            f"source {source['id']} repository tree contains no {source['file_format']} files"
+        )
     random.Random(_shuffle_seed(source["id"], seed)).shuffle(files)
     return {
         "revision": revision,
@@ -592,6 +633,114 @@ def iter_parquet_documents(
             local_path.unlink(missing_ok=True)
 
 
+def iter_jsonl_gzip_documents(
+    *,
+    source,
+    revision,
+    filename,
+    filtering,
+    cache_dir=None,
+    keep_raw=False,
+    description=None,
+):
+    """Yield filtered rows from one downloaded gzip-compressed JSONL file."""
+
+    source = _validate_source(source)
+    cache_dir = Path(cache_dir or default_data_dir / "raw")
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_key = hashlib.sha256(f"{source['repo']}\0{revision}\0{filename}".encode()).hexdigest()[
+        :20
+    ]
+    local_path = cache_dir / f"{cache_key}.json.gz"
+    if not local_path.exists():
+        _download_file(
+            _dataset_url(source["repo"], revision, filename),
+            local_path,
+            description or source["id"],
+            repo=source["repo"],
+        )
+    required = {source["content_column"]}
+    if source.get("language_column"):
+        required.add(source["language_column"])
+    if "min_score" in source["filters"]:
+        required.add(source["score_column"])
+    try:
+        with gzip.open(local_path, "rt", encoding="utf-8") as handle:
+            for row_number, line in enumerate(handle):
+                if not line.strip():
+                    continue
+                try:
+                    values = json.loads(line)
+                except json.JSONDecodeError as error:
+                    raise ValueError(f"{filename} has invalid JSON at row {row_number}") from error
+                if not isinstance(values, dict):
+                    raise ValueError(f"{filename} row {row_number} must be an object")
+                missing = required - values.keys()
+                if missing:
+                    raise ValueError(
+                        f"{filename} is missing configured columns at row {row_number}: "
+                        f"{sorted(missing)}"
+                    )
+                content = values[source["content_column"]]
+                if not isinstance(content, str) or not content:
+                    continue
+                if not filtering["min_chars"] <= len(content) <= filtering["max_chars"]:
+                    continue
+                score = None
+                score_column = source.get("score_column")
+                if score_column and score_column in values:
+                    raw_score = values[score_column]
+                    try:
+                        score = None if raw_score is None else float(raw_score)
+                    except (TypeError, ValueError) as error:
+                        raise ValueError(
+                            f"{filename} score at row {row_number} is not numeric"
+                        ) from error
+                    if score is not None and not math.isfinite(score):
+                        continue
+                    minimum = source["filters"].get("min_score")
+                    if minimum is not None and not _score_passes(
+                        score,
+                        minimum,
+                        source["filters"].get("score_operator", ">="),
+                    ):
+                        continue
+                language = source["filters"].get("language")
+                language_column = source.get("language_column")
+                if language and language_column and values[language_column] != language:
+                    continue
+                detector = source.get("language_detector")
+                if language and detector and _detect_language(content, detector) != language:
+                    continue
+                metadata = {
+                    alias: _metadata_value(values[column])
+                    for alias, column in source["metadata_columns"].items()
+                    if column in values and values[column] is not None
+                }
+                yield {
+                    "content": content,
+                    "score": score,
+                    "metadata": metadata,
+                    "file": filename,
+                    "row": row_number,
+                }
+    finally:
+        if not keep_raw:
+            local_path.unlink(missing_ok=True)
+
+
+def iter_source_file_documents(**kwargs):
+    """Dispatch one source file to its configured reader."""
+
+    source = _validate_source(kwargs["source"])
+    kwargs["source"] = source
+    if source["file_format"] == "parquet":
+        return iter_parquet_documents(**kwargs)
+    if source["file_format"] == "jsonl_gzip":
+        return iter_jsonl_gzip_documents(**kwargs)
+    raise ValueError(f"unsupported source file format: {source['file_format']}")
+
+
 def iter_documents(
     *,
     source,
@@ -601,11 +750,11 @@ def iter_documents(
     cache_dir=None,
     keep_raw=False,
 ):
-    """Yield files sequentially while retaining at most one raw Parquet shard."""
+    """Yield files sequentially while retaining at most one raw source file."""
 
     files = list(files)
     for shard_index, filename in enumerate(files):
-        yield from iter_parquet_documents(
+        yield from iter_source_file_documents(
             source=source,
             revision=revision,
             filename=filename,
@@ -993,6 +1142,7 @@ class SourceBuilder:
             "revision": self.resolved["revision"],
             "tree_path": self.source["tree_path"],
             "content_column": self.source["content_column"],
+            "file_format": self.source["file_format"],
             "score_column": self.source.get("score_column"),
             "language_column": self.source.get("language_column"),
             "metadata_columns": self.source["metadata_columns"],
@@ -1277,7 +1427,7 @@ def prepare_dataset(
                 "file_list_sha256": _line_hash([]),
             }
         else:
-            resolved = discover_parquet_files(source, seed, api)
+            resolved = discover_source_files(source, seed, api)
         state["resolved_sources"][source_id] = resolved
         _atomic_json(state_path, state)
 
@@ -1409,7 +1559,7 @@ def prepare_dataset(
                 final_file = None
                 for file_index in range(next_file, len(resolved["files"])):
                     filename = resolved["files"][file_index]
-                    documents = iter_parquet_documents(
+                    documents = iter_source_file_documents(
                         source=source,
                         revision=resolved["revision"],
                         filename=filename,

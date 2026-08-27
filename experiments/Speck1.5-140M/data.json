@@ -121,6 +121,19 @@
     },
     {
       "content_column": "text",
+      "file_format": "jsonl_gzip",
+      "files": [
+        "data/v2/train-00010-of-00020.json.gz",
+        "data/v2/train-00011-of-00020.json.gz",
+        "data/v2/train-00012-of-00020.json.gz",
+        "data/v2/train-00013-of-00020.json.gz",
+        "data/v2/train-00014-of-00020.json.gz",
+        "data/v2/train-00015-of-00020.json.gz",
+        "data/v2/train-00016-of-00020.json.gz",
+        "data/v2/train-00017-of-00020.json.gz",
+        "data/v2/train-00018-of-00020.json.gz",
+        "data/v2/train-00019-of-00020.json.gz"
+      ],
       "filters": {},
       "id": "pes2o",
       "metadata_columns": {
@@ -129,8 +142,8 @@
         "version": "version"
       },
       "repo": "allenai/peS2o",
-      "revision": "bd75175889da22754670327d1489dee0378bc549",
-      "tree_path": "v2/partial-train"
+      "revision": "636a503e44a3ca1b58e01fb61eab0825cd574de0",
+      "tree_path": "data/v2"
     },
     {
       "content_column": "content",

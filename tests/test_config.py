@@ -105,6 +105,10 @@ def test_speck1_5_uses_the_original_model_and_corpus_mixture():
     }
     assert sources["math_multi_style"]["language_detector"] == "py3langid"
     assert sources["math_textbook_exercise"]["language_detector"] == "py3langid"
+    assert sources["pes2o"]["file_format"] == "jsonl_gzip"
+    assert sources["pes2o"]["files"] == [
+        f"data/v2/train-{index:05d}-of-00020.json.gz" for index in range(10, 20)
+    ]
     assert {source_id: source["revision"] for source_id, source in sources.items()} == {
         "fineweb_edu": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
         "dclm_edu": "dbad8ad71224482740cd9c9d353591adbf62fe04",
@@ -112,7 +116,7 @@ def test_speck1_5_uses_the_original_model_and_corpus_mixture():
         "math_textbook_exercise": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
         "math_multi_style": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
         "wikimedia": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
-        "pes2o": "bd75175889da22754670327d1489dee0378bc549",
+        "pes2o": "636a503e44a3ca1b58e01fb61eab0825cd574de0",
         "ufw_l3_multi_style": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
         "cosmopedia_v2": "3ba9d605774198c5868892d7a8deda78031a781f",
     }

@@ -104,17 +104,17 @@ The Speck1.5 corpus uses one stationary mixture for exactly 5B requested trainin
 | Ultra-FineWeb-L3 Multi-Style | 50M | 1% |
 | Cosmopedia v2 | 50M | 1% |
 
-The category totals are 83% natural web, 9% math, 6% knowledge/science, and 2% general synthetic. DCLM-Edu retains English rows with strict raw `edu_score > 3.5`; the two mixed-language UltraData-Math configurations retain rows identified as English by pinned `py3langid==0.3.0`. All repository revisions and dataset paths are pinned in `data.json`.
+The category totals are 83% natural web, 9% math, 6% knowledge/science, and 2% general synthetic. DCLM-Edu retains English rows with strict raw `edu_score > 3.5`; the two mixed-language UltraData-Math configurations retain rows identified as English by pinned `py3langid==0.3.0`. peS2o uses only the V2 `s2orc` full-text training shards, excluding its title-and-abstract `s2ag` records. All repository revisions and dataset paths are pinned in `data.json`.
 
 The previous corpus and stopped run are obsolete and are not resumed or reused. The current corpus uses distinct packed-data and checkpoint names.
 
-Repository revisions are resolved once and pinned, and recursive Parquet discovery uses the Hugging Face repository tree rather than datasets-server previews. Files are deterministically shuffled per source. Preparation downloads and reads only one remote Parquet file at a time, removes it immediately, and writes train and validation shards under `sources/<source-id>/`. Validation reserves 5M tokens per source and the loader schedules those streams equally.
+Repository revisions are resolved once and pinned, and input discovery uses the Hugging Face repository tree rather than datasets-server previews. Files are deterministically shuffled per source. Preparation downloads and reads only one remote Parquet or gzip-JSONL file at a time, removes it immediately, and writes train and validation shards under `sources/<source-id>/`. Validation reserves 5M tokens per source and the loader schedules those streams equally.
 
 Exact global deduplication normalizes text with Unicode NFKC, lowercasing, and whitespace collapse before recording a 128-bit BLAKE2 hash. The expected roughly 6M hashes remain practical in memory and are journaled compactly at 16 bytes each. A collision is treated as a duplicate; fuzzy and LSH deduplication are intentionally excluded. Tokenizer calls are bounded to 1,024 documents and 2,000,000 aggregate input characters.
 
 Preparation performs a live disk-space preflight before creating staged data. The current estimate includes about 10.05GB of packed uint16 data, a 20GiB temporary raw-shard allowance, and at least 5GiB of dedup/index headroom, for about 36.9GB total required capacity. The command reports required and currently free bytes and credits reusable staged bytes on resume.
 
-Preparation builds under the sibling `.building` directory and atomically publishes the final directory. Every completed remote Parquet file closes and checkpoints packed shards, source-local index bytes, and the dedup journal with checksums. A retry validates those boundaries, removes only partial work from the interrupted file, and resumes at the next file. Pass `--restart` to discard all staged state. A completed output directory is never overwritten.
+Preparation builds under the sibling `.building` directory and atomically publishes the final directory. Every completed remote source file closes and checkpoints packed shards, source-local index bytes, and the dedup journal with checksums. A retry validates those boundaries, removes only partial work from the interrupted file, and resumes at the next file. Pass `--restart` to discard all staged state. A completed output directory is never overwritten.
 
 ## Training
 

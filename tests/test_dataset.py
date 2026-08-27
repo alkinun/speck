@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import json
 import shutil
@@ -260,9 +261,9 @@ def test_repository_tree_is_revision_pinned_recursive_and_deterministic():
 
     api = Api()
     source = source_config("a")
-    first = dataset.discover_parquet_files(source, 17, api)
+    first = dataset.discover_source_files(source, 17, api)
     second_api = Api()
-    second = dataset.discover_parquet_files(source, 17, second_api)
+    second = dataset.discover_source_files(source, 17, second_api)
     assert first == second
     assert sorted(first["files"]) == ["data/nested/two.parquet", "data/one.parquet"]
     assert api.info_calls == [("test/a", None)]
@@ -277,6 +278,31 @@ def test_repository_tree_is_revision_pinned_recursive_and_deterministic():
             },
         )
     ]
+
+
+def test_repository_tree_verifies_explicit_gzip_jsonl_files():
+    files = [
+        "data/v2/train-00010-of-00020.json.gz",
+        "data/v2/train-00011-of-00020.json.gz",
+    ]
+
+    class Api:
+        def dataset_info(self, repo, revision=None):
+            return SimpleNamespace(sha="abc123")
+
+        def list_repo_tree(self, repo, **kwargs):
+            return [
+                *(SimpleNamespace(path=path) for path in files),
+                SimpleNamespace(path="data/v2/train-00000-of-00020.json.gz"),
+            ]
+
+    source = {
+        **source_config("papers"),
+        "file_format": "jsonl_gzip",
+        "files": files,
+    }
+    resolved = dataset.discover_source_files(source, 17, Api())
+    assert sorted(resolved["files"]) == files
 
 
 def test_download_uses_revision_pinned_hf_xet(tmp_path, monkeypatch):
@@ -354,6 +380,54 @@ def test_stream_reads_needed_columns_and_only_keeps_raw_when_explicit(tmp_path, 
     assert list(cache.iterdir()) == []
 
 
+def test_streams_gzip_jsonl_source_files(tmp_path, monkeypatch):
+    fixture = tmp_path / "papers.json.gz"
+    with gzip.open(fixture, "wt", encoding="utf-8") as handle:
+        handle.write(
+            json.dumps(
+                {
+                    "id": "paper-1",
+                    "source": "s2orc/train",
+                    "text": "Full paper text with enough content.",
+                    "version": "v2",
+                }
+            )
+            + "\n"
+        )
+
+    def download(url, destination, description, repo=None):
+        Path(destination).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(fixture, destination)
+
+    monkeypatch.setattr(dataset, "_download_file", download)
+    source = {
+        **source_config("papers"),
+        "file_format": "jsonl_gzip",
+        "files": ["data/v2/train-00010-of-00020.json.gz"],
+        "metadata_columns": {"id": "id", "source": "source", "version": "version"},
+    }
+    cache = tmp_path / "raw"
+    rows = list(
+        dataset.iter_documents(
+            source=source,
+            revision="abc123",
+            files=source["files"],
+            filtering={"min_chars": 0, "max_chars": 100},
+            cache_dir=cache,
+        )
+    )
+    assert rows == [
+        {
+            "content": "Full paper text with enough content.",
+            "score": None,
+            "metadata": {"id": "paper-1", "source": "s2orc/train", "version": "v2"},
+            "file": "data/v2/train-00010-of-00020.json.gz",
+            "row": 0,
+        }
+    ]
+    assert list(cache.iterdir()) == []
+
+
 def test_score_and_language_filter_columns_are_required(tmp_path, monkeypatch):
     fixture = tmp_path / "missing.parquet"
     pq.write_table(pa.table({"content": ["text"]}), fixture)
@@ -414,6 +488,14 @@ def test_source_extensions_validate_explicit_contracts():
                 "language_column": "language",
                 "language_detector": "py3langid",
                 "filters": {"language": "en"},
+            }
+        )
+    with pytest.raises(ValueError, match="invalid files"):
+        dataset._validate_source(
+            {
+                **source_config("compressed"),
+                "file_format": "jsonl_gzip",
+                "files": ["data/shard.parquet"],
             }
         )
 
@@ -775,7 +857,7 @@ def test_remote_source_resumes_at_completed_parquet_boundary(tmp_path, monkeypat
         def list_repo_tree(self, repo, **kwargs):
             return [SimpleNamespace(path=path) for path in files]
 
-    order = dataset.discover_parquet_files(source, 7, Api())["files"]
+    order = dataset.discover_source_files(source, 7, Api())["files"]
     fixtures = {}
     first_rows = ["val-first-" + "v" * 99_990]
     first_rows.extend(f"first-{index:02d}-" + "a" * 99_991 for index in range(10))
