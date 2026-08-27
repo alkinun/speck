@@ -443,7 +443,7 @@ def _dataset_url(repo, revision, filename):
     )
 
 
-def _download_file(url, destination, description, attempts=5, repo=None):
+def _download_file(url, destination, description, attempts=20, repo=None):
     """Download one revision-pinned dataset file through the HF/Xet cache."""
 
     destination = Path(destination)
@@ -471,12 +471,12 @@ def _download_file(url, destination, description, attempts=5, repo=None):
             shutil.move(Path(downloaded).resolve(), destination)
             shutil.rmtree(cache_dir, ignore_errors=True)
             return
-        except (OSError, HfHubHTTPError):
+        except (OSError, HfHubHTTPError, RuntimeError):
             destination.unlink(missing_ok=True)
-            shutil.rmtree(cache_dir, ignore_errors=True)
             if attempt + 1 == attempts:
+                shutil.rmtree(cache_dir, ignore_errors=True)
                 raise
-            time.sleep(2**attempt)
+            time.sleep(min(2**attempt, 60))
 
 
 def _metadata_value(value):

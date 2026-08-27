@@ -336,6 +336,37 @@ def test_download_uses_revision_pinned_hf_xet(tmp_path, monkeypatch):
     }
 
 
+def test_download_retries_xet_runtime_errors_without_discarding_cache(tmp_path, monkeypatch):
+    attempts = 0
+
+    def download(**kwargs):
+        nonlocal attempts
+        attempts += 1
+        cache = Path(kwargs["cache_dir"])
+        partial = cache / "partial"
+        if attempts == 1:
+            partial.parent.mkdir(parents=True)
+            partial.write_bytes(b"partial")
+            raise RuntimeError("CAS Client Error: 503 Service Unavailable")
+        assert partial.read_bytes() == b"partial"
+        blob = cache / "blobs" / "shard"
+        blob.parent.mkdir(parents=True)
+        blob.write_bytes(b"complete")
+        return str(blob)
+
+    monkeypatch.setattr(dataset, "hf_hub_download", download)
+    monkeypatch.setattr(dataset.time, "sleep", lambda delay: None)
+    destination = tmp_path / "raw" / "shard.parquet"
+    dataset._download_file(
+        "https://huggingface.co/datasets/example/data/resolve/abc123/data/shard.parquet",
+        destination,
+        "test shard",
+        attempts=2,
+    )
+    assert attempts == 2
+    assert destination.read_bytes() == b"complete"
+
+
 def test_stream_reads_needed_columns_and_only_keeps_raw_when_explicit(tmp_path, monkeypatch):
     fixture = tmp_path / "fixture.parquet"
     pq.write_table(
