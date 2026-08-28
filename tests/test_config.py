@@ -72,31 +72,50 @@ def test_speck1_1_140m_two_epoch_variant_only_changes_training_length():
     assert two_epoch["sft"]["run"] == "Speck1.1-140M-Instruct-2ep"
 
 
-def test_speck1_5_uses_the_original_model_and_corpus_mixture():
+def test_speck1_5_uses_the_original_model_and_phased_corpus_mixture():
     original = load_experiment("experiments/Speck1-140M", "model", "tokenizer", "train")
     updated = load_experiment("experiments/Speck1.5-140M", "data", "model", "tokenizer", "train")
 
     assert updated["model"] == original["model"]
     assert updated["tokenizer"] == original["tokenizer"]
-    assert updated["train"] == {**original["train"], "run": "Speck1.5-140M-corpus"}
+    assert updated["train"] == {
+        **original["train"],
+        "run": "Speck1.5-140M",
+        "save_every": 3815,
+    }
     data = dict(updated["data"])
     assert data.pop("output_dir") is None
-    assert data.pop("output_name") == "Speck1.5-140M-corpus"
+    assert data.pop("output_name") == "Speck1.5-140M"
     data.pop("seed")
     validated = validate_data_settings(**data)
     assert validated["quotas"] == {
-        "fineweb_edu": 2_500_000_000,
-        "dclm_edu": 1_650_000_000,
-        "finemath_4plus": 350_000_000,
-        "math_textbook_exercise": 75_000_000,
-        "math_multi_style": 25_000_000,
-        "wikimedia": 125_000_000,
-        "pes2o": 175_000_000,
-        "ufw_l3_multi_style": 50_000_000,
-        "cosmopedia_v2": 50_000_000,
+        "fineweb_edu": 1_390_000_000,
+        "dclm_edu": 900_000_000,
+        "ultra_fineweb": 570_000_000,
+        "dclm": 260_000_000,
+        "finemath_4plus": 455_000_000,
+        "math_textbook_exercise": 140_000_000,
+        "math_multi_style": 90_000_000,
+        "wikimedia": 215_000_000,
+        "pes2o": 250_000_000,
+        "ufw_l3_multi_style": 335_000_000,
+        "cosmopedia_v2": 395_000_000,
     }
-    assert len(validated["phases"]) == 1
-    assert validated["train_reserve_tokens_per_source"] == 131_072
+    assert len(validated["phases"]) == 3
+    assert validated["train_reserve_tokens_per_source"] == 262_144
+    assert [source["id"] for source in validated["sources"]] == [
+        "finemath_4plus",
+        "math_textbook_exercise",
+        "math_multi_style",
+        "cosmopedia_v2",
+        "ufw_l3_multi_style",
+        "pes2o",
+        "wikimedia",
+        "dclm_edu",
+        "fineweb_edu",
+        "ultra_fineweb",
+        "dclm",
+    ]
     sources = {source["id"]: source for source in validated["sources"]}
     assert sources["dclm_edu"]["filters"] == {
         "language": "en",
@@ -112,6 +131,8 @@ def test_speck1_5_uses_the_original_model_and_corpus_mixture():
     assert {source_id: source["revision"] for source_id, source in sources.items()} == {
         "fineweb_edu": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
         "dclm_edu": "dbad8ad71224482740cd9c9d353591adbf62fe04",
+        "ultra_fineweb": "02c85641e3d19a854be2e09139c25adaa9518063",
+        "dclm": "817d6752765f6a41261085171dd546b104f60626",
         "finemath_4plus": "e92b25a616738fe95dc186b64dfb19f9c8525594",
         "math_textbook_exercise": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
         "math_multi_style": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",

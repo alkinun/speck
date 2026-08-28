@@ -37,7 +37,7 @@ source .venv/bin/activate.fish
 Checked-in experiment directories identify an architecture and its data, tokenizer, and training configuration:
 
 - `experiments/Speck1-140M` is the 140,652,288-parameter production and architecture-search configuration.
-- `experiments/Speck1.5-140M` keeps that architecture, tokenizer, and 5B-token optimization recipe while using its isolated stationary corpus mixture.
+- `experiments/Speck1.5-140M` keeps that architecture, tokenizer, and 5B-token optimization recipe while using an isolated three-phase corpus curriculum.
 - `experiments/Speck1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1-140M-Instruct` on SpeckChat1.
 - `experiments/Speck1.1-140M-Instruct` reuses that base architecture and tokenizer to post-train `Speck1.1-140M-Instruct` on SpeckChat2 for one epoch.
 - `experiments/Speck1.1-140M-Instruct-2ep` retains the corresponding two-epoch training run.
@@ -74,7 +74,7 @@ Resolve, stream, filter, deduplicate, tokenize, and pack the configured sources:
 python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
-Prepare the isolated Speck1.5 corpus under `~/.cache/speck/data/Speck1.5-140M-corpus`:
+Prepare the isolated Speck1.5 corpus under `~/.cache/speck/data/Speck1.5-140M`:
 
 ```bash
 python -m scripts.data_prepare experiments/Speck1.5-140M
@@ -90,23 +90,42 @@ The base pretraining experiment requests 5,000,000,000 training tokens. Its phas
 
 The phase durations and integer weights derive source targets of 1.975B, 1.55B, 670M, 475M, and 330M tokens respectively. Preparation adds a derived 262,144-token per-source loader reserve for the configured maximum 65,536-token distributed microbatch, then reports each requested target, reserve, and actual full-document result. Actual packed training data can exceed 5B only by these configured reserves and one final full-document overshoot per source.
 
-The Speck1.5 corpus uses one stationary mixture for exactly 5B requested training tokens:
+The Speck1.5 corpus uses a foundation phase through 3.5B tokens, a capability ramp through
+4.5B, and a final 500M-token capability anneal:
+
+| Phase end | FineWeb-Edu | DCLM-Edu | Ultra-FineWeb | DCLM | FineMath | Textbook math | Multi-style math | Wikimedia | peS2o | UFW-L3 | Cosmopedia |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 3.5B | 32% | 20% | 13% | 6% | 7% | 2% | 1% | 4% | 4% | 5% | 6% |
+| 4.5B | 22% | 16% | 9% | 4% | 12% | 4% | 3% | 5% | 7% | 8% | 10% |
+| 5.0B | 10% | 8% | 5% | 2% | 18% | 6% | 5% | 5% | 8% | 16% | 17% |
+
+The phase durations derive these exact aggregate targets:
 
 | Source | Tokens | Share |
 | --- | ---: | ---: |
-| FineWeb-Edu | 2.500B | 50% |
-| DCLM-Edu | 1.650B | 33% |
-| FineMath-4+ | 350M | 7% |
-| UltraData-Math L3 Textbook-Exercise | 75M | 1.5% |
-| UltraData-Math L3 Multi-Style | 25M | 0.5% |
-| Wikimedia | 125M | 2.5% |
-| peS2o | 175M | 3.5% |
-| Ultra-FineWeb-L3 Multi-Style | 50M | 1% |
-| Cosmopedia v2 | 50M | 1% |
+| FineWeb-Edu | 1.390B | 27.8% |
+| DCLM-Edu | 900M | 18.0% |
+| Ultra-FineWeb | 570M | 11.4% |
+| DCLM | 260M | 5.2% |
+| FineMath-4+ | 455M | 9.1% |
+| UltraData-Math L3 Textbook-Exercise | 140M | 2.8% |
+| UltraData-Math L3 Multi-Style | 90M | 1.8% |
+| Wikimedia | 215M | 4.3% |
+| peS2o | 250M | 5.0% |
+| Ultra-FineWeb-L3 Multi-Style | 335M | 6.7% |
+| Cosmopedia v2 | 395M | 7.9% |
 
-The category totals are 83% natural web, 9% math, 6% knowledge/science, and 2% general synthetic. DCLM-Edu retains English rows with strict raw `edu_score > 3.5`; the two mixed-language UltraData-Math configurations retain rows identified as English by pinned `py3langid==0.3.0`. peS2o uses only the V2 `s2orc` full-text training shards, excluding its title-and-abstract `s2ag` records. All repository revisions and dataset paths are pinned in `data.json`.
+The category totals are 62.4% natural web, 13.7% math, 9.3% knowledge/science, and 14.6%
+general synthetic. Specialist sources appear first so their documents win global cross-source deduplication.
+DCLM-Edu retains English rows with strict raw `edu_score > 3.5`; Ultra-FineWeb retains rows
+scored at least 0.8; the two mixed-language UltraData-Math configurations retain rows identified
+as English by pinned `py3langid==0.3.0`. peS2o uses only the V2 `s2orc` full-text training shards,
+excluding its title-and-abstract `s2ag` records. All repository revisions and dataset paths are pinned
+in `data.json`.
 
-The previous corpus and stopped run are obsolete and are not resumed or reused. The current corpus uses distinct packed-data and checkpoint names.
+The completed stationary corpus, preparation log, and checkpoints are archived with `-old` suffixes.
+The replacement corpus and checkpoint run both use the clean `Speck1.5-140M` artifact name in
+their respective data and checkpoint directories.
 
 Repository revisions are resolved once and pinned, and input discovery uses the Hugging Face repository tree rather than datasets-server previews. Files are deterministically shuffled per source. Preparation downloads and reads only one remote Parquet or gzip-JSONL file at a time, removes it immediately, and writes train and validation shards under `sources/<source-id>/`. Validation reserves 5M tokens per source and the loader schedules those streams equally.
 

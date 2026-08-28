@@ -602,8 +602,8 @@ def test_py3langid_detects_long_english_and_chinese_text():
 
 def test_resolve_data_dir_preserves_default_and_supports_isolated_names(tmp_path):
     assert dataset.resolve_data_dir() == dataset.default_data_dir / "packed"
-    assert dataset.resolve_data_dir(output_name="Speck1.5-140M-corpus") == (
-        dataset.default_data_dir / "Speck1.5-140M-corpus"
+    assert dataset.resolve_data_dir(output_name="Speck1.5-140M") == (
+        dataset.default_data_dir / "Speck1.5-140M"
     )
     assert dataset.resolve_data_dir(tmp_path / "explicit", "ignored") == tmp_path / "explicit"
     with pytest.raises(ValueError, match="one nonempty path component"):
