@@ -1086,11 +1086,27 @@ def initial_generation(baseline, settings, existing_digests=()):
 def _regression(points):
     if len(points) < 3:
         raise ValueError("learning-curve regression requires three points")
-    selected = sorted(points, key=lambda point: point["tokens"])[-3:]
+    validated = []
+    for point in points:
+        if not isinstance(point, dict):
+            raise ValueError("learning-curve points must be objects")
+        tokens = point.get("tokens")
+        nll = point.get("nll")
+        if (
+            isinstance(tokens, bool)
+            or not isinstance(tokens, (int, float))
+            or not math.isfinite(tokens)
+            or tokens <= 0
+        ):
+            raise ValueError("learning-curve token positions must be positive and finite")
+        if isinstance(nll, bool) or not isinstance(nll, (int, float)) or not math.isfinite(nll):
+            raise ValueError("learning-curve nll values must be finite")
+        validated.append({"tokens": tokens, "nll": float(nll)})
+    selected = sorted(validated, key=lambda point: point["tokens"])[-3:]
+    if len({point["tokens"] for point in selected}) != 3:
+        raise ValueError("learning-curve regression requires distinct token positions")
     x = [math.log2(point["tokens"]) for point in selected]
-    y = [float(point["nll"]) for point in selected]
-    if any(not math.isfinite(value) for value in y):
-        raise ValueError("learning-curve nll values must be finite")
+    y = [point["nll"] for point in selected]
     x_mean = statistics.mean(x)
     y_mean = statistics.mean(y)
     denominator = sum((value - x_mean) ** 2 for value in x)
@@ -1111,6 +1127,19 @@ def _regression(points):
 
 def project_learning_curve(points, next_horizon, median_slope):
     estimate = _regression(points)
+    if (
+        isinstance(next_horizon, bool)
+        or not isinstance(next_horizon, (int, float))
+        or not math.isfinite(next_horizon)
+        or next_horizon <= estimate["current_tokens"]
+    ):
+        raise ValueError("learning-curve projection horizon must be in the future")
+    if (
+        isinstance(median_slope, bool)
+        or not isinstance(median_slope, (int, float))
+        or not math.isfinite(median_slope)
+    ):
+        raise ValueError("median learning-curve slope must be finite")
     effective_slope = (
         estimate["r_squared"] * estimate["measured_slope"]
         + (1 - estimate["r_squared"]) * median_slope
@@ -1163,27 +1192,26 @@ def score_candidates(records, next_horizon):
             continue
         curve = record.get("nll_curve", [])
         if len(curve) >= 3:
-            estimates[_record_key(record)] = _regression(curve)
+            try:
+                estimates[_record_key(record)] = _regression(curve)
+            except ValueError:
+                continue
     if not estimates:
         return scored
     median_slope = statistics.median(estimate["measured_slope"] for estimate in estimates.values())
+    forecasts = {}
     for record in scored:
         key = _record_key(record)
         if key in estimates:
-            record["forecast"] = project_learning_curve(
-                record["nll_curve"], next_horizon, median_slope
-            )
+            try:
+                forecast = project_learning_curve(record["nll_curve"], next_horizon, median_slope)
+            except ValueError:
+                continue
+            record["forecast"] = forecast
+            forecasts[key] = forecast
 
-    current = {
-        _record_key(record): record["forecast"]["current_nll"]
-        for record in scored
-        if "forecast" in record
-    }
-    projected = {
-        _record_key(record): record["forecast"]["projected_nll"]
-        for record in scored
-        if "forecast" in record
-    }
+    current = {key: forecast["current_nll"] for key, forecast in forecasts.items()}
+    projected = {key: forecast["projected_nll"] for key, forecast in forecasts.items()}
     current_ranks = percentile_ranks(current)
     projected_ranks = percentile_ranks(projected)
     for record in scored:

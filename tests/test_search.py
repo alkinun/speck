@@ -298,6 +298,19 @@ def test_learning_curves_forecast_sustained_improvement():
     assert min(noisy["measured_slope"], -1.0) <= noisy["effective_slope"]
     assert noisy["effective_slope"] <= max(noisy["measured_slope"], -1.0)
 
+    with pytest.raises(ValueError, match="distinct token positions"):
+        project_learning_curve(
+            [
+                {"tokens": 1, "nll": 5.0},
+                {"tokens": 1, "nll": 4.5},
+                {"tokens": 2, "nll": 4.0},
+            ],
+            8,
+            -0.5,
+        )
+    with pytest.raises(ValueError, match="horizon must be in the future"):
+        project_learning_curve(slow_sustained, 4, -0.5)
+
 
 def test_candidate_scoring_and_lane_promotions():
     curves = (
@@ -331,6 +344,49 @@ def test_candidate_scoring_and_lane_promotions():
         "b": 0.25,
         "c": 1.0,
     }
+
+
+def test_candidate_scoring_ignores_unforecastable_records():
+    records = [
+        {
+            "candidate_id": "ready",
+            "status": "ready",
+            "nll_curve": [
+                {"tokens": 1, "nll": 5.0},
+                {"tokens": 2, "nll": 4.5},
+                {"tokens": 4, "nll": 4.0},
+            ],
+            "forecast": None,
+        },
+        {
+            "candidate_id": "partial",
+            "status": "running",
+            "nll_curve": [
+                {"tokens": 1, "nll": 5.0},
+                {"tokens": 2, "nll": 4.5},
+            ],
+            "forecast": None,
+        },
+        {
+            "candidate_id": "invalid",
+            "status": "ready",
+            "nll_curve": [
+                {"tokens": 1, "nll": 5.0},
+                {"tokens": 1, "nll": 4.5},
+                {"tokens": 2, "nll": 4.0},
+            ],
+            "forecast": None,
+        },
+    ]
+
+    scored = {record["candidate_id"]: record for record in score_candidates(records, 8)}
+
+    assert scored["ready"]["forecast"]["projected_tokens"] == 8
+    assert scored["ready"]["scores"]["quality"] == 0.0
+    assert scored["partial"]["forecast"] is None
+    assert "quality" not in scored["partial"].get("scores", {})
+    assert scored["invalid"]["forecast"] is None
+    assert "quality" not in scored["invalid"].get("scores", {})
 
 
 def test_atomic_records_resume_and_checkpoint_pruning(tmp_path):
