@@ -75,7 +75,9 @@ def _resolve_speck_run(args, checkpoint_step, checkpoint_directory=None):
     experiment = _speck_experiment(args.model)
     if experiment is None:
         if checkpoint_step is not None or checkpoint_directory is not None:
-            raise ValueError("Speck checkpoint options require a Speck experiment as --model")
+            raise ValueError(
+                "Speck checkpoint options require --model to specify a Speck experiment"
+            )
         return None
     if args.tokenizer is not None:
         raise ValueError("Speck evaluations use the checkpoint tokenizer; omit --tokenizer")

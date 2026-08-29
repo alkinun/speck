@@ -52,7 +52,7 @@ def _copy_json(value):
 
 def _probabilities(values, name):
     if not isinstance(values, dict) or not values:
-        raise ValueError(f"{name} must be a nonempty probability table")
+        raise ValueError(f"{name} must be a non-empty probability table")
     probabilities = {str(key): float(value) for key, value in values.items()}
     if any(value < 0 or not math.isfinite(value) for value in probabilities.values()):
         raise ValueError(f"{name} contains an invalid probability")
@@ -188,7 +188,7 @@ class SearchSettings:
         if any(rung not in training["checkpoints"] for rung in values["rungs"]):
             raise ValueError("every rung must be a training checkpoint")
         if training["schedule_tokens"] != values["final_tokens"]:
-            raise ValueError("training schedule and final horizons must match")
+            raise ValueError("training schedule and final horizon must match")
 
         evaluation = values["evaluation"]
         if evaluation.get("monitor_offset") != 0:
@@ -314,14 +314,14 @@ def _parts(block):
         raise ValueError("search stages must contain one operation")
     operations = tuple(stage.branches[0] for stage in block.stages)
     if not operations or len(operations) > 2:
-        raise ValueError("search blocks contain at most a mixer and SwiGLU")
+        raise ValueError("search blocks must contain one or two operations")
     if len(operations) == 1:
         mixer = None if isinstance(operations[0], SwiGLUSpec) else operations[0]
         swiglu = operations[0] if isinstance(operations[0], SwiGLUSpec) else None
     else:
         mixer, swiglu = operations
     if mixer is not None and not isinstance(mixer, (AttentionSpec, GatedCausalConvSpec)):
-        raise ValueError("search blocks contain one supported mixer")
+        raise ValueError("search blocks must use a supported mixer")
     if swiglu is not None and not isinstance(swiglu, SwiGLUSpec):
         raise ValueError("SwiGLU must follow the mixer")
     return mixer, swiglu
@@ -699,7 +699,7 @@ def _mutation_duplicate(config, settings, rng):
 
 def _mutation_move(config, settings, rng):
     if len(config.blocks) < 2:
-        raise InapplicableMutation("moving a block requires two groups")
+        raise InapplicableMutation("moving a block group requires at least two block groups")
     source = rng.randrange(len(config.blocks))
     destinations = [index for index in range(len(config.blocks)) if index != source]
     destination = rng.choice(destinations)
@@ -1776,7 +1776,9 @@ def select_finalists(records):
     leaders = lane_leaders(confirmed)
     missing = [lane for lane in ("quality", "balanced", "efficiency") if lane not in leaders]
     if missing:
-        raise RuntimeError(f"confirmed archive has no {', '.join(missing)} finalist")
+        raise RuntimeError(
+            f"confirmed archive has no finalist in these lanes: {', '.join(missing)}"
+        )
     return {lane: leaders[lane]["candidate_id"] for lane in ("quality", "balanced", "efficiency")}
 
 

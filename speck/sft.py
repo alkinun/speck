@@ -66,7 +66,10 @@ def _validate_dataset_config(config):
     if not isinstance(expected, int) or not isinstance(validation, int):
         raise ValueError("dataset sample counts must be integers")
     if expected < 2 or not 0 < validation < expected:
-        raise ValueError("dataset validation samples must be between zero and total samples")
+        raise ValueError(
+            "dataset must contain at least two samples with a positive validation count below "
+            "the total"
+        )
 
 
 def _truncate_conversation(tokens, mask, tokenizer, maximum):
@@ -124,7 +127,7 @@ def prepare_sft_dataset(
         or tuple(sorted(set(sequence_lengths))) != sequence_lengths
         or any(not isinstance(length, int) or length < 1 for length in sequence_lengths)
     ):
-        raise ValueError("SFT sequence lengths must be unique positive integers in order")
+        raise ValueError("SFT sequence lengths must be unique positive integers in ascending order")
     output_dir = resolve_sft_data_dir(config, output_dir)
     manifest_path = output_dir / "manifest.json"
     if manifest_path.is_file():

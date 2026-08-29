@@ -112,7 +112,7 @@ def _phase_context(manifest, global_consumed_tokens, global_stride):
 
 
 def scheduled_source(manifest, split, global_consumed_tokens, global_stride):
-    """Select a source from only the manifest and absolute global batch position."""
+    """Select a source using only the manifest and absolute global batch position."""
 
     source_ids = tuple(source["id"] for source in manifest["sources"])
     if split == "val":

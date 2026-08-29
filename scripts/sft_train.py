@@ -1,4 +1,4 @@
-"""Instruction tune Speck on assistant-masked packed chat data."""
+"""Fine-tune Speck on assistant-masked packed chat data."""
 
 import argparse
 import json
@@ -42,8 +42,12 @@ def arguments():
         default="experiments/Speck1-140M-Instruct",
         help="experiment directory (default: %(default)s)",
     )
-    parser.add_argument("--device", default=None, help="training device")
-    parser.add_argument("--resume", type=int, default=None, help="SFT checkpoint step to resume")
+    parser.add_argument(
+        "--device", default=None, help="training device; defaults to automatic runtime selection"
+    )
+    parser.add_argument(
+        "--resume", type=int, default=None, help="SFT checkpoint step to resume from"
+    )
     parser.add_argument("--no-compile", action="store_true", help="disable torch.compile")
     return parser.parse_args()
 
@@ -90,7 +94,8 @@ def _settings(value):
         for key in integer_positive
     ):
         raise ValueError(
-            "SFT batch, epoch, evaluation, logging, and sequence values must be positive"
+            "SFT batch-token count, device batch size, epoch count, logging interval, sequence "
+            "length, and checkpoint retention must be positive"
         )
     if args.eval_every < 0 or args.save_every < 0 or args.warmup_steps < 0:
         raise ValueError("SFT step intervals must not be negative")
@@ -99,7 +104,9 @@ def _settings(value):
         or sorted(set(args.sequence_lengths)) != args.sequence_lengths
         or args.sequence_lengths[-1] != args.sequence_length
     ):
-        raise ValueError("SFT sequence lengths must be unique, ordered, and end at sequence_length")
+        raise ValueError(
+            "SFT sequence lengths must be unique, in ascending order, and end at sequence_length"
+        )
     if args.lr <= 0 or args.weight_decay < 0 or args.grad_clip <= 0:
         raise ValueError("invalid SFT optimization settings")
     if not 0 <= args.min_lr <= 1:
@@ -117,7 +124,7 @@ def main():
     args.data_dir = str(resolve_sft_data_dir(args.dataset, args.data_dir))
     args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
     if args.resume is None and latest(args.output_dir) is not None:
-        raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume")
+        raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume STEP")
 
     rank, local_rank, world_size, device = init_runtime(args.device)
     distributed = world_size > 1

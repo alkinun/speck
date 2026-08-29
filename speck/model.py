@@ -464,9 +464,9 @@ class SpeckForCausalLM(nn.Module):
         loss_reduction="mean",
     ):
         if (tokens is None) == (inputs_embeds is None):
-            raise ValueError("provide exactly one of tokens or inputs embeds")
+            raise ValueError("provide exactly one of tokens or inputs_embeds")
         if targets is not None and last_token_only:
-            raise ValueError("last token logits cannot be used with full sequence targets")
+            raise ValueError("last-token logits cannot be used with full-sequence targets")
         x = self.embed_tokens(tokens) if inputs_embeds is None else inputs_embeds
         x = x.to(torch.bfloat16 if x.is_cuda else self.embed_tokens.weight.dtype)
         length = x.size(1)

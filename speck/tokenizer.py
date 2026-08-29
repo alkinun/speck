@@ -27,7 +27,9 @@ class Tokenizer:
         model_path = os.path.join(directory, filename)
         metadata_path = os.path.join(directory, "tokenizer_metadata.json")
         if not os.path.exists(model_path) or not os.path.exists(metadata_path):
-            raise FileNotFoundError("tokenizer is not prepared; run scripts.tokenizer_prepare")
+            raise FileNotFoundError(
+                "tokenizer is not prepared; run python -m scripts.tokenizer_prepare"
+            )
         tokenizer = cls(model_path)
         with open(metadata_path, encoding="utf-8") as handle:
             metadata = json.load(handle)

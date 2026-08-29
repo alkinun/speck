@@ -47,7 +47,7 @@ uv run --extra cpu python -m scripts.tokenizer_prepare experiments/Speck1-140M
 uv run --extra cpu python -m scripts.data_prepare experiments/Speck1-140M
 ```
 
-Data preparation is a long-running network and disk-intensive job. The current 5B-token recipe
+Data preparation is a long-running network- and disk-intensive job. The current 5B-token recipe
 preflights about 36.9GB of free space and can resume at validated source-file boundaries. Read the
 [data preparation guide](docs/data.md) before starting it.
 

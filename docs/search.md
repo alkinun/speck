@@ -147,7 +147,7 @@ Search comparisons depend on more than architecture JSON. A study records and va
 - Model, data, and tokenizer configurations.
 - Tokenizer fingerprint and special-token IDs.
 - Packed-data manifest fingerprint, resolved directory, and shard checksums.
-- Torch and CUDA versions, device identity, dtypes, deterministic settings, and cuBLAS workspace
+- PyTorch and CUDA versions, device identity, dtypes, deterministic settings, and cuBLAS workspace
   configuration.
 - Search, training, evaluation, promotion, and profiling settings.
 

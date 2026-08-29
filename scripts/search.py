@@ -878,7 +878,8 @@ def _check_generation_space(store, plans, settings):
     free = shutil.disk_usage(store.directory).free
     if free < checkpoint_bytes:
         raise OSError(
-            f"search generation needs {checkpoint_bytes} checkpoint bytes but only {free} are free"
+            f"search generation needs {checkpoint_bytes:,} bytes for checkpoints, but only "
+            f"{free:,} bytes are free"
         )
 
 

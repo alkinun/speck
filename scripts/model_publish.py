@@ -121,7 +121,10 @@ def arguments():
         help="completed SFT checkpoint directory (default: %(default)s)",
     )
     parser.add_argument(
-        "--step", type=int, default=None, help="checkpoint step; defaults to latest"
+        "--step",
+        type=int,
+        default=None,
+        help="checkpoint step; defaults to the latest completed step",
     )
     parser.add_argument(
         "--repo", default=DEFAULT_REPO, help="destination Hugging Face model repository"

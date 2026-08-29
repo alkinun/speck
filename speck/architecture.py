@@ -151,7 +151,7 @@ class BlockInvocation:
 
 @dataclass(frozen=True)
 class ArchitectureConfig:
-    """Describe a Speck model as ordered, optionally shared block groups."""
+    """Describe a Speck model as an ordered sequence of optionally shared block groups."""
 
     blocks: tuple[BlockGroup, ...]
     embedding_size: int

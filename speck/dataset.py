@@ -66,7 +66,7 @@ def resolve_data_dir(output_dir=None, output_name=None):
     if output_name is None:
         return default_data_dir / "packed"
     if not isinstance(output_name, str) or not output_name or Path(output_name).name != output_name:
-        raise ValueError("data output_name must be one nonempty path component")
+        raise ValueError("data output_name must be a single non-empty path component")
     return default_data_dir / output_name
 
 
@@ -191,7 +191,7 @@ def _validate_source(source):
         raise ValueError(f"data source is missing settings: {', '.join(sorted(missing))}")
     source_id = source["id"]
     if not isinstance(source_id, str) or not source_id or Path(source_id).name != source_id:
-        raise ValueError("source ID must be one nonempty path component")
+        raise ValueError("source ID must be a single non-empty path component")
     for key in ("repo", "tree_path", "content_column"):
         if not isinstance(source[key], str) or (key != "tree_path" and not source[key]):
             raise ValueError(f"source {source_id} {key} must be a string")
@@ -204,7 +204,7 @@ def _validate_source(source):
     files = source.get("files")
     if files is not None:
         if not isinstance(files, list) or not files:
-            raise ValueError(f"source {source_id} files must be a nonempty list")
+            raise ValueError(f"source {source_id} files must be a non-empty list")
         if any(
             not isinstance(filename, str)
             or not filename
@@ -1114,7 +1114,7 @@ class SourceBuilder:
                 if self.writers[split].total_tokens < self.targets[split]
             )
             raise RuntimeError(
-                f"source {self.source_id} was exhausted before its budgets: {missing}"
+                f"source {self.source_id} was exhausted before meeting its budgets: {missing}"
             )
         self._sync_outputs()
         self.index_file.close()

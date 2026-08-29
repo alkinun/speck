@@ -167,8 +167,8 @@ def validate_config(config):
         else:
             raise ValueError(f"unsupported Speck operator in block {index}: {kind!r}")
 
-    if hidden_size is None or head_dim is None or kv_heads is None:
-        raise ValueError("source requires both attention and convolution blocks")
+    if hidden_size is None or head_dim is None or kv_heads is None or not kernel_sizes:
+        raise ValueError("source model must contain both attention and convolution blocks")
     if hidden_size % head_dim:
         raise ValueError("residual width must be divisible by the attention head dimension")
     if any(not isinstance(size, int) or not 1 <= size <= hidden_size for size in conv_inner_sizes):
@@ -433,7 +433,10 @@ def transformed_parameter_count(config, layout):
     embedding_size = config.get("embedding_size")
     vocab_size = config.get("vocab_size")
     if not all(isinstance(value, int) for value in (expected, embedding_size, vocab_size)):
-        raise ValueError("source config must declare integer parameter and embedding sizes")
+        raise ValueError(
+            "source config must declare an integer parameter count, embedding size, and "
+            "vocabulary size"
+        )
 
     hidden_size = layout["hidden_size"]
     total = expected

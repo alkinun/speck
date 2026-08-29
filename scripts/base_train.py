@@ -42,7 +42,7 @@ def arguments():
         "--resume",
         type=int,
         default=None,
-        help="checkpoint step to resume",
+        help="checkpoint step to resume from",
     )
     parser.add_argument(
         "--no-compile",
@@ -81,7 +81,7 @@ def main():
     )
     args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
     if args.resume is None and latest(args.output_dir) is not None:
-        raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume")
+        raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume STEP")
     rank, local_rank, world_size, device = init_runtime(args.device)
     distributed = world_size > 1
     master = rank == 0

@@ -1,4 +1,4 @@
-"""Export a base-training checkpoint for local Transformers evaluation."""
+"""Export a pretraining checkpoint for local Transformers evaluation."""
 
 import argparse
 import json
@@ -42,7 +42,7 @@ def load_metadata(checkpoint_dir, step):
         raise FileNotFoundError(f"checkpoint {step} is incomplete")
     metadata = json.loads(path.read_text(encoding="utf-8"))
     if metadata.get("step") != step or metadata.get("training_phase") == "sft":
-        raise ValueError("checkpoint is not a matching base-training checkpoint")
+        raise ValueError("checkpoint is not a matching pretraining checkpoint")
     return metadata
 
 

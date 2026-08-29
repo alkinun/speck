@@ -65,8 +65,8 @@ Speck evaluations.
 `Open SLM Intelligence Index` means the chance-normalized Intelligence Index reported by the Open SLM
 Leaderboard. `BananaMind Base Bench 1.1 Elo` means the overall Elo reported by BananaMind Base
 Bench 1.1. Speed and memory values are local batch-1 measurements described below. Reference
-models saw 6-400x more pretraining tokens, so this is a parameter-adjacent comparison, not a
-compute-matched one."""
+models were pretrained on 6 to 400 times as many tokens. This is a parameter-adjacent comparison,
+not a compute-matched one."""
 
 
 def arguments():
@@ -75,7 +75,7 @@ def arguments():
         "--output-dir",
         type=Path,
         default=Path(base_dir()) / "model-cards",
-        help="local generated-card directory",
+        help="local directory for generated model cards",
     )
     parser.add_argument("--no-upload", action="store_true", help="validate without uploading")
     parser.add_argument("--force", action="store_true", help="replace existing local cards")

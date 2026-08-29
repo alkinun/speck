@@ -74,7 +74,7 @@ new clean build can resolve newer source commits.
 `experiments/Speck1.5-140M` pins every source revision and uses a foundation phase through 3.5B
 tokens, a capability ramp through 4.5B, and a final 500M-token capability anneal:
 
-| Phase end | FineWeb-Edu | DCLM-Edu | Ultra-FineWeb | DCLM | FineMath-4+ | UltraData-Math L3 Textbook-Exercise | UltraData-Math L3 Multi-Style | Wikimedia | peS2o | Ultra-FineWeb-L3 Multi-Style | Cosmopedia v2 |
+| Phase end | FineWeb-Edu | DCLM-Edu | Ultra-FineWeb | DCLM | FineMath-4+ | UltraData-Math L3 Textbook-Exercise | UltraData-Math L3 Multi-Style | English Wikipedia | peS2o | Ultra-FineWeb-L3 Multi-Style | Cosmopedia v2 |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 3.5B | 32% | 20% | 13% | 6% | 7% | 2% | 1% | 4% | 4% | 5% | 6% |
 | 4.5B | 22% | 16% | 9% | 4% | 12% | 4% | 3% | 5% | 7% | 8% | 10% |
@@ -91,7 +91,7 @@ The phase durations produce these aggregate targets:
 | FineMath-4+ | 455M | 9.1% |
 | UltraData-Math L3 Textbook-Exercise | 140M | 2.8% |
 | UltraData-Math L3 Multi-Style | 90M | 1.8% |
-| Wikimedia | 215M | 4.3% |
+| English Wikipedia | 215M | 4.3% |
 | peS2o | 250M | 5.0% |
 | Ultra-FineWeb-L3 Multi-Style | 335M | 6.7% |
 | Cosmopedia v2 | 395M | 7.9% |
@@ -116,8 +116,8 @@ Dataset repositories, revisions, paths, filters, and source order are recorded i
 
 Input discovery uses each Hugging Face repository tree rather than datasets-server previews. Files
 are deterministically shuffled per source. The pipeline downloads and reads one remote Parquet or
-gzip-JSONL file at a time, removes it after processing, and writes source-local train and validation
-shards under `sources/<source-id>/`.
+gzip-compressed JSONL file at a time, removes it after processing, and writes source-local train and
+validation shards under `sources/<source-id>/`.
 
 Validation reserves 5M tokens per source. Validation loading schedules source streams equally;
 training loading follows the configured phased weights.

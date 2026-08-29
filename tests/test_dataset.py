@@ -618,7 +618,7 @@ def test_resolve_data_dir_preserves_default_and_supports_isolated_names(tmp_path
         dataset.default_data_dir / "Speck1.5-140M"
     )
     assert dataset.resolve_data_dir(tmp_path / "explicit", "ignored") == tmp_path / "explicit"
-    with pytest.raises(ValueError, match="one nonempty path component"):
+    with pytest.raises(ValueError, match="single non-empty path component"):
         dataset.resolve_data_dir(output_name="nested/name")
 
 

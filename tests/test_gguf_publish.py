@@ -126,6 +126,14 @@ def test_transformed_config_selects_attention_layers_with_kv_heads():
     assert result["conv_L_cache"] == 3
 
 
+def test_validate_config_requires_attention_and_convolution():
+    source = config()
+    source["blocks"] = source["blocks"][1:]
+
+    with pytest.raises(ValueError, match="both attention and convolution"):
+        validate_config(source)
+
+
 def test_transformed_parameter_count_includes_padded_convolution():
     source = config()
     layout = validate_config(source)

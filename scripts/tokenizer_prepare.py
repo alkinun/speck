@@ -21,7 +21,7 @@ def main(argv=None):
     args = parse_args(argv)
     config = load_experiment(args.experiment, "tokenizer")["tokenizer"]
     tokenizer = prepare(**config)
-    print(f"Prepared tokenizer with {tokenizer.vocab_size:,} tokens")
+    print(f"Prepared tokenizer with {tokenizer.vocab_size:,} vocabulary entries")
 
 
 if __name__ == "__main__":

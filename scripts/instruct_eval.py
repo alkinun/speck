@@ -1,4 +1,4 @@
-"""Compare local Speck instruction checkpoints on 15 deterministic questions."""
+"""Compare local checkpoints for instruction-tuned Speck models on 15 fixed questions."""
 
 import argparse
 import json
@@ -248,7 +248,7 @@ def main():
     for result in results["models"]:
         print(
             f"{result['name']}: {result['correct']}/{result['questions']} correct, "
-            f"{result['exact_format']}/{result['questions']} exact format"
+            f"{result['exact_format']}/{result['questions']} exact-format answers"
         )
     print(f"Full results: {args.output}")
 
