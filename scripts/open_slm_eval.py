@@ -45,6 +45,26 @@ def _sha256(path):
     return digest.hexdigest()
 
 
+def _local_model_identity(path):
+    path = Path(path).expanduser().resolve()
+    if not path.is_dir():
+        raise FileNotFoundError(f"local model directory does not exist: {path}")
+    files = sorted(candidate for candidate in path.rglob("*") if candidate.is_file())
+    if not files:
+        raise ValueError(f"local model directory is empty: {path}")
+    digest = hashlib.sha256()
+    entries = []
+    for candidate in files:
+        relative = candidate.relative_to(path).as_posix()
+        checksum = _sha256(candidate)
+        digest.update(relative.encode())
+        digest.update(b"\0")
+        digest.update(checksum.encode())
+        digest.update(b"\n")
+        entries.append({"path": relative, "sha256": checksum, "bytes": candidate.stat().st_size})
+    return {"path": str(path), "sha256": digest.hexdigest(), "files": entries}
+
+
 def _verify_checksum(path, expected, label):
     actual = _sha256(path)
     if actual != expected:
@@ -87,24 +107,26 @@ def _assert_revision(api, repo, repo_type, expected, *, require_main=False):
             )
 
 
-def _assert_implicit_revisions(config):
+def _assert_implicit_revisions(config, *, check_model=True):
     api = HfApi()
-    model = config["model"]
-    _assert_revision(api, model["repo"], "model", model["revision"], require_main=True)
+    if check_model:
+        model = config["model"]
+        _assert_revision(api, model["repo"], "model", model["revision"], require_main=True)
     for repo, revision in config["lm_eval"]["datasets"].items():
         _assert_revision(api, repo, "dataset", revision, require_main=True)
 
 
-def _lm_eval_command(config, output_path, device, limit=None):
+def _lm_eval_command(config, output_path, device, limit=None, local_model=None):
     model = config["model"]
     evaluation = config["lm_eval"]
     model_args = [
-        f"pretrained={model['repo']}",
-        f"revision={model['revision']}",
+        f"pretrained={local_model or model['repo']}",
         "trust_remote_code=True",
         f"dtype={evaluation['dtype']}",
         "use_cache=False",
     ]
+    if local_model is None:
+        model_args.insert(1, f"revision={model['revision']}")
     command = [
         sys.executable,
         "-m",
@@ -140,15 +162,26 @@ def _new_result(output_path, before):
     return created.pop()
 
 
-def _run_lm_eval(config, output_dir, device, limit=None):
-    _assert_implicit_revisions(config)
+def _run_lm_eval(config, output_dir, device, limit=None, local_model=None):
+    _assert_implicit_revisions(config, check_model=local_model is None)
     name = "smoke-results.json" if limit is not None else "results.json"
     output_path = output_dir / "lm-eval" / name
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    local_identity = _local_model_identity(local_model) if local_model is not None else None
     before = set(output_path.parent.glob(f"{output_path.stem}_*.json"))
-    subprocess.run(_lm_eval_command(config, output_path, device, limit), check=True)
-    _assert_implicit_revisions(config)
+    subprocess.run(_lm_eval_command(config, output_path, device, limit, local_model), check=True)
+    _assert_implicit_revisions(config, check_model=local_model is None)
     result = _new_result(output_path, before)
+    if local_identity is not None:
+        identity_dir = output_path.parent / "local-identities"
+        identity_dir.mkdir(exist_ok=True)
+        identity = {
+            "local_model": local_identity,
+            "result": {"path": result.name, "sha256": _sha256(result)},
+        }
+        (identity_dir / f"{result.name}.json").write_text(
+            json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
     print(f"lm-eval result: {result}")
     return result
 
@@ -360,9 +393,12 @@ def _parse_args():
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     parser.add_argument("--limit", type=float, help="lm-eval smoke-test sample limit")
+    parser.add_argument("--local-model", type=Path, help="local Transformers model for lm-eval")
     args = parser.parse_args()
     if args.limit is not None and (args.limit <= 0 or args.stage not in ("lm-eval",)):
         parser.error("--limit must be positive and is only supported by the lm-eval stage")
+    if args.local_model is not None and args.stage != "lm-eval":
+        parser.error("--local-model is only supported by the lm-eval stage")
     return args
 
 
@@ -373,7 +409,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     if args.stage in ("lm-eval", "all"):
-        _run_lm_eval(config, output_dir, args.device, args.limit)
+        _run_lm_eval(config, output_dir, args.device, args.limit, args.local_model)
     if args.stage in ("arithmark-2", "arithmark-3", "all"):
         files = _download_benchmark_files(config)
         if args.stage in ("arithmark-2", "all"):

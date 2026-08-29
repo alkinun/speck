@@ -2,6 +2,13 @@
   "base_experiment": "../Speck1.5-140M",
   "batch_tokens": 65536,
   "checkpoint_tokens": [50000000, 100000000, 250000000, 500000000],
+  "evaluation": {
+    "batch_size": 4,
+    "cases_per_family": 256,
+    "families": ["hierarchy", "retrieval", "binding", "state", "set_union", "composition"],
+    "seed": 20250829,
+    "standard_config": "../Speck1-140M/open_slm.json"
+  },
   "format_version": 1,
   "procedural": {
     "formal": {

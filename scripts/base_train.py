@@ -80,6 +80,7 @@ def validate(model, loader, steps, world_size):
 
 
 def train(configs, cli):
+    session_started = time.perf_counter()
     args = SimpleNamespace(**configs["train"])
     args.device = cli.device
     args.resume = cli.resume
@@ -143,6 +144,9 @@ def train(configs, cli):
             **transfer,
             "source_manifest": source_metadata["manifest"],
             "source_phase": source_metadata["training_phase"],
+            "source_timing": load_timing(source_directory, source_step)
+            or source_metadata.get("timing", {}),
+            "source_tokens": source_metadata["resolved"]["consumed_tokens"],
         }
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
@@ -305,7 +309,6 @@ def train(configs, cli):
             train_model, device_ids=[local_rank], broadcast_buffers=False
         )
     flops = model.flops_per_token(args.sequence_length)
-    session_started = time.perf_counter()
 
     def validation(step):
         nonlocal elapsed_evaluation

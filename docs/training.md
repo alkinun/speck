@@ -51,6 +51,10 @@ Resume validates the architecture, packed-data manifest, optimizer settings, bat
 training horizon, world size, and next loader offset. It restores the optimizer, data position,
 elapsed time, and W&B run identity.
 
+Backbone initialization is deliberately separate from resume. The
+[SpeckGym v0 experiment](speckgym.md) uses it to retain learned cores while replacing the complete
+token interface and starting a fresh optimizer, schedule, language-data cursor, and W&B phase.
+
 ## Supervised Fine-Tuning
 
 SFT configurations live in experiment directories containing `model.json`, `tokenizer.json`, and

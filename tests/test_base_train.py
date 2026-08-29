@@ -12,6 +12,7 @@ from speck.architecture import (
 )
 from speck.checkpoint import load_metadata, load_timing
 from speck.speckgym import prepare_speckgym
+from speck.speckgym_eval import aggregate_training_metrics
 
 
 class FakeTokenizer:
@@ -128,6 +129,8 @@ def test_procedural_checkpoint_initializes_a_fresh_language_phase(tmp_path, monk
     assert language["validation_step"] == 2
     assert language["validation_global_tokens"] == 160
     assert language["initialization"]["policy"] == "reset_token_interface"
+    assert language["initialization"]["source_tokens"] == 80
+    assert language["initialization"]["source_timing"]["optimizer_seconds"] > 0
     assert language["initialization"]["reset"] == [
         "adapters.0.weight",
         "embed_tokens.weight",
@@ -140,6 +143,8 @@ def test_procedural_checkpoint_initializes_a_fresh_language_phase(tmp_path, monk
     checkpoint_timing = load_timing(language_dir, 2)
     assert checkpoint_timing["checkpoint_seconds"] > 0
     assert checkpoint_timing["active_seconds"] >= language["timing"]["active_seconds"]
+    aggregate = aggregate_training_metrics(language, checkpoint_timing, "B")
+    assert [phase["tokens"] for phase in aggregate["phases"]] == [80, 80]
 
     shutil.rmtree(warmup_dir)
     cli.resume = 1

@@ -7,6 +7,13 @@ allows it.
 Run commands from the repository root. Model-quality evaluations require network access and may
 require gated-dataset acceptance and Hugging Face authentication.
 
+## SpeckGym v0
+
+SpeckGym evaluates native language validation, HellaSwag, ARC, PIQA, and deterministic held-out
+computational tasks at common 50M, 100M, 250M, and 500M requested-token milestones. It also combines
+warm-up and language-phase throughput and active wall time. See the [SpeckGym guide](speckgym.md) for
+the complete experiment contract and commands.
+
 ## Open SLM Leaderboard
 
 Run every stage in the checked Open SLM configuration:

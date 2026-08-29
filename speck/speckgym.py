@@ -64,6 +64,7 @@ def load_speckgym_config(experiment="experiments/SpeckGym-v0"):
         "batch_tokens",
         "total_requested_tokens",
         "checkpoint_tokens",
+        "evaluation",
         "procedural",
     }
     missing = required - config.keys()
@@ -91,6 +92,9 @@ def load_speckgym_config(experiment="experiments/SpeckGym-v0"):
         raise ValueError("SpeckGym warm-up must be shorter than the total token budget")
     config["experiment"] = str(path.parent.resolve())
     config["base_experiment"] = str((path.parent / config["base_experiment"]).resolve())
+    config["evaluation"]["standard_config"] = str(
+        (path.parent / config["evaluation"]["standard_config"]).resolve()
+    )
     config["warmup_tokens"] = warmup_tokens
     return config
 

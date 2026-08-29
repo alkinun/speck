@@ -25,6 +25,61 @@ def test_lm_eval_command_pins_model_and_numerical_settings(tmp_path):
     assert command[command.index("--batch_size") + 1] == "32"
 
 
+def test_lm_eval_command_accepts_a_local_export_without_a_model_revision(tmp_path):
+    config = load_config()
+    model = tmp_path / "export"
+    command = open_slm_eval._lm_eval_command(
+        config, tmp_path / "result.json", "cuda", local_model=model
+    )
+
+    model_args_start = command.index("--model_args") + 1
+    tasks_start = command.index("--tasks")
+    model_args = command[model_args_start:tasks_start]
+    assert f"pretrained={model}" in model_args
+    assert not any(argument.startswith("revision=") for argument in model_args)
+
+
+def test_local_model_identity_changes_with_export_contents(tmp_path):
+    model = tmp_path / "model"
+    model.mkdir()
+    (model / "config.json").write_text("{}")
+    (model / "weights.bin").write_bytes(b"first")
+    first = open_slm_eval._local_model_identity(model)
+
+    (model / "weights.bin").write_bytes(b"second")
+    second = open_slm_eval._local_model_identity(model)
+
+    assert first["path"] == str(model.resolve())
+    assert first["sha256"] != second["sha256"]
+    assert [entry["path"] for entry in first["files"]] == ["config.json", "weights.bin"]
+
+
+def test_local_lm_eval_identity_is_bound_to_one_successful_result(tmp_path, monkeypatch):
+    config = load_config()
+    model = tmp_path / "model"
+    model.mkdir()
+    (model / "weights.bin").write_bytes(b"weights")
+    result = tmp_path / "output" / "lm-eval" / "results_2026.json"
+
+    monkeypatch.setattr(open_slm_eval, "_assert_implicit_revisions", lambda *args, **kwargs: None)
+
+    def run(command, check):
+        assert check
+        result.write_text("{}", encoding="utf-8")
+
+    monkeypatch.setattr(open_slm_eval.subprocess, "run", run)
+    returned = open_slm_eval._run_lm_eval(config, tmp_path / "output", "cpu", local_model=model)
+
+    assert returned == result
+    identity_path = result.parent / "local-identities" / f"{result.name}.json"
+    identity = json.loads(identity_path.read_text(encoding="utf-8"))
+    assert identity["local_model"] == open_slm_eval._local_model_identity(model)
+    assert identity["result"] == {
+        "path": result.name,
+        "sha256": open_slm_eval._sha256(result),
+    }
+
+
 @pytest.mark.parametrize(
     ("path", "repo", "revision"),
     [
