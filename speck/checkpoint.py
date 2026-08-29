@@ -7,7 +7,14 @@ import re
 import torch
 
 
+def _validate_step(step):
+    if not isinstance(step, int) or isinstance(step, bool) or step < 0:
+        raise ValueError("checkpoint step must be a non-negative integer")
+    return step
+
+
 def save(directory, step, model, optimizer, metadata):
+    step = _validate_step(step)
     os.makedirs(directory, exist_ok=True)
     paths = {
         "model": os.path.join(directory, f"model_{step:06d}.pt"),
@@ -33,11 +40,15 @@ def save(directory, step, model, optimizer, metadata):
 def completed_steps(directory):
     if not os.path.isdir(directory):
         return []
-    return sorted(
-        int(match.group(1))
-        for name in os.listdir(directory)
-        if (match := re.fullmatch(r"complete_(\d+)", name))
-    )
+    steps = []
+    for name in os.listdir(directory):
+        match = re.fullmatch(r"complete_(\d+)", name)
+        if match is None:
+            continue
+        step = int(match.group(1))
+        if name == f"complete_{step:06d}":
+            steps.append(step)
+    return sorted(steps)
 
 
 def latest(directory):
@@ -64,6 +75,7 @@ def prune(directory, keep):
 
 
 def load(directory, step, device):
+    step = _validate_step(step)
     if not os.path.exists(os.path.join(directory, f"complete_{step:06d}")):
         raise FileNotFoundError(f"checkpoint {step} is incomplete")
     model = torch.load(os.path.join(directory, f"model_{step:06d}.pt"), map_location=device)
@@ -74,6 +86,7 @@ def load(directory, step, device):
 
 
 def load_model(directory, step, device):
+    step = _validate_step(step)
     if not os.path.exists(os.path.join(directory, f"complete_{step:06d}")):
         raise FileNotFoundError(f"checkpoint {step} is incomplete")
     path = os.path.join(directory, f"model_{step:06d}.pt")
