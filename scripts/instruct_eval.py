@@ -107,6 +107,12 @@ QUESTIONS = (
     },
 )
 
+MODEL_NAMES = (
+    "Speck1-140M-Instruct",
+    "Speck1.1-140M-Instruct",
+    "Speck1.1-140M-Instruct-2ep",
+)
+
 
 def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -223,11 +229,6 @@ def main():
     if args.max_tokens < 1:
         raise ValueError("--max-tokens must be positive")
     device = torch.device(args.device)
-    names = (
-        "Speck1-140M-Instruct",
-        "Speck1.1-140M-Instruct",
-        "Speck1.1-140M-Instruct-Light",
-    )
     results = {
         "method": {
             "decoding": "greedy",
@@ -238,7 +239,8 @@ def main():
             "device": str(device),
         },
         "models": [
-            evaluate(name, args.checkpoints_root / name, args.max_tokens, device) for name in names
+            evaluate(name, args.checkpoints_root / name, args.max_tokens, device)
+            for name in MODEL_NAMES
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

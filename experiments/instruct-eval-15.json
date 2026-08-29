@@ -222,8 +222,8 @@
       ]
     },
     {
-      "name": "Speck1.1-140M-Instruct",
-      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct",
+      "name": "Speck1.1-140M-Instruct-2ep",
+      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct-2ep",
       "step": 17068,
       "correct": 3,
       "exact_format": 2,
@@ -435,8 +435,8 @@
       ]
     },
     {
-      "name": "Speck1.1-140M-Instruct-Light",
-      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct-Light",
+      "name": "Speck1.1-140M-Instruct",
+      "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct",
       "step": 8534,
       "correct": 5,
       "exact_format": 2,

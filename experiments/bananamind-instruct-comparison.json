@@ -16,10 +16,10 @@
     "batch_size": 32,
     "threads": 16
   },
-  "official_elo_winner": "Speck1.1-140M-Instruct-Light",
+  "official_elo_winner": "Speck1.1-140M-Instruct",
   "models": [
     {
-      "name": "Speck1.1-140M-Instruct-Light",
+      "name": "Speck1.1-140M-Instruct",
       "checkpoint_step": 8534,
       "overall_elo": 1002,
       "overall_elo_unrounded": 1002.063998163818,
@@ -35,7 +35,7 @@
         "logical_reasoning": {"passed": 19, "accuracy": 0.38, "elo": 995},
         "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1320}
       },
-      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct-Light/report.json"
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct/report.json"
     },
     {
       "name": "Speck1-140M-Instruct",
@@ -57,7 +57,7 @@
       "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1-140M-Instruct/report.json"
     },
     {
-      "name": "Speck1.1-140M-Instruct",
+      "name": "Speck1.1-140M-Instruct-2ep",
       "checkpoint_step": 17068,
       "overall_elo": 999,
       "overall_elo_unrounded": 998.9729263586623,
@@ -73,27 +73,27 @@
         "logical_reasoning": {"passed": 14, "accuracy": 0.28, "elo": 925},
         "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1326}
       },
-      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct/report.json"
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct-2ep/report.json"
     }
   ],
   "paired_accuracy_checks": [
     {
       "first": "Speck1-140M-Instruct",
-      "second": "Speck1.1-140M-Instruct",
+      "second": "Speck1.1-140M-Instruct-2ep",
       "first_only_correct": 28,
       "second_only_correct": 20,
       "exact_mcnemar_p": 0.3123
     },
     {
       "first": "Speck1-140M-Instruct",
-      "second": "Speck1.1-140M-Instruct-Light",
+      "second": "Speck1.1-140M-Instruct",
       "first_only_correct": 20,
       "second_only_correct": 16,
       "exact_mcnemar_p": 0.6177
     },
     {
-      "first": "Speck1.1-140M-Instruct",
-      "second": "Speck1.1-140M-Instruct-Light",
+      "first": "Speck1.1-140M-Instruct-2ep",
+      "second": "Speck1.1-140M-Instruct",
       "first_only_correct": 13,
       "second_only_correct": 17,
       "exact_mcnemar_p": 0.5847
