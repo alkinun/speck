@@ -10,6 +10,7 @@
   "models": [
     {
       "name": "Speck1-140M-Instruct",
+      "source_run": "Speck1-140M-Instruct",
       "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1-140M-Instruct",
       "step": 4835,
       "correct": 2,
@@ -223,6 +224,7 @@
     },
     {
       "name": "Speck1.1-140M-Instruct-2ep",
+      "source_run": "Speck1.1-140M-Instruct",
       "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct-2ep",
       "step": 17068,
       "correct": 3,
@@ -436,6 +438,7 @@
     },
     {
       "name": "Speck1.1-140M-Instruct",
+      "source_run": "Speck1.1-140M-Instruct-Light",
       "checkpoint_dir": "/home/alkin/.cache/speck/checkpoints/Speck1.1-140M-Instruct",
       "step": 8534,
       "correct": 5,

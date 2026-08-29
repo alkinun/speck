@@ -10,7 +10,7 @@ import torch
 
 from speck.architecture import ArchitectureConfig
 from speck.chat import ChatTokenizer
-from speck.checkpoint import latest, load_model
+from speck.checkpoint import completed_steps, load_model
 from speck.model import SpeckForCausalLM
 from speck.tokenizer import Tokenizer
 
@@ -107,11 +107,11 @@ QUESTIONS = (
     },
 )
 
-MODEL_NAMES = (
-    "Speck1-140M-Instruct",
-    "Speck1.1-140M-Instruct",
-    "Speck1.1-140M-Instruct-2ep",
-)
+MODEL_STEPS = {
+    "Speck1-140M-Instruct": 4_835,
+    "Speck1.1-140M-Instruct": 8_534,
+    "Speck1.1-140M-Instruct-2ep": 17_068,
+}
 
 
 def arguments():
@@ -169,10 +169,9 @@ def generate(model, tokenizer, prompt, max_tokens, device):
     return tokenizer.decode(generated, skip_special_tokens=True).strip(), len(generated)
 
 
-def evaluate(name, checkpoint_dir, max_tokens, device):
-    step = latest(checkpoint_dir)
-    if step is None:
-        raise FileNotFoundError(f"no completed checkpoint found in {checkpoint_dir}")
+def evaluate(name, checkpoint_dir, step, max_tokens, device):
+    if step not in completed_steps(checkpoint_dir):
+        raise FileNotFoundError(f"checkpoint {step} is incomplete in {checkpoint_dir}")
     metadata_path = checkpoint_dir / f"metadata_{step:06d}.json"
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     tokenizer = ChatTokenizer(Tokenizer(checkpoint_dir / "tokenizer/tokenizer.model"))
@@ -214,6 +213,7 @@ def evaluate(name, checkpoint_dir, max_tokens, device):
     }
     return {
         "name": name,
+        "source_run": metadata["resolved"]["run"],
         "checkpoint_dir": str(checkpoint_dir.resolve()),
         "step": step,
         "correct": sum(answer["correct"] for answer in answers),
@@ -239,8 +239,8 @@ def main():
             "device": str(device),
         },
         "models": [
-            evaluate(name, args.checkpoints_root / name, args.max_tokens, device)
-            for name in MODEL_NAMES
+            evaluate(name, args.checkpoints_root / name, step, args.max_tokens, device)
+            for name, step in MODEL_STEPS.items()
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

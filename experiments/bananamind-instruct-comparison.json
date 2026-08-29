@@ -20,6 +20,7 @@
   "models": [
     {
       "name": "Speck1.1-140M-Instruct",
+      "source_run": "Speck1.1-140M-Instruct-Light",
       "checkpoint_step": 8534,
       "overall_elo": 1002,
       "overall_elo_unrounded": 1002.063998163818,
@@ -35,10 +36,11 @@
         "logical_reasoning": {"passed": 19, "accuracy": 0.38, "elo": 995},
         "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1320}
       },
-      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct/report.json"
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct-Light/report.json"
     },
     {
       "name": "Speck1-140M-Instruct",
+      "source_run": "Speck1-140M-Instruct",
       "checkpoint_step": 4835,
       "overall_elo": 1001,
       "overall_elo_unrounded": 1001.4836627341797,
@@ -58,6 +60,7 @@
     },
     {
       "name": "Speck1.1-140M-Instruct-2ep",
+      "source_run": "Speck1.1-140M-Instruct",
       "checkpoint_step": 17068,
       "overall_elo": 999,
       "overall_elo_unrounded": 998.9729263586623,
@@ -73,7 +76,7 @@
         "logical_reasoning": {"passed": 14, "accuracy": 0.28, "elo": 925},
         "code_completion": {"passed": 37, "accuracy": 0.74, "elo": 1326}
       },
-      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct-2ep/report.json"
+      "report": "/home/alkin/.cache/speck/benchmarks/bananamind-instruct-comparison/Speck1.1-140M-Instruct/report.json"
     }
   ],
   "paired_accuracy_checks": [
