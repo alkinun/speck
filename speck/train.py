@@ -21,9 +21,25 @@ def validate_loader_progress(data_state, trained_tokens):
 
 
 def lr_scale(step, steps, warmup, minimum):
+    if not isinstance(steps, int) or steps < 1:
+        raise ValueError("steps must be a positive integer")
+    if not isinstance(step, int) or not 0 <= step < steps:
+        raise ValueError("step must be an executed zero-based schedule index")
+    if not isinstance(warmup, int) or not 0 <= warmup < steps:
+        raise ValueError("warmup must leave at least one scheduled step")
+    if not isinstance(minimum, (int, float)) or not math.isfinite(minimum):
+        raise ValueError("minimum must be a finite scale")
+    if not 0 <= minimum <= 1:
+        raise ValueError("minimum must be between zero and one")
+
     if step < warmup:
         return (step + 1) / warmup
-    progress = min(1.0, (step - warmup) / max(1, steps - warmup))
+    if steps == 1:
+        return minimum
+    if warmup == 0:
+        progress = step / (steps - 1)
+    else:
+        progress = (step - warmup + 1) / (steps - warmup)
     return minimum + (1 - minimum) * 0.5 * (1 + math.cos(math.pi * progress))
 
 
