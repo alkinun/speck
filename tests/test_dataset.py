@@ -222,6 +222,20 @@ def test_half_percentage_weights_produce_exact_quotas_and_schedule():
         "sources": [{"id": "a"}, {"id": "b"}],
     }
     assert source_selection_counts(manifest, "train", 200, 1) == {"a": 199, "b": 1}
+    cycle = dataloader._smooth_cycle((("a", 99.5), ("b", 0.5)))
+    assert len(cycle) == 200
+    assert cycle.count("a") == 199
+    assert cycle.count("b") == 1
+
+
+def test_weighted_schedule_reduces_ratios_and_bounds_exact_cycles():
+    cycle = dataloader._smooth_cycle((("a", 75), ("b", 25)))
+    assert len(cycle) == 4
+    assert cycle.count("a") == 3
+    assert cycle.count("b") == 1
+
+    with pytest.raises(ValueError, match="cycle exceeds 100,000 batches"):
+        dataloader._smooth_cycle((("a", 50.000001), ("b", 49.999999)))
 
 
 def test_disk_preflight_reports_required_and_available_bytes(tmp_path):

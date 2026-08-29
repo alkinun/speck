@@ -15,6 +15,8 @@ import torch
 from speck.common import dist_info
 from speck.dataset import default_data_dir, load_manifest
 
+_MAX_WEIGHT_CYCLE = 100_000
+
 
 class PackedTokenSource:
     """Expose one source and split as a contiguous memory-mapped token stream."""
@@ -77,7 +79,11 @@ def _smooth_cycle(weight_items):
     fractions = tuple(Fraction(str(weight)) for _, weight in weight_items)
     scale = math.lcm(*(weight.denominator for weight in fractions))
     weights = tuple(int(weight * scale) for weight in fractions)
+    divisor = math.gcd(*weights)
+    weights = tuple(weight // divisor for weight in weights)
     total_weight = sum(weights)
+    if total_weight > _MAX_WEIGHT_CYCLE:
+        raise ValueError(f"exact mixture scheduling cycle exceeds {_MAX_WEIGHT_CYCLE:,} batches")
     current = [0] * len(source_ids)
     cycle = []
     for _ in range(total_weight):
