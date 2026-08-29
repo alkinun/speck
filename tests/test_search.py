@@ -360,6 +360,23 @@ def test_atomic_records_resume_and_checkpoint_pruning(tmp_path):
     assert (checkpoint / "complete_000002").exists()
 
 
+def test_study_directory_rejects_traversal_and_symlink_escapes(tmp_path, monkeypatch):
+    monkeypatch.setattr(search_script, "base_dir", lambda: str(tmp_path))
+    root = tmp_path / "search"
+    root.mkdir()
+
+    assert search_script.study_directory("evolution-01") == root / "evolution-01"
+    for name in ("", ".", "..", "nested/study", "/absolute"):
+        with pytest.raises(ValueError, match="one path component"):
+            search_script.study_directory(name)
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (root / "escaped").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="outside the search directory"):
+        search_script.study_directory("escaped")
+
+
 def test_partial_study_initialization_and_provenance_resume(tmp_path):
     settings = tiny_settings()
     directory = tmp_path / "study"

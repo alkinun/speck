@@ -740,9 +740,13 @@ def final_cpu_profile_candidate(study, candidate_id):
 
 
 def study_directory(name):
-    if not name or Path(name).name != name:
+    if not isinstance(name, str) or not name or name in {".", ".."} or Path(name).parts != (name,):
         raise ValueError("study name must be one path component")
-    return Path(base_dir()) / "search" / name
+    root = (Path(base_dir()) / "search").resolve()
+    directory = (root / name).resolve()
+    if directory.parent != root:
+        raise ValueError("study name resolves outside the search directory")
+    return directory
 
 
 @contextmanager
