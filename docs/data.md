@@ -4,7 +4,7 @@ Speck prepares remote text corpora into deterministic, sharded token streams. Th
 repositories, discovers input files, streams and filters documents, performs global exact
 deduplication, tokenizes text, and writes packed `uint16` training and validation shards.
 
-## Prepare A Corpus
+## Prepare a Corpus
 
 Run commands from the repository root. Download and verify the experiment tokenizer first:
 
@@ -45,16 +45,25 @@ corpus is complete.
 
 `experiments/Speck1-140M` requests 5,000,000,000 training tokens across three phases:
 
-| Phase end | ultra_fineweb | dclm | cosmopedia_v2 | finemath_4plus | ultrafineweb_l3 |
+| Phase end | Ultra-FineWeb | DCLM | Cosmopedia v2 | FineMath-4+ | Ultra-FineWeb-L3 Multi-Style |
 | ---: | ---: | ---: | ---: | ---: | ---: |
 | 3,500,000,000 | 45% | 35% | 12% | 8% | 0% |
 | 4,500,000,000 | 30% | 25% | 15% | 12% | 18% |
 | 5,000,000,000 | 20% | 15% | 20% | 15% | 30% |
 
-The phase durations and integer weights derive source targets of 1.975B, 1.55B, 670M, 475M, and
-330M tokens. Preparation adds a 262,144-token per-source loader reserve for the configured maximum
-65,536-token distributed microbatch. Actual packed output can exceed 5B only by those reserves and
-one final full-document overshoot per source.
+The phase durations and integer weights derive these source targets:
+
+| Source | Tokens |
+| --- | ---: |
+| Ultra-FineWeb | 1.975B |
+| DCLM | 1.55B |
+| Cosmopedia v2 | 670M |
+| FineMath-4+ | 475M |
+| Ultra-FineWeb-L3 Multi-Style | 330M |
+
+Preparation adds a 262,144-token per-source loader reserve for the configured maximum 65,536-token
+distributed microbatch. Actual packed output can exceed 5B only by those reserves and one final
+full-document overshoot per source.
 
 The base recipe resolves floating source revisions when a build starts and records the resolved
 commits in the staged state and final manifest. A completed build is internally reproducible, but a
@@ -65,7 +74,7 @@ new clean build can resolve newer source commits.
 `experiments/Speck1.5-140M` pins every source revision and uses a foundation phase through 3.5B
 tokens, a capability ramp through 4.5B, and a final 500M-token capability anneal:
 
-| Phase end | FineWeb-Edu | DCLM-Edu | Ultra-FineWeb | DCLM | FineMath | Textbook math | Multi-style math | Wikimedia | peS2o | UFW-L3 | Cosmopedia |
+| Phase end | FineWeb-Edu | DCLM-Edu | Ultra-FineWeb | DCLM | FineMath-4+ | UltraData-Math L3 Textbook-Exercise | UltraData-Math L3 Multi-Style | Wikimedia | peS2o | Ultra-FineWeb-L3 Multi-Style | Cosmopedia v2 |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 3.5B | 32% | 20% | 13% | 6% | 7% | 2% | 1% | 4% | 4% | 5% | 6% |
 | 4.5B | 22% | 16% | 9% | 4% | 12% | 4% | 3% | 5% | 7% | 8% | 10% |
@@ -103,7 +112,7 @@ Source-specific constraints include:
 Dataset repositories, revisions, paths, filters, and source order are recorded in
 `experiments/Speck1.5-140M/data.json`.
 
-## Determinism And Deduplication
+## Determinism and Deduplication
 
 Input discovery uses each Hugging Face repository tree rather than datasets-server previews. Files
 are deterministically shuffled per source. The pipeline downloads and reads one remote Parquet or
@@ -118,7 +127,7 @@ then records a 128-bit BLAKE2 hash. A hash collision is treated as a duplicate. 
 deduplication are intentionally excluded. The expected roughly 6M hashes are journaled at 16 bytes
 each. Tokenizer calls are bounded to 1,024 documents and 2,000,000 aggregate input characters.
 
-## Disk And Resume Behavior
+## Disk and Resume Behavior
 
 Preparation performs a live disk-space preflight before creating staged data. For the 5B-token
 recipe, the current estimate includes about 10.05GB of packed data, a 20GiB temporary raw-shard

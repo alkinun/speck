@@ -77,18 +77,19 @@ configuration:
 | --- | --- |
 | `experiments/Speck1-140M` | 140,652,288-parameter base model, production recipe, and architecture-search baseline. |
 | `experiments/Speck1.5-140M` | Same architecture and 5B-token optimization recipe with an isolated, pinned three-phase corpus curriculum. |
-| `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 post-training from `Speck1-140M`. |
-| `experiments/Speck1.1-140M-Instruct` | One-epoch SpeckChat2 post-training from the original base weights. |
+| `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 supervised fine-tuning of `Speck1-140M`. |
+| `experiments/Speck1.1-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the original base weights. |
 | `experiments/Speck1.1-140M-Instruct-2ep` | Retained two-epoch SpeckChat2 variant. |
 
-Model names follow `Speck<generation>-<size>`, with an optional decimal generation for intermediate
-families.
+Model names follow `Speck<generation>-<size>`. Instruction-tuned variants append `-Instruct`, and
+retained recipe variants may append an explicit suffix such as `-2ep`. Decimal generations identify
+intermediate families.
 
 A base experiment can contain:
 
 ```text
 model.json      Architecture and dimensions.
-tokenizer.json  Tokenizer artifact and local directory.
+tokenizer.json  Tokenizer source, revision, artifact filename, and prepared local directory.
 data.json       Sources, phases, filters, deduplication, shards, and packed output.
 train.json      Optimization, batching, logging, and checkpoints.
 search.json     Search space, training rungs, scoring, and profiling contract.
@@ -117,11 +118,14 @@ Runtime artifacts use `~/.cache/speck` by default:
 ~/.cache/speck/
   checkpoints/   Base and SFT checkpoints.
   data/          Packed corpora and SFT datasets.
-  evaluations/   Benchmark working directories and reports.
+  evaluations/   Open SLM evaluation working directories and reports.
+  benchmarks/    BananaMind and ad hoc benchmark reports.
   gguf/          Generated GGUF artifacts and conversion state.
+  model-cards/   Generated model-card staging directories.
   releases/      Local Transformers exports.
   search/        Architecture-search studies.
   tokenizer/     Downloaded tokenizer artifacts.
+  tools/         Pinned tool checkouts such as llama.cpp.
 ```
 
 Set `speck_base_dir` before running a command to move the cache root. Explicit output paths in an

@@ -1,4 +1,4 @@
-# Training And Inference
+# Training and Inference
 
 Speck supports base pretraining, full-model supervised fine-tuning, explicit checkpoint resume, and
 local checkpoint generation. Run commands from the repository root.

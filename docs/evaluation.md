@@ -1,4 +1,4 @@
-# Evaluation And Benchmarking
+# Evaluation and Benchmarking
 
 Speck includes model-quality and systems-performance harnesses. Checked evaluation configurations
 pin runner code, datasets, model identities, and expected checksums where the upstream interface
@@ -42,7 +42,7 @@ outputs use separate directories named after each Hub repository.
 
 Pinned zero-shot results are checked in under `results/<model>/open_slm.json`:
 
-| Model | HellaSwag | ARC-Easy | ARC-Challenge | PIQA | ArithMark-3 | Int Index | ArithMark-2 |
+| Model | HellaSwag | ARC-Easy | ARC-Challenge | PIQA | ArithMark 3.0 | Intelligence Index | ArithMark 2.0 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Speck1-140M | 35.03 | 46.68 | 25.94 | 63.87 | 36.60 | 18.15 | 31.52 |
 | Speck1-140M-Instruct | 35.22 | 45.66 | 25.85 | 63.60 | 36.10 | 17.75 | 33.64 |
@@ -64,7 +64,7 @@ Use `--mode end-to-end --data-dir <packed-data>` to include packed-data loading.
 separately. `--peak-tflops` reports model FLOPs utilization, and `--no-compile` measures eager
 execution.
 
-## BananaMind Base Bench
+## BananaMind Base Bench 1.1
 
 Accept the dataset gate and authenticate with Hugging Face before running BananaMind Base Bench
 1.1:
@@ -94,11 +94,20 @@ uv run --extra gpu --group transformers python -m scripts.inference_benchmark \
   --model speck --device cuda
 ```
 
-Select `speck`, `supra`, `gptx`, `banana`, or `smol`. CPU defaults to FP32 batch 1; CUDA defaults to
-BF16 batches 1 and 32. The benchmark excludes tokenization, uses eager SDPA, returns only the
-final-position logit, and records synchronized raw timings. The Speck case uses the local configured
-checkpoint; external models must already exist in the Hugging Face cache because loading is
-offline-only.
+Model aliases resolve as follows:
+
+| Alias | Model |
+| --- | --- |
+| `speck` | `Speck1-140M` from a local experiment checkpoint. |
+| `supra` | `SupraLabs/Supra2-100M-Base`. |
+| `gptx` | `AxiomicLabs/GPT-X2.5-135M`. |
+| `banana` | `BananaMind/BananaMind-2-Pro`. |
+| `smol` | `HuggingFaceTB/SmolLM2-135M`. |
+
+CPU defaults to FP32 batch 1; CUDA defaults to BF16 batches 1 and 32. The benchmark excludes
+tokenization, uses eager SDPA, returns only the final-position logit, and records synchronized raw
+timings. The Speck case uses the local configured checkpoint; external models must already exist in
+the Hugging Face cache because loading is offline-only.
 
 Use `--output <path>` to preserve the JSON report. Record the exact local Speck checkpoint with the
 report because the current benchmark identifies it by experiment and step rather than a public

@@ -26,7 +26,7 @@ uv run --extra gpu python -m scripts.data_prepare experiments/Speck1-140M
 Data preparation is the expensive step. See the repository README for its storage requirements
 and resume behavior.
 
-## Start Or Resume
+## Start or Resume
 
 A new study needs a time limit, a generation limit, or both:
 
