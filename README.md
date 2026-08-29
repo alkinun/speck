@@ -143,4 +143,4 @@ or integration validation in addition to these checks.
 
 ## License
 
-Speck is available under the [MIT License](license).
+Speck is available under the [MIT License](LICENSE).

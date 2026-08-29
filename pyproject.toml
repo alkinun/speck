@@ -2,8 +2,8 @@
 name = "speck"
 version = "0.1.0"
 description = "A compact research harness for pretraining small language models"
-readme = "readme.md"
-license = { file = "license" }
+readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26.0",
