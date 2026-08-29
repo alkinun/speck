@@ -13,7 +13,13 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
-from speck.model import CombinedOptimizer, Linear, SpeckForCausalLM, build_model
+from speck.model import (
+    CombinedOptimizer,
+    Linear,
+    SpeckForCausalLM,
+    build_model,
+    initialize_backbone,
+)
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
 
@@ -171,6 +177,52 @@ def test_resize_token_embeddings_preserves_and_reties_rows():
     assert model.parameter_count() == parameters + 3 * 8
     with pytest.raises(ValueError, match="cannot shrink"):
         model.resize_token_embeddings(15)
+
+
+def test_backbone_initialization_resets_the_complete_token_interface():
+    torch.manual_seed(10)
+    source_config = ArchitectureConfig(
+        (
+            BlockGroup(BlockConfig(12, (StageConfig((AttentionSpec(4, 1),)),))),
+            BlockGroup(BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),))),
+        ),
+        embedding_size=6,
+        vocab_size=16,
+        max_position_embeddings=8,
+    )
+    source = SpeckForCausalLM(source_config)
+    source.init_weights()
+    with torch.no_grad():
+        for index, parameter in enumerate(source.parameters(), start=1):
+            parameter.fill_(index)
+
+    torch.manual_seed(20)
+    target = SpeckForCausalLM(source_config)
+    target.init_weights()
+    fresh = {key: value.clone() for key, value in target.state_dict().items()}
+    report = initialize_backbone(target, source.state_dict())
+    transferred = set(report["transferred"])
+    reset = set(report["reset"])
+
+    assert reset == {
+        "adapters.0.weight",
+        "embed_tokens.weight",
+        "lm_head.weight",
+        "output_projection.weight",
+    }
+    assert transferred | reset == set(target.state_dict())
+    for key, value in target.state_dict().items():
+        expected = source.state_dict()[key] if key in transferred else fresh[key]
+        assert torch.equal(value, expected)
+    assert target.lm_head.weight is target.embed_tokens.weight
+
+
+def test_backbone_initialization_rejects_incomplete_state():
+    model = model_with(SwiGLUSpec(16))
+    state = dict(model.state_dict())
+    state.pop("norm.weight")
+    with pytest.raises(ValueError, match="missing norm.weight"):
+        initialize_backbone(model, state)
 
 
 def test_heterogeneous_head_dimensions_and_widths():

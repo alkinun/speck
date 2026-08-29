@@ -25,8 +25,8 @@ def lr_scale(step, steps, warmup, minimum):
         raise ValueError("steps must be a positive integer")
     if not isinstance(step, int) or not 0 <= step < steps:
         raise ValueError("step must be an executed zero-based schedule index")
-    if not isinstance(warmup, int) or not 0 <= warmup < steps:
-        raise ValueError("warmup must leave at least one scheduled step")
+    if not isinstance(warmup, int) or warmup < 0:
+        raise ValueError("warmup must be a non-negative integer")
     if not isinstance(minimum, (int, float)) or not math.isfinite(minimum):
         raise ValueError("minimum must be a finite scale")
     if not 0 <= minimum <= 1:
@@ -41,6 +41,35 @@ def lr_scale(step, steps, warmup, minimum):
     else:
         progress = (step - warmup + 1) / (steps - warmup)
     return minimum + (1 - minimum) * 0.5 * (1 + math.cos(math.pi * progress))
+
+
+def checkpoint_milestones(tokens, batch_tokens, global_token_offset, steps):
+    """Map requested global-token milestones to phase-local completed steps."""
+
+    if not isinstance(tokens, list) or any(
+        isinstance(token, bool) or not isinstance(token, int) or token < 1 for token in tokens
+    ):
+        raise ValueError("checkpoint_tokens must be a list of positive integers")
+    if tokens != sorted(set(tokens)):
+        raise ValueError("checkpoint_tokens must be sorted and unique")
+    if (
+        isinstance(batch_tokens, bool)
+        or not isinstance(batch_tokens, int)
+        or batch_tokens < 1
+        or isinstance(global_token_offset, bool)
+        or not isinstance(global_token_offset, int)
+        or global_token_offset < 0
+        or global_token_offset % batch_tokens
+    ):
+        raise ValueError("global token geometry is invalid")
+    milestones = {}
+    for token in tokens:
+        if token <= global_token_offset:
+            continue
+        step = math.ceil((token - global_token_offset) / batch_tokens)
+        if step <= steps:
+            milestones[step] = token
+    return milestones
 
 
 def optimization_step(

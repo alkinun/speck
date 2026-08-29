@@ -3,7 +3,18 @@ import json
 import pytest
 import torch
 
-from speck.checkpoint import completed_steps, latest, load, load_model, prune, save
+from speck.checkpoint import (
+    checkpoint_identity,
+    completed_steps,
+    latest,
+    load,
+    load_metadata,
+    load_model,
+    load_timing,
+    prune,
+    save,
+    save_timing,
+)
 
 
 def test_checkpoint_is_visible_only_after_completion(tmp_path):
@@ -20,6 +31,10 @@ def test_checkpoint_is_visible_only_after_completion(tmp_path):
     assert optimizer == {"state": "optimizer"}
     assert metadata == {"step": 3}
     assert load_model(tmp_path, 3, "cpu")["weight"].item() == 1.0
+    assert load_metadata(tmp_path, 3) == {"step": 3}
+    identity = checkpoint_identity(tmp_path, 3)
+    assert identity["step"] == 3
+    assert len(identity["model_sha256"]) == len(identity["metadata_sha256"]) == 64
 
     torch.save({"weight": torch.tensor([2.0])}, tmp_path / "model_000004.pt")
     (tmp_path / "metadata_000004.json").write_text(json.dumps({"step": 4}))
@@ -59,6 +74,38 @@ def test_checkpoint_discovery_ignores_noncanonical_markers(tmp_path):
 
     assert completed_steps(tmp_path) == [0, 3, 1_000_000]
     assert latest(tmp_path) == 1_000_000
+
+
+def test_checkpoint_metadata_must_match_its_filename_step(tmp_path):
+    save(tmp_path, 3, {}, {}, {"step": 2})
+    with pytest.raises(ValueError, match="metadata step"):
+        load_metadata(tmp_path, 3)
+    with pytest.raises(ValueError, match="metadata step"):
+        load(tmp_path, 3, "cpu")
+
+
+def test_checkpoint_timing_sidecar_is_optional_and_pruned(tmp_path):
+    save(tmp_path, 1, {}, {}, {"step": 1})
+    assert load_timing(tmp_path, 1) is None
+    save_timing(tmp_path, 1, {"active_seconds": 2.5})
+    assert load_timing(tmp_path, 1) == {"active_seconds": 2.5}
+    save(tmp_path, 2, {}, {}, {"step": 2})
+
+    prune(tmp_path, keep=1)
+
+    assert not (tmp_path / "timing_000001.json").exists()
+
+
+def test_checkpoint_can_publish_timing_before_completion(tmp_path):
+    save(
+        tmp_path,
+        3,
+        {},
+        {},
+        {"step": 3},
+        timing=lambda: {"checkpoint_seconds": 1.25},
+    )
+    assert load_timing(tmp_path, 3) == {"checkpoint_seconds": 1.25}
 
 
 @pytest.mark.parametrize("step", (-1, 1.5, True, "3"))

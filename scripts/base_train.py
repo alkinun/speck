@@ -15,14 +15,27 @@ import wandb
 from torch.nn.parallel import DistributedDataParallel
 
 from speck.architecture import ArchitectureConfig
-from speck.checkpoint import latest, load, save
+from speck.checkpoint import (
+    checkpoint_identity,
+    latest,
+    load,
+    load_metadata,
+    load_model,
+    load_timing,
+    save,
+)
 from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir, verify_shards
-from speck.model import build_model
+from speck.model import build_model, initialize_backbone
 from speck.tokenizer import get_tokenizer
-from speck.train import lr_scale, optimization_step, validate_loader_progress
+from speck.train import (
+    checkpoint_milestones,
+    lr_scale,
+    optimization_step,
+    validate_loader_progress,
+)
 
 
 def arguments():
@@ -66,13 +79,16 @@ def validate(model, loader, steps, world_size):
     return loss.item()
 
 
-def main():
-    cli = arguments()
-    configs = load_experiment(cli.experiment, "data", "tokenizer", "model", "train")
+def train(configs, cli):
     args = SimpleNamespace(**configs["train"])
     args.device = cli.device
     args.resume = cli.resume
     args.no_compile = cli.no_compile
+    args.global_token_offset = getattr(args, "global_token_offset", 0)
+    args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
+    args.training_phase = getattr(args, "training_phase", "base")
+    args.initialization = getattr(args, "initialization", None)
+    args.wandb_group = getattr(args, "wandb_group", None)
     args.data_dir = str(
         resolve_data_dir(
             configs["data"].get("output_dir"),
@@ -107,6 +123,27 @@ def main():
     ).to(device)
     config = model.config
     model.init_weights()
+    initialization = None
+    if args.resume is None and args.initialization is not None:
+        request = args.initialization
+        if not isinstance(request, dict) or request.get("kind") != "backbone_checkpoint":
+            raise ValueError("unsupported pretraining initialization")
+        source_directory = Path(request["checkpoint_dir"]).expanduser().resolve()
+        source_step = request["step"]
+        source_metadata = load_metadata(source_directory, source_step)
+        source_config = ArchitectureConfig.from_dict(source_metadata["config"]).settings()
+        if source_config != config.settings():
+            raise ValueError("backbone checkpoint architecture does not match the target model")
+        if source_metadata.get("training_phase") != "procedural_warmup":
+            raise ValueError("backbone initialization requires a procedural warm-up checkpoint")
+        transfer = initialize_backbone(model, load_model(source_directory, source_step, device))
+        initialization = {
+            "kind": "backbone_checkpoint",
+            **checkpoint_identity(source_directory, source_step),
+            **transfer,
+            "source_manifest": source_metadata["manifest"],
+            "source_phase": source_metadata["training_phase"],
+        }
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
 
@@ -116,12 +153,28 @@ def main():
     accumulation = args.batch_tokens // micro_tokens
     steps = math.ceil(args.train_tokens / args.batch_tokens)
     consumed_tokens = steps * args.batch_tokens
+    if (
+        not isinstance(args.global_token_offset, int)
+        or isinstance(args.global_token_offset, bool)
+        or args.global_token_offset < 0
+        or args.global_token_offset % args.batch_tokens
+    ):
+        raise ValueError("global token offset must align with optimizer batches")
+    global_step_offset = args.global_token_offset // args.batch_tokens
+    global_consumed_tokens = args.global_token_offset + consumed_tokens
+    milestones = checkpoint_milestones(
+        args.checkpoint_tokens, args.batch_tokens, args.global_token_offset, steps
+    )
     if manifest["splits"]["train"]["tokens"] <= consumed_tokens:
         raise ValueError("packed dataset is too small for this run")
 
     data_state = None
     start_step = 0
     elapsed_training = 0.0
+    elapsed_optimizer = 0.0
+    elapsed_evaluation = 0.0
+    elapsed_active = 0.0
+    elapsed_checkpoint = 0.0
     metadata = None
     if args.resume is not None:
         model_state, optimizer_state, metadata = load(args.output_dir, args.resume, device)
@@ -134,20 +187,39 @@ def main():
         data_state = metadata["data_state"]
         validate_loader_progress(data_state, start_step * args.batch_tokens)
         elapsed_training = metadata["training_seconds"]
+        timing = load_timing(args.output_dir, args.resume) or metadata.get("timing", {})
+        elapsed_optimizer = timing.get("optimizer_seconds", elapsed_training)
+        elapsed_evaluation = timing.get("evaluation_seconds", 0.0)
+        elapsed_active = timing.get("active_seconds", elapsed_training)
+        elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
+        initialization = metadata.get("initialization")
 
-    dataset_provenance = {
-        "requested_train_tokens": manifest["requested_train_tokens"],
-        "mixture": manifest["mixture"],
-        "sources": [
-            {
-                "id": source["id"],
-                "repo": source["repo"],
-                "revision": source["revision"],
-                "file_list_sha256": source["file_list_sha256"],
-            }
-            for source in manifest["sources"]
-        ],
-    }
+    if manifest["format"] == "speck_procedural_tokens":
+        dataset_provenance = {
+            "format": manifest["format"],
+            "requested_train_tokens": manifest["requested_train_tokens"],
+            "mixture": manifest["mixture"],
+            "encoding": manifest["encoding"],
+            "sources": [
+                {"id": source["id"], "generator": source["generator"]}
+                for source in manifest["sources"]
+            ],
+        }
+    else:
+        dataset_provenance = {
+            "format": manifest["format"],
+            "requested_train_tokens": manifest["requested_train_tokens"],
+            "mixture": manifest["mixture"],
+            "sources": [
+                {
+                    "id": source["id"],
+                    "repo": source["repo"],
+                    "revision": source["revision"],
+                    "file_list_sha256": source["file_list_sha256"],
+                }
+                for source in manifest["sources"]
+            ],
+        }
     resolved = {
         **vars(args),
         "experiment": str(Path(cli.experiment).resolve()),
@@ -160,6 +232,9 @@ def main():
         "accumulation_steps": accumulation,
         "steps": steps,
         "consumed_tokens": consumed_tokens,
+        "global_step_offset": global_step_offset,
+        "global_consumed_tokens": global_consumed_tokens,
+        "milestone_steps": {str(step): token for step, token in milestones.items()},
     }
     if metadata:
         immutable = (
@@ -174,8 +249,22 @@ def main():
             "grad_clip",
             "optimizer",
             "world_size",
+            "global_token_offset",
+            "checkpoint_tokens",
+            "training_phase",
+            "initialization",
         )
-        changed = [key for key in immutable if metadata["resolved"].get(key) != resolved.get(key)]
+        legacy_defaults = {
+            "global_token_offset": 0,
+            "checkpoint_tokens": [],
+            "training_phase": "base",
+            "initialization": None,
+        }
+        changed = [
+            key
+            for key in immutable
+            if metadata["resolved"].get(key, legacy_defaults.get(key)) != resolved.get(key)
+        ]
         if changed:
             raise ValueError(f"resume settings changed: {', '.join(changed)}")
     print0(json.dumps(resolved, indent=2, sort_keys=True))
@@ -184,6 +273,8 @@ def main():
         run = wandb.init(
             project=args.wandb_project,
             name=args.run,
+            group=args.wandb_group,
+            job_type=args.training_phase,
             id=metadata.get("wandb_id") if metadata else None,
             resume="must" if metadata and metadata.get("wandb_id") else None,
             config=resolved,
@@ -214,8 +305,11 @@ def main():
             train_model, device_ids=[local_rank], broadcast_buffers=False
         )
     flops = model.flops_per_token(args.sequence_length)
+    session_started = time.perf_counter()
 
     def validation(step):
+        nonlocal elapsed_evaluation
+        started = time.perf_counter()
         tokens_per_step = args.device_batch_size * args.sequence_length * world_size
         eval_tokens = args.final_eval_tokens if step == steps else args.eval_tokens
         val_steps = max(1, min(eval_tokens, manifest["splits"]["val"]["tokens"]) // tokens_per_step)
@@ -228,34 +322,80 @@ def main():
             data_dir=args.data_dir,
         )
         loss = validate(compiled_model, loader, val_steps, world_size)
+        evaluated_tokens = val_steps * tokens_per_step
+        elapsed_evaluation += time.perf_counter() - started
+        global_step = global_step_offset + step
+        global_tokens = args.global_token_offset + step * args.batch_tokens
         run.log(
             {
-                "progress/step": step,
-                "progress/tokens": step * args.batch_tokens,
+                "progress/step": global_step,
+                "progress/phase_step": step,
+                "progress/tokens": global_tokens,
                 "validation/loss": loss,
                 "validation/perplexity": math.exp(min(loss, 20)),
+                "validation/tokens": evaluated_tokens,
             }
         )
-        print0(f"step {step:,} | validation loss {loss:.5f}")
-        return loss
+        print0(f"step {global_step:,} ({global_tokens:,} tokens) | validation loss {loss:.5f}")
+        return loss, evaluated_tokens
 
-    def checkpoint(step, validation_loss):
+    def checkpoint(step, validation_loss, validation_step, validation_tokens, milestone):
+        nonlocal elapsed_checkpoint
+        started = time.perf_counter()
         if master:
+            global_tokens = args.global_token_offset + step * args.batch_tokens
             state = {
                 "step": step,
+                "global_step": global_step_offset + step,
+                "global_tokens": global_tokens,
+                "training_phase": args.training_phase,
                 "config": config.settings(),
                 "resolved": resolved,
                 "manifest": manifest_hash,
                 "data_state": data_state,
                 "validation_loss": validation_loss,
+                "validation_step": validation_step,
+                "validation_global_tokens": (
+                    args.global_token_offset + validation_step * args.batch_tokens
+                    if validation_step is not None
+                    else None
+                ),
+                "validation_tokens": validation_tokens,
+                "milestone_tokens": milestone,
                 "training_seconds": elapsed_training,
+                "timing": {
+                    "optimizer_seconds": elapsed_optimizer,
+                    "evaluation_seconds": elapsed_evaluation,
+                    "checkpoint_seconds": elapsed_checkpoint,
+                    "active_seconds": elapsed_active + time.perf_counter() - session_started,
+                },
+                "initialization": initialization,
                 "wandb_id": run.id,
             }
-            save(args.output_dir, step, model.state_dict(), optimizer.state_dict(), state)
+            save(
+                args.output_dir,
+                step,
+                model.state_dict(),
+                optimizer.state_dict(),
+                state,
+                timing=lambda: {
+                    "optimizer_seconds": elapsed_optimizer,
+                    "evaluation_seconds": elapsed_evaluation,
+                    "checkpoint_seconds": elapsed_checkpoint + time.perf_counter() - started,
+                    "active_seconds": elapsed_active + time.perf_counter() - session_started,
+                },
+            )
         if distributed:
             dist.barrier()
+        elapsed_checkpoint += time.perf_counter() - started
 
-    validation_loss = metadata.get("validation_loss") if metadata else validation(0)
+    if metadata:
+        validation_loss = metadata["validation_loss"]
+        validation_step = metadata.get("validation_step")
+        validation_tokens = metadata.get("validation_tokens", 0)
+    else:
+        validation_loss, validation_tokens = validation(0)
+        validation_step = 0
     synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
     for step in range(start_step, steps):
         synchronize()
@@ -276,6 +416,7 @@ def main():
         synchronize()
         duration = time.perf_counter() - started
         completed = step + 1
+        elapsed_optimizer += duration
         if completed > 10:
             elapsed_training += duration
         should_log = completed == 1 or completed % args.log_every == 0
@@ -283,8 +424,9 @@ def main():
             dist.all_reduce(loss_sum, op=dist.ReduceOp.AVG)
         if should_log:
             metrics = {
-                "progress/step": completed,
-                "progress/tokens": completed * args.batch_tokens,
+                "progress/step": global_step_offset + completed,
+                "progress/phase_step": completed,
+                "progress/tokens": args.global_token_offset + completed * args.batch_tokens,
                 "train/loss": loss_sum.item(),
                 "train/lr": optimizer.param_groups[0]["lr"],
                 "train/grad_norm": float(grad_norm),
@@ -299,15 +441,52 @@ def main():
             }
             run.log(metrics)
             print0(
-                f"step {completed:,}/{steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s"
+                f"step {metrics['progress/step']:,}/{global_step_offset + steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s"
             )
-        if (args.eval_every > 0 and completed % args.eval_every == 0) or completed == steps:
-            validation_loss = validation(completed)
-        if (args.save_every > 0 and completed % args.save_every == 0) or completed == steps:
-            checkpoint(completed, validation_loss)
+        milestone = milestones.get(completed)
+        if (
+            (args.eval_every > 0 and completed % args.eval_every == 0)
+            or milestone is not None
+            or completed == steps
+        ):
+            validation_loss, validation_tokens = validation(completed)
+            validation_step = completed
+        if (
+            (args.save_every > 0 and completed % args.save_every == 0)
+            or milestone is not None
+            or completed == steps
+        ):
+            checkpoint(
+                completed,
+                validation_loss,
+                validation_step,
+                validation_tokens,
+                milestone,
+            )
 
     run.finish()
+    if master:
+        summary = {
+            "training_phase": args.training_phase,
+            "steps": steps,
+            "global_step": global_step_offset + steps,
+            "global_tokens": global_consumed_tokens,
+            "optimizer_seconds": elapsed_optimizer,
+            "evaluation_seconds": elapsed_evaluation,
+            "checkpoint_seconds": elapsed_checkpoint,
+            "active_seconds": elapsed_active + time.perf_counter() - session_started,
+        }
+        path = Path(args.output_dir) / "run_summary.json"
+        temporary = path.with_suffix(".json.tmp")
+        temporary.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        os.replace(temporary, path)
     cleanup()
+
+
+def main():
+    cli = arguments()
+    configs = load_experiment(cli.experiment, "data", "tokenizer", "model", "train")
+    train(configs, cli)
 
 
 if __name__ == "__main__":

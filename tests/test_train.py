@@ -12,7 +12,12 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.model import SpeckForCausalLM
-from speck.train import lr_scale, optimization_step, validate_loader_progress
+from speck.train import (
+    checkpoint_milestones,
+    lr_scale,
+    optimization_step,
+    validate_loader_progress,
+)
 
 
 def test_lr_scale_reaches_minimum_on_last_executed_step():
@@ -38,13 +43,17 @@ def test_single_step_lr_schedule_uses_minimum():
     assert lr_scale(0, 1, 0, 0.25) == 0.25
 
 
+def test_short_phase_can_end_during_warmup():
+    assert lr_scale(0, 500, 512, 0.1) == 1 / 512
+    assert lr_scale(499, 500, 512, 0.1) == 500 / 512
+
+
 @pytest.mark.parametrize(
     ("step", "steps", "warmup", "minimum"),
     (
         (-1, 10, 2, 0.1),
         (10, 10, 2, 0.1),
         (0, 0, 0, 0.1),
-        (0, 10, 10, 0.1),
         (0, 10, -1, 0.1),
         (0, 10, 2, math.nan),
         (0, 10, 2, -0.1),
@@ -64,6 +73,22 @@ def test_checkpoint_loader_progress_matches_next_batch_offset():
         assert "does not match training progress" in str(error)
     else:
         raise AssertionError("mismatched loader progress was accepted")
+
+
+def test_checkpoint_milestones_align_baseline_and_warmup_runs():
+    requested = [50_000_000, 100_000_000, 250_000_000, 500_000_000]
+    baseline = checkpoint_milestones(requested, 65_536, 0, 7_630)
+    initialized = checkpoint_milestones(requested, 65_536, 32_768_000, 7_130)
+
+    assert baseline == {763: 50_000_000, 1_526: 100_000_000, 3_815: 250_000_000, 7_630: 500_000_000}
+    assert initialized == {
+        263: 50_000_000,
+        1_026: 100_000_000,
+        3_315: 250_000_000,
+        7_130: 500_000_000,
+    }
+    for baseline_step, initialized_step in zip(baseline, initialized):
+        assert baseline_step * 65_536 == 32_768_000 + initialized_step * 65_536
 
 
 def test_optimization_step_advances_the_loader():

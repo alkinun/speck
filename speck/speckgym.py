@@ -6,6 +6,7 @@ import os
 import random
 import shutil
 from collections import Counter
+from copy import deepcopy
 from pathlib import Path
 
 from speck.common import base_dir
@@ -14,6 +15,12 @@ from speck.dataset import TokenShardWriter, derive_source_quotas
 FORMAT = "speck_procedural_tokens"
 FORMAT_VERSION = 1
 FAMILIES = ("hierarchy", "binding", "state", "set_union", "composition")
+RUN_DATASETS = {
+    "B": "B-RandomSymbols",
+    "C": "C-ShuffledGym",
+    "D": "D-FormalStructure",
+    "E": "E-SpeckGym",
+}
 
 _START = 0
 _QUERY = 1
@@ -86,6 +93,72 @@ def load_speckgym_config(experiment="experiments/SpeckGym-v0"):
     config["base_experiment"] = str((path.parent / config["base_experiment"]).resolve())
     config["warmup_tokens"] = warmup_tokens
     return config
+
+
+def resolve_training_phase(config, base_configs, run, phase, cache_dir=None):
+    """Resolve one A-E phase into the ordinary base-training configuration contract."""
+
+    if run not in {"A", *RUN_DATASETS}:
+        raise ValueError("SpeckGym run must be one of A, B, C, D, or E")
+    if phase not in {"warmup", "language"}:
+        raise ValueError("SpeckGym phase must be warmup or language")
+    if run == "A" and phase == "warmup":
+        raise ValueError("baseline A has no procedural warm-up")
+    configs = deepcopy(base_configs)
+    train = configs["train"]
+    data = configs["data"]
+    cache_dir = Path(cache_dir or base_dir()).expanduser().resolve()
+    warmup_tokens = config["warmup_tokens"]
+    group = f"SpeckGym-v0-{run}"
+    if phase == "warmup":
+        name = f"{group}-warmup"
+        data["output_dir"] = str(
+            cache_dir
+            / "data"
+            / config["procedural"].get("output_name", "SpeckGym-v0")
+            / RUN_DATASETS[run]
+        )
+        train.update(
+            checkpoint_tokens=[],
+            eval_every=100,
+            eval_tokens=262_144,
+            final_eval_tokens=1_048_576,
+            global_token_offset=0,
+            initialization=None,
+            run=name,
+            save_every=0,
+            train_tokens=warmup_tokens,
+            training_phase="procedural_warmup",
+            wandb_group=group,
+        )
+    else:
+        name = group
+        initialized = run != "A"
+        train.update(
+            checkpoint_tokens=config["checkpoint_tokens"],
+            global_token_offset=warmup_tokens if initialized else 0,
+            initialization=(
+                {
+                    "kind": "backbone_checkpoint",
+                    "checkpoint_dir": str(cache_dir / "checkpoints" / f"{group}-warmup"),
+                    "step": config["procedural"]["updates"],
+                }
+                if initialized
+                else None
+            ),
+            run=name,
+            save_every=0,
+            train_tokens=(
+                config["total_requested_tokens"] - warmup_tokens
+                if initialized
+                else config["total_requested_tokens"]
+            ),
+            training_phase="language",
+            wandb_group=group,
+        )
+    train["batch_tokens"] = config["batch_tokens"]
+    train["output_dir"] = str(cache_dir / "checkpoints" / name)
+    return configs
 
 
 def symbol_ids(vocab_size, count, seed):

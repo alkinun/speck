@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from speck.config import load_experiment
 from speck.dataloader import packed_loader
 from speck.dataset import load_manifest, verify_shards
 from speck.speckgym import (
@@ -14,6 +15,7 @@ from speck.speckgym import (
     generate_shuffle_dyck,
     load_speckgym_config,
     prepare_speckgym,
+    resolve_training_phase,
     symbol_ids,
 )
 
@@ -76,6 +78,32 @@ def test_checked_speckgym_contract_has_expected_token_geometry():
         "p_open": 0.5,
         "reference": "Hu et al. (ACL 2025), Between Circuits and Chomsky",
     }
+
+
+def test_training_phases_resolve_to_common_global_milestones(tmp_path):
+    suite = load_speckgym_config()
+    base_configs = load_experiment(suite["base_experiment"], "data", "tokenizer", "model", "train")
+    baseline = resolve_training_phase(suite, base_configs, "A", "language", tmp_path)
+    warmup = resolve_training_phase(suite, base_configs, "E", "warmup", tmp_path)
+    initialized = resolve_training_phase(suite, base_configs, "E", "language", tmp_path)
+
+    assert baseline["train"]["train_tokens"] == 500_000_000
+    assert baseline["train"]["global_token_offset"] == 0
+    assert warmup["train"]["train_tokens"] == 32_768_000
+    assert warmup["train"]["training_phase"] == "procedural_warmup"
+    assert warmup["data"]["output_dir"].endswith("SpeckGym-v0/E-SpeckGym")
+    assert initialized["train"]["train_tokens"] == 467_232_000
+    assert initialized["train"]["global_token_offset"] == 32_768_000
+    assert initialized["train"]["initialization"] == {
+        "kind": "backbone_checkpoint",
+        "checkpoint_dir": str(tmp_path / "checkpoints" / "SpeckGym-v0-E-warmup"),
+        "step": 500,
+    }
+    assert initialized["data"] == base_configs["data"]
+    assert initialized["model"] == baseline["model"] == warmup["model"]
+    assert initialized["tokenizer"] == baseline["tokenizer"] == warmup["tokenizer"]
+    with pytest.raises(ValueError, match="baseline A"):
+        resolve_training_phase(suite, base_configs, "A", "warmup", tmp_path)
 
 
 def test_symbol_ids_are_unique_deterministic_and_avoid_special_tokens():
@@ -198,3 +226,11 @@ def test_speckgym_prepare_parser_is_import_safe():
     assert args.experiment == "custom-gym"
     assert args.output_dir == Path("/tmp/gym")
     assert args.restart
+
+
+def test_speckgym_train_parser_is_import_safe():
+    from scripts import speckgym_train
+
+    args = speckgym_train.parse_args(["D", "language", "--resume", "263", "--no-compile"])
+    assert args.run == "D" and args.phase == "language"
+    assert args.resume == 263 and args.no_compile
