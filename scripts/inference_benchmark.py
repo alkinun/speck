@@ -1,11 +1,13 @@
 """Benchmark normalized prefill and cached decode speed across small language models."""
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
 import os
 import platform
 import statistics
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,10 +23,7 @@ from speck.model import SpeckForCausalLM
 os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
 
 MODELS = {
-    "speck": {
-        "name": "Speck1-140M",
-        "revision": "39823e9",
-    },
+    "speck": {},
     "supra": {
         "name": "SupraLabs/Supra2-100M-Base",
         "revision": "a664acf32f2210ce1a1d5a85b1a381977f6d5d4b",
@@ -95,6 +94,43 @@ def _parameter_count(model):
     return sum(parameter.numel() for parameter in model.parameters())
 
 
+def _file_sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        while chunk := handle.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _git_revision():
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    return result.stdout.strip() or None
+
+
+def _speck_identity(experiment, run, checkpoint_dir, checkpoint_step, metadata):
+    if metadata.get("step") != checkpoint_step:
+        raise ValueError("checkpoint metadata step does not match the requested step")
+    source_run = metadata.get("resolved", {}).get("run")
+    if not isinstance(source_run, str) or not source_run:
+        raise ValueError("checkpoint metadata does not identify its source run")
+    model_path = checkpoint_dir / f"model_{checkpoint_step:06d}.pt"
+    metadata_path = checkpoint_dir / f"metadata_{checkpoint_step:06d}.json"
+    return run, {
+        "directory": str(checkpoint_dir.resolve()),
+        "step": checkpoint_step,
+        "experiment": str(Path(experiment).resolve()),
+        "source_run": source_run,
+        "source_experiment": metadata["resolved"].get("experiment"),
+        "model_sha256": _file_sha256(model_path),
+        "metadata_sha256": _file_sha256(metadata_path),
+    }
+
+
 def _cpu_name():
     try:
         for line in Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines():
@@ -115,6 +151,8 @@ class ModelRunner:
         self.device = device
         self.dtype = dtype
         self.spec = MODELS[key]
+        self.name = self.spec.get("name")
+        self.revision = _git_revision() if key == "speck" else self.spec["revision"]
         self.last_logit_method = "native"
         self.checkpoint = None
         if key == "speck":
@@ -152,10 +190,13 @@ class ModelRunner:
         model = SpeckForCausalLM(ArchitectureConfig.from_dict(metadata["config"]))
         model.load_state_dict(state)
         model.to(self.device, dtype=self.dtype).eval()
-        self.checkpoint = {
-            "directory": str(checkpoint_dir.resolve()),
-            "step": checkpoint_step,
-        }
+        self.name, self.checkpoint = _speck_identity(
+            experiment,
+            configs["train"]["run"],
+            checkpoint_dir,
+            checkpoint_step,
+            metadata,
+        )
         return model
 
     def _validate_and_install_last_logit_hook(self):
@@ -377,8 +418,8 @@ def run(args):
         },
         "model": {
             "key": args.model,
-            "name": runner.spec["name"],
-            "revision": runner.spec["revision"],
+            "name": runner.name,
+            "revision": runner.revision,
             "parameters": runner.parameters,
             "last_logit_method": runner.last_logit_method,
             "checkpoint": runner.checkpoint,
