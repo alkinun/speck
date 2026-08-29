@@ -213,9 +213,7 @@ def test_mixture_validation_rejects_bad_phases():
 
 def test_half_percentage_weights_produce_exact_quotas_and_schedule():
     sources = [source_config("a"), source_config("b")]
-    mixture = {
-        "phases": [{"end_tokens": 200, "weights": {"a": 99.5, "b": 0.5}}]
-    }
+    mixture = {"phases": [{"end_tokens": 200, "weights": {"a": 99.5, "b": 0.5}}]}
     quotas, phases = dataset.derive_source_quotas(sources, mixture, 200)
     assert quotas == {"a": 199, "b": 1}
     manifest = {

@@ -154,8 +154,7 @@ def prompt_digest(messages):
 
 def _stable_id(spec, source_id, source_row_index):
     identity = (
-        f"{spec.repo}\x1f{spec.revision}\x1f{spec.split}\x1f"
-        f"{source_id}\x1f{source_row_index}"
+        f"{spec.repo}\x1f{spec.revision}\x1f{spec.split}\x1f{source_id}\x1f{source_row_index}"
     )
     return hashlib.blake2b(identity.encode(), digest_size=16).hexdigest()
 
@@ -452,9 +451,7 @@ def select_source(dataset, spec, token_counter, seen_prompts):
                 rejections["category cap"] += 1
                 continue
 
-            row, digest, error = prepare_candidate(
-                spec, candidate, source_row_index, token_counter
-            )
+            row, digest, error = prepare_candidate(spec, candidate, source_row_index, token_counter)
             if error:
                 rejections[error] += 1
                 continue
@@ -526,9 +523,7 @@ def build_dataset(cache_dir=None):
             revision=spec.revision,
             cache_dir=cache_dir,
         )
-        rows, rejections, categories = select_source(
-            dataset, spec, token_counter, seen_prompts
-        )
+        rows, rejections, categories = select_source(dataset, spec, token_counter, seen_prompts)
         selected_datasets[key] = Dataset.from_list(rows, features=features)
         print(f"Selected {len(rows):,} rows from {spec.repo}")
         print(f"  categories: {dict(categories.most_common())}")
@@ -536,9 +531,9 @@ def build_dataset(cache_dir=None):
         del dataset, rows
         gc.collect()
 
-    mixed = concatenate_datasets(
-        [selected_datasets[source.key] for source in SOURCES]
-    ).shuffle(seed=SEED)
+    mixed = concatenate_datasets([selected_datasets[source.key] for source in SOURCES]).shuffle(
+        seed=SEED
+    )
     mixed = mixed.flatten_indices()
     if len(mixed) != TOTAL_SAMPLES:
         raise RuntimeError(f"expected {TOTAL_SAMPLES:,} rows, built {len(mixed):,}")

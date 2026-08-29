@@ -149,9 +149,9 @@ def generate(model, tokenizer, prompt, max_tokens, device):
     )
     with torch.inference_mode():
         state = model.state(length=len(tokens) + max_tokens)
-        logits = model(
-            torch.tensor([tokens], device=device), state=state, last_token_only=True
-        )[:, -1]
+        logits = model(torch.tensor([tokens], device=device), state=state, last_token_only=True)[
+            :, -1
+        ]
         generated = []
         for _ in range(max_tokens):
             token = logits.argmax(dim=-1)
@@ -182,9 +182,7 @@ def evaluate(name, checkpoint_dir, max_tokens, device):
         answer, generated_tokens = generate(
             model, tokenizer, question["prompt"], max_tokens, device
         )
-        correct, exact = score(
-            answer, question["accepted"], question.get("scoring", "contains")
-        )
+        correct, exact = score(answer, question["accepted"], question.get("scoring", "contains"))
         answers.append(
             {
                 "number": index,
@@ -240,8 +238,7 @@ def main():
             "device": str(device),
         },
         "models": [
-            evaluate(name, args.checkpoints_root / name, args.max_tokens, device)
-            for name in names
+            evaluate(name, args.checkpoints_root / name, args.max_tokens, device) for name in names
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

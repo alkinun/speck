@@ -46,10 +46,7 @@ def convert_sharegpt(example, source):
 
 
 def convert_messages(example, source):
-    messages = [
-        {"role": turn["role"], "content": turn["content"]}
-        for turn in example["messages"]
-    ]
+    messages = [{"role": turn["role"], "content": turn["content"]} for turn in example["messages"]]
     return {"messages": messages, "source": source}
 
 

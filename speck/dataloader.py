@@ -112,9 +112,7 @@ def scheduled_source(manifest, split, global_consumed_tokens, global_stride):
     if split == "val":
         batch_index = global_consumed_tokens // global_stride
         return source_ids[batch_index % len(source_ids)], "validation"
-    phase_index, phase_batch = _phase_context(
-        manifest, global_consumed_tokens, global_stride
-    )
+    phase_index, phase_batch = _phase_context(manifest, global_consumed_tokens, global_stride)
     weights = manifest["mixture"]["phases"][phase_index]["weights"]
     cycle = _smooth_cycle(tuple((source_id, weights[source_id]) for source_id in source_ids))
     return cycle[phase_batch % len(cycle)], phase_index
@@ -202,9 +200,7 @@ def loader_state_for_offset(
     selected_source, phase = scheduled_source(
         manifest, split, global_consumed_tokens, global_stride
     )
-    counts = source_selection_counts(
-        manifest, split, global_consumed_tokens, global_stride
-    )
+    counts = source_selection_counts(manifest, split, global_consumed_tokens, global_stride)
     sources = _source_map(manifest)
     offsets = {}
     epochs = {}
@@ -234,9 +230,7 @@ def loader_state_for_offset(
         "source_epochs": epochs,
         "selected_source": selected_source,
         "phase": phase,
-        "shard": _shard_diagnostic(
-            sources[selected_source], split, offsets[selected_source]
-        ),
+        "shard": _shard_diagnostic(sources[selected_source], split, offsets[selected_source]),
         "sequence_length": sequence_length,
         "batch_size": batch_size,
         "world_size": world_size,
@@ -257,10 +251,7 @@ def _validate_resume_state(
         raise ValueError("cannot resume with a different packed dataset")
     if state.get("split") != split:
         raise ValueError("cannot resume a different packed split")
-    if (
-        state.get("sequence_length") != sequence_length
-        or state.get("batch_size") != batch_size
-    ):
+    if state.get("sequence_length") != sequence_length or state.get("batch_size") != batch_size:
         raise ValueError("cannot resume with different batch geometry")
     if state.get("world_size") != world_size:
         raise ValueError("cannot resume with a different world size")
@@ -358,9 +349,7 @@ def packed_loader(
     device = torch.device(device)
 
     while True:
-        source_id, phase = scheduled_source(
-            manifest, split, global_consumed_tokens, global_stride
-        )
+        source_id, phase = scheduled_source(manifest, split, global_consumed_tokens, global_stride)
         source = packed[source_id]
         source_offset = source_offsets[source_id]
         if source_offset + global_stride + 1 > source.total_tokens:
@@ -409,9 +398,6 @@ def packed_loader(
         global_consumed_tokens += global_stride
         if split == "val" or global_consumed_tokens >= schedule_end:
             for wrapped_id, wrapped_source in packed.items():
-                if (
-                    source_offsets[wrapped_id] + global_stride + 1
-                    > wrapped_source.total_tokens
-                ):
+                if source_offsets[wrapped_id] + global_stride + 1 > wrapped_source.total_tokens:
                     source_offsets[wrapped_id] = 0
                     source_epochs[wrapped_id] += 1

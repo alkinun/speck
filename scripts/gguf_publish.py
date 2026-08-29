@@ -141,9 +141,7 @@ def validate_config(config):
         if feed_forward.get("kind") != "swiglu":
             raise ValueError(f"block {index} does not end in SwiGLU")
         current_intermediate = feed_forward.get("intermediate_size")
-        intermediate_size = (
-            current_intermediate if intermediate_size is None else intermediate_size
-        )
+        intermediate_size = current_intermediate if intermediate_size is None else intermediate_size
         if current_intermediate != intermediate_size:
             raise ValueError("GGUF conversion requires a uniform SwiGLU width")
 
@@ -204,12 +202,12 @@ def transform_state(state, config):
     embeddings = _take(state, consumed, "embed_tokens.weight")
     input_adapter = _take(state, consumed, "adapters.0.weight")
     output_adapter = _take(state, consumed, "output_projection.weight")
-    transformed["model.embed_tokens.weight"] = (
-        embeddings.float() @ input_adapter.float().T
-    ).to(embeddings.dtype)
-    transformed["lm_head.weight"] = (
-        embeddings.float() @ output_adapter.float()
-    ).to(embeddings.dtype)
+    transformed["model.embed_tokens.weight"] = (embeddings.float() @ input_adapter.float().T).to(
+        embeddings.dtype
+    )
+    transformed["lm_head.weight"] = (embeddings.float() @ output_adapter.float()).to(
+        embeddings.dtype
+    )
     transformed["model.embedding_norm.weight"] = _take(state, consumed, "norm.weight")
 
     for index, (group, layer_type) in enumerate(zip(config["blocks"], layout["layer_types"])):
@@ -249,20 +247,16 @@ def transform_state(state, config):
         spec = group["block"]["stages"][0]["branches"][0]
         inner_size = spec["inner_size"]
         kernel_size = spec["kernel_size"]
-        input_projection = _take(
-            state, consumed, f"{operator}.operation.input_projection.weight"
-        )
+        input_projection = _take(state, consumed, f"{operator}.operation.input_projection.weight")
         padded_input = input_projection.new_zeros(3 * hidden_size, hidden_size)
         for chunk in range(3):
             start = chunk * inner_size
-            padded_input[chunk * hidden_size : chunk * hidden_size + inner_size] = (
-                input_projection[start : start + inner_size]
-            )
+            padded_input[chunk * hidden_size : chunk * hidden_size + inner_size] = input_projection[
+                start : start + inner_size
+            ]
         transformed[f"{target}.conv.in_proj.weight"] = padded_input
 
-        output_projection = _take(
-            state, consumed, f"{operator}.operation.output_projection.weight"
-        )
+        output_projection = _take(state, consumed, f"{operator}.operation.output_projection.weight")
         padded_output = output_projection.new_zeros(hidden_size, hidden_size)
         padded_output[:, :inner_size] = output_projection
         transformed[f"{target}.conv.out_proj.weight"] = padded_output
@@ -490,7 +484,9 @@ def write_release_files(
         },
     }
     manifest_path = output_dir / "conversion.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     rows = "\n".join(
         f"| [{item['path'].name}](./{item['path'].name}) | {item['quantization']} | "
@@ -593,17 +589,13 @@ def main():
     existing = [path for path in intended if path.exists()]
     if existing and not (args.force or args.resume):
         names = ", ".join(path.name for path in existing)
-        raise FileExistsError(
-            f"local artifacts already exist (use --resume or --force): {names}"
-        )
+        raise FileExistsError(f"local artifacts already exist (use --resume or --force): {names}")
     if args.force:
         for path in existing:
             path.unlink()
 
     llama_cpp, quantizer, cli, completion = ensure_llama_cpp(args.llama_cpp, args.jobs)
-    llama_revision = run(
-        ["git", "rev-parse", "HEAD"], cwd=llama_cpp, capture=True
-    ).stdout.strip()
+    llama_revision = run(["git", "rev-parse", "HEAD"], cwd=llama_cpp, capture=True).stdout.strip()
     bf16 = intended[0]
     if not bf16.is_file():
         with tempfile.TemporaryDirectory(prefix="speck-gguf-", dir=output_dir) as temporary:

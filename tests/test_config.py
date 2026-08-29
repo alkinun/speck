@@ -20,9 +20,7 @@ def test_load_experiment_requires_objects(tmp_path):
 
 def test_speck1_instruct_experiment_is_separate_from_base():
     base = load_experiment("experiments/Speck1-140M", "model", "tokenizer")
-    instruct = load_experiment(
-        "experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft"
-    )
+    instruct = load_experiment("experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft")
 
     assert instruct["model"] == base["model"]
     assert instruct["tokenizer"] == base["tokenizer"]
@@ -30,12 +28,8 @@ def test_speck1_instruct_experiment_is_separate_from_base():
 
 
 def test_speck1_1_sft_experiment_uses_speckchat2_and_original_instruct_config():
-    current = load_experiment(
-        "experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft"
-    )
-    updated = load_experiment(
-        "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
-    )
+    current = load_experiment("experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft")
+    updated = load_experiment("experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft")
 
     assert updated["model"] == current["model"]
     assert updated["tokenizer"] == current["tokenizer"]
@@ -57,9 +51,7 @@ def test_speck1_1_sft_experiment_uses_speckchat2_and_original_instruct_config():
 
 
 def test_speck1_1_140m_two_epoch_variant_only_changes_training_length():
-    current = load_experiment(
-        "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
-    )
+    current = load_experiment("experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft")
     two_epoch = load_experiment(
         "experiments/Speck1.1-140M-Instruct-2ep", "model", "tokenizer", "sft"
     )

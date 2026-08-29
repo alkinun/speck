@@ -409,9 +409,7 @@ def discover_source_files(source, seed, api=None):
     )
     suffix = _SOURCE_FILE_SUFFIXES[source["file_format"]]
     available = {
-        entry.path
-        for entry in entries
-        if getattr(entry, "path", "").lower().endswith(suffix)
+        entry.path for entry in entries if getattr(entry, "path", "").lower().endswith(suffix)
     }
     files = source["files"]
     if files is not None:

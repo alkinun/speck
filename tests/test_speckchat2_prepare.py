@@ -4,9 +4,7 @@ from scripts import speckchat2_prepare as prepare
 class CharacterTokenCounter:
     def measure(self, messages):
         assistant = sum(
-            len(message["content"]) + 1
-            for message in messages
-            if message["role"] == "assistant"
+            len(message["content"]) + 1 for message in messages if message["role"] == "assistant"
         )
         return 1 + sum(len(message["content"]) + 3 for message in messages), assistant
 
@@ -74,9 +72,7 @@ def test_prepare_candidate_validates_and_measures_canonical_messages():
         "source-row",
     )
 
-    row, digest, error = prepare.prepare_candidate(
-        spec, candidate, 3, CharacterTokenCounter()
-    )
+    row, digest, error = prepare.prepare_candidate(spec, candidate, 3, CharacterTokenCounter())
 
     assert error is None
     assert row["messages"][0]["content"] == "Hello\nthere"

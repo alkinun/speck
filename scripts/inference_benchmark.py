@@ -228,7 +228,9 @@ def _measure_prefill(runner, tokens, warmups, repeats):
     _synchronize(runner.device)
     if runner.device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(runner.device)
-    durations = [_duration(lambda: runner.prefill(tokens), runner.device)[1] for _ in range(repeats)]
+    durations = [
+        _duration(lambda: runner.prefill(tokens), runner.device)[1] for _ in range(repeats)
+    ]
     median = statistics.median(durations)
     token_count = tokens.numel()
     return {
@@ -240,9 +242,7 @@ def _measure_prefill(runner, tokens, warmups, repeats):
             _percentile(durations, 0.75),
         ],
         "peak_allocated_bytes": (
-            torch.cuda.max_memory_allocated(runner.device)
-            if runner.device.type == "cuda"
-            else None
+            torch.cuda.max_memory_allocated(runner.device) if runner.device.type == "cuda" else None
         ),
     }
 
@@ -292,9 +292,7 @@ def _measure_decode(runner, prefix, decode_tokens, warmups, repeats):
         ],
         "untimed_prefix_seconds": prefix_durations,
         "peak_allocated_bytes": (
-            torch.cuda.max_memory_allocated(runner.device)
-            if runner.device.type == "cuda"
-            else None
+            torch.cuda.max_memory_allocated(runner.device) if runner.device.type == "cuda" else None
         ),
     }
 
@@ -387,7 +385,9 @@ def run(args):
         },
         "environment": {
             "device": str(device),
-            "device_name": torch.cuda.get_device_name(device) if device.type == "cuda" else _cpu_name(),
+            "device_name": torch.cuda.get_device_name(device)
+            if device.type == "cuda"
+            else _cpu_name(),
             "dtype": str(dtype).removeprefix("torch."),
             "threads": args.threads,
             "cpu_count": os.cpu_count(),

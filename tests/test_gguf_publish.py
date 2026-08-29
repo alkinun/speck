@@ -104,7 +104,10 @@ def test_transform_folds_adapters_and_pads_convolution():
     )
     padded_input = transformed["model.layers.0.conv.in_proj.weight"]
     assert padded_input.shape == (12, 4)
-    assert torch.equal(padded_input[0:2], source["cores.group_0_repeat_0.stages.0.branches.0.operation.input_projection.weight"][0:2])
+    assert torch.equal(
+        padded_input[0:2],
+        source["cores.group_0_repeat_0.stages.0.branches.0.operation.input_projection.weight"][0:2],
+    )
     assert torch.count_nonzero(padded_input[2:4]) == 0
     assert transformed["model.layers.0.conv.conv.weight"].shape == (4, 1, 3)
     assert layout["layer_types"] == ["conv", "full_attention"]
