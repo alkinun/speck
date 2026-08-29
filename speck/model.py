@@ -16,7 +16,8 @@ from speck.architecture import (
 
 class Linear(nn.Linear):
     def forward(self, input):
-        return F.linear(input, self.weight.to(input.dtype))
+        bias = self.bias.to(input.dtype) if self.bias is not None else None
+        return F.linear(input, self.weight.to(input.dtype), bias)
 
 
 class RMSNorm(nn.Module):
@@ -412,8 +413,16 @@ class SpeckForCausalLM(nn.Module):
         parameter = next(self.parameters())
         device = torch.device(device or parameter.device)
         dtype = dtype or (torch.bfloat16 if device.type == "cuda" else parameter.dtype)
-        length = length or self.config.max_position_embeddings
-        if length < 1 or length > self.config.max_position_embeddings:
+        if not isinstance(batch_size, int) or isinstance(batch_size, bool) or batch_size < 1:
+            raise ValueError("state batch size must be a positive integer")
+        if length is None:
+            length = self.config.max_position_embeddings
+        if (
+            not isinstance(length, int)
+            or isinstance(length, bool)
+            or length < 1
+            or length > self.config.max_position_embeddings
+        ):
             raise ValueError("state length is outside the model context")
         entries = {}
         for invocation in self.execution_plan:

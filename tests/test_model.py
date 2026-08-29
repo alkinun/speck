@@ -13,7 +13,7 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
-from speck.model import CombinedOptimizer, SpeckForCausalLM, build_model
+from speck.model import CombinedOptimizer, Linear, SpeckForCausalLM, build_model
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
 
@@ -38,6 +38,15 @@ def cached_logits(model, tokens):
     for index in range(1, tokens.size(1)):
         values.append(model(tokens[:, index : index + 1], state=state))
     return torch.cat(values, dim=1)
+
+
+def test_linear_applies_configured_bias():
+    layer = Linear(2, 1, bias=True)
+    with torch.no_grad():
+        layer.weight.copy_(torch.tensor([[2.0, 3.0]]))
+        layer.bias.fill_(5.0)
+
+    assert torch.equal(layer(torch.tensor([[7.0, 11.0]])), torch.tensor([[52.0]]))
 
 
 def test_main_model_parameter_count():
@@ -123,6 +132,20 @@ def test_state_reset_replays_the_same_sequence():
     state.reset()
     second = model(tokens, state=state)
     assert torch.equal(first, second)
+
+
+@pytest.mark.parametrize("length", (0, -1, 17, True, 1.5))
+def test_state_rejects_invalid_lengths(length):
+    model = model_with(AttentionSpec(4, 1))
+    with pytest.raises(ValueError, match="state length"):
+        model.state(length=length)
+
+
+@pytest.mark.parametrize("batch_size", (0, -1, True, 1.5))
+def test_state_rejects_invalid_batch_sizes(batch_size):
+    model = model_with(AttentionSpec(4, 1))
+    with pytest.raises(ValueError, match="batch size"):
+        model.state(batch_size=batch_size)
 
 
 def test_build_model_uses_block_config():
