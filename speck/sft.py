@@ -197,6 +197,13 @@ def prepare_sft_dataset(
                         stats[split]["rejection_reasons"][str(error)] += 1
                         sample_index += 1
                         continue
+                    if not any(mask):
+                        stats[split]["rejected_samples"] += 1
+                        stats[split]["rejection_reasons"][
+                            "conversation has no assistant target"
+                        ] += 1
+                        sample_index += 1
+                        continue
                     tokens, mask, truncated = _truncate_conversation(
                         tokens,
                         mask,
@@ -234,6 +241,9 @@ def prepare_sft_dataset(
             raise ValueError(
                 f"expected {config['expected_samples']:,} samples, found {sample_index:,}"
             )
+        for split, values in stats.items():
+            if not values["samples"]:
+                raise ValueError(f"SFT {split} split has no accepted samples")
         for buckets in split_files.values():
             for files in buckets.values():
                 for handle in files.values():

@@ -2,6 +2,7 @@ import hashlib
 
 import pyarrow as pa
 import pyarrow.parquet as pq
+import pytest
 import torch
 
 import speck.sft as sft_module
@@ -131,13 +132,25 @@ def test_prepare_and_load_masked_sft_data(tmp_path, monkeypatch):
             "source": "test/source",
         }
     )
+    rows.extend(
+        [
+            {
+                "messages": [{"role": "user", "content": "No answer"}],
+                "source": "test/source",
+            },
+            {
+                "messages": [{"role": "user", "content": "No answer " * 100}],
+                "source": "test/source",
+            },
+        ]
+    )
     pq.write_table(pa.Table.from_pylist(rows), parquet_path)
     monkeypatch.setattr(sft_module, "hf_hub_download", lambda *args, **kwargs: parquet_path)
     config = {
         "repo": "test/dataset",
         "revision": "a" * 40,
         "files": ["data.parquet"],
-        "expected_samples": 7,
+        "expected_samples": 9,
         "validation_samples": 1,
     }
     output = tmp_path / "packed"
@@ -145,8 +158,12 @@ def test_prepare_and_load_masked_sft_data(tmp_path, monkeypatch):
     manifest = prepare_sft_dataset(config, tokenizer, [16, 64], output)
 
     assert manifest["splits"]["train"]["samples"] == 5
-    assert manifest["splits"]["train"]["input_samples"] == 6
-    assert manifest["splits"]["train"]["rejected_samples"] == 1
+    assert manifest["splits"]["train"]["input_samples"] == 8
+    assert manifest["splits"]["train"]["rejected_samples"] == 3
+    assert manifest["splits"]["train"]["rejection_reasons"] == {
+        "conversation has no assistant target": 2,
+        "message content must be a non-empty string": 1,
+    }
     assert manifest["splits"]["val"]["samples"] == 1
     assert manifest["splits"]["train"]["supervised_tokens"] > 0
     assert manifest["splits"]["train"]["buckets"]["16"]["samples"] == 4
@@ -175,6 +192,42 @@ def test_prepare_and_load_masked_sft_data(tmp_path, monkeypatch):
     assert torch.equal(resumed_inputs, long_inputs)
     assert torch.equal(resumed_targets, long_targets)
     assert resumed_state == long_state
+
+
+def test_prepare_rejects_a_split_without_assistant_targets(tmp_path, monkeypatch):
+    tokenizer_path = tmp_path / "tokenizer.model"
+    tokenizer_path.write_bytes(b"sentencepiece")
+    tokenizer = ChatTokenizer(BaseTokenizer(tokenizer_path))
+    parquet_path = tmp_path / "data.parquet"
+    pq.write_table(
+        pa.Table.from_pylist(
+            [
+                {
+                    "messages": [{"role": "user", "content": "No validation answer"}],
+                    "source": "test/source",
+                },
+                {
+                    "messages": [
+                        {"role": "user", "content": "Question"},
+                        {"role": "assistant", "content": "Answer"},
+                    ],
+                    "source": "test/source",
+                },
+            ]
+        ),
+        parquet_path,
+    )
+    monkeypatch.setattr(sft_module, "hf_hub_download", lambda *args, **kwargs: parquet_path)
+    config = {
+        "repo": "test/dataset",
+        "revision": "a" * 40,
+        "files": ["data.parquet"],
+        "expected_samples": 2,
+        "validation_samples": 1,
+    }
+
+    with pytest.raises(ValueError, match="val split has no accepted samples"):
+        prepare_sft_dataset(config, tokenizer, [64], tmp_path / "packed")
 
 
 def test_sft_loader_masks_target_positions(tmp_path):
