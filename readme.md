@@ -351,12 +351,14 @@ uv run --extra cpu --group dev pytest -q
 Search uses the baseline experiment and stores a resumable study under `~/.cache/speck/search/<name>`:
 
 ```bash
-python -m scripts.search run experiments/Speck1-140M \
+uv run --extra gpu python -m scripts.search run experiments/Speck1-140M \
   --name evolution-01 \
   --hours 3
 
-python -m scripts.search status evolution-01
-python -m scripts.search finalize evolution-01
+uv run --extra gpu python -m scripts.search status evolution-01
+uv run --extra gpu python -m scripts.search finalize evolution-01
 ```
 
-See [Architecture search](docs/search.md) for prerequisites, runtime contracts, promotion behavior, output files, and finalization.
+Search requires a prepared packed dataset and a compatible CUDA runtime. See
+[Architecture search](docs/search.md) for prerequisites, lifecycle, resume semantics, runtime
+contracts, output files, and finalization requirements.
