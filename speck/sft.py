@@ -570,18 +570,24 @@ def sft_optimization_step(
 
 @torch.no_grad()
 def validate_sft(model, loader, steps, distributed=False):
+    training = model.training
     model.eval()
-    device = next(model.parameters()).device
-    loss = torch.zeros((), device=device)
-    supervised = torch.zeros((), device=device, dtype=torch.long)
-    for _ in range(steps):
-        inputs, targets, _ = next(loader)
-        loss += model(inputs, targets, loss_reduction="sum")
-        supervised += (targets != -100).sum()
-    if distributed:
-        dist.all_reduce(loss, op=dist.ReduceOp.SUM)
-        dist.all_reduce(supervised, op=dist.ReduceOp.SUM)
-    model.train()
-    if not supervised.item():
-        raise ValueError("SFT validation batch has no supervised tokens")
-    return (loss / supervised).item(), int(supervised.item())
+    try:
+        device = next(model.parameters()).device
+        loss = torch.zeros((), device=device)
+        supervised = torch.zeros((), device=device, dtype=torch.long)
+        for _ in range(steps):
+            inputs, targets, _ = next(loader)
+            loss += model(inputs, targets, loss_reduction="sum")
+            supervised += (targets != -100).sum()
+        if distributed:
+            dist.all_reduce(loss, op=dist.ReduceOp.SUM)
+            dist.all_reduce(supervised, op=dist.ReduceOp.SUM)
+        if not supervised.item():
+            raise ValueError("SFT validation batch has no supervised tokens")
+        mean_loss = loss / supervised
+        if not torch.isfinite(mean_loss).item():
+            raise FloatingPointError("non-finite SFT validation loss")
+        return mean_loss.item(), int(supervised.item())
+    finally:
+        model.train(training)

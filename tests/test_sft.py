@@ -23,6 +23,7 @@ from speck.sft import (
     sft_loader,
     sft_optimization_step,
     sft_plan,
+    validate_sft,
     verify_sft_dataset,
 )
 
@@ -43,6 +44,21 @@ class BaseTokenizer:
 
     def fingerprint(self):
         return "base-tokenizer"
+
+
+class ValidationModel(torch.nn.Module):
+    def __init__(self, loss=6.0, error=None):
+        super().__init__()
+        self.parameter = torch.nn.Parameter(torch.tensor(0.0))
+        self.loss = loss
+        self.error = error
+        self.forward_modes = []
+
+    def forward(self, inputs, targets, loss_reduction):
+        self.forward_modes.append(self.training)
+        if self.error is not None:
+            raise self.error
+        return self.parameter * 0 + self.loss
 
 
 def test_default_sft_data_dir_is_isolated_by_dataset(tmp_path, monkeypatch):
@@ -370,3 +386,43 @@ def test_sft_optimization_counts_supervised_tokens():
     assert supervised == 3
     assert torch.isfinite(loss) and torch.isfinite(grad_norm)
     assert next_batch[2] == {"batch": 2}
+
+
+@pytest.mark.parametrize("training", (True, False))
+def test_validate_sft_restores_model_mode(training):
+    model = ValidationModel()
+    model.train(training)
+    targets = torch.tensor([[1, -100, 2]])
+
+    loss, supervised = validate_sft(
+        model,
+        iter([(torch.zeros_like(targets), targets, {})]),
+        steps=1,
+    )
+
+    assert loss == 3.0
+    assert supervised == 2
+    assert model.forward_modes == [False]
+    assert model.training is training
+
+
+@pytest.mark.parametrize("loss", (float("nan"), float("inf"), float("-inf")))
+def test_validate_sft_rejects_non_finite_loss(loss):
+    model = ValidationModel(loss=loss)
+    targets = torch.tensor([[1]])
+
+    with pytest.raises(FloatingPointError, match="non-finite SFT validation loss"):
+        validate_sft(model, iter([(targets, targets, {})]), steps=1)
+
+    assert model.training
+
+
+def test_validate_sft_restores_model_mode_after_failure():
+    model = ValidationModel(error=RuntimeError("validation failed"))
+    model.eval()
+    targets = torch.tensor([[1]])
+
+    with pytest.raises(RuntimeError, match="validation failed"):
+        validate_sft(model, iter([(targets, targets, {})]), steps=1)
+
+    assert not model.training
