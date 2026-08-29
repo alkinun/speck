@@ -236,7 +236,7 @@ def prepare_sft_dataset(
                     bucket["truncated_samples"] += int(truncated)
                     sample_index += 1
                     if sample_index % 10_000 == 0:
-                        print(f"serialized {sample_index:,} conversations")
+                        print(f"Serialized {sample_index:,} conversations")
         if sample_index != config["expected_samples"]:
             raise ValueError(
                 f"expected {config['expected_samples']:,} samples, found {sample_index:,}"

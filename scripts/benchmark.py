@@ -78,7 +78,7 @@ def arguments():
         "--peak-tflops",
         type=float,
         default=None,
-        help="theoretical peak TFLOPS used to calculate model FLOPS utilization",
+        help="theoretical peak TFLOPS used to calculate model FLOPs utilization",
     )
     parser.add_argument(
         "--seed",
@@ -158,7 +158,7 @@ def run(args):
     micro_tokens = batch_size * sequence_length
     if args.accumulation is None:
         if train["batch_tokens"] % micro_tokens:
-            raise ValueError("batch tokens must be divisible by benchmark micro batch tokens")
+            raise ValueError("batch tokens must be divisible by benchmark microbatch tokens")
         accumulation = train["batch_tokens"] // micro_tokens
     else:
         accumulation = args.accumulation

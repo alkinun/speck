@@ -64,7 +64,7 @@ def synchronize(device):
 def _runtime(device_name, seed):
     device = torch.device(device_name)
     if device.type == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("cuda is required but unavailable")
+        raise RuntimeError("CUDA is required but unavailable")
     torch.manual_seed(seed)
     torch.use_deterministic_algorithms(True)
     if device.type == "cuda":
@@ -81,7 +81,7 @@ def _runtime_contract(settings, device):
     if device.type != expected:
         raise ValueError(f"search profile requires {expected}, not {device.type}")
     if device.type == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("cuda is required but unavailable")
+        raise RuntimeError("CUDA is required but unavailable")
     return {
         "device": str(device),
         "device_type": device.type,
@@ -629,7 +629,7 @@ def final_profile_candidate(study, candidate_id, device_name):
     device = _runtime(device_name, settings["profile"]["seed"])
     _verify_runtime(state, settings, device)
     if device.type != "cuda":
-        raise ValueError("final gpu profiles require cuda")
+        raise ValueError("final GPU profiles require CUDA")
     checkpoint_dir = candidate / "final" / "continuation" / "checkpoint"
     step = latest(checkpoint_dir)
     if step is None:
@@ -1226,10 +1226,10 @@ def human_status(snapshot):
     if current:
         if current.get("nll_curve"):
             point = current["nll_curve"][-1]
-            lines.append(f"current nll | {point['nll']:.5f} at {point['tokens']} tokens")
+            lines.append(f"current NLL | {point['nll']:.5f} at {point['tokens']} tokens")
         if current.get("forecast"):
             lines.append(
-                f"projected nll | {current['forecast']['projected_nll']:.5f} at {current['forecast']['projected_tokens']} tokens"
+                f"projected NLL | {current['forecast']['projected_nll']:.5f} at {current['forecast']['projected_tokens']} tokens"
             )
         profile = current.get("profile") or {}
         if "latency" in profile:
@@ -1237,7 +1237,7 @@ def human_status(snapshot):
                 f"prefill 2048 p50 | {profile['latency']['prefill_2048']['p50_seconds']:.6f} seconds"
             )
         if profile.get("memory", {}).get("peak_vram_bytes") is not None:
-            lines.append(f"peak vram | {profile['memory']['peak_vram_bytes']} bytes")
+            lines.append(f"peak VRAM | {profile['memory']['peak_vram_bytes']} bytes")
     lines.append(f"retained checkpoints | {snapshot['checkpoint_bytes']} bytes")
     return "\n".join(lines)
 
@@ -1328,7 +1328,7 @@ def finalize_study(name, device):
                 stored_profile = json.loads(profile_path.read_text(encoding="utf-8"))
                 stored_cpu = stored_profile.get("cpu", {}).get("contract", {})
                 if any(stored_cpu.get(key) != value for key, value in expected_cpu.items()):
-                    raise RuntimeError("final cpu profile contract differs from the host")
+                    raise RuntimeError("final CPU profile contract differs from the host")
             runs = {
                 run_name: json.loads(
                     (candidate / "final" / run_name / "result.json").read_text(encoding="utf-8")

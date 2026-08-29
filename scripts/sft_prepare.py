@@ -31,7 +31,7 @@ def main(argv=None):
         restart=args.restart,
     )
     print(
-        f"prepared {manifest['splits']['train']['samples']:,} training conversations "
+        f"Prepared {manifest['splits']['train']['samples']:,} training conversations "
         f"and {manifest['splits']['val']['samples']:,} validation conversations"
     )
 

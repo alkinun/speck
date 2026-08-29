@@ -526,8 +526,8 @@ def build_dataset(cache_dir=None):
         rows, rejections, categories = select_source(dataset, spec, token_counter, seen_prompts)
         selected_datasets[key] = Dataset.from_list(rows, features=features)
         print(f"Selected {len(rows):,} rows from {spec.repo}")
-        print(f"  categories: {dict(categories.most_common())}")
-        print(f"  rejections: {dict(rejections.most_common())}")
+        print(f"  Categories: {dict(categories.most_common())}")
+        print(f"  Rejections: {dict(rejections.most_common())}")
         del dataset, rows
         gc.collect()
 
@@ -546,10 +546,14 @@ def build_dataset(cache_dir=None):
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-repo", default=OUTPUT_REPO, help="Hugging Face dataset repo")
+    parser.add_argument(
+        "--output-repo", default=OUTPUT_REPO, help="Hugging Face dataset repository"
+    )
     parser.add_argument("--output-dir", type=Path, help="optional local save_to_disk directory")
     parser.add_argument("--cache-dir", type=Path, help="Hugging Face cache directory")
-    parser.add_argument("--private", action="store_true", help="make a newly created repo private")
+    parser.add_argument(
+        "--private", action="store_true", help="make a newly created repository private"
+    )
     parser.add_argument("--no-push", action="store_true", help="build locally without uploading")
     args = parser.parse_args()
     if args.no_push and args.output_dir is None:

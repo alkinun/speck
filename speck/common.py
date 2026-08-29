@@ -23,7 +23,7 @@ def init_runtime(device_type=None):
     rank, local_rank, world_size = dist_info()
     if world_size > 1:
         if device_type != "cuda":
-            raise ValueError("distributed training requires cuda")
+            raise ValueError("distributed training requires CUDA")
         device = torch.device("cuda", local_rank)
         torch.cuda.set_device(device)
         dist.init_process_group("nccl", device_id=device)

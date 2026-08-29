@@ -179,10 +179,10 @@ class SearchSettings:
         if training["deterministic"] is not True:
             raise ValueError("search training must use deterministic algorithms")
         if training["cublas_workspace_config"] != ":4096:8":
-            raise ValueError("search training must use the fixed cublas workspace")
+            raise ValueError("search training must use the fixed cuBLAS workspace")
         micro_tokens = training["sequence_length"] * training["device_batch_size"]
         if micro_tokens < 1 or training["batch_tokens"] % micro_tokens:
-            raise ValueError("training batch tokens must divide into whole micro batches")
+            raise ValueError("training batch tokens must divide into whole microbatches")
         if any(tokens % training["batch_tokens"] for tokens in training["checkpoints"]):
             raise ValueError("training checkpoints must align with optimizer batches")
         if any(rung not in training["checkpoints"] for rung in values["rungs"]):
@@ -314,7 +314,7 @@ def _parts(block):
         raise ValueError("search stages must contain one operation")
     operations = tuple(stage.branches[0] for stage in block.stages)
     if not operations or len(operations) > 2:
-        raise ValueError("search blocks contain at most a mixer and swiglu")
+        raise ValueError("search blocks contain at most a mixer and SwiGLU")
     if len(operations) == 1:
         mixer = None if isinstance(operations[0], SwiGLUSpec) else operations[0]
         swiglu = operations[0] if isinstance(operations[0], SwiGLUSpec) else None
@@ -323,7 +323,7 @@ def _parts(block):
     if mixer is not None and not isinstance(mixer, (AttentionSpec, GatedCausalConvSpec)):
         raise ValueError("search blocks contain one supported mixer")
     if swiglu is not None and not isinstance(swiglu, SwiGLUSpec):
-        raise ValueError("swiglu must follow the mixer")
+        raise ValueError("SwiGLU must follow the mixer")
     return mixer, swiglu
 
 
@@ -513,7 +513,7 @@ def validate_architecture(config, settings):
             if mixer.head_dim not in settings["head_dimensions"]:
                 raise ValueError("attention head dimension is outside the search space")
             if mixer.num_key_value_heads not in settings["kv_heads"]:
-                raise ValueError("attention kv heads are outside the search space")
+                raise ValueError("attention KV heads are outside the search space")
             if mixer.scope == "sliding" and mixer.window_size not in settings["sliding_windows"]:
                 raise ValueError("sliding window is outside the search space")
         elif isinstance(mixer, GatedCausalConvSpec):
@@ -525,9 +525,9 @@ def validate_architecture(config, settings):
         if swiglu is not None:
             ratio = swiglu.intermediate_size / block.hidden_size
             if not any(math.isclose(ratio, value) for value in settings["swiglu_ratios"]):
-                raise ValueError("swiglu ratio is outside the search space")
+                raise ValueError("SwiGLU ratio is outside the search space")
         if mixer is None and swiglu is None:
-            raise ValueError("a search block requires a mixer or swiglu")
+            raise ValueError("a search block requires a mixer or SwiGLU")
     parameters = parameter_count(config)
     lower, upper = settings["parameter_bounds"]
     if not lower <= parameters <= upper:
@@ -854,7 +854,7 @@ def _mutation_head_dimension(config, settings, rng):
 def _mutation_kv_heads(config, settings, rng):
     choices = _groups_with(config, AttentionSpec)
     if not choices or len(settings["kv_heads"]) < 2:
-        raise InapplicableMutation("architecture has no mutable kv head count")
+        raise InapplicableMutation("architecture has no mutable KV head count")
     index, group, mixer, swiglu, attention = rng.choice(choices)
     heads = _step(settings["kv_heads"], attention.num_key_value_heads, rng)
     changed = replace(
@@ -919,7 +919,7 @@ def _mutation_toggle_swiglu(config, settings, rng):
         if swiglu is None or mixer is not None:
             choices.append((index, group, mixer, swiglu))
     if not choices:
-        raise InapplicableMutation("no swiglu can be toggled")
+        raise InapplicableMutation("no SwiGLU can be toggled")
     index, group, mixer, swiglu = rng.choice(choices)
     if swiglu is None:
         ratio = 3 if 3 in settings["swiglu_ratios"] else settings["swiglu_ratios"][0]
@@ -936,7 +936,7 @@ def _mutation_toggle_swiglu(config, settings, rng):
 def _mutation_swiglu_expansion(config, settings, rng):
     choices = _groups_with(config, SwiGLUSpec)
     if not choices or len(settings["swiglu_ratios"]) < 2:
-        raise InapplicableMutation("architecture has no mutable swiglu expansion")
+        raise InapplicableMutation("architecture has no mutable SwiGLU expansion")
     index, group, mixer, swiglu, operation = rng.choice(choices)
     old_ratio = operation.intermediate_size / group.block.hidden_size
     ratio = _step(settings["swiglu_ratios"], old_ratio, rng)
@@ -1100,7 +1100,7 @@ def _regression(points):
         ):
             raise ValueError("learning-curve token positions must be positive and finite")
         if isinstance(nll, bool) or not isinstance(nll, (int, float)) or not math.isfinite(nll):
-            raise ValueError("learning-curve nll values must be finite")
+            raise ValueError("learning-curve NLL values must be finite")
         validated.append({"tokens": tokens, "nll": float(nll)})
     selected = sorted(validated, key=lambda point: point["tokens"])[-3:]
     if len({point["tokens"] for point in selected}) != 3:
@@ -1607,7 +1607,7 @@ def materialize_generation(store, plans, generation, settings):
         if architecture_path.exists():
             existing = ArchitectureConfig.from_dict(read_json(architecture_path))
             if existing.digest != plan.architecture.digest:
-                raise RuntimeError("candidate id collides with another architecture")
+                raise RuntimeError("candidate ID collides with another architecture")
         else:
             atomic_json(architecture_path, plan.architecture.settings())
         now = utc_now()
@@ -1791,9 +1791,9 @@ def aggregate_final_runs(runs, final_tokens):
             None,
         )
         if point is None or not math.isfinite(point["nll"]):
-            raise ValueError(f"{name} run has no finite final monitor nll")
+            raise ValueError(f"{name} run has no finite final monitor NLL")
         if not math.isfinite(run.get("final_nll", math.nan)):
-            raise ValueError(f"{name} run has no finite untouched final nll")
+            raise ValueError(f"{name} run has no finite untouched final NLL")
         monitor[name] = point["nll"]
         final[name] = run["final_nll"]
     return {

@@ -25,7 +25,7 @@ class AttentionSpec:
         if self.head_dim < 2 or self.head_dim % 2:
             raise ValueError("attention head dimensions must be positive and even")
         if self.num_key_value_heads < 1:
-            raise ValueError("attention kv heads must be positive")
+            raise ValueError("attention KV heads must be positive")
         if self.scope not in {"global", "sliding"}:
             raise ValueError("attention scope must be global or sliding")
         if self.scope == "sliding":
@@ -55,7 +55,7 @@ class SwiGLUSpec:
 
     def __post_init__(self):
         if self.intermediate_size < 1:
-            raise ValueError("swiglu intermediate sizes must be positive")
+            raise ValueError("SwiGLU intermediate sizes must be positive")
 
 
 OperationSpec = AttentionSpec | GatedCausalConvSpec | SwiGLUSpec
@@ -109,7 +109,7 @@ class BlockConfig:
                         )
                     query_heads = self.hidden_size // operation.head_dim
                     if query_heads % operation.num_key_value_heads:
-                        raise ValueError("query heads must be divisible by kv heads")
+                        raise ValueError("query heads must be divisible by KV heads")
 
     @classmethod
     def from_dict(cls, value):
@@ -174,9 +174,9 @@ class ArchitectureConfig:
         if self.rope_theta <= 0 or self.rms_norm_eps <= 0 or self.initializer_range <= 0:
             raise ValueError("model scaling values must be positive")
         if not 0 <= self.bos_token_id < self.vocab_size:
-            raise ValueError("bos token id is outside the vocabulary")
+            raise ValueError("BOS token ID is outside the vocabulary")
         if not 0 <= self.eos_token_id < self.vocab_size:
-            raise ValueError("eos token id is outside the vocabulary")
+            raise ValueError("EOS token ID is outside the vocabulary")
         if self.expected_parameters is not None and self.expected_parameters < 1:
             raise ValueError("expected parameters must be positive")
 

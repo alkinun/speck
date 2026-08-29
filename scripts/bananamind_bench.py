@@ -224,7 +224,7 @@ def main():
             torch.set_float32_matmul_precision("high")
 
             if self.device.type == "cuda" and self.dtype != torch.bfloat16:
-                raise ValueError("Speck CUDA inference supports only bfloat16")
+                raise ValueError("Speck CUDA inference supports only BF16")
             metadata = run["metadata"]
             model_state = load_model(run["checkpoint_dir"], run["step"], "cpu")
             self.model = SpeckForCausalLM(ArchitectureConfig.from_dict(metadata["config"]))

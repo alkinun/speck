@@ -41,7 +41,9 @@ SOURCE_FILES = (
 
 def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", default=SOURCE_REPO, help="source Hugging Face model")
+    parser.add_argument(
+        "--source", default=SOURCE_REPO, help="source Hugging Face model repository"
+    )
     parser.add_argument(
         "--destination",
         default=DESTINATION_REPO,
@@ -70,7 +72,9 @@ def arguments():
         default=None,
         help="artifact directory; defaults to ~/.cache/speck/gguf/<model>-<revision>",
     )
-    parser.add_argument("--private", action="store_true", help="create a private destination repo")
+    parser.add_argument(
+        "--private", action="store_true", help="create a private destination repository"
+    )
     parser.add_argument("--no-upload", action="store_true", help="build locally without uploading")
     parser.add_argument(
         "--jobs",

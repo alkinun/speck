@@ -112,7 +112,7 @@ def main():
 
     micro_tokens = args.device_batch_size * args.sequence_length * world_size
     if args.batch_tokens % micro_tokens:
-        raise ValueError("batch tokens must be divisible by the distributed micro batch")
+        raise ValueError("batch tokens must be divisible by the distributed microbatch")
     accumulation = args.batch_tokens // micro_tokens
     steps = math.ceil(args.train_tokens / args.batch_tokens)
     consumed_tokens = steps * args.batch_tokens

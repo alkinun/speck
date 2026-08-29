@@ -123,7 +123,9 @@ def arguments():
     parser.add_argument(
         "--step", type=int, default=None, help="checkpoint step; defaults to latest"
     )
-    parser.add_argument("--repo", default=DEFAULT_REPO, help="destination Hugging Face model")
+    parser.add_argument(
+        "--repo", default=DEFAULT_REPO, help="destination Hugging Face model repository"
+    )
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -348,7 +350,8 @@ def main():
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     prepare_export(checkpoint_dir, step, output_dir, metadata)
     validate_export(output_dir, metadata)
-    print(f"Exported step {step:,} ({epochs} epoch) to {output_dir}")
+    unit = "epoch" if epochs == 1 else "epochs"
+    print(f"Exported step {step:,} ({epochs} {unit}) to {output_dir}")
     if args.no_upload:
         return
 

@@ -29,7 +29,7 @@ CARD_SPECS = (
     },
 )
 
-COMPARISON_TABLE = """| Model | Params | Training tokens | Open SLM Int Index | BananaMind Base Bench 1.1 Elo | CPU prefill | CPU decode | RTX 3090 prefill | RTX 3090 decode | BF16 memory @2K | BF16 state @2K |
+COMPARISON_TABLE = """| Model | Parameters | Training tokens | Open SLM Intelligence Index | BananaMind Base Bench 1.1 Elo | CPU prefill | CPU decode | RTX 3090 prefill | RTX 3090 decode | BF16 memory @2K | BF16 state @2K |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | BananaMind-2-Pro | 139M | 100B | 24.96 | 1131 | 2,190 tok/s | 43.0 tok/s | 64,060 tok/s | 140.3 tok/s | 325.1 MiB | 60.0 MiB |
 | SmolLM2-135M | 135M | ~2T | 27.13 | 1119 | 2,201 tok/s | 47.4 tok/s | 64,814 tok/s | 157.7 tok/s | 301.6 MiB | 45.0 MiB |
@@ -62,7 +62,7 @@ Speck evaluations.
 
 {COMPARISON_TABLE}
 
-`Open SLM Int Index` means the chance-normalized Intelligence Index reported by the Open SLM
+`Open SLM Intelligence Index` means the chance-normalized Intelligence Index reported by the Open SLM
 Leaderboard. `BananaMind Base Bench 1.1 Elo` means the overall Elo reported by BananaMind Base
 Bench 1.1. Speed and memory values are local batch-1 measurements described below. Reference
 models saw 6-400x more pretraining tokens, so this is a parameter-adjacent comparison, not a
@@ -145,7 +145,7 @@ def _validate_intelligence_indexes():
         displayed_indexes[columns[0]] = float(columns[3])
 
     if displayed_indexes.keys() != INTELLIGENCE_INDEX_INPUTS.keys():
-        raise ValueError("comparison table models do not match the Int Index inputs")
+        raise ValueError("comparison table models do not match the Intelligence Index inputs")
     for model, scores in INTELLIGENCE_INDEX_INPUTS.items():
         hellaswag, arc_easy, arc_challenge, piqa, arithmark_3 = scores
         combined_arc = (arc_easy + arc_challenge) / 2
@@ -156,7 +156,7 @@ def _validate_intelligence_indexes():
             + 0.65 * normalize(arithmark_3, 25)
         ) / 3.65
         if round(calculated, 2) != displayed_indexes[model]:
-            raise ValueError(f"{model} Int Index does not match its benchmark scores")
+            raise ValueError(f"{model} Intelligence Index does not match its benchmark scores")
 
 
 def validate_card(card):

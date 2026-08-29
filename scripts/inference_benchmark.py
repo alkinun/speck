@@ -56,7 +56,7 @@ def arguments():
         "--batch-sizes",
         type=_batch_sizes,
         default=None,
-        help="comma-separated batches; defaults to 1 on CPU and 1,32 on CUDA",
+        help="comma-separated batch sizes; defaults to 1 on CPU and 1,32 on CUDA",
     )
     parser.add_argument("--prefill-length", type=int, default=512)
     parser.add_argument("--decode-prefix-length", type=int, default=448)

@@ -452,7 +452,7 @@ def _download_file(url, destination, description, attempts=20, repo=None):
         revision, filename = resolved.split("/", 1)
         repo = repo or prefix.split("/datasets/", 1)[1]
     except (IndexError, ValueError) as error:
-        raise ValueError(f"unexpected hugging face dataset url: {url}") from error
+        raise ValueError(f"unexpected Hugging Face dataset URL: {url}") from error
     cache_dir = destination.parent / f".{destination.stem}.download"
     shutil.rmtree(cache_dir, ignore_errors=True)
     os.environ.setdefault("HF_XET_HIGH_PERFORMANCE", "1")
@@ -792,7 +792,7 @@ class TokenShardWriter:
         if values.size == 0:
             return 0
         if values.min() < 0 or values.max() > np.iinfo(np.uint16).max:
-            raise ValueError("token ids must fit in uint16")
+            raise ValueError("token IDs must fit in uint16")
         written = 0
         while written < values.size:
             if self._array is None:
@@ -1363,7 +1363,7 @@ def prepare_dataset(
     )
     if check_disk:
         print(
-            f"disk preflight: required {disk_report['required_bytes']:,} bytes, "
+            f"Disk preflight: required {disk_report['required_bytes']:,} bytes, "
             f"free {disk_report['free_bytes']:,} bytes"
         )
 
@@ -1644,7 +1644,7 @@ def prepare_dataset(
     (output_dir / state_path.name).unlink()
     _fsync_directory(output_dir)
     print(
-        f"prepared {manifest['splits']['train']['tokens']:,} train and "
+        f"Prepared {manifest['splits']['train']['tokens']:,} train and "
         f"{manifest['splits']['val']['tokens']:,} validation tokens"
     )
     for source in ordered_summaries:
@@ -1653,7 +1653,7 @@ def prepare_dataset(
             f"{source['id']}: requested {train['requested_tokens']:,}, "
             f"reserve {train['reserve_tokens']:,}, actual {train['tokens']:,}"
         )
-    print(f"manifest: {output_dir / 'manifest.json'}")
+    print(f"Manifest: {output_dir / 'manifest.json'}")
     return manifest
 
 

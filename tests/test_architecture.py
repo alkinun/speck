@@ -79,7 +79,7 @@ def test_focused_hybrid_grammar_round_trips():
 def test_attention_shape_invariants_are_strict():
     with pytest.raises(ValueError, match="divisible by attention"):
         BlockConfig(10, (StageConfig((AttentionSpec(4, 1),)),))
-    with pytest.raises(ValueError, match="divisible by kv"):
+    with pytest.raises(ValueError, match="divisible by KV"):
         BlockConfig(12, (StageConfig((AttentionSpec(4, 2),)),))
 
 
