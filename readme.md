@@ -340,11 +340,15 @@ python -m scripts.inference_benchmark --model speck --device cuda
 
 Select `speck`, `supra`, `gptx`, `banana`, or `smol`. CPU defaults to FP32 batch 1; CUDA defaults to BF16 batches 1 and 32. The benchmark excludes tokenization, uses eager SDPA, returns only the final-position logit, and records raw synchronized timings. External models require `transformers`.
 
-## Tests
+## Development
 
 ```bash
+uv run --extra cpu --group dev ruff format --check .
+uv run --extra cpu --group dev ruff check .
 uv run --extra cpu --group dev pytest -q
 ```
+
+See [Contributing](CONTRIBUTING.md) for setup, quality checks, and change guidelines.
 
 ## Architecture Search
 
