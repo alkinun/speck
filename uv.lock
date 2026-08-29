@@ -3286,12 +3286,18 @@ gpu = [
 ]
 
 [package.dev-dependencies]
+dataset-build = [
+    { name = "datasets" },
+]
 dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
 open-slm = [
     { name = "lm-eval", extra = ["hf"] },
+    { name = "transformers" },
+]
+transformers = [
     { name = "transformers" },
 ]
 
@@ -3312,6 +3318,7 @@ requires-dist = [
 provides-extras = ["cpu", "gpu"]
 
 [package.metadata.requires-dev]
+dataset-build = [{ name = "datasets", specifier = "==5.0.1" }]
 dev = [
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "ruff", specifier = ">=0.15.0" },
@@ -3320,6 +3327,7 @@ open-slm = [
     { name = "lm-eval", extras = ["hf"], git = "https://github.com/EleutherAI/lm-evaluation-harness.git?rev=64f3d0924fc695efd6d776a5ac91f97138085516" },
     { name = "transformers", specifier = "==5.1.0" },
 ]
+transformers = [{ name = "transformers", specifier = "==5.1.0" }]
 
 [[package]]
 name = "sqlitedict"

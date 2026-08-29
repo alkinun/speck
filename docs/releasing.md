@@ -13,7 +13,7 @@ Export and validate the canonical one-epoch instruction checkpoint as a BF16 Tra
 repository without uploading:
 
 ```bash
-uv run --extra cpu --group open-slm python -m scripts.model_publish \
+uv run --extra cpu --group transformers python -m scripts.model_publish \
   --expected-epochs 1 \
   --no-upload
 ```
@@ -32,7 +32,7 @@ Apply and validate the tracked padding compatibility code against an immutable b
 without changing weights:
 
 ```bash
-uv run --extra cpu --group open-slm python -m scripts.model_code_publish --no-upload
+uv run --extra cpu --group transformers python -m scripts.model_code_publish --no-upload
 ```
 
 The publisher verifies the source revision, model-weight LFS checksum, Auto class loading,
@@ -46,7 +46,7 @@ GGUF publication requires Git, CMake, a working C/C++ toolchain, network access,
 space for BF16 plus every requested quantization. Build and smoke-test locally first:
 
 ```bash
-uv run --extra cpu --group open-slm python -m scripts.gguf_publish --no-upload
+uv run --extra cpu python -m scripts.gguf_publish --no-upload
 ```
 
 The default workflow creates BF16, Q4_K_M, Q5_K_M, and Q8_0 variants from the public instruction

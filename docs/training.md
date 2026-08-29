@@ -85,7 +85,7 @@ The maintainer dataset builder reconstructs and optionally publishes the 500,000
 `specklabs/SpeckChat2` training split:
 
 ```bash
-uv run --extra cpu --group open-slm python -m scripts.speckchat2_prepare \
+uv run --extra cpu --group dataset-build python -m scripts.speckchat2_prepare \
   --output-dir <path> \
   --no-push
 ```

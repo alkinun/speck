@@ -70,7 +70,7 @@ Accept the dataset gate and authenticate with Hugging Face before running Banana
 1.1:
 
 ```bash
-uv run --extra gpu --group open-slm python -m scripts.bananamind_bench \
+uv run --extra gpu --group transformers python -m scripts.bananamind_bench \
   --model experiments/Speck1-140M \
   --speck-checkpoint-step 76294 \
   --device cuda \
@@ -80,7 +80,7 @@ uv run --extra gpu --group open-slm python -m scripts.bananamind_bench \
 
 The wrapper verifies the official runner and data checksums, pins checkpoint and tokenizer hashes
 in the report, and rejects resume when checkpoint or numerical settings change. Scoring remains in
-the official runner. The `open-slm` group is included here because the runner requires
+the official runner. The `transformers` group is included because the runner requires
 `transformers==5.1.0`.
 
 ## Inference Performance
@@ -88,9 +88,9 @@ the official runner. The `open-slm` group is included here because the runner re
 Compare normalized prompt-prefill and cached-decoding speed:
 
 ```bash
-uv run --extra cpu --group open-slm python -m scripts.inference_benchmark \
+uv run --extra cpu --group transformers python -m scripts.inference_benchmark \
   --model speck --device cpu
-uv run --extra gpu --group open-slm python -m scripts.inference_benchmark \
+uv run --extra gpu --group transformers python -m scripts.inference_benchmark \
   --model speck --device cuda
 ```
 

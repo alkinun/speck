@@ -18,12 +18,18 @@ dependencies = [
 ]
 
 [dependency-groups]
+dataset-build = [
+    "datasets==5.0.1",
+]
 dev = [
     "pytest>=8.0.0",
     "ruff>=0.15.0",
 ]
 open-slm = [
     "lm-eval[hf] @ git+https://github.com/EleutherAI/lm-evaluation-harness.git@64f3d0924fc695efd6d776a5ac91f97138085516",
+    "transformers==5.1.0",
+]
+transformers = [
     "transformers==5.1.0",
 ]
 
