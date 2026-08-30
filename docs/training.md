@@ -44,7 +44,7 @@ that begins before a phase boundary stays in that phase even when it crosses the
 
 Speck2 performs 305,176 optimizer steps and consumes 20,000,014,336 tokens. It evaluates every
 1,952 steps, saves approximately every 1B tokens at 15,260-step intervals, and warms up for 2,048
-steps.
+steps. Its cosine schedule ends at 5% of the `0.0015` peak learning rate, or `0.000075`.
 
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an
 absolute learning rate. A value of `0.1` ends the schedule at 10% of the peak rate.

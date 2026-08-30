@@ -183,6 +183,7 @@ def test_speck2_uses_the_original_model_and_20b_quality_curriculum():
     assert updated["train"] == {
         **original["train"],
         "eval_every": 1952,
+        "min_lr": 0.05,
         "run": "Speck2-140M",
         "save_every": 15260,
         "train_tokens": 20_000_000_000,
