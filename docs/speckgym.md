@@ -131,3 +131,18 @@ uv run --extra cpu python -m scripts.speckgym_eval E 500000000 summary --device 
 
 Outputs default to `~/.cache/speck/evaluations/SpeckGym-v0/<run>/<requested-tokens>`. Generated
 models, reports, checkpoints, and corpora remain outside the repository.
+
+## Cross-Run Report
+
+Once runs have been evaluated, aggregate them into one comparison:
+
+```bash
+uv run --extra cpu python -m scripts.speckgym_report
+```
+
+This reads every `summary.json` under `~/.cache/speck/evaluations/SpeckGym-v0` and writes
+`report.md` and `report.json` beside them. Runs that have not reached a milestone are reported as
+missing rather than omitted, so the report is readable while a sweep is still in flight. The
+markdown covers the language-learning curve at all four milestones with deltas against baseline A,
+final standard-task and per-family procedural accuracy, token-budget parity across arms, and
+training cost.
