@@ -9,7 +9,12 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
-from scripts.model_publish import release_config, release_state, validate_export
+from scripts.model_publish import (
+    patch_generation_source,
+    release_config,
+    release_state,
+    validate_export,
+)
 from speck.checkpoint import latest, load_model
 
 TEMPLATE_REPO = "specklabs/Speck1-140M"
@@ -59,7 +64,12 @@ def export(checkpoint_dir, step, output_dir, metadata):
             )
         )
         for filename in TEMPLATE_FILES:
-            shutil.copy2(template / filename, building / filename)
+            source = template / filename
+            if filename == "modeling_speck.py":
+                patched = patch_generation_source(source.read_text(encoding="utf-8"))
+                (building / filename).write_text(patched, encoding="utf-8")
+            else:
+                shutil.copy2(source, building / filename)
 
         state = release_state(load_model(checkpoint_dir, step, "cpu"))
         save_file(state, building / "model.safetensors", metadata={"format": "pt"})

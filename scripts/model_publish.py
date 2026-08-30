@@ -110,6 +110,39 @@ PATCHED_MODEL_POSITION_CHECK = """        if position_ids is not None:
             ):
                 raise ValueError("position_ids does not match the Speck sequence")
 """
+MODEL_GENERATION_PREPARE = """        return super().prepare_inputs_for_generation(
+            input_ids,
+            past_key_values=past_key_values,
+            attention_mask=attention_mask,
+            inputs_embeds=inputs_embeds,
+            cache_position=cache_position,
+            use_cache=use_cache,
+            is_first_iteration=is_first_iteration,
+            **kwargs,
+        )
+"""
+PATCHED_MODEL_GENERATION_PREPARE = """        model_inputs = super().prepare_inputs_for_generation(
+            input_ids,
+            past_key_values=past_key_values,
+            attention_mask=attention_mask,
+            inputs_embeds=inputs_embeds,
+            cache_position=cache_position,
+            use_cache=use_cache,
+            is_first_iteration=is_first_iteration,
+            **kwargs,
+        )
+        current = model_inputs.get("input_ids")
+        if current is None:
+            current = model_inputs.get("inputs_embeds")
+        current_mask = model_inputs.get("attention_mask")
+        if (
+            current_mask is not None
+            and current is not None
+            and current_mask.size(1) != current.size(1)
+        ):
+            model_inputs["attention_mask"] = current_mask[:, -current.size(1) :]
+        return model_inputs
+"""
 
 
 def arguments():
@@ -242,13 +275,23 @@ def patch_modeling_source(source):
     return source
 
 
+def patch_generation_source(source):
+    if source.count(MODEL_GENERATION_PREPARE) != 1:
+        raise ValueError("pinned Transformers source has unexpected generation preparation")
+    source = source.replace(MODEL_GENERATION_PREPARE, PATCHED_MODEL_GENERATION_PREPARE)
+    compile(source, "modeling_speck.py", "exec")
+    return source
+
+
 def prepare_release_code(code_dir, output_dir):
     for filename in CODE_FILES:
         source = code_dir / filename
         if not source.is_file():
             raise FileNotFoundError(f"Transformers source is missing {filename}")
         if filename == "modeling_speck.py":
-            patched = patch_modeling_source(source.read_text(encoding="utf-8"))
+            patched = patch_generation_source(
+                patch_modeling_source(source.read_text(encoding="utf-8"))
+            )
             (output_dir / filename).write_text(patched, encoding="utf-8")
         else:
             shutil.copy2(source, output_dir / filename)

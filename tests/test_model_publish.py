@@ -6,9 +6,11 @@ import torch
 from scripts.model_publish import (
     CODE_FILES,
     MODEL_FORWARD_SETUP,
+    MODEL_GENERATION_PREPARE,
     MODEL_IMPORT,
     MODEL_POSITION_CHECK,
     PADDING_DESTINATION,
+    patch_generation_source,
     patch_modeling_source,
     prepare_release_code,
     release_config,
@@ -113,18 +115,36 @@ def test_modeling_patch_rejects_source_drift():
         patch_modeling_source("changed source")
 
 
+def test_generation_patch_slices_cached_attention_mask():
+    source = "class Model:\n    def prepare(self):\n" + MODEL_GENERATION_PREPARE
+    result = patch_generation_source(source)
+
+    assert 'model_inputs["attention_mask"] = current_mask[:, -current.size(1) :]' in result
+    assert "return model_inputs" in result
+
+
+def test_generation_patch_rejects_source_drift():
+    with pytest.raises(ValueError, match="unexpected generation preparation"):
+        patch_generation_source("changed source")
+
+
 def test_prepare_release_code_copies_patched_support(tmp_path):
     source = tmp_path / "source"
     output = tmp_path / "output"
     source.mkdir()
     output.mkdir()
     for filename in CODE_FILES:
-        value = model_source() if filename == "modeling_speck.py" else filename
+        value = (
+            model_source() + MODEL_GENERATION_PREPARE
+            if filename == "modeling_speck.py"
+            else filename
+        )
         (source / filename).write_text(value, encoding="utf-8")
 
     prepare_release_code(source, output)
 
     assert "validate_right_padding" in (output / "modeling_speck.py").read_text()
+    assert "current_mask[:, -current.size(1) :]" in (output / "modeling_speck.py").read_text()
     assert (output / PADDING_DESTINATION).read_text() == Path(
         "speck/transformers_padding.py"
     ).read_text()
