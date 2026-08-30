@@ -26,7 +26,7 @@ CHAT_TEMPLATE = """{%- if messages|length == 0 %}
     {%- elif message['role'] in ['user', 'assistant'] %}
         {%- set turn_index = loop.index0 - system_offset %}
         {%- if (message['role'] == 'user') != (turn_index % 2 == 0) %}
-            {{- raise_exception('conversation roles must alternate between user and assistant') }}
+            {{- raise_exception('conversation roles must alternate user/assistant') }}
         {%- endif %}
     {%- else %}
         {{- raise_exception('unsupported message role') }}
@@ -102,7 +102,7 @@ class ChatTokenizer:
                 expected = "user" if (index - offset) % 2 == 0 else "assistant"
                 if role != expected:
                     raise ChatFormatError(
-                        "conversation roles must alternate between user and assistant"
+                        "conversation roles must alternate user/assistant"
                     )
             else:
                 raise ChatFormatError(f"unsupported message role: {role!r}")
