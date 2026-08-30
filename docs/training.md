@@ -17,6 +17,14 @@ uv run --extra gpu python -m scripts.base_train experiments/Speck1-140M
 Use `experiments/Speck1.5-140M` to train the same architecture and optimization recipe against the
 isolated Speck1.5 corpus.
 
+Use `experiments/Speck2-140M` for the pinned 20B-token curriculum. It retains the architecture,
+tokenizer, optimizer, batch geometry, and peak learning rate while scaling warmup and checkpoint
+cadences with the four-times-longer horizon:
+
+```bash
+uv run --extra gpu python -m scripts.base_train experiments/Speck2-140M
+```
+
 Weights & Biases logging is enabled unless `train.run` is `dummy`. Checkpoints remain local under
 `~/.cache/speck/checkpoints/<train.run>` unless `train.output_dir` overrides the path. Training does
 not upload checkpoints to Hugging Face.
@@ -33,6 +41,10 @@ The configured 65,536-token optimizer batch is divisible by
 not batch-aligned, base training performs 76,294 optimizer steps and consumes 5,000,003,584 tokens.
 Mixture phases are selected from each global microbatch's starting token position, so a microbatch
 that begins before a phase boundary stays in that phase even when it crosses the boundary.
+
+Speck2 performs 305,176 optimizer steps and consumes 20,000,014,336 tokens. It evaluates every
+1,952 steps, saves approximately every 1B tokens at 15,260-step intervals, and warms up for 2,048
+steps.
 
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an
 absolute learning rate. A value of `0.1` ends the schedule at 10% of the peak rate.

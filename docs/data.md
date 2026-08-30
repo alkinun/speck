@@ -24,6 +24,12 @@ The Speck1.5 corpus is isolated from the base corpus:
 uv run --extra cpu python -m scripts.data_prepare experiments/Speck1.5-140M
 ```
 
+Prepare the isolated 20B-token Speck2 corpus in the same way:
+
+```bash
+uv run --extra cpu python -m scripts.data_prepare experiments/Speck2-140M
+```
+
 Pass `--restart` only when intentionally discarding an incomplete staged build. A completed output
 directory is never overwritten.
 
@@ -112,6 +118,38 @@ Source-specific constraints include:
 Dataset repositories, revisions, paths, filters, and source order are recorded in
 `experiments/Speck1.5-140M/data.json`.
 
+## Speck2 Curriculum
+
+`experiments/Speck2-140M` preserves Speck1's broad-web foundation while adding a fixed English
+Wikipedia allocation and using a gentler capability anneal. It requests 20B tokens across three
+phases:
+
+| Phase end | Ultra-FineWeb HQ | DCLM | Cosmopedia v2 | FineMath-4+ | Ultra-FineWeb-L3 Multi-Style | English Wikipedia |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 14B | 43% | 31% | 8% | 8% | 5% | 5% |
+| 18B | 39% | 27% | 10% | 11% | 8% | 5% |
+| 20B | 31% | 19% | 14% | 12% | 19% | 5% |
+
+The phase durations produce these exact aggregate targets:
+
+| Source | Tokens | Share |
+| --- | ---: | ---: |
+| Ultra-FineWeb HQ | 8.2B | 41% |
+| DCLM | 5.8B | 29% |
+| Cosmopedia v2 | 1.8B | 9% |
+| FineMath-4+ | 1.8B | 9% |
+| Ultra-FineWeb-L3 Multi-Style | 1.4B | 7% |
+| English Wikipedia | 1.0B | 5% |
+
+Broad web declines gradually from 74% to 66% to 50%. General synthetic data rises from 13% to
+18% to 33%, FineMath rises from 8% to 12%, and Wikipedia remains fixed at 5%. The aggregate mix is
+70% broad web, 16% general synthetic, 9% math, and 5% reference knowledge.
+
+Speck2 uses the newer `data/ultrafineweb_l1_en_hq` Ultra-FineWeb tree. It retains ordinary DCLM
+rather than DCLM-Edu, uses only the English Multi-Style portion of Ultra-FineWeb-L3, and includes no
+dedicated code, academic-paper, multilingual, instruction, or synthetic-math source. Every source
+revision is pinned in `experiments/Speck2-140M/data.json`.
+
 ## Determinism and Deduplication
 
 Input discovery uses each Hugging Face repository tree rather than datasets-server previews. Files
@@ -133,6 +171,9 @@ Preparation performs a live disk-space preflight before creating staged data. Fo
 recipe, the current estimate includes about 10.05GB of packed data, a 20GiB temporary raw-shard
 allowance, and at least 5GiB of deduplication/index headroom, or about 36.9GB total. The preflight
 reports required and free bytes and credits reusable staged bytes when resuming.
+
+For Speck2, the same estimator requires 81,569,555,072 bytes, about 76GiB: approximately 40.1GB of
+packed data, a 20GiB temporary raw-shard allowance, and 20.0GB of deduplication/index headroom.
 
 After each completed remote source file, preparation closes and checkpoints packed shards,
 source-local index bytes, and the deduplication journal with checksums. A retry validates those

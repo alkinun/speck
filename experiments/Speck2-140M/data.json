@@ -1,0 +1,137 @@
+{
+  "dedup": {
+    "hash": "blake2b-128",
+    "normalization": "NFKC+lower+whitespace",
+    "scope": "global"
+  },
+  "filtering": {
+    "max_chars": 100000,
+    "min_chars": 200
+  },
+  "mixture": {
+    "phases": [
+      {
+        "end_tokens": 14000000000,
+        "weights": {
+          "cosmopedia_v2": 8,
+          "dclm": 31,
+          "finemath_4plus": 8,
+          "ufw_l3_multi_style": 5,
+          "ultra_fineweb_hq": 43,
+          "wikimedia": 5
+        }
+      },
+      {
+        "end_tokens": 18000000000,
+        "weights": {
+          "cosmopedia_v2": 10,
+          "dclm": 27,
+          "finemath_4plus": 11,
+          "ufw_l3_multi_style": 8,
+          "ultra_fineweb_hq": 39,
+          "wikimedia": 5
+        }
+      },
+      {
+        "end_tokens": 20000000000,
+        "weights": {
+          "cosmopedia_v2": 14,
+          "dclm": 19,
+          "finemath_4plus": 12,
+          "ufw_l3_multi_style": 19,
+          "ultra_fineweb_hq": 31,
+          "wikimedia": 5
+        }
+      }
+    ]
+  },
+  "output_dir": null,
+  "output_name": "Speck2-140M",
+  "requested_train_tokens": 20000000000,
+  "seed": 42,
+  "shards": {
+    "maximum_loader_microbatch_tokens": 65536,
+    "tokens": 100000000
+  },
+  "sources": [
+    {
+      "content_column": "text",
+      "filters": {},
+      "id": "finemath_4plus",
+      "metadata_columns": {
+        "score": "score",
+        "url": "url"
+      },
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "tree_path": "finemath-4plus"
+    },
+    {
+      "content_column": "text",
+      "filters": {},
+      "id": "wikimedia",
+      "metadata_columns": {
+        "id": "id",
+        "title": "title",
+        "url": "url"
+      },
+      "repo": "wikimedia/wikipedia",
+      "revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+      "tree_path": "20231101.en"
+    },
+    {
+      "content_column": "text",
+      "filters": {},
+      "id": "cosmopedia_v2",
+      "metadata_columns": {
+        "audience": "audience",
+        "format": "format"
+      },
+      "repo": "HuggingFaceTB/smollm-corpus",
+      "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+      "tree_path": "cosmopedia-v2"
+    },
+    {
+      "content_column": "content",
+      "filters": {},
+      "id": "ufw_l3_multi_style",
+      "metadata_columns": {
+        "style": "style",
+        "uid": "uid"
+      },
+      "repo": "openbmb/Ultra-FineWeb-L3",
+      "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+      "tree_path": "data/ultrafineweb_en_l3/multi_style"
+    },
+    {
+      "content_column": "content",
+      "filters": {},
+      "id": "ultra_fineweb_hq",
+      "metadata_columns": {
+        "dataset_index": "dataset_index",
+        "meta": "meta",
+        "uid": "uid"
+      },
+      "repo": "openbmb/Ultra-FineWeb",
+      "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+      "tree_path": "data/ultrafineweb_l1_en_hq"
+    },
+    {
+      "content_column": "text",
+      "filters": {
+        "language": "en"
+      },
+      "id": "dclm",
+      "language_column": "language",
+      "metadata_columns": {
+        "id": "id",
+        "url": "url"
+      },
+      "repo": "mlfoundations/dclm-baseline-1.0-parquet",
+      "revision": "817d6752765f6a41261085171dd546b104f60626",
+      "tree_path": "filtered/OH_eli5_vs_rw_v2_bigram_200k_train/fasttext_openhermes_reddit_eli5_vs_rw_v2_bigram_200k_train/processed_data"
+    }
+  ],
+  "validation_fraction": 0.02,
+  "validation_tokens_per_source": 5000000
+}

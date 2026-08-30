@@ -152,3 +152,74 @@ def test_speck1_5_uses_the_original_model_and_phased_corpus_mixture():
             assert count * stride + 1 <= (
                 validated["quotas"][source_id] + validated["train_reserve_tokens_per_source"]
             )
+
+
+def test_speck2_uses_the_original_model_and_20b_quality_curriculum():
+    original = load_experiment("experiments/Speck1-140M", "model", "tokenizer", "train")
+    updated = load_experiment("experiments/Speck2-140M", "data", "model", "tokenizer", "train")
+
+    assert updated["model"] == original["model"]
+    assert updated["tokenizer"] == original["tokenizer"]
+    assert updated["train"] == {
+        **original["train"],
+        "eval_every": 1952,
+        "run": "Speck2-140M",
+        "save_every": 15260,
+        "train_tokens": 20_000_000_000,
+        "warmup_steps": 2048,
+    }
+    data = dict(updated["data"])
+    assert data.pop("output_dir") is None
+    assert data.pop("output_name") == "Speck2-140M"
+    data.pop("seed")
+    validated = validate_data_settings(**data)
+    assert validated["quotas"] == {
+        "ultra_fineweb_hq": 8_200_000_000,
+        "dclm": 5_800_000_000,
+        "cosmopedia_v2": 1_800_000_000,
+        "finemath_4plus": 1_800_000_000,
+        "ufw_l3_multi_style": 1_400_000_000,
+        "wikimedia": 1_000_000_000,
+    }
+    assert validated["train_reserve_tokens_per_source"] == 262_144
+    assert [source["id"] for source in validated["sources"]] == [
+        "finemath_4plus",
+        "wikimedia",
+        "cosmopedia_v2",
+        "ufw_l3_multi_style",
+        "ultra_fineweb_hq",
+        "dclm",
+    ]
+    sources = {source["id"]: source for source in validated["sources"]}
+    assert sources["ultra_fineweb_hq"]["tree_path"] == "data/ultrafineweb_l1_en_hq"
+    assert sources["ultra_fineweb_hq"]["content_column"] == "content"
+    assert sources["wikimedia"]["tree_path"] == "20231101.en"
+    assert {source_id: source["revision"] for source_id, source in sources.items()} == {
+        "finemath_4plus": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+        "wikimedia": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+        "cosmopedia_v2": "3ba9d605774198c5868892d7a8deda78031a781f",
+        "ufw_l3_multi_style": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+        "ultra_fineweb_hq": "02c85641e3d19a854be2e09139c25adaa9518063",
+        "dclm": "817d6752765f6a41261085171dd546b104f60626",
+    }
+
+    schedule = {
+        "requested_train_tokens": updated["data"]["requested_train_tokens"],
+        "mixture": {"phases": validated["phases"]},
+        "sources": [{"id": source["id"]} for source in validated["sources"]],
+    }
+    batch_tokens = updated["train"]["batch_tokens"]
+    consumed_tokens = (
+        (updated["train"]["train_tokens"] + batch_tokens - 1) // batch_tokens * batch_tokens
+    )
+    for world_size in (1, 2, 4, 8):
+        stride = (
+            updated["train"]["device_batch_size"]
+            * updated["train"]["sequence_length"]
+            * world_size
+        )
+        counts = source_selection_counts(schedule, "train", consumed_tokens, stride)
+        for source_id, count in counts.items():
+            assert count * stride + 1 <= (
+                validated["quotas"][source_id] + validated["train_reserve_tokens_per_source"]
+            )
