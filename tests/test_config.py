@@ -64,6 +64,26 @@ def test_speck1_1_140m_two_epoch_variant_only_changes_training_length():
     assert two_epoch["sft"]["run"] == "Speck1.1-140M-Instruct-2ep"
 
 
+def test_speck1_5_instruct_uses_speckchat2_and_pinned_speck1_5_base():
+    base = load_experiment("experiments/Speck1.5-140M", "model", "tokenizer")
+    reference = load_experiment("experiments/Speck1.1-140M-Instruct", "sft")
+    instruct = load_experiment(
+        "experiments/Speck1.5-140M-Instruct", "model", "tokenizer", "sft"
+    )
+
+    assert instruct["model"] == base["model"]
+    assert instruct["tokenizer"] == base["tokenizer"]
+    assert instruct["sft"] == {
+        **reference["sft"],
+        "pretrained": {
+            "filename": "model.safetensors",
+            "repo": "specklabs/Speck1.5-140M",
+            "revision": "449cc369329556fbd1e0143ca01c5b40ec4082f9",
+        },
+        "run": "Speck1.5-140M-Instruct",
+    }
+
+
 def test_speck1_5_uses_the_original_model_and_phased_corpus_mixture():
     original = load_experiment("experiments/Speck1-140M", "model", "tokenizer", "train")
     updated = load_experiment("experiments/Speck1.5-140M", "data", "model", "tokenizer", "train")
