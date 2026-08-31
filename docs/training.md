@@ -89,6 +89,18 @@ cursor, and learning-rate schedule. They create a new W&B run and record model, 
 metadata hashes for the parent. Changed-data and changed-schedule branches are rejected rather than
 silently weakening the comparison.
 
+Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
+
+```bash
+uv run --extra cpu python -m scripts.checkpoint_average \
+  ~/.cache/speck/checkpoints/Speck2-140M --steps <step> <step> \
+  --output-dir ~/.cache/speck/averages/<name>
+```
+
+Floating tensors are accumulated in FP32 and restored to their checkpoint dtype. Architecture,
+data manifest, run lineage, tensor layouts, and non-floating tensors must match. The artifact stores
+no optimizer state and cannot be resumed as training.
+
 ## Supervised Fine-Tuning
 
 SFT configurations live in experiment directories containing `model.json`, `tokenizer.json`, and
