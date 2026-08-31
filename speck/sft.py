@@ -17,6 +17,7 @@ from huggingface_hub import hf_hub_download
 from speck.chat import ChatFormatError
 from speck.common import base_dir, dist_info
 from speck.dataloader import manifest_fingerprint
+from speck.train import assert_finite, set_optimizer_lr
 
 FORMAT_VERSION = 3
 default_sft_data_dir = Path(base_dir()) / "data" / f"SpeckChat1-v{FORMAT_VERSION}"
@@ -538,20 +539,21 @@ def sft_optimization_step(
         batches.append(next(loader))
     next_batch = next(loader)
     device = batch[0].device
-    supervised = torch.tensor(
-        sum(int((current[1] != -100).sum()) for current in batches),
-        device=device,
-        dtype=torch.long,
+    supervised = sum(
+        ((current[1] != -100).sum() for current in batches),
+        start=torch.zeros((), device=device, dtype=torch.long),
     )
     if distributed:
         dist.all_reduce(supervised, op=dist.ReduceOp.SUM)
-    if not supervised.item():
+    if device.type == "cuda":
+        torch._assert_async(supervised > 0, "SFT optimizer batch has no supervised tokens")
+    elif not supervised.item():
         raise ValueError("SFT optimizer batch has no supervised tokens")
 
     optimizer.zero_grad(set_to_none=True)
     local_loss = torch.zeros((), device=device)
     world_size = dist.get_world_size() if distributed else 1
-    scale = world_size / supervised.item()
+    scale = world_size / supervised
     for index, current in enumerate(batches):
         context = (
             train_model.no_sync() if distributed and index + 1 < accumulation else nullcontext()
@@ -562,13 +564,12 @@ def sft_optimization_step(
         local_loss += loss.detach()
     if distributed:
         dist.all_reduce(local_loss, op=dist.ReduceOp.SUM)
-    if not torch.isfinite(local_loss).item():
-        raise FloatingPointError("non-finite SFT training loss")
-    for group in optimizer.param_groups:
-        group["lr"] = lr
-    grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip, error_if_nonfinite=True)
+    assert_finite(local_loss, "non-finite SFT training loss")
+    set_optimizer_lr(optimizer, lr)
+    grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip)
+    assert_finite(grad_norm, "non-finite SFT training gradients")
     optimizer.step()
-    return local_loss / supervised, grad_norm, next_batch, int(supervised.item())
+    return local_loss / supervised, grad_norm, next_batch, supervised
 
 
 @torch.no_grad()

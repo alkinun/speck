@@ -417,16 +417,22 @@ def train(configs, cli):
         data_dir=args.data_dir,
     )
     inputs, targets, data_state = next(train_data)
-    compiled_model: Any = (
-        model
-        if args.no_compile
-        else torch.compile(model, dynamic=False, mode="max-autotune-no-cudagraphs")
-    )
-    train_model = compiled_model
+    train_model: Any = model
     if distributed:
         train_model = DistributedDataParallel(
-            train_model, device_ids=[local_rank], broadcast_buffers=False
+            train_model,
+            device_ids=[local_rank],
+            broadcast_buffers=False,
+            gradient_as_bucket_view=True,
         )
+    compiled_model: Any = (
+        train_model
+        if args.no_compile
+        else torch.compile(train_model, dynamic=False, mode="max-autotune-no-cudagraphs")
+    )
+    if not args.no_compile and hasattr(optimizer, "compile_step"):
+        optimizer.compile_step()
+    train_model = compiled_model
     flops = model.flops_per_token(args.sequence_length)
 
     def validation(step):
@@ -529,11 +535,22 @@ def train(configs, cli):
         validation_loss, validation_source_losses, validation_tokens = validation(0)
         validation_step = 0
     synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
+    timing_started = time.perf_counter()
+    timing_steps = 0
     for step in range(start_step, steps):
         completed = step + 1
         should_log = completed == 1 or completed % args.log_every == 0
-        synchronize()
-        started = time.perf_counter()
+        milestone = milestones.get(completed)
+        should_validate = (
+            (args.eval_every > 0 and completed % args.eval_every == 0)
+            or milestone is not None
+            or completed == steps
+        )
+        should_save = (
+            (args.save_every > 0 and completed % args.save_every == 0)
+            or milestone is not None
+            or completed == steps
+        )
         scale = lr_scale(
             schedule_step_offset + step,
             schedule_steps,
@@ -553,20 +570,26 @@ def train(configs, cli):
             distributed,
         )
         inputs, targets, data_state = batch
-        synchronize()
-        duration = time.perf_counter() - started
-        elapsed_optimizer += duration
-        if completed > 10:
-            elapsed_training += duration
+        timing_steps += 1
+        should_flush_timing = should_log or should_validate or should_save or completed == 10
+        duration = None
+        if should_flush_timing:
+            synchronize()
+            window_duration = time.perf_counter() - timing_started
+            elapsed_optimizer += window_duration
+            if completed > 10:
+                elapsed_training += window_duration
+            duration = window_duration / timing_steps
         if distributed and should_log:
             dist.all_reduce(loss_sum, op=dist.ReduceOp.AVG)
         if should_log:
+            assert duration is not None
             metrics = {
                 "progress/step": global_step_offset + completed,
                 "progress/phase_step": completed,
                 "progress/tokens": args.global_token_offset + completed * args.batch_tokens,
                 "train/loss": loss_sum.item(),
-                "train/lr": optimizer.param_groups[0]["lr"],
+                "train/lr": float(optimizer.param_groups[0]["lr"]),
                 "train/grad_norm": float(grad_norm),
                 "performance/tokens_per_second": args.batch_tokens / duration,
                 "performance/tflops": flops * args.batch_tokens / duration / 1e12,
@@ -581,19 +604,10 @@ def train(configs, cli):
             print0(
                 f"step {metrics['progress/step']:,}/{global_step_offset + steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s"
             )
-        milestone = milestones.get(completed)
-        if (
-            (args.eval_every > 0 and completed % args.eval_every == 0)
-            or milestone is not None
-            or completed == steps
-        ):
+        if should_validate:
             validation_loss, validation_source_losses, validation_tokens = validation(completed)
             validation_step = completed
-        if (
-            (args.save_every > 0 and completed % args.save_every == 0)
-            or milestone is not None
-            or completed == steps
-        ):
+        if should_save:
             checkpoint(
                 completed,
                 validation_loss,
@@ -602,6 +616,9 @@ def train(configs, cli):
                 validation_tokens,
                 milestone,
             )
+        if should_flush_timing:
+            timing_started = time.perf_counter()
+            timing_steps = 0
 
     run.finish()
     if master:

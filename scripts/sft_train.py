@@ -276,16 +276,20 @@ def main():
         data_dir=args.data_dir,
     )
     inputs, targets, data_state = next(train_data)
-    compiled_model: Any = (
-        model
-        if args.no_compile
-        else torch.compile(model, dynamic=False, mode="max-autotune-no-cudagraphs")
-    )
-    train_model = compiled_model
+    train_model: Any = model
     if distributed:
         train_model = DistributedDataParallel(
-            train_model, device_ids=[local_rank], broadcast_buffers=False
+            train_model,
+            device_ids=[local_rank],
+            broadcast_buffers=False,
+            gradient_as_bucket_view=True,
         )
+    compiled_model: Any = (
+        train_model
+        if args.no_compile
+        else torch.compile(train_model, dynamic=False, mode="max-autotune-no-cudagraphs")
+    )
+    train_model = compiled_model
 
     def validation(step):
         validation_plan = sft_plan(manifest, "val", device_tokens, world_size)
@@ -336,9 +340,18 @@ def main():
 
     validation_loss = metadata.get("validation_loss") if metadata else validation(0)
     synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
+    pending_supervised_tokens = torch.zeros((), device=device, dtype=torch.long)
+    timing_started = time.perf_counter()
+    timing_steps = 0
     for step in range(start_step, steps):
-        synchronize()
-        started = time.perf_counter()
+        completed = step + 1
+        should_log = completed == 1 or completed % args.log_every == 0
+        should_validate = (
+            args.eval_every > 0 and completed % args.eval_every == 0
+        ) or completed == steps
+        should_save = (
+            args.save_every > 0 and completed % args.save_every == 0
+        ) or completed == steps
         scale = lr_scale(step, steps, args.warmup_steps, args.min_lr)
         loss, grad_norm, batch, supervised = sft_optimization_step(
             train_model,
@@ -352,20 +365,27 @@ def main():
             distributed,
         )
         inputs, targets, data_state = batch
-        trained_supervised_tokens += supervised
-        synchronize()
-        duration = time.perf_counter() - started
-        completed = step + 1
-        if completed > 10:
-            elapsed_training += duration
-        if completed == 1 or completed % args.log_every == 0:
+        pending_supervised_tokens += supervised
+        timing_steps += 1
+        should_flush_timing = should_log or should_validate or should_save or completed == 10
+        duration = None
+        if should_flush_timing:
+            synchronize()
+            window_duration = time.perf_counter() - timing_started
+            if completed > 10:
+                elapsed_training += window_duration
+            duration = window_duration / timing_steps
+            trained_supervised_tokens += int(pending_supervised_tokens.item())
+            pending_supervised_tokens.zero_()
+        if should_log:
+            assert duration is not None
             metrics = {
                 "progress/step": completed,
                 "progress/epoch": completed / steps_per_epoch,
                 "progress/tokens": completed * args.batch_tokens,
                 "progress/supervised_tokens": trained_supervised_tokens,
                 "train/loss": loss.item(),
-                "train/lr": optimizer.param_groups[0]["lr"],
+                "train/lr": float(optimizer.param_groups[0]["lr"]),
                 "train/grad_norm": float(grad_norm),
                 "performance/tokens_per_second": args.batch_tokens / duration,
                 "data/next_sequence_length": data_state["sequence_length"],
@@ -375,10 +395,13 @@ def main():
                 f"step {completed:,}/{steps:,} | loss {metrics['train/loss']:.5f} | "
                 f"{metrics['performance/tokens_per_second']:,.0f} tok/s"
             )
-        if (args.eval_every > 0 and completed % args.eval_every == 0) or completed == steps:
+        if should_validate:
             validation_loss = validation(completed)
-        if (args.save_every > 0 and completed % args.save_every == 0) or completed == steps:
+        if should_save:
             checkpoint(completed, validation_loss)
+        if should_flush_timing:
+            timing_started = time.perf_counter()
+            timing_steps = 0
 
     run.finish()
     cleanup()

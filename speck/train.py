@@ -7,6 +7,29 @@ import torch
 import torch.distributed as dist
 
 
+def assert_finite(value, message, distributed=False):
+    """Check a scalar without introducing a CUDA host synchronization."""
+
+    finite = torch.isfinite(value).to(torch.int32)
+    if distributed:
+        dist.all_reduce(finite, op=dist.ReduceOp.MIN)
+    if value.device.type == "cuda":
+        torch._assert_async(finite, message)
+    elif not finite.item():
+        raise FloatingPointError(message)
+
+
+def set_optimizer_lr(optimizer, lr):
+    """Update scalar tensor learning rates in place to keep compiled steps reusable."""
+
+    for group in optimizer.param_groups:
+        current = group["lr"]
+        if isinstance(current, torch.Tensor):
+            current.fill_(lr)
+        else:
+            group["lr"] = lr
+
+
 def resolve_device_batch_size(limit, batch_tokens, sequence_length, world_size):
     values = (limit, batch_tokens, sequence_length, world_size)
     if any(not isinstance(value, int) or isinstance(value, bool) or value < 1 for value in values):
@@ -144,13 +167,9 @@ def optimization_step(
         loss_sum += loss.detach()
         batch = next(loader)
 
-    finite = torch.isfinite(loss_sum).to(torch.int32)
-    if distributed:
-        dist.all_reduce(finite, op=dist.ReduceOp.MIN)
-    if not finite.item():
-        raise FloatingPointError("non-finite training loss")
-    for group in optimizer.param_groups:
-        group["lr"] = lr
-    grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip, error_if_nonfinite=True)
+    assert_finite(loss_sum, "non-finite training loss", distributed)
+    set_optimizer_lr(optimizer, lr)
+    grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip)
+    assert_finite(grad_norm, "non-finite training gradients")
     optimizer.step()
     return loss_sum / accumulation, grad_norm, batch

@@ -14,6 +14,7 @@ from speck.architecture import (
 )
 from speck.model import SpeckForCausalLM
 from speck.train import (
+    assert_finite,
     branch_position,
     checkpoint_global_tokens,
     checkpoint_milestones,
@@ -22,6 +23,12 @@ from speck.train import (
     resolve_device_batch_size,
     validate_loader_progress,
 )
+
+
+def test_cpu_finite_check_rejects_non_finite_values():
+    assert_finite(torch.tensor(1.0), "bad value")
+    with pytest.raises(FloatingPointError, match="bad value"):
+        assert_finite(torch.tensor(float("nan")), "bad value")
 
 
 def test_lr_scale_reaches_minimum_on_last_executed_step():
