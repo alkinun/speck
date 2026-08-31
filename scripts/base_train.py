@@ -47,7 +47,7 @@ _BRANCH_FIXED_SETTINGS = (
     "optimizer",
     "world_size",
 )
-_SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_steps")
+_SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule")
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "device_batch_size",
@@ -58,7 +58,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "warmup_steps",
     "min_lr",
     "lr_schedule",
-    "decay_steps",
     "grad_clip",
     "optimizer",
     "world_size",
@@ -68,7 +67,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
 )
 _LEGACY_RESUME_DEFAULTS = {
     "lr_schedule": "cosine",
-    "decay_steps": None,
     "global_token_offset": 0,
     "checkpoint_tokens": [],
     "training_phase": "base",
@@ -193,7 +191,6 @@ def train(configs, cli):
     args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
     args.training_phase = getattr(args, "training_phase", "base")
     args.lr_schedule = getattr(args, "lr_schedule", "cosine")
-    args.decay_steps = getattr(args, "decay_steps", None)
     args.wandb_group = getattr(args, "wandb_group", None)
     for key in ("save_every", "eval_every"):
         override = getattr(cli, key, None)
@@ -543,7 +540,6 @@ def train(configs, cli):
             args.warmup_steps,
             args.min_lr,
             args.lr_schedule,
-            args.decay_steps,
         )
         loss_sum, grad_norm, batch = optimization_step(
             train_model,

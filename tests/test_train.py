@@ -59,23 +59,9 @@ def test_short_phase_can_end_during_warmup():
     assert lr_scale(499, 500, 512, 0.1) == 500 / 512
 
 
-def test_wsd_warms_up_stays_stable_and_decays_linearly():
-    scales = [lr_scale(step, 10, 2, 0.1, "wsd", 3) for step in range(10)]
-
-    assert scales[:2] == [0.5, 1.0]
-    assert scales[2:8] == [1.0] * 6
-    assert scales[8] == pytest.approx(0.55)
-    assert scales[9] == 0.1
-    assert lr_scale(3, 4, 0, 0.2, "wsd", 1) == 0.2
-
-
-@pytest.mark.parametrize(
-    ("schedule", "decay_steps"),
-    (("unknown", None), ("cosine", 2), ("wsd", None), ("wsd", 0), ("wsd", 9)),
-)
-def test_lr_scale_rejects_invalid_schedule_settings(schedule, decay_steps):
+def test_lr_scale_rejects_unknown_schedule():
     with pytest.raises(ValueError):
-        lr_scale(0, 10, 2, 0.1, schedule, decay_steps)
+        lr_scale(0, 10, 2, 0.1, "unknown")
 
 
 @pytest.mark.parametrize(
@@ -128,14 +114,15 @@ def test_legacy_resume_defaults_to_cosine_schedule():
     legacy = {}
     current = {
         "lr_schedule": "cosine",
-        "decay_steps": None,
         "global_token_offset": 0,
         "checkpoint_tokens": [],
         "training_phase": "base",
     }
 
     assert changed_resume_settings(legacy, current) == []
-    assert changed_resume_settings(legacy, {**current, "lr_schedule": "wsd"}) == ["lr_schedule"]
+    assert changed_resume_settings(legacy, {**current, "lr_schedule": "constant"}) == [
+        "lr_schedule"
+    ]
 
 
 def test_runtime_cadence_arguments_are_optional():

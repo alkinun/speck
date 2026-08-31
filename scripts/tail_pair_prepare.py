@@ -42,7 +42,6 @@ def next_learning_rate(metadata):
         resolved["warmup_steps"],
         resolved["min_lr"],
         resolved.get("lr_schedule", "cosine"),
-        resolved.get("decay_steps"),
     )
     return resolved["lr"] * scale
 
@@ -83,11 +82,6 @@ def tail_configs(
         "train_tokens": train_tokens,
         "warmup_steps": resolved["warmup_steps"],
     }
-    decay_steps = resolved.get("decay_steps")
-    if decay_steps is None:
-        control.pop("decay_steps", None)
-    else:
-        control["decay_steps"] = decay_steps
     if save_every is not None:
         control["save_every"] = save_every
     if eval_every is not None:
@@ -101,7 +95,6 @@ def tail_configs(
         "run": f"{run_prefix}-Constant",
         "warmup_steps": 0,
     }
-    constant.pop("decay_steps", None)
     world_size = resolved["world_size"]
     control_changes = changed_branch_settings(resolved, {**control, "world_size": world_size})
     constant_changes = changed_branch_settings(

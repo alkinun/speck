@@ -9,7 +9,6 @@ def parent_metadata():
         "step": 30,
         "resolved": {
             "batch_tokens": 10,
-            "decay_steps": None,
             "device_batch_size": 2,
             "grad_clip": 1.0,
             "lr": 1e-3,
@@ -69,7 +68,6 @@ def test_tail_pair_matches_budget_cadence_and_fixed_recipe():
     assert constant["run"] == "tail-Constant"
     assert control["checkpoint_tokens"] == constant["checkpoint_tokens"] == []
     assert control["output_dir"] is constant["output_dir"] is None
-    assert "decay_steps" not in control and "decay_steps" not in constant
 
 
 def test_tail_pair_rejects_exhausted_schedule_or_recipe_drift():

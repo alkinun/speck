@@ -48,9 +48,8 @@ Speck2 performs 305,176 optimizer steps and consumes 20,000,014,336 tokens. It e
 1,952 steps, saves approximately every 1B tokens at 15,260-step intervals, and warms up for 2,048
 steps. Its cosine schedule ends at 5% of the `0.0015` peak learning rate, or `0.000075`.
 
-Base recipes select `cosine` or `wsd` with `lr_schedule`; existing production recipes are pinned to
-`cosine`. WSD requires `decay_steps`: after warmup it stays at peak LR, then decays linearly over
-the final configured steps to `min_lr`. Schedule type and decay length are checkpoint contracts.
+Base recipes use the explicit `cosine` learning-rate schedule. Schedule type is part of the
+checkpoint contract; isolated constant-LR branches are described below.
 
 Use `--save-every` or `--eval-every` to override artifact cadence without changing the optimization
 contract. Intervals are optimizer steps; zero disables that periodic action, while final and
@@ -91,9 +90,9 @@ metadata hashes for the parent. Changed data and implicit schedule changes are r
 silently weakening the comparison.
 
 Pass `--branch-schedule new` to start the schedule in the branch experiment at local step zero.
-Only `lr`, `warmup_steps`, `min_lr`, `lr_schedule`, and `decay_steps` may then differ; optimizer
-state and every non-schedule training setting remain inherited and validated. A constant-LR tail
-uses `lr_schedule: "constant"`, zero warmup, and `min_lr: 1.0` with the desired absolute `lr`.
+Only `lr`, `warmup_steps`, `min_lr`, and `lr_schedule` may then differ; optimizer state and every
+non-schedule training setting remain inherited and validated. A constant-LR tail uses
+`lr_schedule: "constant"`, zero warmup, and `min_lr: 1.0` with the desired absolute `lr`.
 
 Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
 parent LR:
