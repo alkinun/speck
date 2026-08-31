@@ -102,17 +102,27 @@ def arguments():
 
 
 @torch.no_grad()
-def validate(model, loader, steps, world_size):
+def validate(model, loader, steps, world_size, source_ids):
     model.eval()
-    loss = torch.zeros((), device=next(model.parameters()).device)
+    device = next(model.parameters()).device
+    source_indices = {source_id: index for index, source_id in enumerate(source_ids)}
+    losses = torch.zeros(len(source_ids), device=device)
+    counts = torch.zeros(len(source_ids), device=device)
     for _ in range(steps):
-        inputs, targets, _ = next(loader)
-        loss += model(inputs, targets)
-    loss /= steps
+        inputs, targets, state = next(loader)
+        index = source_indices[state["selected_source"]]
+        losses[index] += model(inputs, targets)
+        counts[index] += 1
     if world_size > 1:
-        dist.all_reduce(loss, op=dist.ReduceOp.AVG)
+        dist.all_reduce(losses)
+        dist.all_reduce(counts)
     model.train()
-    return loss.item()
+    source_losses = {
+        source_id: (losses[index] / counts[index]).item()
+        for index, source_id in enumerate(source_ids)
+        if counts[index].item()
+    }
+    return (losses.sum() / counts.sum()).item(), source_losses
 
 
 def train(configs, cli):
@@ -141,6 +151,7 @@ def train(configs, cli):
     tokenizer = get_tokenizer(**configs["tokenizer"])
     manifest = load_manifest(args.data_dir)
     manifest_hash = manifest_fingerprint(manifest)
+    source_ids = tuple(source["id"] for source in manifest["sources"])
     if manifest["tokenizer"]["fingerprint"] != tokenizer.fingerprint():
         raise ValueError("dataset and tokenizer do not match")
 
@@ -305,25 +316,34 @@ def train(configs, cli):
             device=device,
             data_dir=args.data_dir,
         )
-        loss = validate(compiled_model, loader, val_steps, world_size)
+        loss, source_losses = validate(compiled_model, loader, val_steps, world_size, source_ids)
         evaluated_tokens = val_steps * tokens_per_step
         elapsed_evaluation += time.perf_counter() - started
         global_step = global_step_offset + step
         global_tokens = args.global_token_offset + step * args.batch_tokens
-        run.log(
-            {
-                "progress/step": global_step,
-                "progress/phase_step": step,
-                "progress/tokens": global_tokens,
-                "validation/loss": loss,
-                "validation/perplexity": math.exp(min(loss, 20)),
-                "validation/tokens": evaluated_tokens,
-            }
-        )
+        metrics = {
+            "progress/step": global_step,
+            "progress/phase_step": step,
+            "progress/tokens": global_tokens,
+            "validation/loss": loss,
+            "validation/perplexity": math.exp(min(loss, 20)),
+            "validation/tokens": evaluated_tokens,
+        }
+        for source_id, source_loss in source_losses.items():
+            metrics[f"validation/source/{source_id}/loss"] = source_loss
+            metrics[f"validation/source/{source_id}/perplexity"] = math.exp(min(source_loss, 20))
+        run.log(metrics)
         print0(f"step {global_step:,} ({global_tokens:,} tokens) | validation loss {loss:.5f}")
-        return loss, evaluated_tokens
+        return loss, source_losses, evaluated_tokens
 
-    def checkpoint(step, validation_loss, validation_step, validation_tokens, milestone):
+    def checkpoint(
+        step,
+        validation_loss,
+        validation_source_losses,
+        validation_step,
+        validation_tokens,
+        milestone,
+    ):
         nonlocal elapsed_checkpoint
         started = time.perf_counter()
         if master:
@@ -338,6 +358,7 @@ def train(configs, cli):
                 "manifest": manifest_hash,
                 "data_state": data_state,
                 "validation_loss": validation_loss,
+                "validation_source_losses": validation_source_losses,
                 "validation_step": validation_step,
                 "validation_global_tokens": (
                     args.global_token_offset + validation_step * args.batch_tokens
@@ -374,10 +395,11 @@ def train(configs, cli):
 
     if metadata:
         validation_loss = metadata["validation_loss"]
+        validation_source_losses = metadata.get("validation_source_losses", {})
         validation_step = metadata.get("validation_step")
         validation_tokens = metadata.get("validation_tokens", 0)
     else:
-        validation_loss, validation_tokens = validation(0)
+        validation_loss, validation_source_losses, validation_tokens = validation(0)
         validation_step = 0
     synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
     for step in range(start_step, steps):
@@ -432,7 +454,7 @@ def train(configs, cli):
             or milestone is not None
             or completed == steps
         ):
-            validation_loss, validation_tokens = validation(completed)
+            validation_loss, validation_source_losses, validation_tokens = validation(completed)
             validation_step = completed
         if (
             (args.save_every > 0 and completed % args.save_every == 0)
@@ -442,6 +464,7 @@ def train(configs, cli):
             checkpoint(
                 completed,
                 validation_loss,
+                validation_source_losses,
                 validation_step,
                 validation_tokens,
                 milestone,

@@ -3,7 +3,7 @@ import math
 import pytest
 import torch
 
-from scripts.base_train import changed_resume_settings
+from scripts.base_train import changed_resume_settings, validate
 from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
@@ -107,6 +107,31 @@ def test_legacy_resume_defaults_to_torch_loss_backend():
 
     assert changed_resume_settings(legacy, current) == []
     assert changed_resume_settings(legacy, {**current, "loss_backend": "liger"}) == ["loss_backend"]
+
+
+def test_validation_reports_aggregate_and_source_losses():
+    class MeanInput(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.anchor = torch.nn.Parameter(torch.zeros(()))
+
+        def forward(self, inputs, targets):
+            return inputs.float().mean() + 0 * self.anchor
+
+    model = MeanInput()
+    loader = iter(
+        [
+            (torch.tensor([[1.0]]), None, {"selected_source": "web"}),
+            (torch.tensor([[4.0]]), None, {"selected_source": "math"}),
+            (torch.tensor([[3.0]]), None, {"selected_source": "web"}),
+        ]
+    )
+
+    loss, source_losses = validate(model, loader, 3, 1, ("web", "math"))
+
+    assert loss == pytest.approx(8 / 3)
+    assert source_losses == pytest.approx({"web": 2.0, "math": 4.0})
+    assert model.training
 
 
 def test_checkpoint_milestones_align_baseline_and_warmup_runs():
