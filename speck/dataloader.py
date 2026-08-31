@@ -389,15 +389,13 @@ def packed_loader(
         }
         rank_offset = source_offset + rank * local_stride
         flat = torch.from_numpy(source.read(rank_offset, required))
-        rows = flat.unfold(0, sequence_length + 1, sequence_length)
-        inputs = rows[:, :-1].contiguous()
-        targets = rows[:, 1:].contiguous()
         if device.type == "cuda":
-            inputs = inputs.pin_memory().to(device, non_blocking=True)
-            targets = targets.pin_memory().to(device, non_blocking=True)
+            flat = flat.pin_memory().to(device, non_blocking=True)
         else:
-            inputs = inputs.to(device)
-            targets = targets.to(device)
+            flat = flat.to(device)
+        rows = flat.unfold(0, sequence_length + 1, sequence_length)
+        inputs = rows[:, :-1]
+        targets = rows[:, 1:]
         yield inputs, targets, state
 
         source_offsets[source_id] += global_stride
