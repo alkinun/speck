@@ -9,14 +9,14 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
-from scripts.checkpoint_average import load_average
+from scripts.checkpoint_average import average_identity, load_average
 from scripts.model_publish import (
     patch_generation_source,
     release_config,
     release_state,
     validate_export,
 )
-from speck.checkpoint import latest, load_model
+from speck.checkpoint import checkpoint_identity, latest, load_model
 
 TEMPLATE_REPO = "specklabs/Speck1-140M"
 TEMPLATE_REVISION = "155b759545645cc694545fab85cd7d4c385fd965"
@@ -57,15 +57,27 @@ def load_source(checkpoint_dir, step):
         if step is not None:
             raise ValueError("--step cannot be used with a model average")
         state, metadata = load_average(checkpoint_dir)
-        return state, metadata, "average"
+        provenance = {
+            "format": "speck_export_source",
+            "format_version": 1,
+            "type": "average",
+            "average": average_identity(checkpoint_dir),
+        }
+        return state, metadata, "average", provenance
     step = step if step is not None else latest(checkpoint_dir)
     if step is None:
         raise FileNotFoundError(f"no completed checkpoint in {checkpoint_dir}")
     metadata = load_checkpoint_metadata(checkpoint_dir, step)
-    return load_model(checkpoint_dir, step, "cpu"), metadata, f"step {step:,}"
+    provenance = {
+        "format": "speck_export_source",
+        "format_version": 1,
+        "type": "checkpoint",
+        "checkpoint": checkpoint_identity(checkpoint_dir, step),
+    }
+    return load_model(checkpoint_dir, step, "cpu"), metadata, f"step {step:,}", provenance
 
 
-def export(state, output_dir, metadata):
+def export(state, output_dir, metadata, provenance):
     building = output_dir.with_name(output_dir.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
     building.mkdir(parents=True)
@@ -99,6 +111,9 @@ def export(state, output_dir, metadata):
         (building / "generation_config.json").write_text(
             json.dumps(generation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
+        (building / "speck_source.json").write_text(
+            json.dumps(provenance, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
         os.replace(building, output_dir)
     except BaseException:
         shutil.rmtree(building, ignore_errors=True)
@@ -108,15 +123,17 @@ def export(state, output_dir, metadata):
 def main():
     args = arguments()
     checkpoint_dir = args.checkpoint_dir.expanduser().resolve()
-    state, metadata, source = load_source(checkpoint_dir, args.step)
+    state, metadata, source, provenance = load_source(checkpoint_dir, args.step)
     output_dir = args.output_dir.expanduser().resolve()
     if output_dir.exists():
         if not args.force:
             raise FileExistsError(f"export already exists (use --force): {output_dir}")
         shutil.rmtree(output_dir)
     output_dir.parent.mkdir(parents=True, exist_ok=True)
-    export(state, output_dir, metadata)
+    export(state, output_dir, metadata, provenance)
     validate_export(output_dir, metadata)
+    if json.loads((output_dir / "speck_source.json").read_text(encoding="utf-8")) != provenance:
+        raise ValueError("exported source provenance does not match its input")
     print(f"Exported {source} to {output_dir}")
 
 

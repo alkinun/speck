@@ -1,6 +1,7 @@
 """Average completed checkpoints from one training trajectory."""
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -114,7 +115,7 @@ def write_average(output_dir, state, metadata, force=False):
         raise
 
 
-def load_average(directory):
+def _average_paths(directory):
     directory = Path(directory).expanduser().resolve()
     paths = {
         "complete": directory / "complete",
@@ -123,9 +124,37 @@ def load_average(directory):
     }
     if any(not path.is_file() for path in paths.values()):
         raise FileNotFoundError(f"model average is incomplete: {directory}")
-    metadata = json.loads(paths["metadata"].read_text(encoding="utf-8"))
+    return directory, paths
+
+
+def _average_metadata(path):
+    metadata = json.loads(path.read_text(encoding="utf-8"))
     if metadata.get("format") != "speck_model_average" or metadata.get("format_version") != 1:
         raise ValueError("unsupported model average format")
+    return metadata
+
+
+def _sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def average_identity(directory):
+    directory, paths = _average_paths(directory)
+    _average_metadata(paths["metadata"])
+    return {
+        "directory": str(directory),
+        "model_sha256": _sha256(paths["model"]),
+        "metadata_sha256": _sha256(paths["metadata"]),
+    }
+
+
+def load_average(directory):
+    _, paths = _average_paths(directory)
+    metadata = _average_metadata(paths["metadata"])
     state = torch.load(paths["model"], map_location="cpu")
     if not isinstance(state, dict) or not state:
         raise ValueError("model average state is empty or invalid")

@@ -3,7 +3,12 @@ import json
 import pytest
 import torch
 
-from scripts.checkpoint_average import average_checkpoints, parse_args, write_average
+from scripts.checkpoint_average import (
+    average_checkpoints,
+    average_identity,
+    parse_args,
+    write_average,
+)
 from speck.checkpoint import save
 
 
@@ -55,6 +60,9 @@ def test_average_checkpoints_writes_model_only_artifact(tmp_path):
     assert [item["step"] for item in stored_lineage["checkpoints"]] == [1, 2, 3]
     assert all(len(item["optimizer_sha256"]) == 64 for item in stored_lineage["checkpoints"])
     assert (output / "complete").read_text() == "complete\n"
+    identity = average_identity(output)
+    assert identity["directory"] == str(output.resolve())
+    assert len(identity["model_sha256"]) == len(identity["metadata_sha256"]) == 64
 
 
 def test_average_rejects_incompatible_checkpoints(tmp_path):

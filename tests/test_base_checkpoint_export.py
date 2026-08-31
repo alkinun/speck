@@ -16,10 +16,12 @@ def test_base_export_loads_checkpoint_or_average(tmp_path):
     }
     save(checkpoints, 3, {"weight": torch.tensor(3.0)}, {}, metadata)
 
-    state, loaded, source = load_source(checkpoints, None)
+    state, loaded, source, provenance = load_source(checkpoints, None)
     assert state["weight"].item() == 3.0
     assert loaded == metadata
     assert source == "step 3"
+    assert provenance["type"] == "checkpoint"
+    assert provenance["checkpoint"]["step"] == 3
 
     average = tmp_path / "average"
     average_metadata = {
@@ -30,9 +32,11 @@ def test_base_export_loads_checkpoint_or_average(tmp_path):
     }
     write_average(average, {"weight": torch.tensor(4.0)}, average_metadata)
 
-    state, loaded, source = load_source(average, None)
+    state, loaded, source, provenance = load_source(average, None)
     assert state["weight"].item() == 4.0
     assert loaded == average_metadata
     assert source == "average"
+    assert provenance["type"] == "average"
+    assert len(provenance["average"]["model_sha256"]) == 64
     with pytest.raises(ValueError, match="--step"):
         load_source(average, 3)
