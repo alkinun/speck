@@ -9,6 +9,7 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
+from scripts.checkpoint_average import load_average
 from scripts.model_publish import (
     patch_generation_source,
     release_config,
@@ -40,7 +41,7 @@ def arguments():
     return parser.parse_args()
 
 
-def load_metadata(checkpoint_dir, step):
+def load_checkpoint_metadata(checkpoint_dir, step):
     path = checkpoint_dir / f"metadata_{step:06d}.json"
     complete = checkpoint_dir / f"complete_{step:06d}"
     if not path.is_file() or not complete.is_file():
@@ -51,7 +52,20 @@ def load_metadata(checkpoint_dir, step):
     return metadata
 
 
-def export(checkpoint_dir, step, output_dir, metadata):
+def load_source(checkpoint_dir, step):
+    if (checkpoint_dir / "complete").is_file():
+        if step is not None:
+            raise ValueError("--step cannot be used with a model average")
+        state, metadata = load_average(checkpoint_dir)
+        return state, metadata, "average"
+    step = step if step is not None else latest(checkpoint_dir)
+    if step is None:
+        raise FileNotFoundError(f"no completed checkpoint in {checkpoint_dir}")
+    metadata = load_checkpoint_metadata(checkpoint_dir, step)
+    return load_model(checkpoint_dir, step, "cpu"), metadata, f"step {step:,}"
+
+
+def export(state, output_dir, metadata):
     building = output_dir.with_name(output_dir.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
     building.mkdir(parents=True)
@@ -71,8 +85,7 @@ def export(checkpoint_dir, step, output_dir, metadata):
             else:
                 shutil.copy2(source, building / filename)
 
-        state = release_state(load_model(checkpoint_dir, step, "cpu"))
-        save_file(state, building / "model.safetensors", metadata={"format": "pt"})
+        save_file(release_state(state), building / "model.safetensors", metadata={"format": "pt"})
         config = release_config(metadata)
         (building / "config.json").write_text(
             json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -95,19 +108,16 @@ def export(checkpoint_dir, step, output_dir, metadata):
 def main():
     args = arguments()
     checkpoint_dir = args.checkpoint_dir.expanduser().resolve()
-    step = args.step if args.step is not None else latest(checkpoint_dir)
-    if step is None:
-        raise FileNotFoundError(f"no completed checkpoint in {checkpoint_dir}")
-    metadata = load_metadata(checkpoint_dir, step)
+    state, metadata, source = load_source(checkpoint_dir, args.step)
     output_dir = args.output_dir.expanduser().resolve()
     if output_dir.exists():
         if not args.force:
             raise FileExistsError(f"export already exists (use --force): {output_dir}")
         shutil.rmtree(output_dir)
     output_dir.parent.mkdir(parents=True, exist_ok=True)
-    export(checkpoint_dir, step, output_dir, metadata)
+    export(state, output_dir, metadata)
     validate_export(output_dir, metadata)
-    print(f"Exported step {step:,} to {output_dir}")
+    print(f"Exported {source} to {output_dir}")
 
 
 if __name__ == "__main__":

@@ -114,6 +114,24 @@ def write_average(output_dir, state, metadata, force=False):
         raise
 
 
+def load_average(directory):
+    directory = Path(directory).expanduser().resolve()
+    paths = {
+        "complete": directory / "complete",
+        "model": directory / "model.pt",
+        "metadata": directory / "metadata.json",
+    }
+    if any(not path.is_file() for path in paths.values()):
+        raise FileNotFoundError(f"model average is incomplete: {directory}")
+    metadata = json.loads(paths["metadata"].read_text(encoding="utf-8"))
+    if metadata.get("format") != "speck_model_average" or metadata.get("format_version") != 1:
+        raise ValueError("unsupported model average format")
+    state = torch.load(paths["model"], map_location="cpu")
+    if not isinstance(state, dict) or not state:
+        raise ValueError("model average state is empty or invalid")
+    return state, metadata
+
+
 def main():
     args = parse_args()
     checkpoint_dir = args.checkpoint_dir.expanduser().resolve()

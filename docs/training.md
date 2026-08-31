@@ -99,7 +99,9 @@ uv run --extra cpu python -m scripts.checkpoint_average \
 
 Floating tensors are accumulated in FP32 and restored to their checkpoint dtype. Architecture,
 data manifest, run lineage, tensor layouts, and non-floating tensors must match. The artifact stores
-no optimizer state and cannot be resumed as training.
+no optimizer state and cannot be resumed as training. Pass its directory to
+`scripts.base_checkpoint_export` without `--step` to create a local Transformers model for the
+existing evaluation harnesses.
 
 ## Supervised Fine-Tuning
 
