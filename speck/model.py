@@ -102,7 +102,11 @@ class CombinedOptimizer:
                 if not isinstance(group["lr"], torch.Tensor):
                     parameter = group["params"][0]
                     group["lr"] = torch.tensor(group["lr"], device=parameter.device)
-            muon.step = torch.compile(muon.step, dynamic=False, mode="default")
+            muon.step = torch.compile(
+                muon.step,
+                dynamic=False,
+                mode="max-autotune-no-cudagraphs",
+            )
 
 
 class BatchedMuon(torch.optim.Muon):
