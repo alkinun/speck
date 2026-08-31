@@ -82,9 +82,12 @@ def optimization_step(
     grad_clip,
     lr,
     distributed=False,
+    cudagraphs=False,
 ):
     optimizer.zero_grad(set_to_none=True)
     loss_sum = torch.zeros((), device=batch[0].device)
+    if cudagraphs:
+        torch.compiler.cudagraph_mark_step_begin()
     for micro_step in range(accumulation):
         context = (
             train_model.no_sync()

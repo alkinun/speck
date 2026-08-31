@@ -98,6 +98,12 @@ def arguments():
         help="torch.compile mode (default: %(default)s)",
     )
     parser.add_argument(
+        "--loss-backend",
+        choices=("torch", "liger"),
+        default="torch",
+        help="linear cross-entropy implementation (default: %(default)s)",
+    )
+    parser.add_argument(
         "--output",
         default=None,
         help="optional path for the JSON benchmark report",
@@ -170,7 +176,11 @@ def run(args):
         torch.set_float32_matmul_precision("high")
 
     model = build_model(
-        configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
+        configs["model"],
+        tokenizer.vocab_size,
+        tokenizer.bos_id,
+        tokenizer.eos_id,
+        loss_backend=args.loss_backend,
     ).to(device)
     model.init_weights()
     parameters = tuple(model.parameters())
@@ -178,6 +188,7 @@ def run(args):
     train_model = (
         model if args.no_compile else torch.compile(model, dynamic=False, mode=args.compile_mode)
     )
+    cudagraphs = not args.no_compile and args.compile_mode in {"reduce-overhead", "max-autotune"}
 
     manifest_hash = None
     if args.mode == "compute":
@@ -206,6 +217,7 @@ def run(args):
             accumulation,
             train["grad_clip"],
             train["lr"],
+            cudagraphs=cudagraphs,
         )
     synchronize(device)
     warmup_seconds = time.perf_counter() - started
@@ -226,6 +238,7 @@ def run(args):
             accumulation,
             train["grad_clip"],
             train["lr"],
+            cudagraphs=cudagraphs,
         )
         synchronize(device)
         durations.append(time.perf_counter() - started)
@@ -243,6 +256,7 @@ def run(args):
             "warmup_seconds": warmup_seconds,
             "compiled": not args.no_compile,
             "compile_mode": None if args.no_compile else args.compile_mode,
+            "loss_backend": args.loss_backend,
             "seed": args.seed,
         },
         "geometry": {
