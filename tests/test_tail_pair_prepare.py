@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.constant_tail_prepare import constant_tail_config, next_learning_rate, parse_args
+from scripts.tail_pair_prepare import next_learning_rate, parse_args, tail_configs
 from speck.train import lr_scale
 
 
@@ -27,14 +27,13 @@ def parent_metadata():
     }
 
 
-def test_constant_tail_uses_parent_next_learning_rate_and_fixed_recipe():
-    metadata = parent_metadata()
-    parent = {
+def parent_train(metadata):
+    train = {
         key: value
         for key, value in metadata["resolved"].items()
         if key not in {"schedule_steps", "steps", "world_size"}
     }
-    parent.update(
+    train.update(
         {
             "checkpoint_tokens": [500],
             "eval_every": 2,
@@ -44,46 +43,63 @@ def test_constant_tail_uses_parent_next_learning_rate_and_fixed_recipe():
             "train_tokens": 1000,
         }
     )
+    return train
 
-    train = constant_tail_config(parent, metadata, train_tokens=200, run="tail")
+
+def test_tail_pair_matches_budget_cadence_and_fixed_recipe():
+    metadata = parent_metadata()
+    control, constant = tail_configs(
+        parent_train(metadata),
+        metadata,
+        train_tokens=200,
+        run_prefix="tail",
+        save_every=5,
+        eval_every=4,
+    )
 
     expected = 1e-3 * lr_scale(30, 100, 10, 0.1)
-    assert train["lr"] == pytest.approx(expected)
-    assert train["lr_schedule"] == "constant"
-    assert train["warmup_steps"] == 0
-    assert train["min_lr"] == 1.0
-    assert train["train_tokens"] == 200
-    assert train["run"] == "tail"
-    assert train["output_dir"] is None
-    assert train["checkpoint_tokens"] == []
-    assert train["device_batch_size"] == 2
-    assert "decay_steps" not in train
+    assert control["lr"] == 1e-3
+    assert control["lr_schedule"] == "cosine"
+    assert constant["lr"] == pytest.approx(expected)
+    assert constant["lr_schedule"] == "constant"
+    assert constant["warmup_steps"] == 0
+    assert constant["min_lr"] == 1.0
+    for key in ("train_tokens", "device_batch_size", "save_every", "eval_every"):
+        assert control[key] == constant[key]
+    assert control["run"] == "tail-Control"
+    assert constant["run"] == "tail-Constant"
+    assert control["checkpoint_tokens"] == constant["checkpoint_tokens"] == []
+    assert control["output_dir"] is constant["output_dir"] is None
+    assert "decay_steps" not in control and "decay_steps" not in constant
 
 
-def test_constant_tail_rejects_exhausted_schedule_or_recipe_drift():
+def test_tail_pair_rejects_exhausted_schedule_or_recipe_drift():
     metadata = parent_metadata()
     metadata["step"] = 100
     with pytest.raises(ValueError, match="exhausted"):
         next_learning_rate(metadata)
 
     metadata = parent_metadata()
-    parent = {**metadata["resolved"], "weight_decay": 0.2}
+    parent = {**parent_train(metadata), "weight_decay": 0.2}
     with pytest.raises(ValueError, match="weight_decay"):
-        constant_tail_config(parent, metadata, 100, "tail")
+        tail_configs(parent, metadata, 100, "tail")
 
 
-def test_constant_tail_arguments_are_explicit():
+def test_tail_pair_arguments_are_explicit():
     args = parse_args(
         [
             "parent",
-            "tail",
+            "pair",
             "--checkpoint-dir",
             "checkpoints",
             "--step",
             "30",
             "--train-tokens",
             "100",
+            "--save-every",
+            "5",
         ]
     )
     assert args.step == 30
     assert args.train_tokens == 100
+    assert args.save_every == 5

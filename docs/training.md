@@ -103,18 +103,20 @@ Only `lr`, `warmup_steps`, `min_lr`, `lr_schedule`, and `decay_steps` may then d
 state and every non-schedule training setting remain inherited and validated. A constant-LR tail
 uses `lr_schedule: "constant"`, zero warmup, and `min_lr: 1.0` with the desired absolute `lr`.
 
-Prepare that constant-tail experiment without manually calculating the parent LR:
+Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
+parent LR:
 
 ```bash
-uv run --extra cpu python -m scripts.constant_tail_prepare \
-  experiments/Speck2-140M experiments/Speck2-140M-ConstantTail \
+uv run --extra cpu python -m scripts.tail_pair_prepare \
+  experiments/Speck2-140M experiments/Speck2-140M-TailPair \
   --checkpoint-dir ~/.cache/speck/checkpoints/Speck2-140M \
-  --step <step> --train-tokens <tokens>
+  --step <step> --train-tokens <tokens> --save-every 1526 --eval-every 1526
 ```
 
 The command verifies architecture, packed data, and fixed training settings, preserves the parent's
-actual device batch, and writes an isolated experiment atomically. Launch it at the reported world
-size with `scripts.base_train`, the same checkpoint arguments, and `--branch-schedule new`.
+actual device batch, and atomically writes `control/`, `constant/`, and a hashed `pair.json` lineage
+record. Launch both arms at the reported world size against the same parent checkpoint; add
+`--branch-schedule new` only for `constant/`.
 
 Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
 
