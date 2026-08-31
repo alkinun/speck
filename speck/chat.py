@@ -101,9 +101,7 @@ class ChatTokenizer:
             elif role in {"user", "assistant"}:
                 expected = "user" if (index - offset) % 2 == 0 else "assistant"
                 if role != expected:
-                    raise ChatFormatError(
-                        "conversation roles must alternate user/assistant"
-                    )
+                    raise ChatFormatError("conversation roles must alternate user/assistant")
             else:
                 raise ChatFormatError(f"unsupported message role: {role!r}")
             if not isinstance(content, str) or not content:

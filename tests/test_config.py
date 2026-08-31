@@ -67,9 +67,7 @@ def test_speck1_1_140m_two_epoch_variant_only_changes_training_length():
 def test_speck1_5_instruct_uses_speckchat2_and_pinned_speck1_5_base():
     base = load_experiment("experiments/Speck1.5-140M", "model", "tokenizer")
     reference = load_experiment("experiments/Speck1.1-140M-Instruct", "sft")
-    instruct = load_experiment(
-        "experiments/Speck1.5-140M-Instruct", "model", "tokenizer", "sft"
-    )
+    instruct = load_experiment("experiments/Speck1.5-140M-Instruct", "model", "tokenizer", "sft")
 
     assert instruct["model"] == base["model"]
     assert instruct["tokenizer"] == base["tokenizer"]

@@ -55,7 +55,10 @@ def test_chat_tokenizer_fingerprint_is_stable_for_prepared_data(tmp_path):
     model_path.write_bytes(b"sentencepiece")
     tokenizer = ChatTokenizer(BaseTokenizer(model_path))
 
-    assert tokenizer.fingerprint() == "43f9e7e14205419cf683d42e12cb8d407f3be73a798e0c7df55fdec025a19d29"
+    assert (
+        tokenizer.fingerprint()
+        == "43f9e7e14205419cf683d42e12cb8d407f3be73a798e0c7df55fdec025a19d29"
+    )
 
 
 def test_generation_prompt_and_role_validation(tmp_path):
