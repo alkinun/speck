@@ -55,6 +55,10 @@ dependencies. The selected backend is part of the checkpoint resume contract.
 Validation reports the equal-batch aggregate and each source separately. Checkpoints retain the
 latest per-source losses alongside the aggregate so later data decisions do not depend on W&B.
 
+Muon runs log exact update-to-weight ratios for one middle attention, convolution, and SwiGLU
+matrix at the normal logging cadence. Only rank zero snapshots these representative matrices; the
+optimizer and other parameters are untouched.
+
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an
 absolute learning rate. A value of `0.1` ends the schedule at 10% of the peak rate.
 
