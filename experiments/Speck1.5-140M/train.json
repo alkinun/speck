@@ -6,6 +6,7 @@
   "final_eval_tokens": 20000000,
   "grad_clip": 1.0,
   "log_every": 10,
+  "loss_backend": "torch",
   "lr": 0.0015,
   "min_lr": 0.1,
   "optimizer": "muon",

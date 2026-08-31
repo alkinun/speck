@@ -3,6 +3,7 @@ import math
 import pytest
 import torch
 
+from scripts.base_train import changed_resume_settings
 from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
@@ -93,6 +94,19 @@ def test_checkpoint_loader_progress_matches_next_batch_offset():
         assert "does not match training progress" in str(error)
     else:
         raise AssertionError("mismatched loader progress was accepted")
+
+
+def test_legacy_resume_defaults_to_torch_loss_backend():
+    legacy = {}
+    current = {
+        "loss_backend": "torch",
+        "global_token_offset": 0,
+        "checkpoint_tokens": [],
+        "training_phase": "base",
+    }
+
+    assert changed_resume_settings(legacy, current) == []
+    assert changed_resume_settings(legacy, {**current, "loss_backend": "liger"}) == ["loss_backend"]
 
 
 def test_checkpoint_milestones_align_baseline_and_warmup_runs():

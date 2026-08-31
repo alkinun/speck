@@ -35,6 +35,38 @@ from speck.train import (
     validate_loader_progress,
 )
 
+_IMMUTABLE_RESUME_SETTINGS = (
+    "sequence_length",
+    "device_batch_size",
+    "batch_tokens",
+    "train_tokens",
+    "lr",
+    "weight_decay",
+    "warmup_steps",
+    "min_lr",
+    "grad_clip",
+    "optimizer",
+    "loss_backend",
+    "world_size",
+    "global_token_offset",
+    "checkpoint_tokens",
+    "training_phase",
+)
+_LEGACY_RESUME_DEFAULTS = {
+    "loss_backend": "torch",
+    "global_token_offset": 0,
+    "checkpoint_tokens": [],
+    "training_phase": "base",
+}
+
+
+def changed_resume_settings(previous, current):
+    return [
+        key
+        for key in _IMMUTABLE_RESUME_SETTINGS
+        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key)) != current.get(key)
+    ]
+
 
 def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -92,6 +124,7 @@ def train(configs, cli):
     args.global_token_offset = getattr(args, "global_token_offset", 0)
     args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
     args.training_phase = getattr(args, "training_phase", "base")
+    args.loss_backend = getattr(args, "loss_backend", "torch")
     args.wandb_group = getattr(args, "wandb_group", None)
     args.data_dir = str(
         resolve_data_dir(
@@ -123,7 +156,11 @@ def train(configs, cli):
         raise ValueError(error[0])
 
     model = build_model(
-        configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
+        configs["model"],
+        tokenizer.vocab_size,
+        tokenizer.bos_id,
+        tokenizer.eos_id,
+        loss_backend=args.loss_backend,
     ).to(device)
     config = model.config
     model.init_weights()
@@ -212,32 +249,7 @@ def train(configs, cli):
         "milestone_steps": {str(step): token for step, token in milestones.items()},
     }
     if metadata:
-        immutable = (
-            "sequence_length",
-            "device_batch_size",
-            "batch_tokens",
-            "train_tokens",
-            "lr",
-            "weight_decay",
-            "warmup_steps",
-            "min_lr",
-            "grad_clip",
-            "optimizer",
-            "world_size",
-            "global_token_offset",
-            "checkpoint_tokens",
-            "training_phase",
-        )
-        legacy_defaults = {
-            "global_token_offset": 0,
-            "checkpoint_tokens": [],
-            "training_phase": "base",
-        }
-        changed = [
-            key
-            for key in immutable
-            if metadata["resolved"].get(key, legacy_defaults.get(key)) != resolved.get(key)
-        ]
+        changed = changed_resume_settings(metadata["resolved"], resolved)
         if changed:
             raise ValueError(f"resume settings changed: {', '.join(changed)}")
     print0(json.dumps(resolved, indent=2, sort_keys=True))
