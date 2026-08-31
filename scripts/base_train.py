@@ -16,11 +16,8 @@ from torch.nn.parallel import DistributedDataParallel
 
 from speck.architecture import ArchitectureConfig
 from speck.checkpoint import (
-    checkpoint_identity,
     latest,
     load,
-    load_metadata,
-    load_model,
     load_timing,
     save,
 )
@@ -28,7 +25,7 @@ from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir, verify_shards
-from speck.model import build_model, initialize_backbone
+from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import (
     checkpoint_milestones,
@@ -88,7 +85,6 @@ def train(configs, cli):
     args.global_token_offset = getattr(args, "global_token_offset", 0)
     args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
     args.training_phase = getattr(args, "training_phase", "base")
-    args.initialization = getattr(args, "initialization", None)
     args.wandb_group = getattr(args, "wandb_group", None)
     args.data_dir = str(
         resolve_data_dir(
@@ -124,30 +120,6 @@ def train(configs, cli):
     ).to(device)
     config = model.config
     model.init_weights()
-    initialization = None
-    if args.resume is None and args.initialization is not None:
-        request = args.initialization
-        if not isinstance(request, dict) or request.get("kind") != "backbone_checkpoint":
-            raise ValueError("unsupported pretraining initialization")
-        source_directory = Path(request["checkpoint_dir"]).expanduser().resolve()
-        source_step = request["step"]
-        source_metadata = load_metadata(source_directory, source_step)
-        source_config = ArchitectureConfig.from_dict(source_metadata["config"]).settings()
-        if source_config != config.settings():
-            raise ValueError("backbone checkpoint architecture does not match the target model")
-        if source_metadata.get("training_phase") != "procedural_warmup":
-            raise ValueError("backbone initialization requires a procedural warm-up checkpoint")
-        transfer = initialize_backbone(model, load_model(source_directory, source_step, device))
-        initialization = {
-            "kind": "backbone_checkpoint",
-            **checkpoint_identity(source_directory, source_step),
-            **transfer,
-            "source_manifest": source_metadata["manifest"],
-            "source_phase": source_metadata["training_phase"],
-            "source_timing": load_timing(source_directory, source_step)
-            or source_metadata.get("timing", {}),
-            "source_tokens": source_metadata["resolved"]["consumed_tokens"],
-        }
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
 
@@ -196,34 +168,21 @@ def train(configs, cli):
         elapsed_evaluation = timing.get("evaluation_seconds", 0.0)
         elapsed_active = timing.get("active_seconds", elapsed_training)
         elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
-        initialization = metadata.get("initialization")
 
-    if manifest["format"] == "speck_procedural_tokens":
-        dataset_provenance = {
-            "format": manifest["format"],
-            "requested_train_tokens": manifest["requested_train_tokens"],
-            "mixture": manifest["mixture"],
-            "encoding": manifest["encoding"],
-            "sources": [
-                {"id": source["id"], "generator": source["generator"]}
-                for source in manifest["sources"]
-            ],
-        }
-    else:
-        dataset_provenance = {
-            "format": manifest["format"],
-            "requested_train_tokens": manifest["requested_train_tokens"],
-            "mixture": manifest["mixture"],
-            "sources": [
-                {
-                    "id": source["id"],
-                    "repo": source["repo"],
-                    "revision": source["revision"],
-                    "file_list_sha256": source["file_list_sha256"],
-                }
-                for source in manifest["sources"]
-            ],
-        }
+    dataset_provenance = {
+        "format": manifest["format"],
+        "requested_train_tokens": manifest["requested_train_tokens"],
+        "mixture": manifest["mixture"],
+        "sources": [
+            {
+                "id": source["id"],
+                "repo": source["repo"],
+                "revision": source["revision"],
+                "file_list_sha256": source["file_list_sha256"],
+            }
+            for source in manifest["sources"]
+        ],
+    }
     resolved = {
         **vars(args),
         "experiment": str(Path(cli.experiment).resolve()),
@@ -256,13 +215,11 @@ def train(configs, cli):
             "global_token_offset",
             "checkpoint_tokens",
             "training_phase",
-            "initialization",
         )
         legacy_defaults = {
             "global_token_offset": 0,
             "checkpoint_tokens": [],
             "training_phase": "base",
-            "initialization": None,
         }
         changed = [
             key
@@ -372,7 +329,6 @@ def train(configs, cli):
                     "checkpoint_seconds": elapsed_checkpoint,
                     "active_seconds": elapsed_active + time.perf_counter() - session_started,
                 },
-                "initialization": initialization,
                 "wandb_id": run.id,
             }
             save(

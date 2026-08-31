@@ -78,7 +78,6 @@ configuration:
 | `experiments/Speck1-140M` | 140,652,288-parameter base model, production recipe, and architecture-search baseline. |
 | `experiments/Speck1.5-140M` | Same architecture and 5B-token optimization recipe with an isolated, pinned three-phase corpus curriculum. |
 | `experiments/Speck2-140M` | Same architecture with a pinned 20B-token quality curriculum and scaled training schedule. |
-| `experiments/SpeckGym-v0` | Five-run procedural pre-pretraining experiment on the pinned Speck1.5 corpus. |
 | `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 supervised fine-tuning of `Speck1-140M`. |
 | `experiments/Speck1.1-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the original base weights. |
 | `experiments/Speck1.1-140M-Instruct-2ep` | Retained two-epoch SpeckChat2 variant. |
@@ -110,7 +109,6 @@ prepared conversation dataset.
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
 | [Evaluation and benchmarking](docs/evaluation.md) | Open SLM, BananaMind, optimization, inference performance, and checked results. |
 | [Architecture search](docs/search.md) | Prerequisites, lifecycle, promotion, reproducibility contracts, artifacts, and finalization. |
-| [SpeckGym v0](docs/speckgym.md) | Procedural corpora, formal control, phase transitions, checkpoints, and evaluation. |
 | [Releasing models](docs/releasing.md) | Maintainer-only Transformers, code-only, and GGUF publication workflows. |
 | [Contributing](CONTRIBUTING.md) | Development setup, formatting, linting, tests, and change guidelines. |
 

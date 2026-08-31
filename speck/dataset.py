@@ -1719,84 +1719,9 @@ def _validate_text_manifest(manifest):
     return manifest
 
 
-def _validate_procedural_manifest(manifest):
-    if manifest.get("format_version") != 1:
-        raise ValueError(
-            f"unsupported procedural dataset version: {manifest.get('format_version')}"
-        )
-    if manifest.get("dtype") != "<u2":
-        raise ValueError("procedural dataset must contain little-endian uint16 tokens")
-    tokenizer = manifest.get("tokenizer", {})
-    if (
-        not isinstance(tokenizer.get("fingerprint"), str)
-        or not isinstance(tokenizer.get("vocab_size"), int)
-        or tokenizer["vocab_size"] < 1
-    ):
-        raise ValueError("procedural dataset has invalid tokenizer provenance")
-    encoding = manifest.get("encoding", {})
-    surface = encoding.get("surface_token_ids")
-    if (
-        encoding.get("kind") != "direct_abstract_symbols"
-        or not isinstance(surface, list)
-        or not surface
-        or len(surface) != len(set(surface))
-        or any(
-            isinstance(token, bool)
-            or not isinstance(token, int)
-            or not 0 <= token < tokenizer["vocab_size"]
-            for token in surface
-        )
-    ):
-        raise ValueError("procedural dataset has invalid abstract-symbol encoding")
-    if encoding.get("fingerprint") != _fingerprint(surface):
-        raise ValueError("procedural dataset encoding fingerprint is invalid")
-    sources = manifest.get("sources")
-    if not isinstance(sources, list) or not sources:
-        raise ValueError("procedural dataset manifest has no sources")
-    source_ids = [source.get("id") for source in sources]
-    if any(not isinstance(source_id, str) or not source_id for source_id in source_ids) or len(
-        source_ids
-    ) != len(set(source_ids)):
-        raise ValueError("procedural dataset manifest has invalid source IDs")
-    quotas, phases = derive_source_quotas(
-        source_ids, manifest.get("mixture", {}), manifest.get("requested_train_tokens")
-    )
-    if manifest["mixture"].get("source_quotas") != quotas:
-        raise ValueError("procedural dataset source quotas do not match its phases")
-    if manifest["mixture"].get("phases") != phases:
-        raise ValueError("procedural dataset phases are not canonical")
-    for source in sources:
-        if not isinstance(source.get("generator"), dict):
-            raise ValueError(f"procedural dataset source {source['id']} has no generator")
-        for split in ("train", "val"):
-            split_manifest = source.get("splits", {}).get(split)
-            if not isinstance(split_manifest, dict) or split_manifest.get("tokens", 0) < 1:
-                raise ValueError(
-                    f"procedural dataset source {source['id']} has invalid {split} data"
-                )
-            shards = split_manifest.get("shards")
-            if (
-                not isinstance(shards, list)
-                or not shards
-                or sum(shard.get("tokens", 0) for shard in shards) != split_manifest["tokens"]
-            ):
-                raise ValueError(
-                    f"procedural dataset source {source['id']} has invalid {split} shards"
-                )
-        if source["splits"]["train"].get("requested_tokens") != quotas[source["id"]]:
-            raise ValueError(f"procedural dataset source quota differs for {source['id']}")
-    for split in ("train", "val"):
-        total = sum(source["splits"][split]["tokens"] for source in sources)
-        if manifest.get("splits", {}).get(split, {}).get("tokens") != total:
-            raise ValueError(f"procedural dataset aggregate {split} token count is invalid")
-    return manifest
-
-
 def _validate_manifest(manifest):
     if manifest.get("format") == "speck_packed_tokens":
         return _validate_text_manifest(manifest)
-    if manifest.get("format") == "speck_procedural_tokens":
-        return _validate_procedural_manifest(manifest)
     raise ValueError("invalid packed dataset format")
 
 
@@ -1825,15 +1750,11 @@ def verify_shards(data_dir=None, manifest=None):
                 if not path.is_file() or path.stat().st_size != expected_bytes:
                     raise ValueError(f"invalid packed token shard: {path}")
                 _verify_file(path, shard["sha256"])
-        if manifest["format"] == "speck_procedural_tokens":
-            continue
         index = source["document_index"]
         index_path = data_dir / index["path"]
         if not index_path.is_file() or index_path.stat().st_size != index["bytes"]:
             raise ValueError(f"invalid packed document index: {index_path}")
         _verify_file(index_path, index["sha256"])
-    if manifest["format"] == "speck_procedural_tokens":
-        return
     dedup_path = data_dir / manifest["dedup"]["path"]
     expected_bytes = manifest["dedup"]["accepted_hashes"] * _DEDUP_BYTES
     if not dedup_path.is_file() or dedup_path.stat().st_size != expected_bytes:

@@ -563,37 +563,6 @@ class SpeckForCausalLM(nn.Module):
         return 6 * linear + attention
 
 
-@torch.no_grad()
-def initialize_backbone(model, source_state):
-    """Transfer learned cores while retaining a freshly initialized token interface."""
-
-    target_state = model.state_dict()
-    source_keys = set(source_state)
-    target_keys = set(target_state)
-    if source_keys != target_keys:
-        missing = sorted(target_keys - source_keys)
-        unexpected = sorted(source_keys - target_keys)
-        details = []
-        if missing:
-            details.append(f"missing {', '.join(missing)}")
-        if unexpected:
-            details.append(f"unexpected {', '.join(unexpected)}")
-        raise ValueError(f"backbone checkpoint state does not match: {'; '.join(details)}")
-    reset = {"embed_tokens.weight", "lm_head.weight"}
-    reset.update(
-        key for key in ("adapters.0.weight", "output_projection.weight") if key in target_state
-    )
-    transferred = sorted(target_keys - reset)
-    for key in transferred:
-        if source_state[key].shape != target_state[key].shape:
-            raise ValueError(f"backbone checkpoint tensor shape differs for {key}")
-        target_state[key] = source_state[key]
-    model.load_state_dict(target_state)
-    if model.lm_head.weight is not model.embed_tokens.weight:
-        raise RuntimeError("backbone initialization broke tied token weights")
-    return {"policy": "reset_token_interface", "transferred": transferred, "reset": sorted(reset)}
-
-
 def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2):
     values = dict(settings)
     values.update(
