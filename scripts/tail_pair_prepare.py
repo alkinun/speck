@@ -155,17 +155,28 @@ def prepare(
         save_every,
         eval_every,
     )
+    consumed_tokens = (
+        (train_tokens + control["batch_tokens"] - 1) // control["batch_tokens"]
+    ) * control["batch_tokens"]
     pair = {
         "format": "speck_tail_pair",
         "format_version": 1,
         "parent_checkpoint": checkpoint_identity(checkpoint_dir, step),
+        "parent_global_tokens": metadata["global_tokens"],
+        "manifest": metadata["manifest"],
         "train_tokens": train_tokens,
+        "consumed_tokens": consumed_tokens,
         "world_size": metadata["resolved"]["world_size"],
         "save_every": control["save_every"],
         "eval_every": control["eval_every"],
-        "control": {"experiment": "control", "schedule": "inherit"},
+        "control": {
+            "experiment": "control",
+            "run": control["run"],
+            "schedule": "inherit",
+        },
         "constant": {
             "experiment": "constant",
+            "run": constant["run"],
             "schedule": "new",
             "lr": constant["lr"],
         },

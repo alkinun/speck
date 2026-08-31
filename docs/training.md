@@ -118,6 +118,20 @@ actual device batch, and atomically writes `control/`, `constant/`, and a hashed
 record. Launch both arms at the reported world size against the same parent checkpoint; add
 `--branch-schedule new` only for `constant/`.
 
+After both arms finish, finalize matched endpoints and one shared averaging window:
+
+```bash
+uv run --extra cpu python -m scripts.tail_pair_finalize \
+  experiments/Speck2-140M-TailPair \
+  --control-checkpoints ~/.cache/speck/checkpoints/<control-run> \
+  --constant-checkpoints ~/.cache/speck/checkpoints/<constant-run> \
+  --average-steps <step> <step> --output-dir ~/.cache/speck/tail-pairs/<name>
+```
+
+Finalization rejects incomplete arms, parent/run/schedule/budget mismatches, different global token
+endpoints, and different averaging windows. It writes both model-only averages and one hashed
+`finalization.json`; pass either average directory to `scripts.base_checkpoint_export` for evaluation.
+
 Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
 
 ```bash
