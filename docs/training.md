@@ -95,8 +95,13 @@ uv run --extra gpu python -m scripts.base_train experiments/branch \
 
 Branches currently preserve the parent model, packed-data manifest, optimizer, batch geometry, data
 cursor, and learning-rate schedule. They create a new W&B run and record model, optimizer, and
-metadata hashes for the parent. Changed-data and changed-schedule branches are rejected rather than
+metadata hashes for the parent. Changed data and implicit schedule changes are rejected rather than
 silently weakening the comparison.
+
+Pass `--branch-schedule new` to start the schedule in the branch experiment at local step zero.
+Only `lr`, `warmup_steps`, `min_lr`, `lr_schedule`, and `decay_steps` may then differ; optimizer
+state and every non-schedule training setting remain inherited and validated. A constant-LR tail
+uses `lr_schedule: "constant"`, zero warmup, and `min_lr: 1.0` with the desired absolute `lr`.
 
 Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
 

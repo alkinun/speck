@@ -40,21 +40,17 @@ from speck.train import (
 )
 
 _UPDATE_MONITOR_SUFFIXES = ("q_proj.weight", "input_projection.weight", "gate_proj.weight")
-_BRANCH_SETTINGS = (
+_BRANCH_FIXED_SETTINGS = (
     "sequence_length",
     "device_batch_size",
     "batch_tokens",
-    "lr",
     "weight_decay",
-    "warmup_steps",
-    "min_lr",
-    "lr_schedule",
-    "decay_steps",
     "grad_clip",
     "optimizer",
     "loss_backend",
     "world_size",
 )
+_SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_steps")
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "device_batch_size",
@@ -93,10 +89,13 @@ def changed_resume_settings(previous, current):
     ]
 
 
-def changed_branch_settings(previous, current):
+def changed_branch_settings(previous, current, allow_schedule_change=False):
+    settings = _BRANCH_FIXED_SETTINGS
+    if not allow_schedule_change:
+        settings += _SCHEDULE_SETTINGS
     return [
         key
-        for key in _BRANCH_SETTINGS
+        for key in settings
         if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
         != current.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
     ]
@@ -150,6 +149,12 @@ def arguments(argv=None):
         type=int,
         default=None,
         help="parent checkpoint step used with --branch-from",
+    )
+    parser.add_argument(
+        "--branch-schedule",
+        choices=("inherit", "new"),
+        default="inherit",
+        help="inherit the parent schedule or start the branch schedule at step zero",
     )
     parser.add_argument(
         "--no-compile",
@@ -232,6 +237,8 @@ def train(configs, cli):
         raise ValueError("--branch-from and --branch-step must be provided together")
     if args.resume is not None and branching:
         raise ValueError("--resume and --branch-from are mutually exclusive")
+    if not branching and cli.branch_schedule != "inherit":
+        raise ValueError("--branch-schedule new requires --branch-from")
     if args.resume is None and latest(args.output_dir) is not None:
         raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume STEP")
     metadata = load_metadata(args.output_dir, args.resume) if args.resume is not None else None
@@ -246,11 +253,13 @@ def train(configs, cli):
     distributed = world_size > 1
     master = rank == 0
     parent = metadata["resolved"].get("parent_checkpoint") if metadata else None
+    branch_schedule = metadata["resolved"].get("branch_schedule") if metadata else None
     if parent_metadata:
         objects = [checkpoint_identity(parent_directory, cli.branch_step) if master else None]
         if distributed:
             dist.broadcast_object_list(objects, src=0)
         parent = objects[0]
+        branch_schedule = cli.branch_schedule
     tokenizer = get_tokenizer(**configs["tokenizer"])
     manifest = load_manifest(args.data_dir)
     manifest_hash = manifest_fingerprint(manifest)
@@ -304,7 +313,14 @@ def train(configs, cli):
             data_token_offset,
             schedule_step_offset,
             schedule_steps,
-        ) = branch_position(parent_metadata, args.batch_tokens, steps)
+        ) = branch_position(
+            parent_metadata,
+            args.batch_tokens,
+            steps if cli.branch_schedule == "inherit" else None,
+        )
+        if cli.branch_schedule == "new":
+            schedule_step_offset = 0
+            schedule_steps = steps
     if (
         not isinstance(args.global_token_offset, int)
         or isinstance(args.global_token_offset, bool)
@@ -350,7 +366,11 @@ def train(configs, cli):
         if stored_config != config.settings() or parent_metadata["manifest"] != manifest_hash:
             raise ValueError("branch parent does not match the model or dataset")
         branch_settings = {**vars(args), "world_size": world_size}
-        changed = changed_branch_settings(parent_metadata["resolved"], branch_settings)
+        changed = changed_branch_settings(
+            parent_metadata["resolved"],
+            branch_settings,
+            allow_schedule_change=cli.branch_schedule == "new",
+        )
         if changed:
             raise ValueError(f"branch settings changed: {', '.join(changed)}")
         model_state, optimizer_state, loaded_parent = load(
@@ -395,6 +415,7 @@ def train(configs, cli):
         "schedule_step_offset": schedule_step_offset,
         "schedule_steps": schedule_steps,
         "parent_checkpoint": parent,
+        "branch_schedule": branch_schedule,
         "milestone_steps": {str(step): token for step, token in milestones.items()},
         "update_monitor": list(update_monitor.names) if update_monitor else [],
     }

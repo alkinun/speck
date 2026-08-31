@@ -44,10 +44,12 @@ def lr_scale(step, steps, warmup, minimum, schedule="cosine", decay_steps=None):
         raise ValueError("minimum must be a finite scale")
     if not 0 <= minimum <= 1:
         raise ValueError("minimum must be between zero and one")
-    if schedule not in {"cosine", "wsd"}:
+    if schedule not in {"constant", "cosine", "wsd"}:
         raise ValueError("unsupported learning-rate schedule")
-    if schedule == "cosine" and decay_steps is not None:
-        raise ValueError("cosine schedule does not use decay_steps")
+    if schedule in {"constant", "cosine"} and decay_steps is not None:
+        raise ValueError(f"{schedule} schedule does not use decay_steps")
+    if schedule == "constant" and (warmup != 0 or minimum != 1):
+        raise ValueError("constant schedule requires zero warmup and minimum scale one")
     if schedule == "wsd" and (
         isinstance(decay_steps, bool)
         or not isinstance(decay_steps, int)
@@ -56,6 +58,8 @@ def lr_scale(step, steps, warmup, minimum, schedule="cosine", decay_steps=None):
     ):
         raise ValueError("WSD decay_steps must fit after warmup")
 
+    if schedule == "constant":
+        return 1.0
     if step < warmup:
         return (step + 1) / warmup
     if schedule == "wsd":
@@ -104,7 +108,7 @@ def checkpoint_milestones(tokens, batch_tokens, global_token_offset, steps):
     return milestones
 
 
-def branch_position(metadata, batch_tokens, steps):
+def branch_position(metadata, batch_tokens, steps=None):
     resolved = metadata["resolved"]
     global_token_offset = metadata["global_tokens"]
     data_token_offset = metadata["data_state"]["global_consumed_tokens"]
@@ -115,7 +119,7 @@ def branch_position(metadata, batch_tokens, steps):
         raise ValueError("branch parent global step does not match its data position")
     schedule_step_offset = resolved.get("schedule_step_offset", 0) + metadata["step"]
     schedule_steps = resolved.get("schedule_steps", resolved["steps"])
-    if schedule_step_offset + steps > schedule_steps:
+    if steps is not None and schedule_step_offset + steps > schedule_steps:
         raise ValueError("branch exceeds the parent learning-rate schedule")
     return global_token_offset, data_token_offset, schedule_step_offset, schedule_steps
 

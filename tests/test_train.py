@@ -43,6 +43,14 @@ def test_lr_scale_without_warmup_starts_at_peak_and_ends_at_minimum():
     assert lr_scale(3, 4, 0, 0.1) == 0.1
 
 
+def test_constant_lr_schedule_stays_at_peak():
+    assert [lr_scale(step, 3, 0, 1.0, "constant") for step in range(3)] == [1.0] * 3
+    with pytest.raises(ValueError, match="constant"):
+        lr_scale(0, 3, 1, 1.0, "constant")
+    with pytest.raises(ValueError, match="constant"):
+        lr_scale(0, 3, 0, 0.1, "constant")
+
+
 def test_single_step_lr_schedule_uses_minimum():
     assert lr_scale(0, 1, 0, 0.25) == 0.25
 
@@ -146,19 +154,27 @@ def test_runtime_cadence_arguments_are_optional():
         "checkpoint_tokens": [],
         "training_phase": "base",
     }
-    assert (
-        changed_resume_settings(
-            {**base, "save_every": 10, "eval_every": 20},
-            {**base, "save_every": 30, "eval_every": 40},
-        )
-        == []
+    assert not changed_resume_settings(
+        {**base, "save_every": 10, "eval_every": 20},
+        {**base, "save_every": 30, "eval_every": 40},
     )
+
+
+def test_branch_schedule_argument_defaults_to_inherit():
+    assert arguments([]).branch_schedule == "inherit"
+    assert arguments(["--branch-schedule", "new"]).branch_schedule == "new"
 
 
 def test_branch_only_allows_same_training_recipe():
     previous = {"loss_backend": "torch", "lr": 1e-3, "world_size": 1}
     assert changed_branch_settings(previous, dict(previous)) == []
     assert changed_branch_settings(previous, {**previous, "lr": 2e-3}) == ["lr"]
+    assert not changed_branch_settings(
+        previous, {**previous, "lr": 2e-3}, allow_schedule_change=True
+    )
+    assert changed_branch_settings(
+        previous, {**previous, "world_size": 2}, allow_schedule_change=True
+    ) == ["world_size"]
 
 
 def test_branch_inherits_global_and_schedule_positions():
@@ -179,6 +195,7 @@ def test_branch_inherits_global_and_schedule_positions():
 
     assert branch_position(legacy, batch_tokens=10, steps=40) == (300, 300, 30, 200)
     assert branch_position(metadata, batch_tokens=10, steps=40) == (1300, 300, 130, 300)
+    assert branch_position(metadata, batch_tokens=10) == (1300, 300, 130, 300)
     with pytest.raises(ValueError, match="exceeds"):
         branch_position(metadata, batch_tokens=10, steps=171)
 
