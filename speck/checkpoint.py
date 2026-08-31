@@ -129,11 +129,13 @@ def checkpoint_identity(directory, step):
     load_metadata(directory, step)
     directory = Path(directory).expanduser().resolve()
     model = directory / f"model_{step:06d}.pt"
+    optimizer = directory / f"optimizer_{step:06d}.pt"
     metadata = directory / f"metadata_{step:06d}.json"
     return {
         "directory": str(directory),
         "step": step,
         "model_sha256": _sha256(model),
+        "optimizer_sha256": _sha256(optimizer),
         "metadata_sha256": _sha256(metadata),
     }
 

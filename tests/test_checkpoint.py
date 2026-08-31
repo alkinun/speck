@@ -34,7 +34,11 @@ def test_checkpoint_is_visible_only_after_completion(tmp_path):
     assert load_metadata(tmp_path, 3) == {"step": 3}
     identity = checkpoint_identity(tmp_path, 3)
     assert identity["step"] == 3
-    assert len(identity["model_sha256"]) == len(identity["metadata_sha256"]) == 64
+    assert {
+        len(identity["model_sha256"]),
+        len(identity["optimizer_sha256"]),
+        len(identity["metadata_sha256"]),
+    } == {64}
 
     torch.save({"weight": torch.tensor([2.0])}, tmp_path / "model_000004.pt")
     (tmp_path / "metadata_000004.json").write_text(json.dumps({"step": 4}))
