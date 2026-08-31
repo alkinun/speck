@@ -15,6 +15,7 @@ from speck.architecture import (
 from speck.model import SpeckForCausalLM
 from speck.train import (
     branch_position,
+    checkpoint_global_tokens,
     checkpoint_milestones,
     lr_scale,
     optimization_step,
@@ -164,7 +165,6 @@ def test_branch_inherits_global_and_schedule_positions():
     legacy = {
         "step": 30,
         "global_step": 30,
-        "global_tokens": 300,
         "data_state": {"global_consumed_tokens": 300},
         "resolved": {"steps": 200},
     }
@@ -177,6 +177,7 @@ def test_branch_inherits_global_and_schedule_positions():
     }
 
     assert branch_position(legacy, batch_tokens=10, steps=40) == (300, 300, 30, 200)
+    assert checkpoint_global_tokens({"step": 30}, batch_tokens=10) == 300
     assert branch_position(metadata, batch_tokens=10, steps=40) == (1300, 300, 130, 300)
     assert branch_position(metadata, batch_tokens=10) == (1300, 300, 130, 300)
     with pytest.raises(ValueError, match="exceeds"):

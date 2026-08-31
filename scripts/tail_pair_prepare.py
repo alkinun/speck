@@ -12,7 +12,7 @@ from speck.checkpoint import checkpoint_identity, load_metadata
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint
 from speck.dataset import load_manifest, resolve_data_dir
-from speck.train import lr_scale
+from speck.train import checkpoint_global_tokens, lr_scale
 
 _EXPERIMENT_FILES = ("data.json", "model.json", "tokenizer.json")
 
@@ -159,7 +159,7 @@ def prepare(
         "format": "speck_tail_pair",
         "format_version": 1,
         "parent_checkpoint": checkpoint_identity(checkpoint_dir, step),
-        "parent_global_tokens": metadata["global_tokens"],
+        "parent_global_tokens": checkpoint_global_tokens(metadata, control["batch_tokens"]),
         "manifest": metadata["manifest"],
         "train_tokens": train_tokens,
         "consumed_tokens": consumed_tokens,

@@ -91,9 +91,18 @@ def checkpoint_milestones(tokens, batch_tokens, global_token_offset, steps):
     return milestones
 
 
+def checkpoint_global_tokens(metadata, batch_tokens):
+    global_tokens = metadata.get("global_tokens")
+    if global_tokens is None:
+        global_tokens = metadata.get("global_step", metadata["step"]) * batch_tokens
+    if global_tokens % batch_tokens:
+        raise ValueError("checkpoint global tokens are not aligned to the optimizer batch")
+    return global_tokens
+
+
 def branch_position(metadata, batch_tokens, steps=None):
     resolved = metadata["resolved"]
-    global_token_offset = metadata["global_tokens"]
+    global_token_offset = checkpoint_global_tokens(metadata, batch_tokens)
     data_token_offset = metadata["data_state"]["global_consumed_tokens"]
     if global_token_offset % batch_tokens or data_token_offset % batch_tokens:
         raise ValueError("branch parent is not aligned to the optimizer batch")
