@@ -162,18 +162,6 @@ def checkpoint_identity(directory, step):
     }
 
 
-def save_timing(directory, step, timing):
-    """Atomically record post-checkpoint timing that cannot be known before completion."""
-
-    step = _validate_step(step)
-    if not os.path.exists(os.path.join(directory, f"complete_{step:06d}")):
-        raise FileNotFoundError(f"checkpoint {step} is incomplete")
-    path = Path(directory) / f"timing_{step:06d}.json"
-    temporary = path.with_suffix(".json.tmp")
-    temporary.write_text(json.dumps(timing, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
-
-
 def load_timing(directory, step):
     """Load optional post-checkpoint timing, falling back to metadata for old checkpoints."""
 

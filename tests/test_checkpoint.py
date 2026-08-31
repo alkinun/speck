@@ -13,7 +13,6 @@ from speck.checkpoint import (
     load_timing,
     prune,
     save,
-    save_timing,
 )
 
 
@@ -91,13 +90,13 @@ def test_checkpoint_metadata_must_match_its_filename_step(tmp_path):
 def test_checkpoint_timing_sidecar_is_optional_and_pruned(tmp_path):
     save(tmp_path, 1, {}, {}, {"step": 1})
     assert load_timing(tmp_path, 1) is None
-    save_timing(tmp_path, 1, {"active_seconds": 2.5})
-    assert load_timing(tmp_path, 1) == {"active_seconds": 2.5}
-    save(tmp_path, 2, {}, {}, {"step": 2})
+    save(tmp_path, 2, {}, {}, {"step": 2}, timing={"active_seconds": 2.5})
+    assert load_timing(tmp_path, 2) == {"active_seconds": 2.5}
+    save(tmp_path, 3, {}, {}, {"step": 3})
 
     prune(tmp_path, keep=1)
 
-    assert not (tmp_path / "timing_000001.json").exists()
+    assert not (tmp_path / "timing_000002.json").exists()
 
 
 def test_checkpoint_can_publish_timing_before_completion(tmp_path):

@@ -403,10 +403,10 @@ def test_stream_reads_needed_columns_and_only_keeps_raw_when_explicit(tmp_path, 
         "filters": {"min_score": 0.8},
     }
     rows = list(
-        dataset.iter_documents(
+        dataset.iter_source_file_documents(
             source=source,
             revision="abc123",
-            files=["data/nested/shard.parquet"],
+            filename="data/nested/shard.parquet",
             filtering={"min_chars": 0, "max_chars": 100},
             cache_dir=cache,
             keep_raw=True,
@@ -416,10 +416,10 @@ def test_stream_reads_needed_columns_and_only_keeps_raw_when_explicit(tmp_path, 
     assert rows[0]["score"] == 0.9
     assert len(list(cache.iterdir())) == 1
     list(
-        dataset.iter_documents(
+        dataset.iter_source_file_documents(
             source=source,
             revision="abc123",
-            files=["data/nested/shard.parquet"],
+            filename="data/nested/shard.parquet",
             filtering={"min_chars": 0, "max_chars": 100},
             cache_dir=cache,
         )
@@ -455,10 +455,10 @@ def test_streams_gzip_jsonl_source_files(tmp_path, monkeypatch):
     }
     cache = tmp_path / "raw"
     rows = list(
-        dataset.iter_documents(
+        dataset.iter_source_file_documents(
             source=source,
             revision="abc123",
-            files=source["files"],
+            filename=source["files"][0],
             filtering={"min_chars": 0, "max_chars": 100},
             cache_dir=cache,
         )
@@ -492,10 +492,10 @@ def test_score_and_language_filter_columns_are_required(tmp_path, monkeypatch):
     }
     with pytest.raises(ValueError, match="missing configured columns.*score"):
         list(
-            dataset.iter_documents(
+            dataset.iter_source_file_documents(
                 source=score_source,
                 revision="abc123",
-                files=["data/score.parquet"],
+                filename="data/score.parquet",
                 filtering={"min_chars": 0, "max_chars": 100},
                 cache_dir=tmp_path / "score_raw",
             )
@@ -508,10 +508,10 @@ def test_score_and_language_filter_columns_are_required(tmp_path, monkeypatch):
     }
     with pytest.raises(ValueError, match="missing configured columns.*language"):
         list(
-            dataset.iter_documents(
+            dataset.iter_source_file_documents(
                 source=language_source,
                 revision="abc123",
-                files=["data/language.parquet"],
+                filename="data/language.parquet",
                 filtering={"min_chars": 0, "max_chars": 100},
                 cache_dir=tmp_path / "language_raw",
             )
@@ -576,10 +576,10 @@ def test_strict_score_and_detected_language_filters(tmp_path, monkeypatch):
         "metadata_columns": {},
     }
     inclusive = list(
-        dataset.iter_documents(
+        dataset.iter_source_file_documents(
             source={**base, "filters": {"min_score": 0.8}},
             revision="abc123",
-            files=["data/filter.parquet"],
+            filename="data/filter.parquet",
             filtering={"min_chars": 0, "max_chars": 100},
             cache_dir=tmp_path / "inclusive",
         )
@@ -590,7 +590,7 @@ def test_strict_score_and_detected_language_filters(tmp_path, monkeypatch):
         "chinese above",
     ]
     strict = list(
-        dataset.iter_documents(
+        dataset.iter_source_file_documents(
             source={
                 **base,
                 "language_detector": "py3langid",
@@ -601,7 +601,7 @@ def test_strict_score_and_detected_language_filters(tmp_path, monkeypatch):
                 },
             },
             revision="abc123",
-            files=["data/filter.parquet"],
+            filename="data/filter.parquet",
             filtering={"min_chars": 0, "max_chars": 100},
             cache_dir=tmp_path / "strict",
         )

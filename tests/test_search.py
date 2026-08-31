@@ -27,7 +27,6 @@ from speck.search import (
     StudyStore,
     aggregate_final_runs,
     atomic_json,
-    first_incomplete_candidate,
     initial_generation,
     later_generation,
     loader_state,
@@ -399,10 +398,6 @@ def test_atomic_records_resume_and_checkpoint_pruning(tmp_path):
     store = open_study(tmp_path / "study", tmp_path, settings, generations=1)
     plans = initial_generation(rich_architecture(), settings)
     materialize_generation(store, plans, 0, settings)
-    store.update_result("000001", status="completed")
-    store.update_result("000002", status="running")
-    assert first_incomplete_candidate(store.results())["candidate_id"] == "000002"
-
     checkpoint = store.candidate_path("000001") / "checkpoint"
     checkpoint.mkdir()
     for step in (1, 2):

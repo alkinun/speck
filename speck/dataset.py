@@ -739,30 +739,6 @@ def iter_source_file_documents(**kwargs):
     raise ValueError(f"unsupported source file format: {source['file_format']}")
 
 
-def iter_documents(
-    *,
-    source,
-    revision,
-    files,
-    filtering,
-    cache_dir=None,
-    keep_raw=False,
-):
-    """Yield files sequentially while retaining at most one raw source file."""
-
-    files = list(files)
-    for shard_index, filename in enumerate(files):
-        yield from iter_source_file_documents(
-            source=source,
-            revision=revision,
-            filename=filename,
-            filtering=filtering,
-            cache_dir=cache_dir,
-            keep_raw=keep_raw,
-            description=f"{source['id']} {shard_index + 1}/{len(files)}",
-        )
-
-
 class TokenShardWriter:
     """Write token IDs into bounded, checksummed uint16 shards."""
 

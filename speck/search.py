@@ -1643,11 +1643,6 @@ def materialize_generation(store, plans, generation, settings):
     return tuple(generation_results)
 
 
-def first_incomplete_candidate(results):
-    incomplete = [result for result in results if result.get("status") in {"pending", "running"}]
-    return min(incomplete, key=lambda result: result["candidate_id"]) if incomplete else None
-
-
 def prune_checkpoints(directory, keep_steps=()):
     directory = Path(directory)
     if not directory.is_dir():
