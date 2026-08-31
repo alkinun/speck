@@ -846,6 +846,19 @@ wheels = [
 ]
 
 [[package]]
+name = "liger-kernel"
+version = "0.8.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "torch", version = "2.9.1+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
+    { name = "triton" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ff/a5/27575f85fd91cb92a0d72b4c37daa79021334926b5c4624f7ce9fa15e6ae/liger_kernel-0.8.2.tar.gz", hash = "sha256:387673ed6bf64fc8150cc8315fed578d2fc717ec3450f53489f480880223c1b8", size = 6136426, upload-time = "2026-08-18T20:54:30.62Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e2/b3/a66f1d9143697784ad2c2abf665b02c47aa17857232ed72224588186103c/liger_kernel-0.8.2-py3-none-any.whl", hash = "sha256:84c0a7bc9bf4d4cf8ea5ba89ff84d28686afc94215b220851d9f57dc87852741", size = 644266, upload-time = "2026-08-18T20:54:28.728Z" },
+]
+
+[[package]]
 name = "lm-eval"
 version = "0.4.13.dev0"
 source = { git = "https://github.com/EleutherAI/lm-evaluation-harness.git?rev=64f3d0924fc695efd6d776a5ac91f97138085516#64f3d0924fc695efd6d776a5ac91f97138085516" }
@@ -3282,6 +3295,7 @@ cpu = [
     { name = "torch", version = "2.9.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-5-speck-cpu') or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
 ]
 gpu = [
+    { name = "liger-kernel" },
     { name = "torch", version = "2.9.1+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
 ]
 
@@ -3304,6 +3318,7 @@ transformers = [
 [package.metadata]
 requires-dist = [
     { name = "huggingface-hub", specifier = ">=0.34.0" },
+    { name = "liger-kernel", marker = "extra == 'gpu'", specifier = "==0.8.2" },
     { name = "numpy", specifier = ">=1.26.0" },
     { name = "py3langid", specifier = "==0.3.0" },
     { name = "pyarrow", specifier = ">=21.0.0" },

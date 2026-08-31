@@ -13,6 +13,34 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 
+_LOSS_BACKENDS = {"torch", "liger"}
+
+
+@torch.compiler.disable
+def liger_linear_cross_entropy(hidden, weight, targets, reduction):
+    try:
+        from liger_kernel.transformers.functional import liger_fused_linear_cross_entropy
+    except ImportError as exception:
+        raise RuntimeError(
+            "the Liger loss backend requires the GPU dependencies; run `uv sync --extra gpu`"
+        ) from exception
+    return liger_fused_linear_cross_entropy(
+        hidden,
+        weight,
+        targets,
+        reduction=reduction,
+    )
+
+
+def linear_cross_entropy(hidden, weight, targets, reduction, backend):
+    hidden = hidden.flatten(0, 1)
+    targets = targets.flatten()
+    compute_weight = weight.to(hidden.dtype)
+    if backend == "torch":
+        logits = F.linear(hidden, compute_weight).float()
+        return F.cross_entropy(logits, targets, reduction=reduction)
+    return liger_linear_cross_entropy(hidden, compute_weight, targets, reduction)
+
 
 class Linear(nn.Linear):
     def forward(self, input):
@@ -323,11 +351,14 @@ class BlockCore(nn.Module):
 class SpeckForCausalLM(nn.Module):
     """Implement the configurable Speck causal language model."""
 
-    def __init__(self, config):
+    def __init__(self, config, loss_backend="torch"):
         super().__init__()
         if not isinstance(config, ArchitectureConfig):
             raise TypeError("model requires an architecture config")
+        if loss_backend not in _LOSS_BACKENDS:
+            raise ValueError(f"unsupported loss backend: {loss_backend}")
         self.config = config
+        self.loss_backend = loss_backend
         self.embed_tokens = nn.Embedding(config.vocab_size, config.embedding_size)
         self.execution_plan = config.execution_plan
         self.cores = nn.ModuleDict()
@@ -482,12 +513,16 @@ class SpeckForCausalLM(nn.Module):
         if state is not None:
             state.position += length
         hidden = self.output_projection(self.norm(x))
-        logits = self.lm_head(hidden[:, -1:] if last_token_only else hidden).float()
-        output = (
-            F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction=loss_reduction)
-            if targets is not None
-            else logits
-        )
+        if targets is not None:
+            output = linear_cross_entropy(
+                hidden,
+                self.lm_head.weight,
+                targets,
+                loss_reduction,
+                self.loss_backend,
+            )
+        else:
+            output = self.lm_head(hidden[:, -1:] if last_token_only else hidden).float()
         return (output, hidden) if return_hidden else output
 
     def optimizer(self, lr=6e-4, weight_decay=0.1, name="adamw"):
@@ -563,7 +598,7 @@ class SpeckForCausalLM(nn.Module):
         return 6 * linear + attention
 
 
-def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2):
+def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2, loss_backend="torch"):
     values = dict(settings)
     values.update(
         vocab_size=vocab_size,
@@ -571,7 +606,7 @@ def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2):
         eos_token_id=eos_token_id,
     )
     config = ArchitectureConfig.from_dict(values)
-    model = SpeckForCausalLM(config)
+    model = SpeckForCausalLM(config, loss_backend=loss_backend)
     if config.expected_parameters is not None:
         actual = model.parameter_count()
         if actual != config.expected_parameters:

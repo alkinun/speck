@@ -61,6 +61,39 @@ def test_main_model_parameter_count():
     assert model.parameter_count() == 140_652_288
 
 
+def test_model_rejects_unknown_loss_backend():
+    config = model_with(SwiGLUSpec(16)).config
+    with pytest.raises(ValueError, match="unsupported loss backend"):
+        SpeckForCausalLM(config, loss_backend="unknown")
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="Liger requires CUDA")
+@pytest.mark.parametrize("reduction", ("mean", "sum"))
+def test_liger_loss_and_gradients_match_torch(reduction):
+    pytest.importorskip("liger_kernel")
+    torch.manual_seed(5)
+    reference = model_with(SwiGLUSpec(16)).cuda()
+    fused = SpeckForCausalLM(reference.config, loss_backend="liger").cuda()
+    fused.load_state_dict(reference.state_dict())
+    tokens = torch.randint(0, 16, (2, 8), device="cuda")
+    targets = tokens.clone()
+    targets[0, 0] = -100
+
+    reference_loss = reference(tokens, targets, loss_reduction=reduction)
+    fused_loss = torch.compile(fused, dynamic=False)(tokens, targets, loss_reduction=reduction)
+    reference_loss.backward()
+    fused_loss.backward()
+
+    torch.testing.assert_close(fused_loss, reference_loss, rtol=2e-3, atol=2e-3)
+    for reference_parameter, fused_parameter in zip(reference.parameters(), fused.parameters()):
+        torch.testing.assert_close(
+            fused_parameter.grad,
+            reference_parameter.grad,
+            rtol=2e-2,
+            atol=2e-2,
+        )
+
+
 def test_global_attention_cache_matches_full_forward():
     torch.manual_seed(1)
     model = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))
