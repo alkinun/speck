@@ -22,7 +22,8 @@ file checksums. Output defaults to `~/.cache/speck/evaluations/open-slm/Speck1-1
 Run `lm-eval`, `arithmark-2`, `arithmark-3`, or `summary` separately to diagnose or resume stages.
 Use `--limit 2` only with `lm-eval` for a smoke test. The evaluator refuses to run if a configured
 Hub drift guard no longer matches the repository head; review and update the pin rather than
-silently evaluating changed inputs.
+silently evaluating changed inputs. Full lm-eval reruns update a checksummed
+`lm-eval/selected-result.json` pointer so the summary remains bound to one exact result.
 
 ArithMark 2.0's verified official runner right-pads without disabling the model cache. The wrapper
 leaves its scoring code unchanged and sets `model.config.use_cache=False` after loading.

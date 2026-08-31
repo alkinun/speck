@@ -79,6 +79,35 @@ def test_local_lm_eval_identity_is_bound_to_one_successful_result(tmp_path, monk
         "path": result.name,
         "sha256": open_slm_eval._sha256(result),
     }
+    selection = json.loads((result.parent / "selected-result.json").read_text(encoding="utf-8"))
+    assert selection == {
+        "format_version": 1,
+        "path": result.name,
+        "sha256": open_slm_eval._sha256(result),
+    }
+
+
+def test_lm_eval_result_selection_survives_reruns_and_checks_integrity(tmp_path):
+    directory = tmp_path / "lm-eval"
+    directory.mkdir()
+    first = directory / "results_first.json"
+    second = directory / "results_second.json"
+    first.write_text('{"run": 1}', encoding="utf-8")
+    second.write_text('{"run": 2}', encoding="utf-8")
+
+    open_slm_eval._record_lm_eval_result(second)
+
+    assert open_slm_eval._selected_lm_eval_result(directory) == second
+    second.write_text('{"run": "changed"}', encoding="utf-8")
+    with pytest.raises(ValueError, match="SHA-256 mismatch"):
+        open_slm_eval._selected_lm_eval_result(directory)
+
+
+def test_legacy_single_lm_eval_result_remains_summarizable(tmp_path):
+    result = tmp_path / "results_only.json"
+    result.write_text("{}", encoding="utf-8")
+
+    assert open_slm_eval._selected_lm_eval_result(tmp_path) == result
 
 
 @pytest.mark.parametrize(

@@ -144,6 +144,21 @@ def _new_result(output_path, before):
     return created.pop()
 
 
+def _record_lm_eval_result(result):
+    """Atomically bind later summaries to one checksummed full result."""
+
+    result = Path(result)
+    selection = result.parent / "selected-result.json"
+    temporary = selection.with_suffix(".json.tmp")
+    value = {
+        "format_version": 1,
+        "path": result.name,
+        "sha256": _sha256(result),
+    }
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, selection)
+
+
 def _run_lm_eval(config, output_dir, device, limit=None, local_model=None):
     _assert_implicit_revisions(config, check_model=local_model is None)
     name = "smoke-results.json" if limit is not None else "results.json"
@@ -154,6 +169,8 @@ def _run_lm_eval(config, output_dir, device, limit=None, local_model=None):
     subprocess.run(_lm_eval_command(config, output_path, device, limit, local_model), check=True)
     _assert_implicit_revisions(config, check_model=local_model is None)
     result = _new_result(output_path, before)
+    if limit is None:
+        _record_lm_eval_result(result)
     if local_identity is not None:
         identity_dir = output_path.parent / "local-identities"
         identity_dir.mkdir(exist_ok=True)
@@ -264,6 +281,27 @@ def _one_result(directory, pattern):
     return matches[0]
 
 
+def _selected_lm_eval_result(directory):
+    directory = Path(directory)
+    selection = directory / "selected-result.json"
+    if not selection.is_file():
+        return _one_result(directory, "results_*.json")
+    value = json.loads(selection.read_text(encoding="utf-8"))
+    name = value.get("path")
+    if (
+        value.get("format_version") != 1
+        or not isinstance(name, str)
+        or Path(name).name != name
+        or not isinstance(value.get("sha256"), str)
+    ):
+        raise ValueError(f"invalid lm-eval result selection: {selection}")
+    result = directory / name
+    if not result.is_file():
+        raise FileNotFoundError(f"selected lm-eval result does not exist: {result}")
+    _verify_checksum(result, value["sha256"], "selected lm-eval result")
+    return result
+
+
 def _normalize_from_chance(score, chance):
     return 100 * (score - chance) / (100 - chance)
 
@@ -348,7 +386,7 @@ def _summarize(config, lm_eval_path, arithmark_2_path, arithmark_3_path):
 
 
 def _summarize_output(config, output_dir):
-    lm_eval_path = _one_result(output_dir / "lm-eval", "results_*.json")
+    lm_eval_path = _selected_lm_eval_result(output_dir / "lm-eval")
     model_tag = config["model"]["repo"].replace("/", "_")
     arithmark_2_path = output_dir / "arithmark-2" / (f"{model_tag}_arithmark_2.0_results.json")
     arithmark_3_path = output_dir / "arithmark-3" / (f"{model_tag}_arithmark-3_results.json")
