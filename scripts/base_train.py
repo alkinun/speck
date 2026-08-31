@@ -16,8 +16,10 @@ from torch.nn.parallel import DistributedDataParallel
 
 from speck.architecture import ArchitectureConfig
 from speck.checkpoint import (
+    checkpoint_identity,
     latest,
     load,
+    load_metadata,
     load_timing,
     save,
 )
@@ -29,6 +31,7 @@ from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import (
     UpdateMonitor,
+    branch_position,
     checkpoint_milestones,
     lr_scale,
     optimization_step,
@@ -37,6 +40,19 @@ from speck.train import (
 )
 
 _UPDATE_MONITOR_SUFFIXES = ("q_proj.weight", "input_projection.weight", "gate_proj.weight")
+_BRANCH_SETTINGS = (
+    "sequence_length",
+    "device_batch_size",
+    "batch_tokens",
+    "lr",
+    "weight_decay",
+    "warmup_steps",
+    "min_lr",
+    "grad_clip",
+    "optimizer",
+    "loss_backend",
+    "world_size",
+)
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "device_batch_size",
@@ -66,6 +82,14 @@ def changed_resume_settings(previous, current):
     return [
         key
         for key in _IMMUTABLE_RESUME_SETTINGS
+        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key)) != current.get(key)
+    ]
+
+
+def changed_branch_settings(previous, current):
+    return [
+        key
+        for key in _BRANCH_SETTINGS
         if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key)) != current.get(key)
     ]
 
@@ -106,6 +130,18 @@ def arguments():
         type=int,
         default=None,
         help="checkpoint step to resume from",
+    )
+    parser.add_argument(
+        "--branch-from",
+        type=Path,
+        default=None,
+        help="complete parent checkpoint directory for a new same-recipe branch",
+    )
+    parser.add_argument(
+        "--branch-step",
+        type=int,
+        default=None,
+        help="parent checkpoint step used with --branch-from",
     )
     parser.add_argument(
         "--no-compile",
@@ -163,11 +199,30 @@ def train(configs, cli):
         )
     )
     args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
+    branching = cli.branch_from is not None or cli.branch_step is not None
+    if (cli.branch_from is None) != (cli.branch_step is None):
+        raise ValueError("--branch-from and --branch-step must be provided together")
+    if args.resume is not None and branching:
+        raise ValueError("--resume and --branch-from are mutually exclusive")
     if args.resume is None and latest(args.output_dir) is not None:
         raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume STEP")
+    metadata = load_metadata(args.output_dir, args.resume) if args.resume is not None else None
+    parent_directory = cli.branch_from.expanduser().resolve() if branching else None
+    if parent_directory == Path(args.output_dir).expanduser().resolve():
+        raise ValueError("branch output directory must differ from its parent")
+    parent_metadata = load_metadata(parent_directory, cli.branch_step) if branching else None
+    if metadata:
+        args.global_token_offset = metadata["resolved"].get("global_token_offset", 0)
+    data_token_offset = metadata["resolved"].get("data_token_offset", 0) if metadata else 0
     rank, local_rank, world_size, device = init_runtime(args.device)
     distributed = world_size > 1
     master = rank == 0
+    parent = metadata["resolved"].get("parent_checkpoint") if metadata else None
+    if parent_metadata:
+        objects = [checkpoint_identity(parent_directory, cli.branch_step) if master else None]
+        if distributed:
+            dist.broadcast_object_list(objects, src=0)
+        parent = objects[0]
     tokenizer = get_tokenizer(**configs["tokenizer"])
     manifest = load_manifest(args.data_dir)
     manifest_hash = manifest_fingerprint(manifest)
@@ -210,6 +265,18 @@ def train(configs, cli):
     accumulation = args.batch_tokens // micro_tokens
     steps = math.ceil(args.train_tokens / args.batch_tokens)
     consumed_tokens = steps * args.batch_tokens
+    schedule_step_offset = 0
+    schedule_steps = steps
+    if metadata:
+        schedule_step_offset = metadata["resolved"].get("schedule_step_offset", 0)
+        schedule_steps = metadata["resolved"].get("schedule_steps", steps)
+    elif parent_metadata:
+        (
+            args.global_token_offset,
+            data_token_offset,
+            schedule_step_offset,
+            schedule_steps,
+        ) = branch_position(parent_metadata, args.batch_tokens, steps)
     if (
         not isinstance(args.global_token_offset, int)
         or isinstance(args.global_token_offset, bool)
@@ -232,9 +299,10 @@ def train(configs, cli):
     elapsed_evaluation = 0.0
     elapsed_active = 0.0
     elapsed_checkpoint = 0.0
-    metadata = None
     if args.resume is not None:
-        model_state, optimizer_state, metadata = load(args.output_dir, args.resume, device)
+        model_state, optimizer_state, loaded_metadata = load(args.output_dir, args.resume, device)
+        if loaded_metadata != metadata:
+            raise ValueError("checkpoint metadata changed while loading")
         stored_config = ArchitectureConfig.from_dict(metadata["config"]).settings()
         if stored_config != config.settings() or metadata["manifest"] != manifest_hash:
             raise ValueError("checkpoint does not match the model or dataset")
@@ -242,13 +310,30 @@ def train(configs, cli):
         optimizer.load_state_dict(optimizer_state)
         start_step = metadata["step"]
         data_state = metadata["data_state"]
-        validate_loader_progress(data_state, start_step * args.batch_tokens)
+        validate_loader_progress(data_state, data_token_offset + start_step * args.batch_tokens)
         elapsed_training = metadata["training_seconds"]
         timing = load_timing(args.output_dir, args.resume) or metadata.get("timing", {})
         elapsed_optimizer = timing.get("optimizer_seconds", elapsed_training)
         elapsed_evaluation = timing.get("evaluation_seconds", 0.0)
         elapsed_active = timing.get("active_seconds", elapsed_training)
         elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
+    elif parent_metadata:
+        stored_config = ArchitectureConfig.from_dict(parent_metadata["config"]).settings()
+        if stored_config != config.settings() or parent_metadata["manifest"] != manifest_hash:
+            raise ValueError("branch parent does not match the model or dataset")
+        branch_settings = {**vars(args), "world_size": world_size}
+        changed = changed_branch_settings(parent_metadata["resolved"], branch_settings)
+        if changed:
+            raise ValueError(f"branch settings changed: {', '.join(changed)}")
+        model_state, optimizer_state, loaded_parent = load(
+            parent_directory, cli.branch_step, device
+        )
+        if loaded_parent != parent_metadata:
+            raise ValueError("parent checkpoint metadata changed while loading")
+        model.load_state_dict(model_state)
+        optimizer.load_state_dict(optimizer_state)
+        data_state = parent_metadata["data_state"]
+        validate_loader_progress(data_state, data_token_offset)
 
     dataset_provenance = {
         "format": manifest["format"],
@@ -278,6 +363,10 @@ def train(configs, cli):
         "consumed_tokens": consumed_tokens,
         "global_step_offset": global_step_offset,
         "global_consumed_tokens": global_consumed_tokens,
+        "data_token_offset": data_token_offset,
+        "schedule_step_offset": schedule_step_offset,
+        "schedule_steps": schedule_steps,
+        "parent_checkpoint": parent,
         "milestone_steps": {str(step): token for step, token in milestones.items()},
         "update_monitor": list(update_monitor.names) if update_monitor else [],
     }
@@ -430,7 +519,12 @@ def train(configs, cli):
         update_snapshot = update_monitor.snapshot() if master and should_log else None
         synchronize()
         started = time.perf_counter()
-        scale = lr_scale(step, steps, args.warmup_steps, args.min_lr)
+        scale = lr_scale(
+            schedule_step_offset + step,
+            schedule_steps,
+            args.warmup_steps,
+            args.min_lr,
+        )
         loss_sum, grad_norm, batch = optimization_step(
             train_model,
             parameters,

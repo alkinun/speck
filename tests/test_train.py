@@ -3,7 +3,7 @@ import math
 import pytest
 import torch
 
-from scripts.base_train import changed_resume_settings, validate
+from scripts.base_train import changed_branch_settings, changed_resume_settings, validate
 from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
@@ -15,6 +15,7 @@ from speck.architecture import (
 from speck.model import SpeckForCausalLM
 from speck.train import (
     UpdateMonitor,
+    branch_position,
     checkpoint_milestones,
     lr_scale,
     optimization_step,
@@ -108,6 +109,34 @@ def test_legacy_resume_defaults_to_torch_loss_backend():
 
     assert changed_resume_settings(legacy, current) == []
     assert changed_resume_settings(legacy, {**current, "loss_backend": "liger"}) == ["loss_backend"]
+
+
+def test_branch_only_allows_same_training_recipe():
+    previous = {"loss_backend": "torch", "lr": 1e-3, "world_size": 1}
+    assert changed_branch_settings(previous, dict(previous)) == []
+    assert changed_branch_settings(previous, {**previous, "lr": 2e-3}) == ["lr"]
+
+
+def test_branch_inherits_global_and_schedule_positions():
+    legacy = {
+        "step": 30,
+        "global_step": 30,
+        "global_tokens": 300,
+        "data_state": {"global_consumed_tokens": 300},
+        "resolved": {"steps": 200},
+    }
+    metadata = {
+        "step": 30,
+        "global_step": 130,
+        "global_tokens": 1300,
+        "data_state": {"global_consumed_tokens": 300},
+        "resolved": {"steps": 200, "schedule_step_offset": 100, "schedule_steps": 300},
+    }
+
+    assert branch_position(legacy, batch_tokens=10, steps=40) == (300, 300, 30, 200)
+    assert branch_position(metadata, batch_tokens=10, steps=40) == (1300, 300, 130, 300)
+    with pytest.raises(ValueError, match="exceeds"):
+        branch_position(metadata, batch_tokens=10, steps=171)
 
 
 def test_validation_reports_aggregate_and_source_losses():

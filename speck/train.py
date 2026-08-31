@@ -85,6 +85,22 @@ def checkpoint_milestones(tokens, batch_tokens, global_token_offset, steps):
     return milestones
 
 
+def branch_position(metadata, batch_tokens, steps):
+    resolved = metadata["resolved"]
+    global_token_offset = metadata["global_tokens"]
+    data_token_offset = metadata["data_state"]["global_consumed_tokens"]
+    if global_token_offset % batch_tokens or data_token_offset % batch_tokens:
+        raise ValueError("branch parent is not aligned to the optimizer batch")
+    global_step = global_token_offset // batch_tokens
+    if metadata.get("global_step", metadata["step"]) != global_step:
+        raise ValueError("branch parent global step does not match its data position")
+    schedule_step_offset = resolved.get("schedule_step_offset", 0) + metadata["step"]
+    schedule_steps = resolved.get("schedule_steps", resolved["steps"])
+    if schedule_step_offset + steps > schedule_steps:
+        raise ValueError("branch exceeds the parent learning-rate schedule")
+    return global_token_offset, data_token_offset, schedule_step_offset, schedule_steps
+
+
 class UpdateMonitor:
     """Measure exact relative updates for a small fixed parameter sample."""
 

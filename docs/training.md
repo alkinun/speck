@@ -76,6 +76,19 @@ Resume validates the architecture, packed-data manifest, optimizer settings, bat
 training horizon, world size, and next loader offset. It restores the optimizer, data position,
 elapsed time, and W&B run identity.
 
+Start an isolated branch from a complete checkpoint with a separate experiment whose `run`, output
+directory, and local `train_tokens` describe the branch:
+
+```bash
+uv run --extra gpu python -m scripts.base_train experiments/branch \
+  --branch-from ~/.cache/speck/checkpoints/Speck2-140M --branch-step <step>
+```
+
+Branches currently preserve the parent model, packed-data manifest, optimizer, batch geometry, data
+cursor, and learning-rate schedule. They create a new W&B run and record model, optimizer, and
+metadata hashes for the parent. Changed-data and changed-schedule branches are rejected rather than
+silently weakening the comparison.
+
 ## Supervised Fine-Tuning
 
 SFT configurations live in experiment directories containing `model.json`, `tokenizer.json`, and
