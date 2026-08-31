@@ -44,6 +44,15 @@ base training performs 76,294 optimizer steps and consumes 5,000,003,584 tokens.
 Mixture phases are selected from each global microbatch's starting token position, so a microbatch
 that begins before a phase boundary stays in that phase even when it crosses the boundary.
 
+Compiled base training also batches same-shaped Muon matrices for the Newton-Schulz update and
+compiles that optimizer step independently. The fixed-width causal convolution branches use a
+compiler-fused depthwise stencil instead of launching a generic grouped convolution. CUDA AdamW
+parameter groups use the fused kernel.
+Distributed runs wrap the model in DDP before compilation so gradient communication can overlap the
+partitioned backward graph, and gradients reuse DDP bucket storage. CUDA finite checks and
+performance timing synchronize only at reporting or artifact boundaries; `--no-compile` disables
+both model and optimizer compilation.
+
 Speck2 performs 305,176 optimizer steps and consumes 20,000,014,336 tokens. It evaluates every
 1,952 steps, saves approximately every 1B tokens at 15,260-step intervals, and warms up for 2,048
 steps. Its cosine schedule ends at 5% of the `0.0015` peak learning rate, or `0.000075`.
