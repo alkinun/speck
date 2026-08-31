@@ -75,7 +75,6 @@ def tail_configs(
         **parent,
         "checkpoint_tokens": [],
         "device_batch_size": resolved["device_batch_size"],
-        "loss_backend": resolved.get("loss_backend", "torch"),
         "lr": resolved["lr"],
         "lr_schedule": resolved.get("lr_schedule", "cosine"),
         "min_lr": resolved["min_lr"],

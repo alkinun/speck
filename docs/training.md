@@ -52,10 +52,6 @@ Base recipes select `cosine` or `wsd` with `lr_schedule`; existing production re
 `cosine`. WSD requires `decay_steps`: after warmup it stays at peak LR, then decays linearly over
 the final configured steps to `min_lr`. Schedule type and decay length are checkpoint contracts.
 
-Base recipes select `torch` or `liger` with `train.json`'s `loss_backend`. The default `torch`
-backend materializes FP32 logits; `liger` uses fused linear cross-entropy and requires the GPU
-dependencies. The selected backend is part of the checkpoint resume contract.
-
 Use `--save-every` or `--eval-every` to override artifact cadence without changing the optimization
 contract. Intervals are optimizer steps; zero disables that periodic action, while final and
 token-milestone artifacts still run. For example, `--save-every 1526` is approximately every 100M

@@ -12,7 +12,6 @@ def parent_metadata():
             "decay_steps": None,
             "device_batch_size": 2,
             "grad_clip": 1.0,
-            "loss_backend": "torch",
             "lr": 1e-3,
             "lr_schedule": "cosine",
             "min_lr": 0.1,

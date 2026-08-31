@@ -125,12 +125,11 @@ def test_checkpoint_loader_progress_matches_next_batch_offset():
         raise AssertionError("mismatched loader progress was accepted")
 
 
-def test_legacy_resume_defaults_to_torch_loss_backend():
+def test_legacy_resume_defaults_to_cosine_schedule():
     legacy = {}
     current = {
         "lr_schedule": "cosine",
         "decay_steps": None,
-        "loss_backend": "torch",
         "global_token_offset": 0,
         "checkpoint_tokens": [],
         "training_phase": "base",
@@ -138,7 +137,6 @@ def test_legacy_resume_defaults_to_torch_loss_backend():
 
     assert changed_resume_settings(legacy, current) == []
     assert changed_resume_settings(legacy, {**current, "lr_schedule": "wsd"}) == ["lr_schedule"]
-    assert changed_resume_settings(legacy, {**current, "loss_backend": "liger"}) == ["loss_backend"]
 
 
 def test_runtime_cadence_arguments_are_optional():
@@ -149,7 +147,6 @@ def test_runtime_cadence_arguments_are_optional():
     assert overridden.save_every == 1526
     assert overridden.eval_every == 0
     base = {
-        "loss_backend": "torch",
         "global_token_offset": 0,
         "checkpoint_tokens": [],
         "training_phase": "base",
@@ -166,7 +163,7 @@ def test_branch_schedule_argument_defaults_to_inherit():
 
 
 def test_branch_only_allows_same_training_recipe():
-    previous = {"loss_backend": "torch", "lr": 1e-3, "world_size": 1}
+    previous = {"lr": 1e-3, "world_size": 1}
     assert changed_branch_settings(previous, dict(previous)) == []
     assert changed_branch_settings(previous, {**previous, "lr": 2e-3}) == ["lr"]
     assert not changed_branch_settings(

@@ -47,7 +47,6 @@ _BRANCH_FIXED_SETTINGS = (
     "weight_decay",
     "grad_clip",
     "optimizer",
-    "loss_backend",
     "world_size",
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_steps")
@@ -64,7 +63,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "decay_steps",
     "grad_clip",
     "optimizer",
-    "loss_backend",
     "world_size",
     "global_token_offset",
     "checkpoint_tokens",
@@ -73,7 +71,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
 _LEGACY_RESUME_DEFAULTS = {
     "lr_schedule": "cosine",
     "decay_steps": None,
-    "loss_backend": "torch",
     "global_token_offset": 0,
     "checkpoint_tokens": [],
     "training_phase": "base",
@@ -215,7 +212,6 @@ def train(configs, cli):
     args.global_token_offset = getattr(args, "global_token_offset", 0)
     args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
     args.training_phase = getattr(args, "training_phase", "base")
-    args.loss_backend = getattr(args, "loss_backend", "torch")
     args.lr_schedule = getattr(args, "lr_schedule", "cosine")
     args.decay_steps = getattr(args, "decay_steps", None)
     args.wandb_group = getattr(args, "wandb_group", None)
@@ -279,11 +275,7 @@ def train(configs, cli):
         raise ValueError(error[0])
 
     model = build_model(
-        configs["model"],
-        tokenizer.vocab_size,
-        tokenizer.bos_id,
-        tokenizer.eos_id,
-        loss_backend=args.loss_backend,
+        configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
     ).to(device)
     config = model.config
     model.init_weights()
