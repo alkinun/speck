@@ -747,6 +747,7 @@ def test_deterministic_phased_selection_and_source_separation(packed_dataset):
 
     loader = packed_loader(tokenizer, 1, 4, "train", device="cpu", data_dir=path)
     inputs, targets, state = next(loader)
+    assert inputs.dtype == targets.dtype == torch.int64
     source = next(value for value in manifest["sources"] if value["id"] == state["selected_source"])
     values = source_values(path, source, "train")
     offset = state["source_offsets"][state["selected_source"]]

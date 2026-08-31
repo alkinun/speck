@@ -51,8 +51,9 @@ depthwise stencil instead of launching a generic grouped convolution. CUDA AdamW
 use the fused kernel.
 Distributed runs wrap the model in DDP before compilation so gradient communication can overlap the
 partitioned backward graph, and gradients reuse DDP bucket storage. CUDA finite checks and
-performance timing synchronize only at reporting or artifact boundaries; `--no-compile` disables
-both model and optimizer compilation.
+performance timing synchronize only at reporting or artifact boundaries. Packed uint16 tokens stay
+compact through pinned-memory transfer and widen to model indices on the GPU. `--no-compile`
+disables both model and optimizer compilation.
 
 Speck2 performs 305,176 optimizer steps and consumes 20,000,014,336 tokens. It evaluates every
 1,952 steps, saves approximately every 1B tokens at 15,260-step intervals, and warms up for 2,048

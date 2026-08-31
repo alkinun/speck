@@ -41,7 +41,7 @@ class PackedTokenSource:
             raise ValueError(f"invalid {split} token count for source {self.source_id}")
         self.total_tokens = total
 
-    def read(self, start, count):
+    def read(self, start, count, dtype=np.int64):
         if start < 0 or start + count > self.total_tokens:
             raise IndexError(f"packed token read is out of range for source {self.source_id}")
         pieces = []
@@ -57,7 +57,7 @@ class PackedTokenSource:
             remaining -= take
         return np.array(
             pieces[0] if len(pieces) == 1 else np.concatenate(pieces),
-            dtype=np.int64,
+            dtype=dtype,
             copy=True,
         )
 
@@ -388,9 +388,10 @@ def packed_loader(
             "world_size": world_size,
         }
         rank_offset = source_offset + rank * local_stride
-        flat = torch.from_numpy(source.read(rank_offset, required))
+        read_dtype = np.uint16 if device.type == "cuda" else np.int64
+        flat = torch.from_numpy(source.read(rank_offset, required, dtype=read_dtype))
         if device.type == "cuda":
-            flat = flat.pin_memory().to(device, non_blocking=True)
+            flat = flat.pin_memory().to(device, dtype=torch.int64, non_blocking=True)
         else:
             flat = flat.to(device)
         rows = flat.unfold(0, sequence_length + 1, sequence_length)
