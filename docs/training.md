@@ -45,9 +45,10 @@ Mixture phases are selected from each global microbatch's starting token positio
 that begins before a phase boundary stays in that phase even when it crosses the boundary.
 
 Compiled base training also batches same-shaped Muon matrices for the Newton-Schulz update and
-compiles that optimizer step independently. The fixed-width causal convolution branches use a
-compiler-fused depthwise stencil instead of launching a generic grouped convolution. CUDA AdamW
-parameter groups use the fused kernel.
+compiles that optimizer step independently. Both compiled graphs enable aggressive kernel fusion
+and exhaustive GEMM autotuning. The fixed-width causal convolution branches use a compiler-fused
+depthwise stencil instead of launching a generic grouped convolution. CUDA AdamW parameter groups
+use the fused kernel.
 Distributed runs wrap the model in DDP before compilation so gradient communication can overlap the
 partitioned backward graph, and gradients reuse DDP bucket storage. CUDA finite checks and
 performance timing synchronize only at reporting or artifact boundaries; `--no-compile` disables

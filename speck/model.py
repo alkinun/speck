@@ -105,7 +105,11 @@ class CombinedOptimizer:
             muon.step = torch.compile(
                 muon.step,
                 dynamic=False,
-                mode="max-autotune-no-cudagraphs",
+                options={
+                    "max_autotune": True,
+                    "coordinate_descent_tuning": True,
+                    "aggressive_fusion": True,
+                },
             )
 
 

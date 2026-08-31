@@ -19,6 +19,20 @@ from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import optimization_step
 
+_COMPILE_MODE_OPTIONS = {
+    "default": {},
+    "reduce-overhead": {"triton.cudagraphs": True},
+    "max-autotune": {
+        "max_autotune": True,
+        "coordinate_descent_tuning": True,
+        "triton.cudagraphs": True,
+    },
+    "max-autotune-no-cudagraphs": {
+        "max_autotune": True,
+        "coordinate_descent_tuning": True,
+    },
+}
+
 
 def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -94,7 +108,7 @@ def arguments():
     parser.add_argument(
         "--compile-mode",
         default="max-autotune-no-cudagraphs",
-        choices=("default", "reduce-overhead", "max-autotune", "max-autotune-no-cudagraphs"),
+        choices=tuple(_COMPILE_MODE_OPTIONS),
         help="torch.compile mode (default: %(default)s)",
     )
     parser.add_argument(
@@ -186,7 +200,16 @@ def run(args):
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(train["lr"], train["weight_decay"], train["optimizer"])
     train_model = (
-        model if args.no_compile else torch.compile(model, dynamic=False, mode=args.compile_mode)
+        model
+        if args.no_compile
+        else torch.compile(
+            model,
+            dynamic=False,
+            options={
+                **_COMPILE_MODE_OPTIONS[args.compile_mode],
+                "aggressive_fusion": True,
+            },
+        )
     )
     optimizer_step_compiled = not args.no_compile and hasattr(optimizer, "compile_step")
     if optimizer_step_compiled:
@@ -259,6 +282,7 @@ def run(args):
             "warmup_seconds": warmup_seconds,
             "compiled": not args.no_compile,
             "compile_mode": None if args.no_compile else args.compile_mode,
+            "aggressive_fusion": not args.no_compile,
             "loss_backend": args.loss_backend,
             "optimizer": train["optimizer"],
             "optimizer_step_compiled": optimizer_step_compiled,

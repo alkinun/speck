@@ -428,7 +428,15 @@ def train(configs, cli):
     compiled_model: Any = (
         train_model
         if args.no_compile
-        else torch.compile(train_model, dynamic=False, mode="max-autotune-no-cudagraphs")
+        else torch.compile(
+            train_model,
+            dynamic=False,
+            options={
+                "max_autotune": True,
+                "coordinate_descent_tuning": True,
+                "aggressive_fusion": True,
+            },
+        )
     )
     if not args.no_compile and hasattr(optimizer, "compile_step"):
         optimizer.compile_step()
