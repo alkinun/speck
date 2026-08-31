@@ -132,6 +132,17 @@ Finalization rejects incomplete arms, parent/run/schedule/budget mismatches, dif
 endpoints, and different averaging windows. It writes both model-only averages and one hashed
 `finalization.json`; pass either average directory to `scripts.base_checkpoint_export` for evaluation.
 
+Register existing benchmark summaries against an exported final or averaged variant:
+
+```bash
+uv run --extra cpu python -m scripts.tail_pair_register \
+  ~/.cache/speck/tail-pairs/<name> control-average --model-dir <export> \
+  --open-slm <summary.json> --bananamind <report.json>
+```
+
+Registration verifies `speck_source.json`, hashes the complete export and supplied summaries, and
+writes one immutable `results/<variant>.json`. It does not run benchmarks or define new metrics.
+
 Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
 
 ```bash

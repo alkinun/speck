@@ -11,6 +11,8 @@ from pathlib import Path
 
 from huggingface_hub import HfApi, hf_hub_download
 
+from speck.checkpoint import directory_identity
+
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = REPOSITORY_ROOT / "experiments" / "Speck1-140M" / "open_slm.json"
 DEFAULT_OUTPUT_ROOT = (
@@ -43,26 +45,6 @@ def _sha256(path):
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def _local_model_identity(path):
-    path = Path(path).expanduser().resolve()
-    if not path.is_dir():
-        raise FileNotFoundError(f"local model directory does not exist: {path}")
-    files = sorted(candidate for candidate in path.rglob("*") if candidate.is_file())
-    if not files:
-        raise ValueError(f"local model directory is empty: {path}")
-    digest = hashlib.sha256()
-    entries = []
-    for candidate in files:
-        relative = candidate.relative_to(path).as_posix()
-        checksum = _sha256(candidate)
-        digest.update(relative.encode())
-        digest.update(b"\0")
-        digest.update(checksum.encode())
-        digest.update(b"\n")
-        entries.append({"path": relative, "sha256": checksum, "bytes": candidate.stat().st_size})
-    return {"path": str(path), "sha256": digest.hexdigest(), "files": entries}
 
 
 def _verify_checksum(path, expected, label):
@@ -167,7 +149,7 @@ def _run_lm_eval(config, output_dir, device, limit=None, local_model=None):
     name = "smoke-results.json" if limit is not None else "results.json"
     output_path = output_dir / "lm-eval" / name
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    local_identity = _local_model_identity(local_model) if local_model is not None else None
+    local_identity = directory_identity(local_model) if local_model is not None else None
     before = set(output_path.parent.glob(f"{output_path.stem}_*.json"))
     subprocess.run(_lm_eval_command(config, output_path, device, limit, local_model), check=True)
     _assert_implicit_revisions(config, check_model=local_model is None)

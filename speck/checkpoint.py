@@ -122,6 +122,28 @@ def _sha256(path):
     return digest.hexdigest()
 
 
+def directory_identity(directory):
+    """Return a stable identity for every file in a directory tree."""
+
+    directory = Path(directory).expanduser().resolve()
+    if not directory.is_dir():
+        raise FileNotFoundError(f"directory does not exist: {directory}")
+    files = sorted(candidate for candidate in directory.rglob("*") if candidate.is_file())
+    if not files:
+        raise ValueError(f"directory is empty: {directory}")
+    digest = hashlib.sha256()
+    entries = []
+    for candidate in files:
+        relative = candidate.relative_to(directory).as_posix()
+        checksum = _sha256(candidate)
+        digest.update(relative.encode())
+        digest.update(b"\0")
+        digest.update(checksum.encode())
+        digest.update(b"\n")
+        entries.append({"path": relative, "sha256": checksum, "bytes": candidate.stat().st_size})
+    return {"path": str(directory), "sha256": digest.hexdigest(), "files": entries}
+
+
 def checkpoint_identity(directory, step):
     """Return stable model and metadata identities for a completed checkpoint."""
 

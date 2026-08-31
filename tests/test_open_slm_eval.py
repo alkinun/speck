@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import pytest
 
 from scripts import open_slm_eval
+from speck.checkpoint import directory_identity
 
 
 def load_config():
@@ -44,10 +45,10 @@ def test_local_model_identity_changes_with_export_contents(tmp_path):
     model.mkdir()
     (model / "config.json").write_text("{}")
     (model / "weights.bin").write_bytes(b"first")
-    first = open_slm_eval._local_model_identity(model)
+    first = directory_identity(model)
 
     (model / "weights.bin").write_bytes(b"second")
-    second = open_slm_eval._local_model_identity(model)
+    second = directory_identity(model)
 
     assert first["path"] == str(model.resolve())
     assert first["sha256"] != second["sha256"]
@@ -73,7 +74,7 @@ def test_local_lm_eval_identity_is_bound_to_one_successful_result(tmp_path, monk
     assert returned == result
     identity_path = result.parent / "local-identities" / f"{result.name}.json"
     identity = json.loads(identity_path.read_text(encoding="utf-8"))
-    assert identity["local_model"] == open_slm_eval._local_model_identity(model)
+    assert identity["local_model"] == directory_identity(model)
     assert identity["result"] == {
         "path": result.name,
         "sha256": open_slm_eval._sha256(result),

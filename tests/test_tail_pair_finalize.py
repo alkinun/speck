@@ -66,6 +66,8 @@ def test_finalize_builds_matched_average_artifacts(tmp_path):
 
     assert report["global_tokens"] == 130
     assert report["average_steps"] == [1, 2, 3]
+    assert report["control"]["average"]["path"] == "control-average"
+    assert len(report["constant"]["average"]["model_sha256"]) == 64
     control_state = torch.load(output / "control-average" / "model.pt")
     constant_state = torch.load(output / "constant-average" / "model.pt")
     assert control_state["weight"].item() == 2.0

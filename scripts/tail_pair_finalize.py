@@ -7,7 +7,7 @@ import os
 import shutil
 from pathlib import Path
 
-from scripts.checkpoint_average import average_checkpoints, write_average
+from scripts.checkpoint_average import average_checkpoints, average_identity, write_average
 from speck.checkpoint import checkpoint_identity, latest, load_metadata
 
 
@@ -86,9 +86,11 @@ def finalize(pair_dir, control_dir, constant_dir, average_steps, output_dir):
         control_state, control_average = average_checkpoints(control_dir, average_steps)
         write_average(building / "control-average", control_state, control_average)
         del control_state
+        control_average_identity = average_identity(building / "control-average")
         constant_state, constant_average = average_checkpoints(constant_dir, average_steps)
         write_average(building / "constant-average", constant_state, constant_average)
         del constant_state
+        constant_average_identity = average_identity(building / "constant-average")
         report = {
             "format": "speck_tail_pair_finalization",
             "format_version": 1,
@@ -100,11 +102,19 @@ def finalize(pair_dir, control_dir, constant_dir, average_steps, output_dir):
             "average_steps": average_steps,
             "control": {
                 "final_checkpoint": control_final,
-                "average": "control-average",
+                "average": {
+                    "path": "control-average",
+                    "model_sha256": control_average_identity["model_sha256"],
+                    "metadata_sha256": control_average_identity["metadata_sha256"],
+                },
             },
             "constant": {
                 "final_checkpoint": constant_final,
-                "average": "constant-average",
+                "average": {
+                    "path": "constant-average",
+                    "model_sha256": constant_average_identity["model_sha256"],
+                    "metadata_sha256": constant_average_identity["metadata_sha256"],
+                },
             },
         }
         (building / "finalization.json").write_text(
