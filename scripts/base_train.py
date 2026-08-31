@@ -112,7 +112,7 @@ def build_update_monitor(model, optimizer):
     return UpdateMonitor(selected) if selected else None
 
 
-def arguments():
+def arguments(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "experiment",
@@ -154,7 +154,19 @@ def arguments():
         default=None,
         help="per-device batch ceiling; defaults to the experiment configuration",
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--save-every",
+        type=int,
+        default=None,
+        help="runtime checkpoint interval in steps; zero disables periodic saves",
+    )
+    parser.add_argument(
+        "--eval-every",
+        type=int,
+        default=None,
+        help="runtime validation interval in steps; zero disables periodic evaluation",
+    )
+    return parser.parse_args(argv)
 
 
 @torch.no_grad()
@@ -192,6 +204,12 @@ def train(configs, cli):
     args.training_phase = getattr(args, "training_phase", "base")
     args.loss_backend = getattr(args, "loss_backend", "torch")
     args.wandb_group = getattr(args, "wandb_group", None)
+    for key in ("save_every", "eval_every"):
+        override = getattr(cli, key, None)
+        if override is not None:
+            setattr(args, key, override)
+        if not isinstance(getattr(args, key), int) or getattr(args, key) < 0:
+            raise ValueError(f"{key} must be a non-negative integer")
     args.data_dir = str(
         resolve_data_dir(
             configs["data"].get("output_dir"),

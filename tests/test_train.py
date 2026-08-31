@@ -3,7 +3,7 @@ import math
 import pytest
 import torch
 
-from scripts.base_train import changed_branch_settings, changed_resume_settings, validate
+from scripts.base_train import arguments, changed_branch_settings, changed_resume_settings, validate
 from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
@@ -109,6 +109,28 @@ def test_legacy_resume_defaults_to_torch_loss_backend():
 
     assert changed_resume_settings(legacy, current) == []
     assert changed_resume_settings(legacy, {**current, "loss_backend": "liger"}) == ["loss_backend"]
+
+
+def test_runtime_cadence_arguments_are_optional():
+    defaults = arguments([])
+    overridden = arguments(["experiment", "--save-every", "1526", "--eval-every", "0"])
+
+    assert defaults.save_every is defaults.eval_every is None
+    assert overridden.save_every == 1526
+    assert overridden.eval_every == 0
+    base = {
+        "loss_backend": "torch",
+        "global_token_offset": 0,
+        "checkpoint_tokens": [],
+        "training_phase": "base",
+    }
+    assert (
+        changed_resume_settings(
+            {**base, "save_every": 10, "eval_every": 20},
+            {**base, "save_every": 30, "eval_every": 40},
+        )
+        == []
+    )
 
 
 def test_branch_only_allows_same_training_recipe():

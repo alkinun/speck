@@ -52,6 +52,11 @@ Base recipes select `torch` or `liger` with `train.json`'s `loss_backend`. The d
 backend materializes FP32 logits; `liger` uses fused linear cross-entropy and requires the GPU
 dependencies. The selected backend is part of the checkpoint resume contract.
 
+Use `--save-every` or `--eval-every` to override artifact cadence without changing the optimization
+contract. Intervals are optimizer steps; zero disables that periodic action, while final and
+token-milestone artifacts still run. For example, `--save-every 1526` is approximately every 100M
+tokens at the 65,536-token optimizer batch.
+
 Validation reports the equal-batch aggregate and each source separately. Checkpoints retain the
 latest per-source losses alongside the aggregate so later data decisions do not depend on W&B.
 
