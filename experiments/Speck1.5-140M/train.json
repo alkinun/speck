@@ -1,6 +1,6 @@
 {
   "batch_tokens": 65536,
-  "device_batch_size": 4,
+  "device_batch_size": 16,
   "eval_every": 488,
   "eval_tokens": 5000000,
   "final_eval_tokens": 20000000,

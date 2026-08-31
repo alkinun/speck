@@ -164,9 +164,11 @@ def test_speck1_5_uses_the_original_model_and_phased_corpus_mixture():
         (updated["train"]["train_tokens"] + batch_tokens - 1) // batch_tokens * batch_tokens
     )
     for world_size in (1, 2, 4, 8):
-        stride = (
-            updated["train"]["device_batch_size"] * updated["train"]["sequence_length"] * world_size
+        device_batch_size = min(
+            updated["train"]["device_batch_size"],
+            batch_tokens // (updated["train"]["sequence_length"] * world_size),
         )
+        stride = device_batch_size * updated["train"]["sequence_length"] * world_size
         counts = source_selection_counts(schedule, "train", consumed_tokens, stride)
         for source_id, count in counts.items():
             assert count * stride + 1 <= (
@@ -234,11 +236,11 @@ def test_speck2_uses_the_original_model_and_20b_quality_curriculum():
         (updated["train"]["train_tokens"] + batch_tokens - 1) // batch_tokens * batch_tokens
     )
     for world_size in (1, 2, 4, 8):
-        stride = (
-            updated["train"]["device_batch_size"]
-            * updated["train"]["sequence_length"]
-            * world_size
+        device_batch_size = min(
+            updated["train"]["device_batch_size"],
+            batch_tokens // (updated["train"]["sequence_length"] * world_size),
         )
+        stride = device_batch_size * updated["train"]["sequence_length"] * world_size
         counts = source_selection_counts(schedule, "train", consumed_tokens, stride)
         for source_id, count in counts.items():
             assert count * stride + 1 <= (

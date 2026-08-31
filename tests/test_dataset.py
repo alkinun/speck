@@ -182,7 +182,11 @@ def test_production_mixture_derives_exact_targets_and_small_reserve():
     )
     assert consumed_tokens == 5_000_003_584
     for world_size in (1, 2, 4, 8):
-        stride = train["device_batch_size"] * train["sequence_length"] * world_size
+        device_batch_size = min(
+            train["device_batch_size"],
+            train["batch_tokens"] // (train["sequence_length"] * world_size),
+        )
+        stride = device_batch_size * train["sequence_length"] * world_size
         assert train["batch_tokens"] % stride == 0
         assert consumed_tokens % stride == 0
         counts = source_selection_counts(schedule_manifest, "train", consumed_tokens, stride)

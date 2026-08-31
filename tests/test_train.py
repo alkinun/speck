@@ -16,6 +16,7 @@ from speck.train import (
     checkpoint_milestones,
     lr_scale,
     optimization_step,
+    resolve_device_batch_size,
     validate_loader_progress,
 )
 
@@ -46,6 +47,25 @@ def test_single_step_lr_schedule_uses_minimum():
 def test_short_phase_can_end_during_warmup():
     assert lr_scale(0, 500, 512, 0.1) == 1 / 512
     assert lr_scale(499, 500, 512, 0.1) == 500 / 512
+
+
+@pytest.mark.parametrize(
+    ("world_size", "expected"),
+    ((1, 16), (2, 16), (4, 8), (8, 4)),
+)
+def test_device_batch_ceiling_resolves_for_distributed_training(world_size, expected):
+    assert resolve_device_batch_size(16, 65_536, 2_048, world_size) == expected
+
+
+@pytest.mark.parametrize(
+    ("limit", "batch_tokens", "sequence_length", "world_size"),
+    ((0, 65_536, 2_048, 1), (16, 65_536, 2_048, 3), (12, 65_536, 2_048, 1)),
+)
+def test_device_batch_resolution_rejects_invalid_geometry(
+    limit, batch_tokens, sequence_length, world_size
+):
+    with pytest.raises(ValueError, match="batch"):
+        resolve_device_batch_size(limit, batch_tokens, sequence_length, world_size)
 
 
 @pytest.mark.parametrize(

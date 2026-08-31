@@ -7,6 +7,19 @@ import torch
 import torch.distributed as dist
 
 
+def resolve_device_batch_size(limit, batch_tokens, sequence_length, world_size):
+    values = (limit, batch_tokens, sequence_length, world_size)
+    if any(not isinstance(value, int) or isinstance(value, bool) or value < 1 for value in values):
+        raise ValueError("batch geometry values must be positive integers")
+    distributed_sequence_tokens = sequence_length * world_size
+    if batch_tokens % distributed_sequence_tokens:
+        raise ValueError("batch tokens must contain a whole sequence on every rank")
+    device_batch_size = min(limit, batch_tokens // distributed_sequence_tokens)
+    if batch_tokens % (device_batch_size * distributed_sequence_tokens):
+        raise ValueError("batch tokens must be divisible by the distributed microbatch")
+    return device_batch_size
+
+
 def validate_loader_progress(data_state, trained_tokens):
     """Require a next-batch loader cursor at the checkpoint's trained-token boundary."""
 

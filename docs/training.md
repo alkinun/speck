@@ -36,9 +36,11 @@ uv run --extra gpu torchrun --standalone --nproc_per_node=8 \
   -m scripts.base_train -- experiments/Speck1-140M
 ```
 
-The configured 65,536-token optimizer batch is divisible by
-`device_batch_size * sequence_length * world_size` for world sizes 1, 2, 4, and 8. Because 5B is
-not batch-aligned, base training performs 76,294 optimizer steps and consumes 5,000,003,584 tokens.
+`device_batch_size` is a per-device ceiling. The configured ceiling of 16 resolves to device batches
+16, 16, 8, and 4 for world sizes 1, 2, 4, and 8, keeping the optimizer batch fixed at 65,536 tokens
+while minimizing gradient accumulation. Use `--device-batch-size` to set a lower ceiling for a
+resume or constrained GPU, or to test 32 on a larger-memory GPU. Because 5B is not batch-aligned,
+base training performs 76,294 optimizer steps and consumes 5,000,003,584 tokens.
 Mixture phases are selected from each global microbatch's starting token position, so a microbatch
 that begins before a phase boundary stays in that phase even when it crosses the boundary.
 

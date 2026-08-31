@@ -31,6 +31,7 @@ from speck.train import (
     checkpoint_milestones,
     lr_scale,
     optimization_step,
+    resolve_device_batch_size,
     validate_loader_progress,
 )
 
@@ -58,6 +59,12 @@ def arguments():
         "--no-compile",
         action="store_true",
         help="disable torch.compile",
+    )
+    parser.add_argument(
+        "--device-batch-size",
+        type=int,
+        default=None,
+        help="per-device batch ceiling; defaults to the experiment configuration",
     )
     return parser.parse_args()
 
@@ -123,9 +130,14 @@ def train(configs, cli):
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
 
+    batch_limit = args.device_batch_size if cli.device_batch_size is None else cli.device_batch_size
+    args.device_batch_size = resolve_device_batch_size(
+        batch_limit,
+        args.batch_tokens,
+        args.sequence_length,
+        world_size,
+    )
     micro_tokens = args.device_batch_size * args.sequence_length * world_size
-    if args.batch_tokens % micro_tokens:
-        raise ValueError("batch tokens must be divisible by the distributed microbatch")
     accumulation = args.batch_tokens // micro_tokens
     steps = math.ceil(args.train_tokens / args.batch_tokens)
     consumed_tokens = steps * args.batch_tokens
