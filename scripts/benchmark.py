@@ -188,6 +188,9 @@ def run(args):
     train_model = (
         model if args.no_compile else torch.compile(model, dynamic=False, mode=args.compile_mode)
     )
+    optimizer_step_compiled = not args.no_compile and hasattr(optimizer, "compile_step")
+    if optimizer_step_compiled:
+        optimizer.compile_step()
     cudagraphs = not args.no_compile and args.compile_mode in {"reduce-overhead", "max-autotune"}
 
     manifest_hash = None
@@ -257,6 +260,8 @@ def run(args):
             "compiled": not args.no_compile,
             "compile_mode": None if args.no_compile else args.compile_mode,
             "loss_backend": args.loss_backend,
+            "optimizer": train["optimizer"],
+            "optimizer_step_compiled": optimizer_step_compiled,
             "seed": args.seed,
         },
         "geometry": {

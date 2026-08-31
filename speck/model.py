@@ -1,5 +1,7 @@
 """Implement the Speck hybrid decoder language model."""
 
+import math
+from collections import defaultdict
 from dataclasses import replace
 
 import torch
@@ -91,10 +93,113 @@ class CombinedOptimizer:
         for name, optimizer in self.optimizers.items():
             optimizer.load_state_dict(state["optimizers"][name])
 
+    def compile_step(self):
+        """Compile the matrix-heavy Muon update with checkpoint-compatible state."""
+
+        muon = self.optimizers.get("muon")
+        if isinstance(muon, BatchedMuon):
+            for group in muon.param_groups:
+                if not isinstance(group["lr"], torch.Tensor):
+                    parameter = group["params"][0]
+                    group["lr"] = torch.tensor(group["lr"], device=parameter.device)
+            muon.step = torch.compile(muon.step, dynamic=False, mode="default")
+
+
+class BatchedMuon(torch.optim.Muon):
+    """Run Muon's per-matrix Newton-Schulz updates in shape batches."""
+
+    @staticmethod
+    def _lr_ratio(mode, shape):
+        rows, columns = shape
+        if mode is None or mode == "original":
+            return math.sqrt(max(1, rows / columns))
+        if mode == "match_rms_adamw":
+            return 0.2 * math.sqrt(max(rows, columns))
+        return 1.0
+
+    @torch.no_grad()
+    def step(self, closure=None):
+        loss = None
+        if closure is not None:
+            with torch.enable_grad():
+                loss = closure()
+
+        for group in self.param_groups:
+            batches = defaultdict(list)
+            for parameter in group["params"]:
+                gradient = parameter.grad
+                if gradient is None:
+                    continue
+                if gradient.is_sparse or gradient.ndim != 2 or torch.is_complex(parameter):
+                    raise RuntimeError("BatchedMuon requires dense, real matrix gradients")
+                state = self.state[parameter]
+                if "momentum_buffer" not in state:
+                    state["momentum_buffer"] = torch.zeros_like(
+                        gradient, memory_format=torch.preserve_format
+                    )
+                shape = tuple(parameter.shape)
+                lr_ratio = self._lr_ratio(group["adjust_lr_fn"], shape)
+                oriented_shape = (min(shape), max(shape))
+                batches[(oriented_shape, lr_ratio)].append(
+                    (parameter, gradient, state["momentum_buffer"], shape[0] > shape[1])
+                )
+
+            for (_, lr_ratio), entries in batches.items():
+                parameters, gradients, momentum_buffers, transposed = map(list, zip(*entries))
+                torch._foreach_lerp_(momentum_buffers, gradients, 1 - group["momentum"])
+                if group["nesterov"]:
+                    updates = torch._foreach_lerp(gradients, momentum_buffers, group["momentum"])
+                else:
+                    updates = momentum_buffers
+                orthogonal = torch.stack(
+                    [
+                        (update.T if transpose else update).bfloat16()
+                        for update, transpose in zip(updates, transposed)
+                    ]
+                )
+                norms = torch.linalg.vector_norm(orthogonal, dim=(1, 2), keepdim=True)
+                orthogonal.div_(norms.clamp(min=group["eps"]))
+                a, b, c = group["ns_coefficients"]
+                for _ in range(group["ns_steps"]):
+                    gram = torch.bmm(orthogonal, orthogonal.transpose(1, 2))
+                    gram_update = torch.baddbmm(gram, gram, gram, beta=b, alpha=c)
+                    orthogonal = torch.baddbmm(orthogonal, gram_update, orthogonal, beta=a)
+                torch._foreach_mul_(parameters, 1 - group["lr"] * group["weight_decay"])
+                final_updates = [
+                    update.T if transpose else update
+                    for update, transpose in zip(orthogonal.unbind(), transposed)
+                ]
+                adjusted_lr = group["lr"] * lr_ratio
+                for parameter, update in zip(parameters, final_updates):
+                    parameter.add_(update.to(parameter.dtype) * (-adjusted_lr))
+        return loss
+
+
+class DeviceAdamW(torch.optim.AdamW):
+    """Keep fused AdamW enabled after loading legacy optimizer state."""
+
+    def load_state_dict(self, state_dict):
+        super().load_state_dict(state_dict)
+        parameter = next(parameter for group in self.param_groups for parameter in group["params"])
+        fused = parameter.device.type == "cuda"
+        for group in self.param_groups:
+            group["fused"] = fused
+
 
 def rotate(x, cos, sin):
     x1, x2 = x.chunk(2, dim=-1)
     return x * cos + torch.cat((-x2, x1), dim=-1) * sin
+
+
+def causal_depthwise_conv1d(x, weight):
+    """Apply a tiny causal depthwise stencil without a generic convolution launch."""
+
+    kernel = weight[:, 0].to(x.dtype)
+    output = x * kernel[:, -1, None]
+    for delay in range(1, kernel.size(1)):
+        shifted = F.pad(x, (delay, 0))[:, :, :-delay]
+        output = output + shifted * kernel[:, -1 - delay, None]
+    return output
 
 
 class AttentionState:
@@ -269,17 +374,13 @@ class GatedCausalConv(nn.Module):
     def forward(self, x, state=None):
         first_gate, second_gate, values = self.input_projection(x).chunk(3, dim=-1)
         transposed = (first_gate * values).transpose(1, 2)
-        if state is None:
-            transposed = F.pad(transposed, (self.spec.kernel_size - 1, 0))
-        else:
-            transposed = torch.cat((state.values, transposed), dim=2)
-        convolved = F.conv1d(
-            transposed,
-            self.kernel.to(transposed.dtype),
-            groups=self.spec.inner_size,
-        )
+        history = self.spec.kernel_size - 1
         if state is not None:
-            state.values.copy_(transposed[:, :, -(self.spec.kernel_size - 1) :])
+            transposed = torch.cat((state.values, transposed), dim=2)
+        convolved = causal_depthwise_conv1d(transposed, self.kernel)
+        if state is not None:
+            state.values.copy_(transposed[:, :, -history:])
+            convolved = convolved[:, :, history:]
         return self.output_projection(second_gate * convolved.transpose(1, 2))
 
 
@@ -535,15 +636,16 @@ class SpeckForCausalLM(nn.Module):
                 matrices.append(parameter)
             else:
                 other_decay.append(parameter)
+        fused = embedding.device.type == "cuda"
         if name == "muon":
             return CombinedOptimizer(
-                muon=torch.optim.Muon(
+                muon=BatchedMuon(
                     matrices,
                     lr=lr,
                     weight_decay=weight_decay,
                     adjust_lr_fn="match_rms_adamw",
                 ),
-                adamw=torch.optim.AdamW(
+                adamw=DeviceAdamW(
                     [
                         {"params": other_decay, "weight_decay": weight_decay},
                         {"params": no_decay, "weight_decay": 0.0},
@@ -551,11 +653,12 @@ class SpeckForCausalLM(nn.Module):
                     lr=lr,
                     betas=(0.9, 0.95),
                     eps=1e-8,
+                    fused=fused,
                 ),
             )
         if name != "adamw":
             raise ValueError(f"unsupported optimizer: {name}")
-        return torch.optim.AdamW(
+        return DeviceAdamW(
             [
                 {"params": matrices + other_decay, "weight_decay": weight_decay},
                 {"params": no_decay, "weight_decay": 0.0},
@@ -563,6 +666,7 @@ class SpeckForCausalLM(nn.Module):
             lr=lr,
             betas=(0.9, 0.95),
             eps=1e-8,
+            fused=fused,
         )
 
     def parameter_count(self):

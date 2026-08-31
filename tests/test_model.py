@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 import torch
+import torch.nn.functional as F
 
 from speck.architecture import (
     ArchitectureConfig,
@@ -14,10 +15,13 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.model import (
+    BatchedMuon,
     CombinedOptimizer,
+    DeviceAdamW,
     Linear,
     SpeckForCausalLM,
     build_model,
+    causal_depthwise_conv1d,
 )
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
@@ -117,10 +121,36 @@ def test_convolution_state_matches_full_forward():
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
 
 
+@pytest.mark.parametrize(
+    ("kernel_size", "sequence_length"),
+    ((3, 1), (5, 2), (3, 8), (5, 8)),
+)
+def test_direct_causal_convolution_matches_grouped_convolution(kernel_size, sequence_length):
+    torch.manual_seed(kernel_size)
+    inputs = torch.randn(2, 4, sequence_length, requires_grad=True)
+    reference_inputs = inputs.detach().clone().requires_grad_()
+    weight = torch.randn(4, 1, kernel_size, requires_grad=True)
+    reference_weight = weight.detach().clone().requires_grad_()
+
+    actual = causal_depthwise_conv1d(inputs, weight)
+    expected = F.conv1d(
+        F.pad(reference_inputs, (kernel_size - 1, 0)),
+        reference_weight,
+        groups=4,
+    )
+    actual.square().sum().backward()
+    expected.square().sum().backward()
+
+    torch.testing.assert_close(actual, expected)
+    torch.testing.assert_close(inputs.grad, reference_inputs.grad)
+    torch.testing.assert_close(weight.grad, reference_weight.grad)
+
+
 def test_muon_optimizer_routes_convolution_parameters_to_adamw():
     model = model_with(GatedCausalConvSpec(8, 3), SwiGLUSpec(16))
     optimizer = model.optimizer(name="muon")
     assert isinstance(optimizer, CombinedOptimizer)
+    assert isinstance(optimizer.optimizers["muon"], BatchedMuon)
     muon_parameters = {
         id(parameter)
         for group in optimizer.optimizers["muon"].param_groups
@@ -145,6 +175,68 @@ def test_muon_optimizer_routes_convolution_parameters_to_adamw():
     optimizer.step()
     state = optimizer.state_dict()
     optimizer.load_state_dict(state)
+
+
+def test_batched_muon_matches_reference_and_keeps_compatible_state():
+    torch.manual_seed(7)
+    shapes = ((8, 16), (8, 16), (16, 8), (16, 8), (8, 8), (8, 8))
+    reference_parameters = [torch.nn.Parameter(torch.randn(shape)) for shape in shapes]
+    batched_parameters = [
+        torch.nn.Parameter(parameter.detach().clone()) for parameter in reference_parameters
+    ]
+    gradients = [torch.randn_like(parameter) for parameter in reference_parameters]
+    for reference, batched, gradient in zip(reference_parameters, batched_parameters, gradients):
+        reference.grad = gradient.clone()
+        batched.grad = gradient.clone()
+    settings = {
+        "lr": 1e-3,
+        "weight_decay": 0.1,
+        "adjust_lr_fn": "match_rms_adamw",
+    }
+    reference = torch.optim.Muon(reference_parameters, **settings)
+    batched = BatchedMuon(batched_parameters, **settings)
+
+    reference.step()
+    batched.step()
+
+    for expected, actual in zip(reference_parameters, batched_parameters):
+        torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    reference.load_state_dict(batched.state_dict())
+    batched.load_state_dict(reference.state_dict())
+
+
+def test_batched_muon_step_compiles_with_a_tensor_learning_rate():
+    parameter = torch.nn.Parameter(torch.randn(8, 8))
+    parameter.grad = torch.randn_like(parameter)
+    optimizer = BatchedMuon([parameter])
+    optimizer.param_groups[0]["lr"] = torch.tensor(1e-3)
+    graphs = []
+
+    def backend(graph, _):
+        graphs.append(graph)
+        return graph.forward
+
+    compiled_step = torch.compile(
+        optimizer.step,
+        backend=backend,
+        fullgraph=True,
+        dynamic=False,
+    )
+
+    compiled_step()
+
+    assert len(graphs) == 1
+
+
+def test_device_adamw_restores_runtime_fusion_after_loading_state():
+    reference_parameter = torch.nn.Parameter(torch.ones(2))
+    reference = torch.optim.AdamW([{"params": []}, {"params": [reference_parameter]}])
+    parameter = torch.nn.Parameter(torch.ones(2))
+    optimizer = DeviceAdamW([{"params": []}, {"params": [parameter]}], fused=False)
+
+    optimizer.load_state_dict(reference.state_dict())
+
+    assert all(group["fused"] is False for group in optimizer.param_groups)
 
 
 def test_shared_blocks_keep_occurrence_state_separate():
