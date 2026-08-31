@@ -118,40 +118,9 @@ actual device batch, and atomically writes `control/`, `constant/`, and a hashed
 record. Launch both arms at the reported world size against the same parent checkpoint; add
 `--branch-schedule new` only for `constant/`.
 
-After both arms finish, finalize matched endpoints and one shared averaging window:
-
-```bash
-uv run --extra cpu python -m scripts.tail_pair_finalize \
-  experiments/Speck2-140M-TailPair \
-  --control-checkpoints ~/.cache/speck/checkpoints/<control-run> \
-  --constant-checkpoints ~/.cache/speck/checkpoints/<constant-run> \
-  --average-steps <step> <step> --output-dir ~/.cache/speck/tail-pairs/<name>
-```
-
-Finalization rejects incomplete arms, parent/run/schedule/budget mismatches, different global token
-endpoints, and different averaging windows. It writes both model-only averages and one hashed
-`finalization.json`; pass either average directory to `scripts.base_checkpoint_export` for evaluation.
-
-Register existing benchmark summaries against an exported final or averaged variant:
-
-```bash
-uv run --extra cpu python -m scripts.tail_pair_register \
-  ~/.cache/speck/tail-pairs/<name> control-average --model-dir <export> \
-  --open-slm <summary.json> --bananamind <report.json>
-```
-
-Registration verifies `speck_source.json`, hashes the complete export and supplied summaries, and
-writes one immutable `results/<variant>.json`. It does not run benchmarks or define new metrics.
-
-After registering all four variants, write the predeclared paired score deltas:
-
-```bash
-uv run --extra cpu python -m scripts.tail_pair_compare ~/.cache/speck/tail-pairs/<name>
-```
-
-The comparison requires identical benchmark protocols and metric sets. It reports only constant
-minus control and average minus final deltas for existing Open-SLM and BananaMind scores; it does
-not introduce another aggregate or choose a winner.
+The planner rejects tails that do not fit in the control's remaining inherited schedule. Evaluate
+the two completed final checkpoints through the existing pinned benchmark paths before adding any
+checkpoint-averaging experiment.
 
 Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
 

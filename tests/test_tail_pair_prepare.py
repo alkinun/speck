@@ -84,6 +84,11 @@ def test_tail_pair_rejects_exhausted_schedule_or_recipe_drift():
     with pytest.raises(ValueError, match="weight_decay"):
         tail_configs(parent, metadata, 100, "tail")
 
+    metadata = parent_metadata()
+    metadata["step"] = 95
+    with pytest.raises(ValueError, match="exceeds"):
+        tail_configs(parent_train(metadata), metadata, 60, "tail")
+
 
 def test_tail_pair_arguments_are_explicit():
     args = parse_args(

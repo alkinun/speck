@@ -66,6 +66,11 @@ def tail_configs(
             raise ValueError(f"tail {name} must be a non-negative integer")
 
     resolved = metadata["resolved"]
+    tail_steps = (train_tokens + resolved["batch_tokens"] - 1) // resolved["batch_tokens"]
+    schedule_step = resolved.get("schedule_step_offset", 0) + metadata["step"]
+    schedule_steps = resolved.get("schedule_steps", resolved["steps"])
+    if schedule_step + tail_steps > schedule_steps:
+        raise ValueError("tail exceeds the remaining parent learning-rate schedule")
     control = {
         **parent,
         "checkpoint_tokens": [],
