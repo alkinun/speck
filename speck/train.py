@@ -33,7 +33,7 @@ def validate_loader_progress(data_state, trained_tokens):
         )
 
 
-def lr_scale(step, steps, warmup, minimum):
+def lr_scale(step, steps, warmup, minimum, schedule="cosine", decay_steps=None):
     if not isinstance(steps, int) or steps < 1:
         raise ValueError("steps must be a positive integer")
     if not isinstance(step, int) or not 0 <= step < steps:
@@ -44,9 +44,28 @@ def lr_scale(step, steps, warmup, minimum):
         raise ValueError("minimum must be a finite scale")
     if not 0 <= minimum <= 1:
         raise ValueError("minimum must be between zero and one")
+    if schedule not in {"cosine", "wsd"}:
+        raise ValueError("unsupported learning-rate schedule")
+    if schedule == "cosine" and decay_steps is not None:
+        raise ValueError("cosine schedule does not use decay_steps")
+    if schedule == "wsd" and (
+        isinstance(decay_steps, bool)
+        or not isinstance(decay_steps, int)
+        or decay_steps < 1
+        or warmup + decay_steps > steps
+    ):
+        raise ValueError("WSD decay_steps must fit after warmup")
 
     if step < warmup:
         return (step + 1) / warmup
+    if schedule == "wsd":
+        decay_start = steps - decay_steps
+        if step < decay_start:
+            return 1.0
+        if step + 1 == steps:
+            return minimum
+        progress = (step - decay_start) / (decay_steps - 1)
+        return 1 - (1 - minimum) * progress
     if steps == 1:
         return minimum
     if warmup == 0:

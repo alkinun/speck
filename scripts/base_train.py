@@ -48,6 +48,8 @@ _BRANCH_SETTINGS = (
     "weight_decay",
     "warmup_steps",
     "min_lr",
+    "lr_schedule",
+    "decay_steps",
     "grad_clip",
     "optimizer",
     "loss_backend",
@@ -62,6 +64,8 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "weight_decay",
     "warmup_steps",
     "min_lr",
+    "lr_schedule",
+    "decay_steps",
     "grad_clip",
     "optimizer",
     "loss_backend",
@@ -71,6 +75,8 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "training_phase",
 )
 _LEGACY_RESUME_DEFAULTS = {
+    "lr_schedule": "cosine",
+    "decay_steps": None,
     "loss_backend": "torch",
     "global_token_offset": 0,
     "checkpoint_tokens": [],
@@ -82,7 +88,8 @@ def changed_resume_settings(previous, current):
     return [
         key
         for key in _IMMUTABLE_RESUME_SETTINGS
-        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key)) != current.get(key)
+        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
+        != current.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
     ]
 
 
@@ -90,7 +97,8 @@ def changed_branch_settings(previous, current):
     return [
         key
         for key in _BRANCH_SETTINGS
-        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key)) != current.get(key)
+        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
+        != current.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
     ]
 
 
@@ -203,6 +211,8 @@ def train(configs, cli):
     args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
     args.training_phase = getattr(args, "training_phase", "base")
     args.loss_backend = getattr(args, "loss_backend", "torch")
+    args.lr_schedule = getattr(args, "lr_schedule", "cosine")
+    args.decay_steps = getattr(args, "decay_steps", None)
     args.wandb_group = getattr(args, "wandb_group", None)
     for key in ("save_every", "eval_every"):
         override = getattr(cli, key, None)
@@ -542,6 +552,8 @@ def train(configs, cli):
             schedule_steps,
             args.warmup_steps,
             args.min_lr,
+            args.lr_schedule,
+            args.decay_steps,
         )
         loss_sum, grad_norm, batch = optimization_step(
             train_model,

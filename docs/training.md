@@ -48,6 +48,10 @@ Speck2 performs 305,176 optimizer steps and consumes 20,000,014,336 tokens. It e
 1,952 steps, saves approximately every 1B tokens at 15,260-step intervals, and warms up for 2,048
 steps. Its cosine schedule ends at 5% of the `0.0015` peak learning rate, or `0.000075`.
 
+Base recipes select `cosine` or `wsd` with `lr_schedule`; existing production recipes are pinned to
+`cosine`. WSD requires `decay_steps`: after warmup it stays at peak LR, then decays linearly over
+the final configured steps to `min_lr`. Schedule type and decay length are checkpoint contracts.
+
 Base recipes select `torch` or `liger` with `train.json`'s `loss_backend`. The default `torch`
 backend materializes FP32 logits; `liger` uses fused linear cross-entropy and requires the GPU
 dependencies. The selected backend is part of the checkpoint resume contract.

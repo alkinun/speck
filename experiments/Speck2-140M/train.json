@@ -8,6 +8,7 @@
   "log_every": 10,
   "loss_backend": "torch",
   "lr": 0.0015,
+  "lr_schedule": "cosine",
   "min_lr": 0.05,
   "optimizer": "muon",
   "output_dir": null,
