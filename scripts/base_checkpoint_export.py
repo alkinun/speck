@@ -9,7 +9,6 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
-from scripts.checkpoint_average import average_identity, load_average
 from scripts.model_publish import (
     patch_generation_source,
     release_config,
@@ -53,17 +52,6 @@ def load_checkpoint_metadata(checkpoint_dir, step):
 
 
 def load_source(checkpoint_dir, step):
-    if (checkpoint_dir / "complete").is_file():
-        if step is not None:
-            raise ValueError("--step cannot be used with a model average")
-        state, metadata = load_average(checkpoint_dir)
-        provenance = {
-            "format": "speck_export_source",
-            "format_version": 1,
-            "type": "average",
-            "average": average_identity(checkpoint_dir),
-        }
-        return state, metadata, "average", provenance
     step = step if step is not None else latest(checkpoint_dir)
     if step is None:
         raise FileNotFoundError(f"no completed checkpoint in {checkpoint_dir}")

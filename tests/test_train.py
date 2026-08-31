@@ -14,7 +14,6 @@ from speck.architecture import (
 )
 from speck.model import SpeckForCausalLM
 from speck.train import (
-    UpdateMonitor,
     branch_position,
     checkpoint_milestones,
     lr_scale,
@@ -220,26 +219,6 @@ def test_validation_reports_aggregate_and_source_losses():
     assert loss == pytest.approx(8 / 3)
     assert source_losses == pytest.approx({"web": 2.0, "math": 4.0})
     assert model.training
-
-
-def test_update_monitor_measures_relative_parameter_change():
-    first = torch.nn.Parameter(torch.tensor([3.0, 4.0]))
-    second = torch.nn.Parameter(torch.tensor([0.0, 2.0]))
-    monitor = UpdateMonitor((("first", first), ("second", second)))
-    snapshot = monitor.snapshot()
-
-    with torch.no_grad():
-        first.add_(torch.tensor([0.0, 5.0]))
-        second.add_(torch.tensor([0.0, 1.0]))
-    metrics = monitor.metrics(snapshot)
-
-    assert monitor.names == ("first", "second")
-    assert metrics["first"] == pytest.approx(
-        {"weight_norm": 5.0, "update_norm": 5.0, "effective_lr": 1.0}
-    )
-    assert metrics["second"] == pytest.approx(
-        {"weight_norm": 2.0, "update_norm": 1.0, "effective_lr": 0.5}
-    )
 
 
 def test_checkpoint_milestones_align_baseline_and_warmup_runs():

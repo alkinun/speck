@@ -30,7 +30,6 @@ from speck.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import (
-    UpdateMonitor,
     branch_position,
     checkpoint_milestones,
     lr_scale,
@@ -39,7 +38,6 @@ from speck.train import (
     validate_loader_progress,
 )
 
-_UPDATE_MONITOR_SUFFIXES = ("q_proj.weight", "input_projection.weight", "gate_proj.weight")
 _BRANCH_FIXED_SETTINGS = (
     "sequence_length",
     "device_batch_size",
@@ -96,24 +94,6 @@ def changed_branch_settings(previous, current, allow_schedule_change=False):
         if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
         != current.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
     ]
-
-
-def build_update_monitor(model, optimizer):
-    muon = getattr(optimizer, "optimizers", {}).get("muon")
-    if muon is None:
-        return None
-    optimized = {id(parameter) for group in muon.param_groups for parameter in group["params"]}
-    named = [
-        (name, parameter)
-        for name, parameter in model.named_parameters()
-        if id(parameter) in optimized
-    ]
-    selected = []
-    for suffix in _UPDATE_MONITOR_SUFFIXES:
-        matches = [item for item in named if item[0].endswith(suffix)]
-        if matches:
-            selected.append(matches[len(matches) // 2])
-    return UpdateMonitor(selected) if selected else None
 
 
 def arguments(argv=None):
@@ -281,7 +261,6 @@ def train(configs, cli):
     model.init_weights()
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
-    update_monitor = build_update_monitor(model, optimizer)
 
     batch_limit = args.device_batch_size if cli.device_batch_size is None else cli.device_batch_size
     args.device_batch_size = resolve_device_batch_size(
@@ -409,7 +388,6 @@ def train(configs, cli):
         "parent_checkpoint": parent,
         "branch_schedule": branch_schedule,
         "milestone_steps": {str(step): token for step, token in milestones.items()},
-        "update_monitor": list(update_monitor.names) if update_monitor else [],
     }
     if metadata:
         changed = changed_resume_settings(metadata["resolved"], resolved)
@@ -557,7 +535,6 @@ def train(configs, cli):
     for step in range(start_step, steps):
         completed = step + 1
         should_log = completed == 1 or completed % args.log_every == 0
-        update_snapshot = update_monitor.snapshot() if master and should_log else None
         synchronize()
         started = time.perf_counter()
         scale = lr_scale(
@@ -604,11 +581,6 @@ def train(configs, cli):
                 "data/next_phase": data_state["phase"],
                 "data/next_shard": data_state["shard"]["index"],
             }
-            if update_snapshot is not None:
-                for name, values in update_monitor.metrics(update_snapshot).items():
-                    path = name.replace(".", "/")
-                    for metric, value in values.items():
-                        metrics[f"optimization/{path}/{metric}"] = value
             run.log(metrics)
             print0(
                 f"step {metrics['progress/step']:,}/{global_step_offset + steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s"

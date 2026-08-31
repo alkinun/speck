@@ -124,36 +124,6 @@ def branch_position(metadata, batch_tokens, steps=None):
     return global_token_offset, data_token_offset, schedule_step_offset, schedule_steps
 
 
-class UpdateMonitor:
-    """Measure exact relative updates for a small fixed parameter sample."""
-
-    def __init__(self, named_parameters):
-        self.parameters = tuple(named_parameters)
-
-    @property
-    def names(self):
-        return tuple(name for name, _ in self.parameters)
-
-    @torch.no_grad()
-    def snapshot(self):
-        return tuple(parameter.detach().clone() for _, parameter in self.parameters)
-
-    @torch.no_grad()
-    def metrics(self, snapshot):
-        values = {}
-        for (name, parameter), before in zip(self.parameters, snapshot):
-            weight_norm = before.norm()
-            update_norm = (parameter - before).norm()
-            values[name] = {
-                "weight_norm": weight_norm.item(),
-                "update_norm": update_norm.item(),
-                "effective_lr": (
-                    update_norm / weight_norm.clamp_min(torch.finfo(before.dtype).tiny)
-                ).item(),
-            }
-        return values
-
-
 def optimization_step(
     train_model,
     parameters,

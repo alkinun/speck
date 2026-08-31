@@ -60,10 +60,6 @@ tokens at the 65,536-token optimizer batch.
 Validation reports the equal-batch aggregate and each source separately. Checkpoints retain the
 latest per-source losses alongside the aggregate so later data decisions do not depend on W&B.
 
-Muon runs log exact update-to-weight ratios for one middle attention, convolution, and SwiGLU
-matrix at the normal logging cadence. Only rank zero snapshots these representative matrices; the
-optimizer and other parameters are untouched.
-
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an
 absolute learning rate. A value of `0.1` ends the schedule at 10% of the peak rate.
 
@@ -117,20 +113,6 @@ record. Launch both arms at the reported world size against the same parent chec
 The planner rejects tails that do not fit in the control's remaining inherited schedule. Evaluate
 the two completed final checkpoints through the existing pinned benchmark paths before adding any
 checkpoint-averaging experiment.
-
-Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
-
-```bash
-uv run --extra cpu python -m scripts.checkpoint_average \
-  ~/.cache/speck/checkpoints/Speck2-140M --steps <step> <step> \
-  --output-dir ~/.cache/speck/averages/<name>
-```
-
-Floating tensors are accumulated in FP32 and restored to their checkpoint dtype. Architecture,
-data manifest, run lineage, tensor layouts, and non-floating tensors must match. The artifact stores
-no optimizer state and cannot be resumed as training. Pass its directory to
-`scripts.base_checkpoint_export` without `--step` to create a local Transformers model for the
-existing evaluation harnesses.
 
 ## Supervised Fine-Tuning
 
