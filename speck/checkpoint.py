@@ -114,7 +114,7 @@ def load_metadata(directory, step):
     return metadata
 
 
-def _sha256(path):
+def file_sha256(path):
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
         for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
@@ -135,7 +135,7 @@ def directory_identity(directory):
     entries = []
     for candidate in files:
         relative = candidate.relative_to(directory).as_posix()
-        checksum = _sha256(candidate)
+        checksum = file_sha256(candidate)
         digest.update(relative.encode())
         digest.update(b"\0")
         digest.update(checksum.encode())
@@ -156,9 +156,9 @@ def checkpoint_identity(directory, step):
     return {
         "directory": str(directory),
         "step": step,
-        "model_sha256": _sha256(model),
-        "optimizer_sha256": _sha256(optimizer),
-        "metadata_sha256": _sha256(metadata),
+        "model_sha256": file_sha256(model),
+        "optimizer_sha256": file_sha256(optimizer),
+        "metadata_sha256": file_sha256(metadata),
     }
 
 

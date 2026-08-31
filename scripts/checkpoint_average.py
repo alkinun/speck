@@ -1,7 +1,6 @@
 """Average completed checkpoints from one training trajectory."""
 
 import argparse
-import hashlib
 import json
 import os
 import shutil
@@ -9,7 +8,7 @@ from pathlib import Path
 
 import torch
 
-from speck.checkpoint import checkpoint_identity, load_metadata, load_model
+from speck.checkpoint import checkpoint_identity, file_sha256, load_metadata, load_model
 
 
 def parse_args(argv=None):
@@ -134,21 +133,13 @@ def _average_metadata(path):
     return metadata
 
 
-def _sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def average_identity(directory):
     directory, paths = _average_paths(directory)
     _average_metadata(paths["metadata"])
     return {
         "directory": str(directory),
-        "model_sha256": _sha256(paths["model"]),
-        "metadata_sha256": _sha256(paths["metadata"]),
+        "model_sha256": file_sha256(paths["model"]),
+        "metadata_sha256": file_sha256(paths["metadata"]),
     }
 
 

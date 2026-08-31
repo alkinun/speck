@@ -1,14 +1,13 @@
 """Finalize matched tail checkpoints and checkpoint averages for evaluation."""
 
 import argparse
-import hashlib
 import json
 import os
 import shutil
 from pathlib import Path
 
 from scripts.checkpoint_average import average_checkpoints, average_identity, write_average
-from speck.checkpoint import checkpoint_identity, latest, load_metadata
+from speck.checkpoint import checkpoint_identity, file_sha256, latest, load_metadata
 
 
 def parse_args(argv=None):
@@ -19,14 +18,6 @@ def parse_args(argv=None):
     parser.add_argument("--average-steps", type=int, nargs="+", required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     return parser.parse_args(argv)
-
-
-def _sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def load_pair(pair_dir):
@@ -96,7 +87,7 @@ def finalize(pair_dir, control_dir, constant_dir, average_steps, output_dir):
             "format_version": 1,
             "pair_manifest": {
                 "path": str(pair_path),
-                "sha256": _sha256(pair_path),
+                "sha256": file_sha256(pair_path),
             },
             "global_tokens": control_metadata["global_tokens"],
             "average_steps": average_steps,

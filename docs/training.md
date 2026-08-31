@@ -143,6 +143,16 @@ uv run --extra cpu python -m scripts.tail_pair_register \
 Registration verifies `speck_source.json`, hashes the complete export and supplied summaries, and
 writes one immutable `results/<variant>.json`. It does not run benchmarks or define new metrics.
 
+After registering all four variants, write the predeclared paired score deltas:
+
+```bash
+uv run --extra cpu python -m scripts.tail_pair_compare ~/.cache/speck/tail-pairs/<name>
+```
+
+The comparison requires identical benchmark protocols and metric sets. It reports only constant
+minus control and average minus final deltas for existing Open-SLM and BananaMind scores; it does
+not introduce another aggregate or choose a winner.
+
 Average two or more sorted checkpoints from one trajectory into a model-only evaluation artifact:
 
 ```bash

@@ -1,12 +1,11 @@
 """Register benchmark evidence for one finalized tail-pair model variant."""
 
 import argparse
-import hashlib
 import json
 import os
 from pathlib import Path
 
-from speck.checkpoint import directory_identity
+from speck.checkpoint import directory_identity, file_sha256
 
 _VARIANTS = {
     "control-final": ("control", "final_checkpoint", "checkpoint"),
@@ -24,14 +23,6 @@ def parse_args(argv=None):
     parser.add_argument("--open-slm", type=Path, default=None)
     parser.add_argument("--bananamind", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def _sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _load_json(path, label):
@@ -70,7 +61,13 @@ def _open_slm_result(path, model_identity):
     recorded_model = result.get("model", {}).get("transformers_export")
     if recorded_model is not None and recorded_model != model_identity:
         raise ValueError("Open-SLM summary records a different model export")
-    return {"path": str(path), "sha256": _sha256(path), "scores_percent": scores}
+    protocol = {key: result.get(key) for key in ("leaderboard", "evaluation", "samples", "metrics")}
+    return {
+        "path": str(path),
+        "sha256": file_sha256(path),
+        "scores_percent": scores,
+        "protocol": protocol,
+    }
 
 
 def _bananamind_result(path, model_dir):
@@ -81,7 +78,26 @@ def _bananamind_result(path, model_dir):
     model = result.get("model")
     if not isinstance(model, str) or Path(model).expanduser().resolve() != model_dir:
         raise ValueError("BananaMind report records a different model export")
-    return {"path": str(path), "sha256": _sha256(path), "summary": summary}
+    protocol = {
+        key: result.get(key)
+        for key in (
+            "benchmark",
+            "benchmark_version",
+            "dataset_id",
+            "dataset_revision",
+            "dataset_sha256",
+            "scoring",
+            "dtype",
+            "model_context_length",
+            "batch_size",
+        )
+    }
+    return {
+        "path": str(path),
+        "sha256": file_sha256(path),
+        "summary": summary,
+        "protocol": protocol,
+    }
 
 
 def register(finalization_dir, variant, model_dir, open_slm=None, bananamind=None):
@@ -107,10 +123,10 @@ def register(finalization_dir, variant, model_dir, open_slm=None, bananamind=Non
         "variant": variant,
         "finalization": {
             "path": str(finalization_path),
-            "sha256": _sha256(finalization_path),
+            "sha256": file_sha256(finalization_path),
         },
         "model_export": model_identity,
-        "source_sha256": _sha256(source_path),
+        "source_sha256": file_sha256(source_path),
     }
     if open_slm is not None:
         record["open_slm"] = _open_slm_result(open_slm, model_identity)
