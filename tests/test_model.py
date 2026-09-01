@@ -50,6 +50,13 @@ def cached_logits(model, tokens):
     return torch.cat(values, dim=1)
 
 
+def chunked_logits(model, tokens, split):
+    state = model.state(length=tokens.size(1))
+    first = model(tokens[:, :split], state=state)
+    second = model(tokens[:, split:], state=state)
+    return torch.cat((first, second), dim=1)
+
+
 def test_linear_applies_configured_bias():
     layer = Linear(2, 1, bias=True)
     with torch.no_grad():
@@ -104,6 +111,29 @@ def test_global_attention_cache_matches_full_forward():
     model = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))
     tokens = torch.randint(0, 16, (1, 8))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
+    assert torch.allclose(model(tokens), chunked_logits(model, tokens, 3), atol=1e-5)
+
+
+@pytest.mark.parametrize("rope_dim", (0, 2))
+def test_partial_and_nope_attention_cache_matches_full_forward(rope_dim):
+    torch.manual_seed(11 + rope_dim)
+    model = model_with(AttentionSpec(4, 1, rope_dim=rope_dim), SwiGLUSpec(16))
+    tokens = torch.randint(0, 16, (1, 8))
+    assert torch.allclose(model(tokens), chunked_logits(model, tokens, 5), atol=1e-5)
+
+
+def test_rotary_memory_does_not_grow_with_context_length():
+    config = model_with(AttentionSpec(4, 1)).config
+    config = ArchitectureConfig(
+        config.blocks,
+        config.embedding_size,
+        vocab_size=config.vocab_size,
+        max_position_embeddings=1_000_000,
+    )
+    model = SpeckForCausalLM(config)
+    buffers = tuple(model.rotary.buffers())
+    assert sum(buffer.numel() for buffer in buffers) == 2
+    assert torch.isfinite(model(torch.randint(0, 16, (1, 8)))).all()
 
 
 def test_sliding_attention_cache_matches_full_forward():
@@ -333,7 +363,7 @@ def test_heterogeneous_head_dimensions_and_widths():
     model.init_weights()
     tokens = torch.randint(0, 16, (1, 6))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
-    assert set(model.rotary) == {"4", "6"}
+    assert set(model.rotary) == {"4:4", "6:6"}
 
 
 def test_parallel_stage_cache_matches_full_forward():

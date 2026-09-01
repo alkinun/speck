@@ -14,6 +14,7 @@ class AttentionSpec:
     num_key_value_heads: int
     scope: str = "global"
     window_size: int | None = None
+    rope_dim: int | None = None
     kind: str = field(init=False, default="attention")
 
     def __post_init__(self):
@@ -28,6 +29,9 @@ class AttentionSpec:
                 raise ValueError("sliding attention requires a positive window")
         elif self.window_size is not None:
             raise ValueError("global attention cannot define a window")
+        rope_dim = self.head_dim if self.rope_dim is None else self.rope_dim
+        if rope_dim < 0 or rope_dim > self.head_dim or rope_dim % 2:
+            raise ValueError("attention RoPE dimensions must be even and within the head")
 
 
 @dataclass(frozen=True)
@@ -178,6 +182,7 @@ class ArchitectureConfig:
     eos_token_id: int = 2
     max_position_embeddings: int = 4_096
     rope_theta: float = 10_000.0
+    rope_scaling_factor: float = 1.0
     rms_norm_eps: float = 1e-5
     initializer_range: float = 0.02
     expected_parameters: int | None = None
@@ -189,7 +194,12 @@ class ArchitectureConfig:
             raise ValueError("embedding and vocabulary sizes must be positive")
         if self.max_position_embeddings < 1:
             raise ValueError("maximum positions must be positive")
-        if self.rope_theta <= 0 or self.rms_norm_eps <= 0 or self.initializer_range <= 0:
+        if (
+            self.rope_theta <= 0
+            or self.rope_scaling_factor < 1
+            or self.rms_norm_eps <= 0
+            or self.initializer_range <= 0
+        ):
             raise ValueError("model scaling values must be positive")
         if not 0 <= self.bos_token_id < self.vocab_size:
             raise ValueError("BOS token ID is outside the vocabulary")

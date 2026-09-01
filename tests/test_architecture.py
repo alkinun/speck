@@ -91,6 +91,10 @@ def test_attention_shape_invariants_are_strict():
         BlockConfig(10, (StageConfig((AttentionSpec(4, 1),)),))
     with pytest.raises(ValueError, match="divisible by KV"):
         BlockConfig(12, (StageConfig((AttentionSpec(4, 2),)),))
+    with pytest.raises(ValueError, match="RoPE dimensions"):
+        AttentionSpec(8, 1, rope_dim=3)
+    with pytest.raises(ValueError, match="RoPE dimensions"):
+        AttentionSpec(8, 1, rope_dim=10)
 
 
 def test_parallel_stage_kinds_must_be_unique():

@@ -7,6 +7,7 @@ from dataclasses import replace
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn.attention.bias import causal_lower_right
 
 from speck.architecture import (
     ArchitectureConfig,
@@ -242,9 +243,13 @@ class DeviceAdamW(torch.optim.AdamW):
             group["fused"] = fused
 
 
-def rotate(x, cos, sin):
-    x1, x2 = x.chunk(2, dim=-1)
-    return x * cos + torch.cat((-x2, x1), dim=-1) * sin
+def rotate(x, cos, sin, rotary_dim):
+    if rotary_dim == 0:
+        return x
+    rotary, passthrough = x[..., :rotary_dim], x[..., rotary_dim:]
+    first, second = rotary.chunk(2, dim=-1)
+    rotary = rotary * cos + torch.cat((-second, first), dim=-1) * sin
+    return torch.cat((rotary, passthrough), dim=-1)
 
 
 def causal_depthwise_conv1d(x, weight):
@@ -388,18 +393,31 @@ class SequenceState:
 
 
 class RotaryEmbedding(nn.Module):
-    def __init__(self, head_dim, length, theta):
+    """Generate RoPE chunks on demand instead of retaining position-sized tables."""
+
+    def __init__(self, rotary_dim, theta, scaling_factor):
         super().__init__()
-        frequency = 1 / (theta ** (torch.arange(0, head_dim, 2, dtype=torch.float32) / head_dim))
-        angles = torch.outer(torch.arange(length, dtype=torch.float32), frequency).repeat(1, 2)
-        self.register_buffer("cos", angles.cos()[None, None], persistent=False)
-        self.register_buffer("sin", angles.sin()[None, None], persistent=False)
+        frequency = 1 / (
+            theta ** (torch.arange(0, rotary_dim, 2, dtype=torch.float32) / rotary_dim)
+        )
+        self.register_buffer("frequency", frequency, persistent=False)
+        self.scaling_factor = scaling_factor
 
     def forward(self, position, length, dtype):
-        end = position + length
-        cos = self.get_buffer("cos")
-        sin = self.get_buffer("sin")
-        return cos[..., position:end, :].to(dtype), sin[..., position:end, :].to(dtype)
+        positions = torch.arange(
+            position,
+            position + length,
+            device=self.frequency.device,
+            dtype=torch.float32,
+        )
+        positions = positions / self.scaling_factor
+        angles = torch.outer(positions, self.frequency).repeat(1, 2)
+        return angles.cos()[None, None].to(dtype), angles.sin()[None, None].to(dtype)
+
+
+def attention_rotary_key(spec):
+    rotary_dim = spec.head_dim if spec.rope_dim is None else spec.rope_dim
+    return f"{spec.head_dim}:{rotary_dim}"
 
 
 class Attention(nn.Module):
@@ -428,25 +446,38 @@ class Attention(nn.Module):
             .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
             .transpose(1, 2)
         )
-        cos, sin = rotary(position, length, q.dtype)
-        q = rotate(self.q_norm(q), cos, sin)
-        k = rotate(self.k_norm(k), cos, sin)
+        q, k = self.q_norm(q), self.k_norm(k)
+        rotary_dim = self.spec.head_dim if self.spec.rope_dim is None else self.spec.rope_dim
+        if rotary_dim:
+            cos, sin = rotary(position, length, q.dtype)
+            q = rotate(q, cos, sin, rotary_dim)
+            k = rotate(k, cos, sin, rotary_dim)
         if state is None and self.spec.scope == "global":
             keys, values, mask, causal = k, v, None, True
         else:
             past_k, past_v = (k[:, :, :0], v[:, :, :0]) if state is None else state.current()
             keys = torch.cat((past_k, k), dim=2)
             values = torch.cat((past_v, v), dim=2)
-            key_positions = torch.arange(
-                position - past_k.size(2), position + length, device=x.device
-            )
-            query_positions = torch.arange(position, position + length, device=x.device)[:, None]
-            mask = key_positions[None, :] <= query_positions
-            if self.spec.scope == "sliding":
+            if self.spec.scope == "global":
+                if past_k.size(2) == 0:
+                    mask, causal = None, True
+                elif length == 1:
+                    mask, causal = None, False
+                else:
+                    mask = causal_lower_right(length, keys.size(2))
+                    causal = False
+            else:
+                key_positions = torch.arange(
+                    position - past_k.size(2), position + length, device=x.device
+                )
+                query_positions = torch.arange(position, position + length, device=x.device)[
+                    :, None
+                ]
+                mask = key_positions[None, :] <= query_positions
                 window = self.spec.window_size
                 assert window is not None
                 mask &= key_positions[None, :] > query_positions - window
-            causal = False
+                causal = False
         output = F.scaled_dot_product_attention(
             q,
             keys,
@@ -638,7 +669,9 @@ class Operation(nn.Module):
     def forward(self, x, rotary, position, state=None):
         normalized = self.norm(x)
         if isinstance(self.spec, AttentionSpec):
-            return self.operation(normalized, rotary[str(self.spec.head_dim)], position, state)
+            rotary_dim = self.spec.head_dim if self.spec.rope_dim is None else self.spec.rope_dim
+            embedding = rotary[attention_rotary_key(self.spec)] if rotary_dim else None
+            return self.operation(normalized, embedding, position, state)
         if isinstance(self.spec, (GatedCausalConvSpec, GatedDeltaNetSpec)):
             return self.operation(normalized, state)
         return self.operation(normalized)
@@ -711,19 +744,20 @@ class SpeckForCausalLM(nn.Module):
         )
         self.lm_head = Linear(config.embedding_size, config.vocab_size, bias=False)
         self.lm_head.weight = self.embed_tokens.weight
-        head_dimensions = {
-            branch.head_dim
+        rotary_dimensions = {
+            (branch.head_dim, branch.head_dim if branch.rope_dim is None else branch.rope_dim)
             for invocation in self.execution_plan
             for stage in invocation.block.stages
             for branch in stage.branches
             if isinstance(branch, AttentionSpec)
+            and (branch.head_dim if branch.rope_dim is None else branch.rope_dim) > 0
         }
         self.rotary = nn.ModuleDict(
             {
-                str(head_dim): RotaryEmbedding(
-                    head_dim, config.max_position_embeddings, config.rope_theta
+                f"{head_dim}:{rotary_dim}": RotaryEmbedding(
+                    rotary_dim, config.rope_theta, config.rope_scaling_factor
                 )
-                for head_dim in head_dimensions
+                for head_dim, rotary_dim in rotary_dimensions
             }
         )
 
