@@ -1,8 +1,9 @@
 # Speck
 
-Speck is a compact research harness for designing, training, evaluating, and exporting efficient
-causal language models. It supports heterogeneous residual blocks, phased data mixtures, resumable
-training, full-model instruction tuning, and reproducible evaluation tools.
+Speck is SpeckLabs's research harness for effective long context in small, highly efficient causal
+language models. Its primary work is fixed-state/dense-attention hybrids, progressive context
+training, and reproducible quality-memory-latency curves. The earlier generalist releases remain
+reproducible baselines rather than the direction of the project.
 
 ## Capabilities
 
@@ -112,6 +113,7 @@ prepared conversation dataset.
 | Guide | Contents |
 | --- | --- |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
+| [Long-context research](docs/long_context.md) | Claims, architecture, experiment sequence, reference models, data, and known boundaries. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
 | [Evaluation and benchmarking](docs/evaluation.md) | Open SLM, BananaMind, optimization, inference performance, and checked results. |
 | [Releasing models](docs/releasing.md) | Maintainer-only Transformers, code-only, and GGUF publication workflows. |

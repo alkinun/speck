@@ -176,6 +176,20 @@ per-token training FLOPs, and a compute-matched token budget for each variant. K
 token-matched and compute-matched views; neither parameter count nor tokens alone is a fair systems
 comparison across quadratic and recurrent mixers.
 
+Before budgeting a length stage, calculate from the materialized architecture rather than applying
+`6ND` at every length:
+
+```bash
+uv run --extra cpu python -m scripts.context_budget experiments/SpeckLC-1.2B \
+  --lengths 4096,131072,524288,1048576 --effective-tflops 400 \
+  --h100-hours 10000 --weight-bits 4 --kv-cache-dtype int8
+```
+
+The report adds each global-attention layer's context-dependent training FLOPs, calculates the
+tokens implied by the supplied effective throughput, and builds the real inference state on the
+meta device to count attention KV, recurrent state, quantization scales, and weights. This makes the
+cost discontinuity between a 4K core run and a nominal 1M stage explicit.
+
 Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
 parent LR:
 
