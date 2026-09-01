@@ -64,6 +64,14 @@ are recorded in `experiments/SpeckLabs-1B-shared/qualification.json`.
    run the pinned Open SLM stages and routed-expert masking analysis. Keep each
    model/step in its own output directory.
 
+   ```bash
+   uv run --extra gpu python -m scripts.expert_masking \
+     experiments/SpeckLabs-1B-M1 /path/to/SpeckLabs-1B-M1/checkpoints \
+     --step 7630 --output results/masking/M1/step-007630.json
+   ```
+
+   Repeat masking for M1/M2/M3 at both steps. D0 has no routed layer to mask.
+
 The implementation qualification uses only synthetic tokens. These commands
 are the user-run workflow; repository verification does not download the full
 corpus or launch any 1B-token arm.

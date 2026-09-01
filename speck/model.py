@@ -626,13 +626,16 @@ class Stage(nn.Module):
             Operation(hidden_size, spec, config) for spec in stage.branches
         )
 
-    def forward(self, x, rotary, position, state, occurrence):
+    def forward(self, x, rotary, position, state, occurrence, masked_routed_layers):
         outputs = []
         routing = []
         for branch_index, branch in enumerate(self.branches):
             key = f"occurrence_{occurrence}_stage_{self.stage_index}_branch_{branch_index}"
             entry = state.entries[key] if state is not None and key in state.entries else None
-            output, stats = branch(x, rotary, position, entry)
+            if key in masked_routed_layers and isinstance(branch.operation, RoutedSwiGLU):
+                output, stats = torch.zeros_like(x), None
+            else:
+                output, stats = branch(x, rotary, position, entry)
             outputs.append(output)
             if stats is not None:
                 routing.append(replace(stats, layer=key))
@@ -647,10 +650,17 @@ class BlockCore(nn.Module):
             for index, stage in enumerate(block.stages)
         )
 
-    def forward(self, x, rotary, position, state, occurrence):
+    def forward(self, x, rotary, position, state, occurrence, masked_routed_layers):
         routing = []
         for stage in self.stages:
-            x, stage_routing = stage(x, rotary, position, state, occurrence)
+            x, stage_routing = stage(
+                x,
+                rotary,
+                position,
+                state,
+                occurrence,
+                masked_routed_layers,
+            )
             routing.extend(stage_routing)
         return x, tuple(routing)
 
@@ -806,6 +816,7 @@ class SpeckForCausalLM(nn.Module):
         return_training_output=False,
         load_balance_coefficient=0.01,
         router_z_loss_coefficient=0.001,
+        masked_routed_layers=(),
     ):
         if (tokens is None) == (inputs_embeds is None):
             raise ValueError("provide exactly one of tokens or inputs_embeds")
@@ -815,6 +826,13 @@ class SpeckForCausalLM(nn.Module):
             raise ValueError("training output requires targets")
         if load_balance_coefficient < 0 or router_z_loss_coefficient < 0:
             raise ValueError("routing loss coefficients must be non-negative")
+        masked_routed_layers = frozenset(masked_routed_layers)
+        if masked_routed_layers:
+            unknown_masks = masked_routed_layers - self.routed_operations().keys()
+            if unknown_masks:
+                raise ValueError(
+                    f"unknown routed layer masks: {', '.join(sorted(unknown_masks))}"
+                )
         x = self.embed_tokens(tokens) if inputs_embeds is None else inputs_embeds
         x = x.to(torch.bfloat16 if x.is_cuda else self.embed_tokens.weight.dtype)
         length = x.size(1)
@@ -826,7 +844,12 @@ class SpeckForCausalLM(nn.Module):
         for invocation, adapter in zip(self.execution_plan, self.adapters):
             x = adapter(x)
             x, block_routing = self.cores[invocation.weight_key](
-                x, self.rotary, position, state, invocation.occurrence_index
+                x,
+                self.rotary,
+                position,
+                state,
+                invocation.occurrence_index,
+                masked_routed_layers,
             )
             routing.extend(block_routing)
         if state is not None:
