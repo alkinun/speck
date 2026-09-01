@@ -37,6 +37,12 @@ TOKENIZER_FILES = (
     "tokenizer_metadata.json",
 )
 PADDING_SOURCE = Path(__file__).resolve().parents[1] / "speck" / "transformers_padding.py"
+ARCHITECTURE_SOURCE = Path(__file__).resolve().parents[1] / "speck" / "architecture.py"
+NATIVE_MODEL_SOURCE = Path(__file__).resolve().parents[1] / "speck" / "model.py"
+CURRENT_CONFIGURATION_SOURCE = (
+    Path(__file__).resolve().parents[1] / "speck" / "transformers_configuration.py"
+)
+CURRENT_MODELING_SOURCE = Path(__file__).resolve().parents[1] / "speck" / "transformers_modeling.py"
 PADDING_DESTINATION = "padding_speck.py"
 MODEL_IMPORT = "from .configuration_speck import SpeckConfig\n"
 PATCHED_MODEL_IMPORT = MODEL_IMPORT + "from .padding_speck import validate_right_padding\n"
@@ -259,7 +265,7 @@ def release_state(state):
     if not torch.equal(state["embed_tokens.weight"], state["lm_head.weight"]):
         raise ValueError("checkpoint input and output embeddings are not tied")
     return {
-        name: tensor.detach().to(torch.bfloat16).contiguous()
+        f"native.{name}": tensor.detach().to(torch.bfloat16).contiguous()
         for name, tensor in state.items()
         if name != "lm_head.weight"
     }
@@ -299,6 +305,22 @@ def prepare_release_code(code_dir, output_dir):
             (output_dir / filename).write_text(patched, encoding="utf-8")
         else:
             shutil.copy2(source, output_dir / filename)
+    shutil.copy2(PADDING_SOURCE, output_dir / PADDING_DESTINATION)
+
+
+def prepare_current_release_code(output_dir):
+    """Ship the current native implementation behind a small Transformers wrapper."""
+
+    shutil.copy2(ARCHITECTURE_SOURCE, output_dir / "architecture_speck.py")
+    native = NATIVE_MODEL_SOURCE.read_text(encoding="utf-8")
+    original = "from speck.architecture import ("
+    if native.count(original) != 1:
+        raise ValueError("native model has unexpected architecture import")
+    native = native.replace(original, "from .architecture_speck import (")
+    compile(native, "native_speck.py", "exec")
+    (output_dir / "native_speck.py").write_text(native, encoding="utf-8")
+    shutil.copy2(CURRENT_CONFIGURATION_SOURCE, output_dir / "configuration_speck.py")
+    shutil.copy2(CURRENT_MODELING_SOURCE, output_dir / "modeling_speck.py")
     shutil.copy2(PADDING_SOURCE, output_dir / PADDING_DESTINATION)
 
 
@@ -356,7 +378,9 @@ def prepare_export(checkpoint_dir, step, output_dir, metadata):
                 allow_patterns=list(CODE_FILES),
             )
         )
-        prepare_release_code(code_dir, building)
+        for filename in ("LICENSE", "LICENSE.tokenizer", "tokenization_speck.py"):
+            shutil.copy2(code_dir / filename, building / filename)
+        prepare_current_release_code(building)
         if (building / "README.md").exists():
             raise RuntimeError("model-card-free export unexpectedly contains README.md")
         os.replace(building, output_dir)
@@ -370,13 +394,23 @@ def validate_export(output_dir, metadata):
     if config != release_config(metadata):
         raise ValueError("exported config does not match checkpoint metadata")
     state = load_file(output_dir / "model.safetensors", device="cpu")
-    if "lm_head.weight" in state or not state:
+    if "native.lm_head.weight" in state or not state:
         raise ValueError("exported Safetensors tied-weight layout is invalid")
     invalid_dtypes = [name for name, tensor in state.items() if tensor.dtype != torch.bfloat16]
     if invalid_dtypes:
         raise ValueError("exported model has invalid compute dtypes")
     if not (output_dir / PADDING_DESTINATION).is_file():
         raise ValueError("export is missing Transformers padding support")
+    required_code = {
+        "architecture_speck.py",
+        "configuration_speck.py",
+        "modeling_speck.py",
+        "native_speck.py",
+        PADDING_DESTINATION,
+    }
+    missing_code = sorted(name for name in required_code if not (output_dir / name).is_file())
+    if missing_code:
+        raise ValueError(f"export is missing current model code: {missing_code}")
     if (output_dir / "README.md").exists():
         raise ValueError("export must not contain a model card")
 

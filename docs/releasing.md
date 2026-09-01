@@ -9,6 +9,12 @@ Run local validation with `--no-upload` first.
 
 ## Transformers Export
 
+Exports vendor the current checked-in architecture and native model implementation behind a thin
+Transformers wrapper. They no longer depend on an older published Speck modeling file, so new
+operations such as Gated DeltaNet, partial RoPE, NoPE, lazy positions, and fixed recurrent state are
+covered by native/Transformers logit parity before release. The exported Safetensors names are
+prefixed with `native.` to make that wrapper boundary explicit.
+
 Export and validate the canonical one-epoch instruction checkpoint as a BF16 Transformers
 repository without uploading:
 
@@ -41,6 +47,11 @@ parameter count, padded-batch logit parity, generated code hashes, and unchanged
 the intended remote parent.
 
 ## GGUF Variants
+
+The existing GGUF converter is an exact mapping from the original attention/convolution Speck
+family to llama.cpp's LFM2 layout. It deliberately rejects Gated DeltaNet checkpoints. Do not use a
+successful Transformers export as evidence of GGUF compatibility: a GDN release needs a dedicated
+llama.cpp architecture mapping plus per-backend state and logit parity before publication.
 
 GGUF publication requires Git, CMake, a working C/C++ toolchain, network access, and enough local
 space for BF16 plus every requested quantization. Build and smoke-test locally first:

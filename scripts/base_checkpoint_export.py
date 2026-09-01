@@ -12,7 +12,7 @@ from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
 from scripts.model_publish import (
-    patch_generation_source,
+    prepare_current_release_code,
     release_config,
     release_state,
     validate_export,
@@ -26,9 +26,6 @@ TEMPLATE_REVISION = "155b759545645cc694545fab85cd7d4c385fd965"
 TEMPLATE_FILES = (
     "LICENSE",
     "LICENSE.tokenizer",
-    "configuration_speck.py",
-    "modeling_speck.py",
-    "padding_speck.py",
     "tokenization_speck.py",
     "tokenizer.model",
     "tokenizer_config.json",
@@ -82,12 +79,9 @@ def export(state, output_dir, metadata, provenance):
             )
         )
         for filename in TEMPLATE_FILES:
-            source = template / filename
-            if filename == "modeling_speck.py":
-                patched = patch_generation_source(source.read_text(encoding="utf-8"))
-                (building / filename).write_text(patched, encoding="utf-8")
-            else:
-                shutil.copy2(source, building / filename)
+            shutil.copy2(template / filename, building / filename)
+
+        prepare_current_release_code(building)
 
         save_file(release_state(state), building / "model.safetensors", metadata={"format": "pt"})
         config = release_config(metadata)
