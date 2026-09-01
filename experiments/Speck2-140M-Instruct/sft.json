@@ -1,0 +1,38 @@
+{
+  "batch_tokens": 65536,
+  "data_dir": null,
+  "dataset": {
+    "expected_samples": 500000,
+    "files": [
+      "data/train-00000-of-00004.parquet",
+      "data/train-00001-of-00004.parquet",
+      "data/train-00002-of-00004.parquet",
+      "data/train-00003-of-00004.parquet"
+    ],
+    "repo": "specklabs/SpeckChat2",
+    "revision": "7b497b3e0c7f4653278cc67af27722b20a5c8d10",
+    "validation_samples": 1000
+  },
+  "device_batch_size": 4,
+  "epochs": 1,
+  "eval_every": 100,
+  "grad_clip": 1.0,
+  "keep_checkpoints": 2,
+  "log_every": 5,
+  "lr": 0.0001,
+  "min_lr": 0.1,
+  "optimizer": "adamw",
+  "output_dir": null,
+  "pretrained": {
+    "filename": "model.safetensors",
+    "repo": "specklabs/Speck2-140M",
+    "revision": "1201df613d9ee9d50909189f52e45c6fcefa3c01"
+  },
+  "run": "Speck2-140M-Instruct",
+  "save_every": 500,
+  "sequence_length": 2048,
+  "sequence_lengths": [256, 512, 1024, 2048],
+  "wandb_project": "speck",
+  "warmup_steps": 100,
+  "weight_decay": 0.1
+}

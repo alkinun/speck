@@ -82,6 +82,24 @@ def test_speck1_5_instruct_uses_speckchat2_and_pinned_speck1_5_base():
     }
 
 
+def test_speck2_instruct_uses_speckchat2_and_pinned_speck2_base():
+    base = load_experiment("experiments/Speck2-140M", "model", "tokenizer")
+    reference = load_experiment("experiments/Speck1.1-140M-Instruct", "sft")
+    instruct = load_experiment("experiments/Speck2-140M-Instruct", "model", "tokenizer", "sft")
+
+    assert instruct["model"] == base["model"]
+    assert instruct["tokenizer"] == base["tokenizer"]
+    assert instruct["sft"] == {
+        **reference["sft"],
+        "pretrained": {
+            "filename": "model.safetensors",
+            "repo": "specklabs/Speck2-140M",
+            "revision": "1201df613d9ee9d50909189f52e45c6fcefa3c01",
+        },
+        "run": "Speck2-140M-Instruct",
+    }
+
+
 def test_speck1_5_uses_the_original_model_and_phased_corpus_mixture():
     original = load_experiment("experiments/Speck1-140M", "model", "tokenizer", "train")
     updated = load_experiment("experiments/Speck1.5-140M", "data", "model", "tokenizer", "train")

@@ -82,6 +82,7 @@ configuration:
 | `experiments/Speck1.1-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the original base weights. |
 | `experiments/Speck1.1-140M-Instruct-2ep` | Retained two-epoch SpeckChat2 variant. |
 | `experiments/Speck1.5-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the pinned Speck1.5 base. |
+| `experiments/Speck2-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the pinned Speck2 base. |
 
 Model names follow `Speck<generation>-<size>`. Instruction-tuned variants append `-Instruct`, and
 retained recipe variants may append an explicit suffix such as `-2ep`. Decimal generations identify

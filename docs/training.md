@@ -185,6 +185,15 @@ uv run --extra gpu python -m scripts.sft_train experiments/Speck1.5-140M-Instruc
 
 This run writes checkpoints under `~/.cache/speck/checkpoints/Speck1.5-140M-Instruct`.
 
+Train the recipe from the pinned Speck2 base release:
+
+```bash
+uv run --extra cpu python -m scripts.sft_prepare experiments/Speck2-140M-Instruct
+uv run --extra gpu python -m scripts.sft_train experiments/Speck2-140M-Instruct
+```
+
+This run writes checkpoints under `~/.cache/speck/checkpoints/Speck2-140M-Instruct`.
+
 Prepared data is written under `~/.cache/speck/data/SpeckChat2-v3`; checkpoints use
 `~/.cache/speck/checkpoints/Speck1.1-140M-Instruct`.
 
