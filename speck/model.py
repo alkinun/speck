@@ -508,6 +508,42 @@ def attention_rotary_key(spec):
     return f"{spec.head_dim}:{rotary_dim}"
 
 
+def sliding_window_attention(query, key, value, position, past_length, window_size):
+    """Evaluate local attention in bounded query chunks without a sequence-square mask."""
+
+    outputs = []
+    query_chunk_size = min(2_048, max(256, window_size))
+    first_key_position = position - past_length
+    for start in range(0, query.size(2), query_chunk_size):
+        end = min(start + query_chunk_size, query.size(2))
+        query_start_position = position + start
+        query_end_position = position + end
+        key_start_position = max(first_key_position, query_start_position - window_size + 1)
+        key_end_position = query_end_position
+        key_start = key_start_position - first_key_position
+        key_end = key_end_position - first_key_position
+        selected_key = key[:, :, key_start:key_end]
+        selected_value = value[:, :, key_start:key_end]
+        query_positions = torch.arange(
+            query_start_position, query_end_position, device=query.device
+        )[:, None]
+        key_positions = torch.arange(key_start_position, key_end_position, device=query.device)[
+            None, :
+        ]
+        mask = key_positions <= query_positions
+        mask &= key_positions > query_positions - window_size
+        outputs.append(
+            F.scaled_dot_product_attention(
+                query[:, :, start:end],
+                selected_key,
+                selected_value,
+                attn_mask=mask,
+                enable_gqa=query.size(1) != key.size(1),
+            )
+        )
+    return torch.cat(outputs, dim=2)
+
+
 class Attention(nn.Module):
     def __init__(self, hidden_size, spec, eps):
         super().__init__()
@@ -555,25 +591,26 @@ class Attention(nn.Module):
                     mask = causal_lower_right(length, keys.size(2))
                     causal = False
             else:
-                key_positions = torch.arange(
-                    position - past_k.size(2), position + length, device=x.device
-                )
-                query_positions = torch.arange(position, position + length, device=x.device)[
-                    :, None
-                ]
-                mask = key_positions[None, :] <= query_positions
-                window = self.spec.window_size
-                assert window is not None
-                mask &= key_positions[None, :] > query_positions - window
-                causal = False
-        output = F.scaled_dot_product_attention(
-            q,
-            keys,
-            values,
-            attn_mask=mask,
-            is_causal=causal,
-            enable_gqa=self.q_heads != self.spec.num_key_value_heads,
-        )
+                mask, causal = None, False
+        if self.spec.scope == "sliding":
+            assert self.spec.window_size is not None
+            output = sliding_window_attention(
+                q,
+                keys,
+                values,
+                position,
+                past_k.size(2),
+                self.spec.window_size,
+            )
+        else:
+            output = F.scaled_dot_product_attention(
+                q,
+                keys,
+                values,
+                attn_mask=mask,
+                is_causal=causal,
+                enable_gqa=self.q_heads != self.spec.num_key_value_heads,
+            )
         if state is not None:
             state.append(k, v)
         return self.o_proj(output.transpose(1, 2).contiguous().view(batch, length, hidden_size))

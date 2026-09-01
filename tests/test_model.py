@@ -145,6 +145,21 @@ def test_sliding_attention_cache_matches_full_forward():
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
 
 
+def test_sliding_attention_chunks_long_sequences():
+    torch.manual_seed(22)
+    model = model_with(AttentionSpec(4, 1, "sliding", 3), SwiGLUSpec(16))
+    model.config = ArchitectureConfig(
+        model.config.blocks,
+        model.config.embedding_size,
+        vocab_size=model.config.vocab_size,
+        max_position_embeddings=2_100,
+    )
+    tokens = torch.randint(0, 16, (1, 2_100))
+    output = model(tokens)
+    assert output.shape == (1, 2_100, 16)
+    assert torch.isfinite(output).all()
+
+
 def test_int8_kv_cache_tracks_scales_and_approximates_full_forward():
     torch.manual_seed(21)
     model = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))
