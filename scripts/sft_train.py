@@ -7,7 +7,7 @@ import os
 import time
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, cast
 
 import torch
 import torch.distributed as dist
@@ -114,202 +114,261 @@ def _settings(value):
     return args
 
 
-def main():
-    cli = arguments()
-    configs = load_experiment(cli.experiment, "tokenizer", "model", "sft")
-    args = _settings(configs["sft"])
-    args.device = cli.device
-    args.resume = cli.resume
-    args.no_compile = cli.no_compile
-    args.data_dir = str(resolve_sft_data_dir(args.dataset, args.data_dir))
-    args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
-    if args.resume is None and latest(args.output_dir) is not None:
-        raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume STEP")
+class SFTTrainer:
+    """Own one supervised fine-tuning lifecycle and its mutable execution state."""
 
-    rank, local_rank, world_size, device = init_runtime(args.device)
-    distributed = world_size > 1
-    master = rank == 0
-    tokenizer = get_chat_tokenizer(**configs["tokenizer"])
-    manifest = load_sft_manifest(args.data_dir)
-    manifest_hash = manifest_fingerprint(manifest)
-    if manifest["tokenizer"] != tokenizer.metadata():
-        raise ValueError("SFT dataset and tokenizer do not match")
-    expected_dataset = {**args.dataset, "sequence_lengths": args.sequence_lengths}
-    if manifest["dataset"] != expected_dataset:
-        raise ValueError("prepared SFT dataset does not match the configured dataset")
-    error: list[str | None] = [None]
-    if master:
-        try:
-            verify_sft_dataset(args.data_dir, manifest)
-        except Exception as exception:
-            error[0] = str(exception)
-    if distributed:
-        dist.broadcast_object_list(error, src=0)
-    if error[0]:
-        raise ValueError(error[0])
+    def __init__(self, configs, cli):
+        self.configs = configs
+        self.cli = cli
+        self.tracking: Any = None
+        args = _settings(configs["sft"])
+        args.device = cli.device
+        args.resume = cli.resume
+        args.no_compile = cli.no_compile
+        args.data_dir = str(resolve_sft_data_dir(args.dataset, args.data_dir))
+        args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
+        if args.resume is None and latest(args.output_dir) is not None:
+            raise FileExistsError(
+                f"checkpoints already exist: {args.output_dir}; pass --resume STEP"
+            )
+        self.args = args
 
-    micro_tokens = args.device_batch_size * args.sequence_length * world_size
-    if args.batch_tokens % micro_tokens:
-        raise ValueError("SFT batch tokens must be divisible by the distributed microbatch")
-    accumulation = args.batch_tokens // micro_tokens
-    device_tokens = args.device_batch_size * args.sequence_length
-    train_plan = sft_plan(manifest, "train", device_tokens, world_size, accumulation)
-    steps_per_epoch = train_plan["cycle_microbatches"] // accumulation
-    steps = steps_per_epoch * args.epochs
+    def _initialize_runtime(self):
+        self.rank, self.local_rank, self.world_size, self.device = init_runtime(self.args.device)
+        self.distributed = self.world_size > 1
+        self.master = self.rank == 0
 
-    data_state = None
-    start_step = 0
-    trained_supervised_tokens = 0
-    elapsed_training = 0.0
-    metadata = None
-    checkpoint_state = None
-    if args.resume is not None:
-        checkpoint_state = load(args.output_dir, args.resume, device)
-        metadata = checkpoint_state[2]
-        if metadata.get("training_phase") != "sft" or metadata["manifest"] != manifest_hash:
+    def _load_and_verify_data(self):
+        args = self.args
+        self.tokenizer = get_chat_tokenizer(**self.configs["tokenizer"])
+        self.manifest = load_sft_manifest(args.data_dir)
+        self.manifest_hash = manifest_fingerprint(self.manifest)
+        if self.manifest["tokenizer"] != self.tokenizer.metadata():
+            raise ValueError("SFT dataset and tokenizer do not match")
+        expected_dataset = {**args.dataset, "sequence_lengths": args.sequence_lengths}
+        if self.manifest["dataset"] != expected_dataset:
+            raise ValueError("prepared SFT dataset does not match the configured dataset")
+        error: list[str | None] = [None]
+        if self.master:
+            try:
+                verify_sft_dataset(args.data_dir, self.manifest)
+            except Exception as exception:
+                error[0] = str(exception)
+        if self.distributed:
+            dist.broadcast_object_list(error, src=0)
+        if error[0]:
+            raise ValueError(error[0])
+
+    def _resolve_geometry(self):
+        args = self.args
+        micro_tokens = args.device_batch_size * args.sequence_length * self.world_size
+        if args.batch_tokens % micro_tokens:
+            raise ValueError("SFT batch tokens must be divisible by the distributed microbatch")
+        self.accumulation = args.batch_tokens // micro_tokens
+        self.device_tokens = args.device_batch_size * args.sequence_length
+        self.train_plan = sft_plan(
+            self.manifest,
+            "train",
+            self.device_tokens,
+            self.world_size,
+            self.accumulation,
+        )
+        self.steps_per_epoch = self.train_plan["cycle_microbatches"] // self.accumulation
+        self.steps = self.steps_per_epoch * args.epochs
+
+    def _initialize_model(self):
+        args = self.args
+        self.data_state = None
+        self.start_step = 0
+        self.trained_supervised_tokens = 0
+        self.elapsed_training = 0.0
+        self.metadata = None
+        checkpoint_state = None
+        if args.resume is not None:
+            checkpoint_state = load(args.output_dir, args.resume, self.device)
+            self.metadata = checkpoint_state[2]
+            self.model, self.config, self.pretrained = self._resumed_model()
+        else:
+            self.model = build_model(
+                self.configs["model"],
+                self.tokenizer.base.vocab_size,
+                self.tokenizer.bos_id,
+                self.tokenizer.eos_id,
+            )
+            self.pretrained = load_pretrained(self.model, **args.pretrained)
+            self.model.resize_token_embeddings(self.tokenizer.vocab_size)
+            self.config = self.model.config
+        self.model = self.model.to(self.device)
+        self.parameters = tuple(self.model.parameters())
+        self.optimizer = self.model.optimizer(args.lr, args.weight_decay, args.optimizer)
+        if checkpoint_state is not None:
+            self._restore_checkpoint_state(checkpoint_state)
+
+    def _resumed_model(self):
+        metadata = self.metadata
+        if metadata is None:
+            raise RuntimeError("resume metadata was not loaded")
+        if metadata.get("training_phase") != "sft" or metadata["manifest"] != self.manifest_hash:
             raise ValueError("SFT checkpoint does not match the model or dataset")
         pretrained = metadata["resolved"]["pretrained"]
         source = {key: pretrained[key] for key in ("repo", "revision", "filename")}
-        if source != args.pretrained:
+        if source != self.args.pretrained:
             raise ValueError("SFT checkpoint uses a different pretrained model")
         config = ArchitectureConfig.from_dict(metadata["config"])
-        expected_model = dict(configs["model"])
+        expected_model = dict(self.configs["model"])
         expected_model.pop("expected_parameters", None)
         expected_model.update(
-            vocab_size=tokenizer.vocab_size,
-            bos_token_id=tokenizer.bos_id,
-            eos_token_id=tokenizer.eos_id,
+            vocab_size=self.tokenizer.vocab_size,
+            bos_token_id=self.tokenizer.bos_id,
+            eos_token_id=self.tokenizer.eos_id,
         )
         if config.settings() != ArchitectureConfig.from_dict(expected_model).settings():
             raise ValueError("SFT checkpoint architecture does not match the experiment")
-        model = SpeckForCausalLM(config)
-    else:
-        model = build_model(
-            configs["model"], tokenizer.base.vocab_size, tokenizer.bos_id, tokenizer.eos_id
-        )
-        pretrained = load_pretrained(model, **args.pretrained)
-        model.resize_token_embeddings(tokenizer.vocab_size)
-        config = model.config
-    model = model.to(device)
-    parameters = tuple(model.parameters())
-    optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
-    if checkpoint_state is not None:
+        return SpeckForCausalLM(config), config, pretrained
+
+    def _restore_checkpoint_state(self, checkpoint_state):
+        metadata = self.metadata
+        if metadata is None:
+            raise RuntimeError("resume metadata was not loaded")
         model_state, optimizer_state, _ = checkpoint_state
-        model.load_state_dict(model_state)
-        optimizer.load_state_dict(optimizer_state)
-        start_step = metadata["step"]
-        data_state = metadata["data_state"]
-        if data_state.get("global_consumed_microbatches") != start_step * accumulation:
+        self.model.load_state_dict(model_state)
+        self.optimizer.load_state_dict(optimizer_state)
+        self.start_step = metadata["step"]
+        self.data_state = metadata["data_state"]
+        if (
+            self.data_state.get("global_consumed_microbatches")
+            != self.start_step * self.accumulation
+        ):
             raise ValueError("SFT checkpoint loader position does not match its step")
-        trained_supervised_tokens = metadata["trained_supervised_tokens"]
-        elapsed_training = metadata["training_seconds"]
+        self.trained_supervised_tokens = metadata["trained_supervised_tokens"]
+        self.elapsed_training = metadata["training_seconds"]
 
-    resolved = {
-        **vars(args),
-        "experiment": str(Path(cli.experiment).resolve()),
-        "tokenizer": tokenizer.metadata(),
-        "model": config.export(),
-        "parameters": model.parameter_count(),
-        "pretrained": pretrained,
-        "manifest": manifest_hash,
-        "dataset": manifest["dataset"],
-        "world_size": world_size,
-        "accumulation_steps": accumulation,
-        "steps_per_epoch": steps_per_epoch,
-        "steps": steps,
-        "device_tokens": device_tokens,
-        "bucket_plan": {
-            "real_microbatches": train_plan["real_microbatches"],
-            "dummy_microbatches": train_plan["dummy_microbatches"],
-            "cycle_microbatches": train_plan["cycle_microbatches"],
-            "context_tokens": train_plan["context_tokens"],
-            "buckets": train_plan["buckets"],
-            "fingerprint": train_plan["fingerprint"],
-        },
-    }
-    if metadata:
-        immutable = (
-            "sequence_length",
-            "device_batch_size",
-            "batch_tokens",
-            "epochs",
-            "lr",
-            "weight_decay",
-            "warmup_steps",
-            "min_lr",
-            "grad_clip",
-            "optimizer",
-            "world_size",
-            "manifest",
-            "pretrained",
-        )
-        changed = [key for key in immutable if metadata["resolved"].get(key) != resolved.get(key)]
-        if changed:
-            raise ValueError(f"SFT resume settings changed: {', '.join(changed)}")
-    print0(json.dumps(resolved, indent=2, sort_keys=True))
+    def _build_resolved_settings(self):
+        self.resolved = {
+            **vars(self.args),
+            "experiment": str(Path(self.cli.experiment).resolve()),
+            "tokenizer": self.tokenizer.metadata(),
+            "model": self.config.export(),
+            "parameters": self.model.parameter_count(),
+            "pretrained": self.pretrained,
+            "manifest": self.manifest_hash,
+            "dataset": self.manifest["dataset"],
+            "world_size": self.world_size,
+            "accumulation_steps": self.accumulation,
+            "steps_per_epoch": self.steps_per_epoch,
+            "steps": self.steps,
+            "device_tokens": self.device_tokens,
+            "bucket_plan": {
+                "real_microbatches": self.train_plan["real_microbatches"],
+                "dummy_microbatches": self.train_plan["dummy_microbatches"],
+                "cycle_microbatches": self.train_plan["cycle_microbatches"],
+                "context_tokens": self.train_plan["context_tokens"],
+                "buckets": self.train_plan["buckets"],
+                "fingerprint": self.train_plan["fingerprint"],
+            },
+        }
+        if self.metadata:
+            immutable = (
+                "sequence_length",
+                "device_batch_size",
+                "batch_tokens",
+                "epochs",
+                "lr",
+                "weight_decay",
+                "warmup_steps",
+                "min_lr",
+                "grad_clip",
+                "optimizer",
+                "world_size",
+                "manifest",
+                "pretrained",
+            )
+            changed = [
+                key
+                for key in immutable
+                if self.metadata["resolved"].get(key) != self.resolved.get(key)
+            ]
+            if changed:
+                raise ValueError(f"SFT resume settings changed: {', '.join(changed)}")
+        print0(json.dumps(self.resolved, indent=2, sort_keys=True))
 
-    if master:
-        tokenizer.save_pretrained(
-            Path(args.output_dir) / "tokenizer", config.max_position_embeddings
-        )
-    if distributed:
-        dist.barrier()
-    if master and args.run != "dummy":
-        run = wandb.init(
-            project=args.wandb_project,
-            name=args.run,
-            id=metadata.get("wandb_id") if metadata else None,
-            resume="must" if metadata and metadata.get("wandb_id") else None,
-            config=resolved,
-        )
-        wandb.define_metric("progress/step")
-        wandb.define_metric("*", step_metric="progress/step")
-    else:
-        run = NullRun()
+    def _publish_tokenizer(self):
+        if self.master:
+            self.tokenizer.save_pretrained(
+                Path(self.args.output_dir) / "tokenizer",
+                self.config.max_position_embeddings,
+            )
+        if self.distributed:
+            dist.barrier()
 
-    train_data = sft_loader(
-        tokenizer,
-        device_tokens,
-        accumulation,
-        device=device,
-        resume_state_dict=data_state,
-        data_dir=args.data_dir,
-    )
-    inputs, targets, data_state = next(train_data)
-    train_model: Any = model
-    if distributed:
-        train_model = DistributedDataParallel(
-            train_model,
-            device_ids=[local_rank],
-            broadcast_buffers=False,
-            gradient_as_bucket_view=True,
-        )
-    compiled_model: Any = (
-        train_model
-        if args.no_compile
-        else torch.compile(train_model, dynamic=False, mode="max-autotune-no-cudagraphs")
-    )
-    train_model = compiled_model
+    def _initialize_tracking(self):
+        args = self.args
+        if self.master and args.run != "dummy":
+            self.tracking = wandb.init(
+                project=args.wandb_project,
+                name=args.run,
+                id=self.metadata.get("wandb_id") if self.metadata else None,
+                resume="must" if self.metadata and self.metadata.get("wandb_id") else None,
+                config=self.resolved,
+            )
+            wandb.define_metric("progress/step")
+            wandb.define_metric("*", step_metric="progress/step")
+        else:
+            self.tracking = NullRun()
 
-    def validation(step):
-        validation_plan = sft_plan(manifest, "val", device_tokens, world_size)
-        loader = sft_loader(
-            tokenizer,
-            device_tokens,
-            split="val",
-            device=device,
+    def _prepare_execution(self):
+        args = self.args
+        self.train_data = sft_loader(
+            self.tokenizer,
+            self.device_tokens,
+            self.accumulation,
+            device=cast(Any, self.device),
+            resume_state_dict=self.data_state,
             data_dir=args.data_dir,
         )
+        self.inputs, self.targets, self.data_state = next(self.train_data)
+        train_model: Any = self.model
+        if self.distributed:
+            train_model = DistributedDataParallel(
+                train_model,
+                device_ids=[self.local_rank],
+                broadcast_buffers=False,
+                gradient_as_bucket_view=True,
+            )
+        self.train_model: Any = (
+            train_model
+            if args.no_compile
+            else torch.compile(
+                train_model,
+                dynamic=False,
+                mode="max-autotune-no-cudagraphs",
+            )
+        )
+
+    def _validate(self, step):
+        validation_plan = sft_plan(
+            self.manifest,
+            "val",
+            self.device_tokens,
+            self.world_size,
+        )
+        loader = sft_loader(
+            self.tokenizer,
+            self.device_tokens,
+            split="val",
+            device=cast(Any, self.device),
+            data_dir=self.args.data_dir,
+        )
         loss, supervised = validate_sft(
-            compiled_model,
+            self.train_model,
             loader,
             validation_plan["cycle_microbatches"],
-            distributed,
+            self.distributed,
         )
-        run.log(
+        self.tracking.log(
             {
                 "progress/step": step,
-                "progress/tokens": step * args.batch_tokens,
+                "progress/tokens": step * self.args.batch_tokens,
                 "validation/loss": loss,
                 "validation/perplexity": math.exp(min(loss, 20)),
                 "validation/supervised_tokens": supervised,
@@ -318,93 +377,134 @@ def main():
         print0(f"step {step:,} | validation loss {loss:.5f}")
         return loss
 
-    def checkpoint(step, validation_loss):
-        if master:
+    def _checkpoint(self, step, validation_loss):
+        if self.master:
             state = {
                 "format_version": 1,
                 "training_phase": "sft",
                 "step": step,
-                "config": config.settings(),
-                "resolved": resolved,
-                "manifest": manifest_hash,
-                "data_state": data_state,
-                "trained_supervised_tokens": trained_supervised_tokens,
+                "config": self.config.settings(),
+                "resolved": self.resolved,
+                "manifest": self.manifest_hash,
+                "data_state": self.data_state,
+                "trained_supervised_tokens": self.trained_supervised_tokens,
                 "validation_loss": validation_loss,
-                "training_seconds": elapsed_training,
-                "wandb_id": run.id,
+                "training_seconds": self.elapsed_training,
+                "wandb_id": self.tracking.id,
             }
-            save(args.output_dir, step, model.state_dict(), optimizer.state_dict(), state)
-            prune(args.output_dir, args.keep_checkpoints)
-        if distributed:
+            save(
+                self.args.output_dir,
+                step,
+                self.model.state_dict(),
+                self.optimizer.state_dict(),
+                state,
+            )
+            prune(self.args.output_dir, self.args.keep_checkpoints)
+        if self.distributed:
             dist.barrier()
 
-    validation_loss = metadata.get("validation_loss") if metadata else validation(0)
-    synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
-    pending_supervised_tokens = torch.zeros((), device=device, dtype=torch.long)
-    timing_started = time.perf_counter()
-    timing_steps = 0
-    for step in range(start_step, steps):
-        completed = step + 1
-        should_log = completed == 1 or completed % args.log_every == 0
-        should_validate = (
-            args.eval_every > 0 and completed % args.eval_every == 0
-        ) or completed == steps
-        should_save = (
-            args.save_every > 0 and completed % args.save_every == 0
-        ) or completed == steps
-        scale = lr_scale(step, steps, args.warmup_steps, args.min_lr)
-        loss, grad_norm, batch, supervised = sft_optimization_step(
-            train_model,
-            parameters,
-            optimizer,
-            train_data,
-            (inputs, targets, data_state),
-            accumulation,
-            args.grad_clip,
-            args.lr * scale,
-            distributed,
+    def _run_steps(self):
+        args = self.args
+        validation_loss = (
+            self.metadata.get("validation_loss") if self.metadata else self._validate(0)
         )
-        inputs, targets, data_state = batch
-        pending_supervised_tokens += supervised
-        timing_steps += 1
-        should_flush_timing = should_log or should_validate or should_save or completed == 10
-        duration = None
-        if should_flush_timing:
-            synchronize()
-            window_duration = time.perf_counter() - timing_started
-            if completed > 10:
-                elapsed_training += window_duration
-            duration = window_duration / timing_steps
-            trained_supervised_tokens += int(pending_supervised_tokens.item())
-            pending_supervised_tokens.zero_()
-        if should_log:
-            assert duration is not None
-            metrics = {
-                "progress/step": completed,
-                "progress/epoch": completed / steps_per_epoch,
-                "progress/tokens": completed * args.batch_tokens,
-                "progress/supervised_tokens": trained_supervised_tokens,
-                "train/loss": loss.item(),
-                "train/lr": float(optimizer.param_groups[0]["lr"]),
-                "train/grad_norm": float(grad_norm),
-                "performance/tokens_per_second": args.batch_tokens / duration,
-                "data/next_sequence_length": data_state["sequence_length"],
-            }
-            run.log(metrics)
-            print0(
-                f"step {completed:,}/{steps:,} | loss {metrics['train/loss']:.5f} | "
-                f"{metrics['performance/tokens_per_second']:,.0f} tok/s"
+        synchronize = torch.cuda.synchronize if self.device.type == "cuda" else lambda: None
+        pending_supervised_tokens = torch.zeros((), device=self.device, dtype=torch.long)
+        timing_started = time.perf_counter()
+        timing_steps = 0
+        for step in range(self.start_step, self.steps):
+            completed = step + 1
+            should_log = completed == 1 or completed % args.log_every == 0
+            should_validate = (
+                args.eval_every > 0 and completed % args.eval_every == 0
+            ) or completed == self.steps
+            should_save = (
+                args.save_every > 0 and completed % args.save_every == 0
+            ) or completed == self.steps
+            scale = lr_scale(step, self.steps, args.warmup_steps, args.min_lr)
+            loss, grad_norm, batch, supervised = sft_optimization_step(
+                self.train_model,
+                self.parameters,
+                self.optimizer,
+                self.train_data,
+                (self.inputs, self.targets, self.data_state),
+                self.accumulation,
+                args.grad_clip,
+                args.lr * scale,
+                self.distributed,
             )
-        if should_validate:
-            validation_loss = validation(completed)
-        if should_save:
-            checkpoint(completed, validation_loss)
-        if should_flush_timing:
-            timing_started = time.perf_counter()
-            timing_steps = 0
+            self.inputs, self.targets, self.data_state = batch
+            pending_supervised_tokens += supervised
+            timing_steps += 1
+            should_flush_timing = should_log or should_validate or should_save or completed == 10
+            duration = None
+            if should_flush_timing:
+                synchronize()
+                window_duration = time.perf_counter() - timing_started
+                if completed > 10:
+                    self.elapsed_training += window_duration
+                duration = window_duration / timing_steps
+                self.trained_supervised_tokens += int(pending_supervised_tokens.item())
+                pending_supervised_tokens.zero_()
+            if should_log:
+                self._log_step(completed, loss, grad_norm, duration)
+            if should_validate:
+                validation_loss = self._validate(completed)
+            if should_save:
+                self._checkpoint(completed, validation_loss)
+            if should_flush_timing:
+                timing_started = time.perf_counter()
+                timing_steps = 0
 
-    run.finish()
-    cleanup()
+    def _log_step(self, completed, loss, grad_norm, duration):
+        assert duration is not None
+        data_state = self.data_state
+        if data_state is None:
+            raise RuntimeError("training data state is unavailable")
+        metrics = {
+            "progress/step": completed,
+            "progress/epoch": completed / self.steps_per_epoch,
+            "progress/tokens": completed * self.args.batch_tokens,
+            "progress/supervised_tokens": self.trained_supervised_tokens,
+            "train/loss": loss.item(),
+            "train/lr": float(self.optimizer.param_groups[0]["lr"]),
+            "train/grad_norm": float(grad_norm),
+            "performance/tokens_per_second": self.args.batch_tokens / duration,
+            "data/next_sequence_length": data_state["sequence_length"],
+        }
+        self.tracking.log(metrics)
+        print0(
+            f"step {completed:,}/{self.steps:,} | loss {metrics['train/loss']:.5f} | "
+            f"{metrics['performance/tokens_per_second']:,.0f} tok/s"
+        )
+
+    def _finish_tracking(self):
+        if self.tracking is None:
+            return
+        tracking, self.tracking = self.tracking, None
+        tracking.finish()
+
+    def run(self):
+        try:
+            self._initialize_runtime()
+            self._load_and_verify_data()
+            self._resolve_geometry()
+            self._initialize_model()
+            self._build_resolved_settings()
+            self._publish_tokenizer()
+            self._initialize_tracking()
+            self._prepare_execution()
+            self._run_steps()
+            self._finish_tracking()
+        finally:
+            self._finish_tracking()
+            cleanup()
+
+
+def main():
+    cli = arguments()
+    configs = load_experiment(cli.experiment, "tokenizer", "model", "sft")
+    SFTTrainer(configs, cli).run()
 
 
 if __name__ == "__main__":

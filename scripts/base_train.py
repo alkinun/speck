@@ -181,286 +181,366 @@ def validate(model, loader, steps, world_size, source_ids):
     return (losses.sum() / counts.sum()).item(), source_losses
 
 
-def train(configs, cli):
-    session_started = time.perf_counter()
-    args = SimpleNamespace(**configs["train"])
-    args.device = cli.device
-    args.resume = cli.resume
-    args.no_compile = cli.no_compile
-    args.global_token_offset = getattr(args, "global_token_offset", 0)
-    args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
-    args.training_phase = getattr(args, "training_phase", "base")
-    args.lr_schedule = getattr(args, "lr_schedule", "cosine")
-    args.wandb_group = getattr(args, "wandb_group", None)
-    for key in ("save_every", "eval_every"):
-        override = getattr(cli, key, None)
-        if override is not None:
-            setattr(args, key, override)
-        if not isinstance(getattr(args, key), int) or getattr(args, key) < 0:
-            raise ValueError(f"{key} must be a non-negative integer")
-    args.data_dir = str(
-        resolve_data_dir(
-            configs["data"].get("output_dir"),
-            configs["data"].get("output_name"),
+class BaseTrainer:
+    """Own one base-training lifecycle and its mutable execution state."""
+
+    def __init__(self, configs, cli):
+        self.configs = configs
+        self.cli = cli
+        self.session_started = time.perf_counter()
+        self.tracking: Any = None
+        self._prepare_settings()
+        self._load_checkpoint_metadata()
+
+    def _prepare_settings(self):
+        args = SimpleNamespace(**self.configs["train"])
+        args.device = self.cli.device
+        args.resume = self.cli.resume
+        args.no_compile = self.cli.no_compile
+        args.global_token_offset = getattr(args, "global_token_offset", 0)
+        args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
+        args.training_phase = getattr(args, "training_phase", "base")
+        args.lr_schedule = getattr(args, "lr_schedule", "cosine")
+        args.wandb_group = getattr(args, "wandb_group", None)
+        for key in ("save_every", "eval_every"):
+            override = getattr(self.cli, key, None)
+            if override is not None:
+                setattr(args, key, override)
+            if not isinstance(getattr(args, key), int) or getattr(args, key) < 0:
+                raise ValueError(f"{key} must be a non-negative integer")
+        args.data_dir = str(
+            resolve_data_dir(
+                self.configs["data"].get("output_dir"),
+                self.configs["data"].get("output_name"),
+            )
         )
-    )
-    args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
-    branching = cli.branch_from is not None or cli.branch_step is not None
-    if (cli.branch_from is None) != (cli.branch_step is None):
-        raise ValueError("--branch-from and --branch-step must be provided together")
-    if args.resume is not None and branching:
-        raise ValueError("--resume and --branch-from are mutually exclusive")
-    if not branching and cli.branch_schedule != "inherit":
-        raise ValueError("--branch-schedule new requires --branch-from")
-    if args.resume is None and latest(args.output_dir) is not None:
-        raise FileExistsError(f"checkpoints already exist: {args.output_dir}; pass --resume STEP")
-    metadata = load_metadata(args.output_dir, args.resume) if args.resume is not None else None
-    parent_directory = cli.branch_from.expanduser().resolve() if branching else None
-    if parent_directory == Path(args.output_dir).expanduser().resolve():
-        raise ValueError("branch output directory must differ from its parent")
-    parent_metadata = load_metadata(parent_directory, cli.branch_step) if branching else None
-    if metadata:
-        args.global_token_offset = metadata["resolved"].get("global_token_offset", 0)
-    data_token_offset = metadata["resolved"].get("data_token_offset", 0) if metadata else 0
-    rank, local_rank, world_size, device = init_runtime(args.device)
-    distributed = world_size > 1
-    master = rank == 0
-    parent = metadata["resolved"].get("parent_checkpoint") if metadata else None
-    branch_schedule = metadata["resolved"].get("branch_schedule") if metadata else None
-    if parent_metadata:
-        objects = [checkpoint_identity(parent_directory, cli.branch_step) if master else None]
-        if distributed:
-            dist.broadcast_object_list(objects, src=0)
-        parent = objects[0]
-        branch_schedule = cli.branch_schedule
-    tokenizer = get_tokenizer(**configs["tokenizer"])
-    manifest = load_manifest(args.data_dir)
-    manifest_hash = manifest_fingerprint(manifest)
-    source_ids = tuple(source["id"] for source in manifest["sources"])
-    if manifest["tokenizer"]["fingerprint"] != tokenizer.fingerprint():
-        raise ValueError("dataset and tokenizer do not match")
+        args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
+        self.args = args
+        self.branching = self.cli.branch_from is not None or self.cli.branch_step is not None
+        if (self.cli.branch_from is None) != (self.cli.branch_step is None):
+            raise ValueError("--branch-from and --branch-step must be provided together")
+        if args.resume is not None and self.branching:
+            raise ValueError("--resume and --branch-from are mutually exclusive")
+        if not self.branching and self.cli.branch_schedule != "inherit":
+            raise ValueError("--branch-schedule new requires --branch-from")
+        if args.resume is None and latest(args.output_dir) is not None:
+            raise FileExistsError(
+                f"checkpoints already exist: {args.output_dir}; pass --resume STEP"
+            )
 
-    error: list[str | None] = [None]
-    if master:
-        try:
-            verify_shards(args.data_dir, manifest)
-        except Exception as exception:
-            error[0] = str(exception)
-    if distributed:
-        dist.broadcast_object_list(error, src=0)
-    if error[0]:
-        raise ValueError(error[0])
+    def _load_checkpoint_metadata(self):
+        args = self.args
+        self.metadata = (
+            load_metadata(args.output_dir, args.resume) if args.resume is not None else None
+        )
+        self.parent_directory = (
+            self.cli.branch_from.expanduser().resolve() if self.branching else None
+        )
+        if self.parent_directory == Path(args.output_dir).expanduser().resolve():
+            raise ValueError("branch output directory must differ from its parent")
+        self.parent_metadata = (
+            load_metadata(self.parent_directory, self.cli.branch_step) if self.branching else None
+        )
+        if self.metadata:
+            args.global_token_offset = self.metadata["resolved"].get("global_token_offset", 0)
+        self.data_token_offset = (
+            self.metadata["resolved"].get("data_token_offset", 0) if self.metadata else 0
+        )
 
-    model = build_model(
-        configs["model"], tokenizer.vocab_size, tokenizer.bos_id, tokenizer.eos_id
-    ).to(device)
-    config = model.config
-    model.init_weights()
-    parameters = tuple(model.parameters())
-    optimizer = model.optimizer(args.lr, args.weight_decay, args.optimizer)
+    def _initialize_runtime(self):
+        self.rank, self.local_rank, self.world_size, self.device = init_runtime(self.args.device)
+        self.distributed = self.world_size > 1
+        self.master = self.rank == 0
+        self.parent = self.metadata["resolved"].get("parent_checkpoint") if self.metadata else None
+        self.branch_schedule = (
+            self.metadata["resolved"].get("branch_schedule") if self.metadata else None
+        )
+        if self.parent_metadata:
+            objects = [
+                checkpoint_identity(self.parent_directory, self.cli.branch_step)
+                if self.master
+                else None
+            ]
+            if self.distributed:
+                dist.broadcast_object_list(objects, src=0)
+            self.parent = objects[0]
+            self.branch_schedule = self.cli.branch_schedule
 
-    batch_limit = args.device_batch_size if cli.device_batch_size is None else cli.device_batch_size
-    args.device_batch_size = resolve_device_batch_size(
-        batch_limit,
-        args.batch_tokens,
-        args.sequence_length,
-        world_size,
-    )
-    micro_tokens = args.device_batch_size * args.sequence_length * world_size
-    accumulation = args.batch_tokens // micro_tokens
-    steps = math.ceil(args.train_tokens / args.batch_tokens)
-    consumed_tokens = steps * args.batch_tokens
-    schedule_step_offset = 0
-    schedule_steps = steps
-    if metadata:
-        schedule_step_offset = metadata["resolved"].get("schedule_step_offset", 0)
-        schedule_steps = metadata["resolved"].get("schedule_steps", steps)
-    elif parent_metadata:
-        (
-            args.global_token_offset,
-            data_token_offset,
-            schedule_step_offset,
-            schedule_steps,
-        ) = branch_position(
-            parent_metadata,
+    def _load_and_verify_data(self):
+        self.tokenizer = get_tokenizer(**self.configs["tokenizer"])
+        self.manifest = load_manifest(self.args.data_dir)
+        self.manifest_hash = manifest_fingerprint(self.manifest)
+        self.source_ids = tuple(source["id"] for source in self.manifest["sources"])
+        if self.manifest["tokenizer"]["fingerprint"] != self.tokenizer.fingerprint():
+            raise ValueError("dataset and tokenizer do not match")
+        error: list[str | None] = [None]
+        if self.master:
+            try:
+                verify_shards(self.args.data_dir, self.manifest)
+            except Exception as exception:
+                error[0] = str(exception)
+        if self.distributed:
+            dist.broadcast_object_list(error, src=0)
+        if error[0]:
+            raise ValueError(error[0])
+
+    def _initialize_model_and_geometry(self):
+        args = self.args
+        self.model = build_model(
+            self.configs["model"],
+            self.tokenizer.vocab_size,
+            self.tokenizer.bos_id,
+            self.tokenizer.eos_id,
+        ).to(self.device)
+        self.config = self.model.config
+        self.model.init_weights()
+        self.parameters = tuple(self.model.parameters())
+        self.optimizer = self.model.optimizer(args.lr, args.weight_decay, args.optimizer)
+        batch_limit = (
+            args.device_batch_size
+            if self.cli.device_batch_size is None
+            else self.cli.device_batch_size
+        )
+        args.device_batch_size = resolve_device_batch_size(
+            batch_limit,
             args.batch_tokens,
-            steps if cli.branch_schedule == "inherit" else None,
+            args.sequence_length,
+            self.world_size,
         )
-        if cli.branch_schedule == "new":
-            schedule_step_offset = 0
-            schedule_steps = steps
-    if (
-        not isinstance(args.global_token_offset, int)
-        or isinstance(args.global_token_offset, bool)
-        or args.global_token_offset < 0
-        or args.global_token_offset % args.batch_tokens
-    ):
-        raise ValueError("global token offset must align with optimizer batches")
-    global_step_offset = args.global_token_offset // args.batch_tokens
-    global_consumed_tokens = args.global_token_offset + consumed_tokens
-    milestones = checkpoint_milestones(
-        args.checkpoint_tokens, args.batch_tokens, args.global_token_offset, steps
-    )
-    if manifest["splits"]["train"]["tokens"] <= consumed_tokens:
-        raise ValueError("packed dataset is too small for this run")
+        micro_tokens = args.device_batch_size * args.sequence_length * self.world_size
+        self.accumulation = args.batch_tokens // micro_tokens
+        self.steps = math.ceil(args.train_tokens / args.batch_tokens)
+        self.consumed_tokens = self.steps * args.batch_tokens
+        self.schedule_step_offset = 0
+        self.schedule_steps = self.steps
+        if self.metadata:
+            self.schedule_step_offset = self.metadata["resolved"].get("schedule_step_offset", 0)
+            self.schedule_steps = self.metadata["resolved"].get("schedule_steps", self.steps)
+        elif self.parent_metadata:
+            (
+                args.global_token_offset,
+                self.data_token_offset,
+                self.schedule_step_offset,
+                self.schedule_steps,
+            ) = branch_position(
+                self.parent_metadata,
+                args.batch_tokens,
+                self.steps if self.cli.branch_schedule == "inherit" else None,
+            )
+            if self.cli.branch_schedule == "new":
+                self.schedule_step_offset = 0
+                self.schedule_steps = self.steps
+        if (
+            not isinstance(args.global_token_offset, int)
+            or isinstance(args.global_token_offset, bool)
+            or args.global_token_offset < 0
+            or args.global_token_offset % args.batch_tokens
+        ):
+            raise ValueError("global token offset must align with optimizer batches")
+        self.global_step_offset = args.global_token_offset // args.batch_tokens
+        self.global_consumed_tokens = args.global_token_offset + self.consumed_tokens
+        self.milestones = checkpoint_milestones(
+            args.checkpoint_tokens,
+            args.batch_tokens,
+            args.global_token_offset,
+            self.steps,
+        )
+        if self.manifest["splits"]["train"]["tokens"] <= self.consumed_tokens:
+            raise ValueError("packed dataset is too small for this run")
 
-    data_state = None
-    start_step = 0
-    elapsed_training = 0.0
-    elapsed_optimizer = 0.0
-    elapsed_evaluation = 0.0
-    elapsed_active = 0.0
-    elapsed_checkpoint = 0.0
-    if args.resume is not None:
-        model_state, optimizer_state, loaded_metadata = load(args.output_dir, args.resume, device)
-        if loaded_metadata != metadata:
-            raise ValueError("checkpoint metadata changed while loading")
-        stored_config = ArchitectureConfig.from_dict(metadata["config"]).settings()
-        if stored_config != config.settings() or metadata["manifest"] != manifest_hash:
-            raise ValueError("checkpoint does not match the model or dataset")
-        model.load_state_dict(model_state)
-        optimizer.load_state_dict(optimizer_state)
-        start_step = metadata["step"]
-        data_state = metadata["data_state"]
-        validate_loader_progress(data_state, data_token_offset + start_step * args.batch_tokens)
-        elapsed_training = metadata["training_seconds"]
-        timing = load_timing(args.output_dir, args.resume) or metadata.get("timing", {})
-        elapsed_optimizer = timing.get("optimizer_seconds", elapsed_training)
-        elapsed_evaluation = timing.get("evaluation_seconds", 0.0)
-        elapsed_active = timing.get("active_seconds", elapsed_training)
-        elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
-    elif parent_metadata:
+    def _restore_training_state(self):
+        args = self.args
+        self.data_state = None
+        self.start_step = 0
+        self.elapsed_training = 0.0
+        self.elapsed_optimizer = 0.0
+        self.elapsed_evaluation = 0.0
+        self.elapsed_active = 0.0
+        self.elapsed_checkpoint = 0.0
+        if args.resume is not None:
+            metadata = self.metadata
+            if metadata is None:
+                raise RuntimeError("resume metadata was not loaded")
+            model_state, optimizer_state, loaded_metadata = load(
+                args.output_dir, args.resume, self.device
+            )
+            if loaded_metadata != metadata:
+                raise ValueError("checkpoint metadata changed while loading")
+            stored_config = ArchitectureConfig.from_dict(metadata["config"]).settings()
+            if (
+                stored_config != self.config.settings()
+                or metadata["manifest"] != self.manifest_hash
+            ):
+                raise ValueError("checkpoint does not match the model or dataset")
+            self.model.load_state_dict(model_state)
+            self.optimizer.load_state_dict(optimizer_state)
+            self.start_step = metadata["step"]
+            self.data_state = metadata["data_state"]
+            validate_loader_progress(
+                self.data_state,
+                self.data_token_offset + self.start_step * args.batch_tokens,
+            )
+            self.elapsed_training = metadata["training_seconds"]
+            timing = load_timing(args.output_dir, args.resume) or metadata.get("timing", {})
+            self.elapsed_optimizer = timing.get("optimizer_seconds", self.elapsed_training)
+            self.elapsed_evaluation = timing.get("evaluation_seconds", 0.0)
+            self.elapsed_active = timing.get("active_seconds", self.elapsed_training)
+            self.elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
+        elif self.parent_metadata:
+            self._restore_parent_checkpoint()
+
+    def _restore_parent_checkpoint(self):
+        parent_metadata = self.parent_metadata
+        if parent_metadata is None:
+            raise RuntimeError("branch metadata was not loaded")
         stored_config = ArchitectureConfig.from_dict(parent_metadata["config"]).settings()
-        if stored_config != config.settings() or parent_metadata["manifest"] != manifest_hash:
+        if (
+            stored_config != self.config.settings()
+            or parent_metadata["manifest"] != self.manifest_hash
+        ):
             raise ValueError("branch parent does not match the model or dataset")
-        branch_settings = {**vars(args), "world_size": world_size}
+        branch_settings = {**vars(self.args), "world_size": self.world_size}
         changed = changed_branch_settings(
             parent_metadata["resolved"],
             branch_settings,
-            allow_schedule_change=cli.branch_schedule == "new",
+            allow_schedule_change=self.cli.branch_schedule == "new",
         )
         if changed:
             raise ValueError(f"branch settings changed: {', '.join(changed)}")
         model_state, optimizer_state, loaded_parent = load(
-            parent_directory, cli.branch_step, device
+            self.parent_directory, self.cli.branch_step, self.device
         )
         if loaded_parent != parent_metadata:
             raise ValueError("parent checkpoint metadata changed while loading")
-        model.load_state_dict(model_state)
-        optimizer.load_state_dict(optimizer_state)
-        data_state = parent_metadata["data_state"]
-        validate_loader_progress(data_state, data_token_offset)
+        self.model.load_state_dict(model_state)
+        self.optimizer.load_state_dict(optimizer_state)
+        self.data_state = parent_metadata["data_state"]
+        validate_loader_progress(self.data_state, self.data_token_offset)
 
-    dataset_provenance = {
-        "format": manifest["format"],
-        "requested_train_tokens": manifest["requested_train_tokens"],
-        "mixture": manifest["mixture"],
-        "sources": [
-            {
-                "id": source["id"],
-                "repo": source["repo"],
-                "revision": source["revision"],
-                "file_list_sha256": source["file_list_sha256"],
-            }
-            for source in manifest["sources"]
-        ],
-    }
-    resolved = {
-        **vars(args),
-        "experiment": str(Path(cli.experiment).resolve()),
-        "tokenizer": configs["tokenizer"],
-        "model": config.export(),
-        "parameters": model.parameter_count(),
-        "manifest": manifest_hash,
-        "dataset": dataset_provenance,
-        "world_size": world_size,
-        "accumulation_steps": accumulation,
-        "steps": steps,
-        "consumed_tokens": consumed_tokens,
-        "global_step_offset": global_step_offset,
-        "global_consumed_tokens": global_consumed_tokens,
-        "data_token_offset": data_token_offset,
-        "schedule_step_offset": schedule_step_offset,
-        "schedule_steps": schedule_steps,
-        "parent_checkpoint": parent,
-        "branch_schedule": branch_schedule,
-        "milestone_steps": {str(step): token for step, token in milestones.items()},
-    }
-    if metadata:
-        changed = changed_resume_settings(metadata["resolved"], resolved)
-        if changed:
-            raise ValueError(f"resume settings changed: {', '.join(changed)}")
-    print0(json.dumps(resolved, indent=2, sort_keys=True))
+    def _build_resolved_settings(self):
+        dataset_provenance = {
+            "format": self.manifest["format"],
+            "requested_train_tokens": self.manifest["requested_train_tokens"],
+            "mixture": self.manifest["mixture"],
+            "sources": [
+                {
+                    "id": source["id"],
+                    "repo": source["repo"],
+                    "revision": source["revision"],
+                    "file_list_sha256": source["file_list_sha256"],
+                }
+                for source in self.manifest["sources"]
+            ],
+        }
+        self.resolved = {
+            **vars(self.args),
+            "experiment": str(Path(self.cli.experiment).resolve()),
+            "tokenizer": self.configs["tokenizer"],
+            "model": self.config.export(),
+            "parameters": self.model.parameter_count(),
+            "manifest": self.manifest_hash,
+            "dataset": dataset_provenance,
+            "world_size": self.world_size,
+            "accumulation_steps": self.accumulation,
+            "steps": self.steps,
+            "consumed_tokens": self.consumed_tokens,
+            "global_step_offset": self.global_step_offset,
+            "global_consumed_tokens": self.global_consumed_tokens,
+            "data_token_offset": self.data_token_offset,
+            "schedule_step_offset": self.schedule_step_offset,
+            "schedule_steps": self.schedule_steps,
+            "parent_checkpoint": self.parent,
+            "branch_schedule": self.branch_schedule,
+            "milestone_steps": {str(step): token for step, token in self.milestones.items()},
+        }
+        if self.metadata:
+            changed = changed_resume_settings(self.metadata["resolved"], self.resolved)
+            if changed:
+                raise ValueError(f"resume settings changed: {', '.join(changed)}")
+        print0(json.dumps(self.resolved, indent=2, sort_keys=True))
 
-    if master and args.run != "dummy":
-        run = wandb.init(
-            project=args.wandb_project,
-            name=args.run,
-            group=args.wandb_group,
-            job_type=args.training_phase,
-            id=metadata.get("wandb_id") if metadata else None,
-            resume="must" if metadata and metadata.get("wandb_id") else None,
-            config=resolved,
+    def _initialize_tracking(self):
+        args = self.args
+        if self.master and args.run != "dummy":
+            self.tracking = wandb.init(
+                project=args.wandb_project,
+                name=args.run,
+                group=args.wandb_group,
+                job_type=args.training_phase,
+                id=self.metadata.get("wandb_id") if self.metadata else None,
+                resume="must" if self.metadata and self.metadata.get("wandb_id") else None,
+                config=self.resolved,
+            )
+            wandb.define_metric("progress/step")
+            wandb.define_metric("*", step_metric="progress/step")
+        else:
+            self.tracking = NullRun()
+
+    def _prepare_execution(self):
+        args = self.args
+        self.train_data = packed_loader(
+            self.tokenizer,
+            args.device_batch_size,
+            args.sequence_length,
+            "train",
+            device=self.device,
+            resume_state_dict=self.data_state,
+            data_dir=args.data_dir,
         )
-        wandb.define_metric("progress/step")
-        wandb.define_metric("*", step_metric="progress/step")
-    else:
-        run = NullRun()
-
-    train_data = packed_loader(
-        tokenizer,
-        args.device_batch_size,
-        args.sequence_length,
-        "train",
-        device=device,
-        resume_state_dict=data_state,
-        data_dir=args.data_dir,
-    )
-    inputs, targets, data_state = next(train_data)
-    train_model: Any = model
-    if distributed:
-        train_model = DistributedDataParallel(
-            train_model,
-            device_ids=[local_rank],
-            broadcast_buffers=False,
-            gradient_as_bucket_view=True,
+        self.inputs, self.targets, self.data_state = next(self.train_data)
+        train_model: Any = self.model
+        if self.distributed:
+            train_model = DistributedDataParallel(
+                train_model,
+                device_ids=[self.local_rank],
+                broadcast_buffers=False,
+                gradient_as_bucket_view=True,
+            )
+        self.train_model: Any = (
+            train_model
+            if args.no_compile
+            else torch.compile(
+                train_model,
+                dynamic=False,
+                options={
+                    "max_autotune": True,
+                    "coordinate_descent_tuning": True,
+                    "aggressive_fusion": True,
+                },
+            )
         )
-    compiled_model: Any = (
-        train_model
-        if args.no_compile
-        else torch.compile(
-            train_model,
-            dynamic=False,
-            options={
-                "max_autotune": True,
-                "coordinate_descent_tuning": True,
-                "aggressive_fusion": True,
-            },
-        )
-    )
-    if not args.no_compile and hasattr(optimizer, "compile_step"):
-        optimizer.compile_step()
-    train_model = compiled_model
-    flops = model.flops_per_token(args.sequence_length)
+        compile_step = getattr(self.optimizer, "compile_step", None)
+        if not args.no_compile and compile_step is not None:
+            compile_step()
+        self.flops = self.model.flops_per_token(args.sequence_length)
 
-    def validation(step):
-        nonlocal elapsed_evaluation
+    def _validate(self, step):
         started = time.perf_counter()
-        tokens_per_step = args.device_batch_size * args.sequence_length * world_size
-        eval_tokens = args.final_eval_tokens if step == steps else args.eval_tokens
-        val_steps = max(1, min(eval_tokens, manifest["splits"]["val"]["tokens"]) // tokens_per_step)
+        args = self.args
+        tokens_per_step = args.device_batch_size * args.sequence_length * self.world_size
+        eval_tokens = args.final_eval_tokens if step == self.steps else args.eval_tokens
+        val_steps = max(
+            1,
+            min(eval_tokens, self.manifest["splits"]["val"]["tokens"]) // tokens_per_step,
+        )
         loader = packed_loader(
-            tokenizer,
+            self.tokenizer,
             args.device_batch_size,
             args.sequence_length,
             "val",
-            device=device,
+            device=self.device,
             data_dir=args.data_dir,
         )
-        loss, source_losses = validate(compiled_model, loader, val_steps, world_size, source_ids)
+        loss, source_losses = validate(
+            self.train_model,
+            loader,
+            val_steps,
+            self.world_size,
+            self.source_ids,
+        )
         evaluated_tokens = val_steps * tokens_per_step
-        elapsed_evaluation += time.perf_counter() - started
-        global_step = global_step_offset + step
+        self.elapsed_evaluation += time.perf_counter() - started
+        global_step = self.global_step_offset + step
         global_tokens = args.global_token_offset + step * args.batch_tokens
         metrics = {
             "progress/step": global_step,
@@ -473,11 +553,12 @@ def train(configs, cli):
         for source_id, source_loss in source_losses.items():
             metrics[f"validation/source/{source_id}/loss"] = source_loss
             metrics[f"validation/source/{source_id}/perplexity"] = math.exp(min(source_loss, 20))
-        run.log(metrics)
+        self.tracking.log(metrics)
         print0(f"step {global_step:,} ({global_tokens:,} tokens) | validation loss {loss:.5f}")
         return loss, source_losses, evaluated_tokens
 
-    def checkpoint(
+    def _checkpoint(
+        self,
         step,
         validation_loss,
         validation_source_losses,
@@ -485,19 +566,19 @@ def train(configs, cli):
         validation_tokens,
         milestone,
     ):
-        nonlocal elapsed_checkpoint
         started = time.perf_counter()
-        if master:
+        args = self.args
+        if self.master:
             global_tokens = args.global_token_offset + step * args.batch_tokens
             state = {
                 "step": step,
-                "global_step": global_step_offset + step,
+                "global_step": self.global_step_offset + step,
                 "global_tokens": global_tokens,
                 "training_phase": args.training_phase,
-                "config": config.settings(),
-                "resolved": resolved,
-                "manifest": manifest_hash,
-                "data_state": data_state,
+                "config": self.config.settings(),
+                "resolved": self.resolved,
+                "manifest": self.manifest_hash,
+                "data_state": self.data_state,
                 "validation_loss": validation_loss,
                 "validation_source_losses": validation_source_losses,
                 "validation_step": validation_step,
@@ -508,143 +589,194 @@ def train(configs, cli):
                 ),
                 "validation_tokens": validation_tokens,
                 "milestone_tokens": milestone,
-                "training_seconds": elapsed_training,
+                "training_seconds": self.elapsed_training,
                 "timing": {
-                    "optimizer_seconds": elapsed_optimizer,
-                    "evaluation_seconds": elapsed_evaluation,
-                    "checkpoint_seconds": elapsed_checkpoint,
-                    "active_seconds": elapsed_active + time.perf_counter() - session_started,
+                    "optimizer_seconds": self.elapsed_optimizer,
+                    "evaluation_seconds": self.elapsed_evaluation,
+                    "checkpoint_seconds": self.elapsed_checkpoint,
+                    "active_seconds": self.elapsed_active
+                    + time.perf_counter()
+                    - self.session_started,
                 },
-                "wandb_id": run.id,
+                "wandb_id": self.tracking.id,
             }
             save(
                 args.output_dir,
                 step,
-                model.state_dict(),
-                optimizer.state_dict(),
+                self.model.state_dict(),
+                self.optimizer.state_dict(),
                 state,
                 timing=lambda: {
-                    "optimizer_seconds": elapsed_optimizer,
-                    "evaluation_seconds": elapsed_evaluation,
-                    "checkpoint_seconds": elapsed_checkpoint + time.perf_counter() - started,
-                    "active_seconds": elapsed_active + time.perf_counter() - session_started,
+                    "optimizer_seconds": self.elapsed_optimizer,
+                    "evaluation_seconds": self.elapsed_evaluation,
+                    "checkpoint_seconds": self.elapsed_checkpoint + time.perf_counter() - started,
+                    "active_seconds": self.elapsed_active
+                    + time.perf_counter()
+                    - self.session_started,
                 },
             )
-        if distributed:
+        if self.distributed:
             dist.barrier()
-        elapsed_checkpoint += time.perf_counter() - started
+        self.elapsed_checkpoint += time.perf_counter() - started
 
-    if metadata:
-        validation_loss = metadata["validation_loss"]
-        validation_source_losses = metadata.get("validation_source_losses", {})
-        validation_step = metadata.get("validation_step")
-        validation_tokens = metadata.get("validation_tokens", 0)
-    else:
-        validation_loss, validation_source_losses, validation_tokens = validation(0)
-        validation_step = 0
-    synchronize = torch.cuda.synchronize if device.type == "cuda" else lambda: None
-    timing_started = time.perf_counter()
-    timing_steps = 0
-    for step in range(start_step, steps):
-        completed = step + 1
-        should_log = completed == 1 or completed % args.log_every == 0
-        milestone = milestones.get(completed)
-        should_validate = (
-            (args.eval_every > 0 and completed % args.eval_every == 0)
-            or milestone is not None
-            or completed == steps
-        )
-        should_save = (
-            (args.save_every > 0 and completed % args.save_every == 0)
-            or milestone is not None
-            or completed == steps
-        )
-        scale = lr_scale(
-            schedule_step_offset + step,
-            schedule_steps,
-            args.warmup_steps,
-            args.min_lr,
-            args.lr_schedule,
-        )
-        loss_sum, grad_norm, batch = optimization_step(
-            train_model,
-            parameters,
-            optimizer,
-            train_data,
-            (inputs, targets, data_state),
-            accumulation,
-            args.grad_clip,
-            args.lr * scale,
-            distributed,
-        )
-        inputs, targets, data_state = batch
-        timing_steps += 1
-        should_flush_timing = should_log or should_validate or should_save or completed == 10
-        duration = None
-        if should_flush_timing:
-            synchronize()
-            window_duration = time.perf_counter() - timing_started
-            elapsed_optimizer += window_duration
-            if completed > 10:
-                elapsed_training += window_duration
-            duration = window_duration / timing_steps
-        if distributed and should_log:
-            dist.all_reduce(loss_sum, op=dist.ReduceOp.AVG)
-        if should_log:
-            assert duration is not None
-            metrics = {
-                "progress/step": global_step_offset + completed,
-                "progress/phase_step": completed,
-                "progress/tokens": args.global_token_offset + completed * args.batch_tokens,
-                "train/loss": loss_sum.item(),
-                "train/lr": float(optimizer.param_groups[0]["lr"]),
-                "train/grad_norm": float(grad_norm),
-                "performance/tokens_per_second": args.batch_tokens / duration,
-                "performance/tflops": flops * args.batch_tokens / duration / 1e12,
-                "data/next_source": data_state["selected_source"],
-                "data/next_source_epoch": data_state["source_epochs"][
-                    data_state["selected_source"]
-                ],
-                "data/next_phase": data_state["phase"],
-                "data/next_shard": data_state["shard"]["index"],
-            }
-            run.log(metrics)
-            print0(
-                f"step {metrics['progress/step']:,}/{global_step_offset + steps:,} | loss {metrics['train/loss']:.5f} | {metrics['performance/tokens_per_second']:,.0f} tok/s"
+    def _initial_validation(self):
+        metadata = self.metadata
+        if metadata:
+            return (
+                metadata["validation_loss"],
+                metadata.get("validation_source_losses", {}),
+                metadata.get("validation_step"),
+                metadata.get("validation_tokens", 0),
             )
-        if should_validate:
-            validation_loss, validation_source_losses, validation_tokens = validation(completed)
-            validation_step = completed
-        if should_save:
-            checkpoint(
-                completed,
-                validation_loss,
-                validation_source_losses,
-                validation_step,
-                validation_tokens,
-                milestone,
-            )
-        if should_flush_timing:
-            timing_started = time.perf_counter()
-            timing_steps = 0
+        loss, source_losses, tokens = self._validate(0)
+        return loss, source_losses, 0, tokens
 
-    run.finish()
-    if master:
-        summary = {
-            "training_phase": args.training_phase,
-            "steps": steps,
-            "global_step": global_step_offset + steps,
-            "global_tokens": global_consumed_tokens,
-            "optimizer_seconds": elapsed_optimizer,
-            "evaluation_seconds": elapsed_evaluation,
-            "checkpoint_seconds": elapsed_checkpoint,
-            "active_seconds": elapsed_active + time.perf_counter() - session_started,
+    def _run_steps(self):
+        args = self.args
+        validation_loss, validation_source_losses, validation_step, validation_tokens = (
+            self._initial_validation()
+        )
+        synchronize = torch.cuda.synchronize if self.device.type == "cuda" else lambda: None
+        timing_started = time.perf_counter()
+        timing_steps = 0
+        for step in range(self.start_step, self.steps):
+            completed = step + 1
+            should_log = completed == 1 or completed % args.log_every == 0
+            milestone = self.milestones.get(completed)
+            should_validate = (
+                (args.eval_every > 0 and completed % args.eval_every == 0)
+                or milestone is not None
+                or completed == self.steps
+            )
+            should_save = (
+                (args.save_every > 0 and completed % args.save_every == 0)
+                or milestone is not None
+                or completed == self.steps
+            )
+            scale = lr_scale(
+                self.schedule_step_offset + step,
+                self.schedule_steps,
+                args.warmup_steps,
+                args.min_lr,
+                args.lr_schedule,
+            )
+            loss_sum, grad_norm, batch = optimization_step(
+                self.train_model,
+                self.parameters,
+                self.optimizer,
+                self.train_data,
+                (self.inputs, self.targets, self.data_state),
+                self.accumulation,
+                args.grad_clip,
+                args.lr * scale,
+                self.distributed,
+            )
+            self.inputs, self.targets, self.data_state = batch
+            timing_steps += 1
+            should_flush_timing = should_log or should_validate or should_save or completed == 10
+            duration = None
+            if should_flush_timing:
+                synchronize()
+                window_duration = time.perf_counter() - timing_started
+                self.elapsed_optimizer += window_duration
+                if completed > 10:
+                    self.elapsed_training += window_duration
+                duration = window_duration / timing_steps
+            if self.distributed and should_log:
+                dist.all_reduce(loss_sum, op=dist.ReduceOp.AVG)
+            if should_log:
+                self._log_step(completed, loss_sum, grad_norm, duration)
+            if should_validate:
+                validation_loss, validation_source_losses, validation_tokens = self._validate(
+                    completed
+                )
+                validation_step = completed
+            if should_save:
+                self._checkpoint(
+                    completed,
+                    validation_loss,
+                    validation_source_losses,
+                    validation_step,
+                    validation_tokens,
+                    milestone,
+                )
+            if should_flush_timing:
+                timing_started = time.perf_counter()
+                timing_steps = 0
+
+    def _log_step(self, completed, loss_sum, grad_norm, duration):
+        assert duration is not None
+        args = self.args
+        data_state = self.data_state
+        if data_state is None:
+            raise RuntimeError("training data state is unavailable")
+        metrics = {
+            "progress/step": self.global_step_offset + completed,
+            "progress/phase_step": completed,
+            "progress/tokens": args.global_token_offset + completed * args.batch_tokens,
+            "train/loss": loss_sum.item(),
+            "train/lr": float(self.optimizer.param_groups[0]["lr"]),
+            "train/grad_norm": float(grad_norm),
+            "performance/tokens_per_second": args.batch_tokens / duration,
+            "performance/tflops": self.flops * args.batch_tokens / duration / 1e12,
+            "data/next_source": data_state["selected_source"],
+            "data/next_source_epoch": data_state["source_epochs"][data_state["selected_source"]],
+            "data/next_phase": data_state["phase"],
+            "data/next_shard": data_state["shard"]["index"],
         }
-        path = Path(args.output_dir) / "run_summary.json"
+        self.tracking.log(metrics)
+        print0(
+            f"step {metrics['progress/step']:,}/{self.global_step_offset + self.steps:,} | "
+            f"loss {metrics['train/loss']:.5f} | "
+            f"{metrics['performance/tokens_per_second']:,.0f} tok/s"
+        )
+
+    def _write_summary(self):
+        if not self.master:
+            return
+        summary = {
+            "training_phase": self.args.training_phase,
+            "steps": self.steps,
+            "global_step": self.global_step_offset + self.steps,
+            "global_tokens": self.global_consumed_tokens,
+            "optimizer_seconds": self.elapsed_optimizer,
+            "evaluation_seconds": self.elapsed_evaluation,
+            "checkpoint_seconds": self.elapsed_checkpoint,
+            "active_seconds": self.elapsed_active + time.perf_counter() - self.session_started,
+        }
+        path = Path(self.args.output_dir) / "run_summary.json"
         temporary = path.with_suffix(".json.tmp")
-        temporary.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        temporary.write_text(
+            json.dumps(summary, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
         os.replace(temporary, path)
-    cleanup()
+
+    def _finish_tracking(self):
+        if self.tracking is None:
+            return
+        tracking, self.tracking = self.tracking, None
+        tracking.finish()
+
+    def run(self):
+        try:
+            self._initialize_runtime()
+            self._load_and_verify_data()
+            self._initialize_model_and_geometry()
+            self._restore_training_state()
+            self._build_resolved_settings()
+            self._initialize_tracking()
+            self._prepare_execution()
+            self._run_steps()
+            self._finish_tracking()
+            self._write_summary()
+        finally:
+            self._finish_tracking()
+            cleanup()
+
+
+def train(configs, cli):
+    BaseTrainer(configs, cli).run()
 
 
 def main():
