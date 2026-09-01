@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-01",
+  "device": "NVIDIA GeForce RTX 3090",
+  "device_reported_vram_mib": 24576,
+  "limit_mib": 22118.4,
+  "notes": [
+    "Each result used compiled forward/backward, one Muon/AdamW update, sequence length 2048, and synthetic token IDs.",
+    "The host PyTorch 2.11 Inductor scheduler rejects the banked Muon graph; optimizer graph capture used AOT eager for qualification. The pinned PyTorch 2.9 training path retains Inductor compilation.",
+    "Compiler caches were isolated in tmpfs and the full corpus was not downloaded."
+  ],
+  "results": {
+    "D0": {
+      "accumulation_steps": 2,
+      "rejected": [],
+      "selected_device_batch_size": 16,
+      "selected_peak_reserved_mib": 17916
+    },
+    "M1": {
+      "accumulation_steps": 4,
+      "rejected": [{"batch_size": 16, "reason": "CUDA OOM"}],
+      "selected_device_batch_size": 8,
+      "selected_peak_reserved_mib": 15032
+    },
+    "M2": {
+      "accumulation_steps": 4,
+      "rejected": [{"batch_size": 16, "reason": "CUDA OOM"}],
+      "selected_device_batch_size": 8,
+      "selected_peak_reserved_mib": 17504
+    },
+    "M3": {
+      "accumulation_steps": 16,
+      "rejected": [
+        {"batch_size": 16, "reason": "CUDA OOM"},
+        {"batch_size": 8, "peak_reserved_mib": 23246, "reason": "over 90% VRAM"},
+        {"batch_size": 4, "peak_reserved_mib": 23662, "reason": "over 90% VRAM"}
+      ],
+      "selected_device_batch_size": 2,
+      "selected_peak_reserved_mib": 21584
+    }
+  },
+  "torch_probe_version": "2.11.0+cu130"
+}

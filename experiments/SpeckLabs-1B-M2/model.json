@@ -1,0 +1,12 @@
+{
+  "extends": "../SpeckLabs-1B-M1/model.json",
+  "expected_active_parameters": 140861184,
+  "expected_parameters": 411590400,
+  "operation_overrides": {
+    "routed_swiglu": {
+      "intermediate_size": 576,
+      "num_experts": 16,
+      "top_k": 4
+    }
+  }
+}

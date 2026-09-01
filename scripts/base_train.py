@@ -213,6 +213,7 @@ class BaseTrainer:
 
     def _prepare_settings(self):
         args = SimpleNamespace(**self.configs["train"])
+        args.run = args.run or Path(self.cli.experiment).resolve().name
         args.device = self.cli.device
         args.resume = self.cli.resume
         args.no_compile = self.cli.no_compile

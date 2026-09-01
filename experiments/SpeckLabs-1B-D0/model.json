@@ -1,0 +1,4 @@
+{
+  "extends": "../Speck1-140M/model.json",
+  "expected_active_parameters": 140652288
+}
