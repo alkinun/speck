@@ -9,6 +9,7 @@ import random
 import shutil
 import time
 import unicodedata
+from dataclasses import dataclass
 from fractions import Fraction
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
@@ -1285,6 +1286,408 @@ def _verify_source_integrity(
     return journal["end_byte"]
 
 
+@dataclass(frozen=True)
+class _DatasetBuildRequest:
+    requested_train_tokens: int
+    validation_tokens_per_source: int
+    validation_fraction: float
+    seed: int
+    output_dir: Path
+    restart: bool
+    tokenizer: Any
+    document_iterators: Any
+    api: Any
+    check_disk: bool
+    disk_usage: Any
+
+
+class _DatasetBuild:
+    """Own the durable state and explicit phases of one packed-dataset build."""
+
+    def __init__(self, settings, request):
+        self.settings = settings
+        self.requested_train_tokens = request.requested_train_tokens
+        self.validation_tokens_per_source = request.validation_tokens_per_source
+        self.validation_fraction = request.validation_fraction
+        self.seed = request.seed
+        self.output_dir = request.output_dir
+        self.restart = request.restart
+        self.tokenizer = request.tokenizer
+        self.document_iterators = request.document_iterators or {}
+        self.api = request.api
+        self.check_disk = request.check_disk
+        self.disk_usage = request.disk_usage
+        self.staging = self.output_dir.with_name(self.output_dir.name + ".building")
+        self.state_path = self.staging / "build_state.json"
+        self.dedup_path = self.staging / "dedup_hashes.bin"
+        self.raw_directory = self.staging / ".raw"
+
+    def _prepare_staging(self):
+        if self.output_dir.exists():
+            if any(self.output_dir.iterdir()):
+                raise FileExistsError(f"dataset already exists: {self.output_dir}")
+            self.output_dir.rmdir()
+        self.output_dir.parent.mkdir(parents=True, exist_ok=True)
+        if self.staging.exists() and self.restart:
+            shutil.rmtree(self.staging)
+        self.disk_report = disk_preflight(
+            self.output_dir,
+            self.settings,
+            self.requested_train_tokens,
+            check=self.check_disk,
+            disk_usage=self.disk_usage,
+        )
+        if self.check_disk:
+            print(
+                f"Disk preflight: required {self.disk_report['required_bytes']:,} bytes, "
+                f"free {self.disk_report['free_bytes']:,} bytes"
+            )
+        self.tokenizer_manifest = {
+            "fingerprint": self.tokenizer.fingerprint(),
+            "vocab_size": self.tokenizer.vocab_size,
+            "bos_token_id": self.tokenizer.bos_id,
+            "eos_token_id": self.tokenizer.eos_id,
+        }
+        self._load_or_create_state()
+        unknown_iterators = set(self.document_iterators) - {
+            source["id"] for source in self.settings["sources"]
+        }
+        if unknown_iterators:
+            raise ValueError(
+                f"document iterators have unknown sources: {', '.join(unknown_iterators)}"
+            )
+
+    def _load_or_create_state(self):
+        contract = {
+            "format_version": format_version,
+            "sources": self.settings["sources"],
+            "mixture": {"phases": self.settings["phases"]},
+            "requested_train_tokens": self.requested_train_tokens,
+            "validation_tokens_per_source": self.validation_tokens_per_source,
+            "validation_fraction": self.validation_fraction,
+            "filtering": self.settings["filtering"],
+            "dedup": self.settings["dedup"],
+            "shards": self.settings["shards"],
+            "seed": self.seed,
+            "tokenizer": self.tokenizer_manifest,
+        }
+        contract_hash = _fingerprint(contract)
+        if not self.staging.exists():
+            self.staging.mkdir(parents=True)
+            (self.staging / "sources").mkdir()
+            self.state = {
+                "format_version": format_version,
+                "contract": contract_hash,
+                "completed_sources": [],
+                "current_source": None,
+                "resolved_sources": {},
+                "disk_preflight": self.disk_report,
+            }
+            _atomic_json(self.state_path, self.state)
+            return
+        if not self.state_path.is_file():
+            raise ValueError(f"invalid staged build: {self.staging}; pass --restart to replace it")
+        self.state = json.loads(self.state_path.read_text(encoding="utf-8"))
+        if self.state.get("contract") != contract_hash:
+            raise ValueError("staged build settings changed; pass --restart to replace it")
+        self.state["disk_preflight"] = self.disk_report
+        _atomic_json(self.state_path, self.state)
+
+    def _resolve_sources(self):
+        api = self.api or HfApi()
+        for source in self.settings["sources"]:
+            source_id = source["id"]
+            if source_id in self.state["resolved_sources"]:
+                continue
+            if source_id in self.document_iterators:
+                resolved = {
+                    "revision": "injected",
+                    "files": [],
+                    "file_list_sha256": _line_hash([]),
+                }
+            else:
+                resolved = discover_source_files(source, self.seed, api)
+            self.state["resolved_sources"][source_id] = resolved
+            _atomic_json(self.state_path, self.state)
+
+    def _verify_completed_sources(self):
+        self.dedup_path.touch(exist_ok=True)
+        self.source_ids = [source["id"] for source in self.settings["sources"]]
+        self.completed = self.state["completed_sources"]
+        if self.completed != self.source_ids[: len(self.completed)]:
+            raise ValueError("staged completed sources are not a source-order prefix")
+        self.summaries = {}
+        self.journal_boundary = 0
+        for source_id in self.completed:
+            directory = self.staging / "sources" / source_id
+            summary = _source_summary(directory)
+            if summary.get("id") != source_id:
+                raise ValueError("completed staged source ID is inconsistent")
+            self.journal_boundary = _verify_source_integrity(
+                directory,
+                summary,
+                self.dedup_path,
+                self.journal_boundary,
+            )
+            self.summaries[source_id] = summary
+
+    def _recover_current_source(self):
+        current = self.state.get("current_source")
+        if not current:
+            if self.dedup_path.stat().st_size != self.journal_boundary:
+                raise ValueError(
+                    "staged dedup journal does not end at the completed-source boundary"
+                )
+            return
+        source_id = current["id"]
+        expected_source = (
+            self.source_ids[len(self.completed)]
+            if len(self.completed) < len(self.source_ids)
+            else None
+        )
+        if source_id != expected_source or current["dedup_bytes_before"] != self.journal_boundary:
+            raise ValueError("staged current source boundary is inconsistent")
+        final_directory = self.staging / "sources" / source_id
+        temporary_directory = self.staging / "sources" / f"{source_id}.building"
+        if final_directory.is_dir():
+            self._recover_published_source(source_id, final_directory)
+        elif (
+            current.get("mode") == "files"
+            and (temporary_directory / "source_progress.json").is_file()
+        ):
+            self._recover_file_progress(source_id, temporary_directory)
+        else:
+            self._discard_uncommitted_source(temporary_directory)
+
+    def _recover_published_source(self, source_id, final_directory):
+        summary = _source_summary(final_directory)
+        self.journal_boundary = _verify_source_integrity(
+            final_directory,
+            summary,
+            self.dedup_path,
+            self.journal_boundary,
+            require_journal_end=True,
+        )
+        self.completed.append(source_id)
+        self.state["current_source"] = None
+        _atomic_json(self.state_path, self.state)
+        (final_directory / "source_progress.json").unlink(missing_ok=True)
+        _fsync_directory(final_directory)
+        self.summaries[source_id] = summary
+
+    def _recover_file_progress(self, source_id, temporary_directory):
+        progress_path = temporary_directory / "source_progress.json"
+        progress = json.loads(progress_path.read_text(encoding="utf-8"))
+        if progress.get("source_id") != source_id:
+            raise ValueError("staged source progress has the wrong source ID")
+        _recover_source_progress(
+            temporary_directory,
+            progress,
+            self.state["resolved_sources"][source_id],
+            self.dedup_path,
+            self.journal_boundary,
+        )
+
+    def _discard_uncommitted_source(self, temporary_directory):
+        if self.dedup_path.stat().st_size < self.journal_boundary:
+            raise ValueError("staged dedup journal is shorter than completed sources")
+        if self.dedup_path.stat().st_size > self.journal_boundary:
+            _truncate(self.dedup_path, self.journal_boundary)
+        shutil.rmtree(temporary_directory, ignore_errors=True)
+        self.state["current_source"] = None
+        _atomic_json(self.state_path, self.state)
+
+    def _build_remaining_sources(self):
+        self.accepted_hashes = _load_hashes(self.dedup_path)
+        for source in self.settings["sources"]:
+            if source["id"] not in self.completed:
+                self._build_source(source)
+
+    def _build_source(self, source):
+        source_id = source["id"]
+        final_directory = self.staging / "sources" / source_id
+        temporary_directory = self.staging / "sources" / f"{source_id}.building"
+        resuming = (self.state.get("current_source") or {}).get("id") == source_id
+        if not resuming:
+            shutil.rmtree(temporary_directory, ignore_errors=True)
+            temporary_directory.mkdir(parents=True)
+            dedup_start = self.dedup_path.stat().st_size
+            self.state["current_source"] = {
+                "id": source_id,
+                "dedup_bytes_before": dedup_start,
+                "mode": "injected" if source_id in self.document_iterators else "files",
+            }
+            _atomic_json(self.state_path, self.state)
+        else:
+            dedup_start = self.state["current_source"]["dedup_bytes_before"]
+        resolved = self.state["resolved_sources"][source_id]
+        progress_path = temporary_directory / "source_progress.json"
+        progress = (
+            json.loads(progress_path.read_text(encoding="utf-8"))
+            if progress_path.is_file()
+            else None
+        )
+        builder_settings = self._builder_settings(
+            source,
+            resolved,
+            temporary_directory,
+            dedup_start,
+        )
+        with self.dedup_path.open("ab") as dedup_file:
+            builder_settings["dedup_file"] = dedup_file
+            if source_id in self.document_iterators:
+                summary = _prepare_injected_source(
+                    documents=iter(self.document_iterators[source_id]),
+                    **builder_settings,
+                )
+            else:
+                summary = self._build_source_files(source, resolved, progress, builder_settings)
+        self._commit_source(source_id, temporary_directory, final_directory, summary)
+
+    def _builder_settings(self, source, resolved, temporary_directory, dedup_start):
+        source_id = source["id"]
+        return {
+            "directory": temporary_directory,
+            "source": source,
+            "resolved": resolved,
+            "tokenizer": self.tokenizer,
+            "accepted_hashes": self.accepted_hashes,
+            "dedup_start": dedup_start,
+            "train_requested": self.settings["quotas"][source_id],
+            "train_reserve": self.settings["train_reserve_tokens_per_source"],
+            "validation_requested": self.settings["validation_tokens_per_source"],
+            "validation_fraction": self.settings["validation_fraction"],
+            "shard_tokens": self.settings["shards"]["tokens"],
+            "filtering": self.settings["filtering"],
+            "seed": self.seed,
+        }
+
+    def _build_source_files(self, source, resolved, progress, builder_settings):
+        builder = SourceBuilder(progress=progress, **builder_settings)
+        if progress is None:
+            progress = builder.progress(0)
+        next_file = progress["next_file_index"]
+        final_file = None
+        for file_index in range(next_file, len(resolved["files"])):
+            filename = resolved["files"][file_index]
+            documents = iter_source_file_documents(
+                source=source,
+                revision=resolved["revision"],
+                filename=filename,
+                filtering=self.settings["filtering"],
+                cache_dir=self.raw_directory,
+                description=(f"{source['id']} {file_index + 1}/{len(resolved['files'])}"),
+            )
+            try:
+                builder.consume(documents)
+            finally:
+                documents.close()
+            if builder.complete:
+                final_file = filename
+                break
+            progress = builder.progress(file_index + 1)
+        return builder.finish(
+            files_completed=progress["next_file_index"],
+            final_file=final_file,
+        )
+
+    def _commit_source(self, source_id, temporary_directory, final_directory, summary):
+        temporary_directory.replace(final_directory)
+        _fsync_directory(final_directory.parent)
+        (final_directory / "source_progress.json").unlink(missing_ok=True)
+        _fsync_directory(final_directory)
+        self.completed.append(source_id)
+        self.state["current_source"] = None
+        _atomic_json(self.state_path, self.state)
+        self.summaries[source_id] = summary
+        self.journal_boundary = summary["dedup_journal"]["end_byte"]
+
+    def _finalize(self):
+        if self.dedup_path.stat().st_size != self.journal_boundary:
+            raise ValueError("dedup journal does not end at the final source boundary")
+        ordered_summaries = [self.summaries[source["id"]] for source in self.settings["sources"]]
+        manifest = self._manifest(ordered_summaries)
+        _atomic_json(self.staging / "manifest.json", manifest)
+        shutil.rmtree(self.raw_directory, ignore_errors=True)
+        self.staging.replace(self.output_dir)
+        _fsync_directory(self.output_dir.parent)
+        (self.output_dir / self.state_path.name).unlink()
+        _fsync_directory(self.output_dir)
+        self._print_summary(manifest, ordered_summaries)
+        return manifest
+
+    def _manifest(self, ordered_summaries):
+        aggregate_splits = {}
+        for split in ("train", "val"):
+            aggregate_splits[split] = {
+                "requested_tokens": (
+                    self.requested_train_tokens
+                    if split == "train"
+                    else self.validation_tokens_per_source * len(ordered_summaries)
+                ),
+                "tokens": sum(source["splits"][split]["tokens"] for source in ordered_summaries),
+                "documents": sum(
+                    source["splits"][split]["documents"] for source in ordered_summaries
+                ),
+            }
+        return {
+            "format": "speck_packed_tokens",
+            "format_version": format_version,
+            "dtype": "<u2",
+            "requested_train_tokens": self.requested_train_tokens,
+            "validation_tokens_per_source": self.validation_tokens_per_source,
+            "mixture": {
+                "phases": self.settings["phases"],
+                "source_quotas": self.settings["quotas"],
+            },
+            "preparation": {
+                "seed": self.seed,
+                "validation_fraction": self.settings["validation_fraction"],
+                "filtering": self.settings["filtering"],
+                "shards": self.settings["shards"],
+                "train_reserve_tokens_per_source": self.settings["train_reserve_tokens_per_source"],
+                "reserve_basis": "(phase_count + 1) * maximum_loader_microbatch_tokens",
+                "tokenizer_batch": {
+                    "maximum_documents": _MAX_TOKENIZER_DOCUMENTS,
+                    "maximum_characters": _MAX_TOKENIZER_CHARACTERS,
+                },
+                "disk_preflight": self.disk_report,
+            },
+            "dedup": {
+                **self.settings["dedup"],
+                "path": self.dedup_path.name,
+                "accepted_hashes": self.dedup_path.stat().st_size // _DEDUP_BYTES,
+                "sha256": _file_hash(self.dedup_path),
+                "collision_policy": "128-bit collisions are treated as duplicates",
+            },
+            "tokenizer": self.tokenizer_manifest,
+            "documents": sum(source["documents"] for source in ordered_summaries),
+            "sources": ordered_summaries,
+            "splits": aggregate_splits,
+        }
+
+    def _print_summary(self, manifest, ordered_summaries):
+        print(
+            f"Prepared {manifest['splits']['train']['tokens']:,} train and "
+            f"{manifest['splits']['val']['tokens']:,} validation tokens"
+        )
+        for source in ordered_summaries:
+            train = source["splits"]["train"]
+            print(
+                f"{source['id']}: requested {train['requested_tokens']:,}, "
+                f"reserve {train['reserve_tokens']:,}, actual {train['tokens']:,}"
+            )
+        print(f"Manifest: {self.output_dir / 'manifest.json'}")
+
+    def run(self):
+        self._prepare_staging()
+        self._resolve_sources()
+        self._verify_completed_sources()
+        self._recover_current_source()
+        self._build_remaining_sources()
+        return self._finalize()
+
+
 def prepare_dataset(
     *,
     sources,
@@ -1321,316 +1724,21 @@ def prepare_dataset(
     tokenizer = tokenizer or get_tokenizer()
     if tokenizer.vocab_size > 65536:
         raise ValueError("packed uint16 data requires vocab_size <= 65536")
-    output_dir = resolve_data_dir(output_dir, output_name)
-    if output_dir.exists():
-        if any(output_dir.iterdir()):
-            raise FileExistsError(f"dataset already exists: {output_dir}")
-        output_dir.rmdir()
-    output_dir.parent.mkdir(parents=True, exist_ok=True)
-    staging = output_dir.with_name(output_dir.name + ".building")
-    if staging.exists() and restart:
-        shutil.rmtree(staging)
-    disk_report = disk_preflight(
-        output_dir,
-        settings,
-        requested_train_tokens,
-        check=check_disk,
+    request = _DatasetBuildRequest(
+        requested_train_tokens=requested_train_tokens,
+        validation_tokens_per_source=validation_tokens_per_source,
+        validation_fraction=validation_fraction,
+        seed=seed,
+        output_dir=resolve_data_dir(output_dir, output_name),
+        restart=restart,
+        tokenizer=tokenizer,
+        document_iterators=document_iterators,
+        api=api,
+        check_disk=check_disk,
         disk_usage=disk_usage,
     )
-    if check_disk:
-        print(
-            f"Disk preflight: required {disk_report['required_bytes']:,} bytes, "
-            f"free {disk_report['free_bytes']:,} bytes"
-        )
-
-    tokenizer_manifest = {
-        "fingerprint": tokenizer.fingerprint(),
-        "vocab_size": tokenizer.vocab_size,
-        "bos_token_id": tokenizer.bos_id,
-        "eos_token_id": tokenizer.eos_id,
-    }
-    contract = {
-        "format_version": format_version,
-        "sources": settings["sources"],
-        "mixture": {"phases": settings["phases"]},
-        "requested_train_tokens": requested_train_tokens,
-        "validation_tokens_per_source": validation_tokens_per_source,
-        "validation_fraction": validation_fraction,
-        "filtering": settings["filtering"],
-        "dedup": settings["dedup"],
-        "shards": settings["shards"],
-        "seed": seed,
-        "tokenizer": tokenizer_manifest,
-    }
-    contract_hash = _fingerprint(contract)
-    state_path = staging / "build_state.json"
-    if not staging.exists():
-        staging.mkdir(parents=True)
-        (staging / "sources").mkdir()
-        state = {
-            "format_version": format_version,
-            "contract": contract_hash,
-            "completed_sources": [],
-            "current_source": None,
-            "resolved_sources": {},
-            "disk_preflight": disk_report,
-        }
-        _atomic_json(state_path, state)
-    else:
-        if not state_path.is_file():
-            raise ValueError(f"invalid staged build: {staging}; pass --restart to replace it")
-        state = json.loads(state_path.read_text(encoding="utf-8"))
-        if state.get("contract") != contract_hash:
-            raise ValueError("staged build settings changed; pass --restart to replace it")
-        state["disk_preflight"] = disk_report
-        _atomic_json(state_path, state)
-
-    document_iterators = document_iterators or {}
-    unknown_iterators = set(document_iterators) - {source["id"] for source in settings["sources"]}
-    if unknown_iterators:
-        raise ValueError(f"document iterators have unknown sources: {', '.join(unknown_iterators)}")
-    api = api or HfApi()
-    for source in settings["sources"]:
-        source_id = source["id"]
-        if source_id in state["resolved_sources"]:
-            continue
-        if source_id in document_iterators:
-            resolved = {
-                "revision": "injected",
-                "files": [],
-                "file_list_sha256": _line_hash([]),
-            }
-        else:
-            resolved = discover_source_files(source, seed, api)
-        state["resolved_sources"][source_id] = resolved
-        _atomic_json(state_path, state)
-
-    dedup_path = staging / "dedup_hashes.bin"
-    dedup_path.touch(exist_ok=True)
-    source_ids = [source["id"] for source in settings["sources"]]
-    completed = state["completed_sources"]
-    if completed != source_ids[: len(completed)]:
-        raise ValueError("staged completed sources are not a source-order prefix")
-    summaries = {}
-    journal_boundary = 0
-    for source_id in completed:
-        directory = staging / "sources" / source_id
-        summary = _source_summary(directory)
-        if summary.get("id") != source_id:
-            raise ValueError("completed staged source ID is inconsistent")
-        journal_boundary = _verify_source_integrity(
-            directory,
-            summary,
-            dedup_path,
-            journal_boundary,
-        )
-        summaries[source_id] = summary
-
-    current = state.get("current_source")
-    if current:
-        source_id = current["id"]
-        expected_source = source_ids[len(completed)] if len(completed) < len(source_ids) else None
-        if source_id != expected_source or current["dedup_bytes_before"] != journal_boundary:
-            raise ValueError("staged current source boundary is inconsistent")
-        final_directory = staging / "sources" / source_id
-        temporary_directory = staging / "sources" / f"{source_id}.building"
-        if final_directory.is_dir():
-            summary = _source_summary(final_directory)
-            journal_boundary = _verify_source_integrity(
-                final_directory,
-                summary,
-                dedup_path,
-                journal_boundary,
-                require_journal_end=True,
-            )
-            state["completed_sources"].append(source_id)
-            state["current_source"] = None
-            _atomic_json(state_path, state)
-            (final_directory / "source_progress.json").unlink(missing_ok=True)
-            _fsync_directory(final_directory)
-            summaries[source_id] = summary
-        elif (
-            current.get("mode") == "files"
-            and (temporary_directory / "source_progress.json").is_file()
-        ):
-            progress_path = temporary_directory / "source_progress.json"
-            progress = json.loads(progress_path.read_text(encoding="utf-8"))
-            if progress.get("source_id") != source_id:
-                raise ValueError("staged source progress has the wrong source ID")
-            _recover_source_progress(
-                temporary_directory,
-                progress,
-                state["resolved_sources"][source_id],
-                dedup_path,
-                journal_boundary,
-            )
-        else:
-            if dedup_path.stat().st_size < journal_boundary:
-                raise ValueError("staged dedup journal is shorter than completed sources")
-            if dedup_path.stat().st_size > journal_boundary:
-                _truncate(dedup_path, journal_boundary)
-            shutil.rmtree(temporary_directory, ignore_errors=True)
-            state["current_source"] = None
-            _atomic_json(state_path, state)
-    elif dedup_path.stat().st_size != journal_boundary:
-        raise ValueError("staged dedup journal does not end at the completed-source boundary")
-
-    accepted_hashes = _load_hashes(dedup_path)
-    raw_directory = staging / ".raw"
-    for source in settings["sources"]:
-        source_id = source["id"]
-        final_directory = staging / "sources" / source_id
-        if source_id in state["completed_sources"]:
-            continue
-        temporary_directory = staging / "sources" / f"{source_id}.building"
-        resuming = (state.get("current_source") or {}).get("id") == source_id
-        if not resuming:
-            shutil.rmtree(temporary_directory, ignore_errors=True)
-            temporary_directory.mkdir(parents=True)
-            dedup_start = dedup_path.stat().st_size
-            state["current_source"] = {
-                "id": source_id,
-                "dedup_bytes_before": dedup_start,
-                "mode": "injected" if source_id in document_iterators else "files",
-            }
-            _atomic_json(state_path, state)
-        else:
-            dedup_start = state["current_source"]["dedup_bytes_before"]
-        resolved = state["resolved_sources"][source_id]
-        progress_path = temporary_directory / "source_progress.json"
-        progress = (
-            json.loads(progress_path.read_text(encoding="utf-8"))
-            if progress_path.is_file()
-            else None
-        )
-        builder_settings = {
-            "directory": temporary_directory,
-            "source": source,
-            "resolved": resolved,
-            "tokenizer": tokenizer,
-            "accepted_hashes": accepted_hashes,
-            "dedup_start": dedup_start,
-            "train_requested": settings["quotas"][source_id],
-            "train_reserve": settings["train_reserve_tokens_per_source"],
-            "validation_requested": settings["validation_tokens_per_source"],
-            "validation_fraction": settings["validation_fraction"],
-            "shard_tokens": settings["shards"]["tokens"],
-            "filtering": settings["filtering"],
-            "seed": seed,
-        }
-        with dedup_path.open("ab") as dedup_file:
-            builder_settings["dedup_file"] = dedup_file
-            if source_id in document_iterators:
-                summary = _prepare_injected_source(
-                    documents=iter(document_iterators[source_id]),
-                    **builder_settings,
-                )
-            else:
-                builder = SourceBuilder(progress=progress, **builder_settings)
-                if progress is None:
-                    progress = builder.progress(0)
-                next_file = progress["next_file_index"]
-                final_file = None
-                for file_index in range(next_file, len(resolved["files"])):
-                    filename = resolved["files"][file_index]
-                    documents = iter_source_file_documents(
-                        source=source,
-                        revision=resolved["revision"],
-                        filename=filename,
-                        filtering=settings["filtering"],
-                        cache_dir=raw_directory,
-                        description=f"{source_id} {file_index + 1}/{len(resolved['files'])}",
-                    )
-                    try:
-                        builder.consume(documents)
-                    finally:
-                        documents.close()
-                    if builder.complete:
-                        final_file = filename
-                        break
-                    progress = builder.progress(file_index + 1)
-                summary = builder.finish(
-                    files_completed=progress["next_file_index"],
-                    final_file=final_file,
-                )
-        temporary_directory.replace(final_directory)
-        _fsync_directory(final_directory.parent)
-        (final_directory / "source_progress.json").unlink(missing_ok=True)
-        _fsync_directory(final_directory)
-        state["completed_sources"].append(source_id)
-        state["current_source"] = None
-        _atomic_json(state_path, state)
-        summaries[source_id] = summary
-        journal_boundary = summary["dedup_journal"]["end_byte"]
-
-    if dedup_path.stat().st_size != journal_boundary:
-        raise ValueError("dedup journal does not end at the final source boundary")
-    ordered_summaries = [summaries[source["id"]] for source in settings["sources"]]
-    dedup_checksum = _file_hash(dedup_path)
-    aggregate_splits = {}
-    for split in ("train", "val"):
-        aggregate_splits[split] = {
-            "requested_tokens": (
-                requested_train_tokens
-                if split == "train"
-                else validation_tokens_per_source * len(ordered_summaries)
-            ),
-            "tokens": sum(source["splits"][split]["tokens"] for source in ordered_summaries),
-            "documents": sum(source["splits"][split]["documents"] for source in ordered_summaries),
-        }
-    manifest = {
-        "format": "speck_packed_tokens",
-        "format_version": format_version,
-        "dtype": "<u2",
-        "requested_train_tokens": requested_train_tokens,
-        "validation_tokens_per_source": validation_tokens_per_source,
-        "mixture": {
-            "phases": settings["phases"],
-            "source_quotas": settings["quotas"],
-        },
-        "preparation": {
-            "seed": seed,
-            "validation_fraction": settings["validation_fraction"],
-            "filtering": settings["filtering"],
-            "shards": settings["shards"],
-            "train_reserve_tokens_per_source": settings["train_reserve_tokens_per_source"],
-            "reserve_basis": "(phase_count + 1) * maximum_loader_microbatch_tokens",
-            "tokenizer_batch": {
-                "maximum_documents": _MAX_TOKENIZER_DOCUMENTS,
-                "maximum_characters": _MAX_TOKENIZER_CHARACTERS,
-            },
-            "disk_preflight": disk_report,
-        },
-        "dedup": {
-            **settings["dedup"],
-            "path": dedup_path.name,
-            "accepted_hashes": dedup_path.stat().st_size // _DEDUP_BYTES,
-            "sha256": dedup_checksum,
-            "collision_policy": "128-bit collisions are treated as duplicates",
-        },
-        "tokenizer": tokenizer_manifest,
-        "documents": sum(source["documents"] for source in ordered_summaries),
-        "sources": ordered_summaries,
-        "splits": aggregate_splits,
-    }
-    _atomic_json(staging / "manifest.json", manifest)
-    shutil.rmtree(raw_directory, ignore_errors=True)
-    staging.replace(output_dir)
-    _fsync_directory(output_dir.parent)
-    (output_dir / state_path.name).unlink()
-    _fsync_directory(output_dir)
-    print(
-        f"Prepared {manifest['splits']['train']['tokens']:,} train and "
-        f"{manifest['splits']['val']['tokens']:,} validation tokens"
-    )
-    for source in ordered_summaries:
-        train = source["splits"]["train"]
-        print(
-            f"{source['id']}: requested {train['requested_tokens']:,}, "
-            f"reserve {train['reserve_tokens']:,}, actual {train['tokens']:,}"
-        )
-    print(f"Manifest: {output_dir / 'manifest.json'}")
-    return manifest
+    build = _DatasetBuild(settings, request)
+    return build.run()
 
 
 def _validate_text_manifest(manifest):
