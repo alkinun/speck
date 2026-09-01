@@ -9,6 +9,7 @@ from speck.architecture import (
     BlockConfig,
     BlockGroup,
     GatedCausalConvSpec,
+    RoutedSwiGLUSpec,
     StageConfig,
     SwiGLUSpec,
 )
@@ -86,3 +87,49 @@ def test_attention_shape_invariants_are_strict():
 def test_parallel_stage_kinds_must_be_unique():
     with pytest.raises(ValueError, match="must be unique"):
         StageConfig((SwiGLUSpec(16), SwiGLUSpec(32)))
+
+
+@pytest.mark.parametrize(
+    ("intermediate_size", "num_experts", "top_k"),
+    ((0, 4, 1), (16, 0, 1), (16, 4, 0), (16, 4, 5)),
+)
+def test_routed_swiglu_shape_invariants_are_strict(
+    intermediate_size, num_experts, top_k
+):
+    with pytest.raises(ValueError, match="routed SwiGLU"):
+        RoutedSwiGLUSpec(intermediate_size, num_experts, top_k)
+
+
+def test_routed_swiglu_round_trips_and_accounts_only_selected_experts():
+    block = BlockConfig(
+        8,
+        (StageConfig((RoutedSwiGLUSpec(16, num_experts=4, top_k=2),)),),
+    )
+    config = ArchitectureConfig(
+        (BlockGroup(block, repeat=2, weight_sharing="all"),),
+        embedding_size=8,
+        vocab_size=16,
+        expected_parameters=10_000,
+        expected_active_parameters=8_464,
+    )
+
+    assert ArchitectureConfig.from_dict(config.export()) == config
+    assert config.settings()["blocks"][0]["block"]["stages"][0]["branches"][0] == {
+        "intermediate_size": 16,
+        "kind": "routed_swiglu",
+        "num_experts": 4,
+        "top_k": 2,
+    }
+    assert config.active_parameter_count(10_000) == 10_000 - 2 * 3 * 8 * 16
+
+
+def test_active_parameter_expectation_cannot_exceed_total():
+    block = BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),))
+    with pytest.raises(ValueError, match="cannot exceed"):
+        ArchitectureConfig(
+            (BlockGroup(block),),
+            8,
+            vocab_size=16,
+            expected_parameters=100,
+            expected_active_parameters=101,
+        )

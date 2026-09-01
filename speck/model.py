@@ -12,6 +12,7 @@ from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
     GatedCausalConvSpec,
+    RoutedSwiGLUSpec,
     SwiGLUSpec,
 )
 
@@ -680,6 +681,9 @@ class SpeckForCausalLM(nn.Module):
     def parameter_count(self):
         return sum(parameter.numel() for parameter in self.parameters())
 
+    def active_parameter_count(self):
+        return self.config.active_parameter_count(self.parameter_count())
+
     def flops_per_token(self, sequence_length):
         linear = self.config.vocab_size * self.config.embedding_size
         input_size = self.config.embedding_size
@@ -702,6 +706,9 @@ class SpeckForCausalLM(nn.Module):
                     elif isinstance(branch, GatedCausalConvSpec):
                         linear += 4 * hidden_size * branch.inner_size
                         linear += branch.inner_size * branch.kernel_size
+                    elif isinstance(branch, RoutedSwiGLUSpec):
+                        linear += branch.num_experts * hidden_size
+                        linear += 3 * branch.top_k * hidden_size * branch.intermediate_size
                     else:
                         linear += 3 * hidden_size * branch.intermediate_size
             input_size = hidden_size
