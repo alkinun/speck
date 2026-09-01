@@ -4,6 +4,7 @@ from pathlib import Path
 
 import torch
 
+from scripts.open_slm_eval import _load_config
 from speck.architecture import ArchitectureConfig, RoutedSwiGLUSpec, SwiGLUSpec
 from speck.config import load_experiment
 from speck.dataset import validate_data_settings
@@ -127,3 +128,16 @@ def test_qualification_report_matches_committed_runtime_ceilings():
         result = report["results"][arm]
         assert result["selected_device_batch_size"] == device_batch
         assert result["selected_peak_reserved_mib"] <= report["limit_mib"]
+
+
+def test_every_sweep_arm_inherits_the_pinned_local_open_slm_suite():
+    for arm, (parameters, _, _) in EXPECTED.items():
+        config = _load_config(experiment(arm) / "open_slm.json")
+        assert config["model"] == {
+            "repo": f"local/SpeckLabs-1B-{arm}",
+            "revision": "local-export-only",
+            "parameters": parameters,
+        }
+        assert config["lm_eval"]["revision"] == (
+            "64f3d0924fc695efd6d776a5ac91f97138085516"
+        )

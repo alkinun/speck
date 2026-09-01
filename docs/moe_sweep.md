@@ -65,6 +65,20 @@ are recorded in `experiments/SpeckLabs-1B-shared/qualification.json`.
    model/step in its own output directory.
 
    ```bash
+   uv run --group transformers python -m scripts.base_checkpoint_export \
+     /path/to/SpeckLabs-1B-M1/checkpoints --step 7630 \
+     --output-dir exports/M1/step-007630
+   uv run --group open-slm python -m scripts.open_slm_eval all \
+     --config experiments/SpeckLabs-1B-M1/open_slm.json \
+     --local-model exports/M1/step-007630
+   ```
+
+   Export refuses to finish until native/Transformers logits and parameter
+   counts agree. Open SLM refuses local directories without that parity
+   attestation and binds every stage plus the summary to the export directory
+   hash.
+
+   ```bash
    uv run --extra gpu python -m scripts.expert_masking \
      experiments/SpeckLabs-1B-M1 /path/to/SpeckLabs-1B-M1/checkpoints \
      --step 7630 --output results/masking/M1/step-007630.json

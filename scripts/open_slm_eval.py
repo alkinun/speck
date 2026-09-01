@@ -35,8 +35,42 @@ def _load_config(path):
     return config
 
 
-def _default_output_dir(config):
+def _default_output_dir(config, local_model=None):
+    if local_model is not None:
+        identity = directory_identity(local_model)
+        return DEFAULT_OUTPUT_ROOT / f"{Path(local_model).name}--{identity['sha256'][:16]}"
     return DEFAULT_OUTPUT_ROOT / config["model"]["repo"].rsplit("/", 1)[-1]
+
+
+def _validate_local_export(local_model):
+    local_model = Path(local_model).expanduser().resolve()
+    required = ("config.json", "model.safetensors", "speck_parity.json")
+    missing = [name for name in required if not (local_model / name).is_file()]
+    if missing:
+        raise ValueError(f"local export is missing parity artifacts: {', '.join(missing)}")
+    config = json.loads((local_model / "config.json").read_text(encoding="utf-8"))
+    parity = json.loads((local_model / "speck_parity.json").read_text(encoding="utf-8"))
+    if parity.get("format") != "speck_export_parity" or parity.get("passed") is not True:
+        raise ValueError("local export has no successful native/Transformers parity gate")
+    if parity.get("parameters") != config.get("expected_parameters"):
+        raise ValueError("local export parameter parity does not match its config")
+    return local_model
+
+
+def _bind_local_model(output_dir, local_model):
+    identity = directory_identity(local_model)
+    path = output_dir / "local-model-identity.json"
+    if path.is_file():
+        stored = json.loads(path.read_text(encoding="utf-8"))
+        if stored != identity:
+            raise ValueError("Open SLM output directory is bound to a different local export")
+    else:
+        temporary = path.with_suffix(".json.tmp")
+        temporary.write_text(
+            json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        os.replace(temporary, path)
+    return identity
 
 
 def _sha256(path):
@@ -144,7 +178,7 @@ def _new_result(output_path, before):
     return created.pop()
 
 
-def _record_lm_eval_result(result):
+def _record_lm_eval_result(result, local_identity=None):
     """Atomically bind later summaries to one checksummed full result."""
 
     result = Path(result)
@@ -155,6 +189,8 @@ def _record_lm_eval_result(result):
         "path": result.name,
         "sha256": _sha256(result),
     }
+    if local_identity is not None:
+        value["local_model_sha256"] = local_identity["sha256"]
     temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     os.replace(temporary, selection)
 
@@ -170,7 +206,7 @@ def _run_lm_eval(config, output_dir, device, limit=None, local_model=None):
     _assert_implicit_revisions(config, check_model=local_model is None)
     result = _new_result(output_path, before)
     if limit is None:
-        _record_lm_eval_result(result)
+        _record_lm_eval_result(result, local_identity)
     if local_identity is not None:
         identity_dir = output_path.parent / "local-identities"
         identity_dir.mkdir(exist_ok=True)
@@ -205,11 +241,16 @@ def _disable_arithmark_2_cache(official):
     official.load_hf_model = load_without_cache
 
 
-def _run_arithmark_2(config, files, output_dir):
-    _assert_implicit_revisions(config)
+def _run_arithmark_2(config, files, output_dir, local_model=None, local_identity=None):
+    _assert_implicit_revisions(config, check_model=local_model is None)
     benchmark = config["arithmark_2"]
     results_dir = output_dir / "arithmark-2"
     results_dir.mkdir(parents=True, exist_ok=True)
+    before = {
+        path: _sha256(path)
+        for path in results_dir.glob("*.json")
+        if path.name != "selected-result.json"
+    }
     official = _load_module(files["runner"], "official_arithmark_2")
     official.CACHE_DIR = str(results_dir)
 
@@ -221,7 +262,7 @@ def _run_arithmark_2(config, files, output_dir):
         sys.argv = [
             str(files["runner"]),
             "--model",
-            config["model"]["repo"],
+            str(local_model or config["model"]["repo"]),
             "--batch-size",
             str(benchmark["batch_size"]),
             "--data-path",
@@ -230,26 +271,37 @@ def _run_arithmark_2(config, files, output_dir):
         official.main()
     finally:
         sys.argv = original_argv
-    _assert_implicit_revisions(config)
-    result = results_dir / (
-        f"{config['model']['repo'].replace('/', '_')}_arithmark_2.0_results.json"
-    )
-    if not result.is_file():
-        raise RuntimeError(f"ArithMark 2.0 did not produce {result}")
+    _assert_implicit_revisions(config, check_model=local_model is None)
+    created = {
+        path
+        for path in results_dir.glob("*.json")
+        if path.name != "selected-result.json" and before.get(path) != _sha256(path)
+    }
+    if len(created) != 1:
+        raise RuntimeError(f"ArithMark 2.0 produced {len(created)} new result files")
+    result = created.pop()
+    _record_lm_eval_result(result, local_identity)
     print(f"ArithMark 2.0 result: {result}")
     return result
 
 
-def _run_arithmark_3(config, files, output_dir, device):
-    _assert_implicit_revisions(config)
+def _run_arithmark_3(
+    config, files, output_dir, device, local_model=None, local_identity=None
+):
+    _assert_implicit_revisions(config, check_model=local_model is None)
     benchmark = config["arithmark_3"]
     results_dir = output_dir / "arithmark-3"
     results_dir.mkdir(parents=True, exist_ok=True)
+    before = {
+        path: _sha256(path)
+        for path in results_dir.glob("*.json")
+        if path.name != "selected-result.json"
+    }
     command = [
         sys.executable,
         str(files["runner"]),
         "--model",
-        config["model"]["repo"],
+        str(local_model or config["model"]["repo"]),
         "--batch-size",
         str(benchmark["batch_size"]),
         "--max-context",
@@ -266,10 +318,16 @@ def _run_arithmark_3(config, files, output_dir, device):
         str(results_dir),
     ]
     subprocess.run(command, check=True)
-    _assert_implicit_revisions(config)
-    result = results_dir / (f"{config['model']['repo'].replace('/', '_')}_arithmark-3_results.json")
-    if not result.is_file():
-        raise RuntimeError(f"ArithMark 3.0 did not produce {result}")
+    _assert_implicit_revisions(config, check_model=local_model is None)
+    created = {
+        path
+        for path in results_dir.glob("*.json")
+        if path.name != "selected-result.json" and before.get(path) != _sha256(path)
+    }
+    if len(created) != 1:
+        raise RuntimeError(f"ArithMark 3.0 produced {len(created)} new result files")
+    result = created.pop()
+    _record_lm_eval_result(result, local_identity)
     print(f"ArithMark 3.0 result: {result}")
     return result
 
@@ -281,10 +339,14 @@ def _one_result(directory, pattern):
     return matches[0]
 
 
-def _selected_lm_eval_result(directory):
+def _selected_lm_eval_result(directory, expected_model_sha256=None):
     directory = Path(directory)
     selection = directory / "selected-result.json"
     if not selection.is_file():
+        if expected_model_sha256 is not None:
+            raise FileNotFoundError(
+                f"local result has no export-bound selection: {selection}"
+            )
         return _one_result(directory, "results_*.json")
     value = json.loads(selection.read_text(encoding="utf-8"))
     name = value.get("path")
@@ -295,6 +357,11 @@ def _selected_lm_eval_result(directory):
         or not isinstance(value.get("sha256"), str)
     ):
         raise ValueError(f"invalid lm-eval result selection: {selection}")
+    if (
+        expected_model_sha256 is not None
+        and value.get("local_model_sha256") != expected_model_sha256
+    ):
+        raise ValueError("selected result is bound to a different local export")
     result = directory / name
     if not result.is_file():
         raise FileNotFoundError(f"selected lm-eval result does not exist: {result}")
@@ -306,7 +373,13 @@ def _normalize_from_chance(score, chance):
     return 100 * (score - chance) / (100 - chance)
 
 
-def _summarize(config, lm_eval_path, arithmark_2_path, arithmark_3_path):
+def _summarize(
+    config,
+    lm_eval_path,
+    arithmark_2_path,
+    arithmark_3_path,
+    local_identity=None,
+):
     lm_result = json.loads(lm_eval_path.read_text(encoding="utf-8"))
     arithmark_2 = json.loads(arithmark_2_path.read_text(encoding="utf-8"))
     arithmark_3 = json.loads(arithmark_3_path.read_text(encoding="utf-8"))
@@ -314,7 +387,10 @@ def _summarize(config, lm_eval_path, arithmark_2_path, arithmark_3_path):
 
     if lm_result["config"]["limit"] is not None:
         raise ValueError("cannot summarize a limited lm-eval run")
-    if lm_result["config"]["model_revision"] != config["model"]["revision"]:
+    if (
+        local_identity is None
+        and lm_result["config"]["model_revision"] != config["model"]["revision"]
+    ):
         raise ValueError("lm-eval model revision does not match the evaluation config")
     if lm_result["lm_eval_version"] != evaluation["version"]:
         raise ValueError("lm-eval version does not match the evaluation config")
@@ -359,7 +435,7 @@ def _summarize(config, lm_eval_path, arithmark_2_path, arithmark_3_path):
         / 3.65,
         2,
     )
-    return {
+    summary = {
         "model": config["model"],
         "leaderboard": config["leaderboard"],
         "scores_percent": {
@@ -383,17 +459,41 @@ def _summarize(config, lm_eval_path, arithmark_2_path, arithmark_3_path):
             "arithmark_3_sha256": _sha256(arithmark_3_path),
         },
     }
+    if local_identity is not None:
+        summary["model"] = {
+            "type": "local_export",
+            "path": local_identity["path"],
+            "directory_sha256": local_identity["sha256"],
+            "parameters": config["model"]["parameters"],
+        }
+        summary["local_model"] = local_identity
+    return summary
 
 
-def _summarize_output(config, output_dir):
-    lm_eval_path = _selected_lm_eval_result(output_dir / "lm-eval")
+def _summarize_output(config, output_dir, local_identity=None):
+    expected_identity = local_identity["sha256"] if local_identity is not None else None
+    lm_eval_path = _selected_lm_eval_result(output_dir / "lm-eval", expected_identity)
     model_tag = config["model"]["repo"].replace("/", "_")
-    arithmark_2_path = output_dir / "arithmark-2" / (f"{model_tag}_arithmark_2.0_results.json")
-    arithmark_3_path = output_dir / "arithmark-3" / (f"{model_tag}_arithmark-3_results.json")
+    arithmark_2_dir = output_dir / "arithmark-2"
+    arithmark_3_dir = output_dir / "arithmark-3"
+    if (arithmark_2_dir / "selected-result.json").is_file():
+        arithmark_2_path = _selected_lm_eval_result(arithmark_2_dir, expected_identity)
+    else:
+        arithmark_2_path = arithmark_2_dir / (f"{model_tag}_arithmark_2.0_results.json")
+    if (arithmark_3_dir / "selected-result.json").is_file():
+        arithmark_3_path = _selected_lm_eval_result(arithmark_3_dir, expected_identity)
+    else:
+        arithmark_3_path = arithmark_3_dir / (f"{model_tag}_arithmark-3_results.json")
     for path in (arithmark_2_path, arithmark_3_path):
         if not path.is_file():
             raise FileNotFoundError(path)
-    summary = _summarize(config, lm_eval_path, arithmark_2_path, arithmark_3_path)
+    summary = _summarize(
+        config,
+        lm_eval_path,
+        arithmark_2_path,
+        arithmark_3_path,
+        local_identity,
+    )
     summary_path = output_dir / "summary.json"
     summary_path.write_text(
         json.dumps(summary, indent=2, ensure_ascii=True) + "\n",
@@ -413,31 +513,54 @@ def _parse_args():
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     parser.add_argument("--limit", type=float, help="lm-eval smoke-test sample limit")
-    parser.add_argument("--local-model", type=Path, help="local Transformers model for lm-eval")
+    parser.add_argument(
+        "--local-model",
+        type=Path,
+        help="parity-validated local Transformers export for every benchmark stage",
+    )
     args = parser.parse_args()
     if args.limit is not None and (args.limit <= 0 or args.stage not in ("lm-eval",)):
         parser.error("--limit must be positive and is only supported by the lm-eval stage")
-    if args.local_model is not None and args.stage != "lm-eval":
-        parser.error("--local-model is only supported by the lm-eval stage")
     return args
 
 
 def main():
     args = _parse_args()
     config = _load_config(args.config)
-    output_dir = (args.output_dir or _default_output_dir(config)).expanduser().resolve()
+    local_model = (
+        _validate_local_export(args.local_model) if args.local_model is not None else None
+    )
+    output_dir = (
+        args.output_dir or _default_output_dir(config, local_model)
+    ).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
+    local_identity = (
+        _bind_local_model(output_dir, local_model) if local_model is not None else None
+    )
 
     if args.stage in ("lm-eval", "all"):
-        _run_lm_eval(config, output_dir, args.device, args.limit, args.local_model)
+        _run_lm_eval(config, output_dir, args.device, args.limit, local_model)
     if args.stage in ("arithmark-2", "arithmark-3", "all"):
         files = _download_benchmark_files(config)
         if args.stage in ("arithmark-2", "all"):
-            _run_arithmark_2(config, files["arithmark_2"], output_dir)
+            _run_arithmark_2(
+                config,
+                files["arithmark_2"],
+                output_dir,
+                local_model,
+                local_identity,
+            )
         if args.stage in ("arithmark-3", "all"):
-            _run_arithmark_3(config, files["arithmark_3"], output_dir, args.device)
+            _run_arithmark_3(
+                config,
+                files["arithmark_3"],
+                output_dir,
+                args.device,
+                local_model,
+                local_identity,
+            )
     if args.stage in ("summary", "all"):
-        _summarize_output(config, output_dir)
+        _summarize_output(config, output_dir, local_identity)
 
 
 if __name__ == "__main__":

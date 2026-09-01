@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -82,9 +83,62 @@ def test_local_lm_eval_identity_is_bound_to_one_successful_result(tmp_path, monk
     selection = json.loads((result.parent / "selected-result.json").read_text(encoding="utf-8"))
     assert selection == {
         "format_version": 1,
+        "local_model_sha256": directory_identity(model)["sha256"],
         "path": result.name,
         "sha256": open_slm_eval._sha256(result),
     }
+
+
+def test_local_default_output_is_collision_free_by_directory_hash(tmp_path):
+    config = load_config()
+    model = tmp_path / "M1-step-7630"
+    model.mkdir()
+    (model / "weights").write_bytes(b"first")
+
+    first = open_slm_eval._default_output_dir(config, model)
+    (model / "weights").write_bytes(b"second")
+    second = open_slm_eval._default_output_dir(config, model)
+
+    assert first.name.startswith("M1-step-7630--")
+    assert first != second
+
+
+def test_local_export_requires_successful_parity_attestation(tmp_path):
+    model = tmp_path / "export"
+    model.mkdir()
+    (model / "config.json").write_text(
+        json.dumps({"expected_parameters": 3}), encoding="utf-8"
+    )
+    (model / "model.safetensors").write_bytes(b"weights")
+
+    with pytest.raises(ValueError, match="parity artifacts"):
+        open_slm_eval._validate_local_export(model)
+
+    (model / "speck_parity.json").write_text(
+        json.dumps(
+            {
+                "format": "speck_export_parity",
+                "passed": True,
+                "parameters": 3,
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert open_slm_eval._validate_local_export(model) == model.resolve()
+
+
+def test_output_directory_binding_rejects_changed_local_export(tmp_path):
+    model = tmp_path / "model"
+    output = tmp_path / "output"
+    model.mkdir()
+    output.mkdir()
+    (model / "weights").write_bytes(b"first")
+    identity = open_slm_eval._bind_local_model(output, model)
+
+    assert identity == directory_identity(model)
+    (model / "weights").write_bytes(b"second")
+    with pytest.raises(ValueError, match="different local export"):
+        open_slm_eval._bind_local_model(output, model)
 
 
 def test_lm_eval_result_selection_survives_reruns_and_checks_integrity(tmp_path):
@@ -101,6 +155,16 @@ def test_lm_eval_result_selection_survives_reruns_and_checks_integrity(tmp_path)
     second.write_text('{"run": "changed"}', encoding="utf-8")
     with pytest.raises(ValueError, match="SHA-256 mismatch"):
         open_slm_eval._selected_lm_eval_result(directory)
+
+
+def test_selected_result_rejects_a_different_local_export_identity(tmp_path):
+    result = tmp_path / "results_local.json"
+    result.write_text("{}", encoding="utf-8")
+    open_slm_eval._record_lm_eval_result(result, {"sha256": "first"})
+
+    assert open_slm_eval._selected_lm_eval_result(tmp_path, "first") == result
+    with pytest.raises(ValueError, match="different local export"):
+        open_slm_eval._selected_lm_eval_result(tmp_path, "second")
 
 
 def test_legacy_single_lm_eval_result_remains_summarizable(tmp_path):
@@ -159,6 +223,79 @@ def test_arithmark_2_shim_only_disables_model_cache():
     assert model.config.use_cache is False
 
 
+def test_arithmark_2_accepts_and_binds_a_local_export(tmp_path, monkeypatch):
+    config = load_config()
+    model = tmp_path / "export"
+    model.mkdir()
+    (model / "weights").write_bytes(b"weights")
+    identity = directory_identity(model)
+    seen = {}
+
+    class Official:
+        CACHE_DIR = None
+
+        @staticmethod
+        def load_hf_model():
+            raise AssertionError("not called by fake runner")
+
+        @staticmethod
+        def main():
+            import sys
+
+            seen["argv"] = sys.argv[:]
+            path = Path(Official.CACHE_DIR) / "local_arithmark_2.0_results.json"
+            path.write_text("{}", encoding="utf-8")
+
+    monkeypatch.setattr(open_slm_eval, "_load_module", lambda *args: Official)
+    monkeypatch.setattr(open_slm_eval, "_disable_arithmark_2_cache", lambda official: None)
+    monkeypatch.setattr(open_slm_eval, "_assert_implicit_revisions", lambda *a, **kw: None)
+    files = {"runner": tmp_path / "runner.py", "data": tmp_path / "data.jsonl"}
+
+    result = open_slm_eval._run_arithmark_2(
+        config,
+        files,
+        tmp_path / "output",
+        local_model=model,
+        local_identity=identity,
+    )
+
+    assert seen["argv"][seen["argv"].index("--model") + 1] == str(model)
+    selection = json.loads((result.parent / "selected-result.json").read_text())
+    assert selection["local_model_sha256"] == identity["sha256"]
+
+
+def test_arithmark_3_accepts_and_binds_a_local_export(tmp_path, monkeypatch):
+    config = load_config()
+    model = tmp_path / "export"
+    model.mkdir()
+    (model / "weights").write_bytes(b"weights")
+    identity = directory_identity(model)
+    seen = {}
+
+    def run(command, check):
+        assert check
+        seen["command"] = command
+        directory = Path(command[command.index("--results-dir") + 1])
+        (directory / "local_arithmark-3_results.json").write_text("{}", encoding="utf-8")
+
+    monkeypatch.setattr(open_slm_eval.subprocess, "run", run)
+    monkeypatch.setattr(open_slm_eval, "_assert_implicit_revisions", lambda *a, **kw: None)
+    files = {"runner": tmp_path / "runner.py", "data": tmp_path / "data.jsonl"}
+
+    result = open_slm_eval._run_arithmark_3(
+        config,
+        files,
+        tmp_path / "output",
+        "cpu",
+        local_model=model,
+        local_identity=identity,
+    )
+
+    assert seen["command"][seen["command"].index("--model") + 1] == str(model)
+    selection = json.loads((result.parent / "selected-result.json").read_text())
+    assert selection["local_model_sha256"] == identity["sha256"]
+
+
 def test_summary_matches_leaderboard_formula(tmp_path):
     config = load_config()
     lm_eval_path = tmp_path / "lm-eval.json"
@@ -206,6 +343,57 @@ def test_summary_matches_leaderboard_formula(tmp_path):
         "combined_arc": 40.0,
         "average": 43.75,
         "intelligence_index": 18.81,
+    }
+
+
+def test_local_summary_is_bound_to_export_identity_not_hub_revision(tmp_path):
+    config = load_config()
+    lm_eval_path = tmp_path / "lm-eval.json"
+    arithmark_2_path = tmp_path / "arithmark-2.json"
+    arithmark_3_path = tmp_path / "arithmark-3.json"
+    lm_eval_path.write_text(
+        json.dumps(
+            {
+                "config": {"limit": None, "model_revision": None},
+                "lm_eval_version": config["lm_eval"]["version"],
+                "transformers_version": config["lm_eval"]["transformers_version"],
+                "results": {
+                    task: {"acc_norm,none": 0.5} for task in config["lm_eval"]["tasks"]
+                },
+                "n-samples": {
+                    task: {"original": count, "effective": count}
+                    for task, count in config["lm_eval"]["expected_samples"].items()
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    arithmark_2_path.write_text(
+        json.dumps({"results": {"arithmark_2.0": {"acc": 50.0, "total": 2500}}}),
+        encoding="utf-8",
+    )
+    arithmark_3_path.write_text(
+        json.dumps(
+            {"results": {"arithmark-3": {"acc_norm": 50.0, "total": 1000}}}
+        ),
+        encoding="utf-8",
+    )
+    identity = {"path": "/export", "sha256": "directory-hash", "files": []}
+
+    summary = open_slm_eval._summarize(
+        config,
+        lm_eval_path,
+        arithmark_2_path,
+        arithmark_3_path,
+        local_identity=identity,
+    )
+
+    assert summary["local_model"] == identity
+    assert summary["model"] == {
+        "type": "local_export",
+        "path": "/export",
+        "directory_sha256": "directory-hash",
+        "parameters": config["model"]["parameters"],
     }
 
 

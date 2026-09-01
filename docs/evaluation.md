@@ -25,6 +25,12 @@ Hub drift guard no longer matches the repository head; review and update the pin
 silently evaluating changed inputs. Full lm-eval reruns update a checksummed
 `lm-eval/selected-result.json` pointer so the summary remains bound to one exact result.
 
+Every stage also accepts `--local-model <export>`. Local exports must contain the successful
+native/Transformers parity attestation produced by `scripts.base_checkpoint_export`. The default
+output directory combines the export name and directory hash; explicit output directories are
+also permanently bound to that hash. ArithMark and lm-eval selections, plus the final summary, are
+therefore keyed to the local directory identity instead of a Hub revision.
+
 ArithMark 2.0's verified official runner right-pads without disabling the model cache. The wrapper
 leaves its scoring code unchanged and sets `model.config.use_cache=False` after loading.
 
