@@ -12,6 +12,7 @@ from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
     GatedCausalConvSpec,
+    GatedDeltaNetSpec,
     SwiGLUSpec,
 )
 
@@ -324,6 +325,45 @@ class ConvolutionState:
         return self.values.numel() * self.values.element_size()
 
 
+class DeltaNetState:
+    """Hold fixed-size recurrent and local-convolution Gated DeltaNet state."""
+
+    def __init__(
+        self,
+        batch_size,
+        num_heads,
+        key_head_dim,
+        value_head_dim,
+        conv_dim,
+        conv_history,
+        device,
+        dtype,
+    ):
+        self.recurrent = torch.zeros(
+            batch_size,
+            num_heads,
+            key_head_dim,
+            value_head_dim,
+            device=device,
+            dtype=torch.float32,
+        )
+        self.convolution = torch.zeros(
+            batch_size,
+            conv_dim,
+            conv_history,
+            device=device,
+            dtype=dtype,
+        )
+
+    def reset(self):
+        self.recurrent.zero_()
+        self.convolution.zero_()
+
+    def allocated_bytes(self):
+        tensors = (self.recurrent, self.convolution)
+        return sum(tensor.numel() * tensor.element_size() for tensor in tensors)
+
+
 class SequenceState:
     """Track incremental-decoding position and per-operation caches."""
 
@@ -338,6 +378,8 @@ class SequenceState:
             if isinstance(entry, AttentionState):
                 entry.used = 0
                 entry.write_position = 0
+            elif isinstance(entry, DeltaNetState):
+                entry.reset()
             else:
                 entry.values.zero_()
 
@@ -439,6 +481,134 @@ class GatedCausalConv(nn.Module):
         return self.output_projection(second_gate * convolved.transpose(1, 2))
 
 
+def torch_gated_delta_rule(query, key, value, log_decay, beta, initial_state=None):
+    """Evaluate the gated delta rule exactly, retaining a differentiable reference path."""
+
+    output_dtype = query.dtype
+    query, key, value, log_decay, beta = (
+        tensor.float() for tensor in (query, key, value, log_decay, beta)
+    )
+    query = query * torch.rsqrt(query.square().sum(dim=-1, keepdim=True) + 1e-6)
+    key = key * torch.rsqrt(key.square().sum(dim=-1, keepdim=True) + 1e-6)
+    query = query * (query.size(-1) ** -0.5)
+    if initial_state is None:
+        state = value.new_zeros(value.size(0), value.size(2), key.size(-1), value.size(-1))
+    else:
+        state = initial_state.float()
+    outputs = []
+    for index in range(query.size(1)):
+        query_token = query[:, index]
+        key_token = key[:, index]
+        value_token = value[:, index]
+        state = state * log_decay[:, index].exp()[..., None, None]
+        remembered = torch.einsum("bhkv,bhk->bhv", state, key_token)
+        delta = (value_token - remembered) * beta[:, index, :, None]
+        state = state + torch.einsum("bhk,bhv->bhkv", key_token, delta)
+        outputs.append(torch.einsum("bhkv,bhk->bhv", state, query_token))
+    return torch.stack(outputs, dim=1).to(output_dtype), state
+
+
+def gated_delta_rule(query, key, value, log_decay, beta, initial_state=None):
+    """Use FLA on CUDA when available and the auditable Torch recurrence otherwise."""
+
+    if query.is_cuda:
+        try:
+            from fla.ops.gated_delta_rule import (
+                chunk_gated_delta_rule,
+                fused_recurrent_gated_delta_rule,
+            )
+        except ImportError:
+            pass
+        else:
+            operation = (
+                fused_recurrent_gated_delta_rule if query.size(1) == 1 else chunk_gated_delta_rule
+            )
+            return operation(
+                query,
+                key,
+                value,
+                g=log_decay,
+                beta=beta,
+                initial_state=initial_state,
+                output_final_state=True,
+                use_qk_l2norm_in_kernel=True,
+            )
+    return torch_gated_delta_rule(query, key, value, log_decay, beta, initial_state)
+
+
+class GatedDeltaNet(nn.Module):
+    """A fixed-state, error-correcting linear sequence mixer with a local convolution."""
+
+    def __init__(self, hidden_size, spec, eps):
+        super().__init__()
+        self.spec = spec
+        self.key_dim = spec.num_key_heads * spec.key_head_dim
+        self.value_dim = spec.num_value_heads * spec.value_head_dim
+        self.conv_dim = 2 * self.key_dim + self.value_dim
+        self.qkvz_projection = Linear(
+            hidden_size,
+            2 * self.key_dim + 2 * self.value_dim,
+            bias=False,
+        )
+        self.gates_projection = Linear(hidden_size, 2 * spec.num_value_heads, bias=False)
+        self.conv_kernel = nn.Parameter(torch.empty(self.conv_dim, 1, spec.conv_kernel_size))
+        rates = torch.linspace(0.1, 1.0, spec.num_value_heads)
+        self.log_rates = nn.Parameter(rates.log())
+        self.decay_bias = nn.Parameter(torch.zeros(spec.num_value_heads))
+        self.output_norm = RMSNorm(spec.value_head_dim, eps)
+        self.output_projection = Linear(self.value_dim, hidden_size, bias=False)
+
+    def forward(self, x, state=None):
+        batch, length, _ = x.shape
+        mixed = self.qkvz_projection(x)
+        query, key, value, output_gate = torch.split(
+            mixed,
+            (self.key_dim, self.key_dim, self.value_dim, self.value_dim),
+            dim=-1,
+        )
+        conv_input = torch.cat((query, key, value), dim=-1).transpose(1, 2)
+        history = self.spec.conv_kernel_size - 1
+        if state is not None:
+            conv_input = torch.cat((state.convolution, conv_input), dim=2)
+        convolved = F.silu(causal_depthwise_conv1d(conv_input, self.conv_kernel))
+        if state is not None:
+            state.convolution.copy_(conv_input[:, :, -history:].detach())
+            convolved = convolved[:, :, history:]
+        query, key, value = torch.split(
+            convolved.transpose(1, 2),
+            (self.key_dim, self.key_dim, self.value_dim),
+            dim=-1,
+        )
+        query = query.view(batch, length, self.spec.num_key_heads, self.spec.key_head_dim)
+        key = key.view(batch, length, self.spec.num_key_heads, self.spec.key_head_dim)
+        value = value.view(batch, length, self.spec.num_value_heads, self.spec.value_head_dim)
+        repetitions = self.spec.num_value_heads // self.spec.num_key_heads
+        if repetitions > 1:
+            query = query.repeat_interleave(repetitions, dim=2)
+            key = key.repeat_interleave(repetitions, dim=2)
+        beta_logits, decay_logits = self.gates_projection(x).chunk(2, dim=-1)
+        beta = beta_logits.sigmoid()
+        log_decay = -self.log_rates.float().exp() * F.softplus(
+            decay_logits.float() + self.decay_bias
+        )
+        recurrent = state.recurrent if state is not None else None
+        output, final_state = gated_delta_rule(
+            query,
+            key,
+            value,
+            log_decay,
+            beta,
+            initial_state=recurrent,
+        )
+        if state is not None:
+            state.recurrent.copy_(final_state.detach())
+        output_gate = output_gate.view(
+            batch, length, self.spec.num_value_heads, self.spec.value_head_dim
+        )
+        output = self.output_norm(output) * F.silu(output_gate.float()).to(output.dtype)
+        return self.output_projection(output.flatten(2))
+
+
 class SwiGLU(nn.Module):
     def __init__(self, hidden_size, spec):
         super().__init__()
@@ -459,6 +629,8 @@ class Operation(nn.Module):
             self.operation = Attention(hidden_size, spec, config.rms_norm_eps)
         elif isinstance(spec, GatedCausalConvSpec):
             self.operation = GatedCausalConv(hidden_size, spec)
+        elif isinstance(spec, GatedDeltaNetSpec):
+            self.operation = GatedDeltaNet(hidden_size, spec, config.rms_norm_eps)
         else:
             assert isinstance(spec, SwiGLUSpec)
             self.operation = SwiGLU(hidden_size, spec)
@@ -467,7 +639,7 @@ class Operation(nn.Module):
         normalized = self.norm(x)
         if isinstance(self.spec, AttentionSpec):
             return self.operation(normalized, rotary[str(self.spec.head_dim)], position, state)
-        if isinstance(self.spec, GatedCausalConvSpec):
+        if isinstance(self.spec, (GatedCausalConvSpec, GatedDeltaNetSpec)):
             return self.operation(normalized, state)
         return self.operation(normalized)
 
@@ -564,6 +736,8 @@ class SpeckForCausalLM(nn.Module):
                 nn.init.ones_(module.weight)
             elif isinstance(module, GatedCausalConv):
                 nn.init.normal_(module.kernel, std=self.config.initializer_range)
+            elif isinstance(module, GatedDeltaNet):
+                nn.init.normal_(module.conv_kernel, std=self.config.initializer_range)
 
     @torch.no_grad()
     def resize_token_embeddings(self, vocab_size):
@@ -634,6 +808,19 @@ class SpeckForCausalLM(nn.Module):
                             batch_size,
                             branch.inner_size,
                             branch.kernel_size - 1,
+                            device,
+                            dtype,
+                        )
+                    elif isinstance(branch, GatedDeltaNetSpec):
+                        key_dim = branch.num_key_heads * branch.key_head_dim
+                        value_dim = branch.num_value_heads * branch.value_head_dim
+                        entries[key] = DeltaNetState(
+                            batch_size,
+                            branch.num_value_heads,
+                            branch.key_head_dim,
+                            branch.value_head_dim,
+                            2 * key_dim + value_dim,
+                            branch.conv_kernel_size - 1,
                             device,
                             dtype,
                         )
@@ -785,6 +972,18 @@ class SpeckForCausalLM(nn.Module):
                     elif isinstance(branch, GatedCausalConvSpec):
                         linear += 4 * hidden_size * branch.inner_size
                         linear += branch.inner_size * branch.kernel_size
+                    elif isinstance(branch, GatedDeltaNetSpec):
+                        key_size = branch.num_key_heads * branch.key_head_dim
+                        value_size = branch.num_value_heads * branch.value_head_dim
+                        linear += hidden_size * (2 * key_size + 3 * value_size)
+                        linear += 2 * hidden_size * branch.num_value_heads
+                        linear += (2 * key_size + value_size) * branch.conv_kernel_size
+                        attention += (
+                            21
+                            * branch.num_value_heads
+                            * branch.key_head_dim
+                            * branch.value_head_dim
+                        )
                     elif isinstance(branch, SwiGLUSpec):
                         linear += 3 * hidden_size * branch.intermediate_size
             input_size = hidden_size

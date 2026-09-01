@@ -11,6 +11,7 @@ from speck.architecture import (
     BlockConfig,
     BlockGroup,
     GatedCausalConvSpec,
+    GatedDeltaNetSpec,
     StageConfig,
     SwiGLUSpec,
 )
@@ -119,6 +120,36 @@ def test_convolution_state_matches_full_forward():
     model = model_with(GatedCausalConvSpec(8, 3), SwiGLUSpec(16))
     tokens = torch.randint(0, 16, (1, 8))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
+
+
+def test_gated_deltanet_state_matches_full_forward():
+    torch.manual_seed(31)
+    spec = GatedDeltaNetSpec(4, 4, 1, 2, conv_kernel_size=3)
+    model = model_with(spec, SwiGLUSpec(16))
+    tokens = torch.randint(0, 16, (1, 8))
+    assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=2e-5)
+
+
+def test_gated_deltanet_state_is_independent_of_context_length():
+    spec = GatedDeltaNetSpec(4, 4, 1, 2, conv_kernel_size=3)
+    model = model_with(spec)
+    short = model.state(length=4)
+    long = model.state(length=16)
+    expected = 1 * 2 * 4 * 4 * 4 + 1 * (2 * 4 + 2 * 4) * 2 * 4
+    assert short.allocated_bytes() == expected
+    assert long.allocated_bytes() == expected
+
+
+def test_gated_deltanet_backward_is_finite():
+    spec = GatedDeltaNetSpec(4, 4, 1, 2, conv_kernel_size=3)
+    model = model_with(spec)
+    tokens = torch.randint(0, 16, (2, 8))
+    loss = model(tokens, tokens)
+    loss.backward()
+    assert all(
+        parameter.grad is None or torch.isfinite(parameter.grad).all()
+        for parameter in model.parameters()
+    )
 
 
 @pytest.mark.parametrize(

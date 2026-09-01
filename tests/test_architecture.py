@@ -9,6 +9,7 @@ from speck.architecture import (
     BlockConfig,
     BlockGroup,
     GatedCausalConvSpec,
+    GatedDeltaNetSpec,
     StageConfig,
     SwiGLUSpec,
 )
@@ -71,6 +72,18 @@ def test_focused_hybrid_grammar_round_trips():
     )
     config = ArchitectureConfig((BlockGroup(block),), 16, vocab_size=32)
     assert ArchitectureConfig.from_dict(config.export()) == config
+
+
+def test_gated_deltanet_grammar_round_trips():
+    operation = GatedDeltaNetSpec(4, 8, 2, 4, conv_kernel_size=3)
+    block = BlockConfig(16, (StageConfig((operation,)),))
+    config = ArchitectureConfig((BlockGroup(block),), 16, vocab_size=32)
+    assert ArchitectureConfig.from_dict(config.export()) == config
+
+
+def test_gated_deltanet_requires_grouped_value_heads():
+    with pytest.raises(ValueError, match="value heads must be divisible"):
+        GatedDeltaNetSpec(4, 4, 2, 3)
 
 
 def test_attention_shape_invariants_are_strict():
