@@ -4,6 +4,18 @@ Speck prepares remote text corpora into deterministic, sharded token streams. Th
 repositories, discovers input files, streams and filters documents, performs global exact
 deduplication, tokenizes text, and writes packed `uint16` training and validation shards.
 
+For context-extension corpora, a source may set `filters.min_tokens` and `filters.max_tokens` to
+select documents by tokenized length. Token filtering happens after BOS/EOS encoding and is recorded
+in the source manifest. Individual documents may contain up to 16 million characters, while
+tokenizer batches remain capped at 2 million characters so ordinary preparation does not acquire a
+large transient memory requirement.
+
+Long-context data should preserve real dependency structure. Prefer complete books and papers,
+repository-level code assembled in deterministic path order, or explicitly related document
+bundles. The packed loader preserves each source stream and BOS/EOS document boundaries, but it
+does not invent relationships between adjacent documents; random concatenation alone is not a
+substitute for semantic long sequences.
+
 ## Prepare a Corpus
 
 Run commands from the repository root. Download and verify the experiment tokenizer first:

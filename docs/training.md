@@ -105,6 +105,48 @@ Only `lr`, `warmup_steps`, `min_lr`, and `lr_schedule` may then differ; optimize
 non-schedule training setting remain inherited and validated. A constant-LR tail uses
 `lr_schedule: "constant"`, zero warmup, and `min_lr: 1.0` with the desired absolute `lr`.
 
+### Progressive context continuation
+
+Context extension is an explicit branch kind. It preserves the parameter topology, model weights,
+Muon/AdamW state, weight decay, clipping, optimizer type, and seed while permitting a new packed
+dataset, sequence length, batch geometry, world size, RoPE base, RoPE scaling factor, and learning
+rate schedule. The new data cursor starts at zero and the checkpoint records both parent identity
+and cumulative token progress.
+
+Prepare a stage bound to an exact completed parent checkpoint:
+
+```bash
+uv run --extra cpu python -m scripts.context_stage_prepare \
+  experiments/SpeckLC-4K experiments/SpeckLC-32K \
+  --checkpoint-dir ~/.cache/speck/checkpoints/SpeckLC-4K \
+  --step <step> --sequence-length 32768 --train-tokens <tokens> \
+  --lr 0.0001 --rope-theta 1000000
+```
+
+Then launch the stage with the parent recorded in `context_stage.json`:
+
+```bash
+uv run --extra gpu torchrun --standalone --nproc_per_node=8 \
+  -m scripts.base_train -- experiments/SpeckLC-32K \
+  --branch-from ~/.cache/speck/checkpoints/SpeckLC-4K --branch-step <step> \
+  --branch-kind context --branch-schedule new
+```
+
+Changing the block layout, mixer dimensions, vocabulary, or optimizer semantics is rejected. A
+context stage must set `training_phase` to `context_extension`; this prevents an ordinary branch
+from silently acquiring the relaxed data and geometry contract.
+
+Gated DeltaNet always has a portable Torch implementation. Install the `linear` extra together
+with the GPU environment to use the pinned flash-linear-attention kernels on CUDA:
+
+```bash
+uv sync --extra gpu --extra linear
+```
+
+The CUDA path selects the chunkwise kernel for prefill/training and the fused recurrent kernel for
+single-token decode. Always qualify kernel outputs and gradients on the target GPU before a large
+run; the Torch recurrence is the numerical reference.
+
 Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
 parent LR:
 

@@ -32,6 +32,7 @@ from speck.tokenizer import get_tokenizer
 from speck.train import (
     average_loss,
     branch_position,
+    checkpoint_global_tokens,
     checkpoint_milestones,
     lr_scale,
     optimization_step,
@@ -50,6 +51,7 @@ _BRANCH_FIXED_SETTINGS = (
     "seed",
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule")
+_CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed")
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "device_batch_size",
@@ -66,6 +68,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "global_token_offset",
     "checkpoint_tokens",
     "training_phase",
+    "branch_kind",
     "seed",
 )
 _LEGACY_RESUME_DEFAULTS = {
@@ -74,6 +77,7 @@ _LEGACY_RESUME_DEFAULTS = {
     "checkpoint_tokens": [],
     "training_phase": "base",
     "seed": 42,
+    "branch_kind": "same",
 }
 
 
@@ -96,6 +100,28 @@ def changed_branch_settings(previous, current, allow_schedule_change=False):
         if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
         != current.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
     ]
+
+
+def changed_context_settings(previous, current):
+    """Return optimizer semantics that a context-extension branch tried to change."""
+
+    return [
+        key
+        for key in _CONTEXT_FIXED_SETTINGS
+        if previous.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
+        != current.get(key, _LEGACY_RESUME_DEFAULTS.get(key))
+    ]
+
+
+def context_compatible_architecture(previous, current):
+    """Allow positional capacity changes without allowing parameter-topology drift."""
+
+    ignored = {"max_position_embeddings", "rope_theta", "rope_scaling_factor"}
+    previous = ArchitectureConfig.from_dict(previous).settings()
+    current = ArchitectureConfig.from_dict(current).settings()
+    return {key: value for key, value in previous.items() if key not in ignored} == {
+        key: value for key, value in current.items() if key not in ignored
+    }
 
 
 def arguments(argv=None):
@@ -134,6 +160,12 @@ def arguments(argv=None):
         choices=("inherit", "new"),
         default="inherit",
         help="inherit the parent schedule or start the branch schedule at step zero",
+    )
+    parser.add_argument(
+        "--branch-kind",
+        choices=("same", "context"),
+        default="same",
+        help="same-recipe comparison or explicit progressive-context continuation",
     )
     parser.add_argument(
         "--no-compile",
@@ -211,6 +243,7 @@ class BaseTrainer:
         args.global_token_offset = getattr(args, "global_token_offset", 0)
         args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
         args.training_phase = getattr(args, "training_phase", "base")
+        args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
         args.wandb_group = getattr(args, "wandb_group", None)
         args.seed = getattr(args, "seed", 42)
@@ -240,6 +273,13 @@ class BaseTrainer:
             raise ValueError("--resume and --branch-from are mutually exclusive")
         if not self.branching and self.cli.branch_schedule != "inherit":
             raise ValueError("--branch-schedule new requires --branch-from")
+        if not self.branching and self.cli.branch_kind != "same":
+            raise ValueError("--branch-kind context requires --branch-from")
+        if self.branching and self.cli.branch_kind == "context":
+            if self.cli.branch_schedule != "new":
+                raise ValueError("context branches require --branch-schedule new")
+            if args.training_phase != "context_extension":
+                raise ValueError("context branches require training_phase context_extension")
         if args.resume is None and latest(args.output_dir) is not None:
             raise FileExistsError(
                 f"checkpoints already exist: {args.output_dir}; pass --resume STEP"
@@ -260,9 +300,12 @@ class BaseTrainer:
         )
         if self.metadata:
             args.global_token_offset = self.metadata["resolved"].get("global_token_offset", 0)
+            args.branch_kind = self.metadata["resolved"].get("branch_kind", "same")
         self.data_token_offset = (
             self.metadata["resolved"].get("data_token_offset", 0) if self.metadata else 0
         )
+        if self.parent_metadata and self.cli.branch_kind == "context":
+            self.data_token_offset = 0
 
     def _initialize_runtime(self):
         self.rank, self.local_rank, self.world_size, self.device = init_runtime(self.args.device)
@@ -335,19 +378,27 @@ class BaseTrainer:
             self.schedule_step_offset = self.metadata["resolved"].get("schedule_step_offset", 0)
             self.schedule_steps = self.metadata["resolved"].get("schedule_steps", self.steps)
         elif self.parent_metadata:
-            (
-                args.global_token_offset,
-                self.data_token_offset,
-                self.schedule_step_offset,
-                self.schedule_steps,
-            ) = branch_position(
-                self.parent_metadata,
-                args.batch_tokens,
-                self.steps if self.cli.branch_schedule == "inherit" else None,
-            )
-            if self.cli.branch_schedule == "new":
+            if self.cli.branch_kind == "context":
+                args.global_token_offset = checkpoint_global_tokens(
+                    self.parent_metadata, args.batch_tokens
+                )
+                self.data_token_offset = 0
                 self.schedule_step_offset = 0
                 self.schedule_steps = self.steps
+            else:
+                (
+                    args.global_token_offset,
+                    self.data_token_offset,
+                    self.schedule_step_offset,
+                    self.schedule_steps,
+                ) = branch_position(
+                    self.parent_metadata,
+                    args.batch_tokens,
+                    self.steps if self.cli.branch_schedule == "inherit" else None,
+                )
+                if self.cli.branch_schedule == "new":
+                    self.schedule_step_offset = 0
+                    self.schedule_steps = self.steps
         if (
             not isinstance(args.global_token_offset, int)
             or isinstance(args.global_token_offset, bool)
@@ -355,7 +406,12 @@ class BaseTrainer:
             or args.global_token_offset % args.batch_tokens
         ):
             raise ValueError("global token offset must align with optimizer batches")
-        self.global_step_offset = args.global_token_offset // args.batch_tokens
+        if self.parent_metadata and self.cli.branch_kind == "context":
+            self.global_step_offset = self.parent_metadata.get(
+                "global_step", self.parent_metadata["step"]
+            )
+        else:
+            self.global_step_offset = args.global_token_offset // args.batch_tokens
         self.global_consumed_tokens = args.global_token_offset + self.consumed_tokens
         self.milestones = checkpoint_milestones(
             args.checkpoint_tokens,
@@ -421,17 +477,25 @@ class BaseTrainer:
         parent_metadata = self.parent_metadata
         if parent_metadata is None:
             raise RuntimeError("branch metadata was not loaded")
+        context_branch = self.cli.branch_kind == "context"
         stored_config = ArchitectureConfig.from_dict(parent_metadata["config"]).settings()
-        if (
-            stored_config != self.config.settings()
-            or parent_metadata["manifest"] != self.manifest_hash
-        ):
+        architecture_matches = (
+            context_compatible_architecture(parent_metadata["config"], self.config.export())
+            if context_branch
+            else stored_config == self.config.settings()
+        )
+        manifest_matches = context_branch or parent_metadata["manifest"] == self.manifest_hash
+        if not architecture_matches or not manifest_matches:
             raise ValueError("branch parent does not match the model or dataset")
         branch_settings = {**vars(self.args), "world_size": self.world_size}
-        changed = changed_branch_settings(
-            parent_metadata["resolved"],
-            branch_settings,
-            allow_schedule_change=self.cli.branch_schedule == "new",
+        changed = (
+            changed_context_settings(parent_metadata["resolved"], branch_settings)
+            if context_branch
+            else changed_branch_settings(
+                parent_metadata["resolved"],
+                branch_settings,
+                allow_schedule_change=self.cli.branch_schedule == "new",
+            )
         )
         if changed:
             raise ValueError(f"branch settings changed: {', '.join(changed)}")
@@ -442,8 +506,11 @@ class BaseTrainer:
             raise ValueError("parent checkpoint metadata changed while loading")
         self.model.load_state_dict(model_state)
         self.optimizer.load_state_dict(optimizer_state)
-        self.data_state = parent_metadata["data_state"]
-        validate_loader_progress(self.data_state, self.data_token_offset)
+        if context_branch:
+            self.data_state = None
+        else:
+            self.data_state = parent_metadata["data_state"]
+            validate_loader_progress(self.data_state, self.data_token_offset)
 
     def _build_resolved_settings(self):
         dataset_provenance = {
@@ -480,6 +547,7 @@ class BaseTrainer:
             "schedule_steps": self.schedule_steps,
             "parent_checkpoint": self.parent,
             "branch_schedule": self.branch_schedule,
+            "branch_kind": self.args.branch_kind,
             "milestone_steps": {str(step): token for step, token in self.milestones.items()},
         }
         if self.metadata:

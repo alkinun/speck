@@ -49,7 +49,8 @@ _DEDUP_SETTINGS = {
 }
 _DEDUP_BYTES = 16
 _MAX_TOKENIZER_DOCUMENTS = 1024
-_MAX_TOKENIZER_CHARACTERS = 2_000_000
+_MAX_TOKENIZER_BATCH_CHARACTERS = 2_000_000
+_MAX_DOCUMENT_CHARACTERS = 16_000_000
 _RAW_SHARD_ALLOWANCE_BYTES = 20 * 1024**3
 _MIN_INDEX_DEDUP_HEADROOM_BYTES = 5 * 1024**3
 _LANGUAGE_DETECTORS = {"py3langid"}
@@ -229,6 +230,8 @@ def _validate_source(source):
         "min_score",
         "score_operator",
         "language",
+        "min_tokens",
+        "max_tokens",
     }:
         raise ValueError(f"source {source_id} has unsupported filters")
     if "min_score" in filters:
@@ -257,6 +260,11 @@ def _validate_source(source):
         raise ValueError(
             f"source {source_id} language filter requires language_column or language_detector"
         )
+    for key in ("min_tokens", "max_tokens"):
+        if key in filters:
+            _integer(filters[key], f"source {source_id} {key}", minimum=1)
+    if filters.get("min_tokens", 1) > filters.get("max_tokens", math.inf):
+        raise ValueError(f"source {source_id} min_tokens cannot exceed max_tokens")
     return {
         **source,
         "revision": source.get("revision"),
@@ -297,8 +305,8 @@ def validate_data_settings(
     max_chars = _integer(filtering["max_chars"], "filtering.max_chars", minimum=1)
     if min_chars > max_chars:
         raise ValueError("filtering.min_chars cannot exceed filtering.max_chars")
-    if max_chars > _MAX_TOKENIZER_CHARACTERS:
-        raise ValueError(f"filtering.max_chars cannot exceed {_MAX_TOKENIZER_CHARACTERS:,}")
+    if max_chars > _MAX_DOCUMENT_CHARACTERS:
+        raise ValueError(f"filtering.max_chars cannot exceed {_MAX_DOCUMENT_CHARACTERS:,}")
     if dedup != _DEDUP_SETTINGS:
         raise ValueError(f"dedup must be {_DEDUP_SETTINGS}")
     if not isinstance(shards, dict) or set(shards) != {
@@ -975,6 +983,10 @@ class SourceBuilder:
             writer = self.writers[split]
             if writer.total_tokens >= self.targets[split]:
                 continue
+            minimum_tokens = self.source["filters"].get("min_tokens", 1)
+            maximum_tokens = self.source["filters"].get("max_tokens", math.inf)
+            if not minimum_tokens <= len(token_ids) <= maximum_tokens:
+                continue
             start_token = writer.total_tokens
             written = writer.write(token_ids)
             self.accepted_hashes.add(digest_integer)
@@ -992,6 +1004,7 @@ class SourceBuilder:
                 "source_id": self.source_id,
                 "split": split,
                 "start_token": start_token,
+                "tokens": written,
             }
             score = document.get("score")
             if score is not None:
@@ -1015,7 +1028,7 @@ class SourceBuilder:
             length = len(content) if isinstance(content, str) else 0
             if batch and (
                 len(batch) >= _MAX_TOKENIZER_DOCUMENTS
-                or characters + length > _MAX_TOKENIZER_CHARACTERS
+                or characters + length > _MAX_TOKENIZER_BATCH_CHARACTERS
             ):
                 self._process(batch)
                 batch.clear()
@@ -1024,7 +1037,10 @@ class SourceBuilder:
                     return
             batch.append(document)
             characters += length
-            if len(batch) >= _MAX_TOKENIZER_DOCUMENTS or characters >= _MAX_TOKENIZER_CHARACTERS:
+            if (
+                len(batch) >= _MAX_TOKENIZER_DOCUMENTS
+                or characters >= _MAX_TOKENIZER_BATCH_CHARACTERS
+            ):
                 self._process(batch)
                 batch.clear()
                 characters = 0
@@ -1649,7 +1665,8 @@ class _DatasetBuild:
                 "reserve_basis": "(phase_count + 1) * maximum_loader_microbatch_tokens",
                 "tokenizer_batch": {
                     "maximum_documents": _MAX_TOKENIZER_DOCUMENTS,
-                    "maximum_characters": _MAX_TOKENIZER_CHARACTERS,
+                    "maximum_characters": _MAX_TOKENIZER_BATCH_CHARACTERS,
+                    "maximum_document_characters": _MAX_DOCUMENT_CHARACTERS,
                 },
                 "disk_preflight": self.disk_report,
             },

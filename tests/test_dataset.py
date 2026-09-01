@@ -545,6 +545,36 @@ def test_source_extensions_validate_explicit_contracts():
                 "files": ["data/shard.parquet"],
             }
         )
+    with pytest.raises(ValueError, match="min_tokens cannot exceed"):
+        dataset._validate_source(
+            {**source_config("long"), "filters": {"min_tokens": 100, "max_tokens": 10}}
+        )
+
+
+def test_source_token_length_filters_select_long_documents(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        dataset,
+        "_is_validation_document",
+        lambda content, seed, fraction: content.startswith("val"),
+    )
+    config = single_source_settings(train_tokens=24, validation_tokens=1)
+    config["sources"][0]["filters"] = {"min_tokens": 12}
+    manifest = dataset.prepare_dataset(
+        **config,
+        output_dir=tmp_path / "long-filter",
+        tokenizer=FakeTokenizer(),
+        check_disk=False,
+        document_iterators={
+            "a": [
+                {"content": "short"},
+                {"content": "val-long-document"},
+                {"content": "long-document-one"},
+                {"content": "long-document-two"},
+            ]
+        },
+    )
+    source = manifest["sources"][0]
+    assert source["splits"]["train"]["documents"] == 2
 
 
 def test_strict_score_and_detected_language_filters(tmp_path, monkeypatch):

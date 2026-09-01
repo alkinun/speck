@@ -77,6 +77,9 @@ gpu = [
     "liger-kernel==0.8.2",
     "torch==2.9.1",
 ]
+linear = [
+    "flash-linear-attention==0.5.0",
+]
 
 [tool.uv]
 default-groups = []

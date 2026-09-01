@@ -8,7 +8,9 @@ from scripts.base_train import (
     BaseTrainer,
     arguments,
     changed_branch_settings,
+    changed_context_settings,
     changed_resume_settings,
+    context_compatible_architecture,
     validate,
 )
 from speck.architecture import (
@@ -187,6 +189,8 @@ def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
 def test_branch_schedule_argument_defaults_to_inherit():
     assert arguments([]).branch_schedule == "inherit"
     assert arguments(["--branch-schedule", "new"]).branch_schedule == "new"
+    assert arguments([]).branch_kind == "same"
+    assert arguments(["--branch-kind", "context"]).branch_kind == "context"
 
 
 def test_branch_only_allows_same_training_recipe():
@@ -199,6 +203,34 @@ def test_branch_only_allows_same_training_recipe():
     assert changed_branch_settings(
         previous, {**previous, "world_size": 2}, allow_schedule_change=True
     ) == ["world_size"]
+
+
+def test_context_branch_only_freezes_optimizer_semantics():
+    previous = {
+        "weight_decay": 0.1,
+        "grad_clip": 1.0,
+        "optimizer": "muon",
+        "seed": 42,
+        "sequence_length": 2_048,
+        "world_size": 8,
+    }
+    current = {**previous, "sequence_length": 131_072, "world_size": 16}
+    assert changed_context_settings(previous, current) == []
+    assert changed_context_settings(previous, {**current, "optimizer": "adamw"}) == ["optimizer"]
+
+
+def test_context_architecture_only_allows_positional_changes():
+    experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
+    model = load_experiment(experiment, "model")["model"]
+    extended = {
+        **model,
+        "max_position_embeddings": 131_072,
+        "rope_theta": 1_000_000.0,
+        "rope_scaling_factor": 2.0,
+    }
+    assert context_compatible_architecture(model, extended)
+    changed = {**extended, "embedding_size": model["embedding_size"] + 1}
+    assert not context_compatible_architecture(model, changed)
 
 
 def test_branch_inherits_global_and_schedule_positions():

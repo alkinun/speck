@@ -7,12 +7,15 @@ training, full-model instruction tuning, and reproducible evaluation tools.
 ## Capabilities
 
 - Global or sliding grouped-query attention.
+- Fixed-state Gated DeltaNet with an auditable Torch recurrence and optional FLA kernels.
+- Partial RoPE, NoPE attention, and training-free linear RoPE scaling.
 - Gated causal convolution.
 - SwiGLU feed-forward layers.
 - Repeated blocks with optional weight sharing.
 - Heterogeneous block widths and attention head dimensions.
 - Deterministic corpus preparation with filtering, exact deduplication, and packed shards.
 - Single-GPU and distributed data-parallel training with explicit checkpoint resume.
+- Lineage-checked progressive-context continuation across new data and sequence lengths.
 - Local checkpoint inference, Transformers and GGUF export, and pinned benchmark wrappers.
 
 Models are groups of residual blocks. Each block contains ordered stages, and a stage can execute
