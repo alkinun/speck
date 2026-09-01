@@ -507,6 +507,21 @@ def test_expert_banks_and_router_use_muon_while_convolution_stays_adamw():
     assert id(convolution.kernel) in adamw_parameters
     assert muon_parameters.isdisjoint(adamw_parameters)
     assert muon_parameters | adamw_parameters == {id(parameter) for parameter in model.parameters()}
+    roles = model.optimizer_role_counts(optimizer)
+    assert roles["muon"]["parameters"] == sum(
+        parameter.numel()
+        for group in optimizer.optimizers["muon"].param_groups
+        for parameter in group["params"]
+    )
+    assert sum(role["tensors"] for role in roles.values()) == len(tuple(model.parameters()))
+    assert model.routing_config() == [
+        {
+            "layer": "occurrence_0_stage_1_branch_0",
+            "intermediate_size": 4,
+            "num_experts": 4,
+            "top_k": 2,
+        }
+    ]
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="grouped GEMM requires CUDA")

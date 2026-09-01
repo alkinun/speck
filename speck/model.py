@@ -920,6 +920,83 @@ class SpeckForCausalLM(nn.Module):
     def active_parameter_count(self):
         return self.config.active_parameter_count(self.parameter_count())
 
+    def routed_operations(self):
+        operations = {}
+        for invocation in self.execution_plan:
+            core = self.cores[invocation.weight_key]
+            for stage_index, stage in enumerate(core.stages):
+                for branch_index, branch in enumerate(stage.branches):
+                    if isinstance(branch.operation, RoutedSwiGLU):
+                        key = (
+                            f"occurrence_{invocation.occurrence_index}_stage_{stage_index}"
+                            f"_branch_{branch_index}"
+                        )
+                        operations[key] = branch.operation
+        return operations
+
+    def routing_config(self):
+        values = []
+        for layer, operation in self.routed_operations().items():
+            values.append(
+                {
+                    "layer": layer,
+                    "intermediate_size": operation.spec.intermediate_size,
+                    "num_experts": operation.spec.num_experts,
+                    "top_k": operation.spec.top_k,
+                }
+            )
+        return values
+
+    def optimizer_role_counts(self, optimizer):
+        """Audit exact optimizer membership and summarize tensor/element roles."""
+
+        parameter_ids = {id(parameter) for parameter in self.parameters()}
+        memberships = {}
+        roles = defaultdict(list)
+        optimizers = (
+            optimizer.optimizers.items()
+            if isinstance(optimizer, CombinedOptimizer)
+            else (("adamw", optimizer),)
+        )
+        for optimizer_name, member in optimizers:
+            for group in member.param_groups:
+                if optimizer_name == "muon":
+                    role = "muon"
+                else:
+                    role = (
+                        "adamw_decay"
+                        if group.get("weight_decay", 0.0)
+                        else "adamw_no_decay"
+                    )
+                for parameter in group["params"]:
+                    identifier = id(parameter)
+                    if identifier in memberships:
+                        raise ValueError("a parameter appears in more than one optimizer role")
+                    memberships[identifier] = role
+                    roles[role].append(parameter)
+        if set(memberships) != parameter_ids:
+            raise ValueError("optimizer roles do not cover every model parameter exactly once")
+        if isinstance(optimizer, CombinedOptimizer):
+            required_muon = {
+                id(parameter)
+                for operation in self.routed_operations().values()
+                for parameter in (
+                    operation.router.weight,
+                    operation.gate_proj,
+                    operation.up_proj,
+                    operation.down_proj,
+                )
+            }
+            if any(memberships[identifier] != "muon" for identifier in required_muon):
+                raise ValueError("routed router and expert parameters must use Muon")
+        return {
+            role: {
+                "tensors": len(parameters),
+                "parameters": sum(parameter.numel() for parameter in parameters),
+            }
+            for role, parameters in sorted(roles.items())
+        }
+
     def flops_per_token(self, sequence_length):
         linear = self.config.vocab_size * self.config.embedding_size
         input_size = self.config.embedding_size
