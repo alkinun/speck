@@ -106,9 +106,7 @@ def test_local_default_output_is_collision_free_by_directory_hash(tmp_path):
 def test_local_export_requires_successful_parity_attestation(tmp_path):
     model = tmp_path / "export"
     model.mkdir()
-    (model / "config.json").write_text(
-        json.dumps({"expected_parameters": 3}), encoding="utf-8"
-    )
+    (model / "config.json").write_text(json.dumps({"expected_parameters": 3}), encoding="utf-8")
     (model / "model.safetensors").write_bytes(b"weights")
 
     with pytest.raises(ValueError, match="parity artifacts"):
@@ -357,9 +355,7 @@ def test_local_summary_is_bound_to_export_identity_not_hub_revision(tmp_path):
                 "config": {"limit": None, "model_revision": None},
                 "lm_eval_version": config["lm_eval"]["version"],
                 "transformers_version": config["lm_eval"]["transformers_version"],
-                "results": {
-                    task: {"acc_norm,none": 0.5} for task in config["lm_eval"]["tasks"]
-                },
+                "results": {task: {"acc_norm,none": 0.5} for task in config["lm_eval"]["tasks"]},
                 "n-samples": {
                     task: {"original": count, "effective": count}
                     for task, count in config["lm_eval"]["expected_samples"].items()
@@ -373,9 +369,7 @@ def test_local_summary_is_bound_to_export_identity_not_hub_revision(tmp_path):
         encoding="utf-8",
     )
     arithmark_3_path.write_text(
-        json.dumps(
-            {"results": {"arithmark-3": {"acc_norm": 50.0, "total": 1000}}}
-        ),
+        json.dumps({"results": {"arithmark-3": {"acc_norm": 50.0, "total": 1000}}}),
         encoding="utf-8",
     )
     identity = {"path": "/export", "sha256": "directory-hash", "files": []}

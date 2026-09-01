@@ -285,9 +285,7 @@ def _run_arithmark_2(config, files, output_dir, local_model=None, local_identity
     return result
 
 
-def _run_arithmark_3(
-    config, files, output_dir, device, local_model=None, local_identity=None
-):
+def _run_arithmark_3(config, files, output_dir, device, local_model=None, local_identity=None):
     _assert_implicit_revisions(config, check_model=local_model is None)
     benchmark = config["arithmark_3"]
     results_dir = output_dir / "arithmark-3"
@@ -344,9 +342,7 @@ def _selected_lm_eval_result(directory, expected_model_sha256=None):
     selection = directory / "selected-result.json"
     if not selection.is_file():
         if expected_model_sha256 is not None:
-            raise FileNotFoundError(
-                f"local result has no export-bound selection: {selection}"
-            )
+            raise FileNotFoundError(f"local result has no export-bound selection: {selection}")
         return _one_result(directory, "results_*.json")
     value = json.loads(selection.read_text(encoding="utf-8"))
     name = value.get("path")
@@ -527,16 +523,12 @@ def _parse_args():
 def main():
     args = _parse_args()
     config = _load_config(args.config)
-    local_model = (
-        _validate_local_export(args.local_model) if args.local_model is not None else None
-    )
+    local_model = _validate_local_export(args.local_model) if args.local_model is not None else None
     output_dir = (
-        args.output_dir or _default_output_dir(config, local_model)
-    ).expanduser().resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
-    local_identity = (
-        _bind_local_model(output_dir, local_model) if local_model is not None else None
+        (args.output_dir or _default_output_dir(config, local_model)).expanduser().resolve()
     )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    local_identity = _bind_local_model(output_dir, local_model) if local_model is not None else None
 
     if args.stage in ("lm-eval", "all"):
         _run_lm_eval(config, output_dir, args.device, args.limit, local_model)

@@ -1,1 +1,1 @@
-"""Speck language-model architecture search and training tools."""
+"""Speck language-model training and evaluation tools."""

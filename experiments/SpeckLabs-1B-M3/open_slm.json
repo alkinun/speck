@@ -1,8 +1,0 @@
-{
-  "extends": "../Speck1-140M/open_slm.json",
-  "model": {
-    "parameters": 772771584,
-    "repo": "local/SpeckLabs-1B-M3",
-    "revision": "local-export-only"
-  }
-}

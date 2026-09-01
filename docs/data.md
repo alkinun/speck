@@ -181,4 +181,4 @@ boundaries, removes only partial work from the interrupted file, and resumes at 
 
 The final manifest records source identities, resolved revisions, quotas, actual token counts,
 filters, tokenizer identity, phase schedule, shard checksums, and preparation statistics. Training
-and architecture search validate this manifest before consuming the corpus.
+validates this manifest before consuming the corpus.

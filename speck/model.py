@@ -2,7 +2,7 @@
 
 import math
 from collections import defaultdict
-from dataclasses import dataclass, replace
+from dataclasses import replace
 
 import torch
 import torch.nn as nn
@@ -12,7 +12,6 @@ from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
     GatedCausalConvSpec,
-    RoutedSwiGLUSpec,
     SwiGLUSpec,
 )
 
@@ -117,11 +116,7 @@ class CombinedOptimizer:
 
 
 class BatchedMuon(torch.optim.Muon):
-    """Run Muon's per-matrix Newton-Schulz updates in shape batches.
-
-    Expert banks retain one checkpoint state entry while each leading-dimension
-    matrix slice receives its own orthogonalized update.
-    """
+    """Run Muon's per-matrix Newton-Schulz updates in shape batches."""
 
     def __init__(
         self,
@@ -158,10 +153,9 @@ class BatchedMuon(torch.optim.Muon):
         torch.optim.Optimizer.__init__(self, params, defaults)
         for group in self.param_groups:
             for parameter in group["params"]:
-                if parameter.ndim not in (2, 3):
+                if parameter.ndim != 2:
                     raise ValueError(
-                        "BatchedMuon only supports matrices and expert matrix banks, "
-                        f"got {tuple(parameter.shape)}"
+                        f"BatchedMuon only supports matrices, got {tuple(parameter.shape)}"
                     )
 
     @staticmethod
@@ -186,31 +180,24 @@ class BatchedMuon(torch.optim.Muon):
                 gradient = parameter.grad
                 if gradient is None:
                     continue
-                if gradient.is_sparse or gradient.ndim not in (2, 3) or torch.is_complex(
-                    parameter
-                ):
-                    raise RuntimeError("BatchedMuon requires dense, real matrix gradients or banks")
+                if gradient.is_sparse or gradient.ndim != 2 or torch.is_complex(parameter):
+                    raise RuntimeError("BatchedMuon requires dense, real matrix gradients")
                 state = self.state[parameter]
                 if "momentum_buffer" not in state:
                     state["momentum_buffer"] = torch.zeros_like(
                         gradient, memory_format=torch.preserve_format
                     )
-                parameters = parameter.unbind() if parameter.ndim == 3 else (parameter,)
-                gradients = gradient.unbind() if gradient.ndim == 3 else (gradient,)
-                momenta = (
-                    state["momentum_buffer"].unbind()
-                    if state["momentum_buffer"].ndim == 3
-                    else (state["momentum_buffer"],)
-                )
-                for matrix, matrix_gradient, momentum in zip(
-                    parameters, gradients, momenta
-                ):
-                    shape = tuple(matrix.shape)
-                    lr_ratio = self._lr_ratio(group["adjust_lr_fn"], shape)
-                    oriented_shape = (min(shape), max(shape))
-                    batches[(oriented_shape, lr_ratio)].append(
-                        (matrix, matrix_gradient, momentum, shape[0] > shape[1])
+                shape = tuple(parameter.shape)
+                lr_ratio = self._lr_ratio(group["adjust_lr_fn"], shape)
+                oriented_shape = (min(shape), max(shape))
+                batches[(oriented_shape, lr_ratio)].append(
+                    (
+                        parameter,
+                        gradient,
+                        state["momentum_buffer"],
+                        shape[0] > shape[1],
                     )
+                )
 
             for (_, lr_ratio), entries in batches.items():
                 parameters, gradients, momentum_buffers, transposed = map(list, zip(*entries))
@@ -463,129 +450,6 @@ class SwiGLU(nn.Module):
         return self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x))
 
 
-@dataclass(frozen=True)
-class RoutingLayerStats:
-    layer: str
-    mean_probabilities: torch.Tensor
-    utilization: torch.Tensor
-    entropy: torch.Tensor
-    load_balance_loss: torch.Tensor
-    z_loss: torch.Tensor
-
-
-@dataclass(frozen=True)
-class CausalLMTrainingOutput:
-    total_loss: torch.Tensor
-    lm_loss: torch.Tensor
-    load_balance_loss: torch.Tensor
-    z_loss: torch.Tensor
-    routing: tuple[RoutingLayerStats, ...]
-
-
-def _reference_expert_swiglu(inputs, expert_ids, gate, up, down):
-    """Execute sorted routes with a portable expert loop."""
-
-    output = inputs.new_zeros((inputs.size(0), down.size(1)))
-    for expert in range(gate.size(0)):
-        positions = torch.nonzero(expert_ids == expert, as_tuple=False).flatten()
-        selected = inputs.index_select(0, positions)
-        hidden = F.silu(F.linear(selected, gate[expert].to(inputs.dtype)))
-        hidden = hidden * F.linear(selected, up[expert].to(inputs.dtype))
-        values = F.linear(hidden, down[expert].to(inputs.dtype))
-        output.index_copy_(0, positions, values)
-    return output
-
-
-def _grouped_expert_swiglu(inputs, counts, gate, up, down):
-    """Execute sorted BF16 routes through CUDA grouped matrix multiplications."""
-
-    offsets = counts.cumsum(0).to(torch.int32)
-    gate_values = torch._grouped_mm(inputs, gate.transpose(1, 2), offsets)
-    up_values = torch._grouped_mm(inputs, up.transpose(1, 2), offsets)
-    hidden = F.silu(gate_values) * up_values
-    return torch._grouped_mm(hidden, down.transpose(1, 2), offsets)
-
-
-class RoutedSwiGLU(nn.Module):
-    """Token-choice dropless routed SwiGLU with contiguous expert banks."""
-
-    def __init__(self, hidden_size, spec):
-        super().__init__()
-        self.spec = spec
-        self.router = Linear(hidden_size, spec.num_experts, bias=False)
-        self.gate_proj = nn.Parameter(
-            torch.empty(spec.num_experts, spec.intermediate_size, hidden_size)
-        )
-        self.up_proj = nn.Parameter(
-            torch.empty(spec.num_experts, spec.intermediate_size, hidden_size)
-        )
-        self.down_proj = nn.Parameter(
-            torch.empty(spec.num_experts, hidden_size, spec.intermediate_size)
-        )
-
-    def forward(self, x):
-        shape = x.shape
-        tokens = x.reshape(-1, shape[-1])
-        logits = F.linear(tokens.float(), self.router.weight.float())
-        probabilities = logits.softmax(dim=-1)
-        selected_logits, selected_experts = logits.topk(self.spec.top_k, dim=-1)
-        mixture = selected_logits.softmax(dim=-1)
-
-        route_experts = selected_experts.flatten()
-        route_tokens = (
-            torch.arange(tokens.size(0), device=tokens.device)[:, None]
-            .expand(-1, self.spec.top_k)
-            .reshape(-1)
-        )
-        order = route_experts.argsort(stable=True)
-        sorted_experts = route_experts.index_select(0, order)
-        sorted_tokens = route_tokens.index_select(0, order)
-        sorted_inputs = tokens.index_select(0, sorted_tokens)
-        counts = torch.bincount(sorted_experts, minlength=self.spec.num_experts)
-
-        grouped = (
-            x.device.type == "cuda"
-            and x.dtype == torch.bfloat16
-            and torch.cuda.get_device_capability(x.device) >= (8, 0)
-        )
-        if grouped:
-            routed = _grouped_expert_swiglu(
-                sorted_inputs,
-                counts,
-                self.gate_proj.to(x.dtype),
-                self.up_proj.to(x.dtype),
-                self.down_proj.to(x.dtype),
-            )
-        else:
-            routed = _reference_expert_swiglu(
-                sorted_inputs,
-                sorted_experts,
-                self.gate_proj,
-                self.up_proj,
-                self.down_proj,
-            )
-        sorted_mixture = mixture.flatten().index_select(0, order).to(routed.dtype)
-        combined = tokens.new_zeros(tokens.shape)
-        combined.index_add_(0, sorted_tokens, routed * sorted_mixture[:, None])
-
-        mean_probabilities = probabilities.mean(dim=0)
-        utilization = counts.to(probabilities.dtype) / route_experts.numel()
-        entropy = -(probabilities * probabilities.clamp_min(1e-20).log()).sum(dim=-1).mean()
-        load_balance_loss = self.spec.num_experts * torch.sum(
-            mean_probabilities * utilization
-        )
-        z_loss = logits.logsumexp(dim=-1).square().mean()
-        stats = RoutingLayerStats(
-            layer="",
-            mean_probabilities=mean_probabilities,
-            utilization=utilization,
-            entropy=entropy,
-            load_balance_loss=load_balance_loss,
-            z_loss=z_loss,
-        )
-        return combined.view(shape), stats
-
-
 class Operation(nn.Module):
     def __init__(self, hidden_size, spec, config):
         super().__init__()
@@ -595,27 +459,17 @@ class Operation(nn.Module):
             self.operation = Attention(hidden_size, spec, config.rms_norm_eps)
         elif isinstance(spec, GatedCausalConvSpec):
             self.operation = GatedCausalConv(hidden_size, spec)
-        elif isinstance(spec, SwiGLUSpec):
-            self.operation = SwiGLU(hidden_size, spec)
-        elif isinstance(spec, RoutedSwiGLUSpec):
-            self.operation = RoutedSwiGLU(hidden_size, spec)
         else:
-            raise TypeError("unsupported architecture operation")
+            assert isinstance(spec, SwiGLUSpec)
+            self.operation = SwiGLU(hidden_size, spec)
 
     def forward(self, x, rotary, position, state=None):
         normalized = self.norm(x)
         if isinstance(self.spec, AttentionSpec):
-            return (
-                self.operation(
-                    normalized, rotary[str(self.spec.head_dim)], position, state
-                ),
-                None,
-            )
+            return self.operation(normalized, rotary[str(self.spec.head_dim)], position, state)
         if isinstance(self.spec, GatedCausalConvSpec):
-            return self.operation(normalized, state), None
-        if isinstance(self.spec, RoutedSwiGLUSpec):
-            return self.operation(normalized)
-        return self.operation(normalized), None
+            return self.operation(normalized, state)
+        return self.operation(normalized)
 
 
 class Stage(nn.Module):
@@ -626,20 +480,13 @@ class Stage(nn.Module):
             Operation(hidden_size, spec, config) for spec in stage.branches
         )
 
-    def forward(self, x, rotary, position, state, occurrence, masked_routed_layers):
+    def forward(self, x, rotary, position, state, occurrence):
         outputs = []
-        routing = []
         for branch_index, branch in enumerate(self.branches):
             key = f"occurrence_{occurrence}_stage_{self.stage_index}_branch_{branch_index}"
             entry = state.entries[key] if state is not None and key in state.entries else None
-            if key in masked_routed_layers and isinstance(branch.operation, RoutedSwiGLU):
-                output, stats = torch.zeros_like(x), None
-            else:
-                output, stats = branch(x, rotary, position, entry)
-            outputs.append(output)
-            if stats is not None:
-                routing.append(replace(stats, layer=key))
-        return x + sum(outputs), tuple(routing)
+            outputs.append(branch(x, rotary, position, entry))
+        return x + sum(outputs)
 
 
 class BlockCore(nn.Module):
@@ -650,19 +497,10 @@ class BlockCore(nn.Module):
             for index, stage in enumerate(block.stages)
         )
 
-    def forward(self, x, rotary, position, state, occurrence, masked_routed_layers):
-        routing = []
+    def forward(self, x, rotary, position, state, occurrence):
         for stage in self.stages:
-            x, stage_routing = stage(
-                x,
-                rotary,
-                position,
-                state,
-                occurrence,
-                masked_routed_layers,
-            )
-            routing.extend(stage_routing)
-        return x, tuple(routing)
+            x = stage(x, rotary, position, state, occurrence)
+        return x
 
 
 class SpeckForCausalLM(nn.Module):
@@ -726,9 +564,6 @@ class SpeckForCausalLM(nn.Module):
                 nn.init.ones_(module.weight)
             elif isinstance(module, GatedCausalConv):
                 nn.init.normal_(module.kernel, std=self.config.initializer_range)
-            elif isinstance(module, RoutedSwiGLU):
-                for bank in (module.gate_proj, module.up_proj, module.down_proj):
-                    nn.init.normal_(bank, std=self.config.initializer_range)
 
     @torch.no_grad()
     def resize_token_embeddings(self, vocab_size):
@@ -813,26 +648,11 @@ class SpeckForCausalLM(nn.Module):
         return_hidden=False,
         last_token_only=False,
         loss_reduction="mean",
-        return_training_output=False,
-        load_balance_coefficient=0.01,
-        router_z_loss_coefficient=0.001,
-        masked_routed_layers=(),
     ):
         if (tokens is None) == (inputs_embeds is None):
             raise ValueError("provide exactly one of tokens or inputs_embeds")
         if targets is not None and last_token_only:
             raise ValueError("last-token logits cannot be used with full-sequence targets")
-        if return_training_output and targets is None:
-            raise ValueError("training output requires targets")
-        if load_balance_coefficient < 0 or router_z_loss_coefficient < 0:
-            raise ValueError("routing loss coefficients must be non-negative")
-        masked_routed_layers = frozenset(masked_routed_layers)
-        if masked_routed_layers:
-            unknown_masks = masked_routed_layers - self.routed_operations().keys()
-            if unknown_masks:
-                raise ValueError(
-                    f"unknown routed layer masks: {', '.join(sorted(unknown_masks))}"
-                )
         x = self.embed_tokens(tokens) if inputs_embeds is None else inputs_embeds
         x = x.to(torch.bfloat16 if x.is_cuda else self.embed_tokens.weight.dtype)
         length = x.size(1)
@@ -840,69 +660,37 @@ class SpeckForCausalLM(nn.Module):
         maximum = state.length if state is not None else self.config.max_position_embeddings
         if position + length > maximum:
             raise ValueError("sequence exceeds the available model state")
-        routing = []
         for invocation, adapter in zip(self.execution_plan, self.adapters):
             x = adapter(x)
-            x, block_routing = self.cores[invocation.weight_key](
+            x = self.cores[invocation.weight_key](
                 x,
                 self.rotary,
                 position,
                 state,
                 invocation.occurrence_index,
-                masked_routed_layers,
             )
-            routing.extend(block_routing)
         if state is not None:
             state.position += length
         hidden = self.output_projection(self.norm(x))
         if targets is not None:
-            lm_loss = linear_cross_entropy(
+            output = linear_cross_entropy(
                 hidden,
                 self.lm_head.weight,
                 targets,
                 loss_reduction,
                 self.loss_backend,
             )
-            if return_training_output:
-                zero = lm_loss.new_zeros(())
-                load_balance_loss = (
-                    torch.stack([item.load_balance_loss for item in routing]).mean()
-                    if routing
-                    else zero
-                )
-                z_loss = (
-                    torch.stack([item.z_loss for item in routing]).mean()
-                    if routing
-                    else zero
-                )
-                output = CausalLMTrainingOutput(
-                    total_loss=lm_loss
-                    + load_balance_coefficient * load_balance_loss
-                    + router_z_loss_coefficient * z_loss,
-                    lm_loss=lm_loss,
-                    load_balance_loss=load_balance_loss,
-                    z_loss=z_loss,
-                    routing=tuple(routing),
-                )
-            else:
-                output = lm_loss
         else:
             output = self.lm_head(hidden[:, -1:] if last_token_only else hidden).float()
         return (output, hidden) if return_hidden else output
 
     def optimizer(self, lr=6e-4, weight_decay=0.1, name="adamw"):
         embedding = self.embed_tokens.weight
-        expert_banks = {
-            id(parameter)
-            for module in self.modules()
-            if isinstance(module, RoutedSwiGLU)
-            for parameter in (module.gate_proj, module.up_proj, module.down_proj)
-        }
         matrices, other_decay, no_decay = [], [], []
         for parameter in self.parameters():
             if parameter is embedding or parameter.ndim < 2:
                 no_decay.append(parameter)
-            elif parameter.ndim == 2 or id(parameter) in expert_banks:
+            elif parameter.ndim == 2:
                 matrices.append(parameter)
             else:
                 other_decay.append(parameter)
@@ -942,36 +730,6 @@ class SpeckForCausalLM(nn.Module):
     def parameter_count(self):
         return sum(parameter.numel() for parameter in self.parameters())
 
-    def active_parameter_count(self):
-        return self.config.active_parameter_count(self.parameter_count())
-
-    def routed_operations(self):
-        operations = {}
-        for invocation in self.execution_plan:
-            core = self.cores[invocation.weight_key]
-            for stage_index, stage in enumerate(core.stages):
-                for branch_index, branch in enumerate(stage.branches):
-                    if isinstance(branch.operation, RoutedSwiGLU):
-                        key = (
-                            f"occurrence_{invocation.occurrence_index}_stage_{stage_index}"
-                            f"_branch_{branch_index}"
-                        )
-                        operations[key] = branch.operation
-        return operations
-
-    def routing_config(self):
-        values = []
-        for layer, operation in self.routed_operations().items():
-            values.append(
-                {
-                    "layer": layer,
-                    "intermediate_size": operation.spec.intermediate_size,
-                    "num_experts": operation.spec.num_experts,
-                    "top_k": operation.spec.top_k,
-                }
-            )
-        return values
-
     def optimizer_role_counts(self, optimizer):
         """Audit exact optimizer membership and summarize tensor/element roles."""
 
@@ -988,11 +746,7 @@ class SpeckForCausalLM(nn.Module):
                 if optimizer_name == "muon":
                     role = "muon"
                 else:
-                    role = (
-                        "adamw_decay"
-                        if group.get("weight_decay", 0.0)
-                        else "adamw_no_decay"
-                    )
+                    role = "adamw_decay" if group.get("weight_decay", 0.0) else "adamw_no_decay"
                 for parameter in group["params"]:
                     identifier = id(parameter)
                     if identifier in memberships:
@@ -1001,19 +755,6 @@ class SpeckForCausalLM(nn.Module):
                     roles[role].append(parameter)
         if set(memberships) != parameter_ids:
             raise ValueError("optimizer roles do not cover every model parameter exactly once")
-        if isinstance(optimizer, CombinedOptimizer):
-            required_muon = {
-                id(parameter)
-                for operation in self.routed_operations().values()
-                for parameter in (
-                    operation.router.weight,
-                    operation.gate_proj,
-                    operation.up_proj,
-                    operation.down_proj,
-                )
-            }
-            if any(memberships[identifier] != "muon" for identifier in required_muon):
-                raise ValueError("routed router and expert parameters must use Muon")
         return {
             role: {
                 "tensors": len(parameters),
@@ -1044,10 +785,7 @@ class SpeckForCausalLM(nn.Module):
                     elif isinstance(branch, GatedCausalConvSpec):
                         linear += 4 * hidden_size * branch.inner_size
                         linear += branch.inner_size * branch.kernel_size
-                    elif isinstance(branch, RoutedSwiGLUSpec):
-                        linear += branch.num_experts * hidden_size
-                        linear += 3 * branch.top_k * hidden_size * branch.intermediate_size
-                    else:
+                    elif isinstance(branch, SwiGLUSpec):
                         linear += 3 * hidden_size * branch.intermediate_size
             input_size = hidden_size
         if input_size != self.config.embedding_size:
@@ -1069,12 +807,5 @@ def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2, loss_backe
         if actual != config.expected_parameters:
             raise ValueError(
                 f"expected {config.expected_parameters:,} parameters but built {actual:,}"
-            )
-    if config.expected_active_parameters is not None:
-        actual = model.active_parameter_count()
-        if actual != config.expected_active_parameters:
-            raise ValueError(
-                "expected "
-                f"{config.expected_active_parameters:,} active parameters but built {actual:,}"
             )
     return model

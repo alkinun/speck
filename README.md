@@ -1,8 +1,8 @@
 # Speck
 
-Speck is a compact research harness for designing, training, evaluating, and exporting small causal
-language models. It supports heterogeneous residual blocks, phased data mixtures, resumable
-training, full-model instruction tuning, architecture search, and reproducible evaluation tools.
+Speck is a compact research harness for designing, training, evaluating, and exporting efficient
+causal language models. It supports heterogeneous residual blocks, phased data mixtures, resumable
+training, full-model instruction tuning, and reproducible evaluation tools.
 
 ## Capabilities
 
@@ -75,7 +75,7 @@ configuration:
 
 | Experiment | Purpose |
 | --- | --- |
-| `experiments/Speck1-140M` | 140,652,288-parameter base model, production recipe, and architecture-search baseline. |
+| `experiments/Speck1-140M` | 140,652,288-parameter base model and production recipe. |
 | `experiments/Speck1.5-140M` | Same architecture and 5B-token optimization recipe with an isolated, pinned three-phase corpus curriculum. |
 | `experiments/Speck2-140M` | Same architecture with a pinned 20B-token quality curriculum and scaled training schedule. |
 | `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 supervised fine-tuning of `Speck1-140M`. |
@@ -95,7 +95,6 @@ model.json      Architecture and dimensions.
 tokenizer.json  Tokenizer source, revision, artifact filename, and prepared local directory.
 data.json       Sources, phases, filters, deduplication, shards, and packed output.
 train.json      Optimization, batching, logging, and checkpoints.
-search.json     Search space, training rungs, scoring, and profiling contract.
 open_slm.json   Pinned model-quality evaluation contract.
 ```
 
@@ -109,7 +108,6 @@ prepared conversation dataset.
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
 | [Evaluation and benchmarking](docs/evaluation.md) | Open SLM, BananaMind, optimization, inference performance, and checked results. |
-| [Architecture search](docs/search.md) | Prerequisites, lifecycle, promotion, reproducibility contracts, artifacts, and finalization. |
 | [Releasing models](docs/releasing.md) | Maintainer-only Transformers, code-only, and GGUF publication workflows. |
 | [Contributing](CONTRIBUTING.md) | Development setup, formatting, linting, tests, and change guidelines. |
 
@@ -126,7 +124,6 @@ Runtime artifacts use `~/.cache/speck` by default:
   gguf/          Generated GGUF artifacts and conversion state.
   model-cards/   Generated model-card staging directories.
   releases/      Local Transformers exports.
-  search/        Architecture-search studies.
   tokenizer/     Downloaded tokenizer artifacts.
   tools/         Pinned tool checkouts such as llama.cpp.
 ```

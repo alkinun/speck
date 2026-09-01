@@ -13,7 +13,6 @@ from safetensors.torch import load_file, save_file
 from speck.architecture import (
     ArchitectureConfig,
     AttentionSpec,
-    RoutedSwiGLUSpec,
     SwiGLUSpec,
 )
 from speck.checkpoint import latest, load_model
@@ -217,12 +216,6 @@ def release_config(metadata):
         for branch in stage.branches
         if isinstance(branch, SwiGLUSpec)
     }
-    routed = any(
-        isinstance(branch, RoutedSwiGLUSpec)
-        for invocation in architecture.execution_plan
-        for stage in invocation.block.stages
-        for branch in stage.branches
-    )
     hidden_sizes = {invocation.block.hidden_size for invocation in architecture.execution_plan}
     if len(intermediate_sizes) != 1 or len(hidden_sizes) != 1:
         raise ValueError("Transformers release requires uniform hidden and SwiGLU dimensions")
@@ -238,9 +231,6 @@ def release_config(metadata):
             },
             "dtype": "bfloat16",
             "expected_parameters": expected_parameters,
-            "expected_active_parameters": metadata["resolved"].get(
-                "active_parameters", expected_parameters
-            ),
             "head_dim": attention.head_dim,
             "hidden_act": "silu",
             "hidden_size": hidden_sizes.pop(),
@@ -256,7 +246,7 @@ def release_config(metadata):
             "pad_token_id": None,
             "tie_word_embeddings": True,
             "transformers_version": "5.1.0",
-            "use_cache": not routed,
+            "use_cache": True,
         }
     )
     return settings
@@ -269,9 +259,7 @@ def release_state(state):
     if not torch.equal(state["embed_tokens.weight"], state["lm_head.weight"]):
         raise ValueError("checkpoint input and output embeddings are not tied")
     return {
-        name: tensor.detach()
-        .to(torch.float32 if name.endswith(".router.weight") else torch.bfloat16)
-        .contiguous()
+        name: tensor.detach().to(torch.bfloat16).contiguous()
         for name, tensor in state.items()
         if name != "lm_head.weight"
     }
@@ -384,14 +372,9 @@ def validate_export(output_dir, metadata):
     state = load_file(output_dir / "model.safetensors", device="cpu")
     if "lm_head.weight" in state or not state:
         raise ValueError("exported Safetensors tied-weight layout is invalid")
-    invalid_dtypes = [
-        name
-        for name, tensor in state.items()
-        if tensor.dtype
-        != (torch.float32 if name.endswith(".router.weight") else torch.bfloat16)
-    ]
+    invalid_dtypes = [name for name, tensor in state.items() if tensor.dtype != torch.bfloat16]
     if invalid_dtypes:
-        raise ValueError("exported model has invalid compute or router dtypes")
+        raise ValueError("exported model has invalid compute dtypes")
     if not (output_dir / PADDING_DESTINATION).is_file():
         raise ValueError("export is missing Transformers padding support")
     if (output_dir / "README.md").exists():

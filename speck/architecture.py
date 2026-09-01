@@ -1,16 +1,11 @@
 """Define the block grammar for Speck model architectures."""
 
-import hashlib
 import json
 from dataclasses import asdict, dataclass, field, replace
 
 
 def canonical_json(value):
     return json.dumps(value, allow_nan=False, separators=(",", ":"), sort_keys=True)
-
-
-def content_digest(value):
-    return hashlib.sha256(canonical_json(value).encode()).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -58,23 +53,7 @@ class SwiGLUSpec:
             raise ValueError("SwiGLU intermediate sizes must be positive")
 
 
-@dataclass(frozen=True)
-class RoutedSwiGLUSpec:
-    intermediate_size: int
-    num_experts: int
-    top_k: int
-    kind: str = field(init=False, default="routed_swiglu")
-
-    def __post_init__(self):
-        if self.intermediate_size < 1:
-            raise ValueError("routed SwiGLU intermediate sizes must be positive")
-        if self.num_experts < 1:
-            raise ValueError("routed SwiGLU expert counts must be positive")
-        if not 1 <= self.top_k <= self.num_experts:
-            raise ValueError("routed SwiGLU top_k must be between one and num_experts")
-
-
-OperationSpec = AttentionSpec | GatedCausalConvSpec | SwiGLUSpec | RoutedSwiGLUSpec
+OperationSpec = AttentionSpec | GatedCausalConvSpec | SwiGLUSpec
 
 
 def operation_from_dict(value):
@@ -84,7 +63,6 @@ def operation_from_dict(value):
         "attention": AttentionSpec,
         "gated_causal_conv": GatedCausalConvSpec,
         "swiglu": SwiGLUSpec,
-        "routed_swiglu": RoutedSwiGLUSpec,
     }
     if kind not in classes:
         raise ValueError(f"unknown architecture operation: {kind}")
@@ -161,8 +139,6 @@ class BlockGroup:
 class BlockInvocation:
     block: BlockConfig
     occurrence_index: int
-    group_index: int
-    repeat_index: int
     weight_key: str
 
 
@@ -180,7 +156,6 @@ class ArchitectureConfig:
     rms_norm_eps: float = 1e-5
     initializer_range: float = 0.02
     expected_parameters: int | None = None
-    expected_active_parameters: int | None = None
 
     def __post_init__(self):
         if not self.blocks:
@@ -197,14 +172,6 @@ class ArchitectureConfig:
             raise ValueError("EOS token ID is outside the vocabulary")
         if self.expected_parameters is not None and self.expected_parameters < 1:
             raise ValueError("expected parameters must be positive")
-        if self.expected_active_parameters is not None:
-            if self.expected_active_parameters < 1:
-                raise ValueError("expected active parameters must be positive")
-            if (
-                self.expected_parameters is not None
-                and self.expected_active_parameters > self.expected_parameters
-            ):
-                raise ValueError("expected active parameters cannot exceed total parameters")
 
     @property
     def logical_depth(self):
@@ -221,17 +188,11 @@ class ArchitectureConfig:
                     BlockInvocation(
                         block=group.block,
                         occurrence_index=occurrence,
-                        group_index=group_index,
-                        repeat_index=repeat_index,
                         weight_key=f"group_{group_index}_repeat_{weight_repeat}",
                     )
                 )
                 occurrence += 1
         return tuple(invocations)
-
-    @property
-    def unique_parameter_blocks(self):
-        return len({invocation.weight_key for invocation in self.execution_plan})
 
     def settings(self):
         groups = tuple(
@@ -243,45 +204,13 @@ class ArchitectureConfig:
         )
         values = asdict(replace(self, blocks=groups))
         values.pop("expected_parameters")
-        values.pop("expected_active_parameters")
         return json.loads(canonical_json(values))
 
     def export(self):
         values = self.settings()
         if self.expected_parameters is not None:
             values["expected_parameters"] = self.expected_parameters
-        if self.expected_active_parameters is not None:
-            values["expected_active_parameters"] = self.expected_active_parameters
         return values
-
-    def active_parameter_count(self, total_parameters):
-        """Return theoretical per-token parameters, charging only selected experts."""
-
-        if (
-            isinstance(total_parameters, bool)
-            or not isinstance(total_parameters, int)
-            or total_parameters < 1
-        ):
-            raise ValueError("total parameters must be a positive integer")
-        inactive = 0
-        seen = set()
-        for invocation in self.execution_plan:
-            if invocation.weight_key in seen:
-                continue
-            seen.add(invocation.weight_key)
-            hidden_size = invocation.block.hidden_size
-            for stage in invocation.block.stages:
-                for operation in stage.branches:
-                    if isinstance(operation, RoutedSwiGLUSpec):
-                        inactive += (
-                            operation.num_experts
-                            - operation.top_k
-                        ) * 3 * hidden_size * operation.intermediate_size
-        return total_parameters - inactive
-
-    @property
-    def digest(self):
-        return content_digest(self.settings())
 
     @classmethod
     def from_dict(cls, value):

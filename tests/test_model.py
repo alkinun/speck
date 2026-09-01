@@ -11,20 +11,15 @@ from speck.architecture import (
     BlockConfig,
     BlockGroup,
     GatedCausalConvSpec,
-    RoutedSwiGLUSpec,
     StageConfig,
     SwiGLUSpec,
 )
 from speck.model import (
     BatchedMuon,
-    CausalLMTrainingOutput,
     CombinedOptimizer,
     DeviceAdamW,
     Linear,
-    RoutedSwiGLU,
     SpeckForCausalLM,
-    _grouped_expert_swiglu,
-    _reference_expert_swiglu,
     build_model,
     causal_depthwise_conv1d,
 )
@@ -151,7 +146,7 @@ def test_direct_causal_convolution_matches_grouped_convolution(kernel_size, sequ
     torch.testing.assert_close(weight.grad, reference_weight.grad)
 
 
-def test_muon_optimizer_routes_convolution_parameters_to_adamw():
+def test_muon_optimizer_assigns_convolution_parameters_to_adamw():
     model = model_with(GatedCausalConvSpec(8, 3), SwiGLUSpec(16))
     optimizer = model.optimizer(name="muon")
     assert isinstance(optimizer, CombinedOptimizer)
@@ -174,6 +169,8 @@ def test_muon_optimizer_routes_convolution_parameters_to_adamw():
     assert muon_parameters | adamw_parameters == {id(parameter) for parameter in model.parameters()}
     assert convolution_parameters <= adamw_parameters
     assert optimizer.optimizers["adamw"].param_groups[0]["weight_decay"] == 0.1
+    roles = model.optimizer_role_counts(optimizer)
+    assert sum(role["tensors"] for role in roles.values()) == len(tuple(model.parameters()))
 
     tokens = torch.randint(0, 16, (2, 8))
     model(tokens, tokens).backward()
@@ -333,238 +330,3 @@ def test_parallel_stage_cache_matches_full_forward():
     model.init_weights()
     tokens = torch.randint(0, 16, (1, 6))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
-
-
-def test_routed_swiglu_forward_backward_and_training_output():
-    torch.manual_seed(11)
-    model = model_with(RoutedSwiGLUSpec(4, num_experts=4, top_k=2))
-    tokens = torch.randint(0, 16, (2, 6))
-
-    lm_loss = model(tokens, tokens)
-    output = model(tokens, tokens, return_training_output=True)
-
-    assert isinstance(output, CausalLMTrainingOutput)
-    torch.testing.assert_close(output.lm_loss, lm_loss)
-    torch.testing.assert_close(
-        output.total_loss,
-        output.lm_loss + 0.01 * output.load_balance_loss + 0.001 * output.z_loss,
-    )
-    assert len(output.routing) == 1
-    stats = output.routing[0]
-    assert stats.layer == "occurrence_0_stage_0_branch_0"
-    assert stats.utilization.sum() == pytest.approx(1.0)
-    assert stats.mean_probabilities.detach().sum().item() == pytest.approx(1.0)
-    assert stats.utilization.mul(tokens.numel() * 2).round().sum() == tokens.numel() * 2
-    output.total_loss.backward()
-    operation = model.cores["group_0_repeat_0"].stages[0].branches[0].operation
-    assert isinstance(operation, RoutedSwiGLU)
-    assert all(
-        parameter.grad is not None
-        for parameter in (
-            operation.router.weight,
-            operation.gate_proj,
-            operation.up_proj,
-            operation.down_proj,
-        )
-    )
-
-
-def test_routing_auxiliary_losses_match_their_definitions():
-    operation = RoutedSwiGLU(2, RoutedSwiGLUSpec(2, num_experts=2, top_k=1))
-    with torch.no_grad():
-        operation.router.weight.copy_(torch.tensor([[3.0, 0.0], [-3.0, 0.0]]))
-        for bank in (operation.gate_proj, operation.up_proj, operation.down_proj):
-            bank.fill_(0.1)
-    inputs = torch.tensor([[[1.0, 0.0]], [[-1.0, 0.0]]])
-
-    _, stats = operation(inputs)
-    logits = F.linear(inputs.reshape(-1, 2).float(), operation.router.weight.float())
-    probabilities = logits.softmax(dim=-1)
-    expected_utilization = torch.tensor([0.5, 0.5])
-
-    torch.testing.assert_close(stats.mean_probabilities, probabilities.mean(dim=0))
-    torch.testing.assert_close(stats.utilization, expected_utilization)
-    torch.testing.assert_close(
-        stats.load_balance_loss,
-        2 * torch.sum(probabilities.mean(dim=0) * expected_utilization),
-    )
-    torch.testing.assert_close(stats.load_balance_loss, torch.tensor(1.0))
-    torch.testing.assert_close(stats.z_loss, logits.logsumexp(dim=-1).square().mean())
-
-
-def test_unbalanced_routing_has_large_load_balance_penalty():
-    operation = RoutedSwiGLU(2, RoutedSwiGLUSpec(2, num_experts=4, top_k=1))
-    with torch.no_grad():
-        operation.router.weight.copy_(
-            torch.tensor([[10.0, 10.0], [-10.0, -10.0], [-10.0, -10.0], [-10.0, -10.0]])
-        )
-    _, stats = operation(torch.ones(2, 3, 2))
-
-    torch.testing.assert_close(stats.utilization, torch.tensor([1.0, 0.0, 0.0, 0.0]))
-    assert stats.load_balance_loss.item() == pytest.approx(4.0)
-
-
-def test_selected_top_k_logits_are_softmax_normalized_before_combining():
-    operation = RoutedSwiGLU(2, RoutedSwiGLUSpec(2, num_experts=2, top_k=2))
-    inputs = torch.tensor([[[-1.0, 0.5], [0.25, 2.0]]])
-    with torch.no_grad():
-        operation.router.weight.zero_()
-        operation.gate_proj.copy_(
-            torch.tensor(
-                [
-                    [[1.0, 0.0], [0.0, 1.0]],
-                    [[2.0, 0.0], [0.0, 2.0]],
-                ]
-            )
-        )
-        operation.up_proj.copy_(operation.gate_proj)
-        operation.down_proj.copy_(operation.gate_proj)
-
-    actual, _ = operation(inputs)
-    experts = []
-    flat = inputs.flatten(0, 1)
-    for expert in range(2):
-        hidden = F.silu(F.linear(flat, operation.gate_proj[expert]))
-        hidden *= F.linear(flat, operation.up_proj[expert])
-        experts.append(F.linear(hidden, operation.down_proj[expert]))
-    expected = torch.stack(experts).mean(dim=0).view_as(inputs)
-
-    torch.testing.assert_close(actual, expected)
-
-
-def test_router_math_stays_fp32_with_bfloat16_expert_compute():
-    operation = RoutedSwiGLU(8, RoutedSwiGLUSpec(8, num_experts=4, top_k=2))
-    inputs = torch.randn(2, 3, 8, dtype=torch.bfloat16, requires_grad=True)
-
-    output, stats = operation(inputs)
-    output.float().square().mean().backward()
-
-    assert output.dtype == torch.bfloat16
-    assert stats.mean_probabilities.dtype == torch.float32
-    assert stats.utilization.dtype == torch.float32
-    assert stats.z_loss.dtype == torch.float32
-    assert operation.router.weight.dtype == torch.float32
-    assert operation.router.weight.grad.dtype == torch.float32
-
-
-def test_routed_swiglu_incremental_logits_match_full_forward():
-    torch.manual_seed(12)
-    model = model_with(AttentionSpec(4, 1), RoutedSwiGLUSpec(4, 4, 2))
-    tokens = torch.randint(0, 16, (1, 8))
-    torch.testing.assert_close(model(tokens), cached_logits(model, tokens), atol=1e-5, rtol=1e-5)
-
-
-def test_muon_updates_expert_bank_slices_independently_with_bank_state():
-    torch.manual_seed(13)
-    bank = torch.nn.Parameter(torch.randn(3, 8, 16))
-    references = [torch.nn.Parameter(matrix.clone()) for matrix in bank.detach()]
-    gradient = torch.randn_like(bank)
-    bank.grad = gradient.clone()
-    for parameter, matrix_gradient in zip(references, gradient):
-        parameter.grad = matrix_gradient.clone()
-    settings = {
-        "lr": 1e-3,
-        "weight_decay": 0.1,
-        "adjust_lr_fn": "match_rms_adamw",
-    }
-    expected = torch.optim.Muon(references, **settings)
-    actual = BatchedMuon([bank], **settings)
-
-    expected.step()
-    actual.step()
-
-    torch.testing.assert_close(bank, torch.stack(references), rtol=0, atol=0)
-    assert actual.state[bank]["momentum_buffer"].shape == bank.shape
-    reloaded = BatchedMuon([torch.nn.Parameter(bank.detach().clone())], **settings)
-    reloaded.load_state_dict(actual.state_dict())
-
-
-def test_expert_banks_and_router_use_muon_while_convolution_stays_adamw():
-    model = model_with(
-        GatedCausalConvSpec(8, 3), RoutedSwiGLUSpec(4, num_experts=4, top_k=2)
-    )
-    optimizer = model.optimizer(name="muon")
-    operation = model.cores["group_0_repeat_0"].stages[1].branches[0].operation
-    muon_parameters = {
-        id(parameter)
-        for group in optimizer.optimizers["muon"].param_groups
-        for parameter in group["params"]
-    }
-    adamw_parameters = {
-        id(parameter)
-        for group in optimizer.optimizers["adamw"].param_groups
-        for parameter in group["params"]
-    }
-
-    assert isinstance(operation, RoutedSwiGLU)
-    assert {
-        id(operation.router.weight),
-        id(operation.gate_proj),
-        id(operation.up_proj),
-        id(operation.down_proj),
-    } <= muon_parameters
-    convolution = model.cores["group_0_repeat_0"].stages[0].branches[0].operation
-    assert id(convolution.kernel) in adamw_parameters
-    assert muon_parameters.isdisjoint(adamw_parameters)
-    assert muon_parameters | adamw_parameters == {id(parameter) for parameter in model.parameters()}
-    roles = model.optimizer_role_counts(optimizer)
-    assert roles["muon"]["parameters"] == sum(
-        parameter.numel()
-        for group in optimizer.optimizers["muon"].param_groups
-        for parameter in group["params"]
-    )
-    assert sum(role["tensors"] for role in roles.values()) == len(tuple(model.parameters()))
-    assert model.routing_config() == [
-        {
-            "layer": "occurrence_0_stage_1_branch_0",
-            "intermediate_size": 4,
-            "num_experts": 4,
-            "top_k": 2,
-        }
-    ]
-
-
-@pytest.mark.skipif(not torch.cuda.is_available(), reason="grouped GEMM requires CUDA")
-@pytest.mark.parametrize(
-    ("num_experts", "intermediate_size"),
-    ((8, 1152), (16, 576), (32, 576)),
-)
-def test_grouped_cuda_expert_output_and_gradients_match_reference(
-    num_experts, intermediate_size
-):
-    torch.manual_seed(num_experts)
-    hidden_size = 768
-    counts = torch.randint(1, 17, (num_experts,), device="cuda", dtype=torch.int32)
-    expert_ids = torch.repeat_interleave(
-        torch.arange(num_experts, device="cuda"), counts.to(torch.int64)
-    )
-    inputs = torch.randn(
-        int(counts.sum()), hidden_size, device="cuda", dtype=torch.bfloat16, requires_grad=True
-    )
-    reference_inputs = inputs.detach().clone().requires_grad_()
-    banks = [
-        torch.randn(
-            num_experts,
-            rows,
-            columns,
-            device="cuda",
-            dtype=torch.bfloat16,
-            requires_grad=True,
-        )
-        for rows, columns in (
-            (intermediate_size, hidden_size),
-            (intermediate_size, hidden_size),
-            (hidden_size, intermediate_size),
-        )
-    ]
-    reference_banks = [bank.detach().clone().requires_grad_() for bank in banks]
-
-    actual = _grouped_expert_swiglu(inputs, counts, *banks)
-    expected = _reference_expert_swiglu(reference_inputs, expert_ids, *reference_banks)
-    actual.float().square().mean().backward()
-    expected.float().square().mean().backward()
-
-    torch.testing.assert_close(actual, expected, rtol=2e-2, atol=2e-2)
-    torch.testing.assert_close(inputs.grad, reference_inputs.grad, rtol=3e-2, atol=3e-2)
-    for bank, reference in zip(banks, reference_banks):
-        torch.testing.assert_close(bank.grad, reference.grad, rtol=3e-2, atol=3e-2)

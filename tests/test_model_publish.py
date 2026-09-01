@@ -78,54 +78,6 @@ def test_release_state_converts_to_bf16_and_omits_tied_head():
     assert all(tensor.dtype == torch.bfloat16 for tensor in result.values())
 
 
-def test_release_state_preserves_router_fp32_and_exports_experts_bf16():
-    embedding = torch.randn(7, 3)
-    result = release_state(
-        {
-            "embed_tokens.weight": embedding,
-            "lm_head.weight": embedding,
-            "cores.layer.operation.router.weight": torch.randn(4, 3),
-            "cores.layer.operation.gate_proj": torch.randn(4, 8, 3),
-        }
-    )
-
-    assert result["cores.layer.operation.router.weight"].dtype == torch.float32
-    assert result["cores.layer.operation.gate_proj"].dtype == torch.bfloat16
-    assert result["embed_tokens.weight"].dtype == torch.bfloat16
-
-
-def test_release_config_accepts_routed_swiglu_and_disables_cache():
-    value = metadata()
-    value["config"]["blocks"].append(
-        {
-            "block": {
-                "hidden_size": 4,
-                "stages": [
-                    {
-                        "branches": [
-                            {
-                                "kind": "routed_swiglu",
-                                "intermediate_size": 4,
-                                "num_experts": 8,
-                                "top_k": 2,
-                            }
-                        ]
-                    }
-                ],
-            }
-        }
-    )
-    value["resolved"]["active_parameters"] = 55
-
-    result = release_config(value)
-
-    assert result["use_cache"] is False
-    assert result["expected_active_parameters"] == 55
-    assert result["blocks"][1]["block"]["stages"][0]["branches"][0]["kind"] == (
-        "routed_swiglu"
-    )
-
-
 def test_release_state_rejects_untied_head():
     with pytest.raises(ValueError, match="not tied"):
         release_state(

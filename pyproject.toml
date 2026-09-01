@@ -1,7 +1,7 @@
 [project]
 name = "speck"
 version = "0.1.0"
-description = "A compact research harness for pretraining small language models"
+description = "A compact research harness for efficient language model pretraining"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"

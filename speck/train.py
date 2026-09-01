@@ -6,8 +6,6 @@ from contextlib import nullcontext
 import torch
 import torch.distributed as dist
 
-from speck.model import CausalLMTrainingOutput, RoutingLayerStats
-
 
 def assert_finite(value, message, distributed=False):
     """Check a scalar without introducing a CUDA host synchronization."""
@@ -152,16 +150,9 @@ def optimization_step(
     lr,
     distributed=False,
     cudagraphs=False,
-    return_training_output=False,
-    load_balance_coefficient=0.01,
-    router_z_loss_coefficient=0.001,
 ):
     optimizer.zero_grad(set_to_none=True)
     loss_sum = torch.zeros((), device=batch[0].device)
-    lm_loss_sum = torch.zeros_like(loss_sum)
-    load_balance_sum = torch.zeros_like(loss_sum)
-    z_loss_sum = torch.zeros_like(loss_sum)
-    routing_sums = None
     if cudagraphs:
         torch.compiler.cudagraph_mark_step_begin()
     for micro_step in range(accumulation):
@@ -171,48 +162,9 @@ def optimization_step(
             else nullcontext()
         )
         with context:
-            output = train_model(
-                batch[0],
-                batch[1],
-                return_training_output=return_training_output,
-                load_balance_coefficient=load_balance_coefficient,
-                router_z_loss_coefficient=router_z_loss_coefficient,
-            )
-            loss = output.total_loss if return_training_output else output
+            loss = train_model(batch[0], batch[1])
             (loss / accumulation).backward()
         loss_sum += loss.detach()
-        if return_training_output:
-            if not isinstance(output, CausalLMTrainingOutput):
-                raise TypeError("model did not return a typed training output")
-            lm_loss_sum += output.lm_loss.detach()
-            load_balance_sum += output.load_balance_loss.detach()
-            z_loss_sum += output.z_loss.detach()
-            if routing_sums is None:
-                routing_sums = [
-                    {
-                        "stats": stats,
-                        "mean_probabilities": stats.mean_probabilities.detach().clone(),
-                        "utilization": stats.utilization.detach().clone(),
-                        "entropy": stats.entropy.detach().clone(),
-                        "load_balance_loss": stats.load_balance_loss.detach().clone(),
-                        "z_loss": stats.z_loss.detach().clone(),
-                    }
-                    for stats in output.routing
-                ]
-            else:
-                if len(routing_sums) != len(output.routing):
-                    raise RuntimeError("routed layer count changed during accumulation")
-                for accumulated, stats in zip(routing_sums, output.routing):
-                    if accumulated["stats"].layer != stats.layer:
-                        raise RuntimeError("routed layer order changed during accumulation")
-                    for name in (
-                        "mean_probabilities",
-                        "utilization",
-                        "entropy",
-                        "load_balance_loss",
-                        "z_loss",
-                    ):
-                        accumulated[name].add_(getattr(stats, name).detach())
         batch = next(loader)
 
     assert_finite(loss_sum, "non-finite training loss", distributed)
@@ -220,53 +172,12 @@ def optimization_step(
     grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip)
     assert_finite(grad_norm, "non-finite training gradients")
     optimizer.step()
-    if not return_training_output:
-        return loss_sum / accumulation, grad_norm, batch
-    routing = tuple(
-        RoutingLayerStats(
-            layer=accumulated["stats"].layer,
-            mean_probabilities=accumulated["mean_probabilities"] / accumulation,
-            utilization=accumulated["utilization"] / accumulation,
-            entropy=accumulated["entropy"] / accumulation,
-            load_balance_loss=accumulated["load_balance_loss"] / accumulation,
-            z_loss=accumulated["z_loss"] / accumulation,
-        )
-        for accumulated in (routing_sums or [])
-    )
-    return (
-        CausalLMTrainingOutput(
-            total_loss=loss_sum / accumulation,
-            lm_loss=lm_loss_sum / accumulation,
-            load_balance_loss=load_balance_sum / accumulation,
-            z_loss=z_loss_sum / accumulation,
-            routing=routing,
-        ),
-        grad_norm,
-        batch,
-    )
+    return loss_sum / accumulation, grad_norm, batch
 
 
-def average_training_output(output, distributed):
-    """Average detached typed loss and routing diagnostics across ranks in place."""
+def average_loss(loss, distributed):
+    """Average a detached loss across ranks in place."""
 
-    if not distributed:
-        return output
-    tensors = [
-        output.total_loss,
-        output.lm_loss,
-        output.load_balance_loss,
-        output.z_loss,
-    ]
-    for stats in output.routing:
-        tensors.extend(
-            (
-                stats.mean_probabilities,
-                stats.utilization,
-                stats.entropy,
-                stats.load_balance_loss,
-                stats.z_loss,
-            )
-        )
-    for tensor in tensors:
-        dist.all_reduce(tensor, op=dist.ReduceOp.AVG)
-    return output
+    if distributed:
+        dist.all_reduce(loss, op=dist.ReduceOp.AVG)
+    return loss
