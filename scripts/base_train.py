@@ -42,6 +42,7 @@ from speck.train import (
 
 _BRANCH_FIXED_SETTINGS = (
     "sequence_length",
+    "activation_checkpointing",
     "device_batch_size",
     "batch_tokens",
     "weight_decay",
@@ -54,6 +55,7 @@ _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule")
 _CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed")
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
+    "activation_checkpointing",
     "device_batch_size",
     "batch_tokens",
     "train_tokens",
@@ -78,6 +80,7 @@ _LEGACY_RESUME_DEFAULTS = {
     "training_phase": "base",
     "seed": 42,
     "branch_kind": "same",
+    "activation_checkpointing": False,
 }
 
 
@@ -243,6 +246,7 @@ class BaseTrainer:
         args.global_token_offset = getattr(args, "global_token_offset", 0)
         args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
         args.training_phase = getattr(args, "training_phase", "base")
+        args.activation_checkpointing = getattr(args, "activation_checkpointing", False)
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
         args.wandb_group = getattr(args, "wandb_group", None)
@@ -355,6 +359,7 @@ class BaseTrainer:
         ).to(self.device)
         self.config = self.model.config
         self.model.init_weights()
+        self.model.set_gradient_checkpointing(args.activation_checkpointing)
         self.parameters = tuple(self.model.parameters())
         self.optimizer = self.model.optimizer(args.lr, args.weight_decay, args.optimizer)
         batch_limit = (

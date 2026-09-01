@@ -1,4 +1,5 @@
 {
+  "activation_checkpointing": true,
   "batch_tokens": 4194304,
   "device_batch_size": 4,
   "eval_every": 250,

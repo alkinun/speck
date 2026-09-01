@@ -89,7 +89,7 @@ def _synchronize(device):
 
 
 @torch.inference_mode()
-def evaluate_case(model, case, device=None, state_dtype=None):
+def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=None):
     """Score an answer autoregressively without materializing sequence-wide vocabulary logits."""
 
     parameter = next(model.parameters())
@@ -100,6 +100,7 @@ def evaluate_case(model, case, device=None, state_dtype=None):
         length=prompt.size(1) + len(answers),
         device=device,
         dtype=state_dtype,
+        kv_cache_dtype=kv_cache_dtype,
     )
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
@@ -176,7 +177,8 @@ def aggregate_results(results, threshold=0.85):
 
 def validate_eval_settings(settings):
     required = {"lengths", "depths", "samples_per_depth", "effective_threshold"}
-    if set(settings) != required:
+    allowed = required | {"kv_cache_dtype"}
+    if not required <= set(settings) or set(settings) - allowed:
         raise ValueError("long-context settings have missing or unknown fields")
     lengths = settings["lengths"]
     if not isinstance(lengths, list):
@@ -200,9 +202,13 @@ def validate_eval_settings(settings):
         raise ValueError("effective_threshold must be numeric")
     if not math.isfinite(threshold) or not 0 < threshold <= 1:
         raise ValueError("effective_threshold must be in (0, 1]")
+    kv_cache_dtype = settings.get("kv_cache_dtype", "bfloat16")
+    if kv_cache_dtype not in {"bfloat16", "float16", "float32", "int8"}:
+        raise ValueError("unsupported long-context KV cache dtype")
     return {
         "lengths": tuple(lengths),
         "depths": tuple(float(depth) for depth in depths),
         "samples_per_depth": samples,
         "effective_threshold": float(threshold),
+        "kv_cache_dtype": kv_cache_dtype,
     }

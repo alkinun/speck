@@ -54,12 +54,18 @@ def run(args):
     if max(settings["lengths"]) > model.config.max_position_embeddings:
         raise ValueError("evaluation length exceeds the model's allocated context")
     results = []
+    kv_cache_dtype = getattr(torch, settings["kv_cache_dtype"])
     for length in settings["lengths"]:
         for depth_index, depth in enumerate(settings["depths"]):
             for sample in range(settings["samples_per_depth"]):
                 seed = 10_000 * depth_index + sample
                 case = build_passkey_case(tokenizer, length, seed, depth)
-                result = evaluate_case(model, case, device=device)
+                result = evaluate_case(
+                    model,
+                    case,
+                    device=device,
+                    kv_cache_dtype=kv_cache_dtype,
+                )
                 results.append(result)
                 print(
                     f"{length:,} depth={depth:.2f} seed={seed} "

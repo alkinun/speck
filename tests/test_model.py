@@ -145,6 +145,19 @@ def test_sliding_attention_cache_matches_full_forward():
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
 
 
+def test_int8_kv_cache_tracks_scales_and_approximates_full_forward():
+    torch.manual_seed(21)
+    model = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))
+    tokens = torch.randint(0, 16, (1, 8))
+    state = model.state(length=8, kv_cache_dtype=torch.int8)
+    values = [model(tokens[:, :1], state=state)]
+    for index in range(1, tokens.size(1)):
+        values.append(model(tokens[:, index : index + 1], state=state))
+    logits = torch.cat(values, dim=1)
+    assert state.memory_report()["by_kind"]["attention_kv"] == 1 * 1 * 8 * (4 * 2 + 2 * 2)
+    assert torch.allclose(model(tokens), logits, atol=2e-3, rtol=2e-3)
+
+
 def test_convolution_state_matches_full_forward():
     torch.manual_seed(3)
     model = model_with(GatedCausalConvSpec(8, 3), SwiGLUSpec(16))
@@ -180,6 +193,22 @@ def test_gated_deltanet_backward_is_finite():
         parameter.grad is None or torch.isfinite(parameter.grad).all()
         for parameter in model.parameters()
     )
+
+
+def test_activation_checkpointing_preserves_loss_and_gradients():
+    torch.manual_seed(41)
+    reference = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))
+    checkpointed = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))
+    checkpointed.load_state_dict(reference.state_dict())
+    checkpointed.set_gradient_checkpointing(True)
+    tokens = torch.randint(0, 16, (2, 8))
+    reference_loss = reference(tokens, tokens)
+    checkpointed_loss = checkpointed(tokens, tokens)
+    reference_loss.backward()
+    checkpointed_loss.backward()
+    torch.testing.assert_close(checkpointed_loss, reference_loss)
+    for expected, actual in zip(reference.parameters(), checkpointed.parameters()):
+        torch.testing.assert_close(actual.grad, expected.grad)
 
 
 @pytest.mark.parametrize(

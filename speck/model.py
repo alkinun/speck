@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.attention.bias import causal_lower_right
+from torch.utils.checkpoint import checkpoint as activation_checkpoint
 
 from speck.architecture import (
     ArchitectureConfig,
@@ -266,42 +267,107 @@ def causal_depthwise_conv1d(x, weight):
 class AttentionState:
     """Maintain a bounded key-value cache in chronological ring-buffer order."""
 
-    def __init__(self, batch_size, kv_heads, capacity, head_dim, device, dtype):
+    def __init__(self, batch_size, kv_heads, capacity, head_dim, device, dtype, storage_dtype=None):
         if capacity < 1:
             raise ValueError("attention state capacity must be positive")
         shape = (batch_size, kv_heads, capacity, head_dim)
-        self.keys = torch.empty(shape, device=device, dtype=dtype)
-        self.values = torch.empty(shape, device=device, dtype=dtype)
+        self.compute_dtype = dtype
+        self.storage_dtype = storage_dtype or dtype
+        if self.storage_dtype not in {torch.float32, torch.float16, torch.bfloat16, torch.int8}:
+            raise ValueError("unsupported KV cache dtype")
+        self.keys = torch.empty(shape, device=device, dtype=self.storage_dtype)
+        self.values = torch.empty(shape, device=device, dtype=self.storage_dtype)
+        scale_shape = (batch_size, kv_heads, capacity, 1)
+        self.key_scales = (
+            torch.empty(scale_shape, device=device, dtype=torch.float16)
+            if self.storage_dtype == torch.int8
+            else None
+        )
+        self.value_scales = (
+            torch.empty(scale_shape, device=device, dtype=torch.float16)
+            if self.storage_dtype == torch.int8
+            else None
+        )
         self.capacity = capacity
         self.used = 0
         self.write_position = 0
 
     def current(self):
         if self.used == 0:
-            return self.keys[:, :, :0], self.values[:, :, :0]
+            return self._decode(
+                self.keys[:, :, :0],
+                self.values[:, :, :0],
+                self.key_scales[:, :, :0] if self.key_scales is not None else None,
+                self.value_scales[:, :, :0] if self.value_scales is not None else None,
+            )
         if self.used < self.capacity:
-            return self.keys[:, :, : self.used], self.values[:, :, : self.used]
+            return self._decode(
+                self.keys[:, :, : self.used],
+                self.values[:, :, : self.used],
+                self.key_scales[:, :, : self.used] if self.key_scales is not None else None,
+                self.value_scales[:, :, : self.used] if self.value_scales is not None else None,
+            )
         if self.write_position == 0:
-            return self.keys, self.values
-        return (
-            torch.cat(
-                (self.keys[:, :, self.write_position :], self.keys[:, :, : self.write_position]),
-                dim=2,
-            ),
+            return self._decode(self.keys, self.values, self.key_scales, self.value_scales)
+        keys = torch.cat(
+            (self.keys[:, :, self.write_position :], self.keys[:, :, : self.write_position]),
+            dim=2,
+        )
+        values = torch.cat(
+            (self.values[:, :, self.write_position :], self.values[:, :, : self.write_position]),
+            dim=2,
+        )
+        key_scales = (
             torch.cat(
                 (
-                    self.values[:, :, self.write_position :],
-                    self.values[:, :, : self.write_position],
+                    self.key_scales[:, :, self.write_position :],
+                    self.key_scales[:, :, : self.write_position],
                 ),
                 dim=2,
-            ),
+            )
+            if self.key_scales is not None
+            else None
+        )
+        value_scales = (
+            torch.cat(
+                (
+                    self.value_scales[:, :, self.write_position :],
+                    self.value_scales[:, :, : self.write_position],
+                ),
+                dim=2,
+            )
+            if self.value_scales is not None
+            else None
+        )
+        return self._decode(keys, values, key_scales, value_scales)
+
+    def _decode(self, keys, values, key_scales, value_scales):
+        if self.storage_dtype != torch.int8:
+            return keys.to(self.compute_dtype), values.to(self.compute_dtype)
+        assert key_scales is not None and value_scales is not None
+        return (
+            keys.to(self.compute_dtype) * key_scales.to(self.compute_dtype),
+            values.to(self.compute_dtype) * value_scales.to(self.compute_dtype),
         )
 
+    def _encode(self, tensor):
+        if self.storage_dtype != torch.int8:
+            return tensor.to(self.storage_dtype), None
+        scale = tensor.float().abs().amax(dim=-1, keepdim=True).clamp_min(1e-8) / 127
+        quantized = (tensor.float() / scale).round().clamp(-127, 127).to(torch.int8)
+        return quantized, scale.to(torch.float16)
+
     def append(self, keys, values):
+        keys, key_scales = self._encode(keys)
+        values, value_scales = self._encode(values)
         length = keys.size(2)
         if length >= self.capacity:
             self.keys.copy_(keys[:, :, -self.capacity :])
             self.values.copy_(values[:, :, -self.capacity :])
+            if self.key_scales is not None:
+                assert key_scales is not None and value_scales is not None
+                self.key_scales.copy_(key_scales[:, :, -self.capacity :])
+                self.value_scales.copy_(value_scales[:, :, -self.capacity :])
             self.used = self.capacity
             self.write_position = 0
             return
@@ -309,15 +375,25 @@ class AttentionState:
         end = self.write_position + first
         self.keys[:, :, self.write_position : end] = keys[:, :, :first]
         self.values[:, :, self.write_position : end] = values[:, :, :first]
+        if self.key_scales is not None:
+            assert key_scales is not None and value_scales is not None
+            self.key_scales[:, :, self.write_position : end] = key_scales[:, :, :first]
+            self.value_scales[:, :, self.write_position : end] = value_scales[:, :, :first]
         remaining = length - first
         if remaining:
             self.keys[:, :, :remaining] = keys[:, :, first:]
             self.values[:, :, :remaining] = values[:, :, first:]
+            if self.key_scales is not None:
+                self.key_scales[:, :, :remaining] = key_scales[:, :, first:]
+                self.value_scales[:, :, :remaining] = value_scales[:, :, first:]
         self.write_position = (self.write_position + length) % self.capacity
         self.used = min(self.capacity, self.used + length)
 
     def allocated_bytes(self):
-        return sum(tensor.numel() * tensor.element_size() for tensor in (self.keys, self.values))
+        tensors = (self.keys, self.values, self.key_scales, self.value_scales)
+        return sum(
+            tensor.numel() * tensor.element_size() for tensor in tensors if tensor is not None
+        )
 
 
 class ConvolutionState:
@@ -731,6 +807,7 @@ class SpeckForCausalLM(nn.Module):
             raise ValueError(f"unsupported loss backend: {loss_backend}")
         self.config = config
         self.loss_backend = loss_backend
+        self.gradient_checkpointing = False
         self.embed_tokens = nn.Embedding(config.vocab_size, config.embedding_size)
         self.execution_plan = config.execution_plan
         self.cores = nn.ModuleDict()
@@ -815,7 +892,19 @@ class SpeckForCausalLM(nn.Module):
         )
         return self.embed_tokens
 
-    def state(self, batch_size=1, length=None, device=None, dtype=None):
+    def set_gradient_checkpointing(self, enabled=True):
+        if not isinstance(enabled, bool):
+            raise TypeError("gradient checkpointing flag must be boolean")
+        self.gradient_checkpointing = enabled
+
+    def state(
+        self,
+        batch_size=1,
+        length=None,
+        device=None,
+        dtype=None,
+        kv_cache_dtype=None,
+    ):
         parameter = next(self.parameters())
         device = torch.device(device or parameter.device)
         dtype = dtype or (torch.bfloat16 if device.type == "cuda" else parameter.dtype)
@@ -848,6 +937,7 @@ class SpeckForCausalLM(nn.Module):
                             branch.head_dim,
                             device,
                             dtype,
+                            storage_dtype=kv_cache_dtype,
                         )
                     elif isinstance(branch, GatedCausalConvSpec):
                         entries[key] = ConvolutionState(
@@ -895,13 +985,25 @@ class SpeckForCausalLM(nn.Module):
             raise ValueError("sequence exceeds the available model state")
         for invocation, adapter in zip(self.execution_plan, self.adapters):
             x = adapter(x)
-            x = self.cores[invocation.weight_key](
-                x,
-                self.rotary,
-                position,
-                state,
-                invocation.occurrence_index,
-            )
+            core = self.cores[invocation.weight_key]
+            if self.training and self.gradient_checkpointing and state is None:
+                x = activation_checkpoint(
+                    core,
+                    x,
+                    self.rotary,
+                    position,
+                    None,
+                    invocation.occurrence_index,
+                    use_reentrant=False,
+                )
+            else:
+                x = core(
+                    x,
+                    self.rotary,
+                    position,
+                    state,
+                    invocation.occurrence_index,
+                )
         if state is not None:
             state.position += length
         hidden = self.output_projection(self.norm(x))

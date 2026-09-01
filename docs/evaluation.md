@@ -25,6 +25,11 @@ attention KV and fixed recurrent state. It reports effective length as the longe
 whose exact-match score retains at least 85% of the shortest-length baseline. A zero short-context
 baseline produces no effective-length claim.
 
+`kv_cache_dtype` may be `bfloat16`, `float16`, `float32`, or `int8`. The INT8 reference cache uses
+per-token, per-head K/V scales and includes their bytes in the memory report. It is intended for
+quality and capacity experiments; backend-native quantized attention kernels are still required
+for maximum decode speed because the portable path dequantizes values before SDPA.
+
 This built-in passkey task is a systems and literal-retrieval qualification, not evidence of robust
 long-context reasoning. Release evaluation must additionally run pinned upstream RULER, NoLiMa,
 and HELMET suites. Report their upstream revisions and raw outputs separately rather than relabeling

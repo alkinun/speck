@@ -147,6 +147,20 @@ The CUDA path selects the chunkwise kernel for prefill/training and the fused re
 single-token decode. Always qualify kernel outputs and gradients on the target GPU before a large
 run; the Torch recurrence is the numerical reference.
 
+```bash
+uv run --extra gpu --extra linear python -m scripts.gdn_kernel_qualify \
+  --output gdn-kernel-qualification.json
+```
+
+Qualification checks chunkwise outputs and final states against the Torch recurrence, compares all
+five input gradients, requires bitwise-repeatable outputs on the selected backend, benchmarks each
+configured length, and records exact package and GPU identities. A failed tolerance or determinism
+check exits unsuccessfully and still leaves no passing attestation.
+
+Set `activation_checkpointing: true` in `train.json` when long-sequence activations dominate
+memory. The setting is part of exact-resume and same-recipe branch identity, while a declared
+context-extension stage may enable it as the sequence length grows.
+
 Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
 parent LR:
 
