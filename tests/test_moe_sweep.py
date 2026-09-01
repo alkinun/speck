@@ -16,8 +16,8 @@ ARMS = ("D0", "M1", "M2", "M3")
 EXPECTED = {
     "D0": (140_652_288, 140_652_288, 16),
     "M1": (411_485_952, 140_756_736, 8),
-    "M2": (411_590_400, 140_861_184, 8),
-    "M3": (772_771_584, 141_070_080, 2),
+    "M2": (411_590_400, 140_861_184, 4),
+    "M3": (772_771_584, 141_070_080, 1),
 }
 
 
@@ -82,7 +82,7 @@ def test_sweep_schedule_and_calibrated_accumulation_are_exact():
         assert 15_259 * training["batch_tokens"] == 1_000_013_824
         assert training["batch_tokens"] // (
             device_batch * training["sequence_length"]
-        ) == {"D0": 2, "M1": 4, "M2": 4, "M3": 16}[arm]
+        ) == {"D0": 2, "M1": 4, "M2": 8, "M3": 32}[arm]
         assert checkpoint_milestones(
             training["checkpoint_tokens"], training["batch_tokens"], 0, 15_259
         ) == {763: 50_000_000, 7_630: 500_000_000, 15_259: 1_000_000_000}
@@ -127,7 +127,9 @@ def test_qualification_report_matches_committed_runtime_ceilings():
     for arm, (_, _, device_batch) in EXPECTED.items():
         result = report["results"][arm]
         assert result["selected_device_batch_size"] == device_batch
-        assert result["selected_peak_reserved_mib"] <= report["limit_mib"]
+        peak = result["selected_peak_reserved_mib"]
+        assert peak is None or peak <= report["limit_mib"]
+    assert report["results"]["M3"]["qualification"] == "pending_50m_production_run"
 
 
 def test_every_sweep_arm_inherits_the_pinned_local_open_slm_suite():

@@ -19,6 +19,11 @@ def arguments(argv=None):
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--max-autotune", action="store_true")
     parser.add_argument("--compile-optimizer", action="store_true")
+    parser.add_argument(
+        "--production-optimizer",
+        action="store_true",
+        help="compile Muon with the production Inductor settings instead of AOT eager",
+    )
     args = parser.parse_args(argv)
     if args.batch_size not in (16, 8, 4, 2, 1):
         parser.error("--batch-size must be one of 16, 8, 4, 2, 1")
@@ -34,6 +39,7 @@ def probe(
     compile_model=True,
     max_autotune=False,
     compile_optimizer=False,
+    production_optimizer=False,
 ):
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is required for device-batch qualification")
@@ -63,9 +69,12 @@ def probe(
         )
         compile_step = getattr(optimizer, "compile_step", None)
         if compile_optimizer and compile_step is not None:
-            # PyTorch 2.11 has an Inductor scheduler regression for the banked
-            # Muon graph; AOT eager still qualifies graph capture/execution.
-            compile_step(backend="aot_eager")
+            if production_optimizer:
+                compile_step()
+            else:
+                # PyTorch 2.11 has an Inductor scheduler regression for the banked
+                # Muon graph; AOT eager still qualifies graph capture/execution.
+                compile_step(backend="aot_eager")
     tokens = torch.randint(
         0,
         32_000,
@@ -95,6 +104,11 @@ def probe(
         "batch_size": batch_size,
         "compiled": compile_model,
         "compiled_optimizer": compile_optimizer,
+        "optimizer_backend": (
+            "inductor" if production_optimizer else "aot_eager"
+        )
+        if compile_optimizer
+        else None,
         "duration_seconds": duration,
         "loss": output.total_loss.item(),
         "peak_allocated_mib": allocated / 2**20,
@@ -115,6 +129,7 @@ def main(argv=None):
         not args.no_compile,
         args.max_autotune,
         args.compile_optimizer,
+        args.production_optimizer,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     if not result["qualified"]:

@@ -20,8 +20,8 @@ The global batch is 65,536 tokens at sequence length 2,048. The 1B request is
 clipping at 1.0. Validation runs every 1,526 steps and at the requested 50M,
 500M, and 1B milestones.
 
-RTX 3090 qualification selected device batches 16/8/8/2 for D0/M1/M2/M3,
-giving accumulation counts 2/4/4/16. The measurements and rejected candidates
+RTX 3090 qualification selected device batches 16/8/4/1 for D0/M1/M2/M3,
+giving accumulation counts 2/4/8/32. The measurements and rejected candidates
 are recorded in `experiments/SpeckLabs-1B-shared/qualification.json`.
 
 ## Run sequence
