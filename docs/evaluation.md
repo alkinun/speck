@@ -7,6 +7,32 @@ allows it.
 Run commands from the repository root. Model-quality evaluations require network access and may
 require gated-dataset acceptance and Hugging Face authentication.
 
+## Long-context curves
+
+Long-context experiments contain `long_context.json`, which fixes evaluated lengths, needle
+depths, samples per depth, and the effective-length threshold. Run the complete quality and systems
+curve for a local checkpoint with:
+
+```bash
+uv run --extra gpu python -m scripts.long_context_eval \
+  experiments/SpeckLC-150M-GDN --step <step>
+```
+
+The diagnostic creates prompts at exact token lengths, scores the answer autoregressively without
+retaining sequence-wide vocabulary logits, and records exact match, answer-token accuracy, answer
+log probability, prefill/decode throughput, peak CUDA allocation, and a state-memory split between
+attention KV and fixed recurrent state. It reports effective length as the longest evaluated length
+whose exact-match score retains at least 85% of the shortest-length baseline. A zero short-context
+baseline produces no effective-length claim.
+
+This built-in passkey task is a systems and literal-retrieval qualification, not evidence of robust
+long-context reasoning. Release evaluation must additionally run pinned upstream RULER, NoLiMa,
+and HELMET suites. Report their upstream revisions and raw outputs separately rather than relabeling
+the built-in diagnostic as one of those benchmarks.
+
+For every headline length, publish four distinct values: model allocation ceiling, maximum training
+length, measured effective length, and maximum usable length under a named latency/memory contract.
+
 ## Open SLM Leaderboard
 
 Run every stage in the checked Open SLM configuration:

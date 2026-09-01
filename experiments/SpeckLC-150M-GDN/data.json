@@ -1,0 +1,4 @@
+{
+  "extends": "../Speck1.5-140M/data.json",
+  "output_name": "SpeckLC-150M-GDN"
+}

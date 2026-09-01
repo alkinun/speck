@@ -391,6 +391,18 @@ class SequenceState:
     def allocated_bytes(self):
         return sum(entry.allocated_bytes() for entry in self.entries.values())
 
+    def memory_report(self):
+        by_kind = defaultdict(int)
+        for entry in self.entries.values():
+            if isinstance(entry, AttentionState):
+                kind = "attention_kv"
+            elif isinstance(entry, DeltaNetState):
+                kind = "gated_deltanet"
+            else:
+                kind = "convolution"
+            by_kind[kind] += entry.allocated_bytes()
+        return {"total_bytes": sum(by_kind.values()), "by_kind": dict(sorted(by_kind.items()))}
+
 
 class RotaryEmbedding(nn.Module):
     """Generate RoPE chunks on demand instead of retaining position-sized tables."""

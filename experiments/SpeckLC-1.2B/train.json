@@ -1,0 +1,21 @@
+{
+  "batch_tokens": 4194304,
+  "device_batch_size": 4,
+  "eval_every": 250,
+  "eval_tokens": 33554432,
+  "final_eval_tokens": 134217728,
+  "grad_clip": 1.0,
+  "log_every": 10,
+  "lr": 0.0008,
+  "lr_schedule": "cosine",
+  "min_lr": 0.1,
+  "optimizer": "muon",
+  "output_dir": null,
+  "run": "SpeckLC-1.2B",
+  "save_every": 1000,
+  "sequence_length": 4096,
+  "train_tokens": 20000000000,
+  "wandb_project": "speck-long-context",
+  "warmup_steps": 500,
+  "weight_decay": 0.1
+}
