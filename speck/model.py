@@ -673,8 +673,11 @@ def gated_delta_rule(query, key, value, log_decay, beta, initial_state=None):
                 chunk_gated_delta_rule,
                 fused_recurrent_gated_delta_rule,
             )
-        except ImportError:
-            pass
+        except ImportError as error:
+            raise RuntimeError(
+                "CUDA Gated DeltaNet requires the pinned linear extra; "
+                "use torch_gated_delta_rule directly for reference qualification"
+            ) from error
         else:
             operation = (
                 fused_recurrent_gated_delta_rule if query.size(1) == 1 else chunk_gated_delta_rule

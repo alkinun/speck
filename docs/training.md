@@ -161,6 +161,21 @@ Set `activation_checkpointing: true` in `train.json` when long-sequence activati
 memory. The setting is part of exact-resume and same-recipe branch identity, while a declared
 context-extension stage may enable it as the sequence length grows.
 
+Prepare the narrow first-round mixer ablation family from the checked proxy instead of restoring
+the former open-ended architecture search:
+
+```bash
+uv run --extra cpu python -m scripts.mixer_ablation_prepare \
+  experiments/SpeckLC-150M-GDN experiments/SpeckLC-150M-MixerSweep \
+  --window-size 4096
+```
+
+This materializes 3:1 GDN/global-GQA, 3:1 GDN/local-GQA, convolution/global-GQA, and full-global
+baselines at identical depth and training tokens. `sweep.json` records exact parameter counts,
+per-token training FLOPs, and a compute-matched token budget for each variant. Keep both the
+token-matched and compute-matched views; neither parameter count nor tokens alone is a fair systems
+comparison across quadratic and recurrent mixers.
+
 Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
 parent LR:
 
