@@ -1,0 +1,60 @@
+{
+  "format": "speck_flexattention_preflight",
+  "format_version": 1,
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "software": {
+    "cuda": "12.8",
+    "flash_linear_attention": "0.5.0",
+    "torch": "2.9.1+cu128"
+  },
+  "source_revision": "35105d6",
+  "purpose": "Validate the corrected sliding-attention path and recalibrate runtime microbatches; not a justification to run the 500M-token ranking queue.",
+  "sequence_length": 4096,
+  "batch_tokens": 65536,
+  "variants": {
+    "conv-global": {
+      "device_batch_size": 8,
+      "accumulation": 2,
+      "tokens_per_second": 56702.28427100162,
+      "peak_allocated_bytes": 21570014208
+    },
+    "pure-gdn": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 51958.030647464715,
+      "peak_allocated_bytes": 14343730176
+    },
+    "gdn-global": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 48535.80911715328,
+      "peak_allocated_bytes": 13886567936
+    },
+    "gdn-local": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 47721.236453933445,
+      "peak_allocated_bytes": 13889006080
+    },
+    "full-global": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 41273.05043889227,
+      "peak_allocated_bytes": 12485064192
+    },
+    "full-local": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 40306.79987168928,
+      "peak_allocated_bytes": 12489649664
+    }
+  },
+  "local_path_change": {
+    "gdn-local_tokens_per_second_multiple": 1.474230281800538,
+    "full-local_tokens_per_second_multiple": 2.534651698970683,
+    "gdn_local_previous_device_batch_size": 2,
+    "full_local_previous_device_batch_size": 1,
+    "new_device_batch_size": 4
+  },
+  "decision": "Keep the 500M-token 4K ranking queue stopped; measure long-context behavior and the seed noise floor instead."
+}
