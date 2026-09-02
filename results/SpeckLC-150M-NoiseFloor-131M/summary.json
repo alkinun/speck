@@ -1,0 +1,70 @@
+{
+  "format": "speck_seed_noise_floor_result",
+  "format_version": 1,
+  "experiment": "SpeckLC-150M-NoiseFloor-131M",
+  "variant": "gdn-global",
+  "controlled": {
+    "batch_tokens": 65536,
+    "data_order": "fixed packed stream from token offset zero",
+    "final_validation_tokens": 19988480,
+    "manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "sequence_length": 4096,
+    "train_tokens": 131072000
+  },
+  "varied": "training seed, affecting model initialization",
+  "runs": [
+    {
+      "checkpoint_step": 2000,
+      "git_revision": "a0483268b29ae11f665aed6adc2744cb4e5717b4",
+      "gpu_hours": 0.8177560447255706,
+      "model_sha256": "426f0f221aee8615a735a3359263c9a874d53eca65f2835ec3117893a1b8cbb4",
+      "perplexity": 16.766413027712517,
+      "run": "SpeckLC-150M-MixerScreen-131M-gdn-global",
+      "seed": 42,
+      "tokens_per_second": 47724.32368240296,
+      "validation_loss": 2.8193776607513428,
+      "wandb_run": "v3onm3is"
+    },
+    {
+      "checkpoint_step": 2000,
+      "git_revision": "a2e9e4e9598ca53401173ba28c968deaab4b5238",
+      "gpu_hours": 0.8122196304355425,
+      "model_sha256": "29096e94c566024518f51ed3719b415be64ec0fee08c37de5db523e55d87404e",
+      "perplexity": 16.92892334514557,
+      "run": "SpeckLC-150M-NoiseFloor-131M-seed-43",
+      "seed": 43,
+      "tokens_per_second": 47758.41093749993,
+      "validation_loss": 2.829023599624634,
+      "wandb_run": "7ofh2ac8"
+    },
+    {
+      "checkpoint_step": 2000,
+      "git_revision": "a2e9e4e9598ca53401173ba28c968deaab4b5238",
+      "gpu_hours": 0.812371371261672,
+      "model_sha256": "8fc9471377818dc495a693b51bee109ec778aead3f77911c7ed0751befd30666",
+      "perplexity": 16.79065092452791,
+      "run": "SpeckLC-150M-NoiseFloor-131M-seed-44",
+      "seed": 44,
+      "tokens_per_second": 47717.86757875206,
+      "validation_loss": 2.820822238922119,
+      "wandb_run": "4tjumvfg"
+    }
+  ],
+  "aggregate": {
+    "maximum_validation_loss": 2.829023599624634,
+    "mean_perplexity_from_mean_loss": 16.828510468929633,
+    "mean_validation_loss": 2.8230744997660318,
+    "median_validation_loss": 2.820822238922119,
+    "minimum_validation_loss": 2.8193776607513428,
+    "population_standard_deviation": 0.004247787139094398,
+    "sample_standard_deviation": 0.005202455513369014,
+    "validation_loss_range": 0.009645938873291016
+  },
+  "comparison": {
+    "noise_range_fraction_of_original_top_four_range": 0.6143910110376511,
+    "original_gdn_local_advantage_over_gdn_global": 0.008877660751342773,
+    "original_top_four_validation_loss_range": 0.01570000000000027
+  },
+  "interpretation": "A one-seed mixer difference below 0.01 nats is not distinguishable at this budget. The measured initialization-seed range consumes 61% of the original top-four range and exceeds the original gdn-local advantage over gdn-global.",
+  "limitations": "Three seeds estimate initialization and optimization sensitivity only. Packed-data order was held fixed, so this is a lower bound on total run-to-run variance."
+}
