@@ -5,6 +5,7 @@ import json
 import math
 import os
 import time
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -30,6 +31,7 @@ def arguments(argv=None):
     parser.add_argument("--eval-tokens", type=int, default=20_000_000)
     parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--loss-backend", choices=("torch", "liger"), default=None)
+    parser.add_argument("--rope-scaling-factor", type=float, default=None)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", type=Path, default=None)
@@ -75,6 +77,13 @@ def run(args):
     model, metadata = load_checkpoint_model(
         checkpoint_dir, step, device, loss_backend=loss_backend
     )
+    checkpoint_rope_scaling_factor = model.config.rope_scaling_factor
+    if args.rope_scaling_factor is not None:
+        if not math.isfinite(args.rope_scaling_factor) or args.rope_scaling_factor <= 0:
+            raise ValueError("RoPE scaling factor must be positive and finite")
+        for rotary in model.rotary.values():
+            rotary.scaling_factor = args.rope_scaling_factor
+        model.config = replace(model.config, rope_scaling_factor=args.rope_scaling_factor)
     if sequence_length > model.config.max_position_embeddings:
         raise ValueError("evaluation sequence exceeds the model context")
     tokenizer = get_tokenizer(**data_configs["tokenizer"])
@@ -135,7 +144,8 @@ def run(args):
         ),
         "device": str(device),
         "torch_version": torch.__version__,
-        "rope_scaling_factor": model.config.rope_scaling_factor,
+        "checkpoint_rope_scaling_factor": checkpoint_rope_scaling_factor,
+        "evaluation_rope_scaling_factor": model.config.rope_scaling_factor,
     }
     output = (
         args.output
