@@ -19,6 +19,7 @@ from speck.architecture import (
     StageConfig,
 )
 from speck.config import load_experiment
+from speck.dataset import validate_data_settings
 from speck.model import SpeckForCausalLM
 
 VARIANTS = ("gdn-global", "gdn-local", "conv-global", "full-global")
@@ -29,7 +30,78 @@ def arguments(argv=None):
     parser.add_argument("source_experiment", type=Path)
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--window-size", type=int, default=4_096)
+    parser.add_argument(
+        "--train-tokens",
+        type=int,
+        default=None,
+        help="override the source training horizon for a screening rung",
+    )
+    parser.add_argument(
+        "--data-tokens",
+        type=int,
+        default=None,
+        help="scale source mixture phase boundaries for a smaller shared pilot corpus",
+    )
     return parser.parse_args(argv)
+
+
+def positive_integer(value, name):
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise ValueError(f"{name} must be a positive integer")
+    return value
+
+
+def scaled_integer(value, source_tokens, target_tokens, *, minimum=1):
+    return max(minimum, round(value * target_tokens / source_tokens))
+
+
+def scale_data_config(data, requested_tokens):
+    """Scale phase durations exactly while preserving every source weight."""
+
+    requested_tokens = positive_integer(requested_tokens, "pilot data tokens")
+    source_tokens = data["requested_train_tokens"]
+    phases = []
+    for phase in data["mixture"]["phases"]:
+        numerator = phase["end_tokens"] * requested_tokens
+        if numerator % source_tokens:
+            raise ValueError("pilot data tokens do not scale source phase boundaries to integers")
+        phases.append(
+            {
+                **phase,
+                "end_tokens": numerator // source_tokens,
+            }
+        )
+    output_name = data.get("output_name") or "packed"
+    scaled = {
+        **data,
+        "mixture": {**data["mixture"], "phases": phases},
+        "output_dir": None,
+        "output_name": f"{output_name}-Pilot-{requested_tokens}",
+        "requested_train_tokens": requested_tokens,
+    }
+    validate_data_settings(
+        sources=scaled["sources"],
+        mixture=scaled["mixture"],
+        requested_train_tokens=scaled["requested_train_tokens"],
+        validation_tokens_per_source=scaled["validation_tokens_per_source"],
+        validation_fraction=scaled["validation_fraction"],
+        filtering=scaled["filtering"],
+        dedup=scaled["dedup"],
+        shards=scaled["shards"],
+    )
+    return scaled
+
+
+def scale_train_config(train, train_tokens):
+    train_tokens = positive_integer(train_tokens, "pilot train tokens")
+    source_tokens = train["train_tokens"]
+    return {
+        **train,
+        "train_tokens": train_tokens,
+        "warmup_steps": scaled_integer(
+            train["warmup_steps"], source_tokens, train_tokens, minimum=0
+        ),
+    }
 
 
 def variant_architecture(source, variant, window_size=4_096):
@@ -94,13 +166,25 @@ def prepare(args):
     if output.exists():
         raise FileExistsError(f"mixer ablation family already exists: {output}")
     configs = load_experiment(source_dir, "data", "long_context", "model", "tokenizer", "train")
+    train_config = (
+        configs["train"]
+        if args.train_tokens is None
+        else scale_train_config(configs["train"], args.train_tokens)
+    )
+    data_config = (
+        configs["data"]
+        if args.data_tokens is None
+        else scale_data_config(configs["data"], args.data_tokens)
+    )
+    if train_config["train_tokens"] > data_config["requested_train_tokens"]:
+        raise ValueError("mixer sweep training horizon exceeds the prepared data horizon")
     source = ArchitectureConfig.from_dict(configs["model"])
     variants = {name: variant_architecture(source, name, args.window_size) for name in VARIANTS}
     summary = ablation_summary(
         source,
         variants,
-        configs["train"]["sequence_length"],
-        configs["train"]["train_tokens"],
+        train_config["sequence_length"],
+        train_config["train_tokens"],
     )
     contract = {
         "format": "speck_mixer_ablation",
@@ -108,6 +192,8 @@ def prepare(args):
         "source_experiment": str(source_dir),
         "window_size": args.window_size,
         "comparison": "token-matched configs with separately reported compute-matched budgets",
+        "train_tokens": train_config["train_tokens"],
+        "data_tokens": data_config["requested_train_tokens"],
         "variants": summary,
     }
     building = output.with_name(output.name + ".building")
@@ -119,13 +205,13 @@ def prepare(args):
             directory = building / name
             directory.mkdir()
             train = {
-                **configs["train"],
+                **train_config,
                 "output_dir": None,
                 "run": f"{output.name}-{name}",
                 "wandb_group": output.name,
             }
             materialized = {
-                "data.json": configs["data"],
+                "data.json": data_config,
                 "long_context.json": configs["long_context"],
                 "model.json": config.export(),
                 "tokenizer.json": configs["tokenizer"],

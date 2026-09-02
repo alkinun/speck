@@ -7,6 +7,8 @@ from scripts.mixer_ablation_prepare import (
     VARIANTS,
     ablation_summary,
     prepare,
+    scale_data_config,
+    scale_train_config,
     variant_architecture,
 )
 from speck.architecture import ArchitectureConfig, AttentionSpec, GatedCausalConvSpec
@@ -54,6 +56,8 @@ def test_prepare_materializes_inherited_configs_for_nested_candidates(tmp_path):
             source_experiment=experiment,
             output_dir=output,
             window_size=2_048,
+            train_tokens=None,
+            data_tokens=None,
         )
     )
 
@@ -76,3 +80,41 @@ def test_prepare_materializes_inherited_configs_for_nested_candidates(tmp_path):
         with torch.device("meta"):
             model = SpeckForCausalLM(ArchitectureConfig.from_dict(candidate["model"]))
         assert model.parameter_count() == contract["variants"][name]["parameters"]
+
+
+def test_pilot_configs_scale_horizon_cadence_and_data_phases():
+    source = load_experiment(experiment, "data", "train")
+    train = scale_train_config(source["train"], 500_000_000)
+    data = scale_data_config(source["data"], 500_000_000)
+
+    assert train["train_tokens"] == 500_000_000
+    assert train["warmup_steps"] == 51
+    assert train["eval_every"] == 488
+    assert train["save_every"] == 3_815
+    assert [phase["end_tokens"] for phase in data["mixture"]["phases"]] == [
+        350_000_000,
+        450_000_000,
+        500_000_000,
+    ]
+    assert data["output_name"] == "SpeckLC-150M-GDN-Pilot-500000000"
+
+
+def test_prepare_materializes_a_shared_pilot_corpus_and_horizon(tmp_path):
+    output = tmp_path / "PilotSweep"
+    contract = prepare(
+        SimpleNamespace(
+            source_experiment=experiment,
+            output_dir=output,
+            window_size=4_096,
+            train_tokens=32_000_000,
+            data_tokens=500_000_000,
+        )
+    )
+    assert contract["train_tokens"] == 32_000_000
+    assert contract["data_tokens"] == 500_000_000
+    data_names = set()
+    for name in VARIANTS:
+        configs = load_experiment(output / name, "data", "train")
+        assert configs["train"]["train_tokens"] == 32_000_000
+        data_names.add(configs["data"]["output_name"])
+    assert data_names == {"SpeckLC-150M-GDN-Pilot-500000000"}
