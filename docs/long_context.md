@@ -34,8 +34,10 @@ bitwise repeatability. This attests only that exact software/hardware path, not 
 
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized
-causal bias. Sliding attention evaluates bounded query chunks so its mask and compute do not become
-quadratic in the model context ceiling.
+causal bias. CUDA sliding prefill uses FlexAttention with block-level mask metadata; at 128K and a
+2K window the mask metadata occupies about 16 MiB instead of constructing a 16+ GiB token mask.
+Sliding decode retains the bounded ring-buffer path. In mixed models, global and sliding layers use
+separate rotary modules so global RoPE scaling does not compress local-window distances.
 
 ## Reference models
 
@@ -64,6 +66,27 @@ attention compute, not resident state, is the dominant 1M risk.
 The built-in passkey diagnostic is intentionally labeled weak evidence. Its purpose is fast
 regression detection and systems measurement. Effective-length claims intended for publication must
 come from the harder upstream suites and include full per-length curves.
+
+## 150M global-layer frontier
+
+The checked 32K pilot continues every point from the same 131M-token `gdn-local` checkpoint on 32M
+tokens of complete FineMath, peS2o, and Wikipedia documents of at least 16K tokens. Retrieval uses
+paired counterfactual needles to cancel answer-token preferences. These are internal diagnostics,
+not publication-grade RULER, NoLiMa, or HELMET results.
+
+| Global layers | Placement | 32K val loss | 4K loss change | Effective retrieval | Detectable retrieval | BF16 / INT8 state @128K |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | none | 2.68892 | -0.00268 | 4K | 4K | 8.97 / 5.34 MiB |
+| 1 | final (19) | 2.68697 | +0.00234 | 4K | 32K | 103.47 / 54.07 MiB |
+| 1 | middle (11) | 2.65777 | +0.00396 | none | none | 103.47 / 54.07 MiB |
+| 2 | middle + final | 2.65660 | +0.00903 | 4K | 32K | 197.97 / 102.79 MiB |
+| 5 | every fourth layer | 2.63490 | +0.01568 | 16K | 32K | 481.47 / 248.97 MiB |
+
+One middle global layer captures nearly all of the two-layer language-modeling gain but does not
+surface retrieval at the output. One final global layer surfaces retrieval but barely improves
+long-document loss. The two placements therefore play different roles. Five global layers retain
+retrieval most robustly, at a steep state and short-context cost. The raw frontier is recorded in
+`results/SpeckLC-150M-GlobalCount32K`.
 
 ## Data
 

@@ -14,6 +14,7 @@
       "experiment": "../SpeckLC-150M-Context32K/gdn-local",
       "global_layers": [],
       "resident_state_bytes_128k": 9408000,
+      "resident_state_bytes_128k_int8_kv": 5598720,
       "status": "complete",
       "training_flops_per_token_32k": 1016464800.0
     },
@@ -23,6 +24,7 @@
         19
       ],
       "resident_state_bytes_128k": 108498432,
+      "resident_state_bytes_128k_int8_kv": 56692224,
       "status": "complete",
       "training_flops_per_token_32k": 1149179520.0
     },
@@ -32,6 +34,7 @@
         11
       ],
       "resident_state_bytes_128k": 108498432,
+      "resident_state_bytes_128k_int8_kv": 56692224,
       "status": "complete",
       "training_flops_per_token_32k": 1149179520.0
     },
@@ -42,6 +45,7 @@
         19
       ],
       "resident_state_bytes_128k": 207588864,
+      "resident_state_bytes_128k_int8_kv": 107785728,
       "status": "complete",
       "training_flops_per_token_32k": 1281894240.0
     },
@@ -55,6 +59,7 @@
         19
       ],
       "resident_state_bytes_128k": 504860160,
+      "resident_state_bytes_128k_int8_kv": 261066240,
       "status": "complete",
       "training_flops_per_token_32k": 1680038400.0
     }

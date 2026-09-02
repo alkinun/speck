@@ -31,6 +31,7 @@
       },
       "global_layers": [],
       "resident_state_bytes_128k": 9408000,
+      "resident_state_bytes_128k_int8_kv": 5598720,
       "retrieval": {
         "curve": [
           {
@@ -129,6 +130,7 @@
         19
       ],
       "resident_state_bytes_128k": 108498432,
+      "resident_state_bytes_128k_int8_kv": 56692224,
       "retrieval": {
         "curve": [
           {
@@ -227,6 +229,7 @@
         11
       ],
       "resident_state_bytes_128k": 108498432,
+      "resident_state_bytes_128k_int8_kv": 56692224,
       "retrieval": {
         "curve": [
           {
@@ -326,6 +329,7 @@
         19
       ],
       "resident_state_bytes_128k": 207588864,
+      "resident_state_bytes_128k_int8_kv": 107785728,
       "retrieval": {
         "curve": [
           {
@@ -428,6 +432,7 @@
         19
       ],
       "resident_state_bytes_128k": 504860160,
+      "resident_state_bytes_128k_int8_kv": 261066240,
       "retrieval": {
         "curve": [
           {
