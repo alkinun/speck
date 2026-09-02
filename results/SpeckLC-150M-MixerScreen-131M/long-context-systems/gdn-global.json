@@ -1,0 +1,201 @@
+{
+  "checkpoint": {
+    "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-MixerScreen-131M-gdn-global",
+    "metadata_sha256": "5c6cbeb46c99b51f043ced22314a73727e08c7ea29e28343b94ee43ced6e88ed",
+    "model_sha256": "426f0f221aee8615a735a3359263c9a874d53eca65f2835ec3117893a1b8cbb4",
+    "optimizer_sha256": "8d96de459c50bcbbf3707d78c074e264e346cf318ac45d526f2e248c276b4ea2",
+    "step": 2000
+  },
+  "config": {
+    "depths": [
+      0.5
+    ],
+    "effective_threshold": 0.85,
+    "kv_cache_dtype": "bfloat16",
+    "lengths": [
+      4096,
+      32768,
+      131072
+    ],
+    "samples_per_depth": 1
+  },
+  "created_at": "2026-09-02T18:44:21.483914+00:00",
+  "curve": [
+    {
+      "candidate_accuracy": 0.0,
+      "candidate_chance_accuracy": 0.1,
+      "candidate_margin": -4.7578125,
+      "candidate_probability": 0.006456283852458,
+      "candidate_rank": 9.0,
+      "candidate_successes": 0.0,
+      "candidate_trials": 1,
+      "decode_tokens_per_second": 127.12809225159478,
+      "exact_match": 0.0,
+      "length": 4096,
+      "mean_log_probability": -13.901092529296875,
+      "peak_allocated_bytes": 729917952,
+      "prefill_seconds": 0.04867115302477032,
+      "prefill_tokens_per_second": 84136.07949488936,
+      "samples": 1,
+      "state_by_kind": {
+        "attention_kv": 15728640,
+        "gated_deltanet": 1543680
+      },
+      "state_bytes": 17272320,
+      "token_accuracy": 0.0
+    },
+    {
+      "candidate_accuracy": 0.0,
+      "candidate_chance_accuracy": 0.1,
+      "candidate_margin": -5.294921875,
+      "candidate_probability": 0.004090385511517525,
+      "candidate_rank": 9.0,
+      "candidate_successes": 0.0,
+      "candidate_trials": 1,
+      "decode_tokens_per_second": 124.54562744230543,
+      "exact_match": 0.0,
+      "length": 32768,
+      "mean_log_probability": -13.667556762695312,
+      "peak_allocated_bytes": 1366497280,
+      "prefill_seconds": 0.4124011939857155,
+      "prefill_tokens_per_second": 79454.18315431687,
+      "samples": 1,
+      "state_by_kind": {
+        "attention_kv": 125829120,
+        "gated_deltanet": 1543680
+      },
+      "state_bytes": 127372800,
+      "token_accuracy": 0.0
+    },
+    {
+      "candidate_accuracy": 0.0,
+      "candidate_chance_accuracy": 0.1,
+      "candidate_margin": -5.7265625,
+      "candidate_probability": 0.0028258690144866705,
+      "candidate_rank": 9.0,
+      "candidate_successes": 0.0,
+      "candidate_trials": 1,
+      "decode_tokens_per_second": 112.18134515024141,
+      "exact_match": 0.0,
+      "length": 131072,
+      "mean_log_probability": -12.851752281188965,
+      "peak_allocated_bytes": 3556710400,
+      "prefill_seconds": 3.201122401980683,
+      "prefill_tokens_per_second": 40945.325901596356,
+      "samples": 1,
+      "state_by_kind": {
+        "attention_kv": 503316480,
+        "gated_deltanet": 1543680
+      },
+      "state_bytes": 504860160,
+      "token_accuracy": 0.0
+    }
+  ],
+  "device": "cuda",
+  "effective_length": null,
+  "effective_length_by_candidate_accuracy": null,
+  "effective_length_threshold": 0.85,
+  "experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-MixerScreen-131M/gdn-global",
+  "format": "speck_long_context_evaluation",
+  "format_version": 1,
+  "model_context": 131072,
+  "positional_regime": {
+    "attention_scopes": [
+      "global"
+    ],
+    "extrapolates_global_rope": true,
+    "rope_scaling_factor": 1.0,
+    "training_sequence_length": 4096
+  },
+  "results": [
+    {
+      "answer_tokens": 1,
+      "candidate_accuracy": 0.0,
+      "candidate_count": 10,
+      "candidate_margin": -4.7578125,
+      "candidate_probability": 0.006456283852458,
+      "candidate_rank": 9,
+      "decode_seconds": 0.007866082014515996,
+      "decode_tokens_per_second": 127.12809225159478,
+      "depth": 0.5,
+      "exact_match": 0.0,
+      "length": 4096,
+      "mean_log_probability": -13.901092529296875,
+      "peak_allocated_bytes": 729917952,
+      "prefill_seconds": 0.04867115302477032,
+      "prefill_tokens_per_second": 84136.07949488936,
+      "prompt_tokens": 4095,
+      "seed": 0,
+      "state_memory": {
+        "by_kind": {
+          "attention_kv": 15728640,
+          "gated_deltanet": 1543680
+        },
+        "total_bytes": 17272320
+      },
+      "task": "passkey",
+      "token_accuracy": 0.0
+    },
+    {
+      "answer_tokens": 1,
+      "candidate_accuracy": 0.0,
+      "candidate_count": 10,
+      "candidate_margin": -5.294921875,
+      "candidate_probability": 0.004090385511517525,
+      "candidate_rank": 9,
+      "decode_seconds": 0.008029185933992267,
+      "decode_tokens_per_second": 124.54562744230543,
+      "depth": 0.5,
+      "exact_match": 0.0,
+      "length": 32768,
+      "mean_log_probability": -13.667556762695312,
+      "peak_allocated_bytes": 1366497280,
+      "prefill_seconds": 0.4124011939857155,
+      "prefill_tokens_per_second": 79454.18315431687,
+      "prompt_tokens": 32767,
+      "seed": 0,
+      "state_memory": {
+        "by_kind": {
+          "attention_kv": 125829120,
+          "gated_deltanet": 1543680
+        },
+        "total_bytes": 127372800
+      },
+      "task": "passkey",
+      "token_accuracy": 0.0
+    },
+    {
+      "answer_tokens": 1,
+      "candidate_accuracy": 0.0,
+      "candidate_count": 10,
+      "candidate_margin": -5.7265625,
+      "candidate_probability": 0.0028258690144866705,
+      "candidate_rank": 9,
+      "decode_seconds": 0.008914138074032962,
+      "decode_tokens_per_second": 112.18134515024141,
+      "depth": 0.5,
+      "exact_match": 0.0,
+      "length": 131072,
+      "mean_log_probability": -12.851752281188965,
+      "peak_allocated_bytes": 3556710400,
+      "prefill_seconds": 3.201122401980683,
+      "prefill_tokens_per_second": 40945.325901596356,
+      "prompt_tokens": 131071,
+      "seed": 0,
+      "state_memory": {
+        "by_kind": {
+          "attention_kv": 503316480,
+          "gated_deltanet": 1543680
+        },
+        "total_bytes": 504860160
+      },
+      "task": "passkey",
+      "token_accuracy": 0.0
+    }
+  ],
+  "short_context_baseline": 0.0,
+  "short_context_candidate_baseline": 0.0,
+  "short_context_candidate_p_value": 1.0,
+  "torch_version": "2.9.1+cu128",
+  "warmup_each_length": true
+}

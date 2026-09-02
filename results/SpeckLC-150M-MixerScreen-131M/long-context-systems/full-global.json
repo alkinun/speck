@@ -1,0 +1,195 @@
+{
+  "checkpoint": {
+    "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-MixerScreen-131M-full-global",
+    "metadata_sha256": "10fb6ca21d9f51e989d36414f5be35446a50635c7b8381fc9c1a6767a0501ea8",
+    "model_sha256": "9ca4f7550d250c2d21f1de99c91cbd62fac196fe7d4420dce46626a91300b9c8",
+    "optimizer_sha256": "84b2de59a58e73e50c46326042e9d62a2fa1629e2e367776090b76ddb04319c6",
+    "step": 2000
+  },
+  "config": {
+    "depths": [
+      0.5
+    ],
+    "effective_threshold": 0.85,
+    "kv_cache_dtype": "bfloat16",
+    "lengths": [
+      4096,
+      32768,
+      131072
+    ],
+    "samples_per_depth": 1
+  },
+  "created_at": "2026-09-02T18:45:08.319438+00:00",
+  "curve": [
+    {
+      "candidate_accuracy": 0.0,
+      "candidate_chance_accuracy": 0.1,
+      "candidate_margin": -4.642578125,
+      "candidate_probability": 0.004410143010318279,
+      "candidate_rank": 10.0,
+      "candidate_successes": 0.0,
+      "candidate_trials": 1,
+      "decode_tokens_per_second": 160.02112130950806,
+      "exact_match": 0.0,
+      "length": 4096,
+      "mean_log_probability": -15.220979690551758,
+      "peak_allocated_bytes": 789888512,
+      "prefill_seconds": 0.05271759699098766,
+      "prefill_tokens_per_second": 77678.04744021357,
+      "samples": 1,
+      "state_by_kind": {
+        "attention_kv": 62914560
+      },
+      "state_bytes": 62914560,
+      "token_accuracy": 0.0
+    },
+    {
+      "candidate_accuracy": 0.0,
+      "candidate_chance_accuracy": 0.1,
+      "candidate_margin": -4.6328125,
+      "candidate_probability": 0.005210562143474817,
+      "candidate_rank": 10.0,
+      "candidate_successes": 0.0,
+      "candidate_trials": 1,
+      "decode_tokens_per_second": 124.97119336774136,
+      "exact_match": 0.0,
+      "length": 32768,
+      "mean_log_probability": -12.166263580322266,
+      "peak_allocated_bytes": 1744847872,
+      "prefill_seconds": 0.7239296260522678,
+      "prefill_tokens_per_second": 45262.68689773751,
+      "samples": 1,
+      "state_by_kind": {
+        "attention_kv": 503316480
+      },
+      "state_bytes": 503316480,
+      "token_accuracy": 0.0
+    },
+    {
+      "candidate_accuracy": 0.0,
+      "candidate_chance_accuracy": 0.1,
+      "candidate_margin": -3.5703125,
+      "candidate_probability": 0.01061770785599947,
+      "candidate_rank": 10.0,
+      "candidate_successes": 0.0,
+      "candidate_trials": 1,
+      "decode_tokens_per_second": 61.828106133826694,
+      "exact_match": 0.0,
+      "length": 131072,
+      "mean_log_probability": -13.75842571258545,
+      "peak_allocated_bytes": 5067523072,
+      "prefill_seconds": 8.651279859011993,
+      "prefill_tokens_per_second": 15150.475089932968,
+      "samples": 1,
+      "state_by_kind": {
+        "attention_kv": 2013265920
+      },
+      "state_bytes": 2013265920,
+      "token_accuracy": 0.0
+    }
+  ],
+  "device": "cuda",
+  "effective_length": null,
+  "effective_length_by_candidate_accuracy": null,
+  "effective_length_threshold": 0.85,
+  "experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-MixerScreen-131M/full-global",
+  "format": "speck_long_context_evaluation",
+  "format_version": 1,
+  "model_context": 131072,
+  "positional_regime": {
+    "attention_scopes": [
+      "global"
+    ],
+    "extrapolates_global_rope": true,
+    "rope_scaling_factor": 1.0,
+    "training_sequence_length": 4096
+  },
+  "results": [
+    {
+      "answer_tokens": 1,
+      "candidate_accuracy": 0.0,
+      "candidate_count": 10,
+      "candidate_margin": -4.642578125,
+      "candidate_probability": 0.004410143010318279,
+      "candidate_rank": 10,
+      "decode_seconds": 0.00624917505774647,
+      "decode_tokens_per_second": 160.02112130950806,
+      "depth": 0.5,
+      "exact_match": 0.0,
+      "length": 4096,
+      "mean_log_probability": -15.220979690551758,
+      "peak_allocated_bytes": 789888512,
+      "prefill_seconds": 0.05271759699098766,
+      "prefill_tokens_per_second": 77678.04744021357,
+      "prompt_tokens": 4095,
+      "seed": 0,
+      "state_memory": {
+        "by_kind": {
+          "attention_kv": 62914560
+        },
+        "total_bytes": 62914560
+      },
+      "task": "passkey",
+      "token_accuracy": 0.0
+    },
+    {
+      "answer_tokens": 1,
+      "candidate_accuracy": 0.0,
+      "candidate_count": 10,
+      "candidate_margin": -4.6328125,
+      "candidate_probability": 0.005210562143474817,
+      "candidate_rank": 10,
+      "decode_seconds": 0.008001844049431384,
+      "decode_tokens_per_second": 124.97119336774136,
+      "depth": 0.5,
+      "exact_match": 0.0,
+      "length": 32768,
+      "mean_log_probability": -12.166263580322266,
+      "peak_allocated_bytes": 1744847872,
+      "prefill_seconds": 0.7239296260522678,
+      "prefill_tokens_per_second": 45262.68689773751,
+      "prompt_tokens": 32767,
+      "seed": 0,
+      "state_memory": {
+        "by_kind": {
+          "attention_kv": 503316480
+        },
+        "total_bytes": 503316480
+      },
+      "task": "passkey",
+      "token_accuracy": 0.0
+    },
+    {
+      "answer_tokens": 1,
+      "candidate_accuracy": 0.0,
+      "candidate_count": 10,
+      "candidate_margin": -3.5703125,
+      "candidate_probability": 0.01061770785599947,
+      "candidate_rank": 10,
+      "decode_seconds": 0.016173874028027058,
+      "decode_tokens_per_second": 61.828106133826694,
+      "depth": 0.5,
+      "exact_match": 0.0,
+      "length": 131072,
+      "mean_log_probability": -13.75842571258545,
+      "peak_allocated_bytes": 5067523072,
+      "prefill_seconds": 8.651279859011993,
+      "prefill_tokens_per_second": 15150.475089932968,
+      "prompt_tokens": 131071,
+      "seed": 0,
+      "state_memory": {
+        "by_kind": {
+          "attention_kv": 2013265920
+        },
+        "total_bytes": 2013265920
+      },
+      "task": "passkey",
+      "token_accuracy": 0.0
+    }
+  ],
+  "short_context_baseline": 0.0,
+  "short_context_candidate_baseline": 0.0,
+  "short_context_candidate_p_value": 1.0,
+  "torch_version": "2.9.1+cu128",
+  "warmup_each_length": true
+}

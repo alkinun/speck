@@ -1,0 +1,135 @@
+{
+  "format": "speck_long_context_systems_pilot",
+  "format_version": 1,
+  "source_revision": "e88ee32",
+  "checkpoint_step": 2000,
+  "configuration": {
+    "depths": [
+      0.5
+    ],
+    "lengths": [
+      4096,
+      32768,
+      131072
+    ],
+    "samples_per_depth": 1,
+    "warmup_each_length": true
+  },
+  "capability_interpretation": {
+    "claim": "none",
+    "reason": "All six checkpoints scored zero open-vocabulary and controlled-choice accuracy at the 4K baseline. The systems measurements are valid, but this pilot contains no evidence of retrieval capability.",
+    "global_rope_warning": "Global-attention checkpoints use rope_scaling_factor 1.0 and were trained at 4K, so results beyond 4K extrapolate unseen RoPE positions."
+  },
+  "variants": {
+    "conv-global": {
+      "4096": {
+        "peak_allocated_mib": 694.03125,
+        "prefill_seconds": 0.03985654900316149,
+        "resident_state_mib": 15.032958984375
+      },
+      "32768": {
+        "peak_allocated_mib": 1301.125,
+        "prefill_seconds": 0.3450266149593517,
+        "resident_state_mib": 120.032958984375
+      },
+      "131072": {
+        "peak_allocated_mib": 3389.87646484375,
+        "prefill_seconds": 2.8821743289008737,
+        "resident_state_mib": 480.032958984375
+      }
+    },
+    "full-global": {
+      "4096": {
+        "peak_allocated_mib": 753.29638671875,
+        "prefill_seconds": 0.05271759699098766,
+        "resident_state_mib": 60.0
+      },
+      "32768": {
+        "peak_allocated_mib": 1664.0166015625,
+        "prefill_seconds": 0.7239296260522678,
+        "resident_state_mib": 480.0
+      },
+      "131072": {
+        "peak_allocated_mib": 4832.7666015625,
+        "prefill_seconds": 8.651279859011993,
+        "resident_state_mib": 1920.0
+      }
+    },
+    "full-local": {
+      "4096": {
+        "peak_allocated_mib": 711.31396484375,
+        "prefill_seconds": 0.05260841397102922,
+        "resident_state_mib": 30.0
+      },
+      "32768": {
+        "peak_allocated_mib": 1215.0380859375,
+        "prefill_seconds": 0.32712993095628917,
+        "resident_state_mib": 30.0
+      },
+      "131072": {
+        "peak_allocated_mib": 2959.8037109375,
+        "prefill_seconds": 1.3031318370485678,
+        "resident_state_mib": 30.0
+      }
+    },
+    "gdn-global": {
+      "4096": {
+        "peak_allocated_mib": 696.10400390625,
+        "prefill_seconds": 0.04867115302477032,
+        "resident_state_mib": 16.47216796875
+      },
+      "32768": {
+        "peak_allocated_mib": 1303.193359375,
+        "prefill_seconds": 0.4124011939857155,
+        "resident_state_mib": 121.47216796875
+      },
+      "131072": {
+        "peak_allocated_mib": 3391.943359375,
+        "prefill_seconds": 3.201122401980683,
+        "resident_state_mib": 481.47216796875
+      }
+    },
+    "gdn-local": {
+      "4096": {
+        "peak_allocated_mib": 687.99658203125,
+        "prefill_seconds": 0.04855529998894781,
+        "resident_state_mib": 8.97216796875
+      },
+      "32768": {
+        "peak_allocated_mib": 1191.71044921875,
+        "prefill_seconds": 0.3137071549426764,
+        "resident_state_mib": 8.97216796875
+      },
+      "131072": {
+        "peak_allocated_mib": 2937.10546875,
+        "prefill_seconds": 1.3665947410045192,
+        "resident_state_mib": 8.97216796875
+      }
+    },
+    "pure-gdn": {
+      "4096": {
+        "peak_allocated_mib": 670.3310546875,
+        "prefill_seconds": 0.047165025025606155,
+        "resident_state_mib": 1.962890625
+      },
+      "32768": {
+        "peak_allocated_mib": 1173.04541015625,
+        "prefill_seconds": 0.3075024599675089,
+        "resident_state_mib": 1.962890625
+      },
+      "131072": {
+        "peak_allocated_mib": 2901.79541015625,
+        "prefill_seconds": 1.382856079027988,
+        "resident_state_mib": 1.962890625
+      }
+    }
+  },
+  "paired_128k_ratios": {
+    "full_global_over_local_peak_allocation": 1.6327996967176415,
+    "full_global_over_local_prefill_latency": 6.6388370025599786,
+    "full_global_over_local_resident_state": 64.0,
+    "gdn_global_over_local_peak_allocation": 1.154859229763572,
+    "gdn_global_over_local_prefill_latency": 2.342407961871483,
+    "gdn_global_over_local_resident_state": 53.66285714285714
+  }
+}
