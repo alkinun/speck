@@ -28,6 +28,7 @@ def test_context_stage_updates_only_positional_model_settings():
         rope_scaling_factor=2.0,
         loss_backend="liger",
         activation_checkpointing=True,
+        wandb_group="context-32k",
         run="SpeckLC-128K",
     )
     assert model["blocks"] == configs["model"]["blocks"]
@@ -39,6 +40,7 @@ def test_context_stage_updates_only_positional_model_settings():
     assert train["device_batch_size"] == 1
     assert train["loss_backend"] == "liger"
     assert train["activation_checkpointing"] is True
+    assert train["wandb_group"] == "context-32k"
 
 
 def test_context_stage_rejects_invalid_geometry():

@@ -10,6 +10,8 @@ from scripts.base_train import context_compatible_architecture
 from speck.architecture import ArchitectureConfig
 from speck.checkpoint import checkpoint_identity, load_metadata
 from speck.config import load_experiment
+from speck.dataloader import manifest_fingerprint
+from speck.dataset import load_manifest, resolve_data_dir
 
 
 def arguments(argv=None):
@@ -33,6 +35,7 @@ def arguments(argv=None):
     parser.add_argument("--min-lr", type=float, default=0.1)
     parser.add_argument("--data-experiment", type=Path, default=None)
     parser.add_argument("--run", default=None)
+    parser.add_argument("--wandb-group", default=None)
     return parser.parse_args(argv)
 
 
@@ -47,6 +50,7 @@ def stage_configs(
     rope_scaling_factor=1.0,
     loss_backend=None,
     activation_checkpointing=None,
+    wandb_group=None,
     warmup_steps=100,
     min_lr=0.1,
     run,
@@ -99,6 +103,10 @@ def stage_configs(
         "training_phase": "context_extension",
         "warmup_steps": warmup_steps,
     }
+    if wandb_group is not None:
+        if not isinstance(wandb_group, str) or not wandb_group:
+            raise ValueError("context stage W&B group must be a non-empty string")
+        train["wandb_group"] = wandb_group
     return model, train
 
 
@@ -120,6 +128,8 @@ def prepare(args):
     if data["tokenizer"] != configs["tokenizer"]:
         raise ValueError("context data tokenizer does not match the parent")
     run = args.run or output.name
+    data_dir = resolve_data_dir(data["data"].get("output_dir"), data["data"].get("output_name"))
+    data_manifest = load_manifest(data_dir)
     model, train = stage_configs(
         configs,
         metadata,
@@ -130,6 +140,7 @@ def prepare(args):
         rope_scaling_factor=args.rope_scaling_factor,
         loss_backend=args.loss_backend,
         activation_checkpointing=args.activation_checkpointing,
+        wandb_group=args.wandb_group,
         warmup_steps=args.warmup_steps,
         min_lr=args.min_lr,
         run=run,
@@ -140,6 +151,8 @@ def prepare(args):
         "parent_checkpoint": checkpoint_identity(checkpoint_dir, args.step),
         "parent_experiment": str(parent),
         "data_experiment": str(data_experiment),
+        "data_directory": str(data_dir.resolve()),
+        "data_manifest": manifest_fingerprint(data_manifest),
         "sequence_length": args.sequence_length,
         "train_tokens": args.train_tokens,
         "rope_theta": model.get("rope_theta"),
