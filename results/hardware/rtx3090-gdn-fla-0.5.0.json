@@ -1,0 +1,113 @@
+{
+  "configuration": {
+    "batch_size": 1,
+    "gradient_length": 64,
+    "heads": 4,
+    "key_dim": 64,
+    "lengths": [
+      64,
+      512,
+      4096
+    ],
+    "repeats": 10,
+    "value_dim": 64,
+    "warmups": 3
+  },
+  "created_at": "2026-09-02T05:20:03.840774+00:00",
+  "failures": [],
+  "format": "speck_gdn_kernel_qualification",
+  "format_version": 1,
+  "forward": [
+    {
+      "durations_seconds": [
+        0.0003198749618604779,
+        0.00030928803607821465,
+        0.000333865056745708,
+        0.0003372280625626445,
+        0.00031940697226673365,
+        0.00030781899113208055,
+        0.00030826893635094166,
+        0.0002953551011160016,
+        0.00031123298685997725,
+        0.0003021779702976346
+      ],
+      "length": 64,
+      "median_seconds": 0.00031026051146909595,
+      "output_max_abs_error": 0.00048828125,
+      "repeat_output_max_abs_error": 0.0,
+      "repeat_state_max_abs_error": 0.0,
+      "state_max_abs_error": 0.0037150979042053223,
+      "tokens_per_second": 206278.26498756622
+    },
+    {
+      "durations_seconds": [
+        0.00033147004432976246,
+        0.000355307012796402,
+        0.00031259097158908844,
+        0.0003152389544993639,
+        0.0003049009246751666,
+        0.0002975299721583724,
+        0.0003014469984918833,
+        0.0003090950194746256,
+        0.00030148192308843136,
+        0.00032871204894036055
+      ],
+      "length": 512,
+      "median_seconds": 0.000310842995531857,
+      "output_max_abs_error": 0.0009765625,
+      "repeat_output_max_abs_error": 0.0,
+      "repeat_state_max_abs_error": 0.0,
+      "state_max_abs_error": 0.002257436513900757,
+      "tokens_per_second": 1647133.785736302
+    },
+    {
+      "durations_seconds": [
+        0.0003763739950954914,
+        0.00036728300619870424,
+        0.000364425010047853,
+        0.0003581489436328411,
+        0.0003751610638573766,
+        0.0003718119114637375,
+        0.00039784505497664213,
+        0.0003718249499797821,
+        0.0003667800920084119,
+        0.00035630003549158573
+      ],
+      "length": 4096,
+      "median_seconds": 0.00036954745883122087,
+      "output_max_abs_error": 0.0009765625,
+      "repeat_output_max_abs_error": 0.0,
+      "repeat_state_max_abs_error": 0.0,
+      "state_max_abs_error": 0.003541022539138794,
+      "tokens_per_second": 11083826.724054728
+    }
+  ],
+  "forward_atol": 0.02,
+  "gradient_atol": 0.05,
+  "gradient_max_abs_error": {
+    "beta": 4.76837158203125e-07,
+    "key": 6.172340363264084e-07,
+    "log_decay": 3.7278514355421066e-06,
+    "query": 7.450580596923828e-09,
+    "value": 9.5367431640625e-07
+  },
+  "hardware": {
+    "capability": [
+      8,
+      6
+    ],
+    "device": "NVIDIA GeForce RTX 3090",
+    "driver": "610.43.03",
+    "total_memory_bytes": 25295323136
+  },
+  "passed": true,
+  "software": {
+    "cuda": "12.8",
+    "flash_linear_attention": "0.5.0",
+    "torch": "2.9.1+cu128"
+  },
+  "source": {
+    "git_dirty": false,
+    "git_revision": "3b720833100d0632ac85d7839f28a1f359d855fc"
+  }
+}

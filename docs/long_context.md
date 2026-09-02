@@ -27,6 +27,11 @@ The implementation has three deliberately distinct paths:
 Run `scripts.gdn_kernel_qualify` on every new GPU/software combination. Kernel availability is not
 treated as kernel correctness.
 
+The checked [RTX 3090 qualification](../results/hardware/rtx3090-gdn-fla-0.5.0.json) binds FLA 0.5.0,
+PyTorch 2.9.1+cu128, driver 610.43.03, tensor geometry, raw timings, tolerances, and clean Git source.
+It passes output/final-state parity at 64, 512, and 4,096 tokens, all five input gradients, and
+bitwise repeatability. This attests only that exact software/hardware path, not future cluster GPUs.
+
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized
 causal bias. Sliding attention evaluates bounded query chunks so its mask and compute do not become
