@@ -22,7 +22,14 @@ from speck.config import load_experiment
 from speck.dataset import validate_data_settings
 from speck.model import SpeckForCausalLM
 
-VARIANTS = ("gdn-global", "gdn-local", "conv-global", "full-global")
+VARIANTS = (
+    "gdn-global",
+    "gdn-local",
+    "pure-gdn",
+    "conv-global",
+    "full-local",
+    "full-global",
+)
 
 
 def arguments(argv=None):
@@ -41,6 +48,12 @@ def arguments(argv=None):
         type=int,
         default=None,
         help="scale source mixture phase boundaries for a smaller shared pilot corpus",
+    )
+    parser.add_argument(
+        "--data-experiment",
+        type=Path,
+        default=None,
+        help="reuse the packed-data contract from another experiment",
     )
     return parser.parse_args(argv)
 
@@ -116,6 +129,13 @@ def variant_architecture(source, variant, window_size=4_096):
         for branch in stage.branches
         if isinstance(branch, AttentionSpec)
     )
+    gdn_template = next(
+        branch
+        for invocation in source.execution_plan
+        for stage in invocation.block.stages
+        for branch in stage.branches
+        if isinstance(branch, GatedDeltaNetSpec)
+    )
     groups = []
     for invocation in source.execution_plan:
         stages = list(invocation.block.stages)
@@ -123,8 +143,15 @@ def variant_architecture(source, variant, window_size=4_096):
         if len(first.branches) != 1:
             raise ValueError("mixer ablations require one mixer in the first stage")
         mixer = first.branches[0]
-        if variant == "full-global":
-            mixer = replace(attention_template, scope="global", window_size=None)
+        if variant in {"full-global", "full-local"}:
+            local = variant == "full-local"
+            mixer = replace(
+                attention_template,
+                scope="sliding" if local else "global",
+                window_size=window_size if local else None,
+            )
+        elif variant == "pure-gdn":
+            mixer = gdn_template
         elif isinstance(mixer, AttentionSpec):
             if variant == "gdn-local":
                 mixer = replace(mixer, scope="sliding", window_size=window_size)
@@ -166,15 +193,25 @@ def prepare(args):
     if output.exists():
         raise FileExistsError(f"mixer ablation family already exists: {output}")
     configs = load_experiment(source_dir, "data", "long_context", "model", "tokenizer", "train")
+    data_experiment_arg = getattr(args, "data_experiment", None)
+    data_experiment = (
+        source_dir if data_experiment_arg is None else data_experiment_arg.expanduser().resolve()
+    )
+    if data_experiment == source_dir:
+        data_configs = {"data": configs["data"], "tokenizer": configs["tokenizer"]}
+    else:
+        data_configs = load_experiment(data_experiment, "data", "tokenizer")
+    if data_configs["tokenizer"] != configs["tokenizer"]:
+        raise ValueError("mixer sweep data tokenizer does not match the source experiment")
     train_config = (
         configs["train"]
         if args.train_tokens is None
         else scale_train_config(configs["train"], args.train_tokens)
     )
     data_config = (
-        configs["data"]
+        data_configs["data"]
         if args.data_tokens is None
-        else scale_data_config(configs["data"], args.data_tokens)
+        else scale_data_config(data_configs["data"], args.data_tokens)
     )
     if train_config["train_tokens"] > data_config["requested_train_tokens"]:
         raise ValueError("mixer sweep training horizon exceeds the prepared data horizon")
@@ -190,6 +227,7 @@ def prepare(args):
         "format": "speck_mixer_ablation",
         "format_version": 1,
         "source_experiment": str(source_dir),
+        "data_experiment": str(data_experiment),
         "window_size": args.window_size,
         "comparison": "token-matched configs with separately reported compute-matched budgets",
         "train_tokens": train_config["train_tokens"],

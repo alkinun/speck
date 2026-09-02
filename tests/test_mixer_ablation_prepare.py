@@ -11,7 +11,12 @@ from scripts.mixer_ablation_prepare import (
     scale_train_config,
     variant_architecture,
 )
-from speck.architecture import ArchitectureConfig, AttentionSpec, GatedCausalConvSpec
+from speck.architecture import (
+    ArchitectureConfig,
+    AttentionSpec,
+    GatedCausalConvSpec,
+    GatedDeltaNetSpec,
+)
 from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
 
@@ -28,6 +33,12 @@ def test_mixer_variants_preserve_depth_and_materialize_parameter_counts():
     assert all(config.logical_depth == 20 for config in variants.values())
     assert all(config.expected_parameters for config in variants.values())
     assert sum(isinstance(item, AttentionSpec) for item in mixers(variants["full-global"])) == 20
+    assert sum(isinstance(item, AttentionSpec) for item in mixers(variants["full-local"])) == 20
+    assert all(
+        item.scope == "sliding" and item.window_size == 2_048
+        for item in mixers(variants["full-local"])
+    )
+    assert sum(isinstance(item, GatedDeltaNetSpec) for item in mixers(variants["pure-gdn"])) == 20
     local_attention = [
         item for item in mixers(variants["gdn-local"]) if isinstance(item, AttentionSpec)
     ]
@@ -58,6 +69,7 @@ def test_prepare_materializes_inherited_configs_for_nested_candidates(tmp_path):
             window_size=2_048,
             train_tokens=None,
             data_tokens=None,
+            data_experiment=None,
         )
     )
 
@@ -108,6 +120,7 @@ def test_prepare_materializes_a_shared_pilot_corpus_and_horizon(tmp_path):
             window_size=4_096,
             train_tokens=32_000_000,
             data_tokens=500_000_000,
+            data_experiment=None,
         )
     )
     assert contract["train_tokens"] == 32_000_000
@@ -118,3 +131,24 @@ def test_prepare_materializes_a_shared_pilot_corpus_and_horizon(tmp_path):
         assert configs["train"]["train_tokens"] == 32_000_000
         data_names.add(configs["data"]["output_name"])
     assert data_names == {"SpeckLC-150M-GDN-Pilot-500000000"}
+
+
+def test_prepare_can_reuse_an_existing_data_experiment(tmp_path):
+    output = tmp_path / "ReusedDataSweep"
+    data_experiment = experiment.parent / "Speck1.5-140M"
+    contract = prepare(
+        SimpleNamespace(
+            source_experiment=experiment,
+            output_dir=output,
+            window_size=4_096,
+            train_tokens=500_000_000,
+            data_tokens=None,
+            data_experiment=data_experiment,
+        )
+    )
+
+    expected = load_experiment(data_experiment, "data")["data"]
+    assert contract["data_experiment"] == str(data_experiment.resolve())
+    assert contract["data_tokens"] == 5_000_000_000
+    for name in VARIANTS:
+        assert load_experiment(output / name, "data")["data"] == expected

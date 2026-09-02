@@ -167,14 +167,19 @@ the former open-ended architecture search:
 ```bash
 uv run --extra cpu python -m scripts.mixer_ablation_prepare \
   experiments/SpeckLC-150M-GDN experiments/SpeckLC-150M-MixerSweep \
-  --window-size 4096 --train-tokens 32000000 --data-tokens 500000000
+  --window-size 2048 --train-tokens 32000000 --data-tokens 500000000
 ```
 
-This materializes 3:1 GDN/global-GQA, 3:1 GDN/local-GQA, convolution/global-GQA, and full-global
-baselines at identical depth and training tokens. `sweep.json` records exact parameter counts,
-per-token training FLOPs, and a compute-matched token budget for each variant. Keep both the
-token-matched and compute-matched views; neither parameter count nor tokens alone is a fair systems
-comparison across quadratic and recurrent mixers.
+This materializes 3:1 GDN/global-GQA, 3:1 GDN/local-GQA, pure-GDN,
+convolution/global-GQA, full-local, and full-global baselines at identical depth and training
+tokens. `sweep.json` records exact parameter counts, per-token training FLOPs, and a compute-matched
+token budget for each variant. Keep both the token-matched and compute-matched views; neither
+parameter count nor tokens alone is a fair systems comparison across quadratic and recurrent
+mixers.
+
+Keep the local window smaller than the training sequence. A 4,096-token sliding window on a
+4,096-token training sequence is behaviorally global during the sweep and therefore is not a useful
+local-attention ablation.
 
 `--train-tokens` scales warmup with the screening horizon while preserving the source evaluation
 and checkpoint token cadence; final evaluation and saving still occur when a short rung ends.
@@ -182,6 +187,10 @@ and checkpoint token cadence; final evaluation and saving still occur when a sho
 corpus identity, and rejects values that would create fractional phase boundaries. Prepare the
 pilot corpus once through any generated candidate; the other candidates resolve the same packed
 data directory.
+
+Use `--data-experiment experiments/Speck1.5-140M` without `--data-tokens` to bind a screening rung
+to that already prepared 5B-token corpus instead of creating duplicate packed shards. The selected
+data experiment must use the same tokenizer as the mixer source.
 
 Before budgeting a length stage, calculate from the materialized architecture rather than applying
 `6ND` at every length:

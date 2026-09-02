@@ -1,0 +1,56 @@
+{
+  "format": "speck_mixer_rank_preflight",
+  "format_version": 1,
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "purpose": "Select viable runtime microbatches and estimate the 500M-token ranking queue; not a publication benchmark.",
+  "sequence_length": 4096,
+  "batch_tokens": 65536,
+  "consumed_train_tokens": 500039680,
+  "variants": {
+    "conv-global": {
+      "device_batch_size": 8,
+      "accumulation": 2,
+      "tokens_per_second": 56797.109570198045,
+      "peak_allocated_bytes": 21564771328,
+      "projected_optimizer_hours": 2.44555
+    },
+    "pure-gdn": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 52155.07106052161,
+      "peak_allocated_bytes": 14343730176,
+      "projected_optimizer_hours": 2.66321
+    },
+    "gdn-global": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 48717.53307141146,
+      "peak_allocated_bytes": 13889779200,
+      "projected_optimizer_hours": 2.85113,
+      "rejected_larger_batch": "device_batch_size 8 exceeded RTX 3090 memory during compiled backward autotuning"
+    },
+    "full-global": {
+      "device_batch_size": 4,
+      "accumulation": 4,
+      "tokens_per_second": 41495.846656704,
+      "peak_allocated_bytes": 12487423488,
+      "projected_optimizer_hours": 3.34732
+    },
+    "gdn-local": {
+      "device_batch_size": 2,
+      "accumulation": 8,
+      "tokens_per_second": 32370.273214762972,
+      "peak_allocated_bytes": 14554532352,
+      "projected_optimizer_hours": 4.29097,
+      "rejected_larger_batch": "device_batch_size 4 exceeded RTX 3090 memory in the current sliding-attention training path"
+    },
+    "full-local": {
+      "device_batch_size": 1,
+      "accumulation": 16,
+      "tokens_per_second": 15902.303163735012,
+      "peak_allocated_bytes": 17850737152,
+      "projected_optimizer_hours": 8.73458
+    }
+  },
+  "projected_queue_optimizer_hours": 24.33276
+}
