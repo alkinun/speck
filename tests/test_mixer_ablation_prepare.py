@@ -1,8 +1,14 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 import torch
 
-from scripts.mixer_ablation_prepare import VARIANTS, ablation_summary, variant_architecture
+from scripts.mixer_ablation_prepare import (
+    VARIANTS,
+    ablation_summary,
+    prepare,
+    variant_architecture,
+)
 from speck.architecture import ArchitectureConfig, AttentionSpec, GatedCausalConvSpec
 from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
@@ -39,3 +45,34 @@ def test_ablation_summary_exposes_compute_matched_token_budgets():
     with torch.device("meta"):
         full = SpeckForCausalLM(variants["full-global"])
     assert summary["full-global"]["parameters"] == full.parameter_count()
+
+
+def test_prepare_materializes_inherited_configs_for_nested_candidates(tmp_path):
+    output = tmp_path / "nested" / "MixerSweep"
+    contract = prepare(
+        SimpleNamespace(
+            source_experiment=experiment,
+            output_dir=output,
+            window_size=2_048,
+        )
+    )
+
+    assert set(contract["variants"]) == set(VARIANTS)
+    source = load_experiment(experiment, "data", "long_context", "tokenizer", "train")
+    for name in VARIANTS:
+        candidate = load_experiment(
+            output / name,
+            "data",
+            "long_context",
+            "model",
+            "tokenizer",
+            "train",
+        )
+        assert candidate["data"] == source["data"]
+        assert candidate["long_context"] == source["long_context"]
+        assert candidate["tokenizer"] == source["tokenizer"]
+        assert candidate["train"]["run"] == f"MixerSweep-{name}"
+        assert "extends" not in (output / name / "data.json").read_text()
+        with torch.device("meta"):
+            model = SpeckForCausalLM(ArchitectureConfig.from_dict(candidate["model"]))
+        assert model.parameter_count() == contract["variants"][name]["parameters"]

@@ -118,22 +118,24 @@ def prepare(args):
         for name, config in variants.items():
             directory = building / name
             directory.mkdir()
-            for filename in ("data.json", "long_context.json", "tokenizer.json"):
-                shutil.copy2(source_dir / filename, directory / filename)
             train = {
                 **configs["train"],
                 "output_dir": None,
                 "run": f"{output.name}-{name}",
                 "wandb_group": output.name,
             }
-            (directory / "model.json").write_text(
-                json.dumps(config.export(), indent=2, sort_keys=True) + "\n",
-                encoding="utf-8",
-            )
-            (directory / "train.json").write_text(
-                json.dumps(train, indent=2, sort_keys=True) + "\n",
-                encoding="utf-8",
-            )
+            materialized = {
+                "data.json": configs["data"],
+                "long_context.json": configs["long_context"],
+                "model.json": config.export(),
+                "tokenizer.json": configs["tokenizer"],
+                "train.json": train,
+            }
+            for filename, values in materialized.items():
+                (directory / filename).write_text(
+                    json.dumps(values, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
         (building / "sweep.json").write_text(
             json.dumps(contract, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
