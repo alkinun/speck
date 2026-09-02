@@ -1,0 +1,13 @@
+{
+  "maximum_loader_microbatch_tokens": 65536,
+  "minimum_document_tokens": 16384,
+  "requested_train_tokens": 32000000,
+  "shard_tokens": 16000000,
+  "source_experiment": "../Speck1.5-140M",
+  "source_weights": {
+    "finemath_4plus": 50,
+    "pes2o": 40,
+    "wikimedia": 10
+  },
+  "validation_tokens_per_source": 100000
+}
