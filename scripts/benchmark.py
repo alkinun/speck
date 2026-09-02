@@ -34,7 +34,7 @@ _COMPILE_MODE_OPTIONS = {
 }
 
 
-def arguments():
+def arguments(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "experiment",
@@ -118,16 +118,31 @@ def arguments():
         help="linear cross-entropy implementation (default: %(default)s)",
     )
     parser.add_argument(
+        "--activation-checkpointing",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="override train.json activation checkpointing for this benchmark",
+    )
+    parser.add_argument(
         "--output",
         default=None,
         help="optional path for the JSON benchmark report",
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
 def percentile(values, fraction):
     ordered = sorted(values)
     return ordered[round((len(ordered) - 1) * fraction)]
+
+
+def resolve_activation_checkpointing(train, override):
+    configured = train.get("activation_checkpointing", False)
+    if not isinstance(configured, bool):
+        raise ValueError("train activation_checkpointing must be boolean")
+    if override is not None and not isinstance(override, bool):
+        raise ValueError("activation checkpointing override must be boolean or null")
+    return configured if override is None else override
 
 
 def config_fingerprint(configs):
@@ -173,6 +188,9 @@ def run(args):
     configs = load_experiment(args.experiment, "tokenizer", "model", "train")
     tokenizer = get_tokenizer(**configs["tokenizer"])
     train = configs["train"]
+    activation_checkpointing = resolve_activation_checkpointing(
+        train, args.activation_checkpointing
+    )
     batch_size = args.batch_size or train["device_batch_size"]
     sequence_length = args.sequence_length or train["sequence_length"]
     micro_tokens = batch_size * sequence_length
@@ -197,6 +215,7 @@ def run(args):
         loss_backend=args.loss_backend,
     ).to(device)
     model.init_weights()
+    model.set_gradient_checkpointing(activation_checkpointing)
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(train["lr"], train["weight_decay"], train["optimizer"])
     train_model = (
@@ -284,6 +303,7 @@ def run(args):
             "compile_mode": None if args.no_compile else args.compile_mode,
             "aggressive_fusion": not args.no_compile,
             "loss_backend": args.loss_backend,
+            "activation_checkpointing": activation_checkpointing,
             "optimizer": train["optimizer"],
             "optimizer_step_compiled": optimizer_step_compiled,
             "seed": args.seed,

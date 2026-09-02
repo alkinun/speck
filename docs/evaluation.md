@@ -102,6 +102,10 @@ Use `--mode end-to-end --data-dir <packed-data>` to include packed-data loading.
 separately. `--peak-tflops` reports model FLOPs utilization, and `--no-compile` measures eager
 execution.
 
+The optimization benchmark honors `train.json`'s `activation_checkpointing` setting and records the
+resolved value. Use `--activation-checkpointing` or `--no-activation-checkpointing` for an explicit
+paired runtime comparison without editing the experiment contract.
+
 ## BananaMind Base Bench 1.1
 
 Accept the dataset gate and authenticate with Hugging Face before running BananaMind Base Bench
