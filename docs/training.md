@@ -120,7 +120,8 @@ uv run --extra cpu python -m scripts.context_stage_prepare \
   experiments/SpeckLC-4K experiments/SpeckLC-32K \
   --checkpoint-dir ~/.cache/speck/checkpoints/SpeckLC-4K \
   --step <step> --sequence-length 32768 --train-tokens <tokens> \
-  --lr 0.0001 --rope-theta 1000000
+  --lr 0.0001 --rope-theta 1000000 \
+  --loss-backend liger --activation-checkpointing
 ```
 
 Then launch the stage with the parent recorded in `context_stage.json`:

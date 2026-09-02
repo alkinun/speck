@@ -23,6 +23,12 @@ def arguments(argv=None):
     parser.add_argument("--lr", type=float, required=True)
     parser.add_argument("--rope-theta", type=float, default=None)
     parser.add_argument("--rope-scaling-factor", type=float, default=1.0)
+    parser.add_argument("--loss-backend", choices=("torch", "liger"), default=None)
+    parser.add_argument(
+        "--activation-checkpointing",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+    )
     parser.add_argument("--warmup-steps", type=int, default=100)
     parser.add_argument("--min-lr", type=float, default=0.1)
     parser.add_argument("--data-experiment", type=Path, default=None)
@@ -39,6 +45,8 @@ def stage_configs(
     lr,
     rope_theta=None,
     rope_scaling_factor=1.0,
+    loss_backend=None,
+    activation_checkpointing=None,
     warmup_steps=100,
     min_lr=0.1,
     run,
@@ -52,6 +60,10 @@ def stage_configs(
         minimum = 0 if name == "warmup steps" else 1
         if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
             raise ValueError(f"{name} must be an integer of at least {minimum}")
+    if loss_backend is not None and loss_backend not in {"torch", "liger"}:
+        raise ValueError("context stage loss backend must be torch or liger")
+    if activation_checkpointing is not None and not isinstance(activation_checkpointing, bool):
+        raise ValueError("context stage activation checkpointing must be boolean or null")
     if sequence_length > parent_configs["model"].get("max_position_embeddings", 4_096):
         maximum = sequence_length
     else:
@@ -69,10 +81,16 @@ def stage_configs(
         raise ValueError("context stage run must be a non-empty string")
     train = {
         **parent_configs["train"],
+        "activation_checkpointing": (
+            parent_configs["train"].get("activation_checkpointing", False)
+            if activation_checkpointing is None
+            else activation_checkpointing
+        ),
         "checkpoint_tokens": [],
         "device_batch_size": 1,
         "lr": lr,
         "lr_schedule": "cosine",
+        "loss_backend": loss_backend or parent_configs["train"].get("loss_backend", "torch"),
         "min_lr": min_lr,
         "output_dir": None,
         "run": run,
@@ -90,7 +108,7 @@ def prepare(args):
     checkpoint_dir = args.checkpoint_dir.expanduser().resolve()
     if output.exists():
         raise FileExistsError(f"context stage already exists: {output}")
-    configs = load_experiment(parent, "data", "model", "tokenizer", "train")
+    configs = load_experiment(parent, "data", "long_context", "model", "tokenizer", "train")
     metadata = load_metadata(checkpoint_dir, args.step)
     if (
         ArchitectureConfig.from_dict(configs["model"]).settings()
@@ -110,6 +128,8 @@ def prepare(args):
         lr=args.lr,
         rope_theta=args.rope_theta,
         rope_scaling_factor=args.rope_scaling_factor,
+        loss_backend=args.loss_backend,
+        activation_checkpointing=args.activation_checkpointing,
         warmup_steps=args.warmup_steps,
         min_lr=args.min_lr,
         run=run,
@@ -124,6 +144,8 @@ def prepare(args):
         "train_tokens": args.train_tokens,
         "rope_theta": model.get("rope_theta"),
         "rope_scaling_factor": model["rope_scaling_factor"],
+        "loss_backend": train["loss_backend"],
+        "activation_checkpointing": train["activation_checkpointing"],
     }
     building = output.with_name(output.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
@@ -132,6 +154,7 @@ def prepare(args):
     try:
         values = {
             "data.json": data["data"],
+            "long_context.json": configs["long_context"],
             "model.json": model,
             "tokenizer.json": configs["tokenizer"],
             "train.json": train,

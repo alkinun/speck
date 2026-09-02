@@ -43,6 +43,7 @@ from speck.train import (
 _BRANCH_FIXED_SETTINGS = (
     "sequence_length",
     "activation_checkpointing",
+    "loss_backend",
     "device_batch_size",
     "batch_tokens",
     "weight_decay",
@@ -56,6 +57,7 @@ _CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed")
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "activation_checkpointing",
+    "loss_backend",
     "device_batch_size",
     "batch_tokens",
     "train_tokens",
@@ -81,6 +83,7 @@ _LEGACY_RESUME_DEFAULTS = {
     "seed": 42,
     "branch_kind": "same",
     "activation_checkpointing": False,
+    "loss_backend": "torch",
 }
 
 
@@ -247,6 +250,7 @@ class BaseTrainer:
         args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
         args.training_phase = getattr(args, "training_phase", "base")
         args.activation_checkpointing = getattr(args, "activation_checkpointing", False)
+        args.loss_backend = getattr(args, "loss_backend", "torch")
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
         args.wandb_group = getattr(args, "wandb_group", None)
@@ -356,6 +360,7 @@ class BaseTrainer:
             self.tokenizer.vocab_size,
             self.tokenizer.bos_id,
             self.tokenizer.eos_id,
+            loss_backend=args.loss_backend,
         ).to(self.device)
         self.config = self.model.config
         self.model.init_weights()

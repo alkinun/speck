@@ -26,6 +26,8 @@ def test_context_stage_updates_only_positional_model_settings():
         lr=1e-4,
         rope_theta=1_000_000.0,
         rope_scaling_factor=2.0,
+        loss_backend="liger",
+        activation_checkpointing=True,
         run="SpeckLC-128K",
     )
     assert model["blocks"] == configs["model"]["blocks"]
@@ -35,6 +37,8 @@ def test_context_stage_updates_only_positional_model_settings():
     assert train["sequence_length"] == 131_072
     assert train["training_phase"] == "context_extension"
     assert train["device_batch_size"] == 1
+    assert train["loss_backend"] == "liger"
+    assert train["activation_checkpointing"] is True
 
 
 def test_context_stage_rejects_invalid_geometry():
@@ -46,6 +50,16 @@ def test_context_stage_rejects_invalid_geometry():
             sequence_length=0,
             train_tokens=1,
             lr=1e-4,
+            run="invalid",
+        )
+    with pytest.raises(ValueError, match="loss backend"):
+        stage_configs(
+            configs,
+            metadata,
+            sequence_length=32_768,
+            train_tokens=1,
+            lr=1e-4,
+            loss_backend="unknown",
             run="invalid",
         )
 
