@@ -33,10 +33,11 @@ def test_inference_loader_does_not_read_optimizer_state(tmp_path):
     )
     (tmp_path / "optimizer_000003.pt").write_bytes(b"not a torch checkpoint")
 
-    loaded, metadata = load_checkpoint_model(tmp_path, 3, "cpu")
+    loaded, metadata = load_checkpoint_model(tmp_path, 3, "cpu", loss_backend="liger")
 
     assert metadata["step"] == 3
     assert loaded.training is False
+    assert loaded.loss_backend == "liger"
     assert all(
         left.equal(right)
         for left, right in zip(source.state_dict().values(), loaded.state_dict().values())

@@ -62,12 +62,15 @@ def arguments(argv=None):
     return parser.parse_args(argv)
 
 
-def load_checkpoint_model(checkpoint_dir, step, device):
+def load_checkpoint_model(checkpoint_dir, step, device, loss_backend="torch"):
     """Load only inference state, releasing the CPU state before moving the model."""
 
     metadata = load_metadata(checkpoint_dir, step)
     model_state = load_model(checkpoint_dir, step, "cpu")
-    model = SpeckForCausalLM(ArchitectureConfig.from_dict(metadata["config"]))
+    model = SpeckForCausalLM(
+        ArchitectureConfig.from_dict(metadata["config"]),
+        loss_backend=loss_backend,
+    )
     model.load_state_dict(model_state)
     del model_state
     return model.to(device).eval(), metadata
