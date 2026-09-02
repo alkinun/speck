@@ -164,6 +164,23 @@ def test_sliding_attention_chunks_long_sequences():
     assert torch.isfinite(output).all()
 
 
+@pytest.mark.parametrize("with_state", (False, True))
+def test_sliding_attention_skips_empty_kv_concatenation(monkeypatch, with_state):
+    model = model_with(AttentionSpec(4, 1, "sliding", 3, rope_dim=0))
+    tokens = torch.randint(0, 16, (1, 8))
+    state = model.state(length=8) if with_state else None
+    original_cat = torch.cat
+
+    def reject_empty_prefix(tensors, *args, **kwargs):
+        dim = kwargs.get("dim", args[0] if args else 0)
+        if dim == 2 and len(tensors) == 2 and tensors[0].size(2) == 0:
+            raise AssertionError("attention concatenated an empty K/V prefix")
+        return original_cat(tensors, *args, **kwargs)
+
+    monkeypatch.setattr(torch, "cat", reject_empty_prefix)
+    model(tokens, state=state)
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="FlexAttention requires CUDA")
 @pytest.mark.parametrize("past_length", (0, 3))
 def test_flex_sliding_attention_matches_torch_reference(past_length):

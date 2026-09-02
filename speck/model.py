@@ -640,14 +640,20 @@ class Attention(nn.Module):
             cos, sin = rotary(position, length, q.dtype)
             q = rotate(q, cos, sin, rotary_dim)
             k = rotate(k, cos, sin, rotary_dim)
-        if state is None and self.spec.scope == "global":
-            keys, values, mask, causal = k, v, None, True
+        if state is None:
+            keys, values = k, v
+            past_length = 0
+            mask, causal = None, self.spec.scope == "global"
         else:
-            past_k, past_v = (k[:, :, :0], v[:, :, :0]) if state is None else state.current()
-            keys = torch.cat((past_k, k), dim=2)
-            values = torch.cat((past_v, v), dim=2)
+            past_k, past_v = state.current()
+            past_length = past_k.size(2)
+            if past_length:
+                keys = torch.cat((past_k, k), dim=2)
+                values = torch.cat((past_v, v), dim=2)
+            else:
+                keys, values = k, v
             if self.spec.scope == "global":
-                if past_k.size(2) == 0:
+                if past_length == 0:
                     mask, causal = None, True
                 elif length == 1:
                     mask, causal = None, False
@@ -658,12 +664,12 @@ class Attention(nn.Module):
                 mask, causal = None, False
         if self.spec.scope == "sliding":
             assert self.spec.window_size is not None
-            if q.is_cuda and q.size(-1) >= 16 and past_k.size(2) == 0:
+            if q.is_cuda and q.size(-1) >= 16 and past_length == 0:
                 output = flex_sliding_window_attention(
                     q,
                     keys,
                     values,
-                    past_k.size(2),
+                    past_length,
                     self.spec.window_size,
                 )
             else:
@@ -672,7 +678,7 @@ class Attention(nn.Module):
                     keys,
                     values,
                     position,
-                    past_k.size(2),
+                    past_length,
                     self.spec.window_size,
                 )
         else:
