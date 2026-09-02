@@ -12,6 +12,11 @@
       "tokens_per_second": 18247.501738671694,
       "training_flops_per_token": 1149179520.0
     },
+    "global-1-mid": {
+      "peak_allocated_bytes": 4986221056,
+      "tokens_per_second": 14851.401488704856,
+      "training_flops_per_token": 1149179520.0
+    },
     "global-2": {
       "peak_allocated_bytes": 4986221568,
       "tokens_per_second": 16692.73725870513,

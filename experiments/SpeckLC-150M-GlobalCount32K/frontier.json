@@ -23,7 +23,7 @@
         19
       ],
       "resident_state_bytes_128k": 108498432,
-      "status": "prepared",
+      "status": "complete",
       "training_flops_per_token_32k": 1149179520.0
     },
     "global-1-mid": {
@@ -32,7 +32,7 @@
         11
       ],
       "resident_state_bytes_128k": 108498432,
-      "status": "prepared",
+      "status": "complete",
       "training_flops_per_token_32k": 1149179520.0
     },
     "global-2": {
@@ -42,7 +42,7 @@
         19
       ],
       "resident_state_bytes_128k": 207588864,
-      "status": "prepared",
+      "status": "complete",
       "training_flops_per_token_32k": 1281894240.0
     },
     "global-5": {
@@ -55,8 +55,10 @@
         19
       ],
       "resident_state_bytes_128k": 504860160,
-      "status": "prepared",
+      "status": "complete",
       "training_flops_per_token_32k": 1680038400.0
     }
-  }
+  },
+  "result": "../../results/SpeckLC-150M-GlobalCount32K/summary.json",
+  "status": "complete"
 }
