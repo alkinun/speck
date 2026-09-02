@@ -28,5 +28,6 @@
     "warmup_steps": 25
   },
   "short_context_gate": "Re-evaluate 4K validation loss after the stage and reject promotion on material capability erosion.",
-  "status": "prepared_not_launched"
+  "result": "../../results/SpeckLC-150M-Context32K/summary.json",
+  "status": "complete"
 }

@@ -1,0 +1,482 @@
+{
+  "conclusion": "Five global attention layers materially improve long-document modeling and extend contrastive retrieval from 4K to 16K, but cost 53.7x more resident state than the local hybrid at 128K. The next experiment should test one and two global layers.",
+  "evaluator_revision": "0670ddb",
+  "format": "speck_context32k_result",
+  "format_version": 1,
+  "paired_findings": {
+    "global_final_long_document_loss_advantage": 0.0493927001953125,
+    "global_over_local_128k_prefill_latency": 2.367233264678894,
+    "global_over_local_128k_resident_state": 53.66285714285714
+  },
+  "rope_diagnostic": {
+    "parent_global_forced_8x_loss": 2.8768229484558105,
+    "parent_global_native_1x_loss": 2.8193776607513428,
+    "promoted_global_forced_1x_loss": 2.8655412197113037,
+    "promoted_global_trained_8x_loss": 2.8354239463806152
+  },
+  "sequence_length": 32768,
+  "train_tokens": 32000000,
+  "training_data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
+  "variants": {
+    "gdn-global": {
+      "checkpoint": {
+        "metadata_sha256": "ecda42e8fab4b3a4621ac955dd3c28d8ffcfe2ea04ceef59df827e31d7422959",
+        "model_sha256": "f9eff7288b755a8308fddb94e179f16cf1d8707745bcdc1d1c76b5bf09437dd9",
+        "optimizer_sha256": "28a93956b16cbc63d16fdaed58588f0439d460cd41ceac169e23fc7212bee518",
+        "step": 489
+      },
+      "retrieval_parent_4k": {
+        "by_depth": {
+          "0.1": {
+            "directional_successes": 10,
+            "mean_score": 0.010679654777050018,
+            "trials": 10
+          },
+          "0.5": {
+            "directional_successes": 7,
+            "mean_score": 0.006445308029651642,
+            "trials": 10
+          },
+          "0.9": {
+            "directional_successes": 10,
+            "mean_score": 0.13300781324505806,
+            "trials": 10
+          }
+        },
+        "directional_accuracy": 0.9,
+        "directional_successes": 27,
+        "length": 4096,
+        "mean_score": 0.05004425868391991,
+        "one_sided_binomial_p": 4.215165972709656e-06,
+        "pair_accuracy": 0.0,
+        "peak_allocated_mib": 696.10400390625,
+        "prefill_seconds": 0.045339317495624226,
+        "state_mib": 16.47216796875,
+        "trials": 30
+      },
+      "retrieval_promoted": {
+        "curve": [
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 10,
+                "mean_score": 0.11249997764825821,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 10,
+                "mean_score": 0.13847663402557372,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 10,
+                "mean_score": 0.5376952938735485,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 1.0,
+            "directional_successes": 30,
+            "length": 4096,
+            "mean_score": 0.26289063518246014,
+            "one_sided_binomial_p": 9.313225746154785e-10,
+            "pair_accuracy": 0.2,
+            "peak_allocated_mib": 696.10400390625,
+            "prefill_seconds": 0.04566567928995937,
+            "state_mib": 16.47216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 10,
+                "mean_score": 0.0788086012005806,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 10,
+                "mean_score": 0.05820312201976776,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 10,
+                "mean_score": 0.29980468600988386,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 1.0,
+            "directional_successes": 30,
+            "length": 8192,
+            "mean_score": 0.14560546974341074,
+            "one_sided_binomial_p": 9.313225746154785e-10,
+            "pair_accuracy": 0.13333333333333333,
+            "peak_allocated_mib": 783.0029296875,
+            "prefill_seconds": 0.08490372794137026,
+            "state_mib": 31.47216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 8,
+                "mean_score": 0.00947270393371582,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 10,
+                "mean_score": 0.049804672598838806,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 10,
+                "mean_score": 0.12910158336162567,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.9333333333333333,
+            "directional_successes": 28,
+            "length": 16384,
+            "mean_score": 0.06279298663139343,
+            "one_sided_binomial_p": 4.33996319770813e-07,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 960.068359375,
+            "prefill_seconds": 0.17850047782994807,
+            "state_mib": 61.47216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 4,
+                "mean_score": -4.0233135223388675e-08,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 8,
+                "mean_score": 0.0067870795726776125,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 9,
+                "mean_score": 0.05078128278255463,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.7,
+            "directional_successes": 21,
+            "length": 32768,
+            "mean_score": 0.01918944070736567,
+            "one_sided_binomial_p": 0.02138697262853384,
+            "pair_accuracy": 0.03333333333333333,
+            "peak_allocated_mib": 1303.19482421875,
+            "prefill_seconds": 0.41982294716872276,
+            "state_mib": 121.47216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 9,
+                "mean_score": 0.048822018504142764,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 5,
+                "mean_score": 8.27491283416748e-05,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 7,
+                "mean_score": 0.013281262665987014,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.7,
+            "directional_successes": 21,
+            "length": 65536,
+            "mean_score": 0.02072867676615715,
+            "one_sided_binomial_p": 0.02138697262853384,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 1999.44482421875,
+            "prefill_seconds": 1.1022313127992676,
+            "state_mib": 241.47216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 6,
+                "mean_score": 0.000582893192768097,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 7,
+                "mean_score": 0.0054687559604644775,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 6,
+                "mean_score": 0.0035644292831420897,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.6333333333333333,
+            "directional_successes": 19,
+            "length": 131072,
+            "mean_score": 0.0032053594787915547,
+            "one_sided_binomial_p": 0.10024421103298664,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 3391.94482421875,
+            "prefill_seconds": 3.2559448915106866,
+            "state_mib": 481.47216796875,
+            "trials": 30
+          }
+        ],
+        "effective_length": 16384
+      },
+      "short_context": {
+        "evaluated_tokens": 19988480,
+        "loss_change": 0.01604628562927246,
+        "parent_loss": 2.8193776607513428,
+        "promoted_loss": 2.8354239463806152
+      },
+      "training": {
+        "final_long_document_loss": 2.6395230293273926,
+        "gpu_hours": 0.4643992842377823,
+        "initial_long_document_loss": 2.82779,
+        "long_document_loss_change": -0.18826697067260723,
+        "peak_allocated_vram_mib": 4751.4111328125,
+        "tokens_per_second": 19011.599868030426
+      }
+    },
+    "gdn-local": {
+      "checkpoint": {
+        "metadata_sha256": "87414d071160c0ab765cf1e1de70497b234af5b0000708fcb7c0bd01f72bb37c",
+        "model_sha256": "4af4f6023ea6bfbb5e1771e62dc18846b32492d5c73aafc82ce8d666cdaf2ebc",
+        "optimizer_sha256": "e786283c3a75e0cb2dc4c30654a2d1c2777390b1f27c025cfecc3371fb4740f7",
+        "step": 489
+      },
+      "retrieval_parent_4k": {
+        "by_depth": {
+          "0.1": {
+            "directional_successes": 4,
+            "mean_score": -0.0003905847668647766,
+            "trials": 10
+          },
+          "0.5": {
+            "directional_successes": 10,
+            "mean_score": 0.02812502235174179,
+            "trials": 10
+          },
+          "0.9": {
+            "directional_successes": 10,
+            "mean_score": 0.13359375298023224,
+            "trials": 10
+          }
+        },
+        "directional_accuracy": 0.8,
+        "directional_successes": 24,
+        "length": 4096,
+        "mean_score": 0.05377606352170308,
+        "one_sided_binomial_p": 0.000715453177690506,
+        "pair_accuracy": 0.0,
+        "peak_allocated_mib": 687.99658203125,
+        "prefill_seconds": 0.045170492655597624,
+        "state_mib": 8.97216796875,
+        "trials": 30
+      },
+      "retrieval_promoted": {
+        "curve": [
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 3,
+                "mean_score": -0.005664102733135223,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 10,
+                "mean_score": 0.03359376043081284,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 10,
+                "mean_score": 0.24257811680436134,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.7666666666666667,
+            "directional_successes": 23,
+            "length": 4096,
+            "mean_score": 0.09016925816734632,
+            "one_sided_binomial_p": 0.002611439675092697,
+            "pair_accuracy": 0.03333333333333333,
+            "peak_allocated_mib": 687.99658203125,
+            "prefill_seconds": 0.04512910897610709,
+            "state_mib": 8.97216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 3,
+                "mean_score": -0.001074226200580597,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 2,
+                "mean_score": -0.008984375,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 10,
+                "mean_score": 0.05937500596046448,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.5,
+            "directional_successes": 15,
+            "length": 8192,
+            "mean_score": 0.01643880158662796,
+            "one_sided_binomial_p": 0.572232224047184,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 758.5849609375,
+            "prefill_seconds": 0.08024460212715591,
+            "state_mib": 8.97216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 4,
+                "mean_score": -0.0016601547598838807,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 3,
+                "mean_score": -0.0046875342726707455,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 6,
+                "mean_score": 0.0039062410593032836,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.43333333333333335,
+            "directional_successes": 13,
+            "length": 16384,
+            "mean_score": -0.000813815991083781,
+            "one_sided_binomial_p": 0.8192026959732175,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 902.90234375,
+            "prefill_seconds": 0.15511260024116685,
+            "state_mib": 8.97216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 6,
+                "mean_score": 0.0012695327401161193,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 5,
+                "mean_score": 0.0019530922174453736,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 3,
+                "mean_score": -0.00800781399011612,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.4666666666666667,
+            "directional_successes": 14,
+            "length": 32768,
+            "mean_score": -0.0015950630108515422,
+            "one_sided_binomial_p": 0.707667644135654,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 1192.03271484375,
+            "prefill_seconds": 0.31576672916611037,
+            "state_mib": 8.97216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 4,
+                "mean_score": -0.0004882410168647766,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 4,
+                "mean_score": -0.001171840727329254,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 3,
+                "mean_score": -0.0019531503319740297,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.36666666666666664,
+            "directional_successes": 11,
+            "length": 65536,
+            "mean_score": -0.00120441069205602,
+            "one_sided_binomial_p": 0.9506314266473055,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 1772.29052734375,
+            "prefill_seconds": 0.6553653300468189,
+            "state_mib": 8.97216796875,
+            "trials": 30
+          },
+          {
+            "by_depth": {
+              "0.1": {
+                "directional_successes": 2,
+                "mean_score": -0.0017577797174453736,
+                "trials": 10
+              },
+              "0.5": {
+                "directional_successes": 2,
+                "mean_score": 0.0007812023162841797,
+                "trials": 10
+              },
+              "0.9": {
+                "directional_successes": 5,
+                "mean_score": -0.001562519371509552,
+                "trials": 10
+              }
+            },
+            "directional_accuracy": 0.3,
+            "directional_successes": 9,
+            "length": 131072,
+            "mean_score": -0.0008463655908902486,
+            "one_sided_binomial_p": 0.991937599144876,
+            "pair_accuracy": 0.0,
+            "peak_allocated_mib": 2941.43115234375,
+            "prefill_seconds": 1.3754220760970688,
+            "state_mib": 8.97216796875,
+            "trials": 30
+          }
+        ],
+        "effective_length": 4096
+      },
+      "short_context": {
+        "evaluated_tokens": 19988480,
+        "loss_change": -0.002681255340576172,
+        "parent_loss": 2.8105483055114746,
+        "promoted_loss": 2.8078670501708984
+      },
+      "training": {
+        "final_long_document_loss": 2.688915729522705,
+        "gpu_hours": 0.3446299343808399,
+        "initial_long_document_loss": 2.80261,
+        "long_document_loss_change": -0.11369427047729497,
+        "peak_allocated_vram_mib": 4752.4150390625,
+        "tokens_per_second": 25861.401662621418
+      }
+    }
+  }
+}
