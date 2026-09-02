@@ -51,6 +51,11 @@ def arguments(argv=None):
         action="store_true",
         help="run one unmeasured case before timing each distinct prompt length",
     )
+    parser.add_argument(
+        "--counterfactual",
+        action="store_true",
+        help="score a matched prompt with a different needle answer",
+    )
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
 
@@ -139,13 +144,57 @@ def run(args):
                     device=device,
                     kv_cache_dtype=kv_cache_dtype,
                 )
+                if args.counterfactual:
+                    counterfactual_case = build_passkey_case(
+                        tokenizer,
+                        length,
+                        seed,
+                        depth,
+                        answer_offset=1,
+                    )
+                    counterfactual = evaluate_case(
+                        model,
+                        counterfactual_case,
+                        device=device,
+                        kv_cache_dtype=kv_cache_dtype,
+                    )
+                    factual_index = case["answer_index"]
+                    counterfactual_index = counterfactual_case["answer_index"]
+                    factual_scores = result["candidate_log_probabilities"]
+                    counterfactual_scores = counterfactual["candidate_log_probabilities"]
+                    factual_preference = (
+                        factual_scores[factual_index] - factual_scores[counterfactual_index]
+                    )
+                    counterfactual_preference = (
+                        counterfactual_scores[counterfactual_index]
+                        - counterfactual_scores[factual_index]
+                    )
+                    result.update(
+                        counterfactual_answer=counterfactual_case["answer"],
+                        counterfactual_prefill_seconds=counterfactual["prefill_seconds"],
+                        contrastive_retrieval_score=(
+                            factual_preference + counterfactual_preference
+                        )
+                        / 2,
+                        contrastive_direction_accuracy=float(
+                            factual_preference + counterfactual_preference > 0
+                        ),
+                        contrastive_pair_accuracy=float(
+                            factual_preference > 0 and counterfactual_preference > 0
+                        ),
+                    )
                 results.append(result)
+                contrast = (
+                    f" contrast={result['contrastive_retrieval_score']:.3f}"
+                    if args.counterfactual
+                    else ""
+                )
                 print(
                     f"{length:,} depth={depth:.2f} seed={seed} "
                     f"exact={result['exact_match']:.0f} "
                     f"choice={result['candidate_accuracy']:.0f} "
                     f"rank={result['candidate_rank']} "
-                    f"prefill={result['prefill_seconds']:.3f}s"
+                    f"prefill={result['prefill_seconds']:.3f}s{contrast}"
                 )
     summary = aggregate_results(results, settings["effective_threshold"])
     report = {
@@ -159,6 +208,7 @@ def run(args):
         "device": str(device),
         "torch_version": torch.__version__,
         "warmup_each_length": args.warmup_each_length,
+        "counterfactual": args.counterfactual,
         "positional_regime": {
             "attention_scopes": attention_scopes,
             "rope_scaling_factor": model.config.rope_scaling_factor,

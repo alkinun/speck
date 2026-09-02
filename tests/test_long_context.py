@@ -50,6 +50,9 @@ def test_passkey_case_has_exact_requested_length_and_depth():
     assert case["prompt_length"] == len(case["prompt_tokens"])
     assert case["answer_tokens"]
     assert case["depth"] == 0.5
+    counterfactual = build_passkey_case(tokenizer, 512, seed=7, depth=0.5, answer_offset=1)
+    assert counterfactual["label"] == case["label"]
+    assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
 
 
 def test_evaluate_case_streams_answer_without_full_logits():
@@ -111,6 +114,25 @@ def test_candidate_effective_length_requires_signal_above_chance():
             )
     summary = aggregate_results(results)
     assert summary["effective_length_by_candidate_accuracy"] == 2_000
+
+
+def test_contrastive_effective_length_requires_paired_direction_signal():
+    results = []
+    for length in (1_000, 2_000):
+        for index in range(30):
+            results.append(
+                {
+                    **sample_result(),
+                    "length": length,
+                    "contrastive_retrieval_score": 1.0 if index < 20 else -1.0,
+                    "contrastive_direction_accuracy": float(index < 20),
+                    "contrastive_pair_accuracy": float(index < 15),
+                    "counterfactual_prefill_seconds": 1.0,
+                }
+            )
+    summary = aggregate_results(results)
+    assert summary["short_context_contrastive_p_value"] < 0.05
+    assert summary["effective_length_by_contrastive_retrieval"] == 2_000
 
 
 def sample_result():

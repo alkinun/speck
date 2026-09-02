@@ -38,12 +38,14 @@ def test_long_context_eval_arguments_parse_pilot_lengths():
             "--samples-per-depth",
             "1",
             "--warmup-each-length",
+            "--counterfactual",
         ]
     )
     assert args.lengths == (4_096, 32_768)
     assert parse_depths(args.depths) == [0.1, 0.9]
     assert args.samples_per_depth == 1
     assert args.warmup_each_length
+    assert args.counterfactual
 
 
 @pytest.mark.parametrize("value", ("", "one", "0.1,nope"))

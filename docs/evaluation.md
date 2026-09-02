@@ -26,6 +26,12 @@ allocation, and a state-memory split between attention KV and fixed recurrent st
 effective length against both exact match and controlled-choice accuracy. A zero short-context
 baseline produces no effective-length claim for that metric.
 
+Use `--counterfactual` for retrieval claims. It pairs every case with an otherwise identical prompt
+whose needle answer is changed, then tests whether the relative candidate scores move in the
+matching direction. This removes stable answer-token preferences that can look like retrieval in
+ordinary multiple-choice accuracy. A contrastive effective length is reported only when the
+shortest-context directional result exceeds a one-sided binomial chance test at `p < 0.05`.
+
 `kv_cache_dtype` may be `bfloat16`, `float16`, `float32`, or `int8`. The INT8 reference cache uses
 per-token, per-head K/V scales and includes their bytes in the memory report. It is intended for
 quality and capacity experiments; backend-native quantized attention kernels are still required

@@ -53,14 +53,17 @@ def _repeat_to_length(pattern, length):
     return (pattern * repetitions)[:length]
 
 
-def build_passkey_case(tokenizer, length, seed, depth):
+def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
     """Build a literal retrieval case whose prompt and scored answer total an exact length."""
 
     if not 0 <= depth <= 1:
         raise ValueError("needle depth must be in [0, 1]")
     generator = random.Random(seed)
     label = f"archive-{generator.randrange(100_000, 1_000_000)}"
-    answer = generator.choice(_PASSKEY_VALUES)
+    answer_index = (generator.randrange(len(_PASSKEY_VALUES)) + answer_offset) % len(
+        _PASSKEY_VALUES
+    )
+    answer = _PASSKEY_VALUES[answer_index]
     prefix = tokenizer.encode(
         "A long archive follows. Remember exact records and answer the final question.\n",
         bos=True,
@@ -99,6 +102,7 @@ def build_passkey_case(tokenizer, length, seed, depth):
         "answer_tokens": answer_tokens,
         "candidate_token_ids": candidate_token_ids,
         "answer": answer,
+        "answer_index": answer_index,
         "label": label,
     }
 
@@ -162,6 +166,7 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
         "candidate_accuracy": float(candidate_prediction == correct_candidate),
         "candidate_count": len(case["candidate_token_ids"]),
         "candidate_probability": candidate_logits.softmax(dim=0)[correct_candidate].item(),
+        "candidate_log_probabilities": candidate_logits.log_softmax(dim=0).tolist(),
         "candidate_rank": candidate_rank,
         "candidate_margin": (correct_logit - other_logits.max()).item(),
         "mean_log_probability": sum(log_probabilities) / len(log_probabilities),
@@ -193,6 +198,13 @@ def aggregate_results(results, threshold=0.85):
         "prefill_tokens_per_second",
         "decode_tokens_per_second",
     )
+    if results and all("contrastive_retrieval_score" in result for result in results):
+        metrics += (
+            "contrastive_retrieval_score",
+            "contrastive_direction_accuracy",
+            "contrastive_pair_accuracy",
+            "counterfactual_prefill_seconds",
+        )
     for length, values in sorted(grouped.items()):
         point = {"length": length, "samples": len(values)}
         for metric in metrics:
@@ -214,6 +226,8 @@ def aggregate_results(results, threshold=0.85):
         curve.append(point)
     candidate_p_value = None
     candidate_effective_length = None
+    contrastive_p_value = None
+    contrastive_effective_length = None
     if curve:
         baseline = curve[0]
         candidate_p_value = binomial_tail_probability(
@@ -225,6 +239,21 @@ def aggregate_results(results, threshold=0.85):
             candidate_effective_length = effective_length(
                 curve, threshold, metric="candidate_accuracy"
             )
+        if "contrastive_direction_accuracy" in baseline:
+            contrastive_successes = round(
+                baseline["contrastive_direction_accuracy"] * baseline["samples"]
+            )
+            contrastive_p_value = binomial_tail_probability(
+                contrastive_successes,
+                baseline["samples"],
+                0.5,
+            )
+            if contrastive_p_value < 0.05:
+                contrastive_effective_length = effective_length(
+                    curve,
+                    threshold,
+                    metric="contrastive_direction_accuracy",
+                )
     return {
         "curve": curve,
         "effective_length": effective_length(curve, threshold),
@@ -233,6 +262,8 @@ def aggregate_results(results, threshold=0.85):
         "short_context_baseline": curve[0]["exact_match"] if curve else None,
         "short_context_candidate_baseline": curve[0]["candidate_accuracy"] if curve else None,
         "short_context_candidate_p_value": candidate_p_value,
+        "effective_length_by_contrastive_retrieval": contrastive_effective_length,
+        "short_context_contrastive_p_value": contrastive_p_value,
     }
 
 
