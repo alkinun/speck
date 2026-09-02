@@ -1,0 +1,26 @@
+{
+  "activation_checkpointing": true,
+  "format": "speck_global_count_preflight",
+  "format_version": 1,
+  "loss_backend": "liger",
+  "passed": true,
+  "sequence_length": 32768,
+  "source_revision": "faa1b2a",
+  "variants": {
+    "global-1": {
+      "peak_allocated_bytes": 4986221568,
+      "tokens_per_second": 18247.501738671694,
+      "training_flops_per_token": 1149179520.0
+    },
+    "global-2": {
+      "peak_allocated_bytes": 4986221568,
+      "tokens_per_second": 16692.73725870513,
+      "training_flops_per_token": 1281894240.0
+    },
+    "global-5": {
+      "peak_allocated_bytes": 4985168384,
+      "tokens_per_second": 15446.528483931528,
+      "training_flops_per_token": 1680038400.0
+    }
+  }
+}
