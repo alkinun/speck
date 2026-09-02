@@ -2,6 +2,7 @@ import torch
 
 from speck.long_context import (
     aggregate_results,
+    binomial_tail_probability,
     build_passkey_case,
     effective_length,
     evaluate_case,
@@ -76,6 +77,11 @@ def test_effective_length_and_curve_aggregation():
         "answer_tokens": 1,
         "exact_match": 1.0,
         "token_accuracy": 1.0,
+        "candidate_accuracy": 1.0,
+        "candidate_count": 10,
+        "candidate_probability": 0.9,
+        "candidate_rank": 1,
+        "candidate_margin": 2.0,
         "mean_log_probability": -0.1,
         "prefill_seconds": 1.0,
         "prefill_tokens_per_second": 1_000.0,
@@ -85,7 +91,44 @@ def test_effective_length_and_curve_aggregation():
     }
     summary = aggregate_results([{**sample, "length": 1_000}, {**sample, "length": 2_000}])
     assert summary["effective_length"] == 2_000
+    assert summary["effective_length_by_candidate_accuracy"] is None
     assert summary["curve"][1]["state_bytes"] == 64
+
+
+def test_candidate_effective_length_requires_signal_above_chance():
+    assert binomial_tail_probability(1, 9, 0.1) > 0.05
+    assert binomial_tail_probability(4, 9, 0.1) < 0.05
+
+    results = []
+    for length in (1_000, 2_000):
+        for index in range(9):
+            results.append(
+                {
+                    **sample_result(),
+                    "length": length,
+                    "candidate_accuracy": float(index < 4),
+                }
+            )
+    summary = aggregate_results(results)
+    assert summary["effective_length_by_candidate_accuracy"] == 2_000
+
+
+def sample_result():
+    return {
+        "exact_match": 0.0,
+        "token_accuracy": 0.0,
+        "candidate_accuracy": 0.0,
+        "candidate_count": 10,
+        "candidate_probability": 0.1,
+        "candidate_rank": 5,
+        "candidate_margin": -1.0,
+        "mean_log_probability": -1.0,
+        "prefill_seconds": 1.0,
+        "prefill_tokens_per_second": 1.0,
+        "decode_tokens_per_second": 1.0,
+        "state_memory": {"total_bytes": 64, "by_kind": {}},
+        "peak_allocated_bytes": None,
+    }
 
 
 def test_long_context_settings_are_strict():

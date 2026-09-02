@@ -7,6 +7,8 @@ from collections import defaultdict
 
 import torch
 
+_PASSKEY_VALUES = tuple("ABCDEFGHIJ")
+
 
 def parse_lengths(value):
     try:
@@ -35,6 +37,15 @@ def effective_length(curve, threshold=0.85, metric="exact_match"):
     return max(retained) if retained else None
 
 
+def binomial_tail_probability(successes, trials, chance):
+    """Return P(X >= successes) for a binomial random variable under chance."""
+
+    return sum(
+        math.comb(trials, value) * chance**value * (1 - chance) ** (trials - value)
+        for value in range(successes, trials + 1)
+    )
+
+
 def _repeat_to_length(pattern, length):
     if not pattern:
         raise ValueError("filler text must produce at least one token")
@@ -49,14 +60,20 @@ def build_passkey_case(tokenizer, length, seed, depth):
         raise ValueError("needle depth must be in [0, 1]")
     generator = random.Random(seed)
     label = f"archive-{generator.randrange(100_000, 1_000_000)}"
-    answer = str(generator.randrange(100_000, 1_000_000))
+    answer = generator.choice(_PASSKEY_VALUES)
     prefix = tokenizer.encode(
         "A long archive follows. Remember exact records and answer the final question.\n",
         bos=True,
     )
     needle = tokenizer.encode(f"\nThe access code for {label} is {answer}.\n")
-    question = tokenizer.encode(f"\nQuestion: What is the access code for {label}?\nAnswer:")
-    answer_tokens = tokenizer.encode(" " + answer)
+    question = tokenizer.encode(f"\nQuestion: What is the access code for {label}?\nAnswer: ")
+    answer_tokens = tokenizer.encode(answer)
+    candidate_token_ids = []
+    for candidate in _PASSKEY_VALUES:
+        tokens = tokenizer.encode(candidate)
+        if len(tokens) != 1:
+            raise ValueError("passkey candidates must each encode to exactly one token")
+        candidate_token_ids.append(tokens[0])
     prompt_length = length - len(answer_tokens)
     fixed = len(prefix) + len(needle) + len(question)
     if fixed > prompt_length:
@@ -80,6 +97,7 @@ def build_passkey_case(tokenizer, length, seed, depth):
         "prompt_tokens": prompt,
         "prompt_length": len(prompt),
         "answer_tokens": answer_tokens,
+        "candidate_token_ids": candidate_token_ids,
         "answer": answer,
         "label": label,
     }
@@ -111,6 +129,15 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
     logits = model(prompt, state=state, last_token_only=True)[:, -1]
     _synchronize(device)
     prefill_seconds = time.perf_counter() - started
+    candidate_ids = torch.tensor(case["candidate_token_ids"], device=device)
+    candidate_logits = logits[0, candidate_ids].float()
+    correct_candidate = case["candidate_token_ids"].index(answers[0])
+    correct_logit = candidate_logits[correct_candidate]
+    other_logits = torch.cat(
+        (candidate_logits[:correct_candidate], candidate_logits[correct_candidate + 1 :])
+    )
+    candidate_rank = int((candidate_logits > correct_logit).sum().item()) + 1
+    candidate_prediction = int(candidate_logits.argmax().item())
     predictions = []
     log_probabilities = []
     decode_started = time.perf_counter()
@@ -132,6 +159,11 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
         "answer_tokens": len(answers),
         "exact_match": float(matched == len(answers)),
         "token_accuracy": matched / len(answers),
+        "candidate_accuracy": float(candidate_prediction == correct_candidate),
+        "candidate_count": len(case["candidate_token_ids"]),
+        "candidate_probability": candidate_logits.softmax(dim=0)[correct_candidate].item(),
+        "candidate_rank": candidate_rank,
+        "candidate_margin": (correct_logit - other_logits.max()).item(),
         "mean_log_probability": sum(log_probabilities) / len(log_probabilities),
         "prefill_seconds": prefill_seconds,
         "prefill_tokens_per_second": prompt.size(1) / prefill_seconds,
@@ -152,6 +184,10 @@ def aggregate_results(results, threshold=0.85):
     metrics = (
         "exact_match",
         "token_accuracy",
+        "candidate_accuracy",
+        "candidate_probability",
+        "candidate_rank",
+        "candidate_margin",
         "mean_log_probability",
         "prefill_seconds",
         "prefill_tokens_per_second",
@@ -163,6 +199,12 @@ def aggregate_results(results, threshold=0.85):
             point[metric] = sum(value[metric] for value in values) / len(values)
         point["state_bytes"] = max(value["state_memory"]["total_bytes"] for value in values)
         point["state_by_kind"] = values[0]["state_memory"]["by_kind"]
+        candidate_counts = {value["candidate_count"] for value in values}
+        if len(candidate_counts) != 1:
+            raise ValueError("candidate count changed within a context length")
+        point["candidate_successes"] = sum(value["candidate_accuracy"] for value in values)
+        point["candidate_trials"] = len(values)
+        point["candidate_chance_accuracy"] = 1 / candidate_counts.pop()
         peak_values = [value["peak_allocated_bytes"] for value in values]
         point["peak_allocated_bytes"] = (
             max(value for value in peak_values if value is not None)
@@ -170,11 +212,27 @@ def aggregate_results(results, threshold=0.85):
             else None
         )
         curve.append(point)
+    candidate_p_value = None
+    candidate_effective_length = None
+    if curve:
+        baseline = curve[0]
+        candidate_p_value = binomial_tail_probability(
+            int(baseline["candidate_successes"]),
+            baseline["candidate_trials"],
+            baseline["candidate_chance_accuracy"],
+        )
+        if candidate_p_value < 0.05:
+            candidate_effective_length = effective_length(
+                curve, threshold, metric="candidate_accuracy"
+            )
     return {
         "curve": curve,
         "effective_length": effective_length(curve, threshold),
+        "effective_length_by_candidate_accuracy": candidate_effective_length,
         "effective_length_threshold": threshold,
         "short_context_baseline": curve[0]["exact_match"] if curve else None,
+        "short_context_candidate_baseline": curve[0]["candidate_accuracy"] if curve else None,
+        "short_context_candidate_p_value": candidate_p_value,
     }
 
 

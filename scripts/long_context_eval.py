@@ -129,6 +129,8 @@ def run(args):
                 print(
                     f"{length:,} depth={depth:.2f} seed={seed} "
                     f"exact={result['exact_match']:.0f} "
+                    f"choice={result['candidate_accuracy']:.0f} "
+                    f"rank={result['candidate_rank']} "
                     f"prefill={result['prefill_seconds']:.3f}s"
                 )
     summary = aggregate_results(results, settings["effective_threshold"])

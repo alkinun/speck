@@ -19,11 +19,12 @@ uv run --extra gpu python -m scripts.long_context_eval \
 ```
 
 The diagnostic creates prompt-plus-answer cases at exact total token lengths, scores the answer autoregressively without
-retaining sequence-wide vocabulary logits, and records exact match, answer-token accuracy, answer
-log probability, prefill/decode throughput, peak CUDA allocation, and a state-memory split between
-attention KV and fixed recurrent state. It reports effective length as the longest evaluated length
-whose exact-match score retains at least 85% of the shortest-length baseline. A zero short-context
-baseline produces no effective-length claim.
+retaining sequence-wide vocabulary logits. The access code is selected from ten single-token
+candidates, so reports include controlled-choice accuracy, rank, probability, and margin alongside
+open-vocabulary exact match, answer log probability, prefill/decode throughput, peak CUDA
+allocation, and a state-memory split between attention KV and fixed recurrent state. It reports
+effective length against both exact match and controlled-choice accuracy. A zero short-context
+baseline produces no effective-length claim for that metric.
 
 `kv_cache_dtype` may be `bfloat16`, `float16`, `float32`, or `int8`. The INT8 reference cache uses
 per-token, per-head K/V scales and includes their bytes in the memory report. It is intended for
