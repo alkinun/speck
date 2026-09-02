@@ -1,0 +1,42 @@
+{
+  "comparison": "token-matched configs with separately reported compute-matched budgets",
+  "data_experiment": "/home/alkin/Desktop/speck/experiments/Speck1.5-140M",
+  "data_tokens": 5000000000,
+  "format": "speck_mixer_ablation",
+  "format_version": 1,
+  "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-GDN",
+  "train_tokens": 131072000,
+  "variants": {
+    "conv-global": {
+      "compute_matched_tokens": 132104981,
+      "flops_per_token": 1105075200,
+      "parameters": 152754048
+    },
+    "full-global": {
+      "compute_matched_tokens": 85989910,
+      "flops_per_token": 1697710080,
+      "parameters": 157156608
+    },
+    "full-local": {
+      "compute_matched_tokens": 110576750,
+      "flops_per_token": 1320222720,
+      "parameters": 157156608
+    },
+    "gdn-global": {
+      "compute_matched_tokens": 131072000,
+      "flops_per_token": 1113784320,
+      "parameters": 152916468
+    },
+    "gdn-local": {
+      "compute_matched_tokens": 143205955,
+      "flops_per_token": 1019412480,
+      "parameters": 152916468
+    },
+    "pure-gdn": {
+      "compute_matched_tokens": 158828423,
+      "flops_per_token": 919142400,
+      "parameters": 151503088
+    }
+  },
+  "window_size": 2048
+}
