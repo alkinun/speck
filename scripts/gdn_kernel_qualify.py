@@ -5,6 +5,7 @@ import importlib.metadata
 import json
 import os
 import statistics
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,6 +34,11 @@ def arguments(argv=None):
 
 def maximum_error(actual, expected):
     return (actual.float() - expected.float()).abs().max().item()
+
+
+def command_output(command):
+    result = subprocess.run(command, capture_output=True, check=False, text=True)
+    return result.stdout.strip() or None
 
 
 def inputs(args, length, requires_grad=False):
@@ -166,14 +172,36 @@ def run(args):
         "gradient_atol": args.gradient_atol,
         "forward": forward,
         "gradient_max_abs_error": gradients,
+        "configuration": {
+            "lengths": list(args.lengths),
+            "gradient_length": args.gradient_length,
+            "batch_size": args.batch_size,
+            "heads": args.heads,
+            "key_dim": args.key_dim,
+            "value_dim": args.value_dim,
+            "warmups": args.warmups,
+            "repeats": args.repeats,
+        },
         "hardware": {
             "device": torch.cuda.get_device_name(),
             "capability": torch.cuda.get_device_capability(),
+            "total_memory_bytes": torch.cuda.get_device_properties(0).total_memory,
+            "driver": command_output(
+                [
+                    "nvidia-smi",
+                    "--query-gpu=driver_version",
+                    "--format=csv,noheader",
+                ]
+            ),
         },
         "software": {
             "torch": torch.__version__,
             "cuda": torch.version.cuda,
             "flash_linear_attention": importlib.metadata.version("flash-linear-attention"),
+        },
+        "source": {
+            "git_revision": command_output(["git", "rev-parse", "HEAD"]),
+            "git_dirty": bool(command_output(["git", "status", "--porcelain"])),
         },
     }
     atomic_json(args.output, report)
