@@ -508,6 +508,24 @@ def attention_rotary_key(spec):
     return f"{spec.head_dim}:{rotary_dim}"
 
 
+def causal_attention_mask(query_positions, key_positions, window_size=None):
+    """Return the causal attention relation, optionally bounded to a local window."""
+
+    mask = key_positions <= query_positions
+    if window_size is not None:
+        mask &= key_positions > query_positions - window_size
+    return mask
+
+
+def mean_causal_attention_context(sequence_length, window_size=None):
+    """Return the mean number of attended keys per query token."""
+
+    context = sequence_length if window_size is None else min(sequence_length, window_size)
+    attended_pairs = context * (context + 1) // 2
+    attended_pairs += (sequence_length - context) * context
+    return attended_pairs / sequence_length
+
+
 def sliding_window_attention(query, key, value, position, past_length, window_size):
     """Evaluate local attention in bounded query chunks without a sequence-square mask."""
 
@@ -530,8 +548,7 @@ def sliding_window_attention(query, key, value, position, past_length, window_si
         key_positions = torch.arange(key_start_position, key_end_position, device=query.device)[
             None, :
         ]
-        mask = key_positions <= query_positions
-        mask &= key_positions > query_positions - window_size
+        mask = causal_attention_mask(query_positions, key_positions, window_size)
         outputs.append(
             F.scaled_dot_product_attention(
                 query[:, :, start:end],
@@ -1151,11 +1168,11 @@ class SpeckForCausalLM(nn.Module):
                     if isinstance(branch, AttentionSpec):
                         kv_size = branch.num_key_value_heads * branch.head_dim
                         linear += 2 * hidden_size * hidden_size + 2 * hidden_size * kv_size
-                        if branch.scope == "global":
-                            context = sequence_length
-                        else:
+                        window_size = None
+                        if branch.scope == "sliding":
                             assert branch.window_size is not None
-                            context = min(sequence_length, branch.window_size)
+                            window_size = branch.window_size
+                        context = mean_causal_attention_context(sequence_length, window_size)
                         attention += 12 * context * hidden_size
                     elif isinstance(branch, GatedCausalConvSpec):
                         linear += 4 * hidden_size * branch.inner_size

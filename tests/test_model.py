@@ -22,7 +22,9 @@ from speck.model import (
     Linear,
     SpeckForCausalLM,
     build_model,
+    causal_attention_mask,
     causal_depthwise_conv1d,
+    mean_causal_attention_context,
 )
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
@@ -158,6 +160,18 @@ def test_sliding_attention_chunks_long_sequences():
     output = model(tokens)
     assert output.shape == (1, 2_100, 16)
     assert torch.isfinite(output).all()
+
+
+@pytest.mark.parametrize(
+    ("sequence_length", "window_size"),
+    ((1, None), (8, None), (8, 3), (3, 8)),
+)
+def test_attention_flops_context_matches_causal_mask(sequence_length, window_size):
+    positions = torch.arange(sequence_length)
+    mask = causal_attention_mask(positions[:, None], positions[None, :], window_size)
+
+    expected = mask.sum().item() / sequence_length
+    assert mean_causal_attention_context(sequence_length, window_size) == expected
 
 
 def test_int8_kv_cache_tracks_scales_and_approximates_full_forward():
