@@ -234,7 +234,30 @@ def test_long_sliding_block_mask_storage_scales_with_sparse_blocks():
         block_mask.full_q_indices,
     )
     stored_bytes = sum(tensor.numel() * tensor.element_size() for tensor in tensors)
-    assert stored_bytes < 512 * 1_024
+    assert stored_bytes < 40 * 1_024**2
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="FlexAttention requires CUDA")
+def test_flex_sliding_attention_handles_non_block_aligned_model_prefill():
+    config = ArchitectureConfig(
+        (
+            BlockGroup(
+                BlockConfig(
+                    64,
+                    (StageConfig((AttentionSpec(16, 2, "sliding", 128),)),),
+                )
+            ),
+        ),
+        embedding_size=64,
+        vocab_size=128,
+        max_position_embeddings=256,
+    )
+    model = SpeckForCausalLM(config).cuda().eval()
+    model.init_weights()
+    state = model.state(length=256)
+
+    output = model(torch.randint(0, 128, (1, 255), device="cuda"), state=state)
+    assert torch.isfinite(output).all()
 
 
 @pytest.mark.parametrize(

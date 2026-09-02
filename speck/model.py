@@ -567,10 +567,9 @@ _SLIDING_WINDOW_BLOCK_MASKS = {}
 _FLEX_BLOCK_SIZE = 128
 
 
-def ordered_block_rows(rows, device):
-    """Encode variable-length block-index rows without a dense block grid."""
+def ordered_block_rows(rows, width, device):
+    """Encode ordered block-index rows without materializing a token-level mask."""
 
-    width = max(1, max(map(len, rows)))
     counts = torch.tensor([len(row) for row in rows], dtype=torch.int32, device=device)
     padded = [row + [0] * (width - len(row)) for row in rows]
     indices = torch.tensor(padded, dtype=torch.int32, device=device)
@@ -619,10 +618,14 @@ def sliding_window_block_mask(device, query_length, key_length, past_length, win
             kv_rows[query_block].append(key_block)
             q_rows[key_block].append(query_block)
 
-    partial_kv_num, partial_kv_indices = ordered_block_rows(partial_kv_rows, device)
-    full_kv_num, full_kv_indices = ordered_block_rows(full_kv_rows, device)
-    partial_q_num, partial_q_indices = ordered_block_rows(partial_q_rows, device)
-    full_q_num, full_q_indices = ordered_block_rows(full_q_rows, device)
+    partial_kv_num, partial_kv_indices = ordered_block_rows(
+        partial_kv_rows, key_blocks, device
+    )
+    full_kv_num, full_kv_indices = ordered_block_rows(full_kv_rows, key_blocks, device)
+    partial_q_num, partial_q_indices = ordered_block_rows(
+        partial_q_rows, query_blocks, device
+    )
+    full_q_num, full_q_indices = ordered_block_rows(full_q_rows, query_blocks, device)
     block_mask = BlockMask(
         seq_lengths=(query_length, key_length),
         kv_num_blocks=partial_kv_num,
