@@ -1,0 +1,22 @@
+{
+  "format": "speck_context_stage_preflight",
+  "format_version": 1,
+  "source_revision": "eb2addf",
+  "sequence_length": 32768,
+  "tokens_per_step": 65536,
+  "activation_checkpointing": true,
+  "loss_backend": "liger",
+  "variants": {
+    "gdn-local": {
+      "tokens_per_second": 18631.347760710174,
+      "peak_allocated_bytes": 4985814016,
+      "projected_optimizer_hours": 0.4770931766747329
+    },
+    "gdn-global": {
+      "tokens_per_second": 15278.083511594856,
+      "peak_allocated_bytes": 4980187136,
+      "projected_optimizer_hours": 0.5818065388988695
+    }
+  },
+  "passed": true
+}
