@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.attention.bias import causal_lower_right
+from torch.nn.attention.flex_attention import create_block_mask, flex_attention
 from torch.utils.checkpoint import checkpoint as activation_checkpoint
 
 from speck.architecture import (
@@ -19,6 +20,7 @@ from speck.architecture import (
 )
 
 _LOSS_BACKENDS = {"torch", "liger"}
+_COMPILED_FLEX_ATTENTION = torch.compile(flex_attention, dynamic=False)
 
 
 @torch.compiler.disable
@@ -513,7 +515,7 @@ def causal_attention_mask(query_positions, key_positions, window_size=None):
 
     mask = key_positions <= query_positions
     if window_size is not None:
-        mask &= key_positions > query_positions - window_size
+        mask = mask & (key_positions > query_positions - window_size)
     return mask
 
 
@@ -526,8 +528,8 @@ def mean_causal_attention_context(sequence_length, window_size=None):
     return attended_pairs / sequence_length
 
 
-def sliding_window_attention(query, key, value, position, past_length, window_size):
-    """Evaluate local attention in bounded query chunks without a sequence-square mask."""
+def torch_sliding_window_attention(query, key, value, position, past_length, window_size):
+    """Reference local attention using explicit masks in bounded query chunks."""
 
     outputs = []
     query_chunk_size = min(2_048, max(256, window_size))
@@ -559,6 +561,51 @@ def sliding_window_attention(query, key, value, position, past_length, window_si
             )
         )
     return torch.cat(outputs, dim=2)
+
+
+_SLIDING_WINDOW_BLOCK_MASKS = {}
+
+
+@torch.compiler.assume_constant_result
+def sliding_window_block_mask(device, query_length, key_length, past_length, window_size):
+    """Build and cache a head-independent FlexAttention block mask."""
+
+    cache_key = (device, query_length, key_length, past_length, window_size)
+    if cache_key in _SLIDING_WINDOW_BLOCK_MASKS:
+        return _SLIDING_WINDOW_BLOCK_MASKS[cache_key]
+
+    def mask_mod(_batch, _head, query_index, key_index):
+        return causal_attention_mask(query_index + past_length, key_index, window_size)
+
+    block_mask = create_block_mask(
+        mask_mod,
+        B=None,
+        H=None,
+        Q_LEN=query_length,
+        KV_LEN=key_length,
+        device=device,
+    )
+    _SLIDING_WINDOW_BLOCK_MASKS[cache_key] = block_mask
+    return block_mask
+
+
+def flex_sliding_window_attention(query, key, value, past_length, window_size):
+    """Evaluate local attention with a block-sparse FlexAttention kernel."""
+
+    block_mask = sliding_window_block_mask(
+        query.device,
+        query.size(2),
+        key.size(2),
+        past_length,
+        window_size,
+    )
+    return _COMPILED_FLEX_ATTENTION(
+        query,
+        key,
+        value,
+        block_mask=block_mask,
+        enable_gqa=query.size(1) != key.size(1),
+    )
 
 
 class Attention(nn.Module):
@@ -611,14 +658,23 @@ class Attention(nn.Module):
                 mask, causal = None, False
         if self.spec.scope == "sliding":
             assert self.spec.window_size is not None
-            output = sliding_window_attention(
-                q,
-                keys,
-                values,
-                position,
-                past_k.size(2),
-                self.spec.window_size,
-            )
+            if q.is_cuda and q.size(-1) >= 16 and past_k.size(2) == 0:
+                output = flex_sliding_window_attention(
+                    q,
+                    keys,
+                    values,
+                    past_k.size(2),
+                    self.spec.window_size,
+                )
+            else:
+                output = torch_sliding_window_attention(
+                    q,
+                    keys,
+                    values,
+                    position,
+                    past_k.size(2),
+                    self.spec.window_size,
+                )
         else:
             output = F.scaled_dot_product_attention(
                 q,

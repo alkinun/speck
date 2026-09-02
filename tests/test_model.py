@@ -24,7 +24,9 @@ from speck.model import (
     build_model,
     causal_attention_mask,
     causal_depthwise_conv1d,
+    flex_sliding_window_attention,
     mean_causal_attention_context,
+    torch_sliding_window_attention,
 )
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
@@ -160,6 +162,39 @@ def test_sliding_attention_chunks_long_sequences():
     output = model(tokens)
     assert output.shape == (1, 2_100, 16)
     assert torch.isfinite(output).all()
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="FlexAttention requires CUDA")
+@pytest.mark.parametrize("past_length", (0, 3))
+def test_flex_sliding_attention_matches_torch_reference(past_length):
+    torch.manual_seed(23 + past_length)
+    query = torch.randn(2, 4, 7, 16, device="cuda", requires_grad=True)
+    key = torch.randn(
+        2,
+        2,
+        7 + past_length,
+        16,
+        device="cuda",
+        requires_grad=True,
+    )
+    value = torch.randn_like(key, requires_grad=True)
+
+    compiled_flex = torch.compile(flex_sliding_window_attention, dynamic=False)
+    actual = compiled_flex(query, key, value, past_length, window_size=4)
+    expected = torch_sliding_window_attention(
+        query,
+        key,
+        value,
+        position=past_length,
+        past_length=past_length,
+        window_size=4,
+    )
+    torch.testing.assert_close(actual, expected, atol=1e-5, rtol=1e-5)
+
+    actual_gradients = torch.autograd.grad(actual.float().square().sum(), (query, key, value))
+    expected_gradients = torch.autograd.grad(expected.float().square().sum(), (query, key, value))
+    for actual_gradient, expected_gradient in zip(actual_gradients, expected_gradients):
+        torch.testing.assert_close(actual_gradient, expected_gradient, atol=1e-5, rtol=1e-5)
 
 
 @pytest.mark.parametrize(
