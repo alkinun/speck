@@ -44,12 +44,14 @@ Use explicit overrides for a cheap regression pilot before launching a complete 
 ```bash
 uv run --extra gpu --extra linear python -m scripts.long_context_eval \
   experiments/SpeckLC-150M-GDN --step <step> \
-  --lengths 4096,32768 --depths 0.5 --samples-per-depth 1
+  --lengths 4096,32768 --depths 0.5 --samples-per-depth 1 --warmup-each-length
 ```
 
 Default outputs are namespaced by training run so evaluating multiple variants cannot overwrite
 earlier reports. Reports also state whether global-attention layers are evaluated beyond their
 training positions without RoPE scaling; treat such results as diagnostics, not fair comparisons.
+Use the per-length warm-up when comparing prefill latency so one-time kernel compilation is not
+charged to the first architecture or sample.
 
 ## Open SLM Leaderboard
 

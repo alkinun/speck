@@ -46,6 +46,11 @@ def arguments(argv=None):
         default=None,
         help="pilot sample count overriding long_context.json",
     )
+    parser.add_argument(
+        "--warmup-each-length",
+        action="store_true",
+        help="run one unmeasured case before timing each distinct prompt length",
+    )
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
 
@@ -115,6 +120,15 @@ def run(args):
     results = []
     kv_cache_dtype = getattr(torch, settings["kv_cache_dtype"])
     for length in settings["lengths"]:
+        if args.warmup_each_length:
+            warmup_case = build_passkey_case(tokenizer, length, seed=0, depth=0.5)
+            evaluate_case(
+                model,
+                warmup_case,
+                device=device,
+                kv_cache_dtype=kv_cache_dtype,
+            )
+            print(f"{length:,} warmup complete")
         for depth_index, depth in enumerate(settings["depths"]):
             for sample in range(settings["samples_per_depth"]):
                 seed = 10_000 * depth_index + sample
@@ -144,6 +158,7 @@ def run(args):
         "model_context": model.config.max_position_embeddings,
         "device": str(device),
         "torch_version": torch.__version__,
+        "warmup_each_length": args.warmup_each_length,
         "positional_regime": {
             "attention_scopes": attention_scopes,
             "rope_scaling_factor": model.config.rope_scaling_factor,
