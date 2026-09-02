@@ -1,0 +1,8 @@
+{
+  "device_batch_size": 4,
+  "extends": "../../SpeckLC-150M-MixerScreen-131M/gdn-global/train.json",
+  "output_dir": null,
+  "run": "SpeckLC-150M-NoiseFloor-131M-seed-44",
+  "seed": 44,
+  "wandb_group": "SpeckLC-150M-NoiseFloor-131M"
+}
