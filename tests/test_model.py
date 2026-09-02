@@ -519,7 +519,26 @@ def test_heterogeneous_head_dimensions_and_widths():
     model.init_weights()
     tokens = torch.randint(0, 16, (1, 6))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
-    assert set(model.rotary) == {"4:4", "6:6"}
+    assert set(model.rotary) == {"global:4:4", "global:6:6"}
+
+
+def test_mixed_attention_scopes_use_independent_rope_scaling():
+    config = ArchitectureConfig(
+        (
+            BlockGroup(BlockConfig(8, (StageConfig((AttentionSpec(4, 1),)),))),
+            BlockGroup(
+                BlockConfig(8, (StageConfig((AttentionSpec(4, 1, "sliding", 3),)),))
+            ),
+        ),
+        8,
+        vocab_size=16,
+        max_position_embeddings=8,
+        rope_scaling_factor=4.0,
+    )
+    model = SpeckForCausalLM(config)
+
+    assert model.rotary["global:4:4"].scaling_factor == 4.0
+    assert model.rotary["sliding:4:4"].scaling_factor == 1.0
 
 
 def test_parallel_stage_cache_matches_full_forward():

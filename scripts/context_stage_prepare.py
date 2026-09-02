@@ -4,10 +4,17 @@ import argparse
 import json
 import os
 import shutil
+from dataclasses import replace
 from pathlib import Path
 
 from scripts.base_train import context_compatible_architecture
-from speck.architecture import ArchitectureConfig
+from speck.architecture import (
+    ArchitectureConfig,
+    AttentionSpec,
+    BlockConfig,
+    BlockGroup,
+    StageConfig,
+)
 from speck.checkpoint import checkpoint_identity, load_metadata
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint
@@ -36,7 +43,53 @@ def arguments(argv=None):
     parser.add_argument("--data-experiment", type=Path, default=None)
     parser.add_argument("--run", default=None)
     parser.add_argument("--wandb-group", default=None)
+    parser.add_argument(
+        "--global-attention-layers",
+        type=int,
+        nargs="*",
+        default=None,
+        help="logical sliding-attention layers to promote to global attention",
+    )
     return parser.parse_args(argv)
+
+
+def promote_global_attention_layers(model, layer_indices):
+    """Promote selected logical sliding-attention layers without changing parameters."""
+
+    if any(
+        not isinstance(index, int) or isinstance(index, bool) or index < 0
+        for index in layer_indices
+    ) or len(set(layer_indices)) != len(layer_indices):
+        raise ValueError("global attention layer indices must be unique non-negative integers")
+    config = ArchitectureConfig.from_dict(model)
+    if any(group.repeat != 1 for group in config.blocks):
+        raise ValueError("attention-scope promotion requires materialized logical layers")
+    requested = set(layer_indices)
+    promoted = set()
+    groups = []
+    for layer_index, group in enumerate(config.blocks):
+        stages = []
+        for stage in group.block.stages:
+            branches = []
+            for branch in stage.branches:
+                if isinstance(branch, AttentionSpec) and layer_index in requested:
+                    if branch.scope != "sliding":
+                        raise ValueError("attention-scope promotion requires sliding parent layers")
+                    branch = replace(branch, scope="global", window_size=None)
+                    promoted.add(layer_index)
+                branches.append(branch)
+            stages.append(StageConfig(tuple(branches)))
+        groups.append(
+            BlockGroup(
+                BlockConfig(group.block.hidden_size, tuple(stages)),
+                repeat=group.repeat,
+                weight_sharing=group.weight_sharing,
+            )
+        )
+    if promoted != requested:
+        missing = ", ".join(map(str, sorted(requested - promoted)))
+        raise ValueError(f"requested global layers are not sliding-attention layers: {missing}")
+    return replace(config, blocks=tuple(groups)).export()
 
 
 def stage_configs(
@@ -51,6 +104,7 @@ def stage_configs(
     loss_backend=None,
     activation_checkpointing=None,
     wandb_group=None,
+    global_attention_layers=None,
     warmup_steps=100,
     min_lr=0.1,
     run,
@@ -79,7 +133,14 @@ def stage_configs(
     }
     if rope_theta is not None:
         model["rope_theta"] = rope_theta
-    if not context_compatible_architecture(metadata["config"], model):
+    global_attention_layers = tuple(global_attention_layers or ())
+    if global_attention_layers:
+        model = promote_global_attention_layers(model, global_attention_layers)
+    if not context_compatible_architecture(
+        metadata["config"],
+        model,
+        allow_attention_scope_change=bool(global_attention_layers),
+    ):
         raise ValueError("context stage changed the parent parameter topology")
     if not isinstance(run, str) or not run:
         raise ValueError("context stage run must be a non-empty string")
@@ -90,6 +151,7 @@ def stage_configs(
             if activation_checkpointing is None
             else activation_checkpointing
         ),
+        "allow_attention_scope_change": bool(global_attention_layers),
         "checkpoint_tokens": [],
         "device_batch_size": 1,
         "lr": lr,
@@ -141,6 +203,7 @@ def prepare(args):
         loss_backend=args.loss_backend,
         activation_checkpointing=args.activation_checkpointing,
         wandb_group=args.wandb_group,
+        global_attention_layers=args.global_attention_layers,
         warmup_steps=args.warmup_steps,
         min_lr=args.min_lr,
         run=run,
@@ -159,6 +222,7 @@ def prepare(args):
         "rope_scaling_factor": model["rope_scaling_factor"],
         "loss_backend": train["loss_backend"],
         "activation_checkpointing": train["activation_checkpointing"],
+        "global_attention_layers": list(args.global_attention_layers or ()),
     }
     building = output.with_name(output.name + ".building")
     shutil.rmtree(building, ignore_errors=True)

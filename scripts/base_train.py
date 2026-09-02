@@ -58,6 +58,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "activation_checkpointing",
     "loss_backend",
+    "allow_attention_scope_change",
     "device_batch_size",
     "batch_tokens",
     "train_tokens",
@@ -84,6 +85,7 @@ _LEGACY_RESUME_DEFAULTS = {
     "branch_kind": "same",
     "activation_checkpointing": False,
     "loss_backend": "torch",
+    "allow_attention_scope_change": False,
 }
 
 
@@ -119,12 +121,20 @@ def changed_context_settings(previous, current):
     ]
 
 
-def context_compatible_architecture(previous, current):
+def context_compatible_architecture(previous, current, allow_attention_scope_change=False):
     """Allow positional capacity changes without allowing parameter-topology drift."""
 
     ignored = {"max_position_embeddings", "rope_theta", "rope_scaling_factor"}
     previous = ArchitectureConfig.from_dict(previous).settings()
     current = ArchitectureConfig.from_dict(current).settings()
+    if allow_attention_scope_change:
+        for config in (previous, current):
+            for group in config["blocks"]:
+                for stage in group["block"]["stages"]:
+                    for branch in stage["branches"]:
+                        if branch["kind"] == "attention":
+                            branch["scope"] = "parameterless"
+                            branch["window_size"] = None
     return {key: value for key, value in previous.items() if key not in ignored} == {
         key: value for key, value in current.items() if key not in ignored
     }
@@ -251,6 +261,9 @@ class BaseTrainer:
         args.training_phase = getattr(args, "training_phase", "base")
         args.activation_checkpointing = getattr(args, "activation_checkpointing", False)
         args.loss_backend = getattr(args, "loss_backend", "torch")
+        args.allow_attention_scope_change = getattr(
+            args, "allow_attention_scope_change", False
+        )
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
         args.wandb_group = getattr(args, "wandb_group", None)
@@ -490,7 +503,11 @@ class BaseTrainer:
         context_branch = self.cli.branch_kind == "context"
         stored_config = ArchitectureConfig.from_dict(parent_metadata["config"]).settings()
         architecture_matches = (
-            context_compatible_architecture(parent_metadata["config"], self.config.export())
+            context_compatible_architecture(
+                parent_metadata["config"],
+                self.config.export(),
+                allow_attention_scope_change=self.args.allow_attention_scope_change,
+            )
             if context_branch
             else stored_config == self.config.settings()
         )

@@ -507,7 +507,7 @@ class RotaryEmbedding(nn.Module):
 
 def attention_rotary_key(spec):
     rotary_dim = spec.head_dim if spec.rope_dim is None else spec.rope_dim
-    return f"{spec.head_dim}:{rotary_dim}"
+    return f"{spec.scope}:{spec.head_dim}:{rotary_dim}"
 
 
 def causal_attention_mask(query_positions, key_positions, window_size=None):
@@ -1007,7 +1007,11 @@ class SpeckForCausalLM(nn.Module):
         self.lm_head = Linear(config.embedding_size, config.vocab_size, bias=False)
         self.lm_head.weight = self.embed_tokens.weight
         rotary_dimensions = {
-            (branch.head_dim, branch.head_dim if branch.rope_dim is None else branch.rope_dim)
+            (
+                branch.scope,
+                branch.head_dim,
+                branch.head_dim if branch.rope_dim is None else branch.rope_dim,
+            )
             for invocation in self.execution_plan
             for stage in invocation.block.stages
             for branch in stage.branches
@@ -1016,10 +1020,12 @@ class SpeckForCausalLM(nn.Module):
         }
         self.rotary = nn.ModuleDict(
             {
-                f"{head_dim}:{rotary_dim}": RotaryEmbedding(
-                    rotary_dim, config.rope_theta, config.rope_scaling_factor
+                f"{scope}:{head_dim}:{rotary_dim}": RotaryEmbedding(
+                    rotary_dim,
+                    config.rope_theta,
+                    config.rope_scaling_factor if scope == "global" else 1.0,
                 )
-                for head_dim, rotary_dim in rotary_dimensions
+                for scope, head_dim, rotary_dim in rotary_dimensions
             }
         )
 

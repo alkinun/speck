@@ -1,3 +1,4 @@
+import copy
 import math
 from pathlib import Path
 
@@ -231,6 +232,21 @@ def test_context_architecture_only_allows_positional_changes():
     assert context_compatible_architecture(model, extended)
     changed = {**extended, "embedding_size": model["embedding_size"] + 1}
     assert not context_compatible_architecture(model, changed)
+    scope_changed = copy.deepcopy(extended)
+    attention = scope_changed["blocks"][1]["block"]["stages"][0]["branches"][0]
+    attention["scope"] = "sliding"
+    attention["window_size"] = 32
+    assert not context_compatible_architecture(model, scope_changed)
+    assert context_compatible_architecture(
+        model,
+        scope_changed,
+        allow_attention_scope_change=True,
+    )
+    assert not context_compatible_architecture(
+        model,
+        changed,
+        allow_attention_scope_change=True,
+    )
 
 
 def test_branch_inherits_global_and_schedule_positions():

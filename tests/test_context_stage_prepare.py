@@ -4,10 +4,17 @@ from pathlib import Path
 
 import pytest
 
-from scripts.context_stage_prepare import stage_configs
+from scripts.context_stage_prepare import promote_global_attention_layers, stage_configs
+from speck.architecture import ArchitectureConfig, AttentionSpec
 from speck.config import load_experiment
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
+local_experiment = (
+    Path(__file__).parents[1]
+    / "experiments"
+    / "SpeckLC-150M-MixerScreen-131M"
+    / "gdn-local"
+)
 
 
 def parent_inputs():
@@ -77,3 +84,19 @@ def test_context_stage_output_is_json_serializable():
         run="stage",
     )
     json.dumps(values)
+
+
+def test_context_stage_can_promote_selected_sliding_attention_layers():
+    model = load_experiment(local_experiment, "model")["model"]
+    promoted = ArchitectureConfig.from_dict(promote_global_attention_layers(model, (11, 19)))
+    scopes = {
+        invocation.occurrence_index: branch.scope
+        for invocation in promoted.execution_plan
+        for stage in invocation.block.stages
+        for branch in stage.branches
+        if isinstance(branch, AttentionSpec)
+    }
+    assert scopes == {3: "sliding", 7: "sliding", 11: "global", 15: "sliding", 19: "global"}
+
+    with pytest.raises(ValueError, match="not sliding-attention"):
+        promote_global_attention_layers(model, (10,))
