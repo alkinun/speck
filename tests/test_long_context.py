@@ -45,7 +45,8 @@ class OracleModel(torch.nn.Module):
 def test_passkey_case_has_exact_requested_length_and_depth():
     tokenizer = FakeTokenizer()
     case = build_passkey_case(tokenizer, 512, seed=7, depth=0.5)
-    assert len(case["prompt_tokens"]) == 512
+    assert len(case["prompt_tokens"]) + len(case["answer_tokens"]) == 512
+    assert case["prompt_length"] == len(case["prompt_tokens"])
     assert case["answer_tokens"]
     assert case["depth"] == 0.5
 

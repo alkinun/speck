@@ -18,7 +18,7 @@ uv run --extra gpu python -m scripts.long_context_eval \
   experiments/SpeckLC-150M-GDN --step <step>
 ```
 
-The diagnostic creates prompts at exact token lengths, scores the answer autoregressively without
+The diagnostic creates prompt-plus-answer cases at exact total token lengths, scores the answer autoregressively without
 retaining sequence-wide vocabulary logits, and records exact match, answer-token accuracy, answer
 log probability, prefill/decode throughput, peak CUDA allocation, and a state-memory split between
 attention KV and fixed recurrent state. It reports effective length as the longest evaluated length
@@ -37,6 +37,18 @@ the built-in diagnostic as one of those benchmarks.
 
 For every headline length, publish four distinct values: model allocation ceiling, maximum training
 length, measured effective length, and maximum usable length under a named latency/memory contract.
+
+Use explicit overrides for a cheap regression pilot before launching a complete configured curve:
+
+```bash
+uv run --extra gpu --extra linear python -m scripts.long_context_eval \
+  experiments/SpeckLC-150M-GDN --step <step> \
+  --lengths 4096,32768 --depths 0.5 --samples-per-depth 1
+```
+
+Default outputs are namespaced by training run so evaluating multiple variants cannot overwrite
+earlier reports. Reports also state whether global-attention layers are evaluated beyond their
+training positions without RoPE scaling; treat such results as diagnostics, not fair comparisons.
 
 ## Open SLM Leaderboard
 

@@ -43,7 +43,7 @@ def _repeat_to_length(pattern, length):
 
 
 def build_passkey_case(tokenizer, length, seed, depth):
-    """Build an exact-token-length literal retrieval diagnostic at a controlled depth."""
+    """Build a literal retrieval case whose prompt and scored answer total an exact length."""
 
     if not 0 <= depth <= 1:
         raise ValueError("needle depth must be in [0, 1]")
@@ -57,10 +57,11 @@ def build_passkey_case(tokenizer, length, seed, depth):
     needle = tokenizer.encode(f"\nThe access code for {label} is {answer}.\n")
     question = tokenizer.encode(f"\nQuestion: What is the access code for {label}?\nAnswer:")
     answer_tokens = tokenizer.encode(" " + answer)
+    prompt_length = length - len(answer_tokens)
     fixed = len(prefix) + len(needle) + len(question)
-    if fixed > length:
+    if fixed > prompt_length:
         raise ValueError(f"context length {length} is too short for the diagnostic template")
-    filler_length = length - fixed
+    filler_length = prompt_length - fixed
     filler = _repeat_to_length(
         tokenizer.encode(
             "The archive contains ordinary reports, inventories, correspondence, and notes. "
@@ -69,7 +70,7 @@ def build_passkey_case(tokenizer, length, seed, depth):
     )
     before = round(filler_length * depth)
     prompt = prefix + filler[:before] + needle + filler[before:] + question
-    if len(prompt) != length:
+    if len(prompt) + len(answer_tokens) != length:
         raise RuntimeError("long-context diagnostic did not reach its exact requested length")
     return {
         "task": "passkey",
@@ -77,6 +78,7 @@ def build_passkey_case(tokenizer, length, seed, depth):
         "depth": depth,
         "seed": seed,
         "prompt_tokens": prompt,
+        "prompt_length": len(prompt),
         "answer_tokens": answer_tokens,
         "answer": answer,
         "label": label,
@@ -97,7 +99,7 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
     prompt = torch.tensor([case["prompt_tokens"]], device=device)
     answers = case["answer_tokens"]
     state = model.state(
-        length=prompt.size(1) + len(answers),
+        length=case["length"],
         device=device,
         dtype=state_dtype,
         kv_cache_dtype=kv_cache_dtype,
@@ -126,12 +128,13 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
         "length": case["length"],
         "depth": case["depth"],
         "seed": case["seed"],
+        "prompt_tokens": prompt.size(1),
         "answer_tokens": len(answers),
         "exact_match": float(matched == len(answers)),
         "token_accuracy": matched / len(answers),
         "mean_log_probability": sum(log_probabilities) / len(log_probabilities),
         "prefill_seconds": prefill_seconds,
-        "prefill_tokens_per_second": case["length"] / prefill_seconds,
+        "prefill_tokens_per_second": prompt.size(1) / prefill_seconds,
         "decode_seconds": decode_seconds,
         "decode_tokens_per_second": len(answers) / decode_seconds,
         "state_memory": memory,
