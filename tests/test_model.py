@@ -26,6 +26,7 @@ from speck.model import (
     causal_depthwise_conv1d,
     flex_sliding_window_attention,
     mean_causal_attention_context,
+    sliding_window_block_mask,
     torch_sliding_window_attention,
 )
 
@@ -212,6 +213,28 @@ def test_flex_sliding_attention_matches_torch_reference(past_length):
     expected_gradients = torch.autograd.grad(expected.float().square().sum(), (query, key, value))
     for actual_gradient, expected_gradient in zip(actual_gradients, expected_gradients):
         torch.testing.assert_close(actual_gradient, expected_gradient, atol=1e-5, rtol=1e-5)
+
+
+def test_long_sliding_block_mask_storage_scales_with_sparse_blocks():
+    block_mask = sliding_window_block_mask(
+        torch.device("cpu"),
+        query_length=131_072,
+        key_length=131_072,
+        past_length=0,
+        window_size=2_048,
+    )
+    tensors = (
+        block_mask.kv_num_blocks,
+        block_mask.kv_indices,
+        block_mask.full_kv_num_blocks,
+        block_mask.full_kv_indices,
+        block_mask.q_num_blocks,
+        block_mask.q_indices,
+        block_mask.full_q_num_blocks,
+        block_mask.full_q_indices,
+    )
+    stored_bytes = sum(tensor.numel() * tensor.element_size() for tensor in tensors)
+    assert stored_bytes < 512 * 1_024
 
 
 @pytest.mark.parametrize(

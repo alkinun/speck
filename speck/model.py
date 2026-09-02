@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.attention.bias import causal_lower_right
-from torch.nn.attention.flex_attention import create_block_mask, flex_attention
+from torch.nn.attention.flex_attention import BlockMask, flex_attention
 from torch.utils.checkpoint import checkpoint as activation_checkpoint
 
 from speck.architecture import (
@@ -564,6 +564,17 @@ def torch_sliding_window_attention(query, key, value, position, past_length, win
 
 
 _SLIDING_WINDOW_BLOCK_MASKS = {}
+_FLEX_BLOCK_SIZE = 128
+
+
+def ordered_block_rows(rows, device):
+    """Encode variable-length block-index rows without a dense block grid."""
+
+    width = max(1, max(map(len, rows)))
+    counts = torch.tensor([len(row) for row in rows], dtype=torch.int32, device=device)
+    padded = [row + [0] * (width - len(row)) for row in rows]
+    indices = torch.tensor(padded, dtype=torch.int32, device=device)
+    return counts[None, None], indices[None, None]
 
 
 @torch.compiler.assume_constant_result
@@ -577,13 +588,53 @@ def sliding_window_block_mask(device, query_length, key_length, past_length, win
     def mask_mod(_batch, _head, query_index, key_index):
         return causal_attention_mask(query_index + past_length, key_index, window_size)
 
-    block_mask = create_block_mask(
-        mask_mod,
-        B=None,
-        H=None,
-        Q_LEN=query_length,
-        KV_LEN=key_length,
-        device=device,
+    query_blocks = (query_length + _FLEX_BLOCK_SIZE - 1) // _FLEX_BLOCK_SIZE
+    key_blocks = (key_length + _FLEX_BLOCK_SIZE - 1) // _FLEX_BLOCK_SIZE
+    partial_kv_rows = [[] for _ in range(query_blocks)]
+    full_kv_rows = [[] for _ in range(query_blocks)]
+    partial_q_rows = [[] for _ in range(key_blocks)]
+    full_q_rows = [[] for _ in range(key_blocks)]
+    for query_block in range(query_blocks):
+        query_start = query_block * _FLEX_BLOCK_SIZE
+        query_end = min(query_start + _FLEX_BLOCK_SIZE, query_length)
+        first_key_block = max(
+            0,
+            (query_start + past_length - window_size + 1) // _FLEX_BLOCK_SIZE,
+        )
+        last_key_block = min(
+            key_blocks - 1,
+            (query_end - 1 + past_length) // _FLEX_BLOCK_SIZE,
+        )
+        for key_block in range(first_key_block, last_key_block + 1):
+            key_start = key_block * _FLEX_BLOCK_SIZE
+            key_end = min(key_start + _FLEX_BLOCK_SIZE, key_length)
+            is_full = (
+                query_end - query_start == _FLEX_BLOCK_SIZE
+                and key_end - key_start == _FLEX_BLOCK_SIZE
+                and key_end - 1 <= query_start + past_length
+                and key_start > query_end - 1 + past_length - window_size
+            )
+            kv_rows = full_kv_rows if is_full else partial_kv_rows
+            q_rows = full_q_rows if is_full else partial_q_rows
+            kv_rows[query_block].append(key_block)
+            q_rows[key_block].append(query_block)
+
+    partial_kv_num, partial_kv_indices = ordered_block_rows(partial_kv_rows, device)
+    full_kv_num, full_kv_indices = ordered_block_rows(full_kv_rows, device)
+    partial_q_num, partial_q_indices = ordered_block_rows(partial_q_rows, device)
+    full_q_num, full_q_indices = ordered_block_rows(full_q_rows, device)
+    block_mask = BlockMask(
+        seq_lengths=(query_length, key_length),
+        kv_num_blocks=partial_kv_num,
+        kv_indices=partial_kv_indices,
+        full_kv_num_blocks=full_kv_num,
+        full_kv_indices=full_kv_indices,
+        q_num_blocks=partial_q_num,
+        q_indices=partial_q_indices,
+        full_q_num_blocks=full_q_num,
+        full_q_indices=full_q_indices,
+        BLOCK_SIZE=(_FLEX_BLOCK_SIZE, _FLEX_BLOCK_SIZE),
+        mask_mod=mask_mod,
     )
     _SLIDING_WINDOW_BLOCK_MASKS[cache_key] = block_mask
     return block_mask
