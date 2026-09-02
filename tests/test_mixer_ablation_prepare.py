@@ -1,6 +1,8 @@
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 import torch
 
 from scripts.mixer_ablation_prepare import (
@@ -21,6 +23,7 @@ from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
 
 experiment = Path(__file__).parents[1] / "experiments" / "SpeckLC-150M-GDN"
+repository = Path(__file__).parents[1]
 
 
 def mixers(config):
@@ -58,6 +61,26 @@ def test_ablation_summary_exposes_compute_matched_token_budgets():
     with torch.device("meta"):
         full = SpeckForCausalLM(variants["full-global"])
     assert summary["full-global"]["parameters"] == full.parameter_count()
+
+
+@pytest.mark.parametrize(
+    "family",
+    ("SpeckLC-150M-MixerScreen-131M", "SpeckLC-150M-Rank-500M"),
+)
+def test_checked_sweep_accounting_matches_models(family):
+    root = repository / "experiments" / family
+    sweep = json.loads((root / "sweep.json").read_text())
+    flops = {}
+    for name in VARIANTS:
+        config = ArchitectureConfig.from_dict(json.loads((root / name / "model.json").read_text()))
+        with torch.device("meta"):
+            model = SpeckForCausalLM(config)
+        flops[name] = model.flops_per_token(4_096)
+
+    target_flops = flops["gdn-global"] * sweep["train_tokens"]
+    for name, values in sweep["variants"].items():
+        assert values["flops_per_token"] == flops[name]
+        assert values["compute_matched_tokens"] == target_flops // flops[name]
 
 
 def test_prepare_materializes_inherited_configs_for_nested_candidates(tmp_path):

@@ -8,32 +8,32 @@
   "train_tokens": 131072000,
   "variants": {
     "conv-global": {
-      "compute_matched_tokens": 132104981,
-      "flops_per_token": 1105075200,
+      "compute_matched_tokens": 132201407,
+      "flops_per_token": 1010726400,
       "parameters": 152754048
     },
     "full-global": {
-      "compute_matched_tokens": 85989910,
-      "flops_per_token": 1697710080,
+      "compute_matched_tokens": 101202716,
+      "flops_per_token": 1320314880,
       "parameters": 157156608
     },
     "full-local": {
-      "compute_matched_tokens": 110576750,
-      "flops_per_token": 1320222720,
+      "compute_matched_tokens": 108997294,
+      "flops_per_token": 1225896960,
       "parameters": 157156608
     },
     "gdn-global": {
       "compute_matched_tokens": 131072000,
-      "flops_per_token": 1113784320,
+      "flops_per_token": 1019435520,
       "parameters": 152916468
     },
     "gdn-local": {
-      "compute_matched_tokens": 143205955,
-      "flops_per_token": 1019412480,
+      "compute_matched_tokens": 134178838,
+      "flops_per_token": 995831040,
       "parameters": 152916468
     },
     "pure-gdn": {
-      "compute_matched_tokens": 158828423,
+      "compute_matched_tokens": 145374049,
       "flops_per_token": 919142400,
       "parameters": 151503088
     }
