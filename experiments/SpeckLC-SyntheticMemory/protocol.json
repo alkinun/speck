@@ -34,6 +34,26 @@
     "training_generation": "deterministic on-the-fly batches keyed by run seed and optimizer step",
     "validation_generation": "fixed deterministic batches disjoint by seed"
   },
+  "density_calibration": {
+    "decision_trigger": "KDA at 256 pairs and learning rate 0.001 remained at chance through 20000 steps after initialization correction.",
+    "fixed": {
+      "early_stop_accuracy": 0.99,
+      "learning_rate": 0.001,
+      "max_steps": 20000,
+      "seed": 42,
+      "sequence_length": 1024,
+      "variant": "kda-sigmoid",
+      "vocab_size": 8192
+    },
+    "num_pairs": [
+      4,
+      16,
+      64,
+      256
+    ],
+    "purpose": "Locate the learnability boundary before applying the architecture and learning-rate grid.",
+    "result_directory": "../../results/SpeckLC-SyntheticMemory/mqar-density-1024/seed-42"
+  },
   "discovery": {
     "batch_size": 8,
     "early_stop_accuracy": 0.99,
@@ -74,7 +94,7 @@
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "preflight_passed",
+  "status": "calibrating_query_density",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",
