@@ -9,6 +9,34 @@
     "value_heads": 2
   },
   "comparison": "separate output-gate activation from channel-wise recurrent decay",
+  "confirmation": {
+    "fixed_validation_seed": 1000042,
+    "selection_rule": "Best discovery-seed learning rate by the predeclared 99 percent gate; if no rate passes, use the highest observed accuracy.",
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "variants": {
+      "gdn-sigmoid": {
+        "discovery_accuracy": 0.9713134765625,
+        "learning_rate": 0.00005,
+        "passed_discovery_gate": false
+      },
+      "gdn-silu": {
+        "discovery_accuracy": 0.990966796875,
+        "discovery_gate_step": 9750,
+        "learning_rate": 0.0001,
+        "passed_discovery_gate": true
+      },
+      "kda-sigmoid": {
+        "discovery_accuracy": 0.998779296875,
+        "discovery_gate_step": 4750,
+        "learning_rate": 0.0001,
+        "passed_discovery_gate": true
+      }
+    }
+  },
   "data": {
     "mqar": {
       "calibrated_comparison_pairs_at_1024": 32,
@@ -103,7 +131,7 @@
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "running_mqar_lr_screen",
+  "status": "running_mqar_seed_confirmation",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",
