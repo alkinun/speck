@@ -1,0 +1,158 @@
+{
+  "api": {
+    "beta_activation": "external",
+    "gate_parameterization": "external log decay",
+    "signatures": {
+      "chunk_kda": "(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, g: torch.Tensor, beta: torch.Tensor, scale: float | None = None, initial_state: torch.Tensor | None = None, output_final_state: bool = False, use_qk_l2norm_in_kernel: bool = False, use_gate_in_kernel: bool = False, cu_seqlens: torch.LongTensor | None = None, cu_seqlens_cpu: torch.LongTensor | None = None, safe_gate: bool = False, lower_bound: float | None = None, disable_recompute: bool = False, return_intermediate_states: bool = False, cp_context: fla.ops.cp.context.FLACPContext = None, transpose_state_layout: bool = False, **kwargs)",
+      "fused_recurrent_kda": "(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, g: torch.Tensor, beta: torch.Tensor, A_log: torch.Tensor | None = None, dt_bias: torch.Tensor | None = None, scale: float | None = None, initial_state: torch.Tensor = None, output_final_state: bool = False, use_qk_l2norm_in_kernel: bool = False, use_gate_in_kernel: bool = False, lower_bound: float | None = None, cu_seqlens: torch.LongTensor | None = None, transpose_state_layout: bool = False, **kwargs) -> tuple[torch.Tensor, torch.Tensor]"
+    }
+  },
+  "configuration": {
+    "batch_size": 1,
+    "decode_length": 64,
+    "gradient_length": 64,
+    "head_dim": 64,
+    "key_heads": 3,
+    "lengths": [
+      64,
+      512,
+      4096
+    ],
+    "repeats": 20,
+    "value_heads": 6,
+    "warmups": 5
+  },
+  "created_at": "2026-09-03T05:35:13.948281+00:00",
+  "decode": {
+    "length": 64,
+    "output_max_abs_error": 0.00048828125,
+    "state_max_abs_error": 0.0035725831985473633
+  },
+  "decode_atol": 0.02,
+  "failures": [],
+  "format": "speck_kda_kernel_qualification",
+  "format_version": 1,
+  "forward": [
+    {
+      "durations_seconds": [
+        0.00042255991138517857,
+        0.00041555194184184074,
+        0.00045397994108498096,
+        0.0004155150381848216,
+        0.00040599110070616007,
+        0.0004210469778627157,
+        0.00045851198956370354,
+        0.0004289200296625495,
+        0.0004138709045946598,
+        0.0004150619497522712,
+        0.0004095439799129963,
+        0.00041006598621606827,
+        0.00041523203253746033,
+        0.00041040999349206686,
+        0.00040314102079719305,
+        0.00041325599886476994,
+        0.0004185979487374425,
+        0.0004137469222769141,
+        0.0004071849398314953,
+        0.00040111702401190996
+      ],
+      "length": 64,
+      "median_seconds": 0.0004144664271734655,
+      "output_max_abs_error": 0.0009765625,
+      "repeat_output_max_abs_error": 0.0,
+      "repeat_state_max_abs_error": 0.0,
+      "state_max_abs_error": 0.0035033226013183594,
+      "tokens_per_second": 154415.40207842758
+    },
+    {
+      "durations_seconds": [
+        0.0004131749738007784,
+        0.0004101719241589308,
+        0.0004312919918447733,
+        0.00041594402864575386,
+        0.0004259999841451645,
+        0.00040825805626809597,
+        0.0004085430409759283,
+        0.0004220058908686042,
+        0.0004085209220647812,
+        0.0004291749792173505,
+        0.00042519893031567335,
+        0.00041317997965961695,
+        0.00042176200076937675,
+        0.0004074819153174758,
+        0.0004327780334278941,
+        0.00041698897257447243,
+        0.000422114972025156,
+        0.00041675008833408356,
+        0.0004171020118519664,
+        0.00041977595537900925
+      ],
+      "length": 512,
+      "median_seconds": 0.0004170454922132194,
+      "output_max_abs_error": 0.0009765625,
+      "repeat_output_max_abs_error": 0.0,
+      "repeat_state_max_abs_error": 0.0,
+      "state_max_abs_error": 0.005105793476104736,
+      "tokens_per_second": 1227683.8128206742
+    },
+    {
+      "durations_seconds": [
+        0.000519786961376667,
+        0.000508914003148675,
+        0.0004978019278496504,
+        0.0005023599369451404,
+        0.000538333086296916,
+        0.0005063270218670368,
+        0.0005066869780421257,
+        0.0004996469942852855,
+        0.0005116530228406191,
+        0.0004985920386388898,
+        0.0005036650691181421,
+        0.000502559938468039,
+        0.0005073189968243241,
+        0.0004951900336891413,
+        0.0005082739517092705,
+        0.0005087900208309293,
+        0.0005123869050294161,
+        0.0004994770279154181,
+        0.0004941109800711274,
+        0.0005057869711890817
+      ],
+      "length": 4096,
+      "median_seconds": 0.0005060569965280592,
+      "output_max_abs_error": 0.0009765625,
+      "repeat_output_max_abs_error": 0.0,
+      "repeat_state_max_abs_error": 0.0,
+      "state_max_abs_error": 0.004288673400878906,
+      "tokens_per_second": 8093949.946550911
+    }
+  ],
+  "forward_atol": 0.02,
+  "gradient_atol": 0.05,
+  "gradient_max_abs_error": {
+    "beta": 7.62939453125e-06,
+    "key": 2.384185791015625e-07,
+    "log_decay": 1.125867129303515e-06,
+    "query": 7.450580596923828e-09,
+    "value": 9.5367431640625e-07
+  },
+  "hardware": {
+    "capability": [
+      8,
+      6
+    ],
+    "device": "NVIDIA GeForce RTX 3090",
+    "driver": "610.43.03",
+    "total_memory_bytes": 25295323136
+  },
+  "passed": true,
+  "software": {
+    "cuda": "12.8",
+    "flash_linear_attention": "0.5.0",
+    "torch": "2.9.1+cu128"
+  },
+  "source": {
+    "git_dirty": false,
+    "git_revision": "f544196ca2377af9f8bfb632a28df8171590baad"
+  }
+}
