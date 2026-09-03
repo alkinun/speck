@@ -1,0 +1,92 @@
+{
+  "architecture": {
+    "embedding_size": 256,
+    "feed_forward_intermediate_size": 768,
+    "head_dimension": 128,
+    "key_heads": 2,
+    "layers": 2,
+    "short_convolution_kernel": 4,
+    "value_heads": 2
+  },
+  "comparison": "separate output-gate activation from channel-wise recurrent decay",
+  "data": {
+    "mqar": {
+      "key_value_pairs_at_1024": 256,
+      "power_a": 0.01,
+      "random_non_queries": true,
+      "reference": "https://github.com/HazyResearch/zoology/blob/1ad20d193b6113cae1e8f3c655c300d7b4b3f4bb/zoology/data/multiquery_ar.py",
+      "reference_revision": "1ad20d193b6113cae1e8f3c655c300d7b4b3f4bb",
+      "target_mask": "answer token only at every query position",
+      "unique_keys_and_values_per_example": true
+    },
+    "palindrome": {
+      "layout": "random content, separator token 0, exact reversed content",
+      "target_mask": "reversed output only"
+    },
+    "stack": {
+      "num_stacks": 64,
+      "operations": [
+        "PUSH",
+        "POP"
+      ],
+      "target_mask": "value token following every valid POP stack identifier"
+    },
+    "training_generation": "deterministic on-the-fly batches keyed by run seed and optimizer step",
+    "validation_generation": "fixed deterministic batches disjoint by seed"
+  },
+  "discovery": {
+    "batch_size": 8,
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every_steps": 250,
+    "eval_examples": 256,
+    "gradient_clip": 1.0,
+    "learning_rates": [
+      0.00005,
+      0.0001,
+      0.0005,
+      0.001
+    ],
+    "max_steps": 20000,
+    "optimizer": "AdamW",
+    "schedule": "cosine to zero over the maximum step horizon",
+    "seed": 42,
+    "sequence_length": 1024,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "format": "speck_synthetic_memory_protocol",
+  "format_version": 1,
+  "interpretation_rules": [
+    "The learning-rate sweep selects viable optimization separately from architectural conclusions.",
+    "Every attempted learning rate is retained, including failed and early-stopped runs.",
+    "A discovery-seed winner is not a promoted claim until repeated over three declared seeds.",
+    "KDA and GDN keep the same output-gate rank; GDN sigmoid versus KDA sigmoid isolates decay granularity and its required projection.",
+    "Synthetic success gates language-model pretraining but does not imply natural-language long-context capability."
+  ],
+  "paper_reference": "https://arxiv.org/pdf/2510.26692",
+  "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
+  "status": "prepared",
+  "variants": {
+    "gdn-sigmoid": {
+      "decay": "scalar per value head",
+      "flops_per_token_at_1024": 25018368.0,
+      "output_gate": "sigmoid",
+      "parameters": 3941896
+    },
+    "gdn-silu": {
+      "decay": "scalar per value head",
+      "flops_per_token_at_1024": 25018368.0,
+      "output_gate": "silu",
+      "parameters": 3941896
+    },
+    "kda-sigmoid": {
+      "decay": "channel-wise per value-head key dimension",
+      "flops_per_token_at_1024": 24930304.0,
+      "output_gate": "sigmoid",
+      "parameters": 4072452
+    }
+  }
+}
