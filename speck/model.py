@@ -621,13 +621,9 @@ def sliding_window_block_mask(device, query_length, key_length, past_length, win
             kv_rows[query_block].append(key_block)
             q_rows[key_block].append(query_block)
 
-    partial_kv_num, partial_kv_indices = ordered_block_rows(
-        partial_kv_rows, key_blocks, device
-    )
+    partial_kv_num, partial_kv_indices = ordered_block_rows(partial_kv_rows, key_blocks, device)
     full_kv_num, full_kv_indices = ordered_block_rows(full_kv_rows, key_blocks, device)
-    partial_q_num, partial_q_indices = ordered_block_rows(
-        partial_q_rows, query_blocks, device
-    )
+    partial_q_num, partial_q_indices = ordered_block_rows(partial_q_rows, query_blocks, device)
     full_q_num, full_q_indices = ordered_block_rows(full_q_rows, query_blocks, device)
     block_mask = BlockMask(
         seq_lengths=(query_length, key_length),
@@ -675,6 +671,12 @@ class Attention(nn.Module):
         self.k_proj = Linear(hidden_size, kv_size, bias=False)
         self.v_proj = Linear(hidden_size, kv_size, bias=False)
         self.o_proj = Linear(hidden_size, hidden_size, bias=False)
+        if spec.output_gate == "headwise":
+            self.gate_proj = Linear(hidden_size, self.q_heads, bias=False)
+        elif spec.output_gate == "elementwise":
+            self.gate_proj = Linear(hidden_size, hidden_size, bias=False)
+        else:
+            self.gate_proj = None
         self.q_norm = RMSNorm(spec.head_dim, eps)
         self.k_norm = RMSNorm(spec.head_dim, eps)
 
@@ -749,6 +751,11 @@ class Attention(nn.Module):
             )
         if state is not None:
             state.append(k, v)
+        if self.gate_proj is not None:
+            gate = self.gate_proj(x)
+            gate_dim = 1 if self.spec.output_gate == "headwise" else self.spec.head_dim
+            gate = gate.view(batch, length, self.q_heads, gate_dim).transpose(1, 2)
+            output = output * gate.float().sigmoid().to(output.dtype)
         return self.o_proj(output.transpose(1, 2).contiguous().view(batch, length, hidden_size))
 
 
@@ -902,10 +909,14 @@ def initialize_delta_timescales(log_rates, decay_bias, minimum_rate):
     log_rates.copy_(rates.log().to(log_rates.dtype))
     log_minimum_dt = math.log(0.001)
     log_maximum_dt = math.log(0.1)
-    dt = torch.empty_like(decay_bias, dtype=torch.float32).uniform_(
-        log_minimum_dt,
-        log_maximum_dt,
-    ).exp_()
+    dt = (
+        torch.empty_like(decay_bias, dtype=torch.float32)
+        .uniform_(
+            log_minimum_dt,
+            log_maximum_dt,
+        )
+        .exp_()
+    )
     inverse_softplus = dt + torch.log(-torch.expm1(-dt))
     decay_bias.copy_(inverse_softplus.to(decay_bias.dtype))
 
@@ -1015,9 +1026,7 @@ class KimiDeltaAttention(nn.Module):
         )
         self.conv_kernel = nn.Parameter(torch.empty(self.conv_dim, 1, spec.conv_kernel_size))
         self.log_rates = nn.Parameter(torch.zeros(spec.num_value_heads))
-        self.decay_bias = nn.Parameter(
-            torch.zeros(spec.num_value_heads * spec.key_head_dim)
-        )
+        self.decay_bias = nn.Parameter(torch.zeros(spec.num_value_heads * spec.key_head_dim))
         self.output_norm = RMSNorm(spec.value_head_dim, eps)
         self.output_projection = Linear(self.value_dim, hidden_size, bias=False)
 
@@ -1516,6 +1525,10 @@ class SpeckForCausalLM(nn.Module):
                     if isinstance(branch, AttentionSpec):
                         kv_size = branch.num_key_value_heads * branch.head_dim
                         linear += 2 * hidden_size * hidden_size + 2 * hidden_size * kv_size
+                        if branch.output_gate == "headwise":
+                            linear += hidden_size * (hidden_size // branch.head_dim)
+                        elif branch.output_gate == "elementwise":
+                            linear += hidden_size * hidden_size
                         window_size = None
                         if branch.scope == "sliding":
                             assert branch.window_size is not None
@@ -1543,16 +1556,12 @@ class SpeckForCausalLM(nn.Module):
                         gate_rank = branch.value_head_dim
                         linear += hidden_size * (2 * key_size + 3 * value_size)
                         linear += hidden_size * (branch.num_value_heads + gate_rank)
-                        linear += (
-                            gate_rank * branch.num_value_heads * branch.key_head_dim
-                        )
+                        linear += gate_rank * branch.num_value_heads * branch.key_head_dim
                         linear += (2 * key_size + value_size) * branch.conv_kernel_size
                         chunk_size = min(64, sequence_length)
                         head_dim = branch.key_head_dim
                         attention += branch.num_value_heads * (
-                            6 * head_dim**2
-                            + 3 * chunk_size * head_dim
-                            + chunk_size**2
+                            6 * head_dim**2 + 3 * chunk_size * head_dim + chunk_size**2
                         )
                     elif isinstance(branch, SwiGLUSpec):
                         linear += 3 * hidden_size * branch.intermediate_size

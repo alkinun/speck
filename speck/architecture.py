@@ -15,6 +15,7 @@ class AttentionSpec:
     scope: str = "global"
     window_size: int | None = None
     rope_dim: int | None = None
+    output_gate: str = "none"
     kind: str = field(init=False, default="attention")
 
     def __post_init__(self):
@@ -32,6 +33,8 @@ class AttentionSpec:
         rope_dim = self.head_dim if self.rope_dim is None else self.rope_dim
         if rope_dim < 0 or rope_dim > self.head_dim or rope_dim % 2:
             raise ValueError("attention RoPE dimensions must be even and within the head")
+        if self.output_gate not in {"none", "headwise", "elementwise"}:
+            raise ValueError("attention output gate must be none, headwise, or elementwise")
 
 
 @dataclass(frozen=True)
@@ -114,11 +117,7 @@ class SwiGLUSpec:
 
 
 OperationSpec = (
-    AttentionSpec
-    | GatedCausalConvSpec
-    | GatedDeltaNetSpec
-    | KimiDeltaAttentionSpec
-    | SwiGLUSpec
+    AttentionSpec | GatedCausalConvSpec | GatedDeltaNetSpec | KimiDeltaAttentionSpec | SwiGLUSpec
 )
 
 

@@ -128,6 +128,8 @@ def test_attention_shape_invariants_are_strict():
         AttentionSpec(8, 1, rope_dim=3)
     with pytest.raises(ValueError, match="RoPE dimensions"):
         AttentionSpec(8, 1, rope_dim=10)
+    with pytest.raises(ValueError, match="output gate"):
+        AttentionSpec(8, 1, output_gate="unknown")
 
 
 def test_parallel_stage_kinds_must_be_unique():

@@ -17,6 +17,7 @@ from speck.architecture import (
     SwiGLUSpec,
 )
 from speck.model import (
+    Attention,
     BatchedMuon,
     CombinedOptimizer,
     DeviceAdamW,
@@ -120,6 +121,36 @@ def test_global_attention_cache_matches_full_forward():
     tokens = torch.randint(0, 16, (1, 8))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
     assert torch.allclose(model(tokens), chunked_logits(model, tokens, 3), atol=1e-5)
+
+
+@pytest.mark.parametrize("output_gate", ("headwise", "elementwise"))
+def test_gated_global_attention_cache_matches_full_forward(output_gate):
+    torch.manual_seed(101)
+    model = model_with(AttentionSpec(4, 1, rope_dim=0, output_gate=output_gate), SwiGLUSpec(16))
+    tokens = torch.randint(0, 16, (1, 8))
+    assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
+    assert torch.allclose(model(tokens), chunked_logits(model, tokens, 3), atol=1e-5)
+
+
+@pytest.mark.parametrize("output_gate", ("headwise", "elementwise"))
+def test_zero_initialized_attention_gate_halves_ungated_output(output_gate):
+    torch.manual_seed(102)
+    reference = Attention(8, AttentionSpec(4, 1, rope_dim=0), 1e-5)
+    gated = Attention(8, AttentionSpec(4, 1, rope_dim=0, output_gate=output_gate), 1e-5)
+    gated.load_state_dict(reference.state_dict(), strict=False)
+    torch.nn.init.zeros_(gated.gate_proj.weight)
+    values = torch.randn(2, 5, 8)
+    torch.testing.assert_close(gated(values, None, 0), reference(values, None, 0) * 0.5)
+
+
+def test_attention_gate_parameter_and_flop_accounting():
+    ungated = model_with(AttentionSpec(4, 1, rope_dim=0))
+    headwise = model_with(AttentionSpec(4, 1, rope_dim=0, output_gate="headwise"))
+    elementwise = model_with(AttentionSpec(4, 1, rope_dim=0, output_gate="elementwise"))
+    assert headwise.parameter_count() - ungated.parameter_count() == 8 * 2
+    assert elementwise.parameter_count() - ungated.parameter_count() == 8 * 8
+    assert headwise.flops_per_token(8) - ungated.flops_per_token(8) == 6 * 8 * 2
+    assert elementwise.flops_per_token(8) - ungated.flops_per_token(8) == 6 * 8 * 8
 
 
 @pytest.mark.parametrize("rope_dim", (0, 2))
@@ -328,9 +359,7 @@ def test_gated_deltanet_backward_is_finite():
 def test_gated_deltanet_output_gate_activation_is_configurable():
     torch.manual_seed(37)
     silu = model_with(GatedDeltaNetSpec(4, 4, 1, 2))
-    sigmoid = model_with(
-        GatedDeltaNetSpec(4, 4, 1, 2, output_gate_activation="sigmoid")
-    )
+    sigmoid = model_with(GatedDeltaNetSpec(4, 4, 1, 2, output_gate_activation="sigmoid"))
     sigmoid.load_state_dict(silu.state_dict())
     tokens = torch.randint(0, 16, (2, 8))
 
@@ -406,9 +435,7 @@ def first_operation(model):
 
 def test_fla_delta_initialization_has_declared_time_ranges():
     torch.manual_seed(53)
-    gdn = first_operation(
-        model_with(GatedDeltaNetSpec(4, 4, 1, 2, decay_initialization="fla"))
-    )
+    gdn = first_operation(model_with(GatedDeltaNetSpec(4, 4, 1, 2, decay_initialization="fla")))
     kda = first_operation(model_with(KimiDeltaAttentionSpec(4, 4, 1, 2)))
 
     gdn_rates = gdn.log_rates.exp()
@@ -632,9 +659,7 @@ def test_mixed_attention_scopes_use_independent_rope_scaling():
     config = ArchitectureConfig(
         (
             BlockGroup(BlockConfig(8, (StageConfig((AttentionSpec(4, 1),)),))),
-            BlockGroup(
-                BlockConfig(8, (StageConfig((AttentionSpec(4, 1, "sliding", 3),)),))
-            ),
+            BlockGroup(BlockConfig(8, (StageConfig((AttentionSpec(4, 1, "sliding", 3),)),))),
         ),
         8,
         vocab_size=16,
