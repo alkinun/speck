@@ -7,6 +7,7 @@ from scripts.synthetic_memory_train import (
     arguments,
     cosine_scale,
     resolved_settings,
+    source_provenance,
     task_batch,
 )
 from speck.architecture import GatedDeltaNetSpec, KimiDeltaAttentionSpec
@@ -89,3 +90,10 @@ def test_resolved_settings_rejects_incomplete_evaluation_batch():
     )
     with pytest.raises(ValueError, match="divisible"):
         resolved_settings(args)
+
+
+def test_source_provenance_distinguishes_tracked_changes():
+    provenance = source_provenance()
+    assert provenance["git_revision"]
+    assert isinstance(provenance["git_tracked_dirty"], bool)
+    assert isinstance(provenance["untracked_files"], list)

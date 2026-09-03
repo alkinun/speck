@@ -161,6 +161,21 @@ def command_output(command):
     return result.stdout.strip() or None
 
 
+def command_failed(command):
+    return subprocess.run(command, capture_output=True, check=False).returncode != 0
+
+
+def source_provenance():
+    untracked = command_output(["git", "ls-files", "--others", "--exclude-standard"])
+    return {
+        "git_revision": command_output(["git", "rev-parse", "HEAD"]),
+        "git_dirty": bool(command_output(["git", "status", "--porcelain"])),
+        "git_tracked_dirty": command_failed(["git", "diff", "--quiet"])
+        or command_failed(["git", "diff", "--cached", "--quiet"]),
+        "untracked_files": untracked.splitlines() if untracked else [],
+    }
+
+
 def atomic_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -236,10 +251,7 @@ def run(args):
             import fla.ops.kda  # noqa: F401
         except ImportError as error:
             raise RuntimeError("CUDA KDA training requires the pinned linear extra") from error
-    source = {
-        "git_revision": command_output(["git", "rev-parse", "HEAD"]),
-        "git_dirty": bool(command_output(["git", "status", "--porcelain"])),
-    }
+    source = source_provenance()
     torch.manual_seed(settings["seed"])
     if device.type == "cuda":
         torch.cuda.manual_seed_all(settings["seed"])
