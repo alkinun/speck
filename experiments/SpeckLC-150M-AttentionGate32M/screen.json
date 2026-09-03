@@ -1,0 +1,28 @@
+{
+  "comparison": "parameter- and analytic-FLOP-matched global attention output gates",
+  "format": "speck_attention_gate_screen",
+  "format_version": 1,
+  "result": "../../results/SpeckLC-150M-AttentionGate32M/summary.json",
+  "seed": 42,
+  "sequence_length": 4096,
+  "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+  "status": "prepared",
+  "train_tokens": 32000000,
+  "variants": {
+    "elementwise": {
+      "ffn_intermediate_decrement": 64,
+      "flops_per_token": 1021601280.0,
+      "parameters": 153958938
+    },
+    "headwise": {
+      "ffn_intermediate_decrement": 1,
+      "flops_per_token": 1021601280.0,
+      "parameters": 153958938
+    },
+    "ungated": {
+      "ffn_intermediate_decrement": 0,
+      "flops_per_token": 1021601280.0,
+      "parameters": 153958938
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "batch_tokens": 65536,
+  "device_batch_size": 4,
+  "eval_every": 122,
+  "eval_tokens": 5000000,
+  "final_eval_tokens": 20000000,
+  "grad_clip": 1.0,
+  "log_every": 10,
+  "lr": 0.0015,
+  "lr_schedule": "cosine",
+  "min_lr": 0.1,
+  "optimizer": "muon",
+  "output_dir": null,
+  "run": "SpeckLC-150M-AttentionGate32M-elementwise",
+  "save_every": 3815,
+  "seed": 42,
+  "sequence_length": 4096,
+  "train_tokens": 32000000,
+  "wandb_group": "SpeckLC-150M-AttentionGate32M",
+  "wandb_project": "speck-long-context",
+  "warmup_steps": 3,
+  "weight_decay": 0.1
+}
