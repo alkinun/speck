@@ -71,5 +71,5 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "two_hop_calibration_prepared"
+  "status": "kda_two_hop_calibration_failed"
 }
