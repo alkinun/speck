@@ -310,7 +310,7 @@
     "The full learning-rate grid and the lower-length scaling curves were run on seed 42; selected 1024 and 2048 endpoints were repeated on seeds 43 and 44.",
     "Early stopping uses top-1 accuracy, so final cross-entropy is not comparable between successful runs stopped at different confidence levels.",
     "KDA has 3.31 percent more parameters than GDN in this tiny model, although its analytic training FLOPs per token are 0.35 percent lower under the paper formula.",
-    "Palindrome and Stack have not yet been trained.",
+    "Palindrome and Stack used local task definitions because Kimi does not release its complete generators; their full learning-rate grids were run on seed 42 and selected controls were repeated.",
     "MQAR success does not establish natural-language or publication-grade long-context capability."
   ],
   "length_scaling_protocol_revision": "1815cce",
@@ -328,5 +328,127 @@
     "value_heads": 2,
     "vocab_size": 8192
   },
-  "status": "mqar_length_scaling_complete"
+  "status": "synthetic_qualification_complete",
+  "task_qualification": {
+    "palindrome": {
+      "confirmation": {
+        "gdn_silu": {
+          "best_accuracies": [
+            0.9304885864257812,
+            0.7367095947265625,
+            0.0021514892578125
+          ],
+          "gate_steps": [
+            null,
+            null,
+            null
+          ],
+          "learning_rate": 0.0001,
+          "pass_count": 0
+        },
+        "kda_sigmoid": {
+          "best_accuracies": [
+            0.99005126953125,
+            0.9935379028320312,
+            0.98150634765625
+          ],
+          "gate_steps": [
+            10750,
+            9000,
+            null
+          ],
+          "learning_rate": 0.0005,
+          "pass_count": 2
+        },
+        "seeds": [
+          42,
+          43,
+          44
+        ]
+      },
+      "discovery_grid_seed_42": {
+        "gdn_silu": {
+          "0.00005": {
+            "best_accuracy": 0.0021514892578125,
+            "gate_step": null
+          },
+          "0.0001": {
+            "best_accuracy": 0.9304885864257812,
+            "gate_step": null
+          },
+          "0.0005": {
+            "best_accuracy": 0.00017547607421875,
+            "gate_step": null
+          },
+          "0.001": {
+            "best_accuracy": 0.0059814453125,
+            "gate_step": null
+          }
+        },
+        "kda_sigmoid": {
+          "0.00005": {
+            "best_accuracy": 0.06072235107421875,
+            "gate_step": null
+          },
+          "0.0001": {
+            "best_accuracy": 0.9900360107421875,
+            "gate_step": 16500
+          },
+          "0.0005": {
+            "best_accuracy": 0.99005126953125,
+            "gate_step": 10750
+          },
+          "0.001": {
+            "best_accuracy": 0.8860397338867188,
+            "gate_step": null
+          }
+        }
+      },
+      "result": "KDA is stronger but misses the strict all-seed gate: 2/3 versus GDN-SiLU 0/3."
+    },
+    "stack64": {
+      "confirmation": {
+        "gdn_silu": {
+          "gate_step_median": 500,
+          "gate_steps": [
+            500,
+            500,
+            500
+          ],
+          "learning_rate": 0.001,
+          "pass_count": 3
+        },
+        "kda_sigmoid": {
+          "gate_step_median": 500,
+          "gate_steps": [
+            500,
+            500,
+            250
+          ],
+          "learning_rate": 0.001,
+          "pass_count": 3
+        },
+        "seeds": [
+          42,
+          43,
+          44
+        ]
+      },
+      "discovery_grid_seed_42": {
+        "gdn_silu": {
+          "0.00005": 7250,
+          "0.0001": 3250,
+          "0.0005": 500,
+          "0.001": 500
+        },
+        "kda_sigmoid": {
+          "0.00005": 6750,
+          "0.0001": 2500,
+          "0.0005": 750,
+          "0.001": 500
+        }
+      },
+      "result": "Both mixers pass 3/3 with identical 500-step median convergence."
+    }
+  }
 }

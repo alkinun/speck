@@ -152,7 +152,7 @@ The two proposed length curves have since completed:
 
 At the replicated length-2,048 endpoints, KDA passes 3/3 seeds while GDN-SiLU passes 1/3 for both
 fixed load and fixed density. See [14 — MQAR length scaling](14_mqar_length_scaling.md). Palindrome
-and 64-stack tests remain required before the 131M-token architecture staircase.
+and 64-stack tests later completed in [15](15_palindrome_and_stack.md).
 
 ## Artifacts
 

@@ -203,9 +203,11 @@ and declared learning-rate grid. Use a one-seed sweep only to select viable lear
 repeat the selected configuration over three fixed seeds. Report all runs. This separates the gate
 activation effect from the channel-wise decay effect before any expensive language-model screen.
 
-MQAR outcome: complete at the calibrated 32-query point. KDA-sigmoid and GDN-SiLU pass 3/3 seeds;
-sigmoid GDN passes 0/3. KDA has a tighter convergence range, while its median is nearly tied with
-SiLU GDN. See [13 — Synthetic MQAR](13_synthetic_mqar.md). Palindrome and Stack remain pending.
+Synthetic outcome: complete. KDA-sigmoid and GDN-SiLU pass 3/3 on calibrated MQAR, but KDA is more
+reliable at replicated length-2,048 endpoints. On Palindrome, KDA passes 2/3 and GDN 0/3. Both pass
+Stack 3/3 with tied medians. See [13 — Synthetic MQAR](13_synthetic_mqar.md),
+[14 — MQAR length scaling](14_mqar_length_scaling.md), and
+[15 — Palindrome and Stack](15_palindrome_and_stack.md).
 
 ### K3 — 4K language-model staircase
 

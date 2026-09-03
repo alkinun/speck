@@ -21,6 +21,7 @@ Read in order:
 13. [12 — Same-parent NoPE context activation](12_nope_context_activation.md)
 14. [13 — Synthetic MQAR calibration and mixer comparison](13_synthetic_mqar.md)
 15. [14 — MQAR distance and load scaling](14_mqar_length_scaling.md)
+16. [15 — Palindrome and 64-stack mixer qualification](15_palindrome_and_stack.md)
 
 Conventions:
 

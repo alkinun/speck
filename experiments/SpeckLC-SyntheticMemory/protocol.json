@@ -238,7 +238,7 @@
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "running_palindrome_stack_qualification",
+  "status": "synthetic_qualification_complete",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",

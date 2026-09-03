@@ -45,6 +45,11 @@ passes 1/3, making reliable longer-distance learning the clearer KDA advantage. 
 [MQAR mixer](../findings/13_synthetic_mqar.md) and
 [length-scaling](../findings/14_mqar_length_scaling.md) findings.
 
+On exact 512-token reversal, KDA passes two of three seeds while GDN-SiLU passes none. On a
+64-stack mutable-state task, both pass all seeds with identical median convergence. This narrows
+KDA's advantage to difficult identity retention and copying rather than generic synthetic
+optimization. See [Palindrome and Stack](../findings/15_palindrome_and_stack.md).
+
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized
 causal bias. CUDA sliding prefill uses FlexAttention with block-level mask metadata; at 128K and a
