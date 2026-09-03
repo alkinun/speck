@@ -1,0 +1,39 @@
+{
+  "comparison": "matched 32K context activation of the replicated Kimi-transfer frontier",
+  "data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
+  "format": "speck_kimi_context_results",
+  "format_version": 1,
+  "status": "one_of_two_complete",
+  "validation_caveat": "the long-document validation split contains only 327680 evaluated tokens",
+  "variants": {
+    "gdn-sigmoid-rope": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiContext32K-gdn-sigmoid-rope",
+        "metadata_sha256": "3017f5a3b35bd3e645b0751f335fb3e21f9f1be9bf5910c5ee1e863e9196604f",
+        "model_sha256": "2fdfdf715f204bd78373bf4131ee27f5ce0ddd834e1274a06639a24f0ae58994",
+        "optimizer_sha256": "bfe0bd2a8a113f3808de18aa46526b18566607b9e6f5728ce0c990b455d99f34",
+        "step": 489
+      },
+      "final_validation_loss": 2.61572265625,
+      "initial_validation_loss": 2.79745,
+      "loss_change": -0.18172734375,
+      "parent_checkpoint": {
+        "model_sha256": "f3b9147e0f6d46c62fc9b688b2a9dab37999d43e8882fd9567bdcbab7b467ea8",
+        "step": 2000
+      },
+      "performance": {
+        "active_seconds": 1703.405170997954,
+        "gpu_hours": 0.46196,
+        "peak_allocated_vram_mib": 4751.41113,
+        "tokens_per_second": 19057.66176
+      },
+      "validation_source_losses": {
+        "finemath_4plus": 2.4754436016082764,
+        "pes2o": 2.8766043186187744,
+        "wikimedia": 2.541879177093506
+      },
+      "validation_tokens": 327680,
+      "wandb_id": "5rztcowr"
+    }
+  }
+}
