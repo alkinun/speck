@@ -1,0 +1,49 @@
+{
+  "format": "speck_structured_retrieval_adaptation_experiment",
+  "format_version": 1,
+  "gate": {
+    "association_specificity_accuracy": 0.8,
+    "candidate_accuracy": 0.8,
+    "required_tasks": [
+      "multi_key",
+      "two_hop"
+    ]
+  },
+  "parents": {
+    "gdn-sigmoid-rope": {
+      "checkpoint_directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiContext32K-gdn-sigmoid-rope",
+      "model_sha256": "2fdfdf715f204bd78373bf4131ee27f5ce0ddd834e1274a06639a24f0ae58994",
+      "step": 489
+    },
+    "kda-sigmoid-nope": {
+      "checkpoint_directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiContext32K-kda-sigmoid-nope",
+      "model_sha256": "34deca83c4bf5a9f72f8b0129a0034026e175c4ed3c3eda1b6e816a25358b979",
+      "step": 489
+    }
+  },
+  "pilot": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "chains": 6,
+    "eval_every": 20,
+    "grad_clip": 1.0,
+    "learning_rate": 0.0001,
+    "minimum_lr_multiplier": 0.1,
+    "optimizer": "adamw",
+    "records": 8,
+    "seed": 42,
+    "sequence_length": 4096,
+    "steps": 200,
+    "supervised_tokens": 3200,
+    "tasks": [
+      "multi_key",
+      "two_hop"
+    ],
+    "tokens_seen": 13107200,
+    "validation_samples_per_task": 30,
+    "warmup_steps": 25,
+    "weight_decay": 0.1
+  },
+  "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
+  "status": "pilot_prepared"
+}
