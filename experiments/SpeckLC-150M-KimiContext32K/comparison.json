@@ -1,0 +1,32 @@
+{
+  "comparison": "matched 32K context activation of the replicated Kimi-transfer frontier",
+  "data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
+  "format": "speck_kimi_context_comparison",
+  "format_version": 1,
+  "parent_seed": 42,
+  "primary_metrics": [
+    "final long-document validation loss",
+    "original-4K validation loss",
+    "counterfactual retrieval score",
+    "resident state",
+    "prefill latency"
+  ],
+  "result": "../../results/SpeckLC-150M-KimiContext32K/summary.json",
+  "sequence_length": 32768,
+  "status": "prepared",
+  "train_tokens": 32000000,
+  "variants": {
+    "gdn-sigmoid-rope": {
+      "parent_final_loss": 2.790628671646118,
+      "parent_model_sha256": "f3b9147e0f6d46c62fc9b688b2a9dab37999d43e8882fd9567bdcbab7b467ea8",
+      "rope_scaling_factor": 8.0,
+      "role": "capability control"
+    },
+    "kda-sigmoid-nope": {
+      "parent_final_loss": 2.795380115509033,
+      "parent_model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+      "rope_scaling_factor": 1.0,
+      "role": "position-free long-context treatment"
+    }
+  }
+}

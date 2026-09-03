@@ -1,0 +1,23 @@
+{
+  "activation_checkpointing": true,
+  "data_directory": "/home/alkin/.cache/speck/data/SpeckLC-LongDocs-32M",
+  "data_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-LongDocs-32M",
+  "data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
+  "format": "speck_context_stage",
+  "format_version": 1,
+  "global_attention_layers": [],
+  "global_attention_rope_dim": null,
+  "loss_backend": "liger",
+  "parent_checkpoint": {
+    "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+    "metadata_sha256": "0b22b8135696c51ec32694a3f7a0aba88a59eb154a66d2f9b2a55a2713540bcb",
+    "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+    "optimizer_sha256": "018ee866a5bb95a000968867f0b2671f301e98976f073f6347c41493986c8512",
+    "step": 2000
+  },
+  "parent_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+  "rope_scaling_factor": 1.0,
+  "rope_theta": 1000000.0,
+  "sequence_length": 32768,
+  "train_tokens": 32000000
+}
