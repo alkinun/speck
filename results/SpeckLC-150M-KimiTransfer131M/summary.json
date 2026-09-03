@@ -1,0 +1,79 @@
+{
+  "comparison": {
+    "control_final_validation_loss": 2.8193776607513428,
+    "noise_floor_range": 0.00965,
+    "primary_metric": "final 20M-token validation loss",
+    "seed": 42,
+    "sequence_length": 4096,
+    "train_tokens": 131072000
+  },
+  "control": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-MixerScreen-131M-gdn-global",
+      "metadata_sha256": "5c6cbeb46c99b51f043ced22314a73727e08c7ea29e28343b94ee43ced6e88ed",
+      "model_sha256": "426f0f221aee8615a735a3359263c9a874d53eca65f2835ec3117893a1b8cbb4",
+      "optimizer_sha256": "8d96de459c50bcbbf3707d78c074e264e346cf318ac45d526f2e248c276b4ea2",
+      "step": 2000
+    },
+    "decay_initialization": "speck",
+    "final_validation_loss": 2.8193776607513428,
+    "output_gate_activation": "silu",
+    "variant": "gdn-speck-silu-rope"
+  },
+  "format": "speck_kimi_transfer_results",
+  "format_version": 1,
+  "runs": {
+    "gdn-fla-silu-rope": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-gdn-fla-silu-rope",
+        "metadata_sha256": "4846d391b27e28679a461ebf8b991c8232e29695d8ba641835a5ebeabc88fe57",
+        "model_sha256": "4e58bd4e1f59844ebcbbc70cd6fbc0bf50139860b9945c58035d483b482a3895",
+        "optimizer_sha256": "902258cf442fea8713e83e8faeaed298c9550d034d1d61cdec7ceb0966e99399",
+        "step": 2000
+      },
+      "delta_from_control": 0.00858759880065918,
+      "final_validation_loss": 2.827965259552002,
+      "intermediate_validation": [
+        {
+          "global_tokens": 31981568,
+          "loss": 3.74986
+        },
+        {
+          "global_tokens": 63963136,
+          "loss": 3.15102
+        },
+        {
+          "global_tokens": 95944704,
+          "loss": 2.93026
+        },
+        {
+          "global_tokens": 127926272,
+          "loss": 2.82825
+        }
+      ],
+      "interpretation": "unresolved inside the measured seed-noise range",
+      "performance": {
+        "active_seconds": 3071.382473674952,
+        "gpu_hours": 0.81646,
+        "peak_allocated_vram_mib": 13283.20166,
+        "tokens_per_second": 47773.61166
+      },
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.796823263168335,
+        "dclm": 3.6521973609924316,
+        "dclm_edu": 3.126145124435425,
+        "finemath_4plus": 2.552659273147583,
+        "fineweb_edu": 3.3569157123565674,
+        "math_multi_style": 1.7369850873947144,
+        "math_textbook_exercise": 1.2489991188049316,
+        "pes2o": 3.019382953643799,
+        "ufw_l3_multi_style": 3.1656031608581543,
+        "ultra_fineweb": 3.2848851680755615,
+        "wikimedia": 3.1744484901428223
+      },
+      "validation_tokens": 19988480,
+      "wandb_id": "shranqi0"
+    }
+  },
+  "status": "one_of_four_complete"
+}
