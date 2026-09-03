@@ -22,6 +22,94 @@
   },
   "format": "speck_kimi_transfer_results",
   "format_version": 1,
+  "retrieval": {
+    "caveat": "directional contrast demonstrates causal sensitivity; exact match is zero for every model and length",
+    "protocol": {
+      "counterfactual_pairs": true,
+      "depths": [
+        0.1,
+        0.5,
+        0.9
+      ],
+      "lengths": [
+        4096,
+        8192,
+        16384,
+        32768,
+        65536,
+        131072
+      ],
+      "samples_per_depth": 10
+    },
+    "variants": {
+      "gdn-fla-sigmoid-nope": {
+        "candidate_accuracy": 0.23333333333333334,
+        "contrastive_direction_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "contrastive_retrieval_score": [
+          0.738672,
+          0.595573,
+          0.467187,
+          0.336068,
+          0.191016,
+          0.101042
+        ],
+        "effective_directional_length": 131072,
+        "prefill_seconds_at_128k": 3.2376,
+        "state_bytes_at_128k": 504860160
+      },
+      "gdn-fla-sigmoid-rope": {
+        "candidate_accuracy": 0.23333333333333334,
+        "contrastive_direction_accuracy": [
+          0.36666666666666664,
+          0.3333333333333333,
+          0.1,
+          0.3333333333333333,
+          0.7,
+          0.5
+        ],
+        "contrastive_retrieval_score": [
+          -0.004720,
+          -0.004818,
+          -0.018620,
+          -0.007422,
+          0.019141,
+          0.004948
+        ],
+        "effective_directional_length": null,
+        "prefill_seconds_at_128k": 3.2540,
+        "state_bytes_at_128k": 504860160
+      },
+      "kda-sigmoid-nope": {
+        "candidate_accuracy": 0.23333333333333334,
+        "contrastive_direction_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "contrastive_retrieval_score": [
+          1.706510,
+          1.207943,
+          0.716667,
+          0.385807,
+          0.210807,
+          0.144792
+        ],
+        "effective_directional_length": 131072,
+        "prefill_seconds_at_128k": 3.3167,
+        "state_bytes_at_128k": 504860160
+      }
+    }
+  },
   "runs": {
     "gdn-fla-silu-rope": {
       "checkpoint": {
@@ -232,5 +320,6 @@
       "wandb_id": "gq3hqrkw"
     }
   },
-  "status": "training_complete_evaluation_pending"
+  "status": "complete",
+  "total_training_gpu_hours": 3.31728
 }

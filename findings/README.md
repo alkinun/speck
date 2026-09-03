@@ -22,6 +22,7 @@ Read in order:
 14. [13 — Synthetic MQAR calibration and mixer comparison](13_synthetic_mqar.md)
 15. [14 — MQAR distance and load scaling](14_mqar_length_scaling.md)
 16. [15 — Palindrome and 64-stack mixer qualification](15_palindrome_and_stack.md)
+17. [16 — Kimi-transfer language-model staircase](16_kimi_transfer_131m.md)
 
 Conventions:
 
@@ -36,5 +37,5 @@ Conventions:
 - Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
-Last consolidated state: all described experiments are complete, all referenced checkpoints have
-completion markers, the GPU is idle, and the repository test suite passes 318 tests.
+Last consolidated state: the Kimi-transfer staircase and its 128K diagnostics are complete, all
+referenced checkpoints have completion markers, and the repository test suite passes 321 tests.

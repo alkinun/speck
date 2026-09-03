@@ -43,7 +43,7 @@
   "seed": 42,
   "sequence_length": 4096,
   "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-MixerScreen-131M/gdn-global",
-  "status": "prepared",
+  "status": "complete",
   "train_tokens": 131072000,
   "variants": {
     "gdn-fla-sigmoid-nope": {
