@@ -893,6 +893,23 @@ def kimi_delta_rule(query, key, value, log_decay, beta, initial_state=None):
     return torch_kimi_delta_rule(query, key, value, log_decay, beta, initial_state)
 
 
+@torch.no_grad()
+def initialize_delta_timescales(log_rates, decay_bias, minimum_rate):
+    """Initialize FLA-style recurrent rates and inverse-softplus time steps."""
+
+    rates = torch.empty_like(log_rates, dtype=torch.float32).uniform_(minimum_rate, 16.0)
+    rates.clamp_min_(1e-4)
+    log_rates.copy_(rates.log().to(log_rates.dtype))
+    log_minimum_dt = math.log(0.001)
+    log_maximum_dt = math.log(0.1)
+    dt = torch.empty_like(decay_bias, dtype=torch.float32).uniform_(
+        log_minimum_dt,
+        log_maximum_dt,
+    ).exp_()
+    inverse_softplus = dt + torch.log(-torch.expm1(-dt))
+    decay_bias.copy_(inverse_softplus.to(decay_bias.dtype))
+
+
 class GatedDeltaNet(nn.Module):
     """A fixed-state, error-correcting linear sequence mixer with a local convolution."""
 
@@ -909,9 +926,14 @@ class GatedDeltaNet(nn.Module):
         )
         self.gates_projection = Linear(hidden_size, 2 * spec.num_value_heads, bias=False)
         self.conv_kernel = nn.Parameter(torch.empty(self.conv_dim, 1, spec.conv_kernel_size))
-        rates = torch.linspace(0.1, 1.0, spec.num_value_heads)
+        if spec.decay_initialization == "speck":
+            rates = torch.linspace(0.1, 1.0, spec.num_value_heads)
+            decay_bias = torch.zeros(spec.num_value_heads)
+        else:
+            rates = torch.ones(spec.num_value_heads)
+            decay_bias = torch.zeros(spec.num_value_heads)
         self.log_rates = nn.Parameter(rates.log())
-        self.decay_bias = nn.Parameter(torch.zeros(spec.num_value_heads))
+        self.decay_bias = nn.Parameter(decay_bias)
         self.output_norm = RMSNorm(spec.value_head_dim, eps)
         self.output_projection = Linear(self.value_dim, hidden_size, bias=False)
 
@@ -992,8 +1014,7 @@ class KimiDeltaAttention(nn.Module):
             bias=False,
         )
         self.conv_kernel = nn.Parameter(torch.empty(self.conv_dim, 1, spec.conv_kernel_size))
-        rates = torch.linspace(0.1, 1.0, spec.num_value_heads)
-        self.log_rates = nn.Parameter(rates.log())
+        self.log_rates = nn.Parameter(torch.zeros(spec.num_value_heads))
         self.decay_bias = nn.Parameter(
             torch.zeros(spec.num_value_heads * spec.key_head_dim)
         )
@@ -1216,8 +1237,21 @@ class SpeckForCausalLM(nn.Module):
                 nn.init.ones_(module.weight)
             elif isinstance(module, GatedCausalConv):
                 nn.init.normal_(module.kernel, std=self.config.initializer_range)
-            elif isinstance(module, (GatedDeltaNet, KimiDeltaAttention)):
+            elif isinstance(module, GatedDeltaNet):
                 nn.init.normal_(module.conv_kernel, std=self.config.initializer_range)
+                if module.spec.decay_initialization == "fla":
+                    initialize_delta_timescales(
+                        module.log_rates,
+                        module.decay_bias,
+                        minimum_rate=0.0,
+                    )
+            elif isinstance(module, KimiDeltaAttention):
+                nn.init.normal_(module.conv_kernel, std=self.config.initializer_range)
+                initialize_delta_timescales(
+                    module.log_rates,
+                    module.decay_bias,
+                    minimum_rate=1.0,
+                )
 
     @torch.no_grad()
     def resize_token_embeddings(self, vocab_size):

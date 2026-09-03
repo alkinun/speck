@@ -400,6 +400,34 @@ def test_kimi_delta_attention_flops_follow_paper_chunk_formula():
     assert model.flops_per_token(16) == 4_256
 
 
+def first_operation(model):
+    return next(iter(model.cores.values())).stages[0].branches[0].operation
+
+
+def test_fla_delta_initialization_has_declared_time_ranges():
+    torch.manual_seed(53)
+    gdn = first_operation(
+        model_with(GatedDeltaNetSpec(4, 4, 1, 2, decay_initialization="fla"))
+    )
+    kda = first_operation(model_with(KimiDeltaAttentionSpec(4, 4, 1, 2)))
+
+    gdn_rates = gdn.log_rates.exp()
+    kda_rates = kda.log_rates.exp()
+    gdn_dt = F.softplus(gdn.decay_bias)
+    kda_dt = F.softplus(kda.decay_bias)
+
+    assert (gdn_rates >= 1e-4).all() and (gdn_rates <= 16).all()
+    assert (kda_rates >= 1).all() and (kda_rates <= 16).all()
+    assert (gdn_dt >= 0.001).all() and (gdn_dt <= 0.1).all()
+    assert (kda_dt >= 0.001).all() and (kda_dt <= 0.1).all()
+
+
+def test_default_gdn_initialization_preserves_existing_speck_behavior():
+    gdn = first_operation(model_with(GatedDeltaNetSpec(4, 4, 1, 2)))
+    torch.testing.assert_close(gdn.log_rates.exp(), torch.tensor([0.1, 1.0]))
+    assert torch.equal(gdn.decay_bias, torch.zeros(2))
+
+
 def test_activation_checkpointing_preserves_loss_and_gradients():
     torch.manual_seed(41)
     reference = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))

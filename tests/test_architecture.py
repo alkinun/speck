@@ -83,6 +83,7 @@ def test_gated_deltanet_grammar_round_trips():
         4,
         conv_kernel_size=3,
         output_gate_activation="sigmoid",
+        decay_initialization="fla",
     )
     block = BlockConfig(16, (StageConfig((operation,)),))
     config = ArchitectureConfig((BlockGroup(block),), 16, vocab_size=32)
@@ -97,6 +98,11 @@ def test_gated_deltanet_requires_grouped_value_heads():
 def test_gated_deltanet_rejects_unknown_output_gate_activation():
     with pytest.raises(ValueError, match="output gate activation"):
         GatedDeltaNetSpec(4, 4, 2, 4, output_gate_activation="relu")
+
+
+def test_gated_deltanet_rejects_unknown_decay_initialization():
+    with pytest.raises(ValueError, match="decay initialization"):
+        GatedDeltaNetSpec(4, 4, 2, 4, decay_initialization="unknown")
 
 
 def test_kimi_delta_attention_grammar_round_trips():

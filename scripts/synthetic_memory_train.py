@@ -126,6 +126,7 @@ def architecture_for_variant(variant, sequence_length, vocab_size):
             2,
             conv_kernel_size=4,
             output_gate_activation=variant.removeprefix("gdn-"),
+            decay_initialization="fla",
         )
     block = BlockConfig(
         256,

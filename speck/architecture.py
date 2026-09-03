@@ -55,6 +55,7 @@ class GatedDeltaNetSpec:
     num_value_heads: int
     conv_kernel_size: int = 4
     output_gate_activation: str = "silu"
+    decay_initialization: str = "speck"
     kind: str = field(init=False, default="gated_deltanet")
 
     def __post_init__(self):
@@ -72,6 +73,8 @@ class GatedDeltaNetSpec:
             raise ValueError("Gated DeltaNet convolution kernels need at least two positions")
         if self.output_gate_activation not in {"sigmoid", "silu"}:
             raise ValueError("Gated DeltaNet output gate activation must be sigmoid or silu")
+        if self.decay_initialization not in {"fla", "speck"}:
+            raise ValueError("Gated DeltaNet decay initialization must be fla or speck")
 
 
 @dataclass(frozen=True)

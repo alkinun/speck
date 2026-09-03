@@ -43,6 +43,7 @@ def test_synthetic_architectures_change_only_declared_mixer_axis(
     assert all(mixer.num_key_heads == mixer.num_value_heads == 2 for mixer in mixers)
     if activation is not None:
         assert all(mixer.output_gate_activation == activation for mixer in mixers)
+        assert all(mixer.decay_initialization == "fla" for mixer in mixers)
 
 
 def test_task_batch_has_requested_shape_and_targets():

@@ -66,6 +66,11 @@
     "KDA and GDN keep the same output-gate rank; GDN sigmoid versus KDA sigmoid isolates decay granularity and its required projection.",
     "Synthetic success gates language-model pretraining but does not imply natural-language long-context capability."
   ],
+  "recurrent_initialization": {
+    "decay_rate": "FLA-compatible uniform rate; GDN in [0,16], KDA in [1,16]",
+    "time_step": "log-uniform dt in [0.001,0.1], stored through inverse softplus",
+    "why": "The paper-style length-1024 task requires long initial memory timescales; zero decay bias collapses to the value-token prior."
+  },
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
