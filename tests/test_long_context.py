@@ -7,6 +7,7 @@ from speck.long_context import (
     build_multi_key_case,
     build_passkey_case,
     build_two_hop_case,
+    candidate_shift_score,
     effective_length,
     evaluate_case,
     parse_lengths,
@@ -69,6 +70,18 @@ def test_multi_key_case_has_exact_length_and_stable_counterfactual_structure():
     assert case["label"] == counterfactual["label"]
     assert case["query_index"] == counterfactual["query_index"]
     assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
+    distractor_index = (case["query_index"] + 1) % case["records"]
+    distractor = build_multi_key_case(
+        tokenizer,
+        1_024,
+        seed=9,
+        depth=0.4,
+        records=8,
+        answer_offset=1,
+        mutation_index=distractor_index,
+    )
+    assert distractor["answer_index"] == case["answer_index"]
+    assert distractor["mutation_index"] == distractor_index
 
 
 def test_two_hop_case_has_two_ordered_facts_and_exact_length():
@@ -106,6 +119,12 @@ def test_counterfactual_metrics_require_both_prompt_directions():
     assert result["contrastive_retrieval_score"] == 0.75
     assert result["contrastive_direction_accuracy"] == 1.0
     assert result["contrastive_pair_accuracy"] == 0.0
+
+
+def test_candidate_shift_score_is_symmetric_between_prompts():
+    reference = {"candidate_log_probabilities": [-1.0, -2.0]}
+    changed = {"candidate_log_probabilities": [-3.0, -0.5]}
+    assert candidate_shift_score(reference, changed, 0, 1) == 1.75
 
 
 def test_evaluate_case_streams_answer_without_full_logits():
@@ -186,6 +205,29 @@ def test_contrastive_effective_length_requires_paired_direction_signal():
     summary = aggregate_results(results)
     assert summary["short_context_contrastive_p_value"] < 0.05
     assert summary["effective_length_by_contrastive_retrieval"] == 2_000
+
+
+def test_specificity_effective_length_requires_target_over_distractor_signal():
+    results = []
+    for length in (1_000, 2_000):
+        for index in range(30):
+            results.append(
+                {
+                    **sample_result(),
+                    "length": length,
+                    "contrastive_retrieval_score": 1.0,
+                    "contrastive_direction_accuracy": 1.0,
+                    "contrastive_pair_accuracy": 1.0,
+                    "counterfactual_prefill_seconds": 1.0,
+                    "distractor_change_score": 0.0,
+                    "association_specificity_score": 1.0 if index < 25 else -1.0,
+                    "association_specificity_accuracy": float(index < 25),
+                    "distractor_prefill_seconds": 1.0,
+                }
+            )
+    summary = aggregate_results(results)
+    assert summary["short_context_association_specificity_p_value"] < 0.05
+    assert summary["effective_length_by_association_specificity"] == 2_000
 
 
 def sample_result():

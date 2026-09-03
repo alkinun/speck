@@ -135,7 +135,15 @@ def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
     }
 
 
-def build_multi_key_case(tokenizer, length, seed, depth, records=8, answer_offset=0):
+def build_multi_key_case(
+    tokenizer,
+    length,
+    seed,
+    depth,
+    records=8,
+    answer_offset=0,
+    mutation_index=None,
+):
     """Build exact-length associative recall with several simultaneous key/value records."""
 
     if not 0 <= depth <= 1:
@@ -147,9 +155,15 @@ def build_multi_key_case(tokenizer, length, seed, depth, records=8, answer_offse
     while len(set(labels)) != records:
         labels = [f"archive-{generator.randrange(100_000, 1_000_000)}" for _ in range(records)]
     answers = list(generator.sample(_PASSKEY_VALUES, records))
+    original_answers = list(answers)
     query_index = generator.randrange(records)
-    answers[query_index] = _PASSKEY_VALUES[
-        (_PASSKEY_VALUES.index(answers[query_index]) + answer_offset) % len(_PASSKEY_VALUES)
+    mutation_index = query_index if mutation_index is None else mutation_index
+    if not isinstance(mutation_index, int) or isinstance(mutation_index, bool):
+        raise ValueError("multi-key mutation index must be an integer")
+    if not 0 <= mutation_index < records:
+        raise ValueError("multi-key mutation index is outside the records")
+    answers[mutation_index] = _PASSKEY_VALUES[
+        (_PASSKEY_VALUES.index(answers[mutation_index]) + answer_offset) % len(_PASSKEY_VALUES)
     ]
     prefix = tokenizer.encode(
         "A long archive follows. Remember every exact record and answer the final question.\n",
@@ -187,6 +201,9 @@ def build_multi_key_case(tokenizer, length, seed, depth, records=8, answer_offse
         "answer_index": _PASSKEY_VALUES.index(answer),
         "label": labels[query_index],
         "query_index": query_index,
+        "mutation_index": mutation_index,
+        "mutation_from_index": _PASSKEY_VALUES.index(original_answers[mutation_index]),
+        "mutation_to_index": _PASSKEY_VALUES.index(answers[mutation_index]),
         "records": records,
         "fact_positions": positions,
     }
@@ -200,6 +217,7 @@ def build_two_hop_case(
     second_depth,
     chains=6,
     answer_offset=0,
+    mutation_index=None,
 ):
     """Build exact-length two-hop lookup among several independent chains."""
 
@@ -214,9 +232,15 @@ def build_two_hop_case(
         starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
         destinations = [f"box-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
     answers = list(generator.sample(_PASSKEY_VALUES, chains))
+    original_answers = list(answers)
     query_index = generator.randrange(chains)
-    answers[query_index] = _PASSKEY_VALUES[
-        (_PASSKEY_VALUES.index(answers[query_index]) + answer_offset) % len(_PASSKEY_VALUES)
+    mutation_index = query_index if mutation_index is None else mutation_index
+    if not isinstance(mutation_index, int) or isinstance(mutation_index, bool):
+        raise ValueError("two-hop mutation index must be an integer")
+    if not 0 <= mutation_index < chains:
+        raise ValueError("two-hop mutation index is outside the chains")
+    answers[mutation_index] = _PASSKEY_VALUES[
+        (_PASSKEY_VALUES.index(answers[mutation_index]) + answer_offset) % len(_PASSKEY_VALUES)
     ]
     first_lines = list(zip(starts, destinations))
     second_lines = list(zip(destinations, answers))
@@ -267,6 +291,9 @@ def build_two_hop_case(
         "answer_index": _PASSKEY_VALUES.index(answer),
         "label": starts[query_index],
         "query_index": query_index,
+        "mutation_index": mutation_index,
+        "mutation_from_index": _PASSKEY_VALUES.index(original_answers[mutation_index]),
+        "mutation_to_index": _PASSKEY_VALUES.index(answers[mutation_index]),
         "chains": chains,
         "fact_positions": positions,
     }
@@ -367,6 +394,16 @@ def add_counterfactual_metrics(factual, counterfactual, factual_case, counterfac
     return factual
 
 
+def candidate_shift_score(reference, changed, from_index, to_index):
+    """Measure symmetric candidate-logit movement caused by one prompt mutation."""
+
+    reference_scores = reference["candidate_log_probabilities"]
+    changed_scores = changed["candidate_log_probabilities"]
+    reference_preference = reference_scores[from_index] - reference_scores[to_index]
+    changed_preference = changed_scores[to_index] - changed_scores[from_index]
+    return (reference_preference + changed_preference) / 2
+
+
 def aggregate_results(results, threshold=0.85):
     grouped = defaultdict(list)
     for result in results:
@@ -384,12 +421,23 @@ def aggregate_results(results, threshold=0.85):
         "prefill_tokens_per_second",
         "decode_tokens_per_second",
     )
-    if results and all("contrastive_retrieval_score" in result for result in results):
+    has_contrastive = results and all("contrastive_retrieval_score" in result for result in results)
+    has_specificity = results and all(
+        "association_specificity_score" in result for result in results
+    )
+    if has_contrastive:
         metrics += (
             "contrastive_retrieval_score",
             "contrastive_direction_accuracy",
             "contrastive_pair_accuracy",
             "counterfactual_prefill_seconds",
+        )
+    if has_specificity:
+        metrics += (
+            "distractor_change_score",
+            "association_specificity_score",
+            "association_specificity_accuracy",
+            "distractor_prefill_seconds",
         )
     for length, values in sorted(grouped.items()):
         point = {"length": length, "samples": len(values)}
@@ -414,6 +462,8 @@ def aggregate_results(results, threshold=0.85):
     candidate_effective_length = None
     contrastive_p_value = None
     contrastive_effective_length = None
+    specificity_p_value = None
+    specificity_effective_length = None
     if curve:
         baseline = curve[0]
         candidate_p_value = binomial_tail_probability(
@@ -440,6 +490,21 @@ def aggregate_results(results, threshold=0.85):
                     threshold,
                     metric="contrastive_direction_accuracy",
                 )
+        if "association_specificity_accuracy" in baseline:
+            specificity_successes = round(
+                baseline["association_specificity_accuracy"] * baseline["samples"]
+            )
+            specificity_p_value = binomial_tail_probability(
+                specificity_successes,
+                baseline["samples"],
+                0.5,
+            )
+            if specificity_p_value < 0.05:
+                specificity_effective_length = effective_length(
+                    curve,
+                    threshold,
+                    metric="association_specificity_accuracy",
+                )
     return {
         "curve": curve,
         "effective_length": effective_length(curve, threshold),
@@ -450,6 +515,8 @@ def aggregate_results(results, threshold=0.85):
         "short_context_candidate_p_value": candidate_p_value,
         "effective_length_by_contrastive_retrieval": contrastive_effective_length,
         "short_context_contrastive_p_value": contrastive_p_value,
+        "effective_length_by_association_specificity": specificity_effective_length,
+        "short_context_association_specificity_p_value": specificity_p_value,
     }
 
 

@@ -18,6 +18,7 @@ from speck.long_context import (
     aggregate_results,
     build_multi_key_case,
     build_two_hop_case,
+    candidate_shift_score,
     evaluate_case,
     parse_lengths,
 )
@@ -62,7 +63,16 @@ def atomic_json(path, value):
     os.replace(temporary, path)
 
 
-def build_case(task, tokenizer, length, seed, records, chains, answer_offset=0):
+def build_case(
+    task,
+    tokenizer,
+    length,
+    seed,
+    records,
+    chains,
+    answer_offset=0,
+    mutation_index=None,
+):
     if task == "multi_key":
         return build_multi_key_case(
             tokenizer,
@@ -71,6 +81,7 @@ def build_case(task, tokenizer, length, seed, records, chains, answer_offset=0):
             depth=(0.1, 0.5, 0.9)[seed % 3],
             records=records,
             answer_offset=answer_offset,
+            mutation_index=mutation_index,
         )
     first_depth, second_depth = TWO_HOP_DEPTHS[seed % len(TWO_HOP_DEPTHS)]
     return build_two_hop_case(
@@ -81,6 +92,7 @@ def build_case(task, tokenizer, length, seed, records, chains, answer_offset=0):
         second_depth,
         chains=chains,
         answer_offset=answer_offset,
+        mutation_index=mutation_index,
     )
 
 
@@ -117,6 +129,19 @@ def run(args):
                     chains,
                     answer_offset=1,
                 )
+                distractor_index = (case["query_index"] + 1) % (
+                    case.get("records") or case["chains"]
+                )
+                distractor_case = build_case(
+                    task,
+                    tokenizer,
+                    length,
+                    sample,
+                    records,
+                    chains,
+                    answer_offset=1,
+                    mutation_index=distractor_index,
+                )
                 factual = evaluate_case(model, case, device=device, kv_cache_dtype=torch.bfloat16)
                 counterfactual = evaluate_case(
                     model,
@@ -127,6 +152,21 @@ def run(args):
                 result = add_counterfactual_metrics(
                     factual, counterfactual, case, counterfactual_case
                 )
+                distractor = evaluate_case(
+                    model,
+                    distractor_case,
+                    device=device,
+                    kv_cache_dtype=torch.bfloat16,
+                )
+                distractor_change_score = candidate_shift_score(
+                    result,
+                    distractor,
+                    distractor_case["mutation_from_index"],
+                    distractor_case["mutation_to_index"],
+                )
+                association_specificity_score = (
+                    result["contrastive_retrieval_score"] - distractor_change_score
+                )
                 result.update(
                     fact_positions=case["fact_positions"],
                     query_index=case["query_index"],
@@ -134,13 +174,19 @@ def run(args):
                     chains=case.get("chains"),
                     first_depth=case.get("first_depth"),
                     second_depth=case.get("second_depth"),
+                    distractor_index=distractor_index,
+                    distractor_change_score=distractor_change_score,
+                    distractor_prefill_seconds=distractor["prefill_seconds"],
+                    association_specificity_score=association_specificity_score,
+                    association_specificity_accuracy=float(association_specificity_score > 0),
                 )
                 task_results.append(result)
                 results.append(result)
                 print(
                     f"{task} {length:,} sample={sample} exact={result['exact_match']:.0f} "
                     f"choice={result['candidate_accuracy']:.0f} "
-                    f"score={result['contrastive_retrieval_score']:.3f}"
+                    f"score={result['contrastive_retrieval_score']:.3f} "
+                    f"specificity={result['association_specificity_score']:.3f}"
                 )
         task_summaries[task] = aggregate_results(task_results)
     report = {
@@ -188,7 +234,9 @@ def main(argv=None):
         print(
             f"{task}: choice {short['candidate_accuracy']:.3f}->{long['candidate_accuracy']:.3f} "
             f"contrast {short['contrastive_retrieval_score']:.3f}->"
-            f"{long['contrastive_retrieval_score']:.3f}"
+            f"{long['contrastive_retrieval_score']:.3f} "
+            f"specificity {short['association_specificity_score']:.3f}->"
+            f"{long['association_specificity_score']:.3f}"
         )
 
 

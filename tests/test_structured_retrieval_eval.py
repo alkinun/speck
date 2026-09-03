@@ -21,6 +21,19 @@ def test_build_case_is_deterministic_and_counterfactual():
         assert case == repeated
         assert case["label"] == counterfactual["label"]
         assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
+        distractor_index = (case["query_index"] + 1) % (case.get("records") or case["chains"])
+        distractor = build_case(
+            task,
+            tokenizer,
+            1_024,
+            7,
+            records=8,
+            chains=6,
+            answer_offset=1,
+            mutation_index=distractor_index,
+        )
+        assert distractor["answer_index"] == case["answer_index"]
+        assert distractor["mutation_index"] == distractor_index
 
 
 @pytest.mark.parametrize("value", (0, -1, True, 1.2))
