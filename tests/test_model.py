@@ -322,6 +322,23 @@ def test_gated_deltanet_backward_is_finite():
     )
 
 
+def test_gated_deltanet_output_gate_activation_is_configurable():
+    torch.manual_seed(37)
+    silu = model_with(GatedDeltaNetSpec(4, 4, 1, 2))
+    sigmoid = model_with(
+        GatedDeltaNetSpec(4, 4, 1, 2, output_gate_activation="sigmoid")
+    )
+    sigmoid.load_state_dict(silu.state_dict())
+    tokens = torch.randint(0, 16, (2, 8))
+
+    silu_logits = silu(tokens)
+    sigmoid_logits = sigmoid(tokens)
+
+    assert torch.isfinite(silu_logits).all()
+    assert torch.isfinite(sigmoid_logits).all()
+    assert not torch.allclose(sigmoid_logits, silu_logits)
+
+
 def test_activation_checkpointing_preserves_loss_and_gradients():
     torch.manual_seed(41)
     reference = model_with(AttentionSpec(4, 1), SwiGLUSpec(16))

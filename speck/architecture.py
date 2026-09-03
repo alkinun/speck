@@ -54,6 +54,7 @@ class GatedDeltaNetSpec:
     num_key_heads: int
     num_value_heads: int
     conv_kernel_size: int = 4
+    output_gate_activation: str = "silu"
     kind: str = field(init=False, default="gated_deltanet")
 
     def __post_init__(self):
@@ -69,6 +70,8 @@ class GatedDeltaNetSpec:
             raise ValueError("Gated DeltaNet value heads must be divisible by key heads")
         if self.conv_kernel_size < 2:
             raise ValueError("Gated DeltaNet convolution kernels need at least two positions")
+        if self.output_gate_activation not in {"sigmoid", "silu"}:
+            raise ValueError("Gated DeltaNet output gate activation must be sigmoid or silu")
 
 
 @dataclass(frozen=True)
