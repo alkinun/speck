@@ -1,0 +1,262 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "decay_initialization": "fla",
+                  "key_head_dim": 128,
+                  "kind": "gated_deltanet",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "output_gate_activation": "silu",
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 512,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.994873046875,
+  "best_validation_loss": 3.4831480905413628,
+  "completed_steps": 5250,
+  "created_at": "2026-09-03T08:17:13.195701+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.994873046875,
+    "correct": 4075,
+    "loss": 3.4831480905413628,
+    "step": 5250,
+    "targets": 4096
+  },
+  "flops_per_token": 25018368,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.06801426410675,
+      "step": 0,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.061409205198288,
+      "step": 250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.049774020910263,
+      "step": 500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.017363876104355,
+      "step": 750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.851700633764267,
+      "step": 1000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.535039961338043,
+      "step": 1250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.435350447893143,
+      "step": 1500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.000244140625,
+      "correct": 1,
+      "loss": 8.409999161958694,
+      "step": 1750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.39156460762024,
+      "step": 2000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.00048828125,
+      "correct": 2,
+      "loss": 8.378702908754349,
+      "step": 2250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.000732421875,
+      "correct": 3,
+      "loss": 8.345092326402664,
+      "step": 2500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.001708984375,
+      "correct": 7,
+      "loss": 8.284705877304077,
+      "step": 2750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.001953125,
+      "correct": 8,
+      "loss": 8.223344177007675,
+      "step": 3000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.004150390625,
+      "correct": 17,
+      "loss": 8.170601487159729,
+      "step": 3250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.009521484375,
+      "correct": 39,
+      "loss": 8.091013729572296,
+      "step": 3500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.094482421875,
+      "correct": 387,
+      "loss": 7.737772688269615,
+      "step": 3750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.362548828125,
+      "correct": 1485,
+      "loss": 7.195510670542717,
+      "step": 4000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.692138671875,
+      "correct": 2835,
+      "loss": 6.469567224383354,
+      "step": 4250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.92724609375,
+      "correct": 3798,
+      "loss": 5.475402921438217,
+      "step": 4500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.979248046875,
+      "correct": 4011,
+      "loss": 4.7061747610569,
+      "step": 4750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.9892578125,
+      "correct": 4052,
+      "loss": 4.065827369689941,
+      "step": 5000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.994873046875,
+      "correct": 4075,
+      "loss": 3.4831480905413628,
+      "step": 5250,
+      "targets": 4096
+    }
+  ],
+  "parameters": 3941896,
+  "peak_allocated_bytes": 424201216,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.0001,
+    "max_steps": 20000,
+    "num_pairs": 16,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 512,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "variant": "gdn-silu",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": true,
+    "git_revision": "bc67b3cab6e7fa23f8a56338e7aea3651847eae6",
+    "git_tracked_dirty": false,
+    "untracked_files": [
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/gdn-silu/length-256-pairs-8.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/kda-sigmoid/length-2048-pairs-64.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/kda-sigmoid/length-256-pairs-8.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/kda-sigmoid/length-512-pairs-16.json"
+    ]
+  },
+  "status": "complete",
+  "tokens_per_training_second": 639644.1747722953,
+  "training_seconds": 33.61869121633936,
+  "wall_seconds": 42.52048055897467
+}

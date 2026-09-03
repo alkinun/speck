@@ -1,0 +1,261 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "decay_initialization": "fla",
+                  "key_head_dim": 128,
+                  "kind": "gated_deltanet",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "output_gate_activation": "silu",
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 256,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.9912109375,
+  "best_validation_loss": 4.8759651482105255,
+  "completed_steps": 5250,
+  "created_at": "2026-09-03T08:16:31.008342+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.9912109375,
+    "correct": 2030,
+    "loss": 4.8759651482105255,
+    "step": 5250,
+    "targets": 2048
+  },
+  "flops_per_token": 25018368,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.059655725955963,
+      "step": 0,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.057342410087585,
+      "step": 250,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.052017748355865,
+      "step": 500,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.04920706152916,
+      "step": 750,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.043162077665329,
+      "step": 1000,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.030534416437149,
+      "step": 1250,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.983153998851776,
+      "step": 1500,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.830610573291779,
+      "step": 1750,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.631984889507294,
+      "step": 2000,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.526753157377243,
+      "step": 2250,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.495014399290085,
+      "step": 2500,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.00048828125,
+      "correct": 1,
+      "loss": 8.448284387588501,
+      "step": 2750,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.00048828125,
+      "correct": 1,
+      "loss": 8.364889204502106,
+      "step": 3000,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.00244140625,
+      "correct": 5,
+      "loss": 8.268543004989624,
+      "step": 3250,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0048828125,
+      "correct": 10,
+      "loss": 8.188167810440063,
+      "step": 3500,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0126953125,
+      "correct": 26,
+      "loss": 8.10903912782669,
+      "step": 3750,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.0576171875,
+      "correct": 118,
+      "loss": 7.866721093654633,
+      "step": 4000,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.2685546875,
+      "correct": 550,
+      "loss": 7.365467369556427,
+      "step": 4250,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.60693359375,
+      "correct": 1243,
+      "loss": 6.709844008088112,
+      "step": 4500,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.8818359375,
+      "correct": 1806,
+      "loss": 5.992247030138969,
+      "step": 4750,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.96240234375,
+      "correct": 1971,
+      "loss": 5.393358588218689,
+      "step": 5000,
+      "targets": 2048
+    },
+    {
+      "accuracy": 0.9912109375,
+      "correct": 2030,
+      "loss": 4.8759651482105255,
+      "step": 5250,
+      "targets": 2048
+    }
+  ],
+  "parameters": 3941896,
+  "peak_allocated_bytes": 252166656,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.0001,
+    "max_steps": 20000,
+    "num_pairs": 8,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 256,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "variant": "gdn-silu",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": true,
+    "git_revision": "bc67b3cab6e7fa23f8a56338e7aea3651847eae6",
+    "git_tracked_dirty": false,
+    "untracked_files": [
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/kda-sigmoid/length-2048-pairs-64.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/kda-sigmoid/length-256-pairs-8.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-42/kda-sigmoid/length-512-pairs-16.json"
+    ]
+  },
+  "status": "complete",
+  "tokens_per_training_second": 341500.2398089246,
+  "training_seconds": 31.48460453795269,
+  "wall_seconds": 39.68537657998968
+}
