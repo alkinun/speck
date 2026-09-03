@@ -188,10 +188,38 @@
     "time_step": "log-uniform dt in [0.001,0.1], stored through inverse softplus",
     "why": "The paper-style length-1024 task requires long initial memory timescales; zero decay bias collapses to the value-token prior."
   },
+  "task_qualification": {
+    "discovery": {
+      "batch_size": 8,
+      "early_stop_accuracy": 0.99,
+      "eval_examples": 256,
+      "eval_interval_steps": 250,
+      "learning_rates": [
+        0.00005,
+        0.0001,
+        0.0005,
+        0.001
+      ],
+      "max_steps": 20000,
+      "seed": 42,
+      "sequence_length": 1024,
+      "validation_seed": 1000042,
+      "vocab_size": 8192
+    },
+    "replication": "Repeat every passing variant at its fastest passing discovery rate on seeds 43 and 44; keep validation fixed.",
+    "tasks": [
+      "palindrome",
+      "stack"
+    ],
+    "variants": [
+      "kda-sigmoid",
+      "gdn-silu"
+    ]
+  },
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "mqar_length_scaling_complete",
+  "status": "running_palindrome_stack_qualification",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",
