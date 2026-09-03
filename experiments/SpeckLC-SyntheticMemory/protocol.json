@@ -216,6 +216,15 @@
         "kda-sigmoid": 0.001
       }
     },
+    "adaptive_palindrome_control": {
+      "decision_trigger": "KDA passed only two of three Palindrome seeds, while the single GDN-SiLU discovery run reached 93.05 percent but had not been replicated under the passers-only rule.",
+      "learning_rate": 0.0001,
+      "seeds": [
+        43,
+        44
+      ],
+      "variant": "gdn-silu"
+    },
     "tie_break": "If multiple learning rates first cross the gate at the same evaluation step, select the higher learning rate.",
     "tasks": [
       "palindrome",
