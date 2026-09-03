@@ -157,6 +157,20 @@
       "question": "How does recall scale with distance when the number of associations is fixed?"
     },
     "learning_rate": 0.0001,
+    "replication_selection": [
+      {
+        "curve": "fixed_load",
+        "length": 2048,
+        "num_pairs": 32,
+        "reason": "KDA passed seed 42 while GDN-SiLU failed."
+      },
+      {
+        "curve": "fixed_density",
+        "length": 2048,
+        "num_pairs": 64,
+        "reason": "Both passed seed 42 within 500 steps; replication tests whether the apparent tie is stable."
+      }
+    ],
     "reuse": "The completed length-1024, 32-pair confirmation is shared by both curves.",
     "seeds": [
       42,
