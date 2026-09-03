@@ -1,0 +1,57 @@
+{
+  "comparison": "parameter- and analytic-FLOP-matched global attention output gates",
+  "format": "speck_attention_gate_screen_results",
+  "format_version": 1,
+  "status": "one_of_three_complete",
+  "variants": {
+    "ungated": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-AttentionGate32M-ungated",
+        "metadata_sha256": "79a94a512c41fcf6422a771aee04b307f1ec6fdb50089ff810e3ea30f4252e90",
+        "model_sha256": "6fb1901c98c31ba590a74ea2dd75002ffa763578a5a02412458447173c0a0632",
+        "optimizer_sha256": "677960f875ce316014b6f0ad913d52d87c651dc984047fee280c9d408ed6e303",
+        "step": 489
+      },
+      "final_validation_loss": 3.8810811042785645,
+      "intermediate_validation": [
+        {
+          "global_tokens": 7995392,
+          "loss": 4.94406
+        },
+        {
+          "global_tokens": 15990784,
+          "loss": 4.35784
+        },
+        {
+          "global_tokens": 23986176,
+          "loss": 4.03532
+        },
+        {
+          "global_tokens": 31981568,
+          "loss": 3.88009
+        }
+      ],
+      "performance": {
+        "active_seconds": 1044.81272596505,
+        "gpu_hours": 0.23926,
+        "peak_allocated_vram_mib": 14205.16504,
+        "tokens_per_second": 44387.48965
+      },
+      "validation_source_losses": {
+        "cosmopedia_v2": 3.865056037902832,
+        "dclm": 4.531368255615234,
+        "dclm_edu": 4.079215049743652,
+        "finemath_4plus": 3.819815158843994,
+        "fineweb_edu": 4.289869785308838,
+        "math_multi_style": 2.8412482738494873,
+        "math_textbook_exercise": 2.352874994277954,
+        "pes2o": 4.227127552032471,
+        "ufw_l3_multi_style": 4.0929765701293945,
+        "ultra_fineweb": 4.244263648986816,
+        "wikimedia": 4.353936195373535
+      },
+      "validation_tokens": 19988480,
+      "wandb_id": "z65y6oq5"
+    }
+  }
+}
