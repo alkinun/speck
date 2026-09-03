@@ -3,7 +3,8 @@
   "data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
   "format": "speck_kimi_context_results",
   "format_version": 1,
-  "status": "one_of_two_complete",
+  "long_validation_delta_kda_minus_rope": 0.011444091796875,
+  "status": "training_complete_evaluation_pending",
   "validation_caveat": "the long-document validation split contains only 327680 evaluated tokens",
   "variants": {
     "gdn-sigmoid-rope": {
@@ -34,6 +35,35 @@
       },
       "validation_tokens": 327680,
       "wandb_id": "5rztcowr"
+    },
+    "kda-sigmoid-nope": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiContext32K-kda-sigmoid-nope",
+        "metadata_sha256": "3bf28644860033e36869a6eebafc2a99945db080d24d4fc4c62b989fa3135b7e",
+        "model_sha256": "34deca83c4bf5a9f72f8b0129a0034026e175c4ed3c3eda1b6e816a25358b979",
+        "optimizer_sha256": "65ec6f75ecf275aa33895073dde5b3dc654a254e23f54e7b70b4aca38c669135",
+        "step": 489
+      },
+      "final_validation_loss": 2.627166748046875,
+      "initial_validation_loss": 2.87334,
+      "loss_change": -0.246173251953125,
+      "parent_checkpoint": {
+        "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+        "step": 2000
+      },
+      "performance": {
+        "active_seconds": 1779.9086736449972,
+        "gpu_hours": 0.48285,
+        "peak_allocated_vram_mib": 4956.39941,
+        "tokens_per_second": 18291.4943
+      },
+      "validation_source_losses": {
+        "finemath_4plus": 2.476877212524414,
+        "pes2o": 2.896744728088379,
+        "wikimedia": 2.5579745769500732
+      },
+      "validation_tokens": 327680,
+      "wandb_id": "bcpiz02u"
     }
   }
 }
