@@ -1,0 +1,210 @@
+{
+  "comparison": "same-parent five-global-layer RoPE versus NoPE at 32K",
+  "control": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-GlobalCount32K-global-5",
+      "metadata_sha256": "8d87f99d777a31e8829bf983a8ad056a94a2fa79c7c0b0072932b0465d110edc",
+      "model_sha256": "ce1862f63373f5a47f323c9a619288454d2d8aa3cd3425fd0949cf0669bd1efb",
+      "optimizer_sha256": "e11a96a734b40bec6218a9c68a206dd27d62f76c9dc79675bab497259f488063",
+      "step": 489
+    },
+    "global_rope_dim": 32,
+    "retrieval": {
+      "curve": [
+        {
+          "directional_accuracy": 0.9333333333333333,
+          "length": 4096,
+          "mean_contrastive_score": 0.17773434817790984,
+          "one_sided_binomial_p": 4.33996319770813e-07
+        },
+        {
+          "directional_accuracy": 0.8666666666666667,
+          "length": 8192,
+          "mean_contrastive_score": 0.05377601757645607,
+          "one_sided_binomial_p": 2.9738061130046844e-05
+        },
+        {
+          "directional_accuracy": 0.8333333333333334,
+          "length": 16384,
+          "mean_contrastive_score": 0.028125021358331045,
+          "one_sided_binomial_p": 0.00016245711594820023
+        },
+        {
+          "directional_accuracy": 0.7,
+          "length": 32768,
+          "mean_contrastive_score": 0.013411458084980647,
+          "one_sided_binomial_p": 0.02138697262853384
+        },
+        {
+          "directional_accuracy": 0.5,
+          "length": 65536,
+          "mean_contrastive_score": 0.002864545335372289,
+          "one_sided_binomial_p": 0.572232224047184
+        },
+        {
+          "directional_accuracy": 0.6333333333333333,
+          "length": 131072,
+          "mean_contrastive_score": 0.004036451627810796,
+          "one_sided_binomial_p": 0.10024421103298664
+        }
+      ],
+      "effective_length_at_85_percent_directional_retention": 16384,
+      "longest_detectable_length": 32768
+    },
+    "short_context": {
+      "evaluated_tokens": 19988480,
+      "loss": 2.8262271881103516,
+      "loss_change_from_parent": 0.015678882598876953
+    },
+    "training": {
+      "final_long_document_loss": 2.634904384613037,
+      "gpu_hours": 0.4620687407425269,
+      "initial_long_document_loss": 2.8558297157287598,
+      "loss_change": -0.22092533111572266,
+      "tokens_per_second": 19043.09183131761
+    }
+  },
+  "deltas_nope_minus_rope": {
+    "final_long_document_loss": 0.06413626670837402,
+    "initial_long_document_loss": 0.2864985466003418,
+    "short_context_loss": 0.048366546630859375,
+    "tokens_per_second": 164.7539128404317
+  },
+  "evaluator_revision": "65b758e",
+  "findings": {
+    "late_nope_switch_is_competitive_on_language_loss": false,
+    "nope_improves_counterfactual_retrieval_sensitivity": true,
+    "nope_requires_from_scratch_or_longer_adaptation_test": true,
+    "publication_promotion_allowed": false,
+    "systems_cost_changed_materially": false
+  },
+  "fixed": {
+    "activation_checkpointing": true,
+    "batch_tokens": 65536,
+    "data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
+    "global_attention_layers": [
+      3,
+      7,
+      11,
+      15,
+      19
+    ],
+    "learning_rate": 0.0001,
+    "loss_backend": "liger",
+    "optimizer": "muon",
+    "parameters": 152916468,
+    "parent_model_sha256": "ae692777c0f3603261a935c7c56c5a05be8d9768e85eb4eddd444236e5fe46e1",
+    "runtime_seed": 42,
+    "sequence_length": 32768,
+    "train_tokens": 32000000,
+    "training_flops_per_token": 1680038400.0
+  },
+  "format": "speck_global_position_encoding_result",
+  "format_version": 1,
+  "limitations": [
+    "One training seed was run for each positional regime.",
+    "The 32K held-out long-document set contains only 327680 evaluated tokens.",
+    "NoPE was introduced only at the context branch after the parent attention layers had pretrained with sliding RoPE.",
+    "Counterfactual passkey is an internal diagnostic, not RULER, NoLiMa, or HELMET.",
+    "Open-vocabulary exact match remains zero at every tested length.",
+    "The model was trained at 32K and the current corpus does not supervise genuine 64K-128K dependencies."
+  ],
+  "parent_checkpoint": {
+    "metadata_sha256": "f48eb00f1516f271e1d21b001373dc086cb85d091c24155b46cc270c3825decf",
+    "model_sha256": "ae692777c0f3603261a935c7c56c5a05be8d9768e85eb4eddd444236e5fe46e1",
+    "optimizer_sha256": "7226c99edb0499208407bd24ed39a695ba98f591a6d74278d99f6fa9b52f5ddd",
+    "step": 2000
+  },
+  "source_revision": "1ad3c4c",
+  "treatment": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer32K-global-5-nope",
+      "metadata_sha256": "9a0bbc5136b12e33b5fafd28a77b1524a72b2c72c48d019bca964fbc8f48063e",
+      "model_sha256": "b963e89d6154c00deb9741853369aef9e51c55e3d0cf568b2339e30eaac84716",
+      "optimizer_sha256": "0f8cc44e0ece76c915d95dfd30a9d85b16f7ac9c0b358041d5e3c90344d789b6",
+      "step": 489
+    },
+    "global_rope_dim": 0,
+    "positional_regime": {
+      "extrapolates_global_rope": false,
+      "rope_dimensions_by_scope": {
+        "global": [
+          0
+        ]
+      }
+    },
+    "preflight": {
+      "peak_allocated_bytes": 4979077632,
+      "tokens_per_second": 15142.9685203007
+    },
+    "retrieval": {
+      "candidate_accuracy_all_lengths": 0.23333333333333334,
+      "curve": [
+        {
+          "directional_accuracy": 1.0,
+          "length": 4096,
+          "mean_contrastive_score": 1.423828106497725,
+          "one_sided_binomial_p": 9.313225746154785e-10,
+          "prefill_seconds": 0.04449480059556663
+        },
+        {
+          "directional_accuracy": 1.0,
+          "length": 8192,
+          "mean_contrastive_score": 1.2330729108303786,
+          "one_sided_binomial_p": 9.313225746154785e-10,
+          "prefill_seconds": 0.08263895407241459
+        },
+        {
+          "directional_accuracy": 1.0,
+          "length": 16384,
+          "mean_contrastive_score": 1.119401030987501,
+          "one_sided_binomial_p": 9.313225746154785e-10,
+          "prefill_seconds": 0.17424108936296154
+        },
+        {
+          "directional_accuracy": 1.0,
+          "length": 32768,
+          "mean_contrastive_score": 0.887630216156443,
+          "one_sided_binomial_p": 9.313225746154785e-10,
+          "prefill_seconds": 0.41151716735136384
+        },
+        {
+          "directional_accuracy": 1.0,
+          "length": 65536,
+          "mean_contrastive_score": 0.6644531143208344,
+          "one_sided_binomial_p": 9.313225746154785e-10,
+          "prefill_seconds": 1.0892443318424436
+        },
+        {
+          "directional_accuracy": 1.0,
+          "length": 131072,
+          "mean_contrastive_score": 0.586979194978873,
+          "one_sided_binomial_p": 9.313225746154785e-10,
+          "prefill_seconds": 3.2361970242888978
+        }
+      ],
+      "effective_length_at_85_percent_directional_retention": 131072,
+      "exact_match_all_lengths": 0.0,
+      "longest_detectable_length": 131072,
+      "resident_state_bytes_128k": 504860160
+    },
+    "short_context": {
+      "evaluated_tokens": 19988480,
+      "loss": 2.874593734741211,
+      "loss_change_from_parent": 0.06404542922973633
+    },
+    "training": {
+      "final_long_document_loss": 2.699040651321411,
+      "gpu_hours": 0.4584299809397393,
+      "initial_long_document_loss": 3.1423282623291016,
+      "loss_change": -0.44328761100769043,
+      "source_losses": {
+        "finemath_4plus": 2.545711040496826,
+        "pes2o": 2.9657232761383057,
+        "wikimedia": 2.6367971897125244
+      },
+      "tokens_per_second": 19207.845744158043,
+      "wandb_id": "bgohscb1"
+    }
+  }
+}

@@ -18,6 +18,7 @@ Read in order:
 10. [09 — Decisions, open questions, and change log](09_decisions_and_change_log.md)
 11. [10 — Kimi Linear transfer review and revised experiment order](10_kimi_linear_transfer_review.md)
 12. [11 — KDA implementation and kernel qualification](11_kda_implementation_and_qualification.md)
+13. [12 — Same-parent NoPE context activation](12_nope_context_activation.md)
 
 Conventions:
 
@@ -33,4 +34,4 @@ Conventions:
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
 Last consolidated state: all described experiments are complete, all referenced checkpoints have
-completion markers, the GPU is idle, and the repository test suite passes 294 tests.
+completion markers, the GPU is idle, and the repository test suite passes 297 tests.

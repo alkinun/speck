@@ -92,6 +92,19 @@ long-document loss. The two placements therefore play different roles. Five glob
 retrieval most robustly, at a steep state and short-context cost. The raw frontier is recorded in
 `results/SpeckLC-150M-GlobalCount32K`.
 
+## NoPE context intervention
+
+A same-parent 32K control replaced partial RoPE with NoPE only in the five promoted global layers.
+After the same 32M-token continuation, NoPE finished 0.06414 nats worse on 32K long-document loss
+and 0.04837 nats worse than the RoPE control on the original 4K evaluation. However, its paired
+counterfactual retrieval direction was correct in all 30 cases at every tested length through 128K,
+versus detectable retrieval only through 32K for RoPE. Open-vocabulary exact match remained zero.
+
+This rejects late checkpoint conversion as a quality-preserving recipe but establishes positional
+encoding as a strong loss-versus-retrieval axis. The next valid comparison trains NoPE global layers
+from the base stage rather than spending more continuation tokens adapting pretrained RoPE layers.
+See [the complete NoPE finding](../findings/12_nope_context_activation.md).
+
 ## Data
 
 Core pretraining may retain the existing quality mixture. Context-extension data should instead

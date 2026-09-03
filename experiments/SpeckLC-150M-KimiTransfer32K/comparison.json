@@ -49,11 +49,22 @@
     "paired counterfactual retrieval curve"
   ],
   "result": "../../results/SpeckLC-150M-KimiTransfer32K/summary.json",
-  "status": "preflight_passed",
+  "status": "complete",
   "treatment": {
+    "checkpoint": {
+      "metadata_sha256": "9a0bbc5136b12e33b5fafd28a77b1524a72b2c72c48d019bca964fbc8f48063e",
+      "model_sha256": "b963e89d6154c00deb9741853369aef9e51c55e3d0cf568b2339e30eaac84716",
+      "optimizer_sha256": "0f8cc44e0ece76c915d95dfd30a9d85b16f7ac9c0b358041d5e3c90344d789b6",
+      "step": 489
+    },
     "experiment": "global-5-nope",
+    "evaluations": {
+      "retrieval": "../../results/SpeckLC-150M-KimiTransfer32K/retrieval/global-5-nope.json",
+      "short_loss": "../../results/SpeckLC-150M-KimiTransfer32K/short-loss/global-5-nope.json"
+    },
     "global_attention_rope_dim": 0,
     "preflight": "../../results/SpeckLC-150M-KimiTransfer32K/preflight/global-5-nope.json",
-    "status": "preflight_passed"
+    "status": "complete",
+    "wandb_id": "bgohscb1"
   }
 }

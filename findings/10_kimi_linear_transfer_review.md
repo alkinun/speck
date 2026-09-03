@@ -185,6 +185,10 @@ This is the cheapest direct test of the paper's strongest long-context finding. 
 encoding changes only at the context branch, it measures continuation adaptability, not the final
 answer for from-scratch NoPE pretraining.
 
+Outcome: complete. NoPE greatly strengthened paired retrieval sensitivity through 128K but ended
+worse on both 32K and original-4K language loss. See
+[12 — Same-parent NoPE context activation](12_nope_context_activation.md).
+
 ### K2 — Synthetic memory factorization
 
 Build deterministic Palindrome, MQAR, and 64-stack generators following the paper's public task
