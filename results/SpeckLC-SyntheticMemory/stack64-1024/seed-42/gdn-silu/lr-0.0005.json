@@ -1,0 +1,129 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "decay_initialization": "fla",
+                  "key_head_dim": 128,
+                  "kind": "gated_deltanet",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "output_gate_activation": "silu",
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 1024,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.9931792073520965,
+  "best_validation_loss": 0.6468974987528868,
+  "completed_steps": 500,
+  "created_at": "2026-09-03T09:31:52.906754+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.9931792073520965,
+    "correct": 41499,
+    "loss": 0.6468974987528868,
+    "step": 500,
+    "targets": 41784
+  },
+  "flops_per_token": 25018368,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.06385609529814,
+      "step": 0,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.01323473099751101,
+      "correct": 553,
+      "loss": 8.692678020257455,
+      "step": 250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9931792073520965,
+      "correct": 41499,
+      "loss": 0.6468974987528868,
+      "step": 500,
+      "targets": 41784
+    }
+  ],
+  "parameters": 3941896,
+  "peak_allocated_bytes": 803668480,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.0005,
+    "max_steps": 20000,
+    "num_pairs": 256,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 1024,
+    "task": "stack",
+    "validation_seed": 1000042,
+    "variant": "gdn-silu",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": true,
+    "git_revision": "04b236dbd3880a3fe2783101cc1f4f4edf031ff0",
+    "git_tracked_dirty": false,
+    "untracked_files": [
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/gdn-silu/lr-0.001.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/kda-sigmoid/lr-0.00005.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/kda-sigmoid/lr-0.0005.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/kda-sigmoid/lr-0.001.json"
+    ]
+  },
+  "status": "complete",
+  "tokens_per_training_second": 691618.1241226719,
+  "training_seconds": 5.922343352693133,
+  "wall_seconds": 13.715672280988656
+}

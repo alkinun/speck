@@ -1,0 +1,320 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "decay_initialization": "fla",
+                  "key_head_dim": 128,
+                  "kind": "gated_deltanet",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "output_gate_activation": "silu",
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 1024,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.994902354968409,
+  "best_validation_loss": 0.08802719443049349,
+  "completed_steps": 7250,
+  "created_at": "2026-09-03T09:33:22.464782+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.994902354968409,
+    "correct": 41571,
+    "loss": 0.08802719443049349,
+    "step": 7250,
+    "targets": 41784
+  },
+  "flops_per_token": 25018368,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.06385609529814,
+      "step": 0,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.056199437695948,
+      "step": 250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 7.179781734635267e-05,
+      "correct": 3,
+      "loss": 9.052462351954397,
+      "step": 500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 2.3932605782117557e-05,
+      "correct": 1,
+      "loss": 9.04676199790141,
+      "step": 750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 4.7865211564235115e-05,
+      "correct": 2,
+      "loss": 9.033553583421584,
+      "step": 1000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.0011248324717595252,
+      "correct": 47,
+      "loss": 8.898626763907835,
+      "step": 1250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.7103676048248133,
+      "correct": 29682,
+      "loss": 7.588686290655514,
+      "step": 1500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9135554279149913,
+      "correct": 38172,
+      "loss": 5.920546775436621,
+      "step": 1750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154939689833429,
+      "correct": 38253,
+      "loss": 4.879915193970031,
+      "step": 2000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.915517901589125,
+      "correct": 38254,
+      "loss": 4.052497129022173,
+      "step": 2250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.915517901589125,
+      "correct": 38254,
+      "loss": 3.302196650949676,
+      "step": 2500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.915517901589125,
+      "correct": 38254,
+      "loss": 2.615932235995312,
+      "step": 2750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.915517901589125,
+      "correct": 38254,
+      "loss": 2.021340124958118,
+      "step": 3000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154939689833429,
+      "correct": 38253,
+      "loss": 1.5362743485049226,
+      "step": 3250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154939689833429,
+      "correct": 38253,
+      "loss": 1.1822285339016578,
+      "step": 3500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154939689833429,
+      "correct": 38253,
+      "loss": 0.9446196580741133,
+      "step": 3750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154939689833429,
+      "correct": 38253,
+      "loss": 0.7872696098139202,
+      "step": 4000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154700363775607,
+      "correct": 38252,
+      "loss": 0.6818147279877054,
+      "step": 4250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9155657668006892,
+      "correct": 38256,
+      "loss": 0.6159534574855956,
+      "step": 4500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9159247558874211,
+      "correct": 38271,
+      "loss": 0.5585396211767663,
+      "step": 4750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9161880145510243,
+      "correct": 38282,
+      "loss": 0.5147863494329655,
+      "step": 5000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.917336779628566,
+      "correct": 38330,
+      "loss": 0.4799341657895273,
+      "step": 5250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9186770055523645,
+      "correct": 38386,
+      "loss": 0.4528689682997211,
+      "step": 5500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9192992533026996,
+      "correct": 38412,
+      "loss": 0.4208681331885037,
+      "step": 5750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9234156614972239,
+      "correct": 38584,
+      "loss": 0.3972947582439881,
+      "step": 6000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9248037526325866,
+      "correct": 38642,
+      "loss": 0.37951612755550684,
+      "step": 6250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9279628565958261,
+      "correct": 38774,
+      "loss": 0.35723056826079325,
+      "step": 6500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9354058969940647,
+      "correct": 39085,
+      "loss": 0.3247446377524329,
+      "step": 6750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.981883017422937,
+      "correct": 41027,
+      "loss": 0.16165025723110596,
+      "step": 7000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.994902354968409,
+      "correct": 41571,
+      "loss": 0.08802719443049349,
+      "step": 7250,
+      "targets": 41784
+    }
+  ],
+  "parameters": 3941896,
+  "peak_allocated_bytes": 803668480,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 5e-05,
+    "max_steps": 20000,
+    "num_pairs": 256,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 1024,
+    "task": "stack",
+    "validation_seed": 1000042,
+    "variant": "gdn-silu",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": true,
+    "git_revision": "04b236dbd3880a3fe2783101cc1f4f4edf031ff0",
+    "git_tracked_dirty": false,
+    "untracked_files": [
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/gdn-silu/lr-0.0001.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/gdn-silu/lr-0.0005.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/gdn-silu/lr-0.001.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/kda-sigmoid/lr-0.00005.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/kda-sigmoid/lr-0.0005.json",
+      "results/SpeckLC-SyntheticMemory/stack64-1024/seed-42/kda-sigmoid/lr-0.001.json"
+    ]
+  },
+  "status": "complete",
+  "tokens_per_training_second": 981214.6756041513,
+  "training_seconds": 60.52905798971187,
+  "wall_seconds": 157.68815771699883
+}
