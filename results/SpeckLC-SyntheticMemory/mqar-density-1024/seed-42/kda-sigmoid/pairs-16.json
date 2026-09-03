@@ -1,0 +1,276 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "key_head_dim": 128,
+                  "kind": "kimi_delta_attention",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 1024,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.9912109375,
+  "best_validation_loss": 0.06459088192787021,
+  "completed_steps": 6000,
+  "created_at": "2026-09-03T06:57:28.780672+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.9912109375,
+    "correct": 4060,
+    "loss": 0.06459088192787021,
+    "step": 6000,
+    "targets": 4096
+  },
+  "flops_per_token": 24930304,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.066166669130325,
+      "step": 0,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.00048828125,
+      "correct": 2,
+      "loss": 8.547816574573517,
+      "step": 250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.433022141456604,
+      "step": 500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0009765625,
+      "correct": 4,
+      "loss": 8.289840131998062,
+      "step": 750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.006591796875,
+      "correct": 27,
+      "loss": 7.873322486877441,
+      "step": 1000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.050048828125,
+      "correct": 205,
+      "loss": 6.738638237118721,
+      "step": 1250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.183837890625,
+      "correct": 753,
+      "loss": 5.404562175273895,
+      "step": 1500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.37548828125,
+      "correct": 1538,
+      "loss": 4.003931038081646,
+      "step": 1750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.571533203125,
+      "correct": 2341,
+      "loss": 2.792048454284668,
+      "step": 2000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.744140625,
+      "correct": 3048,
+      "loss": 1.7337699718773365,
+      "step": 2250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.857177734375,
+      "correct": 3511,
+      "loss": 0.9800269585102797,
+      "step": 2500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.916015625,
+      "correct": 3752,
+      "loss": 0.5899020759388804,
+      "step": 2750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.943359375,
+      "correct": 3864,
+      "loss": 0.4023085590451956,
+      "step": 3000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.962158203125,
+      "correct": 3941,
+      "loss": 0.2801295071840286,
+      "step": 3250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.9677734375,
+      "correct": 3964,
+      "loss": 0.23084228485822678,
+      "step": 3500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.97509765625,
+      "correct": 3994,
+      "loss": 0.18100186879746616,
+      "step": 3750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.978759765625,
+      "correct": 4009,
+      "loss": 0.16647852514870465,
+      "step": 4000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.979248046875,
+      "correct": 4011,
+      "loss": 0.1497660514432937,
+      "step": 4250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.98486328125,
+      "correct": 4034,
+      "loss": 0.11559613642748445,
+      "step": 4500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.98486328125,
+      "correct": 4034,
+      "loss": 0.11691664427053183,
+      "step": 4750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.98681640625,
+      "correct": 4042,
+      "loss": 0.08539022866170853,
+      "step": 5000,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.987060546875,
+      "correct": 4043,
+      "loss": 0.09343818161869422,
+      "step": 5250,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.988525390625,
+      "correct": 4049,
+      "loss": 0.07569184171734378,
+      "step": 5500,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.9892578125,
+      "correct": 4052,
+      "loss": 0.07144008693285286,
+      "step": 5750,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.9912109375,
+      "correct": 4060,
+      "loss": 0.06459088192787021,
+      "step": 6000,
+      "targets": 4096
+    }
+  ],
+  "parameters": 4072452,
+  "peak_allocated_bytes": 766161920,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.001,
+    "max_steps": 20000,
+    "num_pairs": 16,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 1024,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "variant": "kda-sigmoid",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": false,
+    "git_revision": "3b7e1c785bec5fc92bf494a378bc552aa4ca9c55",
+    "git_tracked_dirty": false,
+    "untracked_files": []
+  },
+  "status": "complete",
+  "tokens_per_training_second": 827109.3288794566,
+  "training_seconds": 59.42624304164201,
+  "wall_seconds": 71.7603014470078
+}
