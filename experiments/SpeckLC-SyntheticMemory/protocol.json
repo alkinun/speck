@@ -51,6 +51,12 @@
       64,
       256
     ],
+    "adaptive_midpoints": [
+      {
+        "decision_trigger": "16 pairs reached 99 percent while 64 pairs remained at chance through 20000 steps.",
+        "num_pairs": 32
+      }
+    ],
     "purpose": "Locate the learnability boundary before applying the architecture and learning-rate grid.",
     "result_directory": "../../results/SpeckLC-SyntheticMemory/mqar-density-1024/seed-42"
   },
