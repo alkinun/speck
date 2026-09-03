@@ -1,0 +1,242 @@
+{
+  "batch_size": 1,
+  "bins": 8,
+  "checkpoint": {
+    "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiContext32K-gdn-sigmoid-rope",
+    "metadata_sha256": "3017f5a3b35bd3e645b0751f335fb3e21f9f1be9bf5910c5ee1e863e9196604f",
+    "model_sha256": "2fdfdf715f204bd78373bf4131ee27f5ce0ddd834e1274a06639a24f0ae58994",
+    "optimizer_sha256": "bfe0bd2a8a113f3808de18aa46526b18566607b9e6f5728ce0c990b455d99f34",
+    "step": 489
+  },
+  "checkpoint_global_tokens": 163119104,
+  "checkpoint_rope_scaling_factor": 8.0,
+  "compiled": true,
+  "created_at": "2026-09-03T21:11:33.342031+00:00",
+  "data_directory": "/home/alkin/.cache/speck/data/SpeckLC-LongDocs-32M",
+  "data_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-LongDocs-32M",
+  "data_manifest": "0a14833ad84d0f240fd7787e542c47c2f77f40d73427c207cc7ae6b2a95f9da0",
+  "device": "cuda",
+  "evaluated_tokens": 327680,
+  "evaluation_rope_scaling_factor": 8.0,
+  "format": "speck_position_loss_evaluation",
+  "format_version": 1,
+  "loss": 2.615756118655554,
+  "loss_backend": "liger",
+  "model_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiContext32K/gdn-sigmoid-rope",
+  "peak_allocated_bytes": 1091907584,
+  "position_bins": [
+    {
+      "end": 4096,
+      "loss": 2.84983714974951,
+      "start": 0,
+      "tokens": 40960
+    },
+    {
+      "end": 8192,
+      "loss": 2.5831394258886577,
+      "start": 4096,
+      "tokens": 40960
+    },
+    {
+      "end": 12288,
+      "loss": 2.543262101500295,
+      "start": 8192,
+      "tokens": 40960
+    },
+    {
+      "end": 16384,
+      "loss": 2.536757428944111,
+      "start": 12288,
+      "tokens": 40960
+    },
+    {
+      "end": 20480,
+      "loss": 2.5875691038323567,
+      "start": 16384,
+      "tokens": 40960
+    },
+    {
+      "end": 24576,
+      "loss": 2.4997966376133265,
+      "start": 20480,
+      "tokens": 40960
+    },
+    {
+      "end": 28672,
+      "loss": 2.69594873317983,
+      "start": 24576,
+      "tokens": 40960
+    },
+    {
+      "end": 32768,
+      "loss": 2.6297383685363456,
+      "start": 28672,
+      "tokens": 40960
+    }
+  ],
+  "requested_eval_tokens": 20000000,
+  "seconds": 8.728652094956487,
+  "sequence_length": 32768,
+  "source_position_bins": {
+    "finemath_4plus": [
+      {
+        "end": 4096,
+        "loss": 2.6158272907487117,
+        "start": 0,
+        "tokens": 16384
+      },
+      {
+        "end": 8192,
+        "loss": 2.3814479478169233,
+        "start": 4096,
+        "tokens": 16384
+      },
+      {
+        "end": 12288,
+        "loss": 2.472196983813774,
+        "start": 8192,
+        "tokens": 16384
+      },
+      {
+        "end": 16384,
+        "loss": 2.4076645508175716,
+        "start": 12288,
+        "tokens": 16384
+      },
+      {
+        "end": 20480,
+        "loss": 2.2844922767253593,
+        "start": 16384,
+        "tokens": 16384
+      },
+      {
+        "end": 24576,
+        "loss": 2.2471594437374733,
+        "start": 20480,
+        "tokens": 16384
+      },
+      {
+        "end": 28672,
+        "loss": 2.7532367593958043,
+        "start": 24576,
+        "tokens": 16384
+      },
+      {
+        "end": 32768,
+        "loss": 2.641460641811136,
+        "start": 28672,
+        "tokens": 16384
+      }
+    ],
+    "pes2o": [
+      {
+        "end": 4096,
+        "loss": 3.0778718249251447,
+        "start": 0,
+        "tokens": 12288
+      },
+      {
+        "end": 8192,
+        "loss": 2.864146760199219,
+        "start": 4096,
+        "tokens": 12288
+      },
+      {
+        "end": 12288,
+        "loss": 2.9092892250822238,
+        "start": 8192,
+        "tokens": 12288
+      },
+      {
+        "end": 16384,
+        "loss": 2.790755004544432,
+        "start": 12288,
+        "tokens": 12288
+      },
+      {
+        "end": 20480,
+        "loss": 2.9168855864554644,
+        "start": 16384,
+        "tokens": 12288
+      },
+      {
+        "end": 24576,
+        "loss": 2.779443006264046,
+        "start": 20480,
+        "tokens": 12288
+      },
+      {
+        "end": 28672,
+        "loss": 2.7472501724647977,
+        "start": 24576,
+        "tokens": 12288
+      },
+      {
+        "end": 32768,
+        "loss": 2.9278820663069687,
+        "start": 28672,
+        "tokens": 12288
+      }
+    ],
+    "wikimedia": [
+      {
+        "end": 4096,
+        "loss": 2.933815619908273,
+        "start": 0,
+        "tokens": 12288
+      },
+      {
+        "end": 8192,
+        "loss": 2.5710540623404086,
+        "start": 4096,
+        "tokens": 12288
+      },
+      {
+        "end": 12288,
+        "loss": 2.2719884681670615,
+        "start": 8192,
+        "tokens": 12288
+      },
+      {
+        "end": 16384,
+        "loss": 2.454883690845842,
+        "start": 12288,
+        "tokens": 12288
+      },
+      {
+        "end": 20480,
+        "loss": 2.662355057351912,
+        "start": 16384,
+        "tokens": 12288
+      },
+      {
+        "end": 24576,
+        "loss": 2.5569998607970774,
+        "start": 20480,
+        "tokens": 12288
+      },
+      {
+        "end": 28672,
+        "loss": 2.5682632589402297,
+        "start": 24576,
+        "tokens": 12288
+      },
+      {
+        "end": 32768,
+        "loss": 2.315964973066002,
+        "start": 28672,
+        "tokens": 12288
+      }
+    ]
+  },
+  "source_trailing_loss": {
+    "finemath_4plus": 2.7831418371060863,
+    "pes2o": 3.0036940396142504,
+    "wikimedia": 2.2858334300108254
+  },
+  "steps": 10,
+  "tokens_per_second": 37540.733258155306,
+  "torch_version": "2.9.1+cu128",
+  "trailing_loss": 2.7001149757299574,
+  "trailing_tokens_per_sequence": 2048
+}
