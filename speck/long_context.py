@@ -53,6 +53,39 @@ def _repeat_to_length(pattern, length):
     return (pattern * repetitions)[:length]
 
 
+def _candidate_token_ids(tokenizer):
+    candidate_token_ids = []
+    for candidate in _PASSKEY_VALUES:
+        tokens = tokenizer.encode(candidate)
+        if len(tokens) != 1:
+            raise ValueError("retrieval candidates must each encode to exactly one token")
+        candidate_token_ids.append(tokens[0])
+    return candidate_token_ids
+
+
+def _exact_prompt(prefix, blocks, question, filler, filler_positions, prompt_length):
+    """Interleave ordered blocks with filler at fractional filler positions."""
+
+    fixed = len(prefix) + sum(len(block) for block in blocks) + len(question)
+    if fixed > prompt_length:
+        raise ValueError("context length is too short for the retrieval template")
+    filler_tokens = _repeat_to_length(filler, prompt_length - fixed)
+    positions = [round(len(filler_tokens) * depth) for depth in filler_positions]
+    prompt = list(prefix)
+    previous = 0
+    block_positions = []
+    for position, block in zip(positions, blocks):
+        prompt.extend(filler_tokens[previous:position])
+        block_positions.append(len(prompt))
+        prompt.extend(block)
+        previous = position
+    prompt.extend(filler_tokens[previous:])
+    prompt.extend(question)
+    if len(prompt) != prompt_length:
+        raise RuntimeError("retrieval diagnostic did not reach its exact requested length")
+    return prompt, block_positions
+
+
 def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
     """Build a literal retrieval case whose prompt and scored answer total an exact length."""
 
@@ -71,12 +104,7 @@ def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
     needle = tokenizer.encode(f"\nThe access code for {label} is {answer}.\n")
     question = tokenizer.encode(f"\nQuestion: What is the access code for {label}?\nAnswer: ")
     answer_tokens = tokenizer.encode(answer)
-    candidate_token_ids = []
-    for candidate in _PASSKEY_VALUES:
-        tokens = tokenizer.encode(candidate)
-        if len(tokens) != 1:
-            raise ValueError("passkey candidates must each encode to exactly one token")
-        candidate_token_ids.append(tokens[0])
+    candidate_token_ids = _candidate_token_ids(tokenizer)
     prompt_length = length - len(answer_tokens)
     fixed = len(prefix) + len(needle) + len(question)
     if fixed > prompt_length:
@@ -104,6 +132,143 @@ def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
         "answer": answer,
         "answer_index": answer_index,
         "label": label,
+    }
+
+
+def build_multi_key_case(tokenizer, length, seed, depth, records=8, answer_offset=0):
+    """Build exact-length associative recall with several simultaneous key/value records."""
+
+    if not 0 <= depth <= 1:
+        raise ValueError("record depth must be in [0, 1]")
+    if not isinstance(records, int) or isinstance(records, bool) or not 2 <= records <= 10:
+        raise ValueError("multi-key records must be an integer in [2, 10]")
+    generator = random.Random(seed)
+    labels = [f"archive-{generator.randrange(100_000, 1_000_000)}" for _ in range(records)]
+    while len(set(labels)) != records:
+        labels = [f"archive-{generator.randrange(100_000, 1_000_000)}" for _ in range(records)]
+    answers = list(generator.sample(_PASSKEY_VALUES, records))
+    query_index = generator.randrange(records)
+    answers[query_index] = _PASSKEY_VALUES[
+        (_PASSKEY_VALUES.index(answers[query_index]) + answer_offset) % len(_PASSKEY_VALUES)
+    ]
+    prefix = tokenizer.encode(
+        "A long archive follows. Remember every exact record and answer the final question.\n",
+        bos=True,
+    )
+    record_lines = list(zip(labels, answers))
+    generator.shuffle(record_lines)
+    record_block = tokenizer.encode(
+        "\n".join(f"The access code for {label} is {answer}." for label, answer in record_lines)
+        + "\n"
+    )
+    question = tokenizer.encode(
+        f"\nQuestion: What is the access code for {labels[query_index]}?\nAnswer: "
+    )
+    answer = answers[query_index]
+    answer_tokens = tokenizer.encode(answer)
+    prompt, positions = _exact_prompt(
+        prefix,
+        (record_block,),
+        question,
+        tokenizer.encode("The archive contains reports, inventories, correspondence, and notes. "),
+        (depth,),
+        length - len(answer_tokens),
+    )
+    return {
+        "task": "multi_key",
+        "length": length,
+        "depth": depth,
+        "seed": seed,
+        "prompt_tokens": prompt,
+        "prompt_length": len(prompt),
+        "answer_tokens": answer_tokens,
+        "candidate_token_ids": _candidate_token_ids(tokenizer),
+        "answer": answer,
+        "answer_index": _PASSKEY_VALUES.index(answer),
+        "label": labels[query_index],
+        "query_index": query_index,
+        "records": records,
+        "fact_positions": positions,
+    }
+
+
+def build_two_hop_case(
+    tokenizer,
+    length,
+    seed,
+    first_depth,
+    second_depth,
+    chains=6,
+    answer_offset=0,
+):
+    """Build exact-length two-hop lookup among several independent chains."""
+
+    if not 0 <= first_depth < second_depth <= 1:
+        raise ValueError("two-hop depths must satisfy 0 <= first < second <= 1")
+    if not isinstance(chains, int) or isinstance(chains, bool) or not 2 <= chains <= 10:
+        raise ValueError("two-hop chains must be an integer in [2, 10]")
+    generator = random.Random(seed)
+    starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
+    destinations = [f"box-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
+    while len(set(starts)) != chains or len(set(destinations)) != chains:
+        starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
+        destinations = [f"box-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
+    answers = list(generator.sample(_PASSKEY_VALUES, chains))
+    query_index = generator.randrange(chains)
+    answers[query_index] = _PASSKEY_VALUES[
+        (_PASSKEY_VALUES.index(answers[query_index]) + answer_offset) % len(_PASSKEY_VALUES)
+    ]
+    first_lines = list(zip(starts, destinations))
+    second_lines = list(zip(destinations, answers))
+    generator.shuffle(first_lines)
+    generator.shuffle(second_lines)
+    first_block = tokenizer.encode(
+        "\n".join(
+            f"The route from {start} leads to {destination}." for start, destination in first_lines
+        )
+        + "\n"
+    )
+    second_block = tokenizer.encode(
+        "\n".join(
+            f"The access code inside {destination} is {answer}."
+            for destination, answer in second_lines
+        )
+        + "\n"
+    )
+    prefix = tokenizer.encode(
+        "A routed archive follows. Resolve the linked records and answer the final question.\n",
+        bos=True,
+    )
+    question = tokenizer.encode(
+        f"\nQuestion: Follow the route from {starts[query_index]}. What access code is inside its destination?\nAnswer: "
+    )
+    answer = answers[query_index]
+    answer_tokens = tokenizer.encode(answer)
+    prompt, positions = _exact_prompt(
+        prefix,
+        (first_block, second_block),
+        question,
+        tokenizer.encode("The archive contains unrelated reports, schedules, and correspondence. "),
+        (first_depth, second_depth),
+        length - len(answer_tokens),
+    )
+    return {
+        "task": "two_hop",
+        "length": length,
+        "depth": second_depth,
+        "first_depth": first_depth,
+        "second_depth": second_depth,
+        "seed": seed,
+        "prompt_tokens": prompt,
+        "prompt_length": len(prompt),
+        "answer_tokens": answer_tokens,
+        "candidate_token_ids": _candidate_token_ids(tokenizer),
+        "answer": answer,
+        "answer_index": _PASSKEY_VALUES.index(answer),
+        "label": starts[query_index],
+        "query_index": query_index,
+        "chains": chains,
+        "fact_positions": positions,
     }
 
 
@@ -179,6 +344,27 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
             torch.cuda.max_memory_allocated(device) if device.type == "cuda" else None
         ),
     }
+
+
+def add_counterfactual_metrics(factual, counterfactual, factual_case, counterfactual_case):
+    """Attach paired prompt-sensitivity metrics to an evaluated factual case."""
+
+    factual_index = factual_case["answer_index"]
+    counterfactual_index = counterfactual_case["answer_index"]
+    factual_scores = factual["candidate_log_probabilities"]
+    counterfactual_scores = counterfactual["candidate_log_probabilities"]
+    factual_preference = factual_scores[factual_index] - factual_scores[counterfactual_index]
+    counterfactual_preference = (
+        counterfactual_scores[counterfactual_index] - counterfactual_scores[factual_index]
+    )
+    factual.update(
+        counterfactual_answer=counterfactual_case["answer"],
+        counterfactual_prefill_seconds=counterfactual["prefill_seconds"],
+        contrastive_retrieval_score=(factual_preference + counterfactual_preference) / 2,
+        contrastive_direction_accuracy=float(factual_preference + counterfactual_preference > 0),
+        contrastive_pair_accuracy=float(factual_preference > 0 and counterfactual_preference > 0),
+    )
+    return factual
 
 
 def aggregate_results(results, threshold=0.85):

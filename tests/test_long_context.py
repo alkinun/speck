@@ -1,9 +1,12 @@
 import torch
 
 from speck.long_context import (
+    add_counterfactual_metrics,
     aggregate_results,
     binomial_tail_probability,
+    build_multi_key_case,
     build_passkey_case,
+    build_two_hop_case,
     effective_length,
     evaluate_case,
     parse_lengths,
@@ -53,6 +56,56 @@ def test_passkey_case_has_exact_requested_length_and_depth():
     counterfactual = build_passkey_case(tokenizer, 512, seed=7, depth=0.5, answer_offset=1)
     assert counterfactual["label"] == case["label"]
     assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
+
+
+def test_multi_key_case_has_exact_length_and_stable_counterfactual_structure():
+    tokenizer = FakeTokenizer()
+    case = build_multi_key_case(tokenizer, 1_024, seed=9, depth=0.4, records=8)
+    counterfactual = build_multi_key_case(
+        tokenizer, 1_024, seed=9, depth=0.4, records=8, answer_offset=1
+    )
+    assert len(case["prompt_tokens"]) + len(case["answer_tokens"]) == 1_024
+    assert case["records"] == 8
+    assert case["label"] == counterfactual["label"]
+    assert case["query_index"] == counterfactual["query_index"]
+    assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
+
+
+def test_two_hop_case_has_two_ordered_facts_and_exact_length():
+    tokenizer = FakeTokenizer()
+    case = build_two_hop_case(tokenizer, 1_024, seed=4, first_depth=0.2, second_depth=0.8)
+    counterfactual = build_two_hop_case(
+        tokenizer,
+        1_024,
+        seed=4,
+        first_depth=0.2,
+        second_depth=0.8,
+        answer_offset=1,
+    )
+    assert len(case["prompt_tokens"]) + len(case["answer_tokens"]) == 1_024
+    assert case["fact_positions"][0] < case["fact_positions"][1]
+    assert case["label"] == counterfactual["label"]
+    assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
+
+
+def test_counterfactual_metrics_require_both_prompt_directions():
+    factual = {
+        "candidate_log_probabilities": [-2.0, -1.0],
+        "prefill_seconds": 1.0,
+    }
+    counterfactual = {
+        "candidate_log_probabilities": [-3.0, -0.5],
+        "prefill_seconds": 2.0,
+    }
+    result = add_counterfactual_metrics(
+        factual,
+        counterfactual,
+        {"answer_index": 0},
+        {"answer_index": 1, "answer": "B"},
+    )
+    assert result["contrastive_retrieval_score"] == 0.75
+    assert result["contrastive_direction_accuracy"] == 1.0
+    assert result["contrastive_pair_accuracy"] == 0.0
 
 
 def test_evaluate_case_streams_answer_without_full_logits():

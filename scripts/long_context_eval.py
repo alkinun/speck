@@ -14,6 +14,7 @@ from speck.checkpoint import checkpoint_identity, latest
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.long_context import (
+    add_counterfactual_metrics,
     aggregate_results,
     build_passkey_case,
     evaluate_case,
@@ -182,30 +183,11 @@ def run(args):
                         device=device,
                         kv_cache_dtype=kv_cache_dtype,
                     )
-                    factual_index = case["answer_index"]
-                    counterfactual_index = counterfactual_case["answer_index"]
-                    factual_scores = result["candidate_log_probabilities"]
-                    counterfactual_scores = counterfactual["candidate_log_probabilities"]
-                    factual_preference = (
-                        factual_scores[factual_index] - factual_scores[counterfactual_index]
-                    )
-                    counterfactual_preference = (
-                        counterfactual_scores[counterfactual_index]
-                        - counterfactual_scores[factual_index]
-                    )
-                    result.update(
-                        counterfactual_answer=counterfactual_case["answer"],
-                        counterfactual_prefill_seconds=counterfactual["prefill_seconds"],
-                        contrastive_retrieval_score=(
-                            factual_preference + counterfactual_preference
-                        )
-                        / 2,
-                        contrastive_direction_accuracy=float(
-                            factual_preference + counterfactual_preference > 0
-                        ),
-                        contrastive_pair_accuracy=float(
-                            factual_preference > 0 and counterfactual_preference > 0
-                        ),
+                    result = add_counterfactual_metrics(
+                        result,
+                        counterfactual,
+                        case,
+                        counterfactual_case,
                     )
                 results.append(result)
                 contrast = (
