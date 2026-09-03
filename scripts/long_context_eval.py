@@ -98,6 +98,39 @@ def report_config(settings):
     }
 
 
+def positional_regime(model, training_sequence_length, evaluation_length):
+    attention = [
+        branch
+        for invocation in model.execution_plan
+        for stage in invocation.block.stages
+        for branch in stage.branches
+        if isinstance(branch, AttentionSpec)
+    ]
+    dimensions_by_scope = {
+        scope: sorted(
+            {
+                branch.head_dim if branch.rope_dim is None else branch.rope_dim
+                for branch in attention
+                if branch.scope == scope
+            }
+        )
+        for scope in sorted({branch.scope for branch in attention})
+    }
+    has_global_rope = any(
+        branch.scope == "global"
+        and (branch.head_dim if branch.rope_dim is None else branch.rope_dim) > 0
+        for branch in attention
+    )
+    return {
+        "attention_scopes": sorted(dimensions_by_scope),
+        "rope_dimensions_by_scope": dimensions_by_scope,
+        "rope_scaling_factor": model.config.rope_scaling_factor,
+        "training_sequence_length": training_sequence_length,
+        "extrapolates_global_rope": has_global_rope
+        and evaluation_length > training_sequence_length,
+    }
+
+
 def run(args):
     configs = load_experiment(args.experiment, "long_context", "tokenizer", "train")
     settings = resolved_eval_settings(configs["long_context"], args)
@@ -113,15 +146,6 @@ def run(args):
     tokenizer = get_tokenizer(**configs["tokenizer"])
     if max(settings["lengths"]) > model.config.max_position_embeddings:
         raise ValueError("evaluation length exceeds the model's allocated context")
-    attention_scopes = sorted(
-        {
-            branch.scope
-            for invocation in model.execution_plan
-            for stage in invocation.block.stages
-            for branch in stage.branches
-            if isinstance(branch, AttentionSpec)
-        }
-    )
     results = []
     kv_cache_dtype = getattr(torch, settings["kv_cache_dtype"])
     for length in settings["lengths"]:
@@ -209,13 +233,11 @@ def run(args):
         "torch_version": torch.__version__,
         "warmup_each_length": args.warmup_each_length,
         "counterfactual": args.counterfactual,
-        "positional_regime": {
-            "attention_scopes": attention_scopes,
-            "rope_scaling_factor": model.config.rope_scaling_factor,
-            "training_sequence_length": configs["train"]["sequence_length"],
-            "extrapolates_global_rope": "global" in attention_scopes
-            and max(settings["lengths"]) > configs["train"]["sequence_length"],
-        },
+        "positional_regime": positional_regime(
+            model,
+            configs["train"]["sequence_length"],
+            max(settings["lengths"]),
+        ),
         "results": results,
         **summary,
     }
@@ -233,7 +255,13 @@ def run(args):
 
 def main(argv=None):
     report = run(arguments(argv))
-    print(f"effective context: {report['effective_length']}")
+    print(
+        f"exact effective context: {report['effective_length']} | "
+        "candidate effective context: "
+        f"{report['effective_length_by_candidate_accuracy']} | "
+        "contrastive effective context: "
+        f"{report['effective_length_by_contrastive_retrieval']}"
+    )
 
 
 if __name__ == "__main__":

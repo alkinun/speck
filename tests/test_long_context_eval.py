@@ -1,8 +1,16 @@
 from argparse import Namespace
+from types import SimpleNamespace
 
 import pytest
 
-from scripts.long_context_eval import arguments, parse_depths, report_config, resolved_eval_settings
+from scripts.long_context_eval import (
+    arguments,
+    parse_depths,
+    positional_regime,
+    report_config,
+    resolved_eval_settings,
+)
+from speck.architecture import AttentionSpec, BlockConfig, BlockInvocation, StageConfig
 
 
 def config():
@@ -52,3 +60,30 @@ def test_long_context_eval_arguments_parse_pilot_lengths():
 def test_long_context_depth_parser_rejects_non_numeric_values(value):
     with pytest.raises(ValueError, match="depths"):
         parse_depths(value)
+
+
+def model_with_attention(*attention):
+    block = BlockConfig(8, tuple(StageConfig((branch,)) for branch in attention))
+    return SimpleNamespace(
+        execution_plan=(BlockInvocation(block, 0, "block_0"),),
+        config=SimpleNamespace(rope_scaling_factor=8.0),
+    )
+
+
+def test_positional_regime_only_reports_extrapolation_for_active_global_rope():
+    nope = model_with_attention(AttentionSpec(4, 1, rope_dim=0))
+    rope = model_with_attention(AttentionSpec(4, 1, rope_dim=2))
+    mixed = model_with_attention(
+        AttentionSpec(4, 1, scope="global", rope_dim=0),
+        AttentionSpec(4, 1, scope="sliding", window_size=32, rope_dim=2),
+    )
+
+    assert positional_regime(nope, 32, 128) == {
+        "attention_scopes": ["global"],
+        "rope_dimensions_by_scope": {"global": [0]},
+        "rope_scaling_factor": 8.0,
+        "training_sequence_length": 32,
+        "extrapolates_global_rope": False,
+    }
+    assert positional_regime(rope, 32, 128)["extrapolates_global_rope"] is True
+    assert positional_regime(mixed, 32, 128)["extrapolates_global_rope"] is False
