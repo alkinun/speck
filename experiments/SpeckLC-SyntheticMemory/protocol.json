@@ -123,6 +123,39 @@
     "KDA and GDN keep the same output-gate rank; GDN sigmoid versus KDA sigmoid isolates decay granularity and its required projection.",
     "Synthetic success gates language-model pretraining but does not imply natural-language long-context capability."
   ],
+  "length_scaling": {
+    "fixed_density": {
+      "length_to_pairs": {
+        "256": 8,
+        "512": 16,
+        "1024": 32,
+        "2048": 64
+      },
+      "question": "How does combined distance and association load scale at one pair per 32 tokens?"
+    },
+    "fixed_load": {
+      "lengths": [
+        256,
+        512,
+        1024,
+        2048
+      ],
+      "num_pairs": 32,
+      "question": "How does recall scale with distance when the number of associations is fixed?"
+    },
+    "learning_rate": 0.0001,
+    "reuse": "The completed length-1024, 32-pair confirmation is shared by both curves.",
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "staging": "Run seed 42 first; replicate all endpoints needed to interpret either curve.",
+    "variants": [
+      "kda-sigmoid",
+      "gdn-silu"
+    ]
+  },
   "recurrent_initialization": {
     "decay_rate": "FLA-compatible uniform rate; GDN in [0,16], KDA in [1,16]",
     "time_step": "log-uniform dt in [0.001,0.1], stored through inverse softplus",
@@ -131,7 +164,7 @@
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "mqar_complete",
+  "status": "running_mqar_length_scaling",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",
