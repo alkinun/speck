@@ -125,7 +125,59 @@
       },
       "validation_tokens": 19988480,
       "wandb_id": "neyzh2kc"
+    },
+    "gdn-fla-sigmoid-nope": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-gdn-fla-sigmoid-nope",
+        "metadata_sha256": "3b77e2e048b817dfc89515e062e10f3dd75c1f68214236f8f4754536f8a5a4c7",
+        "model_sha256": "64175eb0be7fb53e4e5da08a934545bcb399ad36c0cce98d45afcf9ec67c1482",
+        "optimizer_sha256": "426ad04e97815578e4f99ef103e2a5fcc67521ff69b22443d1d07af22a91ed26",
+        "step": 2000
+      },
+      "delta_from_control": -0.004381895065307617,
+      "delta_from_previous": 0.024367094039916992,
+      "final_validation_loss": 2.814995765686035,
+      "intermediate_validation": [
+        {
+          "global_tokens": 31981568,
+          "loss": 3.71134
+        },
+        {
+          "global_tokens": 63963136,
+          "loss": 3.14073
+        },
+        {
+          "global_tokens": 95944704,
+          "loss": 2.91858
+        },
+        {
+          "global_tokens": 127926272,
+          "loss": 2.81546
+        }
+      ],
+      "interpretation": "regresses versus RoPE plus sigmoid; tied with the original control",
+      "performance": {
+        "active_seconds": 3051.4635121480096,
+        "gpu_hours": 0.81117,
+        "peak_allocated_vram_mib": 13276.45117,
+        "tokens_per_second": 47891.84405
+      },
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.782762289047241,
+        "dclm": 3.641101598739624,
+        "dclm_edu": 3.1132051944732666,
+        "finemath_4plus": 2.5393130779266357,
+        "fineweb_edu": 3.342818021774292,
+        "math_multi_style": 1.7268846035003662,
+        "math_textbook_exercise": 1.2404868602752686,
+        "pes2o": 3.0034384727478027,
+        "ufw_l3_multi_style": 3.1494154930114746,
+        "ultra_fineweb": 3.271820545196533,
+        "wikimedia": 3.1611506938934326
+      },
+      "validation_tokens": 19988480,
+      "wandb_id": "khwwdylw"
     }
   },
-  "status": "two_of_four_complete"
+  "status": "three_of_four_complete"
 }
