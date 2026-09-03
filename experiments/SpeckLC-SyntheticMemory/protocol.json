@@ -207,6 +207,16 @@
       "vocab_size": 8192
     },
     "replication": "Repeat every passing variant at its fastest passing discovery rate on seeds 43 and 44; keep validation fixed.",
+    "replication_selections": {
+      "palindrome": {
+        "kda-sigmoid": 0.0005
+      },
+      "stack": {
+        "gdn-silu": 0.001,
+        "kda-sigmoid": 0.001
+      }
+    },
+    "tie_break": "If multiple learning rates first cross the gate at the same evaluation step, select the higher learning rate.",
     "tasks": [
       "palindrome",
       "stack"
