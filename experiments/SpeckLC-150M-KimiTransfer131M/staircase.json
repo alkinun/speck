@@ -1,0 +1,70 @@
+{
+  "comparison": "token-matched one-intervention staircase with compute-matched budgets",
+  "data": {
+    "directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+    "manifest_sha256": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "train_tokens": 5002892299,
+    "validation_tokens": 55021349
+  },
+  "existing_control": {
+    "checkpoint": {
+      "metadata_sha256": "5c6cbeb46c99b51f043ced22314a73727e08c7ea29e28343b94ee43ced6e88ed",
+      "model_sha256": "426f0f221aee8615a735a3359263c9a874d53eca65f2835ec3117893a1b8cbb4",
+      "optimizer_sha256": "8d96de459c50bcbbf3707d78c074e264e346cf318ac45d526f2e248c276b4ea2",
+      "step": 2000
+    },
+    "experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-MixerScreen-131M/gdn-global",
+    "final_validation_loss": 2.8193776607513428,
+    "flops_per_token": 1019435520.0,
+    "parameters": 152916468,
+    "variant": "gdn-speck-silu-rope"
+  },
+  "format": "speck_kimi_transfer_staircase",
+  "format_version": 1,
+  "intervention_order": [
+    {
+      "change_from_previous": "replace historical Speck decay initialization with FLA timescales",
+      "variant": "gdn-fla-silu-rope"
+    },
+    {
+      "change_from_previous": "replace the SiLU output gate with sigmoid",
+      "variant": "gdn-fla-sigmoid-rope"
+    },
+    {
+      "change_from_previous": "remove RoPE from all five global attention layers",
+      "variant": "gdn-fla-sigmoid-nope"
+    },
+    {
+      "change_from_previous": "replace scalar GDN decay with channel-wise KDA decay",
+      "variant": "kda-sigmoid-nope"
+    }
+  ],
+  "result": "../../results/SpeckLC-150M-KimiTransfer131M/summary.json",
+  "seed": 42,
+  "sequence_length": 4096,
+  "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-MixerScreen-131M/gdn-global",
+  "status": "prepared",
+  "train_tokens": 131072000,
+  "variants": {
+    "gdn-fla-sigmoid-nope": {
+      "compute_matched_tokens": 131072000.0,
+      "flops_per_token": 1019435520.0,
+      "parameters": 152916468
+    },
+    "gdn-fla-sigmoid-rope": {
+      "compute_matched_tokens": 131072000.0,
+      "flops_per_token": 1019435520.0,
+      "parameters": 152916468
+    },
+    "gdn-fla-silu-rope": {
+      "compute_matched_tokens": 131072000.0,
+      "flops_per_token": 1019435520.0,
+      "parameters": 152916468
+    },
+    "kda-sigmoid-nope": {
+      "compute_matched_tokens": 130794131.0,
+      "flops_per_token": 1021601280.0,
+      "parameters": 153958938
+    }
+  }
+}

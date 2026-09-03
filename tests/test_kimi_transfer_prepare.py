@@ -84,6 +84,7 @@ def test_prepare_materializes_shared_training_contract(tmp_path):
         SimpleNamespace(source_experiment=source_experiment, output_dir=output)
     )
     assert set(contract["variants"]) == set(VARIANTS)
+    assert [item["variant"] for item in contract["intervention_order"]] == list(VARIANTS)
     source = load_experiment(source_experiment, "data", "long_context", "tokenizer", "train")
     for name in VARIANTS:
         candidate = load_experiment(

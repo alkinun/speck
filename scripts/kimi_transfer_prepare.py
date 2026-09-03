@@ -27,6 +27,12 @@ VARIANTS = (
     "gdn-fla-sigmoid-nope",
     "kda-sigmoid-nope",
 )
+INTERVENTIONS = {
+    "gdn-fla-silu-rope": "replace historical Speck decay initialization with FLA timescales",
+    "gdn-fla-sigmoid-rope": "replace the SiLU output gate with sigmoid",
+    "gdn-fla-sigmoid-nope": "remove RoPE from all five global attention layers",
+    "kda-sigmoid-nope": "replace scalar GDN decay with channel-wise KDA decay",
+}
 
 
 def arguments(argv=None):
@@ -127,6 +133,10 @@ def prepare(args):
         "sequence_length": sequence_length,
         "train_tokens": train_tokens,
         "seed": 42,
+        "intervention_order": [
+            {"variant": name, "change_from_previous": INTERVENTIONS[name]}
+            for name in VARIANTS
+        ],
         "variants": summary,
         "result": "../../results/SpeckLC-150M-KimiTransfer131M/summary.json",
         "status": "prepared",
