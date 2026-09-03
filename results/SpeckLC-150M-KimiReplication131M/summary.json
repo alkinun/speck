@@ -3,6 +3,72 @@
   "format": "speck_kimi_transfer_replication_results",
   "format_version": 1,
   "primary_metric": "final 20M-token validation loss",
+  "retrieval_endpoints": {
+    "caveat": "contrastive direction measures causal sensitivity; exact match remains zero",
+    "gdn-fla-sigmoid-rope": {
+      "at_128k": {
+        "direction_accuracy_by_seed": [
+          0.5,
+          0.6333333333333333,
+          0.3
+        ],
+        "score_by_seed": [
+          0.004947896301746369,
+          0.007031235098838806,
+          -0.0023437673846880597
+        ],
+        "score_mean": 0.0032117880052990383,
+        "score_population_stddev": 0.00401938817104284
+      },
+      "at_4k": {
+        "direction_accuracy_by_seed": [
+          0.36666666666666664,
+          0.9666666666666667,
+          0.4666666666666667
+        ],
+        "score_by_seed": [
+          -0.004720017810662587,
+          0.05250649638473988,
+          0.030859374503294627
+        ],
+        "score_mean": 0.026215284359123972,
+        "score_population_stddev": 0.023592289159660298
+      },
+      "effective_128k_count": 0
+    },
+    "kda-sigmoid-nope": {
+      "at_128k": {
+        "direction_accuracy_by_seed": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "score_by_seed": [
+          0.1447916269302368,
+          0.14257812288900215,
+          0.1533854275941849
+        ],
+        "score_mean": 0.14691839247114127,
+        "score_population_stddev": 0.004661316516260919
+      },
+      "at_4k": {
+        "direction_accuracy_by_seed": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "score_by_seed": [
+          1.706510415673256,
+          0.3018229193985462,
+          0.680078100413084
+        ],
+        "score_mean": 0.8961371451616288,
+        "score_population_stddev": 0.5934632106883956
+      },
+      "effective_128k_count": 3
+    },
+    "samples_per_endpoint_per_seed": 30
+  },
   "seeds": [
     42,
     43,
@@ -23,7 +89,7 @@
     "interpretation": "aggregate difference unresolved; strict per-seed 0.00965-nat tie passes two of three seeds",
     "strict_tie_count": 2
   },
-  "status": "training_complete_retrieval_replication_pending",
+  "status": "complete",
   "variants": {
     "gdn-fla-sigmoid-rope": {
       "aggregate": {

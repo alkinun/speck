@@ -21,7 +21,7 @@
   ],
   "selection_rule": "replicate both models because their seed-42 loss difference is inside the measured 0.00965-nat noise range",
   "sequence_length": 4096,
-  "status": "prepared",
+  "status": "complete",
   "train_tokens_per_run": 131072000,
   "variants": {
     "gdn-fla-sigmoid-rope": {
