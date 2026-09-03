@@ -34,6 +34,19 @@
       "step": 489
     }
   },
+  "two_hop_calibration": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "chains": 2,
+    "eval_every": 40,
+    "learning_rate": 0.0001,
+    "sequence_length": 4096,
+    "steps": 400,
+    "supervised_tokens": 6400,
+    "task": "two_hop",
+    "tokens_seen": 26214400,
+    "validation_samples": 30
+  },
   "pilot": {
     "accumulation": 4,
     "batch_size": 4,
@@ -58,5 +71,5 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "easy_single_hop_passed_two_hop_failed"
+  "status": "two_hop_calibration_prepared"
 }
