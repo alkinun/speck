@@ -1,6 +1,10 @@
 {
   "format": "speck_structured_retrieval_adaptation_experiment",
   "format_version": 1,
+  "matched_controls": {
+    "gdn_easy": "repeat easy_calibration from the GDN/sigmoid/RoPE parent",
+    "gdn_two_hop": "repeat two_hop_calibration from the GDN/sigmoid/RoPE parent"
+  },
   "easy_calibration": {
     "accumulation": 4,
     "batch_size": 4,
@@ -71,5 +75,5 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "kda_two_hop_calibration_failed"
+  "status": "gdn_controls_prepared"
 }
