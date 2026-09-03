@@ -1,0 +1,269 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "key_head_dim": 128,
+                  "kind": "kimi_delta_attention",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 256,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.99853515625,
+  "best_validation_loss": 2.791395455598831,
+  "completed_steps": 5750,
+  "created_at": "2026-09-03T07:58:26.317216+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.99853515625,
+    "correct": 8180,
+    "loss": 2.791395455598831,
+    "step": 5750,
+    "targets": 8192
+  },
+  "flops_per_token": 24930304,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.066862493753433,
+      "step": 0,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.05625593662262,
+      "step": 250,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.978309750556946,
+      "step": 500,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.000244140625,
+      "correct": 2,
+      "loss": 8.48331156373024,
+      "step": 750,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.000244140625,
+      "correct": 2,
+      "loss": 8.384590864181519,
+      "step": 1000,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0001220703125,
+      "correct": 1,
+      "loss": 8.364778488874435,
+      "step": 1250,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.3592709004879,
+      "step": 1500,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0003662109375,
+      "correct": 3,
+      "loss": 8.35133084654808,
+      "step": 1750,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0003662109375,
+      "correct": 3,
+      "loss": 8.333115428686142,
+      "step": 2000,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.00048828125,
+      "correct": 4,
+      "loss": 8.331029713153839,
+      "step": 2250,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0006103515625,
+      "correct": 5,
+      "loss": 8.324898451566696,
+      "step": 2500,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.001220703125,
+      "correct": 10,
+      "loss": 8.32473561167717,
+      "step": 2750,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0001220703125,
+      "correct": 1,
+      "loss": 8.318912386894226,
+      "step": 3000,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0009765625,
+      "correct": 8,
+      "loss": 8.26971971988678,
+      "step": 3250,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.001953125,
+      "correct": 16,
+      "loss": 8.195204377174377,
+      "step": 3500,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0040283203125,
+      "correct": 33,
+      "loss": 8.128985196352005,
+      "step": 3750,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.005126953125,
+      "correct": 42,
+      "loss": 8.062557488679886,
+      "step": 4000,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.009521484375,
+      "correct": 78,
+      "loss": 7.986211150884628,
+      "step": 4250,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.0977783203125,
+      "correct": 801,
+      "loss": 7.610659152269363,
+      "step": 4500,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.6632080078125,
+      "correct": 5433,
+      "loss": 6.58794666826725,
+      "step": 4750,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.931396484375,
+      "correct": 7630,
+      "loss": 5.515524640679359,
+      "step": 5000,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.97119140625,
+      "correct": 7956,
+      "loss": 4.522881254553795,
+      "step": 5250,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.986083984375,
+      "correct": 8078,
+      "loss": 3.6278284788131714,
+      "step": 5500,
+      "targets": 8192
+    },
+    {
+      "accuracy": 0.99853515625,
+      "correct": 8180,
+      "loss": 2.791395455598831,
+      "step": 5750,
+      "targets": 8192
+    }
+  ],
+  "parameters": 4072452,
+  "peak_allocated_bytes": 260546560,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.0001,
+    "max_steps": 20000,
+    "num_pairs": 32,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 256,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "variant": "kda-sigmoid",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": false,
+    "git_revision": "01ac46ddd5ec2f406108012da1004b4abb74c30e",
+    "git_tracked_dirty": false,
+    "untracked_files": []
+  },
+  "status": "complete",
+  "tokens_per_training_second": 167146.902488428,
+  "training_seconds": 70.45299568632618,
+  "wall_seconds": 79.87438682001084
+}
