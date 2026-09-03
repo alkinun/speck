@@ -1,0 +1,17 @@
+{
+  "baseline": {
+    "run": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+    "seed": 42
+  },
+  "batch_tokens": 65536,
+  "comparison": "training-seed repeats with identical model, packed data, and recipe",
+  "format": "speck_seed_noise_floor",
+  "format_version": 1,
+  "repeat_seeds": [
+    43,
+    44
+  ],
+  "sequence_length": 4096,
+  "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+  "train_tokens": 131072000
+}

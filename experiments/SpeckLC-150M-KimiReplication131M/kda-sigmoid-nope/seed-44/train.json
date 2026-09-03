@@ -1,0 +1,8 @@
+{
+  "device_batch_size": 4,
+  "extends": "../../../SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope/train.json",
+  "output_dir": null,
+  "run": "kda-sigmoid-nope-seed-44",
+  "seed": 44,
+  "wandb_group": "kda-sigmoid-nope"
+}

@@ -1,0 +1,3 @@
+{
+  "extends": "../../../SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope/model.json"
+}

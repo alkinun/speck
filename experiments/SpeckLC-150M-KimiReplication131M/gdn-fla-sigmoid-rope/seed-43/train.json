@@ -1,0 +1,8 @@
+{
+  "device_batch_size": 4,
+  "extends": "../../../SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-rope/train.json",
+  "output_dir": null,
+  "run": "gdn-fla-sigmoid-rope-seed-43",
+  "seed": 43,
+  "wandb_group": "gdn-fla-sigmoid-rope"
+}
