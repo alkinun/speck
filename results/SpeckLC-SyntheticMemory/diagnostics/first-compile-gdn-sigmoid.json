@@ -1,0 +1,114 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "key_head_dim": 128,
+                  "kind": "gated_deltanet",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "output_gate_activation": "sigmoid",
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 1024,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.0,
+  "best_validation_loss": 9.062149047851562,
+  "completed_steps": 2,
+  "created_at": "2026-09-03T06:39:11.657244+00:00",
+  "early_stopped": false,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "loss": 9.062149047851562,
+    "step": 2,
+    "targets": 4096
+  },
+  "flops_per_token": 25018368,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.065420150756836,
+      "step": 0,
+      "targets": 4096
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.062149047851562,
+      "step": 2,
+      "targets": 4096
+    }
+  ],
+  "parameters": 3941896,
+  "peak_allocated_bytes": 827004928,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 2,
+    "eval_examples": 16,
+    "grad_clip": 1.0,
+    "log_every": 1,
+    "lr": 0.001,
+    "max_steps": 2,
+    "num_pairs": 256,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 1024,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "variant": "gdn-sigmoid",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": true,
+    "git_revision": "d3c99f1b84498391fe3b6758902563cbd8746877"
+  },
+  "status": "complete",
+  "tokens_per_training_second": 2624.2918372962185,
+  "training_seconds": 6.243208078900352,
+  "wall_seconds": 7.013601250015199
+}
