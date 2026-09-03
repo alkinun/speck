@@ -11,7 +11,8 @@
   "comparison": "separate output-gate activation from channel-wise recurrent decay",
   "data": {
     "mqar": {
-      "key_value_pairs_at_1024": 256,
+      "calibrated_comparison_pairs_at_1024": 32,
+      "initial_dense_endpoint_pairs_at_1024": 256,
       "power_a": 0.01,
       "random_non_queries": true,
       "reference": "https://github.com/HazyResearch/zoology/blob/1ad20d193b6113cae1e8f3c655c300d7b4b3f4bb/zoology/data/multiquery_ar.py",
@@ -58,7 +59,8 @@
       }
     ],
     "purpose": "Locate the learnability boundary before applying the architecture and learning-rate grid.",
-    "result_directory": "../../results/SpeckLC-SyntheticMemory/mqar-density-1024/seed-42"
+    "result_directory": "../../results/SpeckLC-SyntheticMemory/mqar-density-1024/seed-42",
+    "result": "KDA passed 32 pairs at step 12500 and remained at chance for 64 pairs through step 20000."
   },
   "discovery": {
     "batch_size": 8,
@@ -74,6 +76,7 @@
       0.001
     ],
     "max_steps": 20000,
+    "num_pairs": 32,
     "optimizer": "AdamW",
     "schedule": "cosine to zero over the maximum step horizon",
     "seed": 42,
@@ -100,7 +103,7 @@
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "calibrating_query_density",
+  "status": "running_mqar_lr_screen",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",
