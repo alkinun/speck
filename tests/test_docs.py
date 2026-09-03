@@ -6,7 +6,11 @@ root = Path(__file__).parents[1]
 
 
 def test_local_markdown_links_exist():
-    documents = sorted(root.glob("*.md")) + sorted((root / "docs").rglob("*.md"))
+    documents = (
+        sorted(root.glob("*.md"))
+        + sorted((root / "docs").rglob("*.md"))
+        + sorted((root / "findings").rglob("*.md"))
+    )
     missing = []
     for document in documents:
         text = document.read_text(encoding="utf-8")
@@ -17,6 +21,13 @@ def test_local_markdown_links_exist():
             if not (document.parent / path).exists():
                 missing.append(f"{document.relative_to(root)} -> {target}")
     assert not missing, "missing local documentation links:\n" + "\n".join(missing)
+
+
+def test_findings_index_covers_numbered_research_ledger():
+    index = (root / "findings" / "README.md").read_text(encoding="utf-8")
+    findings = sorted((root / "findings").glob("[0-9][0-9]_*.md"))
+    assert [path.name[:2] for path in findings] == [f"{index:02d}" for index in range(10)]
+    assert all(f"({path.name})" in index for path in findings)
 
 
 def test_evaluation_table_matches_checked_results():
