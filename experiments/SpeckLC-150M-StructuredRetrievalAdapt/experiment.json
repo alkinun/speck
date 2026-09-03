@@ -75,5 +75,5 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "gdn_controls_prepared"
+  "status": "matched_adaptation_complete_length_evaluation_pending"
 }
