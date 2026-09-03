@@ -167,6 +167,7 @@ def test_current_release_code_vendors_the_native_architecture(tmp_path):
 
 def assert_current_transformers_parity(tmp_path, values):
     transformers = pytest.importorskip("transformers")
+    torch.manual_seed(17)
     architecture = ArchitectureConfig.from_dict(values["config"])
     native = SpeckForCausalLM(architecture)
     native.init_weights()
