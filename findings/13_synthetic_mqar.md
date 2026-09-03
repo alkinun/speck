@@ -62,8 +62,9 @@ the number of associations changed:
 
 Sixteen associations converge faster than four because each batch contains four times as many
 supervised targets. Query count mixes memory load with gradient density; it is not a monotonic
-difficulty scalar. The sharp 32-to-64 collapse nevertheless identifies a capacity/optimization
-boundary for this fixed model and horizon.
+difficulty scalar. At this point the sharp 32-to-64 collapse identified a capacity-or-optimization
+boundary for this fixed model and horizon; the later matched-LR cross-control resolved it as
+optimization-dependent rather than a demonstrated capacity limit.
 
 Thirty-two associations were frozen as the architecture-comparison point: difficult enough to
 produce a long phase transition, but demonstrably solvable.
@@ -139,18 +140,19 @@ is more precise:
 1. Channel-wise decay rescues sigmoid-gated MQAR and reduces observed convergence-tail variance.
 2. A well-tuned SiLU GDN remains highly competitive at 32 associations.
 3. Both architectures have a sharp phase transition, making seed and LR grids mandatory.
-4. The present KDA fails between 32 and 64 simultaneous associations at length 1,024, so finite
-   recurrent capacity remains a real limit.
+4. The first KDA 64-association run failed at LR `1e-3`, but a later matched `1e-4` cross-control
+   passed at step 5,000. It was an optimization boundary, not evidence of a 32–64 state-capacity
+   limit.
 
-Next, measure two orthogonal length curves before language-model pretraining:
+The two proposed length curves have since completed:
 
 - fixed load: 32 associations at lengths 256, 512, 1,024, and 2,048, isolating distance;
 - fixed density: 8, 16, 32, and 64 associations at those lengths, measuring the combined scaling
   problem.
 
-Run KDA-sigmoid and GDN-SiLU at `1e-4` over the three confirmed seeds. Retain GDN-sigmoid as a
-negative control only where budget permits. Palindrome and 64-stack tests remain required before
-the 131M-token architecture staircase.
+At the replicated length-2,048 endpoints, KDA passes 3/3 seeds while GDN-SiLU passes 1/3 for both
+fixed load and fixed density. See [14 — MQAR length scaling](14_mqar_length_scaling.md). Palindrome
+and 64-stack tests remain required before the 131M-token architecture staircase.
 
 ## Artifacts
 

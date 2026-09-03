@@ -40,7 +40,10 @@ Kimi Delta Attention is also implemented as a distinct mixer with an auditable T
 FLA chunk/recurrent CUDA paths, fixed-state accounting, and a checked RTX 3090 qualification. On a
 calibrated length-1,024 MQAR task, KDA-sigmoid and GDN-SiLU solve all three seeds, while
 GDN-sigmoid solves none. KDA's median convergence is nearly tied with SiLU GDN, but its observed
-step range is smaller. See [the complete MQAR finding](../findings/13_synthetic_mqar.md).
+step range is smaller. At two replicated length-2,048 endpoints, KDA passes 3/3 seeds and GDN-SiLU
+passes 1/3, making reliable longer-distance learning the clearer KDA advantage. See the complete
+[MQAR mixer](../findings/13_synthetic_mqar.md) and
+[length-scaling](../findings/14_mqar_length_scaling.md) findings.
 
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized

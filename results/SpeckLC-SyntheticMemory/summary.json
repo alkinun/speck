@@ -213,8 +213,10 @@
     "kda_has_lower_gate_step_variance_than_gdn_silu": true,
     "kda_passes_three_seed_gate": true,
     "kda_rescues_sigmoid_matched_mixer": true,
+    "kda_passes_all_replicated_2k_endpoints": true,
     "publication_promotion_allowed": false,
-    "query_capacity_boundary_is_between_32_and_64_at_length_1024": true
+    "query_capacity_boundary_is_between_32_and_64_at_length_1024": false,
+    "scalar_gdn_passes_one_of_three_replicated_2k_endpoints": true
   },
   "format": "speck_synthetic_mqar_result",
   "format_version": 1,
@@ -224,14 +226,94 @@
       "reason": "The first KDA module used zero decay bias instead of the official log-uniform time-step initialization."
     }
   ],
+  "length_scaling": {
+    "cross_control_length_1024_pairs_64_lr_0.0001": {
+      "gdn_silu_gate_step": 6000,
+      "kda_sigmoid_gate_step": 5000,
+      "result": "Both pass; the earlier 64-pair failure at learning rate 0.001 was optimization-dependent, not a demonstrated capacity boundary."
+    },
+    "fixed_density_seed_42": {
+      "gdn_silu_gate_steps": {
+        "256_pairs_8": 5250,
+        "512_pairs_16": 5250,
+        "1024_pairs_32": 9750,
+        "2048_pairs_64": 8500
+      },
+      "kda_sigmoid_gate_steps": {
+        "256_pairs_8": 4000,
+        "512_pairs_16": 4250,
+        "1024_pairs_32": 4750,
+        "2048_pairs_64": 8000
+      }
+    },
+    "fixed_load_seed_42": {
+      "gdn_silu_gate_steps": {
+        "256": 5250,
+        "512": 7250,
+        "1024": 9750,
+        "2048": null
+      },
+      "kda_sigmoid_gate_steps": {
+        "256": 5750,
+        "512": 4250,
+        "1024": 4750,
+        "2048": 4750
+      },
+      "num_pairs": 32
+    },
+    "replicated_2048_endpoints": {
+      "fixed_density_pairs_64": {
+        "gdn_silu": {
+          "gate_steps": [
+            8500,
+            null,
+            null
+          ],
+          "pass_count": 1
+        },
+        "kda_sigmoid": {
+          "gate_steps": [
+            8000,
+            4750,
+            6250
+          ],
+          "pass_count": 3
+        }
+      },
+      "fixed_load_pairs_32": {
+        "gdn_silu": {
+          "gate_steps": [
+            null,
+            null,
+            6000
+          ],
+          "pass_count": 1
+        },
+        "kda_sigmoid": {
+          "gate_steps": [
+            4750,
+            7500,
+            7500
+          ],
+          "pass_count": 3
+        }
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    }
+  },
   "limitations": [
     "Kimi Linear does not disclose its MQAR query count, batch size, optimizer, or complete generator, so this is a pinned Speck adaptation rather than an exact reproduction.",
-    "The full learning-rate grid was run on seed 42; only each variant's selected rate was repeated on seeds 43 and 44.",
+    "The full learning-rate grid and the lower-length scaling curves were run on seed 42; selected 1024 and 2048 endpoints were repeated on seeds 43 and 44.",
     "Early stopping uses top-1 accuracy, so final cross-entropy is not comparable between successful runs stopped at different confidence levels.",
     "KDA has 3.31 percent more parameters than GDN in this tiny model, although its analytic training FLOPs per token are 0.35 percent lower under the paper formula.",
     "Palindrome and Stack have not yet been trained.",
     "MQAR success does not establish natural-language or publication-grade long-context capability."
   ],
+  "length_scaling_protocol_revision": "1815cce",
   "protocol_revision": "52ce1ec",
   "settings": {
     "batch_size": 8,
@@ -246,5 +328,5 @@
     "value_heads": 2,
     "vocab_size": 8192
   },
-  "status": "complete"
+  "status": "mqar_length_scaling_complete"
 }

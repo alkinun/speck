@@ -20,6 +20,7 @@ Read in order:
 12. [11 — KDA implementation and kernel qualification](11_kda_implementation_and_qualification.md)
 13. [12 — Same-parent NoPE context activation](12_nope_context_activation.md)
 14. [13 — Synthetic MQAR calibration and mixer comparison](13_synthetic_mqar.md)
+15. [14 — MQAR distance and load scaling](14_mqar_length_scaling.md)
 
 Conventions:
 
