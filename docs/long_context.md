@@ -4,6 +4,9 @@ The complete chronological experiment ledger—including negative results, check
 and decision gates—is maintained in [findings/README.md](../findings/README.md). Checked JSON under
 `results/` remains the machine-readable source of truth.
 
+The separate [paper library](../papers/README.md) records verified external evidence and transfer
+risks. A claim in that library remains a paper result until a Speck finding reproduces it.
+
 SpeckLabs treats context length as a measured capability, not a configuration value. The research
 stack is organized around four separately reported ceilings:
 

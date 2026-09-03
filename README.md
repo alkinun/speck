@@ -112,6 +112,7 @@ prepared conversation dataset.
 
 | Guide | Contents |
 | --- | --- |
+| [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific experiment implications for 22 architecture papers. |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context research](docs/long_context.md) | Claims, architecture, experiment sequence, reference models, data, and known boundaries. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
