@@ -131,7 +131,7 @@
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
   "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "running_mqar_seed_confirmation",
+  "status": "mqar_complete",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",

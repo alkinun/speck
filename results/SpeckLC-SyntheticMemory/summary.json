@@ -1,0 +1,250 @@
+{
+  "chance_accuracy": {
+    "full_vocabulary": 0.0001220703125,
+    "value_half_after_class_prior": 0.000244140625
+  },
+  "confirmation": {
+    "gdn-sigmoid": {
+      "gate_steps": [
+        null,
+        null,
+        null
+      ],
+      "learning_rate": 0.00005,
+      "pass_count": 0,
+      "seed_results": [
+        {
+          "best_accuracy": 0.9713134765625,
+          "final_accuracy": 0.9713134765625,
+          "final_loss": 3.8758347183465958,
+          "seed": 42
+        },
+        {
+          "best_accuracy": 0.00537109375,
+          "final_accuracy": 0.0050048828125,
+          "final_loss": 8.109891265630722,
+          "seed": 43
+        },
+        {
+          "best_accuracy": 0.969970703125,
+          "final_accuracy": 0.9698486328125,
+          "final_loss": 4.763666823506355,
+          "seed": 44
+        }
+      ]
+    },
+    "gdn-silu": {
+      "gate_step_mean": 6500.0,
+      "gate_step_median": 5000,
+      "gate_step_population_stddev": 2300.3622903070436,
+      "gate_step_range": [
+        4750,
+        9750
+      ],
+      "gate_steps": [
+        9750,
+        4750,
+        5000
+      ],
+      "learning_rate": 0.0001,
+      "mean_training_seconds": 55.84359448569982,
+      "mean_wall_seconds": 69.39313345732323,
+      "pass_count": 3,
+      "seed_results": [
+        {
+          "final_accuracy": 0.990966796875,
+          "final_loss": 0.18413498997688293,
+          "gate_step": 9750,
+          "seed": 42
+        },
+        {
+          "final_accuracy": 0.99853515625,
+          "final_loss": 4.742707252502441,
+          "gate_step": 4750,
+          "seed": 43
+        },
+        {
+          "final_accuracy": 0.999755859375,
+          "final_loss": 4.131881892681122,
+          "gate_step": 5000,
+          "seed": 44
+        }
+      ]
+    },
+    "kda-sigmoid": {
+      "gate_step_mean": 5083.333333333333,
+      "gate_step_median": 4750,
+      "gate_step_population_stddev": 656.1673228343176,
+      "gate_step_range": [
+        4500,
+        6000
+      ],
+      "gate_steps": [
+        4750,
+        4500,
+        6000
+      ],
+      "learning_rate": 0.0001,
+      "mean_training_seconds": 50.2458358942143,
+      "mean_wall_seconds": 60.89628399633026,
+      "pass_count": 3,
+      "seed_results": [
+        {
+          "final_accuracy": 0.998779296875,
+          "final_loss": 4.9292459934949875,
+          "gate_step": 4750,
+          "seed": 42
+        },
+        {
+          "final_accuracy": 0.99658203125,
+          "final_loss": 5.183912023901939,
+          "gate_step": 4500,
+          "seed": 43
+        },
+        {
+          "final_accuracy": 0.99755859375,
+          "final_loss": 4.987429842352867,
+          "gate_step": 6000,
+          "seed": 44
+        }
+      ]
+    },
+    "mean_gate_step_ratio_gdn_silu_over_kda": 1.278688524590164,
+    "mean_training_flops_ratio_gdn_silu_over_kda": 1.2832053738925033,
+    "median_gate_step_ratio_gdn_silu_over_kda": 1.0526315789473684,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "validation_seed": 1000042
+  },
+  "density_calibration": [
+    {
+      "best_accuracy": 0.994140625,
+      "final_loss": 0.37107829144224524,
+      "gate_step": 7500,
+      "num_pairs": 4
+    },
+    {
+      "best_accuracy": 0.9912109375,
+      "final_loss": 0.06459088192787021,
+      "gate_step": 6000,
+      "num_pairs": 16
+    },
+    {
+      "best_accuracy": 0.9901123046875,
+      "final_loss": 0.08140234497841448,
+      "gate_step": 12500,
+      "num_pairs": 32
+    },
+    {
+      "best_accuracy": 0.00067138671875,
+      "final_loss": 8.310213893651962,
+      "gate_step": null,
+      "num_pairs": 64
+    },
+    {
+      "best_accuracy": 0.0003662109375,
+      "final_loss": 8.317918807268143,
+      "gate_step": null,
+      "num_pairs": 256
+    }
+  ],
+  "discovery_grid_seed_42": {
+    "gdn-sigmoid": {
+      "0.00005": {
+        "best_accuracy": 0.9713134765625,
+        "gate_step": null
+      },
+      "0.0001": {
+        "best_accuracy": 0.0010986328125,
+        "gate_step": null
+      },
+      "0.0005": {
+        "best_accuracy": 0.0008544921875,
+        "gate_step": null
+      },
+      "0.001": {
+        "best_accuracy": 0.0010986328125,
+        "gate_step": null
+      }
+    },
+    "gdn-silu": {
+      "0.00005": {
+        "best_accuracy": 0.022216796875,
+        "gate_step": null
+      },
+      "0.0001": {
+        "best_accuracy": 0.990966796875,
+        "gate_step": 9750
+      },
+      "0.0005": {
+        "best_accuracy": 0.000732421875,
+        "gate_step": null
+      },
+      "0.001": {
+        "best_accuracy": 0.9908447265625,
+        "gate_step": 12250
+      }
+    },
+    "kda-sigmoid": {
+      "0.00005": {
+        "best_accuracy": 0.037841796875,
+        "gate_step": null
+      },
+      "0.0001": {
+        "best_accuracy": 0.998779296875,
+        "gate_step": 4750
+      },
+      "0.0005": {
+        "best_accuracy": 0.0035400390625,
+        "gate_step": null
+      },
+      "0.001": {
+        "best_accuracy": 0.9901123046875,
+        "gate_step": 12500
+      }
+    }
+  },
+  "findings": {
+    "gdn_sigmoid_passes_three_seed_gate": false,
+    "gdn_silu_passes_three_seed_gate": true,
+    "kda_has_lower_gate_step_variance_than_gdn_silu": true,
+    "kda_passes_three_seed_gate": true,
+    "kda_rescues_sigmoid_matched_mixer": true,
+    "publication_promotion_allowed": false,
+    "query_capacity_boundary_is_between_32_and_64_at_length_1024": true
+  },
+  "format": "speck_synthetic_mqar_result",
+  "format_version": 1,
+  "invalidated_runs": [
+    {
+      "artifact": "diagnostics/invalid-kda-zero-decay-bias-lr-0.001.json",
+      "reason": "The first KDA module used zero decay bias instead of the official log-uniform time-step initialization."
+    }
+  ],
+  "limitations": [
+    "Kimi Linear does not disclose its MQAR query count, batch size, optimizer, or complete generator, so this is a pinned Speck adaptation rather than an exact reproduction.",
+    "The full learning-rate grid was run on seed 42; only each variant's selected rate was repeated on seeds 43 and 44.",
+    "Early stopping uses top-1 accuracy, so final cross-entropy is not comparable between successful runs stopped at different confidence levels.",
+    "KDA has 3.31 percent more parameters than GDN in this tiny model, although its analytic training FLOPs per token are 0.35 percent lower under the paper formula.",
+    "Palindrome and Stack have not yet been trained.",
+    "MQAR success does not establish natural-language or publication-grade long-context capability."
+  ],
+  "protocol_revision": "52ce1ec",
+  "settings": {
+    "batch_size": 8,
+    "early_stop_accuracy": 0.99,
+    "eval_examples": 256,
+    "eval_interval_steps": 250,
+    "head_dimension": 128,
+    "key_heads": 2,
+    "max_steps": 20000,
+    "num_pairs": 32,
+    "sequence_length": 1024,
+    "value_heads": 2,
+    "vocab_size": 8192
+  },
+  "status": "complete"
+}

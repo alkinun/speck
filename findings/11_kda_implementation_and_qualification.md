@@ -121,5 +121,9 @@ It does not yet prove:
 - quality improvements over GDN;
 - parity for variable-length packed sequences or context parallelism.
 
+Subsequent result: KDA passed calibrated 32-query MQAR in all three seeds and robustly beat
+sigmoid-gated GDN, while SiLU-gated GDN remained competitive. See
+[13 — Synthetic MQAR](13_synthetic_mqar.md).
+
 Machine-readable artifact:
 [KDA kernel qualification](../results/KimiLinearTransfer/kda_kernel_qualification.json).

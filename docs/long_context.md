@@ -36,6 +36,12 @@ PyTorch 2.9.1+cu128, driver 610.43.03, tensor geometry, raw timings, tolerances,
 It passes output/final-state parity at 64, 512, and 4,096 tokens, all five input gradients, and
 bitwise repeatability. This attests only that exact software/hardware path, not future cluster GPUs.
 
+Kimi Delta Attention is also implemented as a distinct mixer with an auditable Torch recurrence,
+FLA chunk/recurrent CUDA paths, fixed-state accounting, and a checked RTX 3090 qualification. On a
+calibrated length-1,024 MQAR task, KDA-sigmoid and GDN-SiLU solve all three seeds, while
+GDN-sigmoid solves none. KDA's median convergence is nearly tied with SiLU GDN, but its observed
+step range is smaller. See [the complete MQAR finding](../findings/13_synthetic_mqar.md).
+
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized
 causal bias. CUDA sliding prefill uses FlexAttention with block-level mask metadata; at 128K and a

@@ -19,6 +19,7 @@ Read in order:
 11. [10 — Kimi Linear transfer review and revised experiment order](10_kimi_linear_transfer_review.md)
 12. [11 — KDA implementation and kernel qualification](11_kda_implementation_and_qualification.md)
 13. [12 — Same-parent NoPE context activation](12_nope_context_activation.md)
+14. [13 — Synthetic MQAR calibration and mixer comparison](13_synthetic_mqar.md)
 
 Conventions:
 
@@ -34,4 +35,4 @@ Conventions:
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
 Last consolidated state: all described experiments are complete, all referenced checkpoints have
-completion markers, the GPU is idle, and the repository test suite passes 297 tests.
+completion markers, the GPU is idle, and the repository test suite passes 318 tests.
