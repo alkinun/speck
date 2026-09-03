@@ -1,0 +1,54 @@
+{
+  "benchmark": {
+    "activation_checkpointing": false,
+    "aggressive_fusion": true,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "compiled": true,
+    "loss_backend": "torch",
+    "mode": "compute",
+    "optimizer": "muon",
+    "optimizer_step_compiled": true,
+    "seed": 42,
+    "steps": 2,
+    "warmup_seconds": 14.611331502906978,
+    "warmup_steps": 1
+  },
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "git_dirty": false,
+    "git_revision": "a463d6f",
+    "recorded_at": "2026-09-03T09:57:06.820830+00:00",
+    "torch": "2.9.1+cu128"
+  },
+  "experiment": {
+    "fingerprint": "a5be91cae6f8f6c21aa75ee91daeb79e352e36d4a2138623f9092cabf2c5718b",
+    "manifest": null,
+    "path": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-rope"
+  },
+  "geometry": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "sequence_length": 4096,
+    "tokens_per_step": 65536
+  },
+  "memory": {
+    "peak_allocated_bytes": 13929100800,
+    "peak_reserved_bytes": 14833156096
+  },
+  "model": {
+    "flops_per_token": 1019435520.0,
+    "parameters": 152916468
+  },
+  "performance": {
+    "loss_first": 9.796660423278809,
+    "loss_last": 8.958612442016602,
+    "model_flops_utilization": null,
+    "step_seconds_mean": 2.250983572448604,
+    "step_seconds_median": 2.250983572448604,
+    "step_seconds_p90": 3.1677389959804714,
+    "tflops": 29.680237144531823,
+    "tokens_per_second": 29114.383952927034
+  }
+}
