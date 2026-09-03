@@ -49,10 +49,11 @@
     "paired counterfactual retrieval curve"
   ],
   "result": "../../results/SpeckLC-150M-KimiTransfer32K/summary.json",
-  "status": "prepared",
+  "status": "preflight_passed",
   "treatment": {
     "experiment": "global-5-nope",
     "global_attention_rope_dim": 0,
-    "status": "prepared"
+    "preflight": "../../results/SpeckLC-150M-KimiTransfer32K/preflight/global-5-nope.json",
+    "status": "preflight_passed"
   }
 }
