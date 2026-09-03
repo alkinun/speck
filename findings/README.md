@@ -24,6 +24,7 @@ Read in order:
 16. [15 — Palindrome and 64-stack mixer qualification](15_palindrome_and_stack.md)
 17. [16 — Kimi-transfer language-model staircase](16_kimi_transfer_131m.md)
 18. [17 — Three-seed Kimi-frontier replication](17_kimi_frontier_replication.md)
+19. [18 — Matched 32K KDA/NoPE context activation](18_kimi_context32k.md)
 
 Conventions:
 
@@ -38,6 +39,6 @@ Conventions:
 - Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
-Last consolidated state: the Kimi-transfer staircase, three-seed frontier replication, and 128K
-diagnostics are complete; all referenced checkpoints have completion markers, and the repository
-test suite passes 321 tests.
+Last consolidated state: the Kimi-transfer staircase, three-seed replication, and matched 32K
+context activation are complete; all referenced checkpoints have completion markers, and the
+repository test suite passes 321 tests.

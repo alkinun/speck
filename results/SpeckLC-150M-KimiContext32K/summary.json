@@ -4,7 +4,89 @@
   "format": "speck_kimi_context_results",
   "format_version": 1,
   "long_validation_delta_kda_minus_rope": 0.011444091796875,
-  "status": "training_complete_evaluation_pending",
+  "retrieval": {
+    "caveat": "directional contrast demonstrates causal sensitivity; exact match remains zero",
+    "gdn-sigmoid-rope": {
+      "candidate_accuracy": [
+        0.23333333333333334,
+        0.23333333333333334,
+        0.23333333333333334,
+        0.23333333333333334,
+        0.23333333333333334,
+        0.23333333333333334
+      ],
+      "contrastive_direction_accuracy": [
+        0.9333333333333333,
+        0.8333333333333334,
+        0.6333333333333333,
+        0.2,
+        0.4,
+        0.36666666666666664
+      ],
+      "contrastive_retrieval_score": [
+        0.174674,
+        0.075130,
+        0.010514,
+        -0.014909,
+        -0.005208,
+        -0.002344
+      ],
+      "effective_directional_length": 8192,
+      "prefill_seconds_at_128k": 3.2545,
+      "state_bytes_at_128k": 504860160
+    },
+    "kda-sigmoid-nope": {
+      "candidate_accuracy": [
+        0.26666666666666666,
+        0.26666666666666666,
+        0.23333333333333334,
+        0.23333333333333334,
+        0.23333333333333334,
+        0.23333333333333334
+      ],
+      "contrastive_direction_accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contrastive_retrieval_score": [
+        2.567448,
+        2.240365,
+        1.618229,
+        0.955925,
+        0.474219,
+        0.317969
+      ],
+      "effective_directional_length": 131072,
+      "prefill_seconds_at_128k": 3.3150,
+      "state_bytes_at_128k": 504860160
+    },
+    "lengths": [
+      4096,
+      8192,
+      16384,
+      32768,
+      65536,
+      131072
+    ],
+    "samples_per_length": 30
+  },
+  "short_loss": {
+    "gdn-sigmoid-rope": {
+      "loss": 2.8052237033843994,
+      "regression_from_parent": 0.01459503173828125
+    },
+    "kda_minus_rope": -0.00553441047668457,
+    "kda-sigmoid-nope": {
+      "loss": 2.799689292907715,
+      "regression_from_parent": 0.004309177398681641
+    },
+    "validation_tokens": 19988480
+  },
+  "status": "complete",
   "validation_caveat": "the long-document validation split contains only 327680 evaluated tokens",
   "variants": {
     "gdn-sigmoid-rope": {

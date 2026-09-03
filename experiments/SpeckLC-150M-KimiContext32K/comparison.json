@@ -13,7 +13,7 @@
   ],
   "result": "../../results/SpeckLC-150M-KimiContext32K/summary.json",
   "sequence_length": 32768,
-  "status": "prepared",
+  "status": "complete",
   "train_tokens": 32000000,
   "variants": {
     "gdn-sigmoid-rope": {
