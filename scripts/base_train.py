@@ -135,6 +135,7 @@ def context_compatible_architecture(previous, current, allow_attention_scope_cha
                         if branch["kind"] == "attention":
                             branch["scope"] = "parameterless"
                             branch["window_size"] = None
+                            branch["rope_dim"] = None
     return {key: value for key, value in previous.items() if key not in ignored} == {
         key: value for key, value in current.items() if key not in ignored
     }

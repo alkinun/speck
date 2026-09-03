@@ -242,6 +242,14 @@ def test_context_architecture_only_allows_positional_changes():
         scope_changed,
         allow_attention_scope_change=True,
     )
+    rope_changed = copy.deepcopy(extended)
+    rope_changed["blocks"][1]["block"]["stages"][0]["branches"][0]["rope_dim"] = 0
+    assert not context_compatible_architecture(model, rope_changed)
+    assert context_compatible_architecture(
+        model,
+        rope_changed,
+        allow_attention_scope_change=True,
+    )
     assert not context_compatible_architecture(
         model,
         changed,

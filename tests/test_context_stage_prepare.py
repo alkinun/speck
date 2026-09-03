@@ -100,3 +100,40 @@ def test_context_stage_can_promote_selected_sliding_attention_layers():
 
     with pytest.raises(ValueError, match="not sliding-attention"):
         promote_global_attention_layers(model, (10,))
+
+
+def test_context_stage_can_make_only_promoted_global_layers_nope():
+    model = load_experiment(local_experiment, "model")["model"]
+    promoted = ArchitectureConfig.from_dict(
+        promote_global_attention_layers(model, (11, 19), rope_dim=0)
+    )
+    attention = {
+        invocation.occurrence_index: branch
+        for invocation in promoted.execution_plan
+        for stage in invocation.block.stages
+        for branch in stage.branches
+        if isinstance(branch, AttentionSpec)
+    }
+    assert attention[11].scope == "global"
+    assert attention[11].rope_dim == 0
+    assert attention[19].scope == "global"
+    assert attention[19].rope_dim == 0
+    assert attention[3].scope == "sliding"
+    assert attention[3].rope_dim == 32
+
+    with pytest.raises(ValueError, match="non-negative integer"):
+        promote_global_attention_layers(model, (11,), rope_dim=-2)
+
+
+def test_context_stage_rejects_rope_override_without_promotion():
+    configs, metadata = parent_inputs()
+    with pytest.raises(ValueError, match="requires promoted global layers"):
+        stage_configs(
+            configs,
+            metadata,
+            sequence_length=32_768,
+            train_tokens=1,
+            lr=1e-4,
+            global_attention_rope_dim=0,
+            run="invalid",
+        )

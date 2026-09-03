@@ -50,10 +50,16 @@ def arguments(argv=None):
         default=None,
         help="logical sliding-attention layers to promote to global attention",
     )
+    parser.add_argument(
+        "--global-attention-rope-dim",
+        type=int,
+        default=None,
+        help="override RoPE dimensions only on promoted global layers; use 0 for NoPE",
+    )
     return parser.parse_args(argv)
 
 
-def promote_global_attention_layers(model, layer_indices):
+def promote_global_attention_layers(model, layer_indices, rope_dim=None):
     """Promote selected logical sliding-attention layers without changing parameters."""
 
     if any(
@@ -61,6 +67,10 @@ def promote_global_attention_layers(model, layer_indices):
         for index in layer_indices
     ) or len(set(layer_indices)) != len(layer_indices):
         raise ValueError("global attention layer indices must be unique non-negative integers")
+    if rope_dim is not None and (
+        not isinstance(rope_dim, int) or isinstance(rope_dim, bool) or rope_dim < 0
+    ):
+        raise ValueError("global attention RoPE dimensions must be a non-negative integer")
     config = ArchitectureConfig.from_dict(model)
     if any(group.repeat != 1 for group in config.blocks):
         raise ValueError("attention-scope promotion requires materialized logical layers")
@@ -75,7 +85,10 @@ def promote_global_attention_layers(model, layer_indices):
                 if isinstance(branch, AttentionSpec) and layer_index in requested:
                     if branch.scope != "sliding":
                         raise ValueError("attention-scope promotion requires sliding parent layers")
-                    branch = replace(branch, scope="global", window_size=None)
+                    changes = {"scope": "global", "window_size": None}
+                    if rope_dim is not None:
+                        changes["rope_dim"] = rope_dim
+                    branch = replace(branch, **changes)
                     promoted.add(layer_index)
                 branches.append(branch)
             stages.append(StageConfig(tuple(branches)))
@@ -105,6 +118,7 @@ def stage_configs(
     activation_checkpointing=None,
     wandb_group=None,
     global_attention_layers=None,
+    global_attention_rope_dim=None,
     warmup_steps=100,
     min_lr=0.1,
     run,
@@ -134,8 +148,14 @@ def stage_configs(
     if rope_theta is not None:
         model["rope_theta"] = rope_theta
     global_attention_layers = tuple(global_attention_layers or ())
+    if global_attention_rope_dim is not None and not global_attention_layers:
+        raise ValueError("global attention RoPE override requires promoted global layers")
     if global_attention_layers:
-        model = promote_global_attention_layers(model, global_attention_layers)
+        model = promote_global_attention_layers(
+            model,
+            global_attention_layers,
+            rope_dim=global_attention_rope_dim,
+        )
     if not context_compatible_architecture(
         metadata["config"],
         model,
@@ -204,6 +224,7 @@ def prepare(args):
         activation_checkpointing=args.activation_checkpointing,
         wandb_group=args.wandb_group,
         global_attention_layers=args.global_attention_layers,
+        global_attention_rope_dim=args.global_attention_rope_dim,
         warmup_steps=args.warmup_steps,
         min_lr=args.min_lr,
         run=run,
@@ -223,6 +244,7 @@ def prepare(args):
         "loss_backend": train["loss_backend"],
         "activation_checkpointing": train["activation_checkpointing"],
         "global_attention_layers": list(args.global_attention_layers or ()),
+        "global_attention_rope_dim": args.global_attention_rope_dim,
     }
     building = output.with_name(output.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
