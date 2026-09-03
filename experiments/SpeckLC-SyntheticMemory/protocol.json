@@ -124,6 +124,19 @@
     "Synthetic success gates language-model pretraining but does not imply natural-language long-context capability."
   ],
   "length_scaling": {
+    "adaptive_cross_controls": [
+      {
+        "decision_trigger": "Length 2048 with 64 pairs passed at learning rate 0.0001 while the density calibration at length 1024 with 64 pairs failed at learning rate 0.001.",
+        "learning_rate": 0.0001,
+        "num_pairs": 64,
+        "seed": 42,
+        "sequence_length": 1024,
+        "variants": [
+          "kda-sigmoid",
+          "gdn-silu"
+        ]
+      }
+    ],
     "fixed_density": {
       "length_to_pairs": {
         "256": 8,
