@@ -45,5 +45,5 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "pilot_prepared"
+  "status": "hard_task_pilot_failed_gate"
 }
