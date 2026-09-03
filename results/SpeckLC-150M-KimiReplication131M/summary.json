@@ -8,7 +8,22 @@
     43,
     44
   ],
-  "status": "three_of_four_repeats_complete",
+  "paired_comparison": {
+    "delta_kda_minus_rope_by_seed": [
+      0.004751443862915039,
+      0.004059553146362305,
+      0.011916875839233398
+    ],
+    "delta_mean": 0.006909290949503581,
+    "delta_mean_95_percent_t_interval": [
+      -0.0038978809314543844,
+      0.017716462830461546
+    ],
+    "delta_median": 0.004751443862915039,
+    "interpretation": "aggregate difference unresolved; strict per-seed 0.00965-nat tie passes two of three seeds",
+    "strict_tie_count": 2
+  },
+  "status": "training_complete_retrieval_replication_pending",
   "variants": {
     "gdn-fla-sigmoid-rope": {
       "aggregate": {
@@ -133,6 +148,12 @@
       }
     },
     "kda-sigmoid-nope": {
+      "aggregate": {
+        "loss_mean": 2.796710173288981,
+        "loss_median": 2.795380115509033,
+        "loss_population_stddev": 0.003071447900243555,
+        "loss_range": 0.0071620941162109375
+      },
       "runs": {
         "42": {
           "checkpoint": {
@@ -196,6 +217,57 @@
           },
           "validation_tokens": 19988480,
           "wandb_id": "k0h3vww8"
+        },
+        "44": {
+          "checkpoint": {
+            "directory": "/home/alkin/.cache/speck/checkpoints/kda-sigmoid-nope-seed-44",
+            "metadata_sha256": "eca0d4509440e85026bf3e3dbbdcbc951b4ce3845c4acf44792b89a1e323cd5f",
+            "model_sha256": "530a297927f7bb4fb891217743a2cbf1020e5b4f58568ce6feb9fd3ae86bb54b",
+            "optimizer_sha256": "5de691b7bfc297897ef1dcab2b4b2676548c7db61b9a9eeece0794873c38f640",
+            "step": 2000
+          },
+          "final_validation_loss": 2.8009562492370605,
+          "intermediate_validation": [
+            {
+              "global_tokens": 31981568,
+              "loss": 3.76819
+            },
+            {
+              "global_tokens": 63963136,
+              "loss": 3.12344
+            },
+            {
+              "global_tokens": 95944704,
+              "loss": 2.90366
+            },
+            {
+              "global_tokens": 127926272,
+              "loss": 2.80132
+            }
+          ],
+          "paired_delta_from_rope": 0.011916875839233398,
+          "performance": {
+            "active_seconds": 3284.8498503250303,
+            "gpu_hours": 0.8745,
+            "peak_allocated_vram_mib": 14207.35254,
+            "tokens_per_second": 44322.06348
+          },
+          "seed": 44,
+          "validation_source_losses": {
+            "cosmopedia_v2": 2.767334222793579,
+            "dclm": 3.6320579051971436,
+            "dclm_edu": 3.1025850772857666,
+            "finemath_4plus": 2.517608165740967,
+            "fineweb_edu": 3.3345627784729004,
+            "math_multi_style": 1.706967830657959,
+            "math_textbook_exercise": 1.2214195728302002,
+            "pes2o": 2.9877822399139404,
+            "ufw_l3_multi_style": 3.1386115550994873,
+            "ultra_fineweb": 3.2598021030426025,
+            "wikimedia": 3.14927339553833
+          },
+          "validation_tokens": 19988480,
+          "wandb_id": "not9lyf2"
         }
       }
     }
