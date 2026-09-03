@@ -12,6 +12,7 @@ from speck.architecture import (
     BlockGroup,
     GatedCausalConvSpec,
     GatedDeltaNetSpec,
+    KimiDeltaAttentionSpec,
     StageConfig,
     SwiGLUSpec,
 )
@@ -27,6 +28,8 @@ from speck.model import (
     flex_sliding_window_attention,
     mean_causal_attention_context,
     sliding_window_block_mask,
+    torch_gated_delta_rule,
+    torch_kimi_delta_rule,
     torch_sliding_window_attention,
 )
 
@@ -337,6 +340,64 @@ def test_gated_deltanet_output_gate_activation_is_configurable():
     assert torch.isfinite(silu_logits).all()
     assert torch.isfinite(sigmoid_logits).all()
     assert not torch.allclose(sigmoid_logits, silu_logits)
+
+
+def test_channel_constant_kda_reduces_to_grouped_gated_deltanet():
+    torch.manual_seed(43)
+    query = torch.randn(2, 7, 1, 4)
+    key = torch.randn_like(query)
+    value = torch.randn(2, 7, 2, 4)
+    scalar_decay = -torch.rand(2, 7, 2)
+    channel_decay = scalar_decay[..., None].expand(2, 7, 2, 4)
+    beta = torch.rand(2, 7, 2)
+
+    expected = torch_gated_delta_rule(
+        query.repeat_interleave(2, dim=2),
+        key.repeat_interleave(2, dim=2),
+        value,
+        scalar_decay,
+        beta,
+    )
+    actual = torch_kimi_delta_rule(query, key, value, channel_decay, beta)
+
+    torch.testing.assert_close(actual[0], expected[0])
+    torch.testing.assert_close(actual[1], expected[1])
+
+
+def test_kimi_delta_attention_state_matches_full_forward():
+    torch.manual_seed(47)
+    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3)
+    model = model_with(spec, SwiGLUSpec(16))
+    tokens = torch.randint(0, 16, (1, 8))
+    assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=2e-5)
+
+
+def test_kimi_delta_attention_state_is_independent_of_context_length():
+    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3)
+    model = model_with(spec)
+    short = model.state(length=4)
+    long = model.state(length=16)
+    expected = 1 * 2 * 4 * 4 * 4 + 1 * (2 * 4 + 2 * 4) * 2 * 4
+    assert short.allocated_bytes() == expected
+    assert long.allocated_bytes() == expected
+    assert short.memory_report()["by_kind"] == {"kimi_delta_attention": expected}
+
+
+def test_kimi_delta_attention_backward_is_finite():
+    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3)
+    model = model_with(spec)
+    tokens = torch.randint(0, 16, (2, 8))
+    loss = model(tokens, tokens)
+    loss.backward()
+    assert all(
+        parameter.grad is None or torch.isfinite(parameter.grad).all()
+        for parameter in model.parameters()
+    )
+
+
+def test_kimi_delta_attention_flops_follow_paper_chunk_formula():
+    model = model_with(KimiDeltaAttentionSpec(4, 4, 1, 2))
+    assert model.flops_per_token(16) == 4_256
 
 
 def test_activation_checkpointing_preserves_loss_and_gradients():

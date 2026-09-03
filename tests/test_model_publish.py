@@ -235,3 +235,48 @@ def test_current_transformers_wrapper_exports_gated_deltanet(tmp_path):
         },
     ]
     assert_current_transformers_parity(tmp_path, values)
+
+
+def test_current_transformers_wrapper_exports_kimi_delta_attention(tmp_path):
+    values = metadata()
+    values["config"]["blocks"] = [
+        {
+            "block": {
+                "hidden_size": 4,
+                "stages": [
+                    {
+                        "branches": [
+                            {
+                                "kind": "kimi_delta_attention",
+                                "key_head_dim": 2,
+                                "value_head_dim": 2,
+                                "num_key_heads": 1,
+                                "num_value_heads": 2,
+                                "conv_kernel_size": 3,
+                            }
+                        ]
+                    },
+                    {"branches": [{"kind": "swiglu", "intermediate_size": 8}]},
+                ],
+            }
+        },
+        {
+            "block": {
+                "hidden_size": 4,
+                "stages": [
+                    {
+                        "branches": [
+                            {
+                                "kind": "attention",
+                                "head_dim": 2,
+                                "num_key_value_heads": 1,
+                                "rope_dim": 0,
+                            }
+                        ]
+                    },
+                    {"branches": [{"kind": "swiglu", "intermediate_size": 8}]},
+                ],
+            }
+        },
+    ]
+    assert_current_transformers_parity(tmp_path, values)

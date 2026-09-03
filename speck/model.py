@@ -16,6 +16,7 @@ from speck.architecture import (
     AttentionSpec,
     GatedCausalConvSpec,
     GatedDeltaNetSpec,
+    KimiDeltaAttentionSpec,
     SwiGLUSpec,
 )
 
@@ -409,7 +410,7 @@ class ConvolutionState:
 
 
 class DeltaNetState:
-    """Hold fixed-size recurrent and local-convolution Gated DeltaNet state."""
+    """Hold fixed-size recurrent and local-convolution delta-rule state."""
 
     def __init__(
         self,
@@ -421,7 +422,9 @@ class DeltaNetState:
         conv_history,
         device,
         dtype,
+        kind="gated_deltanet",
     ):
+        self.kind = kind
         self.recurrent = torch.zeros(
             batch_size,
             num_heads,
@@ -475,7 +478,7 @@ class SequenceState:
             if isinstance(entry, AttentionState):
                 kind = "attention_kv"
             elif isinstance(entry, DeltaNetState):
-                kind = "gated_deltanet"
+                kind = entry.kind
             else:
                 kind = "convolution"
             by_kind[kind] += entry.allocated_bytes()
@@ -828,6 +831,68 @@ def gated_delta_rule(query, key, value, log_decay, beta, initial_state=None):
     return torch_gated_delta_rule(query, key, value, log_decay, beta, initial_state)
 
 
+def torch_kimi_delta_rule(query, key, value, log_decay, beta, initial_state=None):
+    """Evaluate channel-wise KDA exactly with a differentiable Torch recurrence."""
+
+    output_dtype = query.dtype
+    query, key, value, log_decay, beta = (
+        tensor.float() for tensor in (query, key, value, log_decay, beta)
+    )
+    query = query * torch.rsqrt(query.square().sum(dim=-1, keepdim=True) + 1e-6)
+    key = key * torch.rsqrt(key.square().sum(dim=-1, keepdim=True) + 1e-6)
+    query = query * (query.size(-1) ** -0.5)
+    if value.size(2) % query.size(2):
+        raise ValueError("KDA value heads must be divisible by query and key heads")
+    repetitions = value.size(2) // query.size(2)
+    if repetitions > 1:
+        query = query.repeat_interleave(repetitions, dim=2)
+        key = key.repeat_interleave(repetitions, dim=2)
+    if log_decay.shape != (*value.shape[:3], key.size(-1)):
+        raise ValueError("KDA log decay must provide every value-head key channel")
+    if beta.shape != value.shape[:3]:
+        raise ValueError("KDA beta must provide every value head")
+    if initial_state is None:
+        state = value.new_zeros(value.size(0), value.size(2), key.size(-1), value.size(-1))
+    else:
+        state = initial_state.float()
+    outputs = []
+    for index in range(query.size(1)):
+        query_token = query[:, index]
+        key_token = key[:, index]
+        value_token = value[:, index]
+        state = state * log_decay[:, index].exp()[..., None]
+        remembered = torch.einsum("bhkv,bhk->bhv", state, key_token)
+        delta = (value_token - remembered) * beta[:, index, :, None]
+        state = state + torch.einsum("bhk,bhv->bhkv", key_token, delta)
+        outputs.append(torch.einsum("bhkv,bhk->bhv", state, query_token))
+    return torch.stack(outputs, dim=1).to(output_dtype), state
+
+
+def kimi_delta_rule(query, key, value, log_decay, beta, initial_state=None):
+    """Use FLA KDA on CUDA and the auditable Torch recurrence elsewhere."""
+
+    if query.is_cuda:
+        try:
+            from fla.ops.kda import chunk_kda, fused_recurrent_kda
+        except ImportError as error:
+            raise RuntimeError(
+                "CUDA Kimi Delta Attention requires the pinned linear extra; "
+                "use torch_kimi_delta_rule directly for reference qualification"
+            ) from error
+        operation = fused_recurrent_kda if query.size(1) == 1 else chunk_kda
+        return operation(
+            query,
+            key,
+            value,
+            g=log_decay,
+            beta=beta,
+            initial_state=initial_state,
+            output_final_state=True,
+            use_qk_l2norm_in_kernel=True,
+        )
+    return torch_kimi_delta_rule(query, key, value, log_decay, beta, initial_state)
+
+
 class GatedDeltaNet(nn.Module):
     """A fixed-state, error-correcting linear sequence mixer with a local convolution."""
 
@@ -905,6 +970,110 @@ class GatedDeltaNet(nn.Module):
         return self.output_projection(output.flatten(2))
 
 
+class KimiDeltaAttention(nn.Module):
+    """A fixed-state delta-rule mixer with an independent decay per key channel."""
+
+    def __init__(self, hidden_size, spec, eps):
+        super().__init__()
+        self.spec = spec
+        self.key_dim = spec.num_key_heads * spec.key_head_dim
+        self.value_dim = spec.num_value_heads * spec.value_head_dim
+        self.conv_dim = 2 * self.key_dim + self.value_dim
+        self.qkvz_projection = Linear(
+            hidden_size,
+            2 * self.key_dim + 2 * self.value_dim,
+            bias=False,
+        )
+        self.beta_projection = Linear(hidden_size, spec.num_value_heads, bias=False)
+        self.decay_down_projection = Linear(hidden_size, spec.value_head_dim, bias=False)
+        self.decay_up_projection = Linear(
+            spec.value_head_dim,
+            spec.num_value_heads * spec.key_head_dim,
+            bias=False,
+        )
+        self.conv_kernel = nn.Parameter(torch.empty(self.conv_dim, 1, spec.conv_kernel_size))
+        rates = torch.linspace(0.1, 1.0, spec.num_value_heads)
+        self.log_rates = nn.Parameter(rates.log())
+        self.decay_bias = nn.Parameter(
+            torch.zeros(spec.num_value_heads * spec.key_head_dim)
+        )
+        self.output_norm = RMSNorm(spec.value_head_dim, eps)
+        self.output_projection = Linear(self.value_dim, hidden_size, bias=False)
+
+    def forward(self, x, state=None):
+        batch, length, _ = x.shape
+        mixed = self.qkvz_projection(x)
+        query, key, value, output_gate = torch.split(
+            mixed,
+            (self.key_dim, self.key_dim, self.value_dim, self.value_dim),
+            dim=-1,
+        )
+        conv_input = torch.cat((query, key, value), dim=-1).transpose(1, 2)
+        history = self.spec.conv_kernel_size - 1
+        if state is not None:
+            conv_input = torch.cat((state.convolution, conv_input), dim=2)
+        convolved = F.silu(causal_depthwise_conv1d(conv_input, self.conv_kernel))
+        if state is not None:
+            state.convolution.copy_(conv_input[:, :, -history:].detach())
+            convolved = convolved[:, :, history:]
+        query, key, value = torch.split(
+            convolved.transpose(1, 2),
+            (self.key_dim, self.key_dim, self.value_dim),
+            dim=-1,
+        )
+        query = query.view(
+            batch,
+            length,
+            self.spec.num_key_heads,
+            self.spec.key_head_dim,
+        )
+        key = key.view(
+            batch,
+            length,
+            self.spec.num_key_heads,
+            self.spec.key_head_dim,
+        )
+        value = value.view(
+            batch,
+            length,
+            self.spec.num_value_heads,
+            self.spec.value_head_dim,
+        )
+        beta = self.beta_projection(x).sigmoid()
+        decay_logits = self.decay_up_projection(self.decay_down_projection(x)).view(
+            batch,
+            length,
+            self.spec.num_value_heads,
+            self.spec.key_head_dim,
+        )
+        decay_bias = self.decay_bias.view(
+            self.spec.num_value_heads,
+            self.spec.key_head_dim,
+        )
+        log_decay = -self.log_rates.float().exp()[None, None, :, None] * F.softplus(
+            decay_logits.float() + decay_bias
+        )
+        recurrent = state.recurrent if state is not None else None
+        output, final_state = kimi_delta_rule(
+            query,
+            key,
+            value,
+            log_decay,
+            beta,
+            initial_state=recurrent,
+        )
+        if state is not None:
+            state.recurrent.copy_(final_state.detach())
+        output_gate = output_gate.view(
+            batch,
+            length,
+            self.spec.num_value_heads,
+            self.spec.value_head_dim,
+        )
+        output = self.output_norm(output) * output_gate.float().sigmoid().to(output.dtype)
+        return self.output_projection(output.flatten(2))
+
+
 class SwiGLU(nn.Module):
     def __init__(self, hidden_size, spec):
         super().__init__()
@@ -927,6 +1096,8 @@ class Operation(nn.Module):
             self.operation = GatedCausalConv(hidden_size, spec)
         elif isinstance(spec, GatedDeltaNetSpec):
             self.operation = GatedDeltaNet(hidden_size, spec, config.rms_norm_eps)
+        elif isinstance(spec, KimiDeltaAttentionSpec):
+            self.operation = KimiDeltaAttention(hidden_size, spec, config.rms_norm_eps)
         else:
             assert isinstance(spec, SwiGLUSpec)
             self.operation = SwiGLU(hidden_size, spec)
@@ -937,7 +1108,10 @@ class Operation(nn.Module):
             rotary_dim = self.spec.head_dim if self.spec.rope_dim is None else self.spec.rope_dim
             embedding = rotary[attention_rotary_key(self.spec)] if rotary_dim else None
             return self.operation(normalized, embedding, position, state)
-        if isinstance(self.spec, (GatedCausalConvSpec, GatedDeltaNetSpec)):
+        if isinstance(
+            self.spec,
+            (GatedCausalConvSpec, GatedDeltaNetSpec, KimiDeltaAttentionSpec),
+        ):
             return self.operation(normalized, state)
         return self.operation(normalized)
 
@@ -1042,7 +1216,7 @@ class SpeckForCausalLM(nn.Module):
                 nn.init.ones_(module.weight)
             elif isinstance(module, GatedCausalConv):
                 nn.init.normal_(module.kernel, std=self.config.initializer_range)
-            elif isinstance(module, GatedDeltaNet):
+            elif isinstance(module, (GatedDeltaNet, KimiDeltaAttention)):
                 nn.init.normal_(module.conv_kernel, std=self.config.initializer_range)
 
     @torch.no_grad()
@@ -1142,6 +1316,20 @@ class SpeckForCausalLM(nn.Module):
                             branch.conv_kernel_size - 1,
                             device,
                             dtype,
+                        )
+                    elif isinstance(branch, KimiDeltaAttentionSpec):
+                        key_dim = branch.num_key_heads * branch.key_head_dim
+                        value_dim = branch.num_value_heads * branch.value_head_dim
+                        entries[key] = DeltaNetState(
+                            batch_size,
+                            branch.num_value_heads,
+                            branch.key_head_dim,
+                            branch.value_head_dim,
+                            2 * key_dim + value_dim,
+                            branch.conv_kernel_size - 1,
+                            device,
+                            dtype,
+                            kind="kimi_delta_attention",
                         )
         return SequenceState(entries, length)
 
@@ -1314,6 +1502,23 @@ class SpeckForCausalLM(nn.Module):
                             * branch.num_value_heads
                             * branch.key_head_dim
                             * branch.value_head_dim
+                        )
+                    elif isinstance(branch, KimiDeltaAttentionSpec):
+                        key_size = branch.num_key_heads * branch.key_head_dim
+                        value_size = branch.num_value_heads * branch.value_head_dim
+                        gate_rank = branch.value_head_dim
+                        linear += hidden_size * (2 * key_size + 3 * value_size)
+                        linear += hidden_size * (branch.num_value_heads + gate_rank)
+                        linear += (
+                            gate_rank * branch.num_value_heads * branch.key_head_dim
+                        )
+                        linear += (2 * key_size + value_size) * branch.conv_kernel_size
+                        chunk_size = min(64, sequence_length)
+                        head_dim = branch.key_head_dim
+                        attention += branch.num_value_heads * (
+                            6 * head_dim**2
+                            + 3 * chunk_size * head_dim
+                            + chunk_size**2
                         )
                     elif isinstance(branch, SwiGLUSpec):
                         linear += 3 * hidden_size * branch.intermediate_size

@@ -75,6 +75,32 @@ class GatedDeltaNetSpec:
 
 
 @dataclass(frozen=True)
+class KimiDeltaAttentionSpec:
+    key_head_dim: int
+    value_head_dim: int
+    num_key_heads: int
+    num_value_heads: int
+    conv_kernel_size: int = 4
+    kind: str = field(init=False, default="kimi_delta_attention")
+
+    def __post_init__(self):
+        dimensions = (
+            self.key_head_dim,
+            self.value_head_dim,
+            self.num_key_heads,
+            self.num_value_heads,
+        )
+        if any(value < 1 for value in dimensions):
+            raise ValueError("Kimi Delta Attention dimensions and head counts must be positive")
+        if self.num_value_heads % self.num_key_heads:
+            raise ValueError("Kimi Delta Attention value heads must be divisible by key heads")
+        if self.key_head_dim != self.value_head_dim:
+            raise ValueError("Kimi Delta Attention requires equal key and value head dimensions")
+        if self.conv_kernel_size < 2:
+            raise ValueError("Kimi Delta Attention convolution kernels need at least two positions")
+
+
+@dataclass(frozen=True)
 class SwiGLUSpec:
     intermediate_size: int
     kind: str = field(init=False, default="swiglu")
@@ -84,7 +110,13 @@ class SwiGLUSpec:
             raise ValueError("SwiGLU intermediate sizes must be positive")
 
 
-OperationSpec = AttentionSpec | GatedCausalConvSpec | GatedDeltaNetSpec | SwiGLUSpec
+OperationSpec = (
+    AttentionSpec
+    | GatedCausalConvSpec
+    | GatedDeltaNetSpec
+    | KimiDeltaAttentionSpec
+    | SwiGLUSpec
+)
 
 
 def operation_from_dict(value):
@@ -94,6 +126,7 @@ def operation_from_dict(value):
         "attention": AttentionSpec,
         "gated_causal_conv": GatedCausalConvSpec,
         "gated_deltanet": GatedDeltaNetSpec,
+        "kimi_delta_attention": KimiDeltaAttentionSpec,
         "swiglu": SwiGLUSpec,
     }
     if kind not in classes:
