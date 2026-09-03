@@ -1,6 +1,19 @@
 {
   "format": "speck_structured_retrieval_adaptation_experiment",
   "format_version": 1,
+  "easy_calibration": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "chains": 2,
+    "eval_every": 20,
+    "learning_rate": 0.0001,
+    "records": 2,
+    "sequence_length": 4096,
+    "steps": 200,
+    "supervised_tokens": 3200,
+    "tokens_seen": 13107200,
+    "validation_samples_per_task": 30
+  },
   "gate": {
     "association_specificity_accuracy": 0.8,
     "candidate_accuracy": 0.8,
@@ -45,5 +58,5 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "hard_task_pilot_failed_gate"
+  "status": "easy_calibration_prepared"
 }
