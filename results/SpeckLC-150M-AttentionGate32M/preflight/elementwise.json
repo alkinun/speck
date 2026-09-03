@@ -1,0 +1,54 @@
+{
+  "benchmark": {
+    "activation_checkpointing": false,
+    "aggressive_fusion": true,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "compiled": true,
+    "loss_backend": "torch",
+    "mode": "compute",
+    "optimizer": "muon",
+    "optimizer_step_compiled": true,
+    "seed": 42,
+    "steps": 5,
+    "warmup_seconds": 14.431673188111745,
+    "warmup_steps": 3
+  },
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "git_dirty": false,
+    "git_revision": "868e6f3",
+    "recorded_at": "2026-09-03T23:20:51.008522+00:00",
+    "torch": "2.9.1+cu128"
+  },
+  "experiment": {
+    "fingerprint": "ac46c23d6bb3640cbdf0205c6146bb8e5ecabff6525a3721417a2b17e2c49884",
+    "manifest": null,
+    "path": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-AttentionGate32M/elementwise"
+  },
+  "geometry": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "sequence_length": 4096,
+    "tokens_per_step": 65536
+  },
+  "memory": {
+    "peak_allocated_bytes": 14913806336,
+    "peak_reserved_bytes": 15783165952
+  },
+  "model": {
+    "flops_per_token": 1021601280.0,
+    "parameters": 153958938
+  },
+  "performance": {
+    "loss_first": 8.243597984313965,
+    "loss_last": 5.533095359802246,
+    "model_flops_utilization": null,
+    "step_seconds_mean": 1.4643906380282714,
+    "step_seconds_median": 1.4635240270290524,
+    "step_seconds_p90": 1.4671933220233768,
+    "tflops": 45.7198098290406,
+    "tokens_per_second": 44753.08588986948
+  }
+}
