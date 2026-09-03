@@ -8,9 +8,15 @@
     43,
     44
   ],
-  "status": "two_of_four_repeats_complete",
+  "status": "three_of_four_repeats_complete",
   "variants": {
     "gdn-fla-sigmoid-rope": {
+      "aggregate": {
+        "loss_mean": 2.7898008823394775,
+        "loss_median": 2.7897346019744873,
+        "loss_population_stddev": 0.0006505187907061315,
+        "loss_range": 0.0015892982482910156
+      },
       "runs": {
         "42": {
           "checkpoint": {
@@ -73,6 +79,56 @@
           },
           "validation_tokens": 19988480,
           "wandb_id": "5v91iscd"
+        },
+        "44": {
+          "checkpoint": {
+            "directory": "/home/alkin/.cache/speck/checkpoints/gdn-fla-sigmoid-rope-seed-44",
+            "metadata_sha256": "8798ead611fe3c5050658010b8aa80fd9c9503f65eea092ea77d18e3ce2acda8",
+            "model_sha256": "80b06575a1c818cc3fccc498eeba581252efd5f5693e3829101aedca07ff40b8",
+            "optimizer_sha256": "a835927d48ff78f5bfb9800212213646f3c8f9b42ec804f07c32cef81334872f",
+            "step": 2000
+          },
+          "final_validation_loss": 2.789039373397827,
+          "intermediate_validation": [
+            {
+              "global_tokens": 31981568,
+              "loss": 3.57990
+            },
+            {
+              "global_tokens": 63963136,
+              "loss": 3.10125
+            },
+            {
+              "global_tokens": 95944704,
+              "loss": 2.88870
+            },
+            {
+              "global_tokens": 127926272,
+              "loss": 2.78936
+            }
+          ],
+          "performance": {
+            "active_seconds": 3055.1686944679823,
+            "gpu_hours": 0.81212,
+            "peak_allocated_vram_mib": 13279.57666,
+            "tokens_per_second": 47784.02573
+          },
+          "seed": 44,
+          "validation_source_losses": {
+            "cosmopedia_v2": 2.7527711391448975,
+            "dclm": 3.6205992698669434,
+            "dclm_edu": 3.0900633335113525,
+            "finemath_4plus": 2.5069990158081055,
+            "fineweb_edu": 3.3209149837493896,
+            "math_multi_style": 1.6949876546859741,
+            "math_textbook_exercise": 1.2103058099746704,
+            "pes2o": 2.9767279624938965,
+            "ufw_l3_multi_style": 3.1280298233032227,
+            "ultra_fineweb": 3.2478370666503906,
+            "wikimedia": 3.1376888751983643
+          },
+          "validation_tokens": 19988480,
+          "wandb_id": "aetzonew"
         }
       }
     },
