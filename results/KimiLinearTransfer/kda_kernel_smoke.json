@@ -1,0 +1,44 @@
+{
+  "comparison": "FLA KDA with channel-constant decay versus a direct GDN recurrence",
+  "date": "2026-09-03",
+  "device": "NVIDIA GeForce RTX 3090",
+  "dtype": "float32",
+  "environment": {
+    "cuda_available": true,
+    "fla_core": "0.5.0",
+    "flash_linear_attention": "0.5.0",
+    "python": "3.10.20",
+    "torch": "2.9.1+cu128"
+  },
+  "format": "speck_kda_kernel_smoke",
+  "format_version": 1,
+  "intended_parameterization": {
+    "batch_size": 1,
+    "finite_gradients": true,
+    "key_head_dimension": 32,
+    "key_heads": 2,
+    "loss": 0.24321411550045013,
+    "max_absolute_output_error": 0.0004995167255401611,
+    "max_absolute_state_error": 0.002516627311706543,
+    "mean_absolute_output_error": 0.00008119598351186141,
+    "mean_absolute_state_error": 0.00048415138735435903,
+    "qk_l2_normalization": true,
+    "query_scale": 0.1767766952966369,
+    "sequence_length": 64,
+    "value_head_dimension": 32,
+    "value_heads": 4
+  },
+  "purpose": "Feasibility smoke test only; this is not the full Speck KDA qualification.",
+  "seed": 7,
+  "stress_probe": {
+    "finite_gradients": false,
+    "loss": "inf",
+    "max_absolute_output_error": 3.652313744681206e+18,
+    "max_absolute_state_error": 2.091816473797329e+18,
+    "mean_absolute_output_error": 1.3434286187216896e+16,
+    "mean_absolute_state_error": 7.040089630284186e+16,
+    "qk_l2_normalization": false,
+    "query_scale": 1.0,
+    "status": "overflowed outside the model's intended parameterization"
+  }
+}

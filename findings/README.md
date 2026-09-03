@@ -16,6 +16,7 @@ Read in order:
 8. [07 — Counterfactual retrieval diagnostic](07_counterfactual_retrieval.md)
 9. [08 — Global-layer count and placement frontier](08_global_attention_frontier.md)
 10. [09 — Decisions, open questions, and change log](09_decisions_and_change_log.md)
+11. [10 — Kimi Linear transfer review and revised experiment order](10_kimi_linear_transfer_review.md)
 
 Conventions:
 

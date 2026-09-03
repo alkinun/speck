@@ -26,7 +26,9 @@ def test_local_markdown_links_exist():
 def test_findings_index_covers_numbered_research_ledger():
     index = (root / "findings" / "README.md").read_text(encoding="utf-8")
     findings = sorted((root / "findings").glob("[0-9][0-9]_*.md"))
-    assert [path.name[:2] for path in findings] == [f"{index:02d}" for index in range(10)]
+    assert [path.name[:2] for path in findings] == [
+        f"{index:02d}" for index in range(len(findings))
+    ]
     assert all(f"({path.name})" in index for path in findings)
 
 
