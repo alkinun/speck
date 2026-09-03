@@ -73,7 +73,59 @@
       },
       "validation_tokens": 19988480,
       "wandb_id": "shranqi0"
+    },
+    "gdn-fla-sigmoid-rope": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-gdn-fla-sigmoid-rope",
+        "metadata_sha256": "428f9a45cdd4a5f8f07af8dc5a41f8aa8b240fe1c7a42e79ed79f1756ccb3266",
+        "model_sha256": "f3b9147e0f6d46c62fc9b688b2a9dab37999d43e8882fd9567bdcbab7b467ea8",
+        "optimizer_sha256": "3e3458ead5411036d6de0ebdb937bc03540040bdeb10027f4fa6d0f71e93153d",
+        "step": 2000
+      },
+      "delta_from_control": -0.02874898910522461,
+      "delta_from_previous": -0.03733658790588379,
+      "final_validation_loss": 2.790628671646118,
+      "intermediate_validation": [
+        {
+          "global_tokens": 31981568,
+          "loss": 3.57974
+        },
+        {
+          "global_tokens": 63963136,
+          "loss": 3.10173
+        },
+        {
+          "global_tokens": 95944704,
+          "loss": 2.89033
+        },
+        {
+          "global_tokens": 127926272,
+          "loss": 2.79020
+        }
+      ],
+      "interpretation": "improvement larger than the measured seed-noise range",
+      "performance": {
+        "active_seconds": 3063.467579355929,
+        "gpu_hours": 0.81407,
+        "peak_allocated_vram_mib": 13279.57666,
+        "tokens_per_second": 47802.49238
+      },
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.7554495334625244,
+        "dclm": 3.6199822425842285,
+        "dclm_edu": 3.0905251502990723,
+        "finemath_4plus": 2.5103251934051514,
+        "fineweb_edu": 3.321897029876709,
+        "math_multi_style": 1.6963530778884888,
+        "math_textbook_exercise": 1.2145905494689941,
+        "pes2o": 2.979295253753662,
+        "ufw_l3_multi_style": 3.1289541721343994,
+        "ultra_fineweb": 3.2495579719543457,
+        "wikimedia": 3.137458324432373
+      },
+      "validation_tokens": 19988480,
+      "wandb_id": "neyzh2kc"
     }
   },
-  "status": "one_of_four_complete"
+  "status": "two_of_four_complete"
 }
