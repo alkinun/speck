@@ -1,0 +1,289 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "key_head_dim": 128,
+                  "kind": "kimi_delta_attention",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 2048,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.992431640625,
+  "best_validation_loss": 3.9790061339735985,
+  "completed_steps": 6250,
+  "created_at": "2026-09-03T08:42:42.888651+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.992431640625,
+    "correct": 16260,
+    "loss": 3.9790061339735985,
+    "step": 6250,
+    "targets": 16384
+  },
+  "flops_per_token": 24930304,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.060105353593826,
+      "step": 0,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.041765004396439,
+      "step": 250,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00018310546875,
+      "correct": 3,
+      "loss": 8.557295858860016,
+      "step": 500,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.000244140625,
+      "correct": 4,
+      "loss": 8.369685679674149,
+      "step": 750,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00018310546875,
+      "correct": 3,
+      "loss": 8.34982743859291,
+      "step": 1000,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 8.343912124633789,
+      "step": 1250,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0001220703125,
+      "correct": 2,
+      "loss": 8.340428531169891,
+      "step": 1500,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0003662109375,
+      "correct": 6,
+      "loss": 8.33730873465538,
+      "step": 1750,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00054931640625,
+      "correct": 9,
+      "loss": 8.334867864847183,
+      "step": 2000,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0001220703125,
+      "correct": 2,
+      "loss": 8.335536062717438,
+      "step": 2250,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0001220703125,
+      "correct": 2,
+      "loss": 8.33386766910553,
+      "step": 2500,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0003662109375,
+      "correct": 6,
+      "loss": 8.331610977649689,
+      "step": 2750,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.000244140625,
+      "correct": 4,
+      "loss": 8.334179043769836,
+      "step": 3000,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.000244140625,
+      "correct": 4,
+      "loss": 8.331765204668045,
+      "step": 3250,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00030517578125,
+      "correct": 5,
+      "loss": 8.331956714391708,
+      "step": 3500,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.0003662109375,
+      "correct": 6,
+      "loss": 8.322402149438858,
+      "step": 3750,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00054931640625,
+      "correct": 9,
+      "loss": 8.295740187168121,
+      "step": 4000,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.001220703125,
+      "correct": 20,
+      "loss": 8.236328333616257,
+      "step": 4250,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00201416015625,
+      "correct": 33,
+      "loss": 8.186901301145554,
+      "step": 4500,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.00286865234375,
+      "correct": 47,
+      "loss": 8.139348149299622,
+      "step": 4750,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.01385498046875,
+      "correct": 227,
+      "loss": 7.99799819290638,
+      "step": 5000,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.22650146484375,
+      "correct": 3711,
+      "loss": 7.298660159111023,
+      "step": 5250,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.86767578125,
+      "correct": 14216,
+      "loss": 6.1677756905555725,
+      "step": 5500,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.9732666015625,
+      "correct": 15946,
+      "loss": 5.340175166726112,
+      "step": 5750,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.98187255859375,
+      "correct": 16087,
+      "loss": 4.696935743093491,
+      "step": 6000,
+      "targets": 16384
+    },
+    {
+      "accuracy": 0.992431640625,
+      "correct": 16260,
+      "loss": 3.9790061339735985,
+      "step": 6250,
+      "targets": 16384
+    }
+  ],
+  "parameters": 4072452,
+  "peak_allocated_bytes": 1458495488,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.0001,
+    "max_steps": 20000,
+    "num_pairs": 64,
+    "num_stacks": 64,
+    "seed": 44,
+    "sequence_length": 2048,
+    "task": "mqar",
+    "validation_seed": 1000042,
+    "variant": "kda-sigmoid",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": true,
+    "git_revision": "1815cce7af364e34756b1b6f405c79467759dbd9",
+    "git_tracked_dirty": false,
+    "untracked_files": [
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-43/gdn-silu/length-2048-pairs-64.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-density/seed-43/kda-sigmoid/length-2048-pairs-64.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-load/seed-43/gdn-silu/length-2048.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-load/seed-43/kda-sigmoid/length-2048.json",
+      "results/SpeckLC-SyntheticMemory/mqar-fixed-load/seed-44/kda-sigmoid/length-2048.json"
+    ]
+  },
+  "status": "complete",
+  "tokens_per_training_second": 943025.7024800869,
+  "training_seconds": 108.58664798922837,
+  "wall_seconds": 126.53632112802006
+}
