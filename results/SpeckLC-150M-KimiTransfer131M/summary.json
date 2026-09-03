@@ -177,7 +177,60 @@
       },
       "validation_tokens": 19988480,
       "wandb_id": "khwwdylw"
+    },
+    "kda-sigmoid-nope": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+        "metadata_sha256": "0b22b8135696c51ec32694a3f7a0aba88a59eb154a66d2f9b2a55a2713540bcb",
+        "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+        "optimizer_sha256": "018ee866a5bb95a000968867f0b2671f301e98976f073f6347c41493986c8512",
+        "step": 2000
+      },
+      "delta_from_control": -0.02399754524230957,
+      "delta_from_previous": -0.019615650177001953,
+      "delta_from_rope_sigmoid": 0.004751443862915039,
+      "final_validation_loss": 2.795380115509033,
+      "intermediate_validation": [
+        {
+          "global_tokens": 31981568,
+          "loss": 3.69230
+        },
+        {
+          "global_tokens": 63963136,
+          "loss": 3.11513
+        },
+        {
+          "global_tokens": 95944704,
+          "loss": 2.89735
+        },
+        {
+          "global_tokens": 127926272,
+          "loss": 2.79594
+        }
+      ],
+      "interpretation": "improves over scalar NoPE and the original control; tied with RoPE plus sigmoid",
+      "performance": {
+        "active_seconds": 3288.8190644059796,
+        "gpu_hours": 0.87558,
+        "peak_allocated_vram_mib": 14205.16504,
+        "tokens_per_second": 44384.03817
+      },
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.759767770767212,
+        "dclm": 3.6254007816314697,
+        "dclm_edu": 3.0969226360321045,
+        "finemath_4plus": 2.5122900009155273,
+        "fineweb_edu": 3.328209161758423,
+        "math_multi_style": 1.7009743452072144,
+        "math_textbook_exercise": 1.2185338735580444,
+        "pes2o": 2.981964111328125,
+        "ufw_l3_multi_style": 3.1324286460876465,
+        "ultra_fineweb": 3.2548770904541016,
+        "wikimedia": 3.1452906131744385
+      },
+      "validation_tokens": 19988480,
+      "wandb_id": "gq3hqrkw"
     }
   },
-  "status": "three_of_four_complete"
+  "status": "training_complete_evaluation_pending"
 }
