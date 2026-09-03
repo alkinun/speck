@@ -67,8 +67,9 @@
     "Synthetic success gates language-model pretraining but does not imply natural-language long-context capability."
   ],
   "paper_reference": "https://arxiv.org/pdf/2510.26692",
+  "preflight": "../../results/SpeckLC-SyntheticMemory/preflight/summary.json",
   "result": "../../results/SpeckLC-SyntheticMemory/summary.json",
-  "status": "prepared",
+  "status": "preflight_passed",
   "variants": {
     "gdn-sigmoid": {
       "decay": "scalar per value head",

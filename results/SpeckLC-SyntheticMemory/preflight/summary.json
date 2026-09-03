@@ -1,0 +1,39 @@
+{
+  "configuration": {
+    "batch_size": 8,
+    "eval_examples": 16,
+    "head_dimension": 128,
+    "key_heads": 2,
+    "learning_rate": 0.001,
+    "num_pairs": 256,
+    "sequence_length": 1024,
+    "steps": 10,
+    "value_heads": 2,
+    "vocab_size": 8192
+  },
+  "format": "speck_synthetic_memory_preflight",
+  "format_version": 1,
+  "interpretation": "Execution and memory qualification only; ten steps cannot rank learning quality or stable throughput.",
+  "source_revision": "cbe0a3b810471e141ec16e7c407ed3c6386c8210",
+  "status": "passed",
+  "variants": {
+    "gdn-sigmoid": {
+      "finite": true,
+      "parameters": 3941896,
+      "peak_allocated_bytes": 827004928,
+      "tokens_per_training_second": 49066.914311287146
+    },
+    "gdn-silu": {
+      "finite": true,
+      "parameters": 3941896,
+      "peak_allocated_bytes": 827004928,
+      "tokens_per_training_second": 45406.60397861263
+    },
+    "kda-sigmoid": {
+      "finite": true,
+      "parameters": 4072452,
+      "peak_allocated_bytes": 829091840,
+      "tokens_per_training_second": 28322.28422763432
+    }
+  }
+}
