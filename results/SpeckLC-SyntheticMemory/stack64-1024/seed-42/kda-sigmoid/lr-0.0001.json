@@ -1,0 +1,178 @@
+{
+  "architecture": {
+    "blocks": [
+      {
+        "block": {
+          "hidden_size": 256,
+          "stages": [
+            {
+              "branches": [
+                {
+                  "conv_kernel_size": 4,
+                  "key_head_dim": 128,
+                  "kind": "kimi_delta_attention",
+                  "num_key_heads": 2,
+                  "num_value_heads": 2,
+                  "value_head_dim": 128
+                }
+              ]
+            },
+            {
+              "branches": [
+                {
+                  "intermediate_size": 768,
+                  "kind": "swiglu"
+                }
+              ]
+            }
+          ]
+        },
+        "repeat": 2,
+        "weight_sharing": "none"
+      }
+    ],
+    "bos_token_id": 1,
+    "embedding_size": 256,
+    "eos_token_id": 2,
+    "initializer_range": 0.02,
+    "max_position_embeddings": 1024,
+    "rms_norm_eps": 1e-05,
+    "rope_scaling_factor": 1.0,
+    "rope_theta": 10000.0,
+    "vocab_size": 8192
+  },
+  "best_validation_accuracy": 0.9909295424085774,
+  "best_validation_loss": 0.072918016564086,
+  "completed_steps": 2500,
+  "created_at": "2026-09-03T09:27:00.626186+00:00",
+  "early_stopped": true,
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_validation": {
+    "accuracy": 0.9909295424085774,
+    "correct": 41405,
+    "loss": 0.072918016564086,
+    "step": 2500,
+    "targets": 41784
+  },
+  "flops_per_token": 24930304,
+  "format": "speck_synthetic_memory_training",
+  "format_version": 1,
+  "history": [
+    {
+      "accuracy": 0.0,
+      "correct": 0,
+      "loss": 9.064271573748325,
+      "step": 0,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.08038962282213287,
+      "correct": 3359,
+      "loss": 8.612988776729729,
+      "step": 250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9131485736166954,
+      "correct": 38155,
+      "loss": 5.34720731498226,
+      "step": 500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9154939689833429,
+      "correct": 38253,
+      "loss": 3.2939911677466256,
+      "step": 750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9185094773118897,
+      "correct": 38379,
+      "loss": 1.7660654160384357,
+      "step": 1000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9566101857170208,
+      "correct": 39971,
+      "loss": 0.8063030137016973,
+      "step": 1250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9750622247750335,
+      "correct": 40742,
+      "loss": 0.3891217580317264,
+      "step": 1500,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9849703235688302,
+      "correct": 41156,
+      "loss": 0.2216962879698737,
+      "step": 1750,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9872199885123493,
+      "correct": 41250,
+      "loss": 0.14738390113849556,
+      "step": 2000,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9891345969749187,
+      "correct": 41330,
+      "loss": 0.10482705928985812,
+      "step": 2250,
+      "targets": 41784
+    },
+    {
+      "accuracy": 0.9909295424085774,
+      "correct": 41405,
+      "loss": 0.072918016564086,
+      "step": 2500,
+      "targets": 41784
+    }
+  ],
+  "parameters": 4072452,
+  "peak_allocated_bytes": 805755392,
+  "settings": {
+    "batch_size": 8,
+    "compiled": true,
+    "device": "cuda",
+    "early_stop_accuracy": 0.99,
+    "eval_batch_size": 8,
+    "eval_every": 250,
+    "eval_examples": 256,
+    "grad_clip": 1.0,
+    "log_every": 250,
+    "lr": 0.0001,
+    "max_steps": 20000,
+    "num_pairs": 256,
+    "num_stacks": 64,
+    "seed": 42,
+    "sequence_length": 1024,
+    "task": "stack",
+    "validation_seed": 1000042,
+    "variant": "kda-sigmoid",
+    "vocab_size": 8192,
+    "weight_decay": 0.1
+  },
+  "source": {
+    "git_dirty": false,
+    "git_revision": "6a9bdb5cfd86fe141d0497590416194e5c3fe1ee",
+    "git_tracked_dirty": false,
+    "untracked_files": []
+  },
+  "status": "complete",
+  "tokens_per_training_second": 808984.7895297047,
+  "training_seconds": 25.315679930034094,
+  "wall_seconds": 58.3363345839316
+}
