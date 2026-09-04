@@ -53,6 +53,17 @@ On exact 512-token reversal, KDA passes two of three seeds while GDN-SiLU passes
 KDA's advantage to difficult identity retention and copying rather than generic synthetic
 optimization. See [Palindrome and Stack](../findings/15_palindrome_and_stack.md).
 
+Speck Reader Attention separates the two jobs a global attention layer performs. A **writer** is an
+ordinary global attention layer that also publishes the keys and values it attends over under a named
+memory. A **reader** is a query-only layer: it owns a query projection, query norm, and output
+projection, and it attends over its writer's memory without a key projection, a value projection, or
+a cache of its own. The architecture grammar validates that each memory has exactly one writer, that
+every reader follows its writer in depth, and that reader and writer agree on head dimension,
+key-value head count, active RoPE dimensions, and scope. Readers therefore change the number of
+key-value caches without changing depth, attention placement, or the number of attention reads. See
+[finding 24](../findings/24_reader_attention.md) for the mechanism, its cost accounting, and the
+prepared staircase.
+
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized
 causal bias. CUDA sliding prefill uses FlexAttention with block-level mask metadata; at 128K and a
@@ -108,6 +119,37 @@ surface retrieval at the output. One final global layer surfaces retrieval but b
 long-document loss. The two placements therefore play different roles. Five global layers retain
 retrieval most robustly, at a steep state and short-context cost. The raw frontier is recorded in
 `results/SpeckLC-150M-GlobalCount32K`.
+
+## Global cache-count staircase
+
+The global-layer frontier above varies how many global attention layers exist. A separate prepared
+staircase holds depth, attention placement, parameters, analytic FLOPs, and the number of attention
+reads fixed at the lead KDA/sigmoid/NoPE geometry, and varies only how many distinct key-value caches
+those five attention slots share.
+
+| Arm | Caches | Reader layers | Parameters | Δ FLOP/token | BF16 state @128K | Reduction |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `caches-5` | 5 | 0 | 153,958,938 | 0 | 504,860,160 B | 1.00× |
+| `caches-3` | 3 | 2 | 153,958,810 | 0 | 303,533,568 B | 1.66× |
+| `caches-2` | 2 | 3 | 153,958,746 | 0 | 202,870,272 B | 2.49× |
+| `caches-1` | 1 | 4 | 153,958,682 | 0 | 102,206,976 B | 4.94× |
+| `caches-1-mqa1` | 1 | 4 | 153,957,914 | −4,608 | 35,098,112 B | 14.38× |
+
+Parameter counts differ only by the 64-element key-norm vector each reader drops; the multi-query arm
+is explicitly not matched and reports its residual. `caches-5` is byte-identical to the source
+architecture, so the existing seed-42 checkpoint is its result and it must not be retrained.
+
+These are allocation and accounting results. No arm has been trained, so the staircase carries no
+loss, retrieval, or latency claim yet.
+
+Prepare it with:
+
+```bash
+uv run --extra cpu python -m scripts.reader_attention_prepare \
+  experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope \
+  experiments/SpeckLC-150M-ReaderAttention131M \
+  --caches 5 3 2 1 --mqa-caches 1
+```
 
 ## NoPE context intervention
 

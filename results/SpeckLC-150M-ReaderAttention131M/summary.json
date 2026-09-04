@@ -1,0 +1,56 @@
+{
+  "arms": {
+    "caches-1": {
+      "caches": 1,
+      "delta_versus_control": 0.007851839065551758,
+      "final_validation_loss": 2.803231954574585,
+      "gpu_hours": 1.00063,
+      "model_sha256": "8721a6d86690d16e9b09f40953e084919619258b696711324eb09aab19bae62f",
+      "readers": 4,
+      "resident_state_bytes_at_128k": 102206976,
+      "resolved_on_one_seed": false,
+      "sources_worse_than_control": 11,
+      "state_fraction_of_control": 0.20244611101814808
+    },
+    "caches-2": {
+      "caches": 2,
+      "delta_versus_control": 0.008230447769165039,
+      "final_validation_loss": 2.8036105632781982,
+      "gpu_hours": 0.98976,
+      "model_sha256": "d5f71760c460d3e9a8fb7debb451a6f1d55aae3a886cac89ee1d05a7d631be09",
+      "readers": 3,
+      "resident_state_bytes_at_128k": 202870272,
+      "resolved_on_one_seed": false,
+      "sources_worse_than_control": 11,
+      "state_fraction_of_control": 0.40183458326361104
+    }
+  },
+  "comparison": "identical depth, attention placement, and read count with a varying number of shared key-value caches",
+  "control": {
+    "arm": "caches-5",
+    "final_validation_loss": 2.795380115509033,
+    "note": "byte-identical architecture to the source; not retrained",
+    "resident_state_bytes_at_128k": 504860160,
+    "reused_checkpoint": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope"
+  },
+  "findings": [
+    "one and two caches are indistinguishable from each other at 0.000379 nats, far inside the seed range",
+    "both sit about 0.008 nats behind five caches, which is inside the 0.00965-nat seed range and unresolved on one seed",
+    "all eleven validation sources are worse than the control for both arms",
+    "the marginal second cache buys no measurable loss, so one cache dominates two at half the state",
+    "throughput comparisons across back-to-back runs on this card are not thermally controlled and are not claimed"
+  ],
+  "format": "speck_reader_attention_staircase_results",
+  "format_version": 1,
+  "not_yet_measured": [
+    "seeds 43 and 44",
+    "distractor-controlled structured retrieval and held-out template gates",
+    "symbolic two-hop composition",
+    "prefill and decode latency at 128K"
+  ],
+  "seed": 42,
+  "seed_range_nats": 0.00965,
+  "sequence_length": 4096,
+  "status": "discovery_seed_42_complete",
+  "train_tokens": 131072000
+}

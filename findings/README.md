@@ -30,6 +30,7 @@ Read in order:
 22. [21 — Retrieval answer transfer and template failure](21_retrieval_template_transfer.md)
 23. [22 — Template-diverse retrieval adaptation](22_template_diverse_retrieval_adaptation.md)
 24. [23 — Symbolic two-hop composition](23_symbolic_two_hop_composition.md)
+25. [24 — Speck Reader Attention and the global cache-count staircase](24_reader_attention.md)
 
 Conventions:
 
@@ -48,5 +49,8 @@ Last consolidated state: KDA's target-specific association signal transfers acro
 templates, two-token values, and eight-record load, but exact value decoding does not replicate at
 the eight-record gate. Symbolic two-hop decomposition learns both edges at 99–100% yet current chain
 curricula do not replicate composition. Long-length promotion and MQA comparison remain gated. All
-23 structured-adaptation checkpoint directories pass integrity checks, and the repository suite
-passes 383 tests.
+23 structured-adaptation checkpoint directories pass integrity checks.
+
+Speck Reader Attention is implemented, validated, and prepared as a cache-count staircase in
+finding 24. It is untrained: no arm has taken an optimization step, so the ledger contains no
+quality result for it.
