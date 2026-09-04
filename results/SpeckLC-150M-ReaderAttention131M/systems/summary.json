@@ -1,0 +1,166 @@
+{
+  "findings": [
+    "prefill is unchanged by cache sharing: all arms lie within 2 percent at both lengths, because readers still compute full attention scores",
+    "batch-1 decode improves only 4 to 5 percent, so single-stream users see almost nothing",
+    "batched decode improves substantially: one cache is 1.91x faster at 32K batch 16 and 1.92x at 128K batch 4, and three caches is 1.31x and 1.32x",
+    "the speedup tracks total cached token slots rather than length or batch separately: 32768x16 and 131072x4 are both 524,288 slots and give the same speedup, which is what a bandwidth-bound decode predicts",
+    "peak allocation at 524,288 cached slots falls from 12.33 to 11.21 GiB between five and one cache",
+    "the arm with the best systems numbers is the arm that fails the retrieval retention gate, so this is a Pareto trade rather than a free win"
+  ],
+  "format": "speck_reader_attention_systems",
+  "format_version": 1,
+  "hardware": "NVIDIA GeForce RTX 3090, PyTorch 2.9.1+cu128, flash-linear-attention 0.5.0",
+  "measurements": [
+    {
+      "arm": "caches-1",
+      "batch_size": 1,
+      "cached_token_slots": 32768,
+      "decode_ms_per_step": 6.522654686705209,
+      "decode_tokens_per_second": 153.31181060960478,
+      "length": 32768,
+      "peak_allocated_bytes": 1055608832,
+      "prefill_ms": 424.97475491836667
+    },
+    {
+      "arm": "caches-1",
+      "batch_size": 4,
+      "cached_token_slots": 131072,
+      "decode_ms_per_step": 6.790296407416463,
+      "decode_tokens_per_second": 589.0759047913049,
+      "length": 32768,
+      "peak_allocated_bytes": 3256630784,
+      "prefill_ms": 1706.633790046908
+    },
+    {
+      "arm": "caches-1",
+      "batch_size": 16,
+      "cached_token_slots": 524288,
+      "decode_ms_per_step": 7.750606218905887,
+      "decode_tokens_per_second": 2064.354651507329,
+      "length": 32768,
+      "peak_allocated_bytes": 12055928320,
+      "prefill_ms": 6941.752105019987
+    },
+    {
+      "arm": "caches-1",
+      "batch_size": 1,
+      "cached_token_slots": 131072,
+      "decode_ms_per_step": 6.56296396664402,
+      "decode_tokens_per_second": 152.37017985813372,
+      "length": 131072,
+      "peak_allocated_bytes": 3251686400,
+      "prefill_ms": 3286.1400760593824
+    },
+    {
+      "arm": "caches-1",
+      "batch_size": 4,
+      "cached_token_slots": 524288,
+      "decode_ms_per_step": 7.648721639270661,
+      "decode_tokens_per_second": 522.9632072715117,
+      "length": 131072,
+      "peak_allocated_bytes": 12034015744,
+      "prefill_ms": 13084.995672979858
+    },
+    {
+      "arm": "caches-3",
+      "batch_size": 1,
+      "cached_token_slots": 32768,
+      "decode_ms_per_step": 6.644168435741449,
+      "decode_tokens_per_second": 150.50792430556527,
+      "length": 32768,
+      "peak_allocated_bytes": 1154421760,
+      "prefill_ms": 424.51855004765093
+    },
+    {
+      "arm": "caches-3",
+      "batch_size": 4,
+      "cached_token_slots": 131072,
+      "decode_ms_per_step": 6.9544936559395865,
+      "decode_tokens_per_second": 575.1676826369295,
+      "length": 32768,
+      "peak_allocated_bytes": 3657550336,
+      "prefill_ms": 1708.2557779503986
+    },
+    {
+      "arm": "caches-3",
+      "batch_size": 16,
+      "cached_token_slots": 524288,
+      "decode_ms_per_step": 11.304198153084144,
+      "decode_tokens_per_second": 1415.4033557554626,
+      "length": 32768,
+      "peak_allocated_bytes": 13666411008,
+      "prefill_ms": 6944.75596898701
+    },
+    {
+      "arm": "caches-3",
+      "batch_size": 1,
+      "cached_token_slots": 131072,
+      "decode_ms_per_step": 6.643156610152801,
+      "decode_tokens_per_second": 150.53084831263655,
+      "length": 131072,
+      "peak_allocated_bytes": 3652440064,
+      "prefill_ms": 3280.2397854975425
+    },
+    {
+      "arm": "caches-3",
+      "batch_size": 4,
+      "cached_token_slots": 524288,
+      "decode_ms_per_step": 11.163204264448723,
+      "decode_tokens_per_second": 358.3200580445111,
+      "length": 131072,
+      "peak_allocated_bytes": 13642728960,
+      "prefill_ms": 13052.820579963736
+    },
+    {
+      "arm": "caches-5",
+      "batch_size": 1,
+      "cached_token_slots": 32768,
+      "decode_ms_per_step": 6.871711811982095,
+      "decode_tokens_per_second": 145.5241470191337,
+      "length": 32768,
+      "peak_allocated_bytes": 1129507328,
+      "prefill_ms": 419.1454569809139
+    },
+    {
+      "arm": "caches-5",
+      "batch_size": 4,
+      "cached_token_slots": 131072,
+      "decode_ms_per_step": 7.3319211551279295,
+      "decode_tokens_per_second": 545.5596037339284,
+      "length": 32768,
+      "peak_allocated_bytes": 3557281280,
+      "prefill_ms": 1695.3754739370197
+    },
+    {
+      "arm": "caches-5",
+      "batch_size": 16,
+      "cached_token_slots": 524288,
+      "decode_ms_per_step": 14.80530224944232,
+      "decode_tokens_per_second": 1080.6939115750022,
+      "length": 32768,
+      "peak_allocated_bytes": 13263685120,
+      "prefill_ms": 6929.387482930906
+    },
+    {
+      "arm": "caches-5",
+      "batch_size": 1,
+      "cached_token_slots": 131072,
+      "decode_ms_per_step": 6.832772531197406,
+      "decode_tokens_per_second": 146.35347444015605,
+      "length": 131072,
+      "peak_allocated_bytes": 3551974400,
+      "prefill_ms": 3221.695982501842
+    },
+    {
+      "arm": "caches-5",
+      "batch_size": 4,
+      "cached_token_slots": 524288,
+      "decode_ms_per_step": 14.68004054549965,
+      "decode_tokens_per_second": 272.4788114584772,
+      "length": 131072,
+      "peak_allocated_bytes": 13239486976,
+      "prefill_ms": 13026.489852985833
+    }
+  ],
+  "protocol": "scripts.inference_benchmark, uncompiled, last-token logits, preallocated Speck state; 32K used 2 warmups and 3 repeats, 128K used 1 warmup and 2 repeats"
+}

@@ -1,0 +1,139 @@
+{
+  "environment": {
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "cpu_count": 24,
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "dtype": "bfloat16",
+    "recorded_at": "2026-09-04T13:37:28.955433+00:00",
+    "threads": 16,
+    "torch": "2.9.1+cu128",
+    "transformers": "5.1.0"
+  },
+  "measurements": [
+    {
+      "batch_size": 1,
+      "decode": {
+        "duration_iqr_seconds": [
+          0.21851955202873796,
+          0.21877788996789604
+        ],
+        "duration_seconds": [
+          0.21851955202873796,
+          0.21877788996789604
+        ],
+        "milliseconds_per_step": 6.832772531197406,
+        "peak_allocated_bytes": 3551851520,
+        "tokens_per_second": 146.35347444015605,
+        "untimed_prefix_seconds": [
+          3.238920960924588,
+          3.242595466086641
+        ]
+      },
+      "prefill": {
+        "duration_iqr_seconds": [
+          3.21534514403902,
+          3.228046820964664
+        ],
+        "duration_seconds": [
+          3.21534514403902,
+          3.228046820964664
+        ],
+        "milliseconds_per_batch": 3221.695982501842,
+        "peak_allocated_bytes": 3551974400,
+        "tokens_per_second": 40684.16160677416
+      }
+    },
+    {
+      "batch_size": 4,
+      "decode": {
+        "duration_iqr_seconds": [
+          0.4695150279439986,
+          0.4700075669679791
+        ],
+        "duration_seconds": [
+          0.4700075669679791,
+          0.4695150279439986
+        ],
+        "milliseconds_per_step": 14.68004054549965,
+        "peak_allocated_bytes": 13238087680,
+        "tokens_per_second": 272.4788114584772,
+        "untimed_prefix_seconds": [
+          13.01315060898196,
+          13.018212691997178
+        ]
+      },
+      "prefill": {
+        "duration_iqr_seconds": [
+          13.00925896607805,
+          13.043720739893615
+        ],
+        "duration_seconds": [
+          13.00925896607805,
+          13.043720739893615
+        ],
+        "milliseconds_per_batch": 13026.489852985833,
+        "peak_allocated_bytes": 13239486976,
+        "tokens_per_second": 40247.83390744566
+      }
+    }
+  ],
+  "model": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+      "experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+      "metadata_sha256": "0b22b8135696c51ec32694a3f7a0aba88a59eb154a66d2f9b2a55a2713540bcb",
+      "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+      "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+      "source_run": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+      "step": 2000
+    },
+    "key": "speck",
+    "last_logit_method": "native",
+    "name": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+    "parameters": 153958938,
+    "revision": "e25426d16eb92e818085dce0c1032d803e2a4e8e"
+  },
+  "protocol": {
+    "cache": "Speck preallocated state; Hugging Face model-native dynamic cache",
+    "compiled": false,
+    "decode_prefix_length": 131040,
+    "decode_repeats": 2,
+    "decode_tokens": 32,
+    "decode_warmups": 5,
+    "logits": "last token only",
+    "name": "normalized causal LM inference",
+    "prefill_length": 131072,
+    "prefill_repeats": 2,
+    "prefill_warmups": 1,
+    "seed": 42,
+    "token_selection": "argmax included in decode timing",
+    "tokenization": false
+  }
+}

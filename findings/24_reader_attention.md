@@ -254,6 +254,38 @@ cannot yet say whether a memory degrades because too many layers depend on it or
 too far below where it was written. Separating them requires a layout that holds one fixed while
 varying the other, and that is the next experiment.
 
+## Measured systems result
+
+Prefill and cached decode were measured with `scripts.inference_benchmark` on the pinned RTX 3090
+stack, uncompiled, with preallocated Speck state.
+
+| Cached token slots | Reached as | `caches-5` | `caches-3` | `caches-1` |
+| ---: | --- | ---: | ---: | ---: |
+| 32,768 | 32K × 1 | 6.872 ms | 6.644 ms (1.03×) | 6.523 ms (1.05×) |
+| 131,072 | 32K × 4 | 7.332 ms | 6.954 ms (1.05×) | 6.790 ms (1.08×) |
+| 131,072 | 128K × 1 | 6.833 ms | 6.643 ms (1.03×) | 6.563 ms (1.04×) |
+| 524,288 | 32K × 16 | 14.805 ms | 11.304 ms (1.31×) | 7.751 ms (1.91×) |
+| 524,288 | 128K × 4 | 14.680 ms | 11.163 ms (1.32×) | 7.649 ms (1.92×) |
+
+**Prefill does not improve.** Every arm lies within 2% at both 32K and 128K: `419`–`425` ms and
+`3222`–`3286` ms respectively. This is the expected result and it must be stated plainly. Readers
+remove key and value projections but still compute the full attention score and value aggregation,
+so sharing a cache is not a prefill optimization.
+
+**Single-stream decode barely moves.** At batch 1 the gain is `4`–`5%` at either length. A batch-1
+deployment does not benefit from this mechanism.
+
+**Batched decode improves substantially, and the governing variable is total cached token slots.**
+At `524,288` slots the maximum-sharing arm decodes `1.9×` faster and the selected three-cache arm
+`1.3×` faster. The same speedup appears whether those slots come from 32K at batch 16 or 128K at
+batch 4, which is what a bandwidth-bound decode predicts: what matters is how many cached bytes must
+be read per step, not how they are arranged. Peak allocation at that point falls from `12.33` to
+`11.21` GiB.
+
+The efficiency claim is therefore specific rather than general: no prefill change, negligible
+single-stream change, and a near-two-fold batched decode gain at the sharing level that fails the
+retrieval gate. The arm that passes the gate keeps a `1.3×` gain.
+
 ## Current selection
 
 `caches-3` is the arm to carry forward. It passes the retrieval gate with retention identical to the
@@ -264,7 +296,9 @@ point precisely because it fails: it establishes that the mechanism has a bounda
 ## What is not verified
 
 - Seeds 43 and 44 have not run for any arm, so no difference here is replicated.
-- Composition and latency are unmeasured, and the retrieval result is one seed per arm.
+- Composition is unmeasured, and both the retrieval and systems results are one seed per arm.
+- Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
+  benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
 - Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.
 - One shared memory is built from layer-3 representations. Whether keys formed that early support
   content-addressable lookup at depth 19 is the central open risk, and it is exactly what the
