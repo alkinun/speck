@@ -545,8 +545,8 @@ def build_symbolic_two_hop_case(
 ):
     """Build route, payload, or composed lookup over shared one-token intermediate nodes."""
 
-    if mode not in {"route", "payload", "compose"}:
-        raise ValueError("symbolic two-hop mode must be route, payload, or compose")
+    if mode not in {"route", "payload", "compose", "chain"}:
+        raise ValueError("symbolic two-hop mode must be route, payload, compose, or chain")
     if not 0 <= first_depth < second_depth <= 1:
         raise ValueError("symbolic two-hop depths must satisfy 0 <= first < second <= 1")
     if not isinstance(chains, int) or isinstance(chains, bool) or not 2 <= chains <= 9:
@@ -566,7 +566,7 @@ def build_symbolic_two_hop_case(
         raise ValueError("symbolic two-hop mutation index must be an integer")
     if not 0 <= mutation_index < chains:
         raise ValueError("symbolic two-hop mutation index is outside the chains")
-    if mode == "route":
+    if mode in {"route", "chain"}:
         candidate_values = ROUTE_VALUES
         original_answer = destinations[mutation_index]
         if answer_offset:
@@ -623,6 +623,12 @@ def build_symbolic_two_hop_case(
             f"Which destination does it reach?\n{native_cue}: "
         )
         answer = destinations[query_index]
+    elif mode == "chain":
+        question_text = (
+            f"\nQuestion: Follow the route from {starts[query_index]}. "
+            "Respond with its destination followed by the access code there.\nAnswer: "
+        )
+        answer = f"{destinations[query_index]} {answers[query_index]}"
     elif mode == "payload":
         native_cue = "Answer" if response_cue == "answer" else "Code"
         question_text = (
@@ -650,6 +656,7 @@ def build_symbolic_two_hop_case(
         "route": "two_hop_route",
         "payload": "two_hop_payload",
         "compose": "two_hop_symbolic",
+        "chain": "two_hop_chain",
     }[mode]
     return {
         "task": task,
@@ -664,7 +671,9 @@ def build_symbolic_two_hop_case(
         "candidate_token_ids": candidate_token_ids,
         "candidate_token_sequences": candidate_token_sequences,
         "answer": answer,
-        "answer_index": candidate_values.index(answer),
+        "answer_index": candidate_values.index(
+            destinations[query_index] if mode == "chain" else answer
+        ),
         "label": starts[query_index],
         "query_index": query_index,
         "mutation_index": mutation_index,

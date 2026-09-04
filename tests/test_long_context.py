@@ -136,7 +136,7 @@ def test_two_hop_case_has_two_ordered_facts_and_exact_length():
 
 def test_symbolic_two_hop_auxiliaries_share_geometry_and_preserve_distractor_query():
     tokenizer = FakeTokenizer()
-    for mode in ("route", "payload", "compose"):
+    for mode in ("route", "payload", "compose", "chain"):
         case = build_symbolic_two_hop_case(
             tokenizer,
             1_024,

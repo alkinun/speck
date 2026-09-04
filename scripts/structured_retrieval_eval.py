@@ -32,6 +32,7 @@ SYMBOLIC_TASK_MODES = {
     "two_hop_route": "route",
     "two_hop_payload": "payload",
     "two_hop_symbolic": "compose",
+    "two_hop_chain": "chain",
 }
 TASKS = PRIMARY_TASKS + tuple(SYMBOLIC_TASK_MODES)
 TWO_HOP_DEPTHS = ((0.1, 0.5), (0.1, 0.9), (0.5, 0.9))

@@ -101,10 +101,13 @@ def test_template_and_answer_set_lists_are_strict():
     assert parse_record_counts("2,8") == (2, 8)
     with pytest.raises(ValueError, match="record counts"):
         parse_record_counts("8,8")
-    assert parse_adaptation_tasks("two_hop_route,two_hop_payload,two_hop_symbolic") == (
+    assert parse_adaptation_tasks(
+        "two_hop_route,two_hop_payload,two_hop_symbolic,two_hop_chain"
+    ) == (
         "two_hop_route",
         "two_hop_payload",
         "two_hop_symbolic",
+        "two_hop_chain",
     )
 
 
