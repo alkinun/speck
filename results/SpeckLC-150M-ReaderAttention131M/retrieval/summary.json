@@ -1,0 +1,152 @@
+{
+  "arms": {
+    "caches-1": {
+      "candidate_trajectory": [
+        0.06666666666666667,
+        0.23333333333333334,
+        0.06666666666666667,
+        0.6333333333333333,
+        0.7666666666666667,
+        0.26666666666666666,
+        0.3333333333333333,
+        0.26666666666666666,
+        0.3
+      ],
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-ReaderAttention131M-caches-1-retrieval",
+        "metadata_sha256": "2bb7783e5e3da1ea15918ffa0baa112df2c52c3b5c3e3dca3d11f416b447def9",
+        "model_sha256": "8a8a5b6f60e9de735d21e200ccb20392fa5ba85ba5be4171323ba7e8ab99c433",
+        "optimizer_sha256": "1e9aeed8ab8b324e6094b970d7d915bca3ba71ebd7d827915f543a2f8dc3fd1a",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.3,
+      "final_exact_match": 0.3,
+      "final_specificity_accuracy": 0.8333333333333334,
+      "final_specificity_score": 1.4846760988235475,
+      "lr": 0.0001,
+      "max_reader_writer_distance": 4,
+      "max_readers_per_memory": 4,
+      "peak_candidate_accuracy": 0.7666666666666667,
+      "peak_step": 200,
+      "readers": 4,
+      "retention_final_over_peak": 0.3913043478260869
+    },
+    "caches-2": {
+      "candidate_trajectory": [
+        0.23333333333333334,
+        0.16666666666666666,
+        0.2,
+        0.9,
+        0.5666666666666667,
+        0.8,
+        0.5333333333333333,
+        0.8,
+        0.6333333333333333
+      ],
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/RA-tmp-caches-2-joint-load",
+        "metadata_sha256": "7d47726938230f430a03ca11a1ec31cb7192798ea46842ca3a567ea9534c775e",
+        "model_sha256": "ed3b0fd1e4a255510141237154840c774baea4564f668c2b8e48ebf8e12792cf",
+        "optimizer_sha256": "17c45e83c926886bbe857e8500b3787d33268fb60ea1804587ce1418534a4de4",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.6333333333333333,
+      "final_exact_match": 0.6,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 4.055208333333334,
+      "lr": 0.0001,
+      "max_reader_writer_distance": 2,
+      "max_readers_per_memory": 2,
+      "peak_candidate_accuracy": 0.9,
+      "peak_step": 150,
+      "readers": 3,
+      "retention_final_over_peak": 0.7037037037037036
+    },
+    "caches-3": {
+      "candidate_trajectory": [
+        0.23333333333333334,
+        0.23333333333333334,
+        0.1,
+        0.9,
+        0.8666666666666667,
+        0.8,
+        0.8333333333333334,
+        0.8333333333333334,
+        0.8333333333333334
+      ],
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/RA-tmp-caches-3-joint-load",
+        "metadata_sha256": "151b148693646d059c62a1a0c280e7f52d87751d5af58b95a7f88571360eb570",
+        "model_sha256": "02a45ca53b4eb61e10d799b93231316df9319d31938a9f2dec050d0015ffd34e",
+        "optimizer_sha256": "393cb741678db1dba5fe309e3699eae9ae538de8c58c12b7913a47565990077b",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.8333333333333334,
+      "final_exact_match": 0.8333333333333334,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 6.935416666666667,
+      "lr": 0.0001,
+      "max_reader_writer_distance": 1,
+      "max_readers_per_memory": 1,
+      "peak_candidate_accuracy": 0.9,
+      "peak_step": 150,
+      "readers": 2,
+      "retention_final_over_peak": 0.9259259259259259
+    },
+    "caches-5": {
+      "candidate_trajectory": [
+        0.06666666666666667,
+        0.2,
+        0.06666666666666667,
+        0.4666666666666667,
+        0.6333333333333333,
+        0.8,
+        0.9333333333333333,
+        0.8,
+        0.8666666666666667
+      ],
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-ReaderAttention131M-caches-5-retrieval",
+        "metadata_sha256": "39d3e06b82956f43cb0f5d7ce11eaa7ed9a86bf04b1ed0c857e95de49327acf3",
+        "model_sha256": "be4542a2fc59a93c52329cef1fbeee106b0021dd32c56786f6ad6d83848ea7e7",
+        "optimizer_sha256": "26bfd855b0c37ac14b9be8325788b2f7f84d392fac1d7043dae07c53ca6597e9",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.8666666666666667,
+      "final_exact_match": 0.8333333333333334,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 4.125520833333334,
+      "lr": 0.0001,
+      "max_reader_writer_distance": 0,
+      "max_readers_per_memory": 0,
+      "peak_candidate_accuracy": 0.9333333333333333,
+      "peak_step": 300,
+      "readers": 0,
+      "retention_final_over_peak": 0.9285714285714286
+    }
+  },
+  "findings": [
+    "every arm learns the task to a similar peak between 0.77 and 0.93 candidate accuracy",
+    "what degrades with sharing is retention, not learnability: final over peak falls 0.94, 0.92, 0.70, 0.39 as readers per memory rise 0, 1, 2, 4",
+    "five and three caches are stable and pass the gate; two caches oscillates between 0.53 and 0.80; one cache collapses from 0.767 to 0.300",
+    "association specificity stays perfect for five, three, and two caches and falls only to 0.833 for one cache, so target selection survives where value decoding does not",
+    "validation loss is graded, tiny, and inside the seed range for every arm, and predicts none of this",
+    "readers per memory and reader-to-writer depth distance are confounded by the even-spacing rule and are not yet separated"
+  ],
+  "format": "speck_reader_attention_retrieval_gate",
+  "format_version": 1,
+  "gate": {
+    "candidate_accuracy": 0.8,
+    "note": "held-out template and held-out answer set"
+  },
+  "learning_rate_control": {
+    "arm": "caches-1",
+    "final_candidate_accuracy": 0.3333333333333333,
+    "interpretation": "underpowered rather than decisive: at half the rate the arm never reached the 0.767 peak it attains at 1e-4, so this does not cleanly separate optimization instability from a representational limit",
+    "lr": 5e-05,
+    "peak_candidate_accuracy": 0.4
+  },
+  "parent_stage": "base 131,072,000-token seed-42 checkpoints, step 2000 (not the post-32K stage used in finding 22)",
+  "protocol": "finding 22 joint-load recipe: four training templates, letters and phrases, two and eight records, 400 steps, 50 percent original-language replay, held-out directory template with phrase answers, 30 fixed validation cases",
+  "status": "seed_42_discovery"
+}

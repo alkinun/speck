@@ -1,6 +1,7 @@
 # 24 — Speck Reader Attention and the global cache-count staircase
 
-> **Status: seed-42 discovery complete for the one-, two-, and three-cache arms.** The mechanism is implemented and
+> **Status: seed-42 loss frontier and retrieval gate complete for one, two, three, and five
+> caches.** The mechanism is implemented and
 > qualified, and two arms have trained to the full 131,072,000-token budget. Retrieval, composition,
 > seed replication, and latency remain unmeasured.
 
@@ -207,10 +208,64 @@ Throughput is deliberately not claimed. The three runs executed back to back on 
 consumer card, and the observed spread between analytically FLOP-matched arms was larger than the
 effect being measured. A throughput claim requires a thermally controlled, interleaved measurement.
 
+## Retrieval gate: sharing costs retention, not learnability
+
+Each arm was adapted from its own seed-42 base checkpoint with finding
+[22](22_template_diverse_retrieval_adaptation.md)'s joint-load recipe: four training templates,
+letters and phrases, two and eight records, 400 steps, 50% original-language replay, and validation
+on the held-out `directory` template with unseen phrase answers.
+
+| Arm | Readers | Readers per memory | Peak candidate | Final candidate | Retention | Final specificity |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `caches-5` | 0 | 0 | 0.933 | 0.867 | 0.93 | 1.000 |
+| `caches-3` | 2 | 1 | 0.900 | 0.833 | 0.93 | 1.000 |
+| `caches-2` | 3 | 2 | 0.900 | 0.633 | 0.70 | 1.000 |
+| `caches-1` | 4 | 4 | 0.767 | 0.300 | 0.39 | 0.833 |
+
+**Every arm learns the task.** Peak held-out candidate accuracy moves only from `0.933` to `0.767`
+across the entire frontier, and three of the four arms peak at `0.90` or above. Sharing a cache does
+not prevent a compact hybrid from acquiring template-robust, distractor-controlled retrieval.
+
+**What collapses is retention.** The ratio of final to peak accuracy falls monotonically as more
+readers depend on a single memory: `0.93`, `0.93`, `0.70`, `0.39`. `caches-5` and `caches-3` rise and
+hold. `caches-2` reaches `0.90` at step 150 and then oscillates between `0.53` and `0.80`.
+`caches-1` reaches `0.767` at step 200 and falls to `0.300`, losing a capability it demonstrably had.
+
+**Language-model loss predicts none of it.** Every arm is inside the `0.00965`-nat seed range on
+validation loss, and the loss frontier is smooth and graded at roughly `0.002` nats per converted
+layer. A reader hybrid can be loss-equivalent and still lose a retrieval capability it had held
+minutes earlier. This is the hidden-cliff failure the [MiniMax-M2 note](../papers/15_minimax_m2.md)
+warns about, reproduced under a controlled architecture ablation.
+
+**Target selection survives where value decoding does not.** Association specificity remains perfect
+for five, three, and two caches and falls only to `0.833` for one cache, still significant at
+`p = 1.6e-4`. Even the collapsed arm knows which record the query names; it stops emitting that
+record's value. This is the same selection-versus-decoding split reached by curriculum in findings
+[22](22_template_diverse_retrieval_adaptation.md) and [23](23_symbolic_two_hop_composition.md),
+reached here by architecture.
+
+A halved adaptation learning rate does not rescue `caches-1`, but the control is underpowered rather
+than decisive: at `5e-5` the arm never reaches the `0.767` peak it attains at `1e-4`, so it does not
+separate optimization instability from a representational limit.
+
+The two candidate mechanisms are confounded by the even-spacing rule that places writers. Readers
+per memory and reader-to-writer depth distance rise together across these arms, so this frontier
+cannot yet say whether a memory degrades because too many layers depend on it or because it is read
+too far below where it was written. Separating them requires a layout that holds one fixed while
+varying the other, and that is the next experiment.
+
+## Current selection
+
+`caches-3` is the arm to carry forward. It passes the retrieval gate with retention identical to the
+five-cache control, its loss deficit of `0.004698` nats is half the endpoint's and inside the seed
+range, and it cuts 128K resident state by `1.66×`. `caches-1` remains the more valuable scientific
+point precisely because it fails: it establishes that the mechanism has a boundary and locates it.
+
 ## What is not verified
 
 - Seeds 43 and 44 have not run for any arm, so no difference here is replicated.
-- No retrieval, composition, or latency measurement exists for any reader model.
+- Composition and latency are unmeasured, and the retrieval result is one seed per arm.
+- Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.
 - One shared memory is built from layer-3 representations. Whether keys formed that early support
   content-addressable lookup at depth 19 is the central open risk, and it is exactly what the
   staircase measures. YOCO answers it affirmatively at 3B and 1.6T tokens with a half-depth writer;
