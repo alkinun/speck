@@ -321,6 +321,13 @@ the internal gate is revisited; they do not rescue the failed 3/3 rule.
 Machine-readable trajectories, gates, hashes, loss controls, and the nondeterminism repeat are at
 [results/SpeckLC-150M-ReaderAttention131M/replication/caches-3-retrieval.json](../results/SpeckLC-150M-ReaderAttention131M/replication/caches-3-retrieval.json).
 
+**Pre-registered composition comparison.** The five-cache and three-cache seed-42 base checkpoints
+receive the same 400-step symbolic route/payload/composition adaptation at training offset
+`60,000,000`, fixed validation offset `70,000,000`, and 50% language replay. Both receive an
+independent 100-case evaluation of route, payload, and direct composition plus the 20M-token
+original-loss control. Composition is compared only if both constituent edges remain qualified;
+otherwise the reader result is an edge-retrieval failure rather than evidence about composition.
+
 The seed-42 cache-count frontier confounds readers per memory with reader-to-writer distance because
 the even-spacing rule raises both together. The matched distance experiment below separates them at
 fan-out one.
