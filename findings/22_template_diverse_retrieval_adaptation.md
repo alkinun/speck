@@ -203,6 +203,19 @@ The target-selection signal remains, but decoding is co-adapted to the relation 
 cue. Standardizing only evaluation creates a mismatched prompt; it is not a valid shortcut. The next
 control must train and evaluate every template with the same response channel.
 
+### Matched standardized-cue training
+
+A final 400-step control trains all four templates, both loads, and both answer sets with `Answer:`
+and evaluates held-out directory wording with the same cue. It also fails the gate: final exact and
+candidate accuracy are 60.0%, while specificity remains 93.3%. The best fixed-validation candidate
+accuracy is only 70.0% at step 120.
+
+This rules out the response token itself as the main cause. At this scale, native semantic cues help
+readout, but neither native nor standardized cues make eight-record open decoding robust across
+held-out wording. Direct-lookup prompt tuning stops here. The replicated result is strong
+target-specific association selection; exact value emission at eight-record load remains an open
+optimization/data problem.
+
 ## Artifacts
 
 - Report:
@@ -261,3 +274,9 @@ control must train and evaluate every template with the same response channel.
   `30aed47d5d177d1dff75d5233398f129cd2ea1eb0f3375a43a5160ff715c68b9`
 - Response-cue control reports are stored beside the joint-load reports with the
   `answer-cue.json` suffix.
+- Matched-cue report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-answercue-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-answercue-seed42.json)
+- Matched-cue model / metadata / optimizer SHA-256:
+  `84f5e31593956b161c0159b6a3e4b32f3a734795e82839b47a0f212764d058b9`,
+  `13d04711e337d888bf44f1da4c95e9b4b379fbd1651061fda17ebebec1fed239`,
+  `5dd1b5e12786f572e3e1107a4ae80d0df497c40e9992404138dfcbe6d8a38683`

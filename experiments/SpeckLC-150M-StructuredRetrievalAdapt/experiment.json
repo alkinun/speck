@@ -254,5 +254,13 @@
     },
     "intervention": "replace only held-out directory's native Signal cue with Answer",
     "verdict": "unmatched cue replacement hurts decoding while preserving specificity; use matched standardized-cue training"
+  },
+  "standardized_cue_training": {
+    "final_candidate_accuracy": 0.6,
+    "final_exact_match": 0.6,
+    "final_specificity_accuracy": 0.9333333333333333,
+    "response_cue": "Answer",
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-answercue-seed42.json",
+    "verdict": "matched cue does not fix held-out eight-record value decoding"
   }
 }
