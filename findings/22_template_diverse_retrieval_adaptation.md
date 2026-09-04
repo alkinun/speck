@@ -44,6 +44,28 @@ requires both tokens and token accuracy ends at 75.0%.
 - Add a fourth template, train archive/registry/ledger with letters, and hold the fourth template plus
   phrases out together.
 
+## Pilot 2 — Three training templates, held-out answers
+
+Pilot 2 trains archive, registry, and ledger with letters only, then holds out both manifest syntax
+and phrase answers. It again uses 1,600 retrieval examples and 6.55M replay tokens. On the fixed
+30-case adaptation validation stream, the final manifest/phrase result is 23.3% exact, 33.3%
+candidate, and 96.7% specificity. The high specificity is significant (`p = 2.89e-8`): the model
+selects the queried manifest association more strongly than an unrelated association even though it
+often fails to emit the unseen phrase.
+
+An additional seed-0 evaluator factorial separates template transfer from answer transfer:
+
+| Evaluation condition | Exact | Candidate | Specificity accuracy | Specificity score |
+| --- | ---: | ---: | ---: | ---: |
+| Archive / letters (seen/seen) | 100% | 100% | 100% | 12.500 |
+| Ledger / letters (seen/seen) | 100% | 100% | 100% | 12.992 |
+| Manifest / letters (held-out/seen) | **93.3%** | **90.0%** | **96.7%** | 5.532 |
+| Manifest / phrases (held-out/held-out) | 40.0% | 50.0% | **93.3%** | 1.737 |
+
+This is the first evidence of template-robust target selection. The remaining failure is joint
+generalization to a new surface form and a new output vocabulary. Pilot 3 will retain three training
+templates but restore phrase supervision; the manifest remains fully held out.
+
 ## Artifacts
 
 - Report:
@@ -52,4 +74,10 @@ requires both tokens and token accuracy ends at 75.0%.
 - Model SHA-256: `3a7c48541f2467e566050f55265b64647e50e41347278e1afbc2557c88019980`
 - Metadata SHA-256: `8fdee220931c81fa0a6f2bbdb00e58f05dbe83ccea3331f4234d212dc80bddb4`
 - Optimizer SHA-256: `7abecf2d5df08ab9ae2ff9b222184c951e308a7af0af7d381e3b28f2adf58a16`
-
+- Pilot 2 report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-seed42.json)
+- Pilot 2 evaluator controls:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse)
+- Pilot 2 model SHA-256: `9b070cba51a9d6d9799393e93edc8ceca0d80801c95d57c1bac11ecd2a2490c7`
+- Pilot 2 metadata SHA-256: `eb204400eea17ed7307875b71df0967a12bd996e8134a70601866d73461d52bc`
+- Pilot 2 optimizer SHA-256: `2f941cbb69455f3a51df246bf192b6329b9b92648bcd7f856ba39f2581dfc6cc`

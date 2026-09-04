@@ -124,5 +124,22 @@
     "validation_answer_set": "phrases",
     "validation_template": "ledger",
     "verdict": "partial transfer; final candidate 50%, specificity 56.7%; gate failed"
+  },
+  "template_diverse_pilot_2": {
+    "language_replay_fraction": 0.5,
+    "records": 2,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-seed42.json",
+    "retrieval_examples": 1600,
+    "sequence_length": 4096,
+    "steps": 200,
+    "train_answer_set": "letters",
+    "train_templates": [
+      "archive",
+      "registry",
+      "ledger"
+    ],
+    "validation_answer_set": "phrases",
+    "validation_template": "manifest",
+    "verdict": "template transfer passes for trained answers; joint template/answer transfer remains partial"
   }
 }
