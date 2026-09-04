@@ -103,6 +103,25 @@ prevent material forgetting under the harder task mixture.
 - Train the same template/value mixture directly at eight records, then replicate distinct training
   streams only if the eight-record manifest gate passes.
 
+## Pilot 4 — Direct eight-record training
+
+Pilot 4 changes only the training and validation load from two records to eight. The 1,600 retrieval
+examples remain balanced across three training templates and two answer sets. Learning is much
+slower: specificity appears before correct decoding, and the final checkpoint does not pass.
+
+| Step | Exact | Candidate | Specificity accuracy | Specificity score |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 0.0% | 6.7% | 60.0% | −0.000 |
+| 120 | 20.0% | 16.7% | 56.7% | 0.013 |
+| 160 | 50.0% | 50.0% | 96.7% | 1.939 |
+| 180 | **60.0%** | **60.0%** | 96.7% | 2.272 |
+| 200 | 50.0% | 50.0% | **100%** | 2.501 |
+
+The perfect final specificity shows that the target record is distinguished from the distractor,
+but value selection remains unreliable. A curriculum is now the controlled next test: initialize
+from pilot 3, which already learned template-robust two-record lookup, and add eight-record examples
+at lower learning rate with language replay.
+
 ## Artifacts
 
 - Report:
@@ -125,3 +144,8 @@ prevent material forgetting under the harder task mixture.
 - Pilot 3 model SHA-256: `cae56a8a4f7af2ad553904957a0e2053332e1c7d22f6b4c1d4940a27372da047`
 - Pilot 3 metadata SHA-256: `4dd437e9cb15d87d4415e0d42ca1d2476a1785273ca351f5fd9d7b85ceb90cd1`
 - Pilot 3 optimizer SHA-256: `0ef72600387eddda75f6fcc158c4b11578fb4d7cd19a7d9c22635faa124d576e`
+- Pilot 4 report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-mixed-r8-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-mixed-r8-seed42.json)
+- Pilot 4 model SHA-256: `47e21c5290a73a424494b331765a959eceba1cba06509fb02671bca2af38eaf8`
+- Pilot 4 metadata SHA-256: `d6a1ce6b3218d178c093d4ebe21f8100fa5c00d305fb7a04f235c9180ab3daf9`
+- Pilot 4 optimizer SHA-256: `2440198c0002350b86ed7223200497fa21a99e8e6a06d1e2b1c048761a4b6189`

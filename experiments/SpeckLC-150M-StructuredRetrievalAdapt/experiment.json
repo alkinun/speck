@@ -162,5 +162,25 @@
     "validation_answer_set": "phrases",
     "validation_template": "manifest",
     "verdict": "two-record held-out-template gate passes; eight-record exact/candidate remains 43.3%"
+  },
+  "template_diverse_pilot_4": {
+    "language_replay_fraction": 0.5,
+    "records": 8,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-mixed-r8-seed42.json",
+    "retrieval_examples": 1600,
+    "sequence_length": 4096,
+    "steps": 200,
+    "train_answer_sets": [
+      "letters",
+      "phrases"
+    ],
+    "train_templates": [
+      "archive",
+      "registry",
+      "ledger"
+    ],
+    "validation_answer_set": "phrases",
+    "validation_template": "manifest",
+    "verdict": "eight-record specificity reaches 100%, but exact/candidate ends at 50%; gate failed"
   }
 }
