@@ -75,5 +75,21 @@
     "weight_decay": 0.1
   },
   "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
-  "status": "matched_adaptation_complete_length_evaluation_pending"
+  "replay_calibration": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "eval_every": 20,
+    "learning_rate": 0.0001,
+    "records": 2,
+    "replay_data_manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "replay_fraction": 0.5,
+    "replay_tokens": 6553600,
+    "retrieval_examples": 1600,
+    "retrieval_prompt_tokens": 6553600,
+    "sequence_length": 4096,
+    "steps": 200,
+    "task": "multi_key",
+    "validation_samples": 30
+  },
+  "status": "replay_calibration_prepared"
 }
