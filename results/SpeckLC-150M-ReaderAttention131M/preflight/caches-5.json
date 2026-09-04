@@ -1,0 +1,54 @@
+{
+  "benchmark": {
+    "activation_checkpointing": false,
+    "aggressive_fusion": true,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "compiled": true,
+    "loss_backend": "torch",
+    "mode": "compute",
+    "optimizer": "muon",
+    "optimizer_step_compiled": true,
+    "seed": 42,
+    "steps": 5,
+    "warmup_seconds": 85.24528474197723,
+    "warmup_steps": 3
+  },
+  "environment": {
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "git_dirty": true,
+    "git_revision": "8a93656",
+    "recorded_at": "2026-09-04T08:00:51.999050+00:00",
+    "torch": "2.9.1+cu128"
+  },
+  "experiment": {
+    "fingerprint": "b96a6362c7d2c4c273b1c510329e2df8cae14d36155d6a604f78958fd06a7a38",
+    "manifest": null,
+    "path": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-ReaderAttention131M/caches-5"
+  },
+  "geometry": {
+    "accumulation": 4,
+    "batch_size": 4,
+    "sequence_length": 4096,
+    "tokens_per_step": 65536
+  },
+  "memory": {
+    "peak_allocated_bytes": 14893031424,
+    "peak_reserved_bytes": 15795748864
+  },
+  "model": {
+    "flops_per_token": 1021601280.0,
+    "parameters": 153958938
+  },
+  "performance": {
+    "loss_first": 8.317033767700195,
+    "loss_last": 5.939885139465332,
+    "model_flops_utilization": null,
+    "step_seconds_mean": 1.4447240635985508,
+    "step_seconds_median": 1.4442018660483882,
+    "step_seconds_p90": 1.446381991961971,
+    "tflops": 46.34217922508698,
+    "tokens_per_second": 45362.29557688786
+  }
+}
