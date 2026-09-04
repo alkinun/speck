@@ -104,7 +104,6 @@
   "format": "speck_reader_attention_staircase_results",
   "format_version": 1,
   "not_yet_measured": [
-    "thermally controlled compiled and uncompiled systems replication",
     "a preregistered larger-sample audit of the one-case seed-43 candidate miss"
   ],
   "per_reader_cost_nats": {

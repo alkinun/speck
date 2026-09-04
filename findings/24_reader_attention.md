@@ -6,7 +6,8 @@
 > Three-cache base loss and retrieval are replicated on seeds 42–44. Strict loss equivalence and
 > candidate-accuracy promotion each pass only two of three seeds, so `caches-3` remains a research
 > candidate rather than a promoted architecture. The symbolic diagnostic adds a route-edge failure,
-> so composition cannot be compared. Thermally controlled systems replication remains unmeasured.
+> so composition cannot be compared. Thermally controlled eager/compiled systems results are
+> complete; the Reader Attention frontier is ready for ledger consolidation.
 
 ## Question
 
@@ -468,6 +469,41 @@ The efficiency claim is therefore specific rather than general: no prefill chang
 single-stream change, and a near-two-fold batched decode gain at the sharing level that fails the
 retrieval gate. The arm that passed the seed-42 gate keeps a `1.3×` gain.
 
+### Controlled eager/compiled replication
+
+All eight processes started at `43`–`50 C` and used two prefill warmups, five timed repeats, and five
+decode warmups. The controlled decode result is:
+
+| Mode | Cached slots | Reached as | Five caches | Three caches | Speedup |
+| --- | ---: | --- | ---: | ---: | ---: |
+| eager | 32,768 | 32K × 1 | 6.717 ms | 6.657 ms | 1.01× |
+| eager | 524,288 | 32K × 16 | 14.771 ms | 11.281 ms | 1.31× |
+| eager | 131,072 | 128K × 1 | 6.793 ms | 6.718 ms | 1.01× |
+| eager | 524,288 | 128K × 4 | 14.688 ms | 11.172 ms | 1.31× |
+| compiled | 32,768 | 32K × 1 | 8.285 ms | 10.711 ms | 0.77× |
+| compiled | 524,288 | 32K × 16 | 14.535 ms | 11.353 ms | 1.28× |
+| compiled | 131,072 | 128K × 1 | 8.230 ms | 11.035 ms | 0.75× |
+| compiled | 524,288 | 128K × 4 | 14.347 ms | 11.322 ms | 1.27× |
+
+The eager result replicates exactly where it matters: `1.31×` at 524,288 cached slots regardless of
+whether they are arranged as 32K × 16 or 128K × 4, and only `1%` at batch one. The bandwidth account
+survives thermal control.
+
+Compilation changes the deployment trade. It improves prefill by `1.04×`–`1.38×`, but this is not a
+reader-specific gain: compiled prefill differs by at most `1.2%` between cache-count arms. High-batch
+reader decode retains a slightly smaller `1.27×`–`1.28×` advantage. Batch-one decode instead
+regresses for both arms and especially for readers: three-cache latency rises `61%` at 32K and `64%`
+at 128K versus its eager path, making it `29%` and `34%` slower than compiled five-cache decode.
+Compile startup is excluded by warmups but was not separately timed, so these are steady-state
+numbers only.
+
+Smaller resident state also does not imply smaller measured peak allocation. At 524,288 slots,
+three-cache peak allocation is about `0.375 GiB` *higher* than five caches in both arrangements
+(`12.73` versus `12.35 GiB` at 32K × 16). Attention workspace and live reader memories dominate this
+metric even though persistent decode state is `1.66×` smaller. Machine-readable controlled reports
+are at
+[results/SpeckLC-150M-ReaderAttention131M/systems/controlled](../results/SpeckLC-150M-ReaderAttention131M/systems/controlled).
+
 ## Current selection status
 
 `caches-3` remains the leading **research candidate**, but it is not promoted. It cuts 128K resident
@@ -490,8 +526,9 @@ payload survives, but route retrieval does not.
 
 - Three-cache base loss and retrieval are replicated across seeds 42–44, but systems remain one seed
   per arm and the retrieval validation contains only 30 fixed cases.
-- Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
-  benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
+- Systems numbers now include thermally controlled eager and compiled paths, but remain
+  single-process measurements on one consumer card rather than a serving benchmark; they exclude
+  tokenization, scheduling, and multi-request batching effects.
 - Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.
 - The distance result is one seed on the internal 30-case diagnostic. It establishes a boundary
   between attention-slot distances one and four but does not locate that boundary or rule out an

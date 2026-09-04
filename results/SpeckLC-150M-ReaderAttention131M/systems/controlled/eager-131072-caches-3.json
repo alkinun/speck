@@ -1,0 +1,157 @@
+{
+  "environment": {
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "cpu_count": 24,
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "dtype": "bfloat16",
+    "recorded_at": "2026-09-04T21:29:21.868429+00:00",
+    "threads": 16,
+    "torch": "2.9.1+cu128",
+    "transformers": "5.1.0"
+  },
+  "measurements": [
+    {
+      "batch_size": 1,
+      "decode": {
+        "duration_iqr_seconds": [
+          0.21467538899742067,
+          0.215152621967718
+        ],
+        "duration_seconds": [
+          0.2149637769907713,
+          0.21467538899742067,
+          0.21384548803325742,
+          0.215152621967718,
+          0.21530457690823823
+        ],
+        "milliseconds_per_step": 6.717618030961603,
+        "peak_allocated_bytes": 3652268032,
+        "tokens_per_second": 148.8622894887719,
+        "untimed_prefix_seconds": [
+          3.2494191630976275,
+          3.250919220969081,
+          3.2541179429972544,
+          3.253376353997737,
+          3.254024784080684
+        ]
+      },
+      "prefill": {
+        "duration_iqr_seconds": [
+          3.2347762080607936,
+          3.242555777076632
+        ],
+        "duration_seconds": [
+          3.2347762080607936,
+          3.2326947239926085,
+          3.2387172339949757,
+          3.242555777076632,
+          3.24374408996664
+        ],
+        "milliseconds_per_batch": 3238.7172339949757,
+        "peak_allocated_bytes": 3652440064,
+        "tokens_per_second": 40470.34382137831
+      }
+    },
+    {
+      "batch_size": 4,
+      "decode": {
+        "duration_iqr_seconds": [
+          0.3575037730624899,
+          0.3575366389704868
+        ],
+        "duration_seconds": [
+          0.3575366389704868,
+          0.3575037730624899,
+          0.3575102809118107,
+          0.35773472604341805,
+          0.357201281003654
+        ],
+        "milliseconds_per_step": 11.172196278494084,
+        "peak_allocated_bytes": 13641004032,
+        "tokens_per_second": 358.03166184072495,
+        "untimed_prefix_seconds": [
+          13.000112158013508,
+          12.99646511906758,
+          12.999673172016628,
+          13.0000814240193,
+          12.995480658020824
+        ]
+      },
+      "prefill": {
+        "duration_iqr_seconds": [
+          13.049870515009388,
+          13.05373746494297
+        ],
+        "duration_seconds": [
+          13.049870515009388,
+          13.053316258941777,
+          13.048863347037695,
+          13.05373746494297,
+          13.0592809880618
+        ],
+        "milliseconds_per_batch": 13053.316258941777,
+        "peak_allocated_bytes": 13642728960,
+        "tokens_per_second": 40165.11893219874
+      }
+    }
+  ],
+  "model": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-ReaderAttention131M-caches-3",
+      "experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-ReaderAttention131M/caches-3",
+      "metadata_sha256": "3d282b9217b864474763332f33ed1813f9bd2e472ee8c785db0c3b0620d45b95",
+      "model_sha256": "1cd021e71a989482e86f097f4d482a8f44670cb1401c76501f41ea3965e9ee03",
+      "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-ReaderAttention131M/caches-3",
+      "source_run": "SpeckLC-150M-ReaderAttention131M-caches-3",
+      "step": 2000
+    },
+    "key": "speck",
+    "last_logit_method": "native",
+    "name": "SpeckLC-150M-ReaderAttention131M-caches-3",
+    "parameters": 153958810,
+    "revision": "aa6d8c5839f94d2898c9ec31ace3389b4c8dba65"
+  },
+  "protocol": {
+    "cache": "Speck preallocated state; Hugging Face model-native dynamic cache",
+    "compiled": false,
+    "decode_prefix_length": 131040,
+    "decode_repeats": 5,
+    "decode_tokens": 32,
+    "decode_warmups": 5,
+    "logits": "last token only",
+    "name": "normalized causal LM inference",
+    "prefill_length": 131072,
+    "prefill_repeats": 5,
+    "prefill_warmups": 2,
+    "seed": 42,
+    "token_selection": "argmax included in decode timing",
+    "tokenization": false
+  }
+}

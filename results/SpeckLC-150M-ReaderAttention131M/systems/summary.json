@@ -1,11 +1,30 @@
 {
+  "controlled_replication": {
+    "compiled_high_batch_speedup": {
+      "128k_batch_4": 1.267132610014339,
+      "32k_batch_16": 1.2802576519718651
+    },
+    "eager_high_batch_speedup": {
+      "128k_batch_4": 1.314670710533613,
+      "32k_batch_16": 1.309382550109711
+    },
+    "max_start_temperature_c": 50,
+    "reader_compiled_batch_1_regression": {
+      "128k": 0.6426637499169359,
+      "32k": 0.6088887121227391
+    },
+    "repeats": 5
+  },
   "findings": [
     "prefill is unchanged by cache sharing: all arms lie within 2 percent at both lengths, because readers still compute full attention scores",
     "batch-1 decode improves only 4 to 5 percent, so single-stream users see almost nothing",
     "batched decode improves substantially: one cache is 1.91x faster at 32K batch 16 and 1.92x at 128K batch 4, and three caches is 1.31x and 1.32x",
     "the speedup tracks total cached token slots rather than length or batch separately: 32768x16 and 131072x4 are both 524,288 slots and give the same speedup, which is what a bandwidth-bound decode predicts",
     "peak allocation at 524,288 cached slots falls from 12.33 to 11.21 GiB between five and one cache",
-    "the arm with the best systems numbers is the arm that fails the retrieval retention gate, so this is a Pareto trade rather than a free win"
+    "the arm with the best systems numbers is the arm that fails the retrieval retention gate, so this is a Pareto trade rather than a free win",
+    "the thermally controlled replication reproduces the caches-3 eager high-batch gain at 1.31x for both ways of arranging 524288 cached slots",
+    "compiled caches-3 retains a 1.27x to 1.28x high-batch gain but regresses batch-one decode by 61 to 64 percent versus its eager path",
+    "compiled and eager prefill stay effectively equal between cache-count arms; compilation itself improves prefill but is not a reader-specific gain"
   ],
   "format": "speck_reader_attention_systems",
   "format_version": 1,
@@ -162,5 +181,5 @@
       "prefill_ms": 13026.489852985833
     }
   ],
-  "protocol": "scripts.inference_benchmark, uncompiled, last-token logits, preallocated Speck state; 32K used 2 warmups and 3 repeats, 128K used 1 warmup and 2 repeats"
+  "protocol": "initial uncompiled measurements plus thermally controlled eager/compiled replication; controlled runs start at or below 50 C with 2 prefill warmups, 5 timed repeats, and 5 decode warmups"
 }

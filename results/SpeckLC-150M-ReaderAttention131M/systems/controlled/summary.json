@@ -1,0 +1,148 @@
+{
+  "comparison": "thermally controlled eager and compiled five-cache versus caches-3 inference",
+  "environment": {
+    "cuda": "12.8",
+    "device": "NVIDIA GeForce RTX 3090",
+    "flash_linear_attention": "0.5.0",
+    "torch": "2.9.1+cu128"
+  },
+  "findings": [
+    "eager high-batch decode reproduces a 1.31x caches-3 speedup at both 32K batch 16 and 128K batch 4",
+    "compiled high-batch decode retains a 1.28x speedup at 32K and 1.27x at 128K",
+    "prefill differs by less than 0.5 percent between eager arms and 1.2 percent between compiled arms",
+    "compile improves prefill by 1.04x to 1.38x, with the largest gains at batch one",
+    "compile does not improve reader decode: high-batch latency is flat and batch-one latency regresses by 61 to 64 percent",
+    "compiled caches-3 batch-one decode is 29 percent slower than five caches at 32K and 34 percent slower at 128K",
+    "caches-3 does not reduce measured peak allocation at 524288 cached slots; it is about 0.375 GiB higher despite the smaller analytic resident state",
+    "compile startup was excluded by warmups but not separately timed, so these are steady-state measurements only"
+  ],
+  "format": "speck_reader_attention_controlled_systems",
+  "format_version": 1,
+  "measurements": [
+    {
+      "batch_size": 1,
+      "caches_3_decode_ms": 6.657367470324971,
+      "caches_3_peak_allocated_bytes": 1154421760,
+      "caches_3_prefill_ms": 419.3911299807951,
+      "caches_3_speedup": 1.0089279799061492,
+      "caches_5_decode_ms": 6.716804313327884,
+      "caches_5_peak_allocated_bytes": 1129502720,
+      "caches_5_prefill_ms": 417.5571600208059,
+      "cached_token_slots": 32768,
+      "compiled": false,
+      "length": 32768
+    },
+    {
+      "batch_size": 16,
+      "caches_3_decode_ms": 11.280708436970599,
+      "caches_3_peak_allocated_bytes": 13664772608,
+      "caches_3_prefill_ms": 6927.408011048101,
+      "caches_3_speedup": 1.309382550109711,
+      "caches_5_decode_ms": 14.770762780244695,
+      "caches_5_peak_allocated_bytes": 13262374400,
+      "caches_5_prefill_ms": 6894.3332839990035,
+      "cached_token_slots": 524288,
+      "compiled": false,
+      "length": 32768
+    },
+    {
+      "batch_size": 1,
+      "caches_3_decode_ms": 10.71096337545896,
+      "caches_3_peak_allocated_bytes": 1078919680,
+      "caches_3_prefill_ms": 305.58787600602955,
+      "caches_3_speedup": 0.7735482229787664,
+      "caches_5_decode_ms": 8.285446685476927,
+      "caches_5_peak_allocated_bytes": 1054000640,
+      "caches_5_prefill_ms": 303.3122039632872,
+      "cached_token_slots": 32768,
+      "compiled": true,
+      "length": 32768
+    },
+    {
+      "batch_size": 16,
+      "caches_3_decode_ms": 11.353194811817957,
+      "caches_3_peak_allocated_bytes": 13664772608,
+      "caches_3_prefill_ms": 6484.493660973385,
+      "caches_3_speedup": 1.2802576519718651,
+      "caches_5_decode_ms": 14.53501453215722,
+      "caches_5_peak_allocated_bytes": 13262374400,
+      "caches_5_prefill_ms": 6465.5660800635815,
+      "cached_token_slots": 524288,
+      "compiled": true,
+      "length": 32768
+    },
+    {
+      "batch_size": 1,
+      "caches_3_decode_ms": 6.717618030961603,
+      "caches_3_peak_allocated_bytes": 3652268032,
+      "caches_3_prefill_ms": 3238.7172339949757,
+      "caches_3_speedup": 1.0111535860111152,
+      "caches_5_decode_ms": 6.792543561459752,
+      "caches_5_peak_allocated_bytes": 3551851520,
+      "caches_5_prefill_ms": 3236.7113799555227,
+      "cached_token_slots": 131072,
+      "compiled": false,
+      "length": 131072
+    },
+    {
+      "batch_size": 4,
+      "caches_3_decode_ms": 11.172196278494084,
+      "caches_3_peak_allocated_bytes": 13641004032,
+      "caches_3_prefill_ms": 13053.316258941777,
+      "caches_3_speedup": 1.314670710533613,
+      "caches_5_decode_ms": 14.687759219668806,
+      "caches_5_peak_allocated_bytes": 13238087680,
+      "caches_5_prefill_ms": 13079.528087051585,
+      "cached_token_slots": 524288,
+      "compiled": false,
+      "length": 131072
+    },
+    {
+      "batch_size": 1,
+      "caches_3_decode_ms": 11.03478762524901,
+      "caches_3_peak_allocated_bytes": 3651268608,
+      "caches_3_prefill_ms": 2711.54155198019,
+      "caches_3_speedup": 0.7458635983252336,
+      "caches_5_decode_ms": 8.230446404922986,
+      "caches_5_peak_allocated_bytes": 3248468992,
+      "caches_5_prefill_ms": 2680.6926910066977,
+      "cached_token_slots": 131072,
+      "compiled": true,
+      "length": 131072
+    },
+    {
+      "batch_size": 4,
+      "caches_3_decode_ms": 11.322215344989672,
+      "caches_3_peak_allocated_bytes": 13640788992,
+      "caches_3_prefill_ms": 12612.906132941134,
+      "caches_3_speedup": 1.267132610014339,
+      "caches_5_decode_ms": 14.346748281241162,
+      "caches_5_peak_allocated_bytes": 13238185984,
+      "caches_5_prefill_ms": 12602.994913002476,
+      "cached_token_slots": 524288,
+      "compiled": true,
+      "length": 131072
+    }
+  ],
+  "protocol": {
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "decode_tokens": 32,
+    "decode_warmups": 5,
+    "prefill_warmups": 2,
+    "repeats": 5,
+    "start_temperature_ceiling_c": 50,
+    "token_selection": "argmax included",
+    "tokenization": false
+  },
+  "status": "complete",
+  "thermal": {
+    "compiled_128k_caches_3": {"end_c": 68, "start_c": 50},
+    "compiled_128k_caches_5": {"end_c": 68, "start_c": 47},
+    "compiled_32k_caches_3": {"end_c": 67, "start_c": 50},
+    "compiled_32k_caches_5": {"end_c": 67, "start_c": 49},
+    "eager_128k_caches_3": {"end_c": 69, "start_c": 50},
+    "eager_128k_caches_5": {"end_c": 69, "start_c": 49},
+    "eager_32k_caches_3": {"end_c": 68, "start_c": 50},
+    "eager_32k_caches_5": {"end_c": 68, "start_c": 43}
+  }
+}
