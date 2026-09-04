@@ -84,6 +84,10 @@ def arguments(argv=None):
     parser.add_argument("--train-answer-sets", type=parse_answer_sets, default=("letters",))
     parser.add_argument("--validation-answer-sets", type=parse_answer_sets, default=("letters",))
     parser.add_argument("--train-record-counts", type=parse_record_counts, default=None)
+    parser.add_argument("--train-response-cue", choices=("native", "answer"), default="native")
+    parser.add_argument(
+        "--validation-response-cue", choices=("native", "answer"), default="native"
+    )
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--replay-data-experiment", type=Path, default=None)
@@ -126,6 +130,7 @@ def build_supervised_batch(
     templates=("archive",),
     answer_sets=("letters",),
     record_counts=None,
+    response_cue="native",
 ):
     record_counts = tuple(record_counts or (records,))
     cases = []
@@ -148,6 +153,7 @@ def build_supervised_batch(
             chains,
             template=template,
             answer_set=answer_set,
+            response_cue=response_cue,
         )
         inputs = case["prompt_tokens"] + case["answer_tokens"][:-1]
         if len(inputs) != sequence_length:
@@ -228,6 +234,7 @@ def validate(model, tokenizer, settings, device):
                             settings["chains"],
                             template=template,
                             answer_set=answer_set,
+                            response_cue=settings["validation_response_cue"],
                         )
                         counterfactual = build_case(
                             task,
@@ -239,6 +246,7 @@ def validate(model, tokenizer, settings, device):
                             answer_offset=1,
                             template=template,
                             answer_set=answer_set,
+                            response_cue=settings["validation_response_cue"],
                         )
                         distractor_index = (case["query_index"] + 1) % (
                             case.get("records") or case["chains"]
@@ -254,6 +262,7 @@ def validate(model, tokenizer, settings, device):
                             mutation_index=distractor_index,
                             template=template,
                             answer_set=answer_set,
+                            response_cue=settings["validation_response_cue"],
                         )
                         cases.append(case)
                         counterfactuals.append(counterfactual)
@@ -335,12 +344,15 @@ def validate(model, tokenizer, settings, device):
                     task
                     if settings["validation_templates"] == ("archive",)
                     and settings["validation_answer_sets"] == ("letters",)
+                    and settings["validation_response_cue"] == "native"
                     else f"{task}/{template}/{answer_set}"
+                    f"/{settings['validation_response_cue']}_cue"
                 )
                 metrics[key] = {
                     "task": task,
                     "template": template,
                     "answer_set": answer_set,
+                    "response_cue": settings["validation_response_cue"],
                     "samples": samples,
                     "exact_match": totals["exact"] / samples,
                     "token_accuracy": totals["token_correct"] / totals["answer_tokens"],
@@ -391,6 +403,8 @@ def validate_settings(args):
         "train_record_counts": tuple(
             getattr(args, "train_record_counts", None) or (args.records,)
         ),
+        "train_response_cue": getattr(args, "train_response_cue", "native"),
+        "validation_response_cue": getattr(args, "validation_response_cue", "native"),
         "replay_fraction": getattr(args, "replay_fraction", 0.0),
     }
     for name in ("train_seed_offset", "validation_seed_offset"):
@@ -407,6 +421,9 @@ def validate_settings(args):
     settings["train_record_counts"] = parse_record_counts(
         ",".join(str(count) for count in settings["train_record_counts"])
     )
+    for name in ("train_response_cue", "validation_response_cue"):
+        if settings[name] not in {"native", "answer"}:
+            raise ValueError(f"{name.replace('_', ' ')} must be native or answer")
     for name in ("lr", "grad_clip"):
         value = getattr(args, name)
         if not math.isfinite(value) or value <= 0:
@@ -514,6 +531,7 @@ def run(args):
                     settings["train_templates"],
                     settings["train_answer_sets"],
                     settings["train_record_counts"],
+                    settings["train_response_cue"],
                 )
                 retrieval_sample += settings["batch_size"]
                 retrieval_examples_seen += settings["batch_size"]
@@ -525,6 +543,8 @@ def run(args):
                     condition = f"{case['task']}/{case['template']}/{case['answer_set']}"
                     if len(settings["train_record_counts"]) > 1:
                         condition += f"/records_{case['records']}"
+                    if settings["train_response_cue"] != "native":
+                        condition += f"/{settings['train_response_cue']}_cue"
                     retrieval_examples_by_condition[condition] = (
                         retrieval_examples_by_condition.get(condition, 0) + 1
                     )

@@ -113,8 +113,10 @@ def test_supervised_batch_cycles_over_record_loads():
         chains=4,
         device=torch.device("cpu"),
         record_counts=(2, 8),
+        response_cue="answer",
     )
     assert [case["records"] for case in cases] == [2, 8]
+    assert [case["response_cue"] for case in cases] == ["answer", "answer"]
 
 
 def test_candidate_shift_is_symmetric():
