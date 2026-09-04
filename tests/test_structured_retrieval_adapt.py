@@ -11,6 +11,7 @@ from scripts.structured_retrieval_adapt import (
     parse_record_counts,
     parse_templates,
     replay_microsteps,
+    training_tasks_for_step,
     validate_settings,
 )
 from tests.test_long_context import FakeTokenizer
@@ -146,6 +147,16 @@ def test_replay_microsteps_are_even_and_exact():
     assert replay_microsteps(4, 0.25) == (3,)
     with pytest.raises(ValueError, match="representable"):
         replay_microsteps(4, 0.3)
+
+
+def test_training_task_schedule_switches_once():
+    values = {
+        "tasks": ("two_hop_chain",),
+        "after_switch_tasks": ("two_hop_symbolic",),
+        "task_switch_step": 10,
+    }
+    assert training_tasks_for_step(values, 9) == ("two_hop_chain",)
+    assert training_tasks_for_step(values, 10) == ("two_hop_symbolic",)
 
 
 @pytest.mark.parametrize(

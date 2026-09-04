@@ -68,6 +68,8 @@ def arguments(argv=None):
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--tasks", type=parse_adaptation_tasks, default=PRIMARY_TASKS)
     parser.add_argument("--validation-tasks", type=parse_adaptation_tasks, default=None)
+    parser.add_argument("--after-switch-tasks", type=parse_adaptation_tasks, default=None)
+    parser.add_argument("--task-switch-step", type=int, default=None)
     parser.add_argument("--sequence-length", type=int, default=4_096)
     parser.add_argument("--steps", type=int, default=500)
     parser.add_argument("--batch-size", type=int, default=4)
@@ -194,6 +196,14 @@ def replay_microsteps(accumulation, fraction):
     if not replay_count:
         return ()
     return tuple((index + 1) * accumulation // replay_count - 1 for index in range(replay_count))
+
+
+def training_tasks_for_step(settings, step_index):
+    """Return the active task family for a zero-indexed optimizer step."""
+
+    if settings["after_switch_tasks"] and step_index >= settings["task_switch_step"]:
+        return settings["after_switch_tasks"]
+    return settings["tasks"]
 
 
 @torch.inference_mode()
@@ -387,6 +397,8 @@ def validate_settings(args):
     settings = {
         "tasks": tuple(args.tasks),
         "validation_tasks": tuple(getattr(args, "validation_tasks", None) or args.tasks),
+        "after_switch_tasks": tuple(getattr(args, "after_switch_tasks", None) or ()),
+        "task_switch_step": getattr(args, "task_switch_step", None),
         "sequence_length": positive_integer(args.sequence_length, "sequence length"),
         "steps": positive_integer(args.steps, "steps"),
         "batch_size": positive_integer(args.batch_size, "batch size"),
@@ -431,6 +443,14 @@ def validate_settings(args):
     for name in ("train_response_cue", "validation_response_cue"):
         if settings[name] not in {"native", "answer"}:
             raise ValueError(f"{name.replace('_', ' ')} must be native or answer")
+    if bool(settings["after_switch_tasks"]) != (settings["task_switch_step"] is not None):
+        raise ValueError("after-switch tasks and task switch step must be provided together")
+    if settings["after_switch_tasks"] and (
+        isinstance(settings["task_switch_step"], bool)
+        or not isinstance(settings["task_switch_step"], int)
+        or not 0 < settings["task_switch_step"] < settings["steps"]
+    ):
+        raise ValueError("task switch step must be an integer strictly inside the training run")
     for name in ("lr", "grad_clip"):
         value = getattr(args, name)
         if not math.isfinite(value) or value <= 0:
@@ -528,7 +548,7 @@ def run(args):
             else:
                 inputs, targets, cases = build_supervised_batch(
                     tokenizer,
-                    settings["tasks"],
+                    training_tasks_for_step(settings, step_index),
                     settings["sequence_length"],
                     settings["batch_size"],
                     retrieval_sample,
