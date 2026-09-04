@@ -1,9 +1,9 @@
 # 24 — Speck Reader Attention and the global cache-count staircase
 
-> **Status: seed-42 loss frontier and retrieval gate complete for one, two, three, and five
-> caches.** The mechanism is implemented and
-> qualified, and two arms have trained to the full 131,072,000-token budget. Retrieval, composition,
-> seed replication, and latency remain unmeasured.
+> **Status: seed-42 cache-count loss/retrieval frontier and systems measurements complete; matched
+> near/far distance base stage complete.** The mechanism is implemented and qualified. Near/far
+> retrieval, symbolic composition, and seed replication remain unmeasured, so the three-cache
+> selection and the explanation for the retention boundary remain provisional.
 
 ## Question
 
@@ -254,6 +254,33 @@ cannot yet say whether a memory degrades because too many layers depend on it or
 too far below where it was written. Separating them requires a layout that holds one fixed while
 varying the other, and that is the next experiment.
 
+## Depth-distance base result
+
+The matched distance experiment holds four caches, one reader, one reader per memory, parameters,
+analytic FLOPs, data order, seed, and the L20 reader position fixed. Only the reader's memory binding
+changes: `caches-4` reads the preceding L16 writer at attention-slot distance one, while
+`caches-4-far` reads the L4 writer at distance four.
+
+| Arm | Reader distance | Final loss | Versus five caches | Versus near |
+| --- | ---: | ---: | ---: | ---: |
+| `caches-5` | — | 2.795380 | — | +0.001704 |
+| `caches-4` | 1 | 2.793676 | -0.001704 | — |
+| `caches-4-far` | 4 | 2.793098 | -0.002282 | -0.000578 |
+
+There is **no base-loss evidence for a depth-distance penalty**. The far reader is nominally
+`0.000578` nats better than the near reader, far inside the `0.00965`-nat one-seed resolution floor.
+Source-level signs split almost evenly: six favor far and five favor near. Both four-cache arms are
+also nominally better than the five-cache control, with eleven of eleven sources better for near
+and ten of eleven for far, but those differences are likewise unresolved on one seed.
+
+This result does not decide the retention mechanism. The cache-count frontier already established
+that language-model loss does not predict retrieval retention, so a flat near/far base result cannot
+exonerate distance. The matched retrieval adaptation is still the decision gate: if far loses a
+capability that near holds, distance selectively damages retention; if both hold, fan-out or gradient
+coupling through a shared writer becomes the surviving explanation. Machine-readable endpoints and
+hashes are checked at
+[results/SpeckLC-150M-ReaderDistance131M](../results/SpeckLC-150M-ReaderDistance131M).
+
 ## Measured systems result
 
 Prefill and cached decode were measured with `scripts.inference_benchmark` on the pinned RTX 3090
@@ -300,14 +327,11 @@ point precisely because it fails: it establishes that the mechanism has a bounda
 - Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
   benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
 - Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.
-- One shared memory is built from layer-3 representations. Whether keys formed that early support
-  content-addressable lookup at depth 19 is the central open risk, and it is exactly what the
-  staircase measures. YOCO answers it affirmatively at 3B and 1.6T tokens with a half-depth writer;
-  that is not evidence at 150M with a writer at the first global slot.
+- The matched distance base stage finds no language-loss penalty when L20 reads the L4 memory, but
+  retrieval retention for that arm is still unmeasured. YOCO answers the broader distance question
+  affirmatively at 3B and 1.6T tokens with a half-depth writer; that is not evidence at 150M with a
+  writer at the first global slot.
 - Preflight proves execution and analytic matching only. It contains no quality signal.
-- Decode and prefill latency are unmeasured. Readers reduce cache bytes and key-value projection
-  work but each still reads the full cache per step, so a bandwidth-bound decode may improve far less
-  than the `4.94×` state reduction suggests. Claiming a latency win requires the systems measurement.
 - The mechanism has no fused kernel. Readers use the same SDPA path as any global layer.
 
 ## Declared protocol and gates

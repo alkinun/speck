@@ -1,0 +1,62 @@
+{
+  "arms": {
+    "caches-4": {
+      "delta_versus_control": -0.0017042160034179688,
+      "final_validation_loss": 2.7936758995056152,
+      "max_reader_writer_slot_distance": 1,
+      "model_sha256": "4ac4ea705fe3cbb2132aec8e157c8bd80037dff8b4a27a922e94f2c7515a00ec",
+      "reader_binding": "nearest",
+      "sources_better_than_control": 11,
+      "sources_worse_than_control": 0
+    },
+    "caches-4-far": {
+      "delta_versus_control": -0.0022821426391601562,
+      "final_validation_loss": 2.793097972869873,
+      "max_reader_writer_slot_distance": 4,
+      "model_sha256": "e72d855ef3883cf521962baac6e6e22b24b5556eaa2d92f75b2ce2cdb478bc0f",
+      "reader_binding": "farthest",
+      "sources_better_than_control": 10,
+      "sources_worse_than_control": 1
+    }
+  },
+  "comparison": "single-variable reader-to-writer depth-distance test at fixed caches, fan-out, parameters, FLOPs, data, and seed",
+  "control": {
+    "arm": "caches-5",
+    "final_validation_loss": 2.795380115509033,
+    "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+    "reused_checkpoint": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope"
+  },
+  "findings": [
+    "far is 0.000578 nats better than near on the matched final validation sample, far inside the 0.00965-nat one-seed resolution floor",
+    "near-versus-far source-level signs split 5 to 6, with no coherent distance penalty",
+    "both four-cache arms are nominally better than the five-cache control and unresolved from it on one seed",
+    "base language-model loss provides no evidence that reader-to-writer depth distance is the retention mechanism",
+    "the matched retrieval adaptation remains the decision gate because validation loss failed to predict the earlier retention collapse"
+  ],
+  "format": "speck_reader_distance_results",
+  "format_version": 1,
+  "near_minus_far": {
+    "aggregate": 0.0005779266357421875,
+    "per_source": {
+      "cosmopedia_v2": 0.002205371856689453,
+      "dclm": 0.0011756420135498047,
+      "dclm_edu": -0.0004305839538574219,
+      "finemath_4plus": 0.003550291061401367,
+      "fineweb_edu": 0.00011610984802246094,
+      "math_multi_style": -0.00011873245239257812,
+      "math_textbook_exercise": -0.0007756948471069336,
+      "pes2o": -0.000024080276489257812,
+      "ufw_l3_multi_style": 0.00004100799560546875,
+      "ultra_fineweb": -0.0009069442749023438,
+      "wikimedia": 0.0015306472778320312
+    },
+    "resolved_on_one_seed": false,
+    "source_signs_favor_far": 6,
+    "source_signs_favor_near": 5
+  },
+  "seed": 42,
+  "seed_range_nats": 0.00965,
+  "sequence_length": 4096,
+  "status": "base_stage_complete_retrieval_pending",
+  "train_tokens": 131072000
+}
