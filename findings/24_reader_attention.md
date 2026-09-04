@@ -5,7 +5,8 @@
 > fixed fan-out one, despite unchanged base loss and preserved language loss after adaptation.
 > Three-cache base loss and retrieval are replicated on seeds 42–44. Strict loss equivalence and
 > candidate-accuracy promotion each pass only two of three seeds, so `caches-3` remains a research
-> candidate rather than a promoted architecture. Symbolic composition remains unmeasured.
+> candidate rather than a promoted architecture. The symbolic diagnostic adds a route-edge failure,
+> so composition cannot be compared. Thermally controlled systems replication remains unmeasured.
 
 ## Question
 
@@ -399,6 +400,34 @@ preceding writer, as `caches-3` does. The experiment establishes distance one as
 four as failing; it does not locate the threshold between them or exclude an additional fan-out
 penalty.
 
+## Symbolic composition gate
+
+The seed-42 five-cache and three-cache base checkpoints receive the same 400-step symbolic
+route/payload/composition adaptation. The independent 100-case evaluation first checks both
+constituent edges, then direct composition.
+
+| Arm | Route candidate | Route specificity | Payload candidate | Payload specificity | Composition candidate | Composition specificity | Original-loss delta |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `caches-5` | 1.00 | 1.00 | 1.00 | 1.00 | 0.45 | 0.51 | +0.02521 |
+| `caches-3` | 0.53 | 0.50 | 1.00 | 1.00 | 0.46 | 0.46 | +0.02173 |
+
+The matched five-cache base control reproduces finding [23](23_symbolic_two_hop_composition.md):
+both edges are perfectly retrievable while direct composition remains at the floor. `caches-3`
+preserves payload lookup but loses route lookup, falling to `0.53` exact/candidate and chance
+specificity. This is a new architecture-sensitive failure.
+
+Composition itself is **not comparable**. Its nominal `0.45` versus `0.46` candidate tie says
+nothing about composition capacity because the reader arm fails a required constituent. The valid
+conclusion is that cache sharing does not preserve the diagnostic's route edge; it is not that
+sharing leaves composition unchanged. Target-direction accuracy remains `1.00` for every view,
+again demonstrating why raw sensitivity cannot substitute for association specificity.
+
+Both arms also exceed the original-language loss tolerance despite 50% replay. The damage is
+slightly smaller for `caches-3`, so differential forgetting does not explain its route failure, but
+the symbolic adaptation recipe itself is not promotion-safe. Machine-readable training, auxiliary,
+loss, and summary reports are at
+[results/SpeckLC-150M-ReaderAttention131M/composition](../results/SpeckLC-150M-ReaderAttention131M/composition).
+
 ## Measured systems result
 
 Prefill and cached decode were measured with `scripts.inference_benchmark` on the pinned RTX 3090
@@ -446,13 +475,13 @@ justify a universal maximum distance or prove that fan-out is harmless.
 `caches-1` remains scientifically valuable precisely because it fails: it establishes that the
 mechanism has a boundary. The distance control locates freshness as one cause; the three-cache
 replication shows that adjacent refresh fixes retention without guaranteeing a stable decoding
-ceiling.
+ceiling. The symbolic result adds that adjacent refresh does not preserve every constituent relation:
+payload survives, but route retrieval does not.
 
 ## What is not verified
 
 - Three-cache base loss and retrieval are replicated across seeds 42–44, but systems remain one seed
   per arm and the retrieval validation contains only 30 fixed cases.
-- Composition is unmeasured.
 - Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
   benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
 - Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.

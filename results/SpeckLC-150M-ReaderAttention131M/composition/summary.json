@@ -1,0 +1,105 @@
+{
+  "arms": {
+    "caches-5": {
+      "auxiliary_100_case": {
+        "payload": {
+          "candidate_accuracy": 1.0,
+          "exact_match": 1.0,
+          "specificity_accuracy": 1.0,
+          "specificity_score": 9.788125010167295
+        },
+        "route": {
+          "candidate_accuracy": 1.0,
+          "exact_match": 1.0,
+          "specificity_accuracy": 1.0,
+          "specificity_score": 9.631640612510383
+        },
+        "two_hop_composition": {
+          "candidate_accuracy": 0.45,
+          "exact_match": 0.46,
+          "specificity_accuracy": 0.51,
+          "specificity_score": -0.06562498671526555
+        }
+      },
+      "checkpoint": {
+        "metadata_sha256": "c3b1339ce64cb17af135c0907847399b98037b19263de04b83053b83e1b9dbcd",
+        "model_sha256": "9e106461a0ee236b8de018551af372578d7b207b9d5a50c74d93d45a96155e20",
+        "optimizer_sha256": "439414f6e65deeb7a1366ceed01f647025eb2820e1b873f3371d27e5998d09a5",
+        "step": 400
+      },
+      "constituent_edges_qualified": true,
+      "final_30_case_composition": {
+        "candidate_accuracy": 0.5,
+        "exact_match": 0.5,
+        "specificity_accuracy": 0.4666666666666667
+      },
+      "original_loss": 2.8205885887145996,
+      "original_loss_delta_versus_parent": 0.025208473205566406,
+      "parent_loss": 2.795380115509033
+    },
+    "caches-3": {
+      "auxiliary_100_case": {
+        "payload": {
+          "candidate_accuracy": 1.0,
+          "exact_match": 1.0,
+          "specificity_accuracy": 1.0,
+          "specificity_score": 9.260167200531699
+        },
+        "route": {
+          "candidate_accuracy": 0.53,
+          "exact_match": 0.53,
+          "specificity_accuracy": 0.5,
+          "specificity_score": 0.07750000033527613
+        },
+        "two_hop_composition": {
+          "candidate_accuracy": 0.46,
+          "exact_match": 0.46,
+          "specificity_accuracy": 0.46,
+          "specificity_score": -0.17250000136205926
+        }
+      },
+      "checkpoint": {
+        "metadata_sha256": "d1e5fd151138d3b898dc5b58ba451a69da8439f428d88a25ff0c38246c592823",
+        "model_sha256": "cba7d1a4f8f532dcdc779f7b1b4ab8a85a8ff5bfaa5cc5512b79fa581cc195d1",
+        "optimizer_sha256": "b491de04d07b16c86dd78f51bf7d20fcfaa6b3beb5bb2108fbc4a63b954229fc",
+        "step": 400
+      },
+      "constituent_edges_qualified": false,
+      "final_30_case_composition": {
+        "candidate_accuracy": 0.43333333333333335,
+        "exact_match": 0.4666666666666667,
+        "specificity_accuracy": 0.4666666666666667
+      },
+      "original_loss": 2.821807861328125,
+      "original_loss_delta_versus_parent": 0.02173018455505371,
+      "parent_loss": 2.8000776767730713
+    }
+  },
+  "comparison": "matched seed-42 base-stage five-cache versus caches-3 symbolic route, payload, and composition adaptation",
+  "decision": {
+    "composition_comparable": false,
+    "reason": "caches-3 fails the route constituent edge qualification while the five-cache control retains both edges perfectly",
+    "reader_architecture_consequence": "caches-3 has an additional capability failure and remains unpromoted",
+    "supported_result": "payload survives sharing but route retrieval does not",
+    "unsupported_claim": "cache sharing preserves constituent retrieval while leaving only composition unchanged"
+  },
+  "findings": [
+    "the matched five-cache base control reproduces finding 23: route and payload are 100 percent while direct composition remains near 45 percent",
+    "caches-3 preserves payload at 100 percent but route exact/candidate falls to 53 percent and route specificity falls to chance",
+    "direct composition is nearly unchanged at 46 percent, but this cannot be interpreted as a composition result because the route edge is unqualified",
+    "target-direction accuracy remains 100 percent for every view, again showing that raw sensitivity is weaker than association specificity",
+    "both symbolic adapters materially damage original-language loss despite 50 percent replay, so this recipe is not promotion-safe",
+    "the route/payload asymmetry is a new architecture-sensitive diagnostic and strengthens the decision not to promote caches-3"
+  ],
+  "format": "speck_reader_attention_composition_comparison",
+  "format_version": 1,
+  "protocol": {
+    "auxiliary_samples_per_view": 100,
+    "chains": 2,
+    "sequence_length": 4096,
+    "steps": 400,
+    "train_seed_offset": 60000000,
+    "validation_seed_offset": 70000000
+  },
+  "status": "complete_reader_edge_failure"
+}

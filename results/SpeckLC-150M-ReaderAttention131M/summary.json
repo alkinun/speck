@@ -73,6 +73,21 @@
     "resident_state_bytes_at_128k": 504860160,
     "reused_checkpoint": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope"
   },
+  "composition": {
+    "caches_3": {
+      "composition_candidate_accuracy": 0.46,
+      "constituent_edges_qualified": false,
+      "payload_candidate_accuracy": 1.0,
+      "route_candidate_accuracy": 0.53
+    },
+    "caches_5": {
+      "composition_candidate_accuracy": 0.45,
+      "constituent_edges_qualified": true,
+      "payload_candidate_accuracy": 1.0,
+      "route_candidate_accuracy": 1.0
+    },
+    "composition_comparable": false
+  },
   "findings": [
     "the cost of sharing is smooth and graded, not a cliff: every arm is inside the 0.00965-nat seed range against the five-cache control",
     "each independent cache converted to a query-only reader costs roughly 0.002 nats, between 0.00196 and 0.00274 across the three arms",
@@ -83,12 +98,12 @@
     "throughput comparisons across back-to-back runs on this card are not thermally controlled and are not claimed",
     "caches-3 has a 0.00578-nat mean paired penalty across seeds 42 to 44, but strict per-seed loss equivalence passes only two of three seeds",
     "all eleven mean source deltas favor the five-cache control, so the small language-modeling cost is directional even though its mean magnitude is unresolved",
-    "caches-3 retrieval retention and specificity replicate three of three, but strict candidate promotion fails two of three because seed 43 ends at 0.767"
+    "caches-3 retrieval retention and specificity replicate three of three, but strict candidate promotion fails two of three because seed 43 ends at 0.767",
+    "the symbolic diagnostic finds an additional route-edge failure: caches-3 retains payload at 1.00 but route retrieval falls to 0.53 versus 1.00 for five caches"
   ],
   "format": "speck_reader_attention_staircase_results",
   "format_version": 1,
   "not_yet_measured": [
-    "symbolic two-hop composition",
     "thermally controlled compiled and uncompiled systems replication",
     "a preregistered larger-sample audit of the one-case seed-43 candidate miss"
   ],
@@ -100,6 +115,6 @@
   "seed": 42,
   "seed_range_nats": 0.00965,
   "sequence_length": 4096,
-  "status": "caches_3_retrieval_replication_complete_promotion_gate_failed",
+  "status": "reader_capability_gates_complete_promotion_failed",
   "train_tokens": 131072000
 }
