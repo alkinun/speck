@@ -1,0 +1,609 @@
+{
+  "blocks": [
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "head_dim": 64,
+                "kind": "attention",
+                "memory": "global_0",
+                "memory_role": "write",
+                "num_key_value_heads": 3,
+                "output_gate": "none",
+                "rope_dim": 0,
+                "scope": "global",
+                "window_size": null
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "head_dim": 64,
+                "kind": "attention",
+                "memory": "global_1",
+                "memory_role": "write",
+                "num_key_value_heads": 3,
+                "output_gate": "none",
+                "rope_dim": 0,
+                "scope": "global",
+                "window_size": null
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "head_dim": 64,
+                "kind": "attention",
+                "memory": "global_2",
+                "memory_role": "write",
+                "num_key_value_heads": 3,
+                "output_gate": "none",
+                "rope_dim": 0,
+                "scope": "global",
+                "window_size": null
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "head_dim": 64,
+                "kind": "attention",
+                "memory": "global_3",
+                "memory_role": "write",
+                "num_key_value_heads": 3,
+                "output_gate": "none",
+                "rope_dim": 0,
+                "scope": "global",
+                "window_size": null
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "conv_kernel_size": 4,
+                "key_head_dim": 64,
+                "kind": "kimi_delta_attention",
+                "num_key_heads": 3,
+                "num_value_heads": 6,
+                "value_head_dim": 64
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2304,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    },
+    {
+      "block": {
+        "hidden_size": 768,
+        "stages": [
+          {
+            "branches": [
+              {
+                "head_dim": 64,
+                "kind": "attention",
+                "memory": "global_3",
+                "memory_role": "read",
+                "num_key_value_heads": 3,
+                "output_gate": "none",
+                "rope_dim": 0,
+                "scope": "global",
+                "window_size": null
+              }
+            ]
+          },
+          {
+            "branches": [
+              {
+                "intermediate_size": 2432,
+                "kind": "swiglu"
+              }
+            ]
+          }
+        ]
+      },
+      "repeat": 1,
+      "weight_sharing": "none"
+    }
+  ],
+  "bos_token_id": 1,
+  "embedding_size": 640,
+  "eos_token_id": 2,
+  "expected_parameters": 153958874,
+  "initializer_range": 0.02,
+  "max_position_embeddings": 131072,
+  "rms_norm_eps": 1e-05,
+  "rope_scaling_factor": 1.0,
+  "rope_theta": 1000000.0,
+  "vocab_size": 32000
+}

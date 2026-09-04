@@ -144,3 +144,48 @@ def test_prepare_refuses_to_overwrite_an_existing_staircase(tmp_path):
                 seed=None,
             )
         )
+
+
+def test_reader_binding_selects_the_nearest_or_first_writer():
+    assert memory_plan(5, 4, "nearest")[4] == ("read", "global_3")
+    assert memory_plan(5, 4, "farthest")[4] == ("read", "global_0")
+    assert memory_plan(5, 2, "farthest") == [
+        ("write", "global_0"),
+        ("read", "global_0"),
+        ("write", "global_1"),
+        ("read", "global_0"),
+        ("read", "global_0"),
+    ]
+    with pytest.raises(ValueError, match="reader binding"):
+        memory_plan(5, 2, "sideways")
+
+
+def test_binding_pair_isolates_depth_distance_from_every_other_axis():
+    source = source_architecture()
+    near, near_plan = shared_memory_architecture(source, 4, binding="nearest")
+    far, far_plan = shared_memory_architecture(source, 4, binding="farthest")
+    with torch.device("meta"):
+        near_model = SpeckForCausalLM(near)
+        far_model = SpeckForCausalLM(far)
+        near_state = near_model.state(length=131_072, device="meta", kv_cache_dtype=torch.bfloat16)
+        far_state = far_model.state(length=131_072, device="meta", kv_cache_dtype=torch.bfloat16)
+    assert near_plan["readers"] == far_plan["readers"] == 1
+    assert near_plan["max_readers_per_memory"] == far_plan["max_readers_per_memory"] == 1
+    assert near_plan["max_reader_writer_slot_distance"] == 1
+    assert far_plan["max_reader_writer_slot_distance"] == 4
+    assert near_model.parameter_count() == far_model.parameter_count()
+    assert near_model.flops_per_token(4_096) == far_model.flops_per_token(4_096)
+    assert near_state.allocated_bytes() == far_state.allocated_bytes()
+    caches = [
+        sum(1 for entry in state.entries.values() if hasattr(entry, "keys"))
+        for state in (near_state, far_state)
+    ]
+    assert caches == [4, 4]
+
+
+def test_reader_binding_round_trips_through_the_architecture_grammar():
+    source = source_architecture()
+    config, _ = shared_memory_architecture(source, 4, binding="farthest")
+    assert ArchitectureConfig.from_dict(config.export()) == config
+    readers = [b for b in attention_branches(config) if b.reads_memory]
+    assert [b.memory for b in readers] == ["global_0"]

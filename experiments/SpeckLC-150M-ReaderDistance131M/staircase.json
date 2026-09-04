@@ -1,0 +1,128 @@
+{
+  "comparison": "identical depth, attention placement, and read count with a varying number of shared key-value caches",
+  "format": "speck_reader_attention_staircase",
+  "format_version": 1,
+  "mechanism": "speck_reader_attention",
+  "seed": 42,
+  "sequence_length": 4096,
+  "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+  "source_flops_per_token": 1021601280.0,
+  "source_parameters": 153958938,
+  "source_resident_state_bytes": {
+    "131072": {
+      "by_kind": {
+        "attention_kv": 503316480,
+        "kimi_delta_attention": 1543680
+      },
+      "total_bytes": 504860160
+    },
+    "32768": {
+      "by_kind": {
+        "attention_kv": 125829120,
+        "kimi_delta_attention": 1543680
+      },
+      "total_bytes": 127372800
+    },
+    "4096": {
+      "by_kind": {
+        "attention_kv": 15728640,
+        "kimi_delta_attention": 1543680
+      },
+      "total_bytes": 17272320
+    }
+  },
+  "status": "prepared",
+  "train_tokens": 131072000,
+  "variants": {
+    "caches-4": {
+      "caches": 4,
+      "flops_delta_versus_source": 0.0,
+      "flops_per_token": 1021601280.0,
+      "matrix_parameter_and_flop_matched": true,
+      "max_reader_writer_slot_distance": 1,
+      "max_readers_per_memory": 1,
+      "parameter_delta_versus_source": -64,
+      "parameters": 153958874,
+      "reader_binding": "nearest",
+      "readers": 1,
+      "reclaimed_key_value_parameters": 294912,
+      "resident_state_bytes": {
+        "131072": {
+          "by_kind": {
+            "attention_kv": 402653184,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 404196864
+        },
+        "32768": {
+          "by_kind": {
+            "attention_kv": 100663296,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 102206976
+        },
+        "4096": {
+          "by_kind": {
+            "attention_kv": 12582912,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 14126592
+        }
+      },
+      "resident_state_fraction_of_source": {
+        "131072": 0.800611527754537,
+        "32768": 0.8024238769972867,
+        "4096": 0.8178746109381948
+      },
+      "reuses_source_architecture": false,
+      "unmatched_key_norm_parameters": 64,
+      "unmatched_parameters_in_feed_forward": 0,
+      "writer_key_value_heads": null
+    },
+    "caches-4-far": {
+      "caches": 4,
+      "flops_delta_versus_source": 0.0,
+      "flops_per_token": 1021601280.0,
+      "matrix_parameter_and_flop_matched": true,
+      "max_reader_writer_slot_distance": 4,
+      "max_readers_per_memory": 1,
+      "parameter_delta_versus_source": -64,
+      "parameters": 153958874,
+      "reader_binding": "farthest",
+      "readers": 1,
+      "reclaimed_key_value_parameters": 294912,
+      "resident_state_bytes": {
+        "131072": {
+          "by_kind": {
+            "attention_kv": 402653184,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 404196864
+        },
+        "32768": {
+          "by_kind": {
+            "attention_kv": 100663296,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 102206976
+        },
+        "4096": {
+          "by_kind": {
+            "attention_kv": 12582912,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 14126592
+        }
+      },
+      "resident_state_fraction_of_source": {
+        "131072": 0.800611527754537,
+        "32768": 0.8024238769972867,
+        "4096": 0.8178746109381948
+      },
+      "reuses_source_architecture": false,
+      "unmatched_key_norm_parameters": 64,
+      "unmatched_parameters_in_feed_forward": 0,
+      "writer_key_value_heads": null
+    }
+  }
+}
