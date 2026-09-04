@@ -1,0 +1,8 @@
+{
+  "eval_every": 488,
+  "extends": "../../SpeckLC-150M-AttentionGate32M/headwise/train.json",
+  "run": "SpeckLC-150M-AttentionGate131M-headwise",
+  "train_tokens": 131072000,
+  "wandb_group": "SpeckLC-150M-AttentionGate131M",
+  "warmup_steps": 13
+}

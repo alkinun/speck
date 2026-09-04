@@ -1,0 +1,20 @@
+{
+  "comparison": "131M-token confirmation of headwise sigmoid global attention gating",
+  "control": {
+    "checkpoint_directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+    "final_validation_loss": 2.795380115509033,
+    "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+    "output_gate": "none",
+    "step": 2000
+  },
+  "format": "speck_attention_gate_confirmation",
+  "format_version": 1,
+  "parameters": 153958938,
+  "flops_per_token": 1021601280.0,
+  "screen_delta": -0.013940095901489258,
+  "seed": 42,
+  "sequence_length": 4096,
+  "status": "prepared",
+  "train_tokens": 131072000,
+  "treatment": "headwise"
+}

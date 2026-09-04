@@ -1,0 +1,3 @@
+{
+  "extends": "../../SpeckLC-150M-AttentionGate32M/headwise/long_context.json"
+}
