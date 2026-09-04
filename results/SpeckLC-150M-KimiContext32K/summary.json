@@ -4,6 +4,11 @@
   "format": "speck_kimi_context_results",
   "format_version": 1,
   "long_validation_delta_kda_minus_rope": 0.011444091796875,
+  "retrieval_interpretation_update": {
+    "finding": "../../findings/19_retrieval_specificity_and_replay.md",
+    "result": "../SpeckLC-150M-StructuredRetrievalAdapt/summary.json",
+    "status": "raw contrastive direction is content sensitivity, not target-specific retrieval"
+  },
   "retrieval": {
     "caveat": "directional contrast demonstrates causal sensitivity; exact match remains zero",
     "gdn-sigmoid-rope": {

@@ -1,0 +1,151 @@
+{
+  "baseline_distractor_control": {
+    "gdn": {
+      "multi_key_4k_specificity_accuracy": 0.4,
+      "two_hop_4k_specificity_accuracy": 0.36666666666666664
+    },
+    "interpretation": "raw counterfactual response is not target-specific retrieval",
+    "kda": {
+      "multi_key_4k_specificity_accuracy": 0.43333333333333335,
+      "two_hop_4k_specificity_accuracy": 0.4
+    }
+  },
+  "easy_adaptation": {
+    "gdn": {
+      "checkpoint": {
+        "metadata_sha256": "aa0028adffb016cc5a2315eb320e6e269b5b9e9e31782786cad411511fd3b39f",
+        "model_sha256": "f264a403a27ea89f56f1a5be2bfb59678f35651a421c51e38727780de3f82738",
+        "step": 200
+      },
+      "multi_key_candidate_accuracy": 0.4666666666666667,
+      "multi_key_exact_match": 0.4666666666666667,
+      "multi_key_specificity_accuracy": 0.4666666666666667,
+      "post_adaptation_language_loss": 7.442082405090332,
+      "two_hop_candidate_accuracy": 0.5,
+      "two_hop_specificity_accuracy": 0.26666666666666666
+    },
+    "kda": {
+      "checkpoint": {
+        "metadata_sha256": "4c3c81b4265793cb26a900a1bc0111d0a627b9760ef03e4da3eed0ad6f591066",
+        "model_sha256": "9f329cda757fdd79a5888fdb6f98699217e646b1d9207b73491e895fe5712eab",
+        "step": 200
+      },
+      "multi_key_candidate_accuracy": 1.0,
+      "multi_key_exact_match": 1.0,
+      "multi_key_specificity_accuracy": 1.0,
+      "post_adaptation_language_loss": 3.607801675796509,
+      "two_hop_candidate_accuracy": 0.5333333333333333,
+      "two_hop_specificity_accuracy": 0.36666666666666664
+    },
+    "protocol": {
+      "records": 2,
+      "chains": 2,
+      "steps": 200,
+      "supervised_examples": 3200,
+      "tasks": [
+        "multi_key",
+        "two_hop"
+      ]
+    }
+  },
+  "format": "speck_structured_retrieval_adaptation_results",
+  "format_version": 1,
+  "no_replay_kda_length_scaling": {
+    "records_2": {
+      "exact_match": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "specificity_accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "records_8": {
+      "exact_match": [
+        1.0,
+        1.0,
+        0.9666666666666667
+      ],
+      "specificity_accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "replay_kda": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-StructuredRetrievalAdapt-kda-replay50",
+      "metadata_sha256": "5fbdc42ca142ce3f94d403ca53934f5555ce7f0262a57502dc43afddcea53d96",
+      "model_sha256": "dd49b20afc9bc1a15692a94f5f0ea77433a1776186adc90023e2698d834bc066",
+      "optimizer_sha256": "bd38663de79e64495509692aea6e0677a4abb647329dda4b3f9bef0223a64577",
+      "step": 200
+    },
+    "language_loss": 2.7992374897003174,
+    "language_loss_change_from_parent": -0.00045180320739746094,
+    "protocol": {
+      "language_replay_fraction": 0.5,
+      "language_replay_tokens": 6553600,
+      "records": 2,
+      "retrieval_examples": 1600,
+      "retrieval_prompt_tokens": 6553600,
+      "sequence_length": 4096,
+      "task": "multi_key"
+    },
+    "records_2": {
+      "exact_match": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "specificity_accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "specificity_score": [
+        12.683463599874786,
+        12.056966097533719,
+        11.501171868330342
+      ]
+    },
+    "records_8": {
+      "exact_match": [
+        0.9666666666666667,
+        0.9666666666666667,
+        0.9666666666666667
+      ],
+      "specificity_accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "specificity_score": [
+        12.199479022617167,
+        11.666015504348268,
+        11.087630244371015
+      ]
+    }
+  },
+  "status": "complete",
+  "tested_lengths": [
+    4096,
+    32768,
+    131072
+  ],
+  "two_hop_only": {
+    "gdn_candidate_accuracy": 0.36666666666666664,
+    "gdn_specificity_accuracy": 0.36666666666666664,
+    "kda_candidate_accuracy": 0.3333333333333333,
+    "kda_specificity_accuracy": 0.5,
+    "protocol": {
+      "chains": 2,
+      "steps": 400,
+      "supervised_examples": 6400
+    },
+    "result": "both architectures fail held-out two-hop composition"
+  }
+}

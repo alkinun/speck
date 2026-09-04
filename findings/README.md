@@ -25,6 +25,8 @@ Read in order:
 17. [16 — Kimi-transfer language-model staircase](16_kimi_transfer_131m.md)
 18. [17 — Three-seed Kimi-frontier replication](17_kimi_frontier_replication.md)
 19. [18 — Matched 32K KDA/NoPE context activation](18_kimi_context32k.md)
+20. [19 — Retrieval specificity, exact completion, and language replay](19_retrieval_specificity_and_replay.md)
+21. [20 — K3 diagnostics and global attention gating](20_k3_diagnostics_and_attention_gating.md)
 
 Conventions:
 
@@ -39,6 +41,6 @@ Conventions:
 - Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
-Last consolidated state: the Kimi-transfer staircase, three-seed replication, and matched 32K
-context activation are complete; all referenced checkpoints have completion markers, and the
-repository test suite passes 321 tests.
+Last consolidated state: distractor-controlled exact retrieval, mixed language replay, K3
+diagnostics, and the matched attention-gate screen are complete; all referenced checkpoints have
+completion markers, and the repository test suite passes 366 tests.

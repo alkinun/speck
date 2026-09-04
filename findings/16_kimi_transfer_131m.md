@@ -1,5 +1,10 @@
 # 16 — Kimi-transfer language-model staircase
 
+> **Interpretation update:** finding [19](19_retrieval_specificity_and_replay.md) shows that the
+> original counterfactual metric was sensitive to arbitrary record changes and did not prove
+> target-specific retrieval. The language-loss results here remain valid; retrieval claims are
+> superseded by distractor-controlled exact evaluation.
+
 ## Question
 
 Which pieces transferred from Kimi Linear improve Speck's recurrent/global hybrid, and can a

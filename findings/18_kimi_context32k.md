@@ -1,5 +1,10 @@
 # 18 — Matched 32K KDA/NoPE context activation
 
+> **Interpretation update:** the contrastive curve below measures long-range content sensitivity,
+> not association-specific retrieval. Finding [19](19_retrieval_specificity_and_replay.md) adds
+> distractor controls, exact-answer evaluation, and mixed-replay adaptation. The loss and systems
+> measurements in this report are unchanged.
+
 ## Question
 
 After the three-seed base-stage result, does KDA/sigmoid/NoPE retain its retrieval advantage when

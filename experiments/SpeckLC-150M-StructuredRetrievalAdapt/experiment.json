@@ -91,5 +91,5 @@
     "task": "multi_key",
     "validation_samples": 30
   },
-  "status": "replay_calibration_passed_length_evaluation_pending"
+  "status": "complete"
 }

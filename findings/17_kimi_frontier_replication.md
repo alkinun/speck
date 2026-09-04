@@ -1,5 +1,9 @@
 # 17 — Three-seed Kimi-frontier replication
 
+> **Interpretation update:** finding [19](19_retrieval_specificity_and_replay.md) demotes the raw
+> counterfactual curves in this report from “retrieval” to “content sensitivity.” Exact,
+> distractor-controlled retrieval requires task adaptation and produces a different conclusion.
+
 ## Question
 
 Does the seed-42 tie between GDN/sigmoid/RoPE and KDA/sigmoid/NoPE survive initialization
