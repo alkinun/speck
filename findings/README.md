@@ -51,6 +51,7 @@ the eight-record gate. Symbolic two-hop decomposition learns both edges at 99–
 curricula do not replicate composition. Long-length promotion and MQA comparison remain gated. All
 23 structured-adaptation checkpoint directories pass integrity checks.
 
-Speck Reader Attention is implemented, validated, and prepared as a cache-count staircase in
-finding 24. It is untrained: no arm has taken an optimization step, so the ledger contains no
-quality result for it.
+Speck Reader Attention is implemented and validated in finding 24. At seed 42 its one- and
+two-cache arms are indistinguishable from each other and sit about 0.008 nats behind the five-cache
+control, inside the seed range and unresolved on one seed. One cache dominates two at half the
+resident state. Retrieval, composition, seed replication, and latency are not yet measured.

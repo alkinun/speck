@@ -1,8 +1,8 @@
 # 24 — Speck Reader Attention and the global cache-count staircase
 
-> **Status: design, implementation, and static qualification only.** No language model has been
-> trained with this mechanism. Every number below is an exact analytic or unit-tested quantity, not
-> a measured quality result.
+> **Status: seed-42 discovery complete for one and two caches.** The mechanism is implemented and
+> qualified, and two arms have trained to the full 131,072,000-token budget. Retrieval, composition,
+> seed replication, and latency remain unmeasured.
 
 ## Question
 
@@ -160,9 +160,50 @@ The `caches-5` preflight also reproduces the earlier KDA/sigmoid/NoPE preflight 
 [16](16_kimi_transfer_131m.md) — `45,362` versus `45.3K` tok/s and `13.87` versus `13.9` GiB — which
 confirms the measurement basis has not drifted.
 
+## Seed-42 discovery result
+
+Both new arms trained to the full budget on the frozen corpus with the same data order, schedule,
+and evaluation sample as the existing control.
+
+| Arm | Caches | Readers | Final loss | Versus control | Sources worse | BF16 state @128K |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `caches-5` | 5 | 0 | 2.795380 | — | — | 504,860,160 B |
+| `caches-2` | 2 | 3 | 2.803611 | +0.008230 | 11/11 | 202,870,272 B |
+| `caches-1` | 1 | 4 | 2.803232 | +0.007852 | 11/11 | 102,206,976 B |
+
+Three conclusions, in decreasing order of confidence.
+
+**One and two caches are indistinguishable.** They differ by `0.000379` nats, an order of magnitude
+inside the measured seed range. The cost of sharing is a step from five caches down to two and is
+then flat. The marginal second cache buys no measurable language modeling, so one cache dominates
+two on every axis: the same loss at half the resident state. `caches-2` should be dropped from the
+frontier rather than replicated.
+
+**The deficit versus five caches is real in direction but unresolved in size.** The aggregate
+`0.008` nats is inside the `0.00965`-nat seed range, so by the standing convention it is unresolved
+on one seed. Its direction is not ambiguous: every one of the eleven validation sources is worse
+for both arms. For `caches-1` the deficit is structured rather than scattered, ranging from
+`+0.0022` on `ufw_l3_multi_style` to `+0.0191` on `math_multi_style`, with the three mathematics
+sources and peS2o taking the largest hits and the general web sources the smallest. Noise would
+scatter in sign; this does not. The honest statement is a small real penalty whose magnitude
+requires seeds 43 and 44.
+
+**A shallow writer does not explain the deficit.** The pre-registered fallback predicted that a
+single memory written at logical layer 3 is too shallow. `caches-2` adds a second writer at logical
+layer 11, the mid-depth integration point identified in finding
+[08](08_global_attention_frontier.md), and recovers nothing. That prediction is refuted for the
+two-cache case. The surviving explanation runs through the absorption lemma above: independent
+caches let each depth compute a different *nonlinear* key and value function of the residual
+stream, and readers structurally cannot. Five such functions beat one; two apparently do not.
+
+Throughput is deliberately not claimed. The three runs executed back to back on an uncooled
+consumer card, and the observed spread between analytically FLOP-matched arms was larger than the
+effect being measured. A throughput claim requires a thermally controlled, interleaved measurement.
+
 ## What is not verified
 
-- No training step of any arm has run. There is no loss, retrieval, or throughput result.
+- Seeds 43 and 44 have not run for any arm, so no difference here is replicated.
+- No retrieval, composition, or latency measurement exists for any reader model.
 - One shared memory is built from layer-3 representations. Whether keys formed that early support
   content-addressable lookup at depth 19 is the central open risk, and it is exactly what the
   staircase measures. YOCO answers it affirmatively at 3B and 1.6T tokens with a half-depth writer;
@@ -177,10 +218,10 @@ confirms the measurement basis has not drifted.
 
 Run order, all at seed 42 first, then seeds 43 and 44 only for arms that pass:
 
-1. `caches-1` — the maximum-sharing arm and the strongest test of the hypothesis.
-2. `caches-2` — one memory refresh at mid-depth, the natural fallback if a single early memory is
-   too shallow.
-3. `caches-3` and `caches-1-mqa1` — only if the first two justify the frontier.
+1. `caches-1` — complete.
+2. `caches-2` — complete, and retired: indistinguishable from `caches-1` at twice the state.
+3. `caches-3` — locates whether the step from five caches happens above or below three.
+4. `caches-1-mqa1` — only after the capability gates.
 
 One fallback is pre-registered before any result is seen. If `caches-1` loses on loss or retrieval
 while `caches-2` holds, the most likely cause is that a memory written at logical layer 3 is too
