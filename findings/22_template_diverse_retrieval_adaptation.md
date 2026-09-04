@@ -189,6 +189,20 @@ in validation). The next diagnostic will standardize only that output cue while 
 held-out record and question wording. This separates associative retrieval from small-model
 instruction/readout calibration.
 
+### Response-cue diagnostic
+
+Changing only held-out directory's native `Signal:` cue to the archive-familiar `Answer:` cue makes
+the result worse:
+
+| Held-out directory condition, n=100 | Native cue candidate / specificity | `Answer:` candidate / specificity |
+| --- | ---: | ---: |
+| Letters | 80.0% / 99.0% | 61.0% / 98.0% |
+| Phrases | 77.0% / 95.0% | 49.0% / 97.0% |
+
+The target-selection signal remains, but decoding is co-adapted to the relation wording and output
+cue. Standardizing only evaluation creates a mismatched prompt; it is not a valid shortcut. The next
+control must train and evaluate every template with the same response channel.
+
 ## Artifacts
 
 - Report:
@@ -245,3 +259,5 @@ instruction/readout calibration.
   `0bbdd1348bc9c574152994bcc193f26473a88b47a028ad345e900bf526093d25`,
   `4b433d207eab990ba1055da93aa2bef8daf24aafe718f386a31834c32ab35477`,
   `30aed47d5d177d1dff75d5233398f129cd2ea1eb0f3375a43a5160ff715c68b9`
+- Response-cue control reports are stored beside the joint-load reports with the
+  `answer-cue.json` suffix.

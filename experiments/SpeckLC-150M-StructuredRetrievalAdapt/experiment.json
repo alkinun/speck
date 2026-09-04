@@ -242,5 +242,17 @@
     ],
     "validation_template": "directory",
     "verdict": "improves load robustness but native-cue n=100 candidate remains 77-80%"
+  },
+  "response_cue_diagnostic": {
+    "answer_cue_candidate_accuracy": {
+      "letters": 0.61,
+      "phrases": 0.49
+    },
+    "answer_cue_specificity_accuracy": {
+      "letters": 0.98,
+      "phrases": 0.97
+    },
+    "intervention": "replace only held-out directory's native Signal cue with Answer",
+    "verdict": "unmatched cue replacement hurts decoding while preserving specificity; use matched standardized-cue training"
   }
 }
