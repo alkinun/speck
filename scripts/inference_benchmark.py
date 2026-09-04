@@ -64,6 +64,11 @@ def arguments():
     parser.add_argument("--repeats", type=int, default=None)
     parser.add_argument("--threads", type=int, default=16)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--compile",
+        action="store_true",
+        help="compile model forward with max-autotune-no-cudagraphs",
+    )
     parser.add_argument("--speck-experiment", default="experiments/Speck1-140M")
     parser.add_argument("--speck-checkpoint-step", type=int, default=76294)
     parser.add_argument("--output", type=Path, default=None)
@@ -146,7 +151,7 @@ def _cpu_affinity():
 
 
 class ModelRunner:
-    def __init__(self, key, device, dtype, experiment, checkpoint_step):
+    def __init__(self, key, device, dtype, experiment, checkpoint_step, compile_model=False):
         self.key = key
         self.device = device
         self.dtype = dtype
@@ -177,6 +182,15 @@ class ModelRunner:
                 self._validate_and_install_last_logit_hook()
         self.parameters = _parameter_count(self.model)
         self._validate_normalized_logits()
+        self.forward_model = (
+            torch.compile(
+                self.model,
+                dynamic=False,
+                mode="max-autotune-no-cudagraphs",
+            )
+            if compile_model
+            else self.model
+        )
 
     def _load_speck(self, experiment, checkpoint_step):
         configs = load_experiment(experiment, "train")
@@ -243,14 +257,14 @@ class ModelRunner:
                 device=self.device,
                 dtype=self.dtype,
             )
-            logits = self.model(tokens, state=state, last_token_only=True)
+            logits = self.forward_model(tokens, state=state, last_token_only=True)
             return logits, state
         output = self._hf_forward(tokens, use_cache=True)
         return output.logits, output.past_key_values
 
     def decode(self, tokens, state):
         if self.key == "speck":
-            return self.model(tokens, state=state, last_token_only=True), state
+            return self.forward_model(tokens, state=state, last_token_only=True), state
         output = self._hf_forward(tokens, past_key_values=state, use_cache=True)
         return output.logits, output.past_key_values
 
@@ -363,6 +377,7 @@ def run(args):
         dtype,
         args.speck_experiment,
         args.speck_checkpoint_step,
+        args.compile,
     )
 
     measurements = []
@@ -412,7 +427,7 @@ def run(args):
             "seed": args.seed,
             "logits": "last token only",
             "cache": "Speck preallocated state; Hugging Face model-native dynamic cache",
-            "compiled": False,
+            "compiled": args.compile,
             "tokenization": False,
             "token_selection": "argmax included in decode timing",
         },

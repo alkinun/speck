@@ -1,9 +1,11 @@
 import argparse
 import json
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
-from scripts.inference_benchmark import _batch_sizes, _percentile, _speck_identity
+from scripts.inference_benchmark import ModelRunner, _batch_sizes, _percentile, _speck_identity
 
 
 def test_batch_sizes():
@@ -41,3 +43,30 @@ def test_speck_identity_uses_selected_experiment_name_and_records_source(tmp_pat
     assert checkpoint["source_run"] == "historical-run"
     assert checkpoint["source_experiment"] == "/old/experiment"
     assert checkpoint["model_sha256"] != checkpoint["metadata_sha256"]
+
+
+def test_model_runner_compiles_forward_without_replacing_state_owner(monkeypatch):
+    model = Mock()
+    compiled = Mock()
+    monkeypatch.setattr(ModelRunner, "_load_speck", lambda *args: model)
+    monkeypatch.setattr(ModelRunner, "_validate_normalized_logits", lambda self: None)
+    monkeypatch.setattr("scripts.inference_benchmark._parameter_count", lambda value: 7)
+    compile_mock = Mock(return_value=compiled)
+    monkeypatch.setattr("scripts.inference_benchmark.torch.compile", compile_mock)
+
+    runner = ModelRunner(
+        "speck",
+        device=SimpleNamespace(type="cuda"),
+        dtype=None,
+        experiment="experiment",
+        checkpoint_step=1,
+        compile_model=True,
+    )
+
+    assert runner.model is model
+    assert runner.forward_model is compiled
+    compile_mock.assert_called_once_with(
+        model,
+        dynamic=False,
+        mode="max-autotune-no-cudagraphs",
+    )
