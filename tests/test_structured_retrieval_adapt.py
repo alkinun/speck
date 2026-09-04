@@ -7,6 +7,7 @@ from scripts.structured_retrieval_adapt import (
     build_supervised_batch,
     candidate_shift,
     parse_answer_sets,
+    parse_record_counts,
     parse_templates,
     replay_microsteps,
     validate_settings,
@@ -96,6 +97,24 @@ def test_template_and_answer_set_lists_are_strict():
         parse_templates("archive,archive")
     with pytest.raises(ValueError, match="answer sets"):
         parse_answer_sets("unknown")
+    assert parse_record_counts("2,8") == (2, 8)
+    with pytest.raises(ValueError, match="record counts"):
+        parse_record_counts("8,8")
+
+
+def test_supervised_batch_cycles_over_record_loads():
+    _, _, cases = build_supervised_batch(
+        FakeTokenizer(),
+        ("multi_key",),
+        sequence_length=1_024,
+        batch_size=2,
+        first_sample=0,
+        records=8,
+        chains=4,
+        device=torch.device("cpu"),
+        record_counts=(2, 8),
+    )
+    assert [case["records"] for case in cases] == [2, 8]
 
 
 def test_candidate_shift_is_symmetric():

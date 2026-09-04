@@ -44,6 +44,16 @@ def parse_answer_sets(value):
     return parse_choice_list(value, tuple(ANSWER_SETS), "answer sets")
 
 
+def parse_record_counts(value):
+    try:
+        counts = tuple(int(item.strip()) for item in value.split(",") if item.strip())
+    except ValueError as error:
+        raise ValueError("record counts must be unique integers in [2, 10]") from error
+    if not counts or len(set(counts)) != len(counts) or any(not 2 <= count <= 10 for count in counts):
+        raise ValueError("record counts must be unique integers in [2, 10]")
+    return counts
+
+
 def arguments(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("experiment", type=Path)
@@ -73,6 +83,7 @@ def arguments(argv=None):
     parser.add_argument("--validation-templates", type=parse_templates, default=("archive",))
     parser.add_argument("--train-answer-sets", type=parse_answer_sets, default=("letters",))
     parser.add_argument("--validation-answer-sets", type=parse_answer_sets, default=("letters",))
+    parser.add_argument("--train-record-counts", type=parse_record_counts, default=None)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--replay-data-experiment", type=Path, default=None)
@@ -114,7 +125,9 @@ def build_supervised_batch(
     device,
     templates=("archive",),
     answer_sets=("letters",),
+    record_counts=None,
 ):
+    record_counts = tuple(record_counts or (records,))
     cases = []
     for offset in range(batch_size):
         index = first_sample + offset
@@ -123,12 +136,15 @@ def build_supervised_batch(
         answer_set = answer_sets[
             (index // (len(tasks) * len(templates))) % len(answer_sets)
         ]
+        record_count = record_counts[
+            (index // (len(tasks) * len(templates) * len(answer_sets))) % len(record_counts)
+        ]
         case = build_case(
             task,
             tokenizer,
             sequence_length + 1,
             index,
-            records,
+            record_count,
             chains,
             template=template,
             answer_set=answer_set,
@@ -372,6 +388,9 @@ def validate_settings(args):
         "validation_answer_sets": tuple(
             getattr(args, "validation_answer_sets", ("letters",))
         ),
+        "train_record_counts": tuple(
+            getattr(args, "train_record_counts", None) or (args.records,)
+        ),
         "replay_fraction": getattr(args, "replay_fraction", 0.0),
     }
     for name in ("train_seed_offset", "validation_seed_offset"):
@@ -385,6 +404,9 @@ def validate_settings(args):
         ("validation_answer_sets", tuple(ANSWER_SETS), "validation answer sets"),
     ):
         settings[name] = parse_choice_list(",".join(settings[name]), choices, label)
+    settings["train_record_counts"] = parse_record_counts(
+        ",".join(str(count) for count in settings["train_record_counts"])
+    )
     for name in ("lr", "grad_clip"):
         value = getattr(args, name)
         if not math.isfinite(value) or value <= 0:
@@ -491,6 +513,7 @@ def run(args):
                     device,
                     settings["train_templates"],
                     settings["train_answer_sets"],
+                    settings["train_record_counts"],
                 )
                 retrieval_sample += settings["batch_size"]
                 retrieval_examples_seen += settings["batch_size"]
@@ -500,6 +523,8 @@ def run(args):
                 retrieval_prompt_tokens_seen += sum(case["prompt_length"] for case in cases)
                 for case in cases:
                     condition = f"{case['task']}/{case['template']}/{case['answer_set']}"
+                    if len(settings["train_record_counts"]) > 1:
+                        condition += f"/records_{case['records']}"
                     retrieval_examples_by_condition[condition] = (
                         retrieval_examples_by_condition.get(condition, 0) + 1
                     )

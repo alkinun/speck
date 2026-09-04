@@ -22,7 +22,7 @@ ANSWER_SETS = {
         "purple house",
     ),
 }
-RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger", "manifest")
+RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger", "manifest", "directory")
 
 
 def parse_lengths(value):
@@ -121,16 +121,27 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 "question": f"\nWhich seal belongs to parcel {labels[query_index]}?\nSeal: ",
                 "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
             }
+        if template == "manifest":
+            return {
+                "prefix": "A shipping manifest assigns one marker to each labeled shipment.\n",
+                "records": [
+                    f"Shipment labeled {label} carries marker {answer}."
+                    for label, answer in zip(labels, answers)
+                ],
+                "question": (
+                    f"\nReport the marker carried by shipment labeled {labels[query_index]}.\n"
+                    "Marker: "
+                ),
+                "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
+            }
         return {
-            "prefix": "A shipping manifest assigns one marker to each labeled shipment.\n",
+            "prefix": "A station directory lists the signal assigned to every station.\n",
             "records": [
-                f"Shipment labeled {label} carries marker {answer}."
+                f"At station {label}, the assigned signal reads {answer}."
                 for label, answer in zip(labels, answers)
             ],
-            "question": (
-                f"\nReport the marker carried by shipment labeled {labels[query_index]}.\nMarker: "
-            ),
-            "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
+            "question": f"\nState the signal assigned at station {labels[query_index]}.\nSignal: ",
+            "filler": "Operators filed weather reports, staffing notes, repairs, and routine notices. ",
         }
     if task != "two_hop" or destinations is None:
         raise ValueError("retrieval text requires a supported task and complete fields")
@@ -183,20 +194,36 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
             ),
             "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
         }
+    if template == "manifest":
+        return {
+            "prefix": "A transit manifest links each ticket to a warehouse and cargo marker.\n",
+            "first": [
+                f"Ticket {label} sends cargo to warehouse {destination}."
+                for label, destination in zip(labels, destinations)
+            ],
+            "second": [
+                f"Warehouse {destination} labels its cargo {answer}."
+                for destination, answer in zip(destinations, answers)
+            ],
+            "question": (
+                f"\nReport the cargo marker reached from ticket {labels[query_index]}.\nMarker: "
+            ),
+            "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
+        }
     return {
-        "prefix": "A transit manifest links each ticket to a warehouse and cargo marker.\n",
+        "prefix": "A route directory links each card to a station displaying one signal.\n",
         "first": [
-            f"Ticket {label} sends cargo to warehouse {destination}."
+            f"Route card {label} points to station {destination}."
             for label, destination in zip(labels, destinations)
         ],
         "second": [
-            f"Warehouse {destination} labels its cargo {answer}."
+            f"Station {destination} displays signal {answer}."
             for destination, answer in zip(destinations, answers)
         ],
         "question": (
-            f"\nReport the cargo marker reached from ticket {labels[query_index]}.\nMarker: "
+            f"\nState the signal reached from route card {labels[query_index]}.\nSignal: "
         ),
-        "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
+        "filler": "Operators filed weather reports, staffing notes, repairs, and routine notices. ",
     }
 
 

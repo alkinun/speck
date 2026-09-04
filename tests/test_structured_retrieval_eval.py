@@ -36,7 +36,7 @@ def test_build_case_is_deterministic_and_counterfactual():
         assert distractor["mutation_index"] == distractor_index
 
 
-@pytest.mark.parametrize("template", ("registry", "ledger", "manifest"))
+@pytest.mark.parametrize("template", ("registry", "ledger", "manifest", "directory"))
 def test_build_case_propagates_template_and_answer_set(template):
     class WordTokenizer:
         bos_id = 1
