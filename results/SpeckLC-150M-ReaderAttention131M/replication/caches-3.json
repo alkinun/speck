@@ -1,0 +1,162 @@
+{
+  "aggregate": {
+    "control_mean_loss": 2.796710173288981,
+    "paired_delta_95_percent_t_interval": [
+      -0.008998862457593185,
+      0.020565183512687584
+    ],
+    "paired_delta_mean": 0.0057831605275472,
+    "paired_delta_median": 0.004697561264038086,
+    "paired_delta_range": 0.011751651763916016,
+    "paired_delta_sample_standard_deviation": 0.005950565024918747,
+    "reader_mean_loss": 2.8024933338165283,
+    "strict_per_seed_ties": 2,
+    "total_seeds": 3
+  },
+  "arm": "caches-3",
+  "comparison": "three-seed paired caches-3 Reader Attention versus five-cache KDA/sigmoid/NoPE",
+  "controlled": {
+    "analytic_flops_per_token": 1021601280.0,
+    "batch_tokens": 65536,
+    "data_order": "fixed packed stream from token offset zero",
+    "final_validation_tokens": 19988480,
+    "manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "parameters": 153958810,
+    "sequence_length": 4096,
+    "train_tokens": 131072000
+  },
+  "findings": [
+    "the mean paired penalty is 0.00578 nats and its three-seed t interval spans zero",
+    "the strict per-seed tie passes only two of three seeds because seed 43 loses by 0.01220 nats",
+    "seed 42 and seed 43 are worse on all eleven sources; seed 44 has five worse and six better sources",
+    "every source has a positive mean paired delta, with the largest means on math_multi_style, pes2o, and math_textbook_exercise",
+    "all runs complete stably and training throughput varies by less than 0.1 percent across reader seeds",
+    "caches-3 remains a research candidate on mean loss and systems value but is not established as strictly loss-noninferior"
+  ],
+  "format": "speck_reader_attention_seed_replication",
+  "format_version": 1,
+  "mean_per_source_delta": {
+    "cosmopedia_v2": 0.00512997309366862,
+    "dclm": 0.004203955332438151,
+    "dclm_edu": 0.005069176355997722,
+    "finemath_4plus": 0.007125059763590495,
+    "fineweb_edu": 0.004151105880737305,
+    "math_multi_style": 0.008657614390055338,
+    "math_textbook_exercise": 0.0074683427810668945,
+    "pes2o": 0.007814804712931315,
+    "ufw_l3_multi_style": 0.003486156463623047,
+    "ultra_fineweb": 0.0045032501220703125,
+    "wikimedia": 0.005990902582804362
+  },
+  "runs": {
+    "42": {
+      "control": {
+        "final_validation_loss": 2.795380115509033,
+        "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff"
+      },
+      "final_validation_loss": 2.8000776767730713,
+      "paired_delta": 0.004697561264038086,
+      "per_source_delta": {
+        "cosmopedia_v2": 0.004072427749633789,
+        "dclm": 0.005074262619018555,
+        "dclm_edu": 0.004664897918701172,
+        "finemath_4plus": 0.005007505416870117,
+        "fineweb_edu": 0.0034401416778564453,
+        "math_multi_style": 0.008453369140625,
+        "math_textbook_exercise": 0.004873991012573242,
+        "pes2o": 0.005591154098510742,
+        "ufw_l3_multi_style": 0.0023488998413085938,
+        "ultra_fineweb": 0.002805948257446289,
+        "wikimedia": 0.0053424835205078125
+      },
+      "reader_checkpoint": {
+        "metadata_sha256": "3d282b9217b864474763332f33ed1813f9bd2e472ee8c785db0c3b0620d45b95",
+        "model_sha256": "1cd021e71a989482e86f097f4d482a8f44670cb1401c76501f41ea3965e9ee03",
+        "optimizer_sha256": "dc060450f1ca98dadb95e971a58daa63c9b5b7f4267fea84f82f4fbb94004c8b",
+        "step": 2000
+      },
+      "sources_better_than_control": 0,
+      "sources_worse_than_control": 11,
+      "strict_tie": true,
+      "training": {
+        "active_seconds": 4131.13561032596,
+        "tokens_per_second": 34968.437244381734,
+        "wandb_id": "zm7xvya9"
+      }
+    },
+    "43": {
+      "control": {
+        "final_validation_loss": 2.7937941551208496,
+        "model_sha256": "3357a9c341b5c06f1731a8906ac9389e15fc4c816ca7a453a51630168d7b4f7f"
+      },
+      "final_validation_loss": 2.8059959411621094,
+      "paired_delta": 0.012201786041259766,
+      "per_source_delta": {
+        "cosmopedia_v2": 0.012123584747314453,
+        "dclm": 0.009938478469848633,
+        "dclm_edu": 0.011313676834106445,
+        "finemath_4plus": 0.0161435604095459,
+        "fineweb_edu": 0.009780168533325195,
+        "math_multi_style": 0.013558626174926758,
+        "math_textbook_exercise": 0.011565923690795898,
+        "pes2o": 0.016084909439086914,
+        "ufw_l3_multi_style": 0.010257959365844727,
+        "ultra_fineweb": 0.010677099227905273,
+        "wikimedia": 0.012754201889038086
+      },
+      "reader_checkpoint": {
+        "metadata_sha256": "373fac8963d6ce27c4cd5773ea90e3b24905529d0f37aeb5098e93075718fae5",
+        "model_sha256": "3cac3cc0d1454d42b65ab4c56cb0ac9c025e3f60fe88122f34d1e507d84d23a3",
+        "optimizer_sha256": "6ab5ee3031061c64efc73bd715b00a0f9c3577ec1dbd05ffb7d1be05a7a4f4fe",
+        "step": 2000,
+        "timing_sha256": "359fc23bdbe2cc549584c773ff586e61c358897364207afe09b1995c8c07b3c1"
+      },
+      "sources_better_than_control": 0,
+      "sources_worse_than_control": 11,
+      "strict_tie": false,
+      "training": {
+        "active_seconds": 4086.455599625944,
+        "tokens_per_second": 34973.51861480296,
+        "wandb_id": "xfslxlko"
+      }
+    },
+    "44": {
+      "control": {
+        "final_validation_loss": 2.8009562492370605,
+        "model_sha256": "530a297927f7bb4fb891217743a2cbf1020e5b4f58568ce6feb9fd3ae86bb54b"
+      },
+      "final_validation_loss": 2.8014063835144043,
+      "paired_delta": 0.00045013427734375,
+      "per_source_delta": {
+        "cosmopedia_v2": -0.0008060932159423828,
+        "dclm": -0.0024008750915527344,
+        "dclm_edu": -0.0007710456848144531,
+        "finemath_4plus": 0.00022411346435546875,
+        "fineweb_edu": -0.0007669925689697266,
+        "math_multi_style": 0.003960847854614258,
+        "math_textbook_exercise": 0.005965113639831543,
+        "pes2o": 0.001768350601196289,
+        "ufw_l3_multi_style": -0.0021483898162841797,
+        "ultra_fineweb": 0.000026702880859375,
+        "wikimedia": -0.0001239776611328125
+      },
+      "reader_checkpoint": {
+        "metadata_sha256": "72ef4d4fbbee7ec359874c87a13b6c779d87da5d636f68b0f03715b5d0662b12",
+        "model_sha256": "b80bdcca86eb43fb2517fbf2aa9f306fccfba6d17cc361bf3d033991cab139b4",
+        "optimizer_sha256": "edd36754bf9ad4f0603cdf595da4d26b5bc6600c60b095f69036c26b7fbc3447",
+        "step": 2000,
+        "timing_sha256": "d191db3d398d6a4455d328b72750b8a358a75e659667a64e6ec1656a573f7ceb"
+      },
+      "sources_better_than_control": 6,
+      "sources_worse_than_control": 5,
+      "strict_tie": true,
+      "training": {
+        "active_seconds": 4087.8644205610035,
+        "tokens_per_second": 34950.684918108636,
+        "wandb_id": "6xyceja8"
+      }
+    }
+  },
+  "seed_range_nats": 0.00965,
+  "status": "complete"
+}

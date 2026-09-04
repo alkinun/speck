@@ -38,6 +38,22 @@
     }
   },
   "comparison": "identical depth, attention placement, and read count with a varying number of shared key-value caches",
+  "caches_3_base_replication": {
+    "control_mean_loss": 2.796710173288981,
+    "paired_delta_95_percent_t_interval": [
+      -0.008998862457593185,
+      0.020565183512687584
+    ],
+    "paired_delta_mean": 0.0057831605275472,
+    "paired_deltas": {
+      "42": 0.004697561264038086,
+      "43": 0.012201786041259766,
+      "44": 0.00045013427734375
+    },
+    "reader_mean_loss": 2.8024933338165283,
+    "strict_per_seed_ties": 2,
+    "total_seeds": 3
+  },
   "control": {
     "arm": "caches-5",
     "final_validation_loss": 2.795380115509033,
@@ -51,16 +67,17 @@
     "one and two caches are indistinguishable at 0.000379 nats, so one cache dominates two at half the resident state",
     "all eleven validation sources are worse than the control for every arm",
     "the endpoint reaches a 4.94x resident state reduction at 128K for a 0.007852-nat aggregate cost that one seed cannot resolve",
-    "a second writer at the mid-depth integration point recovers nothing, refuting the pre-registered shallow-writer explanation",
-    "throughput comparisons across back-to-back runs on this card are not thermally controlled and are not claimed"
+    "a second writer at the mid-depth integration point recovers nothing by itself; the later distance control shows that this did not isolate memory freshness from fan-out",
+    "throughput comparisons across back-to-back runs on this card are not thermally controlled and are not claimed",
+    "caches-3 has a 0.00578-nat mean paired penalty across seeds 42 to 44, but strict per-seed loss equivalence passes only two of three seeds",
+    "all eleven mean source deltas favor the five-cache control, so the small language-modeling cost is directional even though its mean magnitude is unresolved"
   ],
   "format": "speck_reader_attention_staircase_results",
   "format_version": 1,
   "not_yet_measured": [
-    "seeds 43 and 44",
-    "distractor-controlled structured retrieval and held-out template gates",
+    "three-seed caches-3 retrieval replication with varied synthetic streams",
     "symbolic two-hop composition",
-    "prefill and decode latency at 128K"
+    "thermally controlled compiled and uncompiled systems replication"
   ],
   "per_reader_cost_nats": {
     "caches-1": 0.0019629597663879395,
@@ -70,6 +87,6 @@
   "seed": 42,
   "seed_range_nats": 0.00965,
   "sequence_length": 4096,
-  "status": "discovery_seed_42_complete",
+  "status": "caches_3_base_replication_complete",
   "train_tokens": 131072000
 }

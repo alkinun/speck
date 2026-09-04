@@ -3,8 +3,8 @@
 > **Status: seed-42 cache-count frontier, systems measurements, and matched near/far distance test
 > complete.** Reader-to-writer depth distance is independently sufficient to damage retrieval at
 > fixed fan-out one, despite unchanged base loss and preserved language loss after adaptation.
-> Symbolic composition and seed replication remain unmeasured, so the three-cache selection remains
-> provisional.
+> Three-cache base loss is replicated on seeds 42–44; retrieval replication and symbolic composition
+> remain unmeasured, so the selection remains provisional.
 
 ## Question
 
@@ -209,6 +209,36 @@ Throughput is deliberately not claimed. The three runs executed back to back on 
 consumer card, and the observed spread between analytically FLOP-matched arms was larger than the
 effect being measured. A throughput claim requires a thermally controlled, interleaved measurement.
 
+## Three-seed `caches-3` base replication
+
+The selected three-cache topology was trained from scratch at seeds 43 and 44 under the same frozen
+packed-data order and compared with the corresponding five-cache KDA/sigmoid/NoPE seeds. This varies
+initialization and optimization while retaining the exact data stream.
+
+| Seed | Five-cache loss | Three-cache loss | Paired delta | Sources worse | Strict tie |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 42 | 2.795380 | 2.800078 | +0.004698 | 11/11 | pass |
+| 43 | 2.793794 | 2.805996 | +0.012202 | 11/11 | fail |
+| 44 | 2.800956 | 2.801406 | +0.000450 | 5/11 | pass |
+| mean | 2.796710 | 2.802493 | +0.005783 | 11/11 mean deltas | 2/3 |
+
+The mean paired penalty is small and below the `0.00965`-nat reference range, but **strict per-seed
+loss equivalence does not replicate**: seed 43 loses by `0.012202` nats. With only three pairs, the
+paired 95% t interval is wide (`-0.008999` to `+0.020565`) and spans zero. The correct claim is a
+directional mean penalty whose magnitude remains unresolved, not loss non-inferiority.
+
+The source structure supports direction without resolving size. Seeds 42 and 43 are worse on all
+eleven sources; seed 44 splits five worse and six better. Nevertheless, every source has a positive
+mean paired delta, largest on `math_multi_style` (`+0.00866`), peS2o (`+0.00781`), and
+`math_textbook_exercise` (`+0.00747`). All three reader runs complete stably, and realized training
+throughput differs by less than `0.1%` across their seeds, so seed 43 is not an execution outlier.
+
+This weakens but does not retire `caches-3`. Its mean loss cost remains small, its state and batched
+decode gains are measured, and its seed-42 retrieval matches the five-cache control. The next gate is
+therefore retrieval replication on seeds 43 and 44, not a claim that the loss trade-off disappeared.
+Machine-readable paired deltas and hashes are checked at
+[results/SpeckLC-150M-ReaderAttention131M/replication/caches-3.json](../results/SpeckLC-150M-ReaderAttention131M/replication/caches-3.json).
+
 ## Retrieval gate: sharing costs retention, not learnability
 
 Each arm was adapted from its own seed-42 base checkpoint with finding
@@ -365,10 +395,15 @@ The distance control strengthens this selection mechanistically: both `caches-3`
 immediately preceding writer, matching the topology that passes at distance one. It does not yet
 justify a universal maximum distance or prove that fan-out is harmless.
 
+Base replication tempers the quality claim: `caches-3` has a `+0.005783`-nat mean paired cost and a
+wide interval spanning zero, but it passes the strict per-seed tie on only two of three seeds. It is
+the arm to carry into replicated capability gates, not yet a loss-noninferior promotion.
+
 ## What is not verified
 
-- Seeds 43 and 44 have not run for any arm, so no difference here is replicated.
-- Composition is unmeasured, and both the retrieval and systems results are one seed per arm.
+- Three-cache base loss is replicated across seeds 42–44, but retrieval and systems remain one seed
+  per arm.
+- Composition is unmeasured.
 - Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
   benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
 - Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.
