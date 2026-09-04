@@ -61,9 +61,11 @@ def test_build_case_propagates_template_and_answer_set(template):
         chains=6,
         template=template,
         answer_set="phrases",
+        response_cue="answer",
     )
     assert case["template"] == template
     assert case["answer_set"] == "phrases"
+    assert case["response_cue"] == "answer"
     assert len(case["answer_tokens"]) == 2
 
 

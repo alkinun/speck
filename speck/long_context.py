@@ -86,9 +86,23 @@ def _candidate_tokens(tokenizer, values):
     return first_tokens, sequences
 
 
-def _retrieval_text(template, task, labels, answers, query_index, destinations=None):
+def _retrieval_text(
+    template,
+    task,
+    labels,
+    answers,
+    query_index,
+    destinations=None,
+    response_cue="native",
+):
     if template not in RETRIEVAL_TEMPLATES:
         raise ValueError(f"retrieval template must be one of: {', '.join(RETRIEVAL_TEMPLATES)}")
+    if response_cue not in {"native", "answer"}:
+        raise ValueError("retrieval response cue must be native or answer")
+
+    def cue(native):
+        return "Answer" if response_cue == "answer" else native
+
     if task == "multi_key":
         if template == "archive":
             return {
@@ -98,7 +112,8 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                     for label, answer in zip(labels, answers)
                 ],
                 "question": (
-                    f"\nQuestion: What is the access code for {labels[query_index]}?\nAnswer: "
+                    f"\nQuestion: What is the access code for {labels[query_index]}?\n"
+                    f"{cue('Answer')}: "
                 ),
                 "filler": "The archive contains reports, inventories, correspondence, and notes. ",
             }
@@ -108,7 +123,7 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 "records": [
                     f"ID[{label}] :: PAYLOAD[{answer}]" for label, answer in zip(labels, answers)
                 ],
-                "question": f"\nLOOKUP ID[{labels[query_index]}]\nPAYLOAD: ",
+                "question": f"\nLOOKUP ID[{labels[query_index]}]\n{cue('PAYLOAD')}: ",
                 "filler": "Status nominal. Queue empty. Routine telemetry recorded. ",
             }
         if template == "ledger":
@@ -118,7 +133,9 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                     f"Parcel {label} bears the seal {answer}."
                     for label, answer in zip(labels, answers)
                 ],
-                "question": f"\nWhich seal belongs to parcel {labels[query_index]}?\nSeal: ",
+                "question": (
+                    f"\nWhich seal belongs to parcel {labels[query_index]}?\n{cue('Seal')}: "
+                ),
                 "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
             }
         if template == "manifest":
@@ -130,7 +147,7 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 ],
                 "question": (
                     f"\nReport the marker carried by shipment labeled {labels[query_index]}.\n"
-                    "Marker: "
+                    f"{cue('Marker')}: "
                 ),
                 "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
             }
@@ -140,7 +157,10 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 f"At station {label}, the assigned signal reads {answer}."
                 for label, answer in zip(labels, answers)
             ],
-            "question": f"\nState the signal assigned at station {labels[query_index]}.\nSignal: ",
+            "question": (
+                f"\nState the signal assigned at station {labels[query_index]}.\n"
+                f"{cue('Signal')}: "
+            ),
             "filler": "Operators filed weather reports, staffing notes, repairs, and routine notices. ",
         }
     if task != "two_hop" or destinations is None:
@@ -160,7 +180,7 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
             ],
             "question": (
                 f"\nQuestion: Follow the route from {labels[query_index]}. "
-                "What access code is inside its destination?\nAnswer: "
+                f"What access code is inside its destination?\n{cue('Answer')}: "
             ),
             "filler": "The archive contains unrelated reports, schedules, and correspondence. ",
         }
@@ -175,7 +195,7 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 f"NODE[{destination}] -> PAYLOAD[{answer}]"
                 for destination, answer in zip(destinations, answers)
             ],
-            "question": f"\nRESOLVE EDGE[{labels[query_index]}]\nPAYLOAD: ",
+            "question": f"\nRESOLVE EDGE[{labels[query_index]}]\n{cue('PAYLOAD')}: ",
             "filler": "Heartbeat stable. No pending route changes. Diagnostic entry complete. ",
         }
     if template == "ledger":
@@ -190,7 +210,8 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 for destination, answer in zip(destinations, answers)
             ],
             "question": (
-                f"\nWhich seal is stored at the depot named by dispatch {labels[query_index]}?\nSeal: "
+                f"\nWhich seal is stored at the depot named by dispatch {labels[query_index]}?\n"
+                f"{cue('Seal')}: "
             ),
             "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
         }
@@ -206,7 +227,8 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 for destination, answer in zip(destinations, answers)
             ],
             "question": (
-                f"\nReport the cargo marker reached from ticket {labels[query_index]}.\nMarker: "
+                f"\nReport the cargo marker reached from ticket {labels[query_index]}.\n"
+                f"{cue('Marker')}: "
             ),
             "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
         }
@@ -221,7 +243,8 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
             for destination, answer in zip(destinations, answers)
         ],
         "question": (
-            f"\nState the signal reached from route card {labels[query_index]}.\nSignal: "
+            f"\nState the signal reached from route card {labels[query_index]}.\n"
+            f"{cue('Signal')}: "
         ),
         "filler": "Operators filed weather reports, staffing notes, repairs, and routine notices. ",
     }
@@ -309,6 +332,7 @@ def build_multi_key_case(
     mutation_index=None,
     template="archive",
     answer_set="letters",
+    response_cue="native",
 ):
     """Build exact-length associative recall with several simultaneous key/value records."""
 
@@ -334,7 +358,14 @@ def build_multi_key_case(
     answers[mutation_index] = values[
         (values.index(answers[mutation_index]) + answer_offset) % len(values)
     ]
-    text = _retrieval_text(template, "multi_key", labels, answers, query_index)
+    text = _retrieval_text(
+        template,
+        "multi_key",
+        labels,
+        answers,
+        query_index,
+        response_cue=response_cue,
+    )
     prefix = tokenizer.encode(text["prefix"], bos=True)
     record_lines = list(zip(labels, answers))
     generator.shuffle(record_lines)
@@ -344,6 +375,7 @@ def build_multi_key_case(
         [label for label, _ in record_lines],
         [answer for _, answer in record_lines],
         0,
+        response_cue=response_cue,
     )
     record_block = tokenizer.encode("\n".join(shuffled_text["records"]) + "\n")
     question = tokenizer.encode(text["question"])
@@ -379,6 +411,7 @@ def build_multi_key_case(
         "fact_positions": positions,
         "template": template,
         "answer_set": answer_set,
+        "response_cue": response_cue,
     }
 
 
@@ -393,6 +426,7 @@ def build_two_hop_case(
     mutation_index=None,
     template="archive",
     answer_set="letters",
+    response_cue="native",
 ):
     """Build exact-length two-hop lookup among several independent chains."""
 
@@ -431,6 +465,7 @@ def build_two_hop_case(
         answers,
         query_index,
         destinations=destinations,
+        response_cue=response_cue,
     )
     first_text = _retrieval_text(
         template,
@@ -439,6 +474,7 @@ def build_two_hop_case(
         answers,
         query_index,
         destinations=[destination for _, destination in first_lines],
+        response_cue=response_cue,
     )
     answer_by_destination = dict(zip(destinations, answers))
     second_text = _retrieval_text(
@@ -448,6 +484,7 @@ def build_two_hop_case(
         [answer_by_destination[destination] for destination, _ in second_lines],
         query_index,
         destinations=[destination for destination, _ in second_lines],
+        response_cue=response_cue,
     )
     first_block = tokenizer.encode("\n".join(first_text["first"]) + "\n")
     second_block = tokenizer.encode("\n".join(second_text["second"]) + "\n")
@@ -487,6 +524,7 @@ def build_two_hop_case(
         "fact_positions": positions,
         "template": template,
         "answer_set": answer_set,
+        "response_cue": response_cue,
     }
 
 

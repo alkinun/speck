@@ -55,6 +55,7 @@ def arguments(argv=None):
     parser.add_argument("--chains", type=int, default=6)
     parser.add_argument("--template", choices=RETRIEVAL_TEMPLATES, default="archive")
     parser.add_argument("--answer-set", choices=tuple(ANSWER_SETS), default="letters")
+    parser.add_argument("--response-cue", choices=("native", "answer"), default="native")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
@@ -78,6 +79,7 @@ def build_case(
     mutation_index=None,
     template="archive",
     answer_set="letters",
+    response_cue="native",
 ):
     if task == "multi_key":
         return build_multi_key_case(
@@ -90,6 +92,7 @@ def build_case(
             mutation_index=mutation_index,
             template=template,
             answer_set=answer_set,
+            response_cue=response_cue,
         )
     first_depth, second_depth = TWO_HOP_DEPTHS[seed % len(TWO_HOP_DEPTHS)]
     return build_two_hop_case(
@@ -103,6 +106,7 @@ def build_case(
         mutation_index=mutation_index,
         template=template,
         answer_set=answer_set,
+        response_cue=response_cue,
     )
 
 
@@ -138,6 +142,7 @@ def run(args):
                     chains,
                     template=args.template,
                     answer_set=args.answer_set,
+                    response_cue=args.response_cue,
                 )
                 counterfactual_case = build_case(
                     task,
@@ -149,6 +154,7 @@ def run(args):
                     answer_offset=1,
                     template=args.template,
                     answer_set=args.answer_set,
+                    response_cue=args.response_cue,
                 )
                 distractor_index = (case["query_index"] + 1) % (
                     case.get("records") or case["chains"]
@@ -164,6 +170,7 @@ def run(args):
                     mutation_index=distractor_index,
                     template=args.template,
                     answer_set=args.answer_set,
+                    response_cue=args.response_cue,
                 )
                 factual = evaluate_case(model, case, device=device, kv_cache_dtype=torch.bfloat16)
                 counterfactual = evaluate_case(
@@ -194,6 +201,7 @@ def run(args):
                     fact_positions=case["fact_positions"],
                     template=case["template"],
                     answer_set=case["answer_set"],
+                    response_cue=case["response_cue"],
                     query_index=case["query_index"],
                     records=case.get("records"),
                     chains=case.get("chains"),
@@ -230,6 +238,7 @@ def run(args):
             "chains": chains,
             "template": args.template,
             "answer_set": args.answer_set,
+            "response_cue": args.response_cue,
             "two_hop_depths": [list(pair) for pair in TWO_HOP_DEPTHS],
         },
         "positional_regime": positional_regime(
