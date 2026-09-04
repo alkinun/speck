@@ -28,6 +28,7 @@ Read in order:
 20. [19 — Retrieval specificity, exact completion, and language replay](19_retrieval_specificity_and_replay.md)
 21. [20 — K3 diagnostics and global attention gating](20_k3_diagnostics_and_attention_gating.md)
 22. [21 — Retrieval answer transfer and template failure](21_retrieval_template_transfer.md)
+23. [22 — Template-diverse retrieval adaptation](22_template_diverse_retrieval_adaptation.md)
 
 Conventions:
 
