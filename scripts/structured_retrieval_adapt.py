@@ -12,7 +12,7 @@ from pathlib import Path
 import torch
 
 from scripts.infer import load_checkpoint_model
-from scripts.structured_retrieval_eval import SYMBOLIC_TASK_MODES, TASKS, build_case
+from scripts.structured_retrieval_eval import PRIMARY_TASKS, TASKS, build_case
 from speck.checkpoint import checkpoint_identity, latest, save
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
@@ -27,7 +27,7 @@ from speck.train import lr_scale, set_optimizer_lr
 
 TRAIN_SEED_OFFSET = 1_000_000
 VALIDATION_SEED_OFFSET = 2_000_000
-ADAPTATION_TASKS = TASKS + tuple(SYMBOLIC_TASK_MODES)
+ADAPTATION_TASKS = TASKS
 
 
 def parse_choice_list(value, choices, name):
@@ -66,7 +66,7 @@ def arguments(argv=None):
     parser.add_argument("--step", type=int, default=None)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
-    parser.add_argument("--tasks", type=parse_adaptation_tasks, default=TASKS)
+    parser.add_argument("--tasks", type=parse_adaptation_tasks, default=PRIMARY_TASKS)
     parser.add_argument("--validation-tasks", type=parse_adaptation_tasks, default=None)
     parser.add_argument("--sequence-length", type=int, default=4_096)
     parser.add_argument("--steps", type=int, default=500)

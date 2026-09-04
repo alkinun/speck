@@ -27,12 +27,13 @@ from speck.long_context import (
 )
 from speck.tokenizer import get_tokenizer
 
-TASKS = ("multi_key", "two_hop")
+PRIMARY_TASKS = ("multi_key", "two_hop")
 SYMBOLIC_TASK_MODES = {
     "two_hop_route": "route",
     "two_hop_payload": "payload",
     "two_hop_symbolic": "compose",
 }
+TASKS = PRIMARY_TASKS + tuple(SYMBOLIC_TASK_MODES)
 TWO_HOP_DEPTHS = ((0.1, 0.5), (0.1, 0.9), (0.5, 0.9))
 
 
@@ -54,7 +55,7 @@ def arguments(argv=None):
     parser.add_argument("experiment", type=Path)
     parser.add_argument("--checkpoint-dir", type=Path, default=None)
     parser.add_argument("--step", type=int, default=None)
-    parser.add_argument("--tasks", type=parse_tasks, default=TASKS)
+    parser.add_argument("--tasks", type=parse_tasks, default=PRIMARY_TASKS)
     parser.add_argument("--lengths", type=parse_lengths, default=(4_096, 32_768, 131_072))
     parser.add_argument("--samples", type=int, default=30)
     parser.add_argument("--records", type=int, default=8)
