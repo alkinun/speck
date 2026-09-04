@@ -1,0 +1,90 @@
+{
+  "arms": {
+    "caches-4": {
+      "candidate_trajectory": [
+        0.06666666666666667,
+        0.23333333333333334,
+        0.13333333333333333,
+        0.6666666666666666,
+        0.8666666666666667,
+        0.8333333333333334,
+        0.7666666666666667,
+        0.9,
+        0.9333333333333333
+      ],
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/RD-tmp-caches-4",
+        "metadata_sha256": "0b63ab68b6492031a9439905186a3e09198007f061789e64c735407c3d504c09",
+        "model_sha256": "ae93b6dfa664c6c26e9e75864c101653b460b119d67dc9a3cfc25c94d3859985",
+        "optimizer_sha256": "d2c00aa25307372cd319c1ff4a5b47ea8b513d8546b8527f323f339fa85126fb",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.9333333333333333,
+      "final_exact_match": 0.9,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 6.96640625,
+      "max_reader_writer_distance": 1,
+      "original_loss": 2.7976794242858887,
+      "original_loss_delta_versus_parent": 0.0040035247802734375,
+      "passes_candidate_gate": true,
+      "passes_language_retention_gate": true,
+      "peak_candidate_accuracy": 0.9333333333333333,
+      "peak_step": 400,
+      "retention_final_over_peak": 1.0
+    },
+    "caches-4-far": {
+      "candidate_trajectory": [
+        0.1,
+        0.23333333333333334,
+        0.36666666666666664,
+        0.6,
+        0.4666666666666667,
+        0.4,
+        0.36666666666666664,
+        0.43333333333333335,
+        0.4
+      ],
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/RD-tmp-caches-4-far",
+        "metadata_sha256": "d9f83a32069256113179302ee001fd1938f9700cedbee87b0780b78927dcf632",
+        "model_sha256": "1be5014e85fe0e45ccb2274f2faf86612dcfa55dd6ef5c67c0d0254d3608d5bf",
+        "optimizer_sha256": "47433752db0eef85445f8b96aecf78274a804d8ca636a4a574e633877953f4c3",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.4,
+      "final_exact_match": 0.4,
+      "final_specificity_accuracy": 0.8333333333333334,
+      "final_specificity_score": 1.974999992052714,
+      "max_reader_writer_distance": 4,
+      "original_loss": 2.7962775230407715,
+      "original_loss_delta_versus_parent": 0.0031795501708984375,
+      "passes_candidate_gate": false,
+      "passes_language_retention_gate": true,
+      "peak_candidate_accuracy": 0.6,
+      "peak_step": 150,
+      "retention_final_over_peak": 0.6666666666666667
+    }
+  },
+  "decision": {
+    "candidate_accuracy_gate": 0.8,
+    "language_loss_delta_gate": 0.00965,
+    "outcome": "near_pass_far_fail",
+    "preregistered_commit": "37ebf25",
+    "supported_mechanism": "reader_to_writer_depth_distance",
+    "unsupported_hypothesis": "depth_distance_is_innocent",
+    "what_remains_open": "fan-out may add an independent penalty; the safe distance threshold between one and four attention slots is unmeasured"
+  },
+  "findings": [
+    "the adjacent-reader arm passes and improves through step 400, ending at 0.933 candidate accuracy with perfect retention",
+    "the far-reader arm never passes the 0.80 gate, peaks at 0.600 at step 150, and ends at 0.400 with 0.67 retention",
+    "exact match splits 0.900 versus 0.400 and final specificity splits 1.000 versus 0.833",
+    "both arms preserve original-language loss inside the 0.00965-nat gate, so forgetting does not explain the retrieval split",
+    "distance is independently sufficient to damage retrieval at fixed fan-out one even though base language loss is unchanged",
+    "the result supports periodic nonlinear memory refresh and strengthens the selected caches-3 adjacent-reader topology"
+  ],
+  "format": "speck_reader_distance_retrieval_gate",
+  "format_version": 1,
+  "parent_stage": "base 131,072,000-token seed-42 checkpoints, step 2000",
+  "protocol": "finding 22 joint-load recipe: four training templates, letters and phrases, two and eight records, 400 steps, 50 percent original-language replay, held-out directory template with phrase answers, 30 fixed validation cases",
+  "status": "seed_42_distance_decision_complete"
+}

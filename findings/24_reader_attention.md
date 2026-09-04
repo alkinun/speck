@@ -1,9 +1,10 @@
 # 24 — Speck Reader Attention and the global cache-count staircase
 
-> **Status: seed-42 cache-count loss/retrieval frontier and systems measurements complete; matched
-> near/far distance base stage complete.** The mechanism is implemented and qualified. Near/far
-> retrieval, symbolic composition, and seed replication remain unmeasured, so the three-cache
-> selection and the explanation for the retention boundary remain provisional.
+> **Status: seed-42 cache-count frontier, systems measurements, and matched near/far distance test
+> complete.** Reader-to-writer depth distance is independently sufficient to damage retrieval at
+> fixed fan-out one, despite unchanged base loss and preserved language loss after adaptation.
+> Symbolic composition and seed replication remain unmeasured, so the three-cache selection remains
+> provisional.
 
 ## Question
 
@@ -196,13 +197,13 @@ sources and peS2o taking the largest hits and the general web sources the smalle
 scatter in sign; this does not. The honest statement is a small real penalty whose magnitude
 requires seeds 43 and 44.
 
-**A shallow writer does not explain the deficit.** The pre-registered fallback predicted that a
-single memory written at logical layer 3 is too shallow. `caches-2` adds a second writer at logical
-layer 11, the mid-depth integration point identified in finding
-[08](08_global_attention_frontier.md), and recovers nothing. That prediction is refuted for the
-two-cache case. The surviving explanation runs through the absorption lemma above: independent
-caches let each depth compute a different *nonlinear* key and value function of the residual
-stream, and readers structurally cannot. Five such functions beat one; two apparently do not.
+**A second writer does not by itself rescue two caches.** `caches-2` adds a writer at logical layer
+11, the mid-depth integration point identified in finding [08](08_global_attention_frontier.md),
+and recovers nothing. That result previously motivated a stronger rejection of the shallow-writer
+explanation, but it did not isolate distance: the later readers still share the new memory at
+distance two and fan-out two. The matched distance control below shows that distance four fails even
+at fan-out one. The supported statement is therefore narrower: adding one mid-depth writer is
+insufficient, while memory freshness remains causal.
 
 Throughput is deliberately not claimed. The three runs executed back to back on an uncooled
 consumer card, and the observed spread between analytically FLOP-matched arms was larger than the
@@ -290,6 +291,37 @@ substituted post-hoc gates. Each adapter also receives the same 20M-token origin
 an increase greater than the `0.00965`-nat seed range against its own base checkpoint makes the
 comparison inconclusive because adaptation forgetting would be a competing explanation.
 
+### Distance retrieval result
+
+| Arm | Reader distance | Peak candidate | Final candidate | Retention | Final exact | Final specificity | Original-loss delta | Gate |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `caches-4` | 1 | 0.933 | 0.933 | 1.00 | 0.900 | 1.000 | +0.004004 | pass |
+| `caches-4-far` | 4 | 0.600 | 0.400 | 0.67 | 0.400 | 0.833 | +0.003180 | fail |
+
+The pre-registered outcome is **near-pass/far-fail**, supporting reader-to-writer depth distance.
+The final candidate gap is `0.533`, or sixteen of the thirty fixed cases. The adjacent reader
+improves through step 400 and finishes at its peak. The far reader peaks at only `0.600` at step 150,
+falls to `0.400`, and remains between `0.367` and `0.433` over the final three evaluations. Distance
+therefore limits both acquisition and retention in this control; this is not merely a late-training
+collapse.
+
+The competing explanations fail their controls. Far has nominally *better* base loss than near by
+`0.000578` nats, and both adapters retain original-language loss inside the pre-registered limit:
+`+0.004004` near and `+0.003180` far against their own parents. The retrieval split is not predicted
+by base loss and is not explained by differential forgetting.
+
+Target sensitivity again survives better than answer decoding. The far arm's target-direction
+accuracy remains `1.000`, and specificity is still `0.833` (`p = 1.6e-4`), while candidate and exact
+accuracy fall to `0.400`. The model still reacts preferentially to the named record but cannot
+reliably emit its value from a four-slot-old memory.
+
+The architectural consequence is periodic **nonlinear memory refresh**. By the absorption lemma, a
+linear key or value adapter at the reader cannot restore anything its query/output projections do
+not already express. At this scale, the supported topology binds readers to the immediately
+preceding writer, as `caches-3` does. The experiment establishes distance one as working and distance
+four as failing; it does not locate the threshold between them or exclude an additional fan-out
+penalty.
+
 ## Measured systems result
 
 Prefill and cached decode were measured with `scripts.inference_benchmark` on the pinned RTX 3090
@@ -329,6 +361,10 @@ five-cache control, its loss deficit of `0.004698` nats is half the endpoint's a
 range, and it cuts 128K resident state by `1.66×`. `caches-1` remains the more valuable scientific
 point precisely because it fails: it establishes that the mechanism has a boundary and locates it.
 
+The distance control strengthens this selection mechanistically: both `caches-3` readers bind the
+immediately preceding writer, matching the topology that passes at distance one. It does not yet
+justify a universal maximum distance or prove that fan-out is harmless.
+
 ## What is not verified
 
 - Seeds 43 and 44 have not run for any arm, so no difference here is replicated.
@@ -336,10 +372,10 @@ point precisely because it fails: it establishes that the mechanism has a bounda
 - Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
   benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
 - Retrieval uses the internal distractor-controlled diagnostic, not RULER, NoLiMa, or HELMET.
-- The matched distance base stage finds no language-loss penalty when L20 reads the L4 memory, but
-  retrieval retention for that arm is still unmeasured. YOCO answers the broader distance question
-  affirmatively at 3B and 1.6T tokens with a half-depth writer; that is not evidence at 150M with a
-  writer at the first global slot.
+- The distance result is one seed on the internal 30-case diagnostic. It establishes a boundary
+  between attention-slot distances one and four but does not locate that boundary or rule out an
+  additional fan-out penalty. YOCO's half-depth writer at 3B and 1.6T tokens does not override this
+  150M result.
 - Preflight proves execution and analytic matching only. It contains no quality signal.
 - The mechanism has no fused kernel. Readers use the same SDPA path as any global layer.
 

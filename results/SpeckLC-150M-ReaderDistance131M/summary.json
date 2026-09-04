@@ -6,6 +6,15 @@
       "max_reader_writer_slot_distance": 1,
       "model_sha256": "4ac4ea705fe3cbb2132aec8e157c8bd80037dff8b4a27a922e94f2c7515a00ec",
       "reader_binding": "nearest",
+      "retrieval": {
+        "final_candidate_accuracy": 0.9333333333333333,
+        "final_specificity_accuracy": 1.0,
+        "original_loss_delta_versus_parent": 0.0040035247802734375,
+        "passes_candidate_gate": true,
+        "passes_language_retention_gate": true,
+        "peak_candidate_accuracy": 0.9333333333333333,
+        "retention_final_over_peak": 1.0
+      },
       "sources_better_than_control": 11,
       "sources_worse_than_control": 0
     },
@@ -15,6 +24,15 @@
       "max_reader_writer_slot_distance": 4,
       "model_sha256": "e72d855ef3883cf521962baac6e6e22b24b5556eaa2d92f75b2ce2cdb478bc0f",
       "reader_binding": "farthest",
+      "retrieval": {
+        "final_candidate_accuracy": 0.4,
+        "final_specificity_accuracy": 0.8333333333333334,
+        "original_loss_delta_versus_parent": 0.0031795501708984375,
+        "passes_candidate_gate": false,
+        "passes_language_retention_gate": true,
+        "peak_candidate_accuracy": 0.6,
+        "retention_final_over_peak": 0.6666666666666667
+      },
       "sources_better_than_control": 10,
       "sources_worse_than_control": 1
     }
@@ -31,7 +49,9 @@
     "near-versus-far source-level signs split 5 to 6, with no coherent distance penalty",
     "both four-cache arms are nominally better than the five-cache control and unresolved from it on one seed",
     "base language-model loss provides no evidence that reader-to-writer depth distance is the retention mechanism",
-    "the matched retrieval adaptation remains the decision gate because validation loss failed to predict the earlier retention collapse"
+    "retrieval resolves what language loss does not: near passes at 0.933 final candidate accuracy while far fails at 0.400",
+    "both adapters preserve original-language loss inside the 0.00965-nat gate, excluding adaptation forgetting as the cause of the split",
+    "reader-to-writer depth distance is independently sufficient to damage retrieval at fixed fan-out one"
   ],
   "format": "speck_reader_distance_results",
   "format_version": 1,
@@ -54,9 +74,17 @@
     "source_signs_favor_far": 6,
     "source_signs_favor_near": 5
   },
+  "retrieval_decision": {
+    "candidate_accuracy_gate": 0.8,
+    "language_loss_delta_gate": 0.00965,
+    "outcome": "near_pass_far_fail",
+    "preregistered_commit": "37ebf25",
+    "supported_mechanism": "reader_to_writer_depth_distance",
+    "what_remains_open": "fan-out may add an independent penalty and the safe distance threshold is unmeasured"
+  },
   "seed": 42,
   "seed_range_nats": 0.00965,
   "sequence_length": 4096,
-  "status": "base_stage_complete_retrieval_pending",
+  "status": "seed_42_distance_decision_complete",
   "train_tokens": 131072000
 }
