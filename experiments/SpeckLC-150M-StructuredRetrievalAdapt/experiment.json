@@ -295,5 +295,13 @@
       "specificity_accuracy": 0.86
     },
     "verdict": "chain supervision can unlock symbolic composition but fails replication"
+  },
+  "symbolic_two_hop_staged_distillation": {
+    "final_candidate_accuracy": 0.6,
+    "final_specificity_accuracy": 0.5333333333333333,
+    "first_phase": "100 steps explicit node-value chain",
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/two-hop/kda-staged-chain-to-direct-seed42.json",
+    "second_phase": "100 steps direct composition",
+    "verdict": "temporal separation fails to stabilize composition"
   }
 }
