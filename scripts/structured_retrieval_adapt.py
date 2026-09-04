@@ -17,12 +17,31 @@ from speck.checkpoint import checkpoint_identity, latest, save
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
-from speck.long_context import binomial_tail_probability
+from speck.long_context import (
+    ANSWER_SETS,
+    RETRIEVAL_TEMPLATES,
+    binomial_tail_probability,
+)
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, set_optimizer_lr
 
 TRAIN_SEED_OFFSET = 1_000_000
 VALIDATION_SEED_OFFSET = 2_000_000
+
+
+def parse_choice_list(value, choices, name):
+    values = tuple(item.strip() for item in value.split(",") if item.strip())
+    if not values or len(set(values)) != len(values) or any(item not in choices for item in values):
+        raise ValueError(f"{name} must be unique values from {', '.join(choices)}")
+    return values
+
+
+def parse_templates(value):
+    return parse_choice_list(value, RETRIEVAL_TEMPLATES, "templates")
+
+
+def parse_answer_sets(value):
+    return parse_choice_list(value, tuple(ANSWER_SETS), "answer sets")
 
 
 def arguments(argv=None):
@@ -48,6 +67,12 @@ def arguments(argv=None):
     parser.add_argument("--grad-clip", type=float, default=1.0)
     parser.add_argument("--optimizer", choices=("adamw", "muon"), default="adamw")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--train-seed-offset", type=int, default=TRAIN_SEED_OFFSET)
+    parser.add_argument("--validation-seed-offset", type=int, default=VALIDATION_SEED_OFFSET)
+    parser.add_argument("--train-templates", type=parse_templates, default=("archive",))
+    parser.add_argument("--validation-templates", type=parse_templates, default=("archive",))
+    parser.add_argument("--train-answer-sets", type=parse_answer_sets, default=("letters",))
+    parser.add_argument("--validation-answer-sets", type=parse_answer_sets, default=("letters",))
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--replay-data-experiment", type=Path, default=None)
@@ -87,11 +112,17 @@ def build_supervised_batch(
     records,
     chains,
     device,
+    templates=("archive",),
+    answer_sets=("letters",),
 ):
     cases = []
     for offset in range(batch_size):
         index = first_sample + offset
         task = tasks[index % len(tasks)]
+        template = templates[(index // len(tasks)) % len(templates)]
+        answer_set = answer_sets[
+            (index // (len(tasks) * len(templates))) % len(answer_sets)
+        ]
         case = build_case(
             task,
             tokenizer,
@@ -99,13 +130,20 @@ def build_supervised_batch(
             index,
             records,
             chains,
+            template=template,
+            answer_set=answer_set,
         )
-        if len(case["prompt_tokens"]) != sequence_length or len(case["answer_tokens"]) != 1:
+        inputs = case["prompt_tokens"] + case["answer_tokens"][:-1]
+        if len(inputs) != sequence_length:
             raise RuntimeError("structured adaptation case has invalid training geometry")
+        case["input_tokens"] = inputs
         cases.append(case)
-    inputs = torch.tensor([case["prompt_tokens"] for case in cases], device=device)
+    inputs = torch.tensor([case["input_tokens"] for case in cases], device=device)
     targets = torch.full_like(inputs, -100)
-    targets[:, -1] = torch.tensor([case["answer_tokens"][0] for case in cases], device=device)
+    for row, case in enumerate(cases):
+        start = case["prompt_length"] - 1
+        stop = start + len(case["answer_tokens"])
+        targets[row, start:stop] = torch.tensor(case["answer_tokens"], device=device)
     return inputs, targets, cases
 
 
@@ -133,122 +171,181 @@ def replay_microsteps(accumulation, fraction):
 @torch.inference_mode()
 def validate(model, tokenizer, settings, device):
     model.eval()
-    candidates = torch.tensor([tokenizer.encode(value)[0] for value in "ABCDEFGHIJ"], device=device)
     metrics = {}
     for task_index, task in enumerate(settings["tasks"]):
-        totals = {
-            "samples": 0,
-            "exact": 0,
-            "candidate": 0,
-            "target_direction": 0,
-            "specificity_direction": 0,
-            "target_score": 0.0,
-            "distractor_score": 0.0,
-            "specificity_score": 0.0,
-        }
-        for start in range(0, settings["validation_samples"], settings["batch_size"]):
-            count = min(settings["batch_size"], settings["validation_samples"] - start)
-            cases = []
-            counterfactuals = []
-            distractors = []
-            for offset in range(count):
-                seed = VALIDATION_SEED_OFFSET + task_index * 100_000 + start + offset
-                case = build_case(
-                    task,
-                    tokenizer,
-                    settings["sequence_length"] + 1,
-                    seed,
-                    settings["records"],
-                    settings["chains"],
-                )
-                counterfactual = build_case(
-                    task,
-                    tokenizer,
-                    settings["sequence_length"] + 1,
-                    seed,
-                    settings["records"],
-                    settings["chains"],
-                    answer_offset=1,
-                )
-                distractor_index = (case["query_index"] + 1) % (
-                    case.get("records") or case["chains"]
-                )
-                distractor = build_case(
-                    task,
-                    tokenizer,
-                    settings["sequence_length"] + 1,
-                    seed,
-                    settings["records"],
-                    settings["chains"],
-                    answer_offset=1,
-                    mutation_index=distractor_index,
-                )
-                cases.append(case)
-                counterfactuals.append(counterfactual)
-                distractors.append(distractor)
+        for template_index, template in enumerate(settings["validation_templates"]):
+            for answer_set_index, answer_set in enumerate(settings["validation_answer_sets"]):
+                totals = {
+                    "samples": 0,
+                    "answer_tokens": 0,
+                    "exact": 0,
+                    "token_correct": 0,
+                    "candidate": 0,
+                    "target_direction": 0,
+                    "specificity_direction": 0,
+                    "target_score": 0.0,
+                    "distractor_score": 0.0,
+                    "specificity_score": 0.0,
+                }
+                for start in range(0, settings["validation_samples"], settings["batch_size"]):
+                    count = min(
+                        settings["batch_size"], settings["validation_samples"] - start
+                    )
+                    cases = []
+                    counterfactuals = []
+                    distractors = []
+                    for offset in range(count):
+                        seed = (
+                            settings["validation_seed_offset"]
+                            + task_index * 100_000
+                            + template_index * 10_000_000
+                            + answer_set_index * 1_000_000
+                            + start
+                            + offset
+                        )
+                        case = build_case(
+                            task,
+                            tokenizer,
+                            settings["sequence_length"] + 1,
+                            seed,
+                            settings["records"],
+                            settings["chains"],
+                            template=template,
+                            answer_set=answer_set,
+                        )
+                        counterfactual = build_case(
+                            task,
+                            tokenizer,
+                            settings["sequence_length"] + 1,
+                            seed,
+                            settings["records"],
+                            settings["chains"],
+                            answer_offset=1,
+                            template=template,
+                            answer_set=answer_set,
+                        )
+                        distractor_index = (case["query_index"] + 1) % (
+                            case.get("records") or case["chains"]
+                        )
+                        distractor = build_case(
+                            task,
+                            tokenizer,
+                            settings["sequence_length"] + 1,
+                            seed,
+                            settings["records"],
+                            settings["chains"],
+                            answer_offset=1,
+                            mutation_index=distractor_index,
+                            template=template,
+                            answer_set=answer_set,
+                        )
+                        cases.append(case)
+                        counterfactuals.append(counterfactual)
+                        distractors.append(distractor)
 
-            def logits(values):
-                prompts = torch.tensor([case["prompt_tokens"] for case in values], device=device)
-                return model(prompts, last_token_only=True)[:, -1]
+                    def logits(values, answer_prefix=0):
+                        prompts = torch.tensor(
+                            [
+                                case["prompt_tokens"] + case["answer_tokens"][:answer_prefix]
+                                for case in values
+                            ],
+                            device=device,
+                        )
+                        return model(prompts, last_token_only=True)[:, -1]
 
-            factual_logits = logits(cases)
-            counterfactual_logits = logits(counterfactuals)
-            distractor_logits = logits(distractors)
-            factual_candidates = factual_logits[:, candidates].log_softmax(dim=-1)
-            counterfactual_candidates = counterfactual_logits[:, candidates].log_softmax(dim=-1)
-            distractor_candidates = distractor_logits[:, candidates].log_softmax(dim=-1)
-            answer_indices = torch.tensor([case["answer_index"] for case in cases], device=device)
-            changed_indices = torch.tensor(
-                [case["answer_index"] for case in counterfactuals], device=device
-            )
-            distractor_from = torch.tensor(
-                [case["mutation_from_index"] for case in distractors], device=device
-            )
-            distractor_to = torch.tensor(
-                [case["mutation_to_index"] for case in distractors], device=device
-            )
-            target_score = candidate_shift(
-                factual_candidates,
-                counterfactual_candidates,
-                answer_indices,
-                changed_indices,
-            )
-            distractor_score = candidate_shift(
-                factual_candidates,
-                distractor_candidates,
-                distractor_from,
-                distractor_to,
-            )
-            specificity = target_score - distractor_score
-            answer_tokens = candidates[answer_indices]
-            totals["samples"] += count
-            totals["exact"] += int((factual_logits.argmax(dim=-1) == answer_tokens).sum().item())
-            totals["candidate"] += int(
-                (factual_candidates.argmax(dim=-1) == answer_indices).sum().item()
-            )
-            totals["target_direction"] += int((target_score > 0).sum().item())
-            totals["specificity_direction"] += int((specificity > 0).sum().item())
-            totals["target_score"] += target_score.sum().item()
-            totals["distractor_score"] += distractor_score.sum().item()
-            totals["specificity_score"] += specificity.sum().item()
-        samples = totals.pop("samples")
-        metrics[task] = {
-            "samples": samples,
-            "exact_match": totals["exact"] / samples,
-            "candidate_accuracy": totals["candidate"] / samples,
-            "candidate_p_value": binomial_tail_probability(totals["candidate"], samples, 0.1),
-            "target_direction_accuracy": totals["target_direction"] / samples,
-            "target_direction_p_value": binomial_tail_probability(
-                totals["target_direction"], samples, 0.5
-            ),
-            "association_specificity_accuracy": totals["specificity_direction"] / samples,
-            "association_specificity_p_value": binomial_tail_probability(
-                totals["specificity_direction"], samples, 0.5
-            ),
-            "target_change_score": totals["target_score"] / samples,
-            "distractor_change_score": totals["distractor_score"] / samples,
-            "association_specificity_score": totals["specificity_score"] / samples,
-        }
+                    factual_logits = logits(cases)
+                    counterfactual_logits = logits(counterfactuals)
+                    distractor_logits = logits(distractors)
+                    candidates = torch.tensor(cases[0]["candidate_token_ids"], device=device)
+                    factual_candidates = factual_logits[:, candidates].log_softmax(dim=-1)
+                    counterfactual_candidates = counterfactual_logits[:, candidates].log_softmax(
+                        dim=-1
+                    )
+                    distractor_candidates = distractor_logits[:, candidates].log_softmax(dim=-1)
+                    answer_indices = torch.tensor(
+                        [case["answer_index"] for case in cases], device=device
+                    )
+                    changed_indices = torch.tensor(
+                        [case["answer_index"] for case in counterfactuals], device=device
+                    )
+                    distractor_from = torch.tensor(
+                        [case["mutation_from_index"] for case in distractors], device=device
+                    )
+                    distractor_to = torch.tensor(
+                        [case["mutation_to_index"] for case in distractors], device=device
+                    )
+                    target_score = candidate_shift(
+                        factual_candidates,
+                        counterfactual_candidates,
+                        answer_indices,
+                        changed_indices,
+                    )
+                    distractor_score = candidate_shift(
+                        factual_candidates,
+                        distractor_candidates,
+                        distractor_from,
+                        distractor_to,
+                    )
+                    specificity = target_score - distractor_score
+                    answer_lengths = {len(case["answer_tokens"]) for case in cases}
+                    if len(answer_lengths) != 1:
+                        raise RuntimeError("validation answer lengths changed within a batch")
+                    answer_length = answer_lengths.pop()
+                    exact = torch.ones(count, dtype=torch.bool, device=device)
+                    for answer_position in range(answer_length):
+                        position_logits = (
+                            factual_logits if answer_position == 0 else logits(cases, answer_position)
+                        )
+                        expected = torch.tensor(
+                            [case["answer_tokens"][answer_position] for case in cases],
+                            device=device,
+                        )
+                        correct = position_logits.argmax(dim=-1) == expected
+                        exact &= correct
+                        totals["token_correct"] += int(correct.sum().item())
+                    totals["samples"] += count
+                    totals["answer_tokens"] += count * answer_length
+                    totals["exact"] += int(exact.sum().item())
+                    totals["candidate"] += int(
+                        (factual_candidates.argmax(dim=-1) == answer_indices).sum().item()
+                    )
+                    totals["target_direction"] += int((target_score > 0).sum().item())
+                    totals["specificity_direction"] += int((specificity > 0).sum().item())
+                    totals["target_score"] += target_score.sum().item()
+                    totals["distractor_score"] += distractor_score.sum().item()
+                    totals["specificity_score"] += specificity.sum().item()
+                samples = totals["samples"]
+                key = (
+                    task
+                    if settings["validation_templates"] == ("archive",)
+                    and settings["validation_answer_sets"] == ("letters",)
+                    else f"{task}/{template}/{answer_set}"
+                )
+                metrics[key] = {
+                    "task": task,
+                    "template": template,
+                    "answer_set": answer_set,
+                    "samples": samples,
+                    "exact_match": totals["exact"] / samples,
+                    "token_accuracy": totals["token_correct"] / totals["answer_tokens"],
+                    "candidate_accuracy": totals["candidate"] / samples,
+                    "candidate_p_value": binomial_tail_probability(
+                        totals["candidate"], samples, 0.1
+                    ),
+                    "target_direction_accuracy": totals["target_direction"] / samples,
+                    "target_direction_p_value": binomial_tail_probability(
+                        totals["target_direction"], samples, 0.5
+                    ),
+                    "association_specificity_accuracy": (
+                        totals["specificity_direction"] / samples
+                    ),
+                    "association_specificity_p_value": binomial_tail_probability(
+                        totals["specificity_direction"], samples, 0.5
+                    ),
+                    "target_change_score": totals["target_score"] / samples,
+                    "distractor_change_score": totals["distractor_score"] / samples,
+                    "association_specificity_score": totals["specificity_score"] / samples,
+                }
     return metrics
 
 
@@ -265,8 +362,29 @@ def validate_settings(args):
         "chains": positive_integer(args.chains, "chains"),
         "warmup_steps": positive_integer(args.warmup_steps, "warmup steps"),
         "seed": args.seed,
+        "train_seed_offset": getattr(args, "train_seed_offset", TRAIN_SEED_OFFSET),
+        "validation_seed_offset": getattr(
+            args, "validation_seed_offset", VALIDATION_SEED_OFFSET
+        ),
+        "train_templates": tuple(getattr(args, "train_templates", ("archive",))),
+        "validation_templates": tuple(getattr(args, "validation_templates", ("archive",))),
+        "train_answer_sets": tuple(getattr(args, "train_answer_sets", ("letters",))),
+        "validation_answer_sets": tuple(
+            getattr(args, "validation_answer_sets", ("letters",))
+        ),
         "replay_fraction": getattr(args, "replay_fraction", 0.0),
     }
+    for name in ("train_seed_offset", "validation_seed_offset"):
+        value = settings[name]
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise ValueError(f"{name.replace('_', ' ')} must be a non-negative integer")
+    for name, choices, label in (
+        ("train_templates", RETRIEVAL_TEMPLATES, "train templates"),
+        ("validation_templates", RETRIEVAL_TEMPLATES, "validation templates"),
+        ("train_answer_sets", tuple(ANSWER_SETS), "train answer sets"),
+        ("validation_answer_sets", tuple(ANSWER_SETS), "validation answer sets"),
+    ):
+        settings[name] = parse_choice_list(",".join(settings[name]), choices, label)
     for name in ("lr", "grad_clip"):
         value = getattr(args, name)
         if not math.isfinite(value) or value <= 0:
@@ -339,8 +457,11 @@ def run(args):
     history.append({"step": 0, "validation": validate(train_model, tokenizer, settings, device)})
     model.train()
     started = time.perf_counter()
-    retrieval_sample = TRAIN_SEED_OFFSET
+    retrieval_sample = settings["train_seed_offset"]
     retrieval_examples_seen = 0
+    retrieval_supervised_tokens_seen = 0
+    retrieval_prompt_tokens_seen = 0
+    retrieval_examples_by_condition = {}
     replay_tokens_seen = 0
     for step_index in range(settings["steps"]):
         optimizer.zero_grad(set_to_none=True)
@@ -359,7 +480,7 @@ def run(args):
                 replay_microbatches += 1
                 replay_tokens_seen += settings["batch_size"] * settings["sequence_length"]
             else:
-                inputs, targets, _ = build_supervised_batch(
+                inputs, targets, cases = build_supervised_batch(
                     tokenizer,
                     settings["tasks"],
                     settings["sequence_length"],
@@ -368,9 +489,20 @@ def run(args):
                     settings["records"],
                     settings["chains"],
                     device,
+                    settings["train_templates"],
+                    settings["train_answer_sets"],
                 )
                 retrieval_sample += settings["batch_size"]
                 retrieval_examples_seen += settings["batch_size"]
+                retrieval_supervised_tokens_seen += sum(
+                    len(case["answer_tokens"]) for case in cases
+                )
+                retrieval_prompt_tokens_seen += sum(case["prompt_length"] for case in cases)
+                for case in cases:
+                    condition = f"{case['task']}/{case['template']}/{case['answer_set']}"
+                    retrieval_examples_by_condition[condition] = (
+                        retrieval_examples_by_condition.get(condition, 0) + 1
+                    )
                 loss = train_model(inputs, targets, loss_reduction="sum") / settings["batch_size"]
                 retrieval_loss_sum += loss.detach()
                 retrieval_microbatches += 1
@@ -455,9 +587,11 @@ def run(args):
             * settings["accumulation"]
             * settings["sequence_length"]
         ),
-        "supervised_tokens_seen": retrieval_examples_seen,
+        "supervised_tokens_seen": retrieval_supervised_tokens_seen,
         "retrieval_examples_seen": retrieval_examples_seen,
-        "retrieval_prompt_tokens_seen": retrieval_examples_seen * settings["sequence_length"],
+        "retrieval_examples_by_condition": dict(sorted(retrieval_examples_by_condition.items())),
+        "retrieval_input_tokens_seen": retrieval_examples_seen * settings["sequence_length"],
+        "retrieval_prompt_tokens_seen": retrieval_prompt_tokens_seen,
         "replay_tokens_seen": replay_tokens_seen,
         "replay_data": metadata["replay_data"],
         "device": str(device),

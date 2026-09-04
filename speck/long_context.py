@@ -22,7 +22,7 @@ ANSWER_SETS = {
         "purple house",
     ),
 }
-RETRIEVAL_TEMPLATES = ("archive", "registry")
+RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger")
 
 
 def parse_lengths(value):
@@ -102,13 +102,23 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 ),
                 "filler": "The archive contains reports, inventories, correspondence, and notes. ",
             }
+        if template == "registry":
+            return {
+                "prefix": "<REGISTRY>\nThe table below binds identifiers to payloads.\n",
+                "records": [
+                    f"ID[{label}] :: PAYLOAD[{answer}]" for label, answer in zip(labels, answers)
+                ],
+                "question": f"\nLOOKUP ID[{labels[query_index]}]\nPAYLOAD: ",
+                "filler": "Status nominal. Queue empty. Routine telemetry recorded. ",
+            }
         return {
-            "prefix": "<REGISTRY>\nThe table below binds identifiers to payloads.\n",
+            "prefix": "A parcel ledger follows. Each named parcel has one seal.\n",
             "records": [
-                f"ID[{label}] :: PAYLOAD[{answer}]" for label, answer in zip(labels, answers)
+                f"Parcel {label} bears the seal {answer}."
+                for label, answer in zip(labels, answers)
             ],
-            "question": f"\nLOOKUP ID[{labels[query_index]}]\nPAYLOAD: ",
-            "filler": "Status nominal. Queue empty. Routine telemetry recorded. ",
+            "question": f"\nWhich seal belongs to parcel {labels[query_index]}?\nSeal: ",
+            "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
         }
     if task != "two_hop" or destinations is None:
         raise ValueError("retrieval text requires a supported task and complete fields")
@@ -131,18 +141,34 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
             ),
             "filler": "The archive contains unrelated reports, schedules, and correspondence. ",
         }
+    if template == "registry":
+        return {
+            "prefix": "<ROUTING_TABLE>\nResolve the directed bindings, then return the payload.\n",
+            "first": [
+                f"EDGE[{label}] -> NODE[{destination}]"
+                for label, destination in zip(labels, destinations)
+            ],
+            "second": [
+                f"NODE[{destination}] -> PAYLOAD[{answer}]"
+                for destination, answer in zip(destinations, answers)
+            ],
+            "question": f"\nRESOLVE EDGE[{labels[query_index]}]\nPAYLOAD: ",
+            "filler": "Heartbeat stable. No pending route changes. Diagnostic entry complete. ",
+        }
     return {
-        "prefix": "<ROUTING_TABLE>\nResolve the directed bindings, then return the payload.\n",
+        "prefix": "A dispatch ledger follows. Each dispatch names a depot holding one seal.\n",
         "first": [
-            f"EDGE[{label}] -> NODE[{destination}]"
+            f"Dispatch {label} names depot {destination}."
             for label, destination in zip(labels, destinations)
         ],
         "second": [
-            f"NODE[{destination}] -> PAYLOAD[{answer}]"
+            f"Depot {destination} stores seal {answer}."
             for destination, answer in zip(destinations, answers)
         ],
-        "question": f"\nRESOLVE EDGE[{labels[query_index]}]\nPAYLOAD: ",
-        "filler": "Heartbeat stable. No pending route changes. Diagnostic entry complete. ",
+        "question": (
+            f"\nWhich seal is stored at the depot named by dispatch {labels[query_index]}?\nSeal: "
+        ),
+        "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
     }
 
 

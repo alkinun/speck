@@ -6,6 +6,8 @@ import torch
 from scripts.structured_retrieval_adapt import (
     build_supervised_batch,
     candidate_shift,
+    parse_answer_sets,
+    parse_templates,
     replay_microsteps,
     validate_settings,
 )
@@ -52,6 +54,50 @@ def test_supervised_batch_masks_every_position_except_answer():
     assert [case["task"] for case in cases] == ["multi_key", "two_hop"]
 
 
+def test_supervised_batch_trains_every_multi_token_answer_position():
+    class WordTokenizer:
+        bos_id = 1
+
+        def __init__(self):
+            self.ids = {}
+
+        def encode(self, text, bos=False):
+            tokens = []
+            for word in text.replace("\n", " \n ").split():
+                if word not in self.ids:
+                    self.ids[word] = len(self.ids) + 3
+                tokens.append(self.ids[word])
+            return ([self.bos_id] if bos else []) + tokens
+
+    inputs, targets, cases = build_supervised_batch(
+        WordTokenizer(),
+        ("multi_key",),
+        sequence_length=512,
+        batch_size=2,
+        first_sample=1_000,
+        records=4,
+        chains=4,
+        device=torch.device("cpu"),
+        templates=("archive", "registry"),
+        answer_sets=("phrases",),
+    )
+    assert inputs.shape == targets.shape == (2, 512)
+    assert (targets != -100).sum().item() == 4
+    assert [case["template"] for case in cases] == ["archive", "registry"]
+    for row, case in enumerate(cases):
+        start = case["prompt_length"] - 1
+        assert targets[row, start : start + 2].tolist() == case["answer_tokens"]
+
+
+def test_template_and_answer_set_lists_are_strict():
+    assert parse_templates("archive,registry") == ("archive", "registry")
+    assert parse_answer_sets("letters,phrases") == ("letters", "phrases")
+    with pytest.raises(ValueError, match="templates"):
+        parse_templates("archive,archive")
+    with pytest.raises(ValueError, match="answer sets"):
+        parse_answer_sets("unknown")
+
+
 def test_candidate_shift_is_symmetric():
     reference = torch.tensor([[2.0, 1.0], [0.0, 3.0]])
     changed = torch.tensor([[0.0, 4.0], [2.0, 1.0]])
@@ -74,7 +120,13 @@ def test_replay_microsteps_are_even_and_exact():
 
 @pytest.mark.parametrize(
     "field,value",
-    (("steps", 0), ("batch_size", True), ("lr", 0.0), ("min_lr", 2.0)),
+    (
+        ("steps", 0),
+        ("batch_size", True),
+        ("lr", 0.0),
+        ("min_lr", 2.0),
+        ("train_seed_offset", -1),
+    ),
 )
 def test_settings_reject_invalid_values(field, value):
     with pytest.raises(ValueError):
