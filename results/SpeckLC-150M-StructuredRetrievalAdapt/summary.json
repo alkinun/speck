@@ -130,6 +130,69 @@
       ]
     }
   },
+  "hardened_retrieval": {
+    "candidate_ranking_loss": {
+      "candidate_accuracy": 0.7666666666666667,
+      "matched_control_candidate_accuracy": 0.9,
+      "verdict": "rejected at weight 1; worsens held-out decoding"
+    },
+    "joint_load_seed_42": {
+      "fixed_n30": {
+        "candidate_accuracy": 0.9,
+        "exact_match": 0.9,
+        "specificity_accuracy": 0.9666666666666667
+      },
+      "independent_n100_letters": {
+        "candidate_accuracy": 0.8,
+        "specificity_accuracy": 0.99
+      },
+      "independent_n100_phrases": {
+        "candidate_accuracy": 0.77,
+        "exact_match": 0.78,
+        "specificity_accuracy": 0.95
+      }
+    },
+    "replicated_curriculum_independent_n100": {
+      "candidate_accuracy": {
+        "42": 0.8,
+        "43": 0.65,
+        "44": 0.64
+      },
+      "specificity_accuracy": {
+        "42": 0.96,
+        "43": 0.95,
+        "44": 0.93
+      }
+    },
+    "verdict": "held-out target selection replicates; eight-record exact decoding does not"
+  },
+  "symbolic_two_hop": {
+    "edge_qualified_n100": {
+      "composition_candidate_accuracy": 0.43,
+      "composition_specificity_accuracy": 0.45,
+      "payload_candidate_accuracy": 1.0,
+      "payload_specificity_accuracy": 1.0,
+      "route_candidate_accuracy": 0.99,
+      "route_specificity_accuracy": 1.0
+    },
+    "mixed_chain_replication": {
+      "candidate_accuracy": {
+        "42": 0.8666666666666667,
+        "43": 0.6333333333333333,
+        "44": 0.43333333333333335
+      },
+      "specificity_accuracy": {
+        "42": 0.8,
+        "43": 0.5,
+        "44": 0.5666666666666667
+      }
+    },
+    "staged_chain_to_direct": {
+      "candidate_accuracy": 0.6,
+      "specificity_accuracy": 0.5333333333333333
+    },
+    "verdict": "both edges are learned almost perfectly; current composition curricula fail replication"
+  },
   "status": "complete",
   "tested_lengths": [
     4096,

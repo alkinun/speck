@@ -44,7 +44,9 @@ Conventions:
 - Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
-Last consolidated state: replay-trained KDA preserves language loss and transfers exact lookup to
-unseen two-token answers through the archive template, but an independent registry template fails
-at 4K. Template-diverse adaptation is now the active gate. K3 diagnostics and the matched
-attention-gate screen are complete; all referenced checkpoints have completion markers.
+Last consolidated state: KDA's target-specific association signal transfers across held-out
+templates, two-token values, and eight-record load, but exact value decoding does not replicate at
+the eight-record gate. Symbolic two-hop decomposition learns both edges at 99–100% yet current chain
+curricula do not replicate composition. Long-length promotion and MQA comparison remain gated. All
+23 structured-adaptation checkpoint directories pass integrity checks, and the repository suite
+passes 383 tests.

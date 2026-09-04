@@ -16,8 +16,9 @@
 - Sigmoid output gating for the recurrent mixer; it improves the matched 131M GDN model by
   0.03734 nats over SiLU and replicates tightly across three seeds.
 - KDA/sigmoid/NoPE as the lead long-context research treatment. With 50% original-language replay,
-  4K task adaptation reaches 100% exact two-record retrieval and 96.7% unseen eight-record retrieval
-  at 128K without measurable language-loss erosion.
+  4K task adaptation preserves language loss and sustains template-conditioned lookup to 128K. A
+  harder audit shows replicated target selection across held-out wording, but not robust eight-record
+  exact decoding.
 - GDN/sigmoid/RoPE as the short-loss control for subsequent KDA experiments.
 - Position-binned and trailing-token loss for long-context comparisons.
 - Mixed original-language replay for retrieval and long-context task adaptation.
@@ -41,6 +42,9 @@
   benchmarks are available.
 - Do not promote global attention output gating. Its 32M headwise gain shrinks from 0.01394 to
   0.00234 nats at 131M while costing 3% throughput.
+- Do not promote single-template exact retrieval as general retrieval.
+- Do not tune more direct-lookup templates, response cues, or scalar candidate-loss weights against
+  the current held-out set. Those branches have been measured and do not replicate the exact gate.
 
 ## Superseded pre-Kimi architectural hypothesis
 
@@ -66,16 +70,17 @@ KDA misses one of three strict base-stage loss ties and has not passed an indepe
 
 ## Required next work
 
-1. Replicate mixed-replay exact retrieval across seeds and template families. Expand answers beyond
-   ten one-token values and add multi-token completion.
-2. Make two-hop composition learnable at 4K, then compare KDA and GDN at matched supervision. Both
-   currently overfit while failing target specificity.
+1. Add paired target/distractor training that explicitly rewards target-over-distractor invariance;
+   ordinary answer loss and a weight-1 candidate-ranking auxiliary are insufficient.
+2. Generalize two-hop intermediates beyond ten one-token nodes and test an objective that binds both
+   edges directly. Route and payload lookup already reach 99–100%; composition is the isolated
+   failure.
 3. Run pinned independent suites:
    [RULER](https://github.com/NVIDIA/RULER),
    [NoLiMa](https://github.com/adobe-research/NoLiMa), and
    [HELMET](https://github.com/princeton-nlp/HELMET).
-4. Recover disk headroom, then compare five-layer GQA3 with five-layer MQA1 and NoPE MLA. Rank exact
-   retrieval, loss, state, prefill, and decode before reducing global-layer count.
+4. Compare five-layer GQA3 with five-layer MQA1 and NoPE MLA only after the held-out exact gate
+   replicates. Rank exact retrieval, loss, state, prefill, and decode before reducing global layers.
 5. Build or acquire data with genuine 64K–128K dependencies: long books/papers, repository trees,
    connected documents, and held-out synthetic retrieval/aggregation tasks. Do not pad the current
    data with unrelated documents.
@@ -104,14 +109,15 @@ KDA misses one of three strict base-stage loss ties and has not passed an indepe
   not an exact reproduction of Kimi Linear's low-rank gate.
 - Retrieval replication uses an internal deterministic diagnostic, not independent benchmark
   implementations.
-- Exact 128K retrieval currently uses one seed, synthetic templates, one-token answers, and task
-  adaptation. A later audit transfers to two-token answers but fails a held-out registry template
-  at 4K; it does not establish template-robust, multi-hop, or real-document reasoning.
+- Exact 128K retrieval remains a single-template, one-seed adaptation result. Hardened 4K tests add
+  two-token answers and held-out wording: target specificity replicates, but eight-record exact
+  decoding reaches only 80%, 65%, and 64% across curriculum streams.
 - Retrieval-only adaptation damages original language loss by 0.808 nats for KDA and 4.637 nats for
   GDN. The successful KDA recipe requires 50% original-language replay.
-- Both KDA and GDN fail held-out two-hop specificity after 6,400 task examples.
-- The filesystem has approximately 18 GiB free after deleting only abandoned download and compiler
-  caches; keep monitoring headroom before checkpoint families.
+- Symbolic two-hop route and payload edges reach 99–100%, but composition is 43% before chain
+  supervision. A chain intervention passes one stream and fails two; staged distillation also fails.
+- The filesystem has approximately 11 GiB free after preserving every research checkpoint and
+  deleting only explicit redownloadable caches; do not launch another checkpoint family yet.
 
 ## Checkpoint inventory
 
@@ -204,13 +210,43 @@ The full checkpoint hashes are stored in the checked result summaries, not only 
 | `fc034c6` | Recorded replay-trained exact retrieval through 128K |
 | `2cf8556` | Consolidated exact retrieval and K3-transfer findings |
 | `6d6184f` | Added held-out templates and multi-token retrieval evaluation |
+| `8c69876` | Recorded the single-template transfer failure |
+| `000c92b` | Added template-split, multi-token retrieval adaptation |
+| `466c82a` | Recorded the first template-diverse pilot |
+| `ae95963` | Added the held-out manifest template |
+| `dd730b1` | Recorded the three-template pilot |
+| `f646a87` | Kept variable-shape retrieval validation outside compilation |
+| `423d47b` | Recorded the first held-out-template pass |
+| `94f4670` | Recorded direct eight-record training failure |
+| `b48e3b4` | Recorded the two-to-eight-record curriculum |
+| `1495f0b` | Rejected that curriculum after three-stream replication |
+| `22143cd` | Added joint template, answer, and record-load training |
+| `1a97b39` | Recorded joint-load results |
+| `7bb7539` | Separated response-cue transfer from template transfer |
+| `371f35b` | Recorded the unmatched response-cue control |
+| `8ae18e1` | Added matched response-cue adaptation |
+| `ffeced5` | Recorded matched response-cue failure |
+| `aeb14c4` | Added symbolic two-hop edge and composition supervision |
+| `8459e47` | Exposed symbolic auxiliaries in standalone evaluation |
+| `22cc72f` | Isolated two-hop composition from near-perfect edge lookup |
+| `e0ecfdb` | Added explicit intermediate-chain supervision |
+| `ff348c1` | Rejected mixed chain supervision after replication |
+| `805566e` | Added staged task curricula |
+| `4ee60e5` | Recorded staged chain-to-direct failure |
+| `769c95a` | Added optional first-token candidate-ranking loss |
+| `1b8de34` | Rejected weight-1 candidate loss on held-out retrieval |
 
 ## Repository state at consolidation
 
-- Test suite: 366 passed
+- Test suite: 383 passed
+- Lint: all checks passed
+- Experiment/result JSON: all files parse successfully
 - Training/evaluation processes: none
 - GPU: idle
-- Worktree before this findings ledger: clean
-- Branch: `main`, 38 commits ahead of `origin/main`
+- Structured-retrieval checkpoint integrity: 23/23 directories have completion markers plus model,
+  optimizer, and metadata files
+- Worktree after the consolidation commit: clean
+- Branch: `main`, 27 commits ahead of `origin/main`
 - Push status: nothing pushed
-- Free disk after checkpoint creation and cache cleanup: approximately 13 GiB
+- Free disk after checkpoint creation and deletion of only explicit redownloadable caches:
+  approximately 11 GiB
