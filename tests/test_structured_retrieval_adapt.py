@@ -6,6 +6,7 @@ import torch
 from scripts.structured_retrieval_adapt import (
     build_supervised_batch,
     candidate_shift,
+    parse_adaptation_tasks,
     parse_answer_sets,
     parse_record_counts,
     parse_templates,
@@ -100,6 +101,11 @@ def test_template_and_answer_set_lists_are_strict():
     assert parse_record_counts("2,8") == (2, 8)
     with pytest.raises(ValueError, match="record counts"):
         parse_record_counts("8,8")
+    assert parse_adaptation_tasks("two_hop_route,two_hop_payload,two_hop_symbolic") == (
+        "two_hop_route",
+        "two_hop_payload",
+        "two_hop_symbolic",
+    )
 
 
 def test_supervised_batch_cycles_over_record_loads():

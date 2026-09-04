@@ -19,6 +19,7 @@ from speck.long_context import (
     add_counterfactual_metrics,
     aggregate_results,
     build_multi_key_case,
+    build_symbolic_two_hop_case,
     build_two_hop_case,
     candidate_shift_score,
     evaluate_case,
@@ -27,6 +28,11 @@ from speck.long_context import (
 from speck.tokenizer import get_tokenizer
 
 TASKS = ("multi_key", "two_hop")
+SYMBOLIC_TASK_MODES = {
+    "two_hop_route": "route",
+    "two_hop_payload": "payload",
+    "two_hop_symbolic": "compose",
+}
 TWO_HOP_DEPTHS = ((0.1, 0.5), (0.1, 0.9), (0.5, 0.9))
 
 
@@ -95,7 +101,25 @@ def build_case(
             response_cue=response_cue,
         )
     first_depth, second_depth = TWO_HOP_DEPTHS[seed % len(TWO_HOP_DEPTHS)]
-    return build_two_hop_case(
+    if task == "two_hop":
+        return build_two_hop_case(
+            tokenizer,
+            length,
+            seed,
+            first_depth,
+            second_depth,
+            chains=chains,
+            answer_offset=answer_offset,
+            mutation_index=mutation_index,
+            template=template,
+            answer_set=answer_set,
+            response_cue=response_cue,
+        )
+    try:
+        mode = SYMBOLIC_TASK_MODES[task]
+    except KeyError as error:
+        raise ValueError(f"unsupported structured retrieval task: {task}") from error
+    return build_symbolic_two_hop_case(
         tokenizer,
         length,
         seed,
@@ -104,6 +128,7 @@ def build_case(
         chains=chains,
         answer_offset=answer_offset,
         mutation_index=mutation_index,
+        mode=mode,
         template=template,
         answer_set=answer_set,
         response_cue=response_cue,

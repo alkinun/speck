@@ -23,6 +23,7 @@ ANSWER_SETS = {
     ),
 }
 RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger", "manifest", "directory")
+ROUTE_VALUES = tuple("KLMNOPQRST")
 
 
 def parse_lengths(value):
@@ -525,6 +526,157 @@ def build_two_hop_case(
         "template": template,
         "answer_set": answer_set,
         "response_cue": response_cue,
+    }
+
+
+def build_symbolic_two_hop_case(
+    tokenizer,
+    length,
+    seed,
+    first_depth,
+    second_depth,
+    chains=6,
+    answer_offset=0,
+    mutation_index=None,
+    mode="compose",
+    template="archive",
+    answer_set="letters",
+    response_cue="native",
+):
+    """Build route, payload, or composed lookup over shared one-token intermediate nodes."""
+
+    if mode not in {"route", "payload", "compose"}:
+        raise ValueError("symbolic two-hop mode must be route, payload, or compose")
+    if not 0 <= first_depth < second_depth <= 1:
+        raise ValueError("symbolic two-hop depths must satisfy 0 <= first < second <= 1")
+    if not isinstance(chains, int) or isinstance(chains, bool) or not 2 <= chains <= 9:
+        raise ValueError("symbolic two-hop chains must be an integer in [2, 9]")
+    values = _answer_values(answer_set)
+    if chains > len(values):
+        raise ValueError("symbolic two-hop chains exceed the selected answer set")
+    generator = random.Random(seed)
+    starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
+    while len(set(starts)) != chains:
+        starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
+    destinations = list(generator.sample(ROUTE_VALUES, chains))
+    answers = list(generator.sample(values, chains))
+    query_index = generator.randrange(chains)
+    mutation_index = query_index if mutation_index is None else mutation_index
+    if not isinstance(mutation_index, int) or isinstance(mutation_index, bool):
+        raise ValueError("symbolic two-hop mutation index must be an integer")
+    if not 0 <= mutation_index < chains:
+        raise ValueError("symbolic two-hop mutation index is outside the chains")
+    if mode == "route":
+        candidate_values = ROUTE_VALUES
+        original_answer = destinations[mutation_index]
+        if answer_offset:
+            unused = [value for value in ROUTE_VALUES if value not in destinations]
+            destinations[mutation_index] = unused[(answer_offset - 1) % len(unused)]
+        mutated_answer = destinations[mutation_index]
+    else:
+        candidate_values = values
+        original_answer = answers[mutation_index]
+        answers[mutation_index] = values[
+            (values.index(answers[mutation_index]) + answer_offset) % len(values)
+        ]
+        mutated_answer = answers[mutation_index]
+
+    first_lines = list(zip(starts, destinations))
+    second_lines = list(zip(destinations, answers))
+    generator.shuffle(first_lines)
+    generator.shuffle(second_lines)
+    text = _retrieval_text(
+        template,
+        "two_hop",
+        starts,
+        answers,
+        query_index,
+        destinations=destinations,
+        response_cue=response_cue,
+    )
+    first_text = _retrieval_text(
+        template,
+        "two_hop",
+        [start for start, _ in first_lines],
+        answers,
+        query_index,
+        destinations=[destination for _, destination in first_lines],
+        response_cue=response_cue,
+    )
+    answer_by_destination = dict(zip(destinations, answers))
+    second_text = _retrieval_text(
+        template,
+        "two_hop",
+        starts,
+        [answer_by_destination[destination] for destination, _ in second_lines],
+        query_index,
+        destinations=[destination for destination, _ in second_lines],
+        response_cue=response_cue,
+    )
+    first_block = tokenizer.encode("\n".join(first_text["first"]) + "\n")
+    second_block = tokenizer.encode("\n".join(second_text["second"]) + "\n")
+    prefix = tokenizer.encode(text["prefix"], bos=True)
+    if mode == "route":
+        native_cue = "Answer" if response_cue == "answer" else "Destination"
+        question_text = (
+            f"\nQuestion: Follow the route from {starts[query_index]}. "
+            f"Which destination does it reach?\n{native_cue}: "
+        )
+        answer = destinations[query_index]
+    elif mode == "payload":
+        native_cue = "Answer" if response_cue == "answer" else "Code"
+        question_text = (
+            f"\nQuestion: What access code is stored at destination "
+            f"{destinations[query_index]}?\n{native_cue}: "
+        )
+        answer = answers[query_index]
+    else:
+        question_text = text["question"]
+        answer = answers[query_index]
+    question = tokenizer.encode(question_text)
+    answer_tokens = tokenizer.encode(answer)
+    candidate_token_ids, candidate_token_sequences = _candidate_tokens(
+        tokenizer, candidate_values
+    )
+    prompt, positions = _exact_prompt(
+        prefix,
+        (first_block, second_block),
+        question,
+        tokenizer.encode(text["filler"]),
+        (first_depth, second_depth),
+        length - len(answer_tokens),
+    )
+    task = {
+        "route": "two_hop_route",
+        "payload": "two_hop_payload",
+        "compose": "two_hop_symbolic",
+    }[mode]
+    return {
+        "task": task,
+        "length": length,
+        "depth": second_depth,
+        "first_depth": first_depth,
+        "second_depth": second_depth,
+        "seed": seed,
+        "prompt_tokens": prompt,
+        "prompt_length": len(prompt),
+        "answer_tokens": answer_tokens,
+        "candidate_token_ids": candidate_token_ids,
+        "candidate_token_sequences": candidate_token_sequences,
+        "answer": answer,
+        "answer_index": candidate_values.index(answer),
+        "label": starts[query_index],
+        "query_index": query_index,
+        "mutation_index": mutation_index,
+        "mutation_from_index": candidate_values.index(original_answer),
+        "mutation_to_index": candidate_values.index(mutated_answer),
+        "chains": chains,
+        "fact_positions": positions,
+        "template": template,
+        "answer_set": answer_set,
+        "response_cue": response_cue,
+        "symbolic_mode": mode,
+        "destination": destinations[query_index],
     }
 
 

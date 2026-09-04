@@ -69,6 +69,13 @@ def test_build_case_propagates_template_and_answer_set(template):
     assert len(case["answer_tokens"]) == 2
 
 
+@pytest.mark.parametrize("task", ("two_hop_route", "two_hop_payload", "two_hop_symbolic"))
+def test_build_case_supports_symbolic_two_hop_auxiliaries(task):
+    case = build_case(task, FakeTokenizer(), 1_024, 7, records=8, chains=4)
+    assert case["task"] == task
+    assert case["chains"] == 4
+
+
 @pytest.mark.parametrize("value", (0, -1, True, 1.2))
 def test_positive_integer_rejects_invalid_values(value):
     with pytest.raises(ValueError, match="positive integer"):

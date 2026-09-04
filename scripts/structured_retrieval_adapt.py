@@ -12,7 +12,7 @@ from pathlib import Path
 import torch
 
 from scripts.infer import load_checkpoint_model
-from scripts.structured_retrieval_eval import TASKS, build_case, parse_tasks
+from scripts.structured_retrieval_eval import SYMBOLIC_TASK_MODES, TASKS, build_case
 from speck.checkpoint import checkpoint_identity, latest, save
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
@@ -27,6 +27,7 @@ from speck.train import lr_scale, set_optimizer_lr
 
 TRAIN_SEED_OFFSET = 1_000_000
 VALIDATION_SEED_OFFSET = 2_000_000
+ADAPTATION_TASKS = TASKS + tuple(SYMBOLIC_TASK_MODES)
 
 
 def parse_choice_list(value, choices, name):
@@ -42,6 +43,10 @@ def parse_templates(value):
 
 def parse_answer_sets(value):
     return parse_choice_list(value, tuple(ANSWER_SETS), "answer sets")
+
+
+def parse_adaptation_tasks(value):
+    return parse_choice_list(value, ADAPTATION_TASKS, "tasks")
 
 
 def parse_record_counts(value):
@@ -61,7 +66,8 @@ def arguments(argv=None):
     parser.add_argument("--step", type=int, default=None)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
-    parser.add_argument("--tasks", type=parse_tasks, default=TASKS)
+    parser.add_argument("--tasks", type=parse_adaptation_tasks, default=TASKS)
+    parser.add_argument("--validation-tasks", type=parse_adaptation_tasks, default=None)
     parser.add_argument("--sequence-length", type=int, default=4_096)
     parser.add_argument("--steps", type=int, default=500)
     parser.add_argument("--batch-size", type=int, default=4)
@@ -194,7 +200,7 @@ def replay_microsteps(accumulation, fraction):
 def validate(model, tokenizer, settings, device):
     model.eval()
     metrics = {}
-    for task_index, task in enumerate(settings["tasks"]):
+    for task_index, task in enumerate(settings["validation_tasks"]):
         for template_index, template in enumerate(settings["validation_templates"]):
             for answer_set_index, answer_set in enumerate(settings["validation_answer_sets"]):
                 totals = {
@@ -380,6 +386,7 @@ def validate(model, tokenizer, settings, device):
 def validate_settings(args):
     settings = {
         "tasks": tuple(args.tasks),
+        "validation_tasks": tuple(getattr(args, "validation_tasks", None) or args.tasks),
         "sequence_length": positive_integer(args.sequence_length, "sequence length"),
         "steps": positive_integer(args.steps, "steps"),
         "batch_size": positive_integer(args.batch_size, "batch size"),

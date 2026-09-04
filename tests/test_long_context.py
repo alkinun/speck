@@ -6,6 +6,7 @@ from speck.long_context import (
     binomial_tail_probability,
     build_multi_key_case,
     build_passkey_case,
+    build_symbolic_two_hop_case,
     build_two_hop_case,
     candidate_shift_score,
     effective_length,
@@ -131,6 +132,45 @@ def test_two_hop_case_has_two_ordered_facts_and_exact_length():
     assert case["fact_positions"][0] < case["fact_positions"][1]
     assert case["label"] == counterfactual["label"]
     assert counterfactual["answer_index"] == (case["answer_index"] + 1) % 10
+
+
+def test_symbolic_two_hop_auxiliaries_share_geometry_and_preserve_distractor_query():
+    tokenizer = FakeTokenizer()
+    for mode in ("route", "payload", "compose"):
+        case = build_symbolic_two_hop_case(
+            tokenizer,
+            1_024,
+            seed=4,
+            first_depth=0.2,
+            second_depth=0.8,
+            chains=4,
+            mode=mode,
+        )
+        counterfactual = build_symbolic_two_hop_case(
+            tokenizer,
+            1_024,
+            seed=4,
+            first_depth=0.2,
+            second_depth=0.8,
+            chains=4,
+            mode=mode,
+            answer_offset=1,
+        )
+        distractor = build_symbolic_two_hop_case(
+            tokenizer,
+            1_024,
+            seed=4,
+            first_depth=0.2,
+            second_depth=0.8,
+            chains=4,
+            mode=mode,
+            answer_offset=1,
+            mutation_index=(case["query_index"] + 1) % case["chains"],
+        )
+        assert len(case["prompt_tokens"]) + len(case["answer_tokens"]) == 1_024
+        assert case["fact_positions"][0] < case["fact_positions"][1]
+        assert counterfactual["answer_index"] != case["answer_index"]
+        assert distractor["answer_index"] == case["answer_index"]
 
 
 def test_counterfactual_metrics_require_both_prompt_directions():
