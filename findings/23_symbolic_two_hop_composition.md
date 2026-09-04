@@ -45,6 +45,29 @@ This is a composition failure, not a failure to store or retrieve either constit
   Continue to validate direct final-value composition with no revealed intermediate.
 - Mixed language replay remains mandatory.
 
+## Chain-supervision curriculum
+
+A second 200-step stage starts from the edge-qualified checkpoint, lowers the learning rate to
+`5e-5`, and mixes route, payload, explicit chain (`node value`), and direct composition targets. The
+validation prompt still requests only the final value.
+
+Stream 42 appears successful: final fixed validation reaches 86.7% exact/candidate and 80.0%
+specificity. On 100 independent cases it retains 82.0% exact, 83.0% candidate, and 86.0%
+specificity. However, the same intervention with two disjoint training streams does not replicate:
+
+| Chain-stage stream | Exact | Candidate | Specificity accuracy | Specificity score |
+| ---: | ---: | ---: | ---: | ---: |
+| 42 | **86.7%** | **86.7%** | **80.0%** | 1.785 |
+| 43 | 63.3% | 63.3% | 50.0% | −0.089 |
+| 44 | 43.3% | 43.3% | 56.7% | 0.046 |
+
+The seed-42 checkpoint also fails to transfer from single-token nodes to the original random
+multi-token destination identifiers: 50.0% exact/candidate and 56.7% specificity on 30 cases.
+
+Chain supervision can unlock composition, but simultaneous mixing of edge, chain, and direct
+objectives is not a stable recipe. The next experiment temporally separates chain learning from
+direct-answer distillation while validating direct composition throughout.
+
 ## Artifacts
 
 - Training report:
@@ -56,4 +79,17 @@ This is a composition failure, not a failure to store or retrieve either constit
   `26e9e242464b9adf51803f0974e7dbdc8524a770ab196d407185dbf18490a1f6`,
   `3ec7874c1058aeee4a33814252944b1db03b5794074f85553ff81722bcdb0d10`,
   `e3e477e66c4381dbeb29b7f35be1960204e8f17c5f4e10eae3ef73c606573dc6`
-
+- Chain reports and transfer controls:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/two-hop](../results/SpeckLC-150M-StructuredRetrievalAdapt/two-hop)
+- Chain seed-42 model / metadata / optimizer SHA-256:
+  `7a8f5ec2ed447b0a1be941a0f4124f6dc9ff2493c36fb1996947bd4f12568541`,
+  `6c0a080094be36a623d6386c082be0c71760cbffc8943010f0ed3fdba3a66652`,
+  `0b332cf78f4851009aec1a34460513d8f879817ea7ae80de55eaf09208ab3090`
+- Chain seed-43 model / metadata / optimizer SHA-256:
+  `8c27c87ccb0bf9e29ffdf662e171cbc9f4dd84886ba48e6f07d7b133d50f6c2d`,
+  `8b4070982c151938e1f8a30fa1d3141a3d31ebd8ef3e1113c031a6aa331f00fd`,
+  `6ec4e6f69362edfba7763b64ec86225264c9b390c6fb8e72265a149c152fe99b`
+- Chain seed-44 model / metadata / optimizer SHA-256:
+  `0778695306813f7f7e76f30e2f8e8b110347846651b4260ff8a882e68ddee6e0`,
+  `da50cd4be54c9d6ca2e972089e912b06da330dbeb9aaaa418c38771c0a1a02c1`,
+  `78382395f46f3072c2985fbb951fcff1fb15f45cab629acb0659615ef764d65d`

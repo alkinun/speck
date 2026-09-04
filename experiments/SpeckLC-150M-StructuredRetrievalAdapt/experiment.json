@@ -277,5 +277,23 @@
     "retrieval_examples": 3200,
     "steps": 400,
     "verdict": "both edges are learned almost perfectly; two-hop composition fails"
+  },
+  "symbolic_two_hop_chain_replication": {
+    "final_candidate_accuracy": {
+      "42": 0.8666666666666667,
+      "43": 0.6333333333333333,
+      "44": 0.43333333333333335
+    },
+    "final_specificity_accuracy": {
+      "42": 0.8,
+      "43": 0.5,
+      "44": 0.5666666666666667
+    },
+    "seed_42_independent_n100": {
+      "candidate_accuracy": 0.83,
+      "exact_match": 0.82,
+      "specificity_accuracy": 0.86
+    },
+    "verdict": "chain supervision can unlock symbolic composition but fails replication"
   }
 }
