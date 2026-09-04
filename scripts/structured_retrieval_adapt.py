@@ -454,7 +454,7 @@ def run(args):
     )
     history = []
     model.eval()
-    history.append({"step": 0, "validation": validate(train_model, tokenizer, settings, device)})
+    history.append({"step": 0, "validation": validate(model, tokenizer, settings, device)})
     model.train()
     started = time.perf_counter()
     retrieval_sample = settings["train_seed_offset"]
@@ -529,7 +529,7 @@ def run(args):
                 f"grad {float(grad_norm):.3f}"
             )
         if completed % settings["eval_every"] == 0 or completed == settings["steps"]:
-            validation = validate(train_model, tokenizer, settings, device)
+            validation = validate(model, tokenizer, settings, device)
             history.append({"step": completed, "validation": validation})
             print(
                 f"step {completed} validation | "
