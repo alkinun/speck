@@ -45,13 +45,18 @@ Conventions:
 - Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
-Last consolidated state: KDA's target-specific association signal transfers across held-out
-templates, two-token values, and eight-record load, but exact value decoding does not replicate at
-the eight-record gate. Symbolic two-hop decomposition learns both edges at 99–100% yet current chain
-curricula do not replicate composition. Long-length promotion and MQA comparison remain gated. All
-23 structured-adaptation checkpoint directories pass integrity checks.
+Last consolidated state: KDA/sigmoid/NoPE with five global GQA caches remains the conservative
+research control, not a release selection. Its target-specific association signal transfers across
+held-out wording and load, but exact eight-record decoding and symbolic two-hop composition remain
+fragile. Independent suites and genuine 64K–128K dependency data are still required before any
+long-length promotion.
 
-Speck Reader Attention is implemented and validated in finding 24. At seed 42 its one- and
-two-cache arms are indistinguishable from each other and sit about 0.008 nats behind the five-cache
-control, inside the seed range and unresolved on one seed. One cache dominates two at half the
-resident state. Retrieval, composition, seed replication, and latency are not yet measured.
+Finding 24 closes the Speck Reader Attention frontier. Sharing is a real systems trade, not a free
+win: three caches cut persistent 128K state `1.66×` and reproduce a thermally controlled `1.31×`
+eager decode gain at 524,288 cached slots, while prefill is unchanged between cache-count arms.
+Reader-to-writer distance four fails retrieval at fixed fan-out one, establishing the need for
+periodic nonlinear refresh. The three-cache candidate fixes the retention cliff and preserves
+specificity on 3/3 seeds, but strict paired loss and candidate promotion each pass only 2/3 seeds,
+and the symbolic diagnostic exposes a route-edge failure (`0.53` versus `1.00` for five caches).
+It is therefore retained as a paper mechanism and research candidate but not promoted into the lead
+architecture. MQA/MLA interaction work remains gated.

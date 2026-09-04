@@ -114,6 +114,6 @@
   "seed": 42,
   "seed_range_nats": 0.00965,
   "sequence_length": 4096,
-  "status": "reader_capability_gates_complete_promotion_failed",
+  "status": "frontier_complete_not_promoted",
   "train_tokens": 131072000
 }

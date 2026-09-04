@@ -7,7 +7,8 @@
 > candidate-accuracy promotion each pass only two of three seeds, so `caches-3` remains a research
 > candidate rather than a promoted architecture. The symbolic diagnostic adds a route-edge failure,
 > so composition cannot be compared. Thermally controlled eager/compiled systems results are
-> complete; the Reader Attention frontier is ready for ledger consolidation.
+> complete. The Reader Attention frontier is closed without promotion; five-cache KDA/NoPE remains
+> the conservative research control.
 
 ## Question
 
@@ -214,7 +215,7 @@ effect being measured. A throughput claim requires a thermally controlled, inter
 
 ## Three-seed `caches-3` base replication
 
-The selected three-cache topology was trained from scratch at seeds 43 and 44 under the same frozen
+The three-cache candidate was trained from scratch at seeds 43 and 44 under the same frozen
 packed-data order and compared with the corresponding five-cache KDA/sigmoid/NoPE seeds. This varies
 initialization and optimization while retaining the exact data stream.
 
@@ -236,9 +237,10 @@ mean paired delta, largest on `math_multi_style` (`+0.00866`), peS2o (`+0.00781`
 `math_textbook_exercise` (`+0.00747`). All three reader runs complete stably, and realized training
 throughput differs by less than `0.1%` across their seeds, so seed 43 is not an execution outlier.
 
-This weakens but does not retire `caches-3`. Its mean loss cost remains small, its state and batched
-decode gains are measured, and its seed-42 retrieval matches the five-cache control. The next gate is
-therefore retrieval replication on seeds 43 and 44, not a claim that the loss trade-off disappeared.
+This weakens but does not by itself retire `caches-3`. Its mean loss cost remains small, its state and
+batched decode gains are measured, and its seed-42 retrieval matches the five-cache control. The
+retrieval replication below supplies the next gate; the base result alone does not establish that the
+loss trade-off disappeared.
 Machine-readable paired deltas and hashes are checked at
 [results/SpeckLC-150M-ReaderAttention131M/replication/caches-3.json](../results/SpeckLC-150M-ReaderAttention131M/replication/caches-3.json).
 

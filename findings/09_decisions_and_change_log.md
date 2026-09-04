@@ -22,6 +22,10 @@
 - GDN/sigmoid/RoPE as the short-loss control for subsequent KDA experiments.
 - Position-binned and trailing-token loss for long-context comparisons.
 - Mixed original-language replay for retrieval and long-context task adaptation.
+- Speck Reader Attention as a research mechanism and paper result. Query-only readers can share a
+  writer's exact cache with correct eager/checkpointed gradients, and adjacent sharing produces a
+  reproducible high-batch decode gain. Readers must bind fresh memories: distance four fails
+  retrieval even at fan-out one.
 
 ### Retire or stop
 
@@ -45,6 +49,11 @@
 - Do not promote single-template exact retrieval as general retrieval.
 - Do not tune more direct-lookup templates, response cues, or scalar candidate-loss weights against
   the current held-out set. Those branches have been measured and do not replicate the exact gate.
+- Do not promote the three-cache Reader Attention topology. Strict paired base-loss equivalence and
+  strict candidate retrieval each pass only 2/3 seeds, and the symbolic diagnostic loses route-edge
+  retrieval while the five-cache control retains both edges perfectly.
+- Do not launch MQA/MLA or residual-routing interactions on the reader topology merely because the
+  implementation works. Its predeclared capability gate failed; interaction work remains blocked.
 
 ## Superseded pre-Kimi architectural hypothesis
 
@@ -59,36 +68,43 @@ in the internal diagnostic.
 
 ## Current architectural hypothesis
 
-The lead research architecture is a KDA/sigmoid/NoPE recurrent-global hybrid. At five global
-layers it is not yet state-efficient enough: resident BF16 state is 481.47 MiB at 128K. The next
-frontier question is whether MQA or NoPE MLA can compress each of the five global caches before
-deleting global opportunities. One KV head would reduce state to roughly 161.5 MiB while preserving
-global processing at five depths.
+The conservative research architecture remains the five-cache KDA/sigmoid/NoPE recurrent-global
+hybrid. It is not state-efficient—resident BF16 state is 481.47 MiB at 128K—but it is the only arm in
+the Reader Attention study that has not failed a replicated internal capability gate.
 
-This supersedes the earlier GDN/sliding-first hypothesis for research promotion, not for release.
-KDA misses one of three strict base-stage loss ties and has not passed an independent task suite.
+Three-cache Reader Attention remains a useful non-promoted research candidate: it cuts persistent
+state `1.66×`, reproduces a `1.31×` eager decode gain at high cached-slot load, and fixes the
+retention cliff across 3/3 seeds. It also misses strict paired loss and candidate gates on one seed
+each and loses the symbolic route edge. MQA/MLA compression and interaction studies must not use it
+as a selected parent. Neither five caches nor three caches is a release architecture: KDA itself
+misses one of three strict base-stage loss ties against the RoPE control and no independent task
+suite has passed.
 
 ## Required next work
 
-1. Add paired target/distractor training that explicitly rewards target-over-distractor invariance;
-   ordinary answer loss and a weight-1 candidate-ranking auxiliary are insufficient.
-2. Generalize two-hop intermediates beyond ten one-token nodes and test an objective that binds both
-   edges directly. Route and payload lookup already reach 99–100%; composition is the isolated
-   failure.
-3. Run pinned independent suites:
+1. Define non-inferiority margins, capability floors, serving cost envelopes, and versioned
+   evaluation manifests before another architecture promotion decision.
+2. Run pinned independent suites:
    [RULER](https://github.com/NVIDIA/RULER),
    [NoLiMa](https://github.com/adobe-research/NoLiMa), and
    [HELMET](https://github.com/princeton-nlp/HELMET).
-4. Compare five-layer GQA3 with five-layer MQA1 and NoPE MLA only after the held-out exact gate
-   replicates. Rank exact retrieval, loss, state, prefill, and decode before reducing global layers.
-5. Build or acquire data with genuine 64K–128K dependencies: long books/papers, repository trees,
+3. Build or acquire data with genuine 64K–128K dependencies: long books/papers, repository trees,
    connected documents, and held-out synthetic retrieval/aggregation tasks. Do not pad the current
    data with unrelated documents.
-6. Repeat the 32K KDA/control stage on additional seeds if independent metrics validate the
+4. Add paired target/distractor training that explicitly rewards target-over-distractor invariance;
+   ordinary answer loss and a weight-1 candidate-ranking auxiliary are insufficient.
+5. Diagnose the Reader Attention route/payload asymmetry on an independent, larger-sample suite
+   without tuning against the current 30-case stream. A new result must preserve the failed 3/3 gate.
+6. Generalize two-hop intermediates beyond ten one-token nodes and test an objective that binds both
+   edges directly. Five caches retrieve both symbolic edges perfectly; three-cache readers preserve
+   payload but not route, so constituent qualification is architecture-dependent.
+7. Repeat the 32K KDA/control stage on additional seeds if independent metrics validate the
    contrastive result; the current long-document validation contains only 327,680 tokens.
-7. Add a bounded KDA reference for K3's `g_min=-5`. Fewer than 0.5% of trained values cross the
+8. Add a bounded KDA reference for K3's `g_min=-5`. Fewer than 0.5% of trained values cross the
    bound, but the observed tail reaches below `-120`; kernel benefit requires a FlashKDA path.
-8. Promote to 128K only after the data and independent 32K gate pass; re-run original 4K loss at
+9. Compare five-layer GQA3 with five-layer MQA1 and NoPE MLA only after the held-out exact gate
+   passes under a predeclared replication policy. Do not use the failed reader topology as parent.
+10. Promote to 128K only after the data and independent 32K gate pass; re-run original 4K loss at
    every stage.
 
 ## Known limitations
@@ -116,8 +132,21 @@ KDA misses one of three strict base-stage loss ties and has not passed an indepe
   GDN. The successful KDA recipe requires 50% original-language replay.
 - Symbolic two-hop route and payload edges reach 99–100%, but composition is 43% before chain
   supervision. A chain intervention passes one stream and fails two; staged distillation also fails.
-- The filesystem has approximately 11 GiB free after preserving every research checkpoint and
-  deleting only explicit redownloadable caches; do not launch another checkpoint family yet.
+- Three-cache Reader Attention has a `+0.00578`-nat mean paired loss cost across seeds 42–44, with a
+  wide interval spanning zero, but strict per-seed equivalence passes only 2/3 and every mean source
+  delta favors five caches.
+- Three-cache reader retention and specificity pass 3/3 synthetic streams, but strict final
+  candidate accuracy passes only 2/3; seed 43 ends one of thirty cases below the fixed gate.
+- On the matched symbolic diagnostic, three-cache readers retain payload at 100% but route retrieval
+  falls to 53% with chance specificity. Direct composition is therefore not comparable.
+- Same-recipe CUDA adaptation is not bit deterministic: a seed-42 reader repeat changes both model
+  hash and trajectory. It passes the gate but cannot replace the original run.
+- Controlled systems results are single-process RTX 3090 measurements. Reader high-batch decode
+  improves `1.31×` eager and `1.27×`–`1.28×` compiled, but compiled batch-one reader decode regresses
+  `61%`–`64%` and measured peak allocation does not fall.
+- The filesystem has approximately 8 GiB free after preserving every research checkpoint and
+  deleting only explicit redownloadable caches; do not launch another multi-arm checkpoint family
+  without a new storage audit.
 
 ## Checkpoint inventory
 
@@ -144,6 +173,12 @@ All paths below have a completion marker and model plus optimizer state:
 - Attention-gate screens:
   `~/.cache/speck/checkpoints/SpeckLC-150M-AttentionGate{32M-*,131M-headwise}`,
   steps 489 or 2,000
+- Reader Attention base arms:
+  `~/.cache/speck/checkpoints/SpeckLC-150M-ReaderAttention131M-caches-{1,2,3}` and
+  `SpeckLC-150M-ReaderAttention131M-seed{43,44}-caches-3`, step 2,000
+- Reader distance controls:
+  `~/.cache/speck/checkpoints/SpeckLC-150M-ReaderDistance131M-{caches-4,caches-4-far}`,
+  step 2,000
 
 The full checkpoint hashes are stored in the checked result summaries, not only in W&B.
 
@@ -235,18 +270,32 @@ The full checkpoint hashes are stored in the checked result summaries, not only 
 | `4ee60e5` | Recorded staged chain-to-direct failure |
 | `769c95a` | Added optional first-token candidate-ranking loss |
 | `1b8de34` | Rejected weight-1 candidate loss on held-out retrieval |
+| `87aec06` | Recorded the matched Reader Attention distance base result |
+| `37ebf25` | Pre-registered the Reader Distance retrieval decision |
+| `1320e39` | Resolved reader-to-writer distance as a retrieval mechanism |
+| `3472f5b` | Prepared three-cache seeds 43 and 44 |
+| `18c43e7` | Recorded three-seed three-cache base replication |
+| `ad16a16` | Pre-registered three-cache retrieval replication |
+| `06cd167` | Recorded the failed 3/3 three-cache retrieval promotion gate |
+| `e93b18e` | Pre-registered the matched symbolic composition comparison |
+| `22f16c5` | Recorded the three-cache symbolic route-edge failure |
+| `e12cd04` | Added compiled inference benchmark support |
+| `aa6d8c5` | Pre-registered the thermally controlled systems matrix |
+| `d19e3c2` | Recorded controlled eager and compiled Reader Attention systems results |
 
 ## Repository state at consolidation
 
-- Test suite: 383 passed
+- Test suite: 419 passed
 - Lint: all checks passed
-- Experiment/result JSON: all files parse successfully
+- Experiment/result JSON: 597 files parse successfully
 - Training/evaluation processes: none
 - GPU: idle
 - Structured-retrieval checkpoint integrity: 23/23 directories have completion markers plus model,
   optimizer, and metadata files
+- Reader Attention checkpoint integrity: 7/7 retained base/distance checkpoints match recorded
+  model, optimizer, metadata, and timing hashes where applicable
 - Worktree after the consolidation commit: clean
-- Branch: `main`, 27 commits ahead of `origin/main`
+- Branch: `main`, 13 commits ahead of `origin/main`
 - Push status: nothing pushed
 - Free disk after checkpoint creation and deletion of only explicit redownloadable caches:
-  approximately 11 GiB
+  approximately 8 GiB
