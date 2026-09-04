@@ -6,6 +6,7 @@ import torch
 from scripts.structured_retrieval_adapt import (
     build_supervised_batch,
     candidate_shift,
+    replay_microsteps,
     validate_settings,
 )
 from tests.test_long_context import FakeTokenizer
@@ -61,6 +62,14 @@ def test_candidate_shift_is_symmetric():
         torch.tensor([1, 0]),
     )
     torch.testing.assert_close(result, torch.tensor([2.5, 2.0]))
+
+
+def test_replay_microsteps_are_even_and_exact():
+    assert replay_microsteps(4, 0.0) == ()
+    assert replay_microsteps(4, 0.5) == (1, 3)
+    assert replay_microsteps(4, 0.25) == (3,)
+    with pytest.raises(ValueError, match="representable"):
+        replay_microsteps(4, 0.3)
 
 
 @pytest.mark.parametrize(

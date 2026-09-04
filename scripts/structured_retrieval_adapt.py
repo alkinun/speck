@@ -15,6 +15,8 @@ from scripts.infer import load_checkpoint_model
 from scripts.structured_retrieval_eval import TASKS, build_case, parse_tasks
 from speck.checkpoint import checkpoint_identity, latest, save
 from speck.config import load_experiment
+from speck.dataloader import manifest_fingerprint, packed_loader
+from speck.dataset import load_manifest, resolve_data_dir
 from speck.long_context import binomial_tail_probability
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, set_optimizer_lr
@@ -48,6 +50,8 @@ def arguments(argv=None):
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")
+    parser.add_argument("--replay-data-experiment", type=Path, default=None)
+    parser.add_argument("--replay-fraction", type=float, default=0.0)
     return parser.parse_args(argv)
 
 
@@ -110,6 +114,20 @@ def candidate_shift(reference, changed, from_indices, to_indices):
     reference_preference = reference[rows, from_indices] - reference[rows, to_indices]
     changed_preference = changed[rows, to_indices] - changed[rows, from_indices]
     return (reference_preference + changed_preference) / 2
+
+
+def replay_microsteps(accumulation, fraction):
+    """Choose evenly spaced replay microsteps for an exactly representable fraction."""
+
+    accumulation = positive_integer(accumulation, "accumulation")
+    if not math.isfinite(fraction) or not 0 <= fraction < 1:
+        raise ValueError("replay fraction must be in [0, 1)")
+    replay_count = round(accumulation * fraction)
+    if not math.isclose(replay_count / accumulation, fraction):
+        raise ValueError("replay fraction must be exactly representable by accumulation")
+    if not replay_count:
+        return ()
+    return tuple((index + 1) * accumulation // replay_count - 1 for index in range(replay_count))
 
 
 @torch.inference_mode()
@@ -247,6 +265,7 @@ def validate_settings(args):
         "chains": positive_integer(args.chains, "chains"),
         "warmup_steps": positive_integer(args.warmup_steps, "warmup steps"),
         "seed": args.seed,
+        "replay_fraction": getattr(args, "replay_fraction", 0.0),
     }
     for name in ("lr", "grad_clip"):
         value = getattr(args, name)
@@ -261,6 +280,9 @@ def validate_settings(args):
         weight_decay=args.weight_decay,
         min_lr=args.min_lr,
         optimizer=args.optimizer,
+    )
+    settings["replay_microsteps"] = replay_microsteps(
+        settings["accumulation"], settings["replay_fraction"]
     )
     return settings
 
@@ -283,6 +305,28 @@ def run(args):
     if settings["sequence_length"] + 1 > model.config.max_position_embeddings:
         raise ValueError("adaptation sequence exceeds the model context")
     tokenizer = get_tokenizer(**configs["tokenizer"])
+    replay_loader = None
+    replay_manifest = None
+    replay_data_dir = None
+    if bool(settings["replay_microsteps"]) != (args.replay_data_experiment is not None):
+        raise ValueError("positive replay requires exactly one replay data experiment")
+    if args.replay_data_experiment is not None:
+        replay_configs = load_experiment(args.replay_data_experiment, "data", "tokenizer")
+        if replay_configs["tokenizer"] != configs["tokenizer"]:
+            raise ValueError("replay tokenizer does not match the adapted model")
+        replay_data_dir = resolve_data_dir(
+            replay_configs["data"].get("output_dir"),
+            replay_configs["data"].get("output_name"),
+        )
+        replay_manifest = load_manifest(replay_data_dir)
+        replay_loader = packed_loader(
+            tokenizer,
+            settings["batch_size"],
+            settings["sequence_length"],
+            "train",
+            device=device,
+            data_dir=replay_data_dir,
+        )
     parameters = tuple(model.parameters())
     optimizer = model.optimizer(settings["lr"], settings["weight_decay"], settings["optimizer"])
     train_model = (
@@ -295,26 +339,42 @@ def run(args):
     history.append({"step": 0, "validation": validate(train_model, tokenizer, settings, device)})
     model.train()
     started = time.perf_counter()
+    retrieval_sample = TRAIN_SEED_OFFSET
+    retrieval_examples_seen = 0
+    replay_tokens_seen = 0
     for step_index in range(settings["steps"]):
         optimizer.zero_grad(set_to_none=True)
         loss_sum = torch.zeros((), device=device)
+        retrieval_loss_sum = torch.zeros((), device=device)
+        replay_loss_sum = torch.zeros((), device=device)
+        retrieval_microbatches = 0
+        replay_microbatches = 0
         for micro_step in range(settings["accumulation"]):
-            first_sample = (
-                TRAIN_SEED_OFFSET
-                + (step_index * settings["accumulation"] + micro_step) * settings["batch_size"]
-            )
-            inputs, targets, _ = build_supervised_batch(
-                tokenizer,
-                settings["tasks"],
-                settings["sequence_length"],
-                settings["batch_size"],
-                first_sample,
-                settings["records"],
-                settings["chains"],
-                device,
-            )
-            loss = train_model(inputs, targets, loss_reduction="sum")
-            (loss / (settings["batch_size"] * settings["accumulation"])).backward()
+            if micro_step in settings["replay_microsteps"]:
+                if replay_loader is None:
+                    raise RuntimeError("replay schedule has no data loader")
+                inputs, targets, _ = next(replay_loader)
+                loss = train_model(inputs, targets)
+                replay_loss_sum += loss.detach()
+                replay_microbatches += 1
+                replay_tokens_seen += settings["batch_size"] * settings["sequence_length"]
+            else:
+                inputs, targets, _ = build_supervised_batch(
+                    tokenizer,
+                    settings["tasks"],
+                    settings["sequence_length"],
+                    settings["batch_size"],
+                    retrieval_sample,
+                    settings["records"],
+                    settings["chains"],
+                    device,
+                )
+                retrieval_sample += settings["batch_size"]
+                retrieval_examples_seen += settings["batch_size"]
+                loss = train_model(inputs, targets, loss_reduction="sum") / settings["batch_size"]
+                retrieval_loss_sum += loss.detach()
+                retrieval_microbatches += 1
+            (loss / settings["accumulation"]).backward()
             loss_sum += loss.detach()
         scale = lr_scale(
             step_index,
@@ -331,7 +391,9 @@ def run(args):
         if completed == 1 or completed % 10 == 0:
             print(
                 f"step {completed}/{settings['steps']} | "
-                f"loss {loss_sum.item() / (settings['batch_size'] * settings['accumulation']):.5f} | "
+                f"loss {loss_sum.item() / settings['accumulation']:.5f} | "
+                f"retrieval {retrieval_loss_sum.item() / max(1, retrieval_microbatches):.5f} | "
+                f"replay {replay_loss_sum.item() / max(1, replay_microbatches):.5f} | "
                 f"grad {float(grad_norm):.3f}"
             )
         if completed % settings["eval_every"] == 0 or completed == settings["steps"]:
@@ -360,6 +422,15 @@ def run(args):
         "history": history,
         "training_seconds": training_seconds,
         "git_revision": git_revision(),
+        "replay_data": (
+            {
+                "experiment": str(args.replay_data_experiment.expanduser().resolve()),
+                "directory": str(replay_data_dir.expanduser().resolve()),
+                "manifest": manifest_fingerprint(replay_manifest),
+            }
+            if replay_manifest is not None
+            else None
+        ),
     }
     save(
         output_dir,
@@ -384,9 +455,11 @@ def run(args):
             * settings["accumulation"]
             * settings["sequence_length"]
         ),
-        "supervised_tokens_seen": (
-            settings["steps"] * settings["batch_size"] * settings["accumulation"]
-        ),
+        "supervised_tokens_seen": retrieval_examples_seen,
+        "retrieval_examples_seen": retrieval_examples_seen,
+        "retrieval_prompt_tokens_seen": retrieval_examples_seen * settings["sequence_length"],
+        "replay_tokens_seen": replay_tokens_seen,
+        "replay_data": metadata["replay_data"],
         "device": str(device),
         "torch_version": torch.__version__,
         "git_revision": metadata["git_revision"],
