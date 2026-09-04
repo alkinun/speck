@@ -1,0 +1,70 @@
+{
+  "comparison": "131M-token confirmation of headwise sigmoid global attention gating",
+  "control": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+      "metadata_sha256": "0b22b8135696c51ec32694a3f7a0aba88a59eb154a66d2f9b2a55a2713540bcb",
+      "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+      "optimizer_sha256": "018ee866a5bb95a000968867f0b2671f301e98976f073f6347c41493986c8512",
+      "step": 2000
+    },
+    "final_validation_loss": 2.795380115509033,
+    "output_gate": "none",
+    "tokens_per_second": 44384.03817
+  },
+  "delta_headwise_minus_control": -0.00234222412109375,
+  "format": "speck_attention_gate_confirmation_results",
+  "format_version": 1,
+  "interpretation": "headwise gain is inside measured seed variance and does not justify its throughput cost",
+  "status": "complete_not_promoted",
+  "treatment": {
+    "checkpoint": {
+      "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-AttentionGate131M-headwise",
+      "metadata_sha256": "2c6c7d40d7745adac6b6e7fbd6bc85976e84cc7d2ac5799589ca348a6498cf3d",
+      "model_sha256": "8a292bda7229f9fec9c0b4c14b7c2523b7e3e0f77f7a6f9a8d7e6a28114f8236",
+      "optimizer_sha256": "260a0b4131fcaaadaa8e627c50a7237ef38bc23db144c0f5d869604ed50eb080",
+      "step": 2000
+    },
+    "final_validation_loss": 2.7930378913879395,
+    "intermediate_validation": [
+      {
+        "global_tokens": 31981568,
+        "loss": 3.68977
+      },
+      {
+        "global_tokens": 63963136,
+        "loss": 3.11426
+      },
+      {
+        "global_tokens": 95944704,
+        "loss": 2.89435
+      },
+      {
+        "global_tokens": 127926272,
+        "loss": 2.79297
+      }
+    ],
+    "output_gate": "headwise",
+    "performance": {
+      "active_seconds": 3391.5741502359742,
+      "gpu_hours": 0.90133,
+      "peak_allocated_vram_mib": 14210.63086,
+      "tokens_per_second": 43039.07208
+    },
+    "validation_source_losses": {
+      "cosmopedia_v2": 2.756173849105835,
+      "dclm": 3.6243252754211426,
+      "dclm_edu": 3.0938775539398193,
+      "finemath_4plus": 2.509476900100708,
+      "fineweb_edu": 3.3255455493927,
+      "math_multi_style": 1.6994043588638306,
+      "math_textbook_exercise": 1.2170321941375732,
+      "pes2o": 2.9788248538970947,
+      "ufw_l3_multi_style": 3.131105661392212,
+      "ultra_fineweb": 3.2526354789733887,
+      "wikimedia": 3.1425058841705322
+    },
+    "validation_tokens": 19988480,
+    "wandb_id": "yk2g4nzv"
+  }
+}

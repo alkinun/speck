@@ -14,7 +14,7 @@
   "screen_delta": -0.013940095901489258,
   "seed": 42,
   "sequence_length": 4096,
-  "status": "prepared",
+  "status": "complete_not_promoted",
   "train_tokens": 131072000,
   "treatment": "headwise"
 }
