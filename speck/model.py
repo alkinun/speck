@@ -668,8 +668,8 @@ class Attention(nn.Module):
         self.q_heads = hidden_size // spec.head_dim
         kv_size = spec.num_key_value_heads * spec.head_dim
         self.q_proj = Linear(hidden_size, hidden_size, bias=False)
-        self.k_proj = Linear(hidden_size, kv_size, bias=False)
-        self.v_proj = Linear(hidden_size, kv_size, bias=False)
+        self.k_proj = None if spec.reads_memory else Linear(hidden_size, kv_size, bias=False)
+        self.v_proj = None if spec.reads_memory else Linear(hidden_size, kv_size, bias=False)
         self.o_proj = Linear(hidden_size, hidden_size, bias=False)
         if spec.output_gate == "headwise":
             self.gate_proj = Linear(hidden_size, self.q_heads, bias=False)
@@ -678,49 +678,58 @@ class Attention(nn.Module):
         else:
             self.gate_proj = None
         self.q_norm = RMSNorm(spec.head_dim, eps)
-        self.k_norm = RMSNorm(spec.head_dim, eps)
+        self.k_norm = None if spec.reads_memory else RMSNorm(spec.head_dim, eps)
 
-    def forward(self, x, rotary, position, state=None):
+    def forward(self, x, rotary, position, state=None, memory=None, produced=None):
         batch, length, hidden_size = x.shape
         q = self.q_proj(x).view(batch, length, self.q_heads, self.spec.head_dim).transpose(1, 2)
-        k = (
-            self.k_proj(x)
-            .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
-            .transpose(1, 2)
-        )
-        v = (
-            self.v_proj(x)
-            .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
-            .transpose(1, 2)
-        )
-        q, k = self.q_norm(q), self.k_norm(k)
-        rotary_dim = self.spec.head_dim if self.spec.rope_dim is None else self.spec.rope_dim
+        q = self.q_norm(q)
+        rotary_dim = self.spec.active_rope_dim
         if rotary_dim:
             cos, sin = rotary(position, length, q.dtype)
             q = rotate(q, cos, sin, rotary_dim)
-            k = rotate(k, cos, sin, rotary_dim)
-        if state is None:
-            keys, values = k, v
-            past_length = 0
-            mask, causal = None, self.spec.scope == "global"
+        if self.spec.reads_memory:
+            if memory is None or self.spec.memory not in memory:
+                raise ValueError(f"attention memory '{self.spec.memory}' has not been written")
+            k = v = None
+            keys, values = memory[self.spec.memory]
+            past_length = keys.size(2) - length
+            if past_length < 0:
+                raise ValueError("attention memory is shorter than the reading query block")
         else:
-            past_k, past_v = state.current()
-            past_length = past_k.size(2)
-            if past_length:
-                keys = torch.cat((past_k, k), dim=2)
-                values = torch.cat((past_v, v), dim=2)
+            k = (
+                self.k_proj(x)
+                .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
+                .transpose(1, 2)
+            )
+            v = (
+                self.v_proj(x)
+                .view(batch, length, self.spec.num_key_value_heads, self.spec.head_dim)
+                .transpose(1, 2)
+            )
+            k = self.k_norm(k)
+            if rotary_dim:
+                k = rotate(k, cos, sin, rotary_dim)
+            if state is None:
+                keys, values, past_length = k, v, 0
             else:
-                keys, values = k, v
-            if self.spec.scope == "global":
-                if past_length == 0:
-                    mask, causal = None, True
-                elif length == 1:
-                    mask, causal = None, False
+                past_k, past_v = state.current()
+                past_length = past_k.size(2)
+                if past_length:
+                    keys = torch.cat((past_k, k), dim=2)
+                    values = torch.cat((past_v, v), dim=2)
                 else:
-                    mask = causal_lower_right(length, keys.size(2))
-                    causal = False
-            else:
-                mask, causal = None, False
+                    keys, values = k, v
+        if self.spec.scope != "global":
+            mask, causal = None, False
+        elif past_length == 0:
+            mask, causal = None, True
+        elif length == 1:
+            mask, causal = None, False
+        else:
+            mask, causal = causal_lower_right(length, keys.size(2)), False
+        if self.spec.writes_memory and produced is not None:
+            produced[self.spec.memory] = (keys, values)
         if self.spec.scope == "sliding":
             assert self.spec.window_size is not None
             if q.is_cuda and q.size(-1) >= 16 and past_length == 0:
@@ -1132,12 +1141,12 @@ class Operation(nn.Module):
             assert isinstance(spec, SwiGLUSpec)
             self.operation = SwiGLU(hidden_size, spec)
 
-    def forward(self, x, rotary, position, state=None):
+    def forward(self, x, rotary, position, state=None, memory=None, produced=None):
         normalized = self.norm(x)
         if isinstance(self.spec, AttentionSpec):
-            rotary_dim = self.spec.head_dim if self.spec.rope_dim is None else self.spec.rope_dim
+            rotary_dim = self.spec.active_rope_dim
             embedding = rotary[attention_rotary_key(self.spec)] if rotary_dim else None
-            return self.operation(normalized, embedding, position, state)
+            return self.operation(normalized, embedding, position, state, memory, produced)
         if isinstance(
             self.spec,
             (GatedCausalConvSpec, GatedDeltaNetSpec, KimiDeltaAttentionSpec),
@@ -1154,12 +1163,12 @@ class Stage(nn.Module):
             Operation(hidden_size, spec, config) for spec in stage.branches
         )
 
-    def forward(self, x, rotary, position, state, occurrence):
+    def forward(self, x, rotary, position, state, occurrence, memory=None, produced=None):
         outputs = []
         for branch_index, branch in enumerate(self.branches):
             key = f"occurrence_{occurrence}_stage_{self.stage_index}_branch_{branch_index}"
             entry = state.entries[key] if state is not None and key in state.entries else None
-            outputs.append(branch(x, rotary, position, entry))
+            outputs.append(branch(x, rotary, position, entry, memory, produced))
         return x + sum(outputs)
 
 
@@ -1171,10 +1180,11 @@ class BlockCore(nn.Module):
             for index, stage in enumerate(block.stages)
         )
 
-    def forward(self, x, rotary, position, state, occurrence):
+    def forward(self, x, rotary, position, state, occurrence, memory=None):
+        produced = {}
         for stage in self.stages:
-            x = stage(x, rotary, position, state, occurrence)
-        return x
+            x = stage(x, rotary, position, state, occurrence, memory, produced)
+        return x, produced
 
 
 class SpeckForCausalLM(nn.Module):
@@ -1325,6 +1335,8 @@ class SpeckForCausalLM(nn.Module):
                 for branch_index, branch in enumerate(stage.branches):
                     key = f"occurrence_{invocation.occurrence_index}_stage_{stage_index}_branch_{branch_index}"
                     if isinstance(branch, AttentionSpec):
+                        if branch.reads_memory:
+                            continue
                         if branch.scope == "global":
                             capacity = length
                         else:
@@ -1397,27 +1409,32 @@ class SpeckForCausalLM(nn.Module):
         maximum = state.length if state is not None else self.config.max_position_embeddings
         if position + length > maximum:
             raise ValueError("sequence exceeds the available model state")
+        memory = {}
         for invocation, adapter in zip(self.execution_plan, self.adapters):
             x = adapter(x)
             core = self.cores[invocation.weight_key]
             if self.training and self.gradient_checkpointing and state is None:
-                x = activation_checkpoint(
+                x, produced = activation_checkpoint(
                     core,
                     x,
                     self.rotary,
                     position,
                     None,
                     invocation.occurrence_index,
+                    memory,
                     use_reentrant=False,
                 )
             else:
-                x = core(
+                x, produced = core(
                     x,
                     self.rotary,
                     position,
                     state,
                     invocation.occurrence_index,
+                    memory,
                 )
+            if produced:
+                memory = {**memory, **produced}
         if state is not None:
             state.position += length
         hidden = self.output_projection(self.norm(x))
@@ -1524,7 +1541,9 @@ class SpeckForCausalLM(nn.Module):
                 for branch in stage.branches:
                     if isinstance(branch, AttentionSpec):
                         kv_size = branch.num_key_value_heads * branch.head_dim
-                        linear += 2 * hidden_size * hidden_size + 2 * hidden_size * kv_size
+                        linear += 2 * hidden_size * hidden_size
+                        if not branch.reads_memory:
+                            linear += 2 * hidden_size * kv_size
                         if branch.output_gate == "headwise":
                             linear += hidden_size * (hidden_size // branch.head_dim)
                         elif branch.output_gate == "elementwise":

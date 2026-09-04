@@ -135,3 +135,74 @@ def test_attention_shape_invariants_are_strict():
 def test_parallel_stage_kinds_must_be_unique():
     with pytest.raises(ValueError, match="must be unique"):
         StageConfig((SwiGLUSpec(16), SwiGLUSpec(32)))
+
+
+def memory_layers(**overrides):
+    writer = AttentionSpec(4, 1, memory="global", memory_role="write", **overrides)
+    reader = AttentionSpec(4, 1, memory="global", memory_role="read", **overrides)
+    return writer, reader
+
+
+def memory_architecture(*layers):
+    groups = tuple(
+        BlockGroup(BlockConfig(8, (StageConfig((layer,)), StageConfig((SwiGLUSpec(16),)))))
+        for layer in layers
+    )
+    return ArchitectureConfig(groups, 8, vocab_size=16)
+
+
+def test_reader_attention_grammar_round_trips():
+    writer, reader = memory_layers(rope_dim=0)
+    config = memory_architecture(writer, reader, reader)
+    assert ArchitectureConfig.from_dict(config.export()) == config
+    assert writer.writes_memory and not writer.reads_memory
+    assert reader.reads_memory and not reader.writes_memory
+
+
+def test_attention_memory_label_and_role_are_declared_together():
+    with pytest.raises(ValueError, match="declared together"):
+        AttentionSpec(4, 1, memory="global")
+    with pytest.raises(ValueError, match="declared together"):
+        AttentionSpec(4, 1, memory_role="read")
+    with pytest.raises(ValueError, match="memory role"):
+        AttentionSpec(4, 1, memory="global", memory_role="borrow")
+
+
+def test_attention_memory_requires_global_scope():
+    with pytest.raises(ValueError, match="requires global scope"):
+        AttentionSpec(4, 1, "sliding", 8, memory="global", memory_role="write")
+
+
+def test_attention_memory_readers_must_follow_their_writer():
+    writer, reader = memory_layers()
+    with pytest.raises(ValueError, match="must follow their memory writer"):
+        memory_architecture(reader, writer)
+    with pytest.raises(ValueError, match="must follow their memory writer"):
+        memory_architecture(reader)
+    with pytest.raises(ValueError, match="must follow their memory writer"):
+        memory_architecture(writer, AttentionSpec(4, 1, memory="other", memory_role="read"))
+
+
+def test_each_attention_memory_keeps_exactly_one_writer():
+    writer, _ = memory_layers()
+    with pytest.raises(ValueError, match="exactly one writer"):
+        memory_architecture(writer, writer)
+    block = BlockConfig(8, (StageConfig((writer,)), StageConfig((SwiGLUSpec(16),))))
+    with pytest.raises(ValueError, match="exactly one writer"):
+        ArchitectureConfig((BlockGroup(block, repeat=2),), 8, vocab_size=16)
+
+
+def test_attention_memory_readers_must_match_writer_key_geometry():
+    writer = AttentionSpec(4, 1, memory="global", memory_role="write")
+    with pytest.raises(ValueError, match="writer key geometry"):
+        memory_architecture(writer, AttentionSpec(4, 2, memory="global", memory_role="read"))
+    with pytest.raises(ValueError, match="writer key geometry"):
+        memory_architecture(
+            writer, AttentionSpec(4, 1, rope_dim=0, memory="global", memory_role="read")
+        )
+
+
+def test_attention_memory_readers_accept_equivalent_rope_declarations():
+    writer = AttentionSpec(4, 1, rope_dim=4, memory="global", memory_role="write")
+    reader = AttentionSpec(4, 1, memory="global", memory_role="read")
+    assert memory_architecture(writer, reader).logical_depth == 2

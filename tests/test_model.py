@@ -697,3 +697,150 @@ def test_parallel_stage_cache_matches_full_forward():
     model.init_weights()
     tokens = torch.randint(0, 16, (1, 6))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
+
+
+def memory_model(*layers, length=16):
+    groups = tuple(
+        BlockGroup(BlockConfig(8, (StageConfig((layer,)), StageConfig((SwiGLUSpec(16),)))))
+        for layer in layers
+    )
+    config = ArchitectureConfig(groups, 8, vocab_size=16, max_position_embeddings=length)
+    model = SpeckForCausalLM(config)
+    model.init_weights()
+    model.eval()
+    return model
+
+
+def memory_specs(rope_dim=0, num_key_value_heads=1):
+    writer = AttentionSpec(
+        4, num_key_value_heads, rope_dim=rope_dim, memory="global", memory_role="write"
+    )
+    reader = AttentionSpec(
+        4, num_key_value_heads, rope_dim=rope_dim, memory="global", memory_role="read"
+    )
+    standard = AttentionSpec(4, num_key_value_heads, rope_dim=rope_dim)
+    return writer, reader, standard
+
+
+def block_modules(model):
+    return [model.cores[invocation.weight_key] for invocation in model.execution_plan]
+
+
+@pytest.mark.parametrize("rope_dim", (0, 4))
+def test_reader_attention_reads_exactly_the_written_keys_and_values(rope_dim):
+    torch.manual_seed(210 + rope_dim)
+    writer, reader, standard = memory_specs(rope_dim=rope_dim)
+    shared = memory_model(writer, reader)
+    reference = memory_model(standard, standard)
+    reference.load_state_dict(shared.state_dict(), strict=False)
+    written = block_modules(shared)[0].stages[0].branches[0].operation
+    borrowed = block_modules(reference)[1].stages[0].branches[0].operation
+    borrowed.k_proj.load_state_dict(written.k_proj.state_dict())
+    borrowed.v_proj.load_state_dict(written.v_proj.state_dict())
+    borrowed.k_norm.load_state_dict(written.k_norm.state_dict())
+    for blocks in (block_modules(shared), block_modules(reference)):
+        torch.nn.init.zeros_(blocks[0].stages[0].branches[0].operation.o_proj.weight)
+        torch.nn.init.zeros_(blocks[0].stages[1].branches[0].operation.down_proj.weight)
+    tokens = torch.randint(0, 16, (2, 6))
+    torch.testing.assert_close(shared(tokens), reference(tokens))
+
+
+def test_reader_attention_requires_a_written_memory():
+    layer = Attention(8, AttentionSpec(4, 1, rope_dim=0, memory="global", memory_role="read"), 1e-5)
+    with pytest.raises(ValueError, match="has not been written"):
+        layer(torch.randn(1, 3, 8), None, 0)
+
+
+@pytest.mark.parametrize("rope_dim", (0, 4))
+def test_reader_attention_cache_matches_full_forward(rope_dim):
+    torch.manual_seed(220 + rope_dim)
+    writer, reader, _ = memory_specs(rope_dim=rope_dim)
+    model = memory_model(writer, reader, reader)
+    tokens = torch.randint(0, 16, (1, 8))
+    assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=1e-5)
+    assert torch.allclose(model(tokens), chunked_logits(model, tokens, 3), atol=1e-5)
+
+
+def test_reader_attention_allocates_one_shared_key_value_cache():
+    writer, reader, standard = memory_specs()
+    shared = memory_model(writer, reader, reader, reader)
+    independent = memory_model(standard, standard, standard, standard)
+    single = memory_model(standard)
+    assert len(shared.state(length=16).entries) == 1
+    assert len(independent.state(length=16).entries) == 4
+    single_bytes = single.state(length=16).allocated_bytes()
+    assert shared.state(length=16).allocated_bytes() == single_bytes
+    assert independent.state(length=16).allocated_bytes() == 4 * single_bytes
+
+
+def test_reader_attention_drops_key_value_projections_from_parameters_and_flops():
+    writer, reader, standard = memory_specs()
+    shared = memory_model(writer, reader, reader, reader)
+    independent = memory_model(standard, standard, standard, standard)
+    key_value_parameters = 2 * 8 * (1 * 4)
+    key_norm_parameters = 4
+    assert independent.parameter_count() - shared.parameter_count() == 3 * (
+        key_value_parameters + key_norm_parameters
+    )
+    assert independent.flops_per_token(16) - shared.flops_per_token(16) == (
+        6 * 3 * key_value_parameters
+    )
+
+
+def test_reader_attention_keeps_the_full_attention_score_term():
+    writer, reader, standard = memory_specs()
+    shared = memory_model(writer, reader)
+    independent = memory_model(standard, standard)
+    assert shared.flops_per_token(16) - shared.flops_per_token(8) == (
+        independent.flops_per_token(16) - independent.flops_per_token(8)
+    )
+    assert shared.flops_per_token(16) > shared.flops_per_token(8)
+
+
+def test_activation_checkpointing_preserves_reader_loss_and_gradients():
+    torch.manual_seed(230)
+    writer, reader, _ = memory_specs()
+    reference = memory_model(writer, reader, reader)
+    checkpointed = memory_model(writer, reader, reader)
+    checkpointed.load_state_dict(reference.state_dict())
+    reference.train()
+    checkpointed.train()
+    checkpointed.set_gradient_checkpointing(True)
+    tokens = torch.randint(0, 16, (2, 8))
+    reference_loss = reference(tokens, tokens)
+    checkpointed_loss = checkpointed(tokens, tokens)
+    reference_loss.backward()
+    checkpointed_loss.backward()
+    torch.testing.assert_close(checkpointed_loss, reference_loss)
+    gradients = 0
+    for expected, actual in zip(reference.parameters(), checkpointed.parameters()):
+        torch.testing.assert_close(actual.grad, expected.grad)
+        gradients += int(actual.grad is not None and actual.grad.abs().sum() > 0)
+    assert gradients
+
+
+def test_reader_gradients_reach_the_memory_writer():
+    torch.manual_seed(240)
+    writer, reader, _ = memory_specs()
+    model = memory_model(writer, reader)
+    model.train()
+    written = block_modules(model)[0].stages[0].branches[0].operation
+    torch.nn.init.zeros_(written.o_proj.weight)
+    torch.nn.init.zeros_(block_modules(model)[0].stages[1].branches[0].operation.down_proj.weight)
+    tokens = torch.randint(0, 16, (2, 6))
+    model(tokens, tokens).backward()
+    assert written.k_proj.weight.grad.abs().sum() > 0
+    assert written.v_proj.weight.grad.abs().sum() > 0
+
+
+def test_shared_memory_key_adapters_are_absorbed_by_the_query_projection():
+    torch.manual_seed(250)
+    query = torch.randn(2, 3, 5, 4)
+    key = torch.randn(2, 3, 7, 4)
+    adapter = torch.randn(4, 4) * 0.1
+    rekeyed = key + key @ adapter.transpose(0, 1)
+    requeried = query + query @ adapter
+    torch.testing.assert_close(
+        query @ rekeyed.transpose(-1, -2),
+        requeried @ key.transpose(-1, -2),
+    )

@@ -16,7 +16,21 @@ class AttentionSpec:
     window_size: int | None = None
     rope_dim: int | None = None
     output_gate: str = "none"
+    memory: str | None = None
+    memory_role: str = "none"
     kind: str = field(init=False, default="attention")
+
+    @property
+    def active_rope_dim(self):
+        return self.head_dim if self.rope_dim is None else self.rope_dim
+
+    @property
+    def reads_memory(self):
+        return self.memory_role == "read"
+
+    @property
+    def writes_memory(self):
+        return self.memory_role == "write"
 
     def __post_init__(self):
         if self.head_dim < 2 or self.head_dim % 2:
@@ -35,6 +49,14 @@ class AttentionSpec:
             raise ValueError("attention RoPE dimensions must be even and within the head")
         if self.output_gate not in {"none", "headwise", "elementwise"}:
             raise ValueError("attention output gate must be none, headwise, or elementwise")
+        if self.memory_role not in {"none", "write", "read"}:
+            raise ValueError("attention memory role must be none, write, or read")
+        if (self.memory is None) != (self.memory_role == "none"):
+            raise ValueError("attention memory labels and roles must be declared together")
+        if self.memory is not None and not self.memory:
+            raise ValueError("attention memory labels cannot be empty")
+        if self.memory_role != "none" and self.scope != "global":
+            raise ValueError("shared attention memory requires global scope")
 
 
 @dataclass(frozen=True)
@@ -245,6 +267,41 @@ class ArchitectureConfig:
             raise ValueError("EOS token ID is outside the vocabulary")
         if self.expected_parameters is not None and self.expected_parameters < 1:
             raise ValueError("expected parameters must be positive")
+        self._validate_shared_memory()
+
+    def _validate_shared_memory(self):
+        """Bind every attention memory reader to exactly one earlier writer."""
+
+        writers = {}
+        for invocation in self.execution_plan:
+            for stage in invocation.block.stages:
+                for branch in stage.branches:
+                    if not isinstance(branch, AttentionSpec) or branch.memory is None:
+                        continue
+                    if branch.writes_memory:
+                        if branch.memory in writers:
+                            raise ValueError("each attention memory must have exactly one writer")
+                        writers[branch.memory] = (invocation.occurrence_index, branch)
+                        continue
+                    entry = writers.get(branch.memory)
+                    if entry is None or entry[0] >= invocation.occurrence_index:
+                        raise ValueError("attention memory readers must follow their memory writer")
+                    writer = entry[1]
+                    geometry = (
+                        writer.head_dim,
+                        writer.num_key_value_heads,
+                        writer.active_rope_dim,
+                        writer.scope,
+                    )
+                    if geometry != (
+                        branch.head_dim,
+                        branch.num_key_value_heads,
+                        branch.active_rope_dim,
+                        branch.scope,
+                    ):
+                        raise ValueError(
+                            "attention memory readers must match their writer key geometry"
+                        )
 
     @property
     def logical_depth(self):
