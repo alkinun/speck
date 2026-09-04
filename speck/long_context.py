@@ -22,7 +22,7 @@ ANSWER_SETS = {
         "purple house",
     ),
 }
-RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger")
+RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger", "manifest")
 
 
 def parse_lengths(value):
@@ -111,14 +111,26 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
                 "question": f"\nLOOKUP ID[{labels[query_index]}]\nPAYLOAD: ",
                 "filler": "Status nominal. Queue empty. Routine telemetry recorded. ",
             }
+        if template == "ledger":
+            return {
+                "prefix": "A parcel ledger follows. Each named parcel has one seal.\n",
+                "records": [
+                    f"Parcel {label} bears the seal {answer}."
+                    for label, answer in zip(labels, answers)
+                ],
+                "question": f"\nWhich seal belongs to parcel {labels[query_index]}?\nSeal: ",
+                "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
+            }
         return {
-            "prefix": "A parcel ledger follows. Each named parcel has one seal.\n",
+            "prefix": "A shipping manifest assigns one marker to each labeled shipment.\n",
             "records": [
-                f"Parcel {label} bears the seal {answer}."
+                f"Shipment labeled {label} carries marker {answer}."
                 for label, answer in zip(labels, answers)
             ],
-            "question": f"\nWhich seal belongs to parcel {labels[query_index]}?\nSeal: ",
-            "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
+            "question": (
+                f"\nReport the marker carried by shipment labeled {labels[query_index]}.\nMarker: "
+            ),
+            "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
         }
     if task != "two_hop" or destinations is None:
         raise ValueError("retrieval text requires a supported task and complete fields")
@@ -155,20 +167,36 @@ def _retrieval_text(template, task, labels, answers, query_index, destinations=N
             "question": f"\nRESOLVE EDGE[{labels[query_index]}]\nPAYLOAD: ",
             "filler": "Heartbeat stable. No pending route changes. Diagnostic entry complete. ",
         }
+    if template == "ledger":
+        return {
+            "prefix": "A dispatch ledger follows. Each dispatch names a depot holding one seal.\n",
+            "first": [
+                f"Dispatch {label} names depot {destination}."
+                for label, destination in zip(labels, destinations)
+            ],
+            "second": [
+                f"Depot {destination} stores seal {answer}."
+                for destination, answer in zip(destinations, answers)
+            ],
+            "question": (
+                f"\nWhich seal is stored at the depot named by dispatch {labels[query_index]}?\nSeal: "
+            ),
+            "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
+        }
     return {
-        "prefix": "A dispatch ledger follows. Each dispatch names a depot holding one seal.\n",
+        "prefix": "A transit manifest links each ticket to a warehouse and cargo marker.\n",
         "first": [
-            f"Dispatch {label} names depot {destination}."
+            f"Ticket {label} sends cargo to warehouse {destination}."
             for label, destination in zip(labels, destinations)
         ],
         "second": [
-            f"Depot {destination} stores seal {answer}."
+            f"Warehouse {destination} labels its cargo {answer}."
             for destination, answer in zip(destinations, answers)
         ],
         "question": (
-            f"\nWhich seal is stored at the depot named by dispatch {labels[query_index]}?\nSeal: "
+            f"\nReport the cargo marker reached from ticket {labels[query_index]}.\nMarker: "
         ),
-        "filler": "The office logged routine deliveries, receipts, notices, and schedules. ",
+        "filler": "Routine freight, invoices, timetables, and maintenance notes were filed. ",
     }
 
 
