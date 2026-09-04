@@ -239,6 +239,14 @@ therefore retrieval replication on seeds 43 and 44, not a claim that the loss tr
 Machine-readable paired deltas and hashes are checked at
 [results/SpeckLC-150M-ReaderAttention131M/replication/caches-3.json](../results/SpeckLC-150M-ReaderAttention131M/replication/caches-3.json).
 
+**Pre-registered retrieval replication rule.** Seeds 43 and 44 use the identical joint-load recipe
+with distinct synthetic training streams at offsets `21,000,000` and `22,000,000`; seed 42 used
+`20,000,000`. All three retain the same fixed validation stream at offset `30,000,000`. Each seed
+must finish with candidate accuracy `>= 0.80`, final-over-peak retention `>= 0.85`, specificity
+`>= 0.95`, and an original-corpus loss increase no greater than `0.00965` nats against its own base
+checkpoint. Capability promotion requires all three seeds to pass all four gates. This rule is fixed
+before either replication adapter is trained.
+
 ## Retrieval gate: sharing costs retention, not learnability
 
 Each arm was adapted from its own seed-42 base checkpoint with finding
