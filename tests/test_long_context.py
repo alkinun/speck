@@ -84,6 +84,38 @@ def test_multi_key_case_has_exact_length_and_stable_counterfactual_structure():
     assert distractor["mutation_index"] == distractor_index
 
 
+def test_multi_key_case_supports_independent_template_and_multi_token_answers():
+    class WordTokenizer:
+        bos_id = 1
+
+        def __init__(self):
+            self.ids = {}
+
+        def encode(self, text, bos=False):
+            tokens = []
+            for word in text.replace("\n", " \n ").split():
+                if word not in self.ids:
+                    self.ids[word] = len(self.ids) + 3
+                tokens.append(self.ids[word])
+            return ([self.bos_id] if bos else []) + tokens
+
+    case = build_multi_key_case(
+        WordTokenizer(),
+        512,
+        seed=11,
+        depth=0.5,
+        records=8,
+        template="registry",
+        answer_set="phrases",
+    )
+    assert case["template"] == "registry"
+    assert case["answer_set"] == "phrases"
+    assert len(case["answer_tokens"]) == 2
+    assert len(case["candidate_token_ids"]) == 10
+    assert len(set(case["candidate_token_ids"])) == 10
+    assert len(case["prompt_tokens"]) + len(case["answer_tokens"]) == 512
+
+
 def test_two_hop_case_has_two_ordered_facts_and_exact_length():
     tokenizer = FakeTokenizer()
     case = build_two_hop_case(tokenizer, 1_024, seed=4, first_depth=0.2, second_depth=0.8)
@@ -135,6 +167,22 @@ def test_evaluate_case_streams_answer_without_full_logits():
     assert result["exact_match"] == 1
     assert result["token_accuracy"] == 1
     assert result["state_memory"]["total_bytes"] == 64
+
+
+def test_evaluate_case_scores_full_multi_token_answer():
+    case = {
+        "task": "multi_key",
+        "length": 5,
+        "depth": 0.5,
+        "seed": 3,
+        "prompt_tokens": [1, 2, 3],
+        "answer_tokens": [11, 12],
+        "candidate_token_ids": [11, 21],
+    }
+    result = evaluate_case(OracleModel(case["answer_tokens"]), case, device="cpu")
+    assert result["answer_tokens"] == 2
+    assert result["exact_match"] == 1
+    assert result["token_accuracy"] == 1
 
 
 def test_effective_length_and_curve_aggregation():

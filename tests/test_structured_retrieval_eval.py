@@ -36,6 +36,36 @@ def test_build_case_is_deterministic_and_counterfactual():
         assert distractor["mutation_index"] == distractor_index
 
 
+def test_build_case_propagates_template_and_answer_set():
+    class WordTokenizer:
+        bos_id = 1
+
+        def __init__(self):
+            self.ids = {}
+
+        def encode(self, text, bos=False):
+            tokens = []
+            for word in text.replace("\n", " \n ").split():
+                if word not in self.ids:
+                    self.ids[word] = len(self.ids) + 3
+                tokens.append(self.ids[word])
+            return ([self.bos_id] if bos else []) + tokens
+
+    case = build_case(
+        "multi_key",
+        WordTokenizer(),
+        1_024,
+        7,
+        records=8,
+        chains=6,
+        template="registry",
+        answer_set="phrases",
+    )
+    assert case["template"] == "registry"
+    assert case["answer_set"] == "phrases"
+    assert len(case["answer_tokens"]) == 2
+
+
 @pytest.mark.parametrize("value", (0, -1, True, 1.2))
 def test_positive_integer_rejects_invalid_values(value):
     with pytest.raises(ValueError, match="positive integer"):

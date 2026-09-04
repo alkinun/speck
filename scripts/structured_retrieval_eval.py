@@ -14,6 +14,8 @@ from speck.checkpoint import checkpoint_identity, latest
 from speck.common import base_dir
 from speck.config import load_experiment
 from speck.long_context import (
+    ANSWER_SETS,
+    RETRIEVAL_TEMPLATES,
     add_counterfactual_metrics,
     aggregate_results,
     build_multi_key_case,
@@ -51,6 +53,8 @@ def arguments(argv=None):
     parser.add_argument("--samples", type=int, default=30)
     parser.add_argument("--records", type=int, default=8)
     parser.add_argument("--chains", type=int, default=6)
+    parser.add_argument("--template", choices=RETRIEVAL_TEMPLATES, default="archive")
+    parser.add_argument("--answer-set", choices=tuple(ANSWER_SETS), default="letters")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
@@ -72,6 +76,8 @@ def build_case(
     chains,
     answer_offset=0,
     mutation_index=None,
+    template="archive",
+    answer_set="letters",
 ):
     if task == "multi_key":
         return build_multi_key_case(
@@ -82,6 +88,8 @@ def build_case(
             records=records,
             answer_offset=answer_offset,
             mutation_index=mutation_index,
+            template=template,
+            answer_set=answer_set,
         )
     first_depth, second_depth = TWO_HOP_DEPTHS[seed % len(TWO_HOP_DEPTHS)]
     return build_two_hop_case(
@@ -93,6 +101,8 @@ def build_case(
         chains=chains,
         answer_offset=answer_offset,
         mutation_index=mutation_index,
+        template=template,
+        answer_set=answer_set,
     )
 
 
@@ -119,7 +129,16 @@ def run(args):
         task_results = []
         for length in args.lengths:
             for sample in range(samples):
-                case = build_case(task, tokenizer, length, sample, records, chains)
+                case = build_case(
+                    task,
+                    tokenizer,
+                    length,
+                    sample,
+                    records,
+                    chains,
+                    template=args.template,
+                    answer_set=args.answer_set,
+                )
                 counterfactual_case = build_case(
                     task,
                     tokenizer,
@@ -128,6 +147,8 @@ def run(args):
                     records,
                     chains,
                     answer_offset=1,
+                    template=args.template,
+                    answer_set=args.answer_set,
                 )
                 distractor_index = (case["query_index"] + 1) % (
                     case.get("records") or case["chains"]
@@ -141,6 +162,8 @@ def run(args):
                     chains,
                     answer_offset=1,
                     mutation_index=distractor_index,
+                    template=args.template,
+                    answer_set=args.answer_set,
                 )
                 factual = evaluate_case(model, case, device=device, kv_cache_dtype=torch.bfloat16)
                 counterfactual = evaluate_case(
@@ -169,6 +192,8 @@ def run(args):
                 )
                 result.update(
                     fact_positions=case["fact_positions"],
+                    template=case["template"],
+                    answer_set=case["answer_set"],
                     query_index=case["query_index"],
                     records=case.get("records"),
                     chains=case.get("chains"),
@@ -203,6 +228,8 @@ def run(args):
             "samples": samples,
             "records": records,
             "chains": chains,
+            "template": args.template,
+            "answer_set": args.answer_set,
             "two_hop_depths": [list(pair) for pair in TWO_HOP_DEPTHS],
         },
         "positional_regime": positional_regime(

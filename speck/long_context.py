@@ -7,7 +7,22 @@ from collections import defaultdict
 
 import torch
 
-_PASSKEY_VALUES = tuple("ABCDEFGHIJ")
+ANSWER_SETS = {
+    "letters": tuple("ABCDEFGHIJ"),
+    "phrases": (
+        "silver summit",
+        "golden river",
+        "north moon",
+        "red sun",
+        "blue field",
+        "green bird",
+        "black sky",
+        "white rain",
+        "orange star",
+        "purple house",
+    ),
+}
+RETRIEVAL_TEMPLATES = ("archive", "registry")
 
 
 def parse_lengths(value):
@@ -53,14 +68,82 @@ def _repeat_to_length(pattern, length):
     return (pattern * repetitions)[:length]
 
 
-def _candidate_token_ids(tokenizer):
-    candidate_token_ids = []
-    for candidate in _PASSKEY_VALUES:
-        tokens = tokenizer.encode(candidate)
-        if len(tokens) != 1:
-            raise ValueError("retrieval candidates must each encode to exactly one token")
-        candidate_token_ids.append(tokens[0])
-    return candidate_token_ids
+def _answer_values(answer_set):
+    try:
+        return ANSWER_SETS[answer_set]
+    except KeyError as error:
+        choices = ", ".join(ANSWER_SETS)
+        raise ValueError(f"answer set must be one of: {choices}") from error
+
+
+def _candidate_tokens(tokenizer, values):
+    sequences = [tokenizer.encode(candidate) for candidate in values]
+    if any(not sequence for sequence in sequences):
+        raise ValueError("retrieval candidates must each encode to at least one token")
+    first_tokens = [sequence[0] for sequence in sequences]
+    if len(set(first_tokens)) != len(first_tokens):
+        raise ValueError("retrieval candidates must have unique first tokens")
+    return first_tokens, sequences
+
+
+def _retrieval_text(template, task, labels, answers, query_index, destinations=None):
+    if template not in RETRIEVAL_TEMPLATES:
+        raise ValueError(f"retrieval template must be one of: {', '.join(RETRIEVAL_TEMPLATES)}")
+    if task == "multi_key":
+        if template == "archive":
+            return {
+                "prefix": "A long archive follows. Remember every exact record and answer the final question.\n",
+                "records": [
+                    f"The access code for {label} is {answer}."
+                    for label, answer in zip(labels, answers)
+                ],
+                "question": (
+                    f"\nQuestion: What is the access code for {labels[query_index]}?\nAnswer: "
+                ),
+                "filler": "The archive contains reports, inventories, correspondence, and notes. ",
+            }
+        return {
+            "prefix": "<REGISTRY>\nThe table below binds identifiers to payloads.\n",
+            "records": [
+                f"ID[{label}] :: PAYLOAD[{answer}]" for label, answer in zip(labels, answers)
+            ],
+            "question": f"\nLOOKUP ID[{labels[query_index]}]\nPAYLOAD: ",
+            "filler": "Status nominal. Queue empty. Routine telemetry recorded. ",
+        }
+    if task != "two_hop" or destinations is None:
+        raise ValueError("retrieval text requires a supported task and complete fields")
+    if template == "archive":
+        return {
+            "prefix": (
+                "A routed archive follows. Resolve the linked records and answer the final question.\n"
+            ),
+            "first": [
+                f"The route from {label} leads to {destination}."
+                for label, destination in zip(labels, destinations)
+            ],
+            "second": [
+                f"The access code inside {destination} is {answer}."
+                for destination, answer in zip(destinations, answers)
+            ],
+            "question": (
+                f"\nQuestion: Follow the route from {labels[query_index]}. "
+                "What access code is inside its destination?\nAnswer: "
+            ),
+            "filler": "The archive contains unrelated reports, schedules, and correspondence. ",
+        }
+    return {
+        "prefix": "<ROUTING_TABLE>\nResolve the directed bindings, then return the payload.\n",
+        "first": [
+            f"EDGE[{label}] -> NODE[{destination}]"
+            for label, destination in zip(labels, destinations)
+        ],
+        "second": [
+            f"NODE[{destination}] -> PAYLOAD[{answer}]"
+            for destination, answer in zip(destinations, answers)
+        ],
+        "question": f"\nRESOLVE EDGE[{labels[query_index]}]\nPAYLOAD: ",
+        "filler": "Heartbeat stable. No pending route changes. Diagnostic entry complete. ",
+    }
 
 
 def _exact_prompt(prefix, blocks, question, filler, filler_positions, prompt_length):
@@ -93,10 +176,9 @@ def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
         raise ValueError("needle depth must be in [0, 1]")
     generator = random.Random(seed)
     label = f"archive-{generator.randrange(100_000, 1_000_000)}"
-    answer_index = (generator.randrange(len(_PASSKEY_VALUES)) + answer_offset) % len(
-        _PASSKEY_VALUES
-    )
-    answer = _PASSKEY_VALUES[answer_index]
+    values = ANSWER_SETS["letters"]
+    answer_index = (generator.randrange(len(values)) + answer_offset) % len(values)
+    answer = values[answer_index]
     prefix = tokenizer.encode(
         "A long archive follows. Remember exact records and answer the final question.\n",
         bos=True,
@@ -104,7 +186,7 @@ def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
     needle = tokenizer.encode(f"\nThe access code for {label} is {answer}.\n")
     question = tokenizer.encode(f"\nQuestion: What is the access code for {label}?\nAnswer: ")
     answer_tokens = tokenizer.encode(answer)
-    candidate_token_ids = _candidate_token_ids(tokenizer)
+    candidate_token_ids, candidate_token_sequences = _candidate_tokens(tokenizer, values)
     prompt_length = length - len(answer_tokens)
     fixed = len(prefix) + len(needle) + len(question)
     if fixed > prompt_length:
@@ -129,6 +211,7 @@ def build_passkey_case(tokenizer, length, seed, depth, answer_offset=0):
         "prompt_length": len(prompt),
         "answer_tokens": answer_tokens,
         "candidate_token_ids": candidate_token_ids,
+        "candidate_token_sequences": candidate_token_sequences,
         "answer": answer,
         "answer_index": answer_index,
         "label": label,
@@ -143,6 +226,8 @@ def build_multi_key_case(
     records=8,
     answer_offset=0,
     mutation_index=None,
+    template="archive",
+    answer_set="letters",
 ):
     """Build exact-length associative recall with several simultaneous key/value records."""
 
@@ -154,7 +239,10 @@ def build_multi_key_case(
     labels = [f"archive-{generator.randrange(100_000, 1_000_000)}" for _ in range(records)]
     while len(set(labels)) != records:
         labels = [f"archive-{generator.randrange(100_000, 1_000_000)}" for _ in range(records)]
-    answers = list(generator.sample(_PASSKEY_VALUES, records))
+    values = _answer_values(answer_set)
+    if records > len(values):
+        raise ValueError("multi-key records exceed the selected answer set")
+    answers = list(generator.sample(values, records))
     original_answers = list(answers)
     query_index = generator.randrange(records)
     mutation_index = query_index if mutation_index is None else mutation_index
@@ -162,29 +250,30 @@ def build_multi_key_case(
         raise ValueError("multi-key mutation index must be an integer")
     if not 0 <= mutation_index < records:
         raise ValueError("multi-key mutation index is outside the records")
-    answers[mutation_index] = _PASSKEY_VALUES[
-        (_PASSKEY_VALUES.index(answers[mutation_index]) + answer_offset) % len(_PASSKEY_VALUES)
+    answers[mutation_index] = values[
+        (values.index(answers[mutation_index]) + answer_offset) % len(values)
     ]
-    prefix = tokenizer.encode(
-        "A long archive follows. Remember every exact record and answer the final question.\n",
-        bos=True,
-    )
+    text = _retrieval_text(template, "multi_key", labels, answers, query_index)
+    prefix = tokenizer.encode(text["prefix"], bos=True)
     record_lines = list(zip(labels, answers))
     generator.shuffle(record_lines)
-    record_block = tokenizer.encode(
-        "\n".join(f"The access code for {label} is {answer}." for label, answer in record_lines)
-        + "\n"
+    shuffled_text = _retrieval_text(
+        template,
+        "multi_key",
+        [label for label, _ in record_lines],
+        [answer for _, answer in record_lines],
+        0,
     )
-    question = tokenizer.encode(
-        f"\nQuestion: What is the access code for {labels[query_index]}?\nAnswer: "
-    )
+    record_block = tokenizer.encode("\n".join(shuffled_text["records"]) + "\n")
+    question = tokenizer.encode(text["question"])
     answer = answers[query_index]
     answer_tokens = tokenizer.encode(answer)
+    candidate_token_ids, candidate_token_sequences = _candidate_tokens(tokenizer, values)
     prompt, positions = _exact_prompt(
         prefix,
         (record_block,),
         question,
-        tokenizer.encode("The archive contains reports, inventories, correspondence, and notes. "),
+        tokenizer.encode(text["filler"]),
         (depth,),
         length - len(answer_tokens),
     )
@@ -196,16 +285,19 @@ def build_multi_key_case(
         "prompt_tokens": prompt,
         "prompt_length": len(prompt),
         "answer_tokens": answer_tokens,
-        "candidate_token_ids": _candidate_token_ids(tokenizer),
+        "candidate_token_ids": candidate_token_ids,
+        "candidate_token_sequences": candidate_token_sequences,
         "answer": answer,
-        "answer_index": _PASSKEY_VALUES.index(answer),
+        "answer_index": values.index(answer),
         "label": labels[query_index],
         "query_index": query_index,
         "mutation_index": mutation_index,
-        "mutation_from_index": _PASSKEY_VALUES.index(original_answers[mutation_index]),
-        "mutation_to_index": _PASSKEY_VALUES.index(answers[mutation_index]),
+        "mutation_from_index": values.index(original_answers[mutation_index]),
+        "mutation_to_index": values.index(answers[mutation_index]),
         "records": records,
         "fact_positions": positions,
+        "template": template,
+        "answer_set": answer_set,
     }
 
 
@@ -218,6 +310,8 @@ def build_two_hop_case(
     chains=6,
     answer_offset=0,
     mutation_index=None,
+    template="archive",
+    answer_set="letters",
 ):
     """Build exact-length two-hop lookup among several independent chains."""
 
@@ -231,7 +325,10 @@ def build_two_hop_case(
     while len(set(starts)) != chains or len(set(destinations)) != chains:
         starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
         destinations = [f"box-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
-    answers = list(generator.sample(_PASSKEY_VALUES, chains))
+    values = _answer_values(answer_set)
+    if chains > len(values):
+        raise ValueError("two-hop chains exceed the selected answer set")
+    answers = list(generator.sample(values, chains))
     original_answers = list(answers)
     query_index = generator.randrange(chains)
     mutation_index = query_index if mutation_index is None else mutation_index
@@ -239,40 +336,50 @@ def build_two_hop_case(
         raise ValueError("two-hop mutation index must be an integer")
     if not 0 <= mutation_index < chains:
         raise ValueError("two-hop mutation index is outside the chains")
-    answers[mutation_index] = _PASSKEY_VALUES[
-        (_PASSKEY_VALUES.index(answers[mutation_index]) + answer_offset) % len(_PASSKEY_VALUES)
+    answers[mutation_index] = values[
+        (values.index(answers[mutation_index]) + answer_offset) % len(values)
     ]
     first_lines = list(zip(starts, destinations))
     second_lines = list(zip(destinations, answers))
     generator.shuffle(first_lines)
     generator.shuffle(second_lines)
-    first_block = tokenizer.encode(
-        "\n".join(
-            f"The route from {start} leads to {destination}." for start, destination in first_lines
-        )
-        + "\n"
+    text = _retrieval_text(
+        template,
+        "two_hop",
+        starts,
+        answers,
+        query_index,
+        destinations=destinations,
     )
-    second_block = tokenizer.encode(
-        "\n".join(
-            f"The access code inside {destination} is {answer}."
-            for destination, answer in second_lines
-        )
-        + "\n"
+    first_text = _retrieval_text(
+        template,
+        "two_hop",
+        [start for start, _ in first_lines],
+        answers,
+        query_index,
+        destinations=[destination for _, destination in first_lines],
     )
-    prefix = tokenizer.encode(
-        "A routed archive follows. Resolve the linked records and answer the final question.\n",
-        bos=True,
+    answer_by_destination = dict(zip(destinations, answers))
+    second_text = _retrieval_text(
+        template,
+        "two_hop",
+        starts,
+        [answer_by_destination[destination] for destination, _ in second_lines],
+        query_index,
+        destinations=[destination for destination, _ in second_lines],
     )
-    question = tokenizer.encode(
-        f"\nQuestion: Follow the route from {starts[query_index]}. What access code is inside its destination?\nAnswer: "
-    )
+    first_block = tokenizer.encode("\n".join(first_text["first"]) + "\n")
+    second_block = tokenizer.encode("\n".join(second_text["second"]) + "\n")
+    prefix = tokenizer.encode(text["prefix"], bos=True)
+    question = tokenizer.encode(text["question"])
     answer = answers[query_index]
     answer_tokens = tokenizer.encode(answer)
+    candidate_token_ids, candidate_token_sequences = _candidate_tokens(tokenizer, values)
     prompt, positions = _exact_prompt(
         prefix,
         (first_block, second_block),
         question,
-        tokenizer.encode("The archive contains unrelated reports, schedules, and correspondence. "),
+        tokenizer.encode(text["filler"]),
         (first_depth, second_depth),
         length - len(answer_tokens),
     )
@@ -286,16 +393,19 @@ def build_two_hop_case(
         "prompt_tokens": prompt,
         "prompt_length": len(prompt),
         "answer_tokens": answer_tokens,
-        "candidate_token_ids": _candidate_token_ids(tokenizer),
+        "candidate_token_ids": candidate_token_ids,
+        "candidate_token_sequences": candidate_token_sequences,
         "answer": answer,
-        "answer_index": _PASSKEY_VALUES.index(answer),
+        "answer_index": values.index(answer),
         "label": starts[query_index],
         "query_index": query_index,
         "mutation_index": mutation_index,
-        "mutation_from_index": _PASSKEY_VALUES.index(original_answers[mutation_index]),
-        "mutation_to_index": _PASSKEY_VALUES.index(answers[mutation_index]),
+        "mutation_from_index": values.index(original_answers[mutation_index]),
+        "mutation_to_index": values.index(answers[mutation_index]),
         "chains": chains,
         "fact_positions": positions,
+        "template": template,
+        "answer_set": answer_set,
     }
 
 
@@ -306,7 +416,7 @@ def _synchronize(device):
 
 @torch.inference_mode()
 def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=None):
-    """Score an answer autoregressively without materializing sequence-wide vocabulary logits."""
+    """Score full answer emission and first-token candidate choice without full-sequence logits."""
 
     parameter = next(model.parameters())
     device = torch.device(device or parameter.device)
