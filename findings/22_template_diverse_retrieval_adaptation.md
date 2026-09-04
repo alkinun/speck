@@ -122,6 +122,30 @@ but value selection remains unreliable. A curriculum is now the controlled next 
 from pilot 3, which already learned template-robust two-record lookup, and add eight-record examples
 at lower learning rate with language replay.
 
+## Pilot 5 — Two-to-eight-record curriculum
+
+The curriculum initializes from pilot 3 and adds 100 steps / 800 retrieval examples at eight
+records, with `5e-5` learning rate and the same 50% language replay. Training examples use a new
+random stream. The held-out manifest/phrase validation crosses both gates by step 30 and ends at:
+
+| Metric | Fixed validation, n=30 | Independent seed-0, n=30 | Independent seed-0, n=100 |
+| --- | ---: | ---: | ---: |
+| Exact match | **80.0%** | 76.7% | **80.0%** |
+| Candidate accuracy | **83.3%** | 76.7% | **80.0%** |
+| Token accuracy | 90.0% | 88.3% | 90.0% |
+| Specificity accuracy | **96.7%** | **93.3%** | **96.0%** |
+| Specificity score | 5.422 | 5.577 | 5.894 |
+
+The first independent 30-case estimate misses the 80% choice gate by one example. Expanding that
+same deterministic stream to 100 cases gives exactly 80/100, while specificity remains 96/100. The
+result is therefore a narrow pass, not a high-margin one. It warrants full training-stream
+replication before any architecture claim.
+
+An eager-training launch of the same curriculum failed before step 1: backward requested another
+1.95 GiB with only 0.62 GiB free on the RTX 3090. No output checkpoint or report was created. Batch-4
+adaptation therefore retains the compiled path; eager validation remains safe and avoids dynamic
+shape recompilation.
+
 ## Artifacts
 
 - Report:
@@ -149,3 +173,10 @@ at lower learning rate with language replay.
 - Pilot 4 model SHA-256: `47e21c5290a73a424494b331765a959eceba1cba06509fb02671bca2af38eaf8`
 - Pilot 4 metadata SHA-256: `d6a1ce6b3218d178c093d4ebe21f8100fa5c00d305fb7a04f235c9180ab3daf9`
 - Pilot 4 optimizer SHA-256: `2440198c0002350b86ed7223200497fa21a99e8e6a06d1e2b1c048761a4b6189`
+- Curriculum report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-curriculum-r8-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-curriculum-r8-seed42.json)
+- Curriculum n=100 audit:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/eval-kda-curriculum-r8-manifest-phrases-4k-n100.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/eval-kda-curriculum-r8-manifest-phrases-4k-n100.json)
+- Curriculum model SHA-256: `a34678360e296e3588d421795359d90845df8e2628331afd11a1b9eb0f62697e`
+- Curriculum metadata SHA-256: `fd27404f04c0bdfdf89320c923d58cfb186fea21efa952a5e582485efb971b3a`
+- Curriculum optimizer SHA-256: `7b1984d1f819d6322c378fb636ef7a8b3cbe52895130ef943bd57e858f9e8177`

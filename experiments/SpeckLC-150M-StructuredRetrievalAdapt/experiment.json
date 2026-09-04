@@ -182,5 +182,18 @@
     "validation_answer_set": "phrases",
     "validation_template": "manifest",
     "verdict": "eight-record specificity reaches 100%, but exact/candidate ends at 50%; gate failed"
+  },
+  "two_to_eight_record_curriculum": {
+    "language_replay_fraction": 0.5,
+    "learning_rate": 0.00005,
+    "parent": "SpeckLC-150M-StructuredRetrievalAdapt-kda-template3-mixed-seed42/model_000200.pt",
+    "records": 8,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-curriculum-r8-seed42.json",
+    "retrieval_examples": 800,
+    "sequence_length": 4096,
+    "steps": 100,
+    "validation_answer_set": "phrases",
+    "validation_template": "manifest",
+    "verdict": "n=100 exact/candidate 80%, specificity 96%; narrow pass pending training-stream replication"
   }
 }
