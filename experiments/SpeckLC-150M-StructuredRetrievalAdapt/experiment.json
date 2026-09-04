@@ -141,5 +141,26 @@
     "validation_answer_set": "phrases",
     "validation_template": "manifest",
     "verdict": "template transfer passes for trained answers; joint template/answer transfer remains partial"
+  },
+  "template_diverse_pilot_3": {
+    "language_loss": 2.8057000637054443,
+    "language_replay_fraction": 0.5,
+    "records": 2,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-mixed-seed42.json",
+    "retrieval_examples": 1600,
+    "sequence_length": 4096,
+    "steps": 200,
+    "train_answer_sets": [
+      "letters",
+      "phrases"
+    ],
+    "train_templates": [
+      "archive",
+      "registry",
+      "ledger"
+    ],
+    "validation_answer_set": "phrases",
+    "validation_template": "manifest",
+    "verdict": "two-record held-out-template gate passes; eight-record exact/candidate remains 43.3%"
   }
 }

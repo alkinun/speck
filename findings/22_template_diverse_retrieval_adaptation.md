@@ -66,6 +66,43 @@ This is the first evidence of template-robust target selection. The remaining fa
 generalization to a new surface form and a new output vocabulary. Pilot 3 will retain three training
 templates but restore phrase supervision; the manifest remains fully held out.
 
+## Pilot 3 — Three templates and both answer sets
+
+Pilot 3 trains archive/registry/ledger with both letters and phrases. Manifest/phrases remains held
+out as a surface-form split, while the exact validation answers and random records are unseen. At
+step 200, the fixed adaptation validation stream passes the predeclared 80% gate:
+
+| Metric | Result |
+| --- | ---: |
+| Exact match | **86.7%** |
+| Candidate accuracy | **86.7%** |
+| Token accuracy | 93.3% |
+| Specificity accuracy | **96.7%** |
+| Specificity score | 4.599 |
+
+An independent seed-0 evaluator confirms 86.7% exact/candidate and 90.0% specificity with two
+records. It also exposes a load boundary:
+
+| Held-out manifest/phrases load | Exact | Candidate | Specificity accuracy |
+| --- | ---: | ---: | ---: |
+| 2 records | **86.7%** | **86.7%** | **90.0%** |
+| 8 records | 43.3% | 43.3% | **93.3%** |
+
+The model usually responds more to the queried record than to the distractor even at eight records,
+but cannot reliably make the correct ten-way choice. Template and value generalization are now
+demonstrated at the trained load; distractor-load generalization is not.
+
+The 20M-token original-corpus loss is `2.805700`, only `+0.006011` nats from the post-32K parent
+(`2.799689`) and inside the measured `0.00965`-nat seed range. The 50% replay recipe continues to
+prevent material forgetting under the harder task mixture.
+
+## Decision after pilot 3
+
+- Treat the two-record held-out-template gate as passed on one training stream.
+- Do not run long-length or architecture comparisons yet; eight-record exact accuracy is below gate.
+- Train the same template/value mixture directly at eight records, then replicate distinct training
+  streams only if the eight-record manifest gate passes.
+
 ## Artifacts
 
 - Report:
@@ -81,3 +118,10 @@ templates but restore phrase supervision; the manifest remains fully held out.
 - Pilot 2 model SHA-256: `9b070cba51a9d6d9799393e93edc8ceca0d80801c95d57c1bac11ecd2a2490c7`
 - Pilot 2 metadata SHA-256: `eb204400eea17ed7307875b71df0967a12bd996e8134a70601866d73461d52bc`
 - Pilot 2 optimizer SHA-256: `2f941cbb69455f3a51df246bf192b6329b9b92648bcd7f856ba39f2581dfc6cc`
+- Pilot 3 report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-mixed-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-template3-mixed-seed42.json)
+- Pilot 3 short-loss report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/short-loss/kda-template3-mixed-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/short-loss/kda-template3-mixed-seed42.json)
+- Pilot 3 model SHA-256: `cae56a8a4f7af2ad553904957a0e2053332e1c7d22f6b4c1d4940a27372da047`
+- Pilot 3 metadata SHA-256: `4dd437e9cb15d87d4415e0d42ca1d2476a1785273ca351f5fd9d7b85ceb90cd1`
+- Pilot 3 optimizer SHA-256: `0ef72600387eddda75f6fcc158c4b11578fb4d7cd19a7d9c22635faa124d576e`
