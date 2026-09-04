@@ -281,6 +281,15 @@ coupling through a shared writer becomes the surviving explanation. Machine-read
 hashes are checked at
 [results/SpeckLC-150M-ReaderDistance131M](../results/SpeckLC-150M-ReaderDistance131M).
 
+**Pre-registered distance decision rule.** Before either distance arm is adapted, `holds` retains the
+already-published final candidate-accuracy gate of `>= 0.80` on the same 30 fixed held-out cases.
+Near-pass/far-fail supports depth distance; both-pass rejects distance at this diagnostic's resolution
+and requires the fixed-distance fan-out control; near-fail makes the experiment inconclusive. Peak,
+final-over-peak retention, exact match, and specificity are reported as mechanistic diagnostics, not
+substituted post-hoc gates. Each adapter also receives the same 20M-token original-corpus evaluation;
+an increase greater than the `0.00965`-nat seed range against its own base checkpoint makes the
+comparison inconclusive because adaptation forgetting would be a competing explanation.
+
 ## Measured systems result
 
 Prefill and cached decode were measured with `scripts.inference_benchmark` on the pinned RTX 3090
