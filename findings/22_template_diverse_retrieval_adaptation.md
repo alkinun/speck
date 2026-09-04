@@ -216,6 +216,18 @@ held-out wording. Direct-lookup prompt tuning stops here. The replicated result 
 target-specific association selection; exact value emission at eight-record load remains an open
 optimization/data problem.
 
+### Candidate-ranking loss
+
+A matched joint-load run adds a weight-1 ten-way candidate cross-entropy at the first answer token,
+alongside the normal full-vocabulary answer loss and 50% replay. It uses exactly the same seed-42
+examples as pilot 6. The candidate term reaches essentially zero on training prompts, but produces
+large gradient spikes and ends at only 76.7% exact/candidate on the fixed 30-case directory
+validation, below the 90.0% matched control. Specificity stays 100%.
+
+The intervention sharpens the trained candidate boundary without improving surface transfer. It is
+rejected at weight 1; further scalar tuning is not justified without a loss that explicitly enforces
+target-over-distractor invariance.
+
 ## Artifacts
 
 - Report:
@@ -280,3 +292,9 @@ optimization/data problem.
   `84f5e31593956b161c0159b6a3e4b32f3a734795e82839b47a0f212764d058b9`,
   `13d04711e337d888bf44f1da4c95e9b4b379fbd1651061fda17ebebec1fed239`,
   `5dd1b5e12786f572e3e1107a4ae80d0df497c40e9992404138dfcbe6d8a38683`
+- Candidate-loss report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-candidate-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-candidate-seed42.json)
+- Candidate-loss model / metadata / optimizer SHA-256:
+  `3023affc3c1c133a314312f5fae984bb9a5cd7df63856fe9095e77b6b57b893e`,
+  `81184d6ea3d9a1ec55ae6095cb89ee9da9ca874af19c55bffb58ea79db762b08`,
+  `c30aaa154440d8be637ffa47f3fd5240650f6d8923995f03073d1aa5b1c922a2`

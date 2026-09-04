@@ -263,6 +263,15 @@
     "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-answercue-seed42.json",
     "verdict": "matched cue does not fix held-out eight-record value decoding"
   },
+  "candidate_ranking_loss": {
+    "candidate_loss_weight": 1.0,
+    "final_candidate_accuracy": 0.7666666666666667,
+    "final_exact_match": 0.7666666666666667,
+    "final_specificity_accuracy": 1.0,
+    "matched_control_candidate_accuracy": 0.9,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-candidate-seed42.json",
+    "verdict": "rejected; training candidate loss vanishes but held-out decoding worsens"
+  },
   "symbolic_two_hop_pilot": {
     "final_n100": {
       "composition_candidate_accuracy": 0.43,
