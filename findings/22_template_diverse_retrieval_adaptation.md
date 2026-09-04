@@ -146,6 +146,27 @@ An eager-training launch of the same curriculum failed before step 1: backward r
 adaptation therefore retains the compiled path; eager validation remains safe and avoids dynamic
 shape recompilation.
 
+## Three-stream replication
+
+Seeds 43 and 44 vary both `torch.manual_seed` and the actual synthetic example streams at each
+stage. Parent checkpoint, replay order, validation stream, optimizer, and budgets remain fixed.
+
+| Training stream | Stage-1 fixed 2-record candidate / specificity | Stage-1 independent 8-record candidate / specificity | Curriculum fixed candidate / specificity | Curriculum independent n=100 candidate / specificity |
+| ---: | ---: | ---: | ---: | ---: |
+| 42 | 86.7% / 96.7% | 43.3% / 93.3% | **83.3% / 96.7%** | **80.0% / 96.0%** |
+| 43 | 93.3% / 100% | 63.3% / 96.7% | 70.0% / 100% | 65.0% / 95.0% |
+| 44 | 90.0% / 96.7% | 50.0% / 90.0% | 56.7% / 100% | 64.0% / 93.0% |
+
+The stage-1 template result is replicated: all three streams exceed the 80% two-record gate on the
+fixed held-out template. Eight-record candidate accuracy is not replicated. The curriculum passes
+only stream 42 and averages 69.7% on the independent 100-case evaluations. In contrast, specificity
+remains 93–96% on all 300 independent cases.
+
+This localizes the failure. KDA consistently identifies which association matters, across unseen
+wording and load, but the trained readout does not reliably select the corresponding value among
+eight bindings. The next recipe must increase structural diversity during training, not tune more
+steps against the manifest validation set.
+
 ## Artifacts
 
 - Report:
@@ -180,3 +201,19 @@ shape recompilation.
 - Curriculum model SHA-256: `a34678360e296e3588d421795359d90845df8e2628331afd11a1b9eb0f62697e`
 - Curriculum metadata SHA-256: `fd27404f04c0bdfdf89320c923d58cfb186fea21efa952a5e582485efb971b3a`
 - Curriculum optimizer SHA-256: `7b1984d1f819d6322c378fb636ef7a8b3cbe52895130ef943bd57e858f9e8177`
+- Seed-43 stage-1 model / metadata / optimizer SHA-256:
+  `dadbe884a19825bad89f8669c7861028db294ea85ea097b03472382cf2f4b6ae`,
+  `e306960b5ba7d68d6f584f0c1a8a8b306c78420303d7ec51cbb82070a7b603fc`,
+  `2a0de7cf5b081680114d46e49f75537fb8448fb987e58f7d900b7ab4bb6ec389`
+- Seed-43 curriculum model / metadata / optimizer SHA-256:
+  `1c6f2c471f612c49d65380be2ffd0712576ae6cf2cd93852d1da2155d9fbe7f9`,
+  `f3cd3a2bee7f859ac818025033d4476607a6b0629fd68c0f3d321447ec1906f2`,
+  `56f74d59c290808063bb65e595ee92547324f5c1b2e9269a3c93b12d0f740da3`
+- Seed-44 stage-1 model / metadata / optimizer SHA-256:
+  `b60e9277eed913b07db7ff2ee4742d96ef2341f70133bd4af2a98ea8c7ca2a9d`,
+  `d6965c2d681b79cb395187d81623b22bac3508c68af09525f0ef91dc7554e5cb`,
+  `f5801faa7f9b17e34f04d8f71847e70d311c98608a9148acb092e29104ce4199`
+- Seed-44 curriculum model / metadata / optimizer SHA-256:
+  `468b037877e851faed48cfc62591a08b93f245e4e52d7f8981d823b089fbdddb`,
+  `7e444a1898cd622f6425c70951dd98e573a12260cebe844d41c9c8dc7a63a4b1`,
+  `71dad761a9cf5614f2ff2314a9912f7302bc977c2d46a559f62e2e432c71723d`

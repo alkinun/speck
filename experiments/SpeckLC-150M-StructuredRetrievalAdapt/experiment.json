@@ -195,5 +195,23 @@
     "validation_answer_set": "phrases",
     "validation_template": "manifest",
     "verdict": "n=100 exact/candidate 80%, specificity 96%; narrow pass pending training-stream replication"
+  },
+  "two_to_eight_record_replication": {
+    "independent_n100_candidate_accuracy": {
+      "42": 0.8,
+      "43": 0.65,
+      "44": 0.64
+    },
+    "independent_n100_specificity_accuracy": {
+      "42": 0.96,
+      "43": 0.95,
+      "44": 0.93
+    },
+    "training_seeds": [
+      42,
+      43,
+      44
+    ],
+    "verdict": "held-out target selection replicates; eight-record value decoding does not"
   }
 }
