@@ -167,6 +167,28 @@ wording and load, but the trained readout does not reliably select the correspon
 eight bindings. The next recipe must increase structural diversity during training, not tune more
 steps against the manifest validation set.
 
+## Pilot 6 — Joint template, value, and load diversity
+
+This run replaces the curriculum with one 400-step distribution spanning four training templates,
+letters and phrases, and both two- and eight-record cases. Each of the 16 conditions receives exactly
+200 examples. A fifth directory template and its native `Signal:` response cue are held out.
+
+The fixed 30-case validation ends at 90.0% exact/candidate and 96.7% specificity. A larger independent
+sample is more conservative:
+
+| Held-out directory condition, n=100 | Exact | Candidate | Specificity accuracy |
+| --- | ---: | ---: | ---: |
+| Phrases | 78.0% | 77.0% | 95.0% |
+| Letters | 80.0% | 80.0% | 99.0% |
+
+Joint load training improves the independent phrase candidate result from the replicated curriculum
+mean of 69.7% to 77.0%, but still misses the strict 80% gate. Nearly identical letter and phrase
+results show that multi-token emission is no longer the main issue. The held-out template also
+changes the response cue (`Answer:`, `PAYLOAD:`, `Seal:`, and `Marker:` in training versus `Signal:`
+in validation). The next diagnostic will standardize only that output cue while retaining all
+held-out record and question wording. This separates associative retrieval from small-model
+instruction/readout calibration.
+
 ## Artifacts
 
 - Report:
@@ -217,3 +239,9 @@ steps against the manifest validation set.
   `468b037877e851faed48cfc62591a08b93f245e4e52d7f8981d823b089fbdddb`,
   `7e444a1898cd622f6425c70951dd98e573a12260cebe844d41c9c8dc7a63a4b1`,
   `71dad761a9cf5614f2ff2314a9912f7302bc977c2d46a559f62e2e432c71723d`
+- Joint-load report:
+  [results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-seed42.json](../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-seed42.json)
+- Joint-load model / metadata / optimizer SHA-256:
+  `0bbdd1348bc9c574152994bcc193f26473a88b47a028ad345e900bf526093d25`,
+  `4b433d207eab990ba1055da93aa2bef8daf24aafe718f386a31834c32ab35477`,
+  `30aed47d5d177d1dff75d5233398f129cd2ea1eb0f3375a43a5160ff715c68b9`

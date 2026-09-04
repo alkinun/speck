@@ -213,5 +213,34 @@
       44
     ],
     "verdict": "held-out target selection replicates; eight-record value decoding does not"
+  },
+  "joint_diversity_pilot": {
+    "independent_n100": {
+      "letters_candidate_accuracy": 0.8,
+      "letters_specificity_accuracy": 0.99,
+      "phrases_candidate_accuracy": 0.77,
+      "phrases_exact_match": 0.78,
+      "phrases_specificity_accuracy": 0.95
+    },
+    "language_replay_fraction": 0.5,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/template-diverse/kda-joint-load-seed42.json",
+    "retrieval_examples": 3200,
+    "steps": 400,
+    "train_answer_sets": [
+      "letters",
+      "phrases"
+    ],
+    "train_record_counts": [
+      2,
+      8
+    ],
+    "train_templates": [
+      "archive",
+      "registry",
+      "ledger",
+      "manifest"
+    ],
+    "validation_template": "directory",
+    "verdict": "improves load robustness but native-cue n=100 candidate remains 77-80%"
   }
 }
