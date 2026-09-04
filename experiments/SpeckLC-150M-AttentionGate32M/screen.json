@@ -6,7 +6,7 @@
   "seed": 42,
   "sequence_length": 4096,
   "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
-  "status": "prepared",
+  "status": "complete",
   "train_tokens": 32000000,
   "variants": {
     "elementwise": {

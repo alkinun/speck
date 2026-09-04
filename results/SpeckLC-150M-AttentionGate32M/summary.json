@@ -2,7 +2,7 @@
   "comparison": "parameter- and analytic-FLOP-matched global attention output gates",
   "format": "speck_attention_gate_screen_results",
   "format_version": 1,
-  "status": "two_of_three_complete",
+  "status": "complete",
   "variants": {
     "ungated": {
       "checkpoint": {
@@ -102,6 +102,57 @@
       },
       "validation_tokens": 19988480,
       "wandb_id": "eb9lxc4v"
+    },
+    "elementwise": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-AttentionGate32M-elementwise",
+        "metadata_sha256": "19b7107ae8cca6dbe2275f8400e70e5b78d89c7d561a6a827092b9dedfa5b112",
+        "model_sha256": "0c31d07d4ecf0077996e934f6dc34ad664fc28a3a2e190653b25d789fd6b9f35",
+        "optimizer_sha256": "d6c2de94ad3e2bd192c379209c3c81bbf6ab3d88f9131e0da6cb7b11d215238d",
+        "step": 489
+      },
+      "delta_from_headwise": 0.006941556930541992,
+      "delta_from_ungated": -0.006998538970947266,
+      "final_validation_loss": 3.874082565307617,
+      "intermediate_validation": [
+        {
+          "global_tokens": 7995392,
+          "loss": 4.94587
+        },
+        {
+          "global_tokens": 15990784,
+          "loss": 4.35236
+        },
+        {
+          "global_tokens": 23986176,
+          "loss": 4.02909
+        },
+        {
+          "global_tokens": 31981568,
+          "loss": 3.87340
+        }
+      ],
+      "performance": {
+        "active_seconds": 1056.8827028649393,
+        "gpu_hours": 0.24257,
+        "peak_allocated_vram_mib": 14222.94629,
+        "tokens_per_second": 44127.95822
+      },
+      "validation_source_losses": {
+        "cosmopedia_v2": 3.86137056350708,
+        "dclm": 4.5274271965026855,
+        "dclm_edu": 4.071807384490967,
+        "finemath_4plus": 3.802704334259033,
+        "fineweb_edu": 4.287833213806152,
+        "math_multi_style": 2.828416585922241,
+        "math_textbook_exercise": 2.3365626335144043,
+        "pes2o": 4.225081443786621,
+        "ufw_l3_multi_style": 4.090534210205078,
+        "ultra_fineweb": 4.239787578582764,
+        "wikimedia": 4.349270343780518
+      },
+      "validation_tokens": 19988480,
+      "wandb_id": "jzi4lrkz"
     }
   }
 }
