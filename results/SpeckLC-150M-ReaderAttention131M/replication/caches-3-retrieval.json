@@ -1,0 +1,157 @@
+{
+  "aggregate": {
+    "candidate_gate_passes": 2,
+    "family_promotion_pass": false,
+    "final_candidate_accuracy_mean": 0.8555555555555556,
+    "final_candidate_accuracy_range": 0.2,
+    "mean_retention_final_over_peak": 0.9753086419753086,
+    "peak_candidate_accuracy_mean": 0.8777777777777778,
+    "retention_gate_passes": 3,
+    "specificity_gate_passes": 3,
+    "total_seeds": 3
+  },
+  "arm": "caches-3",
+  "determinism_control": {
+    "checkpoint": {
+      "metadata_sha256": "03acb335a95145f5cf1a141497232789420e7ea02a3e756d2cbdd8a823a23fcd",
+      "model_sha256": "978c9aed619e19647784c45746fb694de9860aac1deb1b87db0996eeafe9c87c",
+      "optimizer_sha256": "158528eddf8eef6f17594ed81cb3d8b10df30d4c45e69a7f89fa1cfd4b7d44b9",
+      "step": 400
+    },
+    "final_candidate_accuracy": 0.9,
+    "final_specificity_accuracy": 1.0,
+    "history_matches_original": false,
+    "interpretation": "same declared seed-42 recipe on the unchanged training/runtime code path; CUDA training is not bit deterministic, so this repeat does not replace the original result",
+    "model_hash_matches_original": false,
+    "original_loss": 2.803062677383423,
+    "original_loss_delta_versus_parent": 0.0029850006103515625,
+    "passes_all_measured_gates": true,
+    "peak_candidate_accuracy": 0.9,
+    "retention_final_over_peak": 1.0,
+    "training_seed_offset": 20000000
+  },
+  "findings": [
+    "strict candidate promotion fails at two of three seeds because seed 43 ends at 0.767, one case below the 0.80 gate",
+    "all three seeds retain their learned capability: final-over-peak retention is 0.926, 1.00, and 1.00",
+    "specificity is 1.00 for all three seeds, so target selection replicates more strongly than value decoding",
+    "seed 43 and seed 44 preserve original-language loss; a same-recipe seed-42 repeat also passes, but the deleted original adapter cannot be evaluated exactly",
+    "the seed-42 same-recipe repeat changes the model hash and trajectory while still passing, exposing CUDA training nondeterminism that must be included in the uncertainty budget",
+    "caches-3 removes the retention cliff but does not meet the preregistered 3-of-3 candidate promotion rule"
+  ],
+  "format": "speck_reader_attention_retrieval_replication",
+  "format_version": 1,
+  "gates": {
+    "candidate_accuracy": 0.8,
+    "language_loss_delta": 0.00965,
+    "promotion_requires_all_seeds": true,
+    "retention_final_over_peak": 0.85,
+    "specificity_accuracy": 0.95
+  },
+  "protocol": {
+    "fixed_validation_seed_offset": 30000000,
+    "recipe": "four training templates, letters and phrases, two and eight records, 400 steps, 50 percent original-language replay, held-out directory template with phrase answers, 30 fixed validation cases",
+    "training_seed_offsets": {
+      "42": 20000000,
+      "43": 21000000,
+      "44": 22000000
+    }
+  },
+  "runs": {
+    "42": {
+      "candidate_trajectory": [
+        0.23333333333333334,
+        0.23333333333333334,
+        0.1,
+        0.9,
+        0.8666666666666667,
+        0.8,
+        0.8333333333333334,
+        0.8333333333333334,
+        0.8333333333333334
+      ],
+      "checkpoint": {
+        "metadata_sha256": "151b148693646d059c62a1a0c280e7f52d87751d5af58b95a7f88571360eb570",
+        "model_sha256": "02a45ca53b4eb61e10d799b93231316df9319d31938a9f2dec050d0015ffd34e",
+        "optimizer_sha256": "393cb741678db1dba5fe309e3699eae9ae538de8c58c12b7913a47565990077b",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.8333333333333334,
+      "final_exact_match": 0.8333333333333334,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 6.935416666666667,
+      "original_language_loss": null,
+      "original_language_loss_note": "original adapter deleted before loss evaluation; same-recipe nondeterminism repeat is reported separately",
+      "passes_candidate_gate": true,
+      "passes_retention_gate": true,
+      "passes_specificity_gate": true,
+      "peak_candidate_accuracy": 0.9,
+      "peak_step": 150,
+      "retention_final_over_peak": 0.9259259259259259
+    },
+    "43": {
+      "candidate_trajectory": [
+        0.23333333333333334,
+        0.2,
+        0.7666666666666667,
+        0.7333333333333333,
+        0.7,
+        0.6666666666666666,
+        0.7333333333333333,
+        0.7666666666666667,
+        0.7666666666666667
+      ],
+      "checkpoint": {
+        "metadata_sha256": "84ae2eb766a676e0a95a2403c10e129867b7f9af675dcfe04500ed0df203a508",
+        "model_sha256": "51cb97913aa5c469ad2b8c2b6d8545b4e282442111bebbd4270b0b156c95f834",
+        "optimizer_sha256": "e9490ee1c7029b72e318d8b8b2b2aadb4e90cc7b20a5cd43bd9ed3530657ed82",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.7666666666666667,
+      "final_exact_match": 0.7666666666666667,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 5.655989583333334,
+      "original_language_loss": 2.804746150970459,
+      "original_language_loss_delta_versus_parent": -0.0012497901916503906,
+      "passes_candidate_gate": false,
+      "passes_language_gate": true,
+      "passes_retention_gate": true,
+      "passes_specificity_gate": true,
+      "peak_candidate_accuracy": 0.7666666666666667,
+      "peak_step": 100,
+      "retention_final_over_peak": 1.0
+    },
+    "44": {
+      "candidate_trajectory": [
+        0.06666666666666667,
+        0.0,
+        0.5666666666666667,
+        0.9,
+        0.8666666666666667,
+        0.9,
+        0.8333333333333334,
+        0.9666666666666667,
+        0.9666666666666667
+      ],
+      "checkpoint": {
+        "metadata_sha256": "404ad4bc5bc0da117b7d939aac84c1f8b739ee3f13a988c1100573036fe1ff19",
+        "model_sha256": "8705558fe534a43ce81f7e8bec42d2e9578f68fc7918969d397265122b91af3f",
+        "optimizer_sha256": "d0c79f52832baf209e46da54c88740078fc318277664541b48f6415ce36f9184",
+        "step": 400
+      },
+      "final_candidate_accuracy": 0.9666666666666667,
+      "final_exact_match": 0.9666666666666667,
+      "final_specificity_accuracy": 1.0,
+      "final_specificity_score": 9.002604166666666,
+      "original_language_loss": 2.8018581867218018,
+      "original_language_loss_delta_versus_parent": 0.00045180320739746094,
+      "passes_candidate_gate": true,
+      "passes_language_gate": true,
+      "passes_retention_gate": true,
+      "passes_specificity_gate": true,
+      "peak_candidate_accuracy": 0.9666666666666667,
+      "peak_step": 350,
+      "retention_final_over_peak": 1.0
+    }
+  },
+  "status": "complete_promotion_gate_failed"
+}

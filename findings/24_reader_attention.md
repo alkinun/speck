@@ -3,8 +3,9 @@
 > **Status: seed-42 cache-count frontier, systems measurements, and matched near/far distance test
 > complete.** Reader-to-writer depth distance is independently sufficient to damage retrieval at
 > fixed fan-out one, despite unchanged base loss and preserved language loss after adaptation.
-> Three-cache base loss is replicated on seeds 42–44; retrieval replication and symbolic composition
-> remain unmeasured, so the selection remains provisional.
+> Three-cache base loss and retrieval are replicated on seeds 42–44. Strict loss equivalence and
+> candidate-accuracy promotion each pass only two of three seeds, so `caches-3` remains a research
+> candidate rather than a promoted architecture. Symbolic composition remains unmeasured.
 
 ## Question
 
@@ -287,11 +288,42 @@ A halved adaptation learning rate does not rescue `caches-1`, but the control is
 than decisive: at `5e-5` the arm never reaches the `0.767` peak it attains at `1e-4`, so it does not
 separate optimization instability from a representational limit.
 
-The two candidate mechanisms are confounded by the even-spacing rule that places writers. Readers
-per memory and reader-to-writer depth distance rise together across these arms, so this frontier
-cannot yet say whether a memory degrades because too many layers depend on it or because it is read
-too far below where it was written. Separating them requires a layout that holds one fixed while
-varying the other, and that is the next experiment.
+### Three-seed `caches-3` retrieval replication
+
+Seeds 43 and 44 use distinct synthetic training streams while all seeds retain the same fixed
+held-out validation cases. This separates initialization and task-stream sensitivity from the
+seed-42 discovery result.
+
+| Seed | Peak candidate | Final candidate | Retention | Final exact | Final specificity | Original-loss delta | Gate |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 42 | 0.900 | 0.833 | 0.926 | 0.833 | 1.000 | not available | pass on measured gates |
+| 43 | 0.767 | 0.767 | 1.000 | 0.767 | 1.000 | -0.001250 | fail candidate |
+| 44 | 0.967 | 0.967 | 1.000 | 0.967 | 1.000 | +0.000452 | pass |
+
+The pre-registered 3/3 promotion rule **fails**: seed 43 finishes one of thirty cases below the
+`0.80` candidate gate. This miss must not be erased by the `0.856` mean final accuracy or by changing
+the threshold after seeing the result. `caches-3` is not promoted on this internal diagnostic.
+
+The mechanistic result is more favorable than the binary gate. Retention passes three of three at
+`0.926`, `1.00`, and `1.00`, and specificity is `1.00` for every seed. Cache sharing therefore no
+longer produces the retention cliff seen with two and one caches. What varies is the acquired
+decoding level: final candidate accuracy spans `0.767` to `0.967` across initialization and synthetic
+training streams while target selection remains intact.
+
+Both exact seed-43/44 adapters preserve original-language loss. The original seed-42 adapter had
+already been deleted before that evaluation was added, so the same declared seed-42 recipe was
+rerun. It passes candidate (`0.900`), retention (`1.00`), specificity (`1.00`), and language loss
+(`+0.002985`), but its model hash and trajectory differ from the original despite unchanged relevant
+code. It is recorded as a CUDA nondeterminism control, not substituted for the original result. The
+one-case seed-43 miss and this nondeterminism motivate a pre-registered larger validation sample if
+the internal gate is revisited; they do not rescue the failed 3/3 rule.
+
+Machine-readable trajectories, gates, hashes, loss controls, and the nondeterminism repeat are at
+[results/SpeckLC-150M-ReaderAttention131M/replication/caches-3-retrieval.json](../results/SpeckLC-150M-ReaderAttention131M/replication/caches-3-retrieval.json).
+
+The seed-42 cache-count frontier confounds readers per memory with reader-to-writer distance because
+the even-spacing rule raises both together. The matched distance experiment below separates them at
+fan-out one.
 
 ## Depth-distance base result
 
@@ -382,7 +414,7 @@ so sharing a cache is not a prefill optimization.
 deployment does not benefit from this mechanism.
 
 **Batched decode improves substantially, and the governing variable is total cached token slots.**
-At `524,288` slots the maximum-sharing arm decodes `1.9×` faster and the selected three-cache arm
+At `524,288` slots the maximum-sharing arm decodes `1.9×` faster and the three-cache arm
 `1.3×` faster. The same speedup appears whether those slots come from 32K at batch 16 or 128K at
 batch 4, which is what a bandwidth-bound decode predicts: what matters is how many cached bytes must
 be read per step, not how they are arranged. Peak allocation at that point falls from `12.33` to
@@ -390,27 +422,29 @@ be read per step, not how they are arranged. Peak allocation at that point falls
 
 The efficiency claim is therefore specific rather than general: no prefill change, negligible
 single-stream change, and a near-two-fold batched decode gain at the sharing level that fails the
-retrieval gate. The arm that passes the gate keeps a `1.3×` gain.
+retrieval gate. The arm that passed the seed-42 gate keeps a `1.3×` gain.
 
-## Current selection
+## Current selection status
 
-`caches-3` is the arm to carry forward. It passes the retrieval gate with retention identical to the
-five-cache control, its loss deficit of `0.004698` nats is half the endpoint's and inside the seed
-range, and it cuts 128K resident state by `1.66×`. `caches-1` remains the more valuable scientific
-point precisely because it fails: it establishes that the mechanism has a boundary and locates it.
+`caches-3` remains the leading **research candidate**, but it is not promoted. It cuts 128K resident
+state by `1.66×`, keeps the seed-42 batched decode gain, and resolves the retention cliff across all
+three seeds. Against that, strict paired loss equivalence passes only 2/3 and strict candidate
+promotion also passes only 2/3. The five-cache model remains the conservative architecture until an
+independent or pre-registered larger-sample gate justifies accepting the trade.
 
 The distance control strengthens this selection mechanistically: both `caches-3` readers bind the
 immediately preceding writer, matching the topology that passes at distance one. It does not yet
 justify a universal maximum distance or prove that fan-out is harmless.
 
-Base replication tempers the quality claim: `caches-3` has a `+0.005783`-nat mean paired cost and a
-wide interval spanning zero, but it passes the strict per-seed tie on only two of three seeds. It is
-the arm to carry into replicated capability gates, not yet a loss-noninferior promotion.
+`caches-1` remains scientifically valuable precisely because it fails: it establishes that the
+mechanism has a boundary. The distance control locates freshness as one cause; the three-cache
+replication shows that adjacent refresh fixes retention without guaranteeing a stable decoding
+ceiling.
 
 ## What is not verified
 
-- Three-cache base loss is replicated across seeds 42–44, but retrieval and systems remain one seed
-  per arm.
+- Three-cache base loss and retrieval are replicated across seeds 42–44, but systems remain one seed
+  per arm and the retrieval validation contains only 30 fixed cases.
 - Composition is unmeasured.
 - Systems numbers are uncompiled single-process measurements on one consumer card, not a serving
   benchmark, and they exclude tokenization, scheduling, and multi-request batching effects.
@@ -429,7 +463,7 @@ Run order, all at seed 42 first, then seeds 43 and 44 only for arms that pass:
 1. `caches-1` — complete.
 2. `caches-2` — complete, and retired: indistinguishable from `caches-1` at twice the state.
 3. `caches-3` — complete; it lies between the endpoints and shows the cost is graded.
-4. `caches-1-mqa1` — only after the capability gates.
+4. `caches-1-mqa1` — not launched because the replicated capability gate failed.
 
 One fallback is pre-registered before any result is seen. If `caches-1` loses on loss or retrieval
 while `caches-2` holds, the most likely cause is that a memory written at logical layer 3 is too
@@ -471,11 +505,10 @@ global memory, which is a direct and previously untested answer to the question 
 
 ## Blocking constraint
 
-Approximately 11 GiB of filesystem headroom remains, and the standing decision in
-[09](09_decisions_and_change_log.md) is not to launch another checkpoint family at that headroom.
-Each 131M-token arm writes one completed checkpoint of roughly 1.3–1.9 GiB. Two arms fit; the full
-five-arm, three-seed frontier does not. Resolve the retention question before launching more than
-the first two arms.
+Approximately 8 GiB of filesystem headroom remains after the two retained base-replication
+checkpoints. Do not launch another multi-arm base family without a new storage audit. Temporary
+adapters continue to be run and deleted one at a time only after their reports and hashes are
+written.
 
 ## Artifacts
 

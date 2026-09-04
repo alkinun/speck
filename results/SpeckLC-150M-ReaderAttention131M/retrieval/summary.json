@@ -125,13 +125,36 @@
       "retention_final_over_peak": 0.9285714285714286
     }
   },
+  "caches_3_replication": {
+    "candidate_gate_passes": 2,
+    "family_promotion_pass": false,
+    "final_candidate_accuracy": {
+      "42": 0.8333333333333334,
+      "43": 0.7666666666666667,
+      "44": 0.9666666666666667
+    },
+    "final_specificity_accuracy": {
+      "42": 1.0,
+      "43": 1.0,
+      "44": 1.0
+    },
+    "retention_final_over_peak": {
+      "42": 0.9259259259259259,
+      "43": 1.0,
+      "44": 1.0
+    },
+    "retention_gate_passes": 3,
+    "specificity_gate_passes": 3,
+    "total_seeds": 3
+  },
   "findings": [
     "every arm learns the task to a similar peak between 0.77 and 0.93 candidate accuracy",
     "what degrades with sharing is retention, not learnability: final over peak falls 0.94, 0.92, 0.70, 0.39 as readers per memory rise 0, 1, 2, 4",
     "five and three caches are stable and pass the gate; two caches oscillates between 0.53 and 0.80; one cache collapses from 0.767 to 0.300",
     "association specificity stays perfect for five, three, and two caches and falls only to 0.833 for one cache, so target selection survives where value decoding does not",
     "validation loss is graded, tiny, and inside the seed range for every arm, and predicts none of this",
-    "readers per memory and reader-to-writer depth distance are confounded by the even-spacing rule and are not yet separated"
+    "the distance control isolates reader-to-writer distance as independently harmful at fixed fan-out one",
+    "caches-3 retention and specificity replicate three of three, but strict final candidate promotion fails two of three because seed 43 ends one case below the 0.80 gate"
   ],
   "format": "speck_reader_attention_retrieval_gate",
   "format_version": 1,
@@ -148,5 +171,5 @@
   },
   "parent_stage": "base 131,072,000-token seed-42 checkpoints, step 2000 (not the post-32K stage used in finding 22)",
   "protocol": "finding 22 joint-load recipe: four training templates, letters and phrases, two and eight records, 400 steps, 50 percent original-language replay, held-out directory template with phrase answers, 30 fixed validation cases",
-  "status": "seed_42_discovery"
+  "status": "caches_3_replication_complete_promotion_gate_failed"
 }

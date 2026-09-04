@@ -54,6 +54,18 @@
     "strict_per_seed_ties": 2,
     "total_seeds": 3
   },
+  "caches_3_retrieval_replication": {
+    "candidate_gate_passes": 2,
+    "family_promotion_pass": false,
+    "final_candidate_accuracy": {
+      "42": 0.8333333333333334,
+      "43": 0.7666666666666667,
+      "44": 0.9666666666666667
+    },
+    "retention_gate_passes": 3,
+    "specificity_gate_passes": 3,
+    "total_seeds": 3
+  },
   "control": {
     "arm": "caches-5",
     "final_validation_loss": 2.795380115509033,
@@ -70,14 +82,15 @@
     "a second writer at the mid-depth integration point recovers nothing by itself; the later distance control shows that this did not isolate memory freshness from fan-out",
     "throughput comparisons across back-to-back runs on this card are not thermally controlled and are not claimed",
     "caches-3 has a 0.00578-nat mean paired penalty across seeds 42 to 44, but strict per-seed loss equivalence passes only two of three seeds",
-    "all eleven mean source deltas favor the five-cache control, so the small language-modeling cost is directional even though its mean magnitude is unresolved"
+    "all eleven mean source deltas favor the five-cache control, so the small language-modeling cost is directional even though its mean magnitude is unresolved",
+    "caches-3 retrieval retention and specificity replicate three of three, but strict candidate promotion fails two of three because seed 43 ends at 0.767"
   ],
   "format": "speck_reader_attention_staircase_results",
   "format_version": 1,
   "not_yet_measured": [
-    "three-seed caches-3 retrieval replication with varied synthetic streams",
     "symbolic two-hop composition",
-    "thermally controlled compiled and uncompiled systems replication"
+    "thermally controlled compiled and uncompiled systems replication",
+    "a preregistered larger-sample audit of the one-case seed-43 candidate miss"
   ],
   "per_reader_cost_nats": {
     "caches-1": 0.0019629597663879395,
@@ -87,6 +100,6 @@
   "seed": 42,
   "seed_range_nats": 0.00965,
   "sequence_length": 4096,
-  "status": "caches_3_base_replication_complete",
+  "status": "caches_3_retrieval_replication_complete_promotion_gate_failed",
   "train_tokens": 131072000
 }
