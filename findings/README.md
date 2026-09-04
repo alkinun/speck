@@ -29,6 +29,7 @@ Read in order:
 21. [20 — K3 diagnostics and global attention gating](20_k3_diagnostics_and_attention_gating.md)
 22. [21 — Retrieval answer transfer and template failure](21_retrieval_template_transfer.md)
 23. [22 — Template-diverse retrieval adaptation](22_template_diverse_retrieval_adaptation.md)
+24. [23 — Symbolic two-hop composition](23_symbolic_two_hop_composition.md)
 
 Conventions:
 
