@@ -23,6 +23,18 @@
       "resolved_on_one_seed": false,
       "sources_worse_than_control": 11,
       "state_fraction_of_control": 0.40183458326361104
+    },
+    "caches-3": {
+      "caches": 3,
+      "delta_versus_control": 0.004697561264038086,
+      "final_validation_loss": 2.8000776767730713,
+      "gpu_hours": 1.14831,
+      "model_sha256": "1cd021e71a989482e86f097f4d482a8f44670cb1401c76501f41ea3965e9ee03",
+      "readers": 2,
+      "resident_state_bytes_at_128k": 303533568,
+      "resolved_on_one_seed": false,
+      "sources_worse_than_control": 11,
+      "state_fraction_of_control": 0.6012230555090741
     }
   },
   "comparison": "identical depth, attention placement, and read count with a varying number of shared key-value caches",
@@ -34,10 +46,12 @@
     "reused_checkpoint": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope"
   },
   "findings": [
-    "one and two caches are indistinguishable from each other at 0.000379 nats, far inside the seed range",
-    "both sit about 0.008 nats behind five caches, which is inside the 0.00965-nat seed range and unresolved on one seed",
-    "all eleven validation sources are worse than the control for both arms",
-    "the marginal second cache buys no measurable loss, so one cache dominates two at half the state",
+    "the cost of sharing is smooth and graded, not a cliff: every arm is inside the 0.00965-nat seed range against the five-cache control",
+    "each independent cache converted to a query-only reader costs roughly 0.002 nats, between 0.00196 and 0.00274 across the three arms",
+    "one and two caches are indistinguishable at 0.000379 nats, so one cache dominates two at half the resident state",
+    "all eleven validation sources are worse than the control for every arm",
+    "the endpoint reaches a 4.94x resident state reduction at 128K for a 0.007852-nat aggregate cost that one seed cannot resolve",
+    "a second writer at the mid-depth integration point recovers nothing, refuting the pre-registered shallow-writer explanation",
     "throughput comparisons across back-to-back runs on this card are not thermally controlled and are not claimed"
   ],
   "format": "speck_reader_attention_staircase_results",
@@ -48,6 +62,11 @@
     "symbolic two-hop composition",
     "prefill and decode latency at 128K"
   ],
+  "per_reader_cost_nats": {
+    "caches-1": 0.0019629597663879395,
+    "caches-2": 0.0027434825897216797,
+    "caches-3": 0.002348780632019043
+  },
   "seed": 42,
   "seed_range_nats": 0.00965,
   "sequence_length": 4096,

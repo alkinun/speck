@@ -1,0 +1,117 @@
+{
+  "architecture": {
+    "caches": 3,
+    "flops_delta_versus_source": 0.0,
+    "flops_per_token": 1021601280.0,
+    "matrix_parameter_and_flop_matched": true,
+    "parameter_delta_versus_source": -128,
+    "parameters": 153958810,
+    "readers": 2,
+    "reclaimed_key_value_parameters": 589824,
+    "resident_state_bytes": {
+      "131072": {
+        "by_kind": {
+          "attention_kv": 301989888,
+          "kimi_delta_attention": 1543680
+        },
+        "total_bytes": 303533568
+      },
+      "32768": {
+        "by_kind": {
+          "attention_kv": 75497472,
+          "kimi_delta_attention": 1543680
+        },
+        "total_bytes": 77041152
+      },
+      "4096": {
+        "by_kind": {
+          "attention_kv": 9437184,
+          "kimi_delta_attention": 1543680
+        },
+        "total_bytes": 10980864
+      }
+    },
+    "resident_state_fraction_of_source": {
+      "131072": 0.6012230555090741,
+      "32768": 0.6048477539945734,
+      "4096": 0.6357492218763895
+    },
+    "reuses_source_architecture": false,
+    "unmatched_key_norm_parameters": 128,
+    "unmatched_parameters_in_feed_forward": 0,
+    "writer_key_value_heads": null
+  },
+  "arm": "caches-3",
+  "checkpoint": {
+    "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-ReaderAttention131M-caches-3",
+    "metadata_sha256": "3d282b9217b864474763332f33ed1813f9bd2e472ee8c785db0c3b0620d45b95",
+    "model_sha256": "1cd021e71a989482e86f097f4d482a8f44670cb1401c76501f41ea3965e9ee03",
+    "optimizer_sha256": "dc060450f1ca98dadb95e971a58daa63c9b5b7f4267fea84f82f4fbb94004c8b",
+    "step": 2000
+  },
+  "comparison": {
+    "delta_versus_control": 0.004697561264038086,
+    "per_source_delta": {
+      "cosmopedia_v2": 0.004072427749633789,
+      "dclm": 0.005074262619018555,
+      "dclm_edu": 0.004664897918701172,
+      "finemath_4plus": 0.005007505416870117,
+      "fineweb_edu": 0.0034401416778564453,
+      "math_multi_style": 0.008453369140625,
+      "math_textbook_exercise": 0.004873991012573242,
+      "pes2o": 0.005591154098510742,
+      "ufw_l3_multi_style": 0.0023488998413085938,
+      "ultra_fineweb": 0.002805948257446289,
+      "wikimedia": 0.0053424835205078125
+    },
+    "resolved_on_one_seed": false,
+    "seed_range": 0.00965,
+    "sources_total": 11,
+    "sources_worse_than_control": 11
+  },
+  "control": {
+    "arm": "caches-5",
+    "final_validation_loss": 2.795380115509033,
+    "validation_source_losses": {
+      "cosmopedia_v2": 2.759767770767212,
+      "dclm": 3.6254007816314697,
+      "dclm_edu": 3.0969226360321045,
+      "finemath_4plus": 2.5122900009155273,
+      "fineweb_edu": 3.328209161758423,
+      "math_multi_style": 1.7009743452072144,
+      "math_textbook_exercise": 1.2185338735580444,
+      "pes2o": 2.981964111328125,
+      "ufw_l3_multi_style": 3.1324286460876465,
+      "ultra_fineweb": 3.2548770904541016,
+      "wikimedia": 3.1452906131744385
+    }
+  },
+  "final_validation_loss": 2.8000776767730713,
+  "format": "speck_reader_attention_arm_result",
+  "format_version": 1,
+  "performance": {
+    "active_seconds": 4131.685493894038,
+    "checkpoint_seconds": 0.550449673901312,
+    "evaluation_seconds": 303.94952699297573,
+    "gpu_hours": 1.14831,
+    "optimizer_seconds": 3817.5449887599098
+  },
+  "seed": 42,
+  "sequence_length": 4096,
+  "status": "complete",
+  "train_tokens": 131072000,
+  "validation_source_losses": {
+    "cosmopedia_v2": 2.7638401985168457,
+    "dclm": 3.6304750442504883,
+    "dclm_edu": 3.1015875339508057,
+    "finemath_4plus": 2.5172975063323975,
+    "fineweb_edu": 3.3316493034362793,
+    "math_multi_style": 1.7094277143478394,
+    "math_textbook_exercise": 1.2234078645706177,
+    "pes2o": 2.9875552654266357,
+    "ufw_l3_multi_style": 3.134777545928955,
+    "ultra_fineweb": 3.257683038711548,
+    "wikimedia": 3.1506330966949463
+  },
+  "validation_tokens": 19988480
+}

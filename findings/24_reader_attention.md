@@ -1,6 +1,6 @@
 # 24 — Speck Reader Attention and the global cache-count staircase
 
-> **Status: seed-42 discovery complete for one and two caches.** The mechanism is implemented and
+> **Status: seed-42 discovery complete for the one-, two-, and three-cache arms.** The mechanism is implemented and
 > qualified, and two arms have trained to the full 131,072,000-token budget. Retrieval, composition,
 > seed replication, and latency remain unmeasured.
 
@@ -165,13 +165,20 @@ confirms the measurement basis has not drifted.
 Both new arms trained to the full budget on the frozen corpus with the same data order, schedule,
 and evaluation sample as the existing control.
 
-| Arm | Caches | Readers | Final loss | Versus control | Sources worse | BF16 state @128K |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `caches-5` | 5 | 0 | 2.795380 | — | — | 504,860,160 B |
-| `caches-2` | 2 | 3 | 2.803611 | +0.008230 | 11/11 | 202,870,272 B |
-| `caches-1` | 1 | 4 | 2.803232 | +0.007852 | 11/11 | 102,206,976 B |
+| Arm | Caches | Readers | Final loss | Versus control | Per reader | Sources worse | BF16 state @128K |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `caches-5` | 5 | 0 | 2.795380 | — | — | — | 504,860,160 B |
+| `caches-3` | 3 | 2 | 2.800078 | +0.004698 | +0.00235 | 11/11 | 303,533,568 B |
+| `caches-2` | 2 | 3 | 2.803611 | +0.008230 | +0.00274 | 11/11 | 202,870,272 B |
+| `caches-1` | 1 | 4 | 2.803232 | +0.007852 | +0.00196 | 11/11 | 102,206,976 B |
 
-Three conclusions, in decreasing order of confidence.
+**There is no cliff.** Every arm sits inside the `0.00965`-nat seed range against the control, and
+the cost per converted layer is stable between `0.00196` and `0.00274` nats. Sharing degrades
+gracefully and roughly in proportion to how many independent caches are removed, rather than
+collapsing once some minimum count is crossed. The endpoint buys a `4.94×` resident state reduction
+at 128K for an aggregate cost one seed cannot resolve.
+
+Three further conclusions, in decreasing order of confidence.
 
 **One and two caches are indistinguishable.** They differ by `0.000379` nats, an order of magnitude
 inside the measured seed range. The cost of sharing is a step from five caches down to two and is
@@ -220,7 +227,7 @@ Run order, all at seed 42 first, then seeds 43 and 44 only for arms that pass:
 
 1. `caches-1` — complete.
 2. `caches-2` — complete, and retired: indistinguishable from `caches-1` at twice the state.
-3. `caches-3` — locates whether the step from five caches happens above or below three.
+3. `caches-3` — complete; it lies between the endpoints and shows the cost is graded.
 4. `caches-1-mqa1` — only after the capability gates.
 
 One fallback is pre-registered before any result is seen. If `caches-1` loses on loss or retrieval
