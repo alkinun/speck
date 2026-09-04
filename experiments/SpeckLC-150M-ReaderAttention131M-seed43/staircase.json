@@ -1,0 +1,83 @@
+{
+  "comparison": "identical depth, attention placement, and read count with a varying number of shared key-value caches",
+  "format": "speck_reader_attention_staircase",
+  "format_version": 1,
+  "mechanism": "speck_reader_attention",
+  "seed": 43,
+  "sequence_length": 4096,
+  "source_experiment": "/home/alkin/Desktop/speck/experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+  "source_flops_per_token": 1021601280.0,
+  "source_parameters": 153958938,
+  "source_resident_state_bytes": {
+    "131072": {
+      "by_kind": {
+        "attention_kv": 503316480,
+        "kimi_delta_attention": 1543680
+      },
+      "total_bytes": 504860160
+    },
+    "32768": {
+      "by_kind": {
+        "attention_kv": 125829120,
+        "kimi_delta_attention": 1543680
+      },
+      "total_bytes": 127372800
+    },
+    "4096": {
+      "by_kind": {
+        "attention_kv": 15728640,
+        "kimi_delta_attention": 1543680
+      },
+      "total_bytes": 17272320
+    }
+  },
+  "status": "prepared",
+  "train_tokens": 131072000,
+  "variants": {
+    "caches-3": {
+      "caches": 3,
+      "flops_delta_versus_source": 0.0,
+      "flops_per_token": 1021601280.0,
+      "matrix_parameter_and_flop_matched": true,
+      "max_reader_writer_slot_distance": 1,
+      "max_readers_per_memory": 1,
+      "parameter_delta_versus_source": -128,
+      "parameters": 153958810,
+      "reader_binding": "nearest",
+      "readers": 2,
+      "reclaimed_key_value_parameters": 589824,
+      "resident_state_bytes": {
+        "131072": {
+          "by_kind": {
+            "attention_kv": 301989888,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 303533568
+        },
+        "32768": {
+          "by_kind": {
+            "attention_kv": 75497472,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 77041152
+        },
+        "4096": {
+          "by_kind": {
+            "attention_kv": 9437184,
+            "kimi_delta_attention": 1543680
+          },
+          "total_bytes": 10980864
+        }
+      },
+      "resident_state_fraction_of_source": {
+        "131072": 0.6012230555090741,
+        "32768": 0.6048477539945734,
+        "4096": 0.6357492218763895
+      },
+      "reuses_source_architecture": false,
+      "unmatched_key_norm_parameters": 128,
+      "unmatched_parameters_in_feed_forward": 0,
+      "writer_key_value_heads": null
+    }
+  }
+}
