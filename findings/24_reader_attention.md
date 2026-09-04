@@ -433,6 +433,14 @@ loss, and summary reports are at
 Prefill and cached decode were measured with `scripts.inference_benchmark` on the pinned RTX 3090
 stack, uncompiled, with preallocated Speck state.
 
+**Pre-registered controlled replication.** Five-cache and three-cache checkpoints are rerun at 32K
+with batches 1/16 and at 128K with batches 1/4, in both eager and `torch.compile` modes. Every
+process begins at or below `50 C`, uses two prefill warmups, five timed repeats, and five decode
+warmups, and records start/end temperature. Arms alternate within each length/mode, with order
+reversed for compiled runs. Compilation occurs before timed repeats and is excluded from latency;
+compile startup cost is reported separately as a deployment limitation rather than folded into
+steady-state latency.
+
 | Cached token slots | Reached as | `caches-5` | `caches-3` | `caches-1` |
 | ---: | --- | ---: | ---: | ---: |
 | 32,768 | 32K × 1 | 6.872 ms | 6.644 ms (1.03×) | 6.523 ms (1.05×) |
