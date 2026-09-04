@@ -5,6 +5,7 @@ import torch
 
 from scripts.structured_retrieval_adapt import (
     build_supervised_batch,
+    candidate_ranking_loss,
     candidate_shift,
     parse_adaptation_tasks,
     parse_answer_sets,
@@ -139,6 +140,22 @@ def test_candidate_shift_is_symmetric():
         torch.tensor([1, 0]),
     )
     torch.testing.assert_close(result, torch.tensor([2.5, 2.0]))
+
+
+def test_candidate_ranking_loss_uses_each_response_position_and_vocabulary():
+    hidden = torch.zeros(2, 4, 3)
+    hidden[0, 2, 0] = 1
+    hidden[1, 1, 1] = 1
+    weight = torch.zeros(8, 3)
+    weight[3, 0] = 4
+    weight[4, 0] = -2
+    weight[5, 1] = -2
+    weight[6, 1] = 4
+    cases = [
+        {"prompt_length": 3, "candidate_token_ids": [3, 4], "answer_index": 0},
+        {"prompt_length": 2, "candidate_token_ids": [5, 6], "answer_index": 1},
+    ]
+    assert candidate_ranking_loss(hidden, cases, weight).item() < 0.01
 
 
 def test_replay_microsteps_are_even_and_exact():

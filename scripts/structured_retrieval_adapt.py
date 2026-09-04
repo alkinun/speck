@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
+import torch.nn.functional as F
 
 from scripts.infer import load_checkpoint_model
 from scripts.structured_retrieval_eval import PRIMARY_TASKS, TASKS, build_case
@@ -100,6 +101,7 @@ def arguments(argv=None):
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--replay-data-experiment", type=Path, default=None)
     parser.add_argument("--replay-fraction", type=float, default=0.0)
+    parser.add_argument("--candidate-loss-weight", type=float, default=0.0)
     return parser.parse_args(argv)
 
 
@@ -182,6 +184,22 @@ def candidate_shift(reference, changed, from_indices, to_indices):
     reference_preference = reference[rows, from_indices] - reference[rows, to_indices]
     changed_preference = changed[rows, to_indices] - changed[rows, from_indices]
     return (reference_preference + changed_preference) / 2
+
+
+def candidate_ranking_loss(hidden, cases, embedding_weight):
+    """Compute ten-way first-answer-token loss at each case's response position."""
+
+    device = hidden.device
+    rows = torch.arange(hidden.size(0), device=device)
+    positions = torch.tensor([case["prompt_length"] - 1 for case in cases], device=device)
+    response_hidden = hidden[rows, positions]
+    candidate_ids = torch.tensor(
+        [case["candidate_token_ids"] for case in cases], device=device
+    )
+    candidate_weights = embedding_weight[candidate_ids].to(response_hidden.dtype)
+    logits = torch.einsum("bh,bch->bc", response_hidden, candidate_weights).float()
+    targets = torch.tensor([case["answer_index"] for case in cases], device=device)
+    return F.cross_entropy(logits, targets)
 
 
 def replay_microsteps(accumulation, fraction):
@@ -425,6 +443,7 @@ def validate_settings(args):
         "train_response_cue": getattr(args, "train_response_cue", "native"),
         "validation_response_cue": getattr(args, "validation_response_cue", "native"),
         "replay_fraction": getattr(args, "replay_fraction", 0.0),
+        "candidate_loss_weight": getattr(args, "candidate_loss_weight", 0.0),
     }
     for name in ("train_seed_offset", "validation_seed_offset"):
         value = settings[name]
@@ -465,6 +484,11 @@ def validate_settings(args):
         min_lr=args.min_lr,
         optimizer=args.optimizer,
     )
+    if (
+        not math.isfinite(settings["candidate_loss_weight"])
+        or settings["candidate_loss_weight"] < 0
+    ):
+        raise ValueError("candidate loss weight must be non-negative and finite")
     settings["replay_microsteps"] = replay_microsteps(
         settings["accumulation"], settings["replay_fraction"]
     )
@@ -534,6 +558,7 @@ def run(args):
         loss_sum = torch.zeros((), device=device)
         retrieval_loss_sum = torch.zeros((), device=device)
         replay_loss_sum = torch.zeros((), device=device)
+        candidate_loss_sum = torch.zeros((), device=device)
         retrieval_microbatches = 0
         replay_microbatches = 0
         for micro_step in range(settings["accumulation"]):
@@ -575,7 +600,23 @@ def run(args):
                     retrieval_examples_by_condition[condition] = (
                         retrieval_examples_by_condition.get(condition, 0) + 1
                     )
-                loss = train_model(inputs, targets, loss_reduction="sum") / settings["batch_size"]
+                if settings["candidate_loss_weight"]:
+                    full_loss, hidden = train_model(
+                        inputs,
+                        targets,
+                        loss_reduction="sum",
+                        return_hidden=True,
+                    )
+                    full_loss = full_loss / settings["batch_size"]
+                    candidate_loss = candidate_ranking_loss(
+                        hidden,
+                        cases,
+                        model.lm_head.weight,
+                    )
+                    candidate_loss_sum += candidate_loss.detach()
+                    loss = full_loss + settings["candidate_loss_weight"] * candidate_loss
+                else:
+                    loss = train_model(inputs, targets, loss_reduction="sum") / settings["batch_size"]
                 retrieval_loss_sum += loss.detach()
                 retrieval_microbatches += 1
             (loss / settings["accumulation"]).backward()
@@ -597,6 +638,7 @@ def run(args):
                 f"step {completed}/{settings['steps']} | "
                 f"loss {loss_sum.item() / settings['accumulation']:.5f} | "
                 f"retrieval {retrieval_loss_sum.item() / max(1, retrieval_microbatches):.5f} | "
+                f"candidate {candidate_loss_sum.item() / max(1, retrieval_microbatches):.5f} | "
                 f"replay {replay_loss_sum.item() / max(1, replay_microbatches):.5f} | "
                 f"grad {float(grad_norm):.3f}"
             )
