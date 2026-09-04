@@ -1,5 +1,9 @@
 # 19 — Retrieval specificity, exact completion, and language replay
 
+> **Interpretation update (Finding 21):** a held-out-template audit shows that this checkpoint
+> transfers to unseen two-token answers but fails when the archive prose is replaced with registry
+> syntax. The result below is template-conditioned associative lookup, not general retrieval.
+
 ## Why the old metric was insufficient
 
 Findings 16–18 used a factual/counterfactual passkey pair. KDA responded strongly when the distant
@@ -90,7 +94,8 @@ supervision. Lower training loss does not rescue specificity.
 
 ## Exact length and load generalization
 
-The easy KDA checkpoint was trained only at 4K with two-record cases.
+The easy KDA checkpoint was trained only at 4K with two-record cases. These measurements retain the
+training template; Finding 21 separately tests surface-form transfer.
 
 | Evaluation load | 4K exact | 32K exact | 128K exact | Specificity accuracy |
 | --- | ---: | ---: | ---: | ---: |
@@ -130,16 +135,17 @@ Length/load evaluation:
 | 8 records, unseen | 96.7% | 96.7% | 96.7% | 11.088 |
 
 All six specificity accuracies are 100%. This is genuine distractor-controlled, unconstrained exact
-retrieval after 4K task training, extrapolating to 128K without measurable language forgetting.
+lookup within the trained template after 4K task training, extrapolating to 128K without measurable
+language forgetting.
 
 ## Decision
 
-KDA/NoPE has now demonstrated a real long-context advantage over GDN/RoPE for direct associative
-retrieval. The claim remains narrow:
+KDA/NoPE has demonstrated a real long-context advantage over GDN/RoPE for direct associative lookup
+within the trained template. The claim remains narrow:
 
 - one seed;
-- one-token answers from ten values;
-- synthetic natural-language templates;
+- answer transfer succeeds on a held-out set of two-token values;
+- the checkpoint fails a held-out registry template at 4K;
 - task adaptation is required;
 - two-hop composition still fails.
 

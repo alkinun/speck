@@ -91,5 +91,19 @@
     "task": "multi_key",
     "validation_samples": 30
   },
-  "status": "complete"
+  "status": "complete",
+  "transfer_audit": {
+    "answer_set": "ten arbitrary two-token phrases",
+    "checkpoint": "SpeckLC-150M-StructuredRetrievalAdapt-kda-replay50/model_000200.pt",
+    "conditions": [
+      "archive/phrases",
+      "registry/letters",
+      "registry/phrases"
+    ],
+    "length": 4096,
+    "records": 8,
+    "result": "../../results/SpeckLC-150M-StructuredRetrievalAdapt/transfer",
+    "samples_per_condition": 30,
+    "verdict": "answer transfer passes; held-out template transfer fails at 4K"
+  }
 }

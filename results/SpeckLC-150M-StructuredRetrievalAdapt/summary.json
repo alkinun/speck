@@ -136,6 +136,39 @@
     32768,
     131072
   ],
+  "transfer_audit": {
+    "archive_phrases": {
+      "answer_tokens": 2,
+      "candidate_accuracy": 1.0,
+      "exact_match": 0.9666666666666667,
+      "report_sha256": "7f6020b8e430e737ed30c6a6bbff62f159528bdbd7d0db267452147e43aaccec",
+      "specificity_accuracy": 1.0,
+      "specificity_score": 7.683599919591264,
+      "token_accuracy": 0.9833333333333333
+    },
+    "interpretation": "answer-format transfer passes; independent-template transfer fails at 4K",
+    "protocol": {
+      "length": 4096,
+      "records": 8,
+      "samples_per_condition": 30
+    },
+    "registry_letters": {
+      "candidate_accuracy": 0.06666666666666667,
+      "exact_match": 0.06666666666666667,
+      "report_sha256": "5b3fb85ff5c9cd0b792f8f3517eb82950e27910c16170ec9209c61efe93bb79e",
+      "specificity_accuracy": 0.4666666666666667,
+      "specificity_score": -1.2914339701334636e-08
+    },
+    "registry_phrases": {
+      "answer_tokens": 2,
+      "candidate_accuracy": 0.1,
+      "exact_match": 0.0,
+      "report_sha256": "298642290af28b6a5d92965e08ddaceb4053b6cec0c04e077a9310bcb6de2a0b",
+      "specificity_accuracy": 0.4666666666666667,
+      "specificity_score": -0.004219552874565125,
+      "token_accuracy": 0.08333333333333333
+    }
+  },
   "two_hop_only": {
     "gdn_candidate_accuracy": 0.36666666666666664,
     "gdn_specificity_accuracy": 0.36666666666666664,

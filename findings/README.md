@@ -27,6 +27,7 @@ Read in order:
 19. [18 — Matched 32K KDA/NoPE context activation](18_kimi_context32k.md)
 20. [19 — Retrieval specificity, exact completion, and language replay](19_retrieval_specificity_and_replay.md)
 21. [20 — K3 diagnostics and global attention gating](20_k3_diagnostics_and_attention_gating.md)
+22. [21 — Retrieval answer transfer and template failure](21_retrieval_template_transfer.md)
 
 Conventions:
 
@@ -41,6 +42,7 @@ Conventions:
 - Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
 - A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
 
-Last consolidated state: distractor-controlled exact retrieval, mixed language replay, K3
-diagnostics, and the matched attention-gate screen are complete; all referenced checkpoints have
-completion markers, and the repository test suite passes 366 tests.
+Last consolidated state: replay-trained KDA preserves language loss and transfers exact lookup to
+unseen two-token answers through the archive template, but an independent registry template fails
+at 4K. Template-diverse adaptation is now the active gate. K3 diagnostics and the matched
+attention-gate screen are complete; all referenced checkpoints have completion markers.

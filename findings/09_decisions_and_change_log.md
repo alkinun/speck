@@ -105,12 +105,13 @@ KDA misses one of three strict base-stage loss ties and has not passed an indepe
 - Retrieval replication uses an internal deterministic diagnostic, not independent benchmark
   implementations.
 - Exact 128K retrieval currently uses one seed, synthetic templates, one-token answers, and task
-  adaptation. It does not establish multi-hop or real-document reasoning.
+  adaptation. A later audit transfers to two-token answers but fails a held-out registry template
+  at 4K; it does not establish template-robust, multi-hop, or real-document reasoning.
 - Retrieval-only adaptation damages original language loss by 0.808 nats for KDA and 4.637 nats for
   GDN. The successful KDA recipe requires 50% original-language replay.
 - Both KDA and GDN fail held-out two-hop specificity after 6,400 task examples.
-- The filesystem has approximately 13 GiB free; do not launch the MQA/MLA family before recovering
-  checkpoint headroom.
+- The filesystem has approximately 18 GiB free after deleting only abandoned download and compiler
+  caches; keep monitoring headroom before checkpoint families.
 
 ## Checkpoint inventory
 
@@ -202,6 +203,7 @@ The full checkpoint hashes are stored in the checked result summaries, not only 
 | `d7261f5` | Added packed-language replay to retrieval adaptation |
 | `fc034c6` | Recorded replay-trained exact retrieval through 128K |
 | `2cf8556` | Consolidated exact retrieval and K3-transfer findings |
+| `6d6184f` | Added held-out templates and multi-token retrieval evaluation |
 
 ## Repository state at consolidation
 
