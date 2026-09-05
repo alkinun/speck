@@ -18,6 +18,7 @@ from scripts.model_publish import (
     prepare_release_code,
     release_config,
     release_state,
+    validate_parity,
 )
 from speck.architecture import ArchitectureConfig
 from speck.model import SpeckForCausalLM
@@ -182,15 +183,53 @@ def assert_current_transformers_parity(tmp_path, values):
         trust_remote_code=True,
         dtype=torch.bfloat16,
     )
+    expected_rotary = [buffer for buffer in native.rotary.buffers()]
+    actual_rotary = [buffer for buffer in exported.native.rotary.buffers()]
+    assert len(actual_rotary) == len(expected_rotary)
+    for actual, expected in zip(actual_rotary, expected_rotary):
+        torch.testing.assert_close(actual, expected, rtol=0, atol=0)
     tokens = torch.randint(0, architecture.vocab_size, (1, 8))
     with torch.no_grad():
         expected = native(tokens)
         actual = exported(input_ids=tokens, use_cache=False).logits
     torch.testing.assert_close(actual, expected, rtol=2e-2, atol=2e-2)
+    generated = exported.generate(
+        tokens[:, :2],
+        max_new_tokens=2,
+        do_sample=False,
+        pad_token_id=architecture.eos_token_id,
+    )
+    assert generated.shape[0] == 1
+    assert 2 < generated.shape[1] <= 4
 
 
 def test_current_transformers_wrapper_matches_native_logits(tmp_path):
     assert_current_transformers_parity(tmp_path, metadata())
+
+
+def test_current_transformers_wrapper_restores_derived_rotary_buffer(tmp_path):
+    values = metadata()
+    values["config"]["blocks"][0]["block"]["stages"][0]["branches"][0]["head_dim"] = 4
+    assert_current_transformers_parity(tmp_path, values)
+
+
+def test_current_transformers_parity_writes_attestation(tmp_path):
+    values = metadata()
+    architecture = ArchitectureConfig.from_dict(values["config"])
+    native = SpeckForCausalLM(architecture)
+    native.init_weights()
+    values["resolved"]["parameters"] = native.parameter_count()
+    prepare_current_release_code(tmp_path)
+    (tmp_path / "config.json").write_text(json.dumps(release_config(values)), encoding="utf-8")
+    save_file(release_state(native.state_dict()), tmp_path / "model.safetensors")
+
+    report = validate_parity(tmp_path, native.state_dict(), values)
+
+    assert report["passed"] is True
+    assert report["parameters"] == native.parameter_count()
+    assert report["incremental_logits_max_absolute_error"] >= 0
+    assert 0 < report["generation_smoke_new_tokens"] <= 2
+    assert json.loads((tmp_path / "speck_parity.json").read_text()) == report
 
 
 def test_current_transformers_wrapper_exports_gated_deltanet(tmp_path):

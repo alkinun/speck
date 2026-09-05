@@ -1,6 +1,7 @@
 """Export a completed Speck SFT checkpoint and publish it to Hugging Face."""
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -15,8 +16,9 @@ from speck.architecture import (
     AttentionSpec,
     SwiGLUSpec,
 )
-from speck.checkpoint import latest, load_model
+from speck.checkpoint import checkpoint_identity, latest, load_model
 from speck.common import base_dir
+from speck.model import build_model
 
 DEFAULT_CHECKPOINT = Path(base_dir()) / "checkpoints" / "Speck1.1-140M-Instruct"
 DEFAULT_REPO = "specklabs/Speck1.1-140M-Instruct"
@@ -324,13 +326,13 @@ def prepare_current_release_code(output_dir):
     shutil.copy2(PADDING_SOURCE, output_dir / PADDING_DESTINATION)
 
 
-def prepare_export(checkpoint_dir, step, output_dir, metadata):
+def prepare_export(checkpoint_dir, step, output_dir, metadata, state=None):
     building = output_dir.with_name(output_dir.name + ".building")
     if building.exists():
         shutil.rmtree(building)
     building.mkdir(parents=True)
     try:
-        state = load_model(checkpoint_dir, step, "cpu")
+        state = load_model(checkpoint_dir, step, "cpu") if state is None else state
         exported = release_state(state)
         expected_parameters = metadata["resolved"]["parameters"]
         actual_parameters = sum(tensor.numel() for tensor in exported.values())
@@ -353,6 +355,15 @@ def prepare_export(checkpoint_dir, step, output_dir, metadata):
         }
         (building / "generation_config.json").write_text(
             json.dumps(generation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        provenance = {
+            "format": "speck_export_source",
+            "format_version": 1,
+            "type": "sft_checkpoint",
+            "checkpoint": checkpoint_identity(checkpoint_dir, step),
+        }
+        (building / "speck_source.json").write_text(
+            json.dumps(provenance, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
 
         tokenizer_dir = checkpoint_dir / "tokenizer"
@@ -401,6 +412,8 @@ def validate_export(output_dir, metadata):
         raise ValueError("exported model has invalid compute dtypes")
     if not (output_dir / PADDING_DESTINATION).is_file():
         raise ValueError("export is missing Transformers padding support")
+    if not (output_dir / "speck_source.json").is_file():
+        raise ValueError("export is missing checkpoint provenance")
     required_code = {
         "architecture_speck.py",
         "configuration_speck.py",
@@ -413,6 +426,73 @@ def validate_export(output_dir, metadata):
         raise ValueError(f"export is missing current model code: {missing_code}")
     if (output_dir / "README.md").exists():
         raise ValueError("export must not contain a model card")
+
+
+def validate_parity(output_dir, state, metadata):
+    """Gate an exported checkpoint on native/Transformers logit identity."""
+
+    from transformers import AutoModelForCausalLM
+
+    architecture = ArchitectureConfig.from_dict(metadata["config"])
+    native = build_model(
+        architecture.export(),
+        architecture.vocab_size,
+        architecture.bos_token_id,
+        architecture.eos_token_id,
+    )
+    native.load_state_dict(state)
+    native.to(torch.bfloat16)
+    native.eval()
+    exported = AutoModelForCausalLM.from_pretrained(
+        output_dir,
+        trust_remote_code=True,
+        dtype=torch.bfloat16,
+    )
+    exported.eval()
+    expected_parameters = native.parameter_count()
+    exported_parameters = sum(parameter.numel() for parameter in exported.parameters())
+    if exported_parameters != expected_parameters:
+        raise ValueError(
+            f"Transformers export has {exported_parameters:,} parameters, "
+            f"expected {expected_parameters:,}"
+        )
+    generator = torch.Generator().manual_seed(42)
+    tokens = torch.randint(0, architecture.vocab_size, (2, 8), generator=generator)
+    with torch.no_grad():
+        native_logits = native(tokens)
+        exported_logits = exported(input_ids=tokens, use_cache=False).logits
+    torch.testing.assert_close(exported_logits, native_logits, rtol=2e-2, atol=2e-2)
+    prompt = tokens[:1, :4]
+    with torch.no_grad():
+        prefill = exported(input_ids=prompt, use_cache=True)
+        next_token = prefill.logits[:, -1].argmax(dim=-1, keepdim=True)
+        incremental = exported(
+            input_ids=next_token,
+            past_key_values=prefill.past_key_values,
+            use_cache=True,
+        ).logits[:, -1]
+        reference = native(torch.cat((prompt, next_token), dim=1))[:, -1]
+    torch.testing.assert_close(incremental, reference, rtol=2e-2, atol=2e-2)
+    generated = exported.generate(
+        prompt,
+        max_new_tokens=2,
+        do_sample=False,
+        pad_token_id=architecture.eos_token_id,
+    )
+    report = {
+        "format": "speck_export_parity",
+        "format_version": 1,
+        "passed": True,
+        "parameters": expected_parameters,
+        "compute_dtype": "bfloat16",
+        "logits_max_absolute_error": (exported_logits - native_logits).abs().max().item(),
+        "incremental_logits_max_absolute_error": (incremental - reference).abs().max().item(),
+        "generation_smoke_new_tokens": generated.size(1) - prompt.size(1),
+        "tokens_sha256": hashlib.sha256(tokens.numpy().tobytes()).hexdigest(),
+    }
+    path = output_dir / "speck_parity.json"
+    path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return report
 
 
 def main():
@@ -433,8 +513,10 @@ def main():
             raise FileExistsError(f"export already exists (use --force): {output_dir}")
         shutil.rmtree(output_dir)
     output_dir.parent.mkdir(parents=True, exist_ok=True)
-    prepare_export(checkpoint_dir, step, output_dir, metadata)
+    state = load_model(checkpoint_dir, step, "cpu")
+    prepare_export(checkpoint_dir, step, output_dir, metadata, state)
     validate_export(output_dir, metadata)
+    validate_parity(output_dir, state, metadata)
     unit = "epoch" if epochs == 1 else "epochs"
     print(f"Exported step {step:,} ({epochs} {unit}) to {output_dir}")
     if args.no_upload:

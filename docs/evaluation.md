@@ -82,17 +82,41 @@ The active manifest pins suite-specific contracts under
 without installing the suite or downloading its data.
 
 - RULER uses the official `rulerv1-ns` pipeline plus its exact NeMo-Skills dependency. The old `main`
-  runner is deprecated. Its data preparer still has transitive downloads that must be content-pinned,
-  and its supported vLLM/SGLang/TensorRT path needs a Speck runtime.
+  runner is deprecated. Its data preparer still has transitive downloads that must be content-pinned.
 - NoLiMa's checked configurations cover 4K, 8K, 16K, and 32K. Its Adobe Research License permits only
-  non-commercial research use and must be accepted before data download. The evaluator expects an
-  OpenAI-compatible endpoint.
+  non-commercial research use and must be accepted before data download.
 - HELMET covers seven task categories through 128K and has a native `trust_remote_code` Hugging Face
   adapter. Its advertised dataset is approximately 34GB, so it must use a separate planned volume; the
   model adapter also requires a locked-environment Speck-export smoke.
 
 Source qualification is not evaluation qualification. A suite contributes no promotion evidence until
 its data, licenses, model adapter, raw outputs, and official scorer all pass and are hashed.
+
+### Local external-evaluation endpoint
+
+`scripts.evaluation_server` exposes an attested local Transformers export through the non-streaming
+OpenAI chat and text-completion endpoints used for evaluation. It is a serialized correctness adapter,
+not a production serving or throughput claim. The loader stays offline, refuses exports without a
+successful `speck_parity.json`, and rejects decoding options that would be silently ignored.
+
+Export an instruction checkpoint and start the endpoint with:
+
+```bash
+uv run --extra cpu --group transformers python -m scripts.model_publish \
+  --checkpoint-dir ~/.cache/speck/checkpoints/Speck2-140M-Instruct \
+  --step <step> --repo specklabs/Speck2-140M-Instruct \
+  --output-dir ~/.cache/speck/releases/Speck2-140M-Instruct-eval \
+  --no-upload
+uv run --extra cpu --group transformers python -m scripts.evaluation_server \
+  ~/.cache/speck/releases/Speck2-140M-Instruct-eval \
+  --device cpu --dtype bfloat16 --port 8000
+```
+
+Both base and SFT exporters attest full-sequence logits, incremental native-cache logits, parameter
+count, and a Transformers `generate()` smoke. This gate specifically guards derived RoPE buffers and
+Speck's nonstandard recurrent cache from generic Transformers loading behavior. The endpoint enforces
+the export's configured context ceiling; qualifying the API at 4K does not qualify a candidate at 32K
+or 128K.
 
 ## Open SLM Leaderboard
 

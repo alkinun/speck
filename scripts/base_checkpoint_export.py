@@ -1,13 +1,11 @@
 """Export a pretraining checkpoint for local Transformers evaluation."""
 
 import argparse
-import hashlib
 import json
 import os
 import shutil
 from pathlib import Path
 
-import torch
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
@@ -16,10 +14,9 @@ from scripts.model_publish import (
     release_config,
     release_state,
     validate_export,
+    validate_parity,
 )
-from speck.architecture import ArchitectureConfig
 from speck.checkpoint import checkpoint_identity, latest, load_model
-from speck.model import build_model
 
 TEMPLATE_REPO = "specklabs/Speck1-140M"
 TEMPLATE_REVISION = "155b759545645cc694545fab85cd7d4c385fd965"
@@ -104,54 +101,6 @@ def export(state, output_dir, metadata, provenance):
     except BaseException:
         shutil.rmtree(building, ignore_errors=True)
         raise
-
-
-def validate_parity(output_dir, state, metadata):
-    """Gate evaluation on native/Transformers logits and parameter identity."""
-
-    from transformers import AutoModelForCausalLM
-
-    architecture = ArchitectureConfig.from_dict(metadata["config"])
-    native = build_model(
-        architecture.export(),
-        architecture.vocab_size,
-        architecture.bos_token_id,
-        architecture.eos_token_id,
-    )
-    native.load_state_dict(state)
-    native.to(torch.bfloat16)
-    native.eval()
-    exported = AutoModelForCausalLM.from_pretrained(
-        output_dir,
-        trust_remote_code=True,
-        dtype=torch.bfloat16,
-    )
-    exported.eval()
-    expected_parameters = native.parameter_count()
-    exported_parameters = sum(parameter.numel() for parameter in exported.parameters())
-    if exported_parameters != expected_parameters:
-        raise ValueError(
-            f"Transformers export has {exported_parameters:,} parameters, "
-            f"expected {expected_parameters:,}"
-        )
-    generator = torch.Generator().manual_seed(42)
-    tokens = torch.randint(0, architecture.vocab_size, (2, 8), generator=generator)
-    with torch.no_grad():
-        native_logits = native(tokens)
-        exported_logits = exported(input_ids=tokens, use_cache=False).logits
-    torch.testing.assert_close(exported_logits, native_logits, rtol=2e-2, atol=2e-2)
-    report = {
-        "format": "speck_export_parity",
-        "format_version": 1,
-        "passed": True,
-        "parameters": expected_parameters,
-        "compute_dtype": "bfloat16",
-        "logits_max_absolute_error": (exported_logits - native_logits).abs().max().item(),
-        "tokens_sha256": hashlib.sha256(tokens.numpy().tobytes()).hexdigest(),
-    }
-    path = output_dir / "speck_parity.json"
-    path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return report
 
 
 def main():

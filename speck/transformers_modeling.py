@@ -6,7 +6,7 @@ from transformers import GenerationMixin, PreTrainedModel
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
 from .configuration_speck import SpeckConfig
-from .native_speck import SequenceState
+from .native_speck import RotaryEmbedding, SequenceState
 from .native_speck import SpeckForCausalLM as NativeSpeckForCausalLM
 from .padding_speck import validate_right_padding
 
@@ -19,10 +19,13 @@ class SpeckPreTrainedModel(PreTrainedModel):
     _no_split_modules = ["BlockCore"]
     _supports_cache_class = False
     _supports_static_cache = False
+    _is_stateful = True
     _tied_weights_keys = {"native.lm_head.weight": "native.embed_tokens.weight"}
 
     def _init_weights(self, module):
-        return None
+        if isinstance(module, RotaryEmbedding):
+            module.frequency = module.frequency.to(dtype=self.dtype)
+            module.reset_frequency()
 
 
 class SpeckForCausalLM(SpeckPreTrainedModel, GenerationMixin):

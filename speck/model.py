@@ -490,11 +490,34 @@ class RotaryEmbedding(nn.Module):
 
     def __init__(self, rotary_dim, theta, scaling_factor):
         super().__init__()
-        frequency = 1 / (
-            theta ** (torch.arange(0, rotary_dim, 2, dtype=torch.float32) / rotary_dim)
-        )
-        self.register_buffer("frequency", frequency, persistent=False)
+        self.rotary_dim = rotary_dim
+        self.theta = theta
         self.scaling_factor = scaling_factor
+        self.register_buffer(
+            "frequency",
+            torch.empty(rotary_dim // 2, dtype=torch.float32),
+            persistent=False,
+        )
+        self.reset_frequency()
+
+    @torch.no_grad()
+    def reset_frequency(self):
+        """Rebuild the derived buffer after meta-device checkpoint loading."""
+
+        frequency = 1 / (
+            self.theta
+            ** (
+                torch.arange(
+                    0,
+                    self.rotary_dim,
+                    2,
+                    device=self.frequency.device,
+                    dtype=torch.float32,
+                )
+                / self.rotary_dim
+            )
+        )
+        self.frequency.copy_(frequency.to(self.frequency.dtype))
 
     def forward(self, position, length, dtype):
         positions = torch.arange(
