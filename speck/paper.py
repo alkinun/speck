@@ -131,6 +131,9 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "matrix_sha256",
             "analysis_plan",
             "analysis_plan_sha256",
+            "preflight",
+            "preflight_sha256",
+            "preflight_status",
             "materialization",
             "materialization_sha256",
             "audit",
@@ -144,6 +147,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     for path_key, hash_key in (
         ("matrix", "matrix_sha256"),
         ("analysis_plan", "analysis_plan_sha256"),
+        ("preflight", "preflight_sha256"),
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
     ):
@@ -159,6 +163,14 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         or audit.get("contract_sha256") != evidence["matrix_sha256"]
     ):
         raise ValueError("paper baseline audit is invalid")
+    preflight = _load_json(repository_root / evidence["preflight"])
+    if (
+        preflight.get("format") != "speck_paper_baseline_preflight"
+        or preflight.get("format_version") != 1
+        or preflight.get("status") != evidence["preflight_status"]
+        or preflight.get("matrix_sha256") != evidence["matrix_sha256"]
+    ):
+        raise ValueError("paper baseline preflight is invalid")
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
         raise ValueError("paper experiment program references a missing promotion policy")

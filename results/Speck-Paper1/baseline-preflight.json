@@ -4,10 +4,10 @@
       "arm_id": "dense_global_param_match",
       "compiled_training_step": {
         "batch_size": 4,
-        "compile_and_step_seconds": 7.270166981033981,
-        "gradient_norm_before_clip": 0.7947713136672974,
+        "compile_and_step_seconds": 7.6284091039560735,
+        "gradient_norm_before_clip": 0.7949038743972778,
         "hard_peak_allocated_bytes": 17179869184,
-        "loss": 10.409818649291992,
+        "loss": 10.409786224365234,
         "loss_backend": "torch",
         "optimizer": "muon",
         "peak_allocated_bytes": 10989776384,
@@ -25,16 +25,22 @@
       "flops_per_token_at_4096": 1301237760,
       "native_incremental": {
         "absolute_tolerance": 0.02,
-        "maximum_absolute_logit_error": 0.0224609375,
+        "argmax_agreement": 1.0,
+        "maximum_absolute_logit_error": 0.0234375,
+        "mismatched_logits": 1,
         "passed": false,
+        "relative_rms_logit_error": 0.01811452022739467,
         "relative_tolerance": 0.02,
-        "tokens": 8
+        "rms_logit_error": 0.004752067849040031,
+        "tokens": 8,
+        "total_logits": 256000
       },
       "parameters": 153977088,
       "passed": false,
       "start_temperature_c": 43,
-      "thermal_wait_seconds": 0.016756389057263732,
+      "thermal_wait_seconds": 0.01707816799171269,
       "transformers_export": {
+        "device": "cpu",
         "files": {
           "architecture_speck.py": {
             "bytes": 13186,
@@ -50,7 +56,7 @@
           },
           "model.safetensors": {
             "bytes": 307986440,
-            "sha256": "a73a784d8a2a04f582a14d266ee40b1a07868089f15df1537361c7dc77041bc7"
+            "sha256": "80139b6bc93afb4823570144f9e9d083f0e57ed6ef95737a5b7134fa294b4740"
           },
           "modeling_speck.py": {
             "bytes": 6362,
@@ -91,10 +97,10 @@
       "arm_id": "five_cache_kda_gqa",
       "compiled_training_step": {
         "batch_size": 4,
-        "compile_and_step_seconds": 14.721146663068794,
-        "gradient_norm_before_clip": 2.1064863204956055,
+        "compile_and_step_seconds": 10.861737989005633,
+        "gradient_norm_before_clip": 2.1070029735565186,
         "hard_peak_allocated_bytes": 17179869184,
-        "loss": 10.410881042480469,
+        "loss": 10.410892486572266,
         "loss_backend": "torch",
         "optimizer": "muon",
         "peak_allocated_bytes": 15187470336,
@@ -112,16 +118,22 @@
       "flops_per_token_at_4096": 1021601280,
       "native_incremental": {
         "absolute_tolerance": 0.02,
-        "maximum_absolute_logit_error": 0.060546875,
+        "argmax_agreement": 0.75,
+        "maximum_absolute_logit_error": 0.0546875,
+        "mismatched_logits": 8180,
         "passed": false,
+        "relative_rms_logit_error": 0.038614154248677555,
         "relative_tolerance": 0.02,
-        "tokens": 8
+        "rms_logit_error": 0.01082570943981409,
+        "tokens": 8,
+        "total_logits": 256000
       },
       "parameters": 153958938,
       "passed": false,
       "start_temperature_c": 50,
-      "thermal_wait_seconds": 0.013014163007028401,
+      "thermal_wait_seconds": 5.03256987198256,
       "transformers_export": {
+        "device": "cpu",
         "files": {
           "architecture_speck.py": {
             "bytes": 13186,
@@ -137,7 +149,7 @@
           },
           "model.safetensors": {
             "bytes": 307957452,
-            "sha256": "8b5ce109b34bd49b95c7d2d5c60c9eb778cfc618d565ee16194121706fde1d32"
+            "sha256": "441e2a70a40a83f16d7eacd89b86821d4279a619df2d3ffd3639a8f59585ec08"
           },
           "modeling_speck.py": {
             "bytes": 6362,
@@ -152,8 +164,8 @@
             "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
           },
           "speck_parity.json": {
-            "bytes": 344,
-            "sha256": "e38fdff8a6351a6b092b07138f0b136766d90619e0cb400a64f0c603430a6e66"
+            "bytes": 353,
+            "sha256": "4ffedf151b021c14a5130c5144a62edfea794505312354a61cbd0af728aece7f"
           },
           "speck_source.json": {
             "bytes": 107,
@@ -165,7 +177,7 @@
           "format": "speck_export_parity",
           "format_version": 1,
           "generation_smoke_new_tokens": 2,
-          "incremental_logits_max_absolute_error": 0.0,
+          "incremental_logits_max_absolute_error": 0.0185546875,
           "logits_max_absolute_error": 0.0,
           "parameters": 153958938,
           "passed": true,
@@ -175,7 +187,7 @@
       }
     }
   ],
-  "created_at": "2026-09-05T09:13:38.007865+00:00",
+  "created_at": "2026-09-05T09:15:47.124214+00:00",
   "format": "speck_paper_baseline_preflight",
   "format_version": 1,
   "hardware": {
@@ -195,7 +207,7 @@
   ],
   "matrix": "research/paper-1/baseline_matrix.json",
   "matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
-  "runner_revision": "3d2dcb49c6261128d8aac1efb8bab061e9b6905c",
+  "runner_revision": "a2588d1c23341d4d451053b3d6c15d1768d7b082",
   "software": {
     "cuda": "12.8",
     "flash_linear_attention": "0.5.0",

@@ -88,7 +88,8 @@ The checked analysis plan contains the exact CLI input and result contracts.
 The five historical sequence controls are now identity-audited as discovery evidence only. A new
 153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
 cells. Its analysis and stopping rule are frozen, but launch remains blocked on the evaluation-manifest
-dependency, paired GPU preflight, and the storage-provisioning provenance closeout tracked in SPE-104.
+dependency, a failed native CUDA full-versus-cached decode preflight, and the storage-provisioning
+provenance closeout tracked in SPE-104.
 The current capacity audit passes the 16GiB floor. The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

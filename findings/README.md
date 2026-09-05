@@ -35,6 +35,7 @@ Read in order:
 27. [26 — Paper 1 research program](26_paper_1_research_program.md)
 28. [27 — Paper 1 matched-baseline audit and launch contract](27_paper_1_baseline_audit.md)
 29. [28 — Paper 1 baseline analysis and stopping contract](28_paper_1_baseline_analysis.md)
+30. [29 — Paper 1 baseline hardware preflight failure](29_paper_1_baseline_preflight.md)
 
 Conventions:
 
@@ -86,3 +87,9 @@ Finding 28 freezes the paired baseline analysis before results. It makes the thr
 cells the statistical units, fixes one-sided language-loss and per-source guardrails, separates
 fixed-token/FLOP/steady-time views, locks time-to-quality from controls only, preserves right-censoring,
 and forbids interim quality stopping. The proxy still has no architecture-promotion authority.
+
+Finding 29 runs the exact-shape RTX 3090 baseline preflight. Both arms complete finite compiled
+training steps within the 16GiB allocation envelope, and CPU Transformers exports pass, but the native
+CUDA full-versus-cached decode gate fails. Dense attention has one tail-logit miss with unchanged
+argmax; KDA has 8,180/256,000 mismatched logits and only 0.75 token argmax agreement. Training remains
+blocked pending a layerwise CUDA decode diagnosis; the observed tolerance is not relaxed post hoc.

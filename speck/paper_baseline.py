@@ -18,6 +18,7 @@ from speck.dataset import load_manifest, resolve_data_dir
 from speck.model import SpeckForCausalLM
 
 CONFIG_NAMES = ("data", "long_context", "model", "tokenizer", "train")
+PREFLIGHT_RESULT = Path("results/Speck-Paper1/baseline-preflight.json")
 
 
 def load_matrix(path):
@@ -392,10 +393,23 @@ def audit_baselines(matrix_path, cache_root, runner_revision):
         and analysis.get("status") == "frozen_before_results"
         and analysis.get("baseline_matrix_sha256") == matrix_sha256
     )
-    blockers = [
-        "SPE-58 evaluation-manifest dependency remains open",
-        "paired compiled/runtime/export preflight has not run",
-    ]
+    preflight_path = repository_root / PREFLIGHT_RESULT
+    preflight = (
+        json.loads(preflight_path.read_text(encoding="utf-8")) if preflight_path.is_file() else {}
+    )
+    preflight_valid = (
+        preflight.get("format") == "speck_paper_baseline_preflight"
+        and preflight.get("format_version") == 1
+        and preflight.get("matrix_sha256") == matrix_sha256
+        and len(preflight.get("arms", ())) == len(planned["arms"])
+    )
+    blockers = ["SPE-58 evaluation-manifest dependency remains open"]
+    if not preflight:
+        blockers.append("paired compiled/runtime/export preflight has not run")
+    elif not preflight_valid:
+        blockers.append("paired compiled/runtime/export preflight artifact is invalid")
+    elif preflight.get("status") != "qualified":
+        blockers.append("paired compiled/runtime/export preflight failed")
     if not analysis_qualified:
         blockers.append("paired analysis and stopping script is not frozen")
     if disk.free < storage["minimum_free_bytes_before_proxy_launch"]:
@@ -412,6 +426,16 @@ def audit_baselines(matrix_path, cache_root, runner_revision):
             "path": analysis_contract.get("path"),
             "sha256": file_sha256(analysis_path) if analysis_path.is_file() else None,
             "status": "qualified_frozen_before_results" if analysis_qualified else "unqualified",
+        },
+        "preflight": {
+            "path": PREFLIGHT_RESULT.as_posix(),
+            "sha256": file_sha256(preflight_path) if preflight_path.is_file() else None,
+            "status": preflight.get("status", "not_run"),
+            "runner_revision": preflight.get("runner_revision"),
+            "arms": [
+                {"arm_id": arm.get("arm_id"), "passed": arm.get("passed")}
+                for arm in preflight.get("arms", ())
+            ],
         },
         "source_artifacts": source_artifacts,
         "historical_arms": arms,
