@@ -94,10 +94,12 @@ to a checked experiment artifact.
     with validation feedback and show static probe rankings miss placement interactions.
 35. [Systematic hybrid-architecture design](39_hybrid_architectures_systematic.md) — compare
     from-scratch Transformer/Mamba ratios and early/middle/late depth placements at 350M and 1B.
+36. [Massive activations in hybrid linear attention](40_massive_activations_hla.md) — trace
+    architecture-aligned pre-attention spikes and plateaus, including controlled placement and gates.
 
 ### Supporting eviction baselines
 
-36. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+37. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
 ## Decision map for Speck
@@ -115,7 +117,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, sixteen later direct
+The collection contains all 22 papers supplied in the research brief, seventeen later direct
 novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
