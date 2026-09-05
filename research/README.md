@@ -65,12 +65,12 @@ canonicalization, SQuAD, HotpotQA, word lists, NLTK resources, and an exact depe
 complete 4K through 128K matrices are also qualified across two byte-identical, network-denied generations
 per length. A pinned compatibility patch repairs an upstream HotpotQA non-termination without changing
 prompt or scoring semantics. RULER case data are complete, while candidate-specific execution and
-scoring remain blocked. NoLiMa requires
-acceptance of a
-non-commercial research license and a data manifest. HELMET's native CPU/eager model adapter now
-qualifies on a real Speck export, while its separate 34GB data volume, component licenses, complete
-dataset-bound processing, and candidate executions remain blocked. Its native `pytrec_eval` retrieval
-scorer is separately qualified from two identical network-denied local builds.
+scoring remain blocked. NoLiMa's exact terms and pre-existing restricted object cache are now audited;
+it still requires authorized acceptance of its academic/noncommercial-only license and a
+post-acceptance payload manifest. HELMET's native CPU/eager model adapter now qualifies on a real
+Speck export, while its separate 34GB data volume, component licenses, dataset-bound processing, and
+candidate executions remain blocked. Its native `pytrec_eval` retrieval scorer is separately
+qualified from two identical network-denied local builds.
 
 Build or revalidate the non-redistributable RULER source bundle with:
 

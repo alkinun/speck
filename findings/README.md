@@ -48,6 +48,7 @@ Read in order:
 40. [39 — RULERv1 128K and all-length data qualification](39_ruler_128k_and_data_completion.md)
 41. [40 — HELMET native Speck adapter qualification](40_helmet_native_adapter_qualification.md)
 42. [41 — HELMET offline native scorer runtime](41_helmet_offline_scorer_runtime.md)
+43. [42 — NoLiMa license and metadata decision gate](42_nolima_license_decision.md)
 
 Conventions:
 
@@ -163,3 +164,8 @@ Finding 41 closes the reranking dependency with a platform-specific local runtim
 sources produce identical wheels across two offline rebuilds, and pinned HELMET retrieval metrics pass.
 The 34GB volume, component licenses, dataset-bound processing, candidate exports, and execution remain
 blocked.
+
+Finding 42 freezes the NoLiMa legal decision boundary without authorizing use. Adobe's terms are limited
+to academic research and teaching and expressly exclude commercial product development or gain. The
+empty worktree fetched nothing during audit, but its pre-existing object cache already holds all 16
+restricted blobs. Authorized entity acceptance and post-acceptance payload hashing remain blocked.

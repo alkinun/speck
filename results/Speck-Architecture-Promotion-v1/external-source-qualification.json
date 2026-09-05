@@ -2,7 +2,7 @@
   "format": "speck_external_source_qualification_summary",
   "format_version": 1,
   "status": "source_qualified_execution_blocked",
-  "runner_revision": "a259069e078fd74679225d5cfdc3e5145bf368ba",
+  "runner_revision": "8a89a98a845c60fb5549eb4b14eb557512c15c9f",
   "created_on": "2026-09-05",
   "suites": {
     "ruler": {
@@ -100,7 +100,7 @@
     },
     "nolima": {
       "config": "research/architecture-promotion-v1/external/nolima.json",
-      "config_sha256": "e0c47bb0a7da355f9eec89087c469b7bea9a342301bb49eaf4ebc788b03ee1d7",
+      "config_sha256": "3a08bce8bd00fe880e7f7d58805f7aaa26f7011a1f4552e11817129d38a00e0d",
       "status": "source_qualified_license_acceptance_blocked",
       "sources": [
         {
@@ -121,9 +121,19 @@
         "sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
         "status": "endpoint_protocol_qualified_candidate_export_blocked"
       },
+      "license_decision": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/nolima-license-decision.json",
+        "sha256": "ae7118513665f3bd37561d912444f1c99a4346441adca3c85c55e0b119ccf102",
+        "status": "metadata_and_license_audited_authorized_acceptance_blocked",
+        "restricted_payloads": 16,
+        "restricted_payload_bytes": 8342694,
+        "restricted_blobs_cached": 16,
+        "working_tree_materialized": false,
+        "new_objects_fetched": 0
+      },
       "blockers": [
-        "manual acceptance of the non-commercial Adobe Research License",
-        "per-haystack license audit",
+        "authorized entity acceptance of academic/noncommercial-only Adobe Research License terms",
+        "mixed-license shuffled-haystack compatibility decision and post-acceptance SHA-256 manifest",
         "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
@@ -170,7 +180,7 @@
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. HELMET's native pytrec_eval retrieval scorer also qualifies from two identical offline builds. RULER's all-length data qualify; NoLiMa license/data and HELMET volume/dataset-bound processing remain blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. HELMET's native pytrec_eval retrieval scorer also qualifies from two identical offline builds. RULER's all-length data qualify. NoLiMa's exact license/data tree are audited but authorized acceptance remains blocked; HELMET volume/dataset-bound processing remains blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

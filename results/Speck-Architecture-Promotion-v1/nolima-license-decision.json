@@ -1,0 +1,790 @@
+{
+  "adobe_research_license": {
+    "acceptance_trigger": "exercising rights under the license",
+    "activities_resulting_in_commercial_gain_permitted": false,
+    "attribution": "retain all copyright notices and disclaimers",
+    "automatic_termination_on_material_breach": true,
+    "commercial_product_development_permitted": false,
+    "commercial_use_permitted": false,
+    "entity_authority_required": true,
+    "permitted_purpose": "academic research and teaching only",
+    "redistribution": "noncommercial research only; recipients must receive the Adobe Research License",
+    "revocable": true,
+    "sha256": "8638b5a5beb5e1cdf06a09512d23268358b64f646775581d8276e47329e0aa06"
+  },
+  "cache_audit": {
+    "cached_restricted_paths": [
+      "haystack/rand_shuffle/rand_book_1.txt",
+      "haystack/rand_shuffle/rand_book_2.txt",
+      "haystack/rand_shuffle/rand_book_3.txt",
+      "haystack/rand_shuffle/rand_book_4.txt",
+      "haystack/rand_shuffle/rand_book_5.txt",
+      "haystack/rand_shuffle_long/rand_book_1.txt",
+      "haystack/rand_shuffle_long/rand_book_2.txt",
+      "haystack/rand_shuffle_long/rand_book_3.txt",
+      "haystack/rand_shuffle_long/rand_book_4.txt",
+      "haystack/rand_shuffle_long/rand_book_5.txt",
+      "needlesets/needle_set.json",
+      "needlesets/needle_set_MC.json",
+      "needlesets/needle_set_ONLYDirect.json",
+      "needlesets/needle_set_hard.json",
+      "needlesets/needle_set_w_CoT.json",
+      "needlesets/needle_set_w_Distractor.json"
+    ],
+    "materialized_restricted_paths": [],
+    "new_objects_fetched": 0,
+    "pack_files": [
+      {
+        "bytes": 1100,
+        "path": "pack-0115ceef6e3ef730f056bcfc536034a97bb20573.idx",
+        "sha256": "8ed00a77758ea0ff7c419a179608646cedb69fb2f456e754161312290374a4f1"
+      },
+      {
+        "bytes": 890,
+        "path": "pack-0115ceef6e3ef730f056bcfc536034a97bb20573.pack",
+        "sha256": "985203d260a554d0e0e5b4a5c306d76c7deb86a9a43b804ffdcfe4a87f55333c"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-0115ceef6e3ef730f056bcfc536034a97bb20573.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-0115ceef6e3ef730f056bcfc536034a97bb20573.rev",
+        "sha256": "9529793cdf7ba2d9bfc4b23b987875b6f856134092d8a5c5cac64d1cae785fac"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-064976a4dcf2d9c95ee83f5476a6fa6993b3485a.idx",
+        "sha256": "66302ccebd701b968813ec9fcbde295158bcddbd286bb73e6f3ae1f0fe8ad400"
+      },
+      {
+        "bytes": 158123,
+        "path": "pack-064976a4dcf2d9c95ee83f5476a6fa6993b3485a.pack",
+        "sha256": "d33efec537e88a71df0f18c43080884c3b14cb3e23b3aec005d15557a9f9631e"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-064976a4dcf2d9c95ee83f5476a6fa6993b3485a.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-064976a4dcf2d9c95ee83f5476a6fa6993b3485a.rev",
+        "sha256": "0d0959a0013e2631a4fc766596164df020e67eaaa6c10ef0e3cbca9693527ebc"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-0bea89720d85c1c84b20bf23c7000ed26ee3a83e.idx",
+        "sha256": "89d98b9bd962888752b2732a1d5493f7f258243acae095e904fa417f4535409f"
+      },
+      {
+        "bytes": 501441,
+        "path": "pack-0bea89720d85c1c84b20bf23c7000ed26ee3a83e.pack",
+        "sha256": "c181e6a0402451667f31c0d25507b97031c6739f0bbb8dc2ba70477b2f0ef664"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-0bea89720d85c1c84b20bf23c7000ed26ee3a83e.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-0bea89720d85c1c84b20bf23c7000ed26ee3a83e.rev",
+        "sha256": "5dd0978523a9227985eafd9239acd47a2259a9f8521325174af8cd92bca7d1ee"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-0d5978904149e4d4ce7701052d61e9ff793ed41b.idx",
+        "sha256": "ae025f950dbb14f87cc6c0afdb3498af8c8f082cd6286cd9fd1bc1e8b5c2616e"
+      },
+      {
+        "bytes": 501442,
+        "path": "pack-0d5978904149e4d4ce7701052d61e9ff793ed41b.pack",
+        "sha256": "67ba9e40b90eb8fb13c74a120794a4d9d79498d3c052850d538fbe6a6dbf5aa3"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-0d5978904149e4d4ce7701052d61e9ff793ed41b.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-0d5978904149e4d4ce7701052d61e9ff793ed41b.rev",
+        "sha256": "8406040106860efbfb9f2f9ee26529dfafd74b5abbb160289e37c1be9ec02a5d"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-1956f2de8ca3acca40cb411ebefc047b48b18dfd.idx",
+        "sha256": "cc51903a381f5b9dab931b1f89651ceacfb60ce5289900a9e4119489f7539746"
+      },
+      {
+        "bytes": 3292,
+        "path": "pack-1956f2de8ca3acca40cb411ebefc047b48b18dfd.pack",
+        "sha256": "248d1a79e3c54e0f1e5047f23f5194cfafae06c4bdddb475fcb63b620147e439"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-1956f2de8ca3acca40cb411ebefc047b48b18dfd.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-1956f2de8ca3acca40cb411ebefc047b48b18dfd.rev",
+        "sha256": "65f16f6fb2f3104d2fea00a9593b6463f256fb60fbb37652ec4bc438548b45b1"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-1fc1dd475096cf38a59e3a87fcccd6f80cd5dc31.idx",
+        "sha256": "e731e5e16c3be25753b379c48bee091fdeb877d7ca1509087c5cbedcf6bf5a87"
+      },
+      {
+        "bytes": 160372,
+        "path": "pack-1fc1dd475096cf38a59e3a87fcccd6f80cd5dc31.pack",
+        "sha256": "8fc1e102a45fe6f1fba4f3f60f60705f2b20c07b0b6385c89721dbb51f1dc146"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-1fc1dd475096cf38a59e3a87fcccd6f80cd5dc31.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-1fc1dd475096cf38a59e3a87fcccd6f80cd5dc31.rev",
+        "sha256": "16d5d256179dbac69c2c9014c0c0eaed0a361ee805f3dd40a34ca2f0495b523a"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-5e58856a9a7a3408d626731b273841167bce9232.idx",
+        "sha256": "df2143988722d3d7c50c3a1dd8edfe3b8c2431cf7e59f3c0e1ee8a0c363a7a75"
+      },
+      {
+        "bytes": 505904,
+        "path": "pack-5e58856a9a7a3408d626731b273841167bce9232.pack",
+        "sha256": "478b257e24804dfd22403ef6bbd6b4c1c98692a908af40db1a83da5f07235c36"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-5e58856a9a7a3408d626731b273841167bce9232.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-5e58856a9a7a3408d626731b273841167bce9232.rev",
+        "sha256": "031bef46f04e4d785a39cd7a97e20370f7c12e8f3a94e7405bd3c14d0bb57065"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-63a555a684cd9dbadbf932d14798f7843af91845.idx",
+        "sha256": "6e594e2994411f1dc8503290cf9f18f253d5ed72dd1b22f93e50dda7fd980e72"
+      },
+      {
+        "bytes": 169141,
+        "path": "pack-63a555a684cd9dbadbf932d14798f7843af91845.pack",
+        "sha256": "68298cb31a82dab20121a0f32cc1b1e1d0384db0584c26ae822e89bc2f7ddb5f"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-63a555a684cd9dbadbf932d14798f7843af91845.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-63a555a684cd9dbadbf932d14798f7843af91845.rev",
+        "sha256": "bc8fd0ae4d984ccb96ef211502527e61c39591c01970892889ba5e6f1856c4c2"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-749f2cea844309b8943ff817c30c470afca68aaa.idx",
+        "sha256": "9931c5f90f53f4ced952554e82dc706d36b63540fd21dff0d74258f361a465bc"
+      },
+      {
+        "bytes": 167725,
+        "path": "pack-749f2cea844309b8943ff817c30c470afca68aaa.pack",
+        "sha256": "a01a98b81e1c7e39535748a5af8775d9b5c0fb4ae0e7f8f57feaae1e70a07b2d"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-749f2cea844309b8943ff817c30c470afca68aaa.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-749f2cea844309b8943ff817c30c470afca68aaa.rev",
+        "sha256": "4bd0a4eed9dbb8650d8c656c53de914b122be36d53a5bda80675ea79b2b1ebc0"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-7b2deaeaf2659aedd96c26bb98a415dc077d83c4.idx",
+        "sha256": "d8f88064ca5aa0e79cf3851295f25ce7af166676f28ced2328cdb672576b1df9"
+      },
+      {
+        "bytes": 1356,
+        "path": "pack-7b2deaeaf2659aedd96c26bb98a415dc077d83c4.pack",
+        "sha256": "8c19faf1b4b3abf10cacb7d648ffc8846c840c384b9da75684f5b570c7fad3e3"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-7b2deaeaf2659aedd96c26bb98a415dc077d83c4.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-7b2deaeaf2659aedd96c26bb98a415dc077d83c4.rev",
+        "sha256": "1eb735d23a2132f9dde50da3505484306a01ad43bc614e05591a8480664c34d8"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-7c1e5b89186b5f27315613ec816fa079cfb7313e.idx",
+        "sha256": "4db7608d8d06484daaedfac923476309c41fe3d87d06323c2b0a64fcd6655ce1"
+      },
+      {
+        "bytes": 1290,
+        "path": "pack-7c1e5b89186b5f27315613ec816fa079cfb7313e.pack",
+        "sha256": "ae43d0184a08a2669dec2383ded718a7e2384419276c964308d894c8040cf2d1"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-7c1e5b89186b5f27315613ec816fa079cfb7313e.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-7c1e5b89186b5f27315613ec816fa079cfb7313e.rev",
+        "sha256": "8015c811be8468c0e2aaa51094e2e4e7f55115cc1fc985fb1c882432b1a5a479"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-8eaf27781623ae0d01f723be16dd1c5c9f709642.idx",
+        "sha256": "85f2b349968185be524459f27e97a128f29ea6ea5e43bebc05b05acd3d4035d2"
+      },
+      {
+        "bytes": 153,
+        "path": "pack-8eaf27781623ae0d01f723be16dd1c5c9f709642.pack",
+        "sha256": "f3f668a58410a8d9b136dc29913e637af37e07970ef313b5ca37b28d5dbbf5cb"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-8eaf27781623ae0d01f723be16dd1c5c9f709642.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-8eaf27781623ae0d01f723be16dd1c5c9f709642.rev",
+        "sha256": "688bbf64f31c4b153bcb9128175b7843e94a11a567863b76d7eed2a796327261"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-9967b7d9e2e11bdc32f25547fbc7f6f84e07d2cb.idx",
+        "sha256": "ffced2c6dadc78d28ca1219579213b507905470768d34d1a370eae153c9ea72e"
+      },
+      {
+        "bytes": 489582,
+        "path": "pack-9967b7d9e2e11bdc32f25547fbc7f6f84e07d2cb.pack",
+        "sha256": "0bbfe36ef7866d71ab0fdee4dc15f732dc0733a01451db1c4a47cca9ee3540e1"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-9967b7d9e2e11bdc32f25547fbc7f6f84e07d2cb.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-9967b7d9e2e11bdc32f25547fbc7f6f84e07d2cb.rev",
+        "sha256": "0957a623d15d1a2f4c267dc1feb805e87e7031d2252e9b0066d0bfe0d4c3fbbe"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-a53ce6c0d98b015ebcea3f83a0f2cfd31fc586a5.idx",
+        "sha256": "68d8bbbd0f19d72426d8ca414a7d9d067b4189fb29fa050d591cd3bb546d4270"
+      },
+      {
+        "bytes": 168721,
+        "path": "pack-a53ce6c0d98b015ebcea3f83a0f2cfd31fc586a5.pack",
+        "sha256": "746413557b9d37ef3794106d744336661d6215e87b1e41a9c7822cb5c92d0267"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-a53ce6c0d98b015ebcea3f83a0f2cfd31fc586a5.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-a53ce6c0d98b015ebcea3f83a0f2cfd31fc586a5.rev",
+        "sha256": "0f81376186585906e21ccee12a94cbe77e23decece79df261c7950997233600c"
+      },
+      {
+        "bytes": 1240,
+        "path": "pack-a7ec58c7aeaf2fd85d48e8852f5572b0b96e6914.idx",
+        "sha256": "bf9520711c8b950d594f447de10ff7f62f9e4ced5aa831bd0bbbbbda23da6cb1"
+      },
+      {
+        "bytes": 1759,
+        "path": "pack-a7ec58c7aeaf2fd85d48e8852f5572b0b96e6914.pack",
+        "sha256": "54700b4436a6d981039edd5583c49d3444e26ce2c9bf62d6cdd46ce464286dce"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-a7ec58c7aeaf2fd85d48e8852f5572b0b96e6914.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 76,
+        "path": "pack-a7ec58c7aeaf2fd85d48e8852f5572b0b96e6914.rev",
+        "sha256": "44cada8ef579319340e4d9140b21fdb4b1e5c2707fea97fdf49bbb8102dedc5d"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-b9dd03f76dcc48b5e532c31c70b26343f48ad4e1.idx",
+        "sha256": "a8601fcba78e26b93e307f1d6afe5599ff4eacd28d5b374b630641df94b79ea4"
+      },
+      {
+        "bytes": 1535,
+        "path": "pack-b9dd03f76dcc48b5e532c31c70b26343f48ad4e1.pack",
+        "sha256": "f76ded81e5f15c4f4cffd6a6276355aa953b9e1c9cebfa6b262dd70caed98bb3"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-b9dd03f76dcc48b5e532c31c70b26343f48ad4e1.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-b9dd03f76dcc48b5e532c31c70b26343f48ad4e1.rev",
+        "sha256": "df1d83e76c37579573d9517a3f5a27d65175cd26e361e4674b2c8695ce03a29e"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-bf6baa7acd27860cdc2a11930c7dfb21ff6bc96c.idx",
+        "sha256": "78748bb63da07c8574e5d3981f0c46f1b304e36af409d470c855293e71647900"
+      },
+      {
+        "bytes": 1332,
+        "path": "pack-bf6baa7acd27860cdc2a11930c7dfb21ff6bc96c.pack",
+        "sha256": "4a11b91432071142f2acb1994129f0398804d33e0c68ddf569ef855941fdb272"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-bf6baa7acd27860cdc2a11930c7dfb21ff6bc96c.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-bf6baa7acd27860cdc2a11930c7dfb21ff6bc96c.rev",
+        "sha256": "3ba85d7360b39bf03d347d8e38c496c8dfc0df5d59264fae898262580ecb63bc"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-c481bd5ea3f1f6d1afe2f92e6dcef7d459963570.idx",
+        "sha256": "7d53cbce32acd0d5892a3027c91d9e70758d94f54e67c99f620b6f213b876366"
+      },
+      {
+        "bytes": 1122,
+        "path": "pack-c481bd5ea3f1f6d1afe2f92e6dcef7d459963570.pack",
+        "sha256": "18a2a93023e1e7aa68b9ab489f40f24889aae51650e0f701e5a6db151395ce94"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-c481bd5ea3f1f6d1afe2f92e6dcef7d459963570.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-c481bd5ea3f1f6d1afe2f92e6dcef7d459963570.rev",
+        "sha256": "41ae91b1cbea96d011cf4b466d18ddd9e1b382df1b990385cab029579d90e93c"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-e1a0822d84ba08c8581aec584dec13180f4b9e2d.idx",
+        "sha256": "b9c4c13849d7cb9bcaa0a1d5ee0e1bd97f0e37cd26cff11565e327675b9eb4d1"
+      },
+      {
+        "bytes": 500958,
+        "path": "pack-e1a0822d84ba08c8581aec584dec13180f4b9e2d.pack",
+        "sha256": "961164e13e8fdefa1e867e1b0caf166d6b00fbb2c0f3b4df3c8bd8d883090a2d"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-e1a0822d84ba08c8581aec584dec13180f4b9e2d.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-e1a0822d84ba08c8581aec584dec13180f4b9e2d.rev",
+        "sha256": "4737ddefa5a2869d35edca44508514d061ccbcdcabd7f22bedb9939cc1b9d309"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-f017f0c08503a86349fe5a97bac749f1bc66127a.idx",
+        "sha256": "67b991619231151ac6ffc57ebf2e3c518a73efac77b4eac9333b62bb34c53f39"
+      },
+      {
+        "bytes": 359,
+        "path": "pack-f017f0c08503a86349fe5a97bac749f1bc66127a.pack",
+        "sha256": "03c69b26c315a793961fc48b6354dcf373eb855fd13ecfdf9d3e397db008eddb"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-f017f0c08503a86349fe5a97bac749f1bc66127a.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-f017f0c08503a86349fe5a97bac749f1bc66127a.rev",
+        "sha256": "d9b144e42cce16a7ba08b1df5bd0673273d36ec4e37d266d7c907c8e79b56cad"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-fbbe0d76918c77ea0e6ddd336449ff131221fea3.idx",
+        "sha256": "78358f81b4e3e7aaba4ffd2fdd1ae5212c86243f32d41e67151412a3aa68b33f"
+      },
+      {
+        "bytes": 1391,
+        "path": "pack-fbbe0d76918c77ea0e6ddd336449ff131221fea3.pack",
+        "sha256": "8c2a233e5c0749ec0d8743cf1a9f11701c0f5f0d96d0ce0de8ec6386e2ba8989"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-fbbe0d76918c77ea0e6ddd336449ff131221fea3.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-fbbe0d76918c77ea0e6ddd336449ff131221fea3.rev",
+        "sha256": "161c65f749dc9f94991406f89e015faf6f4eccc2ad58d36f3c861079b137af47"
+      },
+      {
+        "bytes": 1100,
+        "path": "pack-ffdf8f3d1b857ea7587c4c92c7cc13d24828ce41.idx",
+        "sha256": "d9dfae864540cd82032965dd9a988562d0dece8c3e96e3fc884028400542b5f7"
+      },
+      {
+        "bytes": 1437,
+        "path": "pack-ffdf8f3d1b857ea7587c4c92c7cc13d24828ce41.pack",
+        "sha256": "41a8da11485177d80c513ba5d501e4d480003d3848499af524a333674815a134"
+      },
+      {
+        "bytes": 0,
+        "path": "pack-ffdf8f3d1b857ea7587c4c92c7cc13d24828ce41.promisor",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 56,
+        "path": "pack-ffdf8f3d1b857ea7587c4c92c7cc13d24828ce41.rev",
+        "sha256": "47925f5fae03cae91685a4fa72f85984288187545302a228f93292530e4a42b0"
+      }
+    ],
+    "pack_snapshot_sha256": "91b57caa9286af1d7632f26e54b7044f3dae580d8096074185a8b6660a75e989",
+    "restricted_blobs_cached": 16,
+    "restricted_blobs_declared": 16,
+    "working_tree_materialized": false
+  },
+  "contract": {
+    "license_spec_sha256": "cef318676fdad36865509f2d89f6565e5e6f8214d3470d25e625d0ec4b0e8778",
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/external/nolima.json"
+  },
+  "created_at": "2026-09-05T12:50:03.317827+00:00",
+  "dataset": {
+    "author": "Ali Modarressi",
+    "authored_at": "2025-06-10T13:40:21Z",
+    "bare_repository": false,
+    "metadata_files": [
+      {
+        "bytes": 3288,
+        "git_object_id": "85baef6c7e1fb6e4a6bab653ff02ed5980b1f255",
+        "mode": "100644",
+        "path": "LICENSE",
+        "sha256": "8638b5a5beb5e1cdf06a09512d23268358b64f646775581d8276e47329e0aa06",
+        "type": "blob"
+      },
+      {
+        "bytes": 8520,
+        "git_object_id": "583e6c591fc0381e029147f1f8f38dadcc2b9146",
+        "mode": "100644",
+        "path": "README.md",
+        "sha256": "6ea416e927553f5acfc0bdbd95306a2ef98a21d02d53f78e9befea0f10318844",
+        "type": "blob"
+      },
+      {
+        "bytes": 4213,
+        "git_object_id": "04181b3530e10e107bc81da7afa954db22deb239",
+        "mode": "100644",
+        "path": "haystack/LICENSES.md",
+        "sha256": "0a295ce17544dc60964bfb7d817388c6f775680c2f4014dc991f9efeb5400b42",
+        "type": "blob"
+      }
+    ],
+    "optional_lfs_book_archive": {
+      "bytes": 10023582,
+      "git_object_id": "24bc9b8e792d2ab1e490740e6df04b761c64d3fc",
+      "mode": "100644",
+      "oid_sha256": "43daa2c4c11c608743129cbd688cb5ab06245872a0551fb98d33f7a061220266",
+      "path": "haystack/books.tar.gz",
+      "type": "blob"
+    },
+    "parents": [],
+    "partial_clone_filter": "blob:none",
+    "repository": "https://huggingface.co/datasets/amodaresi/NoLiMa",
+    "restricted_payload_bytes": 8342694,
+    "restricted_payloads": [
+      {
+        "bytes": 418037,
+        "git_object_id": "55d7021eede9aad49764749249f2580a1a5b1538",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle/rand_book_1.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 400808,
+        "git_object_id": "b0a118eff148f42779d284dd19f97247057f6dbe",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle/rand_book_2.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 420147,
+        "git_object_id": "b05cbffa46ce78aaf0eb8121e9686fb2dfb8d5f9",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle/rand_book_3.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 414451,
+        "git_object_id": "6af722fecb5339700858031e4b94cc24237fc441",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle/rand_book_4.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 390784,
+        "git_object_id": "16dc8b91b029564d45c95d6829e10a8079e25f98",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle/rand_book_5.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 1249102,
+        "git_object_id": "3eb077a1f48f00cc01ab34bd8214802a88bc6aa2",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle_long/rand_book_1.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 1265606,
+        "git_object_id": "818ee39292c274587f778acd5d0c5317615f4795",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle_long/rand_book_2.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 1246442,
+        "git_object_id": "dd77bb24f1e18e0ea7c20588ef5325b716295449",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle_long/rand_book_3.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 1247457,
+        "git_object_id": "e9f8f80bf7d70827d118e4f7b7df723a19fd4d91",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle_long/rand_book_4.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 1221569,
+        "git_object_id": "3461051e0acd2c80436e03e402350c97bb8be1d4",
+        "mode": "100644",
+        "path": "haystack/rand_shuffle_long/rand_book_5.txt",
+        "type": "blob"
+      },
+      {
+        "bytes": 12286,
+        "git_object_id": "bd2e9b8221715a03994d7a8db456530e95f4274a",
+        "mode": "100644",
+        "path": "needlesets/needle_set.json",
+        "type": "blob"
+      },
+      {
+        "bytes": 12946,
+        "git_object_id": "d9380eb9e1e6e089723f6b25494e4b81f69335e3",
+        "mode": "100644",
+        "path": "needlesets/needle_set_MC.json",
+        "type": "blob"
+      },
+      {
+        "bytes": 11416,
+        "git_object_id": "cf19f896b9570a93ccd1d46c90acd589e389de9a",
+        "mode": "100644",
+        "path": "needlesets/needle_set_ONLYDirect.json",
+        "type": "blob"
+      },
+      {
+        "bytes": 4403,
+        "git_object_id": "ab24d254a2a8823a68908a89e0a93cc0f2125d4b",
+        "mode": "100644",
+        "path": "needlesets/needle_set_hard.json",
+        "type": "blob"
+      },
+      {
+        "bytes": 13026,
+        "git_object_id": "6f2d0e5146e2347d8381f6e0032985eca74b33d8",
+        "mode": "100644",
+        "path": "needlesets/needle_set_w_CoT.json",
+        "type": "blob"
+      },
+      {
+        "bytes": 14214,
+        "git_object_id": "5b473964212acb543abe1923352ee5bf7478138e",
+        "mode": "100644",
+        "path": "needlesets/needle_set_w_Distractor.json",
+        "type": "blob"
+      }
+    ],
+    "revision": "378115b1f136b6ba78f90f78682bc55f70ec3ddd",
+    "subject": "Adding longer haystacks",
+    "tree": "6d9560dd0fb391ff154d1652c68dc6bfb9fc46d8"
+  },
+  "decision": {
+    "download_or_use_authorized": false,
+    "if_not_accepted": "remove NoLiMa from required evaluation policy through a new reviewed contract version and substitute a legally compatible independent benchmark",
+    "raw_payload_git_redistribution_authorized": false,
+    "required_attestation": "An authorized representative must confirm that the entity accepts the pinned Adobe Research License solely for noncommercial academic research/teaching, authorizes local evaluation-data use, and forbids redistribution through Speck's MIT artifacts.",
+    "status": "authorized_acceptance_required"
+  },
+  "format": "speck_nolima_license_decision",
+  "format_version": 1,
+  "haystack_rights": {
+    "compatibility_risk": "multiple BY-NC-SA versions appear in derived shuffled haystacks; no local legal conclusion is made about cross-license compatibility",
+    "noncommercial_works": 6,
+    "share_alike_works": 5,
+    "source_file_sha256": "0a295ce17544dc60964bfb7d817388c6f775680c2f4014dc991f9efeb5400b42",
+    "unresolved_mapping": "the license file identifies ten source works but does not map the five shuffled or five long-shuffled outputs to individual works",
+    "works": [
+      {
+        "commercial_use": false,
+        "license": "CC-BY-NC-SA-3.0",
+        "share_alike": true,
+        "source": "Little Brother \u2014 Cory Doctorow"
+      },
+      {
+        "commercial_use": false,
+        "license": "CC-BY-NC-SA-4.0",
+        "share_alike": true,
+        "source": "Zero Sum Game \u2014 S. L. Huang"
+      },
+      {
+        "commercial_use": true,
+        "license": "CC-BY-3.0",
+        "share_alike": false,
+        "source": "Life Blood \u2014 Thomas Hoover"
+      },
+      {
+        "commercial_use": false,
+        "license": "CC-BY-NC-SA-2.5",
+        "share_alike": true,
+        "source": "Overclocked \u2014 Cory Doctorow"
+      },
+      {
+        "commercial_use": false,
+        "license": "CC-BY-NC-SA-4.0",
+        "share_alike": true,
+        "source": "Root of Unity \u2014 S. L. Huang"
+      },
+      {
+        "commercial_use": false,
+        "license": "CC-BY-NC-SA-3.0",
+        "share_alike": true,
+        "source": "With a Little Help \u2014 Cory Doctorow"
+      },
+      {
+        "commercial_use": true,
+        "license": "public-domain-US",
+        "share_alike": false,
+        "source": "Rebecca of Sunnybrook Farm \u2014 Kate Douglas Wiggin"
+      },
+      {
+        "commercial_use": true,
+        "license": "public-domain-US",
+        "share_alike": false,
+        "source": "The Thing Beyond Reason \u2014 Elisabeth Sanxay Holding"
+      },
+      {
+        "commercial_use": false,
+        "license": "CC-BY-NC-4.0",
+        "share_alike": false,
+        "source": "If Then Else \u2014 Barbara Fister"
+      },
+      {
+        "commercial_use": true,
+        "license": "CC-BY-3.0-US",
+        "share_alike": false,
+        "source": "A Vessel for Offering \u2014 Darren R. Hawkins"
+      }
+    ]
+  },
+  "interpretation_boundary": "research compliance inventory only; not legal advice",
+  "runner_revision": "5ef47d7910f0b1d8b4e008d11080d7c95333b7e7",
+  "runner_sha256": "5fdb53b2143ca9c3a37cc65db97c50daf7951b534361a23fbcdce050b86591dc",
+  "source_qualification": {
+    "config_path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/external/nolima.json",
+    "config_sha256": "e0c47bb0a7da355f9eec89087c469b7bea9a342301bb49eaf4ebc788b03ee1d7",
+    "format": "speck_external_suite_source_qualification",
+    "format_version": 1,
+    "remaining_data_status": "revision_pinned_license_acceptance_blocked",
+    "remaining_model_adapter_status": "endpoint_protocol_qualified_candidate_export_blocked",
+    "sources": [
+      {
+        "id": "nolima_pipeline",
+        "repository": "https://github.com/adobe-research/NoLiMa.git",
+        "required_files": [
+          {
+            "path": "README.md",
+            "sha256": "d64d2af4cbba0cb0e2faa46e33a83fcba82221e99a7f5c12bfda04be2c7d81f1"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "8638b5a5beb5e1cdf06a09512d23268358b64f646775581d8276e47329e0aa06"
+          },
+          {
+            "path": "requirements.txt",
+            "sha256": "886818134cd22732d3eebf69ae175ef28cb969016e0919bf5e722069b768ce43"
+          },
+          {
+            "path": "evaluation/run_tests.py",
+            "sha256": "3ad47595b8bc6b96f26a6ebacc7eb9aaa4efe75dd787fc697f8120c3d4c83fcc"
+          },
+          {
+            "path": "evaluation/async_evaluate.py",
+            "sha256": "78f61137f1b23f880540e040ca09a3db726a6e81e252cd346dd60589bedb85b7"
+          },
+          {
+            "path": "evaluation/async_api_connector.py",
+            "sha256": "4c3d34b78b887f459ea7e43d6e63c87a7a67cdaa74063524a1fa3a94d3e96450"
+          },
+          {
+            "path": "evaluation/run_config/multi_test_config_book_4K.yaml",
+            "sha256": "d3ac46a686ffd2ceee83ccc14fa2f9b8b66cbaf2e878227db5f76fd063888f49"
+          },
+          {
+            "path": "evaluation/run_config/multi_test_config_book_8K.yaml",
+            "sha256": "5a06545d563de4ceb045b52a6e07082ceb82d3f0d758820adb62b5557c55a0cf"
+          },
+          {
+            "path": "evaluation/run_config/multi_test_config_book_16K.yaml",
+            "sha256": "57480d134ee5c0886a48f60db9eda11e77fba460cef0aa7515546e5d3de6c293"
+          },
+          {
+            "path": "evaluation/run_config/multi_test_config_book_32K.yaml",
+            "sha256": "cc182fec8000c50773e49b8cfb8c485c3be2ae01337f574efab93add3ebe0ecc"
+          }
+        ],
+        "revision": "cb14780b249fecf2851127b2101a062c1b2c6430"
+      }
+    ],
+    "status": "source_qualified",
+    "suite_id": "nolima",
+    "suite_version": "pinned-2026-09-05"
+  },
+  "status": "metadata_and_license_audited_authorized_acceptance_blocked"
+}
