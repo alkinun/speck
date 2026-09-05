@@ -1,4 +1,5 @@
 import json
+import shutil
 from copy import deepcopy
 from pathlib import Path
 
@@ -25,6 +26,9 @@ def test_checked_architecture_promotion_contract_is_valid():
         "serving_profiles": 3,
         "internal_evaluation_suites": 4,
         "external_evaluation_suites": 3,
+        "promotion_protocols": 2,
+        "symbolic_route_values": 100,
+        "tokenizer_qualified": False,
         "evidence_components": 10,
         "status": "valid",
     }
@@ -32,12 +36,38 @@ def test_checked_architecture_promotion_contract_is_valid():
 
 def test_contract_rejects_equivalence_ratio_drift(tmp_path):
     destination = tmp_path / "contract"
-    destination.mkdir()
-    for source in contract.iterdir():
-        value = json.loads(source.read_text(encoding="utf-8"))
-        if source.name == "policy.json":
-            value = deepcopy(value)
-            value["statistical_contract"]["language_loss"]["perplexity_ratio_at_margin"] = 1.0
-        (destination / source.name).write_text(json.dumps(value), encoding="utf-8")
+    shutil.copytree(contract, destination)
+    policy_path = destination / "policy.json"
+    value = deepcopy(json.loads(policy_path.read_text(encoding="utf-8")))
+    value["statistical_contract"]["language_loss"]["perplexity_ratio_at_margin"] = 1.0
+    policy_path.write_text(json.dumps(value), encoding="utf-8")
     with pytest.raises(ValueError, match="perplexity ratio"):
         validate_research_contract(destination)
+
+
+def test_contract_qualifies_declared_route_tokens():
+    vocabulary = json.loads(
+        (contract / "internal" / "route_values_v1.json").read_text(encoding="utf-8")
+    )
+
+    class DeclaredTokenizer:
+        def __init__(self):
+            self.values = {entry["text"]: entry["token_id"] for entry in vocabulary["values"]}
+            self.other = {}
+
+        def fingerprint(self):
+            return vocabulary["tokenizer"]["fingerprint"]
+
+        def encode(self, text):
+            if text in self.values:
+                return [self.values[text]]
+            tokens = []
+            for word in text.split():
+                if word not in self.other:
+                    self.other[word] = 10000 + len(self.other)
+                tokens.append(self.other[word])
+            return tokens
+
+    report = validate_research_contract(contract, tokenizer=DeclaredTokenizer())
+    assert report["tokenizer_qualified"] is True
+    assert report["symbolic_route_values"] == 100

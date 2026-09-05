@@ -14,12 +14,18 @@ The active contract is [`architecture-promotion-v1`](architecture-promotion-v1/)
   evaluation settings and upstream revisions. An upstream pin is not a qualification result.
 - [`evidence_matrix.json`](architecture-promotion-v1/evidence_matrix.json) records what is retained,
   rejected, proposed, or still unresolved.
+- [`internal/structured_retrieval_v2.json`](architecture-promotion-v1/internal/structured_retrieval_v2.json)
+  freezes the 200-case, two/eight-record, held-out-template and held-out-answer protocol.
+- [`internal/symbolic_composition_v2.json`](architecture-promotion-v1/internal/symbolic_composition_v2.json)
+  freezes route, payload, and direct-composition views over a tokenizer-qualified 100-way route
+  vocabulary.
 
 Validate the complete cross-file contract with:
 
 ```bash
 uv run --extra cpu python -m scripts.research_contract_validate \
-  research/architecture-promotion-v1
+  research/architecture-promotion-v1 \
+  --tokenizer-experiment experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope
 ```
 
 ## Decision principle
@@ -46,4 +52,3 @@ Serving profiles report TTFT, TPOT/inter-token latency, and token throughput rat
 
 - <https://mlcommons.org/2024/03/mlperf-llama2-70b/>
 - <https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md>
-

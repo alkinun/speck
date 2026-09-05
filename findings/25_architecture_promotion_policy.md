@@ -109,7 +109,9 @@ microbenchmarks; p99 serving claims require at least 1,000 online requests.
 
 ## Deliberately incomplete work
 
-- `structured_retrieval_v2` and `symbolic_composition_v2` require new 200-case implementations.
+- The 200-case `structured_retrieval_v2` and `symbolic_composition_v2` protocols are frozen and their
+  answer/route vocabularies qualify against the pinned tokenizer; binding them to end-to-end runners
+  remains incomplete.
 - The pinned RULER, NoLiMa, and HELMET revisions have not been integrated or qualified.
 - The medium-scale hardware, parallelism, and absolute cost envelope are not yet named.
 - A production serving runtime profile is required in policy v2 before architecture freeze.

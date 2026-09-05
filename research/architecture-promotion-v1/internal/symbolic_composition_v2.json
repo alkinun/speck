@@ -1,0 +1,79 @@
+{
+  "format": "speck_promotion_retrieval_protocol",
+  "format_version": 1,
+  "protocol_id": "symbolic_composition_v2",
+  "status": "frozen_runner_integration_pending",
+  "policy_id": "architecture-promotion-v1",
+  "purpose": "Separate route-edge retrieval, payload-edge retrieval, and direct two-hop composition with a 100-way tokenizer-qualified intermediate vocabulary.",
+  "comparison": {
+    "unit": "paired candidate and control adapters",
+    "parent_requirement": "paired base checkpoints from the same architecture comparison run",
+    "adapter_requirement": "identical settings and paired synthetic streams",
+    "base_model_seeds": [42, 43, 44],
+    "training_stream_seed_offsets": {
+      "42": 300000000,
+      "43": 310000000,
+      "44": 320000000
+    },
+    "fixed_validation_seed_offset": 400000000
+  },
+  "tokenizer": {
+    "repo": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+    "fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "route_vocabulary": "route_values_v1.json",
+  "route_vocabulary_sha256": "b0066702ea704e6c10f9a3fe9188eb502f7932f93b7ca09faa21a136ae626622",
+  "adaptation": {
+    "tasks": ["two_hop_route", "two_hop_payload", "two_hop_symbolic"],
+    "sequence_length": 4096,
+    "chains": 6,
+    "steps": 400,
+    "batch_size": 4,
+    "accumulation": 4,
+    "eval_every": 100,
+    "learning_rate": 0.0001,
+    "warmup_steps": 25,
+    "minimum_lr_multiplier": 0.1,
+    "weight_decay": 0.1,
+    "gradient_clip": 1.0,
+    "optimizer": "adamw",
+    "train_templates": ["archive", "registry", "ledger", "manifest"],
+    "train_answer_sets": ["phrases_train_v2"],
+    "train_response_cue": "native",
+    "language_replay_fraction": 0.5,
+    "replay_data_experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+    "candidate_loss_weight": 0.0
+  },
+  "validation": {
+    "tasks": ["two_hop_route", "two_hop_payload", "two_hop_symbolic"],
+    "samples_per_view": 200,
+    "templates": ["directory"],
+    "answer_sets": ["phrases_validation_v2"],
+    "chains": 6,
+    "response_cue": "native",
+    "required_metrics": [
+      "exact_match",
+      "token_accuracy",
+      "candidate_accuracy",
+      "target_direction_accuracy",
+      "association_specificity_accuracy",
+      "association_specificity_score"
+    ],
+    "qualification_rule": "route and payload candidate accuracy plus specificity must pass before direct composition is interpreted",
+    "constituent_absolute_floors": {
+      "candidate_accuracy": 0.9,
+      "association_specificity_accuracy": 0.9
+    },
+    "composition_absolute_floor": {
+      "candidate_accuracy": 0.8
+    }
+  },
+  "leakage_controls": {
+    "template_split": "directory appears only in validation",
+    "answer_split": "phrases_train_v2 and phrases_validation_v2 are disjoint",
+    "seed_split": "training stream ranges and the fixed validation range do not overlap",
+    "intermediate_assignment": "six routes per case are sampled without replacement from the fixed 100-way vocabulary",
+    "adaptive_tuning": "constituent and composition thresholds cannot change after any validation result is observed"
+  }
+}

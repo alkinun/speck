@@ -1,5 +1,6 @@
 """Validate versioned architecture-research decision contracts."""
 
+import hashlib
 import json
 import math
 import re
@@ -12,6 +13,13 @@ CONTRACT_FILES = (
     "evidence_matrix.json",
 )
 COMMIT_PATTERN = re.compile(r"^[0-9a-f]{40}$")
+SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+PROMOTION_TASKS = {
+    "multi_key",
+    "two_hop_route",
+    "two_hop_payload",
+    "two_hop_symbolic",
+}
 
 
 def _load_json(path):
@@ -22,6 +30,14 @@ def _load_json(path):
     if not isinstance(value, dict):
         raise ValueError(f"research contract file must contain an object: {path}")
     return value
+
+
+def _file_sha256(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _require_keys(value, keys, context):
@@ -66,6 +82,219 @@ def _unique_ids(values, context):
     if duplicates:
         raise ValueError(f"duplicate {context} ids: {', '.join(duplicates)}")
     return set(identifiers)
+
+
+def _validate_route_vocabulary(path, expected_tokenizer, tokenizer=None):
+    vocabulary = _load_json(path)
+    _require_keys(
+        vocabulary,
+        {"format", "format_version", "vocabulary_id", "tokenizer", "selection", "values"},
+        "symbolic route vocabulary",
+    )
+    if (
+        vocabulary["format"] != "speck_symbolic_route_vocabulary"
+        or vocabulary["format_version"] != 1
+    ):
+        raise ValueError("symbolic route vocabulary must use format version 1")
+    if vocabulary["tokenizer"] != expected_tokenizer:
+        raise ValueError("symbolic route vocabulary tokenizer does not match its protocol")
+    values = vocabulary["values"]
+    declared_count = vocabulary["selection"].get("count")
+    if not isinstance(values, list) or len(values) != declared_count or len(values) < 100:
+        raise ValueError("symbolic route vocabulary must contain its declared 100+ values")
+    texts = [entry.get("text") for entry in values]
+    token_ids = [entry.get("token_id") for entry in values]
+    if (
+        any(not isinstance(text, str) or not text for text in texts)
+        or len(set(texts)) != len(texts)
+        or any(
+            isinstance(token_id, bool) or not isinstance(token_id, int) or token_id < 0
+            for token_id in token_ids
+        )
+        or len(set(token_ids)) != len(token_ids)
+    ):
+        raise ValueError("symbolic route texts and token ids must be valid and unique")
+    if tokenizer is not None:
+        if tokenizer.fingerprint() != expected_tokenizer["fingerprint"]:
+            raise ValueError("prepared tokenizer fingerprint does not match the route vocabulary")
+        mismatches = [
+            text for text, token_id in zip(texts, token_ids) if tokenizer.encode(text) != [token_id]
+        ]
+        if mismatches:
+            raise ValueError(
+                "symbolic route values do not round-trip as declared one-token ids: "
+                + ", ".join(mismatches[:5])
+            )
+    return tuple(texts)
+
+
+def _validate_promotion_protocol(path, repository_root, policy_id, tokenizer=None):
+    from speck.long_context import ANSWER_SETS, RETRIEVAL_TEMPLATES
+
+    protocol = _load_json(path)
+    _require_keys(
+        protocol,
+        {
+            "format",
+            "format_version",
+            "protocol_id",
+            "status",
+            "policy_id",
+            "comparison",
+            "tokenizer",
+            "adaptation",
+            "validation",
+            "leakage_controls",
+        },
+        f"promotion protocol {path.name}",
+    )
+    if (
+        protocol["format"] != "speck_promotion_retrieval_protocol"
+        or protocol["format_version"] != 1
+    ):
+        raise ValueError(f"promotion protocol {path.name} must use format version 1")
+    if protocol["policy_id"] != policy_id:
+        raise ValueError(f"promotion protocol {path.name} references a different policy")
+    if protocol["status"] != "frozen_runner_integration_pending":
+        raise ValueError(f"promotion protocol {path.name} has an unexpected status")
+
+    comparison = protocol["comparison"]
+    seeds = comparison.get("base_model_seeds")
+    offsets = comparison.get("training_stream_seed_offsets")
+    if (
+        seeds != [42, 43, 44]
+        or not isinstance(offsets, dict)
+        or set(offsets) != {str(seed) for seed in seeds}
+        or len(set(offsets.values())) != len(offsets)
+    ):
+        raise ValueError(f"promotion protocol {path.name} has an invalid paired seed design")
+    validation_offset = comparison.get("fixed_validation_seed_offset")
+    _positive(validation_offset, f"promotion protocol {path.name} validation seed offset")
+    if validation_offset in offsets.values():
+        raise ValueError(f"promotion protocol {path.name} overlaps train and validation seeds")
+
+    adaptation = protocol["adaptation"]
+    validation = protocol["validation"]
+    train_tasks = set(adaptation.get("tasks", ()))
+    validation_tasks = set(validation.get("tasks", ()))
+    if (
+        not train_tasks
+        or not validation_tasks
+        or not (train_tasks | validation_tasks) <= PROMOTION_TASKS
+    ):
+        raise ValueError(f"promotion protocol {path.name} has unsupported tasks")
+    train_templates = adaptation.get("train_templates")
+    validation_templates = validation.get("templates")
+    if (
+        not train_templates
+        or not validation_templates
+        or not set(train_templates).isdisjoint(validation_templates)
+        or not (set(train_templates) | set(validation_templates)) <= set(RETRIEVAL_TEMPLATES)
+    ):
+        raise ValueError(f"promotion protocol {path.name} must keep valid templates disjoint")
+    train_answer_sets = adaptation.get("train_answer_sets")
+    validation_answer_sets = validation.get("answer_sets")
+    if (
+        not train_answer_sets
+        or not validation_answer_sets
+        or not set(train_answer_sets).isdisjoint(validation_answer_sets)
+        or not (set(train_answer_sets) | set(validation_answer_sets)) <= set(ANSWER_SETS)
+    ):
+        raise ValueError(f"promotion protocol {path.name} must keep valid answer sets disjoint")
+    train_answers = {answer for name in train_answer_sets for answer in ANSWER_SETS[name]}
+    validation_answers = {answer for name in validation_answer_sets for answer in ANSWER_SETS[name]}
+    if not train_answers.isdisjoint(validation_answers):
+        raise ValueError(f"promotion protocol {path.name} answer values leak across the split")
+    if tokenizer is not None:
+        if tokenizer.fingerprint() != protocol["tokenizer"]["fingerprint"]:
+            raise ValueError(f"promotion protocol {path.name} tokenizer fingerprint does not match")
+        for name in set(train_answer_sets) | set(validation_answer_sets):
+            sequences = [tokenizer.encode(answer) for answer in ANSWER_SETS[name]]
+            if any(not sequence for sequence in sequences) or len(
+                {sequence[0] for sequence in sequences}
+            ) != len(sequences):
+                raise ValueError(
+                    f"promotion protocol {path.name} answer set {name} lacks unique first tokens"
+                )
+            if (
+                name in validation_answer_sets
+                and len({len(sequence) for sequence in sequences}) != 1
+            ):
+                raise ValueError(
+                    f"promotion protocol {path.name} validation answer set {name} "
+                    "does not have a fixed token length"
+                )
+    replay = repository_root / adaptation.get("replay_data_experiment", "")
+    if not replay.is_dir():
+        raise ValueError(f"promotion protocol {path.name} replay experiment does not exist")
+    for key in ("sequence_length", "steps", "batch_size", "accumulation", "eval_every"):
+        _positive(adaptation.get(key), f"promotion protocol {path.name} adaptation {key}")
+
+    sample_key = (
+        "samples_per_condition"
+        if protocol["protocol_id"] == "structured_retrieval_v2"
+        else "samples_per_view"
+    )
+    samples = validation.get(sample_key)
+    if not isinstance(samples, int) or samples < 200:
+        raise ValueError(f"promotion protocol {path.name} requires at least 200 validation cases")
+
+    route_count = 0
+    if protocol["protocol_id"] == "structured_retrieval_v2":
+        if adaptation.get("train_record_counts") != [2, 8] or validation.get("record_counts") != [
+            2,
+            8,
+        ]:
+            raise ValueError("structured retrieval v2 must report two- and eight-record loads")
+        length_evaluation = protocol.get("length_evaluation", {})
+        if length_evaluation.get("lengths") != [4096, 32768, 131072]:
+            raise ValueError("structured retrieval v2 must freeze 4K, 32K, and 128K")
+        if length_evaluation.get("samples_per_condition", 0) < 200:
+            raise ValueError("structured retrieval v2 length cells require at least 200 cases")
+    elif protocol["protocol_id"] == "symbolic_composition_v2":
+        route_reference = protocol.get("route_vocabulary")
+        route_hash = protocol.get("route_vocabulary_sha256")
+        if not isinstance(route_reference, str) or not SHA256_PATTERN.fullmatch(route_hash or ""):
+            raise ValueError("symbolic composition v2 requires a route vocabulary")
+        route_path = path.parent / route_reference
+        if _file_sha256(route_path) != route_hash:
+            raise ValueError("symbolic composition v2 route vocabulary hash does not match")
+        route_values = _validate_route_vocabulary(
+            route_path,
+            protocol["tokenizer"],
+            tokenizer,
+        )
+        route_count = len(route_values)
+        required_tasks = {"two_hop_route", "two_hop_payload", "two_hop_symbolic"}
+        if train_tasks != required_tasks or validation_tasks != required_tasks:
+            raise ValueError("symbolic composition v2 must preserve all three task views")
+    else:
+        raise ValueError(f"unknown promotion protocol: {protocol['protocol_id']}")
+    return {"id": protocol["protocol_id"], "route_values": route_count}
+
+
+def _validate_internal_protocols(manifest, repository_root, policy_id, tokenizer=None):
+    protocols = []
+    for suite in manifest["internal_suites"]:
+        reference = suite.get("protocol")
+        if reference is None:
+            continue
+        path = repository_root / reference
+        expected_hash = suite.get("protocol_sha256")
+        if not path.is_file() or not SHA256_PATTERN.fullmatch(expected_hash or ""):
+            raise ValueError(f"evaluation suite {suite['id']} has an invalid protocol pin")
+        if _file_sha256(path) != expected_hash:
+            raise ValueError(f"evaluation suite {suite['id']} protocol hash does not match")
+        protocol = _validate_promotion_protocol(path, repository_root, policy_id, tokenizer)
+        if protocol["id"] != suite["id"]:
+            raise ValueError(f"evaluation suite {suite['id']} pins the wrong protocol")
+        protocols.append(protocol)
+    if {protocol["id"] for protocol in protocols} != {
+        "structured_retrieval_v2",
+        "symbolic_composition_v2",
+    }:
+        raise ValueError("evaluation manifest must pin both promotion protocols")
+    return protocols
 
 
 def _validate_policy(policy):
@@ -317,7 +546,7 @@ def _validate_evidence(matrix, policy_id, repository_root):
                 )
 
 
-def validate_research_contract(directory):
+def validate_research_contract(directory, tokenizer=None):
     """Validate one complete contract directory and return a compact inventory."""
 
     directory = Path(directory).expanduser().resolve()
@@ -333,6 +562,9 @@ def validate_research_contract(directory):
     repository_root = directory.parents[1]
     _validate_envelopes(values["cost_envelopes.json"], policy_id)
     _validate_evaluations(values["evaluation_manifest.json"], policy_id, repository_root)
+    protocols = _validate_internal_protocols(
+        values["evaluation_manifest.json"], repository_root, policy_id, tokenizer
+    )
     _validate_evidence(values["evidence_matrix.json"], policy_id, repository_root)
     evaluations = values["evaluation_manifest.json"]
     return {
@@ -343,6 +575,9 @@ def validate_research_contract(directory):
         "serving_profiles": len(values["cost_envelopes.json"]["serving_profiles"]),
         "internal_evaluation_suites": len(evaluations["internal_suites"]),
         "external_evaluation_suites": len(evaluations["external_suites"]),
+        "promotion_protocols": len(protocols),
+        "symbolic_route_values": sum(protocol["route_values"] for protocol in protocols),
+        "tokenizer_qualified": tokenizer is not None,
         "evidence_components": len(values["evidence_matrix.json"]["components"]),
         "status": "valid",
     }
