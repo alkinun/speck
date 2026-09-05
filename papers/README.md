@@ -80,10 +80,14 @@ to a checked experiment artifact.
     reachability, and utilization under multi-hop cache eviction.
 28. [BRIEF](32_brief.md) — decompose multi-hop questions, require one helpful proposition from each
     distinct source document, and train a query-aware evidence compressor on their concatenation.
+29. [BRIEF-Pro](33_brief_pro.md) — scale oracle-plus-distractor evidence fusion beyond 10K words with
+    user-controlled budgets and full compressor-plus-reader cost accounting.
+30. [IterCOMP](34_itercomp.md) — distinguish complete/partial hop evidence, judge sufficiency, and
+    iteratively retrieve the missing source during prompt compression.
 
 ### Supporting eviction baselines
 
-29. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+31. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
 ## Decision map for Speck
@@ -101,7 +105,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, nine later direct
+The collection contains all 22 papers supplied in the research brief, eleven later direct
 novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
