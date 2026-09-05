@@ -94,16 +94,16 @@
   "external_suites": [
     {
       "id": "ruler",
-      "status": "source_qualified_case_generation_through_65536_qualified_131072_blocked",
+      "status": "source_qualified_case_data_qualified_candidate_execution_blocked",
       "repository": "https://github.com/NVIDIA/RULER",
       "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
       "contract": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "contract_sha256": "2848f9f8f5fac06d15d257dbe1fcb05f417de7218880663a88bbdeb5d01031a1",
+      "contract_sha256": "38cde3dd74110b96e3b9d11b595d4d197bb37715b2ddfc12e1b89048f6a03946",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "7e011c54555efe52117dd61e902c1f4ce7cc9bb65dedc782daafde26dbd32991",
+      "source_qualification_sha256": "9f4817396ff6253eff4d87c5706c9505a9d3b91d7272afe206eff2699f89aa89",
       "model_adapter_qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
       "model_adapter_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
-      "qualified_case_lengths": [4096, 8192, 16384, 32768, 65536],
+      "qualified_case_lengths": [4096, 8192, 16384, 32768, 65536, 131072],
       "case_qualifications": [
         {
           "length": 4096,
@@ -134,6 +134,12 @@
           "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-65536-qualified.json",
           "sha256": "74775cb9a0c60dd3478bce88fb9ebc994a87af92f38d5085e6497608104d91ac",
           "case_identity_sha256": "eed73e822a8f5ab27e9d91b399583b40000bf9f5105115968c57e0c5768f864e"
+        },
+        {
+          "length": 131072,
+          "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-131072-qualified.json",
+          "sha256": "f6553b7b2d2b427fe6a1c58009ebaa2311eecf5caa6461a7def35c63b31f82b9",
+          "case_identity_sha256": "f14b9372cd2bb15e3254d4f3bccd0ad56b7fb9b53754e520854df8e852b668f8"
         }
       ],
       "lengths": [
@@ -156,7 +162,7 @@
       "contract": "research/architecture-promotion-v1/external/nolima.json",
       "contract_sha256": "e0c47bb0a7da355f9eec89087c469b7bea9a342301bb49eaf4ebc788b03ee1d7",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "7e011c54555efe52117dd61e902c1f4ce7cc9bb65dedc782daafde26dbd32991",
+      "source_qualification_sha256": "9f4817396ff6253eff4d87c5706c9505a9d3b91d7272afe206eff2699f89aa89",
       "model_adapter_qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
       "model_adapter_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
       "lengths": [
@@ -177,7 +183,7 @@
       "contract": "research/architecture-promotion-v1/external/helmet.json",
       "contract_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "7e011c54555efe52117dd61e902c1f4ce7cc9bb65dedc782daafde26dbd32991",
+      "source_qualification_sha256": "9f4817396ff6253eff4d87c5706c9505a9d3b91d7272afe206eff2699f89aa89",
       "lengths": [
         8192,
         16384,

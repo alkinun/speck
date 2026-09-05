@@ -45,6 +45,7 @@ Read in order:
 37. [36 — RULERv1 16K deterministic case qualification](36_ruler_16k_case_qualification.md)
 38. [37 — RULERv1 32K deterministic case qualification](37_ruler_32k_case_qualification.md)
 39. [38 — RULERv1 64K deterministic case qualification](38_ruler_64k_case_qualification.md)
+40. [39 — RULERv1 128K and all-length data qualification](39_ruler_128k_and_data_completion.md)
 
 Conventions:
 
@@ -145,3 +146,8 @@ capability runs remain blocked.
 
 Finding 38 carries the gate through 64K with the same result. The retained artifact is 282MB and the
 storage projection remains safe. The 128K matrix and all model capability runs remain blocked.
+
+Finding 39 completes the 128K stage and the RULER data-generation matrix. All 78 task/length cells
+qualify across two full offline generations per length, representing 7,800 retained and 15,600 checked
+cases in a 1.1GB local cache. Candidate-specific execution and scoring remain blocked, so no capability
+claim is made.

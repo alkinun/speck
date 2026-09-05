@@ -15,7 +15,7 @@ external = root / "research" / "architecture-promotion-v1" / "external"
 def test_checked_external_suite_contract_is_valid_and_blocked(name):
     config = validate_external_suite(external / name)
     assert "blocked" in config["status"]
-    assert "blocked" in config["data"]["status"]
+    assert "blocked" in config["data"]["status"] or "qualified" in config["data"]["status"]
     assert "blocked" in config["model_adapter"]["status"]
 
 
@@ -46,7 +46,7 @@ def test_ruler_case_lengths_must_partition_the_suite(tmp_path):
     )
     path = copied / "ruler_v1.json"
     value = json.loads(path.read_text(encoding="utf-8"))
-    value["data"]["case_generation"]["remaining_lengths"].pop(0)
+    value["data"]["case_generation"]["qualified_lengths"].pop()
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="do not partition"):

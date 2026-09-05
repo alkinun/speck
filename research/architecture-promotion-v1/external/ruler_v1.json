@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "ruler",
   "suite_version": "rulerv1-ns",
-  "status": "source_qualified_case_generation_through_65536_qualified_131072_blocked",
+  "status": "source_qualified_case_data_qualified_candidate_execution_blocked",
   "upstream": {
     "id": "ruler_pipeline",
     "repository": "https://github.com/NVIDIA/RULER.git",
@@ -74,7 +74,7 @@
     "staging": "run one length at a time; advance only after the current paired capability gate"
   },
   "data": {
-    "status": "source_bundle_qualified_case_generation_through_65536_qualified_131072_blocked",
+    "status": "source_bundle_qualified_all_case_matrices_qualified",
     "source_manifest": "results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json",
     "source_manifest_sha256": "9d207d1c6e8a6c2a7ace67c953604feabce0b6c0c307473497d19f022d45d1ce",
     "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
@@ -94,7 +94,7 @@
       "paul_graham": "mixed upstream essay rights; local research cache only; redistribution forbidden"
     },
     "case_generation": {
-      "status": "qualified_through_65536_131072_blocked",
+      "status": "qualified_all_declared_lengths",
       "compatibility_patch": {
         "path": "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch",
         "sha256": "5063fdb5f1737fdfd39f955e19a2cfa6418acd15cbcd24f513518295fa15f6a7",
@@ -143,11 +143,19 @@
           "case_identity_sha256": "eed73e822a8f5ab27e9d91b399583b40000bf9f5105115968c57e0c5768f864e",
           "tokenizer_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
           "total_cases": 1300
+        },
+        {
+          "length": 131072,
+          "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-131072-qualified.json",
+          "report_sha256": "f6553b7b2d2b427fe6a1c58009ebaa2311eecf5caa6461a7def35c63b31f82b9",
+          "case_identity_sha256": "f14b9372cd2bb15e3254d4f3bccd0ad56b7fb9b53754e520854df8e852b668f8",
+          "tokenizer_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+          "total_cases": 1300
         }
       ],
-      "remaining_lengths": [131072]
+      "remaining_lengths": []
     },
-    "reason": "all source inputs and the complete 4096- through 65536-token case matrices are qualified; the 131072-token matrix is not generated or hashed yet",
+    "reason": "all source inputs and all 78 declared task/length cells are qualified from two complete deterministic offline generations per length",
     "qualification_rule": "generate all declared task/length cells from the offline bundle, hash inputs/prompts/outputs, and prove the runner makes no network request"
   },
   "model_adapter": {
