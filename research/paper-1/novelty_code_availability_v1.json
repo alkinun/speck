@@ -1,0 +1,123 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-novelty-code-availability-v1",
+  "paper_id": "speck-paper-1",
+  "status": "one_code_rights_path_qualified_five_reproduction_paths_blocked",
+  "audited_on": "2026-09-05",
+  "method": "Resolve official repository HEADs, query immutable recursive Git trees, and hash only declared license files; do not clone, install, import, or execute third-party code.",
+  "sources": [
+    {
+      "id": "flashmorph",
+      "paper": "arxiv_2606_30562v1",
+      "repository": "https://github.com/LanDisen/FlashMorph",
+      "revision": "b9b635379380fc4774d3e54eefd2fc6f10c89ee2",
+      "revision_date": "2026-06-30T02:56:57Z",
+      "files": 6,
+      "code_like_files": 0,
+      "license_files": [],
+      "contents": [
+        "README.md",
+        "assets/flashmorph.png",
+        "assets/layer_selection_efficiency.png",
+        "assets/prefill_decode_efficiency.png",
+        "assets/table_niah.png",
+        "assets/table_zero_shot.png"
+      ],
+      "status": "paper_assets_only_code_and_license_unavailable",
+      "decision": "cannot reproduce FlashMorph from the declared repository snapshot"
+    },
+    {
+      "id": "sparse_prefix_caching",
+      "paper": "arxiv_2605_05219v1",
+      "repository": null,
+      "status": "no_official_implementation_declared_in_paper",
+      "decision": "mathematical baseline can be independently reimplemented only after a clean-room equation/test contract"
+    },
+    {
+      "id": "adakv",
+      "paper": "arxiv_2407_11550v5",
+      "repository": "https://github.com/FFY0/AdaKV",
+      "revision": "04497abac4c1a58426f3daf1014578990e225cc5",
+      "revision_date": "2025-11-26T05:19:52Z",
+      "files": 38,
+      "code_like_files": 15,
+      "license_files": [
+        {
+          "path": "LICENSE",
+          "license": "MIT",
+          "bytes": 1385,
+          "sha256": "32c2e620117c9d27467ed25ab7358dea158d22c396d7a66b66ea31b81d96ca44",
+          "copyright": "Yuan Feng, 2024"
+        },
+        {
+          "path": "csrc/LICENSE",
+          "license": "MIT",
+          "bytes": 1063,
+          "sha256": "9a429046085cacdc4f32f700f45534fb9c48a54ad6a4b578f7c0106df8c333e5",
+          "copyright": "66RING, 2023"
+        }
+      ],
+      "status": "immutable_code_and_declared_license_paths_available",
+      "decision": "eligible for a separate dependency, provenance, fixture, and offline behavior audit; execution is not authorized by this inventory"
+    },
+    {
+      "id": "squeezeattention",
+      "paper": "arxiv_2404_04793v2",
+      "repository": "https://github.com/hetailang/SqueezeAttention",
+      "revision": "a1933d18b09c668312cbabdfd7b1fa73888c0f6f",
+      "revision_date": "2024-10-10T12:57:51Z",
+      "files": 460,
+      "code_like_files": 333,
+      "root_license_files": [],
+      "vendored_license_files": [
+        {
+          "path": "helm/LICENSE",
+          "license": "Apache-2.0",
+          "bytes": 11349,
+          "sha256": "6c989acbb367e521d0da7ff86484f7004d16d511aae0eee9c4e029801b1a4fae",
+          "scope": "vendored HELM tree only; does not establish a license for repository-root modifications"
+        }
+      ],
+      "status": "code_available_repository_root_license_missing",
+      "decision": "source can be read for research, but reuse/execution/distribution authority remains blocked pending an affirmative root license"
+    },
+    {
+      "id": "budgeted_attention_allocation",
+      "paper": "arxiv_2605_05697v1",
+      "repository": null,
+      "status": "no_official_implementation_declared_in_paper",
+      "decision": "equations may inform a clean-room reference contract; reproduced performance requires an independently audited implementation"
+    },
+    {
+      "id": "alternating_sparse_attention",
+      "paper": "arxiv_2511_00819v1",
+      "repository": null,
+      "dependency_repository": "https://github.com/fla-org/native-sparse-attention",
+      "dependency_scope": "base NSA kernel cited for the kernel optimization; not an ASA implementation",
+      "status": "pseudocode_available_dedicated_implementation_not_declared",
+      "decision": "paper pseudocode can define a clean-room reference, but ASA reproduction and claimed kernel changes remain blocked"
+    }
+  ],
+  "summary": {
+    "sources": 6,
+    "immutable_repository_snapshots": 3,
+    "repositories_with_code": 2,
+    "repositories_with_root_license_covering_code": 1,
+    "declared_paper_specific_reproduction_paths": 1,
+    "third_party_code_executed": false,
+    "code_payloads_cloned": false
+  },
+  "decision": {
+    "adakv_deeper_audit_authorized": true,
+    "adakv_execution_authorized": false,
+    "flashmorph_reproduction_authorized": false,
+    "sparse_prefix_reproduction_authorized": false,
+    "squeezeattention_reuse_authorized": false,
+    "budgeted_attention_reproduction_authorized": false,
+    "alternating_sparse_attention_reproduction_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "audit Ada-KV's pinned dependency/code path without execution; monitor FlashMorph for a versioned code release; seek affirmative SqueezeAttention root licensing; use clean-room contracts for papers without code"
+  }
+}

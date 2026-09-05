@@ -24,6 +24,7 @@ PROGRAM_FILES = (
     "scaling_readiness_v1.json",
     "systems_cost_readiness_v1.json",
     "novelty_landscape_v1.json",
+    "novelty_code_availability_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1143,6 +1144,53 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
         raise ValueError("novelty landscape audit is incomplete")
 
 
+def _validate_novelty_code_availability(reference, repository_root, paper_id):
+    _require(reference, {"audit", "sha256", "status"}, "novelty code reference")
+    path = repository_root / reference["audit"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("novelty code availability audit does not match its pin")
+    audit = _load_json(path)
+    sources = {source.get("id"): source for source in audit.get("sources", ())}
+    summary = audit.get("summary", {})
+    decision = audit.get("decision", {})
+    if (
+        audit.get("format") != "speck_novelty_code_availability_audit"
+        or audit.get("format_version") != 1
+        or audit.get("paper_id") != paper_id
+        or audit.get("status") != reference["status"]
+        or set(sources)
+        != {
+            "flashmorph",
+            "sparse_prefix_caching",
+            "adakv",
+            "squeezeattention",
+            "budgeted_attention_allocation",
+            "alternating_sparse_attention",
+        }
+        or sources["flashmorph"].get("revision")
+        != "b9b635379380fc4774d3e54eefd2fc6f10c89ee2"
+        or sources["flashmorph"].get("code_like_files") != 0
+        or sources["adakv"].get("revision")
+        != "04497abac4c1a58426f3daf1014578990e225cc5"
+        or sources["adakv"].get("code_like_files") != 15
+        or len(sources["adakv"].get("license_files", ())) != 2
+        or sources["squeezeattention"].get("revision")
+        != "a1933d18b09c668312cbabdfd7b1fa73888c0f6f"
+        or sources["squeezeattention"].get("root_license_files")
+        or summary.get("sources") != 6
+        or summary.get("immutable_repository_snapshots") != 3
+        or summary.get("repositories_with_code") != 2
+        or summary.get("repositories_with_root_license_covering_code") != 1
+        or summary.get("third_party_code_executed") is not False
+        or summary.get("code_payloads_cloned") is not False
+        or decision.get("adakv_deeper_audit_authorized") is not True
+        or decision.get("adakv_execution_authorized") is not False
+        or decision.get("novelty_gate_changed") is not False
+        or decision.get("architecture_freeze_authorized") is not False
+    ):
+        raise ValueError("novelty code availability audit is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1219,6 +1267,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "scaling_readiness",
             "systems_cost_readiness",
             "novelty_landscape",
+            "novelty_code_availability",
         },
         "paper experiment program",
     )
@@ -1228,6 +1277,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("claims and experiment program use different paper ids")
     _validate_novelty_landscape(
         program["novelty_landscape"],
+        repository_root,
+        paper_id,
+    )
+    _validate_novelty_code_availability(
+        program["novelty_code_availability"],
         repository_root,
         paper_id,
     )

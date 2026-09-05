@@ -103,6 +103,9 @@ the final combined model.
 - [`novelty_landscape_v1.json`](novelty_landscape_v1.json) pins recent direct prior-art overlaps,
   rejects several easy novelty stories, and retains two falsifiable hypotheses without claiming either
   is novel before full-text/code/citation and held-out causal review.
+- [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
+  revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
+  currently has a qualified code-plus-root-rights path for deeper audit.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

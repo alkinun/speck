@@ -78,6 +78,7 @@ Read in order:
 70. [69 — Scaling and held-out prediction readiness gate](69_scaling_readiness_gate.md)
 71. [70 — Systems-cost readiness and proxy envelope failure](70_systems_cost_readiness_gate.md)
 72. [71 — Recent novelty landscape and surviving hypotheses](71_novelty_landscape_audit.md)
+73. [72 — Novelty-baseline code and license availability](72_novelty_code_availability.md)
 
 Conventions:
 
@@ -363,3 +364,9 @@ selection, adaptive cache budgeting, sparse recurrent prefix checkpoints, budget
 and alternating local/global latent sparse attention are not novel alone. Only a role-grounded
 from-scratch placement law and an all-required-source composition predictor remain provisionally
 distinct; both still require full landscape and held-out causal evidence. No novelty is claimed.
+
+Finding 72 checks immutable code trees and rights without execution. FlashMorph's declared repository
+has only a README/images; Sparse Prefix and Budgeted Attention declare no code; ASA links only the base
+NSA kernel; SqueezeAttention has code but no root license. Ada-KV alone has a pinned code tree and root/
+CUDA MIT licenses, making it eligible for deeper non-executing audit. No reproduction or novelty status
+changes.
