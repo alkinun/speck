@@ -90,10 +90,12 @@ to a checked experiment artifact.
     attention layers carry retrieval while efficient mixers shape its learning trajectory across scale.
 33. [Systematic hybrid linear attention](37_systematic_hybrid_linear.md) — train 72 models to separate
     mixer, uniform ratio, language quality, recall, and cache-efficiency effects.
+34. [Distill-then-Replace](38_distill_then_replace.md) — greedily replace distilled attention layers
+    with validation feedback and show static probe rankings miss placement interactions.
 
 ### Supporting eviction baselines
 
-34. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+35. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
 ## Decision map for Speck
@@ -111,7 +113,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, fourteen later direct
+The collection contains all 22 papers supplied in the research brief, fifteen later direct
 novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
