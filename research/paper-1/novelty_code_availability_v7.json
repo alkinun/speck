@@ -1,0 +1,69 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 7,
+  "audit_id": "speck-paper-1-novelty-code-availability-v7",
+  "paper_id": "speck-paper-1",
+  "status": "eighteen_sources_three_root_rights_paths_no_new_full_reproduction",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_code_availability_v6.json",
+    "sha256": "d6e541cc24b33fc022305578c0a1ba6d21f4e33bc7220762ffd972350df6f418",
+    "sources_inherited": 17
+  },
+  "landscape": {
+    "path": "research/paper-1/novelty_landscape_v8.json",
+    "sha256": "2968774ad615108d88b362381423cc12a8d19501763b6a2159e0a5fb08c5b920"
+  },
+  "additional_sources": [
+    {
+      "id": "halo_hypenet",
+      "paper": "arxiv_2601_22156v1",
+      "repository": "https://github.com/thunlp/hybrid-linear-attention",
+      "revision": "229e3013740266394640af8cff7f24cd35795ec9",
+      "files": 271,
+      "python_files": 31,
+      "evaluation_log_files": 206,
+      "test_files": 0,
+      "root_license": null,
+      "audit": "research/paper-1/halo_code_audit_v1.json",
+      "audit_sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",
+      "status": "source_identity_and_result_logs_qualified_root_rights_behavior_and_reproduction_blocked"
+    }
+  ],
+  "release_boundary": {
+    "source_identity_qualified": true,
+    "training_and_selection_source_available": true,
+    "precomputed_layer_sweep_logs_available": true,
+    "root_code_rights_qualified": false,
+    "paper_code_semantics_identical": false,
+    "portable_environment_qualified": false,
+    "data_and_checkpoint_identity_qualified": false,
+    "upstream_execution_authorized": false,
+    "direct_reuse_authorized": false,
+    "full_reproduction_authorized": false
+  },
+  "summary": {
+    "sources": 18,
+    "immutable_repository_snapshots": 9,
+    "repositories_with_code": 7,
+    "repositories_with_root_license_covering_code": 3,
+    "new_full_reproduction_paths_qualified": 0,
+    "metadata_only_tree_clones": 6,
+    "working_trees_checked_out": 0,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false,
+    "novelty_status_changed": false
+  },
+  "decision": {
+    "halo_source_identity_qualified": true,
+    "halo_result_log_presence_qualified": true,
+    "halo_root_rights_qualified": false,
+    "halo_execution_authorized": false,
+    "halo_reuse_authorized": false,
+    "halo_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "use the immutable source and logs only as inspected conceptual evidence; independent N1 review precedes any rights remediation or behavior audit"
+  }
+}

@@ -531,3 +531,8 @@ single replacement is scored on recall versus commonsense outcomes, and the top 
 layers are retained. The only remaining distinction is held-out, from-scratch, interaction-aware
 prediction—a procedural, low-prior residual pending independent retention-or-retirement review. No new
 placement work is authorized.
+
+Finding 98 updates the artifact inventory to eighteen sources, nine immutable source/checkpoint
+snapshots, seven repositories with code, and three root-licensed code paths. HALO's selection logs are
+useful inspected evidence, but rights and behavioral identity block execution/reuse/reproduction. No
+new full reproduction path exists, and independent N1 review precedes remediation.
