@@ -156,6 +156,9 @@ the final combined model.
 - [`rethinking_hybrid_code_audit_v1.json`](rethinking_hybrid_code_audit_v1.json) pins the 20-file MIT
   analysis tree while recording absent training configs, receptive-field implementation, complete
   scaling observations, immutable checkpoint/data identities, environment pins, and tests.
+- [`massive_hla_code_audit_v1.json`](massive_hla_code_audit_v1.json) pins the official MIT analysis
+  tree and Apache-2.0 aggregate checkpoint tree without checkout or execution, qualifying identities
+  while blocking missing training code, gated-FA behavior, exact inputs, and full reproduction.
 - [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
   within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
   reduction, model integration, training, novelty, and architecture claims blocked.

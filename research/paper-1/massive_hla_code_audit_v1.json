@@ -1,0 +1,94 @@
+{
+  "format": "speck_massive_hla_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-massive-hla-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "analysis_code_and_baseline_checkpoint_identity_qualified_training_and_full_reproduction_blocked",
+  "audited_on": "2026-09-06",
+  "paper": {
+    "id": "arxiv_2608_12149v2",
+    "url": "https://arxiv.org/abs/2608.12149v2",
+    "local_note": "papers/40_massive_activations_hla.md",
+    "local_note_sha256": "e7f15e93c5de4ce82276bcd78057409aa4d09a1845cd61eacc119f9b687ceaa0"
+  },
+  "code_repository": {
+    "url": "https://github.com/StartLuxLabs/Massive-Activations-HLA",
+    "branch": "main",
+    "revision": "190e1b795262b91159a01f846ebbca799c45be8f",
+    "revision_date": "2026-08-13T10:35:27+08:00",
+    "files": 57,
+    "code_or_config_or_doc_files": 55,
+    "package_python_files": 23,
+    "script_python_files": 5,
+    "test_files": 5,
+    "root_license": "MIT",
+    "metadata_only_clone": true,
+    "working_tree_checked_out": false,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false
+  },
+  "pinned_code_files": [
+    {
+      "path": "LICENSE",
+      "git_blob_sha1": "2e2cf609c0a7274bfb76e1ae6074b8b1697c0873"
+    },
+    {
+      "path": "pyproject.toml",
+      "git_blob_sha1": "5933a9fd2ae468d2bdf1d37038b2ea0d57fc1f39"
+    },
+    {
+      "path": "requirements/released-gdn-cu126.txt",
+      "git_blob_sha1": "9023b29419e692a4236ed80a755c8f20869f2b70"
+    },
+    {
+      "path": "docs/reproduction.md",
+      "git_blob_sha1": "2a21fc85dd46a99b98eab9f931a86b67b8998984"
+    },
+    {
+      "path": "configs/models/released_gdn_models.yaml",
+      "git_blob_sha1": "5343959f102f761d50af79dc0cfc5bf12b33992c"
+    }
+  ],
+  "checkpoint_repository": {
+    "url": "https://huggingface.co/startlux-models/Massive-Activations-HLA",
+    "revision": "5a98aec28a52efe0303545d929d0964a5973b127",
+    "revision_date": "2026-08-13T02:19:20Z",
+    "files": 62,
+    "checkpoint_directories": 10,
+    "safetensors_files": 12,
+    "root_license": "Apache-2.0",
+    "release_manifest_git_blob_sha1": "41999594b132d1e3b308e8d47b9b45b0430d4a49",
+    "weights_downloaded": false,
+    "metadata_only_clone": true,
+    "working_tree_checked_out": false
+  },
+  "qualified_scope": [
+    "immutable analysis-code tree identity and MIT root rights",
+    "immutable legacy aggregate checkpoint-tree identity and Apache-2.0 model-card rights",
+    "ten named controlled final-checkpoint configurations with scale, token budget, and full-attention indices",
+    "exact A800 CUDA 12.6 package versions for released baseline and no-GDN-output-gate analysis",
+    "toy metric, attention-map, registry, model-loading, and compatibility test sources are present"
+  ],
+  "blocking_findings": [
+    "the repository is explicitly organized for analysis and visualization, not from-scratch training",
+    "the gated-full-attention integration is undistributed and its two checkpoints are weights-only",
+    "exact sampled JSONL inputs for every paper panel are absent",
+    "M-A-P and modern-hybrid registry entries do not pin immutable remote model revisions",
+    "the install script mutates an environment and downloads native wheels; none of it was executed in this audit",
+    "checkpoint bytes, declared model behavior, and paper-table parity were not validated",
+    "training data order, optimizer-state checkpoints, hardware logs, and placement replicates are absent"
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "root_code_rights_qualified": true,
+    "aggregate_checkpoint_identity_qualified": true,
+    "baseline_analysis_path_potentially_reproducible": true,
+    "gated_full_attention_behavior_reproducible": false,
+    "training_reproducible": false,
+    "full_paper_reproduction_authorized": false,
+    "upstream_execution_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_status_changed": false,
+    "next_action": "do not execute; independent N1 review must first justify any bounded checkpoint-analysis reproduction"
+  }
+}

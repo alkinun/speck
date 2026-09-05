@@ -505,3 +505,8 @@ inter-spike plateaus recur across five mixers and large public hybrids; matched 
 placements all reach nearly perfect spike alignment despite large retrieval gaps. The diagnostic is
 occupied and does not rank placement quality, further lowering N1's prior. Independent review may
 retire the residual; no placement experiment is authorized.
+
+Finding 93 pins the official massive-activation analysis tree and aggregate checkpoint tree without
+checkout or execution. MIT code rights, Apache-2.0 model-card rights, ten named checkpoint directories,
+package pins, and tests are visible. Training code, gated-full-attention behavior, exact sampled inputs,
+and table parity remain missing, so neither upstream execution nor full reproduction is authorized.
