@@ -80,6 +80,22 @@ def _temperature_c():
     )
 
 
+def _wait_for_temperature(maximum_c=50, timeout_seconds=600, poll_seconds=5):
+    started = time.monotonic()
+    temperature = _temperature_c()
+    while temperature > maximum_c:
+        waited = time.monotonic() - started
+        if waited >= timeout_seconds:
+            raise RuntimeError(
+                f"GPU did not cool to the frozen {maximum_c}C start limit; "
+                f"last temperature was {temperature}C"
+            )
+        print(f"waiting for GPU to cool: {temperature}C > {maximum_c}C", flush=True)
+        time.sleep(poll_seconds)
+        temperature = _temperature_c()
+    return temperature, time.monotonic() - started
+
+
 def _export_case(state, metadata, directory):
     prepare_current_release_code(directory)
     save_file(release_state(state), directory / "model.safetensors", metadata={"format": "pt"})
@@ -110,11 +126,7 @@ def preflight_arm(arm, output_root, device):
     configs = load_experiment(experiment, "model", "tokenizer", "train")
     train = configs["train"]
     tokenizer = get_tokenizer(**configs["tokenizer"])
-    start_temperature = _temperature_c()
-    if start_temperature > 50:
-        raise RuntimeError(
-            f"GPU start temperature exceeds the frozen 50C limit: {start_temperature}"
-        )
+    start_temperature, thermal_wait_seconds = _wait_for_temperature()
     torch.manual_seed(42)
     torch.cuda.manual_seed(42)
     torch.cuda.empty_cache()
@@ -245,6 +257,7 @@ def preflight_arm(arm, output_root, device):
         },
         "transformers_export": export,
         "start_temperature_c": start_temperature,
+        "thermal_wait_seconds": thermal_wait_seconds,
         "passed": peak_allocated <= hard_peak and incremental_passed and export["parity"]["passed"],
     }
 
