@@ -240,6 +240,9 @@ the final combined model.
   qualifies all config hashes, twelve absent outputs, two disjoint data windows with ten exact
   direct/resume replay points, and the 5.64-TB-free dedicated volume; runtime, analysis, release gates,
   and training remain blocked.
+- [`finalist-analysis-qualified-v1.json`](../../results/Speck-Paper1/finalist-analysis-qualified-v1.json)
+  pins and qualifies the twelve-cell collector, six-control target lock, df=5 paired analysis,
+  censoring, and stopping-rule implementation; runtime, release gates, and training remain blocked.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched

@@ -592,3 +592,8 @@ Finding 109 qualifies finalist configs, output absence, data, and storage. Both 
 are disjoint, crossed with all three seeds, and replay byte-identically at ten start/quartile/end points.
 All twelve outputs remain absent; the dedicated device has 5.64 TB free versus a 25.77 GB floor with no
 deletions. Runtime, collector/analysis, release suites, training, and automatic launch remain blocked.
+
+Finding 110 qualifies the finalist collector, six-control target lock, df=5 paired analysis, censoring,
+and stopping-rule implementation through six focused fixtures and lint. All implementation and contract
+files are pinned. Exact CUDA runtime and release dependencies remain blocked; no training, automatic
+launch, attribution, promotion, or paper-scale work is authorized.

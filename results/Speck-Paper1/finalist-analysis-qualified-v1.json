@@ -1,0 +1,79 @@
+{
+  "format": "speck_paper_finalist_analysis_qualification",
+  "format_version": 1,
+  "qualification_id": "speck-paper-1-finalist-analysis-qualified-v1",
+  "paper_id": "speck-paper-1",
+  "status": "collector_and_analysis_implementation_qualified_no_training_authority",
+  "qualified_on": "2026-09-06",
+  "contracts": {
+    "analysis": {
+      "path": "research/paper-1/finalist_analysis_v1.json",
+      "sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1"
+    },
+    "materialization": {
+      "path": "research/paper-1/finalist_materialization_v1.json",
+      "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3"
+    },
+    "manifest": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_analysis.py",
+      "sha256": "2be6111bafa7075a3d17a77e4790933b3ca0d3a1dbd9a2caf1e0e3503359ee9f"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_analyze.py",
+      "sha256": "a4926db2922a98f3326bca0a8ece39650823c3778b5c8aa3704c5e4ce7ead218"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_analysis.py",
+      "sha256": "f674c064a6e58c554a163967351e6a22030462e626659e22109e95a1116f1509"
+    }
+  },
+  "checked_contracts": [
+    "exact six seed-by-data-order pairs and twelve unique arm cells",
+    "exact 1,539,833,856-token endpoint and 23,496-step checkpoint identity",
+    "exact 0/5,874/11,748/17,622/23,496 validation cadence",
+    "complete-batch 4,997,120 intermediate and 19,988,480 final validation arithmetic",
+    "six controls required before a rounded-up control-only target lock",
+    "candidate result timestamps strictly after target locking",
+    "one-sided 95% Student-t summaries with df=5 critical value 2.0150483733330233",
+    "unchanged +0.01 aggregate and +0.02 every-source non-inferiority margins",
+    "identical non-empty source keys across all twelve cells",
+    "right-censoring retained for any pair where either arm misses the target",
+    "fixed-token, analytic-FLOP, steady-time, and time-to-quality views",
+    "exactly one complete final checkpoint and matching metadata, timing, and run summary"
+  ],
+  "test_run": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest -q tests/test_paper_finalist_analysis.py",
+    "passed": 6,
+    "failed": 0,
+    "duration_seconds": 1.64,
+    "cases": [
+      "clear six-pair non-inferiority and all-source pass",
+      "all-six-pair right censoring retained without complete-case bound",
+      "target lock rejects fewer than six pure controls",
+      "analysis rejects duplicate or missing frozen cells",
+      "analysis and materialization identities agree",
+      "collector validates a final-only checkpoint fixture"
+    ],
+    "ruff": "passed"
+  },
+  "decision": {
+    "collector_implementation_qualified": true,
+    "target_lock_implementation_qualified": true,
+    "analysis_implementation_qualified": true,
+    "stopping_rule_implementation_qualified": true,
+    "runtime_preflight_qualified": false,
+    "release_dependencies_qualified": false,
+    "training_authorized": false,
+    "automatic_launch_authorized": false,
+    "component_attribution_authorized": false,
+    "architecture_promotion_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "run a no-output exact-finalist CUDA/BF16 runtime preflight, then preserve release-suite blockers and reassess launch authority without starting training"
+  }
+}
