@@ -8,6 +8,7 @@ from speck.paper_baseline_analysis import (
     analyze_baselines,
     atomic_json,
     collect_run_result,
+    evaluated_validation_tokens,
     file_sha256,
     load_analysis_plan,
     lock_time_to_quality_target,
@@ -37,7 +38,7 @@ def result(pair, arm, final_loss, created_at):
                     "source-a": loss,
                     "source-b": loss - 0.1,
                 },
-                "validation_tokens": 20_000_000 if step == 2000 else 5_000_000,
+                "validation_tokens": 19_988_480 if step == 2000 else 4_997_120,
                 "optimizer_seconds": elapsed + 3.0,
                 "steady_training_seconds": elapsed,
             }
@@ -148,6 +149,16 @@ def test_analysis_plan_rejects_matrix_pin_drift(tmp_path):
         load_analysis_plan(copied)
 
 
+def test_validation_tokens_are_rounded_to_complete_microbatches():
+    assert evaluated_validation_tokens(5_000_000, 4 * 4_096) == 4_997_120
+    assert evaluated_validation_tokens(20_000_000, 4 * 4_096) == 19_988_480
+
+
+def test_validation_token_rounding_rejects_invalid_geometry():
+    with pytest.raises(ValueError, match="positive integers"):
+        evaluated_validation_tokens(20_000_000, 0)
+
+
 def test_collect_run_result_qualifies_the_frozen_checkpoint_contract(tmp_path):
     pair = {"pair": 0, "seed": 42, "data_token_offset": 0}
     report = result(
@@ -166,7 +177,7 @@ def test_collect_run_result_qualifies_the_frozen_checkpoint_contract(tmp_path):
         "partial": False,
         "manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
         "validation_step": 2000,
-        "validation_tokens": 20_000_000,
+        "validation_tokens": 19_988_480,
         "validation_history": report["validation_history"],
         "peak_allocated_bytes": 123,
         "resolved": {
@@ -176,6 +187,7 @@ def test_collect_run_result_qualifies_the_frozen_checkpoint_contract(tmp_path):
             "batch_tokens": 65_536,
             "sequence_length": 4_096,
             "parameters": 153_977_088,
+            "world_size": 1,
         },
     }
     (checkpoint / "metadata_002000.json").write_text(json.dumps(metadata), encoding="utf-8")

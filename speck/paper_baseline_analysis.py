@@ -85,7 +85,27 @@ def _utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def _validate_history(history, expected_steps, final_eval_tokens):
+def evaluated_validation_tokens(requested_tokens, tokens_per_step):
+    """Return the realizable validation budget after complete-batch rounding."""
+
+    if (
+        not isinstance(requested_tokens, int)
+        or isinstance(requested_tokens, bool)
+        or requested_tokens < 1
+        or not isinstance(tokens_per_step, int)
+        or isinstance(tokens_per_step, bool)
+        or tokens_per_step < 1
+    ):
+        raise ValueError("validation token geometry must use positive integers")
+    return max(1, requested_tokens // tokens_per_step) * tokens_per_step
+
+
+def _validate_history(
+    history,
+    expected_steps,
+    intermediate_eval_tokens,
+    final_eval_tokens,
+):
     if not isinstance(history, list) or [entry.get("step") for entry in history] != expected_steps:
         raise ValueError("baseline validation history does not match the frozen cadence")
     previous_optimizer = -1.0
@@ -119,8 +139,11 @@ def _validate_history(history, expected_steps, final_eval_tokens):
             raise ValueError("baseline validation timing is not monotonic")
         previous_optimizer = entry["optimizer_seconds"]
         previous_steady = entry["steady_training_seconds"]
-        if index == len(history) - 1 and entry["validation_tokens"] != final_eval_tokens:
-            raise ValueError("baseline final validation does not use the frozen token count")
+        expected_tokens = (
+            final_eval_tokens if index == len(history) - 1 else intermediate_eval_tokens
+        )
+        if entry["validation_tokens"] != expected_tokens:
+            raise ValueError("baseline validation does not use the realizable frozen token budget")
 
 
 def collect_run_result(plan_path, experiment, checkpoint_dir=None):
@@ -161,6 +184,18 @@ def collect_run_result(plan_path, experiment, checkpoint_dir=None):
         raise ValueError("baseline run must retain exactly one complete final checkpoint")
     metadata = load_metadata(checkpoint_dir, expected_step)
     resolved = metadata.get("resolved", {})
+    world_size = resolved.get("world_size")
+    if world_size != 1:
+        raise ValueError("Paper 1 proxy baselines require the frozen single-GPU world size")
+    validation_batch_tokens = (
+        arm["device_batch_size"] * shared["sequence_length"] * world_size
+    )
+    intermediate_validation_tokens = evaluated_validation_tokens(
+        shared["evaluation_tokens"], validation_batch_tokens
+    )
+    final_validation_tokens = evaluated_validation_tokens(
+        shared["final_evaluation_tokens"], validation_batch_tokens
+    )
     expected_resolved = {
         "seed": pair["seed"],
         "data_token_offset": pair["data_token_offset"],
@@ -188,13 +223,18 @@ def collect_run_result(plan_path, experiment, checkpoint_dir=None):
         metadata.get("partial")
         or metadata.get("global_tokens") != shared["training_tokens"]
         or metadata.get("validation_step") != expected_step
-        or metadata.get("validation_tokens") != shared["final_evaluation_tokens"]
+        or metadata.get("validation_tokens") != final_validation_tokens
     ):
         raise ValueError("baseline final checkpoint is incomplete")
     cadence = shared["evaluation_every_steps"]
     expected_validation_steps = [0, cadence, 2 * cadence, 3 * cadence, 4 * cadence, expected_step]
     history = metadata.get("validation_history")
-    _validate_history(history, expected_validation_steps, shared["final_evaluation_tokens"])
+    _validate_history(
+        history,
+        expected_validation_steps,
+        intermediate_validation_tokens,
+        final_validation_tokens,
+    )
     summary_path = checkpoint_dir / "run_summary.json"
     _, summary = load_json(summary_path)
     if (
@@ -284,10 +324,20 @@ def _validate_result(report, plan, matrix, plan_sha256, matrix_sha256):
         or report["training_tokens"] != shared["training_tokens"]
     ):
         raise ValueError("baseline run result geometry is invalid")
+    validation_batch_tokens = arm["device_batch_size"] * shared["sequence_length"]
+    intermediate_validation_tokens = evaluated_validation_tokens(
+        plan["input_contract"]["intermediate_validation_tokens"],
+        validation_batch_tokens,
+    )
+    final_validation_tokens = evaluated_validation_tokens(
+        plan["input_contract"]["final_validation_tokens"],
+        validation_batch_tokens,
+    )
     _validate_history(
         report["validation_history"],
         plan["input_contract"]["validation_steps"],
-        plan["input_contract"]["final_validation_tokens"],
+        intermediate_validation_tokens,
+        final_validation_tokens,
     )
     if report["final_validation"] != report["validation_history"][-1]:
         raise ValueError("baseline final validation is not the last trace point")

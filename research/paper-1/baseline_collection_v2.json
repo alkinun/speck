@@ -1,0 +1,72 @@
+{
+  "format": "speck_paper_baseline_collection_correction",
+  "format_version": 1,
+  "correction_id": "speck-paper-1-baseline-collection-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_after_control_0_before_candidate_results",
+  "frozen_on": "2026-09-05",
+  "predecessor": {
+    "analysis_plan": "research/paper-1/baseline_analysis.json",
+    "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+    "collector_behavior": "required the requested validation-token budget to equal the evaluated token count",
+    "failure": "baseline final checkpoint is incomplete"
+  },
+  "trigger": {
+    "run": "Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "arm": "dense_global_param_match",
+    "pair": 0,
+    "candidate_checkpoint_directories_present": 0,
+    "candidate_result_records_present": 0,
+    "checkpoint": {
+      "step": 2000,
+      "complete_sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+      "metadata_sha256": "df7b9e057700a094dcb4542a35e2c4550235846fe006f538022b6ba8dfe4dcd6",
+      "timing_sha256": "9326fb1ac00e642ba5901dee1a38ce1004e1c90c8984e2763cd70a48fc739640",
+      "run_summary_sha256": "ba19995d91046054afa9a32ed8ab44b7ea8f59a1b6c1952c836334920d3dde13",
+      "model_sha256": "fea229015dc0f279c37511154c94324388746ed0a5e6e2fa27fc326c10ada087",
+      "optimizer_sha256": "5a4e4a1b8ab69ffbf91b662359b09381eb4086bbca4766b85637961e8061041a"
+    }
+  },
+  "correction": {
+    "scope": "collector integrity arithmetic only",
+    "world_size": 1,
+    "device_batch_size": 4,
+    "sequence_length": 4096,
+    "tokens_per_validation_step": 16384,
+    "formula": "max(1, requested_tokens // tokens_per_validation_step) * tokens_per_validation_step",
+    "intermediate": {
+      "requested_tokens": 5000000,
+      "evaluated_tokens": 4997120
+    },
+    "final": {
+      "requested_tokens": 20000000,
+      "evaluated_tokens": 19988480
+    },
+    "runtime_source": "scripts/base_train.py computes validation only over complete device-batch times sequence-length times world-size steps",
+    "collector_rule": "derive the realizable intermediate and final counts from frozen arm geometry and require every history entry to match"
+  },
+  "unchanged": [
+    "all model parameters and optimizer state",
+    "training tokens, seeds, and packed-data offsets",
+    "validation examples and computed losses",
+    "validation cadence and requested budgets",
+    "paired estimand, margins, confidence bound, stopping rule, and control-only target lock",
+    "control-first execution order",
+    "architecture and component non-claims"
+  ],
+  "decision": {
+    "retain_completed_control": true,
+    "rerun_control": false,
+    "reason": "The checkpoint matches the runtime's pre-existing complete-batch semantics; rerunning cannot produce the collector's unattainable raw token count.",
+    "candidate_access_changed": false,
+    "promotion_authority": false
+  },
+  "implementation": {
+    "collector": "speck/paper_baseline_analysis.py",
+    "collector_sha256": "29ba2c300bc494629ada84e1fa016d6968dd1e31cdd182786fa609d1ac9c5d72",
+    "tests": "tests/test_paper_baseline_analysis.py",
+    "tests_sha256": "a1e1493ebceb31e513ec926ee281efb920d7b983bef76203c80511e74527ca30"
+  },
+  "qualification_result": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json"
+}
