@@ -1,0 +1,509 @@
+{
+  "blockers": [
+    "SPE-58 evaluation-manifest dependency remains open",
+    "paired compiled/runtime/export preflight has not run",
+    "paired analysis and stopping script is not frozen",
+    "free storage is below the proxy launch minimum"
+  ],
+  "conclusion": "historical arms are reproducible discovery context, but no existing result is a promotion-authority Paper 1 baseline comparison; the new paired matrix is materialized and remains blocked from launch",
+  "contract": "research/paper-1/baseline_matrix.json",
+  "contract_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+  "format": "speck_paper_baseline_audit",
+  "format_version": 1,
+  "historical_arms": [
+    {
+      "accumulation_steps": 4,
+      "active_seconds": 3583.506412098068,
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-MixerScreen-131M-full-global",
+        "metadata_sha256": "10fb6ca21d9f51e989d36414f5be35446a50635c7b8381fc9c1a6767a0501ea8",
+        "model_sha256": "9ca4f7550d250c2d21f1de99c91cbd62fac196fe7d4420dce46626a91300b9c8",
+        "optimizer_sha256": "84b2de59a58e73e50c46326042e9d62a2fa1629e2e367776090b76ddb04319c6",
+        "step": 2000
+      },
+      "checkpoint_bytes": 1339579657,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "model.json": "845ac2e25690525465ad227cb3c49024a030cafc3b95e281a8c3399b911d6489",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "cfcc7541c1462900ed2dc63a62193bf1d3d84c63671255d710e0622b1121547e"
+      },
+      "device_batch_size": 4,
+      "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/full-global",
+      "flops_per_token_at_4096": 1320314880,
+      "id": "dense_global",
+      "mixer_counts": {
+        "attention_global": 20
+      },
+      "optimizer_seconds": 3236.792013359838,
+      "parameters": 157156608,
+      "role": "historical conventional whole-architecture control",
+      "status": "qualified_historical_discovery_only",
+      "training_tokens": 131072000,
+      "validation_loss": 2.826206684112549,
+      "validation_tokens": 19988480
+    },
+    {
+      "accumulation_steps": 16,
+      "active_seconds": 9473.585222620051,
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-MixerScreen-131M-full-local",
+        "metadata_sha256": "6801b1cc607aae9ad363d64cf79cec5bc70c5046c4caaab806a10d7cee1d3e70",
+        "model_sha256": "036fbb2f97c9cfc378f1e85576be458bf1b0e80bf1001732559c3bfc03d480f2",
+        "optimizer_sha256": "707735b74a872af62978931131f98471a700674d4fbc6a82007c3733916b92b1",
+        "step": 2000
+      },
+      "checkpoint_bytes": 1339579700,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "model.json": "11bd897442da256cff4c6c7592568eda8bca27c79d7566edb6ba4a775f3a7860",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "a7c25eb130d5e73c020941ddde4bdaa884950867d66dd55d4c28f03bbbe67a29"
+      },
+      "device_batch_size": 1,
+      "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/full-local",
+      "flops_per_token_at_4096": 1225896960,
+      "id": "swa_2048",
+      "mixer_counts": {
+        "attention_sliding_2048": 20
+      },
+      "optimizer_seconds": 8396.166551448056,
+      "parameters": 157156608,
+      "role": "historical bounded-attention systems control",
+      "status": "qualified_historical_discovery_only",
+      "training_tokens": 131072000,
+      "validation_loss": 2.8226680755615234,
+      "validation_tokens": 19996672
+    },
+    {
+      "accumulation_steps": 4,
+      "active_seconds": 3073.3981252729427,
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-MixerScreen-131M-gdn-global",
+        "metadata_sha256": "5c6cbeb46c99b51f043ced22314a73727e08c7ea29e28343b94ee43ced6e88ed",
+        "model_sha256": "426f0f221aee8615a735a3359263c9a874d53eca65f2835ec3117893a1b8cbb4",
+        "optimizer_sha256": "8d96de459c50bcbbf3707d78c074e264e346cf318ac45d526f2e248c276b4ea2",
+        "step": 2000
+      },
+      "checkpoint_bytes": 1305863818,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "model.json": "8922ef0c4113a30a96a3a5702dca7a445c36e6ca89b57ed460bb137b5b5ec21f",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "87e48a2488f6ff23c726545deed90045bdb47c28f318ce12f30c0a1debd884ae"
+      },
+      "device_batch_size": 4,
+      "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/gdn-global",
+      "flops_per_token_at_4096": 1019435520,
+      "id": "gdn_global_silu_rope",
+      "mixer_counts": {
+        "attention_global": 5,
+        "gated_deltanet": 15
+      },
+      "optimizer_seconds": 2757.490418041707,
+      "parameters": 152916468,
+      "role": "historical recurrent/global mixer-screen control",
+      "status": "qualified_historical_discovery_only",
+      "training_tokens": 131072000,
+      "validation_loss": 2.8193776607513428,
+      "validation_tokens": 19988480
+    },
+    {
+      "accumulation_steps": 4,
+      "active_seconds": 3049.731200577924,
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-gdn-fla-sigmoid-nope",
+        "metadata_sha256": "3b77e2e048b817dfc89515e062e10f3dd75c1f68214236f8f4754536f8a5a4c7",
+        "model_sha256": "64175eb0be7fb53e4e5da08a934545bcb399ad36c0cce98d45afcf9ec67c1482",
+        "optimizer_sha256": "426ad04e97815578e4f99ef103e2a5fcc67521ff69b22443d1d07af22a91ed26",
+        "step": 2000
+      },
+      "checkpoint_bytes": 1305867094,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "model.json": "2cc57dd226d2d542d221b9f9eea4713bacd01b2a4e5f9966bf25d19da0a1ef55",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "6957c1327ccf4f32a5a3bad81ba9bc3ca56fb5c18e8b2a373b895e899ed9bc28"
+      },
+      "device_batch_size": 4,
+      "experiment": "experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-nope",
+      "flops_per_token_at_4096": 1019435520,
+      "id": "gdn_global_sigmoid_nope",
+      "mixer_counts": {
+        "attention_global": 5,
+        "gated_deltanet": 15
+      },
+      "optimizer_seconds": 2745.2799224943155,
+      "parameters": 152916468,
+      "role": "historical KDA-isolation predecessor",
+      "status": "qualified_historical_discovery_only",
+      "training_tokens": 131072000,
+      "validation_loss": 2.814995765686035,
+      "validation_tokens": 19988480
+    },
+    {
+      "accumulation_steps": 4,
+      "active_seconds": 3286.379703049897,
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+        "metadata_sha256": "0b22b8135696c51ec32694a3f7a0aba88a59eb154a66d2f9b2a55a2713540bcb",
+        "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+        "optimizer_sha256": "018ee866a5bb95a000968867f0b2671f301e98976f073f6347c41493986c8512",
+        "step": 2000
+      },
+      "checkpoint_bytes": 1314251184,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "model.json": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "9c6c94bce40669ebba5859ccc7112c6870ac5c8d1176418c74a8ea4f0a53c0ef"
+      },
+      "device_batch_size": 4,
+      "experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+      "flops_per_token_at_4096": 1021601280,
+      "id": "kda_global_sigmoid_nope",
+      "mixer_counts": {
+        "attention_global": 5,
+        "kimi_delta_attention": 15
+      },
+      "optimizer_seconds": 2968.2364756260067,
+      "parameters": 153958938,
+      "role": "historical conservative hybrid candidate",
+      "status": "qualified_historical_discovery_only",
+      "training_tokens": 131072000,
+      "validation_loss": 2.795380115509033,
+      "validation_tokens": 19988480
+    }
+  ],
+  "historical_comparisons": {
+    "dense_global_vs_kda_hybrid": {
+      "dense_minus_kda_validation_loss": 0.030826568603515625,
+      "dense_over_kda_flops_per_token_at_4096": 1.2923974410055554,
+      "dense_over_kda_parameters": 1.0207696288474009,
+      "interpretation": "whole-architecture historical context only; multiple axes differ"
+    },
+    "gdn_nope_vs_kda_nope": {
+      "interpretation": "close operator isolation at one seed and one packed-data order",
+      "kda_minus_gdn_validation_loss": -0.019615650177001953,
+      "kda_over_gdn_flops_per_token_at_4096": 1.0021244698242415,
+      "kda_over_gdn_parameters": 1.0068172513636662
+    }
+  },
+  "paper_id": "speck-paper-1",
+  "planned_data_orders": {
+    "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+    "manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "status": "aligned_disjoint_windows_qualified",
+    "windows": [
+      {
+        "data_token_offset": 0,
+        "end_phase": 0,
+        "end_state_sha256": "d7717b7e078834a7971c6c816722b1c1becd9a9657730b236226b9a22f0a8994",
+        "end_token_offset": 131072000,
+        "pair": 0,
+        "seed": 42,
+        "start_phase": 0,
+        "start_state_sha256": "29b957678867a4a09c5151443e4ea3d97d66b894af8ae9b73a9d3cb7ecf277ff"
+      },
+      {
+        "data_token_offset": 536870912,
+        "end_phase": 0,
+        "end_state_sha256": "fc19092ae04a312bb869a16440b1b35f1fd29c6fc92689ea7aefedc23e5cbe64",
+        "end_token_offset": 667942912,
+        "pair": 1,
+        "seed": 43,
+        "start_phase": 0,
+        "start_state_sha256": "62391ebc758e2a19a9fd50dccaf06ab1cbd55064931fb102db4835d78b52e6d2"
+      },
+      {
+        "data_token_offset": 1073741824,
+        "end_phase": 0,
+        "end_state_sha256": "5d09a4c06547fa0f09f6a0ea39387c25685115beadc96d17b81681bfb582c64c",
+        "end_token_offset": 1204813824,
+        "pair": 2,
+        "seed": 44,
+        "start_phase": 0,
+        "start_state_sha256": "5924fe0f6c36a29ee6dc6077e7bf937be627946b503eb5401734e796fc328c0b"
+      }
+    ]
+  },
+  "planned_materialization": {
+    "arms": {
+      "dense_global_param_match": {
+        "flops_per_token_at_4096": 1301237760,
+        "parameters": 153977088
+      },
+      "five_cache_kda_gqa": {
+        "flops_per_token_at_4096": 1021601280,
+        "parameters": 153958938
+      }
+    },
+    "contract": "research/paper-1/baseline_matrix.json",
+    "contract_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+    "family_id": "Speck-Paper1-Baselines-131M",
+    "format": "speck_paper_baseline_materialization",
+    "format_version": 1,
+    "generated_files": [
+      "arms/dense_global_param_match/data.json",
+      "arms/dense_global_param_match/long_context.json",
+      "arms/dense_global_param_match/model.json",
+      "arms/dense_global_param_match/runtime.json",
+      "arms/dense_global_param_match/tokenizer.json",
+      "arms/dense_global_param_match/train.json",
+      "arms/five_cache_kda_gqa/data.json",
+      "arms/five_cache_kda_gqa/long_context.json",
+      "arms/five_cache_kda_gqa/model.json",
+      "arms/five_cache_kda_gqa/runtime.json",
+      "arms/five_cache_kda_gqa/tokenizer.json",
+      "arms/five_cache_kda_gqa/train.json",
+      "runs/pair-0-seed-42-order-0/dense_global_param_match/data.json",
+      "runs/pair-0-seed-42-order-0/dense_global_param_match/long_context.json",
+      "runs/pair-0-seed-42-order-0/dense_global_param_match/model.json",
+      "runs/pair-0-seed-42-order-0/dense_global_param_match/runtime.json",
+      "runs/pair-0-seed-42-order-0/dense_global_param_match/tokenizer.json",
+      "runs/pair-0-seed-42-order-0/dense_global_param_match/train.json",
+      "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/data.json",
+      "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/long_context.json",
+      "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/model.json",
+      "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/runtime.json",
+      "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/tokenizer.json",
+      "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/train.json",
+      "runs/pair-1-seed-43-order-536870912/dense_global_param_match/data.json",
+      "runs/pair-1-seed-43-order-536870912/dense_global_param_match/long_context.json",
+      "runs/pair-1-seed-43-order-536870912/dense_global_param_match/model.json",
+      "runs/pair-1-seed-43-order-536870912/dense_global_param_match/runtime.json",
+      "runs/pair-1-seed-43-order-536870912/dense_global_param_match/tokenizer.json",
+      "runs/pair-1-seed-43-order-536870912/dense_global_param_match/train.json",
+      "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/data.json",
+      "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/long_context.json",
+      "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/model.json",
+      "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/runtime.json",
+      "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/tokenizer.json",
+      "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/train.json",
+      "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/data.json",
+      "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/long_context.json",
+      "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/model.json",
+      "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/runtime.json",
+      "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/tokenizer.json",
+      "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/train.json",
+      "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/data.json",
+      "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/long_context.json",
+      "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/model.json",
+      "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/runtime.json",
+      "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/tokenizer.json",
+      "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/train.json"
+    ],
+    "pairs": [
+      {
+        "data_token_offset": 0,
+        "pair": 0,
+        "seed": 42
+      },
+      {
+        "data_token_offset": 536870912,
+        "pair": 1,
+        "seed": 43
+      },
+      {
+        "data_token_offset": 1073741824,
+        "pair": 2,
+        "seed": 44
+      }
+    ],
+    "status": "materialized_unexecuted"
+  },
+  "runner_revision": "252bc5105db502348630c08fecab4f4ee1dfa02f",
+  "source_artifacts": [
+    {
+      "path": "experiments/SpeckLC-150M-MixerScreen-131M/sweep.json",
+      "sha256": "897752be9914209d3ca7d48e5cfe3eb980aa8bca42c6abb879aaeedd192c0a72"
+    },
+    {
+      "path": "results/SpeckLC-150M-KimiTransfer131M/summary.json",
+      "sha256": "f21ccc432aef318ddae086098d91fbb6fc1a6a4d8b15332437753fcc9dc797eb"
+    },
+    {
+      "path": "results/SpeckLC-150M-KimiReplication131M/summary.json",
+      "sha256": "212171bcd62951ef56b82f2256f1346ce08febd781a24d48a6895cf24b0865df"
+    },
+    {
+      "path": "results/SpeckLC-150M-NoiseFloor-131M/summary.json",
+      "sha256": "93eee53a601e781e768b0c9eb5f354405c1eaa9877647edeeee5cb16cd7dfaba"
+    }
+  ],
+  "status": "historical_evidence_qualified_proxy_launch_blocked",
+  "storage": {
+    "cache_root": "/home/alkin/.cache/speck",
+    "estimated_proxy_checkpoint_bytes": 8400000000,
+    "filesystem_free_bytes": 7085318144,
+    "filesystem_total_bytes": 490048561152,
+    "filesystem_used_bytes": 457994866688,
+    "historical_checkpoint_bytes": 6605141453,
+    "largest_checkpoint_directories": [
+      {
+        "bytes": 24151007232,
+        "path": "Speck2-140M"
+      },
+      {
+        "bytes": 24150921216,
+        "path": "Speck1.5-140M"
+      },
+      {
+        "bytes": 19320672256,
+        "path": "Speck1-140M"
+      },
+      {
+        "bytes": 3376873472,
+        "path": "Speck1-140M-Instruct"
+      },
+      {
+        "bytes": 3376820224,
+        "path": "Speck1.1-140M-Instruct"
+      },
+      {
+        "bytes": 3376803840,
+        "path": "Speck1.5-140M-Instruct"
+      },
+      {
+        "bytes": 3376803840,
+        "path": "Speck2-140M-Instruct"
+      },
+      {
+        "bytes": 3376795648,
+        "path": "Speck1.1-140M-Instruct-2ep"
+      },
+      {
+        "bytes": 3375079424,
+        "path": "SpeckLabs-1B-M2"
+      },
+      {
+        "bytes": 3374243840,
+        "path": "SpeckLabs-1B-M1"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-curriculum-r8-seed42"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-easy"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-pilot"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-template3-mixed-r8-seed42"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-template3-mixed-seed42"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-twohop-chain-seed43"
+      },
+      {
+        "bytes": 1847926784,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-twohop-chain-seed44"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-curriculum-r8-seed43"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-curriculum-r8-seed44"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-joint-load-answercue-seed42"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-joint-load-candidate-seed42"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-joint-load-seed42"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-symbolic-twohop-seed42"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-template-diverse-seed42"
+      },
+      {
+        "bytes": 1847922688,
+        "path": "SpeckLC-150M-StructuredRetrievalAdapt-kda-template3-mixed-seed43"
+      }
+    ],
+    "minimum_free_bytes_before_proxy_launch": 17179869184,
+    "proxy_storage_deficit_bytes": 10094551040,
+    "top_level_directories": [
+      {
+        "bytes": 185411022848,
+        "path": "checkpoints"
+      },
+      {
+        "bytes": 21376716800,
+        "path": "data"
+      },
+      {
+        "bytes": 4512821248,
+        "path": "releases"
+      },
+      {
+        "bytes": 4392062976,
+        "path": "search"
+      },
+      {
+        "bytes": 4238700544,
+        "path": "evaluations"
+      },
+      {
+        "bytes": 3187011584,
+        "path": "gguf"
+      },
+      {
+        "bytes": 563834880,
+        "path": "exports"
+      },
+      {
+        "bytes": 297185280,
+        "path": "tools"
+      },
+      {
+        "bytes": 63299584,
+        "path": "wandb"
+      },
+      {
+        "bytes": 35061760,
+        "path": "benchmarks"
+      },
+      {
+        "bytes": 6766592,
+        "path": "evals"
+      },
+      {
+        "bytes": 5644288,
+        "path": "archive"
+      },
+      {
+        "bytes": 528384,
+        "path": "tokenizer"
+      },
+      {
+        "bytes": 106496,
+        "path": "model-cards"
+      },
+      {
+        "bytes": 4096,
+        "path": "logs"
+      }
+    ]
+  }
+}

@@ -58,6 +58,8 @@ the final combined model.
 - [`claims.json`](claims.json) is the claim and falsification ledger.
 - [`baseline_matrix.json`](baseline_matrix.json) audits historical controls and freezes the first
   parameter-matched dense/KDA paired design, data orders, matching views, storage gate, and non-claims.
+- [`baseline-audit.json`](../../results/Speck-Paper1/baseline-audit.json) rehashes the five historical
+  checkpoints, verifies the materialized pair/data windows, and records the live storage deficit.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each

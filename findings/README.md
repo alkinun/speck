@@ -33,6 +33,7 @@ Read in order:
 25. [24 — Speck Reader Attention and the global cache-count staircase](24_reader_attention.md)
 26. [25 — Architecture promotion policy and cost envelopes](25_architecture_promotion_policy.md)
 27. [26 — Paper 1 research program](26_paper_1_research_program.md)
+28. [27 — Paper 1 matched-baseline audit and launch contract](27_paper_1_baseline_audit.md)
 
 Conventions:
 
@@ -73,3 +74,9 @@ Finding 26 establishes the first-paper program without selecting an architecture
 candidate research across sequence, depth, and width; requires a Speck-specific novelty rather than a
 bundle of published mechanisms; mandates isolated, interaction, scaling, systems, and mechanistic
 evidence; and blocks paper-scale pretraining until ten checked prerequisites pass.
+
+Finding 27 audits five historical sequence controls without granting them retrospective promotion
+authority, materializes a 0.0118%-parameter-matched dense/KDA baseline pair across three disjoint
+seed/data-order cells, and records a 9.40GiB storage deficit against the proxy launch floor. Training
+remains blocked pending evaluation-manifest closure, storage, paired GPU/export preflight, and frozen
+analysis code.

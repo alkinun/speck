@@ -6,6 +6,16 @@
   "status": "preregistered_program_no_architecture_selected",
   "updated_on": "2026-09-05",
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
+  "baseline_evidence": {
+    "status": "historical_evidence_qualified_proxy_launch_blocked",
+    "matrix": "research/paper-1/baseline_matrix.json",
+    "matrix_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+    "materialization": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
+    "materialization_sha256": "036272f6eb5fdcadc1bdb0fe62eb226267afb983b739b43274abdf2fdc1cea7b",
+    "audit": "results/Speck-Paper1/baseline-audit.json",
+    "audit_sha256": "2f4ef80b1078b881c8e25df769336f2df1dcd5d2100a9569785c0863928a8a38",
+    "runner_revision": "252bc5105db502348630c08fecab4f4ee1dfa02f"
+  },
   "controls": {
     "primary_conventional": {
       "id": "dense_global_transformer",

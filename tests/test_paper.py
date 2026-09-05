@@ -44,3 +44,15 @@ def test_paper_program_rejects_an_unknown_axis_claim(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
     with pytest.raises(ValueError, match="invalid claims"):
         validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_baseline_audit_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["baseline_evidence"]["audit_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="baseline audit"):
+        validate_paper_program(copied, repository_root=root)

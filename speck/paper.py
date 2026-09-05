@@ -104,6 +104,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "paper_id",
             "policy_id",
             "status",
+            "baseline_evidence",
             "controls",
             "matching_views",
             "scales",
@@ -120,6 +121,40 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("paper experiment program must use format version 1")
     if program["paper_id"] != paper_id:
         raise ValueError("claims and experiment program use different paper ids")
+    evidence = program["baseline_evidence"]
+    _require(
+        evidence,
+        {
+            "status",
+            "matrix",
+            "matrix_sha256",
+            "materialization",
+            "materialization_sha256",
+            "audit",
+            "audit_sha256",
+            "runner_revision",
+        },
+        "paper baseline evidence",
+    )
+    if evidence["status"] != "historical_evidence_qualified_proxy_launch_blocked":
+        raise ValueError("paper baseline evidence cannot claim an unexecuted launch")
+    for path_key, hash_key in (
+        ("matrix", "matrix_sha256"),
+        ("materialization", "materialization_sha256"),
+        ("audit", "audit_sha256"),
+    ):
+        path = repository_root / evidence[path_key]
+        if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
+            raise ValueError(f"paper baseline {path_key} does not match its pin")
+    audit = _load_json(repository_root / evidence["audit"])
+    if (
+        audit.get("format") != "speck_paper_baseline_audit"
+        or audit.get("status") != evidence["status"]
+        or audit.get("paper_id") != paper_id
+        or audit.get("runner_revision") != evidence["runner_revision"]
+        or audit.get("contract_sha256") != evidence["matrix_sha256"]
+    ):
+        raise ValueError("paper baseline audit is invalid")
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
         raise ValueError("paper experiment program references a missing promotion policy")
