@@ -489,3 +489,8 @@ ratios and early/middle/late placements at 350M and 1B, finds a consistent front
 links it to early uniform attention versus Mamba locality. Non-uniform placement and the middle/later
 recipe are prior art. Only prospective prediction of arbitrary unseen layouts remains technically
 distinct, with no demonstrated value and no experiment authority.
+
+Finding 90 records that the systematic placement paper declares no official code, model, exact-config,
+or immutable data-order artifact. It remains a mandatory conceptual baseline but adds no qualified
+reproduction path. Across sixteen sources, only two repositories have root code rights; no N1
+execution or placement protocol is authorized.

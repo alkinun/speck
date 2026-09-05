@@ -135,6 +135,9 @@ the final combined model.
 - [`novelty_code_availability_v4.json`](novelty_code_availability_v4.json) extends coverage to fifteen
   sources: the hybrid-role repository has root MIT analysis code but lacks training/constraint/full-data
   artifacts, the systematic study exposes moving model repositories, and DtR declares no code.
+- [`novelty_code_availability_v5.json`](novelty_code_availability_v5.json) records that the direct
+  systematic placement study declares no official code, models, exact configs, or immutable data order;
+  it is a conceptual baseline, not an authorized reproduction path.
 - [`adakv_code_audit_v1.json`](adakv_code_audit_v1.json) statically audits that pinned path and records
   its environment, native-build, monkeypatch, cache, remote-code/data, and test blockers before any
   clean-room reference or upstream execution.

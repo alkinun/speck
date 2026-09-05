@@ -1,0 +1,60 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 5,
+  "audit_id": "speck-paper-1-novelty-code-availability-v5",
+  "paper_id": "speck-paper-1",
+  "status": "sixteen_sources_two_root_rights_paths_no_new_full_reproduction",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_code_availability_v4.json",
+    "sha256": "8350c53f768b99a7283dc1566d288eda010ee2999f0c83d376522c4dada9838b",
+    "sources_inherited": 15
+  },
+  "landscape": {
+    "path": "research/paper-1/novelty_landscape_v6.json",
+    "sha256": "e66e94e652171353374c915508df535373a37f74ee7a9d24d1272b1e725b21b7"
+  },
+  "additional_sources": [
+    {
+      "id": "hybrid_architectures_systematic_design",
+      "paper": "arxiv_2510_04800v3",
+      "paper_license": "CC_BY_4_0",
+      "dedicated_repository_declared": false,
+      "dedicated_models_declared": false,
+      "exact_configs_declared": false,
+      "immutable_data_order_declared": false,
+      "status": "full_text_conceptual_baseline_no_official_reproduction_artifacts_declared"
+    }
+  ],
+  "release_boundary": {
+    "paper_full_text_available": true,
+    "paper_reuse_rights_visible": true,
+    "training_code_available": false,
+    "evaluation_code_available": false,
+    "checkpoint_identity_qualified": false,
+    "configuration_identity_qualified": false,
+    "data_order_identity_qualified": false,
+    "upstream_execution_authorized": false,
+    "reproduction_authorized": false
+  },
+  "summary": {
+    "sources": 16,
+    "immutable_repository_snapshots": 6,
+    "repositories_with_code": 5,
+    "repositories_with_root_license_covering_code": 2,
+    "new_full_reproduction_paths_qualified": 0,
+    "metadata_only_tree_clones": 3,
+    "working_trees_checked_out": 0,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false,
+    "novelty_status_changed": false
+  },
+  "decision": {
+    "systematic_hybrid_paper_as_conceptual_baseline": true,
+    "systematic_hybrid_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "seek an author artifact or independently specified reproduction only if expert review retains the residual prospective-prediction question"
+  }
+}
