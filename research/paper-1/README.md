@@ -115,6 +115,9 @@ the final combined model.
 - [`adaptive_cache_gqa_v1.json`](adaptive_cache_gqa_v1.json) proves and exhaustively checks equal-group
   mean reduction onto physical GQA heads, rejects max as theorem-equivalent, and records a safeguard
   conservation failure without authorizing model integration or training.
+- [`adaptive_cache_safeguard_v1.json`](adaptive_cache_safeguard_v1.json) defines an exact-rational,
+  largest-remainder integer control that conserves physical slots and resolves neither the upstream
+  coefficient ambiguity nor its unmeasured quality tradeoff.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

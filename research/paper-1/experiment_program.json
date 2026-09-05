@@ -13,6 +13,13 @@
     "qualification_sha256": "d3fc660092865d87a34b7c4d5960d6e60c365899506898faf9a8527c8e8597a7",
     "status": "equal_group_mean_reference_qualified"
   },
+  "adaptive_cache_safeguard": {
+    "protocol": "research/paper-1/adaptive_cache_safeguard_v1.json",
+    "protocol_sha256": "685cadddcb0cdb971d18c83734f5ff98ae738923085407e39ee3fa6328e8abfe",
+    "qualification": "results/Speck-Paper1/adaptive-cache-safeguard-qualified.json",
+    "qualification_sha256": "902e097d0a0f997bb70d3fbf0f0e289c5760b94e1a297b71a4a3c4d5119b80c4",
+    "status": "conservation_safe_reference_qualified"
+  },
   "adakv_code_audit": {
     "audit": "research/paper-1/adakv_code_audit_v1.json",
     "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",

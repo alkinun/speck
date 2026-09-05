@@ -28,6 +28,7 @@ PROGRAM_FILES = (
     "adakv_code_audit_v1.json",
     "adaptive_cache_budget_v1.json",
     "adaptive_cache_gqa_v1.json",
+    "adaptive_cache_safeguard_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1395,6 +1396,93 @@ def _validate_adaptive_cache_gqa(reference, repository_root, paper_id):
                     raise ValueError(f"adaptive cache GQA {path_key} does not match its source pin")
 
 
+def _validate_adaptive_cache_safeguard(reference, repository_root, paper_id):
+    _require(
+        reference,
+        {"protocol", "protocol_sha256", "qualification", "qualification_sha256", "status"},
+        "adaptive cache safeguard reference",
+    )
+    protocol_path = repository_root / reference["protocol"]
+    result_path = repository_root / reference["qualification"]
+    if not protocol_path.is_file() or _file_sha256(protocol_path) != reference["protocol_sha256"]:
+        raise ValueError("adaptive cache safeguard protocol does not match its pin")
+    if not result_path.is_file() or _file_sha256(result_path) != reference["qualification_sha256"]:
+        raise ValueError("adaptive cache safeguard qualification does not match its pin")
+    protocol = _load_json(protocol_path)
+    result = _load_json(result_path)
+    cases = result.get("cases", {})
+    negative = result.get("negative_control", {})
+    decision = result.get("decision", {})
+    implementation = result.get("implementation", {})
+    tests = result.get("tests", {})
+    if (
+        protocol.get("format") != "speck_adaptive_cache_safeguard_protocol"
+        or protocol.get("format_version") != 1
+        or protocol.get("paper_id") != paper_id
+        or protocol.get("status") != "frozen_before_local_implementation"
+        or protocol.get("decision", {}).get("primary_safeguard_authorized") is not False
+        or protocol.get("decision", {}).get("model_integration_authorized") is not False
+        or protocol.get("decision", {}).get("training_authorized") is not False
+        or result.get("format") != "speck_adaptive_cache_safeguard_qualification"
+        or result.get("format_version") != 1
+        or result.get("status") != reference["status"]
+        or result.get("protocol", {}).get("path") != reference["protocol"]
+        or result.get("protocol", {}).get("sha256") != reference["protocol_sha256"]
+        or cases.get("apportionment_cases") != 14120
+        or cases.get("oracle_allocation_comparisons") != 952660
+        or cases.get("endpoint_cases") != 5648
+        or cases.get("uniform_lower_floor_cases") != 14120
+        or cases.get("maximum_absolute_conservation_error") != 0
+        or not all(
+            cases.get(key) is True
+            for key in (
+                "capacity_and_conservation_pass",
+                "floor_or_ceiling_pass",
+                "exact_l1_l2_oracle_pass",
+                "deterministic_tie_pass",
+                "endpoint_pass",
+                "uniform_lower_floor_pass",
+            )
+        )
+        or negative.get("adaptive_budgets") != [4, 1, 1]
+        or negative.get("code_like_rounded_budgets") != [3, 1, 1]
+        or negative.get("code_like_total") != 5
+        or negative.get("reference_budgets") != [4, 1, 1]
+        or negative.get("reference_total") != 6
+        or negative.get("conservation_failure_preserved") is not True
+        or decision.get("conservation_safe_reference_qualified") is not True
+        or decision.get("paper_alpha_semantics_selected") is not False
+        or decision.get("upstream_behavior_reproduction_claimed") is not False
+        or decision.get("primary_safeguard_authorized") is not False
+        or decision.get("upstream_code_used") is not False
+        or decision.get("upstream_code_executed") is not False
+        or decision.get("model_integration_authorized") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("quality_benefit_claimed") is not False
+        or decision.get("novelty_gate_changed") is not False
+        or implementation.get("path") != "speck/cache_budget_safeguard.py"
+        or _file_sha256(repository_root / implementation["path"]) != implementation.get("sha256")
+        or tests.get("path") != "tests/test_cache_budget_safeguard.py"
+        or _file_sha256(repository_root / tests["path"]) != tests.get("sha256")
+        or result.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/adaptive_cache_safeguard_qualify.py")
+    ):
+        raise ValueError("adaptive cache safeguard qualification is incomplete")
+    for source in protocol.get("sources", ()):
+        for path_key, hash_key in (
+            ("local_note", "local_note_sha256"),
+            ("audit", "sha256"),
+            ("protocol", "protocol_sha256"),
+            ("qualification", "qualification_sha256"),
+        ):
+            if path_key in source:
+                path = repository_root / source[path_key]
+                if not path.is_file() or _file_sha256(path) != source[hash_key]:
+                    raise ValueError(
+                        f"adaptive cache safeguard {path_key} does not match its source pin"
+                    )
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1475,6 +1563,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "adakv_code_audit",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
+            "adaptive_cache_safeguard",
         },
         "paper experiment program",
     )
@@ -1504,6 +1593,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_adaptive_cache_gqa(
         program["adaptive_cache_gqa"],
+        repository_root,
+        paper_id,
+    )
+    _validate_adaptive_cache_safeguard(
+        program["adaptive_cache_safeguard"],
         repository_root,
         paper_id,
     )

@@ -83,6 +83,7 @@ Read in order:
 75. [74 — Paper 1 KDA/GQA candidate pair 0](74_paper_1_candidate_0.md)
 76. [75 — Adaptive cache budget clean-room reference](75_adaptive_cache_budget_reference.md)
 77. [76 — Adaptive cache GQA reduction reference](76_adaptive_cache_gqa_reference.md)
+78. [77 — Adaptive cache safeguard apportionment reference](77_adaptive_cache_safeguard_reference.md)
 
 Conventions:
 
@@ -397,3 +398,9 @@ Finding 76 qualifies arithmetic-mean GQA reduction only under equal-size groups.
 identical allocation identities and attain maximal original query-head retained mass. Max loses a
 frozen counterexample by 0.1 mass, and code-like safeguard rounding loses one of six slots. Model
 integration, safeguard use, training, novelty, and architecture promotion remain blocked.
+
+Finding 77 replaces an ambiguous fractional safeguard with a precisely named uniform fraction and exact
+largest-remainder apportionment. All 14,120 cases and 952,660 feasible-allocation comparisons pass with
+zero conservation error, exact L1/L2 optimality, deterministic ties, valid endpoints, and a uniform
+lower floor. This is only a control primitive: upstream equivalence, quality benefit, primary use,
+model integration, training, novelty, and architecture promotion remain blocked.

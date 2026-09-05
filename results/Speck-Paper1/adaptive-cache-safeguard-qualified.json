@@ -1,0 +1,66 @@
+{
+  "cases": {
+    "apportionment_cases": 14120,
+    "capacity_and_conservation_pass": true,
+    "deterministic_tie_pass": true,
+    "endpoint_cases": 5648,
+    "endpoint_pass": true,
+    "exact_l1_l2_oracle_pass": true,
+    "floor_or_ceiling_pass": true,
+    "maximum_absolute_conservation_error": 0,
+    "oracle_allocation_comparisons": 952660,
+    "uniform_lower_floor_cases": 14120,
+    "uniform_lower_floor_pass": true
+  },
+  "created_at": "2026-09-05T21:19:30.613028+00:00",
+  "decision": {
+    "conservation_safe_reference_qualified": true,
+    "model_integration_authorized": false,
+    "novelty_gate_changed": false,
+    "paper_alpha_semantics_selected": false,
+    "primary_safeguard_authorized": false,
+    "quality_benefit_claimed": false,
+    "training_authorized": false,
+    "upstream_behavior_reproduction_claimed": false,
+    "upstream_code_executed": false,
+    "upstream_code_used": false
+  },
+  "format": "speck_adaptive_cache_safeguard_qualification",
+  "format_version": 1,
+  "implementation": {
+    "path": "speck/cache_budget_safeguard.py",
+    "sha256": "3a77ac146c0d5d63beab2207e1bc485f681f37eea764ea24aac34907f202cc30"
+  },
+  "negative_control": {
+    "adaptive_budgets": [
+      4,
+      1,
+      1
+    ],
+    "code_like_rounded_budgets": [
+      3,
+      1,
+      1
+    ],
+    "code_like_total": 5,
+    "conservation_failure_preserved": true,
+    "reference_budgets": [
+      4,
+      1,
+      1
+    ],
+    "reference_total": 6
+  },
+  "protocol": {
+    "path": "research/paper-1/adaptive_cache_safeguard_v1.json",
+    "sha256": "685cadddcb0cdb971d18c83734f5ff98ae738923085407e39ee3fa6328e8abfe"
+  },
+  "runner_revision": "48b18578ea3d31e9d5dbeb30f56b5885833a7f16",
+  "runner_sha256": "f5e372e982c80d6a5e29271db893ffe4ae32947efd25882d5ff55b046b99a07f",
+  "scope": "exact integer apportionment control only; no salience acquisition, model integration, training, quality benefit, novelty, or architecture claim",
+  "status": "conservation_safe_reference_qualified",
+  "tests": {
+    "path": "tests/test_cache_budget_safeguard.py",
+    "sha256": "9464fe68690e34a1005c0fb12c02fe10cb3f4d99aaf836116a12ab12d6dc4218"
+  }
+}
