@@ -1,0 +1,137 @@
+{
+  "format": "speck_paper_proxy_launch_contract",
+  "format_version": 1,
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_before_first_proxy_result",
+  "frozen_on": "2026-09-05",
+  "purpose": "Separate authorization to execute the frozen paired language-model proxy from authorization to make architecture, long-context capability, or release claims.",
+  "prerequisites": [
+    {
+      "id": "baseline_matrix",
+      "path": "research/paper-1/baseline_matrix.json",
+      "sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+      "required_status": "historical_evidence_audited_new_launch_blocked"
+    },
+    {
+      "id": "analysis_plan",
+      "path": "research/paper-1/baseline_analysis.json",
+      "sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+      "required_status": "frozen_before_results"
+    },
+    {
+      "id": "materialization",
+      "path": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
+      "sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b",
+      "required_status": "materialized_unexecuted"
+    },
+    {
+      "id": "hardware_preflight",
+      "path": "results/Speck-Paper1/baseline-preflight-v2.json",
+      "sha256": "91012edc3a597dcf8cddd28bbe846b81cd6d99d1eec359ce66bf4ccf7deede86",
+      "required_status": "qualified"
+    },
+    {
+      "id": "storage_qualification",
+      "path": "results/Speck-Paper1/baseline-storage-volume-qualified.json",
+      "sha256": "e0b482987207efafd1e6273b0d3d39290ca2b40bc80584035fdd48244760d9df",
+      "required_status": "qualified_dedicated_proxy_and_finalist_checkpoint_volume"
+    },
+    {
+      "id": "evaluation_manifest",
+      "path": "research/architecture-promotion-v1/evaluation_manifest.json",
+      "sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6",
+      "required_status": "frozen_v2_ruler_synthetic_primary_external_data_pending"
+    }
+  ],
+  "evaluation_boundary": {
+    "proxy_training": {
+      "required": [
+        "the language-loss estimand, pairs, stopping rule, and control-only target lock are frozen",
+        "the active evaluation manifest, thresholds, prompt-change versioning, contamination rule, and missing-suite outcome are frozen before model output",
+        "the failed contaminated RULER v1 result is preserved and the v2 successor is frozen before model output",
+        "hardware, model export, cache behavior, data windows, and checkpoint storage are qualified"
+      ],
+      "not_required": [
+        "NoLiMa restricted-data license acceptance",
+        "HELMET rights-blocked payload acquisition",
+        "HELMET real-data prompt, tokenizer, judge, and contamination qualification",
+        "execution of external capability suites that require a trained candidate checkpoint"
+      ],
+      "reason": "The proxy produces the checkpoints needed for later evaluation and supports only a paired base-language whole-architecture screen. Frozen unavailable suites remain mandatory failed release gates rather than disappearing from the evidence standard."
+    },
+    "release_and_capability_claims": {
+      "status": "blocked",
+      "required_external_suites": [
+        "ruler",
+        "nolima",
+        "helmet"
+      ],
+      "rule": "Every required suite must be implemented, qualified, executed, and passing at the claimed effective length; a suite that cannot run is a failed release gate, not an omitted metric."
+    },
+    "forbidden_inferences": [
+      "architecture promotion",
+      "component attribution to KDA, NoPE, GQA, or mixer ratio",
+      "long-context capability",
+      "release readiness",
+      "paper-scale pretraining authorization"
+    ]
+  },
+  "execution": {
+    "fixed_sample_model_runs": 6,
+    "control_first": true,
+    "control_runs": [
+      "Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+      "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match",
+      "Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match"
+    ],
+    "target_lock": {
+      "after": "all three complete dense-control result records",
+      "before": "creating or inspecting any candidate result record",
+      "command": "uv run --extra cpu python -m scripts.paper_baseline_analyze lock-target research/paper-1/baseline_analysis.json results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json --output results/Speck-Paper1/baseline-time-to-quality-target.json"
+    },
+    "candidate_runs": [
+      "Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+      "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa",
+      "Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa"
+    ],
+    "tracking_mode": "offline",
+    "tracking_reason": "Retain immutable local intermediate metrics without making training availability depend on an external logging service.",
+    "managed_unit_prefix": "speck-paper1-baseline",
+    "interim_quality_decisions": 0,
+    "recovery": "Resume the same frozen cell from its latest valid checkpoint; if it cannot be resumed, retain the failed attempt, document root cause, and preregister any rerun."
+  },
+  "live_gate": {
+    "repository_must_be_clean": true,
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "uuid": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd",
+      "minimum_total_memory_bytes": 25295323136,
+      "maximum_start_temperature_c": 50,
+      "maximum_start_utilization_percent": 0,
+      "active_compute_processes": 0
+    },
+    "storage": {
+      "directory": "/mnt/speck-data/speck/paper1-baselines-131m",
+      "mount_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+      "filesystem": "ext4",
+      "required_options": [
+        "rw",
+        "nosuid",
+        "nodev",
+        "noexec"
+      ],
+      "minimum_free_bytes": 17179869184,
+      "checkpoint_targets_must_not_exist": true,
+      "result_records_must_not_exist": true
+    },
+    "host": {
+      "minimum_available_memory_bytes": 12884901888,
+      "required_inactive_user_units": [
+        "speck-helmet-download.service"
+      ],
+      "reason": "Do not overlap the memory-heavy HELMET Xet transfer with compilation and full-model training on this 32 GiB host."
+    }
+  },
+  "qualification_result": "results/Speck-Paper1/proxy-launch-qualified.json"
+}
