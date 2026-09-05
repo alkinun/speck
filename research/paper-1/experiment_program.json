@@ -338,6 +338,11 @@
     "trained_decode_result": "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
     "trained_decode_result_sha256": "a966e92d06574f1b80902799fa62d6e8d643365d06283c1e6b505a011393db8a"
   },
+  "brief_code_audit": {
+    "audit": "research/paper-1/brief_code_audit_v1.json",
+    "sha256": "da0fadfae3d9f58b700927510f59de3dab8993bb2b4ec608ef8b1942a28aca28",
+    "status": "combined_tree_audited_root_rights_historical_identity_and_execution_blocked"
+  },
   "controls": {
     "mechanism_controls": [
       "GDN/sigmoid/RoPE hybrid",
@@ -515,9 +520,9 @@
     "time and energy to locked quality"
   ],
   "novelty_code_availability": {
-    "audit": "research/paper-1/novelty_code_availability_v2.json",
-    "sha256": "15198b4fdb34c12e78d0ee6fede48fcb3ce4609270ba9bc6e24feaec49d8e2fd",
-    "status": "eight_sources_one_root_rights_path_headkv_and_routing_reproduction_blocked"
+    "audit": "research/paper-1/novelty_code_availability_v3.json",
+    "sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e",
+    "status": "twelve_sources_one_root_rights_path_no_new_reproduction_authority"
   },
   "novelty_landscape": {
     "audit": "research/paper-1/novelty_landscape_v4.json",

@@ -89,6 +89,7 @@ Read in order:
 81. [80 — HeadKV and routing-artifact availability audit](80_n2_code_availability.md)
 82. [81 — N2 concept rejection after evidence-compression audit](81_n2_concept_rejection.md)
 83. [82 — STEC adjacent evidence-verification baseline](82_stec_baseline.md)
+84. [83 — BRIEF-family artifact availability audit](83_brief_code_availability.md)
 
 Conventions:
 
@@ -442,3 +443,9 @@ and conflicting evidence plus reasoning paths for constrained candidate verifica
 measure pre-output internal cache-source survival or equal-state interventions. It strengthens the
 external comparison without changing the N2 concept rejection or establishing the residual empirical
 law.
+
+Finding 83 pins the combined BRIEF repository at `07794332`: 601 files, of which 492 are vendored
+Axolotl. The old BRIEF subtree has 49 files; BRIEF-Pro adds about 31 non-vendored files. No root license
+or paper-specific historical revisions exist, environments conflict and include a machine-local prefix,
+and model/data derivations remain unpinned. Across twelve sources, only the prior Ada-KV tree has root
+rights and no new reproduction path is authorized.
