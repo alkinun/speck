@@ -106,6 +106,35 @@ def validate_external_suite(path):
     for section in ("data", "model_adapter"):
         if "blocked" not in config[section].get("status", ""):
             raise ValueError(f"external suite {section} must state its unresolved blocker")
+    adapter = config["model_adapter"]
+    if adapter["status"].startswith("endpoint_protocol_qualified"):
+        _require(
+            adapter,
+            {"qualification", "qualification_sha256", "runner_revision", "settings"},
+            "qualified external model adapter",
+        )
+        if not SHA256_PATTERN.fullmatch(adapter["qualification_sha256"]):
+            raise ValueError("external model-adapter qualification has an invalid SHA-256")
+        if not COMMIT_PATTERN.fullmatch(adapter["runner_revision"]):
+            raise ValueError("external model-adapter qualification has an invalid revision")
+        repository_root = path.parents[3]
+        qualification_path = repository_root / adapter["qualification"]
+        if (
+            not qualification_path.is_file()
+            or _file_sha256(qualification_path) != adapter["qualification_sha256"]
+        ):
+            raise ValueError("external model-adapter qualification artifact does not match")
+        qualification = _load_json(qualification_path)
+        if (
+            qualification.get("format") != "speck_evaluation_endpoint_qualification"
+            or qualification.get("status")
+            != "qualified_for_serialized_openai_correctness_evaluation"
+            or qualification.get("runner_revision") != adapter["runner_revision"]
+            or config["suite_id"] not in qualification.get("qualified_consumers", {})
+            or not qualification.get("export", {}).get("parity", {}).get("passed")
+            or qualification.get("export", {}).get("maximum_context", 0) < min(lengths)
+        ):
+            raise ValueError("external model-adapter qualification artifact is invalid")
     return config
 
 

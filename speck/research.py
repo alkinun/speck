@@ -714,6 +714,14 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             or external["benchmark"]["lengths"] != suite.get("lengths")
         ):
             raise ValueError(f"external suite {suite['id']} manifest and contract disagree")
+        adapter = external["model_adapter"]
+        if adapter.get("qualification") and (
+            suite.get("model_adapter_qualification") != adapter["qualification"]
+            or suite.get("model_adapter_qualification_sha256") != adapter["qualification_sha256"]
+        ):
+            raise ValueError(
+                f"external suite {suite['id']} model-adapter qualification is not pinned"
+            )
         qualification_path = repository_root / suite.get("source_qualification", "")
         qualification_hash = suite.get("source_qualification_sha256")
         if (
@@ -813,6 +821,9 @@ def validate_research_contract(directory, tokenizer=None):
         "external_source_qualified": sum(
             suite["status"].startswith("source_qualified")
             for suite in evaluations["external_suites"]
+        ),
+        "external_model_adapters_qualified": sum(
+            "model_adapter_qualification" in suite for suite in evaluations["external_suites"]
         ),
         "external_execution_ready": sum(
             "blocked" not in suite["status"] for suite in evaluations["external_suites"]

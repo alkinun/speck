@@ -1,0 +1,209 @@
+{
+  "created_on": "2026-09-05",
+  "endpoint": {
+    "cases": {
+      "nolima_chat": {
+        "repeated_response_identical": true,
+        "request": {
+          "max_tokens": 8,
+          "messages": [
+            {
+              "content": "You are a helpful assistant",
+              "role": "system"
+            },
+            {
+              "content": "Reply with one word: blue",
+              "role": "user"
+            }
+          ],
+          "model": "Speck2-140M-Instruct-endpoint-current",
+          "seed": 43,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "blue",
+                "role": "assistant"
+              }
+            }
+          ],
+          "created": 0,
+          "id": "speck-aa165367d8eb7e8a4e00f2eb",
+          "model": "Speck2-140M-Instruct-endpoint-current",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 27,
+            "total_tokens": 28
+          }
+        }
+      },
+      "ruler_nemo_openai_chat": {
+        "repeated_response_identical": true,
+        "request": {
+          "frequency_penalty": 0.0,
+          "logprobs": false,
+          "max_completion_tokens": 8,
+          "messages": [
+            {
+              "content": "Reply with one word: blue",
+              "role": "user"
+            }
+          ],
+          "model": "Speck2-140M-Instruct-endpoint-current",
+          "n": 1,
+          "presence_penalty": 0.0,
+          "seed": 42,
+          "stream": false,
+          "temperature": 0.0,
+          "tools": null,
+          "top_logprobs": null,
+          "top_p": 1.0
+        },
+        "response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "blue",
+                "role": "assistant"
+              }
+            }
+          ],
+          "created": 0,
+          "id": "speck-096bc1e7c196dc2373b91ea9",
+          "model": "Speck2-140M-Instruct-endpoint-current",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 16,
+            "total_tokens": 17
+          }
+        }
+      }
+    },
+    "health": {
+      "model": "Speck2-140M-Instruct-endpoint-current",
+      "status": "ok"
+    },
+    "models": {
+      "data": [
+        {
+          "created": 0,
+          "id": "Speck2-140M-Instruct-endpoint-current",
+          "object": "model",
+          "owned_by": "specklabs"
+        }
+      ],
+      "object": "list"
+    },
+    "transport": "loopback_http_ephemeral_port"
+  },
+  "export": {
+    "files": {
+      "architecture_speck.py": {
+        "bytes": 13186,
+        "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+      },
+      "chat_template.jinja": {
+        "bytes": 1543,
+        "sha256": "8f3d02b46a5720823c583099b6539564f2adcb737d862ba5ed2887bfb2bc9390"
+      },
+      "config.json": {
+        "bytes": 12118,
+        "sha256": "5c59d6c32d6be720cba7a65bb012d8e58c774499d8df111b6d171e828bcf8dae"
+      },
+      "generation_config.json": {
+        "bytes": 110,
+        "sha256": "b7372a10b4af99a1f168fcae48fe25af105d91feaf46d57397fbf2d3eb136b3b"
+      },
+      "model.safetensors": {
+        "bytes": 281333304,
+        "sha256": "1893026b01e9e60380a58bf00162db5e7bba7331a6d7a4df719119b64cfa2152"
+      },
+      "modeling_speck.py": {
+        "bytes": 6362,
+        "sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d"
+      },
+      "native_speck.py": {
+        "bytes": 67463,
+        "sha256": "47c85e326d9b0677ebbde44a6077e8e9bf891daaf858e2b65437c06e1919988e"
+      },
+      "padding_speck.py": {
+        "bytes": 898,
+        "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+      },
+      "speck_parity.json": {
+        "bytes": 344,
+        "sha256": "b6ae52190cf2f8b517ecebfc9b88d59003c7cf128284d0a9bd425cd482f683f9"
+      },
+      "speck_source.json": {
+        "bytes": 478,
+        "sha256": "378949770837f7180756ac739ea7ad531a8876161a4f78a3bff731a6c23c337e"
+      },
+      "tokenization_speck.py": {
+        "bytes": 2728,
+        "sha256": "47ba215f99683f8bb3d882e886e86b647568c5fc2a5a06eb67fbde96c8a8a0c2"
+      },
+      "tokenizer.model": {
+        "bytes": 493443,
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokenizer_config.json": {
+        "bytes": 2665,
+        "sha256": "ce1985805b452a78f6f5897aaf572dfb7f4d738a0f6facbfc022482d8b647909"
+      }
+    },
+    "maximum_context": 4096,
+    "model_id": "Speck2-140M-Instruct-endpoint-current",
+    "parity": {
+      "compute_dtype": "bfloat16",
+      "format": "speck_export_parity",
+      "format_version": 1,
+      "generation_smoke_new_tokens": 2,
+      "incremental_logits_max_absolute_error": 0.0,
+      "logits_max_absolute_error": 0.0,
+      "parameters": 140654208,
+      "passed": true,
+      "tokens_sha256": "e36555b6b258ffeb818451285a0968f5d139c60e305e247538ebb7d7ce5dfcf2"
+    },
+    "source": {
+      "checkpoint": {
+        "directory": "/home/alkin/.cache/speck/checkpoints/Speck2-140M-Instruct",
+        "metadata_sha256": "28063bd1159073dc3d2ed8541ed081488a23b7904f2a489eac9b71bc17e18f57",
+        "model_sha256": "b29586a4c7cdd32666bc4c3d8ca0f5aa48c0f7f93751f054c191e1da1cf56472",
+        "optimizer_sha256": "b037f88857dbb70db0c89db9d15c951d5de407730bfad06a42a06fe1072f2fa4",
+        "step": 8534
+      },
+      "format": "speck_export_source",
+      "format_version": 1,
+      "type": "sft_checkpoint"
+    }
+  },
+  "format": "speck_evaluation_endpoint_qualification",
+  "format_version": 1,
+  "limitations": [
+    "serialized correctness adapter; no serving-throughput claim",
+    "short request-shape smoke; no benchmark task or long-context capability claim",
+    "each evaluated candidate still requires its own attested export and context ceiling"
+  ],
+  "qualified_consumers": {
+    "nolima": "pinned AsyncOpenAI chat request shape",
+    "ruler": "pinned NeMo-Skills OpenAI chat shape with presence_penalty=0"
+  },
+  "runner_revision": "d399b04a6ff79411b2f72feea61042e4611aa1ea",
+  "runtime": {
+    "device": "cpu",
+    "dtype": "bfloat16",
+    "python": "3.10.20",
+    "torch": "2.9.1+cpu",
+    "transformers": "5.1.0"
+  },
+  "status": "qualified_for_serialized_openai_correctness_evaluation"
+}

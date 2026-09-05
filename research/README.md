@@ -56,9 +56,20 @@ uv run --extra cpu python -m scripts.external_suite_qualify \
 
 The checked
 [external-source qualification](../results/Speck-Architecture-Promotion-v1/external-source-qualification.json)
-proves only upstream commit and source-file identity. RULER and NoLiMa remain blocked on a supported
-Speck serving endpoint; NoLiMa additionally requires acceptance of a non-commercial research license;
-HELMET remains blocked on a separate 34GB data volume and locked-environment model-adapter smoke.
+proves upstream commit and source-file identity. The separate
+[endpoint qualification](../results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json)
+binds an attested instruction export to the exact serialized OpenAI request shapes used by RULER's
+pinned NeMo-Skills adapter and NoLiMa. It does not qualify long-context capability or serving speed.
+RULER remains blocked on its transitive data pins; NoLiMa requires acceptance of a non-commercial
+research license and a data manifest; HELMET remains blocked on a separate 34GB data volume and its
+own model-adapter smoke.
+
+Reproduce the endpoint protocol check for an attested instruction export with:
+
+```bash
+uv run --extra cpu --group transformers python -m scripts.evaluation_endpoint_qualify \
+  <instruction-export> --device cpu --dtype bfloat16 --output <qualification.json>
+```
 
 Run one protocol-bound adapter. The protocol supplies every scientific setting, including the
 training/validation split, synthetic streams, replay source, optimizer, and sample counts:

@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "ruler",
   "suite_version": "rulerv1-ns",
-  "status": "source_qualified_data_and_runtime_blocked",
+  "status": "source_qualified_data_blocked",
   "upstream": {
     "id": "ruler_pipeline",
     "repository": "https://github.com/NVIDIA/RULER.git",
@@ -27,7 +27,11 @@
         {"path": "LICENSE", "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"},
         {"path": "pyproject.toml", "sha256": "4efd6fbcda6df2a74a8fb12dc146065feebb9577e4686325546099773f579b4b"},
         {"path": "nemo_skills/dataset/ruler/prepare.py", "sha256": "e25394d84399800b9b3dccec404e902d6fedc6068a01100a516bb9fffa5ad2ee"},
-        {"path": "nemo_skills/dataset/ruler/ruler_score.py", "sha256": "489da1206781db238f4f9393eaa56eda7661eaf0f45c04bbd1be7cc0d56e88a2"}
+        {"path": "nemo_skills/dataset/ruler/ruler_score.py", "sha256": "489da1206781db238f4f9393eaa56eda7661eaf0f45c04bbd1be7cc0d56e88a2"},
+        {"path": "nemo_skills/inference/generate.py", "sha256": "199beac34940ff487ded5a5d927ba655ab4ce2b6bded7cd3aa9725b568406ec6"},
+        {"path": "nemo_skills/inference/model/base.py", "sha256": "9cafd7f0c28cbe2d706e27778ebf7084f492dfd4c5ddedcc1e751b1814885496"},
+        {"path": "nemo_skills/inference/model/openai.py", "sha256": "0110aa1f80f54025806d0a5aab2adcc10e806c2696ce31b5c0595caca4214df9"},
+        {"path": "nemo_skills/prompt/config/generic/default.yaml", "sha256": "75df1388eb30281c9ac0bd1cdf9e784f9c4ef31720a95a1fcbcf2deb0a6371fa"}
       ]
     },
     {
@@ -74,10 +78,22 @@
     "qualification_rule": "preseed the exact ruler_data_generator revision and record SHA-256 for every downloaded source before generating cases"
   },
   "model_adapter": {
-    "mode": "NeMo-Skills vLLM, SGLang, or TensorRT-LLM server",
-    "status": "blocked",
-    "reason": "no supported Speck production server has passed Transformers/checkpoint/runtime parity",
-    "required_next": "qualify a supported serving backend or a protocol-preserving native adapter before prediction"
+    "mode": "pinned NeMo-Skills OpenAI chat adapter to the serialized local Speck evaluation endpoint",
+    "status": "endpoint_protocol_qualified_candidate_export_blocked",
+    "qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
+    "qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
+    "runner_revision": "d399b04a6ff79411b2f72feea61042e4611aa1ea",
+    "settings": {
+      "server_type": "openai",
+      "endpoint_type": "chat",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "repetition_penalty": 0.0,
+      "random_seed": 42,
+      "presence_penalty": 0.0
+    },
+    "reason": "the adapter request shape and native Speck cache pass on an attested 4K instruction export; every evaluated candidate still needs its own attested export at the declared context ceiling",
+    "required_next": "after data qualification, bind each frozen candidate and length to an attested export; preserve repetition_penalty=0 because the pinned OpenAI adapter maps it to presence_penalty"
   },
   "release_use": "required independent long-context suite after data and runtime qualification"
 }

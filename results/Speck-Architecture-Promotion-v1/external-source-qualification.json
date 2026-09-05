@@ -2,13 +2,13 @@
   "format": "speck_external_source_qualification_summary",
   "format_version": 1,
   "status": "source_qualified_execution_blocked",
-  "runner_revision": "82d1a4003715363210d35b9fb8ff3d132b10711b",
+  "runner_revision": "d399b04a6ff79411b2f72feea61042e4611aa1ea",
   "created_on": "2026-09-05",
   "suites": {
     "ruler": {
       "config": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "config_sha256": "1f7fdb8216bb7a17ef33f7a0aa1e5daad83497332e7cdf44575c2b0c54b3d8c5",
-      "status": "source_qualified_data_and_runtime_blocked",
+      "config_sha256": "6164325b706cee8726df49c2fc0bb84b31795d260fa283b360ad5f89ed2781a5",
+      "status": "source_qualified_data_blocked",
       "sources": [
         {
           "id": "ruler_pipeline",
@@ -29,17 +29,22 @@
           "ref": "main consumed transitively by the pinned preparer"
         }
       ],
-      "qualified_files": 11,
+      "qualified_files": 15,
       "correction": "the previously pinned RULER main pipeline is deprecated; the active contract now uses the official rulerv1-ns branch and pins its NeMo-Skills dependency",
+      "model_adapter_qualification": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
+        "sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
+        "status": "endpoint_protocol_qualified_candidate_export_blocked"
+      },
       "blockers": [
         "the NeMo-Skills preparer has unpinned transitive data downloads",
-        "Speck has no qualified vLLM, SGLang, or TensorRT-LLM server"
+        "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
     "nolima": {
       "config": "research/architecture-promotion-v1/external/nolima.json",
-      "config_sha256": "5dc1f5ec0cea709c294536fd9d24de1c8a62db9564bb9c8e1a53d2dcd8ab3186",
-      "status": "source_qualified_license_acceptance_and_runtime_blocked",
+      "config_sha256": "e0c47bb0a7da355f9eec89087c469b7bea9a342301bb49eaf4ebc788b03ee1d7",
+      "status": "source_qualified_license_acceptance_blocked",
       "sources": [
         {
           "id": "nolima_pipeline",
@@ -54,10 +59,15 @@
       },
       "qualified_files": 10,
       "correction": "the upstream checked configurations end at 32K, so the active NoLiMa contract no longer fabricates 64K or 128K cells",
+      "model_adapter_qualification": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
+        "sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
+        "status": "endpoint_protocol_qualified_candidate_export_blocked"
+      },
       "blockers": [
         "manual acceptance of the non-commercial Adobe Research License",
         "per-haystack license audit",
-        "Speck has no qualified OpenAI-compatible endpoint"
+        "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
     "helmet": {
@@ -85,7 +95,7 @@
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and required file hashes qualify. No external suite has data, model-adapter, or execution qualification, and none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and required file hashes qualify. The shared serialized OpenAI endpoint protocol qualifies for RULER and NoLiMa, but no external suite has data or execution qualification and none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

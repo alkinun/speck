@@ -32,6 +32,7 @@ def test_checked_architecture_promotion_contract_is_valid():
         "internal_evaluation_suites": 4,
         "external_evaluation_suites": 3,
         "external_source_qualified": 3,
+        "external_model_adapters_qualified": 2,
         "external_execution_ready": 0,
         "promotion_protocols": 2,
         "symbolic_route_values": 100,

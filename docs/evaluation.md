@@ -82,9 +82,12 @@ The active manifest pins suite-specific contracts under
 without installing the suite or downloading its data.
 
 - RULER uses the official `rulerv1-ns` pipeline plus its exact NeMo-Skills dependency. The old `main`
-  runner is deprecated. Its data preparer still has transitive downloads that must be content-pinned.
+  runner is deprecated. Its OpenAI adapter request shape is qualified, including the required
+  zero-presence-penalty override; its data preparer still has transitive downloads that must be
+  content-pinned.
 - NoLiMa's checked configurations cover 4K, 8K, 16K, and 32K. Its Adobe Research License permits only
-  non-commercial research use and must be accepted before data download.
+  non-commercial research use and must be accepted before data download. Its exact AsyncOpenAI chat
+  request and response fields are qualified against the local endpoint.
 - HELMET covers seven task categories through 128K and has a native `trust_remote_code` Hugging Face
   adapter. Its advertised dataset is approximately 34GB, so it must use a separate planned volume; the
   model adapter also requires a locked-environment Speck-export smoke.

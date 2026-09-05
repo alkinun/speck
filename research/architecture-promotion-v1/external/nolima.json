@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "nolima",
   "suite_version": "pinned-2026-09-05",
-  "status": "source_qualified_license_acceptance_and_runtime_blocked",
+  "status": "source_qualified_license_acceptance_blocked",
   "upstream": {
     "id": "nolima_pipeline",
     "repository": "https://github.com/adobe-research/NoLiMa.git",
@@ -51,10 +51,19 @@
     "qualification_rule": "manual acceptance of non-commercial terms and complete post-download SHA-256 manifest"
   },
   "model_adapter": {
-    "mode": "OpenAI-compatible vLLM endpoint",
-    "status": "blocked",
-    "reason": "the pinned evaluator has no native Hugging Face path and Speck has no qualified compatible server",
-    "required_next": "qualify a protocol-preserving endpoint and pin a Speck model config with max_tokens=192, temperature=0, and top_p=1"
+    "mode": "pinned AsyncOpenAI chat adapter to the serialized local Speck evaluation endpoint",
+    "status": "endpoint_protocol_qualified_candidate_export_blocked",
+    "qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
+    "qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
+    "runner_revision": "d399b04a6ff79411b2f72feea61042e4611aa1ea",
+    "settings": {
+      "max_tokens": 192,
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "seed": 43
+    },
+    "reason": "the exact request and response fields used by the pinned evaluator pass on an attested 4K instruction export; every evaluated candidate still needs its own attested export at the declared context ceiling",
+    "required_next": "after license and data qualification, bind each frozen candidate and length to an attested export"
   },
   "release_use": "research-paper evaluation only under the non-commercial license; do not redistribute upstream materials in the MIT repository"
 }
