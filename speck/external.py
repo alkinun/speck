@@ -313,6 +313,63 @@ def validate_external_suite(path):
             is not False
         ):
             raise ValueError("NoLiMa license decision artifact is invalid")
+    if config["suite_id"] == "helmet" and data["status"].startswith(
+        "metadata_and_storage_plan_qualified"
+    ):
+        _require(
+            data,
+            {
+                "required_archive",
+                "excluded_archive",
+                "metadata_qualification",
+                "metadata_qualification_sha256",
+                "metadata_audit_runner_revision",
+                "minimum_free_bytes_before_download",
+                "candidate_device",
+                "candidate_device_uuid",
+            },
+            "qualified HELMET data metadata",
+        )
+        repository_root = path.parents[3]
+        metadata_path = repository_root / data["metadata_qualification"]
+        if (
+            not metadata_path.is_file()
+            or _file_sha256(metadata_path) != data["metadata_qualification_sha256"]
+            or not SHA256_PATTERN.fullmatch(data["metadata_qualification_sha256"])
+            or not COMMIT_PATTERN.fullmatch(data["metadata_audit_runner_revision"])
+            or not SHA256_PATTERN.fullmatch(data["required_archive"]["sha256"])
+        ):
+            raise ValueError("HELMET data metadata qualification does not match its pin")
+        metadata = _load_json(metadata_path)
+        archives = {
+            entry["path"]: entry for entry in metadata.get("dataset", {}).get("archives", ())
+        }
+        storage = metadata.get("storage", {})
+        if (
+            metadata.get("format") != "speck_helmet_data_metadata_qualification"
+            or metadata.get("status")
+            != "metadata_and_storage_plan_qualified_mount_and_payload_blocked"
+            or metadata.get("runner_revision") != data["metadata_audit_runner_revision"]
+            or metadata.get("dataset", {}).get("revision") != data["revision"]
+            or metadata.get("dataset", {}).get("license_file_present") is not False
+            or metadata.get("dataset", {}).get("new_objects_fetched") != 0
+            or metadata.get("dataset", {}).get("lfs_payloads_materialized") is not False
+            or archives.get(data["required_archive"]["path"], {}).get("oid_sha256")
+            != data["required_archive"]["sha256"]
+            or archives.get(data["required_archive"]["path"], {}).get("payload_bytes")
+            != data["required_archive"]["bytes"]
+            or storage.get("minimum_free_bytes_before_download")
+            != data["minimum_free_bytes_before_download"]
+            or storage.get("root_filesystem_qualified") is not False
+            or storage.get("candidate_device", {}).get("path") != data["candidate_device"]
+            or storage.get("candidate_device", {}).get("uuid") != data["candidate_device_uuid"]
+            or storage.get("candidate_capacity_qualified") is not True
+            or storage.get("candidate_mounted") is not False
+            or metadata.get("license_audit", {}).get("component_licenses_qualified") is not False
+            or metadata.get("decision", {}).get("download_authorized") is not False
+            or metadata.get("decision", {}).get("execution_authorized") is not False
+        ):
+            raise ValueError("HELMET data metadata qualification artifact is invalid")
     adapter = config["model_adapter"]
     if adapter["status"].startswith("endpoint_protocol_qualified"):
         _require(
