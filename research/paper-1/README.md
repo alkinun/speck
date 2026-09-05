@@ -126,6 +126,9 @@ the final combined model.
 - [`novelty_code_availability_v3.json`](novelty_code_availability_v3.json) covers all twelve audited
   overlaps: the evolving combined BRIEF tree lacks root rights and paper-specific revisions, while
   IterCOMP and STEC declare no dedicated immutable implementation.
+- [`novelty_code_availability_v4.json`](novelty_code_availability_v4.json) extends coverage to fifteen
+  sources: the hybrid-role repository has root MIT analysis code but lacks training/constraint/full-data
+  artifacts, the systematic study exposes moving model repositories, and DtR declares no code.
 - [`adakv_code_audit_v1.json`](adakv_code_audit_v1.json) statically audits that pinned path and records
   its environment, native-build, monkeypatch, cache, remote-code/data, and test blockers before any
   clean-room reference or upstream execution.
@@ -135,6 +138,9 @@ the final combined model.
 - [`brief_code_audit_v1.json`](brief_code_audit_v1.json) separates the old 49-file BRIEF subtree from
   BRIEF-Pro and its 492-file vendored Axolotl tree, preserving root-rights, historical-revision,
   environment, model/data, credential, and held-out-contamination blockers.
+- [`rethinking_hybrid_code_audit_v1.json`](rethinking_hybrid_code_audit_v1.json) pins the 20-file MIT
+  analysis tree while recording absent training configs, receptive-field implementation, complete
+  scaling observations, immutable checkpoint/data identities, environment pins, and tests.
 - [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
   within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
   reduction, model integration, training, novelty, and architecture claims blocked.

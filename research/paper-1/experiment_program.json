@@ -531,9 +531,9 @@
     "status": "twelve_source_table_n1_primary_n2_deferred_no_novelty"
   },
   "novelty_code_availability": {
-    "audit": "research/paper-1/novelty_code_availability_v3.json",
-    "sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e",
-    "status": "twelve_sources_one_root_rights_path_no_new_reproduction_authority"
+    "audit": "research/paper-1/novelty_code_availability_v4.json",
+    "sha256": "8350c53f768b99a7283dc1566d288eda010ee2999f0c83d376522c4dada9838b",
+    "status": "fifteen_sources_two_root_rights_paths_no_new_full_reproduction"
   },
   "novelty_landscape": {
     "audit": "research/paper-1/novelty_landscape_v5.json",
@@ -556,6 +556,11 @@
     "contract": "research/paper-1/ratio_placement_readiness_v1.json",
     "sha256": "d8401cfd494f53eef04f95e386fab446aedda54361919c022f0d187cf4920406",
     "status": "design_blocked_operators_and_ratio_unselected"
+  },
+  "rethinking_hybrid_code_audit": {
+    "audit": "research/paper-1/rethinking_hybrid_code_audit_v1.json",
+    "sha256": "1704fff0a5d8578a00360663c372535f16793976576e974cd2433c07753189b4",
+    "status": "analysis_source_and_rights_qualified_full_experiment_reproduction_blocked"
   },
   "raw_local_readiness": {
     "contract": "research/paper-1/raw_local_readiness_v1.json",

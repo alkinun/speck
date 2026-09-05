@@ -93,6 +93,7 @@ Read in order:
 85. [84 — Claim-granular novelty overlap and priority](84_novelty_claim_overlap.md)
 86. [85 — Paper 1 KDA/GQA candidate pair 1](85_paper_1_candidate_1.md)
 87. [86 — N1 role-overlap audit and scope reduction](86_n1_role_overlap.md)
+88. [87 — N1 released-artifact availability audit](87_n1_code_availability.md)
 
 Conventions:
 
@@ -469,3 +470,9 @@ attention carries retrieval while efficient mixers shape its learning trajectory
 crosses mixer and uniform ratio; DtR greedily selects non-uniform conversion layouts and shows static
 probes miss interactions. Only prospective prediction of unseen non-uniform from-scratch layouts may
 remain, as an unestablished empirical law. No placement experiment or architecture freeze is authorized.
+
+Finding 87 pins the hybrid-role repository at `feaad089`: 20 MIT-licensed files with analysis scripts,
+but no training/config pipeline, referenced receptive-field implementation, complete scaling tables,
+immutable checkpoint/data manifests, pinned environment, or tests. The 72-model collection is visible
+but unaudited, and DtR declares no code. Fifteen sources now yield two root-rights paths and zero new
+full reproductions; N1 remains conceptual only.

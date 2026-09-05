@@ -32,9 +32,11 @@ PROGRAM_FILES = (
     "novelty_code_availability_v1.json",
     "novelty_code_availability_v2.json",
     "novelty_code_availability_v3.json",
+    "novelty_code_availability_v4.json",
     "adakv_code_audit_v1.json",
     "headkv_code_audit_v1.json",
     "brief_code_audit_v1.json",
+    "rethinking_hybrid_code_audit_v1.json",
     "adaptive_cache_budget_v1.json",
     "adaptive_cache_gqa_v1.json",
     "adaptive_cache_safeguard_v1.json",
@@ -1221,52 +1223,54 @@ def _validate_novelty_code_availability(reference, repository_root, paper_id):
     landscape = audit.get("landscape", {})
     if (
         audit.get("format") != "speck_novelty_code_availability_audit"
-        or audit.get("format_version") != 3
+        or audit.get("format_version") != 4
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
-        or predecessor.get("path") != "research/paper-1/novelty_code_availability_v2.json"
+        or predecessor.get("path") != "research/paper-1/novelty_code_availability_v3.json"
         or not (repository_root / predecessor["path"]).is_file()
         or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
-        or landscape.get("path") != "research/paper-1/novelty_landscape_v4.json"
+        or landscape.get("path") != "research/paper-1/novelty_landscape_v5.json"
         or not (repository_root / landscape["path"]).is_file()
         or _file_sha256(repository_root / landscape["path"]) != landscape.get("sha256")
         or set(sources)
         != {
-            "brief",
-            "brief_pro",
-            "itercomp",
-            "stec",
+            "rethinking_hybrid_attention",
+            "systematic_hybrid_linear_attention",
+            "distill_then_replace",
         }
-        or sources["brief"].get("observed_revision")
-        != "077943328a555f49925ac1d459e00ed229bc63b9"
-        or sources["brief"].get("subtree_files") != 49
-        or sources["brief_pro"].get("subtree_files") != 523
-        or sources["brief_pro"].get("vendored_axolotl_files") != 492
-        or sources["brief"].get("root_license_present") is not False
-        or sources["brief_pro"].get("root_license_present") is not False
-        or sources["brief"].get("audit") != "research/paper-1/brief_code_audit_v1.json"
-        or not (repository_root / sources["brief"]["audit"]).is_file()
-        or _file_sha256(repository_root / sources["brief"]["audit"])
-        != sources["brief"].get("audit_sha256")
-        or sources["brief_pro"].get("audit_sha256") != sources["brief"].get("audit_sha256")
-        or sources["itercomp"].get("dedicated_repository") is not None
-        or sources["stec"].get("dedicated_repository") is not None
-        or summary.get("sources") != 12
-        or summary.get("immutable_repository_snapshots") != 5
-        or summary.get("repositories_with_code") != 4
-        or summary.get("repositories_with_root_license_covering_code") != 1
-        or summary.get("new_source_reproduction_paths_qualified") != 0
-        or summary.get("metadata_only_tree_clones") != 2
+        or sources["rethinking_hybrid_attention"].get("revision")
+        != "feaad0899bea98e0bf32de9693f37a176713f3ad"
+        or sources["rethinking_hybrid_attention"].get("files") != 20
+        or sources["rethinking_hybrid_attention"].get("code_or_data_files") != 12
+        or sources["rethinking_hybrid_attention"].get("root_license") != "MIT"
+        or sources["rethinking_hybrid_attention"].get("audit")
+        != "research/paper-1/rethinking_hybrid_code_audit_v1.json"
+        or not (repository_root / sources["rethinking_hybrid_attention"]["audit"]).is_file()
+        or _file_sha256(repository_root / sources["rethinking_hybrid_attention"]["audit"])
+        != sources["rethinking_hybrid_attention"].get("audit_sha256")
+        or sources["systematic_hybrid_linear_attention"].get("paper_claimed_models") != 72
+        or sources["systematic_hybrid_linear_attention"].get(
+            "immutable_collection_revision_declared"
+        )
+        is not False
+        or sources["systematic_hybrid_linear_attention"].get("training_code_repository_declared")
+        is not False
+        or sources["distill_then_replace"].get("dedicated_repository") is not None
+        or summary.get("sources") != 15
+        or summary.get("immutable_repository_snapshots") != 6
+        or summary.get("repositories_with_code") != 5
+        or summary.get("repositories_with_root_license_covering_code") != 2
+        or summary.get("new_full_reproduction_paths_qualified") != 0
+        or summary.get("metadata_only_tree_clones") != 3
         or summary.get("working_trees_checked_out") != 0
         or summary.get("third_party_code_imported") is not False
         or summary.get("third_party_code_executed") is not False
-        or decision.get("brief_source_tree_observed") is not True
-        or decision.get("brief_historical_reproduction_authorized") is not False
-        or decision.get("brief_pro_reproduction_authorized") is not False
-        or decision.get("itercomp_reproduction_authorized") is not False
-        or decision.get("stec_reproduction_authorized") is not False
-        or decision.get("released_outputs_as_heldout_authorized") is not False
-        or decision.get("n2_empirical_protocol_authorized") is not False
+        or decision.get("rethinking_analysis_source_qualified") is not True
+        or decision.get("rethinking_full_reproduction_authorized") is not False
+        or decision.get("systematic_model_identity_qualified") is not False
+        or decision.get("systematic_reproduction_authorized") is not False
+        or decision.get("dtr_reproduction_authorized") is not False
+        or decision.get("n1_placement_protocol_authorized") is not False
         or decision.get("novelty_gate_changed") is not False
         or decision.get("architecture_freeze_authorized") is not False
     ):
@@ -1440,6 +1444,50 @@ def _validate_brief_code_audit(reference, repository_root, paper_id):
         or decision.get("novelty_gate_changed") is not False
     ):
         raise ValueError("BRIEF code audit is incomplete")
+
+
+def _validate_rethinking_hybrid_code_audit(reference, repository_root, paper_id):
+    _require(reference, {"audit", "sha256", "status"}, "hybrid role code reference")
+    path = repository_root / reference["audit"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("hybrid role code audit does not match its pin")
+    audit = _load_json(path)
+    repository = audit.get("repository", {})
+    license_entry = audit.get("license", {})
+    decision = audit.get("decision", {})
+    if (
+        audit.get("format") != "speck_rethinking_hybrid_code_audit"
+        or audit.get("format_version") != 1
+        or audit.get("paper_id") != paper_id
+        or audit.get("status") != reference["status"]
+        or repository.get("revision") != "feaad0899bea98e0bf32de9693f37a176713f3ad"
+        or repository.get("files") != 20
+        or repository.get("code_or_data_files") != 12
+        or repository.get("tree_complete") is not True
+        or repository.get("working_tree_checked_out") is not False
+        or repository.get("third_party_code_imported") is not False
+        or repository.get("third_party_code_executed") is not False
+        or license_entry.get("license") != "MIT"
+        or license_entry.get("root_scope") is not True
+        or len(audit.get("pinned_files", ())) != 6
+        or len(audit.get("available_components", ())) < 5
+        or len(audit.get("missing_experiment_components", ())) < 8
+        or len(audit.get("environment_findings", ())) < 4
+        or decision.get("source_identity_qualified") is not True
+        or decision.get("root_rights_qualified") is not True
+        or decision.get("analysis_code_available") is not True
+        or decision.get("training_code_available") is not False
+        or decision.get("receptive_constraint_code_available") is not False
+        or decision.get("complete_scaling_data_available") is not False
+        or decision.get("checkpoint_identity_qualified") is not False
+        or decision.get("portable_environment_qualified") is not False
+        or decision.get("behavior_qualified") is not False
+        or decision.get("upstream_execution_authorized") is not False
+        or decision.get("direct_reuse_authorized") is not False
+        or decision.get("conceptual_baseline_required") is not True
+        or decision.get("novelty_gate_changed") is not False
+    ):
+        raise ValueError("hybrid role code audit is incomplete")
 
 
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
@@ -1874,6 +1922,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "adakv_code_audit",
             "headkv_code_audit",
             "brief_code_audit",
+            "rethinking_hybrid_code_audit",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -1912,6 +1961,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_brief_code_audit(
         program["brief_code_audit"],
+        repository_root,
+        paper_id,
+    )
+    _validate_rethinking_hybrid_code_audit(
+        program["rethinking_hybrid_code_audit"],
         repository_root,
         paper_id,
     )

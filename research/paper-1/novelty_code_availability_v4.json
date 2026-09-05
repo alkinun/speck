@@ -1,0 +1,82 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 4,
+  "audit_id": "speck-paper-1-novelty-code-availability-v4",
+  "paper_id": "speck-paper-1",
+  "status": "fifteen_sources_two_root_rights_paths_no_new_full_reproduction",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_code_availability_v3.json",
+    "sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e",
+    "sources_inherited": 12
+  },
+  "landscape": {
+    "path": "research/paper-1/novelty_landscape_v5.json",
+    "sha256": "36e03f06000a4b614a1c17f0d4d221376f6e6313e85299745b9113322a821984"
+  },
+  "additional_sources": [
+    {
+      "id": "rethinking_hybrid_attention",
+      "paper": "arxiv_2606_15378v1",
+      "repository": "https://github.com/thunlp/rethinking-hybrid-attention",
+      "revision": "feaad0899bea98e0bf32de9693f37a176713f3ad",
+      "revision_date": "2026-06-17T14:13:42+08:00",
+      "files": 20,
+      "code_or_data_files": 12,
+      "root_license": "MIT",
+      "audit": "research/paper-1/rethinking_hybrid_code_audit_v1.json",
+      "audit_sha256": "1704fff0a5d8578a00360663c372535f16793976576e974cd2433c07753189b4",
+      "status": "analysis_source_and_rights_qualified_training_constraint_checkpoint_data_and_execution_blocked"
+    },
+    {
+      "id": "systematic_hybrid_linear_attention",
+      "paper": "arxiv_2507_06457v2",
+      "model_collection": "https://huggingface.co/collections/m-a-p/hybrid-linear-attention-research-686c488a63d609d2f20e2b1e",
+      "paper_claimed_models": 72,
+      "immutable_collection_revision_declared": false,
+      "training_code_repository_declared": false,
+      "config_and_data_manifest_qualified": false,
+      "status": "model_repositories_visible_identity_training_and_reproduction_audit_pending"
+    },
+    {
+      "id": "distill_then_replace",
+      "paper": "arxiv_2601_11667v2",
+      "dedicated_repository": null,
+      "dedicated_models": null,
+      "status": "no_official_implementation_or_model_artifact_declared"
+    }
+  ],
+  "rethinking_release_boundary": {
+    "root_rights_qualified": true,
+    "analysis_code_available": true,
+    "training_code_available": false,
+    "receptive_constraint_code_available": false,
+    "complete_scaling_data_available": false,
+    "checkpoint_identity_qualified": false,
+    "portable_environment_qualified": false,
+    "upstream_execution_authorized": false
+  },
+  "summary": {
+    "sources": 15,
+    "immutable_repository_snapshots": 6,
+    "repositories_with_code": 5,
+    "repositories_with_root_license_covering_code": 2,
+    "new_full_reproduction_paths_qualified": 0,
+    "metadata_only_tree_clones": 3,
+    "working_trees_checked_out": 0,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false,
+    "novelty_status_changed": false
+  },
+  "decision": {
+    "rethinking_analysis_source_qualified": true,
+    "rethinking_full_reproduction_authorized": false,
+    "systematic_model_identity_qualified": false,
+    "systematic_reproduction_authorized": false,
+    "dtr_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "audit immutable Hugging Face checkpoints and seek missing training/constraint/scaling artifacts; complete remaining landscape and expert review before any N1 placement protocol"
+  }
+}

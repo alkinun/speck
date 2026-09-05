@@ -42,9 +42,11 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "novelty_code_availability_v1.json",
             "novelty_code_availability_v2.json",
             "novelty_code_availability_v3.json",
+            "novelty_code_availability_v4.json",
             "adakv_code_audit_v1.json",
             "headkv_code_audit_v1.json",
             "brief_code_audit_v1.json",
+            "rethinking_hybrid_code_audit_v1.json",
             "adaptive_cache_budget_v1.json",
             "adaptive_cache_gqa_v1.json",
             "adaptive_cache_safeguard_v1.json",
@@ -336,6 +338,18 @@ def test_paper_program_rejects_brief_code_audit_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="BRIEF code audit"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_rethinking_hybrid_code_audit_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["rethinking_hybrid_code_audit"]["sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="hybrid role code audit"):
         validate_paper_program(copied, repository_root=root)
 
 
