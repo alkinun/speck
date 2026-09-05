@@ -35,6 +35,7 @@ helmet-adapter = [
     "setuptools==80.9.0",
     "tqdm==4.70.0",
     "transformers==5.1.0",
+    "wheel==0.45.1",
 ]
 open-slm = [
     "lm-eval[hf] @ git+https://github.com/EleutherAI/lm-evaluation-harness.git@64f3d0924fc695efd6d776a5ac91f97138085516",
