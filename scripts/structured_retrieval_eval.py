@@ -88,6 +88,7 @@ def build_case(
     template="archive",
     answer_set="letters",
     response_cue="native",
+    route_values=None,
 ):
     if task == "multi_key":
         return build_multi_key_case(
@@ -134,6 +135,7 @@ def build_case(
         template=template,
         answer_set=answer_set,
         response_cue=response_cue,
+        route_values=route_values,
     )
 
 

@@ -21,6 +21,7 @@ from speck.dataset import load_manifest, resolve_data_dir
 from speck.long_context import (
     ANSWER_SETS,
     RETRIEVAL_TEMPLATES,
+    ROUTE_VALUES,
     binomial_tail_probability,
 )
 from speck.tokenizer import get_tokenizer
@@ -55,7 +56,11 @@ def parse_record_counts(value):
         counts = tuple(int(item.strip()) for item in value.split(",") if item.strip())
     except ValueError as error:
         raise ValueError("record counts must be unique integers in [2, 10]") from error
-    if not counts or len(set(counts)) != len(counts) or any(not 2 <= count <= 10 for count in counts):
+    if (
+        not counts
+        or len(set(counts)) != len(counts)
+        or any(not 2 <= count <= 10 for count in counts)
+    ):
         raise ValueError("record counts must be unique integers in [2, 10]")
     return counts
 
@@ -93,10 +98,9 @@ def arguments(argv=None):
     parser.add_argument("--train-answer-sets", type=parse_answer_sets, default=("letters",))
     parser.add_argument("--validation-answer-sets", type=parse_answer_sets, default=("letters",))
     parser.add_argument("--train-record-counts", type=parse_record_counts, default=None)
+    parser.add_argument("--validation-record-counts", type=parse_record_counts, default=None)
     parser.add_argument("--train-response-cue", choices=("native", "answer"), default="native")
-    parser.add_argument(
-        "--validation-response-cue", choices=("native", "answer"), default="native"
-    )
+    parser.add_argument("--validation-response-cue", choices=("native", "answer"), default="native")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--replay-data-experiment", type=Path, default=None)
@@ -141,6 +145,7 @@ def build_supervised_batch(
     answer_sets=("letters",),
     record_counts=None,
     response_cue="native",
+    route_values=ROUTE_VALUES,
 ):
     record_counts = tuple(record_counts or (records,))
     cases = []
@@ -148,9 +153,7 @@ def build_supervised_batch(
         index = first_sample + offset
         task = tasks[index % len(tasks)]
         template = templates[(index // len(tasks)) % len(templates)]
-        answer_set = answer_sets[
-            (index // (len(tasks) * len(templates))) % len(answer_sets)
-        ]
+        answer_set = answer_sets[(index // (len(tasks) * len(templates))) % len(answer_sets)]
         record_count = record_counts[
             (index // (len(tasks) * len(templates) * len(answer_sets))) % len(record_counts)
         ]
@@ -164,6 +167,7 @@ def build_supervised_batch(
             template=template,
             answer_set=answer_set,
             response_cue=response_cue,
+            route_values=route_values,
         )
         inputs = case["prompt_tokens"] + case["answer_tokens"][:-1]
         if len(inputs) != sequence_length:
@@ -193,9 +197,7 @@ def candidate_ranking_loss(hidden, cases, embedding_weight):
     rows = torch.arange(hidden.size(0), device=device)
     positions = torch.tensor([case["prompt_length"] - 1 for case in cases], device=device)
     response_hidden = hidden[rows, positions]
-    candidate_ids = torch.tensor(
-        [case["candidate_token_ids"] for case in cases], device=device
-    )
+    candidate_ids = torch.tensor([case["candidate_token_ids"] for case in cases], device=device)
     candidate_weights = embedding_weight[candidate_ids].to(response_hidden.dtype)
     logits = torch.einsum("bh,bch->bc", response_hidden, candidate_weights).float()
     targets = torch.tensor([case["answer_index"] for case in cases], device=device)
@@ -231,183 +233,210 @@ def validate(model, tokenizer, settings, device):
     for task_index, task in enumerate(settings["validation_tasks"]):
         for template_index, template in enumerate(settings["validation_templates"]):
             for answer_set_index, answer_set in enumerate(settings["validation_answer_sets"]):
-                totals = {
-                    "samples": 0,
-                    "answer_tokens": 0,
-                    "exact": 0,
-                    "token_correct": 0,
-                    "candidate": 0,
-                    "target_direction": 0,
-                    "specificity_direction": 0,
-                    "target_score": 0.0,
-                    "distractor_score": 0.0,
-                    "specificity_score": 0.0,
-                }
-                for start in range(0, settings["validation_samples"], settings["batch_size"]):
-                    count = min(
-                        settings["batch_size"], settings["validation_samples"] - start
-                    )
-                    cases = []
-                    counterfactuals = []
-                    distractors = []
-                    for offset in range(count):
-                        seed = (
-                            settings["validation_seed_offset"]
-                            + task_index * 100_000
-                            + template_index * 10_000_000
-                            + answer_set_index * 1_000_000
-                            + start
-                            + offset
-                        )
-                        case = build_case(
-                            task,
-                            tokenizer,
-                            settings["sequence_length"] + 1,
-                            seed,
-                            settings["records"],
-                            settings["chains"],
-                            template=template,
-                            answer_set=answer_set,
-                            response_cue=settings["validation_response_cue"],
-                        )
-                        counterfactual = build_case(
-                            task,
-                            tokenizer,
-                            settings["sequence_length"] + 1,
-                            seed,
-                            settings["records"],
-                            settings["chains"],
-                            answer_offset=1,
-                            template=template,
-                            answer_set=answer_set,
-                            response_cue=settings["validation_response_cue"],
-                        )
-                        distractor_index = (case["query_index"] + 1) % (
-                            case.get("records") or case["chains"]
-                        )
-                        distractor = build_case(
-                            task,
-                            tokenizer,
-                            settings["sequence_length"] + 1,
-                            seed,
-                            settings["records"],
-                            settings["chains"],
-                            answer_offset=1,
-                            mutation_index=distractor_index,
-                            template=template,
-                            answer_set=answer_set,
-                            response_cue=settings["validation_response_cue"],
-                        )
-                        cases.append(case)
-                        counterfactuals.append(counterfactual)
-                        distractors.append(distractor)
-
-                    def logits(values, answer_prefix=0):
-                        prompts = torch.tensor(
-                            [
-                                case["prompt_tokens"] + case["answer_tokens"][:answer_prefix]
-                                for case in values
-                            ],
-                            device=device,
-                        )
-                        return model(prompts, last_token_only=True)[:, -1]
-
-                    factual_logits = logits(cases)
-                    counterfactual_logits = logits(counterfactuals)
-                    distractor_logits = logits(distractors)
-                    candidates = torch.tensor(cases[0]["candidate_token_ids"], device=device)
-                    factual_candidates = factual_logits[:, candidates].log_softmax(dim=-1)
-                    counterfactual_candidates = counterfactual_logits[:, candidates].log_softmax(
-                        dim=-1
-                    )
-                    distractor_candidates = distractor_logits[:, candidates].log_softmax(dim=-1)
-                    answer_indices = torch.tensor(
-                        [case["answer_index"] for case in cases], device=device
-                    )
-                    changed_indices = torch.tensor(
-                        [case["answer_index"] for case in counterfactuals], device=device
-                    )
-                    distractor_from = torch.tensor(
-                        [case["mutation_from_index"] for case in distractors], device=device
-                    )
-                    distractor_to = torch.tensor(
-                        [case["mutation_to_index"] for case in distractors], device=device
-                    )
-                    target_score = candidate_shift(
-                        factual_candidates,
-                        counterfactual_candidates,
-                        answer_indices,
-                        changed_indices,
-                    )
-                    distractor_score = candidate_shift(
-                        factual_candidates,
-                        distractor_candidates,
-                        distractor_from,
-                        distractor_to,
-                    )
-                    specificity = target_score - distractor_score
-                    answer_lengths = {len(case["answer_tokens"]) for case in cases}
-                    if len(answer_lengths) != 1:
-                        raise RuntimeError("validation answer lengths changed within a batch")
-                    answer_length = answer_lengths.pop()
-                    exact = torch.ones(count, dtype=torch.bool, device=device)
-                    for answer_position in range(answer_length):
-                        position_logits = (
-                            factual_logits if answer_position == 0 else logits(cases, answer_position)
-                        )
-                        expected = torch.tensor(
-                            [case["answer_tokens"][answer_position] for case in cases],
-                            device=device,
-                        )
-                        correct = position_logits.argmax(dim=-1) == expected
-                        exact &= correct
-                        totals["token_correct"] += int(correct.sum().item())
-                    totals["samples"] += count
-                    totals["answer_tokens"] += count * answer_length
-                    totals["exact"] += int(exact.sum().item())
-                    totals["candidate"] += int(
-                        (factual_candidates.argmax(dim=-1) == answer_indices).sum().item()
-                    )
-                    totals["target_direction"] += int((target_score > 0).sum().item())
-                    totals["specificity_direction"] += int((specificity > 0).sum().item())
-                    totals["target_score"] += target_score.sum().item()
-                    totals["distractor_score"] += distractor_score.sum().item()
-                    totals["specificity_score"] += specificity.sum().item()
-                samples = totals["samples"]
-                key = (
-                    task
-                    if settings["validation_templates"] == ("archive",)
-                    and settings["validation_answer_sets"] == ("letters",)
-                    and settings["validation_response_cue"] == "native"
-                    else f"{task}/{template}/{answer_set}"
-                    f"/{settings['validation_response_cue']}_cue"
+                record_counts = (
+                    settings["validation_record_counts"]
+                    if task == "multi_key"
+                    else (settings["records"],)
                 )
-                metrics[key] = {
-                    "task": task,
-                    "template": template,
-                    "answer_set": answer_set,
-                    "response_cue": settings["validation_response_cue"],
-                    "samples": samples,
-                    "exact_match": totals["exact"] / samples,
-                    "token_accuracy": totals["token_correct"] / totals["answer_tokens"],
-                    "candidate_accuracy": totals["candidate"] / samples,
-                    "candidate_p_value": binomial_tail_probability(
-                        totals["candidate"], samples, 0.1
-                    ),
-                    "target_direction_accuracy": totals["target_direction"] / samples,
-                    "target_direction_p_value": binomial_tail_probability(
-                        totals["target_direction"], samples, 0.5
-                    ),
-                    "association_specificity_accuracy": (
-                        totals["specificity_direction"] / samples
-                    ),
-                    "association_specificity_p_value": binomial_tail_probability(
-                        totals["specificity_direction"], samples, 0.5
-                    ),
-                    "target_change_score": totals["target_score"] / samples,
-                    "distractor_change_score": totals["distractor_score"] / samples,
-                    "association_specificity_score": totals["specificity_score"] / samples,
-                }
+                for record_index, record_count in enumerate(record_counts):
+                    totals = {
+                        "samples": 0,
+                        "answer_tokens": 0,
+                        "exact": 0,
+                        "token_correct": 0,
+                        "candidate": 0,
+                        "target_direction": 0,
+                        "specificity_direction": 0,
+                        "target_score": 0.0,
+                        "distractor_score": 0.0,
+                        "specificity_score": 0.0,
+                    }
+                    candidate_count = None
+                    for start in range(0, settings["validation_samples"], settings["batch_size"]):
+                        count = min(settings["batch_size"], settings["validation_samples"] - start)
+                        cases = []
+                        counterfactuals = []
+                        distractors = []
+                        for offset in range(count):
+                            seed = (
+                                settings["validation_seed_offset"]
+                                + task_index * 100_000_000
+                                + template_index * 10_000_000
+                                + answer_set_index * 1_000_000
+                                + record_index * 100_000
+                                + start
+                                + offset
+                            )
+                            keywords = {
+                                "template": template,
+                                "answer_set": answer_set,
+                                "response_cue": settings["validation_response_cue"],
+                                "route_values": settings["route_values"],
+                            }
+                            case = build_case(
+                                task,
+                                tokenizer,
+                                settings["sequence_length"] + 1,
+                                seed,
+                                record_count,
+                                settings["chains"],
+                                **keywords,
+                            )
+                            counterfactual = build_case(
+                                task,
+                                tokenizer,
+                                settings["sequence_length"] + 1,
+                                seed,
+                                record_count,
+                                settings["chains"],
+                                answer_offset=1,
+                                **keywords,
+                            )
+                            distractor_index = (case["query_index"] + 1) % (
+                                case.get("records") or case["chains"]
+                            )
+                            distractor = build_case(
+                                task,
+                                tokenizer,
+                                settings["sequence_length"] + 1,
+                                seed,
+                                record_count,
+                                settings["chains"],
+                                answer_offset=1,
+                                mutation_index=distractor_index,
+                                **keywords,
+                            )
+                            cases.append(case)
+                            counterfactuals.append(counterfactual)
+                            distractors.append(distractor)
+
+                        def logits(values, answer_prefix=0):
+                            prompts = torch.tensor(
+                                [
+                                    case["prompt_tokens"] + case["answer_tokens"][:answer_prefix]
+                                    for case in values
+                                ],
+                                device=device,
+                            )
+                            return model(prompts, last_token_only=True)[:, -1]
+
+                        candidate_lists = {tuple(case["candidate_token_ids"]) for case in cases}
+                        if len(candidate_lists) != 1:
+                            raise RuntimeError(
+                                "candidate vocabulary changed within a validation batch"
+                            )
+                        candidates = torch.tensor(candidate_lists.pop(), device=device)
+                        candidate_count = candidates.numel()
+                        factual_logits = logits(cases)
+                        counterfactual_logits = logits(counterfactuals)
+                        distractor_logits = logits(distractors)
+                        factual_candidates = factual_logits[:, candidates].log_softmax(dim=-1)
+                        counterfactual_candidates = counterfactual_logits[
+                            :, candidates
+                        ].log_softmax(dim=-1)
+                        distractor_candidates = distractor_logits[:, candidates].log_softmax(dim=-1)
+                        answer_indices = torch.tensor(
+                            [case["answer_index"] for case in cases], device=device
+                        )
+                        changed_indices = torch.tensor(
+                            [case["answer_index"] for case in counterfactuals], device=device
+                        )
+                        distractor_from = torch.tensor(
+                            [case["mutation_from_index"] for case in distractors], device=device
+                        )
+                        distractor_to = torch.tensor(
+                            [case["mutation_to_index"] for case in distractors], device=device
+                        )
+                        target_score = candidate_shift(
+                            factual_candidates,
+                            counterfactual_candidates,
+                            answer_indices,
+                            changed_indices,
+                        )
+                        distractor_score = candidate_shift(
+                            factual_candidates,
+                            distractor_candidates,
+                            distractor_from,
+                            distractor_to,
+                        )
+                        specificity = target_score - distractor_score
+                        answer_lengths = {len(case["answer_tokens"]) for case in cases}
+                        if len(answer_lengths) != 1:
+                            raise RuntimeError("validation answer lengths changed within a batch")
+                        answer_length = answer_lengths.pop()
+                        exact = torch.ones(count, dtype=torch.bool, device=device)
+                        for answer_position in range(answer_length):
+                            position_logits = (
+                                factual_logits
+                                if answer_position == 0
+                                else logits(cases, answer_position)
+                            )
+                            expected = torch.tensor(
+                                [case["answer_tokens"][answer_position] for case in cases],
+                                device=device,
+                            )
+                            correct = position_logits.argmax(dim=-1) == expected
+                            exact &= correct
+                            totals["token_correct"] += int(correct.sum().item())
+                        totals["samples"] += count
+                        totals["answer_tokens"] += count * answer_length
+                        totals["exact"] += int(exact.sum().item())
+                        totals["candidate"] += int(
+                            (factual_candidates.argmax(dim=-1) == answer_indices).sum().item()
+                        )
+                        totals["target_direction"] += int((target_score > 0).sum().item())
+                        totals["specificity_direction"] += int((specificity > 0).sum().item())
+                        totals["target_score"] += target_score.sum().item()
+                        totals["distractor_score"] += distractor_score.sum().item()
+                        totals["specificity_score"] += specificity.sum().item()
+                    samples = totals["samples"]
+                    if candidate_count is None:
+                        raise RuntimeError("validation produced no candidate vocabulary")
+                    default_key = (
+                        settings["validation_templates"] == ("archive",)
+                        and settings["validation_answer_sets"] == ("letters",)
+                        and settings["validation_record_counts"] == (settings["records"],)
+                        and settings["validation_response_cue"] == "native"
+                    )
+                    key = (
+                        task
+                        if default_key
+                        else f"{task}/{template}/{answer_set}/records_{record_count}"
+                        f"/{settings['validation_response_cue']}_cue"
+                    )
+                    metrics[key] = {
+                        "task": task,
+                        "template": template,
+                        "answer_set": answer_set,
+                        "records": record_count if task == "multi_key" else None,
+                        "chains": settings["chains"] if task != "multi_key" else None,
+                        "route_value_count": (
+                            len(settings["route_values"]) if task.startswith("two_hop_") else None
+                        ),
+                        "response_cue": settings["validation_response_cue"],
+                        "samples": samples,
+                        "candidate_count": candidate_count,
+                        "candidate_chance_accuracy": 1 / candidate_count,
+                        "exact_match": totals["exact"] / samples,
+                        "token_accuracy": totals["token_correct"] / totals["answer_tokens"],
+                        "candidate_accuracy": totals["candidate"] / samples,
+                        "candidate_p_value": binomial_tail_probability(
+                            totals["candidate"], samples, 1 / candidate_count
+                        ),
+                        "target_direction_accuracy": totals["target_direction"] / samples,
+                        "target_direction_p_value": binomial_tail_probability(
+                            totals["target_direction"], samples, 0.5
+                        ),
+                        "association_specificity_accuracy": (
+                            totals["specificity_direction"] / samples
+                        ),
+                        "association_specificity_p_value": binomial_tail_probability(
+                            totals["specificity_direction"], samples, 0.5
+                        ),
+                        "target_change_score": totals["target_score"] / samples,
+                        "distractor_change_score": totals["distractor_score"] / samples,
+                        "association_specificity_score": totals["specificity_score"] / samples,
+                    }
     return metrics
 
 
@@ -428,20 +457,18 @@ def validate_settings(args):
         "warmup_steps": positive_integer(args.warmup_steps, "warmup steps"),
         "seed": args.seed,
         "train_seed_offset": getattr(args, "train_seed_offset", TRAIN_SEED_OFFSET),
-        "validation_seed_offset": getattr(
-            args, "validation_seed_offset", VALIDATION_SEED_OFFSET
-        ),
+        "validation_seed_offset": getattr(args, "validation_seed_offset", VALIDATION_SEED_OFFSET),
         "train_templates": tuple(getattr(args, "train_templates", ("archive",))),
         "validation_templates": tuple(getattr(args, "validation_templates", ("archive",))),
         "train_answer_sets": tuple(getattr(args, "train_answer_sets", ("letters",))),
-        "validation_answer_sets": tuple(
-            getattr(args, "validation_answer_sets", ("letters",))
-        ),
-        "train_record_counts": tuple(
-            getattr(args, "train_record_counts", None) or (args.records,)
+        "validation_answer_sets": tuple(getattr(args, "validation_answer_sets", ("letters",))),
+        "train_record_counts": tuple(getattr(args, "train_record_counts", None) or (args.records,)),
+        "validation_record_counts": tuple(
+            getattr(args, "validation_record_counts", None) or (args.records,)
         ),
         "train_response_cue": getattr(args, "train_response_cue", "native"),
         "validation_response_cue": getattr(args, "validation_response_cue", "native"),
+        "route_values": tuple(getattr(args, "route_values", ROUTE_VALUES)),
         "replay_fraction": getattr(args, "replay_fraction", 0.0),
         "candidate_loss_weight": getattr(args, "candidate_loss_weight", 0.0),
     }
@@ -456,9 +483,14 @@ def validate_settings(args):
         ("validation_answer_sets", tuple(ANSWER_SETS), "validation answer sets"),
     ):
         settings[name] = parse_choice_list(",".join(settings[name]), choices, label)
-    settings["train_record_counts"] = parse_record_counts(
-        ",".join(str(count) for count in settings["train_record_counts"])
-    )
+    for name in ("train_record_counts", "validation_record_counts"):
+        settings[name] = parse_record_counts(",".join(str(count) for count in settings[name]))
+    if (
+        len(settings["route_values"]) <= settings["chains"]
+        or len(set(settings["route_values"])) != len(settings["route_values"])
+        or any(not isinstance(value, str) or not value for value in settings["route_values"])
+    ):
+        raise ValueError("route values must be unique strings and outnumber the active chains")
     for name in ("train_response_cue", "validation_response_cue"):
         if settings[name] not in {"native", "answer"}:
             raise ValueError(f"{name.replace('_', ' ')} must be native or answer")
@@ -584,6 +616,7 @@ def run(args):
                     settings["train_answer_sets"],
                     settings["train_record_counts"],
                     settings["train_response_cue"],
+                    settings["route_values"],
                 )
                 retrieval_sample += settings["batch_size"]
                 retrieval_examples_seen += settings["batch_size"]
@@ -616,7 +649,9 @@ def run(args):
                     candidate_loss_sum += candidate_loss.detach()
                     loss = full_loss + settings["candidate_loss_weight"] * candidate_loss
                 else:
-                    loss = train_model(inputs, targets, loss_reduction="sum") / settings["batch_size"]
+                    loss = (
+                        train_model(inputs, targets, loss_reduction="sum") / settings["batch_size"]
+                    )
                 retrieval_loss_sum += loss.detach()
                 retrieval_microbatches += 1
             (loss / settings["accumulation"]).backward()

@@ -21,6 +21,42 @@ ANSWER_SETS = {
         "orange star",
         "purple house",
     ),
+    "phrases_train_v2": (
+        "family river",
+        "program school",
+        "effect light",
+        "method group",
+        "water house",
+        "product model",
+        "error report",
+        "night service",
+        "level change",
+        "super array",
+        "record table",
+        "money market",
+        "design sound",
+        "reason control",
+        "space context",
+        "block version",
+    ),
+    "phrases_validation_v2": (
+        "public return",
+        "other class",
+        "first function",
+        "under hand",
+        "people work",
+        "static value",
+        "present course",
+        "request data",
+        "children play",
+        "health life",
+        "women person",
+        "company account",
+        "young family",
+        "black sky",
+        "front line",
+        "known result",
+    ),
 }
 RETRIEVAL_TEMPLATES = ("archive", "registry", "ledger", "manifest", "directory")
 ROUTE_VALUES = tuple("KLMNOPQRST")
@@ -159,8 +195,7 @@ def _retrieval_text(
                 for label, answer in zip(labels, answers)
             ],
             "question": (
-                f"\nState the signal assigned at station {labels[query_index]}.\n"
-                f"{cue('Signal')}: "
+                f"\nState the signal assigned at station {labels[query_index]}.\n{cue('Signal')}: "
             ),
             "filler": "Operators filed weather reports, staffing notes, repairs, and routine notices. ",
         }
@@ -244,8 +279,7 @@ def _retrieval_text(
             for destination, answer in zip(destinations, answers)
         ],
         "question": (
-            f"\nState the signal reached from route card {labels[query_index]}.\n"
-            f"{cue('Signal')}: "
+            f"\nState the signal reached from route card {labels[query_index]}.\n{cue('Signal')}: "
         ),
         "filler": "Operators filed weather reports, staffing notes, repairs, and routine notices. ",
     }
@@ -542,8 +576,9 @@ def build_symbolic_two_hop_case(
     template="archive",
     answer_set="letters",
     response_cue="native",
+    route_values=None,
 ):
-    """Build route, payload, or composed lookup over shared one-token intermediate nodes."""
+    """Build route, payload, or composed lookup over a declared intermediate vocabulary."""
 
     if mode not in {"route", "payload", "compose", "chain"}:
         raise ValueError("symbolic two-hop mode must be route, payload, compose, or chain")
@@ -554,11 +589,16 @@ def build_symbolic_two_hop_case(
     values = _answer_values(answer_set)
     if chains > len(values):
         raise ValueError("symbolic two-hop chains exceed the selected answer set")
+    route_values = tuple(ROUTE_VALUES if route_values is None else route_values)
+    if len(route_values) <= chains or len(set(route_values)) != len(route_values):
+        raise ValueError("symbolic route values must be unique and outnumber the active chains")
+    if any(not isinstance(value, str) or not value for value in route_values):
+        raise ValueError("symbolic route values must be non-empty strings")
     generator = random.Random(seed)
     starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
     while len(set(starts)) != chains:
         starts = [f"index-{generator.randrange(100_000, 1_000_000)}" for _ in range(chains)]
-    destinations = list(generator.sample(ROUTE_VALUES, chains))
+    destinations = list(generator.sample(route_values, chains))
     answers = list(generator.sample(values, chains))
     query_index = generator.randrange(chains)
     mutation_index = query_index if mutation_index is None else mutation_index
@@ -567,10 +607,10 @@ def build_symbolic_two_hop_case(
     if not 0 <= mutation_index < chains:
         raise ValueError("symbolic two-hop mutation index is outside the chains")
     if mode in {"route", "chain"}:
-        candidate_values = ROUTE_VALUES
+        candidate_values = route_values
         original_answer = destinations[mutation_index]
         if answer_offset:
-            unused = [value for value in ROUTE_VALUES if value not in destinations]
+            unused = [value for value in route_values if value not in destinations]
             destinations[mutation_index] = unused[(answer_offset - 1) % len(unused)]
         mutated_answer = destinations[mutation_index]
     else:
@@ -641,9 +681,7 @@ def build_symbolic_two_hop_case(
         answer = answers[query_index]
     question = tokenizer.encode(question_text)
     answer_tokens = tokenizer.encode(answer)
-    candidate_token_ids, candidate_token_sequences = _candidate_tokens(
-        tokenizer, candidate_values
-    )
+    candidate_token_ids, candidate_token_sequences = _candidate_tokens(tokenizer, candidate_values)
     prompt, positions = _exact_prompt(
         prefix,
         (first_block, second_block),

@@ -189,3 +189,11 @@ def test_training_task_schedule_switches_once():
 def test_settings_reject_invalid_values(field, value):
     with pytest.raises(ValueError):
         validate_settings(settings(**{field: value}))
+
+
+def test_settings_keep_training_and_validation_loads_separate():
+    resolved = validate_settings(
+        settings(train_record_counts=(2, 8), validation_record_counts=(2, 8))
+    )
+    assert resolved["train_record_counts"] == (2, 8)
+    assert resolved["validation_record_counts"] == (2, 8)

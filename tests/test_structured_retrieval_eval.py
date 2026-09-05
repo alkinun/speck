@@ -78,6 +78,35 @@ def test_build_case_supports_symbolic_two_hop_auxiliaries(task):
     assert case["chains"] == 4
 
 
+def test_symbolic_route_vocabulary_can_exceed_ten_nodes():
+    class WordTokenizer:
+        bos_id = 1
+
+        def __init__(self):
+            self.ids = {}
+
+        def encode(self, text, bos=False):
+            tokens = []
+            for word in text.replace("\n", " \n ").split():
+                if word not in self.ids:
+                    self.ids[word] = len(self.ids) + 3
+                tokens.append(self.ids[word])
+            return ([self.bos_id] if bos else []) + tokens
+
+    routes = tuple(f"route{index}" for index in range(100))
+    case = build_case(
+        "two_hop_route",
+        WordTokenizer(),
+        1_024,
+        7,
+        records=8,
+        chains=6,
+        route_values=routes,
+    )
+    assert len(case["candidate_token_ids"]) == 100
+    assert case["destination"] in routes
+
+
 @pytest.mark.parametrize("value", (0, -1, True, 1.2))
 def test_positive_integer_rejects_invalid_values(value):
     with pytest.raises(ValueError, match="positive integer"):
