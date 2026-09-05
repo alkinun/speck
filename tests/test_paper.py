@@ -34,6 +34,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "scaling_readiness_v1.json",
             "systems_cost_readiness_v1.json",
             "novelty_landscape_v1.json",
+            "novelty_landscape_v2.json",
             "novelty_code_availability_v1.json",
             "adakv_code_audit_v1.json",
             "adaptive_cache_budget_v1.json",

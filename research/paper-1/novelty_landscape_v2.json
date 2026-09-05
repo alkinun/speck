@@ -1,0 +1,233 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 2,
+  "audit_id": "speck-paper-1-novelty-landscape-v2",
+  "paper_id": "speck-paper-1",
+  "status": "eight_full_text_audits_no_novelty_established",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v1.json",
+    "sha256": "00ced5b0ddce708adf51ba0da97d24e6e3a457a3c64cdefe81de7d732a4961d2",
+    "decision_preserved": "six_full_text_audits_no_novelty_established"
+  },
+  "scope": "Full-text audits for eight direct overlaps. Code for the two new N2 sources, complete backward/forward citations, proceedings, patents, deployed systems, non-English literature, and independent expert review remain mandatory before any novelty claim.",
+  "sources": [
+    {
+      "id": "arxiv_2606_30562v1",
+      "title": "Morphing into Hybrid Attention Models",
+      "url": "https://arxiv.org/abs/2606.30562v1",
+      "review_scope": "full_text",
+      "local_note": "papers/23_flashmorph.md",
+      "local_note_sha256": "77bdf8a1a87a107852094fd147aada337b94bfdce963669e6907aa28a2606a3f",
+      "relevant_claim": "budget-constrained joint optimization of interdependent full-versus-linear layer placement"
+    },
+    {
+      "id": "arxiv_2605_05219v1",
+      "title": "Sparse Prefix Caching for Hybrid and Recurrent LLM Serving",
+      "url": "https://arxiv.org/abs/2605.05219v1",
+      "review_scope": "full_text",
+      "local_note": "papers/24_sparse_prefix_caching.md",
+      "local_note_sha256": "f74f9e45e64d06d9fd90f6f8f1ae3956b1a6c6b78b5f07b94351313c9ffb679d",
+      "relevant_claim": "distribution-aware exact recurrent-state prefix checkpoint placement"
+    },
+    {
+      "id": "arxiv_2407_11550v5",
+      "title": "Ada-KV: Optimizing KV Cache Eviction by Adaptive Budget Allocation for Efficient LLM Inference",
+      "url": "https://arxiv.org/abs/2407.11550v5",
+      "review_scope": "full_text",
+      "local_note": "papers/25_adakv.md",
+      "local_note_sha256": "686de1c604bca4ffc9dc72b1078086b26910de2443a4ef47d155effde4861e5d",
+      "relevant_claim": "attention-output-bound-guided adaptive head budgets"
+    },
+    {
+      "id": "arxiv_2404_04793v2",
+      "title": "SqueezeAttention: 2D Management of KV-Cache in LLM Inference via Layer-wise Optimal Budget",
+      "url": "https://arxiv.org/abs/2404.04793v2",
+      "review_scope": "full_text",
+      "local_note": "papers/26_squeezeattention.md",
+      "local_note_sha256": "0932768ec4f55ec92302e84691d65e85ccfd3c78958aa66f9be70e14312e4e2b",
+      "relevant_claim": "joint layer-wise and sequence-wise KV budget allocation"
+    },
+    {
+      "id": "arxiv_2605_05697v1",
+      "title": "Budgeted Attention Allocation: Cost-Conditioned Compute Control for Efficient Transformers",
+      "url": "https://arxiv.org/abs/2605.05697v1",
+      "review_scope": "full_text",
+      "local_note": "papers/27_budgeted_attention_allocation.md",
+      "local_note_sha256": "eacc65881545b592e974838a4c401ca423b4fc8a1e177f93d5ed35964c20d5c8",
+      "relevant_claim": "one-checkpoint monotone attention-head gates conditioned on requested cost"
+    },
+    {
+      "id": "arxiv_2511_00819v1",
+      "title": "Optimizing Native Sparse Attention with Latent Attention and Local Global Alternating Strategies",
+      "url": "https://arxiv.org/abs/2511.00819v1",
+      "review_scope": "full_text",
+      "local_note": "papers/28_alternating_sparse_attention.md",
+      "local_note_sha256": "b864181899f530fc7ad79ca706e1ecc8cf08aed9389e5fe3d544725558efc7c1",
+      "relevant_claim": "alternating local/global sparse-attention roles with latent cache representations"
+    },
+    {
+      "id": "arxiv_2410_19258v4",
+      "title": "Not All Heads Matter: A Head-Level KV Cache Compression Method with Integrated Retrieval and Reasoning",
+      "url": "https://arxiv.org/abs/2410.19258v4",
+      "review_scope": "full_text",
+      "local_note": "papers/30_headkv.md",
+      "local_note_sha256": "8905089642f1398061116be30b8e94b20b94474907cf43f370b4258731a04340",
+      "relevant_claim": "static retrieval-plus-reasoning head profiles and global cross-layer/head cache allocation"
+    },
+    {
+      "id": "arxiv_2603_01426v1",
+      "title": "Understanding the Physics of Key-Value Cache Compression for LLMs through Attention Dynamics",
+      "url": "https://arxiv.org/abs/2603.01426v1",
+      "review_scope": "full_text",
+      "local_note": "papers/31_kv_compression_physics.md",
+      "local_note_sha256": "e6f360553638ed2755bf39f2a2a350fd1345ce4b7e82498f37910e8ae2bb1bdc",
+      "relevant_claim": "retention/accessibility/utilization distinction, global answer-token eviction, head consensus, and token-route reachability under multi-hop cache compression"
+    }
+  ],
+  "overlap_decisions": [
+    {
+      "id": "joint_hybrid_layer_selection",
+      "decision": "not novel by itself",
+      "reason": "FlashMorph already jointly optimizes interdependent full/linear layer choices under a budget"
+    },
+    {
+      "id": "adaptive_cache_budget_by_layer_head_or_sequence",
+      "decision": "not novel by itself",
+      "reason": "Ada-KV, SqueezeAttention, and HeadKV already redistribute cache across heads, layers, and sequence"
+    },
+    {
+      "id": "reasoning_aware_head_importance_and_allocation",
+      "decision": "not novel by itself",
+      "reason": "HeadKV-R2 profiles heads on retrieval-reasoning examples and validates global allocation on contextual and multi-hop QA"
+    },
+    {
+      "id": "retention_accessibility_utilization_distinction",
+      "decision": "not novel by itself",
+      "reason": "arXiv:2603.01426v1 explicitly frames KV compression as routing and separates storage, reachability, and use"
+    },
+    {
+      "id": "global_answer_token_erasure_and_route_reachability",
+      "decision": "not novel by itself",
+      "reason": "GER, head consensus, compressed token-attention graphs, and any-answer-token reachability are already proposed for multi-hop compression failure"
+    },
+    {
+      "id": "sparse_recurrent_prefix_checkpoints",
+      "decision": "not novel by itself",
+      "reason": "Sparse Prefix Caching already gives an exact distribution-aware checkpoint-placement program"
+    },
+    {
+      "id": "one_checkpoint_budget_conditioned_attention",
+      "decision": "not novel by itself",
+      "reason": "Budgeted Attention Allocation already conditions attention-head usage on requested cost"
+    },
+    {
+      "id": "alternating_local_global_latent_sparse_attention",
+      "decision": "not novel by itself",
+      "reason": "arXiv:2511.00819v1 already combines alternating local/global sparse paths with latent attention"
+    },
+    {
+      "id": "published_component_bundle",
+      "decision": "not novel by itself",
+      "reason": "a bundle of KDA, MLA, AttnRes, MoE, HCA, CSA, or cache eviction is not a new mechanism, predictive law, or inseparable systems method"
+    }
+  ],
+  "surviving_hypotheses": [
+    {
+      "id": "N1_role_grounded_placement_law",
+      "type": "predictive composition rule",
+      "statement": "A preregistered small set of causal information-flow quantities predicts unseen from-scratch recurrent/global layer placements at fixed state and compute better than search, sensitivity, role, and random-placement baselines.",
+      "required_baselines": [
+        "uniform and role-designed placements",
+        "independent layerwise sensitivity and greedy replacement",
+        "FlashMorph-style joint gates when reproducible",
+        "Alternating Sparse Attention role layouts",
+        "SqueezeAttention layer clustering",
+        "parameter/state/FLOP-matched random placements"
+      ],
+      "held_out": [
+        "unseen placements",
+        "unseen dependency templates and loads",
+        "at least one larger scale",
+        "one different recurrent or cache representation"
+      ],
+      "success": "prospectively predict held-out rank and absolute failure margins beyond every baseline with stable coefficients and causal interventions",
+      "novelty_status": "plausibly_distinct_full_landscape_and_evidence_pending"
+    },
+    {
+      "id": "N2_conjunctive_required_source_survival_law",
+      "supersedes": "N2_all_required_source_recall_law",
+      "type": "narrow mechanism-quality relationship",
+      "statement": "For examples with independently annotated necessary evidence groups, the probability that every required route and payload group retains at least one causally usable path predicts composition failure beyond any-answer-token erasure, generic reachability, head consensus, answer-span importance, dense mass, output error, and single-source retrieval.",
+      "distinction_to_test": "The candidate is the conjunction over separately necessary groups plus prospective incremental prediction and fixed-budget single-source restoration; routing-aware compression, reasoning-aware head profiles, multi-hop fragility, and survival of any answer token are conceded prior art.",
+      "required_baselines": [
+        "captured dense attention mass and attention-output error",
+        "Ada-KV allocation and bound",
+        "HeadKV-R2 correct-answer-span head importance",
+        "GER answer-token global eviction",
+        "compressed token-graph any-answer reachability",
+        "head consensus or routing diversity",
+        "top-k block/token and single-required-source recall",
+        "random, recency, and distance/load-only selection"
+      ],
+      "fit_data": "discovery examples with required groups labeled independently of selection, diagnostic, and model outputs",
+      "held_out": [
+        "unseen graph structures and hop counts",
+        "unseen real documents and domains",
+        "unseen compression rates and selection budgets",
+        "at least three model scales",
+        "one different compression or sparse-attention family"
+      ],
+      "success": "a frozen nested model adds calibrated held-out prediction beyond every baseline; restoring exactly one missing required group while evicting a matched irrelevant group at fixed physical budget moves both the diagnostic and task outcome as predicted; the result replicates on real multi-document data",
+      "falsifiers": [
+        "GER, token-graph reachability, HeadKV-R2 importance, mass, or output error predicts equally well",
+        "the conjunction is almost always zero or one and adds no resolution",
+        "required-group labels change after model outputs are inspected",
+        "fixed-budget single-group restoration does not recover composition",
+        "the effect disappears after controlling for distance, load, answer length, and base difficulty",
+        "the relationship fails on real multi-document tasks or a held-out compression family"
+      ],
+      "novelty_status": "plausibly_narrower_full_landscape_and_evidence_pending"
+    }
+  ],
+  "change_from_v1": [
+    "adds HeadKV-R2 as a mandatory reasoning-aware head-allocation baseline",
+    "adds GER, head consensus, and compressed token-route reachability as mandatory diagnostic baselines",
+    "concedes the broad retention-versus-accessibility and multi-hop-route framing",
+    "narrows N2 from generic all-source recall to the conjunction over independently necessary groups with incremental prediction and fixed-budget causal restoration",
+    "does not change any implementation, training, promotion, or paper-scale authority"
+  ],
+  "code_followup": {
+    "headkv": "declared repository exists but immutable revision, tree, licenses, environment, data, and behavior are unaudited",
+    "kv_compression_physics": "no dedicated code/data artifact is declared on the arXiv record; named KVPress and Expected Attention dependencies are unpinned",
+    "execution_authorized": false
+  },
+  "claim_gate": {
+    "full_landscape_before_claim": [
+      "audit immutable code/data/rights and behavior boundaries for HeadKV-R2 and the routing paper",
+      "follow backward references and forward citations for both surviving hypotheses",
+      "search arXiv, proceedings, patents, technical reports, deployed systems, and non-English literature with recorded queries and dates",
+      "construct a closest-overlap table at claim granularity",
+      "obtain independent expert review"
+    ],
+    "evidence_before_claim": [
+      "freeze labels, hypotheses, models, predictors, and analysis before held-out outputs",
+      "use at least three scales with paired uncertainty",
+      "hold out architecture, task, rate/budget, and document/domain cells",
+      "perform equal-budget causal intervention rather than correlation alone",
+      "compare with the strongest reproducible direct method and diagnostics",
+      "retain negative results and counterexamples"
+    ],
+    "decision": "Paper 1 may claim novelty only if a surviving narrow hypothesis clears both landscape and prospectively held-out causal gates; otherwise it is a replication/systems study or is not positioned as a novel architecture paper."
+  },
+  "decision": {
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "n2_scope_narrowed": true,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "audit HeadKV code identity/rights and the routing paper artifact boundary, then continue backward/forward citation review before freezing any N2 empirical protocol"
+  }
+}

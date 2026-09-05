@@ -85,6 +85,7 @@ Read in order:
 77. [76 — Adaptive cache GQA reduction reference](76_adaptive_cache_gqa_reference.md)
 78. [77 — Adaptive cache safeguard apportionment reference](77_adaptive_cache_safeguard_reference.md)
 79. [78 — Adaptive cache salience-acquisition readiness](78_adaptive_cache_salience_readiness.md)
+80. [79 — N2 direct-overlap audit and scope reduction](79_n2_direct_overlap_audit.md)
 
 Conventions:
 
@@ -412,3 +413,10 @@ variable-length per-head kernels. A successor must first pass an offline attenti
 then isolate question-visible, reusable context-only, and hindsight modes; pooling; window/kernel;
 allocation; cache lifecycle; source-completeness prediction; causal restoration; and realized systems
 cost. No implementation or evaluation is authorized before the three-pair parent decision.
+
+Finding 79 adds two direct N2 overlaps and narrows the surviving claim. HeadKV-R2 already profiles
+retrieval-plus-reasoning heads and globally allocates cache; a 2026 routing study already separates
+retention, accessibility, and utilization with GER, consensus, token graphs, and multi-hop probes. N2
+now concedes all of that and survives only as conjunctive availability of every independently necessary
+route/payload group, with incremental held-out prediction and fixed-budget single-source restoration.
+No novelty is established.

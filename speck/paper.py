@@ -24,6 +24,7 @@ PROGRAM_FILES = (
     "scaling_readiness_v1.json",
     "systems_cost_readiness_v1.json",
     "novelty_landscape_v1.json",
+    "novelty_landscape_v2.json",
     "novelty_code_availability_v1.json",
     "adakv_code_audit_v1.json",
     "adaptive_cache_budget_v1.json",
@@ -1101,11 +1102,16 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
     hypotheses = audit.get("surviving_hypotheses", ())
     claim_gate = audit.get("claim_gate", {})
     decision = audit.get("decision", {})
+    predecessor = audit.get("predecessor", {})
+    code_followup = audit.get("code_followup", {})
     if (
         audit.get("format") != "speck_novelty_landscape_audit"
-        or audit.get("format_version") != 1
+        or audit.get("format_version") != 2
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
+        or predecessor.get("path") != "research/paper-1/novelty_landscape_v1.json"
+        or not (repository_root / predecessor["path"]).is_file()
+        or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
         or [source.get("id") for source in sources]
         != [
             "arxiv_2606_30562v1",
@@ -1114,35 +1120,35 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
             "arxiv_2404_04793v2",
             "arxiv_2605_05697v1",
             "arxiv_2511_00819v1",
+            "arxiv_2410_19258v4",
+            "arxiv_2603_01426v1",
         ]
-        or [source.get("review_scope") for source in sources]
-        != [
-            "full_text",
-            "full_text",
-            "full_text",
-            "full_text",
-            "full_text",
-            "full_text",
-        ]
+        or any(source.get("review_scope") != "full_text" for source in sources)
         or any(
             not (repository_root / source.get("local_note", "")).is_file()
+            or _file_sha256(repository_root / source["local_note"])
+            != source.get("local_note_sha256")
             for source in sources
         )
-        or len(overlaps) < 6
+        or len(overlaps) < 9
         or any(overlap.get("decision") == "novel" for overlap in overlaps)
         or [hypothesis.get("id") for hypothesis in hypotheses]
-        != ["N1_role_grounded_placement_law", "N2_all_required_source_recall_law"]
-        or any(
-            hypothesis.get("novelty_status")
-            != "plausibly_distinct_full_landscape_and_evidence_pending"
-            for hypothesis in hypotheses
-        )
+        != ["N1_role_grounded_placement_law", "N2_conjunctive_required_source_survival_law"]
+        or hypotheses[0].get("novelty_status")
+        != "plausibly_distinct_full_landscape_and_evidence_pending"
+        or hypotheses[1].get("novelty_status")
+        != "plausibly_narrower_full_landscape_and_evidence_pending"
+        or hypotheses[1].get("supersedes") != "N2_all_required_source_recall_law"
+        or len(hypotheses[1].get("required_baselines", ())) < 8
+        or len(audit.get("change_from_v1", ())) < 5
+        or code_followup.get("execution_authorized") is not False
         or len(claim_gate.get("full_landscape_before_claim", ())) < 5
         or len(claim_gate.get("evidence_before_claim", ())) < 6
         or decision.get("novel_mechanism_established") is not False
         or decision.get("novel_composition_rule_established") is not False
         or decision.get("novel_generalizable_law_established") is not False
         or decision.get("novel_inseparable_systems_method_established") is not False
+        or decision.get("n2_scope_narrowed") is not True
         or decision.get("paper_novelty_gate_pass") is not False
         or decision.get("architecture_freeze_authorized") is not False
     ):
