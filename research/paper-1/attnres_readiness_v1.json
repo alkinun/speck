@@ -1,0 +1,166 @@
+{
+  "format": "speck_attnres_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-attnres-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_sequence_parent_and_module_graph_unimplemented",
+  "frozen_on": "2026-09-05",
+  "purpose": "Isolate content-dependent access over depth from static reweighting, block summarization, and a depth/width geometry change.",
+  "evidence_basis": [
+    {
+      "path": "papers/05_attention_residuals.md",
+      "supported": "content-dependent softmax depth attention outperforms static weights in the reported study; one head, RMS-normalized keys, zero pseudo-query initialization, and block summaries are supported ablations",
+      "not_transferred": "quality gains, 1.25x compute advantage, approximately eight blocks, and below-2% inference overhead"
+    },
+    {
+      "path": "papers/04_kimi_k3.md",
+      "supported": "Block AttnRes can coexist with a KDA/global hybrid and requires explicit sharding/checkpointing",
+      "not_transferred": "K3 whole-system gains or its block size 12 as Speck's optimum"
+    },
+    {
+      "path": "research/paper-1/experiment_program.json",
+      "supported": "depth routing is isolated only after a conservative or selected sequence parent and must be followed by block-count and depth/width studies",
+      "not_transferred": "a selected AttnRes formulation or geometry"
+    }
+  ],
+  "ordered_prerequisites": [
+    "select or freeze one conservative sequence parent and keep its operators fixed",
+    "materialize Speck's residual module graph and source identities independently of model execution",
+    "implement reference Full and Block AttnRes plus static controls",
+    "qualify forward, backward, chunking, checkpoint, export, and incremental behavior",
+    "freeze parameter/FLOP matching, analysis, activation-memory, and depth diagnostics before training"
+  ],
+  "module_graph": {
+    "transformer_blocks": 20,
+    "residual_modules_per_block": 2,
+    "residual_modules": 40,
+    "module_order": "sequence stage followed by feed-forward stage within every logical block",
+    "source_zero": "token embedding",
+    "source_updates": "the output update of every completed residual module in execution order",
+    "rule": "AttnRes partitions and attends over 40 residual modules, not the 20 logical-block labels"
+  },
+  "reference_equations": {
+    "standard_prenorm": "x_j = x_(j-1) + F_j(RMSNorm_j(x_(j-1)))",
+    "full_sources": "embedding plus every completed module update before module j",
+    "full_keys": "RMSNorm each source independently with one shared per-module key normalization rule",
+    "full_query": "one learned hidden-size pseudo-query per module, initialized exactly to zero",
+    "full_weights": "one softmax head over source depth; weights are token-dependent through query/key dot products even though the pseudo-query is input-independent",
+    "full_input": "softmax-weighted sum of unnormalized source values",
+    "block_sources": "embedding, every completed block sum, and the current block's partial sum after its first module",
+    "block_update": "online block sums preserve exact module order; two-phase or chunked execution must equal the reference source set and softmax"
+  },
+  "initial_isolation_arms": [
+    {
+      "id": "standard_prenorm",
+      "role": "primary conventional control"
+    },
+    {
+      "id": "static_depth_weights",
+      "role": "mechanism control",
+      "definition": "learn one token-independent softmax logit per available depth source with the same source set and parameter-matched budget",
+      "purpose": "test whether any gain requires content dependence rather than learned static depth mixing"
+    },
+    {
+      "id": "full_attnres",
+      "role": "uncompressed depth-routing candidate",
+      "maximum_sources": 40
+    },
+    {
+      "id": "block_attnres_8",
+      "role": "bounded depth-routing candidate",
+      "target_completed_blocks": 8,
+      "modules_per_block": 5,
+      "maximum_sources_in_final_block": 9,
+      "maximum_sources_reason": "embedding plus seven completed blocks plus one current partial block at modules after the first within the eighth block"
+    }
+  ],
+  "fixed_attnres_choices": {
+    "aggregation": "softmax",
+    "depth_heads": 1,
+    "key_normalization": "RMSNorm",
+    "pseudo_query_initialization": 0,
+    "value_normalization": false,
+    "reason": "the cited controlled ablations support these choices; changing any requires a versioned local mechanism contract rather than entering the main isolation grid"
+  },
+  "correctness_before_training": [
+    "explicit small-tensor Full and Block reference equations",
+    "static and content-dependent source identity/order checks",
+    "zero-query initialization identity and deterministic source weights",
+    "forward and input/parameter gradient parity",
+    "online block-update parity across arbitrary module chunks",
+    "full prefill, chunked prefill, and one-token decode parity",
+    "gradient-checkpoint and recomputation parity",
+    "checkpoint/resume and Transformers export round trip",
+    "no change to sequence KV or recurrent persistent state",
+    "activation/source storage and temporary workspace accounting"
+  ],
+  "matching": {
+    "active_parameter_tolerance": 0.00025,
+    "parameter_costs_to_report": [
+      "pseudo-query vectors",
+      "depth-key RMSNorm parameters",
+      "static source logits",
+      "any projection or gate introduced by implementation"
+    ],
+    "compensation": "adjust every dense FFN width uniformly where possible; retain exact residual mismatch and a fixed-analytic-FLOP view",
+    "fixed_within_cell": [
+      "sequence parent",
+      "initialization seed and packed-data order",
+      "training tokens and optimizer",
+      "depth and width for initial isolation",
+      "evaluation cases and residual-module ordering"
+    ]
+  },
+  "block_count_successor": {
+    "status": "conditional_on_block_attnres_8_passing_initial_isolation",
+    "residual_modules": 40,
+    "target_completed_block_counts": [
+      4,
+      8,
+      12
+    ],
+    "partition_rule": "for N blocks over M=40 modules, boundary i is floor(i*M/N) for i=0..N; adjacent block sizes may differ by at most one",
+    "full_depth_control": "Full AttnRes with 40 individual module updates",
+    "selection": "choose the smallest summary count passing every quality/gradient-flow constraint and lying on the activation/communication frontier",
+    "independent_confirmation_required": true
+  },
+  "depth_width_successor": {
+    "status": "required_before_any_depth-routing_promotion",
+    "minimum_grid": "three depths by three widths for standard residual and the selected AttnRes formulation",
+    "budget": "matched active parameters and training compute with identical data/tuning budget",
+    "reason": "AttnRes changes the reported compute-optimal depth/width ratio; comparing only at the standard-residual optimum is not a fair architecture decision",
+    "requirements": [
+      "fit uncertainty and residuals",
+      "one held-out geometry or compute point",
+      "architecture-by-depth and architecture-by-training-horizon interactions",
+      "same optimizer-tuning budget for both residual rules"
+    ]
+  },
+  "mechanistic_diagnostics": [
+    "hidden and residual RMS by module depth",
+    "module update fraction relative to routed input",
+    "gradient norm by module and source age",
+    "source weights and entropy by token/module",
+    "effective source age and embedding reliance",
+    "source-weight response to token type, position, and long-context load",
+    "activation memory, recomputation, and pipeline communication",
+    "causal interventions that remove or replace selected old sources"
+  ],
+  "decision_contract": {
+    "quality": "fixed-token aggregate and every-source non-inferiority is mandatory",
+    "claimed_mechanism": "Full or Block AttnRes must beat the static-depth control on a predeclared content-dependence diagnostic",
+    "efficiency": "fixed-analytic-compute loss or time-to-locked-quality must improve by at least 10% with a lower one-sided paired 95% bound clearing the threshold",
+    "systems": "activation/recomputation and realized train/prefill/decode overhead are hard constraints; analytic depth FLOPs alone are insufficient",
+    "promotion": "requires the block-count and depth/width successors plus medium-scale transfer under architecture-promotion-v1"
+  },
+  "decision": {
+    "residual_selected": false,
+    "block_count_selected": false,
+    "depth_width_geometry_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after the sequence parent is fixed, materialize only the 40-module source graph and small-tensor reference equations"
+  }
+}

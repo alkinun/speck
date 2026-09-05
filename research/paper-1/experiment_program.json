@@ -1,4 +1,9 @@
 {
+  "attnres_readiness": {
+    "contract": "research/paper-1/attnres_readiness_v1.json",
+    "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",
+    "status": "design_blocked_sequence_parent_and_module_graph_unimplemented"
+  },
   "analysis_program": [
     {
       "id": "causal_mechanism",
@@ -112,7 +117,7 @@
           "arms": [
             "standard PreNorm residual",
             "Full AttnRes",
-            "Block AttnRes with approximately eight sources"
+            "Block AttnRes with eight five-module blocks"
           ],
           "decision": "promote only content-dependent routing that beats a parameter/FLOP-matched standard residual",
           "fixed": "selected or conservative sequence backbone and dense SwiGLU",

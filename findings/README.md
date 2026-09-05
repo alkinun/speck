@@ -72,6 +72,7 @@ Read in order:
 64. [63 — CSA selector-readiness gate before implementation](63_csa_readiness_gate.md)
 65. [64 — Raw-local branch readiness gate](64_raw_local_readiness_gate.md)
 66. [65 — Recurrent/global ratio and placement readiness gate](65_ratio_placement_readiness_gate.md)
+67. [66 — Attention Residuals readiness gate](66_attnres_readiness_gate.md)
 
 Conventions:
 
@@ -321,3 +322,9 @@ and 9:1 arms use 10, 5, and 2 global layers under one quantile placement rule. C
 placement; integration/readout layouts require a fixed-count successor. Operator definitions, quality
 constraints, parameter/FLOP views, mechanistic roles, and realized systems gates remain explicit, and
 no ratio training is authorized.
+
+Finding 66 corrects the AttnRes unit of analysis from 20 logical blocks to 40 ordered residual modules.
+The initial four-arm isolation adds a static-depth control beside PreNorm, Full, and eight-block
+AttnRes; the bounded arm uses eight five-module blocks and at most nine sources. Exact equations,
+activation/recomputation, block-count, three-by-three depth/width, content-dependence, and 10% efficiency
+gates are frozen. No implementation or training is authorized.

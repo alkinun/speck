@@ -18,6 +18,7 @@ PROGRAM_FILES = (
     "csa_readiness_v1.json",
     "raw_local_readiness_v1.json",
     "ratio_placement_readiness_v1.json",
+    "attnres_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -782,6 +783,56 @@ def _validate_ratio_placement_readiness(reference, repository_root, paper_id, po
         raise ValueError("ratio/placement readiness design is incomplete")
 
 
+def _validate_attnres_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "AttnRes readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("AttnRes readiness gate does not match its pin")
+    gate = _load_json(path)
+    graph = gate.get("module_graph", {})
+    arms = gate.get("initial_isolation_arms", ())
+    choices = gate.get("fixed_attnres_choices", {})
+    block = gate.get("block_count_successor", {})
+    geometry = gate.get("depth_width_successor", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_attnres_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or graph.get("transformer_blocks") != 20
+        or graph.get("residual_modules_per_block") != 2
+        or graph.get("residual_modules") != 40
+        or [arm.get("id") for arm in arms]
+        != ["standard_prenorm", "static_depth_weights", "full_attnres", "block_attnres_8"]
+        or arms[2].get("maximum_sources") != 40
+        or arms[3].get("target_completed_blocks") != 8
+        or arms[3].get("modules_per_block") != 5
+        or arms[3].get("maximum_sources_in_final_block") != 9
+        or choices.get("aggregation") != "softmax"
+        or choices.get("depth_heads") != 1
+        or choices.get("key_normalization") != "RMSNorm"
+        or choices.get("pseudo_query_initialization") != 0
+        or block.get("target_completed_block_counts") != [4, 8, 12]
+        or block.get("residual_modules") != 40
+        or geometry.get("status") != "required_before_any_depth-routing_promotion"
+        or len(gate.get("mechanistic_diagnostics", ())) < 8
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "residual_selected",
+                "block_count_selected",
+                "depth_width_geometry_selected",
+                "implementation_authorized",
+                "training_authorized",
+                "promotion_authority",
+            )
+        )
+    ):
+        raise ValueError("AttnRes readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -852,6 +903,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "csa_readiness",
             "raw_local_readiness",
             "ratio_placement_readiness",
+            "attnres_readiness",
         },
         "paper experiment program",
     )
@@ -885,6 +937,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_ratio_placement_readiness(
         program["ratio_placement_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_attnres_readiness(
+        program["attnres_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],
