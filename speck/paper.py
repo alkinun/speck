@@ -26,6 +26,7 @@ PROGRAM_FILES = (
     "novelty_landscape_v1.json",
     "novelty_code_availability_v1.json",
     "adakv_code_audit_v1.json",
+    "adaptive_cache_budget_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1240,6 +1241,72 @@ def _validate_adakv_code_audit(reference, repository_root, paper_id):
         raise ValueError("Ada-KV code audit is incomplete")
 
 
+def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
+    _require(
+        reference,
+        {"protocol", "protocol_sha256", "qualification", "qualification_sha256", "status"},
+        "adaptive cache budget reference",
+    )
+    protocol_path = repository_root / reference["protocol"]
+    result_path = repository_root / reference["qualification"]
+    if not protocol_path.is_file() or _file_sha256(protocol_path) != reference["protocol_sha256"]:
+        raise ValueError("adaptive cache budget protocol does not match its pin")
+    if not result_path.is_file() or _file_sha256(result_path) != reference["qualification_sha256"]:
+        raise ValueError("adaptive cache budget qualification does not match its pin")
+    protocol = _load_json(protocol_path)
+    result = _load_json(result_path)
+    cases = result.get("cases", {})
+    decision = result.get("decision", {})
+    implementation = result.get("implementation", {})
+    tests = result.get("tests", {})
+    sources = protocol.get("sources", ())
+    source_audit = sources[1] if len(sources) > 1 else {}
+    if (
+        protocol.get("format") != "speck_adaptive_cache_budget_protocol"
+        or protocol.get("format_version") != 1
+        or protocol.get("paper_id") != paper_id
+        or protocol.get("status") != "frozen_before_local_implementation"
+        or source_audit.get("audit") != "research/paper-1/adakv_code_audit_v1.json"
+        or not (repository_root / source_audit.get("audit", "")).is_file()
+        or _file_sha256(repository_root / source_audit["audit"]) != source_audit.get("sha256")
+        or protocol.get("decision", {}).get("model_integration_authorized") is not False
+        or protocol.get("decision", {}).get("architecture_claim_authorized") is not False
+        or result.get("format") != "speck_adaptive_cache_budget_qualification"
+        or result.get("format_version") != 1
+        or result.get("status") != reference["status"]
+        or result.get("protocol", {}).get("path") != reference["protocol"]
+        or result.get("protocol", {}).get("sha256") != reference["protocol_sha256"]
+        or cases.get("random_matrix_cases") != 200
+        or cases.get("random_budget_cases") != 1700
+        or cases.get("adversarial_budget_cases") != 84
+        or cases.get("oracle_allocation_comparisons") != 28240
+        or abs(cases.get("maximum_optimality_gap", math.inf)) > 1e-12
+        or cases.get("minimum_adaptive_minus_uniform_mass", -math.inf) < -1e-12
+        or not all(
+            cases.get(key) is True
+            for key in (
+                "budget_conservation_pass",
+                "per_head_identity_pass",
+                "deterministic_ties_pass",
+                "uniform_control_dominance_pass",
+                "bound_monotonicity_pass",
+            )
+        )
+        or decision.get("reference_qualified") is not True
+        or decision.get("upstream_code_used") is not False
+        or decision.get("upstream_code_executed") is not False
+        or decision.get("model_integration_authorized") is not False
+        or decision.get("novelty_gate_changed") is not False
+        or implementation.get("path") != "speck/cache_budget.py"
+        or _file_sha256(repository_root / implementation["path"]) != implementation.get("sha256")
+        or tests.get("path") != "tests/test_cache_budget.py"
+        or _file_sha256(repository_root / tests["path"]) != tests.get("sha256")
+        or result.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/adaptive_cache_budget_qualify.py")
+    ):
+        raise ValueError("adaptive cache budget qualification is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1318,6 +1385,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "novelty_landscape",
             "novelty_code_availability",
             "adakv_code_audit",
+            "adaptive_cache_budget",
         },
         "paper experiment program",
     )
@@ -1337,6 +1405,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_adakv_code_audit(
         program["adakv_code_audit"],
+        repository_root,
+        paper_id,
+    )
+    _validate_adaptive_cache_budget(
+        program["adaptive_cache_budget"],
         repository_root,
         paper_id,
     )

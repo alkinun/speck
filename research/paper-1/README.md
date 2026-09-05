@@ -109,6 +109,9 @@ the final combined model.
 - [`adakv_code_audit_v1.json`](adakv_code_audit_v1.json) statically audits that pinned path and records
   its environment, native-build, monkeypatch, cache, remote-code/data, and test blockers before any
   clean-room reference or upstream execution.
+- [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
+  within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
+  reduction, model integration, training, novelty, and architecture claims blocked.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

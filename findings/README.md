@@ -382,3 +382,10 @@ Finding 74 completes candidate pair 0 at 2.794477 nats, a descriptive -0.039170 
 all eleven sources favor the candidate. Steady/active time is 10.09%/11.13% lower and analytic FLOPs are
 21.49% lower, while peak allocation is 20.84% higher. One pair has no decision authority. The event chain
 committed it and scheduled pair 1 without branching on quality.
+
+Finding 75 qualifies a clean-room Ada-KV allocation reference without running upstream code. Across 200
+normalized matrices, all 1,700 budgets, 28,240 exhaustive feasible allocations, and 84 adversarial
+budget cases, global top-salience allocation conserves capacity, is deterministically optimal, dominates
+the quotient/remainder uniform control, and makes the paper bound monotone within `8.88e-16` numerical
+noise. This is reference evidence only; GQA reduction, model integration, training, novelty, and
+architecture promotion remain blocked.

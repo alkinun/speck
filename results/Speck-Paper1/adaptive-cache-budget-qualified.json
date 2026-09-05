@@ -1,0 +1,41 @@
+{
+  "cases": {
+    "adversarial_budget_cases": 84,
+    "bound_monotonicity_pass": true,
+    "budget_conservation_pass": true,
+    "deterministic_ties_pass": true,
+    "maximum_optimality_gap": 8.881784197001252e-16,
+    "minimum_adaptive_minus_uniform_mass": -8.881784197001252e-16,
+    "oracle_allocation_comparisons": 28240,
+    "per_head_identity_pass": true,
+    "random_budget_cases": 1700,
+    "random_matrix_cases": 200,
+    "uniform_control_dominance_pass": true
+  },
+  "created_at": "2026-09-05T21:00:02.127077+00:00",
+  "decision": {
+    "model_integration_authorized": false,
+    "novelty_gate_changed": false,
+    "reference_qualified": true,
+    "upstream_code_executed": false,
+    "upstream_code_used": false
+  },
+  "format": "speck_adaptive_cache_budget_qualification",
+  "format_version": 1,
+  "implementation": {
+    "path": "speck/cache_budget.py",
+    "sha256": "3458356359d014174fd96e677ba50764b7c8d4773d9e30db7daebf6cdc3d3c17"
+  },
+  "protocol": {
+    "path": "research/paper-1/adaptive_cache_budget_v1.json",
+    "sha256": "10b69c80bc7e44086489e19627579be94f4dd79a27b78ef244cbffc4dc8aba8e"
+  },
+  "runner_revision": "0cc72d83e7b2c6a786f2447fefd3fd4b2226f237",
+  "runner_sha256": "bf8b282f0fee0d029a33be5ddb0b1c971478d0a25eab091a7e9865c1f683943c",
+  "scope": "within-layer physical cache heads only; no GQA reduction, model integration, upstream execution, or architecture claim",
+  "status": "clean_room_reference_qualified",
+  "tests": {
+    "path": "tests/test_cache_budget.py",
+    "sha256": "93375463886489bcfd41557f1ab824ee56920e1ec36bb212bd2f2da5123205cc"
+  }
+}
