@@ -84,6 +84,7 @@ Read in order:
 76. [75 — Adaptive cache budget clean-room reference](75_adaptive_cache_budget_reference.md)
 77. [76 — Adaptive cache GQA reduction reference](76_adaptive_cache_gqa_reference.md)
 78. [77 — Adaptive cache safeguard apportionment reference](77_adaptive_cache_safeguard_reference.md)
+79. [78 — Adaptive cache salience-acquisition readiness](78_adaptive_cache_salience_readiness.md)
 
 Conventions:
 
@@ -404,3 +405,10 @@ largest-remainder apportionment. All 14,120 cases and 952,660 feasible-allocatio
 zero conservation error, exact L1/L2 optimality, deterministic ties, valid endpoints, and a uniform
 lower floor. This is only a control primitive: upstream equivalence, quality benefit, primary use,
 model integration, training, novelty, and architecture promotion remain blocked.
+
+Finding 78 blocks observation-window implementation after separating instrumentation from the cache
+mechanism. Speck exposes no attention weights, uses a fixed rectangular chronological ring, and lacks
+variable-length per-head kernels. A successor must first pass an offline attention-probe parity gate,
+then isolate question-visible, reusable context-only, and hindsight modes; pooling; window/kernel;
+allocation; cache lifecycle; source-completeness prediction; causal restoration; and realized systems
+cost. No implementation or evaluation is authorized before the three-pair parent decision.

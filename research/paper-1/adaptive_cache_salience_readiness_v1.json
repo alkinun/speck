@@ -1,0 +1,235 @@
+{
+  "format": "speck_adaptive_cache_salience_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-adaptive-cache-salience-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_instrumentation_acquisition_and_runtime_unqualified",
+  "frozen_on": "2026-09-06",
+  "purpose": "Prevent observation-window cache eviction from conflating attention instrumentation, question visibility, pooling, physical budgets, variable-length state, and downstream diagnostic validity.",
+  "sources": [
+    {
+      "paper": "https://arxiv.org/abs/2404.14469v2",
+      "local_note": "papers/29_snapkv.md",
+      "local_note_sha256": "9d7a98c4b252f53f5f8f5f71704fe5ea7a40a75d6f22be6211d947d925f68223",
+      "transferred": "trailing observation queries vote over prefix positions, pooling clusters nearby tokens, selected prefix is concatenated with the full observation window",
+      "not_transferred": "window 16/32/64, kernels 5/7/13, max versus average pooling, fixed token budgets, task quality, and A100 speed/memory ratios"
+    },
+    {
+      "paper": "https://arxiv.org/abs/2407.11550v5",
+      "local_note": "papers/25_adakv.md",
+      "local_note_sha256": "686de1c604bca4ffc9dc72b1078086b26910de2443a4ef47d155effde4861e5d",
+      "audit": "research/paper-1/adakv_code_audit_v1.json",
+      "audit_sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
+      "transferred": "within-layer adaptive physical-head budgets and separate question-aware/question-agnostic evaluation",
+      "not_transferred": "upstream runtime, safeguard, GQA max reduction, model adapters, data, and empirical quality"
+    },
+    {
+      "protocol": "research/paper-1/adaptive_cache_budget_v1.json",
+      "protocol_sha256": "10b69c80bc7e44086489e19627579be94f4dd79a27b78ef244cbffc4dc8aba8e",
+      "qualification": "results/Speck-Paper1/adaptive-cache-budget-qualified.json",
+      "qualification_sha256": "c8f46842b62d97e0890c4b6325f118b5a472b03dcb8f0b9bf6df03194df80a86"
+    },
+    {
+      "protocol": "research/paper-1/adaptive_cache_gqa_v1.json",
+      "protocol_sha256": "afb1fcb959ea626145af281409de9ff6f0089d843cea02124f0b9f1f7e5bf7e4",
+      "qualification": "results/Speck-Paper1/adaptive-cache-gqa-qualified.json",
+      "qualification_sha256": "d3fc660092865d87a34b7c4d5960d6e60c365899506898faf9a8527c8e8597a7"
+    },
+    {
+      "protocol": "research/paper-1/adaptive_cache_safeguard_v1.json",
+      "protocol_sha256": "685cadddcb0cdb971d18c83734f5ff98ae738923085407e39ee3fa6328e8abfe",
+      "qualification": "results/Speck-Paper1/adaptive-cache-safeguard-qualified.json",
+      "qualification_sha256": "902e097d0a0f997bb70d3fbf0f0e289c5760b94e1a297b71a4a3c4d5119b80c4"
+    }
+  ],
+  "local_runtime_audit": {
+    "native_model": "speck/model.py",
+    "native_model_sha256": "72620f04bcd07ff6d6b4d2bd61908195ea208d80e12a65e5ce874e72f7319c27",
+    "transformers_wrapper": "speck/transformers_modeling.py",
+    "transformers_wrapper_sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d",
+    "findings": [
+      "native global attention calls fused scaled_dot_product_attention and returns only projected outputs",
+      "the Transformers wrapper explicitly rejects output_attentions and output_hidden_states",
+      "AttentionState stores one equal-capacity rectangular tensor per layer and KV head",
+      "AttentionState append implements chronological ring eviction, not arbitrary token identities or unequal head lengths",
+      "no qualified flattened or variable-length per-head attention kernel exists"
+    ]
+  },
+  "current_blockers": [
+    "there is no attention-weight probe with parity against the production attention output",
+    "there is no immutable token-identity map through selection, observation retention, decode append, serialization, and resume",
+    "question-visible and reusable question-agnostic prefix modes are not implemented as distinct cache lifecycles",
+    "pooling type, width, boundary padding, and score-to-selected-token identity are unselected",
+    "the current rectangular ring cannot realize unequal physical-head budgets without padding away state savings",
+    "no target-hardware variable-length correctness, memory, or latency evidence exists",
+    "no held-out test shows all-required-source recall predicts composition failure beyond retained mass and attention-output error"
+  ],
+  "stage_0_attention_probe": {
+    "scope": "read-only offline probe on a frozen checkpoint; do not change Attention.forward or training",
+    "required_inputs": [
+      "immutable checkpoint and architecture hashes",
+      "exact token ids, prompt boundaries, absolute positions, layer/cache occurrence, dtype, and device",
+      "named query/KV head counts, head dimension, RoPE/NoPE path, scale, mask, and output projection"
+    ],
+    "reference": "materialize FP32 query-key logits and causal probabilities for only the requested observation rows; expand physical GQA keys by the declared equal grouping; compute value/output results before and after the native output projection",
+    "parity": [
+      "manual dense output versus production SDPA output at batch one and two",
+      "prefill blocks and one-token decode with and without prior state",
+      "GQA3 and MQA1 geometries only after their parent representation is authorized",
+      "NoPE and any active positional path separately",
+      "absolute/relative output error, top-token identities, row-sum error, and non-finite counts"
+    ],
+    "memory_rule": "chunk observation queries and never materialize an L-by-L matrix; the probe is diagnostic and cannot be counted as serving performance",
+    "success": "all frozen parity thresholds in a successor protocol pass on CPU reference and target GPU before any salience comparison"
+  },
+  "salience_definition": {
+    "prompt_partition": "prefix positions [0,L-W) are eviction candidates; trailing positions [L-W,L) are the always-retained observation window",
+    "probability": "compute each observation query's causal softmax over every prompt key visible in the production dense forward, then slice the prefix columns without renormalization",
+    "observation_aggregation": "arithmetic mean over exactly W observation-query rows; sum is an identity control because fixed W changes only one common positive scale",
+    "gqa_reduction": "arithmetic mean over equal-size query-head groups using the qualified GQA reference; sum is an identity control; max is negative-control-only",
+    "pooling_order": "aggregate observation rows, reduce GQA groups, then apply stride-one positional pooling over prefix scores",
+    "pooling_boundaries": "zero padding of floor(kernel/2) for odd kernels; retain original prefix identity at every pooled output index",
+    "selection": "derive physical-head budgets, then select descending pooled score with ascending token identity ties",
+    "selected_payload": "gather original unpooled K and V at selected prefix identities; pooling changes scores, never payload values",
+    "deduplication": "prefix excludes observation positions by construction; selected prefix identities are unique within each physical head",
+    "budget": "B_prefix counts selected physical prefix slots across KV heads; total persistent prompt state is B_prefix plus K*W always-retained physical observation slots"
+  },
+  "visibility_modes": [
+    {
+      "id": "question_visible_prompt_tail",
+      "lifecycle": "serialize the complete task prompt, including its question/instruction, run dense prefill, then score with its trailing W prompt states",
+      "claim_limit": "query-conditioned prompt eviction only; moving the question earlier does not make this question-agnostic because later causal states can encode it"
+    },
+    {
+      "id": "context_only_reusable_prefix",
+      "lifecycle": "prefill and compress context before any future question/instruction tokens exist, serialize once, and reuse the identical compressed prefix for multiple held-out questions",
+      "claim_limit": "the only mode that supports reusable question-agnostic prefix-cache evidence"
+    },
+    {
+      "id": "future_query_hindsight_oracle",
+      "lifecycle": "score prefix positions from frozen future generated-query attention after a full dense run without feeding selections back into that run",
+      "claim_limit": "descriptive upper bound only; impossible online information and no deployable-method claim"
+    }
+  ],
+  "conditional_experiment_order": [
+    {
+      "stage": "probe_parity",
+      "arms": [
+        "manual dense attention probe",
+        "production SDPA"
+      ],
+      "advance": "only exact frozen prompt/state fixtures passing numerical and identity parity"
+    },
+    {
+      "stage": "acquisition_mode",
+      "arms": [
+        "question_visible_prompt_tail",
+        "context_only_reusable_prefix",
+        "future_query_hindsight_oracle"
+      ],
+      "fixed": "no pooling, uniform physical budgets, same checkpoint/prompt/question/output",
+      "advance": "retain both deployable modes for their distinct claims; hindsight remains an oracle"
+    },
+    {
+      "stage": "pooling_isolation",
+      "arms": [
+        "no pooling",
+        "average pooling",
+        "maximum pooling"
+      ],
+      "initial_geometry": "W=32 and odd kernel=7 as a literature baseline, not a selected Speck value",
+      "advance": "select separately by visibility mode using source-complete recall and end-task floors"
+    },
+    {
+      "stage": "window_and_kernel",
+      "windows": [
+        16,
+        32,
+        64
+      ],
+      "odd_kernels": [
+        5,
+        7,
+        13
+      ],
+      "advance": "smallest non-dominated state-plus-probe-cost geometry passing held-out quality"
+    },
+    {
+      "stage": "allocation",
+      "arms": [
+        "uniform quotient/remainder physical budgets",
+        "adaptive equal-group mean budgets",
+        "adaptive budgets with conservation-safe uniform_fraction=1/5 control"
+      ],
+      "advance": "adaptive promotion requires paired benefit beyond the uniform baseline; safeguard requires its own paired benefit and is never pooled with unsafeguarded adaptive"
+    }
+  ],
+  "cache_lifecycle": {
+    "prefill": "compute dense prompt outputs first; eviction cannot change prefill logits",
+    "compressed_prompt": "store selected prefix plus complete observation window with absolute positions and per-head lengths",
+    "decode": "append every generated KV without re-evicting for the frozen maximum output length; prompt state and generated suffix remain distinct",
+    "overflow": "generation beyond the frozen output length is unsupported until a separate recurrent eviction policy is qualified",
+    "prefix_reuse": "context-only mode must reproduce fresh materialization for every held-out question from identical serialized bytes",
+    "serialization": "persist token identities, absolute positions, lengths, dtype/scales, selection configuration, and source checkpoint hash",
+    "resume": "resumed logits and cache identities must match uninterrupted execution at every tested split"
+  },
+  "diagnostics": {
+    "attention": [
+      "retained raw attention mass before pooling",
+      "retained pooled score reported separately from probability mass",
+      "L1 and relative-RMS attention-output error before and after output projection",
+      "per-layer/head concentration, budgets, selected ages, and observation-to-prefix mass"
+    ],
+    "source_completeness": [
+      "per-required-source any-token recall",
+      "per-required-source payload-span recall",
+      "all-required-source joint recall per example",
+      "route, payload, and direct composition strata",
+      "single-source controls matched on distance, span length, and distractor load"
+    ],
+    "predictive_test": "on held-out examples, compare preregistered nested predictors of task failure using retained mass and output error versus those baselines plus all-required-source recall; use grouped cross-validation by template/document and report calibration, discrimination, and paired bootstrap uncertainty",
+    "causal_test": "restore exactly one missing required source at a time without changing total physical budget, evict a matched non-required span, and test whether predicted source-completeness and task output recover together"
+  },
+  "quality_and_multiplicity": {
+    "language": "frozen validation-loss non-inferiority and every-source guardrails from the selected parent experiment",
+    "long_context": "uncontaminated RULER v2, qualified HELMET families, and source-complete synthetic composition; unavailable suites remain failed release gates",
+    "unit": "paired example, seed/data cell, length, visibility mode, pooling arm, window/kernel, and budget are all retained",
+    "correction": "freeze primary contrasts and Holm families in a successor after parent representation/checkpoint and available datasets are known",
+    "no_proxy_substitution": "attention mass, output error, and source recall are diagnostics and cannot replace end-task quality"
+  },
+  "systems_gate": {
+    "state": "count physical K/V bytes, variable-length metadata, positions, quantization scales, observation window, and generated suffix; padded rectangular allocation is reported both logically and physically",
+    "probe_cost": "report offline salience probe time/memory separately and exclude it from steady decode only when prefix caching amortization is explicitly measured",
+    "runtime": "correct variable-length or masked reference first, then a target-hardware kernel; padding that preserves dense physical allocation cannot claim memory savings",
+    "measurements": [
+      "prefill plus compression latency",
+      "time to first token",
+      "batch-1 decode latency",
+      "maximum-resident-batch throughput",
+      "logical and allocated KV bytes",
+      "peak allocation and fragmentation",
+      "serialize/restore bytes and latency"
+    ],
+    "threshold": "a retained arm must pass its parent quality constraints and improve a preregistered end-to-end serving metric by at least 10% on the named target hardware"
+  },
+  "decision": {
+    "attention_probe_qualified": false,
+    "visibility_mode_implemented": false,
+    "pooling_selected": false,
+    "window_selected": false,
+    "kernel_selected": false,
+    "budget_selected": false,
+    "variable_length_state_qualified": false,
+    "target_kernel_qualified": false,
+    "diagnostic_incremental_value_established": false,
+    "causal_source_restoration_established": false,
+    "implementation_authorized": false,
+    "evaluation_authorized": false,
+    "training_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_promotion_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "freeze a checkpoint-specific offline attention-probe parity protocol only after the three-pair Paper 1 baseline result selects or rejects the candidate parent"
+  }
+}

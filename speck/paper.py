@@ -29,6 +29,7 @@ PROGRAM_FILES = (
     "adaptive_cache_budget_v1.json",
     "adaptive_cache_gqa_v1.json",
     "adaptive_cache_safeguard_v1.json",
+    "adaptive_cache_salience_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1483,6 +1484,117 @@ def _validate_adaptive_cache_safeguard(reference, repository_root, paper_id):
                     )
 
 
+def _validate_adaptive_cache_salience_readiness(
+    reference, repository_root, paper_id, policy_id
+):
+    _require(reference, {"contract", "sha256", "status"}, "adaptive salience reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("adaptive cache salience readiness does not match its pin")
+    gate = _load_json(path)
+    runtime = gate.get("local_runtime_audit", {})
+    probe = gate.get("stage_0_attention_probe", {})
+    salience = gate.get("salience_definition", {})
+    modes = gate.get("visibility_modes", ())
+    stages = gate.get("conditional_experiment_order", ())
+    lifecycle = gate.get("cache_lifecycle", {})
+    diagnostics = gate.get("diagnostics", {})
+    systems = gate.get("systems_gate", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_adaptive_cache_salience_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("sources", ())) != 5
+        or runtime.get("native_model") != "speck/model.py"
+        or _file_sha256(repository_root / runtime["native_model"])
+        != runtime.get("native_model_sha256")
+        or runtime.get("transformers_wrapper") != "speck/transformers_modeling.py"
+        or _file_sha256(repository_root / runtime["transformers_wrapper"])
+        != runtime.get("transformers_wrapper_sha256")
+        or len(runtime.get("findings", ())) < 5
+        or len(gate.get("current_blockers", ())) < 7
+        or len(probe.get("required_inputs", ())) < 3
+        or len(probe.get("parity", ())) < 5
+        or probe.get("scope")
+        != "read-only offline probe on a frozen checkpoint; do not change Attention.forward or training"
+        or set(salience)
+        != {
+            "prompt_partition",
+            "probability",
+            "observation_aggregation",
+            "gqa_reduction",
+            "pooling_order",
+            "pooling_boundaries",
+            "selection",
+            "selected_payload",
+            "deduplication",
+            "budget",
+        }
+        or [mode.get("id") for mode in modes]
+        != [
+            "question_visible_prompt_tail",
+            "context_only_reusable_prefix",
+            "future_query_hindsight_oracle",
+        ]
+        or [stage.get("stage") for stage in stages]
+        != [
+            "probe_parity",
+            "acquisition_mode",
+            "pooling_isolation",
+            "window_and_kernel",
+            "allocation",
+        ]
+        or stages[3].get("windows") != [16, 32, 64]
+        or stages[3].get("odd_kernels") != [5, 7, 13]
+        or set(lifecycle)
+        != {"prefill", "compressed_prompt", "decode", "overflow", "prefix_reuse", "serialization", "resume"}
+        or len(diagnostics.get("attention", ())) < 4
+        or len(diagnostics.get("source_completeness", ())) < 5
+        or "grouped cross-validation" not in diagnostics.get("predictive_test", "")
+        or "restore exactly one missing required source" not in diagnostics.get("causal_test", "")
+        or len(systems.get("measurements", ())) < 7
+        or "10%" not in systems.get("threshold", "")
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "attention_probe_qualified",
+                "visibility_mode_implemented",
+                "pooling_selected",
+                "window_selected",
+                "kernel_selected",
+                "budget_selected",
+                "variable_length_state_qualified",
+                "target_kernel_qualified",
+                "diagnostic_incremental_value_established",
+                "causal_source_restoration_established",
+                "implementation_authorized",
+                "evaluation_authorized",
+                "training_authorized",
+                "novelty_gate_changed",
+                "architecture_promotion_authorized",
+                "paper_scale_authorized",
+            )
+        )
+    ):
+        raise ValueError("adaptive cache salience readiness design is incomplete")
+    for source in gate.get("sources", ()):
+        for path_key, hash_key in (
+            ("local_note", "local_note_sha256"),
+            ("audit", "audit_sha256"),
+            ("protocol", "protocol_sha256"),
+            ("qualification", "qualification_sha256"),
+        ):
+            if path_key in source:
+                source_path = repository_root / source[path_key]
+                if not source_path.is_file() or _file_sha256(source_path) != source[hash_key]:
+                    raise ValueError(
+                        f"adaptive cache salience {path_key} does not match its source pin"
+                    )
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1564,6 +1676,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
+            "adaptive_cache_salience_readiness",
         },
         "paper experiment program",
     )
@@ -1600,6 +1713,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         program["adaptive_cache_safeguard"],
         repository_root,
         paper_id,
+    )
+    _validate_adaptive_cache_salience_readiness(
+        program["adaptive_cache_salience_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
     )
     _validate_sequence_cache_design(
         program["sequence_cache_representation"],

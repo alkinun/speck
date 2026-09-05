@@ -118,6 +118,9 @@ the final combined model.
 - [`adaptive_cache_safeguard_v1.json`](adaptive_cache_safeguard_v1.json) defines an exact-rational,
   largest-remainder integer control that conserves physical slots and resolves neither the upstream
   coefficient ambiguity nor its unmeasured quality tradeoff.
+- [`adaptive_cache_salience_readiness_v1.json`](adaptive_cache_salience_readiness_v1.json) freezes
+  attention-probe parity, question-visible/context-only/hindsight modes, pooling and geometry isolation,
+  cache lifecycle, source-completeness diagnostics, and variable-length runtime blockers.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

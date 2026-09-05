@@ -20,6 +20,11 @@
     "qualification_sha256": "902e097d0a0f997bb70d3fbf0f0e289c5760b94e1a297b71a4a3c4d5119b80c4",
     "status": "conservation_safe_reference_qualified"
   },
+  "adaptive_cache_salience_readiness": {
+    "contract": "research/paper-1/adaptive_cache_salience_readiness_v1.json",
+    "sha256": "0dd1d1c2e3e3cb1b029ff8eaec269bf9869672e6fc7046d443f0b9439e030d7c",
+    "status": "design_blocked_instrumentation_acquisition_and_runtime_unqualified"
+  },
   "adakv_code_audit": {
     "audit": "research/paper-1/adakv_code_audit_v1.json",
     "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
