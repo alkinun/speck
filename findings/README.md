@@ -572,3 +572,8 @@ censored. Mean time-to-quality improves 19.48% (lower bound 16.83%); endpoint st
 shorter and analytic FLOPs/token 21.49% lower, while peak allocation is 20.77% higher. The quality screen
 passes and authorizes finalist materialization/qualification only—not component attribution, promotion,
 novelty, release claims, finalist training, or paper-scale execution.
+
+Finding 106 freezes the eligible finalist analysis before config creation: six crossed seed/data-order
+pairs, twelve 1.540B-token runs, exact quartile validation, df=5 one-sided bounds, unchanged aggregate/
+source margins, six controls before target lock, and zero interim looks. Materialization is authorized;
+training, component attribution, promotion, novelty, and scale/release claims remain blocked.

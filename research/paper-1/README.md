@@ -227,6 +227,9 @@ the final combined model.
 - [`baseline-analysis.json`](../../results/Speck-Paper1/baseline-analysis.json) completes the frozen
   three-pair proxy: aggregate and all source quality bounds pass, time-to-quality is uncensored, and
   only separate finalist materialization/qualification becomes eligible.
+- [`finalist_analysis_v1.json`](finalist_analysis_v1.json) freezes the exact six-pair, 23,496-step
+  longer-horizon analysis, df=5 bounds, unchanged margins, control-only target, and zero-interim stopping
+  rule before finalist materialization, while explicitly withholding training authority.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
