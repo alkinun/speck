@@ -1,0 +1,120 @@
+{
+  "contact_attempted": false,
+  "created_at": "2026-09-05T15:15:08.832020+00:00",
+  "decision": {
+    "commercial_scope_authorized": false,
+    "contact_authorized": false,
+    "evaluation_use_authorized": false,
+    "metadata_audit_rule": "public availability and general TREC download guidance are not treated as a license for CogComp's mixed-source labeled derivative",
+    "payload_acquisition_authorized": false,
+    "redistribution_authorized": false,
+    "required_next": "obtain and record authoritative written terms or permission from a rights-bearing source for the exact labeled collection and intended organizational scope, or freeze a new HELMET manifest version that removes TREC before candidate results"
+  },
+  "evidence": [
+    {
+      "absence_assertions_passed": true,
+      "bytes": 10630,
+      "canonical_visible_text_sha256": "3aca036888be0d1b978ac026d823315b573fced65a19d7c1493eaf0c1399c05e",
+      "id": "hub_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata-v2/huggingface-readme.md",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "043293095f8ac7b434fc9054f45e1908483b2f8f2e8d371c16edc9591fef5ef8",
+      "url": "https://huggingface.co/datasets/CogComp/trec/resolve/eb1e45c1ba990fecca7cf84b67ce845edbcf49bf/README.md"
+    },
+    {
+      "absence_assertions_passed": true,
+      "bytes": 5090,
+      "canonical_visible_text_sha256": "2737933408b3c03ae9364237284aab8946effce50700100872a081fbd0dacc4a",
+      "id": "hub_loader",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata-v2/trec.py",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "c3495dd4de1d681aa63d456276fcabc5576a5eb128d5a1511c6ee4900bb4677d",
+      "url": "https://huggingface.co/datasets/CogComp/trec/resolve/eb1e45c1ba990fecca7cf84b67ce845edbcf49bf/trec.py"
+    },
+    {
+      "absence_assertions_passed": true,
+      "bytes": 2333,
+      "canonical_visible_text_sha256": "1c95912c41e12b1d0c2d8a1da69e5aa2684e850e190e92c07c03d1a613cc4ad4",
+      "id": "cogcomp_question_classification",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata-v2/cogcomp-question-classification.html",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "031efcf2b97d377931b397fc4a9b3961402ed299e8825d6863073287136e92f4",
+      "url": "https://cogcomp.seas.upenn.edu/Data/QA/QC/"
+    },
+    {
+      "absence_assertions_passed": true,
+      "bytes": 1283,
+      "canonical_visible_text_sha256": "07e0c8c18f8112d604dc8bf7cb69831f2fb1bdb1e51f6ad8a5a91ca513067da1",
+      "id": "cogcomp_qa_index",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata-v2/cogcomp-qa-index.html",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "2a9b5ddd2bda9d3f913a9daf6f2f7725e126a2ead16c57ee3cc5e26e216e42bd",
+      "url": "https://cogcomp.seas.upenn.edu/Data/QA/"
+    },
+    {
+      "absence_assertions_passed": true,
+      "bytes": 7920,
+      "canonical_visible_text_sha256": "a6fe07c19b008f34c772427038c432b24e8ab2d27aa3f44ac97f02ec797665bf",
+      "id": "nist_trec_faq",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata-v2/nist-trec-faq.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "ad354cd1810f12976f038a468651f6ceade652aa4e0163bc0045647d3ba69d40",
+      "url": "https://trec.nist.gov/faq.html"
+    }
+  ],
+  "format": "speck_helmet_rights_decision",
+  "format_version": 1,
+  "loader_analysis": {
+    "license_assignment_present": false,
+    "source_urls": {
+      "test": "https://cogcomp.seas.upenn.edu/Data/QA/QC/TREC_10.label",
+      "train": "https://cogcomp.seas.upenn.edu/Data/QA/QC/train_5500.label"
+    }
+  },
+  "non_claims": [
+    "a public download link grants evaluation, commercial, or redistribution rights",
+    "NIST's general statement about downloadable topics licenses CogComp's annotations",
+    "the Hugging Face conversion service supplies missing rights",
+    "this operational decision is legal advice or a final ownership determination"
+  ],
+  "payload_files_acquired": 0,
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_trec_rights_v2.json",
+    "spec_identity_sha256": "b31fc2ce7473b6ecb5939008792b8032a904f1014a9b1fdb9683b637d5c861bf"
+  },
+  "runner_revision": "32d2804361b10115bd43b1980ba0c6c7d4331fa2",
+  "runner_sha256": "22b3a661210df905abaf88c45f0046e0b905dbdf2589aa38920c15953b522baa",
+  "source": {
+    "composition": [
+      "approximately 4,500 English questions attributed to USC",
+      "approximately 500 manually constructed rare-class questions",
+      "894 TREC 8 and TREC 9 questions",
+      "500 TREC 10 questions used as the test set",
+      "CogComp fine and coarse manual class labels"
+    ],
+    "conversion_ref": {
+      "files": [
+        {
+          "bytes": 213208,
+          "git_blob_sha1": "12848ae46d93896ace720c25d03e4a0775a67cc3",
+          "path": "default/train/0000.parquet"
+        },
+        {
+          "bytes": 17084,
+          "git_blob_sha1": "29a327eca2a3c25593a4d34ad5db1cd89c47d89d",
+          "path": "default/test/0000.parquet"
+        }
+      ],
+      "revision": "65752bf53af25bc935a0dce92fb5b6c930728450",
+      "status": "metadata_observed_payload_not_acquired"
+    },
+    "hub_repository": "https://huggingface.co/datasets/CogComp/trec",
+    "hub_revision": "eb1e45c1ba990fecca7cf84b67ce845edbcf49bf"
+  },
+  "status": "trec_metadata_audited_payload_and_use_authority_blocked"
+}

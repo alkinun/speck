@@ -56,6 +56,7 @@ Read in order:
 48. [47 — HELMET archive-external runtime and scorer boundary](47_helmet_runtime_dependency_boundary.md)
 49. [48 — HELMET two-family offline materializer preflight](48_helmet_two_family_materializer_preflight.md)
 50. [49 — HELMET CLINC150 source qualification](49_helmet_clinc_source_qualification.md)
+51. [50 — HELMET TREC rights and provenance decision](50_helmet_trec_rights_decision.md)
 
 Conventions:
 
@@ -215,3 +216,9 @@ license. All 18,350 rows map exactly and in order to the declared upstream parts
 match, and offline datasets-5 reload passes. Three of seven archive-external source families now have
 a qualified immutable path, but HELMET ICL remains blocked on TREC and final prompt/contamination
 qualification.
+
+Finding 50 audits TREC without acquiring its payload. CogComp distributes the mixed-source labeled
+collection but states no license or terms; the Hugging Face card says `unknown`, and NIST's general
+download guidance does not grant rights to CogComp's derivative annotations. A raw-HTML v1 failure is
+preserved, while v2 proves stable visible-text evidence across volatile Cloudflare wrappers. TREC and
+therefore HELMET ICL remain blocked pending written authority or a pre-results manifest replacement.

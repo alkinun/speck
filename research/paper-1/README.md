@@ -91,6 +91,9 @@ the final combined model.
 - [`helmet_clinc_source_v1.json`](../architecture-promotion-v1/helmet_clinc_source_v1.json) pins the
   exact CLINC150 `plus` train/validation snapshots, upstream row provenance, feature identity, and
   retained CC-BY-3.0 attribution.
+- [`helmet_trec_rights_v2.json`](../architecture-promotion-v1/helmet_trec_rights_v2.json) preserves a
+  failed raw-transport v1, canonicalizes only volatile delivery wrappers, and records the absence of
+  affirmative authority without downloading TREC payloads.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -124,7 +127,8 @@ blocked on their separate data/legal qualifications. HELMET's runtime audit addi
 archive completion alone cannot qualify 50 externally loaded entries or the proprietary-judge metrics.
 Its isolated materialization strategy now qualifies for two permissive ICL sources, but no broader
 HELMET execution authority follows. CLINC150's separate data-only snapshot also qualifies, leaving
-TREC and final prompt/contamination work before the ICL category can qualify.
+TREC blocked on written authority or pre-results removal, followed by final prompt/contamination work,
+before the ICL category can qualify.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

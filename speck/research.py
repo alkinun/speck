@@ -920,6 +920,33 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or clinc.get("decision", {}).get("helmet_execution_authorized") is not False
             ):
                 raise ValueError("HELMET CLINC source evidence is invalid")
+            trec_protocol_path = repository_root / suite.get("trec_rights_protocol", "")
+            trec_path = repository_root / suite.get("trec_rights_decision", "")
+            if (
+                not trec_protocol_path.is_file()
+                or _file_sha256(trec_protocol_path)
+                != suite.get("trec_rights_protocol_sha256")
+                or not trec_path.is_file()
+                or _file_sha256(trec_path) != suite.get("trec_rights_decision_sha256")
+            ):
+                raise ValueError("HELMET TREC rights evidence has an invalid pin")
+            trec_protocol = _load_json(trec_protocol_path)
+            trec = _load_json(trec_path)
+            if (
+                "trec_rights_blocked" not in suite["status"]
+                or trec_protocol.get("format_version") != 2
+                or trec_protocol.get("status") != "executed_blocked"
+                or trec_protocol.get("result", {}).get("sha256")
+                != suite.get("trec_rights_decision_sha256")
+                or trec.get("status")
+                != "trec_metadata_audited_payload_and_use_authority_blocked"
+                or trec.get("payload_files_acquired") != 0
+                or trec.get("loader_analysis", {}).get("license_assignment_present")
+                is not False
+                or trec.get("decision", {}).get("payload_acquisition_authorized") is not False
+                or trec.get("decision", {}).get("evaluation_use_authorized") is not False
+            ):
+                raise ValueError("HELMET TREC rights evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

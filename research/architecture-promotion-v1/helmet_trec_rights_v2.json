@@ -2,7 +2,7 @@
   "format": "speck_helmet_rights_decision_protocol",
   "format_version": 2,
   "protocol_id": "helmet-trec-rights-v2",
-  "status": "frozen_unexecuted",
+  "status": "executed_blocked",
   "scope": "metadata-only authority decision for the TREC question-classification source required by HELMET ICL",
   "supersedes": {
     "protocol": "research/architecture-promotion-v1/helmet_trec_rights_v1.json",
@@ -97,5 +97,13 @@
       "the Hugging Face conversion service supplies missing rights",
       "this operational decision is legal advice or a final ownership determination"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-trec-rights-decision.json",
+    "sha256": "43a6fb0106373f55bb9671acfe62352f833eed0092520d7783828d2f2e5e68d1",
+    "status": "trec_metadata_audited_payload_and_use_authority_blocked",
+    "created_at": "2026-09-05T15:15:08.832020+00:00",
+    "payload_files_acquired": 0,
+    "evaluation_use_authorized": false
   }
 }

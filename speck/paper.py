@@ -94,6 +94,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_clinc_source_qualification",
             "helmet_clinc_source_qualification_sha256",
             "helmet_clinc_source_status",
+            "helmet_trec_rights_protocol",
+            "helmet_trec_rights_protocol_sha256",
+            "helmet_trec_rights_decision",
+            "helmet_trec_rights_decision_sha256",
+            "helmet_trec_rights_status",
             "ruler_v1_decision",
             "ruler_v2_decision",
         },
@@ -101,7 +106,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     if (
         evidence["status"]
-        != "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_external_data_pending"
+        != "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_trec_rights_blocked"
     ):
         raise ValueError("paper evaluation evidence must preserve v1, RULER v2, and HELMET")
     for path_key, hash_key in (
@@ -128,6 +133,8 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_clinc_source_qualification",
             "helmet_clinc_source_qualification_sha256",
         ),
+        ("helmet_trec_rights_protocol", "helmet_trec_rights_protocol_sha256"),
+        ("helmet_trec_rights_decision", "helmet_trec_rights_decision_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -156,6 +163,8 @@ def _validate_evaluation_evidence(evidence, repository_root):
         repository_root / evidence["helmet_clinc_source_protocol"]
     )
     helmet_clinc = _load_json(repository_root / evidence["helmet_clinc_source_qualification"])
+    helmet_trec_protocol = _load_json(repository_root / evidence["helmet_trec_rights_protocol"])
+    helmet_trec = _load_json(repository_root / evidence["helmet_trec_rights_decision"])
     expected_unaffected = {
         "cwe",
         "fwe",
@@ -286,6 +295,19 @@ def _validate_evaluation_evidence(evidence, repository_root):
         or helmet_clinc.get("decision", {}).get("helmet_execution_authorized") is not False
     ):
         raise ValueError("paper HELMET CLINC source evidence is invalid")
+    if (
+        helmet_trec_protocol.get("format") != "speck_helmet_rights_decision_protocol"
+        or helmet_trec_protocol.get("format_version") != 2
+        or helmet_trec_protocol.get("status") != "executed_blocked"
+        or helmet_trec_protocol.get("result", {}).get("sha256")
+        != evidence["helmet_trec_rights_decision_sha256"]
+        or helmet_trec.get("format") != "speck_helmet_rights_decision"
+        or helmet_trec.get("status") != evidence["helmet_trec_rights_status"]
+        or helmet_trec.get("payload_files_acquired") != 0
+        or helmet_trec.get("decision", {}).get("payload_acquisition_authorized") is not False
+        or helmet_trec.get("decision", {}).get("evaluation_use_authorized") is not False
+    ):
+        raise ValueError("paper HELMET TREC rights evidence is invalid")
 
 
 def _validate_claims(claims):

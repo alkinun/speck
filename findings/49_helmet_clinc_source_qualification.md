@@ -36,6 +36,8 @@ NLU Evaluation Data, and CLINC150.
 This does not qualify the ICL category. TREC remains rights-blocked, the final five-dataset prompt
 matrix has not been materialized, and no contamination scan or model execution has occurred.
 Attribution and license retention remain required.
+Finding 50 records the affirmative metadata search and preserves that TREC block without acquiring its
+payload.
 
 ## Artifacts
 
