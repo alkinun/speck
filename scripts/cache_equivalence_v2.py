@@ -18,8 +18,8 @@ from scripts.infer import load_checkpoint_model
 from scripts.paper_baseline_preflight import _wait_for_temperature
 from speck.checkpoint import checkpoint_identity
 from speck.config import load_experiment
-from speck.dataloader import packed_loader
-from speck.dataset import resolve_data_dir
+from speck.dataloader import loader_state_for_offset, packed_loader
+from speck.dataset import load_manifest, resolve_data_dir
 from speck.paper_baseline import file_sha256
 from speck.tokenizer import get_tokenizer
 
@@ -186,6 +186,17 @@ def _case_tensors(contract, cases, repository_root):
     tensors = {}
     records = {}
     for group in cases["groups"]:
+        resume = (
+            loader_state_for_offset(
+                load_manifest(data_dir),
+                "val",
+                group["global_token_offset"],
+                group["base_length"],
+                1,
+            )
+            if group.get("global_token_offset")
+            else None
+        )
         loader = packed_loader(
             tokenizer,
             1,
@@ -193,6 +204,7 @@ def _case_tensors(contract, cases, repository_root):
             "val",
             device="cpu",
             data_dir=data_dir,
+            resume_state_dict=resume,
         )
         values = []
         for expected_case in group["cases"]:
