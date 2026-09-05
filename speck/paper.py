@@ -1831,6 +1831,58 @@ def _validate_finalist_materialization(reference, repository_root, paper_id):
             raise ValueError(f"finalist generated config does not match its pin: {relative}")
 
 
+def _validate_finalist_qualification(reference, repository_root, paper_id):
+    _require(reference, {"result", "sha256", "status"}, "finalist qualification reference")
+    path = repository_root / reference["result"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist qualification does not match its pin")
+    result = _load_json(path)
+    data = result.get("data", {})
+    storage = result.get("storage", {})
+    absence = result.get("output_absence", {})
+    implementation = result.get("implementation", {})
+    decision = result.get("decision", {})
+    if (
+        result.get("format") != "speck_paper_finalist_qualification"
+        or result.get("format_version") != 1
+        or result.get("paper_id") != paper_id
+        or result.get("status") != reference["status"]
+        or len(result.get("runs", ())) != 12
+        or len({entry.get("checkpoint_directory") for entry in result.get("runs", ())}) != 12
+        or data.get("manifest") != "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e"
+        or len(data.get("windows", ())) != 2
+        or len(data.get("replay_points", ())) != 10
+        or any(entry.get("direct_resume_equal") is not True for entry in data.get("replay_points", ()))
+        or data.get("distinct_windows_disjoint") is not True
+        or data.get("every_window_crossed_with_all_seeds") is not True
+        or data.get("all_replays_exact") is not True
+        or storage.get("uuid") != "b64b59d1-ea2c-4206-9171-b7cd739f3eff"
+        or storage.get("filesystem") != "ext4"
+        or storage.get("free_bytes", 0) < storage.get("minimum_free_bytes", 1)
+        or storage.get("finalist_floor_passed") is not True
+        or storage.get("artifacts_deleted") != 0
+        or storage.get("cleanup_counted_as_capacity") is not False
+        or absence.get("unique_checkpoint_targets") != 12
+        or any(value is not True for key, value in absence.items() if key.endswith("_absent"))
+        or implementation.get("materializer_sha256")
+        != _file_sha256(repository_root / "speck/paper_finalist.py")
+        or implementation.get("base_train_sha256")
+        != _file_sha256(repository_root / "scripts/base_train.py")
+        or implementation.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/paper_finalist_qualify.py")
+        or decision.get("materialization_qualified") is not True
+        or decision.get("data_windows_qualified") is not True
+        or decision.get("storage_qualified") is not True
+        or decision.get("output_absence_qualified") is not True
+        or decision.get("runtime_preflight_qualified") is not False
+        or decision.get("collector_and_analysis_implementation_qualified") is not False
+        or decision.get("release_dependencies_qualified") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("automatic_launch_authorized") is not False
+    ):
+        raise ValueError("finalist qualification is incomplete")
+
+
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
     _require(
         reference,
@@ -2270,6 +2322,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "n1_independent_review_packet",
             "finalist_analysis",
             "finalist_materialization",
+            "finalist_qualification",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2343,6 +2396,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_finalist_materialization(
         program["finalist_materialization"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_qualification(
+        program["finalist_qualification"],
         repository_root,
         paper_id,
     )

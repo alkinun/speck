@@ -489,6 +489,11 @@
     "materialization_sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792",
     "status": "materialized_unexecuted_training_blocked"
   },
+  "finalist_qualification": {
+    "result": "results/Speck-Paper1/finalist-qualification-v1.json",
+    "sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605",
+    "status": "materialization_data_and_storage_qualified_runtime_analysis_and_release_gates_blocked"
+  },
   "halo_code_audit": {
     "audit": "research/paper-1/halo_code_audit_v1.json",
     "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",
