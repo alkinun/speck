@@ -21,6 +21,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "baseline_matrix.json",
             "baseline_analysis.json",
             "baseline_collection_v2.json",
+            "baseline_automation_v1.json",
             "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
@@ -85,6 +86,22 @@ def test_paper_program_rejects_dense_control_result_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="dense-control result"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_target_lock_before_all_dense_controls(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["baseline_evidence"]["time_to_quality_target"] = {
+        "path": "not-allowed.json",
+        "sha256": "0" * 64,
+        "status": "locked_from_controls_before_candidate_analysis",
+    }
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="requires all three dense controls"):
         validate_paper_program(copied, repository_root=root)
 
 

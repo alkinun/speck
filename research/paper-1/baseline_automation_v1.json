@@ -1,0 +1,69 @@
+{
+  "format": "speck_paper_baseline_automation_contract",
+  "format_version": 1,
+  "automation_id": "speck-paper-1-baseline-event-continuation-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_before_dense_control_2_completion",
+  "frozen_on": "2026-09-05",
+  "purpose": "Continue the already frozen baseline sequence from successful completion events without periodic polling or quality-dependent branching.",
+  "inputs": {
+    "analysis_plan": "research/paper-1/baseline_analysis.json",
+    "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+    "storage_qualification": "results/Speck-Paper1/baseline-storage-volume-qualified.json",
+    "storage_qualification_sha256": "e0b482987207efafd1e6273b0d3d39290ca2b40bc80584035fdd48244760d9df",
+    "proxy_launch_contract": "research/paper-1/proxy_launch_v1.json",
+    "proxy_launch_contract_sha256": "156dc8ae7812454f1d73a4d637fe040bfb810db29985659e16b40d3394746ce3",
+    "collection_correction": "research/paper-1/baseline_collection_v2.json",
+    "collection_correction_sha256": "2fe52ac3447429d4ccbf3c5672267d33e93642c461ff2aeb77f2c8a540641a12",
+    "qualified_dense_controls": [
+      {
+        "pair": 0,
+        "sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526"
+      },
+      {
+        "pair": 1,
+        "sha256": "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5"
+      }
+    ],
+    "candidate_checkpoint_directories_present": 0,
+    "candidate_result_records_present": 0
+  },
+  "sequence": [
+    "collect and qualify dense control pair 2 after its successful final summary",
+    "lock and hash the time-to-quality target from all three dense controls",
+    "commit the third control result, target lock, program pins, and transition record",
+    "after a one-time 15-minute cooldown, verify the live gate and launch candidate pair 0",
+    "for each successful candidate summary, disable the event trigger before collection, collect and commit the result, then schedule the next fixed candidate after the same cooldown",
+    "after candidate pair 2, run and commit the fixed six-cell proxy analysis"
+  ],
+  "event_contract": {
+    "trigger": "the run-specific final run_summary.json appears",
+    "training_exit_wait": "wait on the training process pidfd, not a status-polling loop",
+    "one_shot": "the path unit is stopped before collection so a persistent PathExists condition cannot retrigger a failure",
+    "cooldown": "one systemd monotonic timer per next run, 15 minutes, followed by one live check",
+    "polling": false,
+    "on_failure": "stop the sequence, retain logs and artifacts, and launch no successor",
+    "repository": "require a clean worktree before each transition and launch; commit every qualified transition before scheduling its successor"
+  },
+  "launch_gate": {
+    "gpu": "exact named RTX 3090 and UUID, zero compute processes, zero utilization, temperature at most 50 C",
+    "storage": "pinned ext4 UUID and absent run-specific checkpoint/result targets",
+    "host": "HELMET transfer remains inactive",
+    "evidence": "three control results and target lock precede candidate 0; each prior candidate result precedes its fixed successor"
+  },
+  "decision_contract": {
+    "fixed_candidate_runs": 3,
+    "interim_efficacy_or_futility_looks": 0,
+    "quality_dependent_branching": false,
+    "candidate_result_creation_before_target_lock": false,
+    "architecture_promotion_authority": false,
+    "paper_scale_authority": false
+  },
+  "implementation": {
+    "runner": "scripts/paper_baseline_continue.py",
+    "runner_sha256": "3c439f1b83dd17ae41e913553daec438f8a13c369c89c805e613e272ecc75081",
+    "tests": "tests/test_paper_baseline_continue.py",
+    "tests_sha256": "4147b0f54c5de3bf3ca8d9b2e335f76e3f15dc7f7a2b97f6baa27c0848f8c272"
+  }
+}

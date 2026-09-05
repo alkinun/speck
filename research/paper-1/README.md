@@ -64,6 +64,9 @@ the final combined model.
 - [`baseline_collection_v2.json`](baseline_collection_v2.json) preserves the first collector failure
   and freezes the complete-validation-batch arithmetic correction after dense control 0 but before
   any candidate checkpoint or result exists.
+- [`baseline_automation_v1.json`](baseline_automation_v1.json) freezes one-shot, process-event-driven
+  continuation through the remaining control, target lock, three candidate runs, and final proxy
+  analysis, with no periodic polling or quality-dependent branching.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

@@ -64,6 +64,7 @@ Read in order:
 56. [55 — Paper 1 proxy-launch and release-claim boundary](55_paper_1_proxy_launch_boundary.md)
 57. [56 — Paper 1 dense control 0 and collection correction](56_paper_1_dense_control_0.md)
 58. [57 — Paper 1 dense control 1](57_paper_1_dense_control_1.md)
+59. [58 — Event-driven Paper 1 baseline continuation](58_paper_1_event_continuation.md)
 
 Conventions:
 
@@ -268,3 +269,8 @@ Finding 57 completes dense control 1 at seed 43 and packed offset 536,870,912. F
 2.839127 nats, steady training time is 3,260.22 seconds, and all source/identity checks pass. Two of
 three control observations are now qualified; target lock and candidate records remain forbidden until
 control 2 completes.
+
+Finding 58 freezes event-driven continuation before control 2 completes. Successful final summaries
+trigger one-shot collectors that disable themselves and wait on process-exit events rather than poll.
+Every result is validated and committed before a fixed successor is scheduled after a single cooldown;
+any failure stops the chain. No loss-dependent branch or promotion authority is introduced.

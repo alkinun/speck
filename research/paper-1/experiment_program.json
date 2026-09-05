@@ -49,6 +49,9 @@
     "collection_correction": "research/paper-1/baseline_collection_v2.json",
     "collection_correction_sha256": "2fe52ac3447429d4ccbf3c5672267d33e93642c461ff2aeb77f2c8a540641a12",
     "collection_correction_status": "frozen_after_control_0_before_candidate_results",
+    "automation_contract": "research/paper-1/baseline_automation_v1.json",
+    "automation_contract_sha256": "bd8f8673f2a5e359e49f4c39e33509735a7067144a0285f1ad1217866245e084",
+    "automation_contract_status": "frozen_before_dense_control_2_completion",
     "dense_control_results": [
       {
         "pair": 0,

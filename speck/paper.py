@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import math
 from pathlib import Path
 
 PROGRAM_FILES = (
@@ -10,6 +11,7 @@ PROGRAM_FILES = (
     "baseline_matrix.json",
     "baseline_analysis.json",
     "baseline_collection_v2.json",
+    "baseline_automation_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -651,6 +653,9 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "collection_correction",
             "collection_correction_sha256",
             "collection_correction_status",
+            "automation_contract",
+            "automation_contract_sha256",
+            "automation_contract_status",
             "dense_control_results",
             "runner_revision",
         },
@@ -679,6 +684,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("audit", "audit_sha256"),
         ("storage_qualification", "storage_qualification_sha256"),
         ("collection_correction", "collection_correction_sha256"),
+        ("automation_contract", "automation_contract_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -830,6 +836,36 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ):
             raise ValueError("paper dense-control result evidence is invalid")
         controls.append(control)
+    automation = _load_json(repository_root / evidence["automation_contract"])
+    automation_inputs = automation.get("inputs", {})
+    if (
+        automation.get("format") != "speck_paper_baseline_automation_contract"
+        or automation.get("status") != evidence["automation_contract_status"]
+        or automation_inputs.get("analysis_plan_sha256") != evidence["analysis_plan_sha256"]
+        or automation_inputs.get("storage_qualification_sha256")
+        != evidence["storage_qualification_sha256"]
+        or automation_inputs.get("collection_correction_sha256")
+        != evidence["collection_correction_sha256"]
+        or automation_inputs.get("qualified_dense_controls")
+        != [
+            {"pair": entry["pair"], "sha256": entry["sha256"]}
+            for entry in control_entries[:2]
+        ]
+        or automation_inputs.get("candidate_checkpoint_directories_present") != 0
+        or automation_inputs.get("candidate_result_records_present") != 0
+        or automation.get("event_contract", {}).get("polling") is not False
+        or automation.get("decision_contract", {}).get("quality_dependent_branching")
+        is not False
+        or automation.get("decision_contract", {}).get(
+            "interim_efficacy_or_futility_looks"
+        )
+        != 0
+        or automation.get("implementation", {}).get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/paper_baseline_continue.py")
+        or automation.get("implementation", {}).get("tests_sha256")
+        != _file_sha256(repository_root / "tests/test_paper_baseline_continue.py")
+    ):
+        raise ValueError("paper baseline automation contract is invalid")
     if (
         controls[0].get("checkpoint", {}).get("model_sha256")
         != trigger_checkpoint.get("model_sha256")
@@ -839,6 +875,86 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         != trigger_checkpoint.get("metadata_sha256")
     ):
         raise ValueError("paper dense-control zero does not match the correction trigger")
+    target_reference = evidence.get("time_to_quality_target")
+    candidate_entries = evidence.get("candidate_results", [])
+    analysis_reference = evidence.get("proxy_analysis_result")
+    if len(controls) < 3:
+        if target_reference is not None or candidate_entries or analysis_reference is not None:
+            raise ValueError("paper target lock requires all three dense controls")
+    else:
+        if not isinstance(target_reference, dict):
+            raise ValueError("paper target lock is missing after three dense controls")
+        target_path = repository_root / target_reference.get("path", "")
+        if not target_path.is_file() or _file_sha256(target_path) != target_reference.get(
+            "sha256"
+        ):
+            raise ValueError("paper target lock does not match its pin")
+        target = _load_json(target_path)
+        expected_target = math.ceil(
+            max(control["final_validation"]["validation_loss"] for control in controls)
+            * 1_000_000
+        ) / 1_000_000
+        if (
+            target.get("format") != "speck_paper_baseline_time_to_quality_lock"
+            or target.get("status") != target_reference.get("status")
+            or target.get("analysis_plan_sha256") != evidence["analysis_plan_sha256"]
+            or target.get("baseline_matrix_sha256") != evidence["matrix_sha256"]
+            or target.get("validation_loss_target") != expected_target
+            or [entry.get("sha256") for entry in target.get("control_results", ())]
+            != [entry["sha256"] for entry in control_entries]
+        ):
+            raise ValueError("paper time-to-quality target evidence is invalid")
+
+        if (
+            len(candidate_entries) > 3
+            or [entry.get("pair") for entry in candidate_entries]
+            != list(range(len(candidate_entries)))
+        ):
+            raise ValueError("paper candidate result sequence is invalid")
+        candidates = []
+        for entry in candidate_entries:
+            path = repository_root / entry.get("path", "")
+            if not path.is_file() or _file_sha256(path) != entry.get("sha256"):
+                raise ValueError("paper candidate result does not match its pin")
+            candidate = _load_json(path)
+            expected_pair = baseline_matrix["planned_primary_baselines"][
+                "proxy_confirmation_pairs"
+            ][entry["pair"]]
+            if (
+                candidate.get("format") != "speck_paper_baseline_run_result"
+                or candidate.get("status") != entry.get("status")
+                or candidate.get("arm_id") != "five_cache_kda_gqa"
+                or candidate.get("pair") != expected_pair
+                or candidate.get("training_tokens") != 131_072_000
+                or candidate.get("final_validation", {}).get("validation_tokens")
+                != 19_988_480
+                or candidate.get("non_finite_steps") != 0
+            ):
+                raise ValueError("paper candidate result evidence is invalid")
+            candidates.append(candidate)
+        if len(candidates) < 3:
+            if analysis_reference is not None:
+                raise ValueError("paper proxy analysis requires all three candidates")
+        else:
+            if not isinstance(analysis_reference, dict):
+                raise ValueError("paper proxy analysis is missing after all candidate runs")
+            analysis_path = repository_root / analysis_reference.get("path", "")
+            if not analysis_path.is_file() or _file_sha256(
+                analysis_path
+            ) != analysis_reference.get("sha256"):
+                raise ValueError("paper proxy analysis does not match its pin")
+            proxy_analysis = _load_json(analysis_path)
+            if (
+                proxy_analysis.get("format") != "speck_paper_baseline_analysis"
+                or proxy_analysis.get("status") != analysis_reference.get("status")
+                or proxy_analysis.get("analysis_plan_sha256")
+                != evidence["analysis_plan_sha256"]
+                or proxy_analysis.get("baseline_matrix_sha256") != evidence["matrix_sha256"]
+                or proxy_analysis.get("time_to_quality_lock", {}).get("sha256")
+                != target_reference["sha256"]
+                or len(proxy_analysis.get("paired_results", ())) != 3
+            ):
+                raise ValueError("paper proxy analysis evidence is invalid")
     _validate_proxy_launch_evidence(program, repository_root)
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
