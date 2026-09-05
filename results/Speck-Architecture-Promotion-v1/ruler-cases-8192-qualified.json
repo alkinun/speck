@@ -1,0 +1,463 @@
+{
+  "case_identity_sha256": "d7f4894fd29c8139c8af324ae3c643c4535993bf938eaf45ee73f8ac0ea5b954",
+  "cases": [
+    {
+      "bytes": 2919837,
+      "match_type": "all",
+      "maximum_accounted_length": 8179,
+      "maximum_declared_length": 8124,
+      "maximum_with_reserved_template_tokens": 8174,
+      "minimum_declared_length": 8109,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "176c4d040691687f6451cc4ad57bf45c04f5c64c18ddb1333a14bc876ced0ee1",
+      "task": "niah_single_1"
+    },
+    {
+      "bytes": 3284841,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 7498,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "813b1fa3cc4d78ecc69e5a417029e1624a41f9b30ffbd0693dedabb2852aeb11",
+      "task": "niah_single_2"
+    },
+    {
+      "bytes": 3309036,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 7496,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "bb8294716ce77b8ae9f9d8e2f746b5b3e33deab569d55a5337b0035cb3c9968c",
+      "task": "niah_single_3"
+    },
+    {
+      "bytes": 3337510,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 7495,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "f8902d3f3324cabe6724d73c6f5145aca4cf4b4962552c55faca7cb920611952",
+      "task": "niah_multikey_1"
+    },
+    {
+      "bytes": 2154380,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 7507,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "4705295f7d0c2324ff84b72f1488803963930b0d07aaf5cac0fa689e2f7c00c3",
+      "task": "niah_multikey_2"
+    },
+    {
+      "bytes": 992548,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 6066,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "c08b892725377418756cc6cbf10ede649a99af7e324c5392d7f34f8fed8856d0",
+      "task": "niah_multikey_3"
+    },
+    {
+      "bytes": 3380847,
+      "match_type": "all",
+      "maximum_accounted_length": 8191,
+      "maximum_declared_length": 8136,
+      "maximum_with_reserved_template_tokens": 8186,
+      "minimum_declared_length": 7489,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "05519abe54b23a5c1f8fca7629a8419eecc2659062f089efba67fb24c7774be0",
+      "task": "niah_multivalue"
+    },
+    {
+      "bytes": 3425576,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 7487,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "834d3d5bd662e96b9fd3702fe9a3c24ad611f2d612b99750e29b926b6ba515f1",
+      "task": "niah_multiquery"
+    },
+    {
+      "bytes": 2915390,
+      "match_type": "all",
+      "maximum_accounted_length": 8192,
+      "maximum_declared_length": 8137,
+      "maximum_with_reserved_template_tokens": 8187,
+      "minimum_declared_length": 7881,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "2798ec3f66302d7641db526035495618afd5345385d95f5b41e547acf3d25618",
+      "task": "vt"
+    },
+    {
+      "bytes": 1582166,
+      "match_type": "all",
+      "maximum_accounted_length": 8189,
+      "maximum_declared_length": 8134,
+      "maximum_with_reserved_template_tokens": 8184,
+      "minimum_declared_length": 7682,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "082cf5274382a8fd7073d737883c810da8b08d9d09d838de31a4250f56c1ae24",
+      "task": "cwe"
+    },
+    {
+      "bytes": 1856389,
+      "match_type": "all",
+      "maximum_accounted_length": 8186,
+      "maximum_declared_length": 8131,
+      "maximum_with_reserved_template_tokens": 8181,
+      "minimum_declared_length": 6417,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "ff2c69d41d2696b82046017219fa5c7f08011d1a3315c760e45f00576248b8cc",
+      "task": "fwe"
+    },
+    {
+      "bytes": 2983190,
+      "match_type": "part",
+      "maximum_accounted_length": 8180,
+      "maximum_declared_length": 8125,
+      "maximum_with_reserved_template_tokens": 8175,
+      "minimum_declared_length": 5844,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "136e6be351ffe783b3148ab7b49a92cac8073c2b9a5cae446145ae3342c27554",
+      "task": "qa_1"
+    },
+    {
+      "bytes": 2713611,
+      "match_type": "part",
+      "maximum_accounted_length": 8139,
+      "maximum_declared_length": 8084,
+      "maximum_with_reserved_template_tokens": 8134,
+      "minimum_declared_length": 5263,
+      "model_template_tokens": 5,
+      "rows": 100,
+      "sha256": "620c0fc921841d1a6a52e822fcae3e480a014c25fda6b9686f0be1d703278b49",
+      "task": "qa_2"
+    }
+  ],
+  "contract": {
+    "generation_spec_sha256": "cdcb9025d599293d73c15169f4592b4e5440140cb1d1af9c6bc326bd8c3438ad",
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/external/ruler_v1.json"
+  },
+  "created_at": "2026-09-05T11:24:16.474629+00:00",
+  "determinism": {
+    "all_task_hashes_equal": true,
+    "complete_generations": 2
+  },
+  "environment": {
+    "offline_flags": {
+      "HF_DATASETS_OFFLINE": "1",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "package_versions": {
+      "nltk": "3.10.3",
+      "numpy": "2.2.6",
+      "pyyaml": "6.0.3",
+      "scipy": "1.15.3",
+      "sentencepiece": "0.2.2",
+      "tenacity": "9.1.4",
+      "tqdm": "4.70.0",
+      "transformers": "5.1.0",
+      "wonderwords": "3.0.1"
+    },
+    "uv_lock_sha256": "1957f4f2b194d82c194b78c5e97181dc37ae0cf04d85ca372e9b1fa4648715a7"
+  },
+  "format": "speck_ruler_case_qualification",
+  "format_version": 1,
+  "generator": {
+    "compatibility_patch": {
+      "patched_sha256": "727c4c898daad0f73445f32c7a3381426d0da51df63a2ae9e0213f3faa558836",
+      "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch",
+      "reason": "qa_2 example 7 otherwise decrements below its required document count and loops forever at 4096 tokens",
+      "scope": "termination repair only; no prompt, answer, source-order, seed, or scorer change",
+      "sha256": "5063fdb5f1737fdfd39f955e19a2cfa6418acd15cbcd24f513518295fa15f6a7",
+      "target": "scripts/data/synthetic/qa.py",
+      "upstream_sha256": "f00c0b59cf8698e90831bbf461c2c4f40f2a30f2469534c27455808c717281d0"
+    },
+    "executed_code_identity_sha256": "298f22552396e26606e82ab136aca72c7605cc73cc65430b2c380bf0703ff040",
+    "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+    "upstream_code_identity_sha256": "261c789daaa7deddc2456669150a1b19d8ed0a7028b7abf223b5e42667b3dd27",
+    "upstream_files": [
+      {
+        "bytes": 3039,
+        "path": "config_models.sh",
+        "sha256": "f59f5dd0a2e61ba430840f156af534f32a011db640881642d0093a885130cf34"
+      },
+      {
+        "bytes": 1167,
+        "path": "config_tasks.sh",
+        "sha256": "bd2b228b303951ff6e1dba2dd551270744b50d78f5d51493b0c4abfb41a0c544"
+      },
+      {
+        "bytes": 1327,
+        "path": "data/manifest_utils.py",
+        "sha256": "ecac79322f28ce9a12388b12e35d560ecb7cdad6b9888467a5a13b0eff2db91e"
+      },
+      {
+        "bytes": 6730,
+        "path": "data/prepare.py",
+        "sha256": "f2d210860fbf5c640cb41ed104c7a923c9f4043f6e6c354277daacc73afc643d"
+      },
+      {
+        "bytes": 9183,
+        "path": "data/synthetic/common_words_extraction.py",
+        "sha256": "2671d4a84a383acef2d9e8f691a0bea4da03f1632ca3f4ad3c1de6d27ccbc6b9"
+      },
+      {
+        "bytes": 3052,
+        "path": "data/synthetic/constants.py",
+        "sha256": "6296e901d495ec6200dc3f68993ea13d8282e3c0dbe1a8c47967f111105d1fde"
+      },
+      {
+        "bytes": 7766,
+        "path": "data/synthetic/freq_words_extraction.py",
+        "sha256": "29b7af97ffdd2122fde348df20cd02add390a21cd6d64b6fd66c8663dc487f67"
+      },
+      {
+        "bytes": 2783,
+        "path": "data/synthetic/json/download_paulgraham_essay.py",
+        "sha256": "d89622edfe08d4011718bb2634da742d69a56728139fa5e236e00cca703cc84c"
+      },
+      {
+        "bytes": 965,
+        "path": "data/synthetic/json/download_qa_dataset.sh",
+        "sha256": "368ff4bef09af0fc94205ea4dd8559a2d051c0e33215ca92d45e31e50ea750ac"
+      },
+      {
+        "bytes": 12733,
+        "path": "data/synthetic/niah.py",
+        "sha256": "e9cada0a7660d274fe73a1338a90a7087e17b630169f1aaf14a8d3221c6805b5"
+      },
+      {
+        "bytes": 9833,
+        "path": "data/synthetic/qa.py",
+        "sha256": "f00c0b59cf8698e90831bbf461c2c4f40f2a30f2469534c27455808c717281d0"
+      },
+      {
+        "bytes": 14306,
+        "path": "data/synthetic/variable_tracking.py",
+        "sha256": "9aac483420e158d116ab63fc43b9606bdb284ac0c053288c30776d5c365530e5"
+      },
+      {
+        "bytes": 1921,
+        "path": "data/template.py",
+        "sha256": "2e82d85152212136fffcd5624b158a2c75fd5036ec1c537f4b21eeb78fd18069"
+      },
+      {
+        "bytes": 4075,
+        "path": "data/tokenizer.py",
+        "sha256": "c2e4bfab607eef87a86334558303c1811bc8e93f22a5c4b129f302726d2357a4"
+      },
+      {
+        "bytes": 6934,
+        "path": "eval/evaluate.py",
+        "sha256": "b9a5fcbded7209663d97670496c74dbcd6358ddbe3d9887a0c5f0c4f974bfe1c"
+      },
+      {
+        "bytes": 1531,
+        "path": "eval/synthetic/constants.py",
+        "sha256": "6740467c17b8dc06b6b30f4f97e54ce8de81db0dd879f1538d0b6b5727f4bd5f"
+      },
+      {
+        "bytes": 11804,
+        "path": "pred/call_api.py",
+        "sha256": "949d06ae8a19266c637064c2dd18c7b3d21a0a7064bfc2ac52fe274b84d19e48"
+      },
+      {
+        "bytes": 13743,
+        "path": "pred/client_wrappers.py",
+        "sha256": "4530a6b53f451d1af8f29f6ee794fca789feffa92b2e838af2c67a4568244b2c"
+      },
+      {
+        "bytes": 5402,
+        "path": "pred/model_wrappers.py",
+        "sha256": "78def2b2b619e2095dee3ff8fc52e038c531c6c3bb11735e9ac4ce38cf2e0cd7"
+      },
+      {
+        "bytes": 9348,
+        "path": "pred/serve_trt.py",
+        "sha256": "4d785ace0cfa9ea320ea351db96dcfc422ed0ad21107ec49086d0131668d529a"
+      },
+      {
+        "bytes": 4173,
+        "path": "pred/serve_vllm.py",
+        "sha256": "57ded4db3e84b5c0f9d5394b45a965ae470282fcbbc4b13674763f4340f9e81a"
+      },
+      {
+        "bytes": 4223,
+        "path": "run.sh",
+        "sha256": "221f90046bc39c24a357c7847ca2203e3fcacd6f8601f62ec8fbf1413006c67f"
+      },
+      {
+        "bytes": 2356,
+        "path": "synthetic.yaml",
+        "sha256": "34bc71dcacdc41a829a170f04b528fbf48d62c616338005ab4991680fbf8cb0b"
+      }
+    ]
+  },
+  "length": 8192,
+  "local_output_dir": "/home/alkin/.cache/speck/evaluations/ruler-v1-speck2-140m-instruct/8192",
+  "maximum_generator_sequence_length": 8142,
+  "nemo_skills": {
+    "prepare_sha256": "e25394d84399800b9b3dccec404e902d6fedc6068a01100a516bb9fffa5ad2ee",
+    "revision": "f4a3fd8e524acd9abd1fea4387e8f179f6d51cf3",
+    "scorer_sha256": "489da1206781db238f4f9393eaa56eda7661eaf0f45c04bbd1be7cc0d56e88a2"
+  },
+  "network_denial": {
+    "generation_attempts": 0,
+    "guard_sha256": "2d4e9e90900834bc7462f7f7c873e4fb76d6c4b97b11e6be601cd41493f4824b",
+    "kernel_network_namespace_available": false,
+    "mechanism": "sitecustomize IPv4/IPv6 socket interception inherited by every Python subprocess",
+    "self_test": "denied_as_expected",
+    "self_test_denied_operation": "create_connection"
+  },
+  "random_seed": 42,
+  "release_policy": "generated cases and logs remain outside Git; only hashes and aggregate metadata may be published",
+  "runner_revision": "ffb08bd925b08620d92b5147fc887aa6c1ee3968",
+  "runner_sha256": "f87ae1de029f661df1f4e917eb8474c6e72bc133a3dc279da84f4a1380e8984f",
+  "samples_per_task": 100,
+  "source_bundle": {
+    "identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
+    "manifest": "/home/alkin/Desktop/speck/results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json",
+    "manifest_sha256": "9d207d1c6e8a6c2a7ace67c953604feabce0b6c0c307473497d19f022d45d1ce"
+  },
+  "status": "qualified_offline_deterministic_case_stream",
+  "suite": "rulerv1-ns",
+  "tasks": [
+    "niah_single_1",
+    "niah_single_2",
+    "niah_single_3",
+    "niah_multikey_1",
+    "niah_multikey_2",
+    "niah_multikey_3",
+    "niah_multivalue",
+    "niah_multiquery",
+    "vt",
+    "cwe",
+    "fwe",
+    "qa_1",
+    "qa_2"
+  ],
+  "template_token_reserve": 50,
+  "tokenizer": {
+    "files": [
+      {
+        "bytes": 1072,
+        "path": "LICENSE",
+        "sha256": "42bb09f339a8af8b90d3b4969b6f6e4ba4aff3b5c614103b031fccdf71c8f772"
+      },
+      {
+        "bytes": 11710,
+        "path": "LICENSE.tokenizer",
+        "sha256": "62cb476a954bd6cd4b894cd2c002ed091cb69a982a458ca578f470e3e88b1a88"
+      },
+      {
+        "bytes": 13186,
+        "path": "architecture_speck.py",
+        "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+      },
+      {
+        "bytes": 1543,
+        "path": "chat_template.jinja",
+        "sha256": "8f3d02b46a5720823c583099b6539564f2adcb737d862ba5ed2887bfb2bc9390"
+      },
+      {
+        "bytes": 12118,
+        "path": "config.json",
+        "sha256": "5c59d6c32d6be720cba7a65bb012d8e58c774499d8df111b6d171e828bcf8dae"
+      },
+      {
+        "bytes": 1389,
+        "path": "configuration_speck.py",
+        "sha256": "3bf02749b7fc09563d06c5f0822514a8b4158345959de52829a0f242ab715c23"
+      },
+      {
+        "bytes": 110,
+        "path": "generation_config.json",
+        "sha256": "b7372a10b4af99a1f168fcae48fe25af105d91feaf46d57397fbf2d3eb136b3b"
+      },
+      {
+        "bytes": 281333304,
+        "path": "model.safetensors",
+        "sha256": "1893026b01e9e60380a58bf00162db5e7bba7331a6d7a4df719119b64cfa2152"
+      },
+      {
+        "bytes": 6362,
+        "path": "modeling_speck.py",
+        "sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d"
+      },
+      {
+        "bytes": 67463,
+        "path": "native_speck.py",
+        "sha256": "47c85e326d9b0677ebbde44a6077e8e9bf891daaf858e2b65437c06e1919988e"
+      },
+      {
+        "bytes": 898,
+        "path": "padding_speck.py",
+        "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+      },
+      {
+        "bytes": 164,
+        "path": "special_tokens_map.json",
+        "sha256": "68633c15f2750d6ea71cfb38c1e6e96ef8897b8daeba73491fdcb699f4052d1f"
+      },
+      {
+        "bytes": 344,
+        "path": "speck_parity.json",
+        "sha256": "b6ae52190cf2f8b517ecebfc9b88d59003c7cf128284d0a9bd425cd482f683f9"
+      },
+      {
+        "bytes": 478,
+        "path": "speck_source.json",
+        "sha256": "378949770837f7180756ac739ea7ad531a8876161a4f78a3bff731a6c23c337e"
+      },
+      {
+        "bytes": 2728,
+        "path": "tokenization_speck.py",
+        "sha256": "47ba215f99683f8bb3d882e886e86b647568c5fc2a5a06eb67fbde96c8a8a0c2"
+      },
+      {
+        "bytes": 493443,
+        "path": "tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      {
+        "bytes": 2665,
+        "path": "tokenizer_config.json",
+        "sha256": "ce1985805b452a78f6f5897aaf572dfb7f4d738a0f6facbfc022482d8b647909"
+      },
+      {
+        "bytes": 2112,
+        "path": "tokenizer_metadata.json",
+        "sha256": "08b58bc5fd6fd19b19ff46c8d3f24fa215f9d57a07858dca6c19875075dccd60"
+      }
+    ],
+    "identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+    "path": "/home/alkin/.cache/speck/releases/Speck2-140M-Instruct-endpoint-current"
+  },
+  "total_cases": 1300
+}

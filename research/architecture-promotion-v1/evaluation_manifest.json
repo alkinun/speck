@@ -94,19 +94,30 @@
   "external_suites": [
     {
       "id": "ruler",
-      "status": "source_qualified_case_generation_4096_qualified_remaining_lengths_blocked",
+      "status": "source_qualified_case_generation_through_8192_qualified_remaining_lengths_blocked",
       "repository": "https://github.com/NVIDIA/RULER",
       "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
       "contract": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "contract_sha256": "0ef09bcf6014124dba0088f7a28a30fe762de7e013acbdf7fe3648a8850a9a9d",
+      "contract_sha256": "7e8bbcb70827f779dfcdce1c05ae695e2e92e88776b65e2da874d2d5ad19232f",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "fc1f26e78b66b128339009ddf5884cbe6450b68a399111de95e1addd35cac7dc",
+      "source_qualification_sha256": "a30a1cf439d95b60f9cc492cc6bacbaffe7bc9c13aefb1125cb26ce41664c34d",
       "model_adapter_qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
       "model_adapter_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
-      "qualified_case_lengths": [4096],
-      "case_qualification": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json",
-      "case_qualification_sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f",
-      "case_identity_sha256": "d3b6e1da567cc6ad4853a545680de68dff5edf82a14ed9886c00c554ca731fba",
+      "qualified_case_lengths": [4096, 8192],
+      "case_qualifications": [
+        {
+          "length": 4096,
+          "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json",
+          "sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f",
+          "case_identity_sha256": "d3b6e1da567cc6ad4853a545680de68dff5edf82a14ed9886c00c554ca731fba"
+        },
+        {
+          "length": 8192,
+          "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-8192-qualified.json",
+          "sha256": "9f025b2ed9f079f25adda7e7d0ee0963b605eacb420cd2ca5ec53cfb30b34948",
+          "case_identity_sha256": "d7f4894fd29c8139c8af324ae3c643c4535993bf938eaf45ee73f8ac0ea5b954"
+        }
+      ],
       "lengths": [
         4096,
         8192,
@@ -127,7 +138,7 @@
       "contract": "research/architecture-promotion-v1/external/nolima.json",
       "contract_sha256": "e0c47bb0a7da355f9eec89087c469b7bea9a342301bb49eaf4ebc788b03ee1d7",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "fc1f26e78b66b128339009ddf5884cbe6450b68a399111de95e1addd35cac7dc",
+      "source_qualification_sha256": "a30a1cf439d95b60f9cc492cc6bacbaffe7bc9c13aefb1125cb26ce41664c34d",
       "model_adapter_qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
       "model_adapter_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
       "lengths": [
@@ -148,7 +159,7 @@
       "contract": "research/architecture-promotion-v1/external/helmet.json",
       "contract_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "fc1f26e78b66b128339009ddf5884cbe6450b68a399111de95e1addd35cac7dc",
+      "source_qualification_sha256": "a30a1cf439d95b60f9cc492cc6bacbaffe7bc9c13aefb1125cb26ce41664c34d",
       "lengths": [
         8192,
         16384,

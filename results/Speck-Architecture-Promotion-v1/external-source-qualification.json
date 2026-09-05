@@ -7,8 +7,8 @@
   "suites": {
     "ruler": {
       "config": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "config_sha256": "0ef09bcf6014124dba0088f7a28a30fe762de7e013acbdf7fe3648a8850a9a9d",
-      "status": "source_qualified_case_generation_4096_qualified_remaining_lengths_blocked",
+      "config_sha256": "7e8bbcb70827f779dfcdce1c05ae695e2e92e88776b65e2da874d2d5ad19232f",
+      "status": "source_qualified_case_generation_through_8192_qualified_remaining_lengths_blocked",
       "sources": [
         {
           "id": "ruler_pipeline",
@@ -43,19 +43,31 @@
         "status": "offline_sources_complete_unredistributable"
       },
       "case_generation_qualification": {
-        "qualified_lengths": [4096],
-        "remaining_lengths": [8192, 16384, 32768, 65536, 131072],
-        "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json",
-        "sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f",
-        "case_identity_sha256": "d3b6e1da567cc6ad4853a545680de68dff5edf82a14ed9886c00c554ca731fba",
-        "total_cases": 1300,
+        "qualified_lengths": [4096, 8192],
+        "remaining_lengths": [16384, 32768, 65536, 131072],
+        "artifacts": [
+          {
+            "length": 4096,
+            "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json",
+            "sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f",
+            "case_identity_sha256": "d3b6e1da567cc6ad4853a545680de68dff5edf82a14ed9886c00c554ca731fba",
+            "total_cases": 1300
+          },
+          {
+            "length": 8192,
+            "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-8192-qualified.json",
+            "sha256": "9f025b2ed9f079f25adda7e7d0ee0963b605eacb420cd2ca5ec53cfb30b34948",
+            "case_identity_sha256": "d7f4894fd29c8139c8af324ae3c643c4535993bf938eaf45ee73f8ac0ea5b954",
+            "total_cases": 1300
+          }
+        ],
         "complete_generations": 2,
         "network_attempts": 0,
         "compatibility_patch_sha256": "5063fdb5f1737fdfd39f955e19a2cfa6418acd15cbcd24f513518295fa15f6a7",
         "status": "qualified_offline_deterministic_case_stream"
       },
       "blockers": [
-        "official cases at 8192, 16384, 32768, 65536, and 131072 tokens are not generated or hashed",
+        "official cases at 16384, 32768, 65536, and 131072 tokens are not generated or hashed",
         "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
@@ -113,7 +125,7 @@
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive inputs and complete 4096-token case matrix now qualify offline with deterministic rerun and application-layer network denial; five longer case matrices and every candidate execution remain blocked. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive inputs and complete 4096- and 8192-token case matrices now qualify offline with deterministic reruns and application-layer network denial; four longer case matrices and every candidate execution remain blocked. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",
