@@ -20,16 +20,19 @@
         "hybrid recurrent-global models"
       ],
       "evidence": [
-        "findings/01_mixer_screen_131m.md"
+        "findings/01_mixer_screen_131m.md",
+        "findings/29_paper_1_baseline_preflight.md",
+        "results/Speck-Paper1/baseline-preflight.json"
       ],
       "quality": "The one-seed 131M-token full-global result is within the measured seed range of the strongest attention-bearing hybrids and cannot be ranked against them.",
-      "systems": "At 128K it has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls.",
+      "systems": "At 128K it has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls. The exact-shape Paper 1 preflight completes a finite compiled batch-4 4K step at 10.23 GiB peak allocation.",
       "scale_transfer": "not replicated under policy v1",
       "runtime_support": "standard PyTorch attention path",
       "unresolved_risks": [
         "one-seed evidence",
         "short training horizon",
-        "lack of time-to-quality comparison"
+        "lack of time-to-quality comparison",
+        "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
       "next_gate": "include a matched dense reference in finalist horizon and medium-scale comparisons"
     },
@@ -69,19 +72,22 @@
         "findings/16_kimi_transfer_131m.md",
         "findings/17_kimi_frontier_replication.md",
         "findings/18_kimi_context32k.md",
+        "findings/29_paper_1_baseline_preflight.md",
+        "results/Speck-Paper1/baseline-preflight.json",
         "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
       ],
       "quality": "Replicated long-range sensitivity, but mean base loss is 0.006909 nats worse and the old strict tie passes only two of three seeds.",
-      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K.",
+      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB peak allocation, but native CUDA full-versus-cached decode fails on 8180 of 256000 logits and changes two of eight token argmaxes.",
       "scale_transfer": "not established",
-      "runtime_support": "Torch reference and FLA kernels; hybrid production runtime incomplete",
+      "runtime_support": "Torch reference and isolated FLA kernels exist; full-depth CUDA chunk/fused-recurrent parity is unqualified and the hybrid production runtime is incomplete",
       "unresolved_risks": [
         "independent long-context quality",
         "exact eight-record decoding",
         "two-hop composition",
-        "training-horizon transfer"
+        "training-horizon transfer",
+        "full-depth CUDA chunk-versus-recurrent decode drift"
       ],
-      "next_gate": "policy-v1 proxy confirmation with sealed evaluation and longer-horizon finalist replication"
+      "next_gate": "isolate the full-depth CUDA decode drift across layers, recurrent/convolution state, seeds, and lengths before baseline training"
     },
     {
       "id": "reader_attention_three_cache",
