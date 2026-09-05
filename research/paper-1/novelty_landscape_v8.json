@@ -1,0 +1,96 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 8,
+  "audit_id": "speck-paper-1-novelty-landscape-v8",
+  "paper_id": "speck-paper-1",
+  "status": "eighteen_full_text_audits_task_guided_layer_selection_overlapped_no_novelty",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v7.json",
+    "sha256": "1df67600b997f8d550283211aa38e5ac9227f4cb902830d2c8fc29aaed34f14c",
+    "full_text_sources": 17,
+    "n1_nonuniform_from_scratch_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n2_concept_novelty_rejected": true
+  },
+  "additional_sources": [
+    {
+      "id": "arxiv_2601_22156v1",
+      "title": "Hybrid Linear Attention Done Right: Efficient Distillation and Effective Architectures for Extremely Long Contexts",
+      "url": "https://arxiv.org/abs/2601.22156v1",
+      "review_scope": "full_text",
+      "local_note": "papers/41_halo_hypenet.md",
+      "local_note_sha256": "76f7d5b7b47f7b50267e373788518c224a826f14f6e6ccc8b535023b82d9bc79",
+      "relevant_claim": "per-layer hidden-state-aligned recurrent substitutes, recall-versus-commonsense outcome scoring, top-k attention retention, and long-context hybrid composition"
+    }
+  ],
+  "aggregate_source_count": 18,
+  "new_overlap_decisions": [
+    {
+      "id": "task_outcome_guided_attention_layer_retention",
+      "decision": "not novel by itself",
+      "reason": "HALO evaluates every single-layer recurrent replacement on recall and commonsense tasks and retains the top quarter by an explicit importance score"
+    },
+    {
+      "id": "hidden_state_aligned_layer_substitute_sensitivity",
+      "decision": "not novel by itself",
+      "reason": "HALO transfers attention projections, independently MSE-aligns every recurrent substitute, and measures the task effect of substituting each layer"
+    },
+    {
+      "id": "cheap_nonuniform_conversion_selection",
+      "decision": "not novel by itself",
+      "reason": "HALO spends 320M training tokens plus 234M layer-selection inference-token presentations before joint distillation and reports non-uniform rankings at 1.7B, 4B, and 8B"
+    },
+    {
+      "id": "even_latter_half_and_prior_importance_controls",
+      "decision": "mandatory baselines",
+      "reason": "the selection ablation compares even, latter-half even, RNN-only, Jet-Nemotron, and KL-guided rankings inside HALO"
+    },
+    {
+      "id": "hype_long_context_hybrid_composition",
+      "decision": "not novel as a bundle",
+      "reason": "HyPE, recurrent QK normalization, GQA-to-MHA expansion, attention and recurrent output gates, and Lightning Attention are jointly ablated in HypeNet"
+    }
+  ],
+  "residual_assessment": {
+    "id": "N1_heldout_from_scratch_interaction_aware_placement_prediction",
+    "type": "procedural_low_prior_residual_pending_independent_retirement_review",
+    "distinction": "HALO is teacher-conversion selection, observes each layer's selection-task outcomes, and scores independent single replacements rather than predicting unseen jointly trained from-scratch layouts",
+    "cumulative_counterevidence": "from-scratch placement recipes are occupied, PAS alignment fails to rank placement quality, and cheap task-guided conversion already produces non-uniform layouts with strong long-context results",
+    "burden": "must predict held-out from-scratch multi-layer interactions across tasks, scales, and mixers without layout outcomes, beat HALO/DtR/FlashMorph and all role/activation baselines, and yield architecture value worth its much higher evidence cost",
+    "scientific_value": "not established; the residual risks being a more expensive procedural analogue of existing task-guided conversion rather than a new architecture law",
+    "experiment_authorized": false,
+    "novelty_status": "no_novelty_established_independent_review_should_retain_or_retire_n1"
+  },
+  "source_limitations": [
+    "HALO selects conversion layouts from a pretrained Transformer rather than from-scratch architectures",
+    "the selector directly observes every layer's outcomes on the same task families used in its score",
+    "single-replacement sensitivity does not model interactions among the final set of recurrent replacements",
+    "the reported selection-method comparison is one 1.7B conversion without layout replicates or uncertainty",
+    "Jet-Nemotron and KL-LS are represented by their rankings inside HALO rather than complete original procedures",
+    "whole HypeNet serving gains do not isolate the contribution of layer selection"
+  ],
+  "priority": {
+    "architecture_novelty_candidates_established": 0,
+    "n1": "independent claim review must retain or retire the procedural residual; no further landscape artifact execution, protocol, or experiment",
+    "n2": "remain deferred",
+    "baseline_proxy": "complete independently because it evaluates the conservative parent rather than either novelty claim"
+  },
+  "decision": {
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_from_scratch_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n1_task_guided_layer_selection_novelty_rejected": true,
+    "n1_residual_predictive_law_established": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "placement_experiment_authorized": false,
+    "next_action": "finish the frozen proxy and obtain independent retention-or-retirement review of N1 before any further placement work"
+  }
+}

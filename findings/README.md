@@ -525,3 +525,9 @@ Finding 96 pins HALO's 271-file source tree, including training/selection code a
 logs. The config resolves HypeNet-2B as seven attention plus twenty-one recurrent layers, but the code's
 epsilon/clipping differs from the paper, and root rights, tests, dependency/data/checkpoint identity,
 and behavior are missing. No upstream execution, reuse, or reproduction is authorized.
+
+Finding 97 adds HALO as a direct N1 baseline: each recurrent substitute is hidden-state aligned, every
+single replacement is scored on recall versus commonsense outcomes, and the top quarter of attention
+layers are retained. The only remaining distinction is held-out, from-scratch, interaction-aware
+prediction—a procedural, low-prior residual pending independent retention-or-retirement review. No new
+placement work is authorized.

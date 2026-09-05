@@ -120,6 +120,9 @@ the final combined model.
 - [`novelty_landscape_v7.json`](novelty_landscape_v7.json) adds controlled activation/placement
   evidence: PAS/ISP and gate-role diagnostics are occupied, while saturated PAS alignment fails to rank
   early/middle/late retrieval, lowering the prior on N1 and making retirement an explicit review option.
+- [`novelty_landscape_v8.json`](novelty_landscape_v8.json) adds HALO's hidden-state-aligned,
+  recall/commonsense-guided layer selection and control suite, leaving only a procedural held-out
+  from-scratch interaction predictor for independent retention-or-retirement review.
 - [`novelty_claim_overlap_v1.json`](novelty_claim_overlap_v1.json) maps fourteen candidate claims to
   their strongest overlap, keeps N1 as the only primary architecture hypothesis, and defers the residual
   N2 diagnostic before any experimental budget is spent.
