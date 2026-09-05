@@ -1,0 +1,131 @@
+{
+  "format": "speck_brief_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-brief-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "combined_tree_audited_root_rights_historical_identity_and_execution_blocked",
+  "audited_on": "2026-09-06",
+  "repository": {
+    "url": "https://github.com/JasonForJoy/BRIEF",
+    "revision": "077943328a555f49925ac1d459e00ed229bc63b9",
+    "revision_date": "2026-04-09T20:50:52+08:00",
+    "files": 601,
+    "source_code_files": 347,
+    "data_like_files": 45,
+    "brief_subtree_files": 49,
+    "brief_pro_subtree_files": 523,
+    "vendored_axolotl_files": 492,
+    "tree_complete": true,
+    "repository_metadata_clone": true,
+    "working_tree_checked_out": false,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false
+  },
+  "rights": {
+    "root_license_present": false,
+    "visible_license_paths": [
+      "BRIEF-Pro/train/Axolotl/LICENSE",
+      "BRIEF-Pro/train/Axolotl/src/axolotl/integrations/LICENSE.md",
+      "BRIEF-Pro/train/Axolotl/src/axolotl/integrations/grokfast/LICENSE",
+      "BRIEF-Pro/train/Axolotl/src/axolotl/integrations/liger/LICENSE",
+      "BRIEF-Pro/train/Axolotl/src/axolotl/integrations/spectrum/LICENSE"
+    ],
+    "disposition": "all visible text licenses are inside the vendored Axolotl subtree; BRIEF-Pro/src/license.svg is a website asset and no root license covers BRIEF/BRIEF-Pro code or data"
+  },
+  "pinned_files": [
+    {
+      "path": "README.md",
+      "sha256": "b4d03c2f616a0871f78ff6d163395400ee58edd76247f655102d151a255cf225"
+    },
+    {
+      "path": "BRIEF/README.md",
+      "sha256": "279ba0545be60158b3d22a4bb4b0684ba6ebff53b35b9280a5d851e712d5b3f6"
+    },
+    {
+      "path": "BRIEF/code/requirements.txt",
+      "sha256": "5e7986203fb043b01e907722e969ed38d870dbe1e208435d8739e267ed14d8e7"
+    },
+    {
+      "path": "BRIEF-Pro/env/multidoc_vllm_env.yml",
+      "sha256": "8d0ad8e2d7157d4319bbc0dd7a40fb966fee73b155f5bb0956f54495dc4cba44"
+    },
+    {
+      "path": "BRIEF-Pro/env/longbench_env.yml",
+      "sha256": "341fca9a36158b936a2e144c55af515720a9c67598d982e7cbbc5b1bbcd592e4"
+    },
+    {
+      "path": "BRIEF-Pro/train/Axolotl/examples/llama-3.2/train.sh",
+      "sha256": "3c8e752a4759699cc65991edcda0e7e300dbae3bc94fe47c29f380cd125147fa"
+    }
+  ],
+  "environment_findings": [
+    {
+      "id": "evolving_combined_repository",
+      "evidence": "current HEAD postdates BRIEF v2 and combines BRIEF, BRIEF-Pro, a project website, and a vendored training framework; it is not an author-declared immutable historical BRIEF experiment revision"
+    },
+    {
+      "id": "vendored_framework_dominates_tree",
+      "evidence": "492 of 601 files are a vendored Axolotl subtree, so repository-level source/test counts do not describe paper-specific implementation maturity"
+    },
+    {
+      "id": "old_brief_stack",
+      "evidence": "BRIEF requirements pin Torch 2.1.2+cu121, FlashAttention 2.5.9.post1, Transformers 4.29.2, Datasets 2.19.0, and other Python packages but do not pin external model/data revisions or a base image"
+    },
+    {
+      "id": "pro_environment_nonportable",
+      "evidence": "the BRIEF-Pro LongBench conda environment ends with an absolute machine-local prefix under /data2/junyizhang"
+    },
+    {
+      "id": "multiple_incompatible_runtime_environments",
+      "evidence": "separate Axolotl, vLLM, and LongBench environments use different Torch, Transformers, CUDA-linked, and serving packages without one top-level lock"
+    }
+  ],
+  "artifact_findings": [
+    {
+      "id": "old_brief_code_and_some_data_present",
+      "evidence": "the 49-file BRIEF subtree contains training/inference utilities, pinned Python requirements, six response datasets, six ground-truth files, and two synthetic multi-hop test sets"
+    },
+    {
+      "id": "brief_pro_code_model_and_data_links_present",
+      "evidence": "the root README links a Hugging Face model and dataset and provides train/evaluation entry points, but immutable Hub revisions and a full derivation/checksum manifest are absent from this audit"
+    },
+    {
+      "id": "evaluation_data_partly_external",
+      "evidence": "the README instructs users to download LongBench files and run a conversion script; current tree includes LongSeal but not a self-contained immutable evaluation bundle"
+    },
+    {
+      "id": "generated_runtime_artifact_committed",
+      "evidence": "BRIEF-Pro/eval includes a CPython 3.10 __pycache__ file, indicating the paper-specific tree is not a source-only release"
+    },
+    {
+      "id": "credential_filename_present",
+      "evidence": "BRIEF/code/Utilities/apikey.json exists; its contents were deliberately not inspected or exposed and any reproduction must use a secret-free fixture"
+    }
+  ],
+  "reproduction_boundaries": [
+    "resolve root rights for paper-specific source, scripts, prompts, model links, and data independently of vendored Axolotl",
+    "identify an author-confirmed immutable revision for BRIEF v2 and BRIEF-Pro v2 separately",
+    "pin Hugging Face model/dataset revisions and all LongBench/source-data derivations",
+    "remove credentials and generated bytecode from any clean-room fixture",
+    "build separate network-denied training, compression, reader, and evaluation environments",
+    "validate reported source coverage and compression targets from per-example manifests",
+    "measure compressor plus reader time, FLOPs, memory, energy, and failures on named hardware",
+    "do not use released outputs as held-out novelty evidence without contamination and split audits"
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "tree_inventory_qualified": true,
+    "historical_brief_revision_qualified": false,
+    "historical_brief_pro_revision_qualified": false,
+    "root_rights_qualified": false,
+    "portable_environment_qualified": false,
+    "model_identity_qualified": false,
+    "data_identity_and_rights_qualified": false,
+    "fixture_behavior_qualified": false,
+    "upstream_execution_authorized": false,
+    "reuse_in_speck_authorized": false,
+    "released_outputs_as_heldout_authorized": false,
+    "novelty_gate_changed": false,
+    "next_action": "seek author-confirmed paper-specific revisions and rights; retain BRIEF/BRIEF-Pro as conceptual baselines without executing or reusing the combined tree"
+  }
+}
