@@ -1,0 +1,91 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 4,
+  "audit_id": "speck-paper-1-novelty-landscape-v4",
+  "paper_id": "speck-paper-1",
+  "status": "twelve_full_text_audits_n2_concept_overlapped_no_novelty_established",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v3.json",
+    "sha256": "6f2b421fc89a655d157f7093b1f8e30348aa4d33868d347eb76112ba7bd4ae68",
+    "full_text_sources": 11,
+    "n2_concept_novelty_rejected": true
+  },
+  "additional_sources": [
+    {
+      "id": "arxiv_2607_10795v1",
+      "title": "STEC: Evidence Compression for Deep Search in Open-domain Multi-Hop QA",
+      "url": "https://arxiv.org/abs/2607.10795v1",
+      "review_scope": "full_text",
+      "local_note": "papers/35_stec.md",
+      "local_note_sha256": "0074e8be68802c1ff3ed2385dcf947e65544c8633e1462cf5e16d633cf34bc3d",
+      "relevant_claim": "candidate-specific supporting/conflicting evidence, reasoning paths, question-constraint coverage, and constrained final answer verification"
+    }
+  ],
+  "aggregate_source_count": 12,
+  "new_overlap_decisions": [
+    {
+      "id": "candidate_specific_structured_evidence_verification",
+      "decision": "mandatory_adjacent_external_baseline",
+      "reason": "STEC organizes multi-trajectory evidence, contradictions, and reasoning paths for final candidate selection but does not measure pre-output internal cache-source survival"
+    }
+  ],
+  "surviving_hypotheses": [
+    {
+      "id": "N1_role_grounded_placement_law",
+      "novelty_status": "plausibly_distinct_full_landscape_and_evidence_pending"
+    },
+    {
+      "id": "N2_internal_state_completeness_predictor_law",
+      "novelty_status": "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
+    }
+  ],
+  "stec_boundary": {
+    "overlap": [
+      "structured supporting and conflicting evidence",
+      "explicit candidate reasoning path",
+      "coverage of entities, relations, and constraints",
+      "multi-trajectory evidence compression and verification"
+    ],
+    "not_demonstrated": [
+      "internal KV or sparse-state source identity",
+      "prediction before candidate outputs exist",
+      "equal-physical-state removal or restoration",
+      "token/byte compression or end-to-end systems cost"
+    ],
+    "effect_on_v3": "strengthens the external baseline without restoring N2 concept novelty or independently falsifying the residual internal-state empirical-law question"
+  },
+  "code_followup": {
+    "stec": "no dedicated implementation or immutable artifact is declared on the arXiv record",
+    "execution_authorized": false
+  },
+  "claim_gate": {
+    "full_landscape_before_claim": [
+      "complete immutable artifact review for BRIEF/BRIEF-Pro and seek IterCOMP/STEC artifacts",
+      "follow backward and forward citations for N1 and the residual N2 empirical-law question",
+      "search proceedings, patents, deployed systems, technical reports, and non-English literature with dated queries",
+      "build a claim-granular closest-overlap table",
+      "obtain independent expert review"
+    ],
+    "evidence_before_claim": [
+      "freeze labels, predictor, models, mechanisms, splits, and analysis before held-out outputs",
+      "compare mandatory internal and external baselines including STEC on agentic tasks",
+      "use at least three scales and a held-out mechanism with paired uncertainty",
+      "hold out document/domain, graph/hop, rate/budget, and architecture cells",
+      "perform equal-physical-budget removal and restoration interventions",
+      "retain negative results and counterexamples"
+    ]
+  },
+  "decision": {
+    "stec_classification": "adjacent_external_baseline",
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "finish BRIEF/BRIEF-Pro artifact audit and remaining citation/claim-overlap table before deciding whether the residual N2 empirical-law protocol is worth the experimental cost"
+  }
+}

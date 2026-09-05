@@ -88,6 +88,7 @@ Read in order:
 80. [79 — N2 direct-overlap audit and scope reduction](79_n2_direct_overlap_audit.md)
 81. [80 — HeadKV and routing-artifact availability audit](80_n2_code_availability.md)
 82. [81 — N2 concept rejection after evidence-compression audit](81_n2_concept_rejection.md)
+83. [82 — STEC adjacent evidence-verification baseline](82_stec_baseline.md)
 
 Conventions:
 
@@ -435,3 +436,9 @@ words with budgets and one-missing-hop analysis; IterCOMP explicitly tests Full 
 evidence, judges sufficiency, identifies the missing hop, and retrieves it iteratively. Only an
 unestablished cheap internal-state predictor with incremental held-out and equal-budget causal evidence
 remains reviewable; no novelty is established.
+
+Finding 82 classifies STEC as an adjacent mandatory baseline: it compresses multi-trajectory supporting
+and conflicting evidence plus reasoning paths for constrained candidate verification, but does not
+measure pre-output internal cache-source survival or equal-state interventions. It strengthens the
+external comparison without changing the N2 concept rejection or establishing the residual empirical
+law.

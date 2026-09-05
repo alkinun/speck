@@ -36,6 +36,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "novelty_landscape_v1.json",
             "novelty_landscape_v2.json",
             "novelty_landscape_v3.json",
+            "novelty_landscape_v4.json",
             "novelty_code_availability_v1.json",
             "novelty_code_availability_v2.json",
             "adakv_code_audit_v1.json",
