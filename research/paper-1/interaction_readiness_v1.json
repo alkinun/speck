@@ -1,0 +1,146 @@
+{
+  "format": "speck_interaction_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-interaction-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_frozen_axes_unselected_training_blocked",
+  "frozen_on": "2026-09-05",
+  "purpose": "Measure whether independently qualified sequence, depth, and width bundles cooperate, interfere, or become redundant without assigning bundle effects to their internal subcomponents.",
+  "entry_gate": [
+    "one sequence bundle is frozen after its ordered component program and promotion gates",
+    "one depth bundle is frozen after AttnRes block-count and depth/width promotion gates",
+    "one width bundle is frozen after conventional MoE, latent, normalization, activation, balancing, geometry, and hardware gates",
+    "every axis has a matched absence control and immutable export/runtime identity",
+    "the evaluation manifest, data cells, cube analysis, and resource envelope are frozen before any cube output"
+  ],
+  "axis_units": {
+    "sequence": {
+      "presence": "the entire selected sequence-axis bundle",
+      "absence": "its strongest promoted or conservative sequence control at matched geometry",
+      "non_attribution": "the cube cannot credit KDA, cache representation, HCA, CSA, local window, ratio, or placement individually"
+    },
+    "depth": {
+      "presence": "the selected AttnRes formulation, block count, and retuned depth/width geometry",
+      "absence": "a separately retuned standard-residual geometry under the same active parameter and compute budget",
+      "non_attribution": "a naive residual swap at the AttnRes-optimal shape is not the absence control"
+    },
+    "width": {
+      "presence": "the selected stable expert formulation and geometry",
+      "absence": "parameter/FLOP-view-matched dense SwiGLU with the same sequence/depth parent",
+      "non_attribution": "the cube cannot credit latent projection, normalization, bounded activation, balancing, or expert count individually"
+    }
+  },
+  "discovery_cube": {
+    "factors": [
+      "S",
+      "D",
+      "W"
+    ],
+    "cells": [
+      "000",
+      "100",
+      "010",
+      "001",
+      "110",
+      "101",
+      "011",
+      "111"
+    ],
+    "coding": "0 is the frozen matched absence control and 1 is the frozen selected axis bundle",
+    "paired_cells": 3,
+    "model_runs": 24,
+    "pairing": "all eight cells share initialization seed, packed-data order, token budget, optimizer, tokenizer, evaluation, and hardware within each paired cell",
+    "scale": "130M-170M active-parameter discovery at the frozen proxy token budget",
+    "promotion_authority": false,
+    "no_cell_selection": "all 24 runs execute regardless of interim quality unless a preregistered integrity or safety failure occurs"
+  },
+  "contrast_contract": {
+    "direction": "candidate presence minus absence; negative loss is beneficial",
+    "main_effects": [
+      "S",
+      "D",
+      "W"
+    ],
+    "pairwise_interactions": {
+      "SD": "(110-010)-(100-000), repeated at W=1 as (111-011)-(101-001)",
+      "SW": "(101-001)-(100-000), repeated at D=1 as (111-011)-(110-010)",
+      "DW": "(011-001)-(010-000), repeated at S=1 as (111-101)-(110-100)"
+    },
+    "three_way_interaction": "111-110-101-011+100+010+001-000",
+    "conditional_removal_effects": {
+      "sequence_from_full": "111-011",
+      "depth_from_full": "111-101",
+      "width_from_full": "111-110"
+    },
+    "estimation": "form every contrast within seed/data cell, then report mean, sample standard deviation, and one-sided or two-sided 95% Student-t bounds over the three paired contrasts",
+    "regression_view": "report the equivalent saturated pair-blocked S*D*W model as a descriptive consistency check, not as a substitute for paired contrasts"
+  },
+  "decision_thresholds": {
+    "harmful_language_interaction_margin_nats": 0.01,
+    "harmful_source_interaction_margin_nats": 0.02,
+    "pairwise_gate": "the upper one-sided paired 95% bound for every predeclared pairwise loss interaction must be at or below 0.01 nats and every source bound at or below 0.02",
+    "three_way_gate": "report the two-sided 95% bound and require its upper one-sided bound to clear the same harmful margin before retaining all three axes",
+    "multiplicity": "apply Holm correction across SD, SW, DW, and the three-way interaction for any superiority or antagonism claim; source guardrails remain an intersection gate",
+    "systems": "quality-passing combinations must also preserve each axis's already frozen realized systems threshold; interaction overhead is measured rather than inferred",
+    "inconclusive": "failure to detect interaction is not synergy or independence"
+  },
+  "matching_views": [
+    "fixed training tokens",
+    "fixed analytic training FLOPs",
+    "fixed active non-embedding parameters",
+    "fixed total non-embedding parameters",
+    "fixed device-memory envelope",
+    "fixed steady training time",
+    "time and energy to one control-locked quality target"
+  ],
+  "required_diagnostics": {
+    "sequence_depth": [
+      "AttnRes source age around recurrent/global integration slots",
+      "KDA overwrite and global-source recall under routed depth"
+    ],
+    "sequence_width": [
+      "expert choice by dependency distance and selected source",
+      "routing load when compressed/sparse sequence paths activate"
+    ],
+    "depth_width": [
+      "expert choice by residual source age",
+      "gradient/load tails under AttnRes activation storage"
+    ],
+    "three_way": [
+      "joint failure cases with route, payload, residual source, and expert identity",
+      "memory/communication overlap among sequence state, depth activations, and expert dispatch"
+    ]
+  },
+  "final_removal_program": {
+    "axis_removals": [
+      "remove the selected sequence bundle using its matched absence control",
+      "replace depth routing with the retuned standard-residual geometry",
+      "replace the expert bundle with matched dense SwiGLU"
+    ],
+    "subcomponent_removals": {
+      "sequence": "remove each retained cache, HCA, CSA, local, ratio/placement novelty under its own previously qualified control",
+      "depth": "remove content dependence with the static-depth control and replace selected block count/formulation separately",
+      "width": "remove latent projection, normalization, bounded activation, balancing, and geometry changes one at a time"
+    },
+    "retain_rule": "a component remains only if its conditional removal either causes a preregistered quality failure or removes a realized systems benefit that clears its applicable threshold while quality remains non-inferior",
+    "simpler_tie_rule": "if the simpler removal passes all quality floors and the retained component does not clear its systems/quality contribution threshold, delete the component",
+    "new_training": "removals are matched trained arms unless a separately justified surgical inference ablation has been proven to answer the same causal question"
+  },
+  "scale_transfer": {
+    "discovery": "the complete 24-run cube diagnoses interactions but cannot promote a combination",
+    "finalist": "confirm every interaction that changes retention and all full-model removal effects on six paired cells",
+    "medium": "repeat the selected full combination and strongest simpler removal on three paired medium-scale cells with no primary-effect sign reversal",
+    "target_sentinel": "one matched target-scale pair detects integration reversal only and has no population-equivalence authority"
+  },
+  "decision": {
+    "sequence_bundle_selected": false,
+    "depth_bundle_selected": false,
+    "width_bundle_selected": false,
+    "cube_materialized": false,
+    "cube_training_authorized": false,
+    "combined_architecture_selected": false,
+    "promotion_authority": false,
+    "next_action": "after all three axes independently qualify, freeze exact presence/absence config hashes and resource cost for all eight cells"
+  }
+}

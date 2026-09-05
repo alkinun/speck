@@ -74,6 +74,7 @@ Read in order:
 66. [65 — Recurrent/global ratio and placement readiness gate](65_ratio_placement_readiness_gate.md)
 67. [66 — Attention Residuals readiness gate](66_attnres_readiness_gate.md)
 68. [67 — Stable LatentMoE readiness gate](67_stable_latentmoe_readiness_gate.md)
+69. [68 — Tri-axis interaction and removal readiness gate](68_interaction_readiness_gate.md)
 
 Conventions:
 
@@ -335,3 +336,9 @@ specification. Width work is frozen as six separate stages: conventional MoE, la
 normalization, bounded activation, balancing, then geometry. Dropless routing semantics, stability and
 rescue evidence, total/active memory, single-device and expert-parallel systems gates are explicit.
 Primary-source equations, parents, hardware, implementation, and training remain blocked.
+
+Finding 68 freezes the tri-axis interaction unit as three selected bundles, not their hidden
+subcomponents. The complete 2³ discovery cube is 24 fixed runs across three paired cells with explicit
+difference-in-differences, three-way, conditional-removal, Holm, aggregate/source, and retuned absence
+controls. Every retained subcomponent still needs a final removal, and simpler quality-passing ties are
+deleted. No cube or combined architecture is authorized.

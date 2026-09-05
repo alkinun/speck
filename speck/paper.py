@@ -20,6 +20,7 @@ PROGRAM_FILES = (
     "ratio_placement_readiness_v1.json",
     "attnres_readiness_v1.json",
     "stable_latentmoe_readiness_v1.json",
+    "interaction_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -891,6 +892,57 @@ def _validate_stable_latentmoe_readiness(reference, repository_root, paper_id, p
         raise ValueError("Stable LatentMoE readiness design is incomplete")
 
 
+def _validate_interaction_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "interaction readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("interaction readiness gate does not match its pin")
+    gate = _load_json(path)
+    axes = gate.get("axis_units", {})
+    cube = gate.get("discovery_cube", {})
+    contrasts = gate.get("contrast_contract", {})
+    thresholds = gate.get("decision_thresholds", {})
+    removals = gate.get("final_removal_program", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_interaction_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("entry_gate", ())) < 5
+        or set(axes) != {"sequence", "depth", "width"}
+        or cube.get("factors") != ["S", "D", "W"]
+        or cube.get("cells")
+        != ["000", "100", "010", "001", "110", "101", "011", "111"]
+        or cube.get("paired_cells") != 3
+        or cube.get("model_runs") != 24
+        or cube.get("promotion_authority") is not False
+        or set(contrasts.get("pairwise_interactions", {})) != {"SD", "SW", "DW"}
+        or set(contrasts.get("conditional_removal_effects", {}))
+        != {"sequence_from_full", "depth_from_full", "width_from_full"}
+        or thresholds.get("harmful_language_interaction_margin_nats") != 0.01
+        or thresholds.get("harmful_source_interaction_margin_nats") != 0.02
+        or len(gate.get("matching_views", ())) < 7
+        or set(removals.get("subcomponent_removals", {}))
+        != {"sequence", "depth", "width"}
+        or len(gate.get("scale_transfer", {})) < 4
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "sequence_bundle_selected",
+                "depth_bundle_selected",
+                "width_bundle_selected",
+                "cube_materialized",
+                "cube_training_authorized",
+                "combined_architecture_selected",
+                "promotion_authority",
+            )
+        )
+    ):
+        raise ValueError("interaction readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -963,6 +1015,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "ratio_placement_readiness",
             "attnres_readiness",
             "stable_latentmoe_readiness",
+            "interaction_readiness",
         },
         "paper experiment program",
     )
@@ -1008,6 +1061,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_stable_latentmoe_readiness(
         program["stable_latentmoe_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_interaction_readiness(
+        program["interaction_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],

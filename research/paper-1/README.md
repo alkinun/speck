@@ -91,6 +91,9 @@ the final combined model.
 - [`stable_latentmoe_readiness_v1.json`](stable_latentmoe_readiness_v1.json) records the missing primary
   specification and freezes conventional-MoE, latent, normalization, activation, balancing, and expert-
   geometry stages plus routing, stability, rescue, memory, and hardware gates.
+- [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
+  2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
+  cross-scale retention rules without selecting a combined architecture.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

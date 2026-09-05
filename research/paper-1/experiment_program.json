@@ -421,6 +421,11 @@
     "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
     "status": "design_blocked_parent_and_compressor_unselected"
   },
+  "interaction_readiness": {
+    "contract": "research/paper-1/interaction_readiness_v1.json",
+    "sha256": "0e1f5a23cbce2b9a42880e7908e5521acac9ecab59c6cf234b0763bb9d412097",
+    "status": "design_frozen_axes_unselected_training_blocked"
+  },
   "interaction_program": {
     "claim_ids": [
       "C0",
