@@ -4,11 +4,6 @@
     "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
     "status": "immutable_source_audited_execution_blocked"
   },
-  "attnres_readiness": {
-    "contract": "research/paper-1/attnres_readiness_v1.json",
-    "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",
-    "status": "design_blocked_sequence_parent_and_module_graph_unimplemented"
-  },
   "analysis_program": [
     {
       "id": "causal_mechanism",
@@ -27,6 +22,11 @@
       "requirement": "attribute wall-clock and memory to operators, communication, scheduling, fragmentation, and data rather than only whole-step totals"
     }
   ],
+  "attnres_readiness": {
+    "contract": "research/paper-1/attnres_readiness_v1.json",
+    "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",
+    "status": "design_blocked_sequence_parent_and_module_graph_unimplemented"
+  },
   "axes": [
     {
       "claim_ids": [
@@ -236,9 +236,6 @@
     "automation_contract": "research/paper-1/baseline_automation_v1.json",
     "automation_contract_sha256": "bd8f8673f2a5e359e49f4c39e33509735a7067144a0285f1ad1217866245e084",
     "automation_contract_status": "frozen_before_dense_control_2_completion",
-    "proxy_disposition_contract": "research/paper-1/proxy_disposition_v1.json",
-    "proxy_disposition_contract_sha256": "983a881b849a158314ce327736a721b3f97cb1e6b9ea95a93caa5d2309e256b8",
-    "proxy_disposition_contract_status": "frozen_after_control_target_before_candidate_0",
     "cache_equivalence_v2_analysis": "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
     "cache_equivalence_v2_analysis_sha256": "f0f49a3a696a2b21950afe4cc5ac28ecb4ae12a8b32223f38821458e4e746f0e",
     "cache_equivalence_v2_contract": "research/paper-1/cache_equivalence_v2.json",
@@ -251,6 +248,14 @@
     "cache_equivalence_v3_contract": "research/paper-1/cache_equivalence_v3.json",
     "cache_equivalence_v3_contract_sha256": "f90bbfb95c098a26793d5d71b74f02dba02505cb87062bd8cc7e470f4f51bc83",
     "cache_equivalence_v3_status": "qualified",
+    "candidate_results": [
+      {
+        "pair": 0,
+        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa.json",
+        "sha256": "2c877c4bca749c49bcad70aa3d597ad1a7c8c372039533194f3df3d5299b3bb1",
+        "status": "complete_qualified"
+      }
+    ],
     "collection_correction": "research/paper-1/baseline_collection_v2.json",
     "collection_correction_sha256": "2fe52ac3447429d4ccbf3c5672267d33e93642c461ff2aeb77f2c8a540641a12",
     "collection_correction_status": "frozen_after_control_0_before_candidate_results",
@@ -288,6 +293,9 @@
     "preflight_v2": "results/Speck-Paper1/baseline-preflight-v2.json",
     "preflight_v2_sha256": "91012edc3a597dcf8cddd28bbe846b81cd6d99d1eec359ce66bf4ccf7deede86",
     "preflight_v2_status": "qualified",
+    "proxy_disposition_contract": "research/paper-1/proxy_disposition_v1.json",
+    "proxy_disposition_contract_sha256": "983a881b849a158314ce327736a721b3f97cb1e6b9ea95a93caa5d2309e256b8",
+    "proxy_disposition_contract_status": "frozen_after_control_target_before_candidate_0",
     "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2",
     "runtime_preflight_classification": "full-model CUDA/BF16 execution sensitivity with architecture-dependent depth amplification; new versioned behavioral contract required",
     "status": "historical_evidence_qualified_proxy_launch_blocked",
@@ -426,11 +434,6 @@
     "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
     "status": "design_blocked_parent_and_compressor_unselected"
   },
-  "interaction_readiness": {
-    "contract": "research/paper-1/interaction_readiness_v1.json",
-    "sha256": "0e1f5a23cbce2b9a42880e7908e5521acac9ecab59c6cf234b0763bb9d412097",
-    "status": "design_frozen_axes_unselected_training_blocked"
-  },
   "interaction_program": {
     "claim_ids": [
       "C0",
@@ -450,6 +453,11 @@
       "sequence \u00d7 width",
       "depth \u00d7 width"
     ]
+  },
+  "interaction_readiness": {
+    "contract": "research/paper-1/interaction_readiness_v1.json",
+    "sha256": "0e1f5a23cbce2b9a42880e7908e5521acac9ecab59c6cf234b0763bb9d412097",
+    "status": "design_frozen_axes_unselected_training_blocked"
   },
   "large_pretraining_gate": {
     "decision": "no paper-scale or release-scale pretraining begins until every required item has a checked artifact",
@@ -475,15 +483,15 @@
     "fixed wall-clock budget on named hardware",
     "time and energy to locked quality"
   ],
-  "novelty_landscape": {
-    "audit": "research/paper-1/novelty_landscape_v1.json",
-    "sha256": "00ced5b0ddce708adf51ba0da97d24e6e3a457a3c64cdefe81de7d732a4961d2",
-    "status": "six_full_text_audits_no_novelty_established"
-  },
   "novelty_code_availability": {
     "audit": "research/paper-1/novelty_code_availability_v1.json",
     "sha256": "9edd229fdc8913882f8b338fad2205d51c78635e28c6134a3fa28ce84289b640",
     "status": "one_code_rights_path_qualified_five_reproduction_paths_blocked"
+  },
+  "novelty_landscape": {
+    "audit": "research/paper-1/novelty_landscape_v1.json",
+    "sha256": "00ced5b0ddce708adf51ba0da97d24e6e3a457a3c64cdefe81de7d732a4961d2",
+    "status": "six_full_text_audits_no_novelty_established"
   },
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
   "paper_id": "speck-paper-1",
@@ -604,11 +612,11 @@
     "sha256": "838558a6a3d57cbb72fcc4b4b86ea12b42d9fddc4c5d5b070c89cd33c8c0450c",
     "status": "design_blocked_primary_spec_parent_and_hardware"
   },
+  "status": "preregistered_program_no_architecture_selected",
   "systems_cost_readiness": {
     "contract": "research/paper-1/systems_cost_readiness_v1.json",
     "sha256": "6507a382f2786e01ad9cfad11ab9770fc4d06dd9c0652fb89c3ff1a3319bf9d8",
     "status": "design_frozen_proxy_control_envelope_failed_datacenter_blocked"
   },
-  "status": "preregistered_program_no_architecture_selected",
   "updated_on": "2026-09-05"
 }
