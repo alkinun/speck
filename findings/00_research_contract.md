@@ -1,5 +1,10 @@
 # 00 — Research contract
 
+This finding is the original long-context contract. General component and combined-architecture
+promotion is additionally governed by the active
+[`architecture-promotion-v1`](../research/architecture-promotion-v1/) statistical, evaluation, and
+cost contract. The stricter applicable rule wins.
+
 ## Objective
 
 The research question is not “which sequence mixer wins at 4K?” It is:

@@ -1,0 +1,169 @@
+{
+  "format": "speck_architecture_promotion_policy",
+  "format_version": 1,
+  "policy_id": "architecture-promotion-v1",
+  "status": "active",
+  "frozen_on": "2026-09-05",
+  "scope": "component-level and combined architecture promotion",
+  "principles": [
+    "Quality and correctness are constraints; cost is optimized only among candidates that pass them.",
+    "A failure to detect a difference is not evidence of equivalence.",
+    "Discovery results select candidates but cannot promote them.",
+    "Every comparison is bound to model scale, tokens, data, hardware, precision, runtime, context, and load.",
+    "The cheapest point on a quality-non-inferior Pareto frontier wins.",
+    "Negative and inconclusive results remain in the evidence matrix."
+  ],
+  "comparison_contract": {
+    "unit": "paired candidate and control run",
+    "pairing_fields": [
+      "initialization_seed",
+      "packed_data_order",
+      "token_budget",
+      "sequence_length",
+      "optimizer_schedule",
+      "evaluation_manifest"
+    ],
+    "required_views": [
+      "fixed_tokens",
+      "fixed_analytic_flops",
+      "time_to_fixed_quality"
+    ],
+    "architecture_accounting": [
+      "total_parameters",
+      "active_parameters_per_token",
+      "training_flops_per_token",
+      "resident_state_bytes",
+      "peak_allocated_bytes"
+    ]
+  },
+  "statistical_contract": {
+    "alpha": 0.05,
+    "confidence_level": 0.95,
+    "language_loss": {
+      "estimand": "mean paired candidate-minus-control validation loss in natural-log nats",
+      "default_non_inferiority_margin_nats": 0.01,
+      "perplexity_ratio_at_margin": 1.010050167084168,
+      "decision_rule": "upper one-sided paired 95% confidence bound must be at or below the margin",
+      "historical_noise_use": "the 0.00965-nat seed range is a variance-planning input, never an equivalence rule",
+      "source_guardrail_nats": 0.02
+    },
+    "bounded_task_scores": {
+      "estimand": "paired candidate-minus-control score",
+      "default_non_inferiority_margin_absolute": 0.02,
+      "critical_task_guardrail_absolute": 0.05,
+      "decision_rule": "lower paired 95% confidence bound must be at or above the negative margin and every declared absolute floor must pass",
+      "binary_interval": "Wilson score interval",
+      "paired_resampling": "example-level paired bootstrap with 10000 deterministic resamples"
+    },
+    "systems": {
+      "simple_component_minimum_primary_improvement": 0.1,
+      "custom_runtime_component_minimum_primary_improvement": 0.2,
+      "minimum_state_reduction_for_memory_claim": 0.25,
+      "decision_rule": "the lower paired 95% confidence bound must clear the applicable improvement threshold",
+      "repeats": 5,
+      "interleave_arms": true,
+      "exclude_compile_startup": true,
+      "maximum_start_temperature_c": 50
+    },
+    "multiplicity": {
+      "confirmation_candidates": "freeze candidates before confirmation and apply Holm correction across candidates sharing one control",
+      "must_pass_endpoints": "quality and systems gates form an intersection-union decision; every endpoint must pass",
+      "exploratory_metrics": "report without promotion authority"
+    },
+    "missing_data": "a failed, interrupted, or unevaluable run cannot be silently replaced; retain it and execute the preregistered replacement rule",
+    "precision": "report effect sizes and confidence bounds; p-values alone are insufficient"
+  },
+  "replication_stages": [
+    {
+      "id": "correctness",
+      "minimum_paired_runs": 0,
+      "promotion_authority": false,
+      "requirements": [
+        "reference and optimized output parity",
+        "state parity",
+        "input and parameter gradient parity",
+        "incremental decode parity",
+        "checkpoint and export round trips"
+      ]
+    },
+    {
+      "id": "discovery",
+      "minimum_paired_runs": 1,
+      "promotion_authority": false,
+      "requirements": [
+        "one frozen architectural axis",
+        "retention of all attempted arms and hyperparameters",
+        "predeclared early-stop and selection rules"
+      ]
+    },
+    {
+      "id": "proxy_confirmation",
+      "minimum_paired_runs": 3,
+      "promotion_authority": false,
+      "requirements": [
+        "three distinct initialization seeds",
+        "three distinct packed-data orders",
+        "candidate and control paired within each run",
+        "quality and claimed systems gates pass"
+      ]
+    },
+    {
+      "id": "finalist_replication",
+      "minimum_paired_runs": 6,
+      "promotion_authority": true,
+      "requirements": [
+        "crossed design with three initialization seeds and two packed-data orders",
+        "at least 10 training tokens per parameter unless a preregistered scaling-law analysis selects a longer horizon",
+        "independent evaluation manifest remains sealed",
+        "quality and claimed systems gates pass"
+      ]
+    },
+    {
+      "id": "medium_scale_transfer",
+      "minimum_paired_runs": 3,
+      "promotion_authority": true,
+      "requirements": [
+        "matched medium-scale control",
+        "three paired seeds with distinct data orders",
+        "no sign reversal in the primary effect",
+        "time-to-fixed-quality and serving profiles pass"
+      ]
+    },
+    {
+      "id": "target_scale_sentinel",
+      "minimum_paired_runs": 1,
+      "promotion_authority": false,
+      "requirements": [
+        "one matched target-scale pair only after medium-scale promotion",
+        "treat as a reversal and integration check rather than population-level equivalence evidence"
+      ]
+    }
+  ],
+  "promotion_gate": {
+    "required": [
+      "correctness_pass",
+      "proxy_quality_non_inferiority_pass",
+      "declared_capability_floors_pass",
+      "realized_cost_benefit_pass",
+      "medium_scale_transfer_pass",
+      "runtime_and_export_pass",
+      "final_removal_and_interaction_pass"
+    ],
+    "forbidden_shortcuts": [
+      "analytic FLOP or state savings without realized measurements",
+      "single-seed promotion",
+      "allocation length presented as effective context",
+      "synthetic retrieval presented as general long-context reasoning",
+      "promotion from an adapted checkpoint when the claim is from-scratch architecture quality"
+    ],
+    "decision": "promote only when every required gate is true; otherwise retain as research-only, reject, or declare inconclusive"
+  },
+  "change_control": {
+    "rule": "any threshold, task, sample count, or decision-rule change creates a new policy version",
+    "allowed_without_version_change": [
+      "filling result references",
+      "updating evidence status after a preregistered decision",
+      "correcting a non-semantic typo"
+    ]
+  }
+}

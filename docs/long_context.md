@@ -20,10 +20,11 @@ Never substitute one ceiling for another in a model card or benchmark comparison
 
 ## Architecture
 
-The primary candidate is a dense 3:1 Gated DeltaNet/GQA hybrid. Gated DeltaNet supplies a fixed
-recurrent matrix per value head and an error-correcting delta update; a short causal convolution
-provides local order. Periodic GQA layers remain an experimental variable because they improve
-direct retrieval but make global prefill and training quadratic.
+The original reference is a dense 3:1 Gated DeltaNet/GQA hybrid. The current conservative research
+control is a five-cache KDA/sigmoid/NoPE recurrent-global hybrid. It is not a release selection: its
+strict base-loss tie passes only two of three seeds, its exact eight-record retrieval is fragile, and
+it has not passed independent long-context evaluation. Periodic GQA layers remain an experimental
+variable because they improve direct retrieval but make global prefill and training quadratic.
 
 The implementation has three deliberately distinct paths:
 
@@ -139,8 +140,11 @@ Parameter counts differ only by the 64-element key-norm vector each reader drops
 is explicitly not matched and reports its residual. `caches-5` is byte-identical to the source
 architecture, so the existing seed-42 checkpoint is its result and it must not be retrained.
 
-These are allocation and accounting results. No arm has been trained, so the staircase carries no
-loss, retrieval, or latency claim yet.
+All main staircase arms and the distance control have now been trained and evaluated. Three caches
+reduce persistent state `1.66×` and improve thermally controlled high-batch eager decode `1.31×`, but
+strict paired loss and candidate promotion pass only two of three seeds, and symbolic route retrieval
+falls to `0.53` versus `1.00` for five caches. The frontier is therefore complete without promotion;
+see [finding 24](../findings/24_reader_attention.md).
 
 Prepare it with:
 
@@ -177,7 +181,7 @@ useful stress condition, not sufficient long-context supervision.
 
 ## Known boundaries
 
-- The 3:1 ratio and GDN are hypotheses to ablate, not settled SpeckLabs doctrine.
+- The 3:1 recurrent/global ratio and KDA are hypotheses to ablate, not settled SpeckLabs doctrine.
 - Full global-attention layers remain quadratic. Use the budget report before every length stage and
   compare a local-attention hybrid where full prefill becomes uneconomic.
 - INT8 KV currently dequantizes into the SDPA compute dtype. It proves capacity and measures quality,

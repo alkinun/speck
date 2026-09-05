@@ -10,6 +10,7 @@ def test_local_markdown_links_exist():
         sorted(root.glob("*.md"))
         + sorted((root / "docs").rglob("*.md"))
         + sorted((root / "findings").rglob("*.md"))
+        + sorted((root / "research").rglob("*.md"))
     )
     missing = []
     for document in documents:

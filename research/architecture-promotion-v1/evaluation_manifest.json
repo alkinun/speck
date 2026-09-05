@@ -1,0 +1,153 @@
+{
+  "format": "speck_architecture_evaluation_manifest",
+  "format_version": 1,
+  "policy_id": "architecture-promotion-v1",
+  "manifest_id": "architecture-evaluation-v1",
+  "status": "frozen_with_external_integrations_pending",
+  "frozen_on": "2026-09-05",
+  "repository_baseline_revision": "4073be6e4d161d0208f611d45f3a05a594808d82",
+  "rules": {
+    "candidate_access": "candidate developers may inspect internal development evaluations but not sealed external confirmation examples",
+    "contamination": "record exact training-data source revisions and scan benchmark prompts plus normalized n-grams before promotion",
+    "reporting": "publish raw per-example outputs, aggregate scores, confidence bounds, failures, model hash, tokenizer hash, and runtime identity",
+    "missing_suite": "a required suite that cannot run is a failed release gate, not an omitted metric",
+    "prompt_changes": "any prompt, parser, generator, task, length, or scoring change requires a new manifest version"
+  },
+  "internal_suites": [
+    {
+      "id": "base_language_loss",
+      "status": "implemented",
+      "source": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope/data.json",
+      "sequence_length": 4096,
+      "aggregate_validation_tokens": 19988480,
+      "primary_metric": "natural_log_cross_entropy",
+      "breakdowns": "every configured source",
+      "comparison": "paired candidate-minus-control under the policy loss margin"
+    },
+    {
+      "id": "open_slm_short_context",
+      "status": "implemented",
+      "source": "experiments/Speck1-140M/open_slm.json",
+      "lm_eval_revision": "64f3d0924fc695efd6d776a5ac91f97138085516",
+      "tasks": [
+        "hellaswag",
+        "arc_easy",
+        "arc_challenge",
+        "piqa",
+        "arithmark_2",
+        "arithmark_3"
+      ],
+      "primary_metric": "intelligence_index_and_per_task_scores",
+      "comparison": "paired example-level non-inferiority where raw outputs are available; fixed aggregate guardrails otherwise"
+    },
+    {
+      "id": "structured_retrieval_v2",
+      "status": "required_not_implemented",
+      "generator_revision": "4073be6e4d161d0208f611d45f3a05a594808d82",
+      "lengths": [
+        4096,
+        32768,
+        131072
+      ],
+      "record_loads": [
+        2,
+        8
+      ],
+      "samples_per_length_load_cell": 200,
+      "held_out_templates": true,
+      "held_out_answer_sets": true,
+      "required_metrics": [
+        "exact_match",
+        "candidate_accuracy",
+        "specificity_accuracy",
+        "retention_final_over_peak",
+        "original_language_loss"
+      ],
+      "absolute_floors": {
+        "candidate_accuracy": 0.8,
+        "specificity_accuracy": 0.9,
+        "retention_final_over_peak": 0.9
+      }
+    },
+    {
+      "id": "symbolic_composition_v2",
+      "status": "required_not_implemented",
+      "generator_revision": "4073be6e4d161d0208f611d45f3a05a594808d82",
+      "samples_per_view": 200,
+      "minimum_distinct_intermediate_nodes": 100,
+      "required_views": [
+        "route_edge",
+        "payload_edge",
+        "direct_two_hop_composition"
+      ],
+      "qualification_rule": "both constituent edges must pass before direct composition is interpreted"
+    }
+  ],
+  "external_suites": [
+    {
+      "id": "ruler",
+      "status": "pinned_integration_pending",
+      "repository": "https://github.com/NVIDIA/RULER",
+      "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "lengths": [
+        4096,
+        8192,
+        16384,
+        32768,
+        65536,
+        131072
+      ],
+      "configuration": "official synthetic task set at the pinned revision",
+      "scoring": "upstream exact-match scoring without local prompt edits",
+      "release_required": true
+    },
+    {
+      "id": "nolima",
+      "status": "pinned_integration_pending",
+      "repository": "https://github.com/adobe-research/NoLiMa",
+      "revision": "cb14780b249fecf2851127b2101a062c1b2c6430",
+      "lengths": [
+        4096,
+        8192,
+        16384,
+        32768,
+        65536,
+        131072
+      ],
+      "configuration": "official default task and scoring configuration at the pinned revision",
+      "scoring": "upstream scoring without local prompt edits",
+      "release_required": true
+    },
+    {
+      "id": "helmet",
+      "status": "pinned_integration_pending",
+      "repository": "https://github.com/princeton-nlp/HELMET",
+      "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+      "lengths": [
+        4096,
+        8192,
+        16384,
+        32768,
+        65536,
+        131072
+      ],
+      "configuration": "official default task and scoring configuration at the pinned revision",
+      "scoring": "upstream scoring without local prompt edits",
+      "release_required": true
+    }
+  ],
+  "release_gate": {
+    "required_internal": [
+      "base_language_loss",
+      "open_slm_short_context",
+      "structured_retrieval_v2",
+      "symbolic_composition_v2"
+    ],
+    "required_external": [
+      "ruler",
+      "nolima",
+      "helmet"
+    ],
+    "decision": "every required suite must be implemented, qualified, executed, and passing at the claimed effective length"
+  }
+}

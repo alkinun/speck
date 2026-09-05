@@ -31,6 +31,7 @@ Read in order:
 23. [22 — Template-diverse retrieval adaptation](22_template_diverse_retrieval_adaptation.md)
 24. [23 — Symbolic two-hop composition](23_symbolic_two_hop_composition.md)
 25. [24 — Speck Reader Attention and the global cache-count staircase](24_reader_attention.md)
+26. [25 — Architecture promotion policy and cost envelopes](25_architecture_promotion_policy.md)
 
 Conventions:
 
@@ -60,3 +61,9 @@ specificity on 3/3 seeds, but strict paired loss and candidate promotion each pa
 and the symbolic diagnostic exposes a route-edge failure (`0.53` versus `1.00` for five caches).
 It is therefore retained as a paper mechanism and research candidate but not promoted into the lead
 architecture. MQA/MLA interaction work remains gated.
+
+Finding 25 replaces informal equivalence reasoning with the versioned
+[`architecture-promotion-v1`](../research/architecture-promotion-v1/) contract. It defines paired
+one-sided non-inferiority, staged replication, realized systems thresholds, named RTX 3090 cost
+envelopes, frozen evaluation revisions, and a live evidence matrix. External long-context integrations,
+200-case internal confirmation suites, and a production hardware profile remain explicit blockers.

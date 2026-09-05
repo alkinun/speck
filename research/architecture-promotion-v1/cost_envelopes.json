@@ -1,0 +1,135 @@
+{
+  "format": "speck_cost_envelopes",
+  "format_version": 1,
+  "policy_id": "architecture-promotion-v1",
+  "status": "active_research_hardware",
+  "frozen_on": "2026-09-05",
+  "hardware": {
+    "research_rtx3090": {
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "gpu_memory_gib": 24,
+      "driver": "610.43.03",
+      "torch": "2.9.1+cu128",
+      "cuda_runtime": "12.8",
+      "triton": "3.5.1",
+      "flash_linear_attention": "0.5.0",
+      "ownership": "local",
+      "hourly_hardware_amortization_usd_excluding_energy": null,
+      "electricity_usd_per_kwh": null,
+      "note": "Monetary cost is reported only when both accounting inputs are supplied in a result artifact."
+    }
+  },
+  "measurement_controls": {
+    "tokenization_in_timing": false,
+    "include_argmax_or_sampler": true,
+    "synchronize_cuda": true,
+    "report_percentiles": [
+      50,
+      90,
+      99
+    ],
+    "minimum_thermally_interleaved_blocks": 5,
+    "minimum_microbenchmark_iterations_per_block": 30,
+    "minimum_online_requests_for_p99": 1000,
+    "interleave_candidate_and_control": true,
+    "maximum_start_temperature_c": 50,
+    "report_compile_startup_separately": true,
+    "report_eager_and_compiled": true,
+    "record_software_and_model_hashes": true
+  },
+  "training_profiles": [
+    {
+      "id": "proxy_150m_4k",
+      "hardware": "research_rtx3090",
+      "parameter_range": [
+        130000000,
+        170000000
+      ],
+      "sequence_length": 4096,
+      "optimizer_batch_tokens": 65536,
+      "discovery_tokens": 131072000,
+      "hard_envelope": {
+        "maximum_peak_allocated_gib": 16,
+        "minimum_steady_tokens_per_second": 40000,
+        "maximum_gpu_hours_per_discovery_run": 1.0,
+        "non_finite_steps": 0
+      },
+      "primary_cost_metric": "gpu_seconds_to_locked_validation_loss",
+      "quality_target_rule": "lock a reachable validation-loss threshold from control-only pilots before candidate results are evaluated",
+      "promotion_target": "at least 10% lower time-to-quality for a simple component or 20% for a component requiring a custom runtime"
+    },
+    {
+      "id": "medium_scale_transfer",
+      "hardware": "to_be_named_before_launch",
+      "parameter_range": [
+        300000000,
+        600000000
+      ],
+      "sequence_length": 4096,
+      "hard_envelope": null,
+      "primary_cost_metric": "gpu_seconds_to_locked_validation_and_capability_targets",
+      "launch_gate": "hardware, parallelism, batch geometry, monetary inputs, and absolute envelopes must be frozen in policy v2 before training"
+    }
+  ],
+  "serving_profiles": [
+    {
+      "id": "local_interactive_4k",
+      "hardware": "research_rtx3090",
+      "batch_size": 1,
+      "prompt_lengths": [
+        512,
+        4096
+      ],
+      "output_tokens": 128,
+      "hard_envelope": {
+        "p99_ttft_ms_at_4k": 250,
+        "p99_tpot_ms": 20,
+        "maximum_weights_plus_state_gib": 20
+      },
+      "primary_cost_metric": "p99_tpot_ms"
+    },
+    {
+      "id": "throughput_32k",
+      "hardware": "research_rtx3090",
+      "prompt_length": 32768,
+      "output_tokens": 128,
+      "load": "maximum resident batch at 524288 total cached token slots",
+      "hard_envelope": {
+        "minimum_resident_batch": 16,
+        "p99_decode_step_ms": 20,
+        "maximum_prefill_seconds_for_batch": 8
+      },
+      "primary_cost_metric": "output_tokens_per_gpu_second_at_latency_envelope"
+    },
+    {
+      "id": "long_context_128k",
+      "hardware": "research_rtx3090",
+      "prompt_length": 131072,
+      "output_tokens": 128,
+      "hard_envelope": {
+        "p99_ttft_seconds_batch_1": 4,
+        "p99_tpot_ms_batch_1": 20,
+        "minimum_resident_batch_at_524288_cached_slots": 4,
+        "maximum_resident_state_mib_batch_1": 512,
+        "maximum_peak_allocated_gib_batch_1": 4
+      },
+      "primary_cost_metric": "output_tokens_per_gpu_second_at_latency_envelope",
+      "capability_gate": "the model must pass the sealed independent long-context evaluation at 128K; allocation and prefill alone do not qualify"
+    }
+  ],
+  "cost_accounting": {
+    "training_usd": "gpu_hours * (hourly_hardware_amortization_usd_excluding_energy + average_power_kw * electricity_usd_per_kwh)",
+    "serving_usd_per_million_output_tokens": "1000000 * (hourly_hardware_amortization_usd_excluding_energy + average_power_kw * electricity_usd_per_kwh) / output_tokens_per_hour",
+    "required_physical_metrics": [
+      "gpu_seconds",
+      "average_power_watts_when_available",
+      "peak_allocated_bytes",
+      "resident_model_bytes",
+      "resident_sequence_state_bytes",
+      "input_tokens",
+      "output_tokens"
+    ],
+    "relative_decision_rule": "when monetary inputs are unavailable, use physical time, power, and memory separately; never report a fabricated dollar cost"
+  },
+  "architecture_freeze_blocker": "a named datacenter deployment profile on the intended production runtime must be added in a new version before architecture freeze"
+}

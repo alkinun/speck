@@ -1,0 +1,238 @@
+{
+  "format": "speck_architecture_evidence_matrix",
+  "format_version": 1,
+  "policy_id": "architecture-promotion-v1",
+  "updated_on": "2026-09-05",
+  "status_values": [
+    "retained_control",
+    "research_control_not_promoted",
+    "research_only",
+    "rejected",
+    "proposed",
+    "blocked"
+  ],
+  "components": [
+    {
+      "id": "dense_global_transformer_reference",
+      "claim": "A conventional dense global-attention model provides the quality and systems anchor needed to interpret hybrid efficiency.",
+      "status": "retained_control",
+      "alternatives": [
+        "hybrid recurrent-global models"
+      ],
+      "evidence": [
+        "findings/01_mixer_screen_131m.md"
+      ],
+      "quality": "The one-seed 131M-token full-global result is within the measured seed range of the strongest attention-bearing hybrids and cannot be ranked against them.",
+      "systems": "At 128K it has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls.",
+      "scale_transfer": "not replicated under policy v1",
+      "runtime_support": "standard PyTorch attention path",
+      "unresolved_risks": [
+        "one-seed evidence",
+        "short training horizon",
+        "lack of time-to-quality comparison"
+      ],
+      "next_gate": "include a matched dense reference in finalist horizon and medium-scale comparisons"
+    },
+    {
+      "id": "gated_deltanet",
+      "claim": "A recurrent/local backbone is cheaper than pervasive exact attention while preserving short-context language quality.",
+      "status": "retained_control",
+      "alternatives": [
+        "gated_causal_convolution",
+        "full_attention",
+        "pure_gated_deltanet"
+      ],
+      "evidence": [
+        "findings/01_mixer_screen_131m.md",
+        "findings/02_correctness_and_kernel_calibration.md"
+      ],
+      "quality": "GDN-global beats the convolution hybrid by 0.05002 nats; pure GDN loses 0.15499 nats relative to the attention-containing control.",
+      "systems": "Qualified Torch and FLA training/prefill/decode paths on RTX 3090.",
+      "scale_transfer": "not established beyond the proxy",
+      "runtime_support": "PyTorch/FLA; no production GGUF path",
+      "unresolved_risks": [
+        "optimal global-attention ratio",
+        "medium-scale transfer",
+        "production runtime availability"
+      ],
+      "next_gate": "retain as a matched control while finalists are tested at longer horizon"
+    },
+    {
+      "id": "kda_sigmoid_nope_five_cache",
+      "claim": "Channel-wise decay plus NoPE improves long-range association while periodic global attention preserves exact lookup.",
+      "status": "research_control_not_promoted",
+      "alternatives": [
+        "gdn_sigmoid_rope",
+        "kda_sigmoid_rope"
+      ],
+      "evidence": [
+        "findings/16_kimi_transfer_131m.md",
+        "findings/17_kimi_frontier_replication.md",
+        "findings/18_kimi_context32k.md",
+        "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
+      ],
+      "quality": "Replicated long-range sensitivity, but mean base loss is 0.006909 nats worse and the old strict tie passes only two of three seeds.",
+      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K.",
+      "scale_transfer": "not established",
+      "runtime_support": "Torch reference and FLA kernels; hybrid production runtime incomplete",
+      "unresolved_risks": [
+        "independent long-context quality",
+        "exact eight-record decoding",
+        "two-hop composition",
+        "training-horizon transfer"
+      ],
+      "next_gate": "policy-v1 proxy confirmation with sealed evaluation and longer-horizon finalist replication"
+    },
+    {
+      "id": "reader_attention_three_cache",
+      "claim": "Three periodically refreshed global memories can replace five independent caches.",
+      "status": "research_only",
+      "alternatives": [
+        "five independent caches",
+        "two shared caches",
+        "one shared cache"
+      ],
+      "evidence": [
+        "findings/24_reader_attention.md",
+        "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
+      ],
+      "quality": "Strict paired loss and candidate gates pass only two of three seeds; symbolic route retrieval is 0.53 versus 1.00 for five caches.",
+      "systems": "Persistent state falls 1.66x and eager high-batch decode improves 1.31x, but compiled batch-one decode regresses and peak allocation does not fall.",
+      "scale_transfer": "not attempted after proxy promotion failed",
+      "runtime_support": "reference implementation and controlled PyTorch benchmarks",
+      "unresolved_risks": [
+        "route/payload asymmetry",
+        "compiled batch-one regression",
+        "lack of production memory reduction"
+      ],
+      "next_gate": "no interaction or compression experiments on this topology without a new independent promotion result"
+    },
+    {
+      "id": "global_attention_output_gate",
+      "claim": "A learned attention output gate improves global attention quality enough to justify its cost.",
+      "status": "rejected",
+      "alternatives": [
+        "ungated global attention"
+      ],
+      "evidence": [
+        "findings/20_k3_diagnostics_and_attention_gating.md"
+      ],
+      "quality": "The 131M gain is 0.00234 nats, inside measured variance.",
+      "systems": "Training throughput falls 3%.",
+      "scale_transfer": "the apparent 32M gain shrank at 131M",
+      "runtime_support": "implemented",
+      "unresolved_risks": [],
+      "next_gate": "none unless new independent evidence motivates a new policy version"
+    },
+    {
+      "id": "five_cache_mqa_or_mla",
+      "claim": "Compressing each of the five conservative global memories can reduce serving state without the Reader Attention capability loss.",
+      "status": "proposed",
+      "alternatives": [
+        "gqa3",
+        "mqa1",
+        "nope_mla"
+      ],
+      "evidence": [
+        "papers/16_deepseek_v2_mla.md"
+      ],
+      "quality": "not measured locally",
+      "systems": "analytic benefit only",
+      "scale_transfer": "not measured locally",
+      "runtime_support": "MQA expressible; MLA not implemented",
+      "unresolved_risks": [
+        "quality loss",
+        "expanded projection cost",
+        "specialized decode kernel"
+      ],
+      "next_gate": "pre-register a five-cache GQA3/MQA1/NoPE-MLA isolation after evaluation v1 is qualified"
+    },
+    {
+      "id": "block_attention_residuals",
+      "claim": "Content-dependent depth routing improves quality per training FLOP in a deeper, narrower Speck model.",
+      "status": "proposed",
+      "alternatives": [
+        "standard residual",
+        "full attention residuals"
+      ],
+      "evidence": [
+        "papers/05_attention_residuals.md"
+      ],
+      "quality": "not measured locally",
+      "systems": "not measured locally",
+      "scale_transfer": "not measured locally",
+      "runtime_support": "not implemented",
+      "unresolved_risks": [
+        "activation memory",
+        "export compatibility",
+        "depth-width optimum shift"
+      ],
+      "next_gate": "implement reference and run standard/full/block discovery under policy v1"
+    },
+    {
+      "id": "sparse_long_context_attention",
+      "claim": "Block-routed attention reduces long-context prefill cost while retaining retrieval and composition.",
+      "status": "blocked",
+      "alternatives": [
+        "dense global attention",
+        "token-level learned selection"
+      ],
+      "evidence": [
+        "papers/20_moba.md",
+        "papers/21_deepseek_v3_2.md"
+      ],
+      "quality": "not measured locally",
+      "systems": "not implemented locally",
+      "scale_transfer": "not measured locally",
+      "runtime_support": "not implemented",
+      "unresolved_risks": [
+        "selector recall",
+        "kernel locality",
+        "missing genuine 64K-128K dependency data"
+      ],
+      "next_gate": "build the dependency corpus and qualify evaluation v1 before a training comparison"
+    },
+    {
+      "id": "routed_swiglu_moe",
+      "claim": "Conditional width improves quality per active training FLOP and serving dollar.",
+      "status": "blocked",
+      "alternatives": [
+        "dense swiglu"
+      ],
+      "evidence": [
+        "papers/16_deepseek_v2_mla.md",
+        "papers/04_kimi_k3.md"
+      ],
+      "quality": "not measured locally",
+      "systems": "not measured locally",
+      "scale_transfer": "not measured locally",
+      "runtime_support": "not implemented",
+      "unresolved_risks": [
+        "expert memory",
+        "load balance",
+        "communication",
+        "small-batch serving economics"
+      ],
+      "next_gate": "stabilize the dense sequence architecture and name the medium-scale hardware first"
+    },
+    {
+      "id": "lower_precision_training_and_serving",
+      "claim": "Lower numerical precision reduces physical cost without changing model quality.",
+      "status": "proposed",
+      "alternatives": [
+        "bfloat16 training and cache"
+      ],
+      "evidence": [],
+      "quality": "INT8 KV capacity reference exists; production precision parity is not established.",
+      "systems": "INT8 KV dequantizes before SDPA and therefore does not prove speed.",
+      "scale_transfer": "not measured",
+      "runtime_support": "reference only",
+      "unresolved_risks": [
+        "kernel support",
+        "optimizer-state precision",
+        "rare numerical failures"
+      ],
+      "next_gate": "separate training, weight, activation, recurrent-state, and KV precision contracts"
+    }
+  ]
+}

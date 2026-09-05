@@ -1,0 +1,60 @@
+{
+  "format": "speck_architecture_promotion_audit",
+  "format_version": 1,
+  "policy_id": "architecture-promotion-v1",
+  "status": "complete_retrospective_no_promotion_authority",
+  "created_on": "2026-09-05",
+  "method": {
+    "metric": "paired candidate-minus-control validation loss in nats",
+    "non_inferiority_margin_nats": 0.01,
+    "confidence_bound": "upper one-sided 95% Student-t bound",
+    "pairs": 3,
+    "degrees_of_freedom": 2,
+    "critical_t_0_95": 2.91998558035372,
+    "decision_rule": "upper confidence bound must be at or below 0.01 nats",
+    "caveat": "the policy was written after these results; this audit diagnoses current status but cannot promote either candidate"
+  },
+  "comparisons": {
+    "kda_sigmoid_nope_five_cache_vs_gdn_sigmoid_rope": {
+      "source": "../SpeckLC-150M-KimiReplication131M/summary.json",
+      "paired_deltas": [
+        0.004751443862915039,
+        0.004059553146362305,
+        0.011916875839233398
+      ],
+      "paired_mean": 0.006909290949503581,
+      "paired_sample_standard_deviation": 0.004350472159639774,
+      "upper_one_sided_95_percent_bound": 0.014243553846623175,
+      "loss_non_inferiority_pass": false,
+      "other_gates": {
+        "independent_long_context": false,
+        "realized_training_cost_benefit": false,
+        "medium_scale_transfer": false,
+        "production_runtime": false
+      },
+      "decision": "retain as conservative long-context research control; do not promote"
+    },
+    "reader_attention_three_cache_vs_five_cache": {
+      "source": "../SpeckLC-150M-ReaderAttention131M/summary.json",
+      "paired_deltas": [
+        0.004697561264038086,
+        0.012201786041259766,
+        0.00045013427734375
+      ],
+      "paired_mean": 0.0057831605275472,
+      "paired_sample_standard_deviation": 0.005950565024918747,
+      "upper_one_sided_95_percent_bound": 0.015814947119366884,
+      "loss_non_inferiority_pass": false,
+      "other_gates": {
+        "strict_candidate_accuracy_seeds_passed": 2,
+        "strict_candidate_accuracy_seeds_required": 3,
+        "symbolic_route_edge_pass": false,
+        "high_batch_systems_benefit": true,
+        "interactive_compiled_decode_non_regression": false,
+        "medium_scale_transfer": false,
+        "production_runtime": false
+      },
+      "decision": "retain as research-only mechanism; block topology interactions"
+    }
+  }
+}

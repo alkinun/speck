@@ -82,9 +82,10 @@ suite has passed.
 
 ## Required next work
 
-1. Define non-inferiority margins, capability floors, serving cost envelopes, and versioned
-   evaluation manifests before another architecture promotion decision.
-2. Run pinned independent suites:
+1. Apply the checked [`architecture-promotion-v1`](../research/architecture-promotion-v1/) contract.
+   Implement its 200-case internal confirmation suites, qualify its pinned external integrations,
+   and add named medium-scale and production-runtime envelopes in policy v2.
+2. Run the pinned independent suites:
    [RULER](https://github.com/NVIDIA/RULER),
    [NoLiMa](https://github.com/adobe-research/NoLiMa), and
    [HELMET](https://github.com/princeton-nlp/HELMET).
