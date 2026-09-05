@@ -526,19 +526,19 @@
     "time and energy to locked quality"
   ],
   "novelty_claim_overlap": {
-    "contract": "research/paper-1/novelty_claim_overlap_v3.json",
-    "sha256": "1fdda562036094436ca8aa3b498e0e7b72364b734dd71c8ad9d13884cb5b281f",
-    "status": "sixteen_source_table_zero_architecture_novelty_residual_n1_value_unestablished"
+    "contract": "research/paper-1/novelty_claim_overlap_v4.json",
+    "sha256": "2b476bb00d5464699e579fd198b8c952cb9de04775d8211356161c2b61e5e861",
+    "status": "seventeen_source_table_zero_architecture_novelty_n1_retirement_review_pending"
   },
   "novelty_code_availability": {
-    "audit": "research/paper-1/novelty_code_availability_v5.json",
-    "sha256": "a561649842f29be759eec5412d96afc9044e8b297e094019484c10d27e99eaa1",
-    "status": "sixteen_sources_two_root_rights_paths_no_new_full_reproduction"
+    "audit": "research/paper-1/novelty_code_availability_v6.json",
+    "sha256": "d6e541cc24b33fc022305578c0a1ba6d21f4e33bc7220762ffd972350df6f418",
+    "status": "seventeen_sources_three_root_rights_paths_no_new_full_reproduction"
   },
   "novelty_landscape": {
-    "audit": "research/paper-1/novelty_landscape_v6.json",
-    "sha256": "e66e94e652171353374c915508df535373a37f74ee7a9d24d1272b1e725b21b7",
-    "status": "sixteen_full_text_audits_n1_from_scratch_placement_directly_overlapped_no_novelty"
+    "audit": "research/paper-1/novelty_landscape_v7.json",
+    "sha256": "1df67600b997f8d550283211aa38e5ac9227f4cb902830d2c8fc29aaed34f14c",
+    "status": "seventeen_full_text_audits_n1_placement_and_activation_diagnostics_overlapped_no_novelty"
   },
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
   "paper_id": "speck-paper-1",
@@ -561,6 +561,11 @@
     "audit": "research/paper-1/rethinking_hybrid_code_audit_v1.json",
     "sha256": "1704fff0a5d8578a00360663c372535f16793976576e974cd2433c07753189b4",
     "status": "analysis_source_and_rights_qualified_full_experiment_reproduction_blocked"
+  },
+  "massive_hla_code_audit": {
+    "audit": "research/paper-1/massive_hla_code_audit_v1.json",
+    "sha256": "fa6c57e1346b03aa6978cb76e468c264b48da8eba930a5a3316e927fd285882e",
+    "status": "analysis_code_and_baseline_checkpoint_identity_qualified_training_and_full_reproduction_blocked"
   },
   "raw_local_readiness": {
     "contract": "research/paper-1/raw_local_readiness_v1.json",
