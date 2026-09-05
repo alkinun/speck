@@ -19,6 +19,7 @@ PROGRAM_FILES = (
     "raw_local_readiness_v1.json",
     "ratio_placement_readiness_v1.json",
     "attnres_readiness_v1.json",
+    "stable_latentmoe_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -833,6 +834,63 @@ def _validate_attnres_readiness(reference, repository_root, paper_id, policy_id)
         raise ValueError("AttnRes readiness design is incomplete")
 
 
+def _validate_stable_latentmoe_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "LatentMoE readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("Stable LatentMoE readiness gate does not match its pin")
+    gate = _load_json(path)
+    stages = gate.get("required_decomposition_order", ())
+    semantics = gate.get("initial_conventional_moe_semantics_to_freeze", {})
+    intervention = gate.get("intervention_policy_required", {})
+    systems = gate.get("systems_gate", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_stable_latentmoe_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("hard_blockers", ())) < 8
+        or [stage.get("id") for stage in stages]
+        != [
+            "dense_vs_conventional_moe",
+            "latent_projection",
+            "latent_normalization",
+            "bounded_activation",
+            "balancing",
+            "expert_geometry",
+        ]
+        or len(semantics) < 9
+        or len(gate.get("correctness_before_training", ())) < 10
+        or len(gate.get("stability_diagnostics", {})) < 4
+        or len(intervention.get("freeze_before_training", ())) < 5
+        or systems.get("single_device_required") is not True
+        or systems.get("expert_parallel_required_before_promotion") is not True
+        or systems.get("minimum_primary_improvement") != 0.2
+        or systems.get("repeats") != 5
+        or systems.get("interleave_arms") is not True
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "primary_spec_qualified",
+                "sequence_parent_selected",
+                "depth_parent_selected",
+                "hardware_envelope_selected",
+                "conventional_moe_qualified",
+                "latent_projection_qualified",
+                "bounded_activation_qualified",
+                "balancing_qualified",
+                "expert_geometry_selected",
+                "implementation_authorized",
+                "training_authorized",
+                "promotion_authority",
+            )
+        )
+    ):
+        raise ValueError("Stable LatentMoE readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -904,6 +962,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "raw_local_readiness",
             "ratio_placement_readiness",
             "attnres_readiness",
+            "stable_latentmoe_readiness",
         },
         "paper experiment program",
     )
@@ -943,6 +1002,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_attnres_readiness(
         program["attnres_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_stable_latentmoe_readiness(
+        program["stable_latentmoe_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],

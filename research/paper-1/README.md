@@ -88,6 +88,9 @@ the final combined model.
 - [`attnres_readiness_v1.json`](attnres_readiness_v1.json) fixes the 40-module residual source graph,
   adds the static-depth mechanism control, and freezes Full/Block equations, correctness, activation,
   block-count, depth/width, mechanistic, and efficiency gates before implementation.
+- [`stable_latentmoe_readiness_v1.json`](stable_latentmoe_readiness_v1.json) records the missing primary
+  specification and freezes conventional-MoE, latent, normalization, activation, balancing, and expert-
+  geometry stages plus routing, stability, rescue, memory, and hardware gates.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

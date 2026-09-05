@@ -73,6 +73,7 @@ Read in order:
 65. [64 — Raw-local branch readiness gate](64_raw_local_readiness_gate.md)
 66. [65 — Recurrent/global ratio and placement readiness gate](65_ratio_placement_readiness_gate.md)
 67. [66 — Attention Residuals readiness gate](66_attnres_readiness_gate.md)
+68. [67 — Stable LatentMoE readiness gate](67_stable_latentmoe_readiness_gate.md)
 
 Conventions:
 
@@ -328,3 +329,9 @@ The initial four-arm isolation adds a static-depth control beside PreNorm, Full,
 AttnRes; the bounded arm uses eight five-module blocks and at most nine sources. Exact equations,
 activation/recomputation, block-count, three-by-three depth/width, content-dependence, and 10% efficiency
 gates are frozen. No implementation or training is authorized.
+
+Finding 67 records that the local K3 review is not an implementation-complete Stable LatentMoE
+specification. Width work is frozen as six separate stages: conventional MoE, latent factorization,
+normalization, bounded activation, balancing, then geometry. Dropless routing semantics, stability and
+rescue evidence, total/active memory, single-device and expert-parallel systems gates are explicit.
+Primary-source equations, parents, hardware, implementation, and training remain blocked.

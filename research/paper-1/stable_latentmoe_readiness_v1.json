@@ -1,0 +1,177 @@
+{
+  "format": "speck_stable_latentmoe_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-stable-latentmoe-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_primary_spec_parent_and_hardware",
+  "frozen_on": "2026-09-05",
+  "purpose": "Prevent sparse-width capacity, latent factorization, normalization, bounded activation, balancing, and expert geometry from entering as one uninterpretable bundle.",
+  "evidence_basis": [
+    {
+      "path": "papers/04_kimi_k3.md",
+      "supported": "K3 combines latent projection normalization, SiTU-GLU, Quantile Balancing, extreme expert sparsity, and Per-Head Muon in one mature system",
+      "insufficient": "the local review does not contain implementation-complete LatentMoE, SiTU-GLU, Quantile Balancing, histogram, or update equations"
+    },
+    {
+      "path": "research/paper-1/reference_audit.md",
+      "supported": "extreme MoE sparsity cannot be separated from normalization, bounded activation, balancing, optimizer, and systems evidence",
+      "insufficient": "whole-system feasibility is not local component attribution"
+    },
+    {
+      "path": "papers/16_deepseek_v2_mla.md",
+      "supported": "normalized low-rank bottlenecks and fine-grained routed experts can coexist at scale",
+      "insufficient": "DeepSeekMoE geometry and quality do not define K3 LatentMoE"
+    },
+    {
+      "path": "papers/09_nemotron_3_nano.md",
+      "supported": "a hybrid sparse model can expose far more total than active parameters",
+      "insufficient": "128-expert/six-active geometry trained on 25T tokens is not a Speck optimum"
+    }
+  ],
+  "hard_blockers": [
+    "the sequence and depth parents are not selected",
+    "the medium-scale single-device versus expert-parallel hardware envelope is not named",
+    "implementation-complete primary equations and code identities for LatentMoE are not pinned",
+    "implementation-complete SiTU-GLU equation and numerical limits are not pinned",
+    "implementation-complete Quantile Balancing target, margin, histogram, bias-update, and distributed-reduction rules are not pinned",
+    "no local dropless routed-expert reference or dispatch kernel exists",
+    "no storage/memory budget covers expert weights, optimizer state, activation dispatch, and checkpoints",
+    "no intervention policy for routing collapse, overflow, or loss spikes is preregistered"
+  ],
+  "required_decomposition_order": [
+    {
+      "id": "dense_vs_conventional_moe",
+      "intervention": "replace selected dense SwiGLU modules with direct top-k routed SwiGLU experts plus one shared expert",
+      "purpose": "establish whether conditional width helps before latent or stability machinery",
+      "forbidden": "LatentMoE projection, bounded activation, quantile balancing, or changing sequence/depth"
+    },
+    {
+      "id": "latent_projection",
+      "intervention": "direct experts versus exact primary-source LatentMoE factorization",
+      "purpose": "isolate latent parameterization at fixed expert count, top-k, active parameters, routing, activation, and balancing",
+      "forbidden": "adding normalization in the same step"
+    },
+    {
+      "id": "latent_normalization",
+      "intervention": "add only the exact primary-source latent RMSNorm placement",
+      "purpose": "isolate scale control from low-rank capacity"
+    },
+    {
+      "id": "bounded_activation",
+      "intervention": "plain SwiGLU versus one exact frozen bounded activation",
+      "purpose": "separate outlier/stability behavior from latent projection",
+      "forbidden": "mixing clamping and SiTU-GLU in the same candidate"
+    },
+    {
+      "id": "balancing",
+      "intervention": "auxiliary load loss versus bias balancing versus exact Quantile Balancing",
+      "purpose": "select on quality, load tails, margins, communication, and instability rather than mean load"
+    },
+    {
+      "id": "expert_geometry",
+      "intervention": "vary total experts and top-k only after the preceding mechanism is stable",
+      "purpose": "find the total/active capacity and hardware-utilization frontier"
+    }
+  ],
+  "initial_conventional_moe_semantics_to_freeze": {
+    "placement": "which FFN modules become MoE is fixed and identical across routed arms",
+    "shared_experts": "exactly one always-active shared expert in the initial comparison",
+    "routing": "top-k logits, selected-weight normalization, deterministic tie breaking, router precision, and jitter are explicit",
+    "capacity": "initial reference is dropless; any capacity factor, token dropping, padding, or overflow fallback creates a separate arm",
+    "dispatch": "expert token ordering, padding, combine weights, and backward reduction have a slow reference",
+    "expert_initialization": "dense-to-expert cloning versus independent initialization is frozen before training and cannot differ across compared routers",
+    "active_parameter_definition": "count shared plus selected routed expert weights, router work, latent projections, and token-dependent normalization separately",
+    "total_parameter_definition": "count every resident routed/shared expert, router, projection, normalization, and bias parameter",
+    "optimizer": "Muon/AdamW roles for router, expert, latent, norm, and balancing parameters are explicit"
+  },
+  "correctness_before_training": [
+    "dense one-expert reduction where mathematically applicable",
+    "reference versus dispatched forward and input/parameter/router gradient parity",
+    "top-k ties and selected-weight normalization",
+    "dropless token conservation and combine-order identity",
+    "zero-token and highly imbalanced expert batches",
+    "checkpoint/resume and Transformers export",
+    "single-device and expert-parallel semantic parity",
+    "mixed-precision overflow and finite-state checks",
+    "exact total/active parameter and analytic-FLOP accounting",
+    "expert weight, optimizer, activation, dispatch, communication, workspace, and fragmentation memory"
+  ],
+  "stability_diagnostics": {
+    "load": [
+      "tokens per expert and coefficient of variation",
+      "maximum, p95, and p99 expert load",
+      "dead/near-dead expert count",
+      "overflow, padding, and dropped-token counts"
+    ],
+    "routing": [
+      "selected probabilities and top-1/top-k margins",
+      "routing entropy and churn over training",
+      "expert specialization and pairwise redundancy",
+      "shared-expert contribution"
+    ],
+    "numerics": [
+      "expert input/output and latent RMS",
+      "activation and gradient maxima plus quantiles",
+      "non-finite values by module and optimizer role",
+      "loss spikes with pre-spike routing/load history"
+    ],
+    "systems": [
+      "tokens per expert per device",
+      "dispatch and all-to-all bytes/time",
+      "expert GEMM utilization",
+      "batch-1 and maximum-resident-batch latency",
+      "single-device and expert-parallel throughput"
+    ]
+  },
+  "intervention_policy_required": {
+    "freeze_before_training": [
+      "loss-spike threshold",
+      "load/overflow safety thresholds",
+      "maximum rescue frequency and duration",
+      "rollback checkpoint rule",
+      "whether anticipatory routing or another rescue exists"
+    ],
+    "report": "every trigger, duration, older-router identity, added compute, and post-intervention trajectory",
+    "decision": "frequent rescue is a stability failure, not invisible training infrastructure"
+  },
+  "matching_and_replication": {
+    "dense_control": "parameter/FLOP-matched dense SwiGLU under identical sequence/depth parent",
+    "views": [
+      "fixed active parameters",
+      "fixed total parameters",
+      "fixed analytic training FLOPs",
+      "fixed device memory",
+      "fixed steady training time",
+      "time and energy to locked quality"
+    ],
+    "quality": "aggregate and every-source language-loss non-inferiority plus declared capability floors",
+    "proxy": "three paired seed/data cells, no promotion authority",
+    "finalist": "three seeds crossed with two data orders and at least ten tokens per larger active parameter",
+    "medium_transfer": "named expert-parallel hardware with three paired cells and no primary-effect sign reversal"
+  },
+  "systems_gate": {
+    "single_device_required": true,
+    "expert_parallel_required_before_promotion": true,
+    "minimum_primary_improvement": 0.2,
+    "repeats": 5,
+    "interleave_arms": true,
+    "maximum_start_temperature_c": 50,
+    "rule": "total capacity is not free: a sparse arm must improve quality per active compute and retain small-batch serving after expert memory, dispatch, communication, and fragmentation"
+  },
+  "decision": {
+    "primary_spec_qualified": false,
+    "sequence_parent_selected": false,
+    "depth_parent_selected": false,
+    "hardware_envelope_selected": false,
+    "conventional_moe_qualified": false,
+    "latent_projection_qualified": false,
+    "bounded_activation_qualified": false,
+    "balancing_qualified": false,
+    "expert_geometry_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "obtain and pin the implementation-complete primary Stable LatentMoE specification and code before writing local equations"
+  }
+}
