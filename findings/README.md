@@ -555,3 +555,8 @@ execution, reuse, reproduction, or N1 protocol is authorized.
 Finding 102 updates the artifact inventory to nineteen sources, ten immutable source/checkpoint
 snapshots, eight repositories with code, and three root-licensed code paths. The KL-selector tree adds
 config evidence but no qualified reproduction path; execution, reuse, and behavior remain blocked.
+
+Finding 103 updates N1's claim table after cross-task KL selection. Held-out-task, cross-scale,
+cross-mixer, clustered-layout, and spacing-intervention stories are occupied. Only teacher-free
+prediction of jointly trained from-scratch interactions remains—a procedural residual with retirement
+evidence-favored pending independent review. No N1 experiment is authorized.

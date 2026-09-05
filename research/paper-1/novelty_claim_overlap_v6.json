@@ -1,0 +1,90 @@
+{
+  "format": "speck_novelty_claim_overlap_table",
+  "format_version": 6,
+  "table_id": "speck-paper-1-novelty-claim-overlap-v6",
+  "paper_id": "speck-paper-1",
+  "status": "nineteen_source_table_zero_architecture_novelty_n1_retirement_favored",
+  "created_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_claim_overlap_v5.json",
+    "sha256": "996468bba779753bd8af6e8269d84487bc3a9b8fa71a1582054968d785680739",
+    "claims": 28,
+    "superseded_decision": "N1 is a procedural low-prior residual pending retention-or-retirement review"
+  },
+  "inputs": {
+    "landscape": "research/paper-1/novelty_landscape_v9.json",
+    "landscape_sha256": "255fb839478702683707256bf6ec48f4ade705e9c6b917c66ace195e63b99df2",
+    "code_availability": "research/paper-1/novelty_code_availability_v8.json",
+    "code_availability_sha256": "d663c5f9e7b226267dd8c7e8981336c7ac89b5631a2887dd2f6a9efce7056283"
+  },
+  "inherited_claims": 28,
+  "additional_claims": [
+    {
+      "id": "P17_generic_kl_cross_task_cross_mixer_selection",
+      "strongest_source": "Distilling to Hybrid Attention Models via KL-Guided Layer Selection",
+      "classification": "direct_conversion_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "generic-text KL scores select layers evaluated on downstream recall, scale within Qwen, and transfer from a GDN selector to GLA students"
+    },
+    {
+      "id": "P18_clustered_layout_and_spacing_intervention",
+      "strongest_source": "Distilling to Hybrid Attention Models via KL-Guided Layer Selection",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "selected layers form teacher-dependent depth clusters and distance regularization directly tests and harms forced spreading"
+    },
+    {
+      "id": "R7_teacher_free_from_scratch_interaction_prediction",
+      "strongest_source": "no exact source established; closest are KL selection, HALO, DtR, FlashMorph, systematic placement, hybrid-role analysis, and PAS/ISP diagnostics",
+      "classification": "procedural_residual_retirement_favored_not_an_architecture_mechanism",
+      "decision": "independent_retirement_review_only",
+      "reason": "held-out-task, cross-scale, cross-mixer, clustering, spacing, and stopping claims are occupied; only removing the teacher and neighbor-training proxy remains, with no demonstrated architecture value"
+    }
+  ],
+  "aggregate_claim_rows": 31,
+  "residual_questions": [
+    {
+      "rank": 1,
+      "id": "N1_teacher_free_from_scratch_interaction_placement_prediction",
+      "classification": "procedural_residual_with_retirement_favored",
+      "authorized_action": "independent retirement review only",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false,
+      "retention_gate": "retain only if review identifies a non-procedural causal architecture claim that mature conversion selectors cannot answer"
+    },
+    {
+      "rank": 2,
+      "id": "N2_internal_state_completeness_predictor_law",
+      "classification": "deferred_unestablished_empirical_diagnostic_law",
+      "authorized_action": "none before independent claim review finds incremental value",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false
+    }
+  ],
+  "baseline_disposition": {
+    "paper_1_three_pair_proxy": "continue through frozen completion because it estimates the conservative five-cache KDA/GQA parent versus dense attention and is independent of novelty selection",
+    "promotion_limit": "a quality/cost pass may retain a conservative research parent under the architecture policy but cannot satisfy the separate Paper 1 novelty gate",
+    "post_analysis": "after the paired result, decide whether to retain the parent for future isolation; do not infer N1 or N2 evidence"
+  },
+  "decision": {
+    "established_architecture_novelty_candidates": 0,
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n1_task_guided_selection_novelty_rejected": true,
+    "n1_cross_task_cross_mixer_selection_novelty_rejected": true,
+    "n1_predictive_law_established": false,
+    "n1_experiment_authorized": false,
+    "n1_retirement_favored": true,
+    "n1_independent_retirement_review_required": true,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "n2_experiment_authorized": false,
+    "baseline_completion_authorized": true,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "new_training_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "finish the frozen proxy and independently review N1 for retirement; absent a non-procedural causal claim, retire it and search elsewhere"
+  }
+}

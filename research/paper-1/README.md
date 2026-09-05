@@ -141,6 +141,9 @@ the final combined model.
 - [`novelty_claim_overlap_v5.json`](novelty_claim_overlap_v5.json) adds HALO task-guided layer
   selection and the HypeNet composition bundle, leaving only a procedural held-out from-scratch
   interaction-prediction residual for independent retention-or-retirement review.
+- [`novelty_claim_overlap_v6.json`](novelty_claim_overlap_v6.json) adds generic-KL cross-task,
+  cross-scale, cross-mixer, clustering, and spacing overlap, reducing N1 to a teacher-free procedural
+  residual and making retirement evidence-favored pending independent review.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.
