@@ -21,6 +21,7 @@ PROGRAM_FILES = (
     "attnres_readiness_v1.json",
     "stable_latentmoe_readiness_v1.json",
     "interaction_readiness_v1.json",
+    "scaling_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -943,6 +944,64 @@ def _validate_interaction_readiness(reference, repository_root, paper_id, policy
         raise ValueError("interaction readiness design is incomplete")
 
 
+def _validate_scaling_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "scaling readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("scaling readiness gate does not match its pin")
+    gate = _load_json(path)
+    scales = gate.get("scale_points", {})
+    allocation = gate.get("compute_optimal_allocation", {})
+    fit = gate.get("confirmatory_fit", {})
+    uncertainty = gate.get("uncertainty", {})
+    held_out = gate.get("held_out_prediction", {})
+    horizon = gate.get("training_horizon_interaction", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_scaling_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("entry_gate", ())) < 6
+        or scales.get("fit_active_parameters")
+        != [30_000_000, 60_000_000, 150_000_000, 350_000_000, 600_000_000]
+        or scales.get("held_out_active_parameters") != 1_200_000_000
+        or scales.get("held_out_training_tokens") != 20_000_000_000
+        or scales.get("fit_points_per_architecture") != 5
+        or scales.get("minimum_paired_seed_data_cells_per_fit_point") != 3
+        or allocation.get("pilot_parameter_points")
+        != [30_000_000, 60_000_000, 150_000_000]
+        or allocation.get("pilot_tokens_per_active_parameter") != [10, 20, 40]
+        or allocation.get("joint_fit") != "L(N,D)=E+A*N^(-alpha)+B*D^(-beta)"
+        or fit.get("analytic_compute_family") != "L(C)=E_C+A_C*C^(-gamma_C)"
+        or fit.get("shared_family") is not True
+        or uncertainty.get("method")
+        != "paired hierarchical bootstrap that resamples seed/data cells within scale and refits allocation plus both frontier models"
+        or uncertainty.get("resamples") != 10_000
+        or uncertainty.get("seed") != 42
+        or uncertainty.get("full_pipeline_refit") is not True
+        or held_out.get("scale_active_parameters") != 1_200_000_000
+        or held_out.get("training_tokens") != 20_000_000_000
+        or horizon.get("checkpoints_tokens_per_active_parameter") != [2, 5, 10, 20]
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "candidate_architecture_selected",
+                "control_architecture_selected",
+                "geometry_rules_selected",
+                "hardware_envelope_selected",
+                "allocation_pilots_authorized",
+                "fit_runs_authorized",
+                "held_out_run_authorized",
+                "scaling_claim_authorized",
+                "paper_scale_authorized",
+            )
+        )
+    ):
+        raise ValueError("scaling readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1016,6 +1075,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "attnres_readiness",
             "stable_latentmoe_readiness",
             "interaction_readiness",
+            "scaling_readiness",
         },
         "paper experiment program",
     )
@@ -1067,6 +1127,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_interaction_readiness(
         program["interaction_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_scaling_readiness(
+        program["scaling_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],

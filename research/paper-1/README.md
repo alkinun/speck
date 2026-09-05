@@ -94,6 +94,9 @@ the final combined model.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.
+- [`scaling_readiness_v1.json`](scaling_readiness_v1.json) separates transfer from frontier claims and
+  freezes five fit scales, allocation pilots, joint/compute models, full-refit uncertainty, horizon
+  interaction, and a held-out 1.2B prediction sentinel without authorizing runs.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

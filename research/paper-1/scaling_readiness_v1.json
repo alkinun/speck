@@ -1,0 +1,181 @@
+{
+  "format": "speck_scaling_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-scaling-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_frozen_architectures_hardware_and_budget_blocked",
+  "frozen_on": "2026-09-05",
+  "purpose": "Separate sign-consistent scale transfer from a statistical claim that the final Speck architecture has a better loss-compute frontier.",
+  "evidence_basis": [
+    {
+      "path": "papers/02_kimi_linear.md",
+      "supported": "multiple active-parameter points under fixed FLOP budgets are stronger evidence than one large model",
+      "not_transferred": "Kimi's fitted frontier, hyperparameters, 3B-active result, or optimal ratio"
+    },
+    {
+      "path": "papers/20_moba.md",
+      "supported": "architecture loss gaps and trailing-token behavior can change with scale",
+      "not_transferred": "MoBA's fitted gap or compute-optimal allocation"
+    },
+    {
+      "path": "papers/15_minimax_m2.md",
+      "supported": "efficient-attention rankings can reverse on harder capabilities and larger scales",
+      "not_transferred": "MiniMax's data, post-training, or reversal as a prediction for Speck"
+    },
+    {
+      "path": "research/paper-1/reference_audit.md",
+      "supported": "a scaling claim needs at least five points, uncertainty, residuals, and a held-out point",
+      "not_transferred": "a claim from proxy, medium, or target sentinel evidence alone"
+    }
+  ],
+  "claim_separation": {
+    "scale_transfer": "the selected candidate's paired primary effect retains direction and required gates at a larger named scale",
+    "scaling_efficiency": "the candidate's fitted loss frontier versus analytic compute and realized time/energy is better across a predeclared range",
+    "rule": "three-scale sign consistency is necessary for the architecture thesis but does not by itself establish a scaling-law advantage"
+  },
+  "entry_gate": [
+    "the final candidate and strongest conventional baseline are frozen with immutable config generators",
+    "sequence, depth, width, interaction, and final-removal gates are complete",
+    "one deterministic depth/width/head/expert scaling rule exists for each architecture",
+    "tokenizer, data family, validation, optimizer-tuning budget, and analytic cost accounting are frozen",
+    "named hardware, parallelism, storage, energy measurement, and total resource ceiling cover every fit and held-out run",
+    "candidate/control contamination windows and result-access rules are frozen"
+  ],
+  "scale_points": {
+    "fit_active_parameters": [
+      30000000,
+      60000000,
+      150000000,
+      350000000,
+      600000000
+    ],
+    "held_out_active_parameters": 1200000000,
+    "held_out_training_tokens": 20000000000,
+    "fit_points_per_architecture": 5,
+    "architectures": 2,
+    "minimum_paired_seed_data_cells_per_fit_point": 3,
+    "held_out_role": "one matched reversal and prediction sentinel; no population-equivalence authority",
+    "geometry_tolerance": "materialized active parameters must be within 2% of each nominal target and candidate/control within 0.25% inside a scale cell",
+    "rule": "report nominal, materialized active, total, embedding, expert, cache/state, and residual-summary parameters separately"
+  },
+  "compute_optimal_allocation": {
+    "pilot_parameter_points": [
+      30000000,
+      60000000,
+      150000000
+    ],
+    "pilot_tokens_per_active_parameter": [
+      10,
+      20,
+      40
+    ],
+    "pilot_design": "run the same 3x3 N-by-D/N allocation grid for candidate and control with an identical hyperparameter search budget",
+    "joint_fit": "L(N,D)=E+A*N^(-alpha)+B*D^(-beta)",
+    "constraints": "E>=0, A>0, B>0, alpha>0, beta>0",
+    "cost": "use architecture-specific analytic forward-plus-backward training FLOPs including embeddings, attention/recurrent/sparse/expert/residual operations; report realized time and energy separately",
+    "selection": "for each fit-scale compute budget, minimize the preregistered joint-fit prediction over batch-aligned D subject to D/N in [10,40]",
+    "rounding": "round D down to a complete frozen global token batch and report the prediction change",
+    "separation": "allocation pilots select token budgets only; their losses are not reused as the five confirmatory frontier points"
+  },
+  "optimization_fairness": {
+    "shared": [
+      "tokenizer and ordered data mixture",
+      "sequence length curriculum",
+      "loss and evaluation tokens",
+      "weight-decay and gradient-clipping policy",
+      "precision and distributed semantics"
+    ],
+    "tuned_per_architecture_scale": [
+      "peak learning rate",
+      "warmup fraction",
+      "global batch within the hardware envelope"
+    ],
+    "budget": "the same number of tuning trials, seeds, token fraction, and selection metric for both architectures at every scale",
+    "selection": "choose hyperparameters on a disjoint tuning window before confirmatory seed/data cells",
+    "forbidden": "reuse a winning candidate setting for an untuned control or spend more trials on one architecture"
+  },
+  "confirmatory_fit": {
+    "analytic_compute_family": "L(C)=E_C+A_C*C^(-gamma_C)",
+    "constraints": "E_C>=0, A_C>0, gamma_C>0",
+    "shared_family": true,
+    "fit_separately": "candidate and control have separate coefficients under the same functional form and fitting algorithm",
+    "optimization": "bounded nonlinear least squares with parameter transforms, a frozen deterministic multi-start grid, and every converged/local solution retained",
+    "weights": "inverse paired-variance weights estimated from the three confirmatory seed/data cells with a preregistered variance floor",
+    "reported": [
+      "coefficients and covariance/bootstrapped intervals",
+      "observed and fitted loss per scale",
+      "raw, standardized, and leave-one-scale-out residuals",
+      "candidate-minus-control fitted difference over the declared compute range",
+      "crossing points with uncertainty",
+      "sensitivity to unweighted fit and each retained local optimum"
+    ]
+  },
+  "uncertainty": {
+    "method": "paired hierarchical bootstrap that resamples seed/data cells within scale and refits allocation plus both frontier models",
+    "resamples": 10000,
+    "seed": 42,
+    "full_pipeline_refit": true,
+    "confidence": 0.95,
+    "failure_rule": "failed optimization or boundary solutions remain in the bootstrap failure count; do not silently discard until intervals tighten",
+    "multiplicity": "the global frontier claim is primary; scale-specific contrasts and diagnostics are secondary with Holm correction when used as confirmatory claims"
+  },
+  "held_out_prediction": {
+    "scale_active_parameters": 1200000000,
+    "training_tokens": 20000000000,
+    "freeze_before_run": [
+      "candidate and control expected loss intervals",
+      "expected paired difference interval",
+      "time and energy ranges",
+      "maximum tolerated standardized residual",
+      "architecture ranking"
+    ],
+    "pass": "both observed losses fall inside their 95% predictive intervals, the paired advantage has the predicted sign, and the absolute standardized residual for each architecture is at most 2",
+    "failure": "the scaling-efficiency claim fails or is narrowed; the sentinel cannot be used to refit and then declared held out"
+  },
+  "training_horizon_interaction": {
+    "anchor_active_parameters": 150000000,
+    "checkpoints_tokens_per_active_parameter": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "model": "paired loss difference as a function of log training tokens with architecture-by-horizon interaction and retained per-source traces",
+    "rule": "a proxy advantage that disappears or reverses by ten or twenty tokens per active parameter blocks extrapolation",
+    "current_baseline_limit": "131072000 tokens over approximately 154M parameters is below one token per parameter and is only a proxy screen"
+  },
+  "quality_and_capability": {
+    "required_at_every_fit_scale": [
+      "aggregate and every-source language loss",
+      "short-context regression suite",
+      "mechanism diagnostics appropriate to retained components",
+      "structured retrieval and symbolic composition at feasible lengths"
+    ],
+    "required_at_medium_and_held_out": [
+      "all qualified independent long-context suites",
+      "code, mathematics, and reasoning gates",
+      "post-training evaluation only under its own matched frozen recipe"
+    ],
+    "rule": "a loss-compute fit cannot override a capability reversal or missing required suite"
+  },
+  "decision_contract": {
+    "scale_transfer_pass": "primary paired effect keeps its predicted sign and every quality/systems gate passes at proxy-finalist and medium scales",
+    "scaling_efficiency_pass": "the lower 95% simultaneous bootstrap bound on candidate advantage is positive over the declared compute range and the held-out sentinel passes",
+    "inconclusive": "overlapping frontier uncertainty, unstable optimization, or crossing within the claim range yields no scaling-efficiency claim",
+    "failure": "held-out miss, sign reversal, capability failure, or worse realized time/energy prevents the broad efficiency claim",
+    "no_extrapolation": "claims stop at the largest passing held-out scale/context/hardware regime"
+  },
+  "decision": {
+    "candidate_architecture_selected": false,
+    "control_architecture_selected": false,
+    "geometry_rules_selected": false,
+    "hardware_envelope_selected": false,
+    "allocation_pilots_authorized": false,
+    "fit_runs_authorized": false,
+    "held_out_run_authorized": false,
+    "scaling_claim_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "after architecture selection, freeze deterministic geometry generators and price the complete pilot/fit/sentinel resource envelope before any scaling run"
+  }
+}

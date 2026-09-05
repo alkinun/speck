@@ -574,6 +574,11 @@
       "architecture-by-training-horizon interaction"
     ]
   },
+  "scaling_readiness": {
+    "contract": "research/paper-1/scaling_readiness_v1.json",
+    "sha256": "f1eff3cc5980b39332ef1bd14b09fa1823bcad8fc77b372d077fa90f1d5773ab",
+    "status": "design_frozen_architectures_hardware_and_budget_blocked"
+  },
   "sequence_cache_representation": {
     "contract": "research/paper-1/sequence_cache_representation_v1.json",
     "sha256": "e02d5c7bc9642975b5f70575f7b1c5c21da75e7fcabd723ec92719a0aa0c39fb",

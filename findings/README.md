@@ -75,6 +75,7 @@ Read in order:
 67. [66 — Attention Residuals readiness gate](66_attnres_readiness_gate.md)
 68. [67 — Stable LatentMoE readiness gate](67_stable_latentmoe_readiness_gate.md)
 69. [68 — Tri-axis interaction and removal readiness gate](68_interaction_readiness_gate.md)
+70. [69 — Scaling and held-out prediction readiness gate](69_scaling_readiness_gate.md)
 
 Conventions:
 
@@ -342,3 +343,9 @@ subcomponents. The complete 2³ discovery cube is 24 fixed runs across three pai
 difference-in-differences, three-way, conditional-removal, Holm, aggregate/source, and retuned absence
 controls. Every retained subcomponent still needs a final removal, and simpler quality-passing ties are
 deleted. No cube or combined architecture is authorized.
+
+Finding 69 separates scale transfer from a fitted scaling-efficiency claim. It freezes five 30M–600M
+fit points, symmetric N/D allocation pilots, constrained joint and compute fits, complete-refit paired
+bootstrap uncertainty, horizon interaction, and a truly held-out 1.2B/20B sentinel. The current
+sub-one-token-per-parameter proxy cannot support scaling claims. Architecture, hardware, budgets, fits,
+sentinel, and paper-scale execution remain blocked.
