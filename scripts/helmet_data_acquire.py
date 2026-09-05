@@ -162,12 +162,26 @@ def _download(values):
         raise ValueError("HELMET download directory is not user-owned or is a symlink")
     final = download_dir / ARCHIVE_NAME
     partial = download_dir / f"{ARCHIVE_NAME}.partial"
+    hf_staged = values["volume"] / "hf-staging" / ARCHIVE_NAME
     expected_bytes = values["archive"]["bytes"]
     expected_sha256 = values["archive"]["sha256"]
     if final.is_file():
         if final.stat().st_size != expected_bytes or file_sha256(final) != expected_sha256:
             raise ValueError("retained HELMET archive does not match its pin")
-        return final, False, 0.0
+        return final, False, 0.0, "retained_qualified_archive", 0
+    if hf_staged.is_file():
+        if hf_staged.stat().st_size != expected_bytes or file_sha256(hf_staged) != expected_sha256:
+            raise ValueError("Hugging Face staged HELMET archive does not match its pin")
+        discarded_partial_bytes = partial.stat().st_size if partial.is_file() else 0
+        os.replace(hf_staged, final)
+        partial.unlink(missing_ok=True)
+        return (
+            final,
+            True,
+            0.0,
+            "authenticated_huggingface_hub_xet_staging",
+            discarded_partial_bytes,
+        )
     if partial.exists() and (not partial.is_file() or partial.stat().st_size > expected_bytes):
         raise ValueError("HELMET partial download is not a valid resumable file")
     started = time.monotonic()
@@ -203,13 +217,13 @@ def _download(values):
     if observed != expected_sha256:
         raise ValueError(f"HELMET archive SHA-256 is {observed}, expected {expected_sha256}")
     os.replace(partial, final)
-    return final, True, elapsed
+    return final, True, elapsed, "anonymous_curl_resumable", 0
 
 
 def prepare(args):
     values = _inputs(args)
     before = values["live_volume"]
-    archive, transferred, elapsed = _download(values)
+    archive, transferred, elapsed, transport, discarded_partial_bytes = _download(values)
     after = qualify_volume(
         values["volume"], values["contract"]["data"]["minimum_free_bytes_before_download"]
     )
@@ -247,11 +261,19 @@ def prepare(args):
             "sha256": file_sha256(archive),
             "transferred_this_run": transferred,
             "transfer_seconds": elapsed,
+            "transport": transport,
+            "discarded_superseded_partial_bytes": discarded_partial_bytes,
         },
         "storage": {"before": before, "after": after},
-        "curl": subprocess.run(
-            ["curl", "--version"], check=True, capture_output=True, text=True
-        ).stdout.splitlines()[0],
+        "tools": {
+            "curl": subprocess.run(
+                ["curl", "--version"], check=True, capture_output=True, text=True
+            ).stdout.splitlines()[0],
+            "huggingface_cli": subprocess.run(
+                ["hf", "--version"], check=True, capture_output=True, text=True
+            ).stdout.strip(),
+            "credential_exposed": False,
+        },
         "decision": {
             "archive_qualified": True,
             "extraction_authorized": False,

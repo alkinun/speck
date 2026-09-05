@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from scripts.helmet_data_acquire import qualify_volume
+from scripts.helmet_data_acquire import ARCHIVE_NAME, qualify_volume
 
 
 def test_qualify_volume_rejects_symlink(tmp_path):
@@ -22,3 +22,7 @@ def test_qualify_volume_rejects_wrong_filesystem(tmp_path):
 
     with pytest.raises(ValueError, match="identity"):
         qualify_volume(path, 1)
+
+
+def test_archive_name_is_frozen_to_v1_payload():
+    assert ARCHIVE_NAME == "data.tar.gz"
