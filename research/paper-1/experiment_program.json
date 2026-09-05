@@ -524,6 +524,11 @@
     "sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e",
     "status": "twelve_sources_one_root_rights_path_no_new_reproduction_authority"
   },
+  "novelty_claim_overlap": {
+    "contract": "research/paper-1/novelty_claim_overlap_v1.json",
+    "sha256": "f178592fdd13185fe1fdd69faa8a1edabb6161bebd6ff22fa0398f5e62655158",
+    "status": "twelve_source_table_n1_primary_n2_deferred_no_novelty"
+  },
   "novelty_landscape": {
     "audit": "research/paper-1/novelty_landscape_v4.json",
     "sha256": "7c551044b5f9f37d0942477a8cdae9535e16220bdfce05eb993e43369609080f",

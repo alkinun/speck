@@ -1,0 +1,161 @@
+{
+  "format": "speck_novelty_claim_overlap_table",
+  "format_version": 1,
+  "table_id": "speck-paper-1-novelty-claim-overlap-v1",
+  "paper_id": "speck-paper-1",
+  "status": "twelve_source_table_n1_primary_n2_deferred_no_novelty",
+  "created_on": "2026-09-06",
+  "inputs": {
+    "landscape": "research/paper-1/novelty_landscape_v4.json",
+    "landscape_sha256": "7c551044b5f9f37d0942477a8cdae9535e16220bdfce05eb993e43369609080f",
+    "code_availability": "research/paper-1/novelty_code_availability_v3.json",
+    "code_availability_sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e"
+  },
+  "rules": [
+    "a mechanism, metric, workflow, or framing directly present in prior art cannot become novel by bundling it with other published components",
+    "a different implementation substrate such as KV state versus text does not by itself create conceptual novelty",
+    "an empirical law remains only a hypothesis until prospectively held-out prediction and causal intervention outperform all direct baselines",
+    "unavailable code weakens reproducibility but never restores novelty",
+    "no architecture experiment is justified solely to rescue a claim already classified as direct overlap"
+  ],
+  "claims": [
+    {
+      "id": "P1_joint_budgeted_hybrid_placement",
+      "strongest_source": "FlashMorph",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "joint interdependent full/linear layer gates under a budget are explicit"
+    },
+    {
+      "id": "P2_role_based_local_global_alternation",
+      "strongest_source": "Alternating Sparse Attention",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "local language and selective retrieval roles are already assigned across alternating layers"
+    },
+    {
+      "id": "P3_layer_importance_and_cache_clustering",
+      "strongest_source": "SqueezeAttention",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "before/after-attention layer importance and layer/sequence budget allocation are explicit"
+    },
+    {
+      "id": "P4_adaptive_head_layer_or_sequence_budget",
+      "strongest_source": "Ada-KV, HeadKV-R2, and SqueezeAttention",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "input-adaptive within-layer and static global layer/head allocations already cover the generic budget idea"
+    },
+    {
+      "id": "P5_one_checkpoint_requested_attention_budget",
+      "strongest_source": "Budgeted Attention Allocation",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "monotone cost-conditioned structural attention control from one checkpoint is explicit"
+    },
+    {
+      "id": "P6_sparse_recurrent_prefix_checkpoints",
+      "strongest_source": "Sparse Prefix Caching",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "distribution-aware exact checkpoint placement for recurrent/hybrid prefixes is explicit"
+    },
+    {
+      "id": "D1_reasoning_aware_head_importance",
+      "strongest_source": "HeadKV-R2",
+      "classification": "direct_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "retrieval-reasoning profiles already guide global layer/head cache allocation"
+    },
+    {
+      "id": "D2_retention_accessibility_utilization",
+      "strongest_source": "KV-compression attention dynamics",
+      "classification": "direct_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "routing, GER, consensus, token graphs, and survive-but-not-used failure are explicit"
+    },
+    {
+      "id": "D3_all_hop_or_distinct_source_conjunction",
+      "strongest_source": "BRIEF and IterCOMP",
+      "classification": "direct_overlap",
+      "decision": "concept_novelty_rejected",
+      "reason": "one helpful proposition per distinct hop document and Full versus Partial all-hop evidence are explicit"
+    },
+    {
+      "id": "D4_missing_information_detection_and_recovery",
+      "strongest_source": "IterCOMP",
+      "classification": "direct_overlap",
+      "decision": "concept_novelty_rejected",
+      "reason": "answerability, missing-subquestion generation, and iterative targeted accumulation are explicit"
+    },
+    {
+      "id": "D5_long_context_source_aware_budgeted_compression",
+      "strongest_source": "BRIEF-Pro",
+      "classification": "direct_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "oracle-plus-distractor contexts, source helpfulness, user budgets, one-hop omission, and whole-pipeline cost are explicit"
+    },
+    {
+      "id": "D6_structured_candidate_evidence_verification",
+      "strongest_source": "STEC",
+      "classification": "adjacent_overlap",
+      "decision": "mandatory_agentic_baseline",
+      "reason": "supporting/conflicting evidence and reasoning paths are compressed per answer candidate after search, not predicted from internal state before output"
+    },
+    {
+      "id": "R1_prospective_from_scratch_placement_law",
+      "strongest_source": "none established; closest are FlashMorph, ASA, and SqueezeAttention",
+      "classification": "plausibly_distinct_unproven",
+      "decision": "primary_research_hypothesis",
+      "reason": "the proposed law must fit discovery layouts and predict unseen from-scratch placements/tasks/scales without optimizing on held-out cells"
+    },
+    {
+      "id": "R2_cheap_internal_state_failure_law",
+      "strongest_source": "none established; closest are IterCOMP, BRIEF, routing dynamics, and HeadKV-R2",
+      "classification": "possible_incremental_empirical_result_not_concept_novelty",
+      "decision": "defer_before_protocol",
+      "reason": "only incremental pre-output prediction and equal-state intervention could differ; the completeness concept and recovery workflow are already occupied"
+    }
+  ],
+  "priority": [
+    {
+      "rank": 1,
+      "hypothesis": "N1_role_grounded_placement_law",
+      "action": "continue landscape and design work only; do not implement or train until the baseline parent and exact operators are selected",
+      "why": "it is the only current hypothesis that could become an architecture-level predictive law rather than a repackaged metric or component"
+    },
+    {
+      "rank": 2,
+      "hypothesis": "N2_internal_state_completeness_predictor_law",
+      "action": "defer experiment protocol until claim-granular independent expert review finds material incremental value",
+      "why": "the concept is overlapped, reproduction baselines are blocked, and the residual study is likely evaluation rather than architecture novelty"
+    }
+  ],
+  "n1_required_distinction": {
+    "fit": "from-scratch discovery layouts only",
+    "predict": "unseen layouts, dependency templates, source loads, at least one scale, and one different recurrent/cache representation",
+    "baselines": [
+      "count, FLOPs, and final-layer presence",
+      "uniform, random, and hand-role layouts",
+      "independent layer sensitivity and greedy replacement",
+      "FlashMorph-style joint gates when reproducible",
+      "ASA qualitative role layouts",
+      "SqueezeAttention layer clustering"
+    ],
+    "causal_requirement": "intervene on predicted integration, refresh, or readout roles at fixed count/state/FLOPs and move both diagnostic and held-out quality",
+    "falsification": "wrong held-out ranking, unstable coefficients, no intervention response, or no gain beyond count/final-layer baselines rejects the law"
+  },
+  "decision": {
+    "n1_primary_research_hypothesis": true,
+    "n1_established": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_protocol_authorized": false,
+    "new_architecture_mechanism_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "training_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "complete N1 backward/forward/patent/deployed-system review and independent claim-table review while the frozen three-pair baseline finishes"
+  }
+}

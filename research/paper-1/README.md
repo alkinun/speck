@@ -111,6 +111,9 @@ the final combined model.
   unestablished cheap internal-state predictive/causal law for possible later review.
 - [`novelty_landscape_v4.json`](novelty_landscape_v4.json) classifies STEC's structured candidate-
   evidence verification as a mandatory adjacent baseline while preserving the N2 concept rejection.
+- [`novelty_claim_overlap_v1.json`](novelty_claim_overlap_v1.json) maps fourteen candidate claims to
+  their strongest overlap, keeps N1 as the only primary architecture hypothesis, and defers the residual
+  N2 diagnostic before any experimental budget is spent.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.

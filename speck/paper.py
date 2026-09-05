@@ -27,6 +27,7 @@ PROGRAM_FILES = (
     "novelty_landscape_v2.json",
     "novelty_landscape_v3.json",
     "novelty_landscape_v4.json",
+    "novelty_claim_overlap_v1.json",
     "novelty_code_availability_v1.json",
     "novelty_code_availability_v2.json",
     "novelty_code_availability_v3.json",
@@ -1153,6 +1154,51 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
         raise ValueError("novelty landscape audit is incomplete")
 
 
+def _validate_novelty_claim_overlap(reference, repository_root, paper_id):
+    _require(reference, {"contract", "sha256", "status"}, "novelty claim table reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("novelty claim overlap table does not match its pin")
+    table = _load_json(path)
+    inputs = table.get("inputs", {})
+    claims = table.get("claims", ())
+    priority = table.get("priority", ())
+    decision = table.get("decision", {})
+    if (
+        table.get("format") != "speck_novelty_claim_overlap_table"
+        or table.get("format_version") != 1
+        or table.get("paper_id") != paper_id
+        or table.get("status") != reference["status"]
+        or len(table.get("rules", ())) < 5
+        or len(claims) != 14
+        or len({claim.get("id") for claim in claims}) != 14
+        or [entry.get("rank") for entry in priority] != [1, 2]
+        or [entry.get("hypothesis") for entry in priority]
+        != ["N1_role_grounded_placement_law", "N2_internal_state_completeness_predictor_law"]
+        or priority[0].get("action", "").startswith("train")
+        or priority[1].get("action")
+        != "defer experiment protocol until claim-granular independent expert review finds material incremental value"
+        or len(table.get("n1_required_distinction", {}).get("baselines", ())) < 6
+        or decision.get("n1_primary_research_hypothesis") is not True
+        or decision.get("n1_established") is not False
+        or decision.get("n2_concept_novelty_rejected") is not True
+        or decision.get("n2_empirical_protocol_authorized") is not False
+        or decision.get("new_architecture_mechanism_established") is not False
+        or decision.get("paper_novelty_gate_pass") is not False
+        or decision.get("architecture_freeze_authorized") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("novelty claim overlap table is incomplete")
+    for path_key, hash_key in (
+        ("landscape", "landscape_sha256"),
+        ("code_availability", "code_availability_sha256"),
+    ):
+        source_path = repository_root / inputs.get(path_key, "")
+        if not source_path.is_file() or _file_sha256(source_path) != inputs.get(hash_key):
+            raise ValueError(f"novelty claim overlap {path_key} does not match its pin")
+
+
 def _validate_novelty_code_availability(reference, repository_root, paper_id):
     _require(reference, {"audit", "sha256", "status"}, "novelty code reference")
     path = repository_root / reference["audit"]
@@ -1814,6 +1860,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "scaling_readiness",
             "systems_cost_readiness",
             "novelty_landscape",
+            "novelty_claim_overlap",
             "novelty_code_availability",
             "adakv_code_audit",
             "headkv_code_audit",
@@ -1831,6 +1878,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("claims and experiment program use different paper ids")
     _validate_novelty_landscape(
         program["novelty_landscape"],
+        repository_root,
+        paper_id,
+    )
+    _validate_novelty_claim_overlap(
+        program["novelty_claim_overlap"],
         repository_root,
         paper_id,
     )

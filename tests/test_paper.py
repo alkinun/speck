@@ -37,6 +37,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "novelty_landscape_v2.json",
             "novelty_landscape_v3.json",
             "novelty_landscape_v4.json",
+            "novelty_claim_overlap_v1.json",
             "novelty_code_availability_v1.json",
             "novelty_code_availability_v2.json",
             "novelty_code_availability_v3.json",
@@ -274,6 +275,18 @@ def test_paper_program_rejects_novelty_landscape_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="novelty landscape"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_novelty_claim_overlap_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["novelty_claim_overlap"]["sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="novelty claim overlap"):
         validate_paper_program(copied, repository_root=root)
 
 

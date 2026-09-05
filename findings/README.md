@@ -90,6 +90,7 @@ Read in order:
 82. [81 — N2 concept rejection after evidence-compression audit](81_n2_concept_rejection.md)
 83. [82 — STEC adjacent evidence-verification baseline](82_stec_baseline.md)
 84. [83 — BRIEF-family artifact availability audit](83_brief_code_availability.md)
+85. [84 — Claim-granular novelty overlap and priority](84_novelty_claim_overlap.md)
 
 Conventions:
 
@@ -449,3 +450,9 @@ Axolotl. The old BRIEF subtree has 49 files; BRIEF-Pro adds about 31 non-vendore
 or paper-specific historical revisions exist, environments conflict and include a machine-local prefix,
 and model/data derivations remain unpinned. Across twelve sources, only the prior Ada-KV tree has root
 rights and no new reproduction path is authorized.
+
+Finding 84 maps fourteen candidate claims to their strongest prior-art overlaps. Twelve are direct or
+adjacent baselines and cannot be claimed; N1's prospective from-scratch placement law is the only
+primary architecture hypothesis left. N2's concept is rejected and its possible internal-state
+empirical law is deferred before protocol or experiment budget pending independent expert review. No
+novelty or architecture is established.
