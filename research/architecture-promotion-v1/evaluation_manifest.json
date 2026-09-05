@@ -94,9 +94,13 @@
   "external_suites": [
     {
       "id": "ruler",
-      "status": "pinned_integration_pending",
+      "status": "source_qualified_data_and_runtime_blocked",
       "repository": "https://github.com/NVIDIA/RULER",
-      "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
+      "contract": "research/architecture-promotion-v1/external/ruler_v1.json",
+      "contract_sha256": "1f7fdb8216bb7a17ef33f7a0aa1e5daad83497332e7cdf44575c2b0c54b3d8c5",
+      "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
+      "source_qualification_sha256": "4eb246913045ec2d3a5f845ec64aeb425fe1fbc20ece7374d3a17b3d7d9d8403",
       "lengths": [
         4096,
         8192,
@@ -111,16 +115,18 @@
     },
     {
       "id": "nolima",
-      "status": "pinned_integration_pending",
+      "status": "source_qualified_license_acceptance_and_runtime_blocked",
       "repository": "https://github.com/adobe-research/NoLiMa",
       "revision": "cb14780b249fecf2851127b2101a062c1b2c6430",
+      "contract": "research/architecture-promotion-v1/external/nolima.json",
+      "contract_sha256": "5dc1f5ec0cea709c294536fd9d24de1c8a62db9564bb9c8e1a53d2dcd8ab3186",
+      "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
+      "source_qualification_sha256": "4eb246913045ec2d3a5f845ec64aeb425fe1fbc20ece7374d3a17b3d7d9d8403",
       "lengths": [
-        4096,
-        8192,
-        16384,
-        32768,
-        65536,
-        131072
+        4000,
+        8000,
+        16000,
+        32000
       ],
       "configuration": "official default task and scoring configuration at the pinned revision",
       "scoring": "upstream scoring without local prompt edits",
@@ -128,11 +134,14 @@
     },
     {
       "id": "helmet",
-      "status": "pinned_integration_pending",
+      "status": "source_qualified_data_storage_and_model_smoke_blocked",
       "repository": "https://github.com/princeton-nlp/HELMET",
       "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+      "contract": "research/architecture-promotion-v1/external/helmet.json",
+      "contract_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
+      "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
+      "source_qualification_sha256": "4eb246913045ec2d3a5f845ec64aeb425fe1fbc20ece7374d3a17b3d7d9d8403",
       "lengths": [
-        4096,
         8192,
         16384,
         32768,

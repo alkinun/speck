@@ -1,0 +1,96 @@
+{
+  "format": "speck_external_source_qualification_summary",
+  "format_version": 1,
+  "status": "source_qualified_execution_blocked",
+  "runner_revision": "82d1a4003715363210d35b9fb8ff3d132b10711b",
+  "created_on": "2026-09-05",
+  "suites": {
+    "ruler": {
+      "config": "research/architecture-promotion-v1/external/ruler_v1.json",
+      "config_sha256": "1f7fdb8216bb7a17ef33f7a0aa1e5daad83497332e7cdf44575c2b0c54b3d8c5",
+      "status": "source_qualified_data_and_runtime_blocked",
+      "sources": [
+        {
+          "id": "ruler_pipeline",
+          "repository": "https://github.com/NVIDIA/RULER.git",
+          "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
+          "ref": "rulerv1-ns"
+        },
+        {
+          "id": "nemo_skills",
+          "repository": "https://github.com/NVIDIA-NeMo/Skills.git",
+          "revision": "f4a3fd8e524acd9abd1fea4387e8f179f6d51cf3",
+          "ref": "chsieh/ruler-remove-prefix"
+        },
+        {
+          "id": "ruler_data_generator",
+          "repository": "https://github.com/NVIDIA/RULER.git",
+          "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+          "ref": "main consumed transitively by the pinned preparer"
+        }
+      ],
+      "qualified_files": 11,
+      "correction": "the previously pinned RULER main pipeline is deprecated; the active contract now uses the official rulerv1-ns branch and pins its NeMo-Skills dependency",
+      "blockers": [
+        "the NeMo-Skills preparer has unpinned transitive data downloads",
+        "Speck has no qualified vLLM, SGLang, or TensorRT-LLM server"
+      ]
+    },
+    "nolima": {
+      "config": "research/architecture-promotion-v1/external/nolima.json",
+      "config_sha256": "5dc1f5ec0cea709c294536fd9d24de1c8a62db9564bb9c8e1a53d2dcd8ab3186",
+      "status": "source_qualified_license_acceptance_and_runtime_blocked",
+      "sources": [
+        {
+          "id": "nolima_pipeline",
+          "repository": "https://github.com/adobe-research/NoLiMa.git",
+          "revision": "cb14780b249fecf2851127b2101a062c1b2c6430"
+        }
+      ],
+      "data": {
+        "repository": "https://huggingface.co/datasets/amodaresi/NoLiMa",
+        "revision": "378115b1f136b6ba78f90f78682bc55f70ec3ddd",
+        "metadata_qualified_without_lfs_download": true
+      },
+      "qualified_files": 10,
+      "correction": "the upstream checked configurations end at 32K, so the active NoLiMa contract no longer fabricates 64K or 128K cells",
+      "blockers": [
+        "manual acceptance of the non-commercial Adobe Research License",
+        "per-haystack license audit",
+        "Speck has no qualified OpenAI-compatible endpoint"
+      ]
+    },
+    "helmet": {
+      "config": "research/architecture-promotion-v1/external/helmet.json",
+      "config_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
+      "status": "source_qualified_data_storage_and_model_smoke_blocked",
+      "sources": [
+        {
+          "id": "helmet_pipeline",
+          "repository": "https://github.com/princeton-nlp/HELMET.git",
+          "revision": "af609c4d51b97fc35012099380aa889da961c42d"
+        }
+      ],
+      "data": {
+        "repository": "https://huggingface.co/datasets/princeton-nlp/HELMET",
+        "revision": "dddb209d03e38f1f0faf76d6d05ef4ccf96240ee",
+        "advertised_download_size_gb": 34,
+        "metadata_qualified_without_lfs_download": true
+      },
+      "qualified_files": 13,
+      "blockers": [
+        "the dataset cannot fit on the current research volume",
+        "the native Hugging Face adapter still needs a locked-environment Speck export smoke",
+        "component dataset licenses require preservation and audit"
+      ]
+    }
+  },
+  "conclusion": "All three upstream source contracts and required file hashes qualify. No external suite has data, model-adapter, or execution qualification, and none may contribute to a promotion claim yet.",
+  "storage_event": {
+    "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
+    "action": "pruned only unused uv cache artifacts",
+    "cache_bytes_recovered_approx": 556269568,
+    "free_space_after_recovery_gib_approx": 7.4,
+    "consequence": "external evaluation requires a locked environment and separate HELMET data volume"
+  }
+}

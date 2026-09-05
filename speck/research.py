@@ -635,6 +635,8 @@ def _validate_envelopes(envelopes, policy_id):
 
 
 def _validate_evaluations(manifest, policy_id, repository_root):
+    from speck.external import validate_external_suite
+
     _require_keys(
         manifest,
         {
@@ -697,6 +699,36 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             raise ValueError(f"external suite {suite['id']} must name its upstream repository")
         if not suite.get("release_required"):
             raise ValueError(f"external suite {suite['id']} must remain release-required")
+        contract_path = repository_root / suite.get("contract", "")
+        contract_hash = suite.get("contract_sha256")
+        if (
+            not contract_path.is_file()
+            or not SHA256_PATTERN.fullmatch(contract_hash or "")
+            or _file_sha256(contract_path) != contract_hash
+        ):
+            raise ValueError(f"external suite {suite['id']} has an invalid contract pin")
+        external = validate_external_suite(contract_path)
+        if (
+            external["suite_id"] != suite["id"]
+            or external["upstream"]["revision"] != suite["revision"]
+            or external["benchmark"]["lengths"] != suite.get("lengths")
+        ):
+            raise ValueError(f"external suite {suite['id']} manifest and contract disagree")
+        qualification_path = repository_root / suite.get("source_qualification", "")
+        qualification_hash = suite.get("source_qualification_sha256")
+        if (
+            not qualification_path.is_file()
+            or not SHA256_PATTERN.fullmatch(qualification_hash or "")
+            or _file_sha256(qualification_path) != qualification_hash
+        ):
+            raise ValueError(f"external suite {suite['id']} has an invalid qualification pin")
+        qualification = _load_json(qualification_path)
+        qualified = qualification.get("suites", {}).get(suite["id"], {})
+        if (
+            qualification.get("status") != "source_qualified_execution_blocked"
+            or qualified.get("config_sha256") != contract_hash
+        ):
+            raise ValueError(f"external suite {suite['id']} source qualification does not match")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:
@@ -778,6 +810,13 @@ def validate_research_contract(directory, tokenizer=None):
         "serving_profiles": len(values["cost_envelopes.json"]["serving_profiles"]),
         "internal_evaluation_suites": len(evaluations["internal_suites"]),
         "external_evaluation_suites": len(evaluations["external_suites"]),
+        "external_source_qualified": sum(
+            suite["status"].startswith("source_qualified")
+            for suite in evaluations["external_suites"]
+        ),
+        "external_execution_ready": sum(
+            "blocked" not in suite["status"] for suite in evaluations["external_suites"]
+        ),
         "promotion_protocols": len(protocols),
         "symbolic_route_values": sum(protocol["route_values"] for protocol in protocols),
         "tokenizer_qualified": tokenizer is not None,

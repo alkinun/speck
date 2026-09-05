@@ -74,6 +74,26 @@ separately over 100 tokenizer-qualified intermediate nodes. Protocol evaluation 
 `--protocol-length`: run 4K first, then 32K and 128K only after the paired current-length capability
 gate passes.
 
+### External long-context suites
+
+The active manifest pins suite-specific contracts under
+[`research/architecture-promotion-v1/external`](../research/architecture-promotion-v1/external/).
+`scripts.external_suite_qualify` verifies the exact upstream commit and every required source-file hash
+without installing the suite or downloading its data.
+
+- RULER uses the official `rulerv1-ns` pipeline plus its exact NeMo-Skills dependency. The old `main`
+  runner is deprecated. Its data preparer still has transitive downloads that must be content-pinned,
+  and its supported vLLM/SGLang/TensorRT path needs a Speck runtime.
+- NoLiMa's checked configurations cover 4K, 8K, 16K, and 32K. Its Adobe Research License permits only
+  non-commercial research use and must be accepted before data download. The evaluator expects an
+  OpenAI-compatible endpoint.
+- HELMET covers seven task categories through 128K and has a native `trust_remote_code` Hugging Face
+  adapter. Its advertised dataset is approximately 34GB, so it must use a separate planned volume; the
+  model adapter also requires a locked-environment Speck-export smoke.
+
+Source qualification is not evaluation qualification. A suite contributes no promotion evidence until
+its data, licenses, model adapter, raw outputs, and official scorer all pass and are hashed.
+
 ## Open SLM Leaderboard
 
 Run every stage in the checked Open SLM configuration:

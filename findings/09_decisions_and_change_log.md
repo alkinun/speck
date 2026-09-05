@@ -83,8 +83,9 @@ suite has passed.
 ## Required next work
 
 1. Apply the checked [`architecture-promotion-v1`](../research/architecture-promotion-v1/) contract.
-   Execute its runner-bound 200-case internal protocols, qualify its pinned external integrations,
-   and add named medium-scale and production-runtime envelopes in policy v2.
+   Execute its runner-bound 200-case internal protocols; resolve the source-qualified external suites'
+   data, license, storage, and serving-runtime blockers; and add named medium-scale and
+   production-runtime envelopes in policy v2.
 2. Run the pinned independent suites:
    [RULER](https://github.com/NVIDIA/RULER),
    [NoLiMa](https://github.com/adobe-research/NoLiMa), and

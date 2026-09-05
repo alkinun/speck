@@ -24,6 +24,8 @@ The active contract is [`architecture-promotion-v1`](architecture-promotion-v1/)
 - [`internal/symbolic_composition_v2.json`](architecture-promotion-v1/internal/symbolic_composition_v2.json)
   freezes route, payload, and direct-composition views over a tokenizer-qualified 100-way route
   vocabulary.
+- [`external/`](architecture-promotion-v1/external/) contains source-, revision-, file-, data-,
+  license-, and model-adapter contracts for RULERv1, NoLiMa, and HELMET.
 
 Validate the complete cross-file contract with:
 
@@ -43,6 +45,20 @@ uv run --extra cpu python -m scripts.promotion_case_preflight \
 
 The checked [preflight summary](../results/Speck-Architecture-Promotion-v1/protocol-case-preflight.json)
 contains the resulting case-stream hashes for both internal protocols.
+
+Qualify an external source checkout without downloading its benchmark data:
+
+```bash
+uv run --extra cpu python -m scripts.external_suite_qualify \
+  research/architecture-promotion-v1/external/helmet.json \
+  --checkout helmet_pipeline=<pinned-checkout>
+```
+
+The checked
+[external-source qualification](../results/Speck-Architecture-Promotion-v1/external-source-qualification.json)
+proves only upstream commit and source-file identity. RULER and NoLiMa remain blocked on a supported
+Speck serving endpoint; NoLiMa additionally requires acceptance of a non-commercial research license;
+HELMET remains blocked on a separate 34GB data volume and locked-environment model-adapter smoke.
 
 Run one protocol-bound adapter. The protocol supplies every scientific setting, including the
 training/validation split, synthetic streams, replay source, optimizer, and sample counts:
