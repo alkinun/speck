@@ -82,6 +82,9 @@ the final combined model.
 - [`evaluation_manifest.json`](../architecture-promotion-v1/evaluation_manifest.json) is now the v2
   successor: eleven official synthetic RULER tasks are primary, both QA tasks have zero primary
   weight, and HELMET RAG/long-QA is the separately gated source-document guardrail.
+- [`helmet_runtime_dependencies_v1.json`](../architecture-promotion-v1/helmet_runtime_dependencies_v1.json)
+  proves that 50 of HELMET's 105 entries are not supplied by the main archive and freezes the external
+  dataset, tokenizer, runtime-compatibility, rights, and model-judge blockers.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -111,7 +114,9 @@ preflight now passes. The dedicated volume passes both proxy and finalist floors
 contamination audit, however, detects 28 answer-anchored patterns in `qa_1`/`qa_2`; v1 remains failed.
 The v2 successor is frozen before model outputs with the other eleven tasks as its primary matrix and
 HELMET RAG/long-QA as the source-document guardrail. NoLiMa and HELMET contamination checks remain
-blocked on their separate data/legal qualifications. The project otherwise has strong evidence for GDN/KDA
+blocked on their separate data/legal qualifications. HELMET's runtime audit additionally shows that
+archive completion alone cannot qualify 50 externally loaded entries or the proprietary-judge metrics.
+The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
 

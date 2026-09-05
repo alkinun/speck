@@ -52,6 +52,8 @@ and grant a dedicated user-owned Speck directory before the capacity gate can be
 
 Dataset metadata, archive selection, config identity, and the storage plan qualify. Download,
 extraction, component-license qualification, dataset-bound loader checks, and execution remain blocked.
+Finding 47 subsequently establishes that 50 configured entries also require archive-external runtime
+datasets, a gated truncation tokenizer, or model-judge qualification.
 
 ## Artifacts
 

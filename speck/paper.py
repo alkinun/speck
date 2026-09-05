@@ -79,13 +79,21 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "active_evaluation_manifest",
             "active_evaluation_manifest_sha256",
             "active_evaluation_manifest_id",
+            "helmet_runtime_dependency_protocol",
+            "helmet_runtime_dependency_protocol_sha256",
+            "helmet_runtime_dependency_audit",
+            "helmet_runtime_dependency_audit_sha256",
+            "helmet_runtime_dependency_status",
             "ruler_v1_decision",
             "ruler_v2_decision",
         },
         "paper evaluation evidence",
     )
-    if evidence["status"] != "ruler_v1_failed_v2_frozen_external_data_pending":
-        raise ValueError("paper evaluation evidence must preserve v1 and freeze RULER v2")
+    if (
+        evidence["status"]
+        != "ruler_v1_failed_v2_frozen_helmet_runtime_audited_external_data_pending"
+    ):
+        raise ValueError("paper evaluation evidence must preserve v1, RULER v2, and HELMET")
     for path_key, hash_key in (
         ("contamination_protocol", "contamination_protocol_sha256"),
         ("contamination_result", "contamination_result_sha256"),
@@ -95,6 +103,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
         ),
         ("contamination_disposition", "contamination_disposition_sha256"),
         ("active_evaluation_manifest", "active_evaluation_manifest_sha256"),
+        (
+            "helmet_runtime_dependency_protocol",
+            "helmet_runtime_dependency_protocol_sha256",
+        ),
+        ("helmet_runtime_dependency_audit", "helmet_runtime_dependency_audit_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -107,6 +120,12 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     disposition = _load_json(repository_root / evidence["contamination_disposition"])
     active_manifest = _load_json(repository_root / evidence["active_evaluation_manifest"])
+    helmet_runtime_protocol = _load_json(
+        repository_root / evidence["helmet_runtime_dependency_protocol"]
+    )
+    helmet_runtime_audit = _load_json(
+        repository_root / evidence["helmet_runtime_dependency_audit"]
+    )
     expected_unaffected = {
         "cwe",
         "fwe",
@@ -192,6 +211,20 @@ def _validate_evaluation_evidence(evidence, repository_root):
         != "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending"
     ):
         raise ValueError("paper RULER v2 evaluation manifest is invalid")
+    if (
+        helmet_runtime_protocol.get("format")
+        != "speck_helmet_runtime_dependency_protocol"
+        or helmet_runtime_protocol.get("status") != "executed_blocked"
+        or helmet_runtime_protocol.get("result", {}).get("sha256")
+        != evidence["helmet_runtime_dependency_audit_sha256"]
+        or helmet_runtime_audit.get("format") != "speck_helmet_runtime_dependency_audit"
+        or helmet_runtime_audit.get("status")
+        != evidence["helmet_runtime_dependency_status"]
+        or helmet_runtime_audit.get("inventory", {}).get("by_mode")
+        != {"archive_local": 55, "runtime_loaded": 50}
+        or helmet_runtime_audit.get("decision", {}).get("execution_authorized") is not False
+    ):
+        raise ValueError("paper HELMET runtime dependency evidence is invalid")
 
 
 def _validate_claims(claims):

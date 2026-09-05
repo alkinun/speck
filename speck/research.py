@@ -823,6 +823,37 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 not in suite.get("source_document_qa_guardrail", {}).get("status", "")
             ):
                 raise ValueError("RULER v2 contamination disposition is invalid")
+        if suite["id"] == "helmet":
+            runtime_protocol_path = repository_root / suite.get(
+                "runtime_dependency_protocol", ""
+            )
+            runtime_audit_path = repository_root / suite.get("runtime_dependency_audit", "")
+            if (
+                not runtime_protocol_path.is_file()
+                or _file_sha256(runtime_protocol_path)
+                != suite.get("runtime_dependency_protocol_sha256")
+                or not runtime_audit_path.is_file()
+                or _file_sha256(runtime_audit_path)
+                != suite.get("runtime_dependency_audit_sha256")
+            ):
+                raise ValueError("HELMET runtime dependency evidence has an invalid pin")
+            runtime_protocol = _load_json(runtime_protocol_path)
+            runtime_audit = _load_json(runtime_audit_path)
+            if (
+                "runtime_dependency_audited" not in suite["status"]
+                or runtime_protocol.get("status") != "executed_blocked"
+                or runtime_protocol.get("result", {}).get("sha256")
+                != suite.get("runtime_dependency_audit_sha256")
+                or runtime_audit.get("status")
+                != "runtime_dependency_inventory_qualified_execution_blocked"
+                or runtime_audit.get("inventory", {}).get("by_mode")
+                != {"archive_local": 55, "runtime_loaded": 50}
+                or runtime_audit.get("guardrail", {}).get("rag", {}).get("entries") != 20
+                or runtime_audit.get("guardrail", {}).get("longqa", {}).get("entries")
+                != 15
+                or runtime_audit.get("decision", {}).get("execution_authorized") is not False
+            ):
+                raise ValueError("HELMET runtime dependency evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

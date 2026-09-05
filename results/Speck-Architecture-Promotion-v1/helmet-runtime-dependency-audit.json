@@ -1,0 +1,260 @@
+{
+  "code_analysis": {
+    "load_dataset_literals": {
+      "CogComp/trec": 4,
+      "PolyAI/banking77": 2,
+      "allenai/multi_lexsum": 1,
+      "clinc/clinc_oos": 2,
+      "json": 10,
+      "narrativeqa": 1,
+      "xingkunliuxtracta/nlu_evaluation_data": 1,
+      "xinrongzhang2022/infinitebench": 1
+    },
+    "load_dataset_revision_bound_literals": {},
+    "python_script_sources_incompatible_with_datasets_5": [
+      "banking77",
+      "multi_lexsum",
+      "nlu_evaluation_data",
+      "trec"
+    ],
+    "tokenizer_literals": {
+      "meta-llama/Llama-2-7b-hf": 3
+    },
+    "upstream_requirements_status": "unversioned"
+  },
+  "created_at": "2026-09-05T14:46:24.113781+00:00",
+  "decision": {
+    "archive_sufficient": false,
+    "component_rights_qualified": false,
+    "execution_authorized": false,
+    "model_judges_qualified": false,
+    "pinned_runtime_compatible": false,
+    "remote_revisions_bound_by_upstream_code": false,
+    "required_next": "finish and inspect the pinned archive; separately resolve runtime dataset rights and immutable payloads, choose a version-compatible offline loader path, obtain authorized Llama 2 tokenizer acceptance or freeze a semantics-validated replacement, and qualify or replace proprietary judges before case generation"
+  },
+  "format": "speck_helmet_runtime_dependency_audit",
+  "format_version": 1,
+  "gated_dependencies": [
+    {
+      "access": "gated; anonymous revision lookup rejected",
+      "id": "llama2_tokenizer",
+      "license": "Llama 2 Community License acceptance required",
+      "purpose": "length filtering and deterministic context truncation in longqa and summ",
+      "repository": "https://huggingface.co/meta-llama/Llama-2-7b-hf",
+      "status": "authorized_acceptance_and_exact_identity_blocked"
+    }
+  ],
+  "guardrail": {
+    "longqa": {
+      "data_mode": "runtime_loaded",
+      "entries": 15,
+      "remaining": "NarrativeQA, InfiniteBench, Llama 2 tokenizer, model judge, payload identity, rights, and contamination"
+    },
+    "rag": {
+      "data_mode": "archive_local",
+      "entries": 20,
+      "remaining": "archive inspection, component rights, payload identity, and contamination"
+    }
+  },
+  "inventory": {
+    "by_category_and_mode": [
+      {
+        "category": "cite",
+        "entries": 10,
+        "mode": "archive_local"
+      },
+      {
+        "category": "icl",
+        "entries": 25,
+        "mode": "runtime_loaded"
+      },
+      {
+        "category": "longqa",
+        "entries": 15,
+        "mode": "runtime_loaded"
+      },
+      {
+        "category": "rag",
+        "entries": 20,
+        "mode": "archive_local"
+      },
+      {
+        "category": "recall",
+        "entries": 20,
+        "mode": "archive_local"
+      },
+      {
+        "category": "rerank",
+        "entries": 5,
+        "mode": "archive_local"
+      },
+      {
+        "category": "summ",
+        "entries": 10,
+        "mode": "runtime_loaded"
+      }
+    ],
+    "by_mode": {
+      "archive_local": 55,
+      "runtime_loaded": 50
+    },
+    "entries": 105,
+    "runtime_entries_by_source": {
+      "banking77": 5,
+      "clinc_oos": 5,
+      "infinitebench": 15,
+      "multi_lexsum": 5,
+      "narrativeqa": 5,
+      "nlu_evaluation_data": 5,
+      "trec": 10
+    }
+  },
+  "non_claims": [
+    "the 11GB archive contains every dataset consumed by HELMET",
+    "a dataset-card license necessarily covers every embedded underlying work",
+    "an observed main-branch revision is bound by HELMET's unqualified load_dataset call",
+    "a dated proprietary judge name and temperature make scores reproducible",
+    "adapter qualification establishes dataset-loader or scorer qualification"
+  ],
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
+    "spec_identity_sha256": "27ae6ed87d53aecef247016bea460ecee67692a0e86a772d9acd715e86adb084"
+  },
+  "remote_sources": [
+    {
+      "declared_license": "apache-2.0",
+      "id": "narrativeqa",
+      "layout": "parquet",
+      "match_substring": "narrativeqa",
+      "observed_revision": "2e643e7363944af1c33a652d1c87320d0871c4e4",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/deepmind/narrativeqa",
+      "rights_status": "dataset metadata license present; underlying Gutenberg stories and movie scripts require work-level review"
+    },
+    {
+      "declared_license": "apache-2.0",
+      "id": "infinitebench",
+      "layout": "jsonl_lfs",
+      "match_substring": "infbench",
+      "observed_revision": "90f0394333616266d9fe85824ceaf505093cbaa5",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/xinrongzhang2022/InfiniteBench",
+      "rights_status": "dataset metadata license present; underlying long-book texts require work-level review"
+    },
+    {
+      "declared_license": "ODC-By data; CC-BY-NC-4.0 summaries and metadata",
+      "id": "multi_lexsum",
+      "layout": "python_script",
+      "match_substring": "multi_lexsum",
+      "observed_revision": "055f5fa5300a5fdefb5b691c4d6c1e58f485b379",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/allenai/multi_lexsum",
+      "rights_status": "noncommercial summary terms require scope review"
+    },
+    {
+      "declared_license": "unknown",
+      "id": "trec",
+      "layout": "python_script",
+      "match_substring": "icl_trec",
+      "observed_revision": "eb1e45c1ba990fecca7cf84b67ce845edbcf49bf",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/CogComp/trec",
+      "rights_status": "blocked on authoritative terms"
+    },
+    {
+      "declared_license": "cc-by-4.0",
+      "id": "banking77",
+      "layout": "python_script",
+      "match_substring": "icl_banking77",
+      "observed_revision": "90d4e2ee5521c04fc1488f065b8b083658768c57",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/PolyAI/banking77",
+      "rights_status": "metadata terms identified; payload identity pending"
+    },
+    {
+      "declared_license": "cc-by-3.0",
+      "id": "clinc_oos",
+      "layout": "parquet",
+      "match_substring": "icl_clinic150",
+      "observed_revision": "155b9c710419136e17307b80d0a13e68cd46b4ec",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/clinc/clinc_oos",
+      "rights_status": "metadata terms identified; payload identity pending"
+    },
+    {
+      "declared_license": "cc-by-4.0",
+      "id": "nlu_evaluation_data",
+      "layout": "python_script",
+      "match_substring": "icl_nlu",
+      "observed_revision": "0edc7007b37706b838a7facd3115617b26ce4e5e",
+      "payload_status": "not acquired or hashed",
+      "repository": "https://huggingface.co/datasets/xingkunliuxtracta/nlu_evaluation_data",
+      "rights_status": "metadata terms identified; payload identity pending"
+    }
+  ],
+  "runner_revision": "a14361ea46e0b6cd9c3f2e93f2e8e46ed3873993",
+  "runner_sha256": "16effda8afbec1bb3d6d7ed67e31f50a16bdda53fbffab16f0a9cbc89764f5a5",
+  "runtime": {
+    "dataset_module_factory_sha256": "736a7f9d4a0232e820da3cfcfac28cf3b2a4c0d69ad6976458cb47bc2ee63b74",
+    "datasets": "5.0.1",
+    "transformers": "5.1.0"
+  },
+  "scoring": {
+    "judges": {
+      "longqa": [
+        {
+          "model": "gpt-4o-2024-05-13",
+          "temperature": 0.1
+        }
+      ],
+      "summ": [
+        {
+          "generation_max_length": 4096,
+          "model": "gpt-4o-2024-05-13",
+          "temperature": 0.1
+        }
+      ]
+    },
+    "longqa_metrics": [
+      "narrativeqa gpt-4-score",
+      "infbench_qa rougeL_f1",
+      "infbench_choice exact_match"
+    ],
+    "narrativeqa_metric": [
+      "gpt-4-score"
+    ],
+    "summ_metrics": [
+      "infbench_sum gpt-4-f1",
+      "multi_lexsum gpt-4-f1"
+    ]
+  },
+  "scoring_dependencies": [
+    {
+      "category": "longqa",
+      "dataset": "narrativeqa",
+      "judge": "gpt-4o-2024-05-13",
+      "metric": "gpt-4-score",
+      "seed": null,
+      "status": "proprietary_judge_reproducibility_cost_and_data-handling_unqualified",
+      "temperature": 0.1
+    },
+    {
+      "category": "summ",
+      "datasets": [
+        "infbench_sum",
+        "multi_lexsum"
+      ],
+      "judge": "gpt-4o-2024-05-13",
+      "metric": "gpt-4-f1",
+      "seed": null,
+      "status": "proprietary_judge_reproducibility_cost_and_data-handling_unqualified",
+      "temperature": 0.1
+    }
+  ],
+  "status": "runtime_dependency_inventory_qualified_execution_blocked",
+  "suite": {
+    "contract": "research/architecture-promotion-v1/external/helmet.json",
+    "contract_sha256": "1a8ac5243be1b66bf6b9e935554dc24fe95d00e10f0a5e613115e109e3ce2892",
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d"
+  }
+}

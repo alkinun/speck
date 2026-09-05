@@ -53,6 +53,7 @@ Read in order:
 45. [44 — Paper 1 dedicated checkpoint-volume qualification](44_paper_1_dedicated_checkpoint_volume.md)
 46. [45 — Paper 1 RULER contamination audit and v1 failure](45_paper_1_ruler_contamination.md)
 47. [46 — Post-contamination RULER v2 successor manifest](46_ruler_v2_successor_manifest.md)
+48. [47 — HELMET archive-external runtime and scorer boundary](47_helmet_runtime_dependency_boundary.md)
 
 Conventions:
 
@@ -194,3 +195,9 @@ eleven untouched official synthetic tasks and gives the quarantined QA tasks zer
 HELMET RAG/long-QA becomes the explicit source-document guardrail after its own data, rights, and
 contamination qualification. The failed v1 identity remains pinned and external execution remains
 blocked.
+
+Finding 47 proves that HELMET's 11GB archive is not a complete execution bundle. Of 105 active entries,
+55 are archive-local and 50 load seven external dataset families at runtime without revision pins.
+Four source families are incompatible with the pinned `datasets==5.0.1`; long QA and summarization also
+need a gated Llama 2 tokenizer, and NarrativeQA/summarization depend on unqualified proprietary judges.
+The inventory is now frozen, but archive completion alone cannot authorize HELMET execution.

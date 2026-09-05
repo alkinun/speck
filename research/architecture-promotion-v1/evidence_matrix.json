@@ -27,6 +27,7 @@
         "findings/32_cache_equivalence_v3_and_preflight_v2.md",
         "findings/45_paper_1_ruler_contamination.md",
         "findings/46_ruler_v2_successor_manifest.md",
+        "findings/47_helmet_runtime_dependency_boundary.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
@@ -43,7 +44,8 @@
         "one-seed evidence",
         "short training horizon",
         "lack of time-to-quality comparison",
-        "RULER v1 failed its answer-anchored contamination gate and requires a successor manifest",
+        "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
+        "HELMET still needs archive-external datasets, a gated truncation tokenizer, and model-judge qualification",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
       "next_gate": "close the remaining SPE-58 data/legal gates, then include this matched dense reference in finalist horizon and medium-scale comparisons"
@@ -90,6 +92,7 @@
         "findings/32_cache_equivalence_v3_and_preflight_v2.md",
         "findings/45_paper_1_ruler_contamination.md",
         "findings/46_ruler_v2_successor_manifest.md",
+        "findings/47_helmet_runtime_dependency_boundary.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
@@ -111,7 +114,8 @@
         "training-horizon transfer",
         "free-running low-margin path divergence",
         "production runtime parity",
-        "RULER v1 failed its answer-anchored contamination gate"
+        "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
+        "HELMET's RAG/long-QA guardrail remains data, rights, tokenizer, and scorer blocked"
       ],
       "next_gate": "close the remaining SPE-58 data/legal gates, then execute the three-pair whole-architecture proxy without component attribution"
     },

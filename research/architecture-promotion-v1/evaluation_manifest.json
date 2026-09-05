@@ -219,7 +219,7 @@
     },
     {
       "id": "helmet",
-      "status": "source_qualified_model_adapter_qualified_data_storage_blocked",
+      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_archive_transfer_and_legal_blocked",
       "repository": "https://github.com/princeton-nlp/HELMET",
       "revision": "af609c4d51b97fc35012099380aa889da961c42d",
       "contract": "research/architecture-promotion-v1/external/helmet.json",
@@ -232,6 +232,10 @@
       "scorer_runtime_qualification_sha256": "8a0201b4a3c8580312c784a70fa7fdc86fd53f77f2d704ff7ff7580e6058c6c2",
       "data_metadata_qualification": "results/Speck-Architecture-Promotion-v1/helmet-data-metadata-qualification.json",
       "data_metadata_qualification_sha256": "8ac2cbc8820d76acce90b629c0bb8932427ecf11215ffa6321a467a1663453b1",
+      "runtime_dependency_protocol": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
+      "runtime_dependency_protocol_sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b",
+      "runtime_dependency_audit": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
+      "runtime_dependency_audit_sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2",
       "lengths": [
         8192,
         16384,

@@ -2,7 +2,7 @@
   "format": "speck_helmet_runtime_dependency_protocol",
   "format_version": 1,
   "protocol_id": "helmet-runtime-dependencies-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_blocked",
   "suite": {
     "contract": "research/architecture-promotion-v1/external/helmet.json",
     "revision": "af609c4d51b97fc35012099380aa889da961c42d",
@@ -142,5 +142,13 @@
       "a dated proprietary judge name and temperature make scores reproducible",
       "adapter qualification establishes dataset-loader or scorer qualification"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
+    "sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2",
+    "status": "runtime_dependency_inventory_qualified_execution_blocked",
+    "archive_local_entries": 55,
+    "runtime_loaded_entries": 50,
+    "execution_authorized": false
   }
 }
