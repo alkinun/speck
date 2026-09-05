@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.structured_retrieval_eval import build_case, parse_tasks, positive_integer
+from scripts.structured_retrieval_eval import arguments, build_case, parse_tasks, positive_integer
 from tests.test_long_context import FakeTokenizer
 
 
@@ -10,6 +10,12 @@ def test_parse_tasks_is_strict():
         parse_tasks("multi_key,multi_key")
     with pytest.raises(ValueError, match="tasks"):
         parse_tasks("unknown")
+
+
+def test_cli_accepts_a_frozen_protocol():
+    args = arguments(["experiment", "--protocol", "protocol.json"])
+    assert args.experiment.name == "experiment"
+    assert args.protocol.name == "protocol.json"
 
 
 def test_build_case_is_deterministic_and_counterfactual():

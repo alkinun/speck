@@ -22,6 +22,13 @@ PROMOTION_TASKS = {
 }
 
 
+def _repository_root(path):
+    for parent in (path, *path.parents):
+        if (parent / "pyproject.toml").is_file():
+            return parent
+    raise ValueError(f"cannot resolve repository root from promotion protocol: {path}")
+
+
 def _load_json(path):
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -295,6 +302,132 @@ def _validate_internal_protocols(manifest, repository_root, policy_id, tokenizer
     }:
         raise ValueError("evaluation manifest must pin both promotion protocols")
     return protocols
+
+
+def load_promotion_protocol(path, tokenizer=None):
+    """Load and validate one frozen retrieval protocol for an execution runner."""
+
+    path = Path(path).expanduser().resolve()
+    repository_root = _repository_root(path)
+    protocol = _load_json(path)
+    policy_path = repository_root / "research" / protocol.get("policy_id", "") / "policy.json"
+    policy = _load_json(policy_path)
+    _validate_policy(policy)
+    summary = _validate_promotion_protocol(
+        path,
+        repository_root,
+        policy["policy_id"],
+        tokenizer,
+    )
+    route_values = None
+    if route_reference := protocol.get("route_vocabulary"):
+        route_values = tuple(
+            entry["text"] for entry in _load_json(path.parent / route_reference)["values"]
+        )
+    return {
+        "protocol": protocol,
+        "identity": {
+            "id": summary["id"],
+            "path": str(path),
+            "sha256": _file_sha256(path),
+        },
+        "repository_root": repository_root,
+        "route_values": route_values,
+    }
+
+
+def resolve_adaptation_protocol(loaded, seed):
+    """Map a frozen protocol to structured-retrieval adaptation settings."""
+
+    protocol = loaded["protocol"]
+    comparison = protocol["comparison"]
+    if seed not in comparison["base_model_seeds"]:
+        raise ValueError(f"seed {seed} is not declared by protocol {protocol['protocol_id']}")
+    adaptation = protocol["adaptation"]
+    validation = protocol["validation"]
+    validation_samples = validation.get("samples_per_condition", validation.get("samples_per_view"))
+    record_counts = tuple(adaptation.get("train_record_counts", (adaptation.get("records", 8),)))
+    validation_record_counts = tuple(
+        validation.get("record_counts", (adaptation.get("records", 8),))
+    )
+    return {
+        "tasks": tuple(adaptation["tasks"]),
+        "validation_tasks": tuple(validation["tasks"]),
+        "after_switch_tasks": (),
+        "task_switch_step": None,
+        "sequence_length": adaptation["sequence_length"],
+        "steps": adaptation["steps"],
+        "batch_size": adaptation["batch_size"],
+        "accumulation": adaptation["accumulation"],
+        "validation_samples": validation_samples,
+        "eval_every": adaptation["eval_every"],
+        "records": max(record_counts),
+        "chains": adaptation.get("chains", validation.get("chains", 6)),
+        "lr": adaptation["learning_rate"],
+        "warmup_steps": adaptation["warmup_steps"],
+        "min_lr": adaptation["minimum_lr_multiplier"],
+        "weight_decay": adaptation["weight_decay"],
+        "grad_clip": adaptation["gradient_clip"],
+        "optimizer": adaptation["optimizer"],
+        "seed": seed,
+        "train_seed_offset": comparison["training_stream_seed_offsets"][str(seed)],
+        "validation_seed_offset": comparison["fixed_validation_seed_offset"],
+        "train_templates": tuple(adaptation["train_templates"]),
+        "validation_templates": tuple(validation["templates"]),
+        "train_answer_sets": tuple(adaptation["train_answer_sets"]),
+        "validation_answer_sets": tuple(validation["answer_sets"]),
+        "train_record_counts": record_counts,
+        "validation_record_counts": validation_record_counts,
+        "train_response_cue": adaptation["train_response_cue"],
+        "validation_response_cue": validation["response_cue"],
+        "replay_fraction": adaptation["language_replay_fraction"],
+        "candidate_loss_weight": adaptation["candidate_loss_weight"],
+        "route_values": loaded["route_values"] or tuple("KLMNOPQRST"),
+        "replay_data_experiment": (
+            loaded["repository_root"] / adaptation["replay_data_experiment"]
+        ),
+    }
+
+
+def resolve_evaluation_protocol(loaded):
+    """Resolve the exact condition grid for a frozen multi-length evaluation."""
+
+    protocol = loaded["protocol"]
+    evaluation = protocol.get("length_evaluation")
+    if evaluation is None:
+        raise ValueError(f"protocol {protocol['protocol_id']} has no length evaluation")
+    validation = protocol["validation"]
+    tasks = tuple(validation["tasks"])
+    templates = tuple(validation["templates"])
+    answer_sets = tuple(validation["answer_sets"])
+    record_counts = tuple(evaluation.get("record_counts", (evaluation.get("records", 8),)))
+    conditions = []
+    for task in tasks:
+        task_record_counts = record_counts if task == "multi_key" else (max(record_counts),)
+        for template in templates:
+            for answer_set in answer_sets:
+                for records in task_record_counts:
+                    conditions.append(
+                        {
+                            "task": task,
+                            "template": template,
+                            "answer_set": answer_set,
+                            "records": records,
+                            "chains": evaluation.get(
+                                "chains", protocol["adaptation"].get("chains", 6)
+                            ),
+                            "response_cue": evaluation["response_cue"],
+                        }
+                    )
+    return {
+        "lengths": tuple(evaluation["lengths"]),
+        "samples": evaluation["samples_per_condition"],
+        "seed_offset": protocol["comparison"]["fixed_validation_seed_offset"],
+        "kv_cache_dtype": evaluation["kv_cache_dtype"],
+        "effective_threshold": evaluation.get("effective_threshold", 0.85),
+        "conditions": tuple(conditions),
+        "route_values": loaded["route_values"],
+    }
 
 
 def _validate_policy(policy):

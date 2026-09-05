@@ -5,7 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from speck.research import validate_research_contract
+from speck.research import (
+    load_promotion_protocol,
+    resolve_adaptation_protocol,
+    resolve_evaluation_protocol,
+    validate_research_contract,
+)
 
 root = Path(__file__).parents[1]
 contract = root / "research" / "architecture-promotion-v1"
@@ -71,3 +76,25 @@ def test_contract_qualifies_declared_route_tokens():
     report = validate_research_contract(contract, tokenizer=DeclaredTokenizer())
     assert report["tokenizer_qualified"] is True
     assert report["symbolic_route_values"] == 100
+
+
+def test_structured_protocol_resolves_exact_runner_settings():
+    loaded = load_promotion_protocol(contract / "internal" / "structured_retrieval_v2.json")
+    adaptation = resolve_adaptation_protocol(loaded, seed=43)
+    assert adaptation["train_seed_offset"] == 110000000
+    assert adaptation["validation_seed_offset"] == 200000000
+    assert adaptation["train_answer_sets"] == ("letters", "phrases_train_v2")
+    assert adaptation["validation_answer_sets"] == ("phrases_validation_v2",)
+    assert adaptation["train_record_counts"] == (2, 8)
+    assert adaptation["validation_record_counts"] == (2, 8)
+    assert adaptation["validation_samples"] == 200
+    evaluation = resolve_evaluation_protocol(loaded)
+    assert evaluation["lengths"] == (4096, 32768, 131072)
+    assert evaluation["samples"] == 200
+    assert [condition["records"] for condition in evaluation["conditions"]] == [2, 8]
+
+
+def test_protocol_rejects_an_undeclared_base_seed():
+    loaded = load_promotion_protocol(contract / "internal" / "structured_retrieval_v2.json")
+    with pytest.raises(ValueError, match="not declared"):
+        resolve_adaptation_protocol(loaded, seed=45)

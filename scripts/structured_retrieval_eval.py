@@ -25,6 +25,7 @@ from speck.long_context import (
     evaluate_case,
     parse_lengths,
 )
+from speck.research import load_promotion_protocol, resolve_evaluation_protocol
 from speck.tokenizer import get_tokenizer
 
 PRIMARY_TASKS = ("multi_key", "two_hop")
@@ -54,6 +55,12 @@ def positive_integer(value, name):
 def arguments(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("experiment", type=Path)
+    parser.add_argument(
+        "--protocol",
+        type=Path,
+        default=None,
+        help="freeze all scientific settings from a promotion protocol",
+    )
     parser.add_argument("--checkpoint-dir", type=Path, default=None)
     parser.add_argument("--step", type=int, default=None)
     parser.add_argument("--tasks", type=parse_tasks, default=PRIMARY_TASKS)
@@ -140,10 +147,46 @@ def build_case(
 
 
 def run(args):
-    samples = positive_integer(args.samples, "samples")
-    records = positive_integer(args.records, "records")
-    chains = positive_integer(args.chains, "chains")
     configs = load_experiment(args.experiment, "tokenizer", "train")
+    tokenizer = get_tokenizer(**configs["tokenizer"])
+    protocol_identity = None
+    if protocol_path := getattr(args, "protocol", None):
+        loaded_protocol = load_promotion_protocol(protocol_path, tokenizer=tokenizer)
+        settings = resolve_evaluation_protocol(loaded_protocol)
+        protocol_identity = loaded_protocol["identity"]
+    else:
+        samples = positive_integer(args.samples, "samples")
+        records = positive_integer(args.records, "records")
+        chains = positive_integer(args.chains, "chains")
+        settings = {
+            "lengths": tuple(args.lengths),
+            "samples": samples,
+            "seed_offset": 0,
+            "kv_cache_dtype": "bfloat16",
+            "effective_threshold": 0.85,
+            "conditions": tuple(
+                {
+                    "task": task,
+                    "template": args.template,
+                    "answer_set": args.answer_set,
+                    "records": records,
+                    "chains": chains,
+                    "response_cue": args.response_cue,
+                }
+                for task in args.tasks
+            ),
+            "route_values": None,
+        }
+    cache_dtypes = {
+        "bfloat16": torch.bfloat16,
+        "float16": torch.float16,
+        "float32": torch.float32,
+        "int8": torch.int8,
+    }
+    try:
+        cache_dtype = cache_dtypes[settings["kv_cache_dtype"]]
+    except KeyError as error:
+        raise ValueError("promotion protocol has an unsupported KV cache dtype") from error
     checkpoint_dir = args.checkpoint_dir or Path(
         configs["train"].get("output_dir")
         or Path(base_dir()) / "checkpoints" / configs["train"]["run"]
@@ -153,37 +196,45 @@ def run(args):
         raise FileNotFoundError(f"no checkpoint found in {checkpoint_dir}")
     device = torch.device(args.device)
     model, _ = load_checkpoint_model(checkpoint_dir, step, device)
-    tokenizer = get_tokenizer(**configs["tokenizer"])
-    if max(args.lengths) > model.config.max_position_embeddings:
+    if max(settings["lengths"]) > model.config.max_position_embeddings:
         raise ValueError("evaluation length exceeds the model's allocated context")
     results = []
     task_summaries = {}
-    for task in args.tasks:
+    for condition in settings["conditions"]:
+        task = condition["task"]
+        condition_name = (
+            f"{task}/{condition['template']}/{condition['answer_set']}"
+            f"/records_{condition['records']}/chains_{condition['chains']}"
+            f"/{condition['response_cue']}_cue"
+        )
         task_results = []
-        for length in args.lengths:
-            for sample in range(samples):
+        for length in settings["lengths"]:
+            for sample in range(settings["samples"]):
+                seed = settings["seed_offset"] + sample
+                keywords = {
+                    "template": condition["template"],
+                    "answer_set": condition["answer_set"],
+                    "response_cue": condition["response_cue"],
+                    "route_values": settings["route_values"],
+                }
                 case = build_case(
                     task,
                     tokenizer,
                     length,
-                    sample,
-                    records,
-                    chains,
-                    template=args.template,
-                    answer_set=args.answer_set,
-                    response_cue=args.response_cue,
+                    seed,
+                    condition["records"],
+                    condition["chains"],
+                    **keywords,
                 )
                 counterfactual_case = build_case(
                     task,
                     tokenizer,
                     length,
-                    sample,
-                    records,
-                    chains,
+                    seed,
+                    condition["records"],
+                    condition["chains"],
                     answer_offset=1,
-                    template=args.template,
-                    answer_set=args.answer_set,
-                    response_cue=args.response_cue,
+                    **keywords,
                 )
                 distractor_index = (case["query_index"] + 1) % (
                     case.get("records") or case["chains"]
@@ -192,21 +243,19 @@ def run(args):
                     task,
                     tokenizer,
                     length,
-                    sample,
-                    records,
-                    chains,
+                    seed,
+                    condition["records"],
+                    condition["chains"],
                     answer_offset=1,
                     mutation_index=distractor_index,
-                    template=args.template,
-                    answer_set=args.answer_set,
-                    response_cue=args.response_cue,
+                    **keywords,
                 )
-                factual = evaluate_case(model, case, device=device, kv_cache_dtype=torch.bfloat16)
+                factual = evaluate_case(model, case, device=device, kv_cache_dtype=cache_dtype)
                 counterfactual = evaluate_case(
                     model,
                     counterfactual_case,
                     device=device,
-                    kv_cache_dtype=torch.bfloat16,
+                    kv_cache_dtype=cache_dtype,
                 )
                 result = add_counterfactual_metrics(
                     factual, counterfactual, case, counterfactual_case
@@ -215,7 +264,7 @@ def run(args):
                     model,
                     distractor_case,
                     device=device,
-                    kv_cache_dtype=torch.bfloat16,
+                    kv_cache_dtype=cache_dtype,
                 )
                 distractor_change_score = candidate_shift_score(
                     result,
@@ -241,16 +290,20 @@ def run(args):
                     distractor_prefill_seconds=distractor["prefill_seconds"],
                     association_specificity_score=association_specificity_score,
                     association_specificity_accuracy=float(association_specificity_score > 0),
+                    condition=condition_name,
                 )
                 task_results.append(result)
                 results.append(result)
                 print(
-                    f"{task} {length:,} sample={sample} exact={result['exact_match']:.0f} "
+                    f"{condition_name} {length:,} sample={sample} "
+                    f"exact={result['exact_match']:.0f} "
                     f"choice={result['candidate_accuracy']:.0f} "
                     f"score={result['contrastive_retrieval_score']:.3f} "
                     f"specificity={result['association_specificity_score']:.3f}"
                 )
-        task_summaries[task] = aggregate_results(task_results)
+        task_summaries[condition_name] = aggregate_results(
+            task_results, threshold=settings["effective_threshold"]
+        )
     report = {
         "format": "speck_structured_retrieval_evaluation",
         "format_version": 1,
@@ -260,31 +313,29 @@ def run(args):
         "device": str(device),
         "torch_version": torch.__version__,
         "config": {
-            "tasks": list(args.tasks),
-            "lengths": list(args.lengths),
-            "samples": samples,
-            "records": records,
-            "chains": chains,
-            "template": args.template,
-            "answer_set": args.answer_set,
-            "response_cue": args.response_cue,
+            "promotion_protocol": protocol_identity,
+            "lengths": list(settings["lengths"]),
+            "samples_per_condition": settings["samples"],
+            "seed_offset": settings["seed_offset"],
+            "kv_cache_dtype": settings["kv_cache_dtype"],
+            "effective_threshold": settings["effective_threshold"],
+            "conditions": list(settings["conditions"]),
             "two_hop_depths": [list(pair) for pair in TWO_HOP_DEPTHS],
         },
         "positional_regime": positional_regime(
             model,
             configs["train"]["sequence_length"],
-            max(args.lengths),
+            max(settings["lengths"]),
         ),
         "task_summaries": task_summaries,
         "results": results,
     }
-    output = (
-        args.output
-        or Path(base_dir())
-        / "evaluations"
-        / "structured-retrieval"
-        / configs["train"]["run"]
-        / f"{step}.json"
+    output = args.output or Path(base_dir()) / "evaluations" / "structured-retrieval" / configs[
+        "train"
+    ]["run"] / (
+        f"{step}-{protocol_identity['id']}.json"
+        if protocol_identity is not None
+        else f"{step}.json"
     )
     atomic_json(output, report)
     return report

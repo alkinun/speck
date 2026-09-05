@@ -24,6 +24,7 @@ from speck.long_context import (
     ROUTE_VALUES,
     binomial_tail_probability,
 )
+from speck.research import load_promotion_protocol, resolve_adaptation_protocol
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, set_optimizer_lr
 
@@ -68,6 +69,12 @@ def parse_record_counts(value):
 def arguments(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("experiment", type=Path)
+    parser.add_argument(
+        "--protocol",
+        type=Path,
+        default=None,
+        help="freeze all scientific settings from a promotion protocol",
+    )
     parser.add_argument("--checkpoint-dir", type=Path, required=True)
     parser.add_argument("--step", type=int, default=None)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -528,11 +535,20 @@ def validate_settings(args):
 
 
 def run(args):
+    configs = load_experiment(args.experiment, "tokenizer")
+    tokenizer = get_tokenizer(**configs["tokenizer"])
+    protocol_identity = None
+    if protocol_path := getattr(args, "protocol", None):
+        loaded_protocol = load_promotion_protocol(protocol_path, tokenizer=tokenizer)
+        for name, value in resolve_adaptation_protocol(
+            loaded_protocol, getattr(args, "seed", 42)
+        ).items():
+            setattr(args, name, value)
+        protocol_identity = loaded_protocol["identity"]
     settings = validate_settings(args)
     output_dir = args.output_dir.expanduser().resolve()
     if output_dir.exists():
         raise FileExistsError(f"retrieval adaptation output already exists: {output_dir}")
-    configs = load_experiment(args.experiment, "tokenizer")
     checkpoint_dir = args.checkpoint_dir.expanduser().resolve()
     step = args.step if args.step is not None else latest(checkpoint_dir)
     if step is None:
@@ -544,7 +560,6 @@ def run(args):
     model, parent_metadata = load_checkpoint_model(checkpoint_dir, step, device)
     if settings["sequence_length"] + 1 > model.config.max_position_embeddings:
         raise ValueError("adaptation sequence exceeds the model context")
-    tokenizer = get_tokenizer(**configs["tokenizer"])
     replay_loader = None
     replay_manifest = None
     replay_data_dir = None
@@ -703,6 +718,7 @@ def run(args):
         "history": history,
         "training_seconds": training_seconds,
         "git_revision": git_revision(),
+        "promotion_protocol": protocol_identity,
         "replay_data": (
             {
                 "experiment": str(args.replay_data_experiment.expanduser().resolve()),
@@ -746,6 +762,7 @@ def run(args):
         "device": str(device),
         "torch_version": torch.__version__,
         "git_revision": metadata["git_revision"],
+        "promotion_protocol": protocol_identity,
     }
     atomic_json(args.report, report)
     return report
