@@ -253,6 +253,8 @@ def _stable_audit(contract_path, code_checkout, data_checkout):
     local_objects = _local_objects(data_checkout)
     restricted = [tree[path] for path in RESTRICTED_PATHS]
     cached = [entry for entry in restricted if entry["git_object_id"] in local_objects]
+    work_tree = Path(_git(data_checkout, "rev-parse", "--show-toplevel"))
+    materialized = [entry["path"] for entry in restricted if (work_tree / entry["path"]).is_file()]
     after = _pack_snapshot(data_checkout)
     if after != before:
         raise ValueError("NoLiMa metadata audit fetched new Git objects")
@@ -295,7 +297,8 @@ def _stable_audit(contract_path, code_checkout, data_checkout):
             "restricted_blobs_cached": len(cached),
             "restricted_blobs_declared": len(restricted),
             "cached_restricted_paths": [entry["path"] for entry in cached],
-            "working_tree_materialized": False,
+            "materialized_restricted_paths": materialized,
+            "working_tree_materialized": bool(materialized),
         },
     }
 
