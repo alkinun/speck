@@ -89,6 +89,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_materializer_preflight",
             "helmet_materializer_preflight_sha256",
             "helmet_materializer_preflight_status",
+            "helmet_clinc_source_protocol",
+            "helmet_clinc_source_protocol_sha256",
+            "helmet_clinc_source_qualification",
+            "helmet_clinc_source_qualification_sha256",
+            "helmet_clinc_source_status",
             "ruler_v1_decision",
             "ruler_v2_decision",
         },
@@ -96,7 +101,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     if (
         evidence["status"]
-        != "ruler_v1_failed_v2_frozen_helmet_materializer_preflight_qualified_external_data_pending"
+        != "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_external_data_pending"
     ):
         raise ValueError("paper evaluation evidence must preserve v1, RULER v2, and HELMET")
     for path_key, hash_key in (
@@ -118,6 +123,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_materializer_preflight_protocol_sha256",
         ),
         ("helmet_materializer_preflight", "helmet_materializer_preflight_sha256"),
+        ("helmet_clinc_source_protocol", "helmet_clinc_source_protocol_sha256"),
+        (
+            "helmet_clinc_source_qualification",
+            "helmet_clinc_source_qualification_sha256",
+        ),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -142,6 +152,10 @@ def _validate_evaluation_evidence(evidence, repository_root):
     helmet_materializer = _load_json(
         repository_root / evidence["helmet_materializer_preflight"]
     )
+    helmet_clinc_protocol = _load_json(
+        repository_root / evidence["helmet_clinc_source_protocol"]
+    )
+    helmet_clinc = _load_json(repository_root / evidence["helmet_clinc_source_qualification"])
     expected_unaffected = {
         "cwe",
         "fwe",
@@ -258,6 +272,20 @@ def _validate_evaluation_evidence(evidence, repository_root):
         is not False
     ):
         raise ValueError("paper HELMET materializer preflight evidence is invalid")
+    if (
+        helmet_clinc_protocol.get("format") != "speck_helmet_data_only_source_protocol"
+        or helmet_clinc_protocol.get("status") != "executed_qualified"
+        or helmet_clinc_protocol.get("result", {}).get("sha256")
+        != evidence["helmet_clinc_source_qualification_sha256"]
+        or helmet_clinc.get("format")
+        != "speck_helmet_data_only_source_qualification"
+        or helmet_clinc.get("status") != evidence["helmet_clinc_source_status"]
+        or set(helmet_clinc.get("source", {}).get("splits", {}))
+        != {"train", "validation"}
+        or helmet_clinc.get("decision", {}).get("source_snapshot_qualified") is not True
+        or helmet_clinc.get("decision", {}).get("helmet_execution_authorized") is not False
+    ):
+        raise ValueError("paper HELMET CLINC source evidence is invalid")
 
 
 def _validate_claims(claims):

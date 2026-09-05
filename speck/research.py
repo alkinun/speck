@@ -872,7 +872,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             banking = materializer.get("snapshots", {}).get("banking77", {})
             nlu = materializer.get("snapshots", {}).get("nlu_evaluation_data", {})
             if (
-                "two_family_materializer_qualified" not in suite["status"]
+                "three_runtime_sources_qualified" not in suite["status"]
                 or materializer_protocol.get("status") != "executed_qualified"
                 or materializer_protocol.get("result", {}).get("sha256")
                 != suite.get("materializer_preflight_sha256")
@@ -890,6 +890,36 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or nlu.get("train", {}).get("legacy_conversion_full_parity") is not True
             ):
                 raise ValueError("HELMET materializer preflight evidence is invalid")
+            clinc_protocol_path = repository_root / suite.get("clinc_source_protocol", "")
+            clinc_path = repository_root / suite.get("clinc_source_qualification", "")
+            if (
+                not clinc_protocol_path.is_file()
+                or _file_sha256(clinc_protocol_path)
+                != suite.get("clinc_source_protocol_sha256")
+                or not clinc_path.is_file()
+                or _file_sha256(clinc_path)
+                != suite.get("clinc_source_qualification_sha256")
+            ):
+                raise ValueError("HELMET CLINC source evidence has an invalid pin")
+            clinc_protocol = _load_json(clinc_protocol_path)
+            clinc = _load_json(clinc_path)
+            clinc_splits = clinc.get("source", {}).get("splits", {})
+            if (
+                clinc_protocol.get("status") != "executed_qualified"
+                or clinc_protocol.get("result", {}).get("sha256")
+                != suite.get("clinc_source_qualification_sha256")
+                or clinc.get("status") != "clinc_plus_required_splits_qualified_offline"
+                or set(clinc_splits) != {"train", "validation"}
+                or not all(
+                    split.get("upstream_parity", {}).get(
+                        "all_text_and_intent_values_match_in_order"
+                    )
+                    for split in clinc_splits.values()
+                )
+                or clinc.get("decision", {}).get("source_snapshot_qualified") is not True
+                or clinc.get("decision", {}).get("helmet_execution_authorized") is not False
+            ):
+                raise ValueError("HELMET CLINC source evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

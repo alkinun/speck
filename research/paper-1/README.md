@@ -88,6 +88,9 @@ the final combined model.
 - [`helmet_materializer_preflight_v1.json`](../architecture-promotion-v1/helmet_materializer_preflight_v1.json)
   qualifies a hash-locked legacy-to-Parquet bridge for Banking77 and NLU Evaluation Data with complete
   row, order, value, feature, replay, and current-offline-reader parity.
+- [`helmet_clinc_source_v1.json`](../architecture-promotion-v1/helmet_clinc_source_v1.json) pins the
+  exact CLINC150 `plus` train/validation snapshots, upstream row provenance, feature identity, and
+  retained CC-BY-3.0 attribution.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -120,7 +123,8 @@ HELMET RAG/long-QA as the source-document guardrail. NoLiMa and HELMET contamina
 blocked on their separate data/legal qualifications. HELMET's runtime audit additionally shows that
 archive completion alone cannot qualify 50 externally loaded entries or the proprietary-judge metrics.
 Its isolated materialization strategy now qualifies for two permissive ICL sources, but no broader
-HELMET execution authority follows.
+HELMET execution authority follows. CLINC150's separate data-only snapshot also qualifies, leaving
+TREC and final prompt/contamination work before the ICL category can qualify.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

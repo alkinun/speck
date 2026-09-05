@@ -219,7 +219,7 @@
     },
     {
       "id": "helmet",
-      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_two_family_materializer_qualified_archive_transfer_and_legal_blocked",
+      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_archive_transfer_and_remaining_legal_blocked",
       "repository": "https://github.com/princeton-nlp/HELMET",
       "revision": "af609c4d51b97fc35012099380aa889da961c42d",
       "contract": "research/architecture-promotion-v1/external/helmet.json",
@@ -240,6 +240,10 @@
       "materializer_preflight_protocol_sha256": "11fe439568fe7163e4899dbbff992dcec9058d007950ef6b62dc484fbac1cd44",
       "materializer_preflight": "results/Speck-Architecture-Promotion-v1/helmet-materializer-preflight.json",
       "materializer_preflight_sha256": "24ad9ab83b2793711c723f34be80d0be11b585c4b56aa79819c61c7c529db1be",
+      "clinc_source_protocol": "research/architecture-promotion-v1/helmet_clinc_source_v1.json",
+      "clinc_source_protocol_sha256": "a510999385ed4dc70a55eac858094dc77b4ef692137ec9649bf90081bf8f98b7",
+      "clinc_source_qualification": "results/Speck-Architecture-Promotion-v1/helmet-clinc-source-qualified.json",
+      "clinc_source_qualification_sha256": "14c43416d2ba1b25629db473c3622ec7f66f4a14f338f8c7e32615a35eb02d7d",
       "lengths": [
         8192,
         16384,

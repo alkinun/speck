@@ -1,0 +1,87 @@
+{
+  "created_at": "2026-09-05T15:06:09.281721+00:00",
+  "decision": {
+    "contamination_scanned": false,
+    "helmet_execution_authorized": false,
+    "helmet_icl_qualified": false,
+    "source_snapshot_qualified": true
+  },
+  "format": "speck_helmet_data_only_source_qualification",
+  "format_version": 1,
+  "network": {
+    "allowed_hosts": [
+      "huggingface.co",
+      "raw.githubusercontent.com"
+    ],
+    "authentication": "none",
+    "credentials_exposed": false
+  },
+  "non_claims": [
+    "CLINC150 qualification resolves any other HELMET runtime source",
+    "dataset-source qualification establishes generated prompt identity",
+    "a permissive license removes attribution obligations",
+    "source qualification establishes absence of training overlap"
+  ],
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_clinc_source_v1.json",
+    "spec_identity_sha256": "72ee14f1c211fcade9043726a1da2684a678ed0092a90cce85b5ae3017e676e2"
+  },
+  "runner_revision": "8439a68216735b78341859ed2ceb22f1d6c8f9c0",
+  "runner_sha256": "26c2939915560353cdcc326c9ac982009a55eef803da6e9f8d4765b97c3ee369",
+  "runtime": {
+    "dataset_module_factory_sha256": "736a7f9d4a0232e820da3cfcfac28cf3b2a4c0d69ad6976458cb47bc2ee63b74",
+    "datasets": "5.0.1",
+    "pyarrow": "25.0.1"
+  },
+  "source": {
+    "hub_revision": "155b9c710419136e17307b80d0a13e68cd46b4ec",
+    "id": "clinc_oos_plus",
+    "license": "CC-BY-3.0",
+    "license_artifact": {
+      "bytes": 19467,
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/clinc_oos/LICENSE",
+      "sha256": "e6bc9e9c474700b708f568bac9e5a8a9bcb2b1dad53442f5ba449fcb848b8e76"
+    },
+    "splits": {
+      "train": {
+        "bytes": 312096,
+        "canonical_rows_sha256": "99160f75faee53e92126463c1c67fed5240abd13d27099e0fdc8e49124ca383f",
+        "features_sha256": "2623a3f1fefb5b28fac0f1a2dcf2a18dd9c7b4e0d257b90fc3e03b909d85105f",
+        "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/clinc_oos/train.parquet",
+        "rows": 15250,
+        "sha256": "30188119cf9f86fc9db27e1c22442d091cb5cb0913c9496f945fe11e7a02a28f",
+        "upstream_parity": {
+          "all_text_and_intent_values_match_in_order": true,
+          "parts": [
+            "train",
+            "oos_train"
+          ],
+          "rows": 15250
+        }
+      },
+      "validation": {
+        "bytes": 77789,
+        "canonical_rows_sha256": "06cc7028ff152003e7dd3e6252b788a22f9883a9549e6182746481c7be691c63",
+        "features_sha256": "2623a3f1fefb5b28fac0f1a2dcf2a18dd9c7b4e0d257b90fc3e03b909d85105f",
+        "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/clinc_oos/validation.parquet",
+        "rows": 3100,
+        "sha256": "fbd545b46c611c4a7ba4b48cae6c7f09bb5b59f33ff56206ad1cd366c85cdfaa",
+        "upstream_parity": {
+          "all_text_and_intent_values_match_in_order": true,
+          "parts": [
+            "val",
+            "oos_val"
+          ],
+          "rows": 3100
+        }
+      }
+    },
+    "upstream_artifact": {
+      "bytes": 2509789,
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/clinc_oos/data_oos_plus.json",
+      "sha256": "bfcca9ae515623541dc1983c94c4ed7cae9d26b42ae47d74b972e51bb6f7a21f"
+    },
+    "upstream_revision": "828f8093932c8fe6ca7936c3d2e52903b1c523de"
+  },
+  "status": "clinc_plus_required_splits_qualified_offline"
+}

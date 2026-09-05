@@ -55,6 +55,7 @@ Read in order:
 47. [46 — Post-contamination RULER v2 successor manifest](46_ruler_v2_successor_manifest.md)
 48. [47 — HELMET archive-external runtime and scorer boundary](47_helmet_runtime_dependency_boundary.md)
 49. [48 — HELMET two-family offline materializer preflight](48_helmet_two_family_materializer_preflight.md)
+50. [49 — HELMET CLINC150 source qualification](49_helmet_clinc_source_qualification.md)
 
 Conventions:
 
@@ -208,3 +209,9 @@ datasets-3.6 materializer produces deterministic Banking77 Parquet and exactly m
 conversion across all 25,715 rows and feature labels. The datasets-5 reader reproduces all retained
 identities offline. This qualifies the mechanism for those two sources only; blocked licenses,
 tokenizers, judges, and the rest of HELMET are unchanged.
+
+Finding 49 pins the exact CLINC150 `plus` train/validation Parquet, upstream JSON, and CC-BY-3.0
+license. All 18,350 rows map exactly and in order to the declared upstream parts, all 151 intent labels
+match, and offline datasets-5 reload passes. Three of seven archive-external source families now have
+a qualified immutable path, but HELMET ICL remains blocked on TREC and final prompt/contamination
+qualification.

@@ -43,6 +43,8 @@ fingerprints are not treated as cross-version identities; content and semantic f
 The strategy therefore qualifies for Banking77 and NLU Evaluation Data. It demonstrates that a legacy
 materializer can be isolated from the model runtime and replaced by immutable, remote-code-free inputs.
 It does not qualify HELMET execution or authorize extension to a source with unresolved terms.
+Finding 49 separately qualifies the already data-only CLINC150 source without extending this legacy
+materializer result.
 
 ## Storage and provenance
 
