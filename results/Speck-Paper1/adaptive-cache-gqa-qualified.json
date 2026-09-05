@@ -1,0 +1,78 @@
+{
+  "cases": {
+    "bound_scaling_and_monotonicity_pass": true,
+    "maximum_direct_minus_scaled_bound_gap": 5.329070518200751e-15,
+    "maximum_mean_times_group_minus_sum_gap": 2.220446049250313e-16,
+    "maximum_optimality_gap": 2.220446049250313e-16,
+    "mean_sum_identity_pass": true,
+    "oracle_allocation_comparisons": 22000,
+    "physical_capacity_conservation_pass": true,
+    "query_mass_optimality_pass": true,
+    "random_budget_cases": 4200,
+    "random_tensor_cases": 600,
+    "speck_gqa3_budget_cases": 500
+  },
+  "created_at": "2026-09-05T21:14:32.498891+00:00",
+  "decision": {
+    "equal_group_mean_reference_qualified": true,
+    "max_aggregation_primary_authorized": false,
+    "model_integration_authorized": false,
+    "novelty_gate_changed": false,
+    "safeguard_authorized": false,
+    "training_authorized": false,
+    "upstream_code_executed": false,
+    "upstream_code_used": false
+  },
+  "format": "speck_adaptive_cache_gqa_qualification",
+  "format_version": 1,
+  "implementation": {
+    "path": "speck/cache_budget_gqa.py",
+    "sha256": "1ab7084d526504f67cb00098454e1c56965ea72b5adb2aa703cc83b43d1a0221"
+  },
+  "max_negative_control": {
+    "max_query_retained_mass": 1.1,
+    "max_selected": [
+      [
+        0,
+        1
+      ]
+    ],
+    "mean_advantage": 0.09999999999999987,
+    "mean_query_retained_mass": 1.2,
+    "mean_selected": [
+      [
+        1,
+        0
+      ]
+    ],
+    "strict_counterexample_pass": true
+  },
+  "protocol": {
+    "path": "research/paper-1/adaptive_cache_gqa_v1.json",
+    "sha256": "afb1fcb959ea626145af281409de9ff6f0089d843cea02124f0b9f1f7e5bf7e4"
+  },
+  "runner_revision": "5ae33b1c94c2668c9649451eb3d87119818d1d2b",
+  "runner_sha256": "ffb620b09e7c04e239d1ee9a1ab92a1e4af0c909738e4db8cb650a2c4bfabd34",
+  "safeguard_negative_witness": {
+    "adaptive_budgets": [
+      4,
+      1,
+      1
+    ],
+    "average_capacity": 2,
+    "capacity_deficit": 1,
+    "code_like_rounded_budgets": [
+      3,
+      1,
+      1
+    ],
+    "conservation_failure_reproduced": true,
+    "floor_ratio": 0.2
+  },
+  "scope": "equal-size grouped-query reduction onto physical KV heads only; no model integration, observation-window policy, safeguard, training, novelty, or architecture claim",
+  "status": "equal_group_mean_reference_qualified",
+  "tests": {
+    "path": "tests/test_cache_budget_gqa.py",
+    "sha256": "b7f32e6c4d8509a277c61941d32fc0308ad3c43a07486f892d117cfb3bbb223b"
+  }
+}

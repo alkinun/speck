@@ -27,6 +27,7 @@ PROGRAM_FILES = (
     "novelty_code_availability_v1.json",
     "adakv_code_audit_v1.json",
     "adaptive_cache_budget_v1.json",
+    "adaptive_cache_gqa_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1307,6 +1308,93 @@ def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
         raise ValueError("adaptive cache budget qualification is incomplete")
 
 
+def _validate_adaptive_cache_gqa(reference, repository_root, paper_id):
+    _require(
+        reference,
+        {"protocol", "protocol_sha256", "qualification", "qualification_sha256", "status"},
+        "adaptive cache GQA reference",
+    )
+    protocol_path = repository_root / reference["protocol"]
+    result_path = repository_root / reference["qualification"]
+    if not protocol_path.is_file() or _file_sha256(protocol_path) != reference["protocol_sha256"]:
+        raise ValueError("adaptive cache GQA protocol does not match its pin")
+    if not result_path.is_file() or _file_sha256(result_path) != reference["qualification_sha256"]:
+        raise ValueError("adaptive cache GQA qualification does not match its pin")
+    protocol = _load_json(protocol_path)
+    result = _load_json(result_path)
+    cases = result.get("cases", {})
+    maximum = result.get("max_negative_control", {})
+    safeguard = result.get("safeguard_negative_witness", {})
+    decision = result.get("decision", {})
+    implementation = result.get("implementation", {})
+    tests = result.get("tests", {})
+    if (
+        protocol.get("format") != "speck_adaptive_cache_gqa_protocol"
+        or protocol.get("format_version") != 1
+        or protocol.get("paper_id") != paper_id
+        or protocol.get("status") != "frozen_before_local_implementation"
+        or protocol.get("decision", {}).get("model_integration_authorized") is not False
+        or protocol.get("decision", {}).get("training_authorized") is not False
+        or protocol.get("decision", {}).get("safeguard_implementation_authorized") is not False
+        or result.get("format") != "speck_adaptive_cache_gqa_qualification"
+        or result.get("format_version") != 1
+        or result.get("status") != reference["status"]
+        or result.get("protocol", {}).get("path") != reference["protocol"]
+        or result.get("protocol", {}).get("sha256") != reference["protocol_sha256"]
+        or cases.get("random_tensor_cases") != 600
+        or cases.get("random_budget_cases") != 4200
+        or cases.get("speck_gqa3_budget_cases") != 500
+        or cases.get("oracle_allocation_comparisons") != 22000
+        or abs(cases.get("maximum_mean_times_group_minus_sum_gap", math.inf)) > 1e-12
+        or abs(cases.get("maximum_optimality_gap", math.inf)) > 1e-12
+        or abs(cases.get("maximum_direct_minus_scaled_bound_gap", math.inf)) > 1e-12
+        or not all(
+            cases.get(key) is True
+            for key in (
+                "mean_sum_identity_pass",
+                "physical_capacity_conservation_pass",
+                "query_mass_optimality_pass",
+                "bound_scaling_and_monotonicity_pass",
+            )
+        )
+        or maximum.get("mean_selected") != [[1, 0]]
+        or maximum.get("max_selected") != [[0, 1]]
+        or maximum.get("strict_counterexample_pass") is not True
+        or not maximum.get("mean_query_retained_mass", -math.inf)
+        > maximum.get("max_query_retained_mass", math.inf)
+        or safeguard.get("adaptive_budgets") != [4, 1, 1]
+        or safeguard.get("code_like_rounded_budgets") != [3, 1, 1]
+        or safeguard.get("capacity_deficit") != 1
+        or safeguard.get("conservation_failure_reproduced") is not True
+        or decision.get("equal_group_mean_reference_qualified") is not True
+        or decision.get("max_aggregation_primary_authorized") is not False
+        or decision.get("safeguard_authorized") is not False
+        or decision.get("upstream_code_used") is not False
+        or decision.get("upstream_code_executed") is not False
+        or decision.get("model_integration_authorized") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("novelty_gate_changed") is not False
+        or implementation.get("path") != "speck/cache_budget_gqa.py"
+        or _file_sha256(repository_root / implementation["path"]) != implementation.get("sha256")
+        or tests.get("path") != "tests/test_cache_budget_gqa.py"
+        or _file_sha256(repository_root / tests["path"]) != tests.get("sha256")
+        or result.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/adaptive_cache_gqa_qualify.py")
+    ):
+        raise ValueError("adaptive cache GQA qualification is incomplete")
+    for source in protocol.get("sources", ()):
+        for path_key, hash_key in (
+            ("local_note", "local_note_sha256"),
+            ("audit", "sha256"),
+            ("protocol", "protocol_sha256"),
+            ("qualification", "qualification_sha256"),
+        ):
+            if path_key in source:
+                path = repository_root / source[path_key]
+                if not path.is_file() or _file_sha256(path) != source[hash_key]:
+                    raise ValueError(f"adaptive cache GQA {path_key} does not match its source pin")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1386,6 +1474,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "novelty_code_availability",
             "adakv_code_audit",
             "adaptive_cache_budget",
+            "adaptive_cache_gqa",
         },
         "paper experiment program",
     )
@@ -1410,6 +1499,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_adaptive_cache_budget(
         program["adaptive_cache_budget"],
+        repository_root,
+        paper_id,
+    )
+    _validate_adaptive_cache_gqa(
+        program["adaptive_cache_gqa"],
         repository_root,
         paper_id,
     )

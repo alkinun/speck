@@ -37,6 +37,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "novelty_code_availability_v1.json",
             "adakv_code_audit_v1.json",
             "adaptive_cache_budget_v1.json",
+            "adaptive_cache_gqa_v1.json",
             "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
@@ -300,6 +301,18 @@ def test_paper_program_rejects_adaptive_cache_budget_qualification_pin_drift(tmp
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="adaptive cache budget qualification"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_adaptive_cache_gqa_qualification_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["adaptive_cache_gqa"]["qualification_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="adaptive cache GQA qualification"):
         validate_paper_program(copied, repository_root=root)
 
 

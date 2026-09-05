@@ -112,6 +112,9 @@ the final combined model.
 - [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
   within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
   reduction, model integration, training, novelty, and architecture claims blocked.
+- [`adaptive_cache_gqa_v1.json`](adaptive_cache_gqa_v1.json) proves and exhaustively checks equal-group
+  mean reduction onto physical GQA heads, rejects max as theorem-equivalent, and records a safeguard
+  conservation failure without authorizing model integration or training.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

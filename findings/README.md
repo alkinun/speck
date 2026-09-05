@@ -81,6 +81,8 @@ Read in order:
 73. [72 — Novelty-baseline code and license availability](72_novelty_code_availability.md)
 74. [73 — Ada-KV immutable static code audit](73_adakv_static_code_audit.md)
 75. [74 — Paper 1 KDA/GQA candidate pair 0](74_paper_1_candidate_0.md)
+76. [75 — Adaptive cache budget clean-room reference](75_adaptive_cache_budget_reference.md)
+77. [76 — Adaptive cache GQA reduction reference](76_adaptive_cache_gqa_reference.md)
 
 Conventions:
 
@@ -389,3 +391,9 @@ budget cases, global top-salience allocation conserves capacity, is deterministi
 the quotient/remainder uniform control, and makes the paper bound monotone within `8.88e-16` numerical
 noise. This is reference evidence only; GQA reduction, model integration, training, novelty, and
 architecture promotion remain blocked.
+
+Finding 76 qualifies arithmetic-mean GQA reduction only under equal-size groups. Across 600 tensors,
+4,200 budgets, and 22,000 physical allocation oracles—including 500 Speck GQA3 cases—mean and sum have
+identical allocation identities and attain maximal original query-head retained mass. Max loses a
+frozen counterexample by 0.1 mass, and code-like safeguard rounding loses one of six slots. Model
+integration, safeguard use, training, novelty, and architecture promotion remain blocked.

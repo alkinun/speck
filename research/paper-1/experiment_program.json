@@ -6,6 +6,13 @@
     "qualification_sha256": "c8f46842b62d97e0890c4b6325f118b5a472b03dcb8f0b9bf6df03194df80a86",
     "status": "clean_room_reference_qualified"
   },
+  "adaptive_cache_gqa": {
+    "protocol": "research/paper-1/adaptive_cache_gqa_v1.json",
+    "protocol_sha256": "afb1fcb959ea626145af281409de9ff6f0089d843cea02124f0b9f1f7e5bf7e4",
+    "qualification": "results/Speck-Paper1/adaptive-cache-gqa-qualified.json",
+    "qualification_sha256": "d3fc660092865d87a34b7c4d5960d6e60c365899506898faf9a8527c8e8597a7",
+    "status": "equal_group_mean_reference_qualified"
+  },
   "adakv_code_audit": {
     "audit": "research/paper-1/adakv_code_audit_v1.json",
     "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
