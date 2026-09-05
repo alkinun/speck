@@ -46,6 +46,7 @@ Read in order:
 38. [37 — RULERv1 32K deterministic case qualification](37_ruler_32k_case_qualification.md)
 39. [38 — RULERv1 64K deterministic case qualification](38_ruler_64k_case_qualification.md)
 40. [39 — RULERv1 128K and all-length data qualification](39_ruler_128k_and_data_completion.md)
+41. [40 — HELMET native Speck adapter qualification](40_helmet_native_adapter_qualification.md)
 
 Conventions:
 
@@ -151,3 +152,8 @@ Finding 39 completes the 128K stage and the RULER data-generation matrix. All 78
 qualify across two full offline generations per length, representing 7,800 retained and 15,600 checked
 cases in a 1.1GB local cache. Candidate-specific execution and scoring remain blocked, so no capability
 claim is made.
+
+Finding 40 qualifies HELMET's pinned native Hugging Face path on a real parity-attested Speck export
+in a locked CPU/eager environment. Load, truncation, deterministic generation, raw-output shape,
+RULER/QA post-processing, and network denial pass. The 34GB data volume, component licenses,
+reproducible reranking dependency, candidate exports, and capability execution remain blocked.

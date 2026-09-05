@@ -67,8 +67,9 @@ per length. A pinned compatibility patch repairs an upstream HotpotQA non-termin
 prompt or scoring semantics. RULER case data are complete, while candidate-specific execution and
 scoring remain blocked. NoLiMa requires
 acceptance of a
-non-commercial research license and a data manifest; HELMET remains blocked on a separate 34GB data
-volume and its own model-adapter smoke.
+non-commercial research license and a data manifest. HELMET's native CPU/eager model adapter now
+qualifies on a real Speck export, while its separate 34GB data volume, component licenses, complete
+scorer environment, and candidate executions remain blocked.
 
 Build or revalidate the non-redistributable RULER source bundle with:
 

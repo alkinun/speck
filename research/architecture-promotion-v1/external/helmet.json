@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "helmet",
   "suite_version": "pinned-2026-09-05",
-  "status": "source_qualified_data_storage_and_model_smoke_blocked",
+  "status": "source_qualified_model_adapter_qualified_data_storage_blocked",
   "upstream": {
     "id": "helmet_pipeline",
     "repository": "https://github.com/princeton-nlp/HELMET.git",
@@ -45,14 +45,31 @@
     "repository": "https://huggingface.co/datasets/princeton-nlp/HELMET",
     "revision": "dddb209d03e38f1f0faf76d6d05ef4ccf96240ee",
     "advertised_download_size_gb": 34,
-    "reason": "the research filesystem has less than 8GB free",
+    "reason": "the approximately 34GB dataset exceeds the current research volume's safe free-space envelope and a separate qualified volume is not provisioned",
     "qualification_rule": "use a separate capacity-planned volume, preserve dataset licenses, and record every extracted file hash"
   },
   "model_adapter": {
     "mode": "native Hugging Face trust_remote_code adapter with attn_implementation=eager and compilation disabled for qualification",
-    "status": "blocked_smoke_incomplete",
-    "reason": "the adapter source is compatible in principle, but its device_map path requires Accelerate and the first isolated smoke was stopped after an environment resolver attempted a duplicate CUDA stack",
-    "required_next": "add a locked external-evaluation environment and run local-export load, tokenize, generate, and raw-output smoke without changing HELMET prompts or scoring"
+    "status": "native_hf_cpu_eager_qualified_data_and_candidate_execution_blocked",
+    "qualification": "results/Speck-Architecture-Promotion-v1/helmet-adapter-qualification.json",
+    "qualification_sha256": "c86b0994cfa73abf2f909d427c7595cb01876f0812406a20b586d746e31ae038",
+    "runner_revision": "dc84fc01c189d492e0e7b04c12814d41c503a1db",
+    "environment_group": "helmet-adapter",
+    "export_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+    "settings": {
+      "device": "cpu",
+      "dtype": "torch.float32",
+      "attn_implementation": "eager",
+      "torch_compile": false,
+      "device_map": "auto",
+      "use_chat_template": false,
+      "input_max_length": 128,
+      "generation_max_length": 4,
+      "seed": 42
+    },
+    "scoring_scope": "official RULER recall and QA post-processing smoke; pytrec_eval-backed reranking deferred",
+    "reason": "a real parity-attested Speck export passes pinned HELMET load, tokenize, truncate, deterministic generation, raw-output, and RULER/QA scorer behavior offline",
+    "required_next": "after data-volume qualification, bind every frozen candidate to an attested export at its evaluated context ceiling and qualify the complete category scorer environment before execution"
   },
   "release_use": "required independent suite after external storage and model-adapter qualification"
 }

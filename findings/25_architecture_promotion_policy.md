@@ -114,10 +114,11 @@ microbenchmarks; p99 serving claims require at least 1,000 online requests.
   runners enforce their exact path and SHA-256. A complete CPU preflight builds and hashes all 3,000
   factual/counterfactual/distractor cases at the strictest 4K geometry. The first protocol-bound GPU
   executions remain pending.
-- RULERv1, NoLiMa, and HELMET source commits and required files are qualified. Data and execution are
-  still blocked: RULER has unpinned transitive downloads and no supported Speck server; NoLiMa requires
-  non-commercial license acceptance and a compatible endpoint; HELMET requires a separate 34GB volume
-  and locked-environment model smoke.
+- RULERv1, NoLiMa, and HELMET source commits, required files, and model-adapter protocols now qualify.
+  Later findings 33–40 supersede the original integration blockers: RULER case data qualify through
+  128K; NoLiMa still requires license acceptance and data qualification; HELMET still requires a
+  separate 34GB volume, component-license audit, and reproducible full scorer environment. Candidate
+  execution remains blocked for every suite.
 - The medium-scale hardware, parallelism, and absolute cost envelope are not yet named.
 - A production serving runtime profile is required in policy v2 before architecture freeze.
 

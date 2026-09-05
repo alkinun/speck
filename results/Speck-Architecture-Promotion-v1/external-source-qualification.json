@@ -2,7 +2,7 @@
   "format": "speck_external_source_qualification_summary",
   "format_version": 1,
   "status": "source_qualified_execution_blocked",
-  "runner_revision": "25db3b4182837bf9eba2a9b3f526aa830b141951",
+  "runner_revision": "548f8757b1e2d2fabeb7d462f9114070aaf9ec15",
   "created_on": "2026-09-05",
   "suites": {
     "ruler": {
@@ -129,8 +129,8 @@
     },
     "helmet": {
       "config": "research/architecture-promotion-v1/external/helmet.json",
-      "config_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
-      "status": "source_qualified_data_storage_and_model_smoke_blocked",
+      "config_sha256": "f4f8cbd16765a0090988ee932a6b282e290406f53bb68d345c6dc0b8fc5e557f",
+      "status": "source_qualified_model_adapter_qualified_data_storage_blocked",
       "sources": [
         {
           "id": "helmet_pipeline",
@@ -144,15 +144,23 @@
         "advertised_download_size_gb": 34,
         "metadata_qualified_without_lfs_download": true
       },
-      "qualified_files": 13,
+      "qualified_files": 14,
+      "model_adapter_qualification": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/helmet-adapter-qualification.json",
+        "sha256": "c86b0994cfa73abf2f909d427c7595cb01876f0812406a20b586d746e31ae038",
+        "status": "qualified_native_hf_cpu_eager_adapter",
+        "export_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+        "network_attempts": 0
+      },
       "blockers": [
         "the dataset cannot fit on the current research volume",
-        "the native Hugging Face adapter still needs a locked-environment Speck export smoke",
-        "component dataset licenses require preservation and audit"
+        "component dataset licenses require preservation and audit",
+        "pytrec_eval-backed reranking needs reproducible full-suite environment qualification",
+        "each frozen candidate requires an attested export at its evaluated context ceiling"
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive inputs and all 78 declared task/length cells now qualify offline with deterministic reruns and application-layer network denial; every candidate execution remains blocked. No external suite has complete execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. RULER's all-length data qualify; NoLiMa license/data and HELMET volume/full-scorer data remain blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",
