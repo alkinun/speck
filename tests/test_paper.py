@@ -11,7 +11,7 @@ root = Path(__file__).parents[1]
 program = root / "research" / "paper-1"
 
 
-def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
+def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
     assert validate_paper_program(program) == {
         "paper_id": "speck-paper-1",
         "status": "valid_hypotheses_only",
@@ -20,6 +20,7 @@ def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
             "claims.json",
             "baseline_matrix.json",
             "baseline_analysis.json",
+            "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
             "experiment_program.json",
@@ -34,6 +35,7 @@ def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
         "historical_baseline_arms": 5,
         "planned_primary_baseline_arms": 2,
         "proxy_confirmation_pairs": 3,
+        "proxy_training": "authorized",
         "paper_scale_pretraining": "blocked",
     }
 
@@ -58,6 +60,18 @@ def test_paper_program_rejects_baseline_audit_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="baseline audit"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_proxy_launch_qualification_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["proxy_launch_evidence"]["qualification_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="proxy launch qualification"):
         validate_paper_program(copied, repository_root=root)
 
 

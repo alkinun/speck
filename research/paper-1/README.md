@@ -61,6 +61,9 @@ the final combined model.
 - [`baseline_analysis.json`](baseline_analysis.json) freezes the paired estimand, confidence bound,
   source guardrails, interpolation rules, control-only time-to-quality lock, censoring, and fixed-sample
   stopping rule before any new baseline result exists.
+- [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
+  proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
+  explicit non-claims.
 - [`cuda_decode_diagnostic.json`](cuda_decode_diagnostic.json) and
   [`cuda_decode_trained_sentinel.json`](cuda_decode_trained_sentinel.json) freeze the multi-seed
   failure-classification matrix and its immutable trained-checkpoint follow-up.
@@ -75,6 +78,9 @@ the final combined model.
 - [`baseline-storage-volume-qualified.json`](../../results/Speck-Paper1/baseline-storage-volume-qualified.json)
   binds all six proxy checkpoint paths to a dedicated physical filesystem without moving or deleting
   prior evidence.
+- [`proxy-launch-qualified.json`](../../results/Speck-Paper1/proxy-launch-qualified.json) rehashes the
+  complete freeze and records the clean live GPU, host-memory, output-absence, and storage gate that
+  authorizes proxy training while preserving blocked release claims.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
@@ -149,6 +155,12 @@ All seven HELMET runtime sources now have explicit dispositions: three immutable
 four sources are blocked rather than unresolved.
 The known unseeded two-shot defect now has a qualified but inactive repair; a successor manifest and
 real-data replay remain mandatory.
+The launch boundary now distinguishes those checkpoint-consuming release gates from the
+checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
+lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
+disposition, thresholds, and missing-suite failure rule were frozen and rehashed before output. The
+clean live gate passed, so the proxy is authorized in strict control-first order. RULER, NoLiMa, and
+HELMET remain required failed release gates until they are independently qualified and executed.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
@@ -160,5 +172,5 @@ promotion infrastructure. It does **not** yet have:
 - independent long-context results; or
 - a production serving runtime.
 
-Accordingly, the paper is in **thesis and experiment-design**, not model-training or manuscript-claim,
-status.
+Accordingly, the paper has entered **matched proxy execution**, not architecture-promotion,
+paper-scale-training, or manuscript-claim status.

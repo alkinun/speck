@@ -9,6 +9,7 @@ PROGRAM_FILES = (
     "claims.json",
     "baseline_matrix.json",
     "baseline_analysis.json",
+    "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
     "experiment_program.json",
@@ -437,6 +438,99 @@ def _validate_evaluation_evidence(evidence, repository_root):
         raise ValueError("paper HELMET seeded-demo repair evidence is invalid")
 
 
+def _validate_proxy_launch_evidence(program, repository_root):
+    evidence = program["proxy_launch_evidence"]
+    _require(
+        evidence,
+        {
+            "status",
+            "contract",
+            "contract_sha256",
+            "qualification",
+            "qualification_sha256",
+            "qualification_status",
+            "runner_revision",
+        },
+        "paper proxy launch evidence",
+    )
+    if evidence["status"] != "proxy_training_authorized_release_claims_blocked":
+        raise ValueError("paper proxy launch evidence has an invalid decision boundary")
+    for path_key, hash_key in (
+        ("contract", "contract_sha256"),
+        ("qualification", "qualification_sha256"),
+    ):
+        path = repository_root / evidence[path_key]
+        if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
+            raise ValueError(f"paper proxy launch {path_key} does not match its pin")
+
+    contract = _load_json(repository_root / evidence["contract"])
+    result = _load_json(repository_root / evidence["qualification"])
+    prerequisites = {entry.get("id"): entry for entry in contract.get("prerequisites", ())}
+    if (
+        contract.get("format") != "speck_paper_proxy_launch_contract"
+        or contract.get("format_version") != 1
+        or contract.get("paper_id") != program["paper_id"]
+        or contract.get("policy_id") != program["policy_id"]
+        or contract.get("status") != "frozen_before_first_proxy_result"
+        or len(prerequisites) != 6
+    ):
+        raise ValueError("paper proxy launch contract is invalid")
+    for prerequisite in prerequisites.values():
+        path = repository_root / prerequisite.get("path", "")
+        if not path.is_file() or _file_sha256(path) != prerequisite.get("sha256"):
+            raise ValueError("paper proxy launch prerequisite no longer matches its pin")
+    baseline = program["baseline_evidence"]
+    evaluation = program["evaluation_evidence"]
+    if (
+        prerequisites.get("baseline_matrix", {}).get("sha256")
+        != baseline["matrix_sha256"]
+        or prerequisites.get("analysis_plan", {}).get("sha256")
+        != baseline["analysis_plan_sha256"]
+        or prerequisites.get("materialization", {}).get("sha256")
+        != baseline["materialization_sha256"]
+        or prerequisites.get("hardware_preflight", {}).get("sha256")
+        != baseline["preflight_v2_sha256"]
+        or prerequisites.get("storage_qualification", {}).get("sha256")
+        != baseline["storage_qualification_sha256"]
+        or prerequisites.get("evaluation_manifest", {}).get("sha256")
+        != evaluation["active_evaluation_manifest_sha256"]
+        or contract.get("evaluation_boundary", {})
+        .get("release_and_capability_claims", {})
+        .get("status")
+        != "blocked"
+        or contract.get("execution", {}).get("control_first") is not True
+        or contract.get("execution", {}).get("interim_quality_decisions") != 0
+    ):
+        raise ValueError("paper proxy launch contract does not match the research program")
+
+    decision = result.get("decision", {})
+    live = result.get("live_gate", {})
+    controls = contract["execution"]["control_runs"]
+    if (
+        result.get("format") != "speck_paper_proxy_launch_qualification"
+        or result.get("format_version") != 1
+        or result.get("status") != evidence["qualification_status"]
+        or result.get("status") != evidence["status"]
+        or result.get("contract", {}).get("sha256") != evidence["contract_sha256"]
+        or result.get("repository", {}).get("clean") is not True
+        or result.get("runner_revision") != evidence["runner_revision"]
+        or result.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/paper_proxy_launch_qualify.py")
+        or live.get("passed") is not True
+        or live.get("existing_checkpoint_targets")
+        or live.get("existing_result_records")
+        or result.get("next_run", {}).get("run") != controls[0]
+        or decision.get("proxy_training_authorized") is not True
+        or decision.get("release_claims_authorized") is not False
+        or decision.get("long_context_capability_claims_authorized") is not False
+        or decision.get("architecture_promotion_authorized") is not False
+        or decision.get("paper_scale_pretraining_authorized") is not False
+        or decision.get("external_missing_suites_preserved_as_failed_release_gates")
+        is not True
+    ):
+        raise ValueError("paper proxy launch qualification is invalid")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -491,6 +585,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "policy_id",
             "status",
             "baseline_evidence",
+            "proxy_launch_evidence",
             "evaluation_evidence",
             "controls",
             "matching_views",
@@ -681,6 +776,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         != evidence["cache_equivalence_v3_analysis_sha256"]
     ):
         raise ValueError("paper baseline cache-equivalence v3/preflight evidence is invalid")
+    _validate_proxy_launch_evidence(program, repository_root)
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
         raise ValueError("paper experiment program references a missing promotion policy")
@@ -1017,5 +1113,6 @@ def validate_paper_program(directory, repository_root=None):
         "historical_baseline_arms": baseline["historical_arms"],
         "planned_primary_baseline_arms": baseline["planned_arms"],
         "proxy_confirmation_pairs": baseline["proxy_pairs"],
+        "proxy_training": "authorized",
         "paper_scale_pretraining": "blocked",
     }

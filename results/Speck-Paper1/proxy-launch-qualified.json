@@ -1,0 +1,108 @@
+{
+  "contract": {
+    "path": "research/paper-1/proxy_launch_v1.json",
+    "sha256": "156dc8ae7812454f1d73a4d637fe040bfb810db29985659e16b40d3394746ce3",
+    "status": "frozen_before_first_proxy_result"
+  },
+  "created_at": "2026-09-05T16:02:21.140928+00:00",
+  "decision": {
+    "architecture_promotion_authorized": false,
+    "external_missing_suites_preserved_as_failed_release_gates": true,
+    "long_context_capability_claims_authorized": false,
+    "paper_scale_pretraining_authorized": false,
+    "proxy_training_authorized": true,
+    "release_claims_authorized": false
+  },
+  "format": "speck_paper_proxy_launch_qualification",
+  "format_version": 1,
+  "frozen_inputs": {
+    "analysis_plan": {
+      "path": "research/paper-1/baseline_analysis.json",
+      "sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb"
+    },
+    "baseline_matrix": {
+      "path": "research/paper-1/baseline_matrix.json",
+      "sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e"
+    },
+    "evaluation_manifest": {
+      "path": "research/architecture-promotion-v1/evaluation_manifest.json",
+      "sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6"
+    },
+    "hardware_preflight": {
+      "path": "results/Speck-Paper1/baseline-preflight-v2.json",
+      "sha256": "91012edc3a597dcf8cddd28bbe846b81cd6d99d1eec359ce66bf4ccf7deede86"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
+      "sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b"
+    },
+    "storage_qualification": {
+      "path": "results/Speck-Paper1/baseline-storage-volume-qualified.json",
+      "sha256": "e0b482987207efafd1e6273b0d3d39290ca2b40bc80584035fdd48244760d9df"
+    }
+  },
+  "limitations": [
+    "architecture promotion",
+    "component attribution to KDA, NoPE, GQA, or mixer ratio",
+    "long-context capability",
+    "release readiness",
+    "paper-scale pretraining authorization"
+  ],
+  "live_gate": {
+    "existing_checkpoint_targets": [],
+    "existing_result_records": [],
+    "gpu": {
+      "active_compute_processes": [],
+      "name": "NVIDIA GeForce RTX 3090",
+      "temperature_c": 47,
+      "total_memory_bytes": 25769803776,
+      "utilization_percent": 0,
+      "uuid": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd"
+    },
+    "host_memory": {
+      "available_bytes": 25287471104,
+      "swap_free_bytes": 114688,
+      "swap_total_bytes": 4294963200,
+      "total_bytes": 33399123968
+    },
+    "passed": true,
+    "storage": {
+      "device_id": 2050,
+      "directory": "/mnt/speck-data/speck/paper1-baselines-131m",
+      "directory_mode": "0o700",
+      "directory_uid": 1000,
+      "filesystem": "ext4",
+      "free_bytes": 5651812339712,
+      "minimum_free_bytes": 17179869184,
+      "options": [
+        "rw",
+        "nosuid",
+        "nodev",
+        "noexec",
+        "relatime"
+      ],
+      "source": "/dev/sda2",
+      "target": "/mnt/speck-data",
+      "total_bytes": 5952676323328,
+      "used_bytes": 789372928,
+      "uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff"
+    },
+    "user_units": {
+      "speck-helmet-download.service": "inactive"
+    }
+  },
+  "next_run": {
+    "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/dense_global_param_match",
+    "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/dense_global_param_match --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "run": "Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "tracking_mode": "offline"
+  },
+  "repository": {
+    "clean": true,
+    "revision": "4eba36607fe3935950019686c7c171e4ca6841a7"
+  },
+  "runner_revision": "4eba36607fe3935950019686c7c171e4ca6841a7",
+  "runner_sha256": "d32903ff300234127a3fc3c40036bbd499276f7deb6e892934ecd5a89a5bf3b4",
+  "status": "proxy_training_authorized_release_claims_blocked"
+}

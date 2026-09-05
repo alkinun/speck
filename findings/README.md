@@ -61,6 +61,7 @@ Read in order:
 53. [52 — HELMET NarrativeQA embedded-work and prompt-path decision](52_helmet_narrativeqa_decision.md)
 54. [53 — HELMET InfiniteBench embedded-work and metric decision](53_helmet_infinitebench_decision.md)
 55. [54 — HELMET seeded-demonstration repair qualification](54_helmet_seeded_demo_repair.md)
+56. [55 — Paper 1 proxy-launch and release-claim boundary](55_paper_1_proxy_launch_boundary.md)
 
 Conventions:
 
@@ -248,3 +249,9 @@ Finding 54 qualifies the exact two-line repair for NarrativeQA and Multi-LexSum'
 selection. Frozen fixtures produce identical full prompts across independent processes and different
 Python hash seeds, while changing the declared loader seed changes prompt identity. The repair is not
 activated: both datasets' rights, payload, tokenizer, judge, and real-case gates remain blocked.
+
+Finding 55 separates checkpoint-producing proxy execution from checkpoint-consuming release
+evaluation. Every statistical, data, hardware, storage, contamination, threshold, and missing-suite
+rule is frozen; all six outputs are absent; and the live RTX 3090/storage/host gate passes. The paired
+proxy is authorized control-first, while external suite failures, long-context claims, component
+attribution, architecture promotion, and paper-scale training remain blocked.
