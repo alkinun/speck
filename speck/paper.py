@@ -1883,6 +1883,51 @@ def _validate_finalist_qualification(reference, repository_root, paper_id):
         raise ValueError("finalist qualification is incomplete")
 
 
+def _validate_finalist_analysis_qualification(reference, repository_root, paper_id):
+    _require(
+        reference,
+        {"result", "sha256", "status"},
+        "finalist analysis qualification reference",
+    )
+    path = repository_root / reference["result"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist analysis qualification does not match its pin")
+    result = _load_json(path)
+    implementation = result.get("implementation", {})
+    test_run = result.get("test_run", {})
+    decision = result.get("decision", {})
+    if (
+        result.get("format") != "speck_paper_finalist_analysis_qualification"
+        or result.get("format_version") != 1
+        or result.get("paper_id") != paper_id
+        or result.get("status") != reference["status"]
+        or len(result.get("checked_contracts", ())) < 12
+        or test_run.get("passed") != 6
+        or test_run.get("failed") != 0
+        or len(test_run.get("cases", ())) != 6
+        or test_run.get("ruff") != "passed"
+        or decision.get("collector_implementation_qualified") is not True
+        or decision.get("target_lock_implementation_qualified") is not True
+        or decision.get("analysis_implementation_qualified") is not True
+        or decision.get("stopping_rule_implementation_qualified") is not True
+        or decision.get("runtime_preflight_qualified") is not False
+        or decision.get("release_dependencies_qualified") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("automatic_launch_authorized") is not False
+        or decision.get("architecture_promotion_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("finalist analysis qualification is incomplete")
+    for entry in result.get("contracts", {}).values():
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist analysis qualification contract does not match its pin")
+    for entry in implementation.values():
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist analysis implementation does not match its pin")
+
+
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
     _require(
         reference,
@@ -2323,6 +2368,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "finalist_analysis",
             "finalist_materialization",
             "finalist_qualification",
+            "finalist_analysis_qualification",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2401,6 +2447,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_finalist_qualification(
         program["finalist_qualification"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_analysis_qualification(
+        program["finalist_analysis_qualification"],
         repository_root,
         paper_id,
     )
