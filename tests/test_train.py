@@ -157,6 +157,9 @@ def test_runtime_cadence_arguments_are_optional():
     assert overridden.eval_every == 0
     assert defaults.stop_at_tokens is None
     assert arguments(["experiment", "--stop-at-tokens", "50000000"]).stop_at_tokens == 50_000_000
+    assert arguments(["experiment", "--output-dir", "/tmp/checkpoint"]).output_dir == Path(
+        "/tmp/checkpoint"
+    )
     base = {
         "global_token_offset": 0,
         "data_token_offset": 0,
@@ -191,6 +194,18 @@ def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
             configs,
             arguments([str(experiment), "--stop-at-tokens", "100000000"]),
         )
+
+
+def test_cli_checkpoint_directory_overrides_config_without_moving_data(tmp_path):
+    experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
+    configs = load_experiment(experiment, "data", "tokenizer", "model", "train")
+    configs["train"] = {**configs["train"], "output_dir": str(tmp_path / "configured")}
+    override = tmp_path / "volume" / "run"
+
+    trainer = BaseTrainer(configs, arguments([str(experiment), "--output-dir", str(override)]))
+
+    assert trainer.args.output_dir == str(override.resolve())
+    assert str(override.parent) not in trainer.args.data_dir
 
 
 def test_branch_schedule_argument_defaults_to_inherit():

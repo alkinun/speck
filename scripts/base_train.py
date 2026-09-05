@@ -215,6 +215,12 @@ def arguments(argv=None):
         default=None,
         help="stop at a configured token milestone and write a resumable checkpoint",
     )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="operational checkpoint directory override; scientific settings remain config-bound",
+    )
     return parser.parse_args(argv)
 
 
@@ -287,7 +293,12 @@ class BaseTrainer:
                 self.configs["data"].get("output_name"),
             )
         )
-        args.output_dir = args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
+        output_override = getattr(self.cli, "output_dir", None)
+        args.output_dir = (
+            str(output_override.expanduser().resolve())
+            if output_override is not None
+            else args.output_dir or os.path.join(base_dir(), "checkpoints", args.run)
+        )
         self.args = args
         self.branching = self.cli.branch_from is not None or self.cli.branch_step is not None
         if (self.cli.branch_from is None) != (self.cli.branch_step is None):
