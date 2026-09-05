@@ -143,6 +143,13 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "trained_decode_result",
             "trained_decode_result_sha256",
             "runtime_preflight_classification",
+            "cache_equivalence_v2_contract",
+            "cache_equivalence_v2_contract_sha256",
+            "cache_equivalence_v2_control_lock",
+            "cache_equivalence_v2_control_lock_sha256",
+            "cache_equivalence_v2_analysis",
+            "cache_equivalence_v2_analysis_sha256",
+            "cache_equivalence_v2_status",
             "materialization",
             "materialization_sha256",
             "audit",
@@ -161,6 +168,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("cuda_decode_result", "cuda_decode_result_sha256"),
         ("trained_decode_contract", "trained_decode_contract_sha256"),
         ("trained_decode_result", "trained_decode_result_sha256"),
+        ("cache_equivalence_v2_contract", "cache_equivalence_v2_contract_sha256"),
+        (
+            "cache_equivalence_v2_control_lock",
+            "cache_equivalence_v2_control_lock_sha256",
+        ),
+        ("cache_equivalence_v2_analysis", "cache_equivalence_v2_analysis_sha256"),
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
     ):
@@ -201,6 +214,21 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         or trained_result.get("contract_sha256") != evidence["trained_decode_contract_sha256"]
     ):
         raise ValueError("paper baseline CUDA decode diagnosis is invalid")
+    cache_contract = _load_json(repository_root / evidence["cache_equivalence_v2_contract"])
+    cache_lock = _load_json(repository_root / evidence["cache_equivalence_v2_control_lock"])
+    cache_analysis = _load_json(repository_root / evidence["cache_equivalence_v2_analysis"])
+    if (
+        cache_contract.get("format") != "speck_cache_equivalence_contract"
+        or cache_contract.get("format_version") != 2
+        or cache_lock.get("format") != "speck_cache_equivalence_control_lock"
+        or cache_lock.get("contract_sha256") != evidence["cache_equivalence_v2_contract_sha256"]
+        or cache_analysis.get("format") != "speck_cache_equivalence_analysis"
+        or cache_analysis.get("status") != evidence["cache_equivalence_v2_status"]
+        or cache_analysis.get("contract_sha256") != evidence["cache_equivalence_v2_contract_sha256"]
+        or cache_analysis.get("control_lock", {}).get("sha256")
+        != evidence["cache_equivalence_v2_control_lock_sha256"]
+    ):
+        raise ValueError("paper baseline cache-equivalence v2 evidence is invalid")
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
         raise ValueError("paper experiment program references a missing promotion policy")

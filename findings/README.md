@@ -37,6 +37,7 @@ Read in order:
 29. [28 — Paper 1 baseline analysis and stopping contract](28_paper_1_baseline_analysis.md)
 30. [29 — Paper 1 baseline hardware preflight failure](29_paper_1_baseline_preflight.md)
 31. [30 — Full-depth CUDA decode failure classification](30_cuda_decode_failure_classification.md)
+32. [31 — Control-first CUDA cache-equivalence v2](31_cache_equivalence_v2.md)
 
 Conventions:
 
@@ -101,3 +102,9 @@ differences are amplified by depth, about 2.2–3.1× more in random-weight KDA 
 convolution history are not sole causes. Training damps relative error, but KDA still produces three
 greedy-generation counterexamples across nine seed/length sentinels. The old full-model elementwise
 gate also fails dense and must be replaced only through a new versioned, behavior-linked contract.
+
+Finding 31 executes that replacement control-first on 44 source-balanced validation cases. All KDA
+cells pass JS divergence, relative RMS, top-10 overlap, and the 0.5-logit guardrail; narrow token and
+0.1-margin misses remain. The five-point exact free-running endpoint passes only 2/12 cells and is
+severely underpowered at 33/11 cases. V2 therefore fails without proving uniform KDA inferiority, and
+training stays blocked pending numerical remediation or a separately powered v3 contract.

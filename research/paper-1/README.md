@@ -64,6 +64,9 @@ the final combined model.
 - [`cuda_decode_diagnostic.json`](cuda_decode_diagnostic.json) and
   [`cuda_decode_trained_sentinel.json`](cuda_decode_trained_sentinel.json) freeze the multi-seed
   failure-classification matrix and its immutable trained-checkpoint follow-up.
+- [`cache_equivalence_v2.json`](cache_equivalence_v2.json) freezes the source-balanced, control-first
+  behavioral cache contract. Its checked decision is a failed qualification, not permission to relax
+  the original gate.
 - [`baseline-audit.json`](../../results/Speck-Paper1/baseline-audit.json) rehashes the five historical
   checkpoints, verifies the materialized pair/data windows, and records the live storage deficit.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the

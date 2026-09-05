@@ -23,6 +23,8 @@
         "findings/01_mixer_screen_131m.md",
         "findings/29_paper_1_baseline_preflight.md",
         "findings/30_cuda_decode_failure_classification.md",
+        "findings/31_cache_equivalence_v2.md",
+        "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/baseline-preflight.json"
@@ -77,13 +79,15 @@
         "findings/18_kimi_context32k.md",
         "findings/29_paper_1_baseline_preflight.md",
         "findings/30_cuda_decode_failure_classification.md",
+        "findings/31_cache_equivalence_v2.md",
+        "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/baseline-preflight.json",
         "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
       ],
       "quality": "Replicated long-range sensitivity, but mean base loss is 0.006909 nats worse and the old strict tie passes only two of three seeds.",
-      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB. Random-weight CUDA full/cached relative RMS is 2.2-3.1x dense; Torch recurrence and removed convolution history retain the failure. Trained relative RMS falls to 0.0045-0.0066, but 3/9 seed/length sentinels diverge within 32 greedy tokens.",
+      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB. Random-weight CUDA full/cached relative RMS is 2.2-3.1x dense; Torch recurrence and removed convolution history retain the failure. In source-balanced v2, all cells pass JS, relative RMS, top-10 overlap, and the 0.5-logit guardrail, but exact free-running and two narrower common-history gates fail qualification.",
       "scale_transfer": "not established",
       "runtime_support": "Torch reference and isolated FLA kernels exist; full-depth CUDA BF16 cache equivalence is unqualified under both FLA and Torch recurrence, and the hybrid production runtime is incomplete",
       "unresolved_risks": [
@@ -93,7 +97,7 @@
         "training-horizon transfer",
         "full-depth CUDA chunk-versus-recurrent decode drift"
       ],
-      "next_gate": "freeze and qualify a behavior-linked full-model CUDA cache-equivalence contract against the dense control before baseline training"
+      "next_gate": "remediate CUDA numerical sensitivity and rerun v2 unchanged, or pre-register an adequately powered v3 while preserving the v2 failure; baseline training remains blocked"
     },
     {
       "id": "reader_attention_three_cache",
