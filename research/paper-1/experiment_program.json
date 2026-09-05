@@ -499,6 +499,11 @@
     "sha256": "a464004a51bdf45fb7e427e2e7915925687e641b5c065b823b9909cc666dd506",
     "status": "collector_and_analysis_implementation_qualified_no_training_authority"
   },
+  "finalist_runtime_preflight": {
+    "result": "results/Speck-Paper1/finalist-preflight-v1.json",
+    "sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231",
+    "status": "qualified"
+  },
   "halo_code_audit": {
     "audit": "research/paper-1/halo_code_audit_v1.json",
     "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",

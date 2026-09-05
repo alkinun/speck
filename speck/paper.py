@@ -1928,6 +1928,61 @@ def _validate_finalist_analysis_qualification(reference, repository_root, paper_
             raise ValueError("finalist analysis implementation does not match its pin")
 
 
+def _validate_finalist_runtime_preflight(reference, repository_root, paper_id):
+    _require(reference, {"result", "sha256", "status"}, "finalist runtime reference")
+    path = repository_root / reference["result"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist runtime preflight does not match its pin")
+    result = _load_json(path)
+    arms = {arm.get("arm_id"): arm for arm in result.get("arms", ())}
+    decision = result.get("decision", {})
+    absence = result.get("output_absence_after_preflight", {})
+    if (
+        result.get("format") != "speck_paper_finalist_preflight"
+        or result.get("format_version") != 1
+        or result.get("paper_id") != paper_id
+        or result.get("status") != reference["status"]
+        or result.get("hardware", {}).get("device") != "NVIDIA GeForce RTX 3090"
+        or set(arms) != {"dense_global_param_match", "five_cache_kda_gqa"}
+        or any(arm.get("passed") is not True for arm in arms.values())
+        or any(
+            arm.get("compiled_training_step", {}).get("within_peak_envelope") is not True
+            or arm.get("compiled_training_step", {}).get("batch_size") != 4
+            or arm.get("compiled_training_step", {}).get("sequence_length") != 4096
+            or arm.get("transformers_export", {}).get("passed") is not True
+            or arm.get("behavioral_cache_equivalence", {}).get("passed") is not True
+            or arm.get("native_incremental", {}).get("v1_elementwise_passed") is not False
+            or "without v2 pass/fail authority"
+            not in arm.get("native_incremental", {}).get("authority", "")
+            for arm in arms.values()
+        )
+        or any(value is not True for value in absence.values())
+        or result.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/paper_finalist_preflight.py")
+        or decision.get("exact_config_compiled_training_step_qualified") is not True
+        or decision.get("transformers_export_qualified") is not True
+        or decision.get("trained_topology_behavioral_cache_reference_qualified") is not True
+        or decision.get("runtime_preflight_qualified") is not True
+        or decision.get("release_dependencies_qualified") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("automatic_launch_authorized") is not False
+        or decision.get("architecture_promotion_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("finalist runtime preflight is incomplete")
+    for entry in result.get("inputs", {}).values():
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist runtime input does not match its pin")
+    expected_train_hashes = {
+        "dense_global_param_match": "e57593e38b24793147c6add245450b0b2897f9e712e0a84bad312af2b300c98b",
+        "five_cache_kda_gqa": "0d8b04e3589a8fcb3ec3acbd8de1b925d99e98b31dcac9b505eaeb4359356503",
+    }
+    for arm_id, expected_hash in expected_train_hashes.items():
+        if arms[arm_id].get("config_sha256", {}).get("train.json") != expected_hash:
+            raise ValueError("finalist runtime used a different training config")
+
+
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
     _require(
         reference,
@@ -2369,6 +2424,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "finalist_materialization",
             "finalist_qualification",
             "finalist_analysis_qualification",
+            "finalist_runtime_preflight",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2452,6 +2508,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_finalist_analysis_qualification(
         program["finalist_analysis_qualification"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_runtime_preflight(
+        program["finalist_runtime_preflight"],
         repository_root,
         paper_id,
     )
