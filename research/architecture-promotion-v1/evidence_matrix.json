@@ -46,6 +46,7 @@
         "findings/108_finalist_materialized.md",
         "findings/109_finalist_data_storage_qualified.md",
         "findings/110_finalist_analysis_qualified.md",
+        "findings/111_finalist_runtime_preflight.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
@@ -62,7 +63,8 @@
         "results/Speck-Paper1/baseline-analysis.json",
         "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
         "results/Speck-Paper1/finalist-qualification-v1.json",
-        "results/Speck-Paper1/finalist-analysis-qualified-v1.json"
+        "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
+        "results/Speck-Paper1/finalist-preflight-v1.json"
       ],
       "quality": "All six frozen cells are complete. Candidate-minus-control endpoint loss is -0.039170/-0.042662/-0.037184 nats; mean -0.039672 and upper one-sided 95% bound -0.034996 pass the +0.01 margin. All eleven source bounds pass, so the whole-architecture proxy quality screen passes without component attribution.",
       "systems": "At 128K the historical dense geometry has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token. Across the proxy pairs, the candidate uses 21.49% fewer analytic FLOPs/token, 10.01% less steady time, 10.42% less active time, and 11.13% more steady throughput, but 20.77% more peak allocation. Mean time-to-quality improvement is 19.48% with lower one-sided 95% bound 16.83%; no pair is censored. Dense controls still fail the frozen 1.0-hour envelope, so no paired hard-envelope or serving claim passes.",
@@ -70,12 +72,12 @@
       "runtime_support": "standard PyTorch attention path",
       "unresolved_risks": [
         "short training horizon",
-        "six-pair finalist configs, data, storage, and collector/analysis qualify, but runtime and release gates remain",
+        "six-pair finalist configs, data, storage, collector/analysis, and exact runtime qualify, but release and launch gates remain",
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
         "HELMET still needs archive-external datasets, a gated truncation tokenizer, and model-judge qualification",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
-      "next_gate": "qualify the exact finalist CUDA runtime without launching training; retain release dependencies as blocked"
+      "next_gate": "reconcile the remaining release-suite and launch boundary without starting training"
     },
     {
       "id": "gated_deltanet",
@@ -135,6 +137,7 @@
         "findings/108_finalist_materialized.md",
         "findings/109_finalist_data_storage_qualified.md",
         "findings/110_finalist_analysis_qualified.md",
+        "findings/111_finalist_runtime_preflight.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
@@ -150,7 +153,8 @@
         "results/Speck-Paper1/baseline-analysis.json",
         "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
         "results/Speck-Paper1/finalist-qualification-v1.json",
-        "results/Speck-Paper1/finalist-analysis-qualified-v1.json"
+        "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
+        "results/Speck-Paper1/finalist-preflight-v1.json"
       ],
       "quality": "The complete five-cache KDA/GQA architecture passes the three-pair whole-architecture proxy quality screen: mean paired endpoint loss -0.039672 nats, upper one-sided 95% bound -0.034996, and all eleven source bounds below their margins. This does not isolate or promote KDA, NoPE, GQA, or the 3:1 ratio.",
       "systems": "At the fixed endpoint the whole candidate averages 21.49% fewer analytic FLOPs/token, 10.01% less steady training time, and 11.13% higher throughput than dense, while peak allocation is 20.77% higher. Mean time-to-quality improves 19.48% with lower bound 16.83%. Exact-shape and cache-equivalence qualifications remain as previously recorded; no serving or paired hard-envelope claim follows.",
@@ -167,7 +171,7 @@
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
         "HELMET's RAG/long-QA guardrail remains data, rights, tokenizer, and scorer blocked"
       ],
-      "next_gate": "qualify the exact finalist CUDA runtime without launching training; preserve release-suite blockers"
+      "next_gate": "reconcile the remaining release-suite and launch boundary without starting training"
     },
     {
       "id": "reader_attention_three_cache",

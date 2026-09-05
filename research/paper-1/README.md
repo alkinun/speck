@@ -243,6 +243,9 @@ the final combined model.
 - [`finalist-analysis-qualified-v1.json`](../../results/Speck-Paper1/finalist-analysis-qualified-v1.json)
   pins and qualifies the twelve-cell collector, six-control target lock, df=5 paired analysis,
   censoring, and stopping-rule implementation; runtime, release gates, and training remain blocked.
+- [`finalist-preflight-v1.json`](../../results/Speck-Paper1/finalist-preflight-v1.json) qualifies
+  exact-config compiled CUDA steps, temporary Transformers export, and the powered trained-topology
+  cache reference. Random-weight native drift remains explicit; release gates and training stay blocked.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
@@ -352,6 +355,6 @@ promotion infrastructure. It does **not** yet have:
 - a production serving runtime.
 
 Accordingly, the paper has completed its **matched proxy quality screen**, finalist config
-materialization, and data/storage qualification. Runtime, collector/analysis, and release qualification
-remain. It has not entered architecture-promotion, finalist execution,
+materialization, and data/storage, collector/analysis, and exact-runtime qualification. Release-suite
+and launch authority remain. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.

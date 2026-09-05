@@ -597,3 +597,9 @@ Finding 110 qualifies the finalist collector, six-control target lock, df=5 pair
 and stopping-rule implementation through six focused fixtures and lint. All implementation and contract
 files are pinned. Exact CUDA runtime and release dependencies remain blocked; no training, automatic
 launch, attribution, promotion, or paper-scale work is authorized.
+
+Finding 111 qualifies exact finalist compiled CUDA steps, temporary Transformers exports, and the
+powered trained-topology cache reference. Dense/candidate peaks are 10.24/14.14 GiB. The random-weight
+native diagnostic still fails elementwise, and candidate argmax agreement is only 87.5%; this has no v2
+pass/fail authority but remains a mandatory risk. Release gates, training, and automatic launch stay
+blocked.

@@ -1,0 +1,299 @@
+{
+  "arms": [
+    {
+      "arm_id": "dense_global_param_match",
+      "behavioral_cache_equivalence": {
+        "passed": true,
+        "path": "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
+        "scope": "trained topology, common-history behavior, 88 disjoint cases per length",
+        "sha256": "43d2ca48287f1425a207f80d57cf130fab89413ff173eee12d997f6d1ff0d4ac",
+        "status": "qualified"
+      },
+      "compiled_training_step": {
+        "batch_size": 4,
+        "compile_and_step_seconds": 5.9468795920256525,
+        "gradient_norm_before_clip": 0.7946286201477051,
+        "hard_peak_allocated_bytes": 17179869184,
+        "loss": 10.409818649291992,
+        "loss_backend": "torch",
+        "optimizer": "muon",
+        "peak_allocated_bytes": 10989776384,
+        "peak_reserved_bytes": 11041505280,
+        "sequence_length": 4096,
+        "within_peak_envelope": true
+      },
+      "config_sha256": {
+        "model.json": "1103bb44c960d9d1286810c81d6190d1058ac551e50a976f8d3216aad121434c",
+        "runtime.json": "89b1e79bd21c53519f736fa472844c4715c461486343897d5495c850dbdddd2b",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "e57593e38b24793147c6add245450b0b2897f9e712e0a84bad312af2b300c98b"
+      },
+      "experiment": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Finalist-131M/arms/dense_global_param_match",
+      "flops_per_token_at_4096": 1301237760,
+      "native_incremental": {
+        "absolute_tolerance": 0.02,
+        "argmax_agreement": 1.0,
+        "authority": "retained v1 diagnostic without v2 pass/fail authority",
+        "maximum_absolute_logit_error": 0.0234375,
+        "mismatched_logits": 4,
+        "passed": false,
+        "relative_rms_logit_error": 0.01855916280721067,
+        "relative_tolerance": 0.02,
+        "rms_logit_error": 0.004867709707468748,
+        "tokens": 8,
+        "total_logits": 256000,
+        "v1_elementwise_passed": false
+      },
+      "parameters": 153977088,
+      "passed": true,
+      "start_temperature_c": 47,
+      "thermal_wait_seconds": 0.01694656303152442,
+      "transformers_export": {
+        "device": "cpu",
+        "files": {
+          "architecture_speck.py": {
+            "bytes": 13186,
+            "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+          },
+          "config.json": {
+            "bytes": 15696,
+            "sha256": "bb113a26837ec79f97f9c51fbe619b67a09b190cc06061636a56139a3175537e"
+          },
+          "configuration_speck.py": {
+            "bytes": 1389,
+            "sha256": "3bf02749b7fc09563d06c5f0822514a8b4158345959de52829a0f242ab715c23"
+          },
+          "model.safetensors": {
+            "bytes": 307986440,
+            "sha256": "044956e3c866131fd194cb61498b5f53f27cc19c68c7daac70a7dcc6da20bec9"
+          },
+          "modeling_speck.py": {
+            "bytes": 6362,
+            "sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d"
+          },
+          "native_speck.py": {
+            "bytes": 67463,
+            "sha256": "47c85e326d9b0677ebbde44a6077e8e9bf891daaf858e2b65437c06e1919988e"
+          },
+          "padding_speck.py": {
+            "bytes": 898,
+            "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+          },
+          "speck_parity.json": {
+            "bytes": 344,
+            "sha256": "4bc35f14958f77912848866afb97ce52651b8fce272a157fb1063bb7650ecc8b"
+          },
+          "speck_source.json": {
+            "bytes": 107,
+            "sha256": "05bc697bdb2477cf8f01b5b66f4b96be736e1d3d4cca795c13d5e0012d7c1abe"
+          }
+        },
+        "parity": {
+          "compute_dtype": "bfloat16",
+          "format": "speck_export_parity",
+          "format_version": 1,
+          "generation_smoke_new_tokens": 2,
+          "incremental_logits_max_absolute_error": 0.0,
+          "logits_max_absolute_error": 0.0,
+          "parameters": 153977088,
+          "passed": true,
+          "tokens_sha256": "b2e041731a40eca2ee45c5a712f4dfc7e2513353dfe3b449796535fd1a1e348c"
+        },
+        "passed": true
+      }
+    },
+    {
+      "arm_id": "five_cache_kda_gqa",
+      "behavioral_cache_equivalence": {
+        "passed": true,
+        "path": "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
+        "scope": "trained topology, common-history behavior, 88 disjoint cases per length",
+        "sha256": "43d2ca48287f1425a207f80d57cf130fab89413ff173eee12d997f6d1ff0d4ac",
+        "status": "qualified"
+      },
+      "compiled_training_step": {
+        "batch_size": 4,
+        "compile_and_step_seconds": 8.368449195986614,
+        "gradient_norm_before_clip": 2.1070473194122314,
+        "hard_peak_allocated_bytes": 17179869184,
+        "loss": 10.410892486572266,
+        "loss_backend": "torch",
+        "optimizer": "muon",
+        "peak_allocated_bytes": 15187470336,
+        "peak_reserved_bytes": 15361638400,
+        "sequence_length": 4096,
+        "within_peak_envelope": true
+      },
+      "config_sha256": {
+        "model.json": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09",
+        "runtime.json": "89b1e79bd21c53519f736fa472844c4715c461486343897d5495c850dbdddd2b",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "0d8b04e3589a8fcb3ec3acbd8de1b925d99e98b31dcac9b505eaeb4359356503"
+      },
+      "experiment": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Finalist-131M/arms/five_cache_kda_gqa",
+      "flops_per_token_at_4096": 1021601280,
+      "native_incremental": {
+        "absolute_tolerance": 0.02,
+        "argmax_agreement": 0.875,
+        "authority": "retained v1 diagnostic without v2 pass/fail authority",
+        "maximum_absolute_logit_error": 0.0595703125,
+        "mismatched_logits": 12765,
+        "passed": false,
+        "relative_rms_logit_error": 0.04198638899072265,
+        "relative_tolerance": 0.02,
+        "rms_logit_error": 0.011809743009507656,
+        "tokens": 8,
+        "total_logits": 256000,
+        "v1_elementwise_passed": false
+      },
+      "parameters": 153958938,
+      "passed": true,
+      "start_temperature_c": 47,
+      "thermal_wait_seconds": 20.097192622022703,
+      "transformers_export": {
+        "device": "cpu",
+        "files": {
+          "architecture_speck.py": {
+            "bytes": 13186,
+            "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+          },
+          "config.json": {
+            "bytes": 14341,
+            "sha256": "c86e567866740a13b86393b84c3e3ee96670cdd84c569c5125e94b0774fbb92d"
+          },
+          "configuration_speck.py": {
+            "bytes": 1389,
+            "sha256": "3bf02749b7fc09563d06c5f0822514a8b4158345959de52829a0f242ab715c23"
+          },
+          "model.safetensors": {
+            "bytes": 307957452,
+            "sha256": "f35bc16e9609fc319ce4efa488f604a8385abab9970b5818e2dfad70d1288900"
+          },
+          "modeling_speck.py": {
+            "bytes": 6362,
+            "sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d"
+          },
+          "native_speck.py": {
+            "bytes": 67463,
+            "sha256": "47c85e326d9b0677ebbde44a6077e8e9bf891daaf858e2b65437c06e1919988e"
+          },
+          "padding_speck.py": {
+            "bytes": 898,
+            "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+          },
+          "speck_parity.json": {
+            "bytes": 344,
+            "sha256": "e38fdff8a6351a6b092b07138f0b136766d90619e0cb400a64f0c603430a6e66"
+          },
+          "speck_source.json": {
+            "bytes": 107,
+            "sha256": "05bc697bdb2477cf8f01b5b66f4b96be736e1d3d4cca795c13d5e0012d7c1abe"
+          }
+        },
+        "parity": {
+          "compute_dtype": "bfloat16",
+          "format": "speck_export_parity",
+          "format_version": 1,
+          "generation_smoke_new_tokens": 2,
+          "incremental_logits_max_absolute_error": 0.0,
+          "logits_max_absolute_error": 0.0,
+          "parameters": 153958938,
+          "passed": true,
+          "tokens_sha256": "b2e041731a40eca2ee45c5a712f4dfc7e2513353dfe3b449796535fd1a1e348c"
+        },
+        "passed": true
+      }
+    }
+  ],
+  "created_at": "2026-09-05T23:34:47.792543+00:00",
+  "decision": {
+    "architecture_promotion_authorized": false,
+    "automatic_launch_authorized": false,
+    "exact_config_compiled_training_step_qualified": true,
+    "next_action": "register the preflight result, preserve release-suite blockers, and reassess the remaining launch boundary without starting training",
+    "paper_scale_authorized": false,
+    "release_dependencies_qualified": false,
+    "runtime_preflight_qualified": true,
+    "trained_topology_behavioral_cache_reference_qualified": true,
+    "training_authorized": false,
+    "transformers_export_qualified": true
+  },
+  "format": "speck_paper_finalist_preflight",
+  "format_version": 1,
+  "hardware": {
+    "capability": [
+      8,
+      6
+    ],
+    "device": "NVIDIA GeForce RTX 3090",
+    "driver": "610.43.03",
+    "total_memory_bytes": 25295323136
+  },
+  "inputs": {
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
+      "sha256": "a464004a51bdf45fb7e427e2e7915925687e641b5c065b823b9909cc666dd506",
+      "status": "collector_and_analysis_implementation_qualified_no_training_authority"
+    },
+    "contract": {
+      "path": "research/paper-1/finalist_materialization_v1.json",
+      "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3",
+      "status": "frozen_after_proxy_pass_before_finalist_materialization"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792",
+      "status": "materialized_unexecuted_training_blocked"
+    },
+    "qualification": {
+      "path": "results/Speck-Paper1/finalist-qualification-v1.json",
+      "sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605",
+      "status": "materialization_data_and_storage_qualified_runtime_analysis_and_release_gates_blocked"
+    }
+  },
+  "limitations": [
+    "one random-weight full-size compiled step per exact arm is feasibility evidence, not a training benchmark",
+    "temporary Transformers exports are hashed but not retained",
+    "trained-topology cache behavior is inherited from the pinned powered v3 qualification",
+    "free-running cache divergence remains a reported risk",
+    "RULER v2, NoLiMa, and HELMET are not qualified by this preflight",
+    "the preflight has no training, attribution, promotion, novelty, or paper-scale authority"
+  ],
+  "output_absence_after_preflight": {
+    "analysis_result_absent": true,
+    "checkpoint_root_absent": true,
+    "result_root_absent": true,
+    "time_to_quality_lock_absent": true
+  },
+  "paper_id": "speck-paper-1",
+  "prerequisites": {
+    "cache_equivalence_v3": {
+      "passed": null,
+      "path": "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
+      "sha256": "43d2ca48287f1425a207f80d57cf130fab89413ff173eee12d997f6d1ff0d4ac",
+      "status": "qualified"
+    },
+    "failed_v1_preflight": {
+      "passed": null,
+      "path": "results/Speck-Paper1/baseline-preflight.json",
+      "sha256": "164cd1409afd01a25c776dd4471ade27c79eb0d28028042864abb58ed39f5f60",
+      "status": "failed"
+    },
+    "kda_kernel": {
+      "passed": true,
+      "path": "results/KimiLinearTransfer/kda_kernel_qualification.json",
+      "sha256": "f767c4f7d682cab03b08d7f10f78b360efff0ec12a8d0c292c0324ff04a86c1c",
+      "status": null
+    }
+  },
+  "runner_revision": "1e0d3469e793290da65c78c4d0d3b78e38117235",
+  "runner_sha256": "8590ae691cbdcae27a62f2d7d9f140c5cdf8d71bfcfbb5f22e1b828115a49f11",
+  "software": {
+    "cuda": "12.8",
+    "flash_linear_attention": "0.5.0",
+    "python": "3.10.20",
+    "torch": "2.9.1+cu128",
+    "transformers": "5.1.0"
+  },
+  "status": "qualified"
+}
