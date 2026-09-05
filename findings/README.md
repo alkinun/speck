@@ -541,3 +541,8 @@ Finding 99 updates the claim table with HALO's task-guided conversion selection 
 composition bundle. The only formal N1 distinction is held-out prediction of jointly trained
 from-scratch layout interactions—a procedural residual with no established architecture value. N1 has
 no experiment authority and requires independent retention-or-retirement review.
+
+Finding 100 adds generic-text KL selection with held-out recall, cross-scale Qwen evidence, GDN-to-GLA
+probe transfer, teacher-dependent clustering, spacing interventions, and a ranking-stability early stop.
+Those N1 distinctions are occupied. Only teacher-free prediction of interacting from-scratch layouts
+remains, and retirement is evidence-favored pending independent review. No placement work is authorized.

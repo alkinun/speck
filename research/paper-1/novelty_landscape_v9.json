@@ -1,0 +1,108 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 9,
+  "audit_id": "speck-paper-1-novelty-landscape-v9",
+  "paper_id": "speck-paper-1",
+  "status": "nineteen_full_text_audits_cross_task_cross_mixer_kl_selection_overlapped_n1_retirement_favored",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v8.json",
+    "sha256": "2968774ad615108d88b362381423cc12a8d19501763b6a2159e0a5fb08c5b920",
+    "full_text_sources": 18,
+    "n1_task_guided_layer_selection_novelty_rejected": true,
+    "n2_concept_novelty_rejected": true
+  },
+  "additional_sources": [
+    {
+      "id": "arxiv_2512_20569v1",
+      "title": "Distilling to Hybrid Attention Models via KL-Guided Layer Selection",
+      "url": "https://arxiv.org/abs/2512.20569v1",
+      "review_scope": "full_text",
+      "local_note": "papers/42_kl_guided_layer_selection.md",
+      "local_note_sha256": "fa38b0836b1d1f141f62faf6bdeffd9efeb153a51908508f97f4287b20f2150f",
+      "relevant_claim": "generic-text KL marginal-utility selection, held-out recall evaluation, cross-scale and cross-mixer transfer, clustered layouts, spacing ablation, and ranking early stopping"
+    }
+  ],
+  "aggregate_source_count": 19,
+  "new_overlap_decisions": [
+    {
+      "id": "generic_text_diagnostic_to_heldout_recall_placement",
+      "decision": "not novel in conversion",
+      "reason": "KL-guided selection ranks layers from held-out DCLM KL and evaluates the selected hybrids on RULER, SWDE, FDA, SQuADv2, and long needle retrieval"
+    },
+    {
+      "id": "cross_mixer_layer_selection_transfer",
+      "decision": "not novel in conversion",
+      "reason": "GDN-selected layer sets transfer to GLA students and outperform specialized GLA-selected layouts in the reported low-budget setting"
+    },
+    {
+      "id": "cross_scale_selection_evidence",
+      "decision": "not novel in conversion",
+      "reason": "GA-S2 is evaluated with Qwen2.5 teachers at 1.5B, 3B, and 7B plus Llama 3.2 3B"
+    },
+    {
+      "id": "clustered_nonuniform_softmax_placement",
+      "decision": "not novel by itself",
+      "reason": "complete rankings show teacher-dependent clusters, and distance penalties that force spreading reduce RULER"
+    },
+    {
+      "id": "selection_ranking_stability_early_stop",
+      "decision": "not novel by itself",
+      "reason": "a preregisterable rolling-Jaccard and K-minus-one backbone rule cuts selection tokens by a reported 58 to 74 percent"
+    },
+    {
+      "id": "mse_kl_add_remove_and_heuristic_selector_matrix",
+      "decision": "mandatory baselines",
+      "reason": "the study compares Stage-1 MSE versus Stage-2 KL, addition/removal/average rankings, uniform, activation, perplexity, attention, SMART, and other heuristics across fixed budgets"
+    }
+  ],
+  "residual_assessment": {
+    "id": "N1_teacher_free_from_scratch_interaction_placement_prediction",
+    "type": "procedural_residual_with_retirement_favored_by_current_evidence",
+    "distinction": "the KL selector still uses a pretrained teacher and trains every one-restoration neighbor; it does not predict arbitrary jointly trained from-scratch layouts without candidate proxy outcomes",
+    "lost_distinctions": [
+      "held-out-task generalization is demonstrated in conversion",
+      "cross-mixer transfer is demonstrated in conversion",
+      "cross-scale selection evidence exists within a teacher family",
+      "non-uniform clustering and forced-spacing interventions are reported",
+      "selection ranking and calibrated stopping stability are directly measured"
+    ],
+    "burden": "independent review must show why removing the teacher and all neighbor training yields an architecture-level causal law, not merely a costlier from-scratch analogue of mature conversion selectors",
+    "scientific_value": "not established; retirement is favored unless independent review identifies a non-procedural claim with unique predictions and realistic evidence cost",
+    "experiment_authorized": false,
+    "novelty_status": "no_novelty_established_retirement_favored_independent_review_required"
+  },
+  "source_limitations": [
+    "the method selects converted hybrids from pretrained instruction-tuned teachers",
+    "every layer's importance requires training a one-restoration neighbor",
+    "top-K uses independent marginal utilities rather than recomputing joint interactions",
+    "no seed-level placement uncertainty or frozen cross-family prospective test is reported",
+    "GDN-to-GLA transfer is asymmetric and does not establish a universal mechanism-invariant ranking",
+    "the extended 128K evaluation is single-needle retrieval for one converted model"
+  ],
+  "priority": {
+    "architecture_novelty_candidates_established": 0,
+    "n1": "retirement favored; independent claim review is the only authorized action",
+    "n2": "remain deferred",
+    "baseline_proxy": "complete independently because it evaluates the conservative parent rather than either novelty claim"
+  },
+  "decision": {
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_from_scratch_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n1_task_guided_layer_selection_novelty_rejected": true,
+    "n1_cross_task_cross_mixer_selector_novelty_rejected": true,
+    "n1_retirement_favored": true,
+    "n1_residual_predictive_law_established": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "placement_experiment_authorized": false,
+    "next_action": "finish the frozen proxy and obtain independent N1 review; absent a non-procedural claim, retire N1 and search for a different architecture contribution"
+  }
+}

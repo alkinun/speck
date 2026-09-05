@@ -123,6 +123,9 @@ the final combined model.
 - [`novelty_landscape_v8.json`](novelty_landscape_v8.json) adds HALO's hidden-state-aligned,
   recall/commonsense-guided layer selection and control suite, leaving only a procedural held-out
   from-scratch interaction predictor for independent retention-or-retirement review.
+- [`novelty_landscape_v9.json`](novelty_landscape_v9.json) adds generic-KL to held-out-task,
+  cross-scale, cross-mixer, clustering, spacing, and early-stop selection evidence, leaving only a
+  teacher-free from-scratch procedural residual and making N1 retirement evidence-favored.
 - [`novelty_claim_overlap_v1.json`](novelty_claim_overlap_v1.json) maps fourteen candidate claims to
   their strongest overlap, keeps N1 as the only primary architecture hypothesis, and defers the residual
   N2 diagnostic before any experimental budget is spent.
