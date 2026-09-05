@@ -81,8 +81,8 @@ releases (4.5GB), search artifacts (4.4GB), evaluations (4.2GB), and GGUF artifa
 was deleted by the audit. The contract forbids automatic cleanup; archival targets require explicit
 review because checkpoints and optimizer state are part of the evidence chain.
 
-A later clean-tree re-audit at runner revision `d0b77a4` measured 19,273,682,944 bytes (17.95GiB)
-free, 2,093,813,760 bytes (1.95GiB) above the proxy floor. The machine-readable audit therefore drops
+A later clean-tree re-audit at runner revision `7266d6b` measured 19,209,621,504 bytes (17.89GiB)
+free, 2,029,752,320 bytes (1.89GiB) above the proxy floor. The machine-readable audit therefore drops
 the capacity blocker. The repository does not identify every path changed by the intervening external
 cleanup, so SPE-104 retains that provenance closeout rather than inventing an archive record.
 
@@ -93,8 +93,7 @@ three paired seed/data-order cells are materialized but **not authorized to laun
 are:
 
 - close the SPE-58 evaluation-manifest dependency for this stage;
-- run paired compiled forward/backward/optimizer, export, and incremental-generation preflights on the
-  named RTX 3090 environment; and
+- preserve the qualified versioned RTX 3090 training/export/cache preflight; and
 - preserve the now-frozen paired analysis and stopping implementation unchanged through execution.
 
 No baseline ranking, architecture promotion, component contribution, or Paper 1 performance claim is
