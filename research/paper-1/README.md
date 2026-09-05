@@ -189,6 +189,9 @@ the final combined model.
 - [`kl_selection_code_audit_v1.json`](kl_selection_code_audit_v1.json) pins the official 203-file
   selector/config tree while blocking absent root rights/tests, held-out-KL versus training-loss drift,
   missing early-stop code, external state, data/log/checkpoint identity, and reproduction.
+- [`n1_independent_review_packet_v1.json`](n1_independent_review_packet_v1.json) freezes the residual
+  N1 claim, mandatory evidence, reviewer independence, questions, outputs, and retirement/preregistration
+  dispositions without treating Speck's own audit as independent or authorizing execution.
 - [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
   within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
   reduction, model integration, training, novelty, and architecture claims blocked.

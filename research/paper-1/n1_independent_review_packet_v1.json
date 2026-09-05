@@ -1,0 +1,118 @@
+{
+  "format": "speck_n1_independent_review_packet",
+  "format_version": 1,
+  "packet_id": "speck-paper-1-n1-independent-review-v1",
+  "paper_id": "speck-paper-1",
+  "status": "packet_frozen_no_independent_review_completed_no_experiment_authority",
+  "frozen_on": "2026-09-06",
+  "inputs": {
+    "landscape": {
+      "path": "research/paper-1/novelty_landscape_v9.json",
+      "sha256": "255fb839478702683707256bf6ec48f4ade705e9c6b917c66ace195e63b99df2"
+    },
+    "claim_table": {
+      "path": "research/paper-1/novelty_claim_overlap_v6.json",
+      "sha256": "e6645ec16d19d6346b3760af8dd985d6b27d078246633ba262e3e45add7a4935"
+    },
+    "code_availability": {
+      "path": "research/paper-1/novelty_code_availability_v8.json",
+      "sha256": "d663c5f9e7b226267dd8c7e8981336c7ac89b5631a2887dd2f6a9efce7056283"
+    }
+  },
+  "claim_under_review": {
+    "id": "N1_teacher_free_from_scratch_interaction_placement_prediction",
+    "statement": "A predictor frozen without a pretrained teacher or outcomes from held-out candidate layouts forecasts the rank and failure margins of unseen jointly trained non-uniform full/recurrent placements across tasks, scales, and a different recurrent mixer, and fixed-budget interventions validate a causal architecture law.",
+    "current_classification": "procedural_residual_with_retirement_favored",
+    "experiment_authorized": false,
+    "architecture_novelty_established": false
+  },
+  "mandatory_evidence": [
+    {
+      "path": "papers/36_rethinking_hybrid_attention.md",
+      "sha256": "3e5fb5ea19799de5fd0f8572b7df33b0aeed86e6dcede00e8e6cb42a4ee802fc",
+      "issue": "from-scratch middle-layer retrieval roles and optimization dynamics"
+    },
+    {
+      "path": "papers/37_systematic_hybrid_linear.md",
+      "sha256": "accf79a362f4e781ef46f4b5034b6ea7123950ebf8ba219613f3af6634e12cbb",
+      "issue": "from-scratch mixer-by-ratio language and recall evidence"
+    },
+    {
+      "path": "papers/38_distill_then_replace.md",
+      "sha256": "b3c3e8c68e964b96503e1af3ec4c8236566f4935caf3bafe7042c4f856ace12f",
+      "issue": "interaction-aware greedy conversion and probe insufficiency"
+    },
+    {
+      "path": "papers/39_hybrid_architectures_systematic.md",
+      "sha256": "e8bd937f8f177cc533e521fd5637549fb4a7a10d263a99ab8f2f6396ef8df017",
+      "issue": "systematic from-scratch early, middle, and late placement"
+    },
+    {
+      "path": "papers/40_massive_activations_hla.md",
+      "sha256": "e7f15e93c5de4ce82276bcd78057409aa4d09a1845cd61eacc119f9b687ceaa0",
+      "issue": "activation diagnostics and a saturated-alignment placement counterexample"
+    },
+    {
+      "path": "papers/41_halo_hypenet.md",
+      "sha256": "76f7d5b7b47f7b50267e373788518c224a826f14f6e6ccc8b535023b82d9bc79",
+      "issue": "recall-versus-commonsense task-guided conversion selection"
+    },
+    {
+      "path": "papers/42_kl_guided_layer_selection.md",
+      "sha256": "fa38b0836b1d1f141f62faf6bdeffd9efeb153a51908508f97f4287b20f2150f",
+      "issue": "generic-KL held-out-task, cross-scale, cross-mixer, clustering, and spacing evidence"
+    }
+  ],
+  "reviewer_requirements": {
+    "minimum_independent_reviewers": 2,
+    "required_expertise": [
+      "hybrid or linear-attention language-model architecture",
+      "experimental design, scaling, or architecture search"
+    ],
+    "independence": [
+      "not an author of Speck artifacts or a direct collaborator on the proposed claim",
+      "declare conflicts with authors of the mandatory prior works",
+      "review the pinned packet before seeing any future N1 experimental outcome"
+    ],
+    "separate_reviews_before_reconciliation": true
+  },
+  "review_questions": [
+    "Does the claim contain a non-procedural architecture or empirical-law contribution beyond the mandatory evidence?",
+    "Would success teach a transferable causal principle, or only replace teacher-guided selection with a more expensive from-scratch search?",
+    "Are held-out layout, task, scale, and mixer predictions identifiable without observing candidate-layout outcomes?",
+    "Can the claim be tested at a realistic evidence cost with adequate multiplicity control and replication?",
+    "Which exact prior-art claim would remain distinguishable, and what result would falsify it?",
+    "Should N1 be retired, retained for landscape work only, or advanced to a preregistration draft?"
+  ],
+  "required_reviewer_output": {
+    "verdicts": [
+      "retire",
+      "retain_landscape_only",
+      "draft_preregistration_without_execution"
+    ],
+    "fields": [
+      "verdict",
+      "claim_rewrite_if_any",
+      "strongest_overlap",
+      "unique_prediction_if_any",
+      "fatal_falsifier",
+      "minimum_baselines",
+      "minimum_scales_and_replication",
+      "estimated_evidence_cost",
+      "conflicts"
+    ],
+    "unanimity_for_preregistration_draft": true,
+    "review_disagreement_disposition": "retain_landscape_only_and_seek_a_third_independent_review"
+  },
+  "decision": {
+    "independent_review_completed": false,
+    "n1_retired": false,
+    "n1_retirement_favored_by_internal_audit": true,
+    "n1_preregistration_authorized": false,
+    "n1_experiment_authorized": false,
+    "artifact_download_or_execution_authorized": false,
+    "architecture_freeze_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "obtain two separate independent reviews using this pinned packet; absent unanimous non-procedural value, retire N1"
+  }
+}

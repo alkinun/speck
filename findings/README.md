@@ -560,3 +560,8 @@ Finding 103 updates N1's claim table after cross-task KL selection. Held-out-tas
 cross-mixer, clustered-layout, and spacing-intervention stories are occupied. Only teacher-free
 prediction of jointly trained from-scratch interactions remains—a procedural residual with retirement
 evidence-favored pending independent review. No N1 experiment is authorized.
+
+Finding 104 freezes an independent-review packet for N1 before any future outcome. Two separate domain-
+qualified reviews must identify a non-procedural causal claim, unique prediction, falsifier, baselines,
+replication, and evidence cost. Only unanimous support permits a preregistration draft; disagreement
+requires a third review. No review, execution, protocol, architecture freeze, or training is authorized.
