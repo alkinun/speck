@@ -477,6 +477,18 @@
   },
   "format": "speck_paper_experiment_program",
   "format_version": 1,
+  "finalist_analysis": {
+    "contract": "research/paper-1/finalist_analysis_v1.json",
+    "sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1",
+    "status": "frozen_after_proxy_pass_before_finalist_materialization"
+  },
+  "finalist_materialization": {
+    "contract": "research/paper-1/finalist_materialization_v1.json",
+    "contract_sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3",
+    "materialization": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+    "materialization_sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792",
+    "status": "materialized_unexecuted_training_blocked"
+  },
   "halo_code_audit": {
     "audit": "research/paper-1/halo_code_audit_v1.json",
     "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",

@@ -13,6 +13,8 @@ PROGRAM_FILES = (
     "baseline_collection_v2.json",
     "baseline_automation_v1.json",
     "proxy_disposition_v1.json",
+    "finalist_analysis_v1.json",
+    "finalist_materialization_v1.json",
     "sequence_cache_representation_v1.json",
     "hca_readiness_v1.json",
     "csa_readiness_v1.json",
@@ -1712,6 +1714,123 @@ def _validate_n1_independent_review_packet(reference, repository_root, paper_id)
             raise ValueError("N1 review packet evidence does not match its pin")
 
 
+def _validate_finalist_analysis(reference, repository_root, paper_id):
+    _require(reference, {"contract", "sha256", "status"}, "finalist analysis reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist analysis does not match its pin")
+    analysis = _load_json(path)
+    inputs = analysis.get("inputs", {})
+    shared = analysis.get("shared_training", {})
+    statistical = analysis.get("statistical_contract", {})
+    stopping = analysis.get("stopping_rule", {})
+    execution = analysis.get("execution", {})
+    pairs = analysis.get("pairs", ())
+    if (
+        analysis.get("format") != "speck_paper_finalist_analysis_plan"
+        or analysis.get("format_version") != 1
+        or analysis.get("paper_id") != paper_id
+        or analysis.get("status") != reference["status"]
+        or [(pair.get("seed"), pair.get("data_token_offset")) for pair in pairs]
+        != [
+            (42, 0),
+            (42, 1610612736),
+            (43, 0),
+            (43, 1610612736),
+            (44, 0),
+            (44, 1610612736),
+        ]
+        or shared.get("training_tokens_per_arm") != 1539833856
+        or shared.get("optimizer_steps") != 23496
+        or shared.get("evaluation_steps") != [0, 5874, 11748, 17622, 23496]
+        or statistical.get("paired_runs") != 6
+        or statistical.get("student_t_critical_df_5") != 2.0150483733330233
+        or statistical.get("language_loss_non_inferiority_margin_nats") != 0.01
+        or statistical.get("source_guardrail_nats") != 0.02
+        or stopping.get("required_complete_model_runs") != 12
+        or stopping.get("required_control_runs_before_candidates") != 6
+        or stopping.get("interim_efficacy_looks") != 0
+        or stopping.get("interim_futility_looks") != 0
+        or execution.get("materialization_authorized") is not True
+        or execution.get("training_authorized") is not False
+    ):
+        raise ValueError("finalist analysis contract is incomplete")
+    for stem in (
+        "baseline_matrix",
+        "proxy_disposition",
+        "proxy_analysis",
+        "proxy_analysis_plan",
+    ):
+        source = repository_root / inputs.get(stem, "")
+        if not source.is_file() or _file_sha256(source) != inputs.get(f"{stem}_sha256"):
+            raise ValueError(f"finalist analysis {stem} does not match its pin")
+
+
+def _validate_finalist_materialization(reference, repository_root, paper_id):
+    _require(
+        reference,
+        {"contract", "contract_sha256", "materialization", "materialization_sha256", "status"},
+        "finalist materialization reference",
+    )
+    contract_path = repository_root / reference["contract"]
+    materialization_path = repository_root / reference["materialization"]
+    if not contract_path.is_file() or _file_sha256(contract_path) != reference["contract_sha256"]:
+        raise ValueError("finalist materialization contract does not match its pin")
+    if (
+        not materialization_path.is_file()
+        or _file_sha256(materialization_path) != reference["materialization_sha256"]
+    ):
+        raise ValueError("finalist materialization does not match its pin")
+    contract = _load_json(contract_path)
+    materialization = _load_json(materialization_path)
+    pairs = contract.get("pairs", ())
+    training = contract.get("materialized_training", {})
+    decision = contract.get("decision", {})
+    generated = materialization.get("generated_config_sha256", {})
+    if (
+        contract.get("format") != "speck_paper_finalist_materialization_contract"
+        or contract.get("format_version") != 1
+        or contract.get("paper_id") != paper_id
+        or contract.get("status") != "frozen_after_proxy_pass_before_finalist_materialization"
+        or len(pairs) != 6
+        or training.get("training_tokens") != 1539833856
+        or training.get("optimizer_steps") != 23496
+        or training.get("evaluation_every_steps") != 5874
+        or decision.get("materialization_authorized") is not True
+        or decision.get("qualification_authorized") is not True
+        or decision.get("training_authorized") is not False
+        or decision.get("automatic_launch_authorized") is not False
+        or materialization.get("format") != "speck_paper_finalist_materialization"
+        or materialization.get("format_version") != 1
+        or materialization.get("status") != reference["status"]
+        or materialization.get("contract") != reference["contract"]
+        or materialization.get("contract_sha256") != reference["contract_sha256"]
+        or materialization.get("pairs") != pairs
+        or materialization.get("training_authorized") is not False
+        or len(materialization.get("generated_files", ())) != 84
+        or len(generated) != 84
+        or materialization.get("generated_files") != list(generated)
+    ):
+        raise ValueError("finalist materialization contract or manifest is incomplete")
+    for stem in (
+        "baseline_matrix",
+        "proxy_disposition",
+        "proxy_analysis",
+        "proxy_materialization",
+        "finalist_analysis",
+    ):
+        source = repository_root / contract.get("inputs", {}).get(stem, "")
+        if not source.is_file() or _file_sha256(source) != contract["inputs"].get(
+            f"{stem}_sha256"
+        ):
+            raise ValueError(f"finalist materialization {stem} does not match its pin")
+    materialization_root = materialization_path.parent
+    for relative, expected_hash in generated.items():
+        source = materialization_root / relative
+        if not source.is_file() or _file_sha256(source) != expected_hash:
+            raise ValueError(f"finalist generated config does not match its pin: {relative}")
+
+
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
     _require(
         reference,
@@ -2149,6 +2268,8 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "halo_code_audit",
             "kl_selection_code_audit",
             "n1_independent_review_packet",
+            "finalist_analysis",
+            "finalist_materialization",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2212,6 +2333,16 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_n1_independent_review_packet(
         program["n1_independent_review_packet"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_analysis(
+        program["finalist_analysis"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_materialization(
+        program["finalist_materialization"],
         repository_root,
         paper_id,
     )

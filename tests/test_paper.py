@@ -23,6 +23,8 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "baseline_collection_v2.json",
             "baseline_automation_v1.json",
             "proxy_disposition_v1.json",
+            "finalist_analysis_v1.json",
+            "finalist_materialization_v1.json",
             "sequence_cache_representation_v1.json",
             "hca_readiness_v1.json",
             "csa_readiness_v1.json",
