@@ -84,10 +84,12 @@ to a checked experiment artifact.
     user-controlled budgets and full compressor-plus-reader cost accounting.
 30. [IterCOMP](34_itercomp.md) — distinguish complete/partial hop evidence, judge sufficiency, and
     iteratively retrieve the missing source during prompt compression.
+31. [STEC](35_stec.md) — compress multi-trajectory supporting/conflicting evidence and reasoning paths
+    into candidate-specific representations for final multi-hop answer selection.
 
 ### Supporting eviction baselines
 
-31. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+32. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
 ## Decision map for Speck
@@ -105,7 +107,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, eleven later direct
+The collection contains all 22 papers supplied in the research brief, twelve later direct
 novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
