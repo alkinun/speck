@@ -323,13 +323,18 @@ def main(argv=None):
     args = arguments(argv)
     protocol_path = args.protocol.expanduser().resolve()
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-    if (
-        protocol.get("format") != "speck_contamination_protocol"
-        or protocol.get("status") != "frozen_unexecuted"
-    ):
-        raise ValueError("contamination protocol must be frozen and unexecuted")
+    if protocol.get("format") != "speck_contamination_protocol":
+        raise ValueError("contamination protocol has the wrong format")
     if args.check:
+        if protocol.get("status") not in {
+            "frozen_unexecuted",
+            "executed_failed_critical_overlap_detected",
+            "executed_qualified_no_full_or_answer_overlap_context_risk_reported",
+        }:
+            raise ValueError("contamination protocol has an invalid checked status")
         return check_report(protocol_path, protocol, args.output)
+    if protocol.get("status") != "frozen_unexecuted":
+        raise ValueError("contamination protocol must be frozen and unexecuted")
     repository_root = Path(__file__).parents[1]
     data_manifest = load_manifest(protocol["training"]["data_directory"])
     if manifest_fingerprint(data_manifest) != protocol["training"]["manifest_fingerprint"]:
