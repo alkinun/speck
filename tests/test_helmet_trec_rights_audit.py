@@ -1,6 +1,10 @@
 import json
 
-from scripts.helmet_trec_rights_audit import loader_analysis, protocol_identity
+from scripts.helmet_trec_rights_audit import (
+    canonical_visible_text,
+    loader_analysis,
+    protocol_identity,
+)
 
 
 def test_loader_analysis_detects_urls_without_license(tmp_path):
@@ -23,3 +27,9 @@ def test_trec_protocol_identity_excludes_registration_fields():
     executed = json.loads(json.dumps(frozen))
     executed.update({"status": "executed", "result": {"sha256": "abc"}})
     assert protocol_identity(frozen) == protocol_identity(executed)
+
+
+def test_visible_text_ignores_transport_scripts_and_link_attributes():
+    first = '<a href="volatile-a">Contact</a><script>token-a</script><p>Terms text</p>'
+    second = '<a href="volatile-b">Contact</a><script>token-b</script><p>Terms text</p>'
+    assert canonical_visible_text(first) == canonical_visible_text(second)

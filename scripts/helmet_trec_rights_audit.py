@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import urllib.request
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 
 
@@ -41,6 +42,31 @@ def protocol_identity(protocol):
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+
+
+class _VisibleTextParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.hidden_depth = 0
+        self.values = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.casefold() in {"script", "style"}:
+            self.hidden_depth += 1
+
+    def handle_endtag(self, tag):
+        if tag.casefold() in {"script", "style"} and self.hidden_depth:
+            self.hidden_depth -= 1
+
+    def handle_data(self, data):
+        if not self.hidden_depth:
+            self.values.append(data)
+
+
+def canonical_visible_text(content):
+    parser = _VisibleTextParser()
+    parser.feed(content)
+    return " ".join(" ".join(parser.values).split())
 
 
 def repository_revision():
@@ -80,11 +106,16 @@ def download(spec, directory):
     request = urllib.request.Request(spec["url"], headers={"User-Agent": "speck-evidence/1"})
     with urllib.request.urlopen(request) as source, temporary.open("wb") as target:
         shutil.copyfileobj(source, target, 1024 * 1024)
-    if temporary.stat().st_size != spec["bytes"] or file_sha256(temporary) != spec[
-        "sha256"
-    ]:
+    raw_sha256 = file_sha256(temporary)
+    if "sha256" in spec and (
+        temporary.stat().st_size != spec["bytes"] or raw_sha256 != spec["sha256"]
+    ):
         raise ValueError(f"TREC metadata changed: {spec['id']}")
     content = temporary.read_text(encoding="utf-8", errors="replace")
+    canonical = canonical_visible_text(content)
+    canonical_sha256 = hashlib.sha256(canonical.encode()).hexdigest()
+    if canonical_sha256 != spec.get("canonical_visible_text_sha256", canonical_sha256):
+        raise ValueError(f"TREC visible metadata changed: {spec['id']}")
     for required in spec["required_substrings"]:
         if required not in content:
             raise ValueError(f"TREC metadata assertion changed: {spec['id']}")
@@ -98,7 +129,9 @@ def download(spec, directory):
         "path": str(destination),
         "url": spec["url"],
         "bytes": destination.stat().st_size,
-        "sha256": file_sha256(destination),
+        "sha256": raw_sha256,
+        "raw_transport_identity_frozen": "sha256" in spec,
+        "canonical_visible_text_sha256": canonical_sha256,
         "required_assertions_present": True,
         "absence_assertions_passed": True,
     }
@@ -129,6 +162,16 @@ def loader_analysis(path):
 
 
 def prepare(protocol, protocol_path):
+    if "supersedes" in protocol:
+        root = Path(__file__).parents[1]
+        previous_protocol = root / protocol["supersedes"]["protocol"]
+        previous_result = root / protocol["supersedes"]["result"]
+        if (
+            file_sha256(previous_protocol)
+            != protocol["supersedes"]["protocol_sha256"]
+            or file_sha256(previous_result) != protocol["supersedes"]["result_sha256"]
+        ):
+            raise ValueError("TREC v1 failed evidence changed before v2")
     directory = Path(protocol["storage"]["directory"])
     validate_volume(directory, protocol["storage"])
     if any(directory.iterdir()):
@@ -179,12 +222,17 @@ def check(protocol, report_path):
     for artifact in report["evidence"]:
         path = Path(artifact["path"])
         spec = expected[artifact["id"]]
-        if (
-            not path.is_file()
-            or path.stat().st_size != spec["bytes"]
-            or file_sha256(path) != spec["sha256"]
+        if not path.is_file():
+            raise ValueError("TREC retained metadata changed")
+        if "sha256" in spec and (
+            path.stat().st_size != spec["bytes"] or file_sha256(path) != spec["sha256"]
         ):
             raise ValueError("TREC retained metadata changed")
+        if "canonical_visible_text_sha256" in spec:
+            content = path.read_text(encoding="utf-8", errors="replace")
+            canonical = hashlib.sha256(canonical_visible_text(content).encode()).hexdigest()
+            if canonical != spec["canonical_visible_text_sha256"]:
+                raise ValueError("TREC retained visible metadata changed")
     runner = subprocess.run(
         [
             "git",

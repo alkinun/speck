@@ -1,9 +1,16 @@
 {
   "format": "speck_helmet_rights_decision_protocol",
-  "format_version": 1,
-  "protocol_id": "helmet-trec-rights-v1",
-  "status": "executed_failed_transport_identity",
+  "format_version": 2,
+  "protocol_id": "helmet-trec-rights-v2",
+  "status": "frozen_unexecuted",
   "scope": "metadata-only authority decision for the TREC question-classification source required by HELMET ICL",
+  "supersedes": {
+    "protocol": "research/architecture-promotion-v1/helmet_trec_rights_v1.json",
+    "protocol_sha256": "09b30a8fdad9e4e4437f528641885f2d889ee999463ea298e964350cd7c4176f",
+    "result": "results/Speck-Architecture-Promotion-v1/helmet-trec-rights-v1-failed.json",
+    "result_sha256": "c7777a0b17742f7734714868b7c90fb617c4863f7c258514ffa5ded6c3556902",
+    "reason": "v1 froze volatile Cloudflare transport bytes; v2 freezes canonical visible text while retaining the identical legal assertions"
+  },
   "source": {
     "hub_repository": "https://huggingface.co/datasets/CogComp/trec",
     "hub_revision": "eb1e45c1ba990fecca7cf84b67ce845edbcf49bf",
@@ -62,13 +69,13 @@
       "id": "nist_trec_faq",
       "filename": "nist-trec-faq.html",
       "url": "https://trec.nist.gov/faq.html",
-      "bytes": 7559,
-      "sha256": "1f0772c9c1bbcbd00a395476d80893f167e99a3d72e6ac6b9d61ed8ac6d5ab45",
+      "canonical_visible_text_sha256": "a6fe07c19b008f34c772427038c432b24e8ab2d27aa3f44ac97f02ec797665bf",
+      "raw_transport_identity_frozen": false,
       "required_substrings": ["topics and relevance judgments can be downloaded", "document sets are ususally", "must be licensed", "organization with the authority to distribute"]
     }
   ],
   "storage": {
-    "directory": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata",
+    "directory": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata-v2",
     "device_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
     "filesystem": "ext4",
     "required_mount_options": ["rw", "nodev", "nosuid", "noexec"],
@@ -90,12 +97,5 @@
       "the Hugging Face conversion service supplies missing rights",
       "this operational decision is legal advice or a final ownership determination"
     ]
-  },
-  "result": {
-    "path": "results/Speck-Architecture-Promotion-v1/helmet-trec-rights-v1-failed.json",
-    "sha256": "c7777a0b17742f7734714868b7c90fb617c4863f7c258514ffa5ded6c3556902",
-    "status": "failed_transport_byte_identity_before_decision",
-    "payload_files_acquired": 0,
-    "successor_required": true
   }
 }
