@@ -8,7 +8,7 @@
   "runner": {
     "adaptation_module": "scripts.structured_retrieval_adapt",
     "length_evaluation_module": "scripts.structured_retrieval_eval",
-    "revision": "5650e19c027817636f3cbb9248b9bb39cac2526e"
+    "revision": "b8238581be135ff9165ca1dd0124ee7b6e5b7011"
   },
   "comparison": {
     "unit": "paired candidate and control adapters",

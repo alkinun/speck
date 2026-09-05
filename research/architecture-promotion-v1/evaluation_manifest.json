@@ -44,8 +44,8 @@
       "id": "structured_retrieval_v2",
       "status": "runner_bound_unexecuted",
       "protocol": "research/architecture-promotion-v1/internal/structured_retrieval_v2.json",
-      "protocol_sha256": "5585cd2a990c15339cc40acf16543d303dd987c6c6c5cc12bb9b5273226a049d",
-      "generator_revision": "5650e19c027817636f3cbb9248b9bb39cac2526e",
+      "protocol_sha256": "fd7b3175abf77c7f103f0fb1e1f1b04a887a3fb61df266f9e999bfebfaa0bbb9",
+      "generator_revision": "b8238581be135ff9165ca1dd0124ee7b6e5b7011",
       "lengths": [
         4096,
         32768,
@@ -75,8 +75,8 @@
       "id": "symbolic_composition_v2",
       "status": "runner_bound_unexecuted",
       "protocol": "research/architecture-promotion-v1/internal/symbolic_composition_v2.json",
-      "protocol_sha256": "38bc726f36cf82cadb70c5a8ab8f60d507adabecb1af81ec9dc91a371f392630",
-      "generator_revision": "5650e19c027817636f3cbb9248b9bb39cac2526e",
+      "protocol_sha256": "1555e918c80bb03a6e3a1ad1dca8266b48f5da688195ad704c6a46b9a2028d82",
+      "generator_revision": "b8238581be135ff9165ca1dd0124ee7b6e5b7011",
       "samples_per_view": 200,
       "minimum_distinct_intermediate_nodes": 100,
       "required_views": [
