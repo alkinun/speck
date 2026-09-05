@@ -1,0 +1,80 @@
+{
+  "format": "speck_contamination_protocol",
+  "format_version": 1,
+  "protocol_id": "paper1-contamination-v1",
+  "status": "frozen_unexecuted",
+  "scope": "exact token overlap between evaluation prompts and the three packed training windows consumed by the Paper 1 proxy",
+  "training": {
+    "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+    "manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "sequence_length": 4096,
+    "device_batch_size": 4,
+    "tokens_per_window": 131072000,
+    "windows": [
+      {"pair": 0, "seed": 42, "data_token_offset": 0},
+      {"pair": 1, "seed": 43, "data_token_offset": 536870912},
+      {"pair": 2, "seed": 44, "data_token_offset": 1073741824}
+    ],
+    "total_scanned_tokens": 393216000,
+    "boundary_rule": "scan within each 4096-token training sequence only; never fabricate adjacency across examples or microbatches"
+  },
+  "tokenizer": {
+    "path": "/home/alkin/.cache/speck/releases/Speck2-140M-Instruct-endpoint-current",
+    "identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+    "add_special_tokens": false,
+    "scan_backend": "native SentencePiece processor",
+    "parity_rule": "first case in every task/length cell must match the pinned Transformers tokenizer; reject literal special-token strings in every prompt"
+  },
+  "evaluations": [
+    {
+      "suite": "ruler",
+      "status": "case_data_qualified",
+      "length_reports": [
+        {"length": 4096, "path": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json", "sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f"},
+        {"length": 8192, "path": "results/Speck-Architecture-Promotion-v1/ruler-cases-8192-qualified.json", "sha256": "9f025b2ed9f079f25adda7e7d0ee0963b605eacb420cd2ca5ec53cfb30b34948"},
+        {"length": 16384, "path": "results/Speck-Architecture-Promotion-v1/ruler-cases-16384-qualified.json", "sha256": "b668ec71b046c7f7f3b695e8b0e8349bbc909205b626612ea5905ceaaa85ec03"},
+        {"length": 32768, "path": "results/Speck-Architecture-Promotion-v1/ruler-cases-32768-qualified.json", "sha256": "2e06cbf3175f28cb95bc2d4a317e6999abe7eeb798bf5967f50cbcc2dc198087"},
+        {"length": 65536, "path": "results/Speck-Architecture-Promotion-v1/ruler-cases-65536-qualified.json", "sha256": "74775cb9a0c60dd3478bce88fb9ebc994a87af92f38d5085e6497608104d91ac"},
+        {"length": 131072, "path": "results/Speck-Architecture-Promotion-v1/ruler-cases-131072-qualified.json", "sha256": "f6553b7b2d2b427fe6a1c58009ebaa2311eecf5caa6461a7def35c63b31f82b9"}
+      ]
+    },
+    {
+      "suite": "nolima",
+      "status": "authorized_acceptance_blocked_not_scanned"
+    },
+    {
+      "suite": "helmet",
+      "status": "archive_transfer_or_data_qualification_blocked_not_scanned"
+    }
+  ],
+  "probes": {
+    "token_ngram_length": 32,
+    "prefix_index_tokens": 4,
+    "context_fractions": [0.2, 0.4, 0.6, 0.8],
+    "answer_anchored": "one centered 32-token window for every expected-answer occurrence in its prompt",
+    "full_prompt": "every prompt no longer than one 4096-token training sequence",
+    "deduplication": "identical token probes share one scan key while retaining their reference count"
+  },
+  "decision": {
+    "full_prompt_matches_allowed": 0,
+    "answer_anchored_matches_allowed": 0,
+    "context_probe_matches": "descriptive source-overlap risk; no post-hoc pass threshold",
+    "failure_action": "a full-prompt or answer-anchored match blocks absolute benchmark claims and requires case regeneration or explicit contaminated analysis",
+    "paired_scope": "shared contamination cannot establish absolute capability but is common to paired architectures trained on identical windows"
+  },
+  "reporting": {
+    "required": [
+      "unique and referenced probe counts by kind, task, and length",
+      "match counts by training window and source",
+      "full-prompt and answer-anchored pass/fail decisions",
+      "context-overlap risk without thresholding",
+      "unscanned suite blockers and limitations"
+    ],
+    "non_claims": [
+      "zero sampled context-probe matches does not prove absence of contamination",
+      "token overlap does not prove training-example provenance",
+      "shared overlap does not validate absolute benchmark capability",
+      "this protocol does not scan training data outside the exact proxy windows"
+    ]
+  }
+}
