@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+import torch
 
 from scripts import paper_baseline_preflight as preflight
 
@@ -36,3 +37,25 @@ def test_baseline_preflight_temperature_timeout_is_explicit(monkeypatch):
 
     with pytest.raises(RuntimeError, match="did not cool"):
         preflight._wait_for_temperature(timeout_seconds=5)
+
+
+def test_baseline_preflight_retains_export_failure(monkeypatch, tmp_path):
+    monkeypatch.setattr(preflight, "prepare_current_release_code", lambda directory: None)
+    monkeypatch.setattr(
+        preflight,
+        "release_state",
+        lambda state: {"native.weight": torch.zeros(1, dtype=torch.bfloat16)},
+    )
+    monkeypatch.setattr(preflight, "release_config", lambda metadata: {"model_type": "speck"})
+    monkeypatch.setattr(
+        preflight,
+        "validate_export",
+        lambda directory, metadata: (_ for _ in ()).throw(ValueError("parity failed")),
+    )
+
+    result = preflight._export_case({}, {}, tmp_path)
+
+    assert result["passed"] is False
+    assert result["failure_type"] == "ValueError"
+    assert result["failure"] == "parity failed"
+    assert "model.safetensors" in result["files"]

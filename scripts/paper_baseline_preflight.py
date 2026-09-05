@@ -116,9 +116,17 @@ def _export_case(state, metadata, directory):
         + "\n",
         encoding="utf-8",
     )
-    validate_export(directory, metadata)
-    parity = validate_parity(directory, state, metadata)
-    return {"parity": parity, "files": _file_inventory(directory)}
+    try:
+        validate_export(directory, metadata)
+        parity = validate_parity(directory, state, metadata)
+        return {"passed": True, "parity": parity, "files": _file_inventory(directory)}
+    except Exception as error:
+        return {
+            "passed": False,
+            "failure_type": type(error).__name__,
+            "failure": str(error),
+            "files": _file_inventory(directory),
+        }
 
 
 def preflight_arm(arm, output_root, device):
@@ -258,7 +266,7 @@ def preflight_arm(arm, output_root, device):
         "transformers_export": export,
         "start_temperature_c": start_temperature,
         "thermal_wait_seconds": thermal_wait_seconds,
-        "passed": peak_allocated <= hard_peak and incremental_passed and export["parity"]["passed"],
+        "passed": peak_allocated <= hard_peak and incremental_passed and export["passed"],
     }
 
 
