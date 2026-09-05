@@ -80,6 +80,7 @@ Read in order:
 72. [71 — Recent novelty landscape and surviving hypotheses](71_novelty_landscape_audit.md)
 73. [72 — Novelty-baseline code and license availability](72_novelty_code_availability.md)
 74. [73 — Ada-KV immutable static code audit](73_adakv_static_code_audit.md)
+75. [74 — Paper 1 KDA/GQA candidate pair 0](74_paper_1_candidate_0.md)
 
 Conventions:
 
@@ -376,3 +377,8 @@ Finding 73 completes that deeper Ada-KV static audit without cloning/execution. 
 portable: local-path/older-SSH locks, Transformers contract mismatch, native install side effects, global
 monkeypatching, dynamic CUDA cache code, unpinned remote model/data, and absent tests all block execution.
 Only a clean-room exhaustive allocation reference is authorized next; upstream reuse remains blocked.
+
+Finding 74 completes candidate pair 0 at 2.794477 nats, a descriptive -0.039170 paired loss difference;
+all eleven sources favor the candidate. Steady/active time is 10.09%/11.13% lower and analytic FLOPs are
+21.49% lower, while peak allocation is 20.84% higher. One pair has no decision authority. The event chain
+committed it and scheduled pair 1 without branching on quality.

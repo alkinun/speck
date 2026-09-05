@@ -218,6 +218,9 @@ attempt exposed a tooling-only mismatch between the requested 20M-token final va
 the runtime's 19,988,480 complete-batch count. The frozen pre-candidate correction derives the latter
 from the existing 4-by-4,096 single-GPU geometry and changes no loss, threshold, sample, or decision.
 The control phase is complete; candidate pair 0 is the next fixed cell after cooldown and live checks.
+Candidate pair 0 is now complete and qualified at 2.794477 final loss. Its descriptive paired delta is
+-0.039170 nats, steady time is 10.09% shorter, and peak allocation is 20.84% higher. These single-cell
+values have no decision authority; pairs 1 and 2 and the frozen paired analysis remain mandatory.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
