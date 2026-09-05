@@ -219,7 +219,7 @@
     },
     {
       "id": "helmet",
-      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_trec_rights_blocked_archive_transfer_and_remaining_legal_blocked",
+      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_trec_rights_blocked_multilexsum_rights_and_prompt_blocked_archive_transfer_and_remaining_legal_blocked",
       "repository": "https://github.com/princeton-nlp/HELMET",
       "revision": "af609c4d51b97fc35012099380aa889da961c42d",
       "contract": "research/architecture-promotion-v1/external/helmet.json",
@@ -248,6 +248,10 @@
       "trec_rights_protocol_sha256": "ddebbeaad0a021e8f8a1dd5ae3add715614490704359509875b55ae201ca8288",
       "trec_rights_decision": "results/Speck-Architecture-Promotion-v1/helmet-trec-rights-decision.json",
       "trec_rights_decision_sha256": "43a6fb0106373f55bb9671acfe62352f833eed0092520d7783828d2f2e5e68d1",
+      "multilexsum_decision_protocol": "research/architecture-promotion-v1/helmet_multilexsum_decision_v1.json",
+      "multilexsum_decision_protocol_sha256": "514d8898f8814eb2b6c3762d0923008dc220eada35158e8b3d986bd83301340b",
+      "multilexsum_decision": "results/Speck-Architecture-Promotion-v1/helmet-multilexsum-decision.json",
+      "multilexsum_decision_sha256": "1365a9fe17e1ed7d59e7c1e66cc92d8ed89fadaf3240bf80058b012ae66289c1",
       "lengths": [
         8192,
         16384,

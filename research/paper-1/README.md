@@ -94,6 +94,9 @@ the final combined model.
 - [`helmet_trec_rights_v2.json`](../architecture-promotion-v1/helmet_trec_rights_v2.json) preserves a
   failed raw-transport v1, canonicalizes only volatile delivery wrappers, and records the absence of
   affirmative authority without downloading TREC payloads.
+- [`helmet_multilexsum_decision_v1.json`](../architecture-promotion-v1/helmet_multilexsum_decision_v1.json)
+  separates database and summary rights and proves that noncommercial summaries enter two-shot prompts
+  through an unseeded selection path.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -129,6 +132,8 @@ Its isolated materialization strategy now qualifies for two permissive ICL sourc
 HELMET execution authority follows. CLINC150's separate data-only snapshot also qualifies, leaving
 TREC blocked on written authority or pre-results removal, followed by final prompt/contamination work,
 before the ICL category can qualify.
+Multi-LexSum independently blocks summarization on organizational scope, unseeded demonstrations, the
+truncation tokenizer, and the model judge.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

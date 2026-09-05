@@ -947,6 +947,40 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or trec.get("decision", {}).get("evaluation_use_authorized") is not False
             ):
                 raise ValueError("HELMET TREC rights evidence is invalid")
+            multilexsum_protocol_path = repository_root / suite.get(
+                "multilexsum_decision_protocol", ""
+            )
+            multilexsum_path = repository_root / suite.get("multilexsum_decision", "")
+            if (
+                not multilexsum_protocol_path.is_file()
+                or _file_sha256(multilexsum_protocol_path)
+                != suite.get("multilexsum_decision_protocol_sha256")
+                or not multilexsum_path.is_file()
+                or _file_sha256(multilexsum_path)
+                != suite.get("multilexsum_decision_sha256")
+            ):
+                raise ValueError("HELMET Multi-LexSum evidence has an invalid pin")
+            multilexsum_protocol = _load_json(multilexsum_protocol_path)
+            multilexsum = _load_json(multilexsum_path)
+            analysis = multilexsum.get("helmet_analysis", {})
+            if (
+                "multilexsum_rights_and_prompt_blocked" not in suite["status"]
+                or multilexsum_protocol.get("status") != "executed_blocked"
+                or multilexsum_protocol.get("result", {}).get("sha256")
+                != suite.get("multilexsum_decision_sha256")
+                or multilexsum.get("status")
+                != "metadata_qualified_rights_and_prompt_determinism_blocked"
+                or multilexsum.get("payload_files_acquired") != 0
+                or analysis.get("entries") != 5
+                or analysis.get("shots") != 2
+                or analysis.get("unseeded_train_data_shuffle_calls") != 1
+                or analysis.get("prompt_deterministic") is not False
+                or multilexsum.get("decision", {}).get("commercial_scope_authorized")
+                is not False
+                or multilexsum.get("decision", {}).get("evaluation_use_authorized")
+                is not False
+            ):
+                raise ValueError("HELMET Multi-LexSum evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

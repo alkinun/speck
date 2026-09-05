@@ -1,0 +1,132 @@
+{
+  "contact_attempted": false,
+  "created_at": "2026-09-05T15:22:14.852519+00:00",
+  "decision": {
+    "commercial_scope_authorized": false,
+    "contact_authorized": false,
+    "evaluation_use_authorized": false,
+    "metadata_audit_qualified": true,
+    "model_judge_qualified": false,
+    "payload_acquisition_authorized": false,
+    "prompt_determinism_qualified": false,
+    "required_next": "obtain an authorized entity decision establishing strictly noncommercial scope or a separate commercial license; freeze a seeded demonstration-selection repair before candidate outputs; then qualify the Llama 2 truncation tokenizer, proprietary-judge replacement or calibration, immutable payload, prompt identities, and contamination",
+    "tokenizer_qualified": false
+  },
+  "evidence": [
+    {
+      "bytes": 7005,
+      "canonical_visible_text_sha256": "805360ccf8822b1c52232a6478fbe8b2d8b27428734cae241bf85b18586ec372",
+      "id": "hub_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/multilexsum-metadata/huggingface-readme.md",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "5bc39ffdb053864fd5410ff6db744d0296da6083dd46081f4f8b7b82a4eed954",
+      "url": "https://huggingface.co/datasets/allenai/multi_lexsum/resolve/055f5fa5300a5fdefb5b691c4d6c1e58f485b379/README.md"
+    },
+    {
+      "bytes": 7874,
+      "canonical_visible_text_sha256": "1946d166eee638cfc18500b21cdde4704a505bf1523b8b733fa5666ed8cf5bdd",
+      "id": "upstream_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/multilexsum-metadata/upstream-readme.md",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "7088925e2cfc4b56f3a7819fefe84afa8163687c7738193f3c49606b208d455e",
+      "url": "https://raw.githubusercontent.com/multilexsum/dataset/caaed77631c7ed1a012fb857b979adf0a60c03ee/README.md"
+    },
+    {
+      "bytes": 32154,
+      "canonical_visible_text_sha256": "c201b0ee4d0c6c71bbbcb6eafa4ccfd6663f731880f80225e344241b4749a00c",
+      "id": "homepage",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/multilexsum-metadata/homepage.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "eb4df3907ef58471a9536ef77c0a1a495897bb71d9fed75618c9509c0d83dd73",
+      "url": "https://multilexsum.github.io/"
+    },
+    {
+      "bytes": 50209,
+      "canonical_visible_text_sha256": "29ae19432c9efa04d1d16b38af021cc776b426706cdcd14967f3df42966d5617",
+      "id": "cc_by_nc_legal_code",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/multilexsum-metadata/cc-by-nc-4.0.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "f4048cdd87e96bb2d08efc2a2dc1a5824a759123959a404edbce3dade336f5fe",
+      "url": "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en"
+    },
+    {
+      "bytes": 46288,
+      "canonical_visible_text_sha256": "8590918152aaba493d494794f54692ccaeb3a8281cfc2849d54a60a0c2103bab",
+      "id": "odc_by_legal_code",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/multilexsum-metadata/odc-by-1.0.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "0b9bb2f9572d900af671debe4a2c193adec1c09e31bf78dc4c31204e0ad01b0f",
+      "url": "https://opendatacommons.org/licenses/by/1-0/"
+    }
+  ],
+  "format": "speck_helmet_multilexsum_decision",
+  "format_version": 1,
+  "helmet_analysis": {
+    "entries": 5,
+    "prompt_deterministic": false,
+    "shots": 2,
+    "training_summary_demos_in_prompt": true,
+    "unseeded_train_data_shuffle_calls": 1,
+    "validation_short_summary_is_reference": true
+  },
+  "non_claims": [
+    "ODC-By commercial database rights override the separate noncommercial content license",
+    "public-domain source documents make summary demonstrations or references public domain",
+    "an unseeded cached map operation is a reproducible prompt definition",
+    "this operational decision is legal advice or a final ownership determination"
+  ],
+  "payload_files_acquired": 0,
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_multilexsum_decision_v1.json",
+    "spec_identity_sha256": "7e82d0e21a25df6f72095da7d55db79f6dbc1c58e709bc38c0cb38f9e23db36c"
+  },
+  "runner_revision": "5c545a735c60075d08689634b93d9d3f90dd1b90",
+  "runner_sha256": "c55cd2114759c208e152ed09a8b6b08b151d73aeabf084a6a1e01bbf613d2cde",
+  "source": {
+    "component_terms": {
+      "commercial_path": "authors direct commercial users to info@clearinghouse.net for a separate license limiting summary reposting",
+      "database": "ODC-By-1.0 with attribution",
+      "loader_code": "Apache-2.0",
+      "source_documents": "stated public domain by the dataset authors",
+      "summaries_and_metadata": "CC-BY-NC-4.0"
+    },
+    "conversion_ref": {
+      "files": [
+        {
+          "bytes": 144907832,
+          "path": "v20230518/test/0000.parquet",
+          "sha256": "c6a9b5c7f63731ff70349e49a9b9b6a47e95a0265a139b106a9b8bc750e834e4"
+        },
+        {
+          "bytes": 378157979,
+          "path": "v20230518/train/0000.parquet",
+          "sha256": "68281d93b2582391c3872f82ad865b592cb6df92018923f83ea63a6c5f09108f"
+        },
+        {
+          "bytes": 218702213,
+          "path": "v20230518/train/0001.parquet",
+          "sha256": "e5e7d20efdc3cade218a35f1a912406efbb90773f87482f87246cc7df5a5b596"
+        },
+        {
+          "bytes": 94627994,
+          "path": "v20230518/validation/0000.parquet",
+          "sha256": "6343f22c2e64eb97892608adb90e23c58e89fd60608cf6698f1fd518002d2822"
+        }
+      ],
+      "payload_bytes": 836396018,
+      "revision": "80d2f6628cd245985675aad1c9aaa11401142c6a",
+      "status": "metadata_observed_payload_not_acquired"
+    },
+    "hub_repository": "https://huggingface.co/datasets/allenai/multi_lexsum",
+    "hub_revision": "055f5fa5300a5fdefb5b691c4d6c1e58f485b379",
+    "release": "v20230518",
+    "upstream_repository": "https://github.com/multilexsum/dataset.git",
+    "upstream_revision": "caaed77631c7ed1a012fb857b979adf0a60c03ee"
+  },
+  "status": "metadata_qualified_rights_and_prompt_determinism_blocked"
+}

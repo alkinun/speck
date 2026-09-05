@@ -57,6 +57,7 @@ Read in order:
 49. [48 — HELMET two-family offline materializer preflight](48_helmet_two_family_materializer_preflight.md)
 50. [49 — HELMET CLINC150 source qualification](49_helmet_clinc_source_qualification.md)
 51. [50 — HELMET TREC rights and provenance decision](50_helmet_trec_rights_decision.md)
+52. [51 — HELMET Multi-LexSum rights and prompt-determinism decision](51_helmet_multilexsum_decision.md)
 
 Conventions:
 
@@ -222,3 +223,8 @@ collection but states no license or terms; the Hugging Face card says `unknown`,
 download guidance does not grant rights to CogComp's derivative annotations. A raw-HTML v1 failure is
 preserved, while v2 proves stable visible-text evidence across volatile Cloudflare wrappers. TREC and
 therefore HELMET ICL remain blocked pending written authority or a pre-results manifest replacement.
+
+Finding 51 audits Multi-LexSum without acquiring its 836MB payload. ODC-By covers the database, but
+expert summaries/metadata are CC BY-NC and HELMET inserts two training summaries into every prompt and
+uses a short summary as the reference. The same path has an unseeded demonstration shuffle. Both scope
+authority and prompt determinism fail, independently of the still-blocked tokenizer and judge.

@@ -2,7 +2,7 @@
   "format": "speck_helmet_multilexsum_decision_protocol",
   "format_version": 1,
   "protocol_id": "helmet-multilexsum-decision-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_blocked",
   "scope": "metadata-only rights, payload, prompt-determinism, tokenizer, and scorer decision for HELMET Multi-LexSum",
   "source": {
     "hub_repository": "https://huggingface.co/datasets/allenai/multi_lexsum",
@@ -110,5 +110,14 @@
       "an unseeded cached map operation is a reproducible prompt definition",
       "this operational decision is legal advice or a final ownership determination"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-multilexsum-decision.json",
+    "sha256": "1365a9fe17e1ed7d59e7c1e66cc92d8ed89fadaf3240bf80058b012ae66289c1",
+    "status": "metadata_qualified_rights_and_prompt_determinism_blocked",
+    "created_at": "2026-09-05T15:22:14.852519+00:00",
+    "payload_files_acquired": 0,
+    "evaluation_use_authorized": false,
+    "prompt_determinism_qualified": false
   }
 }

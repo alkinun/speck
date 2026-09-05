@@ -69,6 +69,8 @@ or validate a semantics-preserving replacement; qualify or replace model judges;
 contamination-scan exact cases. Adapter qualification is not evidence for any of those steps.
 Finding 48 subsequently qualifies the isolated-materializer strategy for Banking77 and NLU Evaluation
 Data only; it does not extend that result to any blocked source.
+Findings 50 and 51 separately preserve TREC and Multi-LexSum rights/prompt blockers without acquiring
+their payloads.
 
 ## Artifacts
 
