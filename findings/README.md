@@ -499,3 +499,9 @@ Finding 91 updates the claim table after direct placement overlap. From-scratch 
 and the avoid-early-attention/middle-later recipe are explicit do-not-claim rows. Prospective prediction
 of arbitrary unseen layouts is only a technical residual with no demonstrated feasibility or scientific
 value; independent review may retire it, and no placement experiment is authorized.
+
+Finding 92 adds controlled massive-activation evidence across hybrid depth. Pre-attention spikes and
+inter-spike plateaus recur across five mixers and large public hybrids; matched early/middle/late GDN
+placements all reach nearly perfect spike alignment despite large retrieval gaps. The diagnostic is
+occupied and does not rank placement quality, further lowering N1's prior. Independent review may
+retire the residual; no placement experiment is authorized.

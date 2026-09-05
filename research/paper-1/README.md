@@ -117,6 +117,9 @@ the final combined model.
 - [`novelty_landscape_v6.json`](novelty_landscape_v6.json) adds a direct from-scratch ratio/placement
   study, rejects novelty of non-uniform placement and early/middle role recipes, and leaves prospective
   unseen-layout prediction only as an unestablished incremental question with no experiment authority.
+- [`novelty_landscape_v7.json`](novelty_landscape_v7.json) adds controlled activation/placement
+  evidence: PAS/ISP and gate-role diagnostics are occupied, while saturated PAS alignment fails to rank
+  early/middle/late retrieval, lowering the prior on N1 and making retirement an explicit review option.
 - [`novelty_claim_overlap_v1.json`](novelty_claim_overlap_v1.json) maps fourteen candidate claims to
   their strongest overlap, keeps N1 as the only primary architecture hypothesis, and defers the residual
   N2 diagnostic before any experimental budget is spent.

@@ -1,0 +1,88 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 7,
+  "audit_id": "speck-paper-1-novelty-landscape-v7",
+  "paper_id": "speck-paper-1",
+  "status": "seventeen_full_text_audits_n1_placement_and_activation_diagnostics_overlapped_no_novelty",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v6.json",
+    "sha256": "e66e94e652171353374c915508df535373a37f74ee7a9d24d1272b1e725b21b7",
+    "full_text_sources": 16,
+    "n1_nonuniform_from_scratch_placement_novelty_rejected": true,
+    "n2_concept_novelty_rejected": true
+  },
+  "additional_sources": [
+    {
+      "id": "arxiv_2608_12149v2",
+      "title": "Massive Activations in Hybrid Linear Attention Large Language Models: Pre-Attention Spikes and Inter-Spike Plateaus",
+      "url": "https://arxiv.org/abs/2608.12149v2",
+      "review_scope": "full_text",
+      "local_note": "papers/40_massive_activations_hla.md",
+      "local_note_sha256": "e7f15e93c5de4ce82276bcd78057409aa4d09a1845cd61eacc119f9b687ceaa0",
+      "relevant_claim": "cross-mixer architecture-aligned massive-activation diagnostics, controlled early/middle/late single-attention placement, training-time emergence, and module-specific output-gate interventions"
+    }
+  ],
+  "aggregate_source_count": 17,
+  "new_overlap_decisions": [
+    {
+      "id": "pre_attention_spike_and_inter_spike_plateau_diagnostics",
+      "decision": "not novel by themselves",
+      "reason": "arXiv:2608.12149v2 defines PAS and ISR, verifies their cross-ratio trend with paired bootstrap uncertainty, and observes the morphology across five mixers and large deployed hybrid families"
+    },
+    {
+      "id": "single_attention_early_middle_late_retrieval_placement",
+      "decision": "not novel by itself",
+      "reason": "the paper trains matched 24-layer GDN hybrids from scratch with one full-attention layer at depths 4, 12, and 20 and reports large retrieval differences"
+    },
+    {
+      "id": "hybrid_activation_gate_role_intervention",
+      "decision": "not novel by itself",
+      "reason": "adding full-attention output gates and removing GDN output gates directly tests module-specific control of spike and plateau magnitude"
+    },
+    {
+      "id": "binary_pas_alignment_as_placement_predictor",
+      "decision": "empirically insufficient",
+      "reason": "all three placement arms attain 99.53 to 100 percent alignment despite large and task-dependent retrieval gaps, so alignment does not rank placement quality"
+    }
+  ],
+  "residual_assessment": {
+    "id": "N1_prospective_arbitrary_unseen_layout_prediction",
+    "type": "technically_distinguishable_but_low_prior_unestablished_empirical_question",
+    "distinction": "no audited source freezes a predictor before arbitrary held-out layout outcomes and demonstrates calibrated cross-task, cross-scale, cross-mixer placement prediction",
+    "new_counterevidence": "architecture-determined PAS alignment saturates across early, middle, and late placements while retrieval differs sharply; PAS magnitude and gate interventions also do not yield a task-invariant quality ordering",
+    "burden": "must add held-out predictive information beyond count, middle/later recipes, LongPPL, retrieval heads, PAS/ISR, probes, sensitivity, greedy conversion, joint gates, and random layouts, then causally improve a selected architecture",
+    "scientific_value": "not established and now lower-prior; independent review should explicitly consider retiring N1 before any protocol",
+    "experiment_authorized": false,
+    "novelty_status": "no_novelty_established_independent_review_may_retire_residual"
+  },
+  "source_limitations": [
+    "the controlled placement comparison has only three 340M layouts and repeats only the middle layout at 1.3B",
+    "placement replicates and layout-level confidence intervals are not reported",
+    "retrieval tasks disagree and are limited to 2048 or 4096 token contexts",
+    "PAS and ISP are measured after a layout is trained rather than prospectively without its outcomes",
+    "the exact computational role of PAS versus ISP remains open in the paper"
+  ],
+  "priority": {
+    "architecture_novelty_candidates_established": 0,
+    "n1": "independent claim review should decide retirement versus further landscape work; no protocol or experiment",
+    "n2": "remain deferred",
+    "baseline_proxy": "complete independently because it evaluates the conservative parent rather than either novelty claim"
+  },
+  "decision": {
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_from_scratch_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n1_residual_predictive_law_established": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "placement_experiment_authorized": false,
+    "next_action": "finish the frozen proxy and obtain independent claim-level review on whether N1 should be retired before spending further placement-research effort"
+  }
+}
