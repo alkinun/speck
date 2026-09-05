@@ -113,6 +113,16 @@ def test_helmet_narrativeqa_decision_is_pinned():
         _validate_evaluations(value, "architecture-promotion-v1", root)
 
 
+def test_helmet_infinitebench_decision_is_pinned():
+    path = contract / "evaluation_manifest.json"
+    value = json.loads(path.read_text(encoding="utf-8"))
+    helmet = next(suite for suite in value["external_suites"] if suite["id"] == "helmet")
+    helmet["infinitebench_decision_sha256"] = "0" * 64
+
+    with pytest.raises(ValueError, match="HELMET InfiniteBench evidence"):
+        _validate_evaluations(value, "architecture-promotion-v1", root)
+
+
 def test_contract_rejects_equivalence_ratio_drift(tmp_path):
     destination = tmp_path / "contract"
     shutil.copytree(contract, destination)

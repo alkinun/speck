@@ -219,7 +219,7 @@
     },
     {
       "id": "helmet",
-      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_trec_rights_blocked_multilexsum_rights_and_prompt_blocked_narrativeqa_embedded_rights_and_prompt_blocked_archive_transfer_and_remaining_legal_blocked",
+      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_trec_rights_blocked_multilexsum_rights_and_prompt_blocked_narrativeqa_embedded_rights_and_prompt_blocked_infinitebench_embedded_rights_blocked_archive_transfer_and_remaining_gates_blocked",
       "repository": "https://github.com/princeton-nlp/HELMET",
       "revision": "af609c4d51b97fc35012099380aa889da961c42d",
       "contract": "research/architecture-promotion-v1/external/helmet.json",
@@ -256,6 +256,15 @@
       "narrativeqa_decision_protocol_sha256": "136b0166275a5b3d5651b15671acd43f02a207ae077948ff4e60127f54ed933d",
       "narrativeqa_decision": "results/Speck-Architecture-Promotion-v1/helmet-narrativeqa-decision.json",
       "narrativeqa_decision_sha256": "5b520d1140cc04168ceece08ba81abfaea41c6efd4c68a57993899b5f6d4f6c1",
+      "infinitebench_decision_protocol": "research/architecture-promotion-v1/helmet_infinitebench_decision_v1.json",
+      "infinitebench_decision_protocol_sha256": "a798e874bcc295f863799332fdff44c317f5fae76b54b338e0f56f7c3f7adc75",
+      "infinitebench_decision": "results/Speck-Architecture-Promotion-v1/helmet-infinitebench-decision.json",
+      "infinitebench_decision_sha256": "e93e72179f27d6d46ccae53f468be27ccb8a7d165eecff5115a62fda3b65663b",
+      "runtime_source_disposition": {
+        "qualified_immutable_paths": ["banking77", "nlu_evaluation_data", "clinc_oos"],
+        "blocked": ["trec", "multi_lexsum", "narrativeqa", "infinitebench"],
+        "complete_inventory": true
+      },
       "lengths": [
         8192,
         16384,

@@ -1,0 +1,144 @@
+{
+  "contact_attempted": false,
+  "created_at": "2026-09-05T15:39:16.672448+00:00",
+  "decision": {
+    "commercial_scope_authorized": false,
+    "contact_authorized": false,
+    "embedded_work_rights_qualified": false,
+    "evaluation_use_authorized": false,
+    "longqa_local_metrics_identified": true,
+    "metadata_audit_qualified": true,
+    "payload_acquisition_authorized": false,
+    "prompt_selection_deterministic": true,
+    "required_next": "obtain work-level provenance and intended-scope authority or freeze a pre-results replacement; then pin only the three required payloads, qualify Llama 2 truncation or a semantics-preserving replacement, materialize exact seeded prompts, preserve local QA/choice metrics, qualify or replace the summarization judge, and run contamination checks",
+    "summarization_model_judge_qualified": false,
+    "tokenizer_qualified": false
+  },
+  "evidence": [
+    {
+      "bytes": 3356,
+      "id": "hub_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/infinitebench-metadata/huggingface-readme.md",
+      "required_assertions_present": true,
+      "sha256": "b79017fb39a6a7feaa4b01d90ad69e9e3de74b8ab3e1b6930715b5e333602551",
+      "url": "https://huggingface.co/datasets/xinrongzhang2022/InfiniteBench/resolve/90f0394333616266d9fe85824ceaf505093cbaa5/README.md"
+    },
+    {
+      "bytes": 11852,
+      "id": "upstream_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/infinitebench-metadata/upstream-readme.md",
+      "required_assertions_present": true,
+      "sha256": "ae3bfd502be4afc97f77f7adfdd30115c6243fc9e1390fa6eba7a3bafb69f97d",
+      "url": "https://raw.githubusercontent.com/OpenBMB/InfiniteBench/51d9b37b0f1790ead936df2243abbf7f0420e439/README.md"
+    },
+    {
+      "bytes": 1063,
+      "id": "upstream_license",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/infinitebench-metadata/upstream-license.txt",
+      "required_assertions_present": true,
+      "sha256": "3ec74741cb4d777c4f6ce02672a065b737d63d331c9f2ff56888808bb8db84d3",
+      "url": "https://raw.githubusercontent.com/OpenBMB/InfiniteBench/51d9b37b0f1790ead936df2243abbf7f0420e439/LICENSE"
+    },
+    {
+      "bytes": 688352,
+      "id": "paper",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/infinitebench-metadata/infinitebench-paper.pdf",
+      "required_assertions_present": true,
+      "sha256": "df8f387c62d9748c9075a8e7065ddf6c486cd42bfd8a398c4705751fc61f975e",
+      "url": "https://aclanthology.org/2024.acl-long.814.pdf"
+    }
+  ],
+  "format": "speck_helmet_infinitebench_decision",
+  "format_version": 1,
+  "helmet_analysis": {
+    "llama2_length_filter_and_truncation_required": true,
+    "longqa_entries": 10,
+    "longqa_metrics_local": true,
+    "prompt_selection_deterministic": true,
+    "shots": 2,
+    "summarization_entries": 5,
+    "summarization_metric_differs_from_upstream": true,
+    "summarization_proprietary_judge_required": true,
+    "unseeded_shuffle_calls": 0
+  },
+  "non_claims": [
+    "entity substitution makes a copyrighted novel or web summary unrestricted",
+    "Apache or MIT repository licensing necessarily covers all embedded third-party content",
+    "seeded selection establishes exact prompts before tokenizer and payload qualification",
+    "local QA metrics qualify HELMET summarization or the complete long-QA category",
+    "this operational decision is legal advice or a final ownership determination"
+  ],
+  "payload_files_acquired": 0,
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_infinitebench_decision_v1.json",
+    "spec_identity_sha256": "81055902bd3ae66ea3bfbad0cf8abdf701c7903313bb5b2166a1917f69eec704"
+  },
+  "runner_revision": "22c77363c0ee9e9ebe39c48f4b59971904638080",
+  "runner_sha256": "00c81929fe58eeb2c31a890e78a998f5285c90dfc1e6e863e2512395a4ad0071",
+  "source": {
+    "construction_review": {
+      "claims": [
+        "English novel tasks use web-sourced novels and web-sourced gold summaries",
+        "key entities are replaced to create fake novels but all English tasks share the modified novels",
+        "some brand-new or little-known novels are left without entity replacement",
+        "English summarization, QA, and multiple-choice annotations are human-created or web-sourced"
+      ],
+      "paper_pages": [
+        3,
+        15
+      ],
+      "source_sites_named_by_paper": [
+        "https://www.sparknotes.com/",
+        "https://www.cliffsnotes.com/"
+      ]
+    },
+    "hub_declared_license": "Apache-2.0",
+    "hub_default_payload": {
+      "bytes": 2499838795,
+      "files": 12
+    },
+    "hub_repository": "https://huggingface.co/datasets/xinrongzhang2022/InfiniteBench",
+    "hub_revision": "90f0394333616266d9fe85824ceaf505093cbaa5",
+    "required_payload_bytes": 562803684,
+    "required_payloads": [
+      {
+        "bytes": 185904631,
+        "path": "longbook_choice_eng.jsonl",
+        "sha256": "d2e646822a3d40dc329e57894d81cf9c527503e963ba06567c3eaaccf78f87fe",
+        "task": "infbench_choice"
+      },
+      {
+        "bytes": 298297185,
+        "path": "longbook_qa_eng.jsonl",
+        "sha256": "7f53a3aabd5445fa29f168914f13569c348406cfc88a3e495f3f2c13a0966ca4",
+        "task": "infbench_qa"
+      },
+      {
+        "bytes": 78601868,
+        "path": "longbook_sum_eng.jsonl",
+        "sha256": "4e4279cc06c07778f646cda1335755cf5ccdcc38fe9c8a62f1631642fc031027",
+        "task": "infbench_sum"
+      }
+    ],
+    "source_site_terms": [
+      {
+        "direct_metadata_fetch": "HTTP 403",
+        "observed": "personal non-commercial use; commercial and automated extraction restricted",
+        "role": "supporting risk evidence, not a substitute for work-level provenance",
+        "site": "SparkNotes",
+        "url": "https://www.sparknotes.com/terms-of-use/"
+      },
+      {
+        "direct_metadata_fetch": "HTTP 403",
+        "observed": "educational non-commercial personal use unless permitted in writing",
+        "role": "supporting risk evidence, not a substitute for work-level provenance",
+        "site": "CliffsNotes",
+        "url": "https://www.cliffsnotes.com/terms-of-service"
+      }
+    ],
+    "upstream_license": "MIT",
+    "upstream_repository": "https://github.com/OpenBMB/InfiniteBench.git",
+    "upstream_revision": "51d9b37b0f1790ead936df2243abbf7f0420e439"
+  },
+  "status": "metadata_and_seeded_path_qualified_embedded_rights_and_execution_blocked"
+}

@@ -59,6 +59,7 @@ Read in order:
 51. [50 — HELMET TREC rights and provenance decision](50_helmet_trec_rights_decision.md)
 52. [51 — HELMET Multi-LexSum rights and prompt-determinism decision](51_helmet_multilexsum_decision.md)
 53. [52 — HELMET NarrativeQA embedded-work and prompt-path decision](52_helmet_narrativeqa_decision.md)
+54. [53 — HELMET InfiniteBench embedded-work and metric decision](53_helmet_infinitebench_decision.md)
 
 Conventions:
 
@@ -235,3 +236,9 @@ Finding 52 traces NarrativeQA's 1,572 linked works into the 3.23GB embedded Hugg
 licensing does not qualify those full texts; non-U.S. Gutenberg status is work-specific. HELMET also
 uses an unseeded two-shot demo selection, gated Llama 2 truncation, and a proprietary judge. Zero
 payloads were acquired and the RULER-v2 source-document guardrail remains blocked.
+
+Finding 53 completes disposition of the seventh HELMET runtime source. InfiniteBench needs only three
+pinned files totaling 562.8MB; its ten long-QA cells have seeded prompts and local metrics, while five
+summarization cells replace upstream ROUGE-L-Sum with a proprietary judge. Web-derived novel/summary
+rights and Llama 2 truncation remain blocked. Across all runtime sources, three immutable paths qualify
+and four sources now have explicit blocked decisions.

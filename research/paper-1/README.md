@@ -100,6 +100,9 @@ the final combined model.
 - [`helmet_narrativeqa_decision_v1.json`](../architecture-promotion-v1/helmet_narrativeqa_decision_v1.json)
   separates Apache metadata from 1,572 embedded external works and freezes independent rights,
   unseeded-demo, tokenizer, and judge blockers.
+- [`helmet_infinitebench_decision_v1.json`](../architecture-promotion-v1/helmet_infinitebench_decision_v1.json)
+  freezes the minimal three-file payload, web-derived work boundary, seeded prompt selection, local
+  long-QA metrics, gated truncation, and HELMET-only summarization-judge change.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -139,6 +142,8 @@ Multi-LexSum independently blocks summarization on organizational scope, unseede
 truncation tokenizer, and the model judge.
 NarrativeQA independently blocks the source-document guardrail on embedded-work rights, another
 unseeded two-shot path, the same truncation tokenizer, and its proprietary judge.
+All seven HELMET runtime sources now have explicit dispositions: three immutable paths qualify and
+four sources are blocked rather than unresolved.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

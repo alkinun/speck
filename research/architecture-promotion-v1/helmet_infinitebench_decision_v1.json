@@ -2,7 +2,7 @@
   "format": "speck_helmet_infinitebench_decision_protocol",
   "format_version": 1,
   "protocol_id": "helmet-infinitebench-decision-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_blocked",
   "scope": "metadata-only embedded-work, payload, prompt, tokenizer, and metric decision for HELMET InfiniteBench",
   "source": {
     "hub_repository": "https://huggingface.co/datasets/xinrongzhang2022/InfiniteBench",
@@ -127,5 +127,14 @@
       "local QA metrics qualify HELMET summarization or the complete long-QA category",
       "this operational decision is legal advice or a final ownership determination"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-infinitebench-decision.json",
+    "sha256": "e93e72179f27d6d46ccae53f468be27ccb8a7d165eecff5115a62fda3b65663b",
+    "status": "metadata_and_seeded_path_qualified_embedded_rights_and_execution_blocked",
+    "created_at": "2026-09-05T15:39:16.672448+00:00",
+    "payload_files_acquired": 0,
+    "prompt_selection_deterministic": true,
+    "embedded_work_rights_qualified": false
   }
 }

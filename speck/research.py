@@ -1019,6 +1019,46 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 is not False
             ):
                 raise ValueError("HELMET NarrativeQA evidence is invalid")
+            infinitebench_protocol_path = repository_root / suite.get(
+                "infinitebench_decision_protocol", ""
+            )
+            infinitebench_path = repository_root / suite.get("infinitebench_decision", "")
+            if (
+                not infinitebench_protocol_path.is_file()
+                or _file_sha256(infinitebench_protocol_path)
+                != suite.get("infinitebench_decision_protocol_sha256")
+                or not infinitebench_path.is_file()
+                or _file_sha256(infinitebench_path)
+                != suite.get("infinitebench_decision_sha256")
+            ):
+                raise ValueError("HELMET InfiniteBench evidence has an invalid pin")
+            infinitebench_protocol = _load_json(infinitebench_protocol_path)
+            infinitebench = _load_json(infinitebench_path)
+            infinite_analysis = infinitebench.get("helmet_analysis", {})
+            disposition = suite.get("runtime_source_disposition", {})
+            if (
+                "infinitebench_embedded_rights_blocked" not in suite["status"]
+                or infinitebench_protocol.get("status") != "executed_blocked"
+                or infinitebench_protocol.get("result", {}).get("sha256")
+                != suite.get("infinitebench_decision_sha256")
+                or infinitebench.get("status")
+                != "metadata_and_seeded_path_qualified_embedded_rights_and_execution_blocked"
+                or infinitebench.get("payload_files_acquired") != 0
+                or infinite_analysis.get("longqa_entries") != 10
+                or infinite_analysis.get("summarization_entries") != 5
+                or infinite_analysis.get("prompt_selection_deterministic") is not True
+                or infinite_analysis.get("longqa_metrics_local") is not True
+                or infinite_analysis.get("summarization_metric_differs_from_upstream")
+                is not True
+                or infinitebench.get("decision", {}).get("embedded_work_rights_qualified")
+                is not False
+                or set(disposition.get("qualified_immutable_paths", ()))
+                != {"banking77", "nlu_evaluation_data", "clinc_oos"}
+                or set(disposition.get("blocked", ()))
+                != {"trec", "multi_lexsum", "narrativeqa", "infinitebench"}
+                or disposition.get("complete_inventory") is not True
+            ):
+                raise ValueError("HELMET InfiniteBench or runtime disposition evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:
