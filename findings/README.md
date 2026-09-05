@@ -79,6 +79,7 @@ Read in order:
 71. [70 — Systems-cost readiness and proxy envelope failure](70_systems_cost_readiness_gate.md)
 72. [71 — Recent novelty landscape and surviving hypotheses](71_novelty_landscape_audit.md)
 73. [72 — Novelty-baseline code and license availability](72_novelty_code_availability.md)
+74. [73 — Ada-KV immutable static code audit](73_adakv_static_code_audit.md)
 
 Conventions:
 
@@ -370,3 +371,8 @@ has only a README/images; Sparse Prefix and Budgeted Attention declare no code; 
 NSA kernel; SqueezeAttention has code but no root license. Ada-KV alone has a pinned code tree and root/
 CUDA MIT licenses, making it eligible for deeper non-executing audit. No reproduction or novelty status
 changes.
+
+Finding 73 completes that deeper Ada-KV static audit without cloning/execution. Its environment is not
+portable: local-path/older-SSH locks, Transformers contract mismatch, native install side effects, global
+monkeypatching, dynamic CUDA cache code, unpinned remote model/data, and absent tests all block execution.
+Only a clean-room exhaustive allocation reference is authorized next; upstream reuse remains blocked.

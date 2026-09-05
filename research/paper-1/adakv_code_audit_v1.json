@@ -1,0 +1,154 @@
+{
+  "format": "speck_adakv_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-adakv-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "immutable_source_audited_execution_blocked",
+  "audited_on": "2026-09-05",
+  "repository": {
+    "url": "https://github.com/FFY0/AdaKV",
+    "revision": "04497abac4c1a58426f3daf1014578990e225cc5",
+    "revision_date": "2025-11-26T05:19:52Z",
+    "files": 38,
+    "code_like_files": 15,
+    "tree_complete": true,
+    "code_payload_cloned": false,
+    "third_party_code_executed": false
+  },
+  "licenses": [
+    {
+      "path": "LICENSE",
+      "license": "MIT",
+      "sha256": "32c2e620117c9d27467ed25ab7358dea158d22c396d7a66b66ea31b81d96ca44",
+      "scope": "repository root"
+    },
+    {
+      "path": "csrc/LICENSE",
+      "license": "MIT",
+      "sha256": "9a429046085cacdc4f32f700f45534fb9c48a54ad6a4b578f7c0106df8c333e5",
+      "scope": "CUDA component derived from 66RING"
+    }
+  ],
+  "pinned_files": [
+    {
+      "path": "pyproject.toml",
+      "bytes": 408,
+      "sha256": "b5d3efe17fb09b8c671e6f1f963443d36c04809ae31c9187e1633dfc8403b9e7"
+    },
+    {
+      "path": "freeze_requirements.txt",
+      "bytes": 4520,
+      "sha256": "c4aeb2c1324d39e9aa0426463b98f698e86d670246800b4ff7f7ad2679efc182"
+    },
+    {
+      "path": "makefile",
+      "bytes": 46,
+      "sha256": "d85bb88dd4d2ee2df470f3dc88334f2a13d438a38483bad059065d7b1e141f4e"
+    },
+    {
+      "path": "csrc/makefile",
+      "bytes": 47,
+      "sha256": "e56db620b72996ff0423a1d41565a8a5ea75e5ba8186e7ddd11161f8d65cb825"
+    },
+    {
+      "path": "adaptive_snapkv/monkeypatch/monkeypatch.py",
+      "bytes": 5059,
+      "sha256": "797c8ffa287ef6f43a4868624430ebaaf451ca611cc4dc126ad07c936c47b142"
+    },
+    {
+      "path": "adaptive_snapkv/monkeypatch/snapkv_utils.py",
+      "bytes": 36510,
+      "sha256": "16ae10649a54fd5dad7d8a177d153d6d23096ff65b3061b07801155a658d14be"
+    },
+    {
+      "path": "experiments/LongBench/pred.py",
+      "bytes": 11946,
+      "sha256": "2a551e7846b35b2e4155497db71f2779fd3a10b516579f6c2c2c9fbe1a29d358"
+    }
+  ],
+  "environment_findings": [
+    {
+      "id": "project_dependencies_partially_unpinned",
+      "evidence": "pyproject pins NumPy/Jieba/tqdm/Transformers but leaves datasets, accelerate, tokenizers, rouge, rouge_score, and others unpinned"
+    },
+    {
+      "id": "freeze_file_not_portable",
+      "evidence": "freeze_requirements contains machine-local conda file URLs and an editable git+ssh AdaKV dependency"
+    },
+    {
+      "id": "self_revision_mismatch",
+      "evidence": "freeze_requirements points the editable AdaKV package to 67a0fc2729800c3d902225f359e0b50f9202556b rather than audited repository revision 04497abac4c1a58426f3daf1014578990e225cc5"
+    },
+    {
+      "id": "transformers_contract_mismatch",
+      "evidence": "pyproject/freeze pin Transformers 4.44.2, while check_version declares only versions containing 4.37 as tested and otherwise warns rather than fails"
+    },
+    {
+      "id": "native_build_side_effect",
+      "evidence": "make i builds csrc with python build.py install and then performs editable pip installation"
+    }
+  ],
+  "runtime_findings": [
+    {
+      "id": "global_monkeypatch",
+      "evidence": "entry functions replace global Llama/Mistral FlashAttention forward, model forward, and generation-input methods in Transformers"
+    },
+    {
+      "id": "custom_native_cache_update",
+      "evidence": "flattened per-head cache update imports tiny_api_cuda at runtime; source contains TODO interface notes and reports sequence length as one rather than retained length"
+    },
+    {
+      "id": "gqa_expansion",
+      "evidence": "reference cache selection may repeat KV heads to query-head count before scoring; GQA aggregation mode is a configuration choice of mean or max"
+    },
+    {
+      "id": "mutable_model_config",
+      "evidence": "config_compress writes window, capacity, pooling, floor, pyramidal, skip, and GQA settings into the loaded model config"
+    }
+  ],
+  "evaluation_findings": [
+    {
+      "id": "remote_model_code",
+      "evidence": "LongBench prediction loads tokenizer and model with trust_remote_code=True and no immutable repository revision"
+    },
+    {
+      "id": "dataset_revision_unpinned",
+      "evidence": "datasets are loaded from a user-supplied dataset path/config without a frozen Hub/source revision in the runner"
+    },
+    {
+      "id": "local_model_paths",
+      "evidence": "model2path.json must be edited to point to local models"
+    },
+    {
+      "id": "randomness_seeded",
+      "evidence": "Python, NumPy, Torch CPU/CUDA, and all CUDA devices are seeded to 42"
+    },
+    {
+      "id": "no_test_tree",
+      "evidence": "the immutable 38-file tree contains no dedicated test directory or test-named source"
+    }
+  ],
+  "clean_room_requirements": [
+    "derive the within-layer allocation equation directly from arXiv:2407.11550v5",
+    "write a tiny framework-independent NumPy/Torch reference without importing AdaKV",
+    "freeze uniform versus adaptive head budgets, ties, GQA grouping, observation window, and question-aware/agnostic modes",
+    "prove retained-budget conservation and mass-bound optimality on exhaustive small cases",
+    "compare constituent-complete source recall against retained mass and L1 attention-output error",
+    "use separately qualified model/data adapters with network disabled",
+    "only then audit an isolated upstream implementation in a disposable environment"
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "license_identity_qualified": true,
+    "portable_environment_qualified": false,
+    "dependency_identity_qualified": false,
+    "model_revision_qualified": false,
+    "dataset_revision_qualified": false,
+    "fixture_behavior_qualified": false,
+    "native_extension_qualified": false,
+    "upstream_execution_authorized": false,
+    "reuse_in_speck_authorized": false,
+    "novelty_gate_changed": false,
+    "next_action": "freeze and test the clean-room small-case allocation reference; do not install or execute the upstream package"
+  }
+}

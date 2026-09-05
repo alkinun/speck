@@ -106,6 +106,9 @@ the final combined model.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.
+- [`adakv_code_audit_v1.json`](adakv_code_audit_v1.json) statically audits that pinned path and records
+  its environment, native-build, monkeypatch, cache, remote-code/data, and test blockers before any
+  clean-room reference or upstream execution.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

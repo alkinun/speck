@@ -1,4 +1,9 @@
 {
+  "adakv_code_audit": {
+    "audit": "research/paper-1/adakv_code_audit_v1.json",
+    "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
+    "status": "immutable_source_audited_execution_blocked"
+  },
   "attnres_readiness": {
     "contract": "research/paper-1/attnres_readiness_v1.json",
     "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",

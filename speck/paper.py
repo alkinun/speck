@@ -25,6 +25,7 @@ PROGRAM_FILES = (
     "systems_cost_readiness_v1.json",
     "novelty_landscape_v1.json",
     "novelty_code_availability_v1.json",
+    "adakv_code_audit_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1191,6 +1192,54 @@ def _validate_novelty_code_availability(reference, repository_root, paper_id):
         raise ValueError("novelty code availability audit is incomplete")
 
 
+def _validate_adakv_code_audit(reference, repository_root, paper_id):
+    _require(reference, {"audit", "sha256", "status"}, "Ada-KV code reference")
+    path = repository_root / reference["audit"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("Ada-KV code audit does not match its pin")
+    audit = _load_json(path)
+    repository = audit.get("repository", {})
+    licenses = audit.get("licenses", ())
+    files = {entry.get("path"): entry for entry in audit.get("pinned_files", ())}
+    decision = audit.get("decision", {})
+    if (
+        audit.get("format") != "speck_adakv_code_audit"
+        or audit.get("format_version") != 1
+        or audit.get("paper_id") != paper_id
+        or audit.get("status") != reference["status"]
+        or repository.get("revision") != "04497abac4c1a58426f3daf1014578990e225cc5"
+        or repository.get("files") != 38
+        or repository.get("code_like_files") != 15
+        or repository.get("code_payload_cloned") is not False
+        or repository.get("third_party_code_executed") is not False
+        or [license_entry.get("license") for license_entry in licenses] != ["MIT", "MIT"]
+        or set(files)
+        != {
+            "pyproject.toml",
+            "freeze_requirements.txt",
+            "makefile",
+            "csrc/makefile",
+            "adaptive_snapkv/monkeypatch/monkeypatch.py",
+            "adaptive_snapkv/monkeypatch/snapkv_utils.py",
+            "experiments/LongBench/pred.py",
+        }
+        or len(audit.get("environment_findings", ())) < 5
+        or len(audit.get("runtime_findings", ())) < 4
+        or len(audit.get("evaluation_findings", ())) < 5
+        or len(audit.get("clean_room_requirements", ())) < 7
+        or decision.get("source_identity_qualified") is not True
+        or decision.get("license_identity_qualified") is not True
+        or decision.get("portable_environment_qualified") is not False
+        or decision.get("dependency_identity_qualified") is not False
+        or decision.get("fixture_behavior_qualified") is not False
+        or decision.get("native_extension_qualified") is not False
+        or decision.get("upstream_execution_authorized") is not False
+        or decision.get("reuse_in_speck_authorized") is not False
+        or decision.get("novelty_gate_changed") is not False
+    ):
+        raise ValueError("Ada-KV code audit is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1268,6 +1317,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "systems_cost_readiness",
             "novelty_landscape",
             "novelty_code_availability",
+            "adakv_code_audit",
         },
         "paper experiment program",
     )
@@ -1282,6 +1332,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_novelty_code_availability(
         program["novelty_code_availability"],
+        repository_root,
+        paper_id,
+    )
+    _validate_adakv_code_audit(
+        program["adakv_code_audit"],
         repository_root,
         paper_id,
     )
