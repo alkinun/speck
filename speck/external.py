@@ -344,6 +344,57 @@ def validate_external_suite(path):
             != "denied_as_expected"
         ):
             raise ValueError("HELMET model-adapter qualification artifact is invalid")
+        if "scorer_runtime_qualified" in adapter["status"]:
+            _require(adapter, {"scorer_runtime"}, "qualified HELMET scorer runtime")
+            scorer_runtime = adapter["scorer_runtime"]
+            _require(
+                scorer_runtime,
+                {
+                    "qualification",
+                    "qualification_sha256",
+                    "runner_revision",
+                    "wheel_sha256",
+                    "runtime_identity_sha256",
+                    "platform",
+                },
+                "qualified HELMET scorer runtime",
+            )
+            scorer_path = repository_root / scorer_runtime["qualification"]
+            if (
+                not scorer_path.is_file()
+                or _file_sha256(scorer_path) != scorer_runtime["qualification_sha256"]
+                or not COMMIT_PATTERN.fullmatch(scorer_runtime["runner_revision"])
+                or not all(
+                    SHA256_PATTERN.fullmatch(scorer_runtime[field])
+                    for field in (
+                        "qualification_sha256",
+                        "wheel_sha256",
+                        "runtime_identity_sha256",
+                    )
+                )
+            ):
+                raise ValueError("HELMET scorer runtime does not match its pin")
+            scorer = _load_json(scorer_path)
+            build = scorer.get("build", {})
+            metrics = scorer.get("metrics", {}).get("metrics", {})
+            if (
+                scorer.get("format") != "speck_helmet_scorer_runtime_manifest"
+                or scorer.get("status")
+                != "qualified_offline_platform_specific_local_runtime_unredistributable"
+                or scorer.get("runner_revision") != scorer_runtime["runner_revision"]
+                or scorer.get("helmet", {}).get("revision") != config["upstream"]["revision"]
+                or build.get("wheel", {}).get("sha256") != scorer_runtime["wheel_sha256"]
+                or build.get("complete_rebuilds") != 2
+                or not build.get("wheels_identical")
+                or scorer.get("runtime", {}).get("identity_sha256")
+                != scorer_runtime["runtime_identity_sha256"]
+                or metrics.get("P@1") != 0.5
+                or metrics.get("Recall@3") != 1.0
+                or metrics.get("MRR") != 0.75
+                or scorer.get("network_denial", {}).get("build_attempts") != 0
+                or scorer.get("network_denial", {}).get("metric_attempts") != 0
+            ):
+                raise ValueError("HELMET scorer runtime qualification is invalid")
     return config
 
 
