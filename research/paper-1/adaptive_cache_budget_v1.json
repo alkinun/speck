@@ -1,0 +1,83 @@
+{
+  "format": "speck_adaptive_cache_budget_protocol",
+  "format_version": 1,
+  "protocol_id": "speck-paper-1-adaptive-cache-budget-v1",
+  "paper_id": "speck-paper-1",
+  "status": "frozen_before_local_implementation",
+  "frozen_on": "2026-09-05",
+  "purpose": "Implement a clean-room deterministic reference for Ada-KV's within-layer physical-head budget allocation and retained-mass bound without importing or executing upstream code.",
+  "sources": [
+    {
+      "paper": "https://arxiv.org/abs/2407.11550v5",
+      "use": "Algorithm 1 and Theorems 3.1/3.2 define global retained-weight allocation and the attention-output L1 upper bound"
+    },
+    {
+      "audit": "research/paper-1/adakv_code_audit_v1.json",
+      "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
+      "use": "requires clean-room implementation because upstream environment and behavior are unqualified"
+    }
+  ],
+  "input_contract": {
+    "salience": "rectangular H-by-T finite non-negative physical-cache-head weights",
+    "normalization": "each physical head sums to one for the paper-bound calculation; allocation itself also accepts unnormalized non-negative salience",
+    "budget": "integer B in [0,H*T]",
+    "scope": "one layer; cross-layer allocation is explicitly outside Ada-KV v5 and this protocol",
+    "gqa": "query-head to physical-KV-head reduction is outside the core theorem and must be frozen as a separate mean/max/other intervention"
+  },
+  "allocation": {
+    "ordering": "sort every (weight,head,token) by descending weight, then ascending head index, then ascending token index",
+    "selection": "retain the first B entries globally",
+    "head_budget": "B_h is the number of globally retained entries belonging to physical cache head h",
+    "per_head_identity": "the globally retained entries for head h must equal that head's first B_h entries under the same within-head ordering",
+    "conservation": "sum_h B_h equals B and every B_h lies in [0,T]"
+  },
+  "objectives": {
+    "retained_mass": "sum of the top B_h salience weights within every head",
+    "optimality": "among every feasible integer head-budget vector with sum B, adaptive allocation maximizes retained mass",
+    "uniform_control": "divide B by H; give the remainder one extra slot to lowest-index heads without exceeding T",
+    "eviction_bound": "epsilon=2*H*C-2*C*retained_mass for normalized per-head attention and non-negative maximum transformed-value norm C",
+    "bound_monotonicity": "epsilon cannot increase when B increases"
+  },
+  "qualification_cases": {
+    "head_counts": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "tokens_per_head": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "random_seeds_per_shape": 10,
+    "integer_weight_values": "0 through 7 with deterministic ties, normalized per head after replacing an all-zero head with one unit at token zero",
+    "budgets": "every integer from zero through H*T",
+    "oracle": "enumerate every feasible H-vector in [0,T]^H with sum B",
+    "adversarial": [
+      "all weights equal",
+      "all mass in one head",
+      "one token per head tied globally",
+      "zero and full budgets"
+    ]
+  },
+  "required_outputs": [
+    "selected (head,token) identities",
+    "per-head budgets",
+    "retained mass",
+    "uniform-control retained mass",
+    "eviction bound when normalized",
+    "case counts and maximum optimality gap"
+  ],
+  "decision": {
+    "upstream_code_used": false,
+    "upstream_execution_authorized": false,
+    "local_implementation_authorized": true,
+    "model_integration_authorized": false,
+    "architecture_claim_authorized": false,
+    "success": "all conservation, identity, exhaustive optimality, uniform dominance, deterministic tie, and bound-monotonicity checks pass exactly",
+    "failure": "retain the result and block use as an N2 baseline"
+  }
+}
