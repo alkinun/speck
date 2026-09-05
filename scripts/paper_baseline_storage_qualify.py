@@ -57,6 +57,34 @@ def repository_revision():
     ).stdout.strip()
 
 
+def storage_contract_identity(matrix):
+    planned = matrix["planned_primary_baselines"]
+    storage = matrix["storage_contract"]
+    payload = {
+        "paper_id": matrix["paper_id"],
+        "family_id": planned["family_id"],
+        "output_root": planned["output_root"],
+        "arms": planned["arms"],
+        "shared_training": planned["shared_training"],
+        "proxy_confirmation_pairs": planned["proxy_confirmation_pairs"],
+        "storage_contract": {
+            key: storage[key]
+            for key in (
+                "checkpoint_retention",
+                "estimated_max_bytes_per_run",
+                "proxy_confirmation_model_runs",
+                "estimated_proxy_checkpoint_bytes",
+                "future_finalist_model_runs",
+                "estimated_finalist_checkpoint_bytes",
+                "minimum_free_bytes_before_proxy_launch",
+                "minimum_free_bytes_before_finalist_launch",
+                "deletion_policy",
+            )
+        },
+    }
+    return bytes_sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode())
+
+
 def _inputs(args, require_empty):
     root = Path(__file__).parents[1]
     matrix_path = args.matrix.expanduser().resolve()
@@ -143,7 +171,7 @@ def prepare(args):
         "created_at": datetime.now(timezone.utc).isoformat(),
         "matrix": {
             "path": str(values["matrix_path"]),
-            "sha256": file_sha256(values["matrix_path"]),
+            "storage_spec_sha256": storage_contract_identity(values["matrix"]),
         },
         "materialization": {
             "path": str(values["materialization_path"]),
@@ -199,7 +227,8 @@ def check(args):
         report.get("format") != "speck_paper_baseline_storage_qualification"
         or report.get("status")
         != "qualified_dedicated_proxy_and_finalist_checkpoint_volume"
-        or report.get("matrix", {}).get("sha256") != file_sha256(values["matrix_path"])
+        or report.get("matrix", {}).get("storage_spec_sha256")
+        != storage_contract_identity(values["matrix"])
         or report.get("materialization", {}).get("sha256")
         != file_sha256(values["materialization_path"])
         or report.get("volume", {}).get("uuid") != values["mount"]["uuid"]
