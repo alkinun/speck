@@ -1,0 +1,207 @@
+{
+  "arms": [
+    {
+      "arm_id": "dense_global_param_match",
+      "compiled_training_step": {
+        "batch_size": 4,
+        "compile_and_step_seconds": 7.270166981033981,
+        "gradient_norm_before_clip": 0.7947713136672974,
+        "hard_peak_allocated_bytes": 17179869184,
+        "loss": 10.409818649291992,
+        "loss_backend": "torch",
+        "optimizer": "muon",
+        "peak_allocated_bytes": 10989776384,
+        "peak_reserved_bytes": 11041505280,
+        "sequence_length": 4096,
+        "within_peak_envelope": true
+      },
+      "config_sha256": {
+        "model.json": "1103bb44c960d9d1286810c81d6190d1058ac551e50a976f8d3216aad121434c",
+        "runtime.json": "89b1e79bd21c53519f736fa472844c4715c461486343897d5495c850dbdddd2b",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "934100d5755bb0cebc3bd93fdb941c50060830d37916801fc9c3985b9de5fdc7"
+      },
+      "experiment": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Baselines-131M/arms/dense_global_param_match",
+      "flops_per_token_at_4096": 1301237760,
+      "native_incremental": {
+        "absolute_tolerance": 0.02,
+        "maximum_absolute_logit_error": 0.0224609375,
+        "passed": false,
+        "relative_tolerance": 0.02,
+        "tokens": 8
+      },
+      "parameters": 153977088,
+      "passed": false,
+      "start_temperature_c": 43,
+      "thermal_wait_seconds": 0.016756389057263732,
+      "transformers_export": {
+        "files": {
+          "architecture_speck.py": {
+            "bytes": 13186,
+            "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+          },
+          "config.json": {
+            "bytes": 15696,
+            "sha256": "bb113a26837ec79f97f9c51fbe619b67a09b190cc06061636a56139a3175537e"
+          },
+          "configuration_speck.py": {
+            "bytes": 1389,
+            "sha256": "3bf02749b7fc09563d06c5f0822514a8b4158345959de52829a0f242ab715c23"
+          },
+          "model.safetensors": {
+            "bytes": 307986440,
+            "sha256": "a73a784d8a2a04f582a14d266ee40b1a07868089f15df1537361c7dc77041bc7"
+          },
+          "modeling_speck.py": {
+            "bytes": 6362,
+            "sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d"
+          },
+          "native_speck.py": {
+            "bytes": 67463,
+            "sha256": "47c85e326d9b0677ebbde44a6077e8e9bf891daaf858e2b65437c06e1919988e"
+          },
+          "padding_speck.py": {
+            "bytes": 898,
+            "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+          },
+          "speck_parity.json": {
+            "bytes": 344,
+            "sha256": "4bc35f14958f77912848866afb97ce52651b8fce272a157fb1063bb7650ecc8b"
+          },
+          "speck_source.json": {
+            "bytes": 107,
+            "sha256": "05bc697bdb2477cf8f01b5b66f4b96be736e1d3d4cca795c13d5e0012d7c1abe"
+          }
+        },
+        "parity": {
+          "compute_dtype": "bfloat16",
+          "format": "speck_export_parity",
+          "format_version": 1,
+          "generation_smoke_new_tokens": 2,
+          "incremental_logits_max_absolute_error": 0.0,
+          "logits_max_absolute_error": 0.0,
+          "parameters": 153977088,
+          "passed": true,
+          "tokens_sha256": "b2e041731a40eca2ee45c5a712f4dfc7e2513353dfe3b449796535fd1a1e348c"
+        },
+        "passed": true
+      }
+    },
+    {
+      "arm_id": "five_cache_kda_gqa",
+      "compiled_training_step": {
+        "batch_size": 4,
+        "compile_and_step_seconds": 14.721146663068794,
+        "gradient_norm_before_clip": 2.1064863204956055,
+        "hard_peak_allocated_bytes": 17179869184,
+        "loss": 10.410881042480469,
+        "loss_backend": "torch",
+        "optimizer": "muon",
+        "peak_allocated_bytes": 15187470336,
+        "peak_reserved_bytes": 15361638400,
+        "sequence_length": 4096,
+        "within_peak_envelope": true
+      },
+      "config_sha256": {
+        "model.json": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09",
+        "runtime.json": "89b1e79bd21c53519f736fa472844c4715c461486343897d5495c850dbdddd2b",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "ec14f4bd9cf33b6d4846ad010f9ecb7729e3d2610b12ce1b68dd319994c8dc14"
+      },
+      "experiment": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Baselines-131M/arms/five_cache_kda_gqa",
+      "flops_per_token_at_4096": 1021601280,
+      "native_incremental": {
+        "absolute_tolerance": 0.02,
+        "maximum_absolute_logit_error": 0.060546875,
+        "passed": false,
+        "relative_tolerance": 0.02,
+        "tokens": 8
+      },
+      "parameters": 153958938,
+      "passed": false,
+      "start_temperature_c": 50,
+      "thermal_wait_seconds": 0.013014163007028401,
+      "transformers_export": {
+        "files": {
+          "architecture_speck.py": {
+            "bytes": 13186,
+            "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+          },
+          "config.json": {
+            "bytes": 14341,
+            "sha256": "c86e567866740a13b86393b84c3e3ee96670cdd84c569c5125e94b0774fbb92d"
+          },
+          "configuration_speck.py": {
+            "bytes": 1389,
+            "sha256": "3bf02749b7fc09563d06c5f0822514a8b4158345959de52829a0f242ab715c23"
+          },
+          "model.safetensors": {
+            "bytes": 307957452,
+            "sha256": "8b5ce109b34bd49b95c7d2d5c60c9eb778cfc618d565ee16194121706fde1d32"
+          },
+          "modeling_speck.py": {
+            "bytes": 6362,
+            "sha256": "d56773c4b5d7d9efe2193458fd3c67dc29709f0f71198caf64f2e3c7e9ffcb8d"
+          },
+          "native_speck.py": {
+            "bytes": 67463,
+            "sha256": "47c85e326d9b0677ebbde44a6077e8e9bf891daaf858e2b65437c06e1919988e"
+          },
+          "padding_speck.py": {
+            "bytes": 898,
+            "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+          },
+          "speck_parity.json": {
+            "bytes": 344,
+            "sha256": "e38fdff8a6351a6b092b07138f0b136766d90619e0cb400a64f0c603430a6e66"
+          },
+          "speck_source.json": {
+            "bytes": 107,
+            "sha256": "05bc697bdb2477cf8f01b5b66f4b96be736e1d3d4cca795c13d5e0012d7c1abe"
+          }
+        },
+        "parity": {
+          "compute_dtype": "bfloat16",
+          "format": "speck_export_parity",
+          "format_version": 1,
+          "generation_smoke_new_tokens": 2,
+          "incremental_logits_max_absolute_error": 0.0,
+          "logits_max_absolute_error": 0.0,
+          "parameters": 153958938,
+          "passed": true,
+          "tokens_sha256": "b2e041731a40eca2ee45c5a712f4dfc7e2513353dfe3b449796535fd1a1e348c"
+        },
+        "passed": true
+      }
+    }
+  ],
+  "created_at": "2026-09-05T09:13:38.007865+00:00",
+  "format": "speck_paper_baseline_preflight",
+  "format_version": 1,
+  "hardware": {
+    "capability": [
+      8,
+      6
+    ],
+    "device": "NVIDIA GeForce RTX 3090",
+    "driver": "610.43.03",
+    "total_memory_bytes": 25295323136
+  },
+  "limitations": [
+    "random-weight correctness and feasibility preflight; no quality or throughput claim",
+    "one full-size compiled microbatch and optimizer update per arm; not a training benchmark",
+    "short native and Transformers incremental-generation parity only",
+    "temporary export bytes are hashed in the report but not retained"
+  ],
+  "matrix": "research/paper-1/baseline_matrix.json",
+  "matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+  "runner_revision": "3d2dcb49c6261128d8aac1efb8bab061e9b6905c",
+  "software": {
+    "cuda": "12.8",
+    "flash_linear_attention": "0.5.0",
+    "python": "3.10.20",
+    "torch": "2.9.1+cu128",
+    "transformers": "5.1.0"
+  },
+  "status": "failed"
+}
