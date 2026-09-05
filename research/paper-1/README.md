@@ -162,6 +162,9 @@ the final combined model.
 - [`novelty_code_availability_v7.json`](novelty_code_availability_v7.json) adds HALO's pinned
   training/selection tree and result logs, but root-rights, semantic, environment, data, checkpoint,
   execution, reuse, and reproduction gates all remain blocked.
+- [`novelty_code_availability_v8.json`](novelty_code_availability_v8.json) adds the KL-selector's
+  pinned source/config tree while blocking absent root rights/tests, held-out-KL and early-stop parity,
+  environment/data/log/checkpoint identity, execution, reuse, and reproduction.
 - [`adakv_code_audit_v1.json`](adakv_code_audit_v1.json) statically audits that pinned path and records
   its environment, native-build, monkeypatch, cache, remote-code/data, and test blockers before any
   clean-room reference or upstream execution.

@@ -1,0 +1,70 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 8,
+  "audit_id": "speck-paper-1-novelty-code-availability-v8",
+  "paper_id": "speck-paper-1",
+  "status": "nineteen_sources_three_root_rights_paths_no_new_full_reproduction",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_code_availability_v7.json",
+    "sha256": "02934bceedba087bc45c3bcef288cb3be30feb8c5860a7cbc9c9032a8811dbde",
+    "sources_inherited": 18
+  },
+  "landscape": {
+    "path": "research/paper-1/novelty_landscape_v9.json",
+    "sha256": "255fb839478702683707256bf6ec48f4ade705e9c6b917c66ace195e63b99df2"
+  },
+  "additional_sources": [
+    {
+      "id": "kl_guided_layer_selection",
+      "paper": "arxiv_2512_20569v1",
+      "repository": "https://github.com/fla-org/hybrid-distillation",
+      "revision": "d7467e37d359ac873242d2902d23a9fd47de746b",
+      "files": 203,
+      "python_files": 24,
+      "yaml_files": 171,
+      "test_files": 0,
+      "root_license": null,
+      "audit": "research/paper-1/kl_selection_code_audit_v1.json",
+      "audit_sha256": "9c97cf430c2d665a99374d7857acc5578390bba050d2b9d6f79a1aefe4dc4dc5",
+      "status": "source_and_config_identity_qualified_root_rights_semantics_data_and_reproduction_blocked"
+    }
+  ],
+  "release_boundary": {
+    "source_identity_qualified": true,
+    "configuration_matrix_available": true,
+    "root_code_rights_qualified": false,
+    "heldout_kl_implementation_qualified": false,
+    "ranking_early_stop_implementation_qualified": false,
+    "portable_environment_qualified": false,
+    "data_checkpoint_and_log_identity_qualified": false,
+    "deterministic_evaluation_qualified": false,
+    "upstream_execution_authorized": false,
+    "direct_reuse_authorized": false,
+    "full_reproduction_authorized": false
+  },
+  "summary": {
+    "sources": 19,
+    "immutable_repository_snapshots": 10,
+    "repositories_with_code": 8,
+    "repositories_with_root_license_covering_code": 3,
+    "new_full_reproduction_paths_qualified": 0,
+    "metadata_only_tree_clones": 7,
+    "working_trees_checked_out": 0,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false,
+    "novelty_status_changed": false
+  },
+  "decision": {
+    "kl_selector_source_identity_qualified": true,
+    "kl_selector_config_presence_qualified": true,
+    "kl_selector_root_rights_qualified": false,
+    "kl_selector_execution_authorized": false,
+    "kl_selector_reuse_authorized": false,
+    "kl_selector_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "use only as inspected conceptual and configuration evidence; independent N1 review precedes any rights or semantic remediation"
+  }
+}

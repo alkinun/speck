@@ -551,3 +551,7 @@ Finding 101 pins the KL-selector's 203-file tree with 24 Python files and 171 ex
 paper specifies held-out KL, but released ranking code consumes W&B training loss; the early-stop rule,
 root rights, tests, deterministic data, checkpoint/log identity, and full parity are absent. No upstream
 execution, reuse, reproduction, or N1 protocol is authorized.
+
+Finding 102 updates the artifact inventory to nineteen sources, ten immutable source/checkpoint
+snapshots, eight repositories with code, and three root-licensed code paths. The KL-selector tree adds
+config evidence but no qualified reproduction path; execution, reuse, and behavior remain blocked.
