@@ -1,0 +1,3399 @@
+{
+  "assets": [
+    {
+      "bytes": 8564991,
+      "id": "english_words",
+      "license": "Apache-2.0 repository; word-list provenance not separately stated",
+      "path": "inputs/english_words.json",
+      "sha256": "affcd6d45fdf3cc843d585c99c97ad615094e760e6c4756b654bab6c73bc2eca",
+      "url": "https://media.githubusercontent.com/media/NVIDIA/RULER/c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a/scripts/data/synthetic/json/english_words.json"
+    },
+    {
+      "bytes": 4370528,
+      "id": "squad_v2_dev",
+      "license": "CC-BY-SA-4.0",
+      "path": "inputs/squad.json",
+      "sha256": "80a5225e94905956a6446d296ca1093975c4d3b3260f1d6c8f68bc2ab77182d8",
+      "url": "https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v2.0.json"
+    },
+    {
+      "bytes": 61065698,
+      "id": "hotpotqa_dev_distractor",
+      "license": "CC-BY-SA-4.0",
+      "path": "inputs/hotpotqa.json",
+      "sha256": "e3da074df24e8369009918aa5cdbdd254dadcde4c63f7569d36afd6f2268caa8",
+      "url": "https://huggingface.co/datasets/namlh2004/hotpotqa/resolve/7e54db4656209750ff487f6fdf8e39a66dba136b/hotpot_dev_distractor_v1.json"
+    }
+  ],
+  "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
+  "bundle_root": "/home/alkin/.cache/speck/evaluations/ruler-v1-sources-c3f5e3b4",
+  "created_at": "2026-09-05T10:48:34.263042+00:00",
+  "format": "speck_ruler_source_manifest",
+  "format_version": 1,
+  "generator": {
+    "repository": "https://github.com/NVIDIA/RULER.git",
+    "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+    "url_list_sha256": "9862c06b4303b7bb6fe4c4a88671c51d2d36ec65757db54730c703d9cf474099"
+  },
+  "licenses": {
+    "hotpotqa": "CC-BY-SA-4.0",
+    "needle_repository": "MIT",
+    "paul_graham": "upstream copyright; local research use only; no redistribution",
+    "ruler_code": "Apache-2.0",
+    "squad_v2": "CC-BY-SA-4.0"
+  },
+  "needle_repository": {
+    "repository": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack.git",
+    "revision": "021385d68d3202e37893e9d3cd29011c569abe30"
+  },
+  "package_assets": [
+    {
+      "bytes": 7403,
+      "package": "wonderwords==3.0.1",
+      "path": "packages/wonderwords/adjectivelist.txt",
+      "sha256": "66814d46b7e292c83e839d12fe2fa083c8f66779b14b294e1be4e1342c5d4131"
+    },
+    {
+      "bytes": 54752,
+      "package": "wonderwords==3.0.1",
+      "path": "packages/wonderwords/nounlist.txt",
+      "sha256": "8d88b3ebc2e2969ed92ebe49cdb0c8a87c2ad3b27493d7afdff608f2e51c5bc9"
+    },
+    {
+      "bytes": 8340,
+      "package": "wonderwords==3.0.1",
+      "path": "packages/wonderwords/profanitylist.txt",
+      "sha256": "67c668a797704ecbffdf4725ea3ee1a905a983968d2a3877b60a3971433f514e"
+    },
+    {
+      "bytes": 6967,
+      "package": "wonderwords==3.0.1",
+      "path": "packages/wonderwords/verblist.txt",
+      "sha256": "9fbf5e4e69b8869aebd88e6d545312ff9f878a747327ede5f6dbbba5c27b08ad"
+    },
+    {
+      "bytes": 13905355,
+      "package": "nltk==3.10.3",
+      "path": "packages/nltk/punkt.zip",
+      "sha256": "51c3078994aeaf650bfc8e028be4fb42b4a0d177d41c012b6a983979653660ec"
+    },
+    {
+      "bytes": 4319076,
+      "package": "nltk==3.10.3",
+      "path": "packages/nltk/punkt_tab.zip",
+      "sha256": "e57f64187974277726a3417ca6f181ec5403676c717672eef6a748a7b20e0106"
+    }
+  ],
+  "package_versions": {
+    "beautifulsoup4": "4.15.0",
+    "html2text": "2025.4.15",
+    "nltk": "3.10.3",
+    "pyyaml": "6.0.3",
+    "tenacity": "9.1.4",
+    "tqdm": "4.70.0",
+    "transformers": "5.1.0",
+    "wonderwords": "3.0.1"
+  },
+  "paul_graham_output": {
+    "bytes": 3108621,
+    "license": "mixed upstream essay rights; local research cache only; redistribution forbidden",
+    "path": "inputs/PaulGrahamEssays.json",
+    "sha256": "8d31e1b660e0f2180bcca6d238e18f77921df9d158611582b860da1762b6d3dd"
+  },
+  "paul_graham_sources": [
+    {
+      "canonical": {
+        "bytes": 7914,
+        "path": "paul_graham/canonical_html/13sentences.txt",
+        "sha256": "f1ce712b532565ca27c5960ae28a695f07dff12e94530ba95456625198db439f"
+      },
+      "index": 0,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 18325,
+        "path": "paul_graham/raw_html/000-13sentences.html",
+        "sha256": "8bf241d34c111337ff8a04a07957266ebbd055ffd989a84c7f7265221c3922ac"
+      },
+      "url": "http://www.paulgraham.com/13sentences.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4393,
+        "path": "paul_graham/canonical_html/5founders.txt",
+        "sha256": "d58ebf5cee4e8a7394c6a0cff1f139abe7c6cabd1580673bfb48d7fd6d77c43c"
+      },
+      "index": 1,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10454,
+        "path": "paul_graham/raw_html/001-5founders.html",
+        "sha256": "3c0e4ed5b546b47e1069b94d4a8401948fdaa8a0b7101b9332b5f4ceee7daa9f"
+      },
+      "url": "http://www.paulgraham.com/5founders.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4134,
+        "path": "paul_graham/canonical_html/6631327.txt",
+        "sha256": "2398fc7ca0880434fdc26b65b829a5d18e677efbba8e21c2bc80b9d7e86bb928"
+      },
+      "index": 2,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10111,
+        "path": "paul_graham/raw_html/002-6631327.html",
+        "sha256": "84ee6f7ee3793d41e92d31ea3039a72c5e69d0d10bd7c5982297e248632e5adc"
+      },
+      "url": "http://www.paulgraham.com/6631327.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5529,
+        "path": "paul_graham/canonical_html/95.txt",
+        "sha256": "02f69b20369df670c9348705def2cd60efb13e00904977f799c9c1057ee65ca6"
+      },
+      "index": 3,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12669,
+        "path": "paul_graham/raw_html/003-95.html",
+        "sha256": "fb2d20b64b99e07f730011dc05d4b335e18ff934c13bf4f74536b1502f250e79"
+      },
+      "url": "http://www.paulgraham.com/95.html"
+    },
+    {
+      "canonical": {
+        "bytes": 19608,
+        "path": "paul_graham/canonical_html/ace.txt",
+        "sha256": "219714fad9434587a0ffdf0b038e0fb056d1127c5a755f9b656684ea359f0d8f"
+      },
+      "index": 4,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 26366,
+        "path": "paul_graham/raw_html/004-ace.html",
+        "sha256": "96bfabd2927befdc73405164dd026bdbf19dc73ae99131550aaf4b09eb8bbd8e"
+      },
+      "url": "http://www.paulgraham.com/ace.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9157,
+        "path": "paul_graham/canonical_html/airbnb.txt",
+        "sha256": "2f82308f0137c62aa9044ff161acfce053551c62e387c331ab9ac2b0a541697e"
+      },
+      "index": 5,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14501,
+        "path": "paul_graham/raw_html/005-airbnb.html",
+        "sha256": "d524628de62496ad979d852ca51605683e4eaede2b08de8e0fc159fe4182ad95"
+      },
+      "url": "http://www.paulgraham.com/airbnb.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6284,
+        "path": "paul_graham/canonical_html/airbnbs.txt",
+        "sha256": "0c9c98f0fdbc34706bf8c7eecb1c80fc317897be547a008ff212ac6ff5418c44"
+      },
+      "index": 6,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12256,
+        "path": "paul_graham/raw_html/006-airbnbs.html",
+        "sha256": "64038edb5f7d737ed4a7fa590367843ab8039d65d00202df53ed0de28928c00b"
+      },
+      "url": "http://www.paulgraham.com/airbnbs.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3974,
+        "path": "paul_graham/canonical_html/alien.txt",
+        "sha256": "095dee93eea7dd3d75fdf3314a2a73f002346cbd9c1326f67f2c4d0a31916d18"
+      },
+      "index": 7,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9918,
+        "path": "paul_graham/raw_html/007-alien.html",
+        "sha256": "9ef18307bc6c818bdd35f5175121d232fc2ab1e5f946b7b7d6cac9b67fea157a"
+      },
+      "url": "http://www.paulgraham.com/alien.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2173,
+        "path": "paul_graham/canonical_html/altair.txt",
+        "sha256": "ddabe8f4b2acc4e9adca39008683b00005df60362f99cca03f795f9e513f7908"
+      },
+      "index": 8,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 8173,
+        "path": "paul_graham/raw_html/008-altair.html",
+        "sha256": "8574b4d2efd7c70d54f9eba31d9c30c91cc98d685ba894677af0805cbb753f76"
+      },
+      "url": "http://www.paulgraham.com/altair.html"
+    },
+    {
+      "canonical": {
+        "bytes": 21575,
+        "path": "paul_graham/canonical_html/ambitious.txt",
+        "sha256": "9ffca8bfa14cc1335e5dccd6f9ba19983d1d932d454053484ec6d968be369a8b"
+      },
+      "index": 9,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 28862,
+        "path": "paul_graham/raw_html/009-ambitious.html",
+        "sha256": "bbbb605b8bb9f2e177769d3eee582f5cce65756d40b95dff7a9dd4f5be8c663f"
+      },
+      "url": "http://www.paulgraham.com/ambitious.html"
+    },
+    {
+      "canonical": {
+        "bytes": 28184,
+        "path": "paul_graham/canonical_html/america.txt",
+        "sha256": "eae8f5b2592c73956b3a50ae3a12e16bd9e42ec8d9f0d8ceee28fcff3328725a"
+      },
+      "index": 10,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 38734,
+        "path": "paul_graham/raw_html/010-america.html",
+        "sha256": "92de35c65c4e8e5e63ba5cfc829db63b77b76e5d4ae92528eadd617023175f8d"
+      },
+      "url": "http://www.paulgraham.com/america.html"
+    },
+    {
+      "canonical": {
+        "bytes": 22836,
+        "path": "paul_graham/canonical_html/angelinvesting.txt",
+        "sha256": "24a8bdc3d6e73903eb7cf769c677f0288fad5727620f955b5d1dfa0e78d88b62"
+      },
+      "index": 11,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 30712,
+        "path": "paul_graham/raw_html/011-angelinvesting.html",
+        "sha256": "0b9bc390a6454cce8b1778aaadf8cfadc076ef5b62864522bf34c53e578c1332"
+      },
+      "url": "http://www.paulgraham.com/angelinvesting.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7719,
+        "path": "paul_graham/canonical_html/artistsship.txt",
+        "sha256": "8221199e9b3fffe7f7ffa3dd9baaea4b3d7ed3a89c1fe786defe01e9ea87d3c8"
+      },
+      "index": 12,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13851,
+        "path": "paul_graham/raw_html/012-artistsship.html",
+        "sha256": "c5a22e5dace78373bb14c0a14ddb30ca37cec03a644fa1a5247abe19aad1e480"
+      },
+      "url": "http://www.paulgraham.com/artistsship.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6228,
+        "path": "paul_graham/canonical_html/badeconomy.txt",
+        "sha256": "6946efb4fea5b1fc975b5d7e84a20876552f9ee32efb849b30a4875737eef10f"
+      },
+      "index": 13,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14559,
+        "path": "paul_graham/raw_html/013-badeconomy.html",
+        "sha256": "b07fcc66238b5f6dc1b439688621930af3af1fcdf94610cadd9faad4d9208b3b"
+      },
+      "url": "http://www.paulgraham.com/badeconomy.html"
+    },
+    {
+      "canonical": {
+        "bytes": 25981,
+        "path": "paul_graham/canonical_html/better.txt",
+        "sha256": "97a78c5db9b083eab73d40734ce18a11835f03c16a198460ee347afdb57b3cd0"
+      },
+      "index": 14,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 37791,
+        "path": "paul_graham/raw_html/014-better.html",
+        "sha256": "b175a84bdadac6a7a2924df40c7490c385bdea89b26a97fee67a49affdfd4d31"
+      },
+      "url": "http://www.paulgraham.com/better.html"
+    },
+    {
+      "canonical": {
+        "bytes": 18290,
+        "path": "paul_graham/canonical_html/bronze.txt",
+        "sha256": "fbde9f7971c5775d67ee873425e65520e284aef41087cf4b37698cf6e480286b"
+      },
+      "index": 15,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 30233,
+        "path": "paul_graham/raw_html/015-bronze.html",
+        "sha256": "7a0f936d5c433824de2b122389a288c47e599f76d1cf1c107410a8c815cc9724"
+      },
+      "url": "http://www.paulgraham.com/bronze.html"
+    },
+    {
+      "canonical": {
+        "bytes": 21704,
+        "path": "paul_graham/canonical_html/bubble.txt",
+        "sha256": "7b5cc949201d0bb2e12263dd323f52d8a5586209d2f58db685e50237a5b3f6db"
+      },
+      "index": 16,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 30937,
+        "path": "paul_graham/raw_html/016-bubble.html",
+        "sha256": "8701494bdcb8045c75c68864ea89dc1cb487c241658429f35a29cf98e8bc1a19"
+      },
+      "url": "http://www.paulgraham.com/bubble.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9000,
+        "path": "paul_graham/canonical_html/charisma.txt",
+        "sha256": "e57cf9e08558c8e54a304babe7137b4841d0b07d28b080b30daa0863d822f570"
+      },
+      "index": 17,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 18285,
+        "path": "paul_graham/raw_html/017-charisma.html",
+        "sha256": "31f180298ad8447d195f172afba791a39c9af279ba2ce4686c92ab3506a3753d"
+      },
+      "url": "http://www.paulgraham.com/charisma.html"
+    },
+    {
+      "canonical": {
+        "bytes": 20444,
+        "path": "paul_graham/canonical_html/cities.txt",
+        "sha256": "b6a558d985cc031f33d8c97fae895847524de545044ee1363fd4d28e4071c1d6"
+      },
+      "index": 18,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 30242,
+        "path": "paul_graham/raw_html/018-cities.html",
+        "sha256": "d24aef4dbf47c583b4301fe3cf377fb6d0f9005a183197af1caba63b1ec5555c"
+      },
+      "url": "http://www.paulgraham.com/cities.html"
+    },
+    {
+      "canonical": {
+        "bytes": 21107,
+        "path": "paul_graham/canonical_html/college.txt",
+        "sha256": "071177d5a16b2009ff1d3e650ba690b6dc5895f32cc97d5db9f0cbf2cf5c351d"
+      },
+      "index": 19,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 32693,
+        "path": "paul_graham/raw_html/019-college.html",
+        "sha256": "717915d942ab5dfeaffc64d74a42c19959371d155fe483204949e13311bf5b40"
+      },
+      "url": "http://www.paulgraham.com/college.html"
+    },
+    {
+      "canonical": {
+        "bytes": 12754,
+        "path": "paul_graham/canonical_html/colleges.txt",
+        "sha256": "9644f2411148afabfa976c2ede7f416f0e21350b6ccd2e0dd6ae839b612704ca"
+      },
+      "index": 20,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 20367,
+        "path": "paul_graham/raw_html/020-colleges.html",
+        "sha256": "262134ea5a1b135397f5adb605d9bc76fc50c6238f0b4dcf0f975f64e1f65ab6"
+      },
+      "url": "http://www.paulgraham.com/colleges.html"
+    },
+    {
+      "canonical": {
+        "bytes": 12232,
+        "path": "paul_graham/canonical_html/conformism.txt",
+        "sha256": "936ed0372367c27440f21abd36bad4d4069413af8f328d903d19938125d96ae8"
+      },
+      "index": 21,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 20946,
+        "path": "paul_graham/raw_html/021-conformism.html",
+        "sha256": "10ff28bbd8de33d4c7e280dd01e7b7f2f94fcc188a9560df9e5ddce27be2029d"
+      },
+      "url": "http://www.paulgraham.com/conformism.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4461,
+        "path": "paul_graham/canonical_html/control.txt",
+        "sha256": "95489d158ec6822971577b23d639d9b4dc2569a1487dc865adcad27357bc398f"
+      },
+      "index": 22,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10699,
+        "path": "paul_graham/raw_html/022-control.html",
+        "sha256": "fe5de3248905f077ba7a0e7a9e44d2dc87b1aeb45325b9184b44d0b75a288be4"
+      },
+      "url": "http://www.paulgraham.com/control.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9064,
+        "path": "paul_graham/canonical_html/convergence.txt",
+        "sha256": "1c7f03dcc9f651c2750a0e9eda3171bfedd26f0bf661501c34723500d44d9bc9"
+      },
+      "index": 23,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16719,
+        "path": "paul_graham/raw_html/023-convergence.html",
+        "sha256": "84e7124fae688bf43bf8a5f8ddb6c28d6ce075c0f134e1627fef1e938a4e5a39"
+      },
+      "url": "http://www.paulgraham.com/convergence.html"
+    },
+    {
+      "canonical": {
+        "bytes": 21316,
+        "path": "paul_graham/canonical_html/convince.txt",
+        "sha256": "e961f0e52eb9879fe5de7139b092ef086a368cd86243777fd798b9c657aaa5e9"
+      },
+      "index": 24,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 29637,
+        "path": "paul_graham/raw_html/024-convince.html",
+        "sha256": "99d8c8a916fabae6b165e7db9f914e23c97ac8f69bd085e0ee969bac36d2971a"
+      },
+      "url": "http://www.paulgraham.com/convince.html"
+    },
+    {
+      "canonical": {
+        "bytes": 1479,
+        "path": "paul_graham/canonical_html/cred.txt",
+        "sha256": "44861320695a6131a19aa5e0dad7f2339b30ac205a33f6352e4bf37890e63853"
+      },
+      "index": 25,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9291,
+        "path": "paul_graham/raw_html/025-cred.html",
+        "sha256": "12844c8cf407a0096bd5349a37fff71b2952ddf6c371d7b26168ad093c11ad22"
+      },
+      "url": "http://www.paulgraham.com/cred.html"
+    },
+    {
+      "canonical": {
+        "bytes": 14272,
+        "path": "paul_graham/canonical_html/credentials.txt",
+        "sha256": "bfa0aa77da4a8eb513b453fe6f92b06ba10f6e081b616cf234bb9e1bea8dbead"
+      },
+      "index": 26,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 21400,
+        "path": "paul_graham/raw_html/026-credentials.html",
+        "sha256": "8faf3036b2ff251dcf640dcb04ebbdc11ecbea8c7a367ff0b26059378aa6fdd8"
+      },
+      "url": "http://www.paulgraham.com/credentials.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9346,
+        "path": "paul_graham/canonical_html/determination.txt",
+        "sha256": "7a472800e3a5b4f34ef752a93f93da872d844b56aa88dbbe417da4c00eb0d00e"
+      },
+      "index": 27,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 18045,
+        "path": "paul_graham/raw_html/027-determination.html",
+        "sha256": "4f587f13e371a53e5f44caf2f372abb697b7993363ebfce3673bded14b56c8bc"
+      },
+      "url": "http://www.paulgraham.com/determination.html"
+    },
+    {
+      "canonical": {
+        "bytes": 11026,
+        "path": "paul_graham/canonical_html/die.txt",
+        "sha256": "5b4f531c1985cf78fb10d2d43517f7c9efb7e394f2399889f12433e0eec5faec"
+      },
+      "index": 28,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 19146,
+        "path": "paul_graham/raw_html/028-die.html",
+        "sha256": "ba7c02114e42942a716a748258b7e24104cb773a31d3bbfaab9e030fa7964880"
+      },
+      "url": "http://www.paulgraham.com/die.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9143,
+        "path": "paul_graham/canonical_html/disagree.txt",
+        "sha256": "76e14280c753162ebfaebf881c0317ad06d05c00483a848d868f6d1604f1aba2"
+      },
+      "index": 29,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 22324,
+        "path": "paul_graham/raw_html/029-disagree.html",
+        "sha256": "de41028c17fbc06bd0dd049e56221a03c4df8a2a6c4329e28437a530046a85e1"
+      },
+      "url": "http://www.paulgraham.com/disagree.html"
+    },
+    {
+      "canonical": {
+        "bytes": 1297,
+        "path": "paul_graham/canonical_html/disc.txt",
+        "sha256": "cb80b308a43bb3f30b19814df0fa5c04d01cd731d35fc0d9c76a22fc79282c66"
+      },
+      "index": 30,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 7903,
+        "path": "paul_graham/raw_html/030-disc.html",
+        "sha256": "fb7860afce787360ac5534eb6c74f01e2fbba4a6ca349dfe317fea0e4bfe1915"
+      },
+      "url": "http://www.paulgraham.com/disc.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7666,
+        "path": "paul_graham/canonical_html/discover.txt",
+        "sha256": "3a49542660d0a69c5ff5769f9d78957eb7792af2e857c0dcdea0be5c1f542767"
+      },
+      "index": 31,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14198,
+        "path": "paul_graham/raw_html/031-discover.html",
+        "sha256": "e0db35858d8008f63bc56afc251d2a220f920b7b4c2df93b2721cbb02d7114b3"
+      },
+      "url": "http://www.paulgraham.com/discover.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6457,
+        "path": "paul_graham/canonical_html/distraction.txt",
+        "sha256": "ab9205bb2957a186eb4046229fc5bfbbd18d29edbab993cd4f91ef997ccf8d8d"
+      },
+      "index": 32,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16051,
+        "path": "paul_graham/raw_html/032-distraction.html",
+        "sha256": "801dfa72a09455ecba3a6da906375c16640b35f8b8d6ee096aaa15a23bd07c31"
+      },
+      "url": "http://www.paulgraham.com/distraction.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7927,
+        "path": "paul_graham/canonical_html/divergence.txt",
+        "sha256": "fcfee609e4c41cbd055cf46a8933bd180fcbcdb8ab265997ab73ee17c9c57d3d"
+      },
+      "index": 33,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14835,
+        "path": "paul_graham/raw_html/033-divergence.html",
+        "sha256": "f50cde6d99e349a149d5b81f8d6d7ca3bbb589ad78a8854febb9351b0e374db0"
+      },
+      "url": "http://www.paulgraham.com/divergence.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2978,
+        "path": "paul_graham/canonical_html/donate.txt",
+        "sha256": "1c9e0b3dfa3c886aa914a1d845e7ae405ebef2fab4e7c9eecc3f184f05072644"
+      },
+      "index": 34,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9041,
+        "path": "paul_graham/raw_html/034-donate.html",
+        "sha256": "6b55f74e3d6dd914cc8eb8f1613aecd932461fd70a7e8cdceea63039ed8a9f24"
+      },
+      "url": "http://www.paulgraham.com/donate.html"
+    },
+    {
+      "canonical": {
+        "bytes": 25520,
+        "path": "paul_graham/canonical_html/ds.txt",
+        "sha256": "e8638a876dabd70b7efdd8fd97646795ebe894f28f6b034d03d7b05bc039b7c8"
+      },
+      "index": 35,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 37514,
+        "path": "paul_graham/raw_html/035-ds.html",
+        "sha256": "0744d1a4410cc3b88a28643291294d48933ca7b9c7305b4dc1a60a995b598900"
+      },
+      "url": "http://www.paulgraham.com/ds.html"
+    },
+    {
+      "canonical": {
+        "bytes": 14461,
+        "path": "paul_graham/canonical_html/early.txt",
+        "sha256": "94e17aeb71b9752084aa83da01c93aee0f66d3241260cd67a11986edc0c5303c"
+      },
+      "index": 36,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 21717,
+        "path": "paul_graham/raw_html/036-early.html",
+        "sha256": "784807653b43b98055e1e717a302f5a2268838df1ddd16223c1ea8c12bfb7116"
+      },
+      "url": "http://www.paulgraham.com/early.html"
+    },
+    {
+      "canonical": {
+        "bytes": 10005,
+        "path": "paul_graham/canonical_html/earnest.txt",
+        "sha256": "3b69f03dcba429a59c25c62f978ba39b658645a285c6c03bebc4bc303e1ea64e"
+      },
+      "index": 37,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16878,
+        "path": "paul_graham/raw_html/037-earnest.html",
+        "sha256": "9398bd175980235e8d3839fe3db515b497d9295de0f05e6c89296731d9474a1d"
+      },
+      "url": "http://www.paulgraham.com/earnest.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6234,
+        "path": "paul_graham/canonical_html/equity.txt",
+        "sha256": "537000a0eec16281734f4c599f35ec370e39150adfd8e713ded7760020e40842"
+      },
+      "index": 38,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12937,
+        "path": "paul_graham/raw_html/038-equity.html",
+        "sha256": "92e7e6cec54314a4e595d5f1416ade6ae81cea90932b5820b3e8175d40b7a6e3"
+      },
+      "url": "http://www.paulgraham.com/equity.html"
+    },
+    {
+      "canonical": {
+        "bytes": 26441,
+        "path": "paul_graham/canonical_html/essay.txt",
+        "sha256": "c8b7eaa475e96719595a68e8a0dfe5185cb61a9f3c8d9891a04e7e70a45199d3"
+      },
+      "index": 39,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 38145,
+        "path": "paul_graham/raw_html/039-essay.html",
+        "sha256": "fa20c06322384fffb34a6d726d30a5d6a9c440a9d553d385827abbe2b0f86cc9"
+      },
+      "url": "http://www.paulgraham.com/essay.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4987,
+        "path": "paul_graham/canonical_html/ffb.txt",
+        "sha256": "266c58a66f533f519449fb7999ed30adac291db41c6ff855c17549446b6eb376"
+      },
+      "index": 40,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14936,
+        "path": "paul_graham/raw_html/040-ffb.html",
+        "sha256": "376920f9ace45aae1ec2bafb9ac6507f4aec51a4c0c978167d1f423aaea9ba8a"
+      },
+      "url": "http://www.paulgraham.com/ffb.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7896,
+        "path": "paul_graham/canonical_html/fh.txt",
+        "sha256": "c65547931d01af0a01b0db6e4a0b2371141a5c8c74bdb4ef14ac0dd1125debd2"
+      },
+      "index": 41,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15789,
+        "path": "paul_graham/raw_html/041-fh.html",
+        "sha256": "a33a9fe65d685aba79b44ad7e407610e8aba155ebf9378961d2841d140dfcf0f"
+      },
+      "url": "http://www.paulgraham.com/fh.html"
+    },
+    {
+      "canonical": {
+        "bytes": 1562,
+        "path": "paul_graham/canonical_html/fix.txt",
+        "sha256": "2490cdeb07a86896e87dedd5bd362d6776576736658315a0647b5c1a969422d3"
+      },
+      "index": 42,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10581,
+        "path": "paul_graham/raw_html/042-fix.html",
+        "sha256": "f2cf02b9cd561cfe9131ec85dbd44b841f48c1d0165108ba4c2a9e268933cee0"
+      },
+      "url": "http://www.paulgraham.com/fix.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7705,
+        "path": "paul_graham/canonical_html/fn.txt",
+        "sha256": "523599f366d739a21c7190c09bde1e018626f2641d1e5b5fe08f22901a272e8e"
+      },
+      "index": 43,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14849,
+        "path": "paul_graham/raw_html/043-fn.html",
+        "sha256": "d0765f1bf488d5804bc1b56e722d14de6a5af42f1e9ec7df7916711a49df4f7d"
+      },
+      "url": "http://www.paulgraham.com/fn.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4672,
+        "path": "paul_graham/canonical_html/foundersatwork.txt",
+        "sha256": "35d9f121f6d1fb47cfb3301c58d2443337e972411553127b0b84320fbc4a9dff"
+      },
+      "index": 44,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 11737,
+        "path": "paul_graham/raw_html/044-foundersatwork.html",
+        "sha256": "0bd59e4964bb0deb3ee79b950d3511cf92601939541a012f9baca6069f87869b"
+      },
+      "url": "http://www.paulgraham.com/foundersatwork.html"
+    },
+    {
+      "canonical": {
+        "bytes": 1156,
+        "path": "paul_graham/canonical_html/fp.txt",
+        "sha256": "32396f9bf68fed04b0f455bbccc6286dbbf280be612045a04a900ab5482dffe5"
+      },
+      "index": 45,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 8908,
+        "path": "paul_graham/raw_html/045-fp.html",
+        "sha256": "b6b6899a10d62b755d5c35e585a3f64e659d864b8bc93eaea54e51377ffe4d7c"
+      },
+      "url": "http://www.paulgraham.com/fp.html"
+    },
+    {
+      "canonical": {
+        "bytes": 61566,
+        "path": "paul_graham/canonical_html/fr.txt",
+        "sha256": "d07b0a44c0bd92b7c18e70ca3705bc8928d4027d51b7ad9f957111f671f0c04f"
+      },
+      "index": 46,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 73434,
+        "path": "paul_graham/raw_html/046-fr.html",
+        "sha256": "ed9690528552b83e876dd00679f8b4f93afdc888cac6699ceeb630078cd87445"
+      },
+      "url": "http://www.paulgraham.com/fr.html"
+    },
+    {
+      "canonical": {
+        "bytes": 28484,
+        "path": "paul_graham/canonical_html/fundraising.txt",
+        "sha256": "9ae303261d94cb8539386445c4f499fb91504d4ee4ffad56eb7c4ab79f8f2ee2"
+      },
+      "index": 47,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 37108,
+        "path": "paul_graham/raw_html/047-fundraising.html",
+        "sha256": "3a410c434a8c88d1fff9137dc18e3e700e5befebf93944e6edada3d3c618d575"
+      },
+      "url": "http://www.paulgraham.com/fundraising.html"
+    },
+    {
+      "canonical": {
+        "bytes": 22757,
+        "path": "paul_graham/canonical_html/future.txt",
+        "sha256": "11d700448212ffaa937a81a0335601298edb45b4240e9d5e9917c47e108c5901"
+      },
+      "index": 48,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 31595,
+        "path": "paul_graham/raw_html/048-future.html",
+        "sha256": "d0d91ff12f01e0761758427048e1d0df6e655c95f06e8f724485b6cf69f4e568"
+      },
+      "url": "http://www.paulgraham.com/future.html"
+    },
+    {
+      "canonical": {
+        "bytes": 15429,
+        "path": "paul_graham/canonical_html/genius.txt",
+        "sha256": "e1abf761dcf65a1f3ce5fd14e5949fd089e0dd80ccbbcff72aef7b1f83836cba"
+      },
+      "index": 49,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 24188,
+        "path": "paul_graham/raw_html/049-genius.html",
+        "sha256": "b71e942a9c051e51df6a6d0ffb18982f39024124bf414c34aaf84bec2cbd6b3d"
+      },
+      "url": "http://www.paulgraham.com/genius.html"
+    },
+    {
+      "canonical": {
+        "bytes": 873,
+        "path": "paul_graham/canonical_html/getideas.txt",
+        "sha256": "a05c79bdb8a2fd559fd77959fbd58b0ff5f027742898c215dbc90e2dee5d80fa"
+      },
+      "index": 50,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 6780,
+        "path": "paul_graham/raw_html/050-getideas.html",
+        "sha256": "410a9e73831d0cf497ebf8a7bec9b568098367a29170a99f27b4434e02e5f4b5"
+      },
+      "url": "http://www.paulgraham.com/getideas.html"
+    },
+    {
+      "canonical": {
+        "bytes": 17037,
+        "path": "paul_graham/canonical_html/good.txt",
+        "sha256": "c1d06580c3fd3d345d37bfb21cba2a8f7141b3b23cedad7104090ea3b7228ec5"
+      },
+      "index": 51,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 25462,
+        "path": "paul_graham/raw_html/051-good.html",
+        "sha256": "4954c2bec33d1c272d890e85f954479bc8f41fd3ee4233263ab2e4c181b3ccbe"
+      },
+      "url": "http://www.paulgraham.com/good.html"
+    },
+    {
+      "canonical": {
+        "bytes": 20482,
+        "path": "paul_graham/canonical_html/goodart.txt",
+        "sha256": "6e913ed80701cb3f4aa48f77cc28555a78ed9f4240fb700bbf730ee51bf92999"
+      },
+      "index": 52,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 30020,
+        "path": "paul_graham/raw_html/052-goodart.html",
+        "sha256": "5fe9d50e92002458f185087475c69917590086e282402d73e56b793b150d242b"
+      },
+      "url": "http://www.paulgraham.com/goodart.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7949,
+        "path": "paul_graham/canonical_html/googles.txt",
+        "sha256": "9656eca971b39f5f659bb188ea1053670e7311aff5a51445a0ba109b8e593a73"
+      },
+      "index": 53,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15251,
+        "path": "paul_graham/raw_html/053-googles.html",
+        "sha256": "b8ff6eac052f898c52445779b1d70c67cc1adbcb9a0a6b51e5190e67893812e1"
+      },
+      "url": "http://www.paulgraham.com/googles.html"
+    },
+    {
+      "canonical": {
+        "bytes": 68366,
+        "path": "paul_graham/canonical_html/greatwork.txt",
+        "sha256": "01cfc385a10ba6c9e0491176f0389e54afc1201ac46118b32fc7c27193b5faed"
+      },
+      "index": 54,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 79767,
+        "path": "paul_graham/raw_html/054-greatwork.html",
+        "sha256": "ea2ac386123143d593a54c565eefa06453bd21187e44c6b6a4a3a8b2c14a278d"
+      },
+      "url": "http://www.paulgraham.com/greatwork.html"
+    },
+    {
+      "canonical": {
+        "bytes": 31489,
+        "path": "paul_graham/canonical_html/growth.txt",
+        "sha256": "e8914cec32b0c89cccff672a372c6a11ec33383a71a016f87c6f78213585f99b"
+      },
+      "index": 55,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 43015,
+        "path": "paul_graham/raw_html/055-growth.html",
+        "sha256": "e1178c60e3bf1a10708ffd3b9451393b3b84996525f6eb14754084125f2e2be2"
+      },
+      "url": "http://www.paulgraham.com/growth.html"
+    },
+    {
+      "canonical": {
+        "bytes": 36128,
+        "path": "paul_graham/canonical_html/guidetoinvestors.txt",
+        "sha256": "0fd047a4fdd563ee9739253c6ec9bc782cfbeaafdc75fff5b7084c987e009466"
+      },
+      "index": 56,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 43914,
+        "path": "paul_graham/raw_html/056-guidetoinvestors.html",
+        "sha256": "00c9fb9102b1ce3c937a7631346cb1b5e29c8d699325ff5a5e05bf18362a90c4"
+      },
+      "url": "http://www.paulgraham.com/guidetoinvestors.html"
+    },
+    {
+      "canonical": {
+        "bytes": 16921,
+        "path": "paul_graham/canonical_html/hackernews.txt",
+        "sha256": "d6e3ce0263aef322f2b3beb1e5417bf080bf239a7a30dca01cae29fe26b67176"
+      },
+      "index": 57,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 24306,
+        "path": "paul_graham/raw_html/057-hackernews.html",
+        "sha256": "51e1547aea8ac2f21efcff0c1c46d71ea7d8c83b612bd1d72652d8e466b36ac9"
+      },
+      "url": "http://www.paulgraham.com/hackernews.html"
+    },
+    {
+      "canonical": {
+        "bytes": 10675,
+        "path": "paul_graham/canonical_html/head.txt",
+        "sha256": "f0e91d9de1092fc048038e3a3eb114fc2bc383b26d5242c3558034f161bfbc7a"
+      },
+      "index": 58,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 21035,
+        "path": "paul_graham/raw_html/058-head.html",
+        "sha256": "b6834a9d82e2e602fba4f5c093c6455ed482d1a53d694e2d2dc664f94800bba5"
+      },
+      "url": "http://www.paulgraham.com/head.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6611,
+        "path": "paul_graham/canonical_html/herd.txt",
+        "sha256": "c6fbe34279b579d3c55310e0059ffa6b0287fd43bab7ccd8a2b03fc638a98241"
+      },
+      "index": 59,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13984,
+        "path": "paul_graham/raw_html/059-herd.html",
+        "sha256": "0183cd2c4c1bec54b2ff1243041ee980fc5ac82b9d713fb2dc5950befdc36e3a"
+      },
+      "url": "http://www.paulgraham.com/herd.html"
+    },
+    {
+      "canonical": {
+        "bytes": 12856,
+        "path": "paul_graham/canonical_html/heresy.txt",
+        "sha256": "eea0e45d66af4af8da1c09eaac17b927951f797d3cc8ea14ad1c903c4d77248f"
+      },
+      "index": 60,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 19774,
+        "path": "paul_graham/raw_html/060-heresy.html",
+        "sha256": "5230dc75ebc71596f67e2d753fbc7a326175e9c7c228721ecca47cd54be621f5"
+      },
+      "url": "http://www.paulgraham.com/heresy.html"
+    },
+    {
+      "canonical": {
+        "bytes": 15870,
+        "path": "paul_graham/canonical_html/heroes.txt",
+        "sha256": "ade2283b60e8b8040044df23ba11401984357184cb3a596501639cfc56550ec9"
+      },
+      "index": 61,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 23153,
+        "path": "paul_graham/raw_html/061-heroes.html",
+        "sha256": "5ed363b63db6196604cfc81cc2b21dd129f6a50e09ec84d1e544edb936873313"
+      },
+      "url": "http://www.paulgraham.com/heroes.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9228,
+        "path": "paul_graham/canonical_html/highres.txt",
+        "sha256": "727ac27280c88174bdf16c8363f4f08d2e3cb1efe6d86602c8ade54414da01a3"
+      },
+      "index": 62,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15850,
+        "path": "paul_graham/raw_html/062-highres.html",
+        "sha256": "9980b91e0fac11e76a132136f4c6b6ec51a8be227346e0a8de87e9a848b2f192"
+      },
+      "url": "http://www.paulgraham.com/highres.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4386,
+        "path": "paul_graham/canonical_html/hiresfund.txt",
+        "sha256": "72cf879290de9dcfb7aaa97d961d8af92ab60111aa346700c1b842710e810c38"
+      },
+      "index": 63,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10670,
+        "path": "paul_graham/raw_html/063-hiresfund.html",
+        "sha256": "6830e2ca852ac3b7e8dad71d58f7e6afd6cbf3ed4b2a99490027e48064cbea34"
+      },
+      "url": "http://www.paulgraham.com/hiresfund.html"
+    },
+    {
+      "canonical": {
+        "bytes": 27505,
+        "path": "paul_graham/canonical_html/hiring.txt",
+        "sha256": "c2ee9c8e30007cbf8dede6b228a19d384b09063b1b9eb6b5db74600ecaebb78f"
+      },
+      "index": 64,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 38322,
+        "path": "paul_graham/raw_html/064-hiring.html",
+        "sha256": "5d4b590a8f1473a828e6cd316ac8921eb5b74f4275a49adab04f807073c5e404"
+      },
+      "url": "http://www.paulgraham.com/hiring.html"
+    },
+    {
+      "canonical": {
+        "bytes": 32352,
+        "path": "paul_graham/canonical_html/hp.txt",
+        "sha256": "33c78d18979f69f4b3d669320b312fd6c057cc583d0b56d48dd4156f9ead285b"
+      },
+      "index": 65,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 45228,
+        "path": "paul_graham/raw_html/065-hp.html",
+        "sha256": "720bb066404e9621d14c64db52e83f8c803e83d5bd3275cbe483b44d7a96607e"
+      },
+      "url": "http://www.paulgraham.com/hp.html"
+    },
+    {
+      "canonical": {
+        "bytes": 28386,
+        "path": "paul_graham/canonical_html/hs.txt",
+        "sha256": "9e05e8e2c421ecf3a6a68f0eeaef5e5ba0d85c80137254deadcad5cef0018d69"
+      },
+      "index": 66,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 38357,
+        "path": "paul_graham/raw_html/066-hs.html",
+        "sha256": "fd601f28e0b7a425c7670348a879b7564290da756495db9bf6a54de8b8651e93"
+      },
+      "url": "http://www.paulgraham.com/hs.html"
+    },
+    {
+      "canonical": {
+        "bytes": 28329,
+        "path": "paul_graham/canonical_html/hundred.txt",
+        "sha256": "79d89ca89093bc3f40ac72b552648507afc1b113cccff4259cb4bee7ed799a0c"
+      },
+      "index": 67,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 35811,
+        "path": "paul_graham/raw_html/067-hundred.html",
+        "sha256": "5b6b613f537ce3f7781b5c45350cf647919be056f3bd48489f50bb8f00aaea13"
+      },
+      "url": "http://www.paulgraham.com/hundred.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2830,
+        "path": "paul_graham/canonical_html/hw.txt",
+        "sha256": "7ead517b9f110a5a573bb16e2b22db8e29b71052ae37e5f7af777257a21c5857"
+      },
+      "index": 68,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9903,
+        "path": "paul_graham/raw_html/068-hw.html",
+        "sha256": "afb1a3fe8743cc2188d5e91c003370fdec85f590c2ee7bdf627d1a3c87fbe142"
+      },
+      "url": "http://www.paulgraham.com/hw.html"
+    },
+    {
+      "canonical": {
+        "bytes": 18405,
+        "path": "paul_graham/canonical_html/hwh.txt",
+        "sha256": "71edf88579a2c673387684f563d57b23636a9150b39b864ad97b9574ce21cf2d"
+      },
+      "index": 69,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 26540,
+        "path": "paul_graham/raw_html/069-hwh.html",
+        "sha256": "2fd01593ea9ebed96afabbd07aa13fd9c1461669081fc93842039b78567da5f9"
+      },
+      "url": "http://www.paulgraham.com/hwh.html"
+    },
+    {
+      "canonical": {
+        "bytes": 35048,
+        "path": "paul_graham/canonical_html/icad.txt",
+        "sha256": "7b1916a9eae11842063c3142cab52cb75ac27b40e54db1feecac3710c280b9ed"
+      },
+      "index": 70,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 45495,
+        "path": "paul_graham/raw_html/070-icad.html",
+        "sha256": "ca1644d7b456f12d6bb4c32ebd560da3f707159469e2d70482c10afd7e05c9bf"
+      },
+      "url": "http://www.paulgraham.com/icad.html"
+    },
+    {
+      "canonical": {
+        "bytes": 22631,
+        "path": "paul_graham/canonical_html/ideas.txt",
+        "sha256": "25854418763e65abdd1807ee5629cfabaaebfa660f7b8190429ea5847df5cd79"
+      },
+      "index": 71,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 34279,
+        "path": "paul_graham/raw_html/071-ideas.html",
+        "sha256": "e73ed7c770549fcaa4199d740b53387fb672daae5fb8c1074872280ffd8753ea"
+      },
+      "url": "http://www.paulgraham.com/ideas.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5407,
+        "path": "paul_graham/canonical_html/identity.txt",
+        "sha256": "86ba975572a4bd4acfe9034d0ffc49041fe185df7398a2cda485a139b0a1a171"
+      },
+      "index": 72,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13636,
+        "path": "paul_graham/raw_html/072-identity.html",
+        "sha256": "efeb6d48b06a5b196c61650f239042135eb055b03934a5b65c0e04f5372bd385"
+      },
+      "url": "http://www.paulgraham.com/identity.html"
+    },
+    {
+      "canonical": {
+        "bytes": 20610,
+        "path": "paul_graham/canonical_html/ineq.txt",
+        "sha256": "2fbce99804182c8aabe65941194231615b6f546126a833c67a058c6eb6ddf9de"
+      },
+      "index": 73,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 30904,
+        "path": "paul_graham/raw_html/073-ineq.html",
+        "sha256": "fd1912987c4093e36a9ab88e81c861a984dd9c672395620080cb53d3d1be125f"
+      },
+      "url": "http://www.paulgraham.com/ineq.html"
+    },
+    {
+      "canonical": {
+        "bytes": 16610,
+        "path": "paul_graham/canonical_html/inequality.txt",
+        "sha256": "6599e8a9ed6292390d0e0b924a49350854473d864fa6dea021d14c835aab29bd"
+      },
+      "index": 74,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 27867,
+        "path": "paul_graham/raw_html/074-inequality.html",
+        "sha256": "506d2115f506d80138ceb3dd080b008aeb523b894b67988017eef25ac56020f6"
+      },
+      "url": "http://www.paulgraham.com/inequality.html"
+    },
+    {
+      "canonical": {
+        "bytes": 16379,
+        "path": "paul_graham/canonical_html/investors.txt",
+        "sha256": "4c80f9119b875f7636384a748fa8483375ee127bc112895108534d75a4ae1e2a"
+      },
+      "index": 75,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 27137,
+        "path": "paul_graham/raw_html/075-investors.html",
+        "sha256": "cea4c1ff3112dcfca47d4213fd10824ca297c3b45353620f891a35cc63a29a7e"
+      },
+      "url": "http://www.paulgraham.com/investors.html"
+    },
+    {
+      "canonical": {
+        "bytes": 16910,
+        "path": "paul_graham/canonical_html/invtrend.txt",
+        "sha256": "e41e1dee424e23911ec1723d83e685dfa3756d2599187aa5857a8a2dafca024a"
+      },
+      "index": 76,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 24092,
+        "path": "paul_graham/raw_html/076-invtrend.html",
+        "sha256": "f58fb2b507e6972c8adadafa55722d908d70fe51bbf462583377884056d1130a"
+      },
+      "url": "http://www.paulgraham.com/invtrend.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7707,
+        "path": "paul_graham/canonical_html/javacover.txt",
+        "sha256": "920650b9871e33ff20d564af914c389016f5ea1d4b342c9dd1cb7f23519c3378"
+      },
+      "index": 77,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 17928,
+        "path": "paul_graham/raw_html/077-javacover.html",
+        "sha256": "3cc2b0241d7611d2910ead4b78405933bb36841c026e3e80d47ffe3bc372b35c"
+      },
+      "url": "http://www.paulgraham.com/javacover.html"
+    },
+    {
+      "canonical": {
+        "bytes": 11333,
+        "path": "paul_graham/canonical_html/jessica.txt",
+        "sha256": "4d13a7eaf18fd5afe1254b46ad49a5959f5f72e9a87e2392dd7ac9ec8edc85a2"
+      },
+      "index": 78,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 17906,
+        "path": "paul_graham/raw_html/078-jessica.html",
+        "sha256": "d6631575a7ff5801fb4ecd12244cdf07a9ef42c74579722b187413c704ea7957"
+      },
+      "url": "http://www.paulgraham.com/jessica.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4423,
+        "path": "paul_graham/canonical_html/judgement.txt",
+        "sha256": "a54ba539a9d9237416b61bb8ac119bd213298a65bcce521120b985c72ea11db2"
+      },
+      "index": 79,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12687,
+        "path": "paul_graham/raw_html/079-judgement.html",
+        "sha256": "a06b8786560c52ded1e11d071eac88e8cf94d9acdd2308dda7ad75187b0c4ccc"
+      },
+      "url": "http://www.paulgraham.com/judgement.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4893,
+        "path": "paul_graham/canonical_html/kate.txt",
+        "sha256": "500f8ed5e0311f0c056c3490a9782f3cd0c792904fe3098bcc03c6c8101f6c71"
+      },
+      "index": 80,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 11716,
+        "path": "paul_graham/raw_html/080-kate.html",
+        "sha256": "8faad4edf375fb9c48158217ae50a94a776d293f3fa55914d6325a334bd6316e"
+      },
+      "url": "http://www.paulgraham.com/kate.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8375,
+        "path": "paul_graham/canonical_html/kids.txt",
+        "sha256": "d748e82956d475589124fc5306eb11f71be68a4dd3168dd7b2273a93ccbb9ad2"
+      },
+      "index": 81,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15646,
+        "path": "paul_graham/raw_html/081-kids.html",
+        "sha256": "f3433da46e2e7661ad67fdec565133e344e55c7e703b03c9673602aefcf46edc"
+      },
+      "url": "http://www.paulgraham.com/kids.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3450,
+        "path": "paul_graham/canonical_html/ladder.txt",
+        "sha256": "7a644a7cb2fb65d7d4d2c2e16af2b68a944cb2211fc5b18ca0f207ebfb0a05fe"
+      },
+      "index": 82,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10874,
+        "path": "paul_graham/raw_html/082-ladder.html",
+        "sha256": "700350c889c5f8d18067810e8cb4a9c414d3dad6d700bb8b8740257a2ad63fcf"
+      },
+      "url": "http://www.paulgraham.com/ladder.html"
+    },
+    {
+      "canonical": {
+        "bytes": 22858,
+        "path": "paul_graham/canonical_html/lesson.txt",
+        "sha256": "a99cea5307950b2aae579938df9b4783dd01308d7103a798e0cddee18d99d0d7"
+      },
+      "index": 83,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 31100,
+        "path": "paul_graham/raw_html/083-lesson.html",
+        "sha256": "58ad02fb4cb8781765c78fa038e4414be95bb7ef6c14926c72d2a382d5b2dc07"
+      },
+      "url": "http://www.paulgraham.com/lesson.html"
+    },
+    {
+      "canonical": {
+        "bytes": 29714,
+        "path": "paul_graham/canonical_html/lies.txt",
+        "sha256": "6ab940e12e12f71aad55cbf9b3618bf987a71dbeca3ebeab81d74dd609bc3471"
+      },
+      "index": 84,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 39437,
+        "path": "paul_graham/raw_html/084-lies.html",
+        "sha256": "7552ef550f82554e46fa633e07dec0acdbd63efb40f3b8d59f3e87b6beb4fa4c"
+      },
+      "url": "http://www.paulgraham.com/lies.html"
+    },
+    {
+      "canonical": {
+        "bytes": 312,
+        "path": "paul_graham/canonical_html/lwba.txt",
+        "sha256": "5cc9827592c9f677e90609e122c4a211dcf5959a59888ed1dab9a7fb604374db"
+      },
+      "index": 85,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 7125,
+        "path": "paul_graham/raw_html/085-lwba.html",
+        "sha256": "629923699516fd83ccef36ec348647513a0549c4064f8795050dd4d54cdb3e25"
+      },
+      "url": "http://www.paulgraham.com/lwba.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5715,
+        "path": "paul_graham/canonical_html/mac.txt",
+        "sha256": "56a95bd8d935e1e99fdb4f0d029c02db30cf3b75aeb9660e69fbb7753611c7e3"
+      },
+      "index": 86,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14260,
+        "path": "paul_graham/raw_html/086-mac.html",
+        "sha256": "9dde749c23987b034b223bba220eb1bc792b637068db35079e1c6ffb6b0cfdea"
+      },
+      "url": "http://www.paulgraham.com/mac.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6635,
+        "path": "paul_graham/canonical_html/makersschedule.txt",
+        "sha256": "1e198f1b1c12b1cfc32b0909721e2a59a93cc93700ce5bda0db76109dd51646e"
+      },
+      "index": 87,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16817,
+        "path": "paul_graham/raw_html/087-makersschedule.html",
+        "sha256": "82c890a9cb06f8769c715caeaee8073574902be418b95070f623e56965b9ff04"
+      },
+      "url": "http://www.paulgraham.com/makersschedule.html"
+    },
+    {
+      "canonical": {
+        "bytes": 35455,
+        "path": "paul_graham/canonical_html/marginal.txt",
+        "sha256": "bf96fdbfa6531d821573d956d1ce5be78135414dfcbcedfdf1f8c7953b0e65df"
+      },
+      "index": 88,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 45211,
+        "path": "paul_graham/raw_html/088-marginal.html",
+        "sha256": "a92060d49c3bb44df921b4b8d45e04eff314c5313f65a42ac1507a28d64b0b97"
+      },
+      "url": "http://www.paulgraham.com/marginal.html"
+    },
+    {
+      "canonical": {
+        "bytes": 10983,
+        "path": "paul_graham/canonical_html/maybe.txt",
+        "sha256": "c9df24ca686fd74cab45bef038bd7002c0c5476e3447014cf23497f16265274c"
+      },
+      "index": 89,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 17870,
+        "path": "paul_graham/raw_html/089-maybe.html",
+        "sha256": "21312319704f64652c45dc113657bd7506f3dcbc28e01ed66e93cce9b08c24bc"
+      },
+      "url": "http://www.paulgraham.com/maybe.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6718,
+        "path": "paul_graham/canonical_html/mean.txt",
+        "sha256": "13d7562d9b2331d65e73c5089a39385578834d537133352e628166530144f55e"
+      },
+      "index": 90,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15297,
+        "path": "paul_graham/raw_html/090-mean.html",
+        "sha256": "0267e4f58ee4f7e988294d930b192327820c34e5243b543fc1cf0067b4acbb56"
+      },
+      "url": "http://www.paulgraham.com/mean.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7493,
+        "path": "paul_graham/canonical_html/microsoft.txt",
+        "sha256": "4b40b6a3bb6c955988601729301e21cc50c43e2f8fc667a0dd4e7bd1758c9feb"
+      },
+      "index": 91,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16473,
+        "path": "paul_graham/raw_html/091-microsoft.html",
+        "sha256": "ee065b7a1ef3d1ef513257e8b2fac88981d5a17e92c5ac7b46336aaa691a7532"
+      },
+      "url": "http://www.paulgraham.com/microsoft.html"
+    },
+    {
+      "canonical": {
+        "bytes": 36654,
+        "path": "paul_graham/canonical_html/mit.txt",
+        "sha256": "99b8998a6065bb517998a260e0738e74344b835059adb43f0e4d8520ff5ccae8"
+      },
+      "index": 92,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 46512,
+        "path": "paul_graham/raw_html/092-mit.html",
+        "sha256": "5b89d0378857f9ba5dbb98401f4bcdf8bf6d10da0fde00a7db458ffe40437180"
+      },
+      "url": "http://www.paulgraham.com/mit.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4346,
+        "path": "paul_graham/canonical_html/name.txt",
+        "sha256": "85a5645b40939d661dc5e3c1e7c2e2385d3cb7613cd0b485b958d6c5410d8832"
+      },
+      "index": 93,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10761,
+        "path": "paul_graham/raw_html/093-name.html",
+        "sha256": "aed00b264facc19bce3dd407cb4be04fe6ab1db8f1c8a3af6c20552c6d9f5d16"
+      },
+      "url": "http://www.paulgraham.com/name.html"
+    },
+    {
+      "canonical": {
+        "bytes": 32470,
+        "path": "paul_graham/canonical_html/nerds.txt",
+        "sha256": "48ee2263fb3dbc93271ba72e274d35b64359d4e2e210189d198fa89752d45fe9"
+      },
+      "index": 94,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 44606,
+        "path": "paul_graham/raw_html/094-nerds.html",
+        "sha256": "1483c145e3d0fdc585abf1c048278accac0085b69d36db7f47df675d2c941e3c"
+      },
+      "url": "http://www.paulgraham.com/nerds.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6928,
+        "path": "paul_graham/canonical_html/newthings.txt",
+        "sha256": "d278143c737a0bab87d2666481847f4f7888cb168b1d97602231bc59fd2a7762"
+      },
+      "index": 95,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13428,
+        "path": "paul_graham/raw_html/095-newthings.html",
+        "sha256": "b89ae1fd2d08a0ec2c17b6916752e099320ff9a4b18e12e9ebddb441fbd8d316"
+      },
+      "url": "http://www.paulgraham.com/newthings.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2045,
+        "path": "paul_graham/canonical_html/noob.txt",
+        "sha256": "c35771ce3973755ac05ca66df401ab610cfd09c8e72f294e4dcaa170fda44ced"
+      },
+      "index": 96,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12475,
+        "path": "paul_graham/raw_html/096-noob.html",
+        "sha256": "84259722b4c7e0956204477fc8ad68abfeae2998b1fbf0b1da564237e5144618"
+      },
+      "url": "http://www.paulgraham.com/noob.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3029,
+        "path": "paul_graham/canonical_html/noop.txt",
+        "sha256": "336366ed7598d27ebfc2ff7da763c1e6db30a5e5d3dc8c9a2ee1b8e86516d91f"
+      },
+      "index": 97,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10529,
+        "path": "paul_graham/raw_html/097-noop.html",
+        "sha256": "6f8358f6d2389fd32edd82a65892ba9b3356764ae75a5fa55e3771035e63675e"
+      },
+      "url": "http://www.paulgraham.com/noop.html"
+    },
+    {
+      "canonical": {
+        "bytes": 35251,
+        "path": "paul_graham/canonical_html/notnot.txt",
+        "sha256": "71dbd9b1325d89c8d86c0c22933961d298487a11b12fcfa06af44aa43829cada"
+      },
+      "index": 98,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 45403,
+        "path": "paul_graham/raw_html/098-notnot.html",
+        "sha256": "0b4e62f50685946a49d9019a90252bd99fb49bf99fc6ac420fe4dbd2caacf7fe"
+      },
+      "url": "http://www.paulgraham.com/notnot.html"
+    },
+    {
+      "canonical": {
+        "bytes": 1564,
+        "path": "paul_graham/canonical_html/nov.txt",
+        "sha256": "41d6d7ff21bb6891fd8af0498aa720df236b6662a089ff07ce1041e83e85be1c"
+      },
+      "index": 99,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9504,
+        "path": "paul_graham/raw_html/099-nov.html",
+        "sha256": "b45d67d66a2e0f6fdd0520eb6ca6bec0a1af8d98c01989acdcdeb5221b305e11"
+      },
+      "url": "http://www.paulgraham.com/nov.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8099,
+        "path": "paul_graham/canonical_html/nthings.txt",
+        "sha256": "dd7826cf9d7703f4bcfeedcf9c4753914d456a3c814a364062dce4a9fafb2f74"
+      },
+      "index": 100,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15195,
+        "path": "paul_graham/raw_html/100-nthings.html",
+        "sha256": "1457a84bd9e1e1675354be127f313ee72c56cc9d46a00a5449f1eaaff7574a3b"
+      },
+      "url": "http://www.paulgraham.com/nthings.html"
+    },
+    {
+      "canonical": {
+        "bytes": 25174,
+        "path": "paul_graham/canonical_html/opensource.txt",
+        "sha256": "1e242bca3fbb1e4673b66ec191e02c44f353878c62b5f29b2c1aa3faa7c8e7cc"
+      },
+      "index": 101,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 36617,
+        "path": "paul_graham/raw_html/101-opensource.html",
+        "sha256": "4f48ee92bc36696fc71f7f46cb04d08a61ec5c983cb62f2ab27cf76364c798f5"
+      },
+      "url": "http://www.paulgraham.com/opensource.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5757,
+        "path": "paul_graham/canonical_html/organic.txt",
+        "sha256": "a750be7049dcaa51c18985b1e5cdf16cd88d7eae2cc305e93ac8cbcfb562a0b0"
+      },
+      "index": 102,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12407,
+        "path": "paul_graham/raw_html/102-organic.html",
+        "sha256": "013424454963a616959da69c4f627f86a385d466ab81b10f866dc99433f5a064"
+      },
+      "url": "http://www.paulgraham.com/organic.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3939,
+        "path": "paul_graham/canonical_html/orth.txt",
+        "sha256": "3d7f7b8434c642c939413ee02cf26e88710b21655fc2e3fa7e46b469a617d463"
+      },
+      "index": 103,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10668,
+        "path": "paul_graham/raw_html/103-orth.html",
+        "sha256": "53e5ae20300a2a50d5a2e9daa83dc40838620f37690bb264befcd30e38e1291e"
+      },
+      "url": "http://www.paulgraham.com/orth.html"
+    },
+    {
+      "canonical": {
+        "bytes": 14304,
+        "path": "paul_graham/canonical_html/own.txt",
+        "sha256": "40d1e68b5f0890f7197e12df040b5483c7a46e3481207fa30a572e26ad761882"
+      },
+      "index": 104,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 21111,
+        "path": "paul_graham/raw_html/104-own.html",
+        "sha256": "fda3ff436d4767ca68ebdcb719dacedf10ff1161b737f078a4084c179cba5446"
+      },
+      "url": "http://www.paulgraham.com/own.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4102,
+        "path": "paul_graham/canonical_html/patentpledge.txt",
+        "sha256": "5c6e6b72e848cdfed2425f62dc9c323ec366996af6bd453f9e0a9666c50c3139"
+      },
+      "index": 105,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10977,
+        "path": "paul_graham/raw_html/105-patentpledge.html",
+        "sha256": "7591efd1e0f31fb2210e00d0f6cbf254a44c251924fd5eb4d24694c50d6a553d"
+      },
+      "url": "http://www.paulgraham.com/patentpledge.html"
+    },
+    {
+      "canonical": {
+        "bytes": 15185,
+        "path": "paul_graham/canonical_html/pgh.txt",
+        "sha256": "60a3b0cf4e38541fd2762771c59796ea532e0aa6fdad5c1588feab65da9e5235"
+      },
+      "index": 106,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 21517,
+        "path": "paul_graham/raw_html/106-pgh.html",
+        "sha256": "943b682b9ee07b1c14c7640b2c72a77211a0d8819a5fc0541a77e43103f44ca2"
+      },
+      "url": "http://www.paulgraham.com/pgh.html"
+    },
+    {
+      "canonical": {
+        "bytes": 9181,
+        "path": "paul_graham/canonical_html/pinch.txt",
+        "sha256": "9cfe80e8b0be084abd1852b0bd88e836b5de14c1ba92919fd5cf15fe1fd3cbc5"
+      },
+      "index": 107,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16596,
+        "path": "paul_graham/raw_html/107-pinch.html",
+        "sha256": "e1581d32efe22db6c6a3633e57e3d41c854d0262be8a093f770fb6a6418e9fa4"
+      },
+      "url": "http://www.paulgraham.com/pinch.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3563,
+        "path": "paul_graham/canonical_html/polls.txt",
+        "sha256": "9574f75b4af8bb3d1ada70237eadf8413b9b34ed50765911260a8cfe29ede14a"
+      },
+      "index": 108,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12430,
+        "path": "paul_graham/raw_html/108-polls.html",
+        "sha256": "8b1c1574aa03a50dc064f2582050ac4ea68c3eb750733826ef6ad2c3187e60ee"
+      },
+      "url": "http://www.paulgraham.com/polls.html"
+    },
+    {
+      "canonical": {
+        "bytes": 17444,
+        "path": "paul_graham/canonical_html/power.txt",
+        "sha256": "dd67b5bf915ffb1f8a7e6402c104a7fcdd73d3c58facc67e574cf6a43cd3baf7"
+      },
+      "index": 109,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 33794,
+        "path": "paul_graham/raw_html/109-power.html",
+        "sha256": "b5a9c7e7a1b2252057658e9bca5abe8587ab6862c44fd64fd410862d902f77de"
+      },
+      "url": "http://www.paulgraham.com/power.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7653,
+        "path": "paul_graham/canonical_html/prcmc.txt",
+        "sha256": "8e4a85eeb91512d86d414a8f95b95bc3d7e0c75e50392a1df0b52ec6d7282035"
+      },
+      "index": 110,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14626,
+        "path": "paul_graham/raw_html/110-prcmc.html",
+        "sha256": "5ac0797e72dd2aeb8a558ec9e833ccb7d9b640565a09f2e6ff42953290d2abda"
+      },
+      "url": "http://www.paulgraham.com/prcmc.html"
+    },
+    {
+      "canonical": {
+        "bytes": 10317,
+        "path": "paul_graham/canonical_html/procrastination.txt",
+        "sha256": "3c4abd5f65630d21af560e3aed33334c0e82b6a1d6de7c156f31c26f2b070f7e"
+      },
+      "index": 111,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 22497,
+        "path": "paul_graham/raw_html/111-procrastination.html",
+        "sha256": "ba090f34877e2073b463f5fdd2dc92235a699dc4f1cb6a6df3103b6875f7cd76"
+      },
+      "url": "http://www.paulgraham.com/procrastination.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5625,
+        "path": "paul_graham/canonical_html/progbot.txt",
+        "sha256": "24ff151fb55596cf01e5f64aa1240d0ddecd551fa71168fda5165404f3fbc243"
+      },
+      "index": 112,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12044,
+        "path": "paul_graham/raw_html/112-progbot.html",
+        "sha256": "fefb43f8878606026494b153b190742db2bcd53430606f2b94c51a4fec1f1310"
+      },
+      "url": "http://www.paulgraham.com/progbot.html"
+    },
+    {
+      "canonical": {
+        "bytes": 1142,
+        "path": "paul_graham/canonical_html/prop62.txt",
+        "sha256": "bb74995ce28023f7be8bce03bfd3804b4f0908fd4a717abd9ab82fd728de3aa9"
+      },
+      "index": 113,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 7175,
+        "path": "paul_graham/raw_html/113-prop62.html",
+        "sha256": "a4511b24b8c3ccfa56a0591ff1684859a846c775cd2a430f4075305dcfc52c9b"
+      },
+      "url": "http://www.paulgraham.com/prop62.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5997,
+        "path": "paul_graham/canonical_html/property.txt",
+        "sha256": "608b4f0d881580d28df9bfd5035fdf13a1d5c89f6684743a5fa0072d5506c818"
+      },
+      "index": 114,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13283,
+        "path": "paul_graham/raw_html/114-property.html",
+        "sha256": "15afab038ac27a64379f4e7155aa648ac185f109c7b515e4d13222d74da8db92"
+      },
+      "url": "http://www.paulgraham.com/property.html"
+    },
+    {
+      "canonical": {
+        "bytes": 10692,
+        "path": "paul_graham/canonical_html/publishing.txt",
+        "sha256": "a54830de3fa05f916129e5955a28e37c01ecb2f723f3157cf3c1b03ef64fb671"
+      },
+      "index": 115,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 17442,
+        "path": "paul_graham/raw_html/115-publishing.html",
+        "sha256": "94e0d61a136eb932628928895579e8f97c0c2590f0d02fa1a97965a806e335a2"
+      },
+      "url": "http://www.paulgraham.com/publishing.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2564,
+        "path": "paul_graham/canonical_html/pypar.txt",
+        "sha256": "e76cf81749513b9a3cd54013c5c4a64326e21d57b94b86a1f424a48be996281b"
+      },
+      "index": 116,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14571,
+        "path": "paul_graham/raw_html/116-pypar.html",
+        "sha256": "3b2ddd11b10364b0b3a9292d7ba002f33022ca4d9fc392771785bbc45e9294a7"
+      },
+      "url": "http://www.paulgraham.com/pypar.html"
+    },
+    {
+      "canonical": {
+        "bytes": 10948,
+        "path": "paul_graham/canonical_html/ramenprofitable.txt",
+        "sha256": "86421f5c934a2230c41fe84f77f68abab209948755d52eccb5e1aa723d57574f"
+      },
+      "index": 117,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 18606,
+        "path": "paul_graham/raw_html/117-ramenprofitable.html",
+        "sha256": "c17c1c9a2605488fa814172b9ac6e9901124953db68c50627c0ee88e111f60ec"
+      },
+      "url": "http://www.paulgraham.com/ramenprofitable.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3374,
+        "path": "paul_graham/canonical_html/randomness.txt",
+        "sha256": "1e5f2e3eb794b3380e2a43045dfd805a363fc922f93e92a435a8a56d6e3af0c0"
+      },
+      "index": 118,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10100,
+        "path": "paul_graham/raw_html/118-randomness.html",
+        "sha256": "285edf1d29dbac35ea22112a8a07cfc77a13c4c08bc233bfe9a2ed1c6917751e"
+      },
+      "url": "http://www.paulgraham.com/randomness.html"
+    },
+    {
+      "canonical": {
+        "bytes": 42844,
+        "path": "paul_graham/canonical_html/re.txt",
+        "sha256": "7dded42d738ec94a0afa2911f37bd0576be3e774cedd9ccb43139eb4b4113575"
+      },
+      "index": 119,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 53680,
+        "path": "paul_graham/raw_html/119-re.html",
+        "sha256": "dc364c2242998fe618efaf71a6d6abc560a539f4790dff322af1ad9e4a7d3e98"
+      },
+      "url": "http://www.paulgraham.com/re.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2525,
+        "path": "paul_graham/canonical_html/read.txt",
+        "sha256": "49e5a1f201f34ee2ef1d21f9f04379a1d85f8c642c45f872b781665d70ad5953"
+      },
+      "index": 120,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10975,
+        "path": "paul_graham/raw_html/120-read.html",
+        "sha256": "e308a068442e340392b9907ef6a31212e3995a8f523357d700d6c4e662ce8eb7"
+      },
+      "url": "http://www.paulgraham.com/read.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5043,
+        "path": "paul_graham/canonical_html/real.txt",
+        "sha256": "3fc7c41c068b633a3bfd8643c74d9ba787f2206b8ab586fb84931806eaa71558"
+      },
+      "index": 121,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13247,
+        "path": "paul_graham/raw_html/121-real.html",
+        "sha256": "5e769c973e3ed627dce67edbaa9e29b5fcfa0efaa5a0614c32d64b1d14ddc1af"
+      },
+      "url": "http://www.paulgraham.com/real.html"
+    },
+    {
+      "canonical": {
+        "bytes": 29503,
+        "path": "paul_graham/canonical_html/really.txt",
+        "sha256": "2d905263746f5d9edddd2a2608d477ba588607c18d732c82a90886f0afb9b986"
+      },
+      "index": 122,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 43846,
+        "path": "paul_graham/raw_html/122-really.html",
+        "sha256": "5131c960253e234ac223ce5c2efaf27da431e83dcc01744a97a6893834822d43"
+      },
+      "url": "http://www.paulgraham.com/really.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5873,
+        "path": "paul_graham/canonical_html/relres.txt",
+        "sha256": "be94f326c44aac55f42f68c07805a144a8a367418bcf4938a412aa9b2e6c5d44"
+      },
+      "index": 123,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12762,
+        "path": "paul_graham/raw_html/123-relres.html",
+        "sha256": "baa960c55527fed1fb68417707c05bf0ed0dfa2fb24c56eecc7d59021ffe37d0"
+      },
+      "url": "http://www.paulgraham.com/relres.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8110,
+        "path": "paul_graham/canonical_html/revolution.txt",
+        "sha256": "b814fb896b2d60a38321f4ed85ff8d2e0fa0e2b47010d5209c592b2600b63bec"
+      },
+      "index": 124,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14629,
+        "path": "paul_graham/raw_html/124-revolution.html",
+        "sha256": "0ccc6496d46ccfbe9ec4f1934b9f05d2035a24289758ac9adb0b2f4fc39ca09d"
+      },
+      "url": "http://www.paulgraham.com/revolution.html"
+    },
+    {
+      "canonical": {
+        "bytes": 15174,
+        "path": "paul_graham/canonical_html/richnow.txt",
+        "sha256": "7e1d34d3f00d007ef751bd81ecbc0a5ec77edca577c168dbd99818ac3065239d"
+      },
+      "index": 125,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 22552,
+        "path": "paul_graham/raw_html/125-richnow.html",
+        "sha256": "364904ed532980cdef04f3beaff0045b5e82c1925ded553db3966203e52a3525"
+      },
+      "url": "http://www.paulgraham.com/richnow.html"
+    },
+    {
+      "canonical": {
+        "bytes": 70054,
+        "path": "paul_graham/canonical_html/road.txt",
+        "sha256": "3f2e28e4b0baaec3ed9833033fd0416d40a2ef5afbbfa6d78359e7f836e9a5b6"
+      },
+      "index": 126,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 81817,
+        "path": "paul_graham/raw_html/126-road.html",
+        "sha256": "51a82bff531454ffb0446e59dd553ab79ca3be2b889648ecefaa350b2d9922f9"
+      },
+      "url": "http://www.paulgraham.com/road.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3604,
+        "path": "paul_graham/canonical_html/ronco.txt",
+        "sha256": "e9bbf88610b70845453a967c5fc7063b51db41552f18958d5453fc54893cc94a"
+      },
+      "index": 127,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10573,
+        "path": "paul_graham/raw_html/127-ronco.html",
+        "sha256": "e1ba182e4af1deaef07ad8309c6eddaad5251e2027372e89504c3d1dd7da79c7"
+      },
+      "url": "http://www.paulgraham.com/ronco.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4545,
+        "path": "paul_graham/canonical_html/safe.txt",
+        "sha256": "0234fadf854c8e58ba5fa2b94f0e7a195d61395f742385dad63b470a385499b3"
+      },
+      "index": 128,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 11026,
+        "path": "paul_graham/raw_html/128-safe.html",
+        "sha256": "a3111a47c2523c8167587d1e1811daca16d7b580b1326a795ac3c37883cf4cb2"
+      },
+      "url": "http://www.paulgraham.com/safe.html"
+    },
+    {
+      "canonical": {
+        "bytes": 31151,
+        "path": "paul_graham/canonical_html/say.txt",
+        "sha256": "bce2d37e362b8f06d2e9b747b9ac3615da1540da0ec7ca386a5e43c0234e23c9"
+      },
+      "index": 129,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 52195,
+        "path": "paul_graham/raw_html/129-say.html",
+        "sha256": "2e585a0d0ad1fcce1b7d3bfc9c1f5c0e6b769c2ef9543c4fe677e2831e1439da"
+      },
+      "url": "http://www.paulgraham.com/say.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5113,
+        "path": "paul_graham/canonical_html/schlep.txt",
+        "sha256": "e914f2ce5e4b3d03f4fdba4a18b9675b5c96fbc092bb13f35d9015102ecaf33c"
+      },
+      "index": 130,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 11380,
+        "path": "paul_graham/raw_html/130-schlep.html",
+        "sha256": "0093804980e55ef8d5afbe51d2a3d286f721fe5991d450f0fcc9ca30ee31fa43"
+      },
+      "url": "http://www.paulgraham.com/schlep.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7170,
+        "path": "paul_graham/canonical_html/seesv.txt",
+        "sha256": "d78b2f694bdd1711f0521fca2f751d6629cc6342d881273461501bdec52db34c"
+      },
+      "index": 131,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13759,
+        "path": "paul_graham/raw_html/131-seesv.html",
+        "sha256": "ea8ef23a938b22e3d2996fcce9533c6a847825f3c7dc4c3f5980a1ee48a7684c"
+      },
+      "url": "http://www.paulgraham.com/seesv.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2237,
+        "path": "paul_graham/canonical_html/segway.txt",
+        "sha256": "49a2721c3d3ed2ce56d1524f01af10f9930ea2b7b01a105f4cf39fdce42f49a7"
+      },
+      "index": 132,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 8216,
+        "path": "paul_graham/raw_html/132-segway.html",
+        "sha256": "f82ae06cfc172a11a26a97980c49c5522f3b7671f2370bd538791ba64d56b012"
+      },
+      "url": "http://www.paulgraham.com/segway.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3805,
+        "path": "paul_graham/canonical_html/selfindulgence.txt",
+        "sha256": "6a0512ea6521cb8c5f21ef633ac94eb47198142aab7786040596974cf4eb6313"
+      },
+      "index": 133,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9822,
+        "path": "paul_graham/raw_html/133-selfindulgence.html",
+        "sha256": "2c64ccdf7fb91f72673f5a45afc421868b2914b99a8c86986ba14d83ad198afc"
+      },
+      "url": "http://www.paulgraham.com/selfindulgence.html"
+    },
+    {
+      "canonical": {
+        "bytes": 15229,
+        "path": "paul_graham/canonical_html/sfp.txt",
+        "sha256": "c374b7d9402a95f1d3ecf894cbf6861c1ecedf93773c96cd8f1e65ed3feeeb4e"
+      },
+      "index": 134,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 23994,
+        "path": "paul_graham/raw_html/134-sfp.html",
+        "sha256": "380842792f569ba0cc172ae62d0ef7130fbcdad5b6b71df09d411737154d9a2d"
+      },
+      "url": "http://www.paulgraham.com/sfp.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2966,
+        "path": "paul_graham/canonical_html/simply.txt",
+        "sha256": "89165b53290a8dfecd8094e460e5a3d48433a77c10d3b2a33e21dabc46af2ec3"
+      },
+      "index": 135,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 8912,
+        "path": "paul_graham/raw_html/135-simply.html",
+        "sha256": "6e943751b384359bc957dcde531a4bf8584f5c6bee620b0034f31a7be4de7bb2"
+      },
+      "url": "http://www.paulgraham.com/simply.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8489,
+        "path": "paul_graham/canonical_html/smart.txt",
+        "sha256": "a788bc2005d07b50821d34205482092ec4e6a855c09096e30a348d38e2746e00"
+      },
+      "index": 136,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15126,
+        "path": "paul_graham/raw_html/136-smart.html",
+        "sha256": "9e80e2c01dfa3c7926bbe8992290c354a211be71a4293a33ccfad0a640baa747"
+      },
+      "url": "http://www.paulgraham.com/smart.html"
+    },
+    {
+      "canonical": {
+        "bytes": 27728,
+        "path": "paul_graham/canonical_html/softwarepatents.txt",
+        "sha256": "3cdae7d5ef235ff54e3414f326456689394fb31ff88ba4149accd042880bc43e"
+      },
+      "index": 137,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 36512,
+        "path": "paul_graham/raw_html/137-softwarepatents.html",
+        "sha256": "76066e78aa7c5edda9b5be498b56bbc167e03c2af995dd20558837417876c916"
+      },
+      "url": "http://www.paulgraham.com/softwarepatents.html"
+    },
+    {
+      "canonical": {
+        "bytes": 31774,
+        "path": "paul_graham/canonical_html/spam.txt",
+        "sha256": "ff6e75ab064b1ae86084815d1d10e20246ff592a523d8d67540b29cee0cdde9b"
+      },
+      "index": 138,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 49386,
+        "path": "paul_graham/raw_html/138-spam.html",
+        "sha256": "b99909a72ce53fe1f47aea16cf5e876485cec4ff33443f74b6837b0ce1ec4c70"
+      },
+      "url": "http://www.paulgraham.com/spam.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6529,
+        "path": "paul_graham/canonical_html/speak.txt",
+        "sha256": "741332ddee4fa03ac4cbf4af619be841acece8ea54a3736d9bb3ace796a8be63"
+      },
+      "index": 139,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13168,
+        "path": "paul_graham/raw_html/139-speak.html",
+        "sha256": "9e937575a39d742ebcaf8ff269af0e160a9beeac424fb5991dc9d5da667334ca"
+      },
+      "url": "http://www.paulgraham.com/speak.html"
+    },
+    {
+      "canonical": {
+        "bytes": 54553,
+        "path": "paul_graham/canonical_html/start.txt",
+        "sha256": "4dda416ec29e38005b97bfb9577f33a132ec50a9f53a3f7fddd5c00a8fbb87fa"
+      },
+      "index": 140,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 68754,
+        "path": "paul_graham/raw_html/140-start.html",
+        "sha256": "571b7ff110157bfbb44731cc694fac545c9ddd6dad3bf2bd8aae39ae27ff88d8"
+      },
+      "url": "http://www.paulgraham.com/start.html"
+    },
+    {
+      "canonical": {
+        "bytes": 51543,
+        "path": "paul_graham/canonical_html/startupfunding.txt",
+        "sha256": "bd97df7728cd2713ccc5d07780eaa1764bb2b28ad5574cfafaa1df0d58ed8d23"
+      },
+      "index": 141,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 62657,
+        "path": "paul_graham/raw_html/141-startupfunding.html",
+        "sha256": "8773be2cea9342e175df2410923e1d8cad329f42ff7b7e9bd3e3c9f8f2ed15d7"
+      },
+      "url": "http://www.paulgraham.com/startupfunding.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8441,
+        "path": "paul_graham/canonical_html/startuphubs.txt",
+        "sha256": "509d1597f031f7622e9bd8e5576c45bafbbf73d155fba570732b15b2f8e10ff1"
+      },
+      "index": 142,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16023,
+        "path": "paul_graham/raw_html/142-startuphubs.html",
+        "sha256": "cd7d708d83669870a514e1e296e3a08742e672292def1110edfd384a62cff782"
+      },
+      "url": "http://www.paulgraham.com/startuphubs.html"
+    },
+    {
+      "canonical": {
+        "bytes": 41137,
+        "path": "paul_graham/canonical_html/startupideas.txt",
+        "sha256": "152fff41b2f4de07300f2dc932b8d9b31380882c028e46ed402e793963680288"
+      },
+      "index": 143,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 52306,
+        "path": "paul_graham/raw_html/143-startupideas.html",
+        "sha256": "cfb786e25e8114b9087ea326cf07bb0af307f2ae289e86f04fc7b8a099fe142f"
+      },
+      "url": "http://www.paulgraham.com/startupideas.html"
+    },
+    {
+      "canonical": {
+        "bytes": 32541,
+        "path": "paul_graham/canonical_html/startupmistakes.txt",
+        "sha256": "fa0f95e37f8d8d677bdbe81f62c7edaf7963588c6d2e9f90dd45c463bdcd1e33"
+      },
+      "index": 144,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 45196,
+        "path": "paul_graham/raw_html/144-startupmistakes.html",
+        "sha256": "bcdf2c019c0ecfd69af4631843770b5ee28e190a86d7846b1a792d91668020f3"
+      },
+      "url": "http://www.paulgraham.com/startupmistakes.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6975,
+        "path": "paul_graham/canonical_html/stuff.txt",
+        "sha256": "98a5056cd5d99d9fbb9cd5e2fdc9dae2a8e283d3c6427983c1baa04ac66406b6"
+      },
+      "index": 145,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 19878,
+        "path": "paul_graham/raw_html/145-stuff.html",
+        "sha256": "f5ba734c5773507c3314b825925155bdaef82a04907d01e1bcd40457c2bbccad"
+      },
+      "url": "http://www.paulgraham.com/stuff.html"
+    },
+    {
+      "canonical": {
+        "bytes": 25436,
+        "path": "paul_graham/canonical_html/superlinear.txt",
+        "sha256": "63653b53ca478a86158d5ffaf9a969b9017b1ebc35ca0b994069f8da459fd2cb"
+      },
+      "index": 146,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 33459,
+        "path": "paul_graham/raw_html/146-superlinear.html",
+        "sha256": "f4dae0032d83a4737272eef080e305f4ac20214d21c1b37a817a0bf65decb922"
+      },
+      "url": "http://www.paulgraham.com/superlinear.html"
+    },
+    {
+      "canonical": {
+        "bytes": 12375,
+        "path": "paul_graham/canonical_html/swan.txt",
+        "sha256": "b1a1fc6b91033f2aaeee704602e009689d8a38c48c0955e116d9291f0467e685"
+      },
+      "index": 147,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 19404,
+        "path": "paul_graham/raw_html/147-swan.html",
+        "sha256": "80dcf8f13d145c06b44d14b460ac5e7f24cc0b7824793bed5ccdae229792057a"
+      },
+      "url": "http://www.paulgraham.com/swan.html"
+    },
+    {
+      "canonical": {
+        "bytes": 3293,
+        "path": "paul_graham/canonical_html/tablets.txt",
+        "sha256": "cab000082156bce488330c2e813a5dc7ebf5fba17ae06671970b11f9e31e622a"
+      },
+      "index": 148,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9487,
+        "path": "paul_graham/raw_html/148-tablets.html",
+        "sha256": "6ddafe57fbd62e89c53d9d048cb4d84139f13c306e242a8a4a710ea11d2eaaa1"
+      },
+      "url": "http://www.paulgraham.com/tablets.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4211,
+        "path": "paul_graham/canonical_html/talk.txt",
+        "sha256": "464de2ed3df1e27d1d35244d2f453a8e93a3c4ecce4204aacf90785475ed2a19"
+      },
+      "index": 149,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 11437,
+        "path": "paul_graham/raw_html/149-talk.html",
+        "sha256": "f82ee30ff20ec1e027fb590dbe5dab04bf4c2cd7f3ad0497c8b7e8c22639274b"
+      },
+      "url": "http://www.paulgraham.com/talk.html"
+    },
+    {
+      "canonical": {
+        "bytes": 25685,
+        "path": "paul_graham/canonical_html/taste.txt",
+        "sha256": "8d34530c78323262ceabb830b4793ad4baf9d188ecaa11f799d3c09fd7ed3f15"
+      },
+      "index": 150,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 37793,
+        "path": "paul_graham/raw_html/150-taste.html",
+        "sha256": "5ef6ae7d7ce4a1be0b56f1a9490bbe2e97dc13439127756984c72d0752c1ef5b"
+      },
+      "url": "http://www.paulgraham.com/taste.html"
+    },
+    {
+      "canonical": {
+        "bytes": 21350,
+        "path": "paul_graham/canonical_html/think.txt",
+        "sha256": "a8d4f2fc6dcb3097c174889b1d05759fe4218e7d02ce1180c45121320d61878c"
+      },
+      "index": 151,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 29670,
+        "path": "paul_graham/raw_html/151-think.html",
+        "sha256": "a863fc96a4b7aa170be96ae870e7e603b6fe59f389b24a0c4fb240b3e204a7ab"
+      },
+      "url": "http://www.paulgraham.com/think.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6730,
+        "path": "paul_graham/canonical_html/top.txt",
+        "sha256": "deb5ef078a3c5baa5c299a32b7bfcde94ecc3ba9d5790256c4ce0f7d38b96d5f"
+      },
+      "index": 152,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13621,
+        "path": "paul_graham/raw_html/152-top.html",
+        "sha256": "08a900c129518403ed513374687f134a082ae808dba49549efcc1e4763171637"
+      },
+      "url": "http://www.paulgraham.com/top.html"
+    },
+    {
+      "canonical": {
+        "bytes": 5246,
+        "path": "paul_graham/canonical_html/trolls.txt",
+        "sha256": "e099d59c4a51e4a39fbacdbf4e96204fac081a5c885f7d3c07edb41722e8c364"
+      },
+      "index": 153,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 12259,
+        "path": "paul_graham/raw_html/153-trolls.html",
+        "sha256": "b2fdecfa29e5a2ec99cb4eba0a0f5d229de65fc0bdf35e3a8b8183df582f5c9d"
+      },
+      "url": "http://www.paulgraham.com/trolls.html"
+    },
+    {
+      "canonical": {
+        "bytes": 915,
+        "path": "paul_graham/canonical_html/twitter.txt",
+        "sha256": "5e7f4ae5f4a48b465e9fa38401700e8816f6ae9ddc11c37ca5dc4461753ee7ca"
+      },
+      "index": 154,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 6836,
+        "path": "paul_graham/raw_html/154-twitter.html",
+        "sha256": "c9f0e16e5746844311b9cb90df96f47147155194b04932dd9b027c0c323ef17c"
+      },
+      "url": "http://www.paulgraham.com/twitter.html"
+    },
+    {
+      "canonical": {
+        "bytes": 11081,
+        "path": "paul_graham/canonical_html/usa.txt",
+        "sha256": "886b4a2c4084d6494ca1c3622fdcb20d7b68a7fb6b42f58883138b56fcdbb119"
+      },
+      "index": 155,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 19233,
+        "path": "paul_graham/raw_html/155-usa.html",
+        "sha256": "8f14701266531aaa561c7deaa6680622778a26f4d63433ff7fe4e4909612d113"
+      },
+      "url": "http://www.paulgraham.com/usa.html"
+    },
+    {
+      "canonical": {
+        "bytes": 12904,
+        "path": "paul_graham/canonical_html/users.txt",
+        "sha256": "951cde63e4ffe8ddae26c2da7e526a0bcb27d4dd36e4096c358a9a552967dbbc"
+      },
+      "index": 156,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 19772,
+        "path": "paul_graham/raw_html/156-users.html",
+        "sha256": "33727341813c8a15bc4adfe0e8c0bc625acb5fa32879251a930446531247f890"
+      },
+      "url": "http://www.paulgraham.com/users.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8221,
+        "path": "paul_graham/canonical_html/venturecapital.txt",
+        "sha256": "661109b9576f220dd9414f873acc719c80e41807c99404e0ae23e7d4ae5eee95"
+      },
+      "index": 157,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 16298,
+        "path": "paul_graham/raw_html/157-venturecapital.html",
+        "sha256": "f0f1009751350f651176446cb49206ddfe1292a4a0a1122860d11c66ed27b091"
+      },
+      "url": "http://www.paulgraham.com/venturecapital.html"
+    },
+    {
+      "canonical": {
+        "bytes": 50893,
+        "path": "paul_graham/canonical_html/wealth.txt",
+        "sha256": "0373ebce965aa544187e4218aa21456bd7d821ed3b328b0443ec9932c3a192b7"
+      },
+      "index": 158,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 63058,
+        "path": "paul_graham/raw_html/158-wealth.html",
+        "sha256": "ff2e3acba07b016727cf0594798df6b468925347c7d579ff672d434ea5feffa9"
+      },
+      "url": "http://www.paulgraham.com/wealth.html"
+    },
+    {
+      "canonical": {
+        "bytes": 20015,
+        "path": "paul_graham/canonical_html/webstartups.txt",
+        "sha256": "f3d7807f27b4d07609624993de267f6b568122e79e945b7bff1f0775bc2330a7"
+      },
+      "index": 159,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 27533,
+        "path": "paul_graham/raw_html/159-webstartups.html",
+        "sha256": "39301e9c7e041c1ae88e9921c150c4444a937001eb753463eeffcfb93e3dcb33"
+      },
+      "url": "http://www.paulgraham.com/webstartups.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2150,
+        "path": "paul_graham/canonical_html/whyyc.txt",
+        "sha256": "f1ed1972a7d11d67f50fff731e3f77b196e3b57c01eb9be248107af65a629d27"
+      },
+      "index": 160,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 8045,
+        "path": "paul_graham/raw_html/160-whyyc.html",
+        "sha256": "000d0460831dc7423f03c106d4a11a8400630646a30f486b679856a5e0c03fae"
+      },
+      "url": "http://www.paulgraham.com/whyyc.html"
+    },
+    {
+      "canonical": {
+        "bytes": 4652,
+        "path": "paul_graham/canonical_html/word.txt",
+        "sha256": "16961c312ef335250061d53b6d7181790c8d17d7c54850df74e4acd201157f04"
+      },
+      "index": 161,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 11051,
+        "path": "paul_graham/raw_html/161-word.html",
+        "sha256": "b739ca444f36701605a1be1c7fefd10a8cdf1757bd4cc1cf46338574ba4ec727"
+      },
+      "url": "http://www.paulgraham.com/word.html"
+    },
+    {
+      "canonical": {
+        "bytes": 6589,
+        "path": "paul_graham/canonical_html/words.txt",
+        "sha256": "0e2fbc5b0524dabe4e7980d5b6a9e2230460d93def6ccac4fd59bc8b1d259878"
+      },
+      "index": 162,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 13715,
+        "path": "paul_graham/raw_html/162-words.html",
+        "sha256": "164e8f16642e2fda4e5f578697c97794ae8c93b98ed9dfc4dc49b07f55d85e77"
+      },
+      "url": "http://www.paulgraham.com/words.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2720,
+        "path": "paul_graham/canonical_html/work.txt",
+        "sha256": "1218f1b19724060e1513cf6833fcdd51cfe5f94b43eeeb68c164ed9ca4446954"
+      },
+      "index": 163,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 10051,
+        "path": "paul_graham/raw_html/163-work.html",
+        "sha256": "b92aa60d6ceca4ad58e954d31e9ed4eb21e0ccb98df433328b14e999f942c037"
+      },
+      "url": "http://www.paulgraham.com/work.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2588,
+        "path": "paul_graham/canonical_html/writing44.txt",
+        "sha256": "b3391bae7942784915bb1dfdb531187ab6c4d0a6d9a547d9ae395ab167ba8829"
+      },
+      "index": 164,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 15816,
+        "path": "paul_graham/raw_html/164-writing44.html",
+        "sha256": "7fab0fc3aa0ba102c16be86976fb79640beeebf89f7331cd6588be4740fb41ba"
+      },
+      "url": "http://www.paulgraham.com/writing44.html"
+    },
+    {
+      "canonical": {
+        "bytes": 2526,
+        "path": "paul_graham/canonical_html/wtax.txt",
+        "sha256": "a8d4eb3c1fac0bce758d9128eff687ebad6a2829598fc62fa320b2a9ea69ad2f"
+      },
+      "index": 165,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 9888,
+        "path": "paul_graham/raw_html/165-wtax.html",
+        "sha256": "4d813634126b5fb4183b5622f0eb01e4166b1843e2a7118a3bf33130feab9dfb"
+      },
+      "url": "http://www.paulgraham.com/wtax.html"
+    },
+    {
+      "canonical": {
+        "bytes": 12084,
+        "path": "paul_graham/canonical_html/yahoo.txt",
+        "sha256": "655e678d367b96b2dc122e2b0767246b177db593db6bc694bc232f9c53cbeffb"
+      },
+      "index": 166,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 18803,
+        "path": "paul_graham/raw_html/166-yahoo.html",
+        "sha256": "0f33018ec584290fded01d351e92657471bbafb9d64ce2e18d1f6e087a2cf250"
+      },
+      "url": "http://www.paulgraham.com/yahoo.html"
+    },
+    {
+      "canonical": {
+        "bytes": 11371,
+        "path": "paul_graham/canonical_html/ycombinator.txt",
+        "sha256": "3fc9ca7d415d527852a35f2c23025436439eeb3c7f23bdceb041c9eb1b8b5262"
+      },
+      "index": 167,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 17872,
+        "path": "paul_graham/raw_html/167-ycombinator.html",
+        "sha256": "5c3b2cf1a3e9df61de608b5fcb32dc52aa1c7768b6bec24ff715faf6a6748579"
+      },
+      "url": "http://www.paulgraham.com/ycombinator.html"
+    },
+    {
+      "canonical": {
+        "bytes": 8037,
+        "path": "paul_graham/canonical_html/ycstart.txt",
+        "sha256": "272991277f32391919f7ebc41a328008aa0a230c1e51dc03b9131361f2a0c3c9"
+      },
+      "index": 168,
+      "kind": "paulgraham.com_html",
+      "license": "upstream copyright; local research cache only",
+      "raw": {
+        "bytes": 14185,
+        "path": "paul_graham/raw_html/168-ycstart.html",
+        "sha256": "89bb27d108115e4d77b33919db6d87b9591b0f3ccc75ac40a2d3b6bb2e8aba33"
+      },
+      "url": "http://www.paulgraham.com/ycstart.html"
+    },
+    {
+      "canonical": {
+        "bytes": 7446,
+        "path": "paul_graham/canonical_repo/addiction.txt",
+        "sha256": "32b4b8f14a126a14bb7da5a25fb134601510344d9bd3456bd509c2c14609e102"
+      },
+      "index": 169,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/addiction.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 8504,
+        "path": "paul_graham/canonical_repo/aord.txt",
+        "sha256": "ca1a95525193b977ca9e5b4d2523ed6f33ce10272b00fb2e83dfc4df742d7195"
+      },
+      "index": 170,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/aord.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 12413,
+        "path": "paul_graham/canonical_repo/apple.txt",
+        "sha256": "e84fd53a3792f196fd07614ee28d721af98e7425b3b092ab7f02b90fa61e5e84"
+      },
+      "index": 171,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/apple.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 25387,
+        "path": "paul_graham/canonical_repo/avg.txt",
+        "sha256": "0111c10328933b0e90d7a696cb07fa1c89aaf9c773706b28d687a2489384692b"
+      },
+      "index": 172,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/avg.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 25539,
+        "path": "paul_graham/canonical_repo/before.txt",
+        "sha256": "db4bd3fd62ba3c98eeb8822d048ac664742709d4cd6d4dc0c2f9da4af0a9a1f5"
+      },
+      "index": 173,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/before.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 3370,
+        "path": "paul_graham/canonical_repo/bias.txt",
+        "sha256": "363e55ef481571ab75173229d237491f203d4e7a4f04837bf88bb6bd6cc51e91"
+      },
+      "index": 174,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/bias.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 14327,
+        "path": "paul_graham/canonical_repo/boss.txt",
+        "sha256": "a0b98955ffb64162048538fcc7372c5f51c06e5a11fe1b15826ae737a3d2cd44"
+      },
+      "index": 175,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/boss.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 5367,
+        "path": "paul_graham/canonical_repo/copy.txt",
+        "sha256": "15259f67aa300ccec434b955b1ea100fa23b8d16733adf140da0332c20d63125"
+      },
+      "index": 176,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/copy.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 7086,
+        "path": "paul_graham/canonical_repo/corpdev.txt",
+        "sha256": "c966a343377308ccc11b5bd7f0967f226b89a6f9708d96c709f50913890ca8b2"
+      },
+      "index": 177,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/corpdev.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 14988,
+        "path": "paul_graham/canonical_repo/desres.txt",
+        "sha256": "3982864276f95b1a606d76f187ce2c0450a3810b9858fd33a61af1489e1a00ae"
+      },
+      "index": 178,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/desres.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 4231,
+        "path": "paul_graham/canonical_repo/diff.txt",
+        "sha256": "281adb331d84feafaf9954aa9f38188a6e30856c19cbcf745eca43c70759952f"
+      },
+      "index": 179,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/diff.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 6263,
+        "path": "paul_graham/canonical_repo/ecw.txt",
+        "sha256": "754e542a397e82bc23b488c3600b5bdb7d285aaf774c6fbfb0e5302ca89dd1df"
+      },
+      "index": 180,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/ecw.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 4544,
+        "path": "paul_graham/canonical_repo/founders.txt",
+        "sha256": "b49b61dba29889880d66fb00b52c1c37a9373ba473a61e95a0701eca80beb247"
+      },
+      "index": 181,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/founders.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 2261,
+        "path": "paul_graham/canonical_repo/foundervisa.txt",
+        "sha256": "331d5492353c6207efec65c949fe6c813909fb58f85aa606ba393d021af04d27"
+      },
+      "index": 182,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/foundervisa.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 32652,
+        "path": "paul_graham/canonical_repo/gap.txt",
+        "sha256": "fd753f0535797ac3dff137766ed2a71adc71179bb5cfe4521822b85d8e84e7c5"
+      },
+      "index": 183,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/gap.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 11465,
+        "path": "paul_graham/canonical_repo/gba.txt",
+        "sha256": "aede19c44c7f337eed5e72d28b8a1ff040510662621ff3fbd1301d51e126a9da"
+      },
+      "index": 184,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/gba.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 29511,
+        "path": "paul_graham/canonical_repo/gh.txt",
+        "sha256": "ea1aa69c11b29b298ae5068e3b13bb6a6706c0e2276820f77ee60c2b080ee62c"
+      },
+      "index": 185,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/gh.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 6051,
+        "path": "paul_graham/canonical_repo/goodtaste.txt",
+        "sha256": "5383bdc4bf4ba34d831a700defdfa553c418157b4b75e217f4557e105c79e5b9"
+      },
+      "index": 186,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/goodtaste.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 10251,
+        "path": "paul_graham/canonical_repo/hubs.txt",
+        "sha256": "decb683073e140ef5e0463a93d7d35d74df8518afe61dd10a0a330cb4ba2bcfd"
+      },
+      "index": 187,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/hubs.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 2457,
+        "path": "paul_graham/canonical_repo/iflisp.txt",
+        "sha256": "2cc2432a3b4e76bd2c6d643e3c224e73991cc15efed7a7da16baf20898f29f80"
+      },
+      "index": 188,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/iflisp.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 4070,
+        "path": "paul_graham/canonical_repo/island.txt",
+        "sha256": "ec72fccf5757b92e4d924a734c6be7efed4cbf4c0ea53ca927b9e9a91de0995e"
+      },
+      "index": 189,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/island.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 3685,
+        "path": "paul_graham/canonical_repo/know.txt",
+        "sha256": "2e1c8e32d5d1157eae192332c88ac7495a858ce2a141be17b0585c22223187d0"
+      },
+      "index": 190,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/know.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 16954,
+        "path": "paul_graham/canonical_repo/langdes.txt",
+        "sha256": "0fa1ced068a09646c857d91ce8d4685fcedec09ad6ef12b54c6e3013a98d3461"
+      },
+      "index": 191,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/langdes.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 24563,
+        "path": "paul_graham/canonical_repo/laundry.txt",
+        "sha256": "546c9f99d47fd89bce653993fa2b476a6e90a76d1d049008ffda438bc7820b87"
+      },
+      "index": 192,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/laundry.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 25537,
+        "path": "paul_graham/canonical_repo/love.txt",
+        "sha256": "ec4cde975ab273f5641fae71edefed10761876cafb572fb95a28420e121edc0c"
+      },
+      "index": 193,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/love.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 3899,
+        "path": "paul_graham/canonical_repo/mod.txt",
+        "sha256": "016034d82e0664036df32ebbcf30566ab6a8a41a13d4e89d8952eebbc36bc81b"
+      },
+      "index": 194,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/mod.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 7736,
+        "path": "paul_graham/canonical_repo/newideas.txt",
+        "sha256": "e680d93042bf45fef78c10924e74a9749e5f25672350dace89e2b52b5d63d131"
+      },
+      "index": 195,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/newideas.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 1743,
+        "path": "paul_graham/canonical_repo/nft.txt",
+        "sha256": "9b260edeccefe0c29641f8ff5ef429a56177c1bed20a7cdfc7dd9f3e716c4649"
+      },
+      "index": 196,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/nft.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 27981,
+        "path": "paul_graham/canonical_repo/philosophy.txt",
+        "sha256": "7e0e7ec9443730b0b79aad2ef14d74470a310d8df439d73a82e99ba693f4e091"
+      },
+      "index": 197,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/philosophy.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 43295,
+        "path": "paul_graham/canonical_repo/popular.txt",
+        "sha256": "ba81fc48f3a6973f44019565f73d8ecf08f9abde99f0ffd10452fd9cb492726b"
+      },
+      "index": 198,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/popular.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 655,
+        "path": "paul_graham/canonical_repo/pow.txt",
+        "sha256": "9544b749d124306337b10b460f53fb7005861f662cbfda719fc886e0d2796166"
+      },
+      "index": 199,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/pow.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 2059,
+        "path": "paul_graham/canonical_repo/rootsoflisp.txt",
+        "sha256": "9d743d2cd576905006a06c4f0e48f0d32196dc63018d09772384ce900651f69b"
+      },
+      "index": 200,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/rootsoflisp.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 55,
+        "path": "paul_graham/canonical_repo/rss.txt",
+        "sha256": "0c9f488b4334ef61adff51a19308e7da71cfab192ab3df751e3ad3f64b948411"
+      },
+      "index": 201,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/rss.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 20799,
+        "path": "paul_graham/canonical_repo/siliconvalley.txt",
+        "sha256": "38aff7ae38a2641fda8af17253d499d88b38a6fafe4354a84382030509b3f717"
+      },
+      "index": 202,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/siliconvalley.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 27038,
+        "path": "paul_graham/canonical_repo/startuplessons.txt",
+        "sha256": "1c3a8333c9e811a2a5e767fcb727ac95636c2e2f9c46cfb9382e89c61334fbb7"
+      },
+      "index": 203,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/startuplessons.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 13144,
+        "path": "paul_graham/canonical_repo/submarine.txt",
+        "sha256": "d2fb6c30bd79b72f1175a371a93111d28e72031c45d5f4c93ae266bc230cb70a"
+      },
+      "index": 204,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/submarine.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 2567,
+        "path": "paul_graham/canonical_repo/sun.txt",
+        "sha256": "d385ec133053cb65122433d2cff33fe432b2b1de3a1b7fee98b86bb95b21a1a9"
+      },
+      "index": 205,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/sun.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 20125,
+        "path": "paul_graham/canonical_repo/superangels.txt",
+        "sha256": "e22283992fb67f0b58902edb75fb29589d3f784fd34a558e754b9d2e5352f33d"
+      },
+      "index": 206,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/superangels.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 1289,
+        "path": "paul_graham/canonical_repo/todo.txt",
+        "sha256": "49279cde1dc748aa77aed6695d961be110030c4058dc582fa6a633ce64a7d79b"
+      },
+      "index": 207,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/todo.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 3024,
+        "path": "paul_graham/canonical_repo/unions.txt",
+        "sha256": "072bce8c460b4f91af5650a00d0a928a5d70868e7164f1158afdc4336b7b82f5"
+      },
+      "index": 208,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/unions.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 16198,
+        "path": "paul_graham/canonical_repo/useful.txt",
+        "sha256": "27ec97ef3c99d6be7f0529611d9a88fd5ee1917e34eddac9e4024400d26df5ba"
+      },
+      "index": 209,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/useful.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 9156,
+        "path": "paul_graham/canonical_repo/vb.txt",
+        "sha256": "58abf15e074b35662f0e09da0020c65b3a09f27a44c0c2508d24eca53a71ac3b"
+      },
+      "index": 210,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/vb.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 8960,
+        "path": "paul_graham/canonical_repo/vcsqueeze.txt",
+        "sha256": "70bd68bd1c44cd07f190d12e7f09e327901e80b11bac447500d767d37d0e1bd3"
+      },
+      "index": 211,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/vcsqueeze.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 4866,
+        "path": "paul_graham/canonical_repo/vw.txt",
+        "sha256": "0e3ce943e9967dbde5c6b757fd6c65fc17eac4f8c20e0838e71fd45824757c9e"
+      },
+      "index": 212,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/vw.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 2748,
+        "path": "paul_graham/canonical_repo/want.txt",
+        "sha256": "43b5f460f3321b9c736c33d7b4129c80c9d373ee5c272cf975434d28a3cf4635"
+      },
+      "index": 213,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/want.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 19140,
+        "path": "paul_graham/canonical_repo/web20.txt",
+        "sha256": "d8078da5dda03538605661f5b07412744b8b432810cbd580b5896ba7c3d9c68b"
+      },
+      "index": 214,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/web20.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 2106,
+        "path": "paul_graham/canonical_repo/weird.txt",
+        "sha256": "5563700b07211d823bc904bc78f39830941f41b3cfc7882d67b86d0544746efd"
+      },
+      "index": 215,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/weird.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 21869,
+        "path": "paul_graham/canonical_repo/wisdom.txt",
+        "sha256": "cdc71c4962e5bc3d1f38f120e5df9837eb1100fef63b23d06ff115896e577ba0"
+      },
+      "index": 216,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/wisdom.txt"
+    },
+    {
+      "canonical": {
+        "bytes": 74677,
+        "path": "paul_graham/canonical_repo/worked.txt",
+        "sha256": "7a9a464c75d8b515aa9ee3921a1e28f53a2d1c227f111cb67007ebf0a008bfa3"
+      },
+      "index": 217,
+      "kind": "pinned_needle_repository",
+      "license": "MIT repository; underlying essay copyright not relicensed",
+      "repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+      "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack/raw/main/needlehaystack/PaulGrahamEssays/worked.txt"
+    }
+  ],
+  "release_policy": "manifest and hashes may be published; source payloads and generated text containing upstream content remain outside the MIT repository",
+  "status": "offline_sources_complete_unredistributable"
+}
