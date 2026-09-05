@@ -1,0 +1,89 @@
+{
+  "format": "speck_cuda_decode_trained_sentinel_contract",
+  "format_version": 1,
+  "sentinel_id": "speck-paper-1-trained-cuda-decode-v1",
+  "paper_id": "speck-paper-1",
+  "status": "frozen_after_random_weight_matrix_before_trained_execution",
+  "frozen_on": "2026-09-05",
+  "issue": "SPE-105",
+  "trigger_result": "results/Speck-Paper1/cuda-decode-diagnostic.json",
+  "trigger_result_sha256": "3f09952c22cb1dfe950d6dd3c59b3a7d50cdb2559e437969202ce80517b40ec0",
+  "purpose": "Determine whether the random-weight CUDA divergence persists in completed language-model checkpoints with in-domain validation prefixes and greedy generation.",
+  "data": {
+    "source_experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+    "manifest_sha256": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "split": "val",
+    "selection": "first deterministic packed validation sequence at length 512",
+    "prefix_lengths": [
+      8,
+      64,
+      512
+    ]
+  },
+  "greedy_generation_tokens": 32,
+  "checkpoints": [
+    {
+      "id": "dense_global_seed42",
+      "arm": "dense_global",
+      "seed": 42,
+      "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/full-global",
+      "run": "SpeckLC-150M-MixerScreen-131M-full-global",
+      "step": 2000,
+      "parameters": 157156608,
+      "validation_loss": 2.826206684112549,
+      "model_sha256": "9ca4f7550d250c2d21f1de99c91cbd62fac196fe7d4420dce46626a91300b9c8",
+      "optimizer_sha256": "84b2de59a58e73e50c46326042e9d62a2fa1629e2e367776090b76ddb04319c6",
+      "metadata_sha256": "10fb6ca21d9f51e989d36414f5be35446a50635c7b8381fc9c1a6767a0501ea8"
+    },
+    {
+      "id": "kda_seed42",
+      "arm": "five_cache_kda_gqa",
+      "seed": 42,
+      "experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+      "run": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+      "step": 2000,
+      "parameters": 153958938,
+      "validation_loss": 2.795380115509033,
+      "model_sha256": "a8137a5ef2977af6d3cbc21e51b4ee60881e0e78be1cdb335fb2e41af26776ff",
+      "optimizer_sha256": "018ee866a5bb95a000968867f0b2671f301e98976f073f6347c41493986c8512",
+      "metadata_sha256": "0b22b8135696c51ec32694a3f7a0aba88a59eb154a66d2f9b2a55a2713540bcb"
+    },
+    {
+      "id": "kda_seed43",
+      "arm": "five_cache_kda_gqa",
+      "seed": 43,
+      "experiment": "experiments/SpeckLC-150M-KimiReplication131M/kda-sigmoid-nope/seed-43",
+      "run": "kda-sigmoid-nope-seed-43",
+      "step": 2000,
+      "parameters": 153958938,
+      "validation_loss": 2.7937941551208496,
+      "model_sha256": "3357a9c341b5c06f1731a8906ac9389e15fc4c816ca7a453a51630168d7b4f7f",
+      "optimizer_sha256": "2468e4cc99f1b5f74c3044a59a5fa27d773c57b41f4e953c2fbcd2c1f99ea041",
+      "metadata_sha256": "052e90e45df6ca1ac3949f5295690ebbf77e328e321f6dc2a8125e36476ffb8d"
+    },
+    {
+      "id": "kda_seed44",
+      "arm": "five_cache_kda_gqa",
+      "seed": 44,
+      "experiment": "experiments/SpeckLC-150M-KimiReplication131M/kda-sigmoid-nope/seed-44",
+      "run": "kda-sigmoid-nope-seed-44",
+      "step": 2000,
+      "parameters": 153958938,
+      "validation_loss": 2.8009562492370605,
+      "model_sha256": "530a297927f7bb4fb891217743a2cbf1020e5b4f58568ce6feb9fd3ae86bb54b",
+      "optimizer_sha256": "5de691b7bfc297897ef1dcab2b4b2676548c7db61b9a9eeece0794873c38f640",
+      "metadata_sha256": "eca0d4509440e85026bf3e3dbbdcbc951b4ce3845c4acf44792b89a1e323cd5f"
+    }
+  ],
+  "numerical_contract": {
+    "relative_tolerance": 0.02,
+    "absolute_tolerance": 0.02,
+    "change_rule": "The sentinel may measure trained behavior but cannot widen the existing threshold."
+  },
+  "generation": {
+    "common_history": "At each step feed the recompute path's greedy token to both paths, preserving identical histories while measuring next-token agreement.",
+    "free_running": "Let cached and full-recompute greedy paths consume their own selected tokens and report the first divergent generation step.",
+    "claim_limit": "One validation prefix is an operational sentinel, not a distributional generation-quality estimate."
+  },
+  "decision_scope": "Use trained behavior to route numerical remediation and preflight design. Historical checkpoints do not replace the matched Paper 1 baseline runs or authorize promotion."
+}
