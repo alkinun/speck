@@ -286,6 +286,12 @@
         "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
         "sha256": "e971627804813deecc9fb650b644d8b5983047250f6f1c1915945a9a5824afa4",
         "status": "complete_qualified"
+      },
+      {
+        "pair": 2,
+        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa.json",
+        "sha256": "be32fae5c79339149569587e4926e3030114326a60055771620aa79100034272",
+        "status": "complete_qualified"
       }
     ],
     "collection_correction": "research/paper-1/baseline_collection_v2.json",
@@ -325,6 +331,11 @@
     "preflight_v2": "results/Speck-Paper1/baseline-preflight-v2.json",
     "preflight_v2_sha256": "91012edc3a597dcf8cddd28bbe846b81cd6d99d1eec359ce66bf4ccf7deede86",
     "preflight_v2_status": "qualified",
+    "proxy_analysis_result": {
+      "path": "results/Speck-Paper1/baseline-analysis.json",
+      "sha256": "6455b9d4949fcad397fd333afb425b518b13691e6eac2f533b3ddbf5865268b3",
+      "status": "complete_proxy_evidence_no_promotion_authority"
+    },
     "proxy_disposition_contract": "research/paper-1/proxy_disposition_v1.json",
     "proxy_disposition_contract_sha256": "983a881b849a158314ce327736a721b3f97cb1e6b9ea95a93caa5d2309e256b8",
     "proxy_disposition_contract_status": "frozen_after_control_target_before_candidate_0",
@@ -466,6 +477,11 @@
   },
   "format": "speck_paper_experiment_program",
   "format_version": 1,
+  "halo_code_audit": {
+    "audit": "research/paper-1/halo_code_audit_v1.json",
+    "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",
+    "status": "source_identity_and_result_logs_qualified_root_rights_behavior_and_reproduction_blocked"
+  },
   "hca_readiness": {
     "contract": "research/paper-1/hca_readiness_v1.json",
     "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
@@ -501,6 +517,11 @@
     "sha256": "0e1f5a23cbce2b9a42880e7908e5521acac9ecab59c6cf234b0763bb9d412097",
     "status": "design_frozen_axes_unselected_training_blocked"
   },
+  "kl_selection_code_audit": {
+    "audit": "research/paper-1/kl_selection_code_audit_v1.json",
+    "sha256": "9c97cf430c2d665a99374d7857acc5578390bba050d2b9d6f79a1aefe4dc4dc5",
+    "status": "source_and_config_identity_qualified_root_rights_semantics_data_and_reproduction_blocked"
+  },
   "large_pretraining_gate": {
     "decision": "no paper-scale or release-scale pretraining begins until every required item has a checked artifact",
     "required": [
@@ -517,6 +538,11 @@
     ],
     "status": "blocked"
   },
+  "massive_hla_code_audit": {
+    "audit": "research/paper-1/massive_hla_code_audit_v1.json",
+    "sha256": "fa6c57e1346b03aa6978cb76e468c264b48da8eba930a5a3316e927fd285882e",
+    "status": "analysis_code_and_baseline_checkpoint_identity_qualified_training_and_full_reproduction_blocked"
+  },
   "matching_views": [
     "fixed training tokens",
     "fixed analytic training FLOPs",
@@ -525,6 +551,11 @@
     "fixed wall-clock budget on named hardware",
     "time and energy to locked quality"
   ],
+  "n1_independent_review_packet": {
+    "packet": "research/paper-1/n1_independent_review_packet_v1.json",
+    "sha256": "63aa99cc22c2d2d8905fe90ae8067cb55c810cc87bb3ef1866d53e8308abd837",
+    "status": "packet_frozen_no_independent_review_completed_no_experiment_authority"
+  },
   "novelty_claim_overlap": {
     "contract": "research/paper-1/novelty_claim_overlap_v6.json",
     "sha256": "e6645ec16d19d6346b3760af8dd985d6b27d078246633ba262e3e45add7a4935",
@@ -557,35 +588,15 @@
     "sha256": "d8401cfd494f53eef04f95e386fab446aedda54361919c022f0d187cf4920406",
     "status": "design_blocked_operators_and_ratio_unselected"
   },
-  "rethinking_hybrid_code_audit": {
-    "audit": "research/paper-1/rethinking_hybrid_code_audit_v1.json",
-    "sha256": "1704fff0a5d8578a00360663c372535f16793976576e974cd2433c07753189b4",
-    "status": "analysis_source_and_rights_qualified_full_experiment_reproduction_blocked"
-  },
-  "massive_hla_code_audit": {
-    "audit": "research/paper-1/massive_hla_code_audit_v1.json",
-    "sha256": "fa6c57e1346b03aa6978cb76e468c264b48da8eba930a5a3316e927fd285882e",
-    "status": "analysis_code_and_baseline_checkpoint_identity_qualified_training_and_full_reproduction_blocked"
-  },
-  "halo_code_audit": {
-    "audit": "research/paper-1/halo_code_audit_v1.json",
-    "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",
-    "status": "source_identity_and_result_logs_qualified_root_rights_behavior_and_reproduction_blocked"
-  },
-  "kl_selection_code_audit": {
-    "audit": "research/paper-1/kl_selection_code_audit_v1.json",
-    "sha256": "9c97cf430c2d665a99374d7857acc5578390bba050d2b9d6f79a1aefe4dc4dc5",
-    "status": "source_and_config_identity_qualified_root_rights_semantics_data_and_reproduction_blocked"
-  },
-  "n1_independent_review_packet": {
-    "packet": "research/paper-1/n1_independent_review_packet_v1.json",
-    "sha256": "63aa99cc22c2d2d8905fe90ae8067cb55c810cc87bb3ef1866d53e8308abd837",
-    "status": "packet_frozen_no_independent_review_completed_no_experiment_authority"
-  },
   "raw_local_readiness": {
     "contract": "research/paper-1/raw_local_readiness_v1.json",
     "sha256": "b75bb4114421a90599a78fbc8a4e188cc31dd38b9377f56d27caee64d5670dc0",
     "status": "design_blocked_parent_and_fusion_unqualified"
+  },
+  "rethinking_hybrid_code_audit": {
+    "audit": "research/paper-1/rethinking_hybrid_code_audit_v1.json",
+    "sha256": "1704fff0a5d8578a00360663c372535f16793976576e974cd2433c07753189b4",
+    "status": "analysis_source_and_rights_qualified_full_experiment_reproduction_blocked"
   },
   "scales": [
     {

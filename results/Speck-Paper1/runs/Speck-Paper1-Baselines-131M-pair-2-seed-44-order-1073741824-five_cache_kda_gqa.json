@@ -1,0 +1,198 @@
+{
+  "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+  "arm_id": "five_cache_kda_gqa",
+  "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+  "checkpoint": {
+    "directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa",
+    "metadata_sha256": "bfa2cbd7a5f97d3011e858ed43116eadc0961cab7b36df5e5c059501bdcd2152",
+    "model_sha256": "c8f8f4c1c8d5ef9dd1c3d44e268e87029dc19eca334d3b4fbc1b29f02db4f547",
+    "optimizer_sha256": "44dfa6e80457c213685a07809f963d41636d8d8347b8c569c62f8e36c7d32734",
+    "step": 2000
+  },
+  "checkpoint_completed_at": "2026-09-05T23:14:03.463688+00:00",
+  "created_at": "2026-09-05T23:14:06.874957+00:00",
+  "experiment": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa",
+  "final_validation": {
+    "global_step": 2000,
+    "optimizer_seconds": 2966.29010305705,
+    "steady_training_seconds": 2935.9781369210687,
+    "step": 2000,
+    "training_tokens": 131072000,
+    "validation_loss": 2.7955029010772705,
+    "validation_source_losses": {
+      "cosmopedia_v2": 2.7604782581329346,
+      "dclm": 3.6269032955169678,
+      "dclm_edu": 3.097214698791504,
+      "finemath_4plus": 2.5138566493988037,
+      "fineweb_edu": 3.3310258388519287,
+      "math_multi_style": 1.7015990018844604,
+      "math_textbook_exercise": 1.2120639085769653,
+      "pes2o": 2.9834790229797363,
+      "ufw_l3_multi_style": 3.132812023162842,
+      "ultra_fineweb": 3.2529983520507812,
+      "wikimedia": 3.145589828491211
+    },
+    "validation_tokens": 19988480
+  },
+  "flops_per_token_at_4096": 1021601280,
+  "format": "speck_paper_baseline_run_result",
+  "format_version": 1,
+  "non_finite_steps": 0,
+  "pair": {
+    "data_token_offset": 1073741824,
+    "pair": 2,
+    "seed": 44
+  },
+  "paper_id": "speck-paper-1",
+  "parameters": 153958938,
+  "peak_allocated_bytes": 14899848192,
+  "policy_id": "architecture-promotion-v1",
+  "run": "Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa",
+  "run_summary": {
+    "path": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa/run_summary.json",
+    "sha256": "e83b50887c4bc6403b3b153c183096533a812bc86f8d686d08224b6ea3f6b593"
+  },
+  "status": "complete_qualified",
+  "timing": {
+    "active_seconds": 3277.6952294170624,
+    "checkpoint_seconds": 0.5807430349523202,
+    "evaluation_seconds": 303.11487841117196,
+    "optimizer_seconds": 2966.29010305705,
+    "startup_optimizer_seconds": 30.311966135981493
+  },
+  "training_tokens": 131072000,
+  "validation_history": [
+    {
+      "global_step": 0,
+      "optimizer_seconds": 0.0,
+      "steady_training_seconds": 0.0,
+      "step": 0,
+      "training_tokens": 0,
+      "validation_loss": 10.413497924804688,
+      "validation_source_losses": {
+        "cosmopedia_v2": 10.412019729614258,
+        "dclm": 10.414530754089355,
+        "dclm_edu": 10.41440486907959,
+        "finemath_4plus": 10.413365364074707,
+        "fineweb_edu": 10.412735939025879,
+        "math_multi_style": 10.415143966674805,
+        "math_textbook_exercise": 10.414815902709961,
+        "pes2o": 10.413002014160156,
+        "ufw_l3_multi_style": 10.413464546203613,
+        "ultra_fineweb": 10.412542343139648,
+        "wikimedia": 10.412430763244629
+      },
+      "validation_tokens": 4997120
+    },
+    {
+      "global_step": 488,
+      "optimizer_seconds": 734.9344179632608,
+      "steady_training_seconds": 704.6224518272793,
+      "step": 488,
+      "training_tokens": 31981568,
+      "validation_loss": 3.7058846950531006,
+      "validation_source_losses": {
+        "cosmopedia_v2": 3.7782554626464844,
+        "dclm": 4.356650352478027,
+        "dclm_edu": 4.039905548095703,
+        "finemath_4plus": 3.472857713699341,
+        "fineweb_edu": 4.189727306365967,
+        "math_multi_style": 2.620831251144409,
+        "math_textbook_exercise": 2.0916800498962402,
+        "pes2o": 4.018292427062988,
+        "ufw_l3_multi_style": 4.013815402984619,
+        "ultra_fineweb": 4.095920085906982,
+        "wikimedia": 4.1412482261657715
+      },
+      "validation_tokens": 4997120
+    },
+    {
+      "global_step": 976,
+      "optimizer_seconds": 1454.8781822847668,
+      "steady_training_seconds": 1424.5662161487853,
+      "step": 976,
+      "training_tokens": 63963136,
+      "validation_loss": 3.113654613494873,
+      "validation_source_losses": {
+        "cosmopedia_v2": 3.15407133102417,
+        "dclm": 3.8645052909851074,
+        "dclm_edu": 3.4979987144470215,
+        "finemath_4plus": 2.781446933746338,
+        "fineweb_edu": 3.6658742427825928,
+        "math_multi_style": 2.018378973007202,
+        "math_textbook_exercise": 1.5007991790771484,
+        "pes2o": 3.3004262447357178,
+        "ufw_l3_multi_style": 3.479027271270752,
+        "ultra_fineweb": 3.537477493286133,
+        "wikimedia": 3.5118680000305176
+      },
+      "validation_tokens": 4997120
+    },
+    {
+      "global_step": 1464,
+      "optimizer_seconds": 2175.1514920865884,
+      "steady_training_seconds": 2144.839525950607,
+      "step": 1464,
+      "training_tokens": 95944704,
+      "validation_loss": 2.900089740753174,
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.896660089492798,
+        "dclm": 3.664013624191284,
+        "dclm_edu": 3.281435251235962,
+        "finemath_4plus": 2.582620859146118,
+        "fineweb_edu": 3.4576871395111084,
+        "math_multi_style": 1.8078347444534302,
+        "math_textbook_exercise": 1.2983635663986206,
+        "pes2o": 3.1030361652374268,
+        "ufw_l3_multi_style": 3.259061574935913,
+        "ultra_fineweb": 3.3344438076019287,
+        "wikimedia": 3.2785398960113525
+      },
+      "validation_tokens": 4997120
+    },
+    {
+      "global_step": 1952,
+      "optimizer_seconds": 2895.455165057094,
+      "steady_training_seconds": 2865.1431989211123,
+      "step": 1952,
+      "training_tokens": 127926272,
+      "validation_loss": 2.7989158630371094,
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.766220808029175,
+        "dclm": 3.5715014934539795,
+        "dclm_edu": 3.1773526668548584,
+        "finemath_4plus": 2.4882400035858154,
+        "fineweb_edu": 3.3559718132019043,
+        "math_multi_style": 1.7150604724884033,
+        "math_textbook_exercise": 1.2156782150268555,
+        "pes2o": 3.0081329345703125,
+        "ufw_l3_multi_style": 3.1452176570892334,
+        "ultra_fineweb": 3.2345125675201416,
+        "wikimedia": 3.1732280254364014
+      },
+      "validation_tokens": 4997120
+    },
+    {
+      "global_step": 2000,
+      "optimizer_seconds": 2966.29010305705,
+      "steady_training_seconds": 2935.9781369210687,
+      "step": 2000,
+      "training_tokens": 131072000,
+      "validation_loss": 2.7955029010772705,
+      "validation_source_losses": {
+        "cosmopedia_v2": 2.7604782581329346,
+        "dclm": 3.6269032955169678,
+        "dclm_edu": 3.097214698791504,
+        "finemath_4plus": 2.5138566493988037,
+        "fineweb_edu": 3.3310258388519287,
+        "math_multi_style": 1.7015990018844604,
+        "math_textbook_exercise": 1.2120639085769653,
+        "pes2o": 2.9834790229797363,
+        "ufw_l3_multi_style": 3.132812023162842,
+        "ultra_fineweb": 3.2529983520507812,
+        "wikimedia": 3.145589828491211
+      },
+      "validation_tokens": 19988480
+    }
+  ]
+}

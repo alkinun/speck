@@ -1,0 +1,320 @@
+{
+  "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+  "authority": "The analysis may pass or fail the whole-architecture proxy quality screen and estimate paired variance. It cannot promote KDA, NoPE, GQA, the 3:1 mixer ratio, a systems claim, or the architecture, and it cannot authorize paper-scale training.",
+  "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+  "created_at": "2026-09-05T23:14:09.385100+00:00",
+  "fixed_analytic_flops": {
+    "lower_one_sided_95_bound": -0.1247342191839001,
+    "mean": -0.12009455727749192,
+    "n": 3,
+    "sample_standard_deviation": 0.002752112957649381,
+    "standard_error": 0.0015889331569391273,
+    "upper_one_sided_95_bound": -0.11545489537108375,
+    "values": [
+      -0.11759706110250745,
+      -0.12304507220377703,
+      -0.1196415385261913
+    ]
+  },
+  "fixed_steady_training_time": {
+    "lower_one_sided_95_bound": -0.07694972275173535,
+    "mean": -0.07267410347293717,
+    "n": 3,
+    "sample_standard_deviation": 0.0025361734230901095,
+    "standard_error": 0.0014642604085326493,
+    "upper_one_sided_95_bound": -0.06839848419413898,
+    "values": [
+      -0.0708867693646158,
+      -0.07557681338898803,
+      -0.07155872766520766
+    ]
+  },
+  "fixed_tokens": {
+    "lower_one_sided_95_bound": -0.044347108836679076,
+    "margin_nats": 0.01,
+    "mean": -0.03967165946960449,
+    "n": 3,
+    "non_inferiority_pass": true,
+    "sample_standard_deviation": 0.002773341041981423,
+    "standard_error": 0.001601189197142612,
+    "upper_one_sided_95_bound": -0.03499621010252991,
+    "values": [
+      -0.0391697883605957,
+      -0.04266166687011719,
+      -0.037183523178100586
+    ]
+  },
+  "format": "speck_paper_baseline_analysis",
+  "format_version": 1,
+  "paired_results": [
+    {
+      "fixed_flops_candidate_minus_control_loss": -0.11759706110250745,
+      "fixed_steady_time_candidate_minus_control_loss": -0.0708867693646158,
+      "fixed_steady_time_seconds": 2931.5671962120105,
+      "fixed_tokens_candidate_minus_control_loss": -0.0391697883605957,
+      "pair": {
+        "data_token_offset": 0,
+        "pair": 0,
+        "seed": 42
+      },
+      "time_to_quality": {
+        "candidate_relative_improvement": 0.18807171596183725,
+        "candidate_seconds": 2551.5625507872724,
+        "control_seconds": 3142.595966846922,
+        "right_censored": false
+      }
+    },
+    {
+      "fixed_flops_candidate_minus_control_loss": -0.12304507220377703,
+      "fixed_steady_time_candidate_minus_control_loss": -0.07557681338898803,
+      "fixed_steady_time_seconds": 2930.3292954147328,
+      "fixed_tokens_candidate_minus_control_loss": -0.04266166687011719,
+      "pair": {
+        "data_token_offset": 536870912,
+        "pair": 1,
+        "seed": 43
+      },
+      "time_to_quality": {
+        "candidate_relative_improvement": 0.2127773798537934,
+        "candidate_seconds": 2566.5098893509316,
+        "control_seconds": 3260.2085149360514,
+        "right_censored": false
+      }
+    },
+    {
+      "fixed_flops_candidate_minus_control_loss": -0.1196415385261913,
+      "fixed_steady_time_candidate_minus_control_loss": -0.07155872766520766,
+      "fixed_steady_time_seconds": 2935.9781369210687,
+      "fixed_tokens_candidate_minus_control_loss": -0.037183523178100586,
+      "pair": {
+        "data_token_offset": 1073741824,
+        "pair": 2,
+        "seed": 44
+      },
+      "time_to_quality": {
+        "candidate_relative_improvement": 0.18360855363107198,
+        "candidate_seconds": 2578.861499508783,
+        "control_seconds": 3158.85413912506,
+        "right_censored": false
+      }
+    }
+  ],
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "proxy_quality_screen_pass": true,
+  "run_results": [
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
+      "sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
+      "sha256": "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json",
+      "sha256": "77c7f7e5d1ffee91009c5732cab20ced4de31851b3650bd54aea64902ecf389d"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa.json",
+      "sha256": "2c877c4bca749c49bcad70aa3d597ad1a7c8c372039533194f3df3d5299b3bb1"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
+      "sha256": "e971627804813deecc9fb650b644d8b5983047250f6f1c1915945a9a5824afa4"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa.json",
+      "sha256": "be32fae5c79339149569587e4926e3030114326a60055771620aa79100034272"
+    }
+  ],
+  "source_guardrails": {
+    "cosmopedia_v2": {
+      "lower_one_sided_95_bound": -0.06109293880890951,
+      "margin_nats": 0.02,
+      "mean": -0.047205607096354164,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.008237562633714971,
+      "standard_error": 0.0047559590040417415,
+      "upper_one_sided_95_bound": -0.03331827538379882,
+      "values": [
+        -0.044309139251708984,
+        -0.05650019645690918,
+        -0.040807485580444336
+      ]
+    },
+    "dclm": {
+      "lower_one_sided_95_bound": -0.04794802193401064,
+      "margin_nats": 0.02,
+      "mean": -0.04122622807820638,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.003987173277358076,
+      "standard_error": 0.0023019955649883675,
+      "upper_one_sided_95_bound": -0.034504434222402125,
+      "values": [
+        -0.039717912673950195,
+        -0.04574751853942871,
+        -0.038213253021240234
+      ]
+    },
+    "dclm_edu": {
+      "lower_one_sided_95_bound": -0.04722824795070666,
+      "margin_nats": 0.02,
+      "mean": -0.04146711031595866,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.0034173398526070597,
+      "standard_error": 0.001973002083815122,
+      "upper_one_sided_95_bound": -0.03570597268121065,
+      "values": [
+        -0.03979301452636719,
+        -0.045398712158203125,
+        -0.039209604263305664
+      ]
+    },
+    "finemath_4plus": {
+      "lower_one_sided_95_bound": -0.04068529569389354,
+      "margin_nats": 0.02,
+      "mean": -0.0387884775797526,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.0011251375241418489,
+      "standard_error": 0.0006495984524386455,
+      "upper_one_sided_95_bound": -0.03689165946561166,
+      "values": [
+        -0.039496421813964844,
+        -0.0374910831451416,
+        -0.03937792778015137
+      ]
+    },
+    "fineweb_edu": {
+      "lower_one_sided_95_bound": -0.04957298263787306,
+      "margin_nats": 0.02,
+      "mean": -0.043718576431274414,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.0034726640659461993,
+      "standard_error": 0.0020049435332791785,
+      "upper_one_sided_95_bound": -0.03786417022467577,
+      "values": [
+        -0.04268836975097656,
+        -0.047589778900146484,
+        -0.040877580642700195
+      ]
+    },
+    "math_multi_style": {
+      "lower_one_sided_95_bound": -0.029766445404879677,
+      "margin_nats": 0.02,
+      "mean": -0.02690247694651286,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.0016988230745184454,
+      "standard_error": 0.000980815959378772,
+      "upper_one_sided_95_bound": -0.02403850848814604,
+      "values": [
+        -0.028831958770751953,
+        -0.026244044303894043,
+        -0.025631427764892578
+      ]
+    },
+    "math_textbook_exercise": {
+      "lower_one_sided_95_bound": -0.026173822712296377,
+      "margin_nats": 0.02,
+      "mean": -0.020596106847127277,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.0033085393755559462,
+      "standard_error": 0.001910186099101702,
+      "upper_one_sided_95_bound": -0.015018390981958177,
+      "values": [
+        -0.0244140625,
+        -0.01880478858947754,
+        -0.018569469451904297
+      ]
+    },
+    "pes2o": {
+      "lower_one_sided_95_bound": -0.04222206692845558,
+      "margin_nats": 0.02,
+      "mean": -0.0386350949605306,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.002127687799409877,
+      "standard_error": 0.001228421123740775,
+      "upper_one_sided_95_bound": -0.035048122992605624,
+      "values": [
+        -0.03789925575256348,
+        -0.041033029556274414,
+        -0.036972999572753906
+      ]
+    },
+    "ufw_l3_multi_style": {
+      "lower_one_sided_95_bound": -0.05889349141732272,
+      "margin_nats": 0.02,
+      "mean": -0.04830026626586914,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.006283594104636452,
+      "standard_error": 0.003627834747790201,
+      "upper_one_sided_95_bound": -0.037707041114415564,
+      "values": [
+        -0.04604220390319824,
+        -0.055400848388671875,
+        -0.043457746505737305
+      ]
+    },
+    "ultra_fineweb": {
+      "lower_one_sided_95_bound": -0.04800084229486603,
+      "margin_nats": 0.02,
+      "mean": -0.04240091641743978,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.003321713711047512,
+      "standard_error": 0.001917792305244152,
+      "upper_one_sided_95_bound": -0.03680099054001353,
+      "values": [
+        -0.041387319564819336,
+        -0.046111345291137695,
+        -0.039704084396362305
+      ]
+    },
+    "wikimedia": {
+      "lower_one_sided_95_bound": -0.049823056872284624,
+      "margin_nats": 0.02,
+      "mean": -0.04716229438781738,
+      "n": 3,
+      "pass": true,
+      "sample_standard_deviation": 0.0015782871809292207,
+      "standard_error": 0.0009112245287680212,
+      "upper_one_sided_95_bound": -0.04450153190335014,
+      "values": [
+        -0.0462949275970459,
+        -0.04898405075073242,
+        -0.04620790481567383
+      ]
+    }
+  },
+  "status": "complete_proxy_evidence_no_promotion_authority",
+  "time_to_quality": {
+    "paired_relative_improvement": {
+      "lower_one_sided_95_bound": 0.16833189019220052,
+      "mean": 0.19481921648223421,
+      "n": 3,
+      "sample_standard_deviation": 0.01571151419365423,
+      "standard_error": 0.009071046949082897,
+      "upper_one_sided_95_bound": 0.2213065427722679,
+      "values": [
+        0.18807171596183725,
+        0.2127773798537934,
+        0.18360855363107198
+      ]
+    },
+    "right_censored_pairs": []
+  },
+  "time_to_quality_lock": {
+    "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/baseline-time-to-quality-target.json",
+    "sha256": "48424759ccb7f954f55487ebdc773f03ca04ab44661377eede47d5b23a7dd6a2",
+    "validation_loss_target": 2.839127
+  }
+}
