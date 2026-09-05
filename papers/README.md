@@ -67,6 +67,9 @@ to a checked experiment artifact.
     Transformer-to-hybrid conversion.
 21. [Sparse Prefix Caching](24_sparse_prefix_caching.md) — exact distribution-aware recurrent-state
     checkpoint placement under a prefix-overlap law.
+22. [Ada-KV](25_adakv.md) — attention-output-loss-guided head-wise KV eviction budgets.
+23. [SqueezeAttention](26_squeezeattention.md) — before/after-attention layer importance and layer-wise
+    allocation over sequence KV compressors.
 
 ## Decision map for Speck
 
@@ -83,7 +86,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief plus two later direct
+The collection contains all 22 papers supplied in the research brief plus four later direct
 novelty-overlap audits. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).

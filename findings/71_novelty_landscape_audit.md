@@ -2,8 +2,8 @@
 
 ## Scope
 
-FlashMorph and Sparse Prefix Caching now have full-text v1 audits. Four additional sources remain
-primary arXiv metadata/abstract audits. Exact versions are pinned, but released code, the other full
+FlashMorph, Sparse Prefix Caching, Ada-KV, and SqueezeAttention now have full-text audits. Two additional
+sources remain primary arXiv metadata/abstract audits. Exact versions are pinned, but released code, the other full
 texts, backward references, forward citations, proceedings, patents, technical reports, deployed
 systems, and independent expert review remain mandatory.
 
@@ -34,6 +34,13 @@ preset budget before recovery training. Its boundary is conversion, not a prospe
 The full Sparse Prefix audit confirms an exact `O(NM)` distribution-aware dynamic program while retaining
 all attention KV. It isolates recurrent checkpoint positions under block granularity and a fixed last-K
 admission policy; production extraction/restoration and joint trie/eviction optimization remain open.
+
+The full Ada-KV audit establishes captured attention mass and attention-output L1 error as stronger
+baselines for N2: it derives an eviction-loss upper bound and allocates a layer's total budget by globally
+selecting attention weights across heads. It remains within-layer post-hoc eviction. The full
+SqueezeAttention audit establishes before/after-attention cosine and prompt-specific layer clustering as
+stronger N1 baselines; its largest throughput gains come from larger feasible batches, while batch-one
+throughput is approximately tied to full cache.
 
 ## Two hypotheses that survive provisionally
 

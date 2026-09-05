@@ -1113,14 +1113,14 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
         != [
             "full_text",
             "full_text",
-            "metadata_and_abstract",
-            "metadata_and_abstract",
+            "full_text",
+            "full_text",
             "metadata_and_abstract",
             "metadata_and_abstract",
         ]
         or any(
             not (repository_root / source.get("local_note", "")).is_file()
-            for source in sources[:2]
+            for source in sources[:4]
         )
         or len(overlaps) < 6
         or any(overlap.get("decision") == "novel" for overlap in overlaps)

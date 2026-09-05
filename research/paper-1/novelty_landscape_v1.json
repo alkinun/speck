@@ -3,9 +3,9 @@
   "format_version": 1,
   "audit_id": "speck-paper-1-novelty-landscape-v1",
   "paper_id": "speck-paper-1",
-  "status": "two_full_text_four_abstract_audits_no_novelty_established",
+  "status": "four_full_text_two_abstract_audits_no_novelty_established",
   "audited_on": "2026-09-05",
-  "scope": "Full-text v1 audits for FlashMorph and Sparse Prefix Caching plus primary arXiv metadata/abstract audits for four further direct overlaps; released code, full text for the remaining four, references, citations, patents, and non-arXiv literature remain mandatory before a novelty claim.",
+  "scope": "Full-text audits for FlashMorph, Sparse Prefix Caching, Ada-KV, and SqueezeAttention plus primary arXiv metadata/abstract audits for two further direct overlaps; released code, the remaining two full texts, references, citations, patents, and non-arXiv literature remain mandatory before a novelty claim.",
   "sources": [
     {
       "id": "arxiv_2606_30562v1",
@@ -31,7 +31,8 @@
       "submitted": "2024-07-16",
       "revised": "2025-10-16",
       "url": "https://arxiv.org/abs/2407.11550v5",
-      "review_scope": "metadata_and_abstract",
+      "review_scope": "full_text",
+      "local_note": "papers/25_adakv.md",
       "relevant_claim": "head-wise adaptive KV eviction budget allocation guided by an attention-output loss bound"
     },
     {
@@ -40,7 +41,8 @@
       "submitted": "2024-04-07",
       "revised": "2024-10-10",
       "url": "https://arxiv.org/abs/2404.04793v2",
-      "review_scope": "metadata_and_abstract",
+      "review_scope": "full_text",
+      "local_note": "papers/26_squeezeattention.md",
       "relevant_claim": "joint layer-wise and sequence-wise KV budget allocation using measured layer importance"
     },
     {
