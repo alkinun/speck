@@ -1,0 +1,167 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 3,
+  "audit_id": "speck-paper-1-novelty-landscape-v3",
+  "paper_id": "speck-paper-1",
+  "status": "eleven_full_text_audits_n2_concept_overlapped_no_novelty_established",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v2.json",
+    "sha256": "15fb8a2633bc143416ffd19af3e8e845ba45a180029cce3e2857b07f584cfd74",
+    "full_text_sources": 8,
+    "decision_preserved": "no novelty established"
+  },
+  "scope": "Adds three direct cross-paradigm multi-hop evidence-compression sources to the eight v2 architecture/KV sources. Complete code, backward/forward citations, proceedings, patents, deployed systems, non-English literature, and independent expert review remain mandatory.",
+  "additional_sources": [
+    {
+      "id": "acl_2025_findings_naacl_301_arxiv_2410_15277v2",
+      "title": "BRIEF: Bridging Retrieval and Inference for Multi-hop Reasoning via Compression",
+      "url": "https://aclanthology.org/2025.findings-naacl.301/",
+      "arxiv": "https://arxiv.org/abs/2410.15277v2",
+      "review_scope": "full_text",
+      "local_note": "papers/32_brief.md",
+      "local_note_sha256": "cc95fe6aa8424432b92fb54cc16a0f2535182d2a3e5bd34cb96a3e07c5a7ccda",
+      "relevant_claim": "decompose multi-hop questions, require a helpful proposition for every hop from distinct documents, and concatenate all propositions as a compression target"
+    },
+    {
+      "id": "arxiv_2510_13799v2",
+      "title": "BRIEF-Pro: Universal Context Compression with Short-to-Long Synthesis for Fast and Accurate Multi-Hop Reasoning",
+      "url": "https://arxiv.org/abs/2510.13799v2",
+      "review_scope": "full_text",
+      "local_note": "papers/33_brief_pro.md",
+      "local_note_sha256": "4a05d95c06cdc6b62b16576288b958a93f0c1cadf34c2d256e840668030f9c4c",
+      "relevant_claim": "long oracle-plus-distractor compression, per-sentence helpfulness, controllable budgets, whole-pipeline cost, and one-missing-hop error analysis"
+    },
+    {
+      "id": "arxiv_2608_13588v1",
+      "title": "IterCOMP: Reasoning-aware Adaptive Prompt Compression for Multi-hop Question Answering",
+      "url": "https://arxiv.org/abs/2608.13588v1",
+      "review_scope": "full_text",
+      "local_note": "papers/34_itercomp.md",
+      "local_note_sha256": "f0a53bbf93c7a7a8ec4cadb8f1c35b01be6e79e919082d6062d73f12d1ed9fee",
+      "relevant_claim": "Full versus Partial all-hop evidence, answerability judgment, missing-information identification, targeted follow-up, and iterative evidence accumulation"
+    }
+  ],
+  "aggregate_source_count": 11,
+  "new_overlap_decisions": [
+    {
+      "id": "complete_hop_source_conjunction",
+      "decision": "not novel by itself",
+      "reason": "BRIEF rejects synthetic examples missing a helpful proposition for any decomposed hop, requires distinct source documents, and concatenates every hop proposition"
+    },
+    {
+      "id": "full_versus_partial_evidence_sufficiency",
+      "decision": "not novel by itself",
+      "reason": "IterCOMP explicitly defines Full as all required hop sub-answers and Partial as a missing suffix, evaluates answerability, and models premature stopping"
+    },
+    {
+      "id": "missing_source_identification_and_recovery",
+      "decision": "not novel by itself",
+      "reason": "IterCOMP identifies the next missing subquestion and iteratively accumulates targeted evidence until judged sufficient"
+    },
+    {
+      "id": "long_context_multi_source_compression_with_budget_control",
+      "decision": "not novel by itself",
+      "reason": "BRIEF-Pro trains on 6K-word oracle-plus-distractor contexts, preserves compacted oracle documents, exposes requested/automatic summary budgets, and reports missing-one-hop failures"
+    },
+    {
+      "id": "source_helpfulness_by_answer_intervention",
+      "decision": "not novel by itself",
+      "reason": "BRIEF scores proposition inclusion and BRIEF-Pro scores sentence removal using target-answer likelihood"
+    }
+  ],
+  "surviving_hypotheses": [
+    {
+      "id": "N1_role_grounded_placement_law",
+      "type": "predictive composition rule",
+      "statement": "A preregistered small set of causal information-flow quantities predicts unseen from-scratch recurrent/global placements at fixed state and compute better than search, sensitivity, role, and random-placement baselines.",
+      "novelty_status": "plausibly_distinct_full_landscape_and_evidence_pending"
+    },
+    {
+      "id": "N2_internal_state_completeness_predictor_law",
+      "supersedes": "N2_conjunctive_required_source_survival_law",
+      "type": "empirical diagnostic law only",
+      "statement": "A cheap pre-output statistic computed from internal compressed or sparse model state predicts held-out multi-hop failure beyond external evidence coverage and LLM sufficiency judgments, answer-span importance, GER/reachability/consensus, attention mass, and output reconstruction error, with equal-physical-budget interventions moving statistic and outcome together.",
+      "concessions": [
+        "the conjunction over all hop-specific sources is prior art",
+        "complete-versus-partial sufficiency testing is prior art",
+        "identifying and retrieving missing evidence is prior art",
+        "query-aware source-complete multi-hop compression is prior art",
+        "routing, reachability, global answer erasure, and survive-but-not-used framing are prior art"
+      ],
+      "required_baselines": [
+        "BRIEF per-hop proposition coverage and target-answer helpfulness",
+        "BRIEF-Pro oracle-document coverage, leave-one-sentence-out helpfulness, and requested budgets",
+        "IterCOMP Full/Partial answerability score and missing-information judgment",
+        "HeadKV-R2 answer-span head importance",
+        "GER, compressed token-graph reachability, and head consensus",
+        "Ada-KV retained mass and output-error bound",
+        "attention-output absolute/relative error",
+        "single-source, top-k, random, recency, distance, load, and answer-length controls"
+      ],
+      "held_out": [
+        "unseen graphs, hop counts, and necessary-source counts",
+        "unseen real documents and domains",
+        "unseen compression rates and state budgets",
+        "at least three model scales",
+        "a different KV compression or native sparse-attention family"
+      ],
+      "success": "a predictor frozen before held-out outputs materially improves calibration/discrimination beyond every baseline and predicts equal-physical-budget single-source removal/restoration effects across real documents, scales, and a held-out mechanism",
+      "falsifiers": [
+        "external source coverage or an LLM sufficiency judge predicts equally well",
+        "GER/reachability/consensus, mass, or reconstruction error predicts equally well",
+        "source labels or predictor form change after held-out outputs",
+        "equal-budget removal/restoration does not move outcomes as predicted",
+        "effect disappears after base difficulty, distance, load, answer length, and source-count controls",
+        "relationship fails on real documents, another scale, or another mechanism"
+      ],
+      "novelty_status": "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
+    }
+  ],
+  "rejected_hypotheses": [
+    {
+      "id": "N2_all_required_source_recall_law",
+      "decision": "concept_novelty_rejected",
+      "reason": "BRIEF and IterCOMP explicitly operationalize complete per-hop evidence and missing-source recovery, while BRIEF-Pro scales source-aware compression and audits one-hop omission"
+    },
+    {
+      "id": "N2_conjunctive_required_source_survival_law",
+      "decision": "conjunction_novelty_rejected",
+      "reason": "the conjunction remains useful as a measured feature but cannot itself be claimed as a new composition principle"
+    }
+  ],
+  "code_followup": {
+    "brief_and_brief_pro": "one evolving combined repository is declared and currently includes training/evaluation/model/data links, but its immutable tree, root rights, dataset/model revisions, and historical BRIEF-v2 correspondence are unaudited",
+    "itercomp": "no dedicated code artifact is declared on the arXiv record",
+    "execution_authorized": false
+  },
+  "claim_gate": {
+    "full_landscape_before_claim": [
+      "audit immutable BRIEF/BRIEF-Pro repository, model, dataset, environment, and license identities",
+      "audit STEC and other July-August 2026 evidence-compression work before treating this search as current",
+      "follow backward and forward citations for N1 and the residual N2 empirical-law question",
+      "search proceedings, patents, deployed systems, technical reports, and non-English literature with dated queries",
+      "build a claim-granular closest-overlap table and obtain independent expert review"
+    ],
+    "evidence_before_claim": [
+      "freeze source labels, predictor, models, mechanisms, splits, and analysis before held-out outputs",
+      "compare all mandatory internal and external baselines",
+      "use at least three scales and a held-out mechanism with paired uncertainty",
+      "hold out document/domain, graph/hop, rate/budget, and architecture cells",
+      "perform equal-physical-budget removal and restoration interventions",
+      "retain negative results and counterexamples"
+    ],
+    "decision": "No N2 concept may be claimed novel. Only a prospectively demonstrated incremental internal-state law could reopen novelty review; otherwise N2 is an evaluation framework contribution or is removed."
+  },
+  "decision": {
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "audit STEC and the BRIEF repository/model/data boundary, then complete citation review before deciding whether the residual N2 empirical-law protocol is worth freezing"
+  }
+}

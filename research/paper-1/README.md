@@ -106,6 +106,9 @@ the final combined model.
 - [`novelty_landscape_v2.json`](novelty_landscape_v2.json) adds HeadKV-R2 and routing-aware KV
   compression, concedes reasoning-aware allocation and retention/accessibility novelty, and narrows N2
   to conjunctive necessary-source survival with incremental prediction and causal restoration.
+- [`novelty_landscape_v3.json`](novelty_landscape_v3.json) adds BRIEF, BRIEF-Pro, and IterCOMP, rejects
+  novelty of the necessary-source conjunction and missing-hop recovery themselves, and leaves only an
+  unestablished cheap internal-state predictive/causal law for possible later review.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.

@@ -87,6 +87,7 @@ Read in order:
 79. [78 — Adaptive cache salience-acquisition readiness](78_adaptive_cache_salience_readiness.md)
 80. [79 — N2 direct-overlap audit and scope reduction](79_n2_direct_overlap_audit.md)
 81. [80 — HeadKV and routing-artifact availability audit](80_n2_code_availability.md)
+82. [81 — N2 concept rejection after evidence-compression audit](81_n2_concept_rejection.md)
 
 Conventions:
 
@@ -427,3 +428,10 @@ root license, an unpinned/misnamed environment, global monkeypatches, native bin
 profiles/data, and no assertion suite. The routing paper declares no dedicated repository/data or
 immutable KVPress/Expected-Attention revisions. Neither reproduction path is authorized; novelty status
 does not change.
+
+Finding 81 rejects novelty of the N2 source-conjunction concept. BRIEF already requires a helpful
+proposition for every hop from distinct documents; BRIEF-Pro scales source-aware compression beyond 10K
+words with budgets and one-missing-hop analysis; IterCOMP explicitly tests Full versus Partial hop
+evidence, judges sufficiency, identifies the missing hop, and retrieves it iteratively. Only an
+unestablished cheap internal-state predictor with incremental held-out and equal-budget causal evidence
+remains reviewable; no novelty is established.

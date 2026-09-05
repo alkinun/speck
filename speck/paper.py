@@ -25,6 +25,7 @@ PROGRAM_FILES = (
     "systems_cost_readiness_v1.json",
     "novelty_landscape_v1.json",
     "novelty_landscape_v2.json",
+    "novelty_landscape_v3.json",
     "novelty_code_availability_v1.json",
     "novelty_code_availability_v2.json",
     "adakv_code_audit_v1.json",
@@ -1099,8 +1100,8 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
     if not path.is_file() or _file_sha256(path) != reference["sha256"]:
         raise ValueError("novelty landscape audit does not match its pin")
     audit = _load_json(path)
-    sources = audit.get("sources", ())
-    overlaps = audit.get("overlap_decisions", ())
+    sources = audit.get("additional_sources", ())
+    overlaps = audit.get("new_overlap_decisions", ())
     hypotheses = audit.get("surviving_hypotheses", ())
     claim_gate = audit.get("claim_gate", {})
     decision = audit.get("decision", {})
@@ -1108,22 +1109,17 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
     code_followup = audit.get("code_followup", {})
     if (
         audit.get("format") != "speck_novelty_landscape_audit"
-        or audit.get("format_version") != 2
+        or audit.get("format_version") != 3
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
-        or predecessor.get("path") != "research/paper-1/novelty_landscape_v1.json"
+        or predecessor.get("path") != "research/paper-1/novelty_landscape_v2.json"
         or not (repository_root / predecessor["path"]).is_file()
         or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
         or [source.get("id") for source in sources]
         != [
-            "arxiv_2606_30562v1",
-            "arxiv_2605_05219v1",
-            "arxiv_2407_11550v5",
-            "arxiv_2404_04793v2",
-            "arxiv_2605_05697v1",
-            "arxiv_2511_00819v1",
-            "arxiv_2410_19258v4",
-            "arxiv_2603_01426v1",
+            "acl_2025_findings_naacl_301_arxiv_2410_15277v2",
+            "arxiv_2510_13799v2",
+            "arxiv_2608_13588v1",
         ]
         or any(source.get("review_scope") != "full_text" for source in sources)
         or any(
@@ -1132,17 +1128,20 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
             != source.get("local_note_sha256")
             for source in sources
         )
-        or len(overlaps) < 9
+        or audit.get("aggregate_source_count") != 11
+        or len(overlaps) < 5
         or any(overlap.get("decision") == "novel" for overlap in overlaps)
         or [hypothesis.get("id") for hypothesis in hypotheses]
-        != ["N1_role_grounded_placement_law", "N2_conjunctive_required_source_survival_law"]
+        != ["N1_role_grounded_placement_law", "N2_internal_state_completeness_predictor_law"]
         or hypotheses[0].get("novelty_status")
         != "plausibly_distinct_full_landscape_and_evidence_pending"
         or hypotheses[1].get("novelty_status")
-        != "plausibly_narrower_full_landscape_and_evidence_pending"
-        or hypotheses[1].get("supersedes") != "N2_all_required_source_recall_law"
+        != "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
+        or hypotheses[1].get("supersedes")
+        != "N2_conjunctive_required_source_survival_law"
         or len(hypotheses[1].get("required_baselines", ())) < 8
-        or len(audit.get("change_from_v1", ())) < 5
+        or [entry.get("id") for entry in audit.get("rejected_hypotheses", ())]
+        != ["N2_all_required_source_recall_law", "N2_conjunctive_required_source_survival_law"]
         or code_followup.get("execution_authorized") is not False
         or len(claim_gate.get("full_landscape_before_claim", ())) < 5
         or len(claim_gate.get("evidence_before_claim", ())) < 6
@@ -1150,7 +1149,8 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
         or decision.get("novel_composition_rule_established") is not False
         or decision.get("novel_generalizable_law_established") is not False
         or decision.get("novel_inseparable_systems_method_established") is not False
-        or decision.get("n2_scope_narrowed") is not True
+        or decision.get("n2_concept_novelty_rejected") is not True
+        or decision.get("n2_empirical_law_established") is not False
         or decision.get("paper_novelty_gate_pass") is not False
         or decision.get("architecture_freeze_authorized") is not False
     ):
