@@ -39,9 +39,10 @@ uncertainty. The score is based on independent single replacements and does not 
 among the several recurrent replacements ultimately selected.
 
 HALO also reports importance rankings for Qwen3-4B and 8B, but the final table's HTML rendering is
-ambiguous about highlighted top-k membership. Section 4.3 explicitly states that the final model keeps
-25% of layers as attention; the rendered configuration table appears to reverse attention and recurrent
-counts, so exact model artifacts must resolve the release identity.
+ambiguous about highlighted top-k membership. Section 4.3 states that the final model keeps 25% of
+layers as attention, while the rendered configuration table appears to reverse attention and recurrent
+counts. The pinned repository config resolves the 2B case as seven attention and twenty-one Lightning
+Attention layers, consistent with the method text.
 
 ## HypeNet evidence
 
