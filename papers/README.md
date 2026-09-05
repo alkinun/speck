@@ -75,6 +75,11 @@ to a checked experiment artifact.
 25. [Alternating Sparse Attention](28_alternating_sparse_attention.md) — redistribute local and
     compressed/selective latent branches across layers.
 
+### Supporting eviction baselines
+
+26. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+    positions into local clusters, and retain a fixed prompt cache for generation.
+
 ## Decision map for Speck
 
 | Question | Best starting papers | What must still be measured locally |
@@ -90,7 +95,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief plus six later direct
-novelty-overlap audits. The original set is slightly above the requested approximate range because
+The collection contains all 22 papers supplied in the research brief, six later direct
+novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
