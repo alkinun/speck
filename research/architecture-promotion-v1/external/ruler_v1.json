@@ -1,0 +1,83 @@
+{
+  "format": "speck_external_evaluation_suite",
+  "format_version": 1,
+  "suite_id": "ruler",
+  "suite_version": "rulerv1-ns",
+  "status": "source_qualified_data_and_runtime_blocked",
+  "upstream": {
+    "id": "ruler_pipeline",
+    "repository": "https://github.com/NVIDIA/RULER.git",
+    "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
+    "ref": "refs/heads/rulerv1-ns",
+    "license": "Apache-2.0",
+    "required_files": [
+      {"path": "README.md", "sha256": "3302376f861372c433d4080bd9b9d10faf20fed30ec39fd1119cf703f3269c08"},
+      {"path": "run_example.sh", "sha256": "28ff68b9de377b1a109047fa9590f9fb4c9e2c60be54c13e5e3f9664bcb07c01"},
+      {"path": "LICENSE", "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1"}
+    ]
+  },
+  "dependencies": [
+    {
+      "id": "nemo_skills",
+      "repository": "https://github.com/NVIDIA-NeMo/Skills.git",
+      "revision": "f4a3fd8e524acd9abd1fea4387e8f179f6d51cf3",
+      "ref": "refs/heads/chsieh/ruler-remove-prefix",
+      "license": "Apache-2.0",
+      "required_files": [
+        {"path": "LICENSE", "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"},
+        {"path": "pyproject.toml", "sha256": "4efd6fbcda6df2a74a8fb12dc146065feebb9577e4686325546099773f579b4b"},
+        {"path": "nemo_skills/dataset/ruler/prepare.py", "sha256": "e25394d84399800b9b3dccec404e902d6fedc6068a01100a516bb9fffa5ad2ee"},
+        {"path": "nemo_skills/dataset/ruler/ruler_score.py", "sha256": "489da1206781db238f4f9393eaa56eda7661eaf0f45c04bbd1be7cc0d56e88a2"}
+      ]
+    },
+    {
+      "id": "ruler_data_generator",
+      "repository": "https://github.com/NVIDIA/RULER.git",
+      "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "ref": "main as consumed by the pinned NeMo-Skills preparation code",
+      "license": "Apache-2.0",
+      "required_files": [
+        {"path": "scripts/config_tasks.sh", "sha256": "bd2b228b303951ff6e1dba2dd551270744b50d78f5d51493b0c4abfb41a0c544"},
+        {"path": "scripts/synthetic.yaml", "sha256": "34bc71dcacdc41a829a170f04b528fbf48d62c616338005ab4991680fbf8cb0b"},
+        {"path": "scripts/data/prepare.py", "sha256": "f2d210860fbf5c640cb41ed104c7a923c9f4043f6e6c354277daacc73afc643d"},
+        {"path": "scripts/eval/evaluate.py", "sha256": "b9a5fcbded7209663d97670496c74dbcd6358ddbe3d9887a0c5f0c4f974bfe1c"}
+      ]
+    }
+  ],
+  "benchmark": {
+    "tasks": [
+      "niah_single_1",
+      "niah_single_2",
+      "niah_single_3",
+      "niah_multikey_1",
+      "niah_multikey_2",
+      "niah_multikey_3",
+      "niah_multivalue",
+      "niah_multiquery",
+      "vt",
+      "cwe",
+      "fwe",
+      "qa_1",
+      "qa_2"
+    ],
+    "lengths": [4096, 8192, 16384, 32768, 65536, 131072],
+    "samples_per_task_length": 100,
+    "random_seed": 42,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "scoring": "official NeMo-Skills ruler scorer; unweighted mean of all 13 task accuracies",
+    "staging": "run one length at a time; advance only after the current paired capability gate"
+  },
+  "data": {
+    "status": "blocked_unpinned_transitive_downloads",
+    "reason": "the pinned NeMo-Skills preparer clones RULER main and downloads Paul Graham, SQuAD, and HotpotQA artifacts without immutable content pins",
+    "qualification_rule": "preseed the exact ruler_data_generator revision and record SHA-256 for every downloaded source before generating cases"
+  },
+  "model_adapter": {
+    "mode": "NeMo-Skills vLLM, SGLang, or TensorRT-LLM server",
+    "status": "blocked",
+    "reason": "no supported Speck production server has passed Transformers/checkpoint/runtime parity",
+    "required_next": "qualify a supported serving backend or a protocol-preserving native adapter before prediction"
+  },
+  "release_use": "required independent long-context suite after data and runtime qualification"
+}

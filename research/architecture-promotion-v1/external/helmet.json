@@ -1,0 +1,58 @@
+{
+  "format": "speck_external_evaluation_suite",
+  "format_version": 1,
+  "suite_id": "helmet",
+  "suite_version": "pinned-2026-09-05",
+  "status": "source_qualified_data_storage_and_model_smoke_blocked",
+  "upstream": {
+    "id": "helmet_pipeline",
+    "repository": "https://github.com/princeton-nlp/HELMET.git",
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+    "ref": "HEAD pinned on 2026-09-05",
+    "license": "MIT for benchmark code; component datasets retain their own licenses",
+    "required_files": [
+      {"path": "README.md", "sha256": "7f65d7f593f1cce2a24fb394298705c94ee5c2392bcbcd09a3a109ffd36bed1b"},
+      {"path": "LICENSE", "sha256": "f460854d0318a2e3bdaece7970c6417e2a84e3b2e7c653f0046128af01315f77"},
+      {"path": "requirements.txt", "sha256": "053c7cc7604debae4286ff33533b7937477737e230c1cfc677c55aeee771e302"},
+      {"path": "arguments.py", "sha256": "15534e71bfd4d0053f8d836021883450621f8914ced7f101c9f24f10c1f5fd4e"},
+      {"path": "eval.py", "sha256": "99eaaebe11efaa4c2d7932e6120cdbc2ad5104e273e352c299f2455285125909"},
+      {"path": "data.py", "sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348"},
+      {"path": "model_utils.py", "sha256": "9fd15826773fb7f213ac0629eb0db681419241c6d1773e16f1f51f01483eb848"},
+      {"path": "configs/recall.yaml", "sha256": "98b7f40da75ce06796c77fb95c37c3db191628676028ab3b29704b47dca48dce"},
+      {"path": "configs/rag.yaml", "sha256": "9d7378b56785c4b3bf7910252c4dd5a3160f593c1d36acee95b9a575b8bdcee2"},
+      {"path": "configs/rerank.yaml", "sha256": "e6cac9e13124fbfffdb2ae9cbe6ba0a912258dda0cd1ff9ef7c88ddfb0caf7e5"},
+      {"path": "configs/icl.yaml", "sha256": "95b3b9817561b8962c10f73bd0cd24de2b840f21cf342898c6755ba8500ef82f"},
+      {"path": "configs/longqa.yaml", "sha256": "69976fa381c1a6f7232a0f8a00ad98c7e1b8e40f9d7ef16394ad540dffa3b850"},
+      {"path": "configs/summ.yaml", "sha256": "921255979c5c7169d630aafb9de61b0b521204feb43a85464a3ea97e74b70554"},
+      {"path": "configs/cite.yaml", "sha256": "58edbcc7605ce45ae4a1050f50e643045fcca450c59b0c54b5d86ed322800755"}
+    ]
+  },
+  "dependencies": [],
+  "benchmark": {
+    "categories": ["recall", "rag", "rerank", "icl", "longqa", "summ", "cite"],
+    "lengths": [8192, 16384, 32768, 65536, 131072],
+    "use_short_configs_through_65536": true,
+    "use_128k_configs_at_131072": true,
+    "generation": "preserve each pinned config's max length, chat-template, shots, stop, and sample count",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": 42,
+    "scoring": "official per-category post-processing and raw plus .score outputs",
+    "staging": "run one length at a time and retain category-level results"
+  },
+  "data": {
+    "status": "revision_pinned_storage_blocked",
+    "repository": "https://huggingface.co/datasets/princeton-nlp/HELMET",
+    "revision": "dddb209d03e38f1f0faf76d6d05ef4ccf96240ee",
+    "advertised_download_size_gb": 34,
+    "reason": "the research filesystem has less than 8GB free",
+    "qualification_rule": "use a separate capacity-planned volume, preserve dataset licenses, and record every extracted file hash"
+  },
+  "model_adapter": {
+    "mode": "native Hugging Face trust_remote_code adapter with attn_implementation=eager and compilation disabled for qualification",
+    "status": "blocked_smoke_incomplete",
+    "reason": "the adapter source is compatible in principle, but its device_map path requires Accelerate and the first isolated smoke was stopped after an environment resolver attempted a duplicate CUDA stack",
+    "required_next": "add a locked external-evaluation environment and run local-export load, tokenize, generate, and raw-output smoke without changing HELMET prompts or scoring"
+  },
+  "release_use": "required independent suite after external storage and model-adapter qualification"
+}

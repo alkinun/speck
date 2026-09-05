@@ -1,0 +1,60 @@
+{
+  "format": "speck_external_evaluation_suite",
+  "format_version": 1,
+  "suite_id": "nolima",
+  "suite_version": "pinned-2026-09-05",
+  "status": "source_qualified_license_acceptance_and_runtime_blocked",
+  "upstream": {
+    "id": "nolima_pipeline",
+    "repository": "https://github.com/adobe-research/NoLiMa.git",
+    "revision": "cb14780b249fecf2851127b2101a062c1b2c6430",
+    "ref": "HEAD pinned on 2026-09-05",
+    "license": "Adobe Research License; non-commercial research use only",
+    "required_files": [
+      {"path": "README.md", "sha256": "d64d2af4cbba0cb0e2faa46e33a83fcba82221e99a7f5c12bfda04be2c7d81f1"},
+      {"path": "LICENSE", "sha256": "8638b5a5beb5e1cdf06a09512d23268358b64f646775581d8276e47329e0aa06"},
+      {"path": "requirements.txt", "sha256": "886818134cd22732d3eebf69ae175ef28cb969016e0919bf5e722069b768ce43"},
+      {"path": "evaluation/run_tests.py", "sha256": "3ad47595b8bc6b96f26a6ebacc7eb9aaa4efe75dd787fc697f8120c3d4c83fcc"},
+      {"path": "evaluation/async_evaluate.py", "sha256": "78f61137f1b23f880540e040ca09a3db726a6e81e252cd346dd60589bedb85b7"},
+      {"path": "evaluation/async_api_connector.py", "sha256": "4c3d34b78b887f459ea7e43d6e63c87a7a67cdaa74063524a1fa3a94d3e96450"},
+      {"path": "evaluation/run_config/multi_test_config_book_4K.yaml", "sha256": "d3ac46a686ffd2ceee83ccc14fa2f9b8b66cbaf2e878227db5f76fd063888f49"},
+      {"path": "evaluation/run_config/multi_test_config_book_8K.yaml", "sha256": "5a06545d563de4ceb045b52a6e07082ceb82d3f0d758820adb62b5557c55a0cf"},
+      {"path": "evaluation/run_config/multi_test_config_book_16K.yaml", "sha256": "57480d134ee5c0886a48f60db9eda11e77fba460cef0aa7515546e5d3de6c293"},
+      {"path": "evaluation/run_config/multi_test_config_book_32K.yaml", "sha256": "cc182fec8000c50773e49b8cfb8c485c3be2ae01337f574efab93add3ebe0ecc"}
+    ]
+  },
+  "dependencies": [],
+  "benchmark": {
+    "needle_sets": [
+      "needle_set.json",
+      "needle_set_hard.json",
+      "needle_set_w_Distractor.json",
+      "needle_set_ONLYDirect.json"
+    ],
+    "lengths": [4000, 8000, 16000, 32000],
+    "document_depth_percent_min": 0,
+    "document_depth_percent_max": 100,
+    "document_depth_percent_intervals": 26,
+    "haystacks": 5,
+    "base_seed": 42,
+    "metric": "contains",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "staging": "report every needle set, haystack, depth, and length separately before aggregate retention"
+  },
+  "data": {
+    "status": "revision_pinned_license_acceptance_blocked",
+    "repository": "https://huggingface.co/datasets/amodaresi/NoLiMa",
+    "revision": "378115b1f136b6ba78f90f78682bc55f70ec3ddd",
+    "observed_repository_files": "five roughly 0.4MB shuffled haystacks, five roughly 1.2MB long haystacks, and six needle-set JSON files before any optional LFS book archive",
+    "license": "Adobe Research License plus per-haystack source licenses",
+    "qualification_rule": "manual acceptance of non-commercial terms and complete post-download SHA-256 manifest"
+  },
+  "model_adapter": {
+    "mode": "OpenAI-compatible vLLM endpoint",
+    "status": "blocked",
+    "reason": "the pinned evaluator has no native Hugging Face path and Speck has no qualified compatible server",
+    "required_next": "qualify a protocol-preserving endpoint and pin a Speck model config with max_tokens=192, temperature=0, and top_p=1"
+  },
+  "release_use": "research-paper evaluation only under the non-commercial license; do not redistribute upstream materials in the MIT repository"
+}
