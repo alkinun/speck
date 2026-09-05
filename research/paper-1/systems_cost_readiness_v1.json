@@ -1,0 +1,225 @@
+{
+  "format": "speck_systems_cost_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-systems-cost-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_frozen_proxy_control_envelope_failed_datacenter_blocked",
+  "frozen_on": "2026-09-05",
+  "purpose": "Separate analytic complexity, operator kernels, full-model runtime, online serving, energy, memory, and monetary cost while preserving the failed v1 proxy control envelope.",
+  "input": {
+    "cost_envelopes": "research/architecture-promotion-v1/cost_envelopes.json",
+    "cost_envelopes_sha256": "1714aeae3bf4dae2575e199c1a4b413155904cc62be7745ceb2cd5300033dfcb",
+    "profile": "proxy_150m_4k",
+    "candidate_result_records_present": 0
+  },
+  "proxy_control_envelope_audit": {
+    "frozen_limits": {
+      "maximum_peak_allocated_gib": 16,
+      "minimum_steady_tokens_per_second": 40000,
+      "maximum_gpu_hours_per_discovery_run": 1.0,
+      "non_finite_steps": 0
+    },
+    "gpu_hour_definition": "total active_seconds divided by 3600, including startup, compilation, validation, training, and checkpoint work on the occupied GPU",
+    "runs": [
+      {
+        "pair": 0,
+        "result_sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526",
+        "active_seconds": 3763.9053057709243,
+        "gpu_hours": 1.0455292516030346,
+        "steady_tokens_per_second": 40200.37813095491,
+        "peak_allocated_gib": 11.481711864471436,
+        "non_finite_steps": 0,
+        "throughput_pass": true,
+        "memory_pass": true,
+        "finite_pass": true,
+        "gpu_hours_pass": false,
+        "complete_envelope_pass": false
+      },
+      {
+        "pair": 1,
+        "result_sha256": "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5",
+        "active_seconds": 3646.3640678110532,
+        "gpu_hours": 1.0128789077252927,
+        "steady_tokens_per_second": 40203.409173313405,
+        "peak_allocated_gib": 11.492671489715576,
+        "non_finite_steps": 0,
+        "throughput_pass": true,
+        "memory_pass": true,
+        "finite_pass": true,
+        "gpu_hours_pass": false,
+        "complete_envelope_pass": false
+      },
+      {
+        "pair": 2,
+        "result_sha256": "77c7f7e5d1ffee91009c5732cab20ced4de31851b3650bd54aea64902ecf389d",
+        "active_seconds": 3641.1164092719555,
+        "gpu_hours": 1.0114212247977654,
+        "steady_tokens_per_second": 40254.822892745404,
+        "peak_allocated_gib": 11.492671489715576,
+        "non_finite_steps": 0,
+        "throughput_pass": true,
+        "memory_pass": true,
+        "finite_pass": true,
+        "gpu_hours_pass": false,
+        "complete_envelope_pass": false
+      }
+    ],
+    "decision": "the dense control fails the complete v1 proxy hard envelope in all three cells solely on total GPU-hours; the 1.0-hour limit is not widened or redefined",
+    "scope": "this is a negative cost-envelope result, not a quality failure and not a reason to stop the already frozen fixed-sample proxy",
+    "successor_rule": "any future absolute runtime envelope is a versioned prospective resource decision justified from these observations, never a relabeling of v1 as passed"
+  },
+  "evidence_hierarchy": [
+    {
+      "id": "analytic",
+      "measures": "closed-form parameters, arithmetic FLOPs, communication bytes, and persistent-state bytes",
+      "cannot_claim": "realized speed, energy, capacity, or dollar savings"
+    },
+    {
+      "id": "operator",
+      "measures": "isolated reference/kernel latency, throughput, workspace, numerical error, and roofline behavior",
+      "cannot_claim": "full-model or serving-system speed"
+    },
+    {
+      "id": "model_runtime",
+      "measures": "complete training step, prefill, decode, state transition, compile, and peak-memory behavior",
+      "cannot_claim": "online request-level service economics"
+    },
+    {
+      "id": "serving_system",
+      "measures": "scheduler, continuous batching, prefix reuse, arrival-rate saturation, latency distributions, failures, and output throughput",
+      "cannot_claim": "portable monetary cost without explicit accounting inputs"
+    },
+    {
+      "id": "monetary",
+      "measures": "hardware amortization or cloud price plus measured gross/incremental energy under one named deployment",
+      "cannot_claim": "cost on unmeasured hardware, utilization, region, contract, or electricity assumptions"
+    }
+  ],
+  "training_measurement": {
+    "primary": "paired GPU seconds to a control-only locked quality target",
+    "secondary": [
+      "steady tokens per second",
+      "analytic and achieved model TFLOP/s",
+      "model FLOP utilization with stated peak denominator",
+      "gross and incremental joules to quality",
+      "peak allocated and reserved memory",
+      "end-to-end active GPU-hours"
+    ],
+    "time_categories": [
+      "environment materialization",
+      "model construction and compilation/autotuning",
+      "initial validation",
+      "steady optimizer steps",
+      "intermediate/final validation",
+      "checkpoint serialization",
+      "orchestration idle/cooldown"
+    ],
+    "rule": "steady training excludes startup, validation, checkpoint, and orchestration, but total occupied GPU time reports them all; neither may be substituted for the other",
+    "utilization": "report SM/memory utilization samples and operator time; analytic FLOPs times throughput alone is not a hardware-utilization diagnosis"
+  },
+  "energy_measurement": {
+    "sampler": "NVML or nvidia-smi bound to exact GPU UUID with monotonic timestamps",
+    "sampling_hz": 1,
+    "gross_energy_joules": "trapezoidal integral of board power watts over each named interval",
+    "idle_baseline": "five thermally matched idle blocks before/after the experiment with display and background workload recorded",
+    "incremental_energy_joules": "gross energy minus elapsed seconds times paired idle-baseline watts",
+    "report_both": true,
+    "missing_samples": "report count, longest gap, and bounded energy interval using neighboring/minimum/maximum power; do not interpolate an unbounded outage",
+    "cpu_and_host": "report separately when measured; GPU board power alone is not whole-system energy"
+  },
+  "serving_matrix": {
+    "prompt_lengths": [
+      512,
+      4096,
+      32768,
+      131072
+    ],
+    "output_tokens": 128,
+    "loads": [
+      "batch 1",
+      "maximum resident batch at 524288 cached token slots",
+      "online arrival rates at 10, 30, 50, 70, and 90 percent of measured saturation"
+    ],
+    "cache_conditions": [
+      "cold prefix",
+      "exact prefix hit",
+      "partial prefix hit with unfinished-tail recomputation"
+    ],
+    "execution_paths": [
+      "eager reference",
+      "compiled model runtime",
+      "production serving runtime"
+    ],
+    "metrics": [
+      "p50/p90/p99 TTFT",
+      "p50/p90/p99 TPOT and inter-token latency",
+      "input and output tokens per GPU-second",
+      "maximum resident batch",
+      "request failure, timeout, and cancellation rate",
+      "prefix-hit rate and recomputed tokens",
+      "gross/incremental joules per input and output token"
+    ],
+    "minimum_requests_for_p99": 1000,
+    "tokenization_in_timing": false,
+    "sampler_or_argmax_in_timing": true,
+    "rule": "report every shape/load/path separately; a prefill-only or maximum-batch win cannot be presented as batch-1 decode or online-service improvement"
+  },
+  "memory_accounting": [
+    "resident model weights by dense, recurrent, attention, residual, router, shared, and routed-expert category",
+    "optimizer states, gradients, and master weights",
+    "persistent exact/compressed/sparse/local KV plus quantization scales and metadata",
+    "fixed recurrent KDA state and convolution history",
+    "AttnRes source activations/summaries and recomputation",
+    "expert activation, dispatch, and communication buffers",
+    "kernel workspace and compiler/autotune caches",
+    "allocated versus reserved bytes and allocator fragmentation",
+    "host-pinned, pageable CPU, and disk/prefix-cache state"
+  ],
+  "statistical_controls": {
+    "microbenchmark": "at least five thermally interleaved candidate/control blocks and 30 measured iterations per block",
+    "online": "at least 1000 requests for p99 with deterministic request trace replay and paired bootstrap confidence intervals",
+    "start_temperature_c_max": 50,
+    "cuda_synchronization": true,
+    "compile_startup_separate": true,
+    "software_model_and_command_hashes": true,
+    "failure_retention": "OOM, timeout, dropped request, compiler fallback, and numerical failure remain in denominators and artifacts"
+  },
+  "monetary_accounting": {
+    "hardware_amortization_required": true,
+    "electricity_price_required": true,
+    "hardware_inputs": [
+      "purchase price or exact cloud SKU/region/contract price",
+      "economic lifetime",
+      "residual value",
+      "assumed billable utilization",
+      "host/network/storage allocation"
+    ],
+    "training_formula": "gpu_hours*(hardware_amortization_usd_per_hour + average_power_kw*electricity_usd_per_kwh)",
+    "serving_formula": "1000000*(hardware_amortization_usd_per_hour + average_power_kw*electricity_usd_per_kwh)/output_tokens_per_hour",
+    "cloud_rule": "do not add owned-hardware amortization to a cloud hourly price that already bundles hardware; report cloud and owned scenarios separately",
+    "current_status": "blocked because v1 contains neither hardware amortization nor electricity price",
+    "fallback": "report physical time, energy, and memory separately; do not fabricate dollars"
+  },
+  "datacenter_v2_requirements": [
+    "exact accelerator SKU/count/memory and node CPU/RAM",
+    "driver, CUDA, libraries, compiler, serving runtime, and container hashes",
+    "NVLink/PCIe/network topology and bandwidth",
+    "data/tensor/expert/context/pipeline parallel dimensions",
+    "scheduler, batching, cache, eviction, and failure-recovery policy",
+    "training and serving request shapes plus hard latency/capacity envelopes",
+    "power telemetry scope and monetary inputs",
+    "absolute experiment resource and failure-recovery budget"
+  ],
+  "decision": {
+    "proxy_control_hard_envelope_pass": false,
+    "proxy_quality_decision_changed": false,
+    "candidate_cost_result_available": false,
+    "consumer_serving_claim_authorized": false,
+    "datacenter_profile_qualified": false,
+    "monetary_claim_authorized": false,
+    "architecture_cost_promotion_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "retain the v1 control failure; after the fixed proxy completes, report candidate/control physical cost descriptively and freeze a prospective v2 finalist/datacenter envelope before any larger run"
+  }
+}

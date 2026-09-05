@@ -97,6 +97,9 @@ the final combined model.
 - [`scaling_readiness_v1.json`](scaling_readiness_v1.json) separates transfer from frontier claims and
   freezes five fit scales, allocation pilots, joint/compute models, full-refit uncertainty, horizon
   interaction, and a held-out 1.2B prediction sentinel without authorizing runs.
+- [`systems_cost_readiness_v1.json`](systems_cost_readiness_v1.json) preserves the failed 1.0-hour dense
+  proxy envelope and freezes the analytic/operator/model/serving/monetary evidence hierarchy, energy,
+  memory, online load, datacenter, and prospective-envelope requirements.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

@@ -589,6 +589,11 @@
     "sha256": "838558a6a3d57cbb72fcc4b4b86ea12b42d9fddc4c5d5b070c89cd33c8c0450c",
     "status": "design_blocked_primary_spec_parent_and_hardware"
   },
+  "systems_cost_readiness": {
+    "contract": "research/paper-1/systems_cost_readiness_v1.json",
+    "sha256": "6507a382f2786e01ad9cfad11ab9770fc4d06dd9c0652fb89c3ff1a3319bf9d8",
+    "status": "design_frozen_proxy_control_envelope_failed_datacenter_blocked"
+  },
   "status": "preregistered_program_no_architecture_selected",
   "updated_on": "2026-09-05"
 }

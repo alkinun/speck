@@ -76,6 +76,7 @@ Read in order:
 68. [67 — Stable LatentMoE readiness gate](67_stable_latentmoe_readiness_gate.md)
 69. [68 — Tri-axis interaction and removal readiness gate](68_interaction_readiness_gate.md)
 70. [69 — Scaling and held-out prediction readiness gate](69_scaling_readiness_gate.md)
+71. [70 — Systems-cost readiness and proxy envelope failure](70_systems_cost_readiness_gate.md)
 
 Conventions:
 
@@ -349,3 +350,9 @@ fit points, symmetric N/D allocation pilots, constrained joint and compute fits,
 bootstrap uncertainty, horizon interaction, and a truly held-out 1.2B/20B sentinel. The current
 sub-one-token-per-parameter proxy cannot support scaling claims. Architecture, hardware, budgets, fits,
 sentinel, and paper-scale execution remain blocked.
+
+Finding 70 preserves a negative cost result: all three dense controls pass 40K tok/s, 16 GiB, and
+finite-state limits but exceed the frozen 1.0 total GPU-hour envelope at 1.0455/1.0129/1.0114 hours. The
+threshold is not widened or relabeled. Analytic, operator, model, serving, energy/memory, and monetary
+evidence are separated; online and datacenter profiles plus price inputs remain blocked. This does not
+alter the fixed proxy quality experiment.

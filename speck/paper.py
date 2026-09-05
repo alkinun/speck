@@ -22,6 +22,7 @@ PROGRAM_FILES = (
     "stable_latentmoe_readiness_v1.json",
     "interaction_readiness_v1.json",
     "scaling_readiness_v1.json",
+    "systems_cost_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1002,6 +1003,86 @@ def _validate_scaling_readiness(reference, repository_root, paper_id, policy_id)
         raise ValueError("scaling readiness design is incomplete")
 
 
+def _validate_systems_cost_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "systems-cost reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("systems-cost readiness gate does not match its pin")
+    gate = _load_json(path)
+    source = gate.get("input", {})
+    source_path = repository_root / source.get("cost_envelopes", "")
+    audit = gate.get("proxy_control_envelope_audit", {})
+    runs = audit.get("runs", ())
+    hierarchy = gate.get("evidence_hierarchy", ())
+    training = gate.get("training_measurement", {})
+    energy = gate.get("energy_measurement", {})
+    serving = gate.get("serving_matrix", {})
+    monetary = gate.get("monetary_accounting", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_systems_cost_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or not source_path.is_file()
+        or _file_sha256(source_path) != source.get("cost_envelopes_sha256")
+        or source.get("candidate_result_records_present") != 0
+        or len(runs) != 3
+        or [run.get("pair") for run in runs] != [0, 1, 2]
+        or any(run.get("gpu_hours_pass") is not False for run in runs)
+        or any(run.get("complete_envelope_pass") is not False for run in runs)
+        or any(run.get("throughput_pass") is not True for run in runs)
+        or [entry.get("id") for entry in hierarchy]
+        != ["analytic", "operator", "model_runtime", "serving_system", "monetary"]
+        or len(training.get("time_categories", ())) < 7
+        or energy.get("sampling_hz") != 1
+        or energy.get("report_both") is not True
+        or serving.get("prompt_lengths") != [512, 4096, 32768, 131072]
+        or serving.get("output_tokens") != 128
+        or serving.get("minimum_requests_for_p99") != 1000
+        or monetary.get("current_status")
+        != "blocked because v1 contains neither hardware amortization nor electricity price"
+        or len(gate.get("datacenter_v2_requirements", ())) < 8
+        or decision.get("proxy_control_hard_envelope_pass") is not False
+        or decision.get("proxy_quality_decision_changed") is not False
+        or decision.get("candidate_cost_result_available") is not False
+        or decision.get("consumer_serving_claim_authorized") is not False
+        or decision.get("datacenter_profile_qualified") is not False
+        or decision.get("monetary_claim_authorized") is not False
+        or decision.get("architecture_cost_promotion_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("systems-cost readiness design is incomplete")
+    control_results = sorted(
+        (repository_root / "results/Speck-Paper1/runs").glob("*dense_global_param_match.json")
+    )
+    if len(control_results) != 3:
+        raise ValueError("systems-cost audit requires exactly three dense controls")
+    for result_path, audited in zip(control_results, runs):
+        result = _load_json(result_path)
+        active = result.get("timing", {}).get("active_seconds")
+        steady = result.get("final_validation", {}).get("steady_training_seconds")
+        if (
+            _file_sha256(result_path) != audited.get("result_sha256")
+            or not math.isclose(active, audited.get("active_seconds"), rel_tol=0, abs_tol=1e-9)
+            or not math.isclose(active / 3600, audited.get("gpu_hours"), rel_tol=0, abs_tol=1e-12)
+            or not math.isclose(
+                result.get("training_tokens") / steady,
+                audited.get("steady_tokens_per_second"),
+                rel_tol=0,
+                abs_tol=1e-9,
+            )
+            or not math.isclose(
+                result.get("peak_allocated_bytes") / 2**30,
+                audited.get("peak_allocated_gib"),
+                rel_tol=0,
+                abs_tol=1e-12,
+            )
+        ):
+            raise ValueError("systems-cost dense-control audit does not match result evidence")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1076,6 +1157,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "stable_latentmoe_readiness",
             "interaction_readiness",
             "scaling_readiness",
+            "systems_cost_readiness",
         },
         "paper experiment program",
     )
@@ -1133,6 +1215,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_scaling_readiness(
         program["scaling_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_systems_cost_readiness(
+        program["systems_cost_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],
