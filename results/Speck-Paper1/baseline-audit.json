@@ -6,7 +6,7 @@
   },
   "blockers": [
     "SPE-58 evaluation-manifest dependency remains open",
-    "paired compiled/runtime/export preflight has not run"
+    "paired compiled/runtime/export preflight failed"
   ],
   "conclusion": "historical arms are reproducible discovery context, but no existing result is a promotion-authority Paper 1 baseline comparison; the new paired matrix is materialized and remains blocked from launch",
   "contract": "research/paper-1/baseline_matrix.json",
@@ -315,7 +315,23 @@
     ],
     "status": "materialized_unexecuted"
   },
-  "runner_revision": "3a058b51d4b31198366b3f294f5f9315c7a5b887",
+  "preflight": {
+    "arms": [
+      {
+        "arm_id": "dense_global_param_match",
+        "passed": false
+      },
+      {
+        "arm_id": "five_cache_kda_gqa",
+        "passed": false
+      }
+    ],
+    "path": "results/Speck-Paper1/baseline-preflight.json",
+    "runner_revision": "a2588d1c23341d4d451053b3d6c15d1768d7b082",
+    "sha256": "164cd1409afd01a25c776dd4471ade27c79eb0d28028042864abb58ed39f5f60",
+    "status": "failed"
+  },
+  "runner_revision": "d0b77a4af87aa1a9560d38de2d1c589264ec785d",
   "source_artifacts": [
     {
       "path": "experiments/SpeckLC-150M-MixerScreen-131M/sweep.json",
@@ -338,9 +354,9 @@
   "storage": {
     "cache_root": "/home/alkin/.cache/speck",
     "estimated_proxy_checkpoint_bytes": 8400000000,
-    "filesystem_free_bytes": 19339448320,
+    "filesystem_free_bytes": 19273682944,
     "filesystem_total_bytes": 490048561152,
-    "filesystem_used_bytes": 445740736512,
+    "filesystem_used_bytes": 445806501888,
     "historical_checkpoint_bytes": 6605141453,
     "largest_checkpoint_directories": [
       {

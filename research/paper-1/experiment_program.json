@@ -18,8 +18,8 @@
     "materialization": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
     "materialization_sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b",
     "audit": "results/Speck-Paper1/baseline-audit.json",
-    "audit_sha256": "dc08c7db13c50ab0dc3d4dbe9b77727df8ab54f32160b6e94212d89bbeba342c",
-    "runner_revision": "3a058b51d4b31198366b3f294f5f9315c7a5b887"
+    "audit_sha256": "906d456328e4e5ca1db5c326349c8b310624dd3633ebcf47dd6875de114e02c9",
+    "runner_revision": "d0b77a4af87aa1a9560d38de2d1c589264ec785d"
   },
   "controls": {
     "primary_conventional": {

@@ -81,8 +81,8 @@ releases (4.5GB), search artifacts (4.4GB), evaluations (4.2GB), and GGUF artifa
 was deleted by the audit. The contract forbids automatic cleanup; archival targets require explicit
 review because checkpoints and optimizer state are part of the evidence chain.
 
-A later clean-tree re-audit at runner revision `3a058b5` measured 19,339,448,320 bytes (18.01GiB)
-free, 2,159,579,136 bytes (2.01GiB) above the proxy floor. The machine-readable audit therefore drops
+A later clean-tree re-audit at runner revision `d0b77a4` measured 19,273,682,944 bytes (17.95GiB)
+free, 2,093,813,760 bytes (1.95GiB) above the proxy floor. The machine-readable audit therefore drops
 the capacity blocker. The repository does not identify every path changed by the intervening external
 cleanup, so SPE-104 retains that provenance closeout rather than inventing an archive record.
 
