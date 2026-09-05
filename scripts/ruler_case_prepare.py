@@ -56,7 +56,7 @@ RUNTIME_PACKAGES = {
     "numpy": "2.2.6",
     "pyyaml": "6.0.3",
     "scipy": "1.15.3",
-    "sentencepiece": "0.2.1",
+    "sentencepiece": "0.2.2",
     "tenacity": "9.1.4",
     "tqdm": "4.70.0",
     "transformers": "5.1.0",
