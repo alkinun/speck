@@ -1,0 +1,167 @@
+{
+  "format": "speck_headkv_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-headkv-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "immutable_source_audited_rights_environment_data_and_execution_blocked",
+  "audited_on": "2026-09-06",
+  "repository": {
+    "url": "https://github.com/FYYFU/HeadKV",
+    "revision": "0862a0955fe82e9ff611d59541918e02c5def625",
+    "revision_date": "2025-03-10T16:14:25-07:00",
+    "files": 426,
+    "source_code_files": 37,
+    "data_like_files": 376,
+    "tree_complete": true,
+    "repository_metadata_clone": true,
+    "working_tree_checked_out": false,
+    "repository_copy_retained_in_workspace": false,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false
+  },
+  "licenses": [
+    {
+      "path": "csrc/LICENSE",
+      "license": "MIT",
+      "copyright": "66RING, 2023",
+      "sha256": "9a429046085cacdc4f32f700f45534fb9c48a54ad6a4b578f7c0106df8c333e5",
+      "scope": "CUDA subtree only; no root license covers the HeadKV Python, shell, profiles, or data tree"
+    }
+  ],
+  "pinned_files": [
+    {
+      "path": "README.md",
+      "sha256": "f46bf0abfcb78a0b074eb7574a3d24b586c93a54def31a53e98c5fc32fbb67ff"
+    },
+    {
+      "path": "setup.py",
+      "sha256": "5e1a457a167ed7d1eba183cc7f671077e7224c6ee791d9683e058337fd67406c"
+    },
+    {
+      "path": "headkv/monkeypatch.py",
+      "sha256": "3ceb6e01b34bc86e315d0604e559b9ecbc2cd57e6141eeae9157fa4b34594175"
+    },
+    {
+      "path": "headkv/snapkv_utils.py",
+      "sha256": "c8a1e149d56ea5be115379836c97a8933c2070b7795e93e30b17df5046fcc474"
+    },
+    {
+      "path": "Important_Head/retrieval_head_detection_r2.py",
+      "sha256": "f090d7d7735bfe726cb0a6826b2fc07fd1c09991fd08189c9738cd07db0ac63e"
+    },
+    {
+      "path": "run_babilong.py",
+      "sha256": "86cb987dac9dfc5128875c348866668bc9548738c142bca4bcbec0742262dcaa"
+    },
+    {
+      "path": "eval_babilong.py",
+      "sha256": "a2620f8d9792f50508c036c28c85af5457cd09d35edc3659841999a4c48ebef5"
+    },
+    {
+      "path": "test.sh",
+      "sha256": "f238686f5557775846dc260906d55367881659226e0f26728e39a67ed87adeee"
+    }
+  ],
+  "environment_findings": [
+    {
+      "id": "no_dependency_contract",
+      "evidence": "the complete tree contains no requirements, lock, pyproject, or environment file"
+    },
+    {
+      "id": "misnamed_package",
+      "evidence": "setup.py declares package name adakv version 0.0.1 and only discovers packages; it declares no dependencies"
+    },
+    {
+      "id": "warning_only_transformers_contract",
+      "evidence": "monkeypatch.py names Transformers 4.37 as tested but warns rather than fails for every other version"
+    },
+    {
+      "id": "prebuilt_native_binaries",
+      "evidence": "csrc/dist stores Linux x86_64 eggs for Python 3.8 and 3.12; their build environment and binary provenance are not locked"
+    },
+    {
+      "id": "hardcoded_parallel_launch",
+      "evidence": "README and shell scripts enumerate many CUDA devices, background jobs, relative output paths, and fixed model identifiers without a resource or environment manifest"
+    }
+  ],
+  "runtime_findings": [
+    {
+      "id": "global_monkeypatch",
+      "evidence": "headkv/monkeypatch.py replaces global Llama/Mistral model, FlashAttention, and generation-preparation methods"
+    },
+    {
+      "id": "dynamic_native_import",
+      "evidence": "headkv/snapkv_utils.py imports tiny_api_cuda during cache updates"
+    },
+    {
+      "id": "static_profile_paths",
+      "evidence": "ReasonSnapKVCluster loads one of four relative JSON profiles for only the named Llama-3-8B and Mistral-7B checkpoints"
+    },
+    {
+      "id": "unconserved_rounding_risk",
+      "evidence": "the global pool uses floor division with floating beta and independently rounds each head capacity; no post-round total-budget conservation assertion is declared"
+    },
+    {
+      "id": "no_behavior_tests",
+      "evidence": "the tree has no test directory or assertion-based suite; test.sh launches a ReasonKV BABILong experiment"
+    }
+  ],
+  "model_and_data_findings": [
+    {
+      "id": "model_revision_partial",
+      "evidence": "the Mistral tokenizer alone uses an immutable revision in some runners; model weights and Llama tokenizer/model loads have no immutable revision"
+    },
+    {
+      "id": "remote_code_in_profile_builder",
+      "evidence": "retrieval_head_detection_r2.py enables trust_remote_code for some tokenizers/configs/models"
+    },
+    {
+      "id": "embedded_benchmark_copies",
+      "evidence": "376 data-like files include LongBench JSONL and serialized BABILong Arrow datasets without a source revision, derivation manifest, checksum manifest, or root rights file"
+    },
+    {
+      "id": "profile_provenance_incomplete",
+      "evidence": "four committed head-score JSON files are loaded directly, but no machine-readable record binds each profile to exact code, model, tokenizer, prompts, and generated outputs"
+    },
+    {
+      "id": "evaluation_selection",
+      "evidence": "beta is swept across eight values and selected on a stated 15 percent validation split, but the repository provides no checked split/provenance artifact comparable to Speck contracts"
+    }
+  ],
+  "artifact_availability": {
+    "head_profiles_present": 4,
+    "longbench_files_present": true,
+    "babilong_serialized_splits_present": true,
+    "native_binary_files_present": 2,
+    "root_license_present": false,
+    "dependency_lock_present": false,
+    "assertion_test_suite_present": false
+  },
+  "clean_room_requirements": [
+    "resolve rights for HeadKV Python/shell/profile/data artifacts independently of the csrc license",
+    "pin an environment and all native source/build inputs without using committed eggs",
+    "freeze model/tokenizer revisions and disable remote code",
+    "reconstruct profile examples and head scores from a source-hashed deterministic manifest",
+    "define a conservation-safe global layer/head apportionment oracle before reproducing the beta sweep",
+    "qualify model patching and cache behavior against an unmodified dense reference",
+    "materialize BABILong and LongBench only through separately qualified source/rights adapters",
+    "compare correct-answer-span importance against conjunctive required-source labels without importing upstream implementation"
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "tree_inventory_qualified": true,
+    "root_rights_qualified": false,
+    "portable_environment_qualified": false,
+    "dependency_identity_qualified": false,
+    "native_binary_provenance_qualified": false,
+    "model_identity_qualified": false,
+    "data_identity_and_rights_qualified": false,
+    "profile_provenance_qualified": false,
+    "fixture_behavior_qualified": false,
+    "upstream_execution_authorized": false,
+    "reuse_in_speck_authorized": false,
+    "clean_room_equation_reference_authorized": false,
+    "novelty_gate_changed": false,
+    "next_action": "retain HeadKV-R2 as a mandatory conceptual baseline; do not execute or reuse its tree unless rights, environment, model/data/profile provenance, conservation, and behavior contracts are independently resolved"
+  }
+}
