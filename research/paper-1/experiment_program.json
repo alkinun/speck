@@ -49,7 +49,7 @@
     "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2"
   },
   "evaluation_evidence": {
-    "status": "ruler_v1_failed_v2_frozen_helmet_all_runtime_sources_dispositioned_three_qualified_four_blocked",
+    "status": "ruler_v1_failed_v2_frozen_helmet_sources_dispositioned_seeded_demo_repair_qualified_not_activated",
     "contamination_protocol": "research/paper-1/contamination_v1.json",
     "contamination_protocol_sha256": "c61342312c9fe87ff51f851df39b296be68534fdfddfd6cd4daf6513a1837ac0",
     "contamination_result": "results/Speck-Paper1/contamination-ruler-v1.json",
@@ -61,7 +61,7 @@
     "contamination_disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
     "contamination_disposition_status": "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required",
     "active_evaluation_manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
-    "active_evaluation_manifest_sha256": "6e799a3b7a4f427b2ab7f2764d3a21b7480e3d2f7a1be9e3489a1c03845c8762",
+    "active_evaluation_manifest_sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6",
     "active_evaluation_manifest_id": "architecture-evaluation-v2",
     "helmet_runtime_dependency_protocol": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
     "helmet_runtime_dependency_protocol_sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b",
@@ -98,6 +98,11 @@
     "helmet_infinitebench_decision": "results/Speck-Architecture-Promotion-v1/helmet-infinitebench-decision.json",
     "helmet_infinitebench_decision_sha256": "e93e72179f27d6d46ccae53f468be27ccb8a7d165eecff5115a62fda3b65663b",
     "helmet_infinitebench_status": "metadata_and_seeded_path_qualified_embedded_rights_and_execution_blocked",
+    "helmet_seeded_demo_repair_protocol": "research/architecture-promotion-v1/helmet_seeded_demos_v1.json",
+    "helmet_seeded_demo_repair_protocol_sha256": "7672b45d8222591849b4faa893d7ef46d560740fe22bb2f334f42c671d0beef7",
+    "helmet_seeded_demo_repair_qualification": "results/Speck-Architecture-Promotion-v1/helmet-seeded-demos-qualified.json",
+    "helmet_seeded_demo_repair_qualification_sha256": "8b3eaca25312ea3e300772dbb49e3be2bea2e4e2bbfd08a078c88fcd044dcd56",
+    "helmet_seeded_demo_repair_status": "two_loader_seeded_demo_patch_qualified_on_fixtures",
     "ruler_v1_decision": "failed_critical_overlap_preserved",
     "ruler_v2_decision": "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending"
   },

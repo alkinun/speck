@@ -60,6 +60,7 @@ Read in order:
 52. [51 — HELMET Multi-LexSum rights and prompt-determinism decision](51_helmet_multilexsum_decision.md)
 53. [52 — HELMET NarrativeQA embedded-work and prompt-path decision](52_helmet_narrativeqa_decision.md)
 54. [53 — HELMET InfiniteBench embedded-work and metric decision](53_helmet_infinitebench_decision.md)
+55. [54 — HELMET seeded-demonstration repair qualification](54_helmet_seeded_demo_repair.md)
 
 Conventions:
 
@@ -242,3 +243,8 @@ pinned files totaling 562.8MB; its ten long-QA cells have seeded prompts and loc
 summarization cells replace upstream ROUGE-L-Sum with a proprietary judge. Web-derived novel/summary
 rights and Llama 2 truncation remain blocked. Across all runtime sources, three immutable paths qualify
 and four sources now have explicit blocked decisions.
+
+Finding 54 qualifies the exact two-line repair for NarrativeQA and Multi-LexSum's unseeded two-shot
+selection. Frozen fixtures produce identical full prompts across independent processes and different
+Python hash seeds, while changing the declared loader seed changes prompt identity. The repair is not
+activated: both datasets' rights, payload, tokenizer, judge, and real-case gates remain blocked.

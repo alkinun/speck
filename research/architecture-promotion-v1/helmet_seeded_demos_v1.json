@@ -2,7 +2,7 @@
   "format": "speck_helmet_seeded_demos_protocol",
   "format_version": 1,
   "protocol_id": "helmet-seeded-demos-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_qualified",
   "scope": "minimal deterministic demonstration-selection repair for rights-blocked NarrativeQA and Multi-LexSum loaders",
   "upstream": {
     "repository": "https://github.com/princeton-nlp/HELMET",
@@ -57,5 +57,14 @@
       "the patch resolves dataset rights, tokenizer identity, model-judge reproducibility, or contamination",
       "a source patch may be applied to the current frozen manifest without a successor version"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-seeded-demos-qualified.json",
+    "sha256": "8b3eaca25312ea3e300772dbb49e3be2bea2e4e2bbfd08a078c88fcd044dcd56",
+    "status": "two_loader_seeded_demo_patch_qualified_on_fixtures",
+    "created_at": "2026-09-05T15:48:32.273823+00:00",
+    "patch_qualified": true,
+    "real_dataset_prompts_qualified": false,
+    "candidate_execution_authorized": false
   }
 }

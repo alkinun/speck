@@ -1059,6 +1059,48 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or disposition.get("complete_inventory") is not True
             ):
                 raise ValueError("HELMET InfiniteBench or runtime disposition evidence is invalid")
+            seeded_protocol_path = repository_root / suite.get(
+                "seeded_demo_repair_protocol", ""
+            )
+            seeded_path = repository_root / suite.get(
+                "seeded_demo_repair_qualification", ""
+            )
+            if (
+                not seeded_protocol_path.is_file()
+                or _file_sha256(seeded_protocol_path)
+                != suite.get("seeded_demo_repair_protocol_sha256")
+                or not seeded_path.is_file()
+                or _file_sha256(seeded_path)
+                != suite.get("seeded_demo_repair_qualification_sha256")
+            ):
+                raise ValueError("HELMET seeded-demo repair evidence has an invalid pin")
+            seeded_protocol = _load_json(seeded_protocol_path)
+            seeded = _load_json(seeded_path)
+            seeded_qualification = seeded.get("qualification", {})
+            loaders = seeded_qualification.get("loaders", {})
+            if (
+                "seeded_demo_repair_qualified_not_activated" not in suite["status"]
+                or seeded_protocol.get("status") != "executed_qualified"
+                or seeded_protocol.get("result", {}).get("sha256")
+                != suite.get("seeded_demo_repair_qualification_sha256")
+                or seeded.get("status")
+                != "two_loader_seeded_demo_patch_qualified_on_fixtures"
+                or seeded_qualification.get("upstream_unseeded_shuffles")
+                != {"load_multi_lexsum": 1, "load_narrativeqa": 1}
+                or seeded_qualification.get("patched_unseeded_shuffles")
+                != {"load_multi_lexsum": 0, "load_narrativeqa": 0}
+                or set(loaders) != {"multi_lexsum", "narrativeqa"}
+                or not all(
+                    result.get("cross_process_identical")
+                    and result.get("seed_controls_demonstrations")
+                    for result in loaders.values()
+                )
+                or seeded.get("decision", {}).get("patch_qualified") is not True
+                or seeded.get("decision", {}).get("real_dataset_prompts_qualified")
+                is not False
+                or seeded.get("decision", {}).get("current_manifest_changed") is not False
+            ):
+                raise ValueError("HELMET seeded-demo repair evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

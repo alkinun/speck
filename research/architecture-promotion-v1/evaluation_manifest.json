@@ -219,7 +219,7 @@
     },
     {
       "id": "helmet",
-      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_trec_rights_blocked_multilexsum_rights_and_prompt_blocked_narrativeqa_embedded_rights_and_prompt_blocked_infinitebench_embedded_rights_blocked_archive_transfer_and_remaining_gates_blocked",
+      "status": "source_qualified_model_adapter_qualified_runtime_dependency_audited_three_runtime_sources_qualified_trec_rights_blocked_multilexsum_rights_and_prompt_blocked_narrativeqa_embedded_rights_and_prompt_blocked_infinitebench_embedded_rights_blocked_seeded_demo_repair_qualified_not_activated_archive_transfer_and_remaining_gates_blocked",
       "repository": "https://github.com/princeton-nlp/HELMET",
       "revision": "af609c4d51b97fc35012099380aa889da961c42d",
       "contract": "research/architecture-promotion-v1/external/helmet.json",
@@ -265,6 +265,10 @@
         "blocked": ["trec", "multi_lexsum", "narrativeqa", "infinitebench"],
         "complete_inventory": true
       },
+      "seeded_demo_repair_protocol": "research/architecture-promotion-v1/helmet_seeded_demos_v1.json",
+      "seeded_demo_repair_protocol_sha256": "7672b45d8222591849b4faa893d7ef46d560740fe22bb2f334f42c671d0beef7",
+      "seeded_demo_repair_qualification": "results/Speck-Architecture-Promotion-v1/helmet-seeded-demos-qualified.json",
+      "seeded_demo_repair_qualification_sha256": "8b3eaca25312ea3e300772dbb49e3be2bea2e4e2bbfd08a078c88fcd044dcd56",
       "lengths": [
         8192,
         16384,

@@ -42,6 +42,8 @@ The same loader requires the gated Llama 2 tokenizer to select documents longer 
 truncate each context. The primary NarrativeQA metric is `gpt-4-score`, using the separately
 unqualified proprietary judge. Rights, prompt selection, truncation identity, and scoring are four
 independent gates.
+Finding 54 subsequently qualifies the minimal seeded-demo repair on frozen fixtures, while real-data
+prompt identity and every other gate remain blocked.
 
 ## Decision
 

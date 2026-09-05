@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-09-05T15:48:32.273823+00:00",
+  "decision": {
+    "candidate_execution_authorized": false,
+    "current_manifest_changed": false,
+    "patch_qualified": true,
+    "real_dataset_prompts_qualified": false,
+    "rights_blockers_changed": false
+  },
+  "format": "speck_helmet_seeded_demos_qualification",
+  "format_version": 1,
+  "non_claims": [
+    "fixture determinism establishes real-dataset prompt identity",
+    "the patch resolves dataset rights, tokenizer identity, model-judge reproducibility, or contamination",
+    "a source patch may be applied to the current frozen manifest without a successor version"
+  ],
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_seeded_demos_v1.json",
+    "spec_identity_sha256": "da11fe2aaf4ac77d41de9e73581856af30f1bdc3d9120482942428a5b91ab61c"
+  },
+  "qualification": {
+    "loaders": {
+      "multi_lexsum": {
+        "contrast": {
+          "demo_sha256": "4bf5adfcb779012cf12009f7a6ab5174d3b43eee75f6f903c6f25ec51a673a9e",
+          "loader": "multi_lexsum",
+          "prompts_sha256": "0b4bf45d16515af4f9098200ccb731efd7afb00cc09de08075b4bc31abae6b6e",
+          "rows": 3,
+          "seed": 43
+        },
+        "cross_process_identical": true,
+        "primary": {
+          "demo_sha256": "87924fe72664853975bab64c1247aece9edd9b1a35e0933d4e57ab5d84aa484a",
+          "loader": "multi_lexsum",
+          "prompts_sha256": "f77442a1a462fbae821e14d6862d07c8ad626fec914f67290e239bf9a73e5fe3",
+          "rows": 3,
+          "seed": 42
+        },
+        "seed_controls_demonstrations": true
+      },
+      "narrativeqa": {
+        "contrast": {
+          "demo_sha256": "5ee680fa8c437f21df3f2ab6cdfb5450ef42e4e35c218fcf64ffb77061832715",
+          "loader": "narrativeqa",
+          "prompts_sha256": "b64a95cfc69554e8f55f15c5bb4fd3ca84f4299fa898b4d955a38816f43b99cd",
+          "rows": 3,
+          "seed": 43
+        },
+        "cross_process_identical": true,
+        "primary": {
+          "demo_sha256": "b04478e1f34bb7d78c7dd4a8b8ecc9a9d305c230c52dbf3c8d034f8be336917f",
+          "loader": "narrativeqa",
+          "prompts_sha256": "9545e9aebf48c1e22ae319e9b258a76c96faa814fba1af24cfd3082f9b9e0301",
+          "rows": 3,
+          "seed": 42
+        },
+        "seed_controls_demonstrations": true
+      }
+    },
+    "patch_sha256": "ddb855f062e8240018e67678f21fff4532fd9652b25b9fee41cf545950f4a5d6",
+    "patched_target_sha256": "eb085cae6ebd296c578eccb2fee240589d0bd3c4d11e8e001594b87eb3235958",
+    "patched_unseeded_shuffles": {
+      "load_multi_lexsum": 0,
+      "load_narrativeqa": 0
+    },
+    "upstream_target_sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348",
+    "upstream_unseeded_shuffles": {
+      "load_multi_lexsum": 1,
+      "load_narrativeqa": 1
+    }
+  },
+  "runner_revision": "404115681838c98d37706ec2ad4ed3d3bda7f5d9",
+  "runner_sha256": "f7e5b6657e7dc07a414c47474544bbabb3ceb50fb60cba05e559ee6c87e18b24",
+  "runtime": {
+    "datasets": "5.0.1",
+    "numpy": "2.2.6",
+    "pyarrow": "25.0.1"
+  },
+  "status": "two_loader_seeded_demo_patch_qualified_on_fixtures"
+}

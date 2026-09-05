@@ -43,6 +43,8 @@ outer evaluation seed is 42. Dataset hashes alone therefore cannot freeze the be
 
 A repair must bind demonstration selection to an explicit seed and prove case/prompt replay before
 candidate outputs exist. This is a scientific manifest change, not merely an infrastructure fix.
+Finding 54 subsequently qualifies that minimal repair on frozen fixtures, but does not activate or
+rights-qualify this dataset.
 
 ## Decision
 

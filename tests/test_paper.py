@@ -155,3 +155,17 @@ def test_paper_program_rejects_infinitebench_decision_pin_drift(tmp_path):
 
     with pytest.raises(ValueError, match="helmet_infinitebench_decision"):
         validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_seeded_demo_repair_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["evaluation_evidence"]["helmet_seeded_demo_repair_qualification_sha256"] = (
+        "0" * 64
+    )
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="helmet_seeded_demo_repair_qualification"):
+        validate_paper_program(copied, repository_root=root)

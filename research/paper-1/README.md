@@ -103,6 +103,9 @@ the final combined model.
 - [`helmet_infinitebench_decision_v1.json`](../architecture-promotion-v1/helmet_infinitebench_decision_v1.json)
   freezes the minimal three-file payload, web-derived work boundary, seeded prompt selection, local
   long-QA metrics, gated truncation, and HELMET-only summarization-judge change.
+- [`helmet_seeded_demos_v1.json`](../architecture-promotion-v1/helmet_seeded_demos_v1.json) qualifies
+  a two-line seed repair for NarrativeQA and Multi-LexSum across independent fixture processes without
+  activating either rights-blocked dataset.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -144,6 +147,8 @@ NarrativeQA independently blocks the source-document guardrail on embedded-work 
 unseeded two-shot path, the same truncation tokenizer, and its proprietary judge.
 All seven HELMET runtime sources now have explicit dispositions: three immutable paths qualify and
 four sources are blocked rather than unresolved.
+The known unseeded two-shot defect now has a qualified but inactive repair; a successor manifest and
+real-data replay remain mandatory.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

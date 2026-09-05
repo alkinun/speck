@@ -114,6 +114,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_infinitebench_decision",
             "helmet_infinitebench_decision_sha256",
             "helmet_infinitebench_status",
+            "helmet_seeded_demo_repair_protocol",
+            "helmet_seeded_demo_repair_protocol_sha256",
+            "helmet_seeded_demo_repair_qualification",
+            "helmet_seeded_demo_repair_qualification_sha256",
+            "helmet_seeded_demo_repair_status",
             "ruler_v1_decision",
             "ruler_v2_decision",
         },
@@ -121,7 +126,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     if (
         evidence["status"]
-        != "ruler_v1_failed_v2_frozen_helmet_all_runtime_sources_dispositioned_three_qualified_four_blocked"
+        != "ruler_v1_failed_v2_frozen_helmet_sources_dispositioned_seeded_demo_repair_qualified_not_activated"
     ):
         raise ValueError("paper evaluation evidence must preserve v1, RULER v2, and HELMET")
     for path_key, hash_key in (
@@ -165,6 +170,14 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_infinitebench_decision_protocol_sha256",
         ),
         ("helmet_infinitebench_decision", "helmet_infinitebench_decision_sha256"),
+        (
+            "helmet_seeded_demo_repair_protocol",
+            "helmet_seeded_demo_repair_protocol_sha256",
+        ),
+        (
+            "helmet_seeded_demo_repair_qualification",
+            "helmet_seeded_demo_repair_qualification_sha256",
+        ),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -212,6 +225,12 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     helmet_infinitebench = _load_json(
         repository_root / evidence["helmet_infinitebench_decision"]
+    )
+    helmet_seeded_protocol = _load_json(
+        repository_root / evidence["helmet_seeded_demo_repair_protocol"]
+    )
+    helmet_seeded = _load_json(
+        repository_root / evidence["helmet_seeded_demo_repair_qualification"]
     )
     expected_unaffected = {
         "cwe",
@@ -403,6 +422,19 @@ def _validate_evaluation_evidence(evidence, repository_root):
         is not False
     ):
         raise ValueError("paper HELMET InfiniteBench evidence is invalid")
+    if (
+        helmet_seeded_protocol.get("format") != "speck_helmet_seeded_demos_protocol"
+        or helmet_seeded_protocol.get("status") != "executed_qualified"
+        or helmet_seeded_protocol.get("result", {}).get("sha256")
+        != evidence["helmet_seeded_demo_repair_qualification_sha256"]
+        or helmet_seeded.get("format") != "speck_helmet_seeded_demos_qualification"
+        or helmet_seeded.get("status") != evidence["helmet_seeded_demo_repair_status"]
+        or helmet_seeded.get("decision", {}).get("patch_qualified") is not True
+        or helmet_seeded.get("decision", {}).get("real_dataset_prompts_qualified")
+        is not False
+        or helmet_seeded.get("decision", {}).get("rights_blockers_changed") is not False
+    ):
+        raise ValueError("paper HELMET seeded-demo repair evidence is invalid")
 
 
 def _validate_claims(claims):
