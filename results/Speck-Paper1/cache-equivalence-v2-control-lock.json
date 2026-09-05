@@ -1,0 +1,70 @@
+{
+  "contract_sha256": "3deccc06de69969492ef0f2c396097524c85fc7fa2de93fc9a8db26b24d2954e",
+  "control_checkpoint": "dense_global_seed42",
+  "control_result": {
+    "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
+    "sha256": "7be72b1503d9a4348c90b8cdf7c923ffca1f4da7639dc014799fafc42b05733a"
+  },
+  "endpoints": {
+    "common_history_argmax_disagreement": {
+      "direction": "upper",
+      "estimand": "candidate-minus-control disagreement rate with within-case steps kept together",
+      "non_inferiority_margin_absolute": 0.01,
+      "unit": "case with 32 nested decode steps"
+    },
+    "common_history_js_divergence": {
+      "direction": "upper",
+      "estimand": "candidate-minus-control Jensen-Shannon divergence",
+      "non_inferiority_margin_absolute": 0.0001,
+      "unit": "case mean across 32 steps"
+    },
+    "common_history_relative_rms_ratio": {
+      "direction": "upper",
+      "estimand": "candidate/control mean relative RMS ratio",
+      "maximum_ratio": 1.5,
+      "unit": "case mean across 32 steps"
+    },
+    "common_history_top10_overlap": {
+      "direction": "lower",
+      "estimand": "candidate-minus-control top-10 set overlap fraction",
+      "non_inferiority_margin_absolute": 0.02,
+      "unit": "case mean across 32 steps"
+    },
+    "early_free_running_divergence": {
+      "direction": "upper",
+      "estimand": "candidate-minus-control event rate",
+      "event": "cached and recompute greedy tokens first differ before 32 generated tokens",
+      "non_inferiority_margin_absolute": 0.05,
+      "unit": "case"
+    },
+    "hard_guardrails": [
+      "no non-finite logits or probabilities",
+      "no cached/recompute disagreement when the full-path top-1/top-2 margin is at least 0.5 logits",
+      "every strict operator/state/export prerequisite remains passed"
+    ],
+    "high_margin_argmax_disagreement": {
+      "direction": "upper",
+      "estimand": "candidate-minus-control disagreement rate among full-path margins at or above 0.1 logits",
+      "full_path_margin_threshold": 0.1,
+      "non_inferiority_margin_absolute": 0.002,
+      "unit": "case with eligible steps pooled inside the case"
+    },
+    "strict_operator_state_export": {
+      "authority": "unchanged prerequisite",
+      "rule": "existing isolated operator, state, gradient, checkpoint, and CPU Transformers export parity thresholds remain mandatory"
+    }
+  },
+  "format": "speck_cache_equivalence_control_lock",
+  "format_version": 2,
+  "locked_at": "2026-09-05T09:53:55.658996+00:00",
+  "statistics": {
+    "bootstrap_seed": 20260905,
+    "candidate_decision": "each KDA seed must pass separately; no averaging away a failed seed",
+    "length_decision": "every endpoint and hard guardrail must pass separately at 8, 64, 512, and 4096 tokens",
+    "multiplicity": "intersection-union gate across endpoints, lengths, and seeds; every cell must pass",
+    "one_sided_confidence_level": 0.95,
+    "paired_resamples": 10000,
+    "resampling_unit": "case"
+  },
+  "status": "dense_control_locked_before_candidate_execution"
+}
