@@ -526,9 +526,9 @@
     "time and energy to locked quality"
   ],
   "novelty_claim_overlap": {
-    "contract": "research/paper-1/novelty_claim_overlap_v1.json",
-    "sha256": "f178592fdd13185fe1fdd69faa8a1edabb6161bebd6ff22fa0398f5e62655158",
-    "status": "twelve_source_table_n1_primary_n2_deferred_no_novelty"
+    "contract": "research/paper-1/novelty_claim_overlap_v2.json",
+    "sha256": "2c420a79c6ceae5bec2bc5990ae06ee5519f810990f6a1b5fdd77419b2734fb2",
+    "status": "fifteen_source_table_zero_architecture_novelty_two_empirical_laws_unestablished"
   },
   "novelty_code_availability": {
     "audit": "research/paper-1/novelty_code_availability_v4.json",

@@ -29,6 +29,7 @@ PROGRAM_FILES = (
     "novelty_landscape_v4.json",
     "novelty_landscape_v5.json",
     "novelty_claim_overlap_v1.json",
+    "novelty_claim_overlap_v2.json",
     "novelty_code_availability_v1.json",
     "novelty_code_availability_v2.json",
     "novelty_code_availability_v3.json",
@@ -1172,32 +1173,41 @@ def _validate_novelty_claim_overlap(reference, repository_root, paper_id):
         raise ValueError("novelty claim overlap table does not match its pin")
     table = _load_json(path)
     inputs = table.get("inputs", {})
-    claims = table.get("claims", ())
-    priority = table.get("priority", ())
+    claims = table.get("additional_claims", ())
+    priority = table.get("residual_questions", ())
     decision = table.get("decision", {})
+    predecessor = table.get("predecessor", {})
     if (
         table.get("format") != "speck_novelty_claim_overlap_table"
-        or table.get("format_version") != 1
+        or table.get("format_version") != 2
         or table.get("paper_id") != paper_id
         or table.get("status") != reference["status"]
-        or len(table.get("rules", ())) < 5
-        or len(claims) != 14
-        or len({claim.get("id") for claim in claims}) != 14
+        or predecessor.get("path") != "research/paper-1/novelty_claim_overlap_v1.json"
+        or not (repository_root / predecessor["path"]).is_file()
+        or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
+        or table.get("inherited_claims") != 14
+        or len(claims) != 5
+        or len({claim.get("id") for claim in claims}) != 5
+        or table.get("aggregate_claim_rows") != 19
         or [entry.get("rank") for entry in priority] != [1, 2]
-        or [entry.get("hypothesis") for entry in priority]
-        != ["N1_role_grounded_placement_law", "N2_internal_state_completeness_predictor_law"]
-        or priority[0].get("action", "").startswith("train")
-        or priority[1].get("action")
-        != "defer experiment protocol until claim-granular independent expert review finds material incremental value"
-        or len(table.get("n1_required_distinction", {}).get("baselines", ())) < 6
-        or decision.get("n1_primary_research_hypothesis") is not True
-        or decision.get("n1_established") is not False
+        or [entry.get("id") for entry in priority]
+        != [
+            "N1_prospective_nonuniform_from_scratch_placement_law",
+            "N2_internal_state_completeness_predictor_law",
+        ]
+        or any(entry.get("experiment_authorized") is not False for entry in priority)
+        or any(entry.get("architecture_novelty_established") is not False for entry in priority)
+        or decision.get("established_architecture_novelty_candidates") != 0
+        or decision.get("n1_broad_role_novelty_rejected") is not True
+        or decision.get("n1_empirical_law_established") is not False
+        or decision.get("n1_experiment_authorized") is not False
         or decision.get("n2_concept_novelty_rejected") is not True
-        or decision.get("n2_empirical_protocol_authorized") is not False
-        or decision.get("new_architecture_mechanism_established") is not False
+        or decision.get("n2_empirical_law_established") is not False
+        or decision.get("n2_experiment_authorized") is not False
+        or decision.get("baseline_completion_authorized") is not True
         or decision.get("paper_novelty_gate_pass") is not False
         or decision.get("architecture_freeze_authorized") is not False
-        or decision.get("training_authorized") is not False
+        or decision.get("new_training_authorized") is not False
         or decision.get("paper_scale_authorized") is not False
     ):
         raise ValueError("novelty claim overlap table is incomplete")

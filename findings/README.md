@@ -94,6 +94,7 @@ Read in order:
 86. [85 — Paper 1 KDA/GQA candidate pair 1](85_paper_1_candidate_1.md)
 87. [86 — N1 role-overlap audit and scope reduction](86_n1_role_overlap.md)
 88. [87 — N1 released-artifact availability audit](87_n1_code_availability.md)
+89. [88 — Novelty priority correction after N1 audit](88_novelty_priority_correction.md)
 
 Conventions:
 
@@ -476,3 +477,9 @@ but no training/config pipeline, referenced receptive-field implementation, comp
 immutable checkpoint/data manifests, pinned environment, or tests. The 72-model collection is visible
 but unaudited, and DtR declares no code. Fifteen sources now yield two root-rights paths and zero new
 full reproductions; N1 remains conceptual only.
+
+Finding 88 corrects the priority table: there are zero established architecture-novelty candidates.
+N1 and N2 survive only as unestablished empirical-law questions, with no experiment authority; N2 stays
+deferred and N1 receives landscape/artifact/expert review only. The fixed Paper 1 proxy continues because
+it estimates the conservative parent independently of novelty, but even a proxy pass cannot satisfy the
+separate novelty gate.

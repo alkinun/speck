@@ -1,0 +1,97 @@
+{
+  "format": "speck_novelty_claim_overlap_table",
+  "format_version": 2,
+  "table_id": "speck-paper-1-novelty-claim-overlap-v2",
+  "paper_id": "speck-paper-1",
+  "status": "fifteen_source_table_zero_architecture_novelty_two_empirical_laws_unestablished",
+  "created_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_claim_overlap_v1.json",
+    "sha256": "f178592fdd13185fe1fdd69faa8a1edabb6161bebd6ff22fa0398f5e62655158",
+    "claims": 14,
+    "superseded_decision": "N1_role_grounded_placement_law as primary architecture hypothesis"
+  },
+  "inputs": {
+    "landscape": "research/paper-1/novelty_landscape_v5.json",
+    "landscape_sha256": "36e03f06000a4b614a1c17f0d4d221376f6e6313e85299745b9113322a821984",
+    "code_availability": "research/paper-1/novelty_code_availability_v4.json",
+    "code_availability_sha256": "8350c53f768b99a7283dc1566d288eda010ee2999f0c83d376522c4dada9838b"
+  },
+  "inherited_claims": 14,
+  "additional_claims": [
+    {
+      "id": "P7_middle_full_attention_retrieval_role",
+      "strongest_source": "Rethinking the Role of Efficient Attention in Hybrid Architectures",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "from-scratch receptive-field and layer-probe interventions already locate long-range gain in middle full-attention layers"
+    },
+    {
+      "id": "P8_efficient_mixer_optimization_prior",
+      "strongest_source": "Rethinking the Role of Efficient Attention in Hybrid Architectures",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "LongPPL scaling and retrieval-head entropy/QK/gradient traces already connect mixer context to full-attention learning speed"
+    },
+    {
+      "id": "P9_mixer_by_ratio_language_recall_tradeoff",
+      "strongest_source": "A Systematic Analysis of Hybrid Linear Attention",
+      "classification": "direct_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "72 from-scratch models already cross six mixers with uniform ratios and separate flat language quality from recall knees"
+    },
+    {
+      "id": "P10_interaction_aware_nonuniform_layer_selection",
+      "strongest_source": "Distill-then-Replace and FlashMorph",
+      "classification": "direct_conversion_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "greedy validation feedback and joint gates already select interacting non-uniform replacement layouts"
+    },
+    {
+      "id": "R3_prospective_unseen_nonuniform_from_scratch_prediction",
+      "strongest_source": "no exact source established; closest are the hybrid-role paper, DtR, and FlashMorph",
+      "classification": "possible_incremental_empirical_law_not_architecture_mechanism",
+      "decision": "landscape_and_expert_review_only",
+      "reason": "only prediction without observing held-out from-scratch layout outcomes remains distinct; no evidence currently shows it works or yields a new architecture"
+    }
+  ],
+  "aggregate_claim_rows": 19,
+  "residual_questions": [
+    {
+      "rank": 1,
+      "id": "N1_prospective_nonuniform_from_scratch_placement_law",
+      "classification": "unestablished_empirical_architecture_law",
+      "authorized_action": "literature, artifact, patent, deployed-system, and independent expert review only",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false
+    },
+    {
+      "rank": 2,
+      "id": "N2_internal_state_completeness_predictor_law",
+      "classification": "deferred_unestablished_empirical_diagnostic_law",
+      "authorized_action": "none before a claim-granular expert review finds incremental value",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false
+    }
+  ],
+  "baseline_disposition": {
+    "paper_1_three_pair_proxy": "continue through frozen completion because it estimates the conservative five-cache KDA/GQA parent versus dense attention and is independent of novelty selection",
+    "promotion_limit": "a quality/cost pass may promote a conservative research parent under the architecture policy but cannot satisfy the separate Paper 1 novelty gate",
+    "post_analysis": "after the paired result, decide whether to retain the parent for future isolation; do not infer N1/N2 evidence"
+  },
+  "decision": {
+    "established_architecture_novelty_candidates": 0,
+    "n1_broad_role_novelty_rejected": true,
+    "n1_empirical_law_established": false,
+    "n1_experiment_authorized": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "n2_experiment_authorized": false,
+    "baseline_completion_authorized": true,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "new_training_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "finish the frozen proxy, then continue N1 landscape/expert review before deciding whether any new placement hypothesis deserves a preregistration"
+  }
+}
