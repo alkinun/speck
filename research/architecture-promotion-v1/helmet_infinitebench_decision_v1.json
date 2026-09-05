@@ -1,0 +1,131 @@
+{
+  "format": "speck_helmet_infinitebench_decision_protocol",
+  "format_version": 1,
+  "protocol_id": "helmet-infinitebench-decision-v1",
+  "status": "frozen_unexecuted",
+  "scope": "metadata-only embedded-work, payload, prompt, tokenizer, and metric decision for HELMET InfiniteBench",
+  "source": {
+    "hub_repository": "https://huggingface.co/datasets/xinrongzhang2022/InfiniteBench",
+    "hub_revision": "90f0394333616266d9fe85824ceaf505093cbaa5",
+    "hub_declared_license": "Apache-2.0",
+    "hub_default_payload": {"files": 12, "bytes": 2499838795},
+    "upstream_repository": "https://github.com/OpenBMB/InfiniteBench.git",
+    "upstream_revision": "51d9b37b0f1790ead936df2243abbf7f0420e439",
+    "upstream_license": "MIT",
+    "required_payloads": [
+      {"task": "infbench_choice", "path": "longbook_choice_eng.jsonl", "bytes": 185904631, "sha256": "d2e646822a3d40dc329e57894d81cf9c527503e963ba06567c3eaaccf78f87fe"},
+      {"task": "infbench_qa", "path": "longbook_qa_eng.jsonl", "bytes": 298297185, "sha256": "7f53a3aabd5445fa29f168914f13569c348406cfc88a3e495f3f2c13a0966ca4"},
+      {"task": "infbench_sum", "path": "longbook_sum_eng.jsonl", "bytes": 78601868, "sha256": "4e4279cc06c07778f646cda1335755cf5ccdcc38fe9c8a62f1631642fc031027"}
+    ],
+    "required_payload_bytes": 562803684,
+    "construction_review": {
+      "paper_pages": [3, 15],
+      "claims": [
+        "English novel tasks use web-sourced novels and web-sourced gold summaries",
+        "key entities are replaced to create fake novels but all English tasks share the modified novels",
+        "some brand-new or little-known novels are left without entity replacement",
+        "English summarization, QA, and multiple-choice annotations are human-created or web-sourced"
+      ],
+      "source_sites_named_by_paper": ["https://www.sparknotes.com/", "https://www.cliffsnotes.com/"]
+    },
+    "source_site_terms": [
+      {
+        "site": "SparkNotes",
+        "url": "https://www.sparknotes.com/terms-of-use/",
+        "observed": "personal non-commercial use; commercial and automated extraction restricted",
+        "direct_metadata_fetch": "HTTP 403",
+        "role": "supporting risk evidence, not a substitute for work-level provenance"
+      },
+      {
+        "site": "CliffsNotes",
+        "url": "https://www.cliffsnotes.com/terms-of-service",
+        "observed": "educational non-commercial personal use unless permitted in writing",
+        "direct_metadata_fetch": "HTTP 403",
+        "role": "supporting risk evidence, not a substitute for work-level provenance"
+      }
+    ]
+  },
+  "helmet": {
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+    "files": [
+      {"path": "data.py", "sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348"},
+      {"path": "configs/longqa_short.yaml", "sha256": "b671fd74b22e5ef3287d52ebad97ae0b50ee46db6d8a874e560093c35d95dc36"},
+      {"path": "configs/longqa.yaml", "sha256": "69976fa381c1a6f7232a0f8a00ad98c7e1b8e40f9d7ef16394ad540dffa3b850"},
+      {"path": "configs/summ_short.yaml", "sha256": "b17847187a0da2f36952572a95dd8dc5921da130a4d1dcf04096da2b9576797d"},
+      {"path": "configs/summ.yaml", "sha256": "921255979c5c7169d630aafb9de61b0b521204feb43a85464a3ea97e74b70554"},
+      {"path": "scripts/collect_results.py", "sha256": "dd9c0c4e128a693267a48da249d50f7dbc8cecb66b3ec99ee08e668b0f6b74c2"},
+      {"path": "scripts/eval_gpt4_summ.py", "sha256": "ad89dd22953326c4036772da97d00904dbaf74129b04e5ea9cc8f6cf75b70bde"}
+    ],
+    "expected_longqa_entries": 10,
+    "expected_summarization_entries": 5,
+    "expected_shots": 2,
+    "metrics": {
+      "infbench_qa": "rougeL_f1 local",
+      "infbench_choice": "exact_match local",
+      "infbench_sum": "gpt-4-f1 proprietary HELMET replacement for upstream rougeLsum"
+    }
+  },
+  "evidence": [
+    {
+      "id": "hub_readme",
+      "filename": "huggingface-readme.md",
+      "url": "https://huggingface.co/datasets/xinrongzhang2022/InfiniteBench/resolve/90f0394333616266d9fe85824ceaf505093cbaa5/README.md",
+      "bytes": 3356,
+      "sha256": "b79017fb39a6a7feaa4b01d90ad69e9e3de74b8ab3e1b6930715b5e333602551",
+      "required_substrings": ["license: apache-2.0", "longbook_qa_eng", "longbook_sum_eng", "longbook_choice_eng"]
+    },
+    {
+      "id": "upstream_readme",
+      "filename": "upstream-readme.md",
+      "url": "https://raw.githubusercontent.com/OpenBMB/InfiniteBench/51d9b37b0f1790ead936df2243abbf7f0420e439/README.md",
+      "bytes": 11852,
+      "sha256": "ae3bfd502be4afc97f77f7adfdd30115c6243fc9e1390fa6eba7a3bafb69f97d",
+      "required_substrings": ["Fake Book", "core entity substitution", "ROUGE F1 score", "rougeLsum"]
+    },
+    {
+      "id": "upstream_license",
+      "filename": "upstream-license.txt",
+      "url": "https://raw.githubusercontent.com/OpenBMB/InfiniteBench/51d9b37b0f1790ead936df2243abbf7f0420e439/LICENSE",
+      "bytes": 1063,
+      "sha256": "3ec74741cb4d777c4f6ce02672a065b737d63d331c9f2ff56888808bb8db84d3",
+      "required_substrings": ["MIT License", "Copyright (c) 2023 OpenBMB"]
+    },
+    {
+      "id": "paper",
+      "filename": "infinitebench-paper.pdf",
+      "url": "https://aclanthology.org/2024.acl-long.814.pdf",
+      "bytes": 688352,
+      "sha256": "df8f387c62d9748c9075a8e7065ddf6c486cd42bfd8a398c4705751fc61f975e",
+      "required_substrings": []
+    }
+  ],
+  "storage": {
+    "directory": "/mnt/speck-data/speck/helmet-runtime-sources-v1/infinitebench-metadata",
+    "device_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+    "filesystem": "ext4",
+    "required_mount_options": ["rw", "nodev", "nosuid", "noexec"],
+    "required_directory_mode": "0o700"
+  },
+  "decision": {
+    "metadata_audit_qualified": true,
+    "payload_acquisition_authorized": false,
+    "evaluation_use_authorized": false,
+    "embedded_work_rights_qualified": false,
+    "commercial_scope_authorized": false,
+    "prompt_selection_deterministic": true,
+    "tokenizer_qualified": false,
+    "longqa_local_metrics_identified": true,
+    "summarization_model_judge_qualified": false,
+    "contact_authorized": false,
+    "required_next": "obtain work-level provenance and intended-scope authority or freeze a pre-results replacement; then pin only the three required payloads, qualify Llama 2 truncation or a semantics-preserving replacement, materialize exact seeded prompts, preserve local QA/choice metrics, qualify or replace the summarization judge, and run contamination checks"
+  },
+  "reporting": {
+    "non_claims": [
+      "entity substitution makes a copyrighted novel or web summary unrestricted",
+      "Apache or MIT repository licensing necessarily covers all embedded third-party content",
+      "seeded selection establishes exact prompts before tokenizer and payload qualification",
+      "local QA metrics qualify HELMET summarization or the complete long-QA category",
+      "this operational decision is legal advice or a final ownership determination"
+    ]
+  }
+}
