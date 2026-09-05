@@ -1,0 +1,290 @@
+{
+  "analysis": {
+    "path": "research/paper-1/finalist_analysis_v1.json",
+    "sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1",
+    "status": "frozen_after_proxy_pass_before_finalist_materialization"
+  },
+  "contract": {
+    "path": "/home/alkin/Desktop/speck/research/paper-1/finalist_materialization_v1.json",
+    "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3"
+  },
+  "created_at": "2026-09-05T23:26:06.210966+00:00",
+  "data": {
+    "all_replays_exact": true,
+    "directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+    "distinct_windows_disjoint": true,
+    "every_window_crossed_with_all_seeds": true,
+    "manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "replay_points": [
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 0,
+        "input_sha256": "a22bb81290e213ac20169749812c8e4e3d86cd09df8dd35740456b89d581e6ef",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "29b957678867a4a09c5151443e4ea3d97d66b894af8ae9b73a9d3cb7ecf277ff",
+        "target_sha256": "af3e88780995e69373109d814ef8b734c467441a606afbd9ad9785fa26f01894"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 384958464,
+        "input_sha256": "fb1377648bdd6b48eabb276665c2eba851c8a03f81c32b73941768bd41a8506e",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "923204fe4e8416983a32df9f485e05f83ac80b91c61880210c9fe7e2f73d1813",
+        "target_sha256": "60f335597fdee2a8745fff95431c327a10d404cc9e43f6e5fba51b1ea49ebcb6"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 769916928,
+        "input_sha256": "ac0dcbc711c850b966cb9167898a956949d154660767221650920a9848c5100c",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "a232f5489c2ed1656aa2651cab860b8ef892a0608d57763e8e7705e269cf0772",
+        "target_sha256": "3d3f362b350826d293e088e8997cc35be3cb2591d3ea17a694438018782e978f"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 1154875392,
+        "input_sha256": "8a49d3664aa37afe23ec81183de22c134286a43fff4755a481407deffe031800",
+        "phase": 0,
+        "selected_source": "ultra_fineweb",
+        "state_sha256": "ebfd906bf585b149dde74c137f200b78544d214e26b2f93c8c15fd247dcd13e1",
+        "target_sha256": "b6d7192fea020205fcbd194f6140f7c77d0c601210ca8be025e12d4b287fddc9"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 1539833856,
+        "input_sha256": "67bda97ac8346cf3e874c6887831f190a1ed62e7da5f0e8e7599418cc8480a92",
+        "phase": 0,
+        "selected_source": "pes2o",
+        "state_sha256": "a1e1e26aee37024a030c72d0c70ae9e9a4044e9a981129f2fb31ccb0f6b4b63d",
+        "target_sha256": "4e2087f6ff72cf669ac2c258ef27d769185622e9024ae29456f9cc95368aa21b"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 1610612736,
+        "input_sha256": "d1f1d46cb365bc095753880ed6900ce7ad12854477ead90db214656bc26744ec",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "5b0cb407a45b64e994241764102ffeeb69e2bb275fcf59430d0b66980b7922d7",
+        "target_sha256": "528fd6035fd84506fbcd14c53000c40e377c6600c7082f0940a3339821206383"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 1995571200,
+        "input_sha256": "cbb861067d8c9b5af4b32a639dd6d579d318d7f3cc9c2e8f4ea9e16abfd4a504",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "2818cdc7a09ba2b2a8d061e2075f88b3fc7ab06fb4709de28d151b3069167476",
+        "target_sha256": "bcc36a347f13b00b23c792faa6aded4ba5cfa03f05c8af18f269be659fa8850c"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 2380529664,
+        "input_sha256": "53e7272a28404e0368d88bbc2b87d701b0a288f5eb4d3a137589b9483c2933a3",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "bebceae3d125c7ff13366ad8fa94493909628008c845843969208b306fac1359",
+        "target_sha256": "ab4579ba99c0b8bb151e215d8d708df60fe8a426de832a35fed728aba95ba049"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 2765488128,
+        "input_sha256": "daa296e1e130f3ccd41cdf24d71625b8f30d66127af828948e7b185ba3f3beab",
+        "phase": 0,
+        "selected_source": "fineweb_edu",
+        "state_sha256": "99adc2e6503e26db39b050153e3dce756ce113dbc129de52b79337bdee033a54",
+        "target_sha256": "0e8f73921e6239589a41dd4c2fd54599f391cf17dd8d04dd6a392569ffc00a1e"
+      },
+      {
+        "direct_resume_equal": true,
+        "global_token_offset": 3150446592,
+        "input_sha256": "2182fed4e265119f47ca68e4ad966424b18b71857ced427def1f0315964dd06d",
+        "phase": 0,
+        "selected_source": "ultra_fineweb",
+        "state_sha256": "8a6ccda88f4e4d0655f3021f6c458d5bee3134c4b714ab12f058761da6a81896",
+        "target_sha256": "6a185b4afeee46ea8c80d634daa22efa1bf4730e8e4c67ba4c5b14dce7b4ae56"
+      }
+    ],
+    "windows": [
+      {
+        "end": 1539833856,
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "start": 0
+      },
+      {
+        "end": 3150446592,
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "start": 1610612736
+      }
+    ]
+  },
+  "decision": {
+    "automatic_launch_authorized": false,
+    "collector_and_analysis_implementation_qualified": false,
+    "data_windows_qualified": true,
+    "materialization_qualified": true,
+    "next_action": "qualify exact-config CUDA runtime and finalist collector/analysis behavior; preserve release-suite blockers and do not launch training",
+    "output_absence_qualified": true,
+    "release_dependencies_qualified": false,
+    "runtime_preflight_qualified": false,
+    "storage_qualified": true,
+    "training_authorized": false
+  },
+  "format": "speck_paper_finalist_qualification",
+  "format_version": 1,
+  "implementation": {
+    "base_train_sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2",
+    "materializer_sha256": "5d6b751ee6ce64f1e3cebb145f039af5a62558c0328aa5a1f0482f3881b90104",
+    "runner_revision": "6d1c3684c3a7bdbd043313b8f17021f8a27c3a4e",
+    "runner_sha256": "2b1fcae4aae549e268ea73134fd457c40cacbf560a63385a26950af9f39063a3"
+  },
+  "materialization": {
+    "generated_configs": 84,
+    "path": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+    "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+  },
+  "output_absence": {
+    "analysis_result_absent": true,
+    "checkpoint_root_absent": true,
+    "result_root_absent": true,
+    "time_to_quality_lock_absent": true,
+    "unique_checkpoint_targets": 12
+  },
+  "paper_id": "speck-paper-1",
+  "runs": [
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+      "data_token_offset": 0,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/dense_global_param_match",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/dense_global_param_match",
+      "run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+      "seed": 42
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+      "data_token_offset": 0,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa",
+      "run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+      "seed": 42
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-dense_global_param_match",
+      "data_token_offset": 1610612736,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-1-seed-42-order-1610612736/dense_global_param_match",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-1-seed-42-order-1610612736/dense_global_param_match",
+      "run": "Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-dense_global_param_match",
+      "seed": 42
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-five_cache_kda_gqa",
+      "data_token_offset": 1610612736,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-1-seed-42-order-1610612736/five_cache_kda_gqa",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-1-seed-42-order-1610612736/five_cache_kda_gqa",
+      "run": "Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-five_cache_kda_gqa",
+      "seed": 42
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-dense_global_param_match",
+      "data_token_offset": 0,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-2-seed-43-order-0/dense_global_param_match",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-2-seed-43-order-0/dense_global_param_match",
+      "run": "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-dense_global_param_match",
+      "seed": 43
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-five_cache_kda_gqa",
+      "data_token_offset": 0,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-2-seed-43-order-0/five_cache_kda_gqa",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-2-seed-43-order-0/five_cache_kda_gqa",
+      "run": "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-five_cache_kda_gqa",
+      "seed": 43
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-dense_global_param_match",
+      "data_token_offset": 1610612736,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-3-seed-43-order-1610612736/dense_global_param_match",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-3-seed-43-order-1610612736/dense_global_param_match",
+      "run": "Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-dense_global_param_match",
+      "seed": 43
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-five_cache_kda_gqa",
+      "data_token_offset": 1610612736,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-3-seed-43-order-1610612736/five_cache_kda_gqa",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-3-seed-43-order-1610612736/five_cache_kda_gqa",
+      "run": "Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-five_cache_kda_gqa",
+      "seed": 43
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-dense_global_param_match",
+      "data_token_offset": 0,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-4-seed-44-order-0/dense_global_param_match",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-4-seed-44-order-0/dense_global_param_match",
+      "run": "Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-dense_global_param_match",
+      "seed": 44
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-five_cache_kda_gqa",
+      "data_token_offset": 0,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-4-seed-44-order-0/five_cache_kda_gqa",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-4-seed-44-order-0/five_cache_kda_gqa",
+      "run": "Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-five_cache_kda_gqa",
+      "seed": 44
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-dense_global_param_match",
+      "data_token_offset": 1610612736,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-5-seed-44-order-1610612736/dense_global_param_match",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-5-seed-44-order-1610612736/dense_global_param_match",
+      "run": "Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-dense_global_param_match",
+      "seed": 44
+    },
+    {
+      "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-five_cache_kda_gqa",
+      "data_token_offset": 1610612736,
+      "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-5-seed-44-order-1610612736/five_cache_kda_gqa",
+      "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Finalist-131M/runs/pair-5-seed-44-order-1610612736/five_cache_kda_gqa",
+      "run": "Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-five_cache_kda_gqa",
+      "seed": 44
+    }
+  ],
+  "status": "materialization_data_and_storage_qualified_runtime_analysis_and_release_gates_blocked",
+  "storage": {
+    "artifacts_deleted": 0,
+    "checkpoint_root": "/mnt/speck-data/speck/paper1-finalist-131m",
+    "checkpoint_root_absent": true,
+    "cleanup_counted_as_capacity": false,
+    "device_id": 2050,
+    "directory": "/mnt/speck-data/speck",
+    "directory_mode": "0o700",
+    "directory_uid": 1000,
+    "estimated_finalist_checkpoint_bytes": 16800000000,
+    "filesystem": "ext4",
+    "finalist_floor_passed": true,
+    "free_bytes": 5643926896640,
+    "minimum_free_bytes": 25769803776,
+    "options": [
+      "rw",
+      "nosuid",
+      "nodev",
+      "noexec",
+      "relatime"
+    ],
+    "source": "/dev/sda2",
+    "target": "/mnt/speck-data",
+    "total_bytes": 5952676323328,
+    "used_bytes": 8674816000,
+    "uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff"
+  }
+}

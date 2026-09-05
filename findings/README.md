@@ -587,3 +587,8 @@ Finding 108 materializes exactly 84 hashed configs plus one manifest for the six
 finalist. Every run resolves the frozen 1.540B-token horizon and a unique absent checkpoint path;
 materialization revalidation passes. No checkpoint/result path exists and the manifest keeps training
 blocked pending data, storage, runtime, collector/analysis, and release-dependency qualification.
+
+Finding 109 qualifies finalist configs, output absence, data, and storage. Both 1.540B-token windows
+are disjoint, crossed with all three seeds, and replay byte-identically at ten start/quartile/end points.
+All twelve outputs remain absent; the dedicated device has 5.64 TB free versus a 25.77 GB floor with no
+deletions. Runtime, collector/analysis, release suites, training, and automatic launch remain blocked.

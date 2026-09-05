@@ -236,6 +236,10 @@ the final combined model.
 - [`finalist_materialization.json`](../../experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json)
   hashes all 84 generated configs across the two arm templates and twelve unique runs; materialization
   is complete but data/storage/runtime/analysis qualification and training remain blocked.
+- [`finalist-qualification-v1.json`](../../results/Speck-Paper1/finalist-qualification-v1.json)
+  qualifies all config hashes, twelve absent outputs, two disjoint data windows with ten exact
+  direct/resume replay points, and the 5.64-TB-free dedicated volume; runtime, analysis, release gates,
+  and training remain blocked.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
@@ -344,6 +348,7 @@ promotion infrastructure. It does **not** yet have:
 - independent long-context results; or
 - a production serving runtime.
 
-Accordingly, the paper has completed its **matched proxy quality screen** and finalist config
-materialization, and may enter finalist qualification. It has not entered architecture-promotion, finalist execution,
+Accordingly, the paper has completed its **matched proxy quality screen**, finalist config
+materialization, and data/storage qualification. Runtime, collector/analysis, and release qualification
+remain. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.
