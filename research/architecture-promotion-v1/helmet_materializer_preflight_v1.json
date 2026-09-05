@@ -1,0 +1,92 @@
+{
+  "format": "speck_helmet_materializer_preflight_protocol",
+  "format_version": 1,
+  "protocol_id": "helmet-materializer-preflight-v1",
+  "status": "frozen_unexecuted",
+  "scope": "technical parity for two CC-BY-4.0 legacy-loader families only; not HELMET data or execution qualification",
+  "environments": {
+    "legacy_materializer": {
+      "python": "3.10.20",
+      "requirements": "research/architecture-promotion-v1/helmet_materializer_requirements_v1.txt",
+      "requirements_sha256": "8262fecfe66fff1de32b3fdb294c685bbed19b1f7009d7fed5d33f76b7d79e7a",
+      "datasets": "3.6.0",
+      "huggingface_hub": "0.36.0",
+      "pyarrow": "25.0.1",
+      "dataset_module_factory_sha256": "3f937813e0250e8778ef6612cd220b5b8de643d899651ed4638dc8f6faec0aa0"
+    },
+    "current_reader": {
+      "datasets": "5.0.1",
+      "pyarrow": "25.0.1",
+      "dataset_module_factory_sha256": "736a7f9d4a0232e820da3cfcfac28cf3b2a4c0d69ad6976458cb47bc2ee63b74"
+    }
+  },
+  "storage": {
+    "root": "/mnt/speck-data/speck/helmet-runtime-materializer-v1",
+    "device_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+    "filesystem": "ext4",
+    "required_mount_options": ["rw", "nodev", "nosuid", "noexec"],
+    "required_directory_mode": "0o700"
+  },
+  "datasets": [
+    {
+      "id": "banking77",
+      "license": "CC-BY-4.0",
+      "hub_repository": "PolyAI/banking77",
+      "hub_revision": "90d4e2ee5521c04fc1488f065b8b083658768c57",
+      "upstream_repository": "https://github.com/PolyAI-LDN/task-specific-datasets.git",
+      "upstream_revision": "57ec275d8078af65b7731c2a98be812d844a6d6b",
+      "license_sha256": "7e7170e3cebf88a9f60c7b8421418323c09304da1af4d5e90f4da1dc1c8a2661",
+      "raw_inputs": [
+        {"path": "banking_data/train.csv", "bytes": 839073, "sha256": "b06e26ac675513959a63135f11b94ea7786ed02da65db93a5650d8838cbc664b"},
+        {"path": "banking_data/test.csv", "bytes": 239961, "sha256": "d12d6e3bc4c3103966ae786dc435913c0c563dfa328f5a3646d0e62cfeeb474d"}
+      ],
+      "splits": {
+        "train": {"rows": 10003, "canonical_rows_sha256": "c0bbd5c915f4d5d91d16c297eebcd551b75d00ab6aa9665301185ba554c47979", "features_sha256": "8bb6a853dd697a75171a0a8b8ed0e42f05ead3311995abb9eac9f45348c359a8"},
+        "test": {"rows": 3080, "canonical_rows_sha256": "42c73a6a4b13ab08a1eaf81d7a24fcc251b46a743f54f8e62d6f3e8456bb0898", "features_sha256": "8bb6a853dd697a75171a0a8b8ed0e42f05ead3311995abb9eac9f45348c359a8"}
+      },
+      "snapshot_rule": "write each legacy split twice and require byte-identical Parquet before retention"
+    },
+    {
+      "id": "nlu_evaluation_data",
+      "license": "CC-BY-4.0",
+      "hub_repository": "xingkunliuxtracta/nlu_evaluation_data",
+      "hub_revision": "0edc7007b37706b838a7facd3115617b26ce4e5e",
+      "upstream_repository": "https://github.com/xliuhw/NLU-Evaluation-Data.git",
+      "upstream_revision": "f6071b496b17d71e6eb43f543af0707f4ff30557",
+      "license_sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+      "raw_inputs": [
+        {"path": "AnnotatedData/NLU-Data-Home-Domain-Annotated-All.csv", "bytes": 5867439, "sha256": "5f6dbf6d38fc111217924945ac59c554e0b926d5aa836ecdd0d089d2ca48e1d9"}
+      ],
+      "converted_parquet": {
+        "revision": "e71b2fe9a42ca804d595f3749b665f2eed896e8e",
+        "path": "default/train/0000.parquet",
+        "url": "https://huggingface.co/datasets/xingkunliuxtracta/nlu_evaluation_data/resolve/e71b2fe9a42ca804d595f3749b665f2eed896e8e/default/train/0000.parquet",
+        "bytes": 546704,
+        "sha256": "0d832d98cce4ce75f622b03d3077efaea75c21d2864d9868aaf2b9445c46ad53"
+      },
+      "splits": {
+        "train": {"rows": 25715, "canonical_rows_sha256": "dd8f86990854442c3b3d89677c8f1a12b96f5c9e06a768d8f373b6e05eb11656", "features_sha256": "f559f7194f53f17e7203228efb71dfe0c8395275d0bd05859c8a08a4010af426"}
+      },
+      "snapshot_rule": "retain the exact converted Parquet only after full row-order, value, and feature parity with the legacy loader"
+    }
+  ],
+  "network": {
+    "authentication": "none",
+    "allowed_hosts": ["huggingface.co", "raw.githubusercontent.com"],
+    "payload_hash_required_before_interpretation": true
+  },
+  "decision": {
+    "pass": "all raw payload hashes, rows, row order, values, feature metadata, replayed Parquet bytes, and current-reader checks match",
+    "authority": "qualifies the isolated-materializer strategy for Banking77 and NLU Evaluation Data only",
+    "does_not_authorize": ["HELMET execution", "TREC acquisition", "Multi-LexSum acquisition", "Llama 2 access", "model-judge use"],
+    "failure": "preserve the failed artifact and do not extend the strategy to another source family"
+  },
+  "reporting": {
+    "non_claims": [
+      "two-family parity proves every HELMET loader can be converted",
+      "technical parity resolves license or underlying-work rights",
+      "Parquet byte identity is required across different source representations",
+      "this preflight qualifies any model score or HELMET prompt"
+    ]
+  }
+}
