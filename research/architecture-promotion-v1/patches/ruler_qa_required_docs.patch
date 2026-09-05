@@ -1,0 +1,20 @@
+diff --git a/scripts/data/synthetic/qa.py b/scripts/data/synthetic/qa.py
+index d71cf03..31c5a06 100644
+--- a/scripts/data/synthetic/qa.py
++++ b/scripts/data/synthetic/qa.py
+@@ -201,9 +201,12 @@ def generate_samples(num_samples: int, max_seq_length: int, save_dir: str, incre
+                 length = len(TOKENIZER.text_to_tokens(input_text)) + tokens_to_generate
+                 assert length <= max_seq_length, f"{length} exceeds max_seq_length."
+                 break
+-            except:
+-                if used_docs > incremental:
+-                    used_docs -= incremental
++            except AssertionError:
++                minimum_docs = len(QAS[index + args.pre_samples]['context'])
++                if used_docs > minimum_docs:
++                    used_docs = max(minimum_docs, used_docs - incremental)
++                else:
++                    raise
+ 
+         if args.remove_newline_tab:
+             input_text = ' '.join(input_text.replace('\n', ' ').replace('\t', ' ').strip().split())

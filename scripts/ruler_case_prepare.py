@@ -20,6 +20,8 @@ from scripts.ruler_source_prepare import check as check_source_bundle
 
 GENERATOR_REVISION = "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a"
 SKILLS_REVISION = "f4a3fd8e524acd9abd1fea4387e8f179f6d51cf3"
+QA_UPSTREAM_SHA256 = "f00c0b59cf8698e90831bbf461c2c4f40f2a30f2469534c27455808c717281d0"
+QA_PATCHED_SHA256 = "727c4c898daad0f73445f32c7a3381426d0da51df63a2ae9e0213f3faa558836"
 TEMPLATE_TOKENS = 50
 TASKS = (
     "niah_single_1",
@@ -257,9 +259,28 @@ def _require_clean_checkout(directory, revision, name):
     return directory
 
 
-def _stage_sources(stage, generator, source):
+def _stage_sources(stage, generator, source, compatibility_patch):
     ruler = stage / "RULER"
     shutil.copytree(generator / "scripts", ruler / "scripts")
+    qa_path = ruler / "scripts/data/synthetic/qa.py"
+    if file_sha256(qa_path) != QA_UPSTREAM_SHA256:
+        raise ValueError("RULER QA source changed before compatibility patch")
+    subprocess.run(
+        ["git", "apply", "--check", str(compatibility_patch)],
+        cwd=ruler,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        ["git", "apply", str(compatibility_patch)],
+        cwd=ruler,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    if file_sha256(qa_path) != QA_PATCHED_SHA256:
+        raise ValueError("RULER QA compatibility patch produced unexpected source")
     json_dir = ruler / "scripts/data/synthetic/json"
     bundle = Path(source["bundle_root"])
     inputs = {
@@ -521,11 +542,19 @@ def prepare(args):
     )
     tokenizer_identity = directory_identity(tokenizer)
     lock_path = Path(__file__).parents[1] / "uv.lock"
+    compatibility_patch = (
+        Path(__file__).parents[1]
+        / "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch"
+    )
     runner_sha256 = file_sha256(__file__)
 
     with tempfile.TemporaryDirectory(prefix="speck-ruler-cases-") as temporary:
         stage = Path(temporary)
-        ruler, nltk_root = _stage_sources(stage, generator, source)
+        ruler, nltk_root = _stage_sources(stage, generator, source, compatibility_patch)
+        executed_code_identity = directory_identity(
+            ruler / "scripts",
+            include=lambda path: path.suffix in {".py", ".yaml", ".sh"},
+        )
         guard = _network_guard_self_test(stage, nltk_root)
         runs = []
         logs = []
@@ -577,8 +606,18 @@ def prepare(args):
         },
         "generator": {
             "revision": GENERATOR_REVISION,
-            "code_identity_sha256": code_identity["sha256"],
-            "files": code_identity["files"],
+            "upstream_code_identity_sha256": code_identity["sha256"],
+            "upstream_files": code_identity["files"],
+            "executed_code_identity_sha256": executed_code_identity["sha256"],
+            "compatibility_patch": {
+                "path": str(compatibility_patch),
+                "sha256": file_sha256(compatibility_patch),
+                "target": "scripts/data/synthetic/qa.py",
+                "upstream_sha256": QA_UPSTREAM_SHA256,
+                "patched_sha256": QA_PATCHED_SHA256,
+                "scope": "termination repair only; no prompt, answer, source-order, seed, or scorer change",
+                "reason": "qa_2 example 7 otherwise decrements below its required document count and loops forever at 4096 tokens",
+            },
         },
         "nemo_skills": {
             "revision": SKILLS_REVISION,
@@ -643,6 +682,11 @@ def check(args):
         or report["source_bundle"]["manifest_sha256"] != file_sha256(source_manifest_path)
         or report["source_bundle"]["identity_sha256"] != source["bundle_identity_sha256"]
         or report["runner_sha256"] != file_sha256(__file__)
+        or report["generator"]["compatibility_patch"]["sha256"]
+        != file_sha256(
+            Path(__file__).parents[1]
+            / "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch"
+        )
         or report["environment"]["uv_lock_sha256"]
         != file_sha256(Path(__file__).parents[1] / "uv.lock")
         or runtime_versions() != report["environment"]["package_versions"]
