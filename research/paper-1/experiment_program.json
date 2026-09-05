@@ -15,8 +15,8 @@
     "materialization": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
     "materialization_sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b",
     "audit": "results/Speck-Paper1/baseline-audit.json",
-    "audit_sha256": "2f4ef80b1078b881c8e25df769336f2df1dcd5d2100a9569785c0863928a8a38",
-    "runner_revision": "252bc5105db502348630c08fecab4f4ee1dfa02f"
+    "audit_sha256": "dc08c7db13c50ab0dc3d4dbe9b77727df8ab54f32160b6e94212d89bbeba342c",
+    "runner_revision": "3a058b51d4b31198366b3f294f5f9315c7a5b887"
   },
   "controls": {
     "primary_conventional": {

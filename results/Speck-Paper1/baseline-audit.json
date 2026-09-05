@@ -1,13 +1,16 @@
 {
+  "analysis_contract": {
+    "path": "research/paper-1/baseline_analysis.json",
+    "sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+    "status": "qualified_frozen_before_results"
+  },
   "blockers": [
     "SPE-58 evaluation-manifest dependency remains open",
-    "paired compiled/runtime/export preflight has not run",
-    "paired analysis and stopping script is not frozen",
-    "free storage is below the proxy launch minimum"
+    "paired compiled/runtime/export preflight has not run"
   ],
   "conclusion": "historical arms are reproducible discovery context, but no existing result is a promotion-authority Paper 1 baseline comparison; the new paired matrix is materialized and remains blocked from launch",
   "contract": "research/paper-1/baseline_matrix.json",
-  "contract_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+  "contract_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
   "format": "speck_paper_baseline_audit",
   "format_version": 1,
   "historical_arms": [
@@ -239,7 +242,7 @@
       }
     },
     "contract": "research/paper-1/baseline_matrix.json",
-    "contract_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+    "contract_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
     "family_id": "Speck-Paper1-Baselines-131M",
     "format": "speck_paper_baseline_materialization",
     "format_version": 1,
@@ -312,7 +315,7 @@
     ],
     "status": "materialized_unexecuted"
   },
-  "runner_revision": "252bc5105db502348630c08fecab4f4ee1dfa02f",
+  "runner_revision": "3a058b51d4b31198366b3f294f5f9315c7a5b887",
   "source_artifacts": [
     {
       "path": "experiments/SpeckLC-150M-MixerScreen-131M/sweep.json",
@@ -335,9 +338,9 @@
   "storage": {
     "cache_root": "/home/alkin/.cache/speck",
     "estimated_proxy_checkpoint_bytes": 8400000000,
-    "filesystem_free_bytes": 7085318144,
+    "filesystem_free_bytes": 19339448320,
     "filesystem_total_bytes": 490048561152,
-    "filesystem_used_bytes": 457994866688,
+    "filesystem_used_bytes": 445740736512,
     "historical_checkpoint_bytes": 6605141453,
     "largest_checkpoint_directories": [
       {
@@ -442,7 +445,7 @@
       }
     ],
     "minimum_free_bytes_before_proxy_launch": 17179869184,
-    "proxy_storage_deficit_bytes": 10094551040,
+    "proxy_storage_deficit_bytes": 0,
     "top_level_directories": [
       {
         "bytes": 185411022848,
@@ -453,28 +456,16 @@
         "path": "data"
       },
       {
-        "bytes": 4512821248,
-        "path": "releases"
-      },
-      {
-        "bytes": 4392062976,
-        "path": "search"
-      },
-      {
         "bytes": 4238700544,
         "path": "evaluations"
       },
       {
-        "bytes": 3187011584,
-        "path": "gguf"
-      },
-      {
-        "bytes": 563834880,
-        "path": "exports"
-      },
-      {
         "bytes": 297185280,
         "path": "tools"
+      },
+      {
+        "bytes": 282005504,
+        "path": "releases"
       },
       {
         "bytes": 63299584,
@@ -491,6 +482,10 @@
       {
         "bytes": 5644288,
         "path": "archive"
+      },
+      {
+        "bytes": 864256,
+        "path": "search"
       },
       {
         "bytes": 528384,

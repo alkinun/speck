@@ -79,8 +79,8 @@ evidence; and blocks paper-scale pretraining until ten checked prerequisites pas
 Finding 27 audits five historical sequence controls without granting them retrospective promotion
 authority, materializes a 0.0118%-parameter-matched dense/KDA baseline pair across three disjoint
 seed/data-order cells, and records a 9.40GiB storage deficit against the proxy launch floor. Training
-remains blocked pending evaluation-manifest closure, durable storage qualification, and paired
-GPU/export preflight.
+remains blocked pending evaluation-manifest closure, storage-provisioning provenance closeout, and
+paired GPU/export preflight; a later audit passes the numeric 16GiB capacity floor.
 
 Finding 28 freezes the paired baseline analysis before results. It makes the three seed/data-order
 cells the statistical units, fixes one-sided language-loss and per-source guardrails, separates

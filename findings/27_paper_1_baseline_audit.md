@@ -76,10 +76,15 @@ is 16GiB, leaving a 10,094,551,040-byte (9.40GiB) deficit. Six retained proxy ch
 at 8.4GB. The future twelve-run finalist design is estimated at 16.8GB before exports and evaluation
 artifacts.
 
-The largest current consumers are checkpoints (185.4GB), packed data (21.4GB), releases (4.5GB),
-search artifacts (4.4GB), evaluations (4.2GB), and GGUF artifacts (3.2GB). No file was deleted. The
-contract forbids automatic cleanup; archival targets require explicit review because checkpoints and
-optimizer state are part of the evidence chain.
+The largest consumers in that first observation were checkpoints (185.4GB), packed data (21.4GB),
+releases (4.5GB), search artifacts (4.4GB), evaluations (4.2GB), and GGUF artifacts (3.2GB). No file
+was deleted by the audit. The contract forbids automatic cleanup; archival targets require explicit
+review because checkpoints and optimizer state are part of the evidence chain.
+
+A later clean-tree re-audit at runner revision `3a058b5` measured 19,339,448,320 bytes (18.01GiB)
+free, 2,159,579,136 bytes (2.01GiB) above the proxy floor. The machine-readable audit therefore drops
+the capacity blocker. The repository does not identify every path changed by the intervening external
+cleanup, so SPE-104 retains that provenance closeout rather than inventing an archive record.
 
 ## Decision
 
@@ -88,10 +93,9 @@ three paired seed/data-order cells are materialized but **not authorized to laun
 are:
 
 - close the SPE-58 evaluation-manifest dependency for this stage;
-- provision at least 16GiB free storage;
 - run paired compiled forward/backward/optimizer, export, and incremental-generation preflights on the
   named RTX 3090 environment; and
-- freeze the paired analysis and stopping implementation before observing results.
+- preserve the now-frozen paired analysis and stopping implementation unchanged through execution.
 
 No baseline ranking, architecture promotion, component contribution, or Paper 1 performance claim is
 made by this audit.
