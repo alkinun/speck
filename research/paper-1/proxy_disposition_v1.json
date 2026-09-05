@@ -1,0 +1,90 @@
+{
+  "format": "speck_paper_proxy_disposition_contract",
+  "format_version": 1,
+  "disposition_id": "speck-paper-1-proxy-disposition-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_after_control_target_before_candidate_0",
+  "frozen_on": "2026-09-05",
+  "purpose": "Fix what the six-cell proxy result may authorize before any candidate checkpoint or result exists.",
+  "inputs": {
+    "analysis_plan": "research/paper-1/baseline_analysis.json",
+    "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+    "target_lock": "results/Speck-Paper1/baseline-time-to-quality-target.json",
+    "target_lock_sha256": "48424759ccb7f954f55487ebdc773f03ca04ab44661377eede47d5b23a7dd6a2",
+    "target_validation_loss": 2.839127,
+    "automation_contract": "research/paper-1/baseline_automation_v1.json",
+    "automation_contract_sha256": "bd8f8673f2a5e359e49f4c39e33509735a7067144a0285f1ad1217866245e084",
+    "control_result_sha256": [
+      "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526",
+      "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5",
+      "77c7f7e5d1ffee91009c5732cab20ced4de31851b3650bd54aea64902ecf389d"
+    ],
+    "candidate_checkpoint_directories_present": 0,
+    "candidate_result_records_present": 0
+  },
+  "authoritative_fields": {
+    "integrity": "analysis status and exactly six qualified frozen cells",
+    "aggregate_quality": "fixed_tokens.non_inferiority_pass",
+    "source_quality": "every source_guardrails.<source>.pass",
+    "combined_quality": "proxy_quality_screen_pass",
+    "time_to_quality": "time_to_quality.right_censored_pairs and paired_relative_improvement",
+    "efficiency_descriptors": [
+      "fixed_analytic_flops",
+      "fixed_steady_training_time",
+      "per-run timing and peak allocation"
+    ]
+  },
+  "branches": [
+    {
+      "id": "integrity_incomplete",
+      "condition": "analysis is missing, incomplete, outside the six frozen cells, or contains an integrity failure",
+      "decision": "no proxy quality decision",
+      "authorized_next": "retain all evidence, stop automatic progression, and diagnose or preregister recovery",
+      "finalist_materialization_authorized": false
+    },
+    {
+      "id": "aggregate_noninferiority_failed",
+      "condition": "fixed_tokens.non_inferiority_pass is false",
+      "decision": "whole-architecture proxy failed",
+      "authorized_next": "report the paired estimate and bound; use traces only for diagnosis; any redesigned comparison requires a successor contract",
+      "finalist_materialization_authorized": false
+    },
+    {
+      "id": "source_guardrail_failed",
+      "condition": "aggregate noninferiority passes but any source guardrail pass is false",
+      "decision": "whole-architecture proxy failed",
+      "authorized_next": "report every failed source and bound; do not average the failure away; any redesign requires a successor contract",
+      "finalist_materialization_authorized": false
+    },
+    {
+      "id": "quality_screen_passed",
+      "condition": "fixed-token noninferiority and every source guardrail pass, hence proxy_quality_screen_pass is true",
+      "decision": "whole-architecture proxy quality screen passed",
+      "authorized_next": "materialize and separately qualify the frozen six-pair, twelve-run proxy-finalist design at 1,539,833,856 tokens per run",
+      "finalist_materialization_authorized": true
+    }
+  ],
+  "secondary_interpretation": {
+    "time_to_quality_censoring": "retain right-censored pairs; never form a complete-case confidence bound or change the quality branch",
+    "fixed_flops_and_time": "report descriptive paired summaries; they cannot rescue a failed quality screen",
+    "runtime_startup": "keep compilation/startup, validation, checkpoint, and orchestration outside steady training comparisons",
+    "source_diagnostics": "may locate failure modes but cannot credit individual architectural components"
+  },
+  "forbidden_after_any_branch": [
+    "adding proxy pairs or changing the margin after seeing results",
+    "crediting KDA, NoPE, GQA, or the 3:1 mixer ratio",
+    "architecture promotion from this proxy",
+    "paper-scale pretraining",
+    "long-context or release claims from language loss"
+  ],
+  "finalist_preconditions_if_eligible": [
+    "materialization exactly matches future_finalist_design in baseline_matrix.json",
+    "all twelve output paths are unique and absent",
+    "storage is requalified for the finalist floor without deleting evidence",
+    "analysis and stopping rules are frozen for the six paired finalist cells",
+    "the exact hardware/runtime path is requalified before launch",
+    "candidate and dense controls remain paired within every seed/data-order cell"
+  ],
+  "result": "results/Speck-Paper1/baseline-analysis.json"
+}

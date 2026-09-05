@@ -12,6 +12,7 @@ PROGRAM_FILES = (
     "baseline_analysis.json",
     "baseline_collection_v2.json",
     "baseline_automation_v1.json",
+    "proxy_disposition_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -656,6 +657,9 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "automation_contract",
             "automation_contract_sha256",
             "automation_contract_status",
+            "proxy_disposition_contract",
+            "proxy_disposition_contract_sha256",
+            "proxy_disposition_contract_status",
             "dense_control_results",
             "runner_revision",
         },
@@ -685,6 +689,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("storage_qualification", "storage_qualification_sha256"),
         ("collection_correction", "collection_correction_sha256"),
         ("automation_contract", "automation_contract_sha256"),
+        ("proxy_disposition_contract", "proxy_disposition_contract_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -866,6 +871,41 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         != _file_sha256(repository_root / "tests/test_paper_baseline_continue.py")
     ):
         raise ValueError("paper baseline automation contract is invalid")
+    disposition = _load_json(repository_root / evidence["proxy_disposition_contract"])
+    disposition_inputs = disposition.get("inputs", {})
+    disposition_branches = {
+        branch.get("id"): branch for branch in disposition.get("branches", ())
+    }
+    if (
+        disposition.get("format") != "speck_paper_proxy_disposition_contract"
+        or disposition.get("status") != evidence["proxy_disposition_contract_status"]
+        or disposition_inputs.get("analysis_plan_sha256") != evidence["analysis_plan_sha256"]
+        or disposition_inputs.get("automation_contract_sha256")
+        != evidence["automation_contract_sha256"]
+        or disposition_inputs.get("control_result_sha256")
+        != [entry["sha256"] for entry in control_entries]
+        or disposition_inputs.get("candidate_checkpoint_directories_present") != 0
+        or disposition_inputs.get("candidate_result_records_present") != 0
+        or set(disposition_branches)
+        != {
+            "integrity_incomplete",
+            "aggregate_noninferiority_failed",
+            "source_guardrail_failed",
+            "quality_screen_passed",
+        }
+        or disposition_branches["quality_screen_passed"].get(
+            "finalist_materialization_authorized"
+        )
+        is not True
+        or any(
+            branch.get("finalist_materialization_authorized") is not False
+            for identifier, branch in disposition_branches.items()
+            if identifier != "quality_screen_passed"
+        )
+        or len(disposition.get("forbidden_after_any_branch", ())) < 5
+        or len(disposition.get("finalist_preconditions_if_eligible", ())) < 6
+    ):
+        raise ValueError("paper proxy disposition contract is invalid")
     if (
         controls[0].get("checkpoint", {}).get("model_sha256")
         != trigger_checkpoint.get("model_sha256")
@@ -904,6 +944,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             != [entry["sha256"] for entry in control_entries]
         ):
             raise ValueError("paper time-to-quality target evidence is invalid")
+        if (
+            disposition_inputs.get("target_lock_sha256") != target_reference["sha256"]
+            or disposition_inputs.get("target_validation_loss")
+            != target["validation_loss_target"]
+        ):
+            raise ValueError("paper proxy disposition does not match the target lock")
 
         if (
             len(candidate_entries) > 3

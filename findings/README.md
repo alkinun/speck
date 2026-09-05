@@ -66,6 +66,7 @@ Read in order:
 58. [57 — Paper 1 dense control 1](57_paper_1_dense_control_1.md)
 59. [58 — Event-driven Paper 1 baseline continuation](58_paper_1_event_continuation.md)
 60. [59 — Paper 1 dense controls complete and target locked](59_paper_1_dense_controls_and_target_lock.md)
+61. [60 — Paper 1 proxy disposition frozen before candidates](60_paper_1_proxy_disposition.md)
 
 Conventions:
 
@@ -280,3 +281,8 @@ Finding 59 completes the three-control phase. Dense control 2 finishes at 2.8326
 controls average 2.835153 with a 0.006440-nat range, while steady-time spread is only 0.135%. The
 predeclared worst-control rule locks the candidate time-to-quality target at 2.839127 before any
 candidate output exists. Candidate pair 0 is now the next fixed cell.
+
+Finding 60 freezes proxy disposition before candidate 0. Integrity failure, aggregate failure,
+source-guardrail failure, and complete quality pass have explicit non-overlapping consequences.
+Efficiency views cannot rescue failed quality, censoring stays explicit, and only a complete quality
+pass may authorize finalist materialization. No branch grants component attribution or promotion.

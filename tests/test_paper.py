@@ -22,6 +22,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "baseline_analysis.json",
             "baseline_collection_v2.json",
             "baseline_automation_v1.json",
+            "proxy_disposition_v1.json",
             "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
@@ -89,7 +90,7 @@ def test_paper_program_rejects_dense_control_result_pin_drift(tmp_path):
         validate_paper_program(copied, repository_root=root)
 
 
-def test_paper_program_rejects_target_lock_before_all_dense_controls(tmp_path):
+def test_paper_program_rejects_dense_control_rollback_after_disposition_freeze(tmp_path):
     copied = tmp_path / "paper-1"
     shutil.copytree(program, copied)
     path = copied / "experiment_program.json"
@@ -104,7 +105,19 @@ def test_paper_program_rejects_target_lock_before_all_dense_controls(tmp_path):
     }
     path.write_text(json.dumps(value), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="requires all three dense controls"):
+    with pytest.raises(ValueError, match="proxy disposition contract"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_proxy_disposition_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["baseline_evidence"]["proxy_disposition_contract_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="proxy_disposition_contract"):
         validate_paper_program(copied, repository_root=root)
 
 
