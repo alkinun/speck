@@ -178,10 +178,18 @@ def preflight_arm(arm, output_root, device):
             dim=1,
         )
     incremental_error = _maximum_error(cached_logits, full_logits)
-    if incremental_error > 0.02:
-        raise RuntimeError(
-            f"native incremental logits exceed the 0.02 tolerance: {incremental_error}"
+    incremental_rtol = 0.02
+    incremental_atol = 0.02
+    try:
+        torch.testing.assert_close(
+            cached_logits,
+            full_logits,
+            rtol=incremental_rtol,
+            atol=incremental_atol,
         )
+        incremental_passed = True
+    except AssertionError:
+        incremental_passed = False
     state = {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
     metadata = {
         "config": model.config.settings(),
@@ -231,14 +239,13 @@ def preflight_arm(arm, output_root, device):
         "native_incremental": {
             "tokens": 8,
             "maximum_absolute_logit_error": incremental_error,
-            "tolerance": 0.02,
-            "passed": incremental_error <= 0.02,
+            "relative_tolerance": incremental_rtol,
+            "absolute_tolerance": incremental_atol,
+            "passed": incremental_passed,
         },
         "transformers_export": export,
         "start_temperature_c": start_temperature,
-        "passed": peak_allocated <= hard_peak
-        and incremental_error <= 0.02
-        and export["parity"]["passed"],
+        "passed": peak_allocated <= hard_peak and incremental_passed and export["parity"]["passed"],
     }
 
 
