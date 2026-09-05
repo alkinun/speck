@@ -582,3 +582,8 @@ Finding 107 freezes finalist materialization before implementation: SHA-pinned p
 family/root, six seed-by-order pairs, twelve 1.540B-token runs, final-only checkpoints, exact quartile
 validation, fail-on-overwrite behavior, disjoint/replayable data windows, and fresh storage/runtime/
 analysis qualification. Config work is authorized; training and promotion remain blocked.
+
+Finding 108 materializes exactly 84 hashed configs plus one manifest for the six-pair, twelve-run
+finalist. Every run resolves the frozen 1.540B-token horizon and a unique absent checkpoint path;
+materialization revalidation passes. No checkpoint/result path exists and the manifest keeps training
+blocked pending data, storage, runtime, collector/analysis, and release-dependency qualification.

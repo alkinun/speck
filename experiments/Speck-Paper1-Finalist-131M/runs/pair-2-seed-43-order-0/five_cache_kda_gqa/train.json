@@ -1,0 +1,7 @@
+{
+  "data_token_offset": 0,
+  "extends": "../../../arms/five_cache_kda_gqa/train.json",
+  "output_dir": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-five_cache_kda_gqa",
+  "run": "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-five_cache_kda_gqa",
+  "seed": 43
+}

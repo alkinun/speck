@@ -1,0 +1,3 @@
+{
+  "extends": "../../../arms/dense_global_param_match/runtime.json"
+}

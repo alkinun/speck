@@ -233,6 +233,9 @@ the final combined model.
 - [`finalist_materialization_v1.json`](finalist_materialization_v1.json) pins both proxy parent arms,
   the six-pair crossing, new config/checkpoint roots, exact longer-horizon changes, fail-on-overwrite
   behavior, and data/storage/runtime/release qualification gates without authorizing training.
+- [`finalist_materialization.json`](../../experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json)
+  hashes all 84 generated configs across the two arm templates and twelve unique runs; materialization
+  is complete but data/storage/runtime/analysis qualification and training remain blocked.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
@@ -341,6 +344,6 @@ promotion infrastructure. It does **not** yet have:
 - independent long-context results; or
 - a production serving runtime.
 
-Accordingly, the paper has completed its **matched proxy quality screen** and may enter finalist
-materialization/qualification. It has not entered architecture-promotion, finalist execution,
+Accordingly, the paper has completed its **matched proxy quality screen** and finalist config
+materialization, and may enter finalist qualification. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.
