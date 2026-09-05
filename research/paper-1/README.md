@@ -82,6 +82,9 @@ the final combined model.
 - [`raw_local_readiness_v1.json`](raw_local_readiness_v1.json) conditionally fixes a five-slot,
   shared-query, single-softmax raw-local formulation and freezes its deduplication, causal ring,
   window-selection, quality, state, and systems gates without authorizing implementation.
+- [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
+  ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
+  selection before a fixed-count integration/readout placement successor.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

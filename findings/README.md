@@ -71,6 +71,7 @@ Read in order:
 63. [62 — HCA readiness gate before implementation](62_hca_readiness_gate.md)
 64. [63 — CSA selector-readiness gate before implementation](63_csa_readiness_gate.md)
 65. [64 — Raw-local branch readiness gate](64_raw_local_readiness_gate.md)
+66. [65 — Recurrent/global ratio and placement readiness gate](65_ratio_placement_readiness_gate.md)
 
 Conventions:
 
@@ -314,3 +315,9 @@ only at the five global slots and share one causal, deduplicated softmax with CS
 KDA stay fixed. Windows 64/128/256/512 are selected by local-specific floors, not copied. Local state is
 an explicit added cost, and a retained branch must clear the 10% systems threshold without erasing its
 parent's benefit.
+
+Finding 65 corrects the impossible 7:1 label in a 20-layer model before ratio results. Exact 1:1, 3:1,
+and 9:1 arms use 10, 5, and 2 global layers under one quantile placement rule. Count is selected before
+placement; integration/readout layouts require a fixed-count successor. Operator definitions, quality
+constraints, parameter/FLOP views, mechanistic roles, and realized systems gates remain explicit, and
+no ratio training is authorized.

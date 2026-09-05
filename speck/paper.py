@@ -17,6 +17,7 @@ PROGRAM_FILES = (
     "hca_readiness_v1.json",
     "csa_readiness_v1.json",
     "raw_local_readiness_v1.json",
+    "ratio_placement_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -727,6 +728,60 @@ def _validate_raw_local_readiness(reference, repository_root, paper_id, policy_i
         raise ValueError("raw-local readiness design is incomplete")
 
 
+def _validate_ratio_placement_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "ratio readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("ratio/placement readiness gate does not match its pin")
+    gate = _load_json(path)
+    correction = gate.get("ratio_correction", {})
+    isolation = gate.get("ratio_isolation", {})
+    arms = isolation.get("arms", ())
+    successor = gate.get("placement_successor_after_ratio", {})
+    decision = gate.get("decision", {})
+    expected = [
+        ("ratio_1_to_1", 10, 10, [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]),
+        ("ratio_3_to_1", 15, 5, [3, 7, 11, 15, 19]),
+        ("ratio_9_to_1", 18, 2, [9, 19]),
+    ]
+    observed = [
+        (
+            arm.get("id"),
+            arm.get("recurrent_layers"),
+            arm.get("global_layers"),
+            arm.get("global_indices_zero_based"),
+        )
+        for arm in arms
+    ]
+    if (
+        gate.get("format") != "speck_ratio_placement_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("ordered_prerequisites", ())) < 5
+        or correction.get("previous_labels") != ["1:1", "3:1", "7:1"]
+        or correction.get("replacement_labels") != ["1:1", "3:1", "9:1"]
+        or correction.get("changed_before_ratio_results") is not True
+        or observed != expected
+        or successor.get("status") != "not_frozen_until_one_count_is_selected"
+        or successor.get("required_shared_count") is not True
+        or len(gate.get("mechanistic_endpoints", ())) < 7
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "ratio_selected",
+                "placement_selected",
+                "exact_placement_successor_frozen",
+                "implementation_authorized",
+                "training_authorized",
+                "promotion_authority",
+            )
+        )
+    ):
+        raise ValueError("ratio/placement readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -796,6 +851,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "hca_readiness",
             "csa_readiness",
             "raw_local_readiness",
+            "ratio_placement_readiness",
         },
         "paper experiment program",
     )
@@ -823,6 +879,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_raw_local_readiness(
         program["raw_local_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_ratio_placement_readiness(
+        program["ratio_placement_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],

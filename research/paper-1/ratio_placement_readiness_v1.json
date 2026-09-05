@@ -1,0 +1,154 @@
+{
+  "format": "speck_ratio_placement_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-ratio-placement-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_operators_and_ratio_unselected",
+  "frozen_on": "2026-09-05",
+  "purpose": "Separate how many global integration slots exist from where they occur after every sequence operator is fixed.",
+  "evidence_basis": [
+    {
+      "path": "findings/08_global_attention_frontier.md",
+      "supported": "middle attention improves long-document integration, final attention exposes distant content to output, two slots combine those roles, and five distributed slots improve retention at higher cost",
+      "limitation": "one seed, 32M-token continuation, RoPE/scope intervention, internal retrieval only"
+    },
+    {
+      "path": "findings/24_reader_attention.md",
+      "supported": "writer-reader freshness and route/payload composition depend on placement; distance four fails where adjacent refresh passes",
+      "limitation": "reader topology is rejected and cannot serve as this study's parent"
+    },
+    {
+      "path": "findings/10_kimi_linear_transfer_review.md",
+      "supported": "a 15-recurrent/5-global layout makes 3:1 credible and operationally simple",
+      "limitation": "Kimi's scale, training horizon, MLA, and whole-system success do not establish Speck's optimal ratio"
+    }
+  ],
+  "ordered_prerequisites": [
+    "select KDA or another recurrent operator",
+    "select exact cache representation, HCA, CSA, and raw-local formulations",
+    "freeze one 20-layer parameter/FLOP reference geometry",
+    "qualify every ratio arm for correctness, state, prefill, decode, and export",
+    "freeze count analysis before ratio outputs and placement analysis only after count selection on independent cells"
+  ],
+  "ratio_correction": {
+    "previous_labels": [
+      "1:1",
+      "3:1",
+      "7:1"
+    ],
+    "problem": "20 layers cannot contain 2.5 global layers, so an exact 7:1 recurrent/global ratio is not representable",
+    "replacement_labels": [
+      "1:1",
+      "3:1",
+      "9:1"
+    ],
+    "global_layer_counts": [
+      10,
+      5,
+      2
+    ],
+    "recurrent_layer_counts": [
+      10,
+      15,
+      18
+    ],
+    "rule": "report integer counts and realized ratios; never round a non-integral layer allocation while retaining its nominal ratio label",
+    "changed_before_ratio_results": true
+  },
+  "ratio_isolation": {
+    "fixed": [
+      "20 logical layers",
+      "selected sequence operators and their internal geometry",
+      "standard residual and dense FFN formulation",
+      "tokenizer, data, sequence length, optimizer, and evaluation",
+      "placement-generation rule within every count"
+    ],
+    "placement_rule": "for n global slots in L=20 layers, use zero-based indices floor((i+1)*L/n)-1 for i=0..n-1",
+    "arms": [
+      {
+        "id": "ratio_1_to_1",
+        "recurrent_layers": 10,
+        "global_layers": 10,
+        "global_indices_zero_based": [
+          1,
+          3,
+          5,
+          7,
+          9,
+          11,
+          13,
+          15,
+          17,
+          19
+        ]
+      },
+      {
+        "id": "ratio_3_to_1",
+        "recurrent_layers": 15,
+        "global_layers": 5,
+        "global_indices_zero_based": [
+          3,
+          7,
+          11,
+          15,
+          19
+        ]
+      },
+      {
+        "id": "ratio_9_to_1",
+        "recurrent_layers": 18,
+        "global_layers": 2,
+        "global_indices_zero_based": [
+          9,
+          19
+        ]
+      }
+    ],
+    "matching": "match active non-embedding parameters within 0.025% using uniform FFN width where possible; report exact analytic FLOPs and add a batch-aligned fixed-FLOP view rather than forcing both matches with hidden interventions",
+    "selection": "choose the lowest-cost count passing every quality/capability constraint; if multiple pass, use realized state, time-to-quality, prefill, and decode Pareto dominance",
+    "promotion_authority": false
+  },
+  "placement_successor_after_ratio": {
+    "status": "not_frozen_until_one_count_is_selected",
+    "reason": "integration-heavy and readout-heavy layouts require an integer selected count; mixing two-slot and five-slot layouts would reintroduce the ratio confound",
+    "required_shared_count": true,
+    "required_templates": [
+      "uniform quantile placement",
+      "integration-heavy placement with the final readout slot retained",
+      "readout-heavy placement with at least one middle integration slot retained"
+    ],
+    "role_constraints": {
+      "integration": "at least one slot in the middle half of depth",
+      "readout": "the final logical layer remains a global slot",
+      "refresh": "report maximum and distribution of recurrent depth between global updates"
+    },
+    "rule": "freeze exact indices, parameter geometry, and analysis in a successor contract after count selection and before placement outputs"
+  },
+  "mechanistic_endpoints": [
+    "long-document loss change attributable to middle integration",
+    "output-side retrieval attributable to final readout",
+    "route, payload, and direct composition by layer",
+    "KDA decay/overwrite and state update between global slots",
+    "attention mass and selected-source recall by slot",
+    "hidden-state intervention and logit-lens contribution by depth",
+    "quality versus maximum refresh gap rather than nominal ratio alone"
+  ],
+  "quality_and_systems": {
+    "quality": "aggregate and every-source language-loss non-inferiority plus every frozen retrieval/composition floor",
+    "state": "report every recurrent, exact, compressed, sparse, and raw-local state component by layer and length",
+    "training": "fixed-token, fixed-analytic-FLOP, fixed-steady-time, and time-to-locked-quality views",
+    "serving": "prefill, batch-1 decode, maximum-resident-batch decode, and arrival-rate sweeps",
+    "systems_threshold": "the retained lower-cost ratio must clear the applicable 10% simple or 20% custom-runtime primary improvement with five thermally interleaved repeats",
+    "maximum_start_temperature_c": 50
+  },
+  "decision": {
+    "ratio_selected": false,
+    "placement_selected": false,
+    "exact_placement_successor_frozen": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after all operators qualify, materialize geometry-only 1:1, 3:1, and 9:1 arms and run correctness/cost preflight before freezing training"
+  }
+}

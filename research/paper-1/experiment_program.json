@@ -79,7 +79,7 @@
           "arms": [
             "1:1",
             "3:1",
-            "7:1",
+            "9:1",
             "middle-plus-final",
             "uniform",
             "integration-heavy",
@@ -471,6 +471,11 @@
     "qualification_status": "proxy_training_authorized_release_claims_blocked",
     "runner_revision": "4eba36607fe3935950019686c7c171e4ca6841a7",
     "status": "proxy_training_authorized_release_claims_blocked"
+  },
+  "ratio_placement_readiness": {
+    "contract": "research/paper-1/ratio_placement_readiness_v1.json",
+    "sha256": "d8401cfd494f53eef04f95e386fab446aedda54361919c022f0d187cf4920406",
+    "status": "design_blocked_operators_and_ratio_unselected"
   },
   "raw_local_readiness": {
     "contract": "research/paper-1/raw_local_readiness_v1.json",
