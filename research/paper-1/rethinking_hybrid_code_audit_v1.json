@@ -1,0 +1,104 @@
+{
+  "format": "speck_rethinking_hybrid_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-rethinking-hybrid-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "analysis_source_and_rights_qualified_full_experiment_reproduction_blocked",
+  "audited_on": "2026-09-06",
+  "repository": {
+    "url": "https://github.com/thunlp/rethinking-hybrid-attention",
+    "revision": "feaad0899bea98e0bf32de9693f37a176713f3ad",
+    "revision_date": "2026-06-17T14:13:42+08:00",
+    "files": 20,
+    "code_or_data_files": 12,
+    "tree_complete": true,
+    "repository_metadata_clone": true,
+    "working_tree_checked_out": false,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false
+  },
+  "license": {
+    "path": "LICENSE",
+    "license": "MIT",
+    "sha256": "d7f8477e7bd1ebf04d652e1dbf1b6d1d9d5d879ec3c88d149b4ea1371d3a2fef",
+    "root_scope": true
+  },
+  "pinned_files": [
+    {
+      "path": "README.md",
+      "sha256": "474c1a0823fffe8047f6f70ad7f0fffc05538bdbd367b004743d3d55fed99f4a"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "cf331e8a25b0ea2b2f60be8b57319a0cfc4fd70735ab58ed446b8e6b5f9adf1f"
+    },
+    {
+      "path": "requirements-optional.txt",
+      "sha256": "c50467c542b8e5bdbfc5ac90a7dfb58495315be4fa11d34a4c9ad5e013d71eb1"
+    },
+    {
+      "path": "src/scaling/data/swa128_longppl.tsv",
+      "sha256": "a12e461983176dc33593f28f0a99f4723802a34ff9d072a764c462f5ba09c2b1"
+    },
+    {
+      "path": "src/scaling/fit_scaling.py",
+      "sha256": "70718ea0aacd454d95c66dd12ee8f14f4bd433660ea861586696f5ea21e5fe65"
+    },
+    {
+      "path": "src/tracing/data/niah.jsonl",
+      "sha256": "45eae1cbe6ea509036285aa4f9793d65dbc73625b6389c4cb945e1a4299fb35d"
+    }
+  ],
+  "available_components": [
+    "separable scaling-law fitting and one SWA-128 LongPPL table",
+    "NIAH probe-data generation, hidden-state extraction, and logistic probing",
+    "distance-gradient influence analysis",
+    "retrieval-head identification, attention entropy, and Q/K distance analysis",
+    "links to separate Hugging Face checkpoint collections"
+  ],
+  "missing_experiment_components": [
+    "from-scratch model training code and architecture configs for the seven main families and design variants",
+    "data mixture construction, tokenizer, optimizer sweep, schedule, and checkpoint-production manifests",
+    "the receptive-field-constraint modeling.py named by the README",
+    "complete scaling observations for every architecture, scale, and token budget",
+    "immutable Hugging Face checkpoint revisions and file manifests",
+    "LongPPL/GovReport and downstream benchmark source revisions and case manifests",
+    "assertion tests and CPU/GPU parity fixtures",
+    "target-hardware runtime and memory measurements"
+  ],
+  "environment_findings": [
+    {
+      "id": "core_dependencies_unpinned",
+      "evidence": "requirements.txt names NumPy, pandas, SciPy, scikit-learn, Torch, Transformers, Accelerate, tqdm, and safetensors without versions"
+    },
+    {
+      "id": "optional_kernels_not_locked",
+      "evidence": "optional requirements include lower-bounded flash-linear-attention, unversioned causal-conv1d/mamba-ssm, and a moving FlashAttention feature branch"
+    },
+    {
+      "id": "checkpoint_revisions_unpinned",
+      "evidence": "README links Hugging Face collections and model repositories by name without immutable revisions or file checksums"
+    },
+    {
+      "id": "analysis_not_generation",
+      "evidence": "released scripts consume model paths and prepared TSV/JSONL/NPZ artifacts; they do not reconstruct the trained checkpoint matrix"
+    }
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "root_rights_qualified": true,
+    "analysis_code_available": true,
+    "training_code_available": false,
+    "receptive_constraint_code_available": false,
+    "complete_scaling_data_available": false,
+    "checkpoint_identity_qualified": false,
+    "data_identity_qualified": false,
+    "portable_environment_qualified": false,
+    "behavior_qualified": false,
+    "upstream_execution_authorized": false,
+    "direct_reuse_authorized": false,
+    "conceptual_baseline_required": true,
+    "novelty_gate_changed": false,
+    "next_action": "audit immutable checkpoint repositories and request the missing training/constraint/data artifacts; use paper results as mandatory conceptual baselines without claiming full reproduction"
+  }
+}
