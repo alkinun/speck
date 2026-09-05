@@ -577,6 +577,11 @@
     "sha256": "9c97cf430c2d665a99374d7857acc5578390bba050d2b9d6f79a1aefe4dc4dc5",
     "status": "source_and_config_identity_qualified_root_rights_semantics_data_and_reproduction_blocked"
   },
+  "n1_independent_review_packet": {
+    "packet": "research/paper-1/n1_independent_review_packet_v1.json",
+    "sha256": "63aa99cc22c2d2d8905fe90ae8067cb55c810cc87bb3ef1866d53e8308abd837",
+    "status": "packet_frozen_no_independent_review_completed_no_experiment_authority"
+  },
   "raw_local_readiness": {
     "contract": "research/paper-1/raw_local_readiness_v1.json",
     "sha256": "b75bb4114421a90599a78fbc8a4e188cc31dd38b9377f56d27caee64d5670dc0",

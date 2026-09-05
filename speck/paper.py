@@ -53,6 +53,7 @@ PROGRAM_FILES = (
     "massive_hla_code_audit_v1.json",
     "halo_code_audit_v1.json",
     "kl_selection_code_audit_v1.json",
+    "n1_independent_review_packet_v1.json",
     "adaptive_cache_budget_v1.json",
     "adaptive_cache_gqa_v1.json",
     "adaptive_cache_safeguard_v1.json",
@@ -1663,6 +1664,54 @@ def _validate_kl_selection_code_audit(reference, repository_root, paper_id):
         raise ValueError("KL selector code audit is incomplete")
 
 
+def _validate_n1_independent_review_packet(reference, repository_root, paper_id):
+    _require(reference, {"packet", "sha256", "status"}, "N1 review packet reference")
+    path = repository_root / reference["packet"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("N1 review packet does not match its pin")
+    packet = _load_json(path)
+    inputs = packet.get("inputs", {})
+    claim = packet.get("claim_under_review", {})
+    evidence = packet.get("mandatory_evidence", ())
+    reviewers = packet.get("reviewer_requirements", {})
+    output = packet.get("required_reviewer_output", {})
+    decision = packet.get("decision", {})
+    if (
+        packet.get("format") != "speck_n1_independent_review_packet"
+        or packet.get("format_version") != 1
+        or packet.get("paper_id") != paper_id
+        or packet.get("status") != reference["status"]
+        or claim.get("id") != "N1_teacher_free_from_scratch_interaction_placement_prediction"
+        or claim.get("experiment_authorized") is not False
+        or claim.get("architecture_novelty_established") is not False
+        or reviewers.get("minimum_independent_reviewers") != 2
+        or reviewers.get("separate_reviews_before_reconciliation") is not True
+        or len(reviewers.get("required_expertise", ())) < 2
+        or len(reviewers.get("independence", ())) < 3
+        or len(packet.get("review_questions", ())) < 6
+        or output.get("unanimity_for_preregistration_draft") is not True
+        or len(output.get("fields", ())) < 9
+        or len(evidence) != 7
+        or decision.get("independent_review_completed") is not False
+        or decision.get("n1_retired") is not False
+        or decision.get("n1_retirement_favored_by_internal_audit") is not True
+        or decision.get("n1_preregistration_authorized") is not False
+        or decision.get("n1_experiment_authorized") is not False
+        or decision.get("artifact_download_or_execution_authorized") is not False
+        or decision.get("architecture_freeze_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("N1 independent review packet is incomplete")
+    for entry in inputs.values():
+        source_path = repository_root / entry.get("path", "")
+        if not source_path.is_file() or _file_sha256(source_path) != entry.get("sha256"):
+            raise ValueError("N1 review packet input does not match its pin")
+    for entry in evidence:
+        source_path = repository_root / entry.get("path", "")
+        if not source_path.is_file() or _file_sha256(source_path) != entry.get("sha256"):
+            raise ValueError("N1 review packet evidence does not match its pin")
+
+
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
     _require(
         reference,
@@ -2099,6 +2148,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "massive_hla_code_audit",
             "halo_code_audit",
             "kl_selection_code_audit",
+            "n1_independent_review_packet",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2157,6 +2207,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_kl_selection_code_audit(
         program["kl_selection_code_audit"],
+        repository_root,
+        paper_id,
+    )
+    _validate_n1_independent_review_packet(
+        program["n1_independent_review_packet"],
         repository_root,
         paper_id,
     )

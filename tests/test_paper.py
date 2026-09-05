@@ -63,6 +63,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "massive_hla_code_audit_v1.json",
             "halo_code_audit_v1.json",
             "kl_selection_code_audit_v1.json",
+            "n1_independent_review_packet_v1.json",
             "adaptive_cache_budget_v1.json",
             "adaptive_cache_gqa_v1.json",
             "adaptive_cache_safeguard_v1.json",
