@@ -24,7 +24,9 @@
         "findings/29_paper_1_baseline_preflight.md",
         "findings/30_cuda_decode_failure_classification.md",
         "findings/31_cache_equivalence_v2.md",
+        "findings/32_cache_equivalence_v3_and_preflight_v2.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
+        "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/baseline-preflight.json"
@@ -80,24 +82,28 @@
         "findings/29_paper_1_baseline_preflight.md",
         "findings/30_cuda_decode_failure_classification.md",
         "findings/31_cache_equivalence_v2.md",
+        "findings/32_cache_equivalence_v3_and_preflight_v2.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
+        "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
+        "results/Speck-Paper1/baseline-preflight-v2.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/baseline-preflight.json",
         "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
       ],
       "quality": "Replicated long-range sensitivity, but mean base loss is 0.006909 nats worse and the old strict tie passes only two of three seeds.",
-      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB. Random-weight CUDA full/cached relative RMS is 2.2-3.1x dense; Torch recurrence and removed convolution history retain the failure. In source-balanced v2, all cells pass JS, relative RMS, top-10 overlap, and the 0.5-logit guardrail, but exact free-running and two narrower common-history gates fail qualification.",
+      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB. Failed v1/v2 results are preserved. Powered v3 passes all 60 common-history endpoint cells and 12 hard-guardrail cells on disjoint cases; exact free-running divergence remains a reported risk. Baseline preflight v2 passes.",
       "scale_transfer": "not established",
-      "runtime_support": "Torch reference and isolated FLA kernels exist; full-depth CUDA BF16 cache equivalence is unqualified under both FLA and Torch recurrence, and the hybrid production runtime is incomplete",
+      "runtime_support": "Torch reference and isolated FLA kernels pass; powered trained-topology CUDA cache equivalence and exact-shape Paper 1 preflight v2 pass, while the hybrid production runtime remains incomplete",
       "unresolved_risks": [
         "independent long-context quality",
         "exact eight-record decoding",
         "two-hop composition",
         "training-horizon transfer",
-        "full-depth CUDA chunk-versus-recurrent decode drift"
+        "free-running low-margin path divergence",
+        "production runtime parity"
       ],
-      "next_gate": "remediate CUDA numerical sensitivity and rerun v2 unchanged, or pre-register an adequately powered v3 while preserving the v2 failure; baseline training remains blocked"
+      "next_gate": "close SPE-58 and storage provenance, then execute the frozen three-pair whole-architecture proxy without component attribution"
     },
     {
       "id": "reader_attention_three_cache",

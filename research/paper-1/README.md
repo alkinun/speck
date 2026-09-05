@@ -67,6 +67,9 @@ the final combined model.
 - [`cache_equivalence_v2.json`](cache_equivalence_v2.json) freezes the source-balanced, control-first
   behavioral cache contract. Its checked decision is a failed qualification, not permission to relax
   the original gate.
+- [`cache_equivalence_v3.json`](cache_equivalence_v3.json) freezes the powered, disjoint successor.
+  V3 qualifies common-history CUDA cache behavior while preserving free-running risk and the failed v2
+  decision.
 - [`baseline-audit.json`](../../results/Speck-Paper1/baseline-audit.json) rehashes the five historical
   checkpoints, verifies the materialized pair/data windows, and records the live storage deficit.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
@@ -93,9 +96,9 @@ The checked analysis plan contains the exact CLI input and result contracts.
 
 The five historical sequence controls are now identity-audited as discovery evidence only. A new
 153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
-cells. Its analysis and stopping rule are frozen, but launch remains blocked on the evaluation-manifest
-dependency, a failed native CUDA full-versus-cached decode preflight, and the storage-provisioning
-provenance closeout tracked in SPE-104.
+cells. Its analysis and stopping rule are frozen, and the versioned RTX 3090 training/export/cache
+preflight now passes. Launch remains blocked on the evaluation-manifest dependency and the
+storage-provisioning provenance closeout tracked in SPE-104.
 The current capacity audit passes the 16GiB floor. The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

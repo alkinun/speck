@@ -38,6 +38,7 @@ Read in order:
 30. [29 — Paper 1 baseline hardware preflight failure](29_paper_1_baseline_preflight.md)
 31. [30 — Full-depth CUDA decode failure classification](30_cuda_decode_failure_classification.md)
 32. [31 — Control-first CUDA cache-equivalence v2](31_cache_equivalence_v2.md)
+33. [32 — Powered cache equivalence v3 and baseline preflight v2](32_cache_equivalence_v3_and_preflight_v2.md)
 
 Conventions:
 
@@ -108,3 +109,8 @@ cells pass JS divergence, relative RMS, top-10 overlap, and the 0.5-logit guardr
 0.1-margin misses remain. The five-point exact free-running endpoint passes only 2/12 cells and is
 severely underpowered at 33/11 cases. V2 therefore fails without proving uniform KDA inferiority, and
 training stays blocked pending numerical remediation or a separately powered v3 contract.
+
+Finding 32 powers v3 from v2 variance, freezes 88 new disjoint cases per length, and makes exact
+free-running identity a mandatory risk report rather than a chaotic-path primary. All 60 primary KDA
+cells and 12 hard-guardrail cells pass. A new exact-shape baseline preflight consequently passes while
+preserving failed v1/v2 artifacts. Evaluation-manifest and storage-provenance gates still block runs.

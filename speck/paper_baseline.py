@@ -18,7 +18,7 @@ from speck.dataset import load_manifest, resolve_data_dir
 from speck.model import SpeckForCausalLM
 
 CONFIG_NAMES = ("data", "long_context", "model", "tokenizer", "train")
-PREFLIGHT_RESULT = Path("results/Speck-Paper1/baseline-preflight.json")
+PREFLIGHT_RESULT = Path("results/Speck-Paper1/baseline-preflight-v2.json")
 
 
 def load_matrix(path):
@@ -399,7 +399,7 @@ def audit_baselines(matrix_path, cache_root, runner_revision):
     )
     preflight_valid = (
         preflight.get("format") == "speck_paper_baseline_preflight"
-        and preflight.get("format_version") == 1
+        and preflight.get("format_version") == 2
         and preflight.get("matrix_sha256") == matrix_sha256
         and len(preflight.get("arms", ())) == len(planned["arms"])
     )

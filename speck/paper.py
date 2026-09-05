@@ -150,6 +150,14 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "cache_equivalence_v2_analysis",
             "cache_equivalence_v2_analysis_sha256",
             "cache_equivalence_v2_status",
+            "cache_equivalence_v3_contract",
+            "cache_equivalence_v3_contract_sha256",
+            "cache_equivalence_v3_analysis",
+            "cache_equivalence_v3_analysis_sha256",
+            "cache_equivalence_v3_status",
+            "preflight_v2",
+            "preflight_v2_sha256",
+            "preflight_v2_status",
             "materialization",
             "materialization_sha256",
             "audit",
@@ -174,6 +182,9 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "cache_equivalence_v2_control_lock_sha256",
         ),
         ("cache_equivalence_v2_analysis", "cache_equivalence_v2_analysis_sha256"),
+        ("cache_equivalence_v3_contract", "cache_equivalence_v3_contract_sha256"),
+        ("cache_equivalence_v3_analysis", "cache_equivalence_v3_analysis_sha256"),
+        ("preflight_v2", "preflight_v2_sha256"),
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
     ):
@@ -229,6 +240,25 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         != evidence["cache_equivalence_v2_control_lock_sha256"]
     ):
         raise ValueError("paper baseline cache-equivalence v2 evidence is invalid")
+    cache_v3_contract = _load_json(repository_root / evidence["cache_equivalence_v3_contract"])
+    cache_v3_analysis = _load_json(repository_root / evidence["cache_equivalence_v3_analysis"])
+    preflight_v2 = _load_json(repository_root / evidence["preflight_v2"])
+    if (
+        cache_v3_contract.get("format") != "speck_cache_equivalence_contract"
+        or cache_v3_contract.get("format_version") != 3
+        or cache_v3_analysis.get("format") != "speck_cache_equivalence_analysis"
+        or cache_v3_analysis.get("format_version") != 3
+        or cache_v3_analysis.get("status") != evidence["cache_equivalence_v3_status"]
+        or cache_v3_analysis.get("contract_sha256")
+        != evidence["cache_equivalence_v3_contract_sha256"]
+        or not all(decision.get("passed") for decision in cache_v3_analysis.get("decisions", ()))
+        or preflight_v2.get("format") != "speck_paper_baseline_preflight"
+        or preflight_v2.get("format_version") != 2
+        or preflight_v2.get("status") != evidence["preflight_v2_status"]
+        or preflight_v2.get("prerequisites", {}).get("cache_equivalence_v3", {}).get("sha256")
+        != evidence["cache_equivalence_v3_analysis_sha256"]
+    ):
+        raise ValueError("paper baseline cache-equivalence v3/preflight evidence is invalid")
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
         raise ValueError("paper experiment program references a missing promotion policy")
