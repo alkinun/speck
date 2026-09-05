@@ -1,0 +1,155 @@
+{
+  "format": "speck_cache_equivalence_contract",
+  "format_version": 3,
+  "contract_id": "speck-paper-1-cache-equivalence-v3",
+  "paper_id": "speck-paper-1",
+  "issue": "SPE-107",
+  "status": "powered_prospective_candidate_unseen",
+  "frozen_on": "2026-09-05",
+  "evidence_basis": {
+    "v2_analysis": "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
+    "v2_analysis_sha256": "f0f49a3a696a2b21950afe4cc5ac28ecb4ae12a8b32223f38821458e4e746f0e",
+    "disclosure": "V2 failed and all V2 candidate results are known. V3 uses disjoint token windows, unchanged common-history margins, a checked power calculation, and a new dense-first lock.",
+    "non_reinterpretation": "V2 remains failed. V3 cannot retroactively change any V2 endpoint, result, interval, or decision."
+  },
+  "power_analysis": {
+    "path": "results/Speck-Paper1/cache-equivalence-v3-power.json",
+    "sha256": "9cf528a4b6d28df62fbf30f9aad581075c681644ee5124b31e3012b75c9da309",
+    "power": 0.9,
+    "assumed_true_paired_difference": 0.0,
+    "selected_cases_per_length": 88,
+    "cases_per_source_per_length": 8,
+    "free_running_cases_if_primary": 1683
+  },
+  "case_stream": {
+    "path": "results/Speck-Paper1/cache-equivalence-v3-cases.json",
+    "sha256": "c6a29854b06c080a960d8a93bcd328986eb6a0b49c9cbcc0d829070e288baefe",
+    "stream_sha256": "8e5930f4ec16ea35d31fcf1636c0e9b8547c6f1620026f47c0eccd4c6d6c4fea",
+    "manifest_sha256": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "short_cases": 88,
+    "short_prefix_lengths": [
+      8,
+      64,
+      512
+    ],
+    "proxy_4k_cases": 88,
+    "proxy_4k_prefix_lengths": [
+      4096
+    ],
+    "source_balance": "eight short and eight 4K cases from each of 11 validation sources",
+    "disjointness": "all token windows are disjoint within v3 and from v2"
+  },
+  "checkpoint_source": {
+    "path": "research/paper-1/cuda_decode_trained_sentinel.json",
+    "sha256": "17d4011757425f0f0a7e8a6ceaa98a807069b3ef8f028646f47aae90501e651c",
+    "control": "dense_global_seed42",
+    "candidates": [
+      "kda_seed42",
+      "kda_seed43",
+      "kda_seed44"
+    ],
+    "limitation": "The historical dense control has one seed and a 2.08% parameter mismatch; v3 qualifies runtime behavior, not architecture quality."
+  },
+  "execution": {
+    "device": "cuda",
+    "dtype": "BF16 activations with FP32 parameters and recurrent state where implemented",
+    "maximum_start_temperature_c": 50,
+    "generation_tokens": 32,
+    "top_k": 10,
+    "margin_thresholds": [
+      0.1,
+      0.5
+    ],
+    "batch_sizes": {
+      "8": 11,
+      "64": 11,
+      "512": 11,
+      "4096": 11
+    },
+    "full_path": "recompute the complete common-history prefix at every generation step",
+    "cached_path": "one full prefill followed by one-token stateful decode",
+    "case_failure_policy": "retain non-finite, interrupted, OOM, and unevaluable cases; no silent replacement",
+    "resource_envelope": {
+      "maximum_gpu_minutes_per_checkpoint": 5,
+      "maximum_total_gpu_minutes": 20,
+      "maximum_peak_allocated_bytes": 4294967296,
+      "maximum_total_result_bytes": 30000000
+    }
+  },
+  "endpoints": {
+    "strict_operator_state_export": {
+      "authority": "unchanged prerequisite",
+      "rule": "existing isolated operator, state, gradient, checkpoint, and CPU Transformers export parity thresholds remain mandatory"
+    },
+    "common_history_argmax_disagreement": {
+      "authority": "primary",
+      "unit": "case with 32 nested decode steps",
+      "estimand": "candidate-minus-control disagreement rate with within-case steps kept together",
+      "non_inferiority_margin_absolute": 0.01,
+      "direction": "upper"
+    },
+    "high_margin_argmax_disagreement": {
+      "authority": "primary",
+      "unit": "case with eligible steps pooled inside the case",
+      "full_path_margin_threshold": 0.1,
+      "estimand": "candidate-minus-control disagreement rate among full-path margins at or above 0.1 logits",
+      "non_inferiority_margin_absolute": 0.002,
+      "direction": "upper"
+    },
+    "common_history_js_divergence": {
+      "authority": "primary",
+      "unit": "case mean across 32 steps",
+      "estimand": "candidate-minus-control Jensen-Shannon divergence",
+      "non_inferiority_margin_absolute": 0.0001,
+      "direction": "upper"
+    },
+    "common_history_top10_overlap": {
+      "authority": "primary",
+      "unit": "case mean across 32 steps",
+      "estimand": "candidate-minus-control top-10 set overlap fraction",
+      "non_inferiority_margin_absolute": 0.02,
+      "direction": "lower"
+    },
+    "common_history_relative_rms_ratio": {
+      "authority": "primary",
+      "unit": "case mean across 32 steps",
+      "estimand": "candidate/control mean relative RMS ratio",
+      "maximum_ratio": 1.5,
+      "direction": "upper"
+    },
+    "early_free_running_divergence": {
+      "authority": "descriptive_risk",
+      "unit": "case",
+      "event": "cached and recompute greedy tokens first differ before 32 generated tokens",
+      "estimand": "candidate-minus-control event rate and first-divergence horizon",
+      "non_inferiority_margin_absolute": 0.05,
+      "direction": "reported_without_v3_pass_fail",
+      "reason": "one low-margin tie-break makes subsequent histories incomparable; dense diverges in 15-27% of v2 cases and 90%-powered five-point NI requires up to 1683 cases per seed/length"
+    },
+    "hard_guardrails": [
+      "no non-finite logits or probabilities",
+      "no cached/recompute disagreement when the full-path top-1/top-2 margin is at least 0.5 logits",
+      "every strict operator/state/export prerequisite remains passed"
+    ]
+  },
+  "statistics": {
+    "resampling_unit": "case",
+    "paired_resamples": 10000,
+    "bootstrap_seed": 20260905,
+    "one_sided_confidence_level": 0.95,
+    "planning_power": 0.9,
+    "length_decision": "every primary endpoint and hard guardrail must pass separately at 8, 64, 512, and 4096 tokens",
+    "candidate_decision": "each KDA seed must pass separately; no averaging away a failed seed",
+    "multiplicity": "intersection-union gate across primary endpoints, lengths, and seeds; every primary cell must pass"
+  },
+  "phase_order": [
+    "commit the checked power analysis and disjoint provenance-only case stream",
+    "commit this v3 contract with every margin and resource limit frozen",
+    "evaluate and hash the dense control only",
+    "write the immutable v3 control lock",
+    "evaluate KDA seeds 42/43/44 only after the lock timestamp",
+    "apply paired case bootstrap and hard guardrails while reporting free-running risk without decision authority",
+    "rerun the Paper 1 baseline hardware preflight only if v3 passes"
+  ],
+  "decision_scope": "V3 may qualify common-history full-model CUDA cache behavior for the historical KDA topology or keep it blocked. It cannot alter the v2 failure, weaken strict operator correctness, claim model quality, promote an architecture, or authorize paper-scale training."
+}

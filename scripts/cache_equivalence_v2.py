@@ -77,12 +77,17 @@ def load_json(path):
 
 def load_contract(path):
     path, contract = load_json(path)
+    version = contract.get("format_version")
+    expected_status = {
+        2: "control_calibration_frozen_candidate_unseen",
+        3: "powered_prospective_candidate_unseen",
+    }.get(version)
     if (
         contract.get("format") != "speck_cache_equivalence_contract"
-        or contract.get("format_version") != 2
-        or contract.get("status") != "control_calibration_frozen_candidate_unseen"
+        or expected_status is None
+        or contract.get("status") != expected_status
     ):
-        raise ValueError("cache-equivalence contract must use frozen version 2")
+        raise ValueError("cache-equivalence contract must use a supported frozen version")
     repository_root = path.parents[2]
     pins = (
         ("case_stream", "path", "sha256"),
@@ -92,16 +97,22 @@ def load_contract(path):
         artifact = repository_root / contract[group][path_key]
         if not artifact.is_file() or file_sha256(artifact) != contract[group][hash_key]:
             raise ValueError(f"cache-equivalence {group} does not match its pin")
-    for path_key, hash_key in (
-        ("random_weight_result", "random_weight_result_sha256"),
-        ("trained_sentinel_result", "trained_sentinel_result_sha256"),
-    ):
+    evidence_pins = (
+        (
+            ("random_weight_result", "random_weight_result_sha256"),
+            ("trained_sentinel_result", "trained_sentinel_result_sha256"),
+        )
+        if version == 2
+        else (("v2_analysis", "v2_analysis_sha256"),)
+    )
+    for path_key, hash_key in evidence_pins:
         artifact = repository_root / contract["evidence_basis"][path_key]
         if not artifact.is_file() or file_sha256(artifact) != contract["evidence_basis"][hash_key]:
             raise ValueError(f"cache-equivalence evidence {path_key} does not match its pin")
     _, cases = load_json(repository_root / contract["case_stream"]["path"])
     if (
         cases.get("format") != "speck_cache_equivalence_case_stream"
+        or cases.get("format_version") != version - 1
         or cases.get("case_stream_sha256") != contract["case_stream"]["stream_sha256"]
         or cases.get("manifest_sha256") != contract["case_stream"]["manifest_sha256"]
     ):
@@ -119,6 +130,19 @@ def load_contract(path):
         or statistics_contract.get("one_sided_confidence_level") != 0.95
     ):
         raise ValueError("cache-equivalence statistical contract is invalid")
+    if version == 3:
+        power_path = repository_root / contract.get("power_analysis", {}).get("path", "")
+        if not power_path.is_file() or file_sha256(power_path) != contract["power_analysis"].get(
+            "sha256"
+        ):
+            raise ValueError("cache-equivalence v3 power analysis does not match its pin")
+        _, power = load_json(power_path)
+        if (
+            power.get("format") != "speck_cache_equivalence_power_analysis"
+            or power.get("selected_v3_cases_per_length") != 88
+            or power.get("free_running_cases_required_if_primary") != 1683
+        ):
+            raise ValueError("cache-equivalence v3 power analysis is invalid")
     expected_margins = {
         "common_history_argmax_disagreement": ("non_inferiority_margin_absolute", 0.01),
         "high_margin_argmax_disagreement": ("non_inferiority_margin_absolute", 0.002),
@@ -134,10 +158,15 @@ def load_contract(path):
         contract.get("execution", {}).get("generation_tokens") != 32
         or contract.get("execution", {}).get("top_k") != 10
         or contract.get("execution", {}).get("margin_thresholds") != [0.1, 0.5]
-        or contract.get("case_stream", {}).get("short_cases") != 33
-        or contract.get("case_stream", {}).get("proxy_4k_cases") != 11
+        or contract.get("case_stream", {}).get("short_cases") != (33 if version == 2 else 88)
+        or contract.get("case_stream", {}).get("proxy_4k_cases") != (11 if version == 2 else 88)
     ):
         raise ValueError("cache-equivalence frozen execution geometry changed")
+    free_authority = contract["endpoints"]["early_free_running_divergence"].get(
+        "authority", "primary"
+    )
+    if free_authority != ("primary" if version == 2 else "descriptive_risk"):
+        raise ValueError("cache-equivalence free-running endpoint authority changed")
     return path, contract, cases, checkpoints
 
 
@@ -338,7 +367,7 @@ def _validate_lock(contract_path, contract, lock_path):
     lock_path, lock = load_json(lock_path)
     if (
         lock.get("format") != "speck_cache_equivalence_control_lock"
-        or lock.get("format_version") != 2
+        or lock.get("format_version") != contract["format_version"]
         or lock.get("status") != "dense_control_locked_before_candidate_execution"
         or lock.get("contract_sha256") != file_sha256(contract_path)
         or lock.get("control_checkpoint") != contract["checkpoint_source"]["control"]
@@ -431,7 +460,7 @@ def evaluate(contract_path, checkpoint_id, runner_revision, control_lock_path=No
     torch.cuda.empty_cache()
     return {
         "format": "speck_cache_equivalence_checkpoint_result",
-        "format_version": 2,
+        "format_version": contract["format_version"],
         "status": "complete",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "runner_revision": runner_revision,
@@ -466,7 +495,7 @@ def lock_control(contract_path, control_result_path):
     control_result_path, control = load_json(control_result_path)
     if (
         control.get("format") != "speck_cache_equivalence_checkpoint_result"
-        or control.get("format_version") != 2
+        or control.get("format_version") != contract["format_version"]
         or control.get("status") != "complete"
         or control.get("role") != "control"
         or control.get("checkpoint_id") != contract["checkpoint_source"]["control"]
@@ -475,7 +504,7 @@ def lock_control(contract_path, control_result_path):
         raise ValueError("cache-equivalence dense control result is invalid")
     return {
         "format": "speck_cache_equivalence_control_lock",
-        "format_version": 2,
+        "format_version": contract["format_version"],
         "status": "dense_control_locked_before_candidate_execution",
         "locked_at": datetime.now(timezone.utc).isoformat(),
         "contract_sha256": file_sha256(contract_path),
@@ -556,6 +585,7 @@ def analyze(contract_path, control_lock_path, candidate_result_paths):
         path, result = load_json(path)
         if (
             result.get("format") != "speck_cache_equivalence_checkpoint_result"
+            or result.get("format_version") != contract["format_version"]
             or result.get("status") != "complete"
             or result.get("role") != "candidate"
             or result.get("contract_sha256") != file_sha256(contract_path)
@@ -576,6 +606,8 @@ def analyze(contract_path, control_lock_path, candidate_result_paths):
         "relative_rms": ("common_history_relative_rms_ratio", "ratio"),
         "free": ("early_free_running_divergence", "upper"),
     }
+    if contract["format_version"] == 3:
+        endpoint_rules["free"] = ("early_free_running_divergence", "descriptive")
     decisions = []
     for candidate_index, candidate in enumerate(candidates):
         candidate_by_length = {result["prompt_tokens"]: result for result in candidate["results"]}
@@ -603,9 +635,11 @@ def analyze(contract_path, control_lock_path, candidate_result_paths):
                         bootstrap["lower_one_sided_95_bound"]
                         >= -rule["non_inferiority_margin_absolute"]
                     )
-                else:
+                elif direction == "ratio":
                     bound = bootstrap["ratio_upper_one_sided_95_bound"]
                     passed = bound is not None and bound <= rule["maximum_ratio"]
+                else:
+                    passed = None
                 endpoints[rule_name] = {**bootstrap, "passed": passed}
             high_margin_half = candidate_by_length[length]["summary"]["high_margin"]["0.5"]
             hard_guardrail = high_margin_half["disagreements"] == 0
@@ -615,7 +649,11 @@ def analyze(contract_path, control_lock_path, candidate_result_paths):
                     "endpoints": endpoints,
                     "high_margin_0.5_guardrail_pass": hard_guardrail,
                     "passed": hard_guardrail
-                    and all(result["passed"] for result in endpoints.values()),
+                    and all(
+                        result["passed"]
+                        for result in endpoints.values()
+                        if result["passed"] is not None
+                    ),
                 }
             )
         decisions.append(
@@ -627,7 +665,7 @@ def analyze(contract_path, control_lock_path, candidate_result_paths):
         )
     return {
         "format": "speck_cache_equivalence_analysis",
-        "format_version": 2,
+        "format_version": contract["format_version"],
         "status": "qualified" if all(result["passed"] for result in decisions) else "failed",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "contract_sha256": file_sha256(contract_path),

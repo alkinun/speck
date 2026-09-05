@@ -9,6 +9,7 @@ from scripts import cache_equivalence_v2 as v2
 
 root = Path(__file__).parents[1]
 contract_path = root / "research" / "paper-1" / "cache_equivalence_v2.json"
+v3_contract_path = root / "research" / "paper-1" / "cache_equivalence_v3.json"
 
 
 def test_checked_cache_equivalence_v2_is_control_first_and_pinned():
@@ -24,6 +25,18 @@ def test_checked_cache_equivalence_v2_is_control_first_and_pinned():
     assert contract["case_stream"]["proxy_4k_cases"] == 11
     assert len(cases["source_ids"]) == 11
     assert len(checkpoints["checkpoints"]) == 4
+
+
+def test_checked_cache_equivalence_v3_is_powered_disjoint_and_preserves_v2():
+    _, contract, cases, _ = v2.load_contract(v3_contract_path)
+
+    assert contract["power_analysis"]["selected_cases_per_length"] == 88
+    assert contract["case_stream"]["disjointness"]
+    assert cases["format_version"] == 2
+    assert contract["endpoints"]["early_free_running_divergence"]["authority"] == (
+        "descriptive_risk"
+    )
+    assert contract["evidence_basis"]["non_reinterpretation"]
 
 
 def test_cache_equivalence_v2_rejects_margin_change_after_freeze(tmp_path):
