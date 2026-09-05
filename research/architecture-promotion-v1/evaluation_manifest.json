@@ -94,13 +94,13 @@
   "external_suites": [
     {
       "id": "ruler",
-      "status": "source_qualified_data_blocked",
+      "status": "source_qualified_transitive_data_qualified_case_generation_blocked",
       "repository": "https://github.com/NVIDIA/RULER",
       "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
       "contract": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "contract_sha256": "6164325b706cee8726df49c2fc0bb84b31795d260fa283b360ad5f89ed2781a5",
+      "contract_sha256": "c4272d700c7e6df4c6c408e19e519a367151f3245ab1f101ed0d5cb502994bdd",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "228ddbe0f019fec4f0f4b6f73ca559b825147a63df90b340b7402b758e5fb888",
+      "source_qualification_sha256": "f7caf27ae31156a428eea648fab296150115bb3e08b10d1e23f20a4216b9ec3f",
       "model_adapter_qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
       "model_adapter_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
       "lengths": [
@@ -123,7 +123,7 @@
       "contract": "research/architecture-promotion-v1/external/nolima.json",
       "contract_sha256": "e0c47bb0a7da355f9eec89087c469b7bea9a342301bb49eaf4ebc788b03ee1d7",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "228ddbe0f019fec4f0f4b6f73ca559b825147a63df90b340b7402b758e5fb888",
+      "source_qualification_sha256": "f7caf27ae31156a428eea648fab296150115bb3e08b10d1e23f20a4216b9ec3f",
       "model_adapter_qualification": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
       "model_adapter_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
       "lengths": [
@@ -144,7 +144,7 @@
       "contract": "research/architecture-promotion-v1/external/helmet.json",
       "contract_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
       "source_qualification": "results/Speck-Architecture-Promotion-v1/external-source-qualification.json",
-      "source_qualification_sha256": "228ddbe0f019fec4f0f4b6f73ca559b825147a63df90b340b7402b758e5fb888",
+      "source_qualification_sha256": "f7caf27ae31156a428eea648fab296150115bb3e08b10d1e23f20a4216b9ec3f",
       "lengths": [
         8192,
         16384,

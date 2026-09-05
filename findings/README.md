@@ -39,6 +39,7 @@ Read in order:
 31. [30 — Full-depth CUDA decode failure classification](30_cuda_decode_failure_classification.md)
 32. [31 — Control-first CUDA cache-equivalence v2](31_cache_equivalence_v2.md)
 33. [32 — Powered cache equivalence v3 and baseline preflight v2](32_cache_equivalence_v3_and_preflight_v2.md)
+34. [33 — RULERv1 offline source-bundle qualification](33_ruler_offline_source_bundle.md)
 
 Conventions:
 
@@ -114,3 +115,8 @@ Finding 32 powers v3 from v2 variance, freezes 88 new disjoint cases per length,
 free-running identity a mandatory risk report rather than a chaotic-path primary. All 60 primary KDA
 cells and 12 hard-guardrail cells pass. A new exact-shape baseline preflight consequently passes while
 preserving failed v1/v2 artifacts. Evaluation-manifest and storage-provenance gates still block runs.
+
+Finding 33 audits RULERv1's hidden network/package dependencies and replaces them with a 99MB retained
+offline bundle: 218 essay sources, the consolidated essay artifact, SQuAD, HotpotQA, the English-word
+LFS payload, Wonderwords assets, and NLTK archives. Mixed-rights payloads stay outside Git. Transitive
+sources now qualify, while official task/length case generation and candidate execution remain blocked.

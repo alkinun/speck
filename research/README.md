@@ -60,9 +60,22 @@ proves upstream commit and source-file identity. The separate
 [endpoint qualification](../results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json)
 binds an attested instruction export to the exact serialized OpenAI request shapes used by RULER's
 pinned NeMo-Skills adapter and NoLiMa. It does not qualify long-context capability or serving speed.
-RULER remains blocked on its transitive data pins; NoLiMa requires acceptance of a non-commercial
+RULER's transitive source bundle is now locally retained and content-pinned, including dynamic essay
+canonicalization, SQuAD, HotpotQA, word lists, NLTK resources, and an exact dependency group. Its
+official task/length cases are not generated yet. NoLiMa requires acceptance of a non-commercial
 research license and a data manifest; HELMET remains blocked on a separate 34GB data volume and its
 own model-adapter smoke.
+
+Build or revalidate the non-redistributable RULER source bundle with:
+
+```bash
+uv run --extra cpu --group ruler python -m scripts.ruler_source_prepare \
+  --generator-checkout <RULER-c3f5e3b4-checkout> \
+  --needle-checkout <LLMTest_NeedleInAHaystack-021385d-checkout> \
+  --nltk-data <pinned-nltk-download-directory> \
+  --bundle ~/.cache/speck/evaluations/ruler-v1-sources-c3f5e3b4 \
+  --manifest results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json --check
+```
 
 Reproduce the endpoint protocol check for an attested instruction export with:
 

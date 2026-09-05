@@ -7,8 +7,8 @@
   "suites": {
     "ruler": {
       "config": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "config_sha256": "6164325b706cee8726df49c2fc0bb84b31795d260fa283b360ad5f89ed2781a5",
-      "status": "source_qualified_data_blocked",
+      "config_sha256": "c4272d700c7e6df4c6c408e19e519a367151f3245ab1f101ed0d5cb502994bdd",
+      "status": "source_qualified_transitive_data_qualified_case_generation_blocked",
       "sources": [
         {
           "id": "ruler_pipeline",
@@ -36,8 +36,14 @@
         "sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
         "status": "endpoint_protocol_qualified_candidate_export_blocked"
       },
+      "data_source_qualification": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json",
+        "sha256": "9d207d1c6e8a6c2a7ace67c953604feabce0b6c0c307473497d19f022d45d1ce",
+        "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
+        "status": "offline_sources_complete_unredistributable"
+      },
       "blockers": [
-        "the NeMo-Skills preparer has unpinned transitive data downloads",
+        "official cases for every declared task/length cell are not generated or hashed",
         "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
@@ -95,7 +101,7 @@
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and required file hashes qualify. The shared serialized OpenAI endpoint protocol qualifies for RULER and NoLiMa, but no external suite has data or execution qualification and none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive network/package inputs now have a locally retained offline manifest, and the shared serialized OpenAI endpoint protocol qualifies for RULER and NoLiMa. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

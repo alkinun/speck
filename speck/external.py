@@ -106,6 +106,53 @@ def validate_external_suite(path):
     for section in ("data", "model_adapter"):
         if "blocked" not in config[section].get("status", ""):
             raise ValueError(f"external suite {section} must state its unresolved blocker")
+    data = config["data"]
+    if config["suite_id"] == "ruler" and data["status"].startswith("source_bundle_qualified"):
+        _require(
+            data,
+            {
+                "source_manifest",
+                "source_manifest_sha256",
+                "bundle_identity_sha256",
+                "generator_revision",
+                "needle_repository_revision",
+                "environment_group",
+                "source_assets",
+                "licenses",
+            },
+            "qualified RULER source bundle",
+        )
+        repository_root = path.parents[3]
+        source_manifest_path = repository_root / data["source_manifest"]
+        if (
+            not source_manifest_path.is_file()
+            or _file_sha256(source_manifest_path) != data["source_manifest_sha256"]
+        ):
+            raise ValueError("RULER source manifest does not match its pin")
+        source_manifest = _load_json(source_manifest_path)
+        asset_ids = {asset.get("id") for asset in source_manifest.get("assets", ())}
+        if (
+            source_manifest.get("format") != "speck_ruler_source_manifest"
+            or source_manifest.get("status") != "offline_sources_complete_unredistributable"
+            or source_manifest.get("bundle_identity_sha256") != data["bundle_identity_sha256"]
+            or source_manifest.get("generator", {}).get("revision") != data["generator_revision"]
+            or source_manifest.get("needle_repository", {}).get("revision")
+            != data["needle_repository_revision"]
+            or len(source_manifest.get("paul_graham_sources", ()))
+            != data["source_assets"]["paul_graham_source_records"]
+            or asset_ids != {"english_words", "squad_v2_dev", "hotpotqa_dev_distractor"}
+            or source_manifest.get("paul_graham_output", {}).get("sha256")
+            != data["source_assets"]["paul_graham_essays_sha256"]
+        ):
+            raise ValueError("RULER source manifest is invalid")
+        manifest_assets = {asset["id"]: asset["sha256"] for asset in source_manifest["assets"]}
+        expected_assets = {
+            "english_words": data["source_assets"]["english_words_sha256"],
+            "squad_v2_dev": data["source_assets"]["squad_v2_dev_sha256"],
+            "hotpotqa_dev_distractor": data["source_assets"]["hotpotqa_dev_distractor_sha256"],
+        }
+        if manifest_assets != expected_assets:
+            raise ValueError("RULER source asset hashes do not match")
     adapter = config["model_adapter"]
     if adapter["status"].startswith("endpoint_protocol_qualified"):
         _require(

@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "ruler",
   "suite_version": "rulerv1-ns",
-  "status": "source_qualified_data_blocked",
+  "status": "source_qualified_transitive_data_qualified_case_generation_blocked",
   "upstream": {
     "id": "ruler_pipeline",
     "repository": "https://github.com/NVIDIA/RULER.git",
@@ -73,9 +73,27 @@
     "staging": "run one length at a time; advance only after the current paired capability gate"
   },
   "data": {
-    "status": "blocked_unpinned_transitive_downloads",
-    "reason": "the pinned NeMo-Skills preparer clones RULER main and downloads Paul Graham, SQuAD, and HotpotQA artifacts without immutable content pins",
-    "qualification_rule": "preseed the exact ruler_data_generator revision and record SHA-256 for every downloaded source before generating cases"
+    "status": "source_bundle_qualified_case_generation_blocked",
+    "source_manifest": "results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json",
+    "source_manifest_sha256": "9d207d1c6e8a6c2a7ace67c953604feabce0b6c0c307473497d19f022d45d1ce",
+    "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
+    "generator_revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+    "needle_repository_revision": "021385d68d3202e37893e9d3cd29011c569abe30",
+    "environment_group": "ruler",
+    "source_assets": {
+      "paul_graham_essays_sha256": "8d31e1b660e0f2180bcca6d238e18f77921df9d158611582b860da1762b6d3dd",
+      "squad_v2_dev_sha256": "80a5225e94905956a6446d296ca1093975c4d3b3260f1d6c8f68bc2ab77182d8",
+      "hotpotqa_dev_distractor_sha256": "e3da074df24e8369009918aa5cdbdd254dadcde4c63f7569d36afd6f2268caa8",
+      "english_words_sha256": "affcd6d45fdf3cc843d585c99c97ad615094e760e6c4756b654bab6c73bc2eca",
+      "paul_graham_source_records": 218
+    },
+    "licenses": {
+      "squad_v2": "CC-BY-SA-4.0",
+      "hotpotqa": "CC-BY-SA-4.0",
+      "paul_graham": "mixed upstream essay rights; local research cache only; redistribution forbidden"
+    },
+    "reason": "all network and package inputs are pinned in an offline local bundle; official cases at every declared length are not generated or hashed yet",
+    "qualification_rule": "generate all declared task/length cells from the offline bundle, hash inputs/prompts/outputs, and prove the runner makes no network request"
   },
   "model_adapter": {
     "mode": "pinned NeMo-Skills OpenAI chat adapter to the serialized local Speck evaluation endpoint",
