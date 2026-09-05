@@ -26,7 +26,9 @@ PROGRAM_FILES = (
     "novelty_landscape_v1.json",
     "novelty_landscape_v2.json",
     "novelty_code_availability_v1.json",
+    "novelty_code_availability_v2.json",
     "adakv_code_audit_v1.json",
+    "headkv_code_audit_v1.json",
     "adaptive_cache_budget_v1.json",
     "adaptive_cache_gqa_v1.json",
     "adaptive_cache_safeguard_v1.json",
@@ -1164,11 +1166,19 @@ def _validate_novelty_code_availability(reference, repository_root, paper_id):
     sources = {source.get("id"): source for source in audit.get("sources", ())}
     summary = audit.get("summary", {})
     decision = audit.get("decision", {})
+    predecessor = audit.get("predecessor", {})
+    landscape = audit.get("landscape", {})
     if (
         audit.get("format") != "speck_novelty_code_availability_audit"
-        or audit.get("format_version") != 1
+        or audit.get("format_version") != 2
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
+        or predecessor.get("path") != "research/paper-1/novelty_code_availability_v1.json"
+        or not (repository_root / predecessor["path"]).is_file()
+        or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
+        or landscape.get("path") != "research/paper-1/novelty_landscape_v2.json"
+        or not (repository_root / landscape["path"]).is_file()
+        or _file_sha256(repository_root / landscape["path"]) != landscape.get("sha256")
         or set(sources)
         != {
             "flashmorph",
@@ -1177,25 +1187,38 @@ def _validate_novelty_code_availability(reference, repository_root, paper_id):
             "squeezeattention",
             "budgeted_attention_allocation",
             "alternating_sparse_attention",
+            "headkv",
+            "kv_compression_physics",
         }
-        or sources["flashmorph"].get("revision")
-        != "b9b635379380fc4774d3e54eefd2fc6f10c89ee2"
-        or sources["flashmorph"].get("code_like_files") != 0
         or sources["adakv"].get("revision")
         != "04497abac4c1a58426f3daf1014578990e225cc5"
-        or sources["adakv"].get("code_like_files") != 15
-        or len(sources["adakv"].get("license_files", ())) != 2
-        or sources["squeezeattention"].get("revision")
-        != "a1933d18b09c668312cbabdfd7b1fa73888c0f6f"
-        or sources["squeezeattention"].get("root_license_files")
-        or summary.get("sources") != 6
-        or summary.get("immutable_repository_snapshots") != 3
-        or summary.get("repositories_with_code") != 2
+        or sources["headkv"].get("revision")
+        != "0862a0955fe82e9ff611d59541918e02c5def625"
+        or sources["headkv"].get("files") != 426
+        or sources["headkv"].get("source_code_files") != 37
+        or sources["headkv"].get("data_like_files") != 376
+        or sources["headkv"].get("root_license_files")
+        or sources["headkv"].get("audit") != "research/paper-1/headkv_code_audit_v1.json"
+        or not (repository_root / sources["headkv"]["audit"]).is_file()
+        or _file_sha256(repository_root / sources["headkv"]["audit"])
+        != sources["headkv"].get("audit_sha256")
+        or sources["kv_compression_physics"].get("dedicated_repository") is not None
+        or sources["kv_compression_physics"].get("named_runtime_revision_in_paper") is not None
+        or summary.get("sources") != 8
+        or summary.get("immutable_repository_snapshots") != 4
+        or summary.get("repositories_with_code") != 3
         or summary.get("repositories_with_root_license_covering_code") != 1
+        or summary.get("new_source_reproduction_paths_qualified") != 0
+        or summary.get("metadata_only_tree_clones") != 1
+        or summary.get("working_trees_checked_out") != 0
+        or summary.get("third_party_code_imported") is not False
         or summary.get("third_party_code_executed") is not False
-        or summary.get("code_payloads_cloned") is not False
-        or decision.get("adakv_deeper_audit_authorized") is not True
-        or decision.get("adakv_execution_authorized") is not False
+        or decision.get("headkv_source_identity_qualified") is not True
+        or decision.get("headkv_execution_authorized") is not False
+        or decision.get("headkv_reuse_authorized") is not False
+        or decision.get("routing_paper_reproduction_authorized") is not False
+        or decision.get("current_KVPress_substitution_authorized") is not False
+        or decision.get("n2_empirical_protocol_authorized") is not False
         or decision.get("novelty_gate_changed") is not False
         or decision.get("architecture_freeze_authorized") is not False
     ):
@@ -1248,6 +1271,70 @@ def _validate_adakv_code_audit(reference, repository_root, paper_id):
         or decision.get("novelty_gate_changed") is not False
     ):
         raise ValueError("Ada-KV code audit is incomplete")
+
+
+def _validate_headkv_code_audit(reference, repository_root, paper_id):
+    _require(reference, {"audit", "sha256", "status"}, "HeadKV code reference")
+    path = repository_root / reference["audit"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("HeadKV code audit does not match its pin")
+    audit = _load_json(path)
+    repository = audit.get("repository", {})
+    licenses = audit.get("licenses", ())
+    files = {entry.get("path"): entry for entry in audit.get("pinned_files", ())}
+    artifacts = audit.get("artifact_availability", {})
+    decision = audit.get("decision", {})
+    if (
+        audit.get("format") != "speck_headkv_code_audit"
+        or audit.get("format_version") != 1
+        or audit.get("paper_id") != paper_id
+        or audit.get("status") != reference["status"]
+        or repository.get("revision") != "0862a0955fe82e9ff611d59541918e02c5def625"
+        or repository.get("files") != 426
+        or repository.get("source_code_files") != 37
+        or repository.get("data_like_files") != 376
+        or repository.get("tree_complete") is not True
+        or repository.get("working_tree_checked_out") is not False
+        or repository.get("third_party_code_imported") is not False
+        or repository.get("third_party_code_executed") is not False
+        or len(licenses) != 1
+        or licenses[0].get("path") != "csrc/LICENSE"
+        or licenses[0].get("sha256")
+        != "9a429046085cacdc4f32f700f45534fb9c48a54ad6a4b578f7c0106df8c333e5"
+        or set(files)
+        != {
+            "README.md",
+            "setup.py",
+            "headkv/monkeypatch.py",
+            "headkv/snapkv_utils.py",
+            "Important_Head/retrieval_head_detection_r2.py",
+            "run_babilong.py",
+            "eval_babilong.py",
+            "test.sh",
+        }
+        or len(audit.get("environment_findings", ())) < 5
+        or len(audit.get("runtime_findings", ())) < 5
+        or len(audit.get("model_and_data_findings", ())) < 5
+        or len(audit.get("clean_room_requirements", ())) < 8
+        or artifacts.get("head_profiles_present") != 4
+        or artifacts.get("native_binary_files_present") != 2
+        or artifacts.get("root_license_present") is not False
+        or artifacts.get("dependency_lock_present") is not False
+        or artifacts.get("assertion_test_suite_present") is not False
+        or decision.get("source_identity_qualified") is not True
+        or decision.get("tree_inventory_qualified") is not True
+        or decision.get("root_rights_qualified") is not False
+        or decision.get("portable_environment_qualified") is not False
+        or decision.get("model_identity_qualified") is not False
+        or decision.get("data_identity_and_rights_qualified") is not False
+        or decision.get("profile_provenance_qualified") is not False
+        or decision.get("fixture_behavior_qualified") is not False
+        or decision.get("upstream_execution_authorized") is not False
+        or decision.get("reuse_in_speck_authorized") is not False
+        or decision.get("clean_room_equation_reference_authorized") is not False
+        or decision.get("novelty_gate_changed") is not False
+    ):
+        raise ValueError("HeadKV code audit is incomplete")
 
 
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
@@ -1679,6 +1766,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "novelty_landscape",
             "novelty_code_availability",
             "adakv_code_audit",
+            "headkv_code_audit",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -1702,6 +1790,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_adakv_code_audit(
         program["adakv_code_audit"],
+        repository_root,
+        paper_id,
+    )
+    _validate_headkv_code_audit(
+        program["headkv_code_audit"],
         repository_root,
         paper_id,
     )

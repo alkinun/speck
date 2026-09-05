@@ -86,6 +86,7 @@ Read in order:
 78. [77 — Adaptive cache safeguard apportionment reference](77_adaptive_cache_safeguard_reference.md)
 79. [78 — Adaptive cache salience-acquisition readiness](78_adaptive_cache_salience_readiness.md)
 80. [79 — N2 direct-overlap audit and scope reduction](79_n2_direct_overlap_audit.md)
+81. [80 — HeadKV and routing-artifact availability audit](80_n2_code_availability.md)
 
 Conventions:
 
@@ -420,3 +421,9 @@ retention, accessibility, and utilization with GER, consensus, token graphs, and
 now concedes all of that and survives only as conjunctive availability of every independently necessary
 route/payload group, with incremental held-out prediction and fixed-budget single-source restoration.
 No novelty is established.
+
+Finding 80 pins HeadKV at `0862a095` and records 426 files, 37 source files, 376 data-like files, no
+root license, an unpinned/misnamed environment, global monkeypatches, native binaries, unqualified
+profiles/data, and no assertion suite. The routing paper declares no dedicated repository/data or
+immutable KVPress/Expected-Attention revisions. Neither reproduction path is authorized; novelty status
+does not change.

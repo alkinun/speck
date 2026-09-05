@@ -460,6 +460,11 @@
     "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
     "status": "design_blocked_parent_and_compressor_unselected"
   },
+  "headkv_code_audit": {
+    "audit": "research/paper-1/headkv_code_audit_v1.json",
+    "sha256": "103bdce02bdaf742c569f87d3f673503f9d6978a2a93b9d5fae312728ee4307a",
+    "status": "immutable_source_audited_rights_environment_data_and_execution_blocked"
+  },
   "interaction_program": {
     "claim_ids": [
       "C0",
@@ -510,9 +515,9 @@
     "time and energy to locked quality"
   ],
   "novelty_code_availability": {
-    "audit": "research/paper-1/novelty_code_availability_v1.json",
-    "sha256": "9edd229fdc8913882f8b338fad2205d51c78635e28c6134a3fa28ce84289b640",
-    "status": "one_code_rights_path_qualified_five_reproduction_paths_blocked"
+    "audit": "research/paper-1/novelty_code_availability_v2.json",
+    "sha256": "15198b4fdb34c12e78d0ee6fede48fcb3ce4609270ba9bc6e24feaec49d8e2fd",
+    "status": "eight_sources_one_root_rights_path_headkv_and_routing_reproduction_blocked"
   },
   "novelty_landscape": {
     "audit": "research/paper-1/novelty_landscape_v2.json",

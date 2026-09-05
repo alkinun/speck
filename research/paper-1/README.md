@@ -109,9 +109,15 @@ the final combined model.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.
+- [`novelty_code_availability_v2.json`](novelty_code_availability_v2.json) extends that inventory to
+  HeadKV-R2 and the routing study: HeadKV has no root license or reproducible environment/data/profile
+  chain, while the routing paper declares no dedicated immutable artifact.
 - [`adakv_code_audit_v1.json`](adakv_code_audit_v1.json) statically audits that pinned path and records
   its environment, native-build, monkeypatch, cache, remote-code/data, and test blockers before any
   clean-room reference or upstream execution.
+- [`headkv_code_audit_v1.json`](headkv_code_audit_v1.json) pins HeadKV's tree, selected source hashes,
+  narrow CUDA license, embedded data/profiles, environment, model, rounding, monkeypatch, native-binary,
+  and missing-test blockers without importing or executing the repository.
 - [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
   within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
   reduction, model integration, training, novelty, and architecture claims blocked.

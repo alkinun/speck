@@ -1,0 +1,138 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 2,
+  "audit_id": "speck-paper-1-novelty-code-availability-v2",
+  "paper_id": "speck-paper-1",
+  "status": "eight_sources_one_root_rights_path_headkv_and_routing_reproduction_blocked",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_code_availability_v1.json",
+    "sha256": "9edd229fdc8913882f8b338fad2205d51c78635e28c6134a3fa28ce84289b640",
+    "sources_inherited": 6
+  },
+  "landscape": {
+    "path": "research/paper-1/novelty_landscape_v2.json",
+    "sha256": "15fb8a2633bc143416ffd19af3e8e845ba45a180029cce3e2857b07f584cfd74"
+  },
+  "method": "Resolve public repository HEADs without executing code, enumerate immutable trees, inspect only selected text blobs, identify license scope and artifact dependencies, and preserve absent rights/provenance as blockers.",
+  "sources": [
+    {
+      "id": "flashmorph",
+      "paper": "arxiv_2606_30562v1",
+      "inherited_from_v1": true,
+      "status": "paper_assets_only_code_and_license_unavailable"
+    },
+    {
+      "id": "sparse_prefix_caching",
+      "paper": "arxiv_2605_05219v1",
+      "inherited_from_v1": true,
+      "status": "no_official_implementation_declared_in_paper"
+    },
+    {
+      "id": "adakv",
+      "paper": "arxiv_2407_11550v5",
+      "inherited_from_v1": true,
+      "repository": "https://github.com/FFY0/AdaKV",
+      "revision": "04497abac4c1a58426f3daf1014578990e225cc5",
+      "status": "immutable_code_and_root_MIT_available_upstream_execution_blocked_clean_room_references_only"
+    },
+    {
+      "id": "squeezeattention",
+      "paper": "arxiv_2404_04793v2",
+      "inherited_from_v1": true,
+      "status": "code_available_repository_root_license_missing"
+    },
+    {
+      "id": "budgeted_attention_allocation",
+      "paper": "arxiv_2605_05697v1",
+      "inherited_from_v1": true,
+      "status": "no_official_implementation_declared_in_paper"
+    },
+    {
+      "id": "alternating_sparse_attention",
+      "paper": "arxiv_2511_00819v1",
+      "inherited_from_v1": true,
+      "status": "pseudocode_available_dedicated_implementation_not_declared"
+    },
+    {
+      "id": "headkv",
+      "paper": "arxiv_2410_19258v4",
+      "repository": "https://github.com/FYYFU/HeadKV",
+      "revision": "0862a0955fe82e9ff611d59541918e02c5def625",
+      "revision_date": "2025-03-10T16:14:25-07:00",
+      "files": 426,
+      "source_code_files": 37,
+      "data_like_files": 376,
+      "root_license_files": [],
+      "subtree_license_files": [
+        {
+          "path": "csrc/LICENSE",
+          "license": "MIT",
+          "sha256": "9a429046085cacdc4f32f700f45534fb9c48a54ad6a4b578f7c0106df8c333e5",
+          "scope": "66RING-derived CUDA subtree only"
+        }
+      ],
+      "prebuilt_native_binaries": 2,
+      "dependency_lock_present": false,
+      "assertion_test_suite_present": false,
+      "audit": "research/paper-1/headkv_code_audit_v1.json",
+      "audit_sha256": "103bdce02bdaf742c569f87d3f673503f9d6978a2a93b9d5fae312728ee4307a",
+      "status": "immutable_tree_available_root_rights_environment_data_profiles_and_execution_blocked",
+      "decision": "retain as a mandatory conceptual baseline; do not execute, reuse, or treat committed profiles/data as qualified evidence"
+    },
+    {
+      "id": "kv_compression_physics",
+      "paper": "arxiv_2603_01426v1",
+      "dedicated_repository": null,
+      "dedicated_data_artifact": null,
+      "named_runtime": "https://github.com/NVIDIA/kvpress",
+      "named_runtime_revision_in_paper": null,
+      "named_scoring_dependency_revision_in_paper": null,
+      "observed_runtime_head_not_paper_identity": "7f359b84b22f591f21af7394046106ed9b18d916",
+      "status": "no_dedicated_code_data_or_immutable_runtime_identity_declared",
+      "decision": "full reproduction is blocked; current KVPress HEAD cannot be substituted for the unpinned historical experiment environment"
+    }
+  ],
+  "headkv_static_audit_summary": {
+    "root_rights_qualified": false,
+    "portable_environment_qualified": false,
+    "model_identity_qualified": false,
+    "data_identity_and_rights_qualified": false,
+    "profile_provenance_qualified": false,
+    "budget_conservation_qualified": false,
+    "behavior_qualified": false,
+    "upstream_execution_authorized": false
+  },
+  "routing_paper_artifact_summary": {
+    "paper_version_qualified": true,
+    "dedicated_repository_found": false,
+    "dedicated_dataset_found": false,
+    "immutable_KVPress_revision_declared": false,
+    "immutable_Expected_Attention_revision_declared": false,
+    "per_example_results_declared": false,
+    "execution_authorized": false
+  },
+  "summary": {
+    "sources": 8,
+    "immutable_repository_snapshots": 4,
+    "repositories_with_code": 3,
+    "repositories_with_root_license_covering_code": 1,
+    "new_source_reproduction_paths_qualified": 0,
+    "metadata_only_tree_clones": 1,
+    "working_trees_checked_out": 0,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false,
+    "novelty_status_changed": false
+  },
+  "decision": {
+    "headkv_source_identity_qualified": true,
+    "headkv_execution_authorized": false,
+    "headkv_reuse_authorized": false,
+    "routing_paper_reproduction_authorized": false,
+    "current_KVPress_substitution_authorized": false,
+    "n2_empirical_protocol_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "continue backward/forward citation review and seek author-pinned artifacts; use clean-room diagnostic definitions only after the parent checkpoint and source-labeled data contracts are frozen"
+  }
+}
