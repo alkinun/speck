@@ -83,13 +83,22 @@ Paper 1 baseline results use the checked `research/paper-1/baseline_analysis.jso
 each complete final checkpoint, lock the quality target from all three dense controls before creating
 candidate result records, and then run the six-cell analysis:
 
+Keep the CUDA training environment resident while the control sequence is active. Alternating
+`--extra gpu` and `--extra cpu` against the same project environment makes uv replace the PyTorch
+stack and can rematerialize several gigabytes between runs. Use a separate ignored CPU environment
+for collection and validation; this changes only the dependency location, not the frozen command,
+inputs, or result contract:
+
 ```bash
-uv run --extra cpu python -m scripts.paper_baseline_analyze collect \
+UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu \
+  python -m scripts.paper_baseline_analyze collect \
   research/paper-1/baseline_analysis.json <run-experiment> --output <run-result.json>
-uv run --extra cpu python -m scripts.paper_baseline_analyze lock-target \
+UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu \
+  python -m scripts.paper_baseline_analyze lock-target \
   research/paper-1/baseline_analysis.json <three-control-results...> \
   --output <target-lock.json>
-uv run --extra cpu python -m scripts.paper_baseline_analyze analyze \
+UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu \
+  python -m scripts.paper_baseline_analyze analyze \
   research/paper-1/baseline_analysis.json <all-six-results...> \
   --target-lock <target-lock.json> --output <analysis.json>
 ```
