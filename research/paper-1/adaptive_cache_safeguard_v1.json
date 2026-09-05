@@ -1,0 +1,146 @@
+{
+  "format": "speck_adaptive_cache_safeguard_protocol",
+  "format_version": 1,
+  "protocol_id": "speck-paper-1-adaptive-cache-safeguard-v1",
+  "paper_id": "speck-paper-1",
+  "status": "frozen_before_local_implementation",
+  "frozen_on": "2026-09-06",
+  "purpose": "Define and qualify a deterministic conservation-preserving integer safeguard between an adaptive physical-head allocation and its exact uniform control without inheriting the Ada-KV paper/code coefficient ambiguity.",
+  "sources": [
+    {
+      "paper": "https://arxiv.org/abs/2407.11550v5",
+      "section": "Algorithm 2",
+      "local_note": "papers/25_adakv.md",
+      "local_note_sha256": "686de1c604bca4ffc9dc72b1078086b26910de2443a4ef47d155effde4861e5d",
+      "use": "motivates a uniform-allocation safeguard but leaves integerization unresolved"
+    },
+    {
+      "audit": "research/paper-1/adakv_code_audit_v1.json",
+      "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
+      "pinned_source": "adaptive_snapkv/monkeypatch/snapkv_utils.py",
+      "pinned_source_sha256": "16ae10649a54fd5dad7d8a177d153d6d23096ff65b3061b07801155a658d14be",
+      "use": "pins the code-like independently rounded safeguard that fails the registered six-slot witness"
+    },
+    {
+      "protocol": "research/paper-1/adaptive_cache_gqa_v1.json",
+      "protocol_sha256": "afb1fcb959ea626145af281409de9ff6f0089d843cea02124f0b9f1f7e5bf7e4",
+      "qualification": "results/Speck-Paper1/adaptive-cache-gqa-qualified.json",
+      "qualification_sha256": "d3fc660092865d87a34b7c4d5960d6e60c365899506898faf9a8527c8e8597a7",
+      "use": "predecessor qualification and frozen safeguard counterexample"
+    }
+  ],
+  "naming": {
+    "uniform_fraction": "lambda in [0,1], explicitly the fraction moved toward uniform allocation",
+    "forbidden_alias": "alpha is not used because the paper and audited code attach the reported 0.2 coefficient to opposite mixture terms"
+  },
+  "input_contract": {
+    "adaptive_budgets": "H non-negative integer physical-head budgets a_h, each at most T, with total B",
+    "token_capacity": "positive integer T shared across physical heads",
+    "uniform_fraction": "an exact rational lambda in [0,1], supplied as an integer, Fraction, or canonical numerator/denominator string; binary floating-point inputs are rejected",
+    "total_budget": "B=sum_h a_h is preserved exactly and may range from zero through H*T",
+    "scope": "integer apportionment only; it does not acquire salience, change selected-token identity within a head, or establish any quality benefit"
+  },
+  "target": {
+    "uniform_real_budget": "u=B/H for every head; it is not prematurely rounded",
+    "mixed_real_budget": "x_h=(1-lambda)*a_h+lambda*u",
+    "properties": [
+      "sum_h x_h=B exactly",
+      "0<=x_h<=T",
+      "lambda=0 recovers the adaptive allocation",
+      "lambda=1 targets exact uniform real budgets"
+    ]
+  },
+  "integerization": {
+    "method": "Hamilton largest remainder over exact rational targets",
+    "steps": [
+      "take f_h=floor(x_h) for every head",
+      "compute remaining=B-sum_h f_h",
+      "give one slot to the remaining heads in descending fractional remainder order",
+      "break equal remainders by ascending physical-head index"
+    ],
+    "guarantees_to_test": [
+      "every integer budget lies in [0,T]",
+      "integer budgets sum exactly to B",
+      "each integer budget is floor(x_h) or ceil(x_h)",
+      "the result minimizes exact L1 and squared L2 deviation from x over every feasible integer allocation",
+      "ties among joint L1/L2 minimizers prefer the lexicographically largest budget tuple, equivalent to lower-index remainder priority",
+      "every head receives at least floor(lambda*B/H) slots",
+      "lambda=0 returns a exactly",
+      "lambda=1 returns the existing quotient/remainder uniform control"
+    ]
+  },
+  "negative_control": {
+    "adaptive_budgets": [
+      4,
+      1,
+      1
+    ],
+    "token_capacity": 4,
+    "uniform_fraction": "1/5",
+    "code_like_independent_rounding": [
+      3,
+      1,
+      1
+    ],
+    "code_like_total": 5,
+    "required_total": 6,
+    "reference_result": [
+      4,
+      1,
+      1
+    ],
+    "purpose": "preserve the observed conservation failure rather than silently repair or relabel upstream behavior"
+  },
+  "qualification_cases": {
+    "head_counts": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "tokens_per_head": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "adaptive_allocations": "every vector in [0,T]^H, spanning every total B",
+    "uniform_fractions": [
+      "0/1",
+      "1/5",
+      "1/2",
+      "4/5",
+      "1/1"
+    ],
+    "oracle": "for every case enumerate all feasible integer H-vectors in [0,T]^H with the same total B and compare exact rational L1, squared L2, and deterministic tie order",
+    "required_special_cases": [
+      "zero and full total budgets",
+      "already uniform adaptive budgets",
+      "all-equal and unequal fractional remainders",
+      "the registered six-slot conservation witness",
+      "invalid booleans, floats, negative budgets, capacities below a head budget, malformed fractions, and lambda outside [0,1] rejected"
+    ]
+  },
+  "required_outputs": [
+    "case and exhaustive oracle-comparison counts",
+    "capacity, floor/ceiling, lower-floor, endpoint, exact L1, exact squared-L2, and deterministic-tie pass flags",
+    "largest observed absolute conservation error",
+    "negative-control code-like and reference totals"
+  ],
+  "decision": {
+    "upstream_code_used": false,
+    "upstream_execution_authorized": false,
+    "local_reference_implementation_authorized": true,
+    "paper_alpha_semantics_selected": false,
+    "upstream_behavior_reproduction_claimed": false,
+    "primary_safeguard_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "quality_benefit_claimed": false,
+    "novelty_gate_changed": false,
+    "architecture_claim_authorized": false,
+    "failure": "retain the result and keep safeguard use blocked",
+    "success": "qualify only a conservation-safe integer apportionment control for later paired empirical evaluation"
+  }
+}
