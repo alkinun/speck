@@ -3,7 +3,7 @@
     "adapter_spec_sha256": "a8babbf12e839815164fff0505902fec362c0d909a3e37675dda7cbe64f02282",
     "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/external/helmet.json"
   },
-  "created_at": "2026-09-05T12:28:13.726733+00:00",
+  "created_at": "2026-09-05T12:38:51.111710+00:00",
   "export": {
     "endpoint_qualification": "/home/alkin/Desktop/speck/results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
     "endpoint_qualification_sha256": "374b0ba63998490fd22713b3850d8c1844dd846895198d7aa116ee2e8f3d72d9",
@@ -142,11 +142,11 @@
     "revision": "af609c4d51b97fc35012099380aa889da961c42d",
     "source_qualification": {
       "config_path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/external/helmet.json",
-      "config_sha256": "bb38dab1d64bf8f261215a4dc56e4f3b8af9ebcea3ffa0f3a86362df8d512021",
+      "config_sha256": "f4f8cbd16765a0090988ee932a6b282e290406f53bb68d345c6dc0b8fc5e557f",
       "format": "speck_external_suite_source_qualification",
       "format_version": 1,
       "remaining_data_status": "revision_pinned_storage_blocked",
-      "remaining_model_adapter_status": "blocked_smoke_incomplete",
+      "remaining_model_adapter_status": "native_hf_cpu_eager_qualified_data_and_candidate_execution_blocked",
       "sources": [
         {
           "id": "helmet_pipeline",
@@ -284,7 +284,7 @@
       "retained_prefix": true
     }
   },
-  "runner_revision": "dc84fc01c189d492e0e7b04c12814d41c503a1db",
+  "runner_revision": "20d612b61a982dcfecb8c3abb29d5bc57b10cb77",
   "runner_sha256": "097d98001b3706811ed21b95c9aa57fbba3d3c436b50465dc54f2fd77d6255b0",
   "runtime": {
     "environment_group": "helmet-adapter",
@@ -306,7 +306,7 @@
       "tqdm": "4.70.0",
       "transformers": "5.1.0"
     },
-    "uv_lock_sha256": "0354b484c694fbc6b37fee8a6c9a63eabd8333661347bf54b3f223b9301a6985"
+    "uv_lock_sha256": "115aa46ee8f1dacb7aba3a56cebe7e31f8b34d52a29e51048cab9ff2243a0c9d"
   },
   "status": "qualified_native_hf_cpu_eager_adapter"
 }

@@ -41,8 +41,9 @@ This qualifies the native CPU/eager adapter protocol, not HELMET capability, GPU
 serving performance. The synthetic scorer smoke uses HELMET's actual RULER and QA post-processing.
 `pytrec_eval` is an unused eager import on those paths and is stubbed because its PyPI source build
 performs an unverified nested GitHub download; reproducible reranking remains a full-suite environment
-blocker. The 34GB dataset, component license audit, and candidate-specific context-ceiling exports also
-remain blocked.
+blocker in this result. Finding 41 subsequently closes that runtime dependency with a separately
+qualified local build. The 34GB dataset, component license audit, and candidate-specific context-ceiling
+exports remain blocked.
 
 ## Decision
 

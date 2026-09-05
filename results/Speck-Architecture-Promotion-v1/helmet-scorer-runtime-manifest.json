@@ -1,0 +1,141 @@
+{
+  "build": {
+    "c_standard": "gnu17",
+    "complete_rebuilds": 2,
+    "debug_path_prefix": "/usr/src/pytrec_eval",
+    "package_versions": {
+      "setuptools": "80.9.0",
+      "wheel": "0.45.1"
+    },
+    "platform": {
+      "compiler": "g++ (GCC) 16.1.1 20260625",
+      "implementation": "CPython",
+      "libc": [
+        "glibc",
+        "2.43"
+      ],
+      "machine": "x86_64",
+      "python": "3.10.20",
+      "soabi": "cpython-310-x86_64-linux-gnu",
+      "system": "Linux"
+    },
+    "source_date_epoch": 1600000000,
+    "wheel": {
+      "bytes": 306583,
+      "path": "wheels/pytrec_eval-0.5-cp310-cp310-linux_x86_64.whl",
+      "sha256": "48b873ad0eb3e887dde0d90b88ffc3a71f3a5d211c6f063fd7d3cbe34af64a9f"
+    },
+    "wheels_identical": true
+  },
+  "bundle_root": "/home/alkin/.cache/speck/evaluations/helmet-scorer-pytrec-eval-0.5-trec-9.0.8-cp310-linux-x86_64",
+  "created_at": "2026-09-05T12:38:24.405210+00:00",
+  "format": "speck_helmet_scorer_runtime_manifest",
+  "format_version": 1,
+  "helmet": {
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+    "utils_sha256": "86ceef1f3acbd9865eec8d95a5464a6e2d315e1d82ea6b9ae690582bf0ad1a50"
+  },
+  "injected_source_identity_sha256": "b5600f09e0f404912ffcb7de259223af978ae4513a23e26bd675b87181bf5449",
+  "metrics": {
+    "expected_subset": {
+      "MRR": 0.75,
+      "P@1": 0.5,
+      "P@2": 0.5,
+      "Recall@1": 0.25,
+      "Recall@2": 0.75,
+      "Recall@3": 1.0
+    },
+    "metrics": {
+      "MAP@1": 0.25,
+      "MAP@2": 0.5,
+      "MAP@3": 0.66667,
+      "MRR": 0.75,
+      "NDCG@1": 0.5,
+      "NDCG@2": 0.62204,
+      "NDCG@3": 0.77533,
+      "P@1": 0.5,
+      "P@2": 0.5,
+      "P@3": 0.5,
+      "Recall@1": 0.25,
+      "Recall@2": 0.75,
+      "Recall@3": 1.0
+    },
+    "module": "/home/alkin/.cache/speck/evaluations/helmet-scorer-pytrec-eval-0.5-trec-9.0.8-cp310-linux-x86_64/runtime/pytrec_eval/__init__.py"
+  },
+  "network_denial": {
+    "build_attempts": 0,
+    "guard_sha256": "4f9fa54a1d3c9c2cea2bb681a20dc36c48fb2329aac1f8a9998abd3c60407703",
+    "mechanism": "sitecustomize IPv4/IPv6 socket interception during both builds and metric import",
+    "metric_attempts": 0,
+    "self_test": "denied_as_expected",
+    "self_test_denied_operation": "create_connection"
+  },
+  "release_policy": "sources, wheel, and native runtime remain outside Git because trec_eval v9.0.8 has no explicit repository license file; only hashes and measurements may be published",
+  "runner_revision": "20d612b61a982dcfecb8c3abb29d5bc57b10cb77",
+  "runner_sha256": "2c6c7035694ee4d401148a6bba75de7ae8f5fdc0a4f477b6613e36bbed6152c0",
+  "runtime": {
+    "files": [
+      {
+        "bytes": 3442,
+        "path": "pytrec_eval/__init__.py",
+        "sha256": "422768f5ad9f6138b6e8a16cd1496ab14a8c40f2519e540515f68d28f7537030"
+      },
+      {
+        "bytes": 3378,
+        "path": "pytrec_eval/__pycache__/__init__.cpython-310.pyc",
+        "sha256": "36db16a3b1ee493ac8796ab21da9595a95cd9f9f234b921f42b5b673bd09864f"
+      },
+      {
+        "bytes": 947,
+        "path": "pytrec_eval-0.5.dist-info/METADATA",
+        "sha256": "a2a40413be6f6cf4d6da5757687055072e5c8a8829588c0f2aa5af5078b2bf69"
+      },
+      {
+        "bytes": 591,
+        "path": "pytrec_eval-0.5.dist-info/RECORD",
+        "sha256": "618a3f1600565305cf2f4dd1a19d05cab34d785f78ccff15ba3dd6a7329b34dd"
+      },
+      {
+        "bytes": 104,
+        "path": "pytrec_eval-0.5.dist-info/WHEEL",
+        "sha256": "d3e1bbc281b82e0bad718cd418908e60582887be3df85b5f85231e20f2d5192d"
+      },
+      {
+        "bytes": 1086,
+        "path": "pytrec_eval-0.5.dist-info/licenses/LICENSE",
+        "sha256": "8ee975cb4e01e3175090ae133724b6f42cc77f4e6cdd8b339a82fe606353e281"
+      },
+      {
+        "bytes": 28,
+        "path": "pytrec_eval-0.5.dist-info/top_level.txt",
+        "sha256": "034a7976640508431ce1eb4abacde94a48e2f0fe97ffd36c280bf84c05f2f3d0"
+      },
+      {
+        "bytes": 910152,
+        "path": "pytrec_eval_ext.cpython-310-x86_64-linux-gnu.so",
+        "sha256": "62df8f586b945cac03ec80c8f02848ac526c498901556630e2dcbb03f6409a65"
+      }
+    ],
+    "identity_sha256": "7af9f92b93cb5d4ba6a1069247afc30d9b162dfeeaee311fd195bb4db52a5a0a",
+    "path": "runtime"
+  },
+  "sources": [
+    {
+      "bytes": 15248,
+      "id": "pytrec_eval",
+      "license": "MIT",
+      "path": "sources/pytrec_eval-0.5.tar.gz",
+      "sha256": "d9eb4616e7d6b73bf1b5ba4c2c4916e88124e790b53fd61610c30158999e7bde",
+      "url": "https://files.pythonhosted.org/packages/source/p/pytrec-eval/pytrec_eval-0.5.tar.gz"
+    },
+    {
+      "bytes": 189343,
+      "id": "trec_eval",
+      "license": "copyright notices present; no repository license file; local research build only",
+      "path": "sources/trec_eval-v9.0.8.tar.gz",
+      "sha256": "c3994a73103ec842e12df693749584a45814c35c36dcc15f38984bd463566ba1",
+      "url": "https://github.com/usnistgov/trec_eval/archive/v9.0.8.tar.gz"
+    }
+  ],
+  "status": "qualified_offline_platform_specific_local_runtime_unredistributable"
+}

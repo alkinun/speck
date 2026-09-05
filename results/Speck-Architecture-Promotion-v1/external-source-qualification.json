@@ -2,7 +2,7 @@
   "format": "speck_external_source_qualification_summary",
   "format_version": 1,
   "status": "source_qualified_execution_blocked",
-  "runner_revision": "548f8757b1e2d2fabeb7d462f9114070aaf9ec15",
+  "runner_revision": "a259069e078fd74679225d5cfdc3e5145bf368ba",
   "created_on": "2026-09-05",
   "suites": {
     "ruler": {
@@ -129,7 +129,7 @@
     },
     "helmet": {
       "config": "research/architecture-promotion-v1/external/helmet.json",
-      "config_sha256": "f4f8cbd16765a0090988ee932a6b282e290406f53bb68d345c6dc0b8fc5e557f",
+      "config_sha256": "6c1a713f761a1e772130ba8b47efc5e7ae6de697bf5253041ffdded39e40d2cc",
       "status": "source_qualified_model_adapter_qualified_data_storage_blocked",
       "sources": [
         {
@@ -147,20 +147,30 @@
       "qualified_files": 14,
       "model_adapter_qualification": {
         "artifact": "results/Speck-Architecture-Promotion-v1/helmet-adapter-qualification.json",
-        "sha256": "c86b0994cfa73abf2f909d427c7595cb01876f0812406a20b586d746e31ae038",
+        "sha256": "7f14f55bfae2a83ce9eae53c082eb5ba2f5853b1f9ccc9676787e5ff9fc50e9f",
         "status": "qualified_native_hf_cpu_eager_adapter",
         "export_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+        "network_attempts": 0
+      },
+      "scorer_runtime_qualification": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/helmet-scorer-runtime-manifest.json",
+        "sha256": "8a0201b4a3c8580312c784a70fa7fdc86fd53f77f2d704ff7ff7580e6058c6c2",
+        "status": "qualified_offline_platform_specific_local_runtime_unredistributable",
+        "pytrec_eval_source_sha256": "d9eb4616e7d6b73bf1b5ba4c2c4916e88124e790b53fd61610c30158999e7bde",
+        "trec_eval_source_sha256": "c3994a73103ec842e12df693749584a45814c35c36dcc15f38984bd463566ba1",
+        "wheel_sha256": "48b873ad0eb3e887dde0d90b88ffc3a71f3a5d211c6f063fd7d3cbe34af64a9f",
+        "complete_rebuilds": 2,
         "network_attempts": 0
       },
       "blockers": [
         "the dataset cannot fit on the current research volume",
         "component dataset licenses require preservation and audit",
-        "pytrec_eval-backed reranking needs reproducible full-suite environment qualification",
+        "dataset-bound category post-processing requires validation after data qualification",
         "each frozen candidate requires an attested export at its evaluated context ceiling"
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. RULER's all-length data qualify; NoLiMa license/data and HELMET volume/full-scorer data remain blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. HELMET's native pytrec_eval retrieval scorer also qualifies from two identical offline builds. RULER's all-length data qualify; NoLiMa license/data and HELMET volume/dataset-bound processing remain blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

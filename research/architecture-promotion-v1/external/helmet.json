@@ -50,10 +50,10 @@
   },
   "model_adapter": {
     "mode": "native Hugging Face trust_remote_code adapter with attn_implementation=eager and compilation disabled for qualification",
-    "status": "native_hf_cpu_eager_qualified_data_and_candidate_execution_blocked",
+    "status": "native_hf_cpu_eager_qualified_scorer_runtime_qualified_data_and_candidate_execution_blocked",
     "qualification": "results/Speck-Architecture-Promotion-v1/helmet-adapter-qualification.json",
-    "qualification_sha256": "c86b0994cfa73abf2f909d427c7595cb01876f0812406a20b586d746e31ae038",
-    "runner_revision": "dc84fc01c189d492e0e7b04c12814d41c503a1db",
+    "qualification_sha256": "7f14f55bfae2a83ce9eae53c082eb5ba2f5853b1f9ccc9676787e5ff9fc50e9f",
+    "runner_revision": "20d612b61a982dcfecb8c3abb29d5bc57b10cb77",
     "environment_group": "helmet-adapter",
     "export_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
     "settings": {
@@ -67,9 +67,17 @@
       "generation_max_length": 4,
       "seed": 42
     },
-    "scoring_scope": "official RULER recall and QA post-processing smoke; pytrec_eval-backed reranking deferred",
+    "scoring_scope": "official RULER recall and QA post-processing plus a reproducible native pytrec_eval retrieval-metric runtime",
+    "scorer_runtime": {
+      "qualification": "results/Speck-Architecture-Promotion-v1/helmet-scorer-runtime-manifest.json",
+      "qualification_sha256": "8a0201b4a3c8580312c784a70fa7fdc86fd53f77f2d704ff7ff7580e6058c6c2",
+      "runner_revision": "20d612b61a982dcfecb8c3abb29d5bc57b10cb77",
+      "wheel_sha256": "48b873ad0eb3e887dde0d90b88ffc3a71f3a5d211c6f063fd7d3cbe34af64a9f",
+      "runtime_identity_sha256": "7af9f92b93cb5d4ba6a1069247afc30d9b162dfeeaee311fd195bb4db52a5a0a",
+      "platform": "CPython 3.10.20, Linux x86_64, glibc 2.43, GCC 16.1.1"
+    },
     "reason": "a real parity-attested Speck export passes pinned HELMET load, tokenize, truncate, deterministic generation, raw-output, and RULER/QA scorer behavior offline",
-    "required_next": "after data-volume qualification, bind every frozen candidate to an attested export at its evaluated context ceiling and qualify the complete category scorer environment before execution"
+    "required_next": "after data-volume qualification, bind every frozen candidate to an attested export at its evaluated context ceiling and validate dataset-bound category post-processing before execution"
   },
   "release_use": "required independent suite after external storage and model-adapter qualification"
 }

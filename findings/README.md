@@ -47,6 +47,7 @@ Read in order:
 39. [38 — RULERv1 64K deterministic case qualification](38_ruler_64k_case_qualification.md)
 40. [39 — RULERv1 128K and all-length data qualification](39_ruler_128k_and_data_completion.md)
 41. [40 — HELMET native Speck adapter qualification](40_helmet_native_adapter_qualification.md)
+42. [41 — HELMET offline native scorer runtime](41_helmet_offline_scorer_runtime.md)
 
 Conventions:
 
@@ -157,3 +158,8 @@ Finding 40 qualifies HELMET's pinned native Hugging Face path on a real parity-a
 in a locked CPU/eager environment. Load, truncation, deterministic generation, raw-output shape,
 RULER/QA post-processing, and network denial pass. The 34GB data volume, component licenses,
 reproducible reranking dependency, candidate exports, and capability execution remain blocked.
+
+Finding 41 closes the reranking dependency with a platform-specific local runtime. Exact pytrec/NIST
+sources produce identical wheels across two offline rebuilds, and pinned HELMET retrieval metrics pass.
+The 34GB volume, component licenses, dataset-bound processing, candidate exports, and execution remain
+blocked.
