@@ -70,7 +70,9 @@ it still requires authorized acceptance of its academic/noncommercial-only licen
 post-acceptance payload manifest. HELMET's native CPU/eager model adapter now qualifies on a real
 Speck export, while its separate 34GB data volume, component licenses, dataset-bound processing, and
 candidate executions remain blocked. Its native `pytrec_eval` retrieval scorer is separately
-qualified from two identical network-denied local builds.
+qualified from two identical network-denied local builds. The exact 11.27GB compressed archive, all
+14 active configs, and a 64GiB pre-download floor are also pinned; the discovered 5.5TB candidate
+partition is large enough but remains unmounted pending administrator action.
 
 Build or revalidate the non-redistributable RULER source bundle with:
 

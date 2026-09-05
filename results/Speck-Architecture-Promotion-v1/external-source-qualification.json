@@ -2,7 +2,7 @@
   "format": "speck_external_source_qualification_summary",
   "format_version": 1,
   "status": "source_qualified_execution_blocked",
-  "runner_revision": "8a89a98a845c60fb5549eb4b14eb557512c15c9f",
+  "runner_revision": "d59ebf418829889dac8d4891d97915489db00902",
   "created_on": "2026-09-05",
   "suites": {
     "ruler": {
@@ -139,7 +139,7 @@
     },
     "helmet": {
       "config": "research/architecture-promotion-v1/external/helmet.json",
-      "config_sha256": "6c1a713f761a1e772130ba8b47efc5e7ae6de697bf5253041ffdded39e40d2cc",
+      "config_sha256": "1a8ac5243be1b66bf6b9e935554dc24fe95d00e10f0a5e613115e109e3ce2892",
       "status": "source_qualified_model_adapter_qualified_data_storage_blocked",
       "sources": [
         {
@@ -154,7 +154,20 @@
         "advertised_download_size_gb": 34,
         "metadata_qualified_without_lfs_download": true
       },
-      "qualified_files": 14,
+      "qualified_files": 22,
+      "data_metadata_qualification": {
+        "artifact": "results/Speck-Architecture-Promotion-v1/helmet-data-metadata-qualification.json",
+        "sha256": "8ac2cbc8820d76acce90b629c0bb8932427ecf11215ffa6321a467a1663453b1",
+        "status": "metadata_and_storage_plan_qualified_mount_and_payload_blocked",
+        "required_archive_sha256": "9d693981aa3c065b8b2ff82ddf946141cdc4ece4524f18bff6f3fbd2a86982d9",
+        "required_archive_bytes": 11271916108,
+        "active_configs": 14,
+        "declared_evaluation_entries": 105,
+        "minimum_free_bytes_before_download": 68719476736,
+        "candidate_device": "/dev/sda2",
+        "candidate_capacity_qualified": true,
+        "candidate_mounted": false
+      },
       "model_adapter_qualification": {
         "artifact": "results/Speck-Architecture-Promotion-v1/helmet-adapter-qualification.json",
         "sha256": "7f14f55bfae2a83ce9eae53c082eb5ba2f5853b1f9ccc9676787e5ff9fc50e9f",
@@ -173,14 +186,14 @@
         "network_attempts": 0
       },
       "blockers": [
-        "the dataset cannot fit on the current research volume",
-        "component dataset licenses require preservation and audit",
+        "administrator mount and dedicated directory on the capacity-qualified separate device",
+        "component dataset licenses require file-level preservation and audit after acquisition",
         "dataset-bound category post-processing requires validation after data qualification",
         "each frozen candidate requires an attested export at its evaluated context ceiling"
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. HELMET's native pytrec_eval retrieval scorer also qualifies from two identical offline builds. RULER's all-length data qualify. NoLiMa's exact license/data tree are audited but authorized acceptance remains blocked; HELMET volume/dataset-bound processing remains blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and model-adapter protocols now qualify: RULER and NoLiMa through the serialized endpoint, and HELMET through its native Hugging Face CPU/eager path. HELMET's native scorer, exact archive/config matrix, and 64GiB storage plan qualify, but its separate device is unmounted and component payload licenses remain unaudited. RULER's all-length data qualify. NoLiMa's exact license/data tree are audited but authorized acceptance remains blocked. No external suite has complete candidate execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

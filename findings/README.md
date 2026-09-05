@@ -49,6 +49,7 @@ Read in order:
 41. [40 — HELMET native Speck adapter qualification](40_helmet_native_adapter_qualification.md)
 42. [41 — HELMET offline native scorer runtime](41_helmet_offline_scorer_runtime.md)
 43. [42 — NoLiMa license and metadata decision gate](42_nolima_license_decision.md)
+44. [43 — HELMET data metadata and storage plan](43_helmet_data_metadata_and_storage_plan.md)
 
 Conventions:
 
@@ -169,3 +170,8 @@ Finding 42 freezes the NoLiMa legal decision boundary without authorizing use. A
 to academic research and teaching and expressly exclude commercial product development or gain. The
 empty worktree fetched nothing during audit, but its pre-existing object cache already holds all 16
 restricted blobs. Authorized entity acceptance and post-acceptance payload hashing remain blocked.
+
+Finding 43 pins HELMET's required 11.27GB archive, excludes the unused v2 archive, and qualifies all
+14 active configs and a 64GiB storage floor without downloading data. The 5.5TB candidate partition
+passes capacity but is unmounted; component licenses, download, extraction, loader checks, and execution
+remain blocked.
