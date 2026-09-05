@@ -35,16 +35,24 @@
         "findings/52_helmet_narrativeqa_decision.md",
         "findings/53_helmet_infinitebench_decision.md",
         "findings/54_helmet_seeded_demo_repair.md",
+        "findings/55_paper_1_proxy_launch_boundary.md",
+        "findings/56_paper_1_dense_control_0.md",
+        "findings/57_paper_1_dense_control_1.md",
+        "findings/59_paper_1_dense_controls_and_target_lock.md",
+        "findings/70_systems_cost_readiness_gate.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/contamination-ruler-v1.json",
         "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
-        "results/Speck-Paper1/baseline-preflight.json"
+        "results/Speck-Paper1/baseline-preflight.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json"
       ],
-      "quality": "The one-seed 131M-token full-global result is within the measured seed range of the strongest attention-bearing hybrids and cannot be ranked against them.",
-      "systems": "At 128K it has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls. The exact-shape Paper 1 preflight completes a finite compiled batch-4 4K step at 10.23 GiB peak allocation. Random-weight CUDA full/cached relative RMS is 0.017-0.020; the trained seed-42 sentinel falls to 0.0048-0.0060 and matches all three 32-token greedy continuations.",
+      "quality": "The matched dense control is now complete across three frozen seed/data cells at 2.833646, 2.839127, and 2.832686 nats; mean 2.835153, sample SD 0.003475, and range 0.006440. These controls define the 2.839127 time-to-quality target but do not rank the still-running candidate.",
+      "systems": "At 128K the historical dense geometry has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls. The new parameter-matched control trains at 40.20K-40.25K steady tok/s and 11.48-11.49 GiB peak allocation. All three controls fail the frozen 1.0 total GPU-hour envelope at 1.0455, 1.0129, and 1.0114 hours; that limit is preserved.",
       "scale_transfer": "not replicated under policy v1",
       "runtime_support": "standard PyTorch attention path",
       "unresolved_risks": [
@@ -55,7 +63,7 @@
         "HELMET still needs archive-external datasets, a gated truncation tokenizer, and model-judge qualification",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
-      "next_gate": "close the remaining SPE-58 data/legal gates, then include this matched dense reference in finalist horizon and medium-scale comparisons"
+      "next_gate": "complete the fixed three-pair KDA/GQA candidate and paired proxy analysis; retain unavailable external suites as failed release gates"
     },
     {
       "id": "gated_deltanet",
@@ -107,6 +115,8 @@
         "findings/52_helmet_narrativeqa_decision.md",
         "findings/53_helmet_infinitebench_decision.md",
         "findings/54_helmet_seeded_demo_repair.md",
+        "findings/55_paper_1_proxy_launch_boundary.md",
+        "findings/60_paper_1_proxy_disposition.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
@@ -131,7 +141,7 @@
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
         "HELMET's RAG/long-QA guardrail remains data, rights, tokenizer, and scorer blocked"
       ],
-      "next_gate": "close the remaining SPE-58 data/legal gates, then execute the three-pair whole-architecture proxy without component attribution"
+      "next_gate": "complete the in-progress three-pair whole-architecture proxy and apply the frozen disposition without component attribution"
     },
     {
       "id": "reader_attention_three_cache",
@@ -184,10 +194,12 @@
         "nope_mla"
       ],
       "evidence": [
-        "papers/16_deepseek_v2_mla.md"
+        "papers/16_deepseek_v2_mla.md",
+        "findings/61_five_cache_representation_design.md",
+        "research/paper-1/sequence_cache_representation_v1.json"
       ],
       "quality": "not measured locally",
-      "systems": "analytic benefit only",
+      "systems": "Conditional MQA1 and MLA128 each reduce five-cache BF16 state analytically by 66.7%; MQA1 parameter matching is within 0.00998%, while MLA128 is projection-parameter matched before implementation audit. No realized result exists.",
       "scale_transfer": "not measured locally",
       "runtime_support": "MQA expressible; MLA not implemented",
       "unresolved_risks": [
@@ -195,7 +207,7 @@
         "expanded projection cost",
         "specialized decode kernel"
       ],
-      "next_gate": "pre-register a five-cache GQA3/MQA1/NoPE-MLA isolation after evaluation v1 is qualified"
+      "next_gate": "select the sequence backbone, then qualify MQA1 geometry and MLA128 reference/optimized correctness before any representation training"
     },
     {
       "id": "block_attention_residuals",
@@ -206,7 +218,9 @@
         "full attention residuals"
       ],
       "evidence": [
-        "papers/05_attention_residuals.md"
+        "papers/05_attention_residuals.md",
+        "findings/66_attnres_readiness_gate.md",
+        "research/paper-1/attnres_readiness_v1.json"
       ],
       "quality": "not measured locally",
       "systems": "not measured locally",
@@ -217,7 +231,7 @@
         "export compatibility",
         "depth-width optimum shift"
       ],
-      "next_gate": "implement reference and run standard/full/block discovery under policy v1"
+      "next_gate": "after sequence selection, materialize the 40-module source graph and small-tensor standard/static/full/eight-block references"
     },
     {
       "id": "sparse_long_context_attention",
@@ -229,7 +243,16 @@
       ],
       "evidence": [
         "papers/20_moba.md",
-        "papers/21_deepseek_v3_2.md"
+        "papers/21_deepseek_v3_2.md",
+        "papers/22_deepseek_v4.md",
+        "findings/62_hca_readiness_gate.md",
+        "findings/63_csa_readiness_gate.md",
+        "findings/64_raw_local_readiness_gate.md",
+        "findings/65_ratio_placement_readiness_gate.md",
+        "research/paper-1/hca_readiness_v1.json",
+        "research/paper-1/csa_readiness_v1.json",
+        "research/paper-1/raw_local_readiness_v1.json",
+        "research/paper-1/ratio_placement_readiness_v1.json"
       ],
       "quality": "not measured locally",
       "systems": "not implemented locally",
@@ -240,7 +263,7 @@
         "kernel locality",
         "missing genuine 64K-128K dependency data"
       ],
-      "next_gate": "build the dependency corpus and qualify evaluation v1 before a training comparison"
+      "next_gate": "select the parent/cache, then isolate the HCA compressor before rate; CSA begins only with oracle block-mass feasibility, followed by raw-local and integer ratio studies"
     },
     {
       "id": "routed_swiglu_moe",
@@ -251,7 +274,9 @@
       ],
       "evidence": [
         "papers/16_deepseek_v2_mla.md",
-        "papers/04_kimi_k3.md"
+        "papers/04_kimi_k3.md",
+        "findings/67_stable_latentmoe_readiness_gate.md",
+        "research/paper-1/stable_latentmoe_readiness_v1.json"
       ],
       "quality": "not measured locally",
       "systems": "not measured locally",
@@ -263,7 +288,7 @@
         "communication",
         "small-batch serving economics"
       ],
-      "next_gate": "stabilize the dense sequence architecture and name the medium-scale hardware first"
+      "next_gate": "pin implementation-complete primary LatentMoE/SiTU/Quantile equations, select sequence/depth parents and hardware, then qualify a dropless conventional MoE reference"
     },
     {
       "id": "lower_precision_training_and_serving",
