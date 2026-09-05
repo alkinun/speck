@@ -13,6 +13,9 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).parents[1]))
+
 from scripts.ruler_source_prepare import check as check_source_bundle
 
 GENERATOR_REVISION = "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a"
