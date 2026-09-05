@@ -1,0 +1,137 @@
+{
+  "format": "speck_helmet_narrativeqa_decision_protocol",
+  "format_version": 1,
+  "protocol_id": "helmet-narrativeqa-decision-v1",
+  "status": "frozen_unexecuted",
+  "scope": "metadata-only embedded-work rights, prompt-determinism, tokenizer, and scorer decision for HELMET NarrativeQA",
+  "source": {
+    "hub_repository": "https://huggingface.co/datasets/deepmind/narrativeqa",
+    "hub_revision": "2e643e7363944af1c33a652d1c87320d0871c4e4",
+    "parquet_payload": {
+      "files": 35,
+      "bytes": 3232805701,
+      "pointer_tree_identity_sha256": "aa2b9e602e6ab94987e3310831e05a6e34e48d8f9814b5b5721aed0825f05ca8",
+      "splits": {
+        "train": {"files": 24, "bytes": 2269966933},
+        "test": {"files": 8, "bytes": 859965070},
+        "validation": {"files": 3, "bytes": 102873698}
+      },
+      "status": "metadata_observed_payload_not_acquired"
+    },
+    "upstream_repository": "https://github.com/google-deepmind/narrativeqa.git",
+    "upstream_revision": "904246f6d1fe99a99a08a03501fe3e619af2cee5",
+    "metadata_license": "Apache-2.0",
+    "document_inventory": {
+      "documents": 1572,
+      "kinds": {"gutenberg": 783, "movie": 789},
+      "splits": {"train": 1102, "test": 355, "valid": 115},
+      "story_domains": {
+        "www.gutenberg.org": 783,
+        "www.imsdb.com": 767,
+        "www.dailyscript.com": 15,
+        "www.awesomefilm.com": 7
+      }
+    }
+  },
+  "helmet": {
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+    "files": [
+      {"path": "data.py", "sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348"},
+      {"path": "configs/longqa_short.yaml", "sha256": "b671fd74b22e5ef3287d52ebad97ae0b50ee46db6d8a874e560093c35d95dc36"},
+      {"path": "configs/longqa.yaml", "sha256": "69976fa381c1a6f7232a0f8a00ad98c7e1b8e40f9d7ef16394ad540dffa3b850"},
+      {"path": "scripts/eval_gpt4_longqa.py", "sha256": "9297b773cdfda8bc4f7bd52ebdac35bbd5cfefc3b3f716730dc8fdf6b910c3b7"}
+    ],
+    "expected_entries": 5,
+    "expected_shots": 2,
+    "data_usage": [
+      "full story text becomes the evaluated context",
+      "two training question-answer pairs become demonstrations",
+      "test questions and answers become the evaluated query and references",
+      "Llama 2 tokenization selects documents and truncates every context length",
+      "gpt-4-score from a proprietary judge becomes the primary dataset metric"
+    ]
+  },
+  "evidence": [
+    {
+      "id": "hub_readme",
+      "filename": "huggingface-readme.md",
+      "url": "https://huggingface.co/datasets/deepmind/narrativeqa/resolve/2e643e7363944af1c33a652d1c87320d0871c4e4/README.md",
+      "bytes": 10572,
+      "sha256": "6bb0cf93487ba1c63b7039892958ea6f23d07513fa2ad9b16c73ce813bbfa3d1",
+      "required_substrings": ["license:\n- apache-2.0", "Stories and movies scripts were downloaded from", "Project Gutenburg", "imsdb"]
+    },
+    {
+      "id": "upstream_readme",
+      "filename": "upstream-readme.md",
+      "url": "https://raw.githubusercontent.com/google-deepmind/narrativeqa/904246f6d1fe99a99a08a03501fe3e619af2cee5/README.md",
+      "bytes": 3840,
+      "sha256": "85b32d79619a8f2fec88ac62ace984bfb60544c6a90766580032a380bbf1262a",
+      "required_substrings": ["links to full stories", "download_stories.sh", "Apache License, Version 2.0"]
+    },
+    {
+      "id": "upstream_license",
+      "filename": "upstream-license.txt",
+      "url": "https://raw.githubusercontent.com/google-deepmind/narrativeqa/904246f6d1fe99a99a08a03501fe3e619af2cee5/LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "required_substrings": ["Apache License", "Version 2.0"]
+    },
+    {
+      "id": "documents_csv",
+      "filename": "documents.csv",
+      "url": "https://raw.githubusercontent.com/google-deepmind/narrativeqa/904246f6d1fe99a99a08a03501fe3e619af2cee5/documents.csv",
+      "bytes": 341683,
+      "sha256": "6dffa4cc0b5c9963fe3a097c87f04aa7767da36627500cc7a0d69e2405e1144a",
+      "required_substrings": ["document_id,set,kind,story_url"]
+    },
+    {
+      "id": "imsdb_disclaimer",
+      "filename": "imsdb-disclaimer.html",
+      "url": "https://imsdb.com/disclaimer.html",
+      "canonical_visible_text_sha256": "54561e814d8aa78b3be11861845f8f9020fbf591eed0cbe89f0d22080b6b54ea",
+      "required_substrings": ["All scripts on this site are educational purposes only", "commercial nature or is for nonprofit educational purposes"]
+    },
+    {
+      "id": "dailyscript_homepage",
+      "filename": "dailyscript-homepage.html",
+      "url": "https://www.dailyscript.com/",
+      "canonical_visible_text_sha256": "d8271ff76c1682213f1390b6ca94b1650239a85af5593daa97b380923324d05c",
+      "required_substrings": ["These are for Educational Purposes only"]
+    },
+    {
+      "id": "gutenberg_license",
+      "filename": "gutenberg-license.html",
+      "url": "https://www.gutenberg.org/policy/license",
+      "canonical_visible_text_sha256": "96a036ed2aaed2bd169d59122ffb41883810b688f798770b3a78638cd6275833",
+      "required_substrings": ["If you are not located in the United States", "check the laws of the country", "Copyrighted Books", "permission does not automatically expand to include you"]
+    }
+  ],
+  "storage": {
+    "directory": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata",
+    "device_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+    "filesystem": "ext4",
+    "required_mount_options": ["rw", "nodev", "nosuid", "noexec"],
+    "required_directory_mode": "0o700"
+  },
+  "decision": {
+    "metadata_audit_qualified": true,
+    "payload_acquisition_authorized": false,
+    "evaluation_use_authorized": false,
+    "embedded_work_rights_qualified": false,
+    "commercial_scope_authorized": false,
+    "prompt_determinism_qualified": false,
+    "tokenizer_qualified": false,
+    "model_judge_qualified": false,
+    "contact_authorized": false,
+    "required_next": "complete work-level and jurisdiction-specific rights review for the embedded full texts or freeze a pre-results replacement; seed and replay demonstration selection; then qualify the Llama 2 truncation tokenizer, proprietary judge or replacement metric, immutable payload, exact prompts, and contamination"
+  },
+  "reporting": {
+    "non_claims": [
+      "Apache-2.0 on the metadata repository grants rights to every linked or embedded full story",
+      "Project Gutenberg status in the United States determines rights in every operating jurisdiction",
+      "educational-only script hosting is affirmative commercial evaluation authority",
+      "an unseeded cached map operation is a reproducible prompt definition",
+      "this operational decision is legal advice or a final ownership determination"
+    ]
+  }
+}
