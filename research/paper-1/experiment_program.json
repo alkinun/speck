@@ -1,418 +1,4 @@
 {
-  "format": "speck_paper_experiment_program",
-  "format_version": 1,
-  "paper_id": "speck-paper-1",
-  "policy_id": "architecture-promotion-v1",
-  "status": "preregistered_program_no_architecture_selected",
-  "updated_on": "2026-09-05",
-  "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
-  "baseline_evidence": {
-    "status": "historical_evidence_qualified_proxy_launch_blocked",
-    "matrix": "research/paper-1/baseline_matrix.json",
-    "matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
-    "analysis_plan": "research/paper-1/baseline_analysis.json",
-    "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
-    "preflight": "results/Speck-Paper1/baseline-preflight.json",
-    "preflight_sha256": "164cd1409afd01a25c776dd4471ade27c79eb0d28028042864abb58ed39f5f60",
-    "preflight_status": "failed",
-    "cuda_decode_contract": "research/paper-1/cuda_decode_diagnostic.json",
-    "cuda_decode_contract_sha256": "24bf8c0b6732089dc69a005893600152812834b4977b99658dce976008daa5fb",
-    "cuda_decode_result": "results/Speck-Paper1/cuda-decode-diagnostic.json",
-    "cuda_decode_result_sha256": "3f09952c22cb1dfe950d6dd3c59b3a7d50cdb2559e437969202ce80517b40ec0",
-    "trained_decode_contract": "research/paper-1/cuda_decode_trained_sentinel.json",
-    "trained_decode_contract_sha256": "17d4011757425f0f0a7e8a6ceaa98a807069b3ef8f028646f47aae90501e651c",
-    "trained_decode_result": "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
-    "trained_decode_result_sha256": "a966e92d06574f1b80902799fa62d6e8d643365d06283c1e6b505a011393db8a",
-    "runtime_preflight_classification": "full-model CUDA/BF16 execution sensitivity with architecture-dependent depth amplification; new versioned behavioral contract required",
-    "cache_equivalence_v2_contract": "research/paper-1/cache_equivalence_v2.json",
-    "cache_equivalence_v2_contract_sha256": "3deccc06de69969492ef0f2c396097524c85fc7fa2de93fc9a8db26b24d2954e",
-    "cache_equivalence_v2_control_lock": "results/Speck-Paper1/cache-equivalence-v2-control-lock.json",
-    "cache_equivalence_v2_control_lock_sha256": "121deb26010b2b8f25232eebe469130cc1bab060cfe129350222c8b3ee7aadb5",
-    "cache_equivalence_v2_analysis": "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
-    "cache_equivalence_v2_analysis_sha256": "f0f49a3a696a2b21950afe4cc5ac28ecb4ae12a8b32223f38821458e4e746f0e",
-    "cache_equivalence_v2_status": "failed",
-    "cache_equivalence_v3_contract": "research/paper-1/cache_equivalence_v3.json",
-    "cache_equivalence_v3_contract_sha256": "f90bbfb95c098a26793d5d71b74f02dba02505cb87062bd8cc7e470f4f51bc83",
-    "cache_equivalence_v3_analysis": "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
-    "cache_equivalence_v3_analysis_sha256": "43d2ca48287f1425a207f80d57cf130fab89413ff173eee12d997f6d1ff0d4ac",
-    "cache_equivalence_v3_status": "qualified",
-    "preflight_v2": "results/Speck-Paper1/baseline-preflight-v2.json",
-    "preflight_v2_sha256": "91012edc3a597dcf8cddd28bbe846b81cd6d99d1eec359ce66bf4ccf7deede86",
-    "preflight_v2_status": "qualified",
-    "materialization": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
-    "materialization_sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b",
-    "audit": "results/Speck-Paper1/baseline-audit.json",
-    "audit_sha256": "b1dd59e9392c4223f706ff3b64434f80195f0a265734c11ea18e55ab8ee46244",
-    "storage_qualification": "results/Speck-Paper1/baseline-storage-volume-qualified.json",
-    "storage_qualification_sha256": "e0b482987207efafd1e6273b0d3d39290ca2b40bc80584035fdd48244760d9df",
-    "storage_qualification_status": "qualified_dedicated_proxy_and_finalist_checkpoint_volume",
-    "collection_correction": "research/paper-1/baseline_collection_v2.json",
-    "collection_correction_sha256": "2fe52ac3447429d4ccbf3c5672267d33e93642c461ff2aeb77f2c8a540641a12",
-    "collection_correction_status": "frozen_after_control_0_before_candidate_results",
-    "automation_contract": "research/paper-1/baseline_automation_v1.json",
-    "automation_contract_sha256": "bd8f8673f2a5e359e49f4c39e33509735a7067144a0285f1ad1217866245e084",
-    "automation_contract_status": "frozen_before_dense_control_2_completion",
-    "dense_control_results": [
-      {
-        "pair": 0,
-        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
-        "sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526",
-        "status": "complete_qualified"
-      },
-      {
-        "pair": 1,
-        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
-        "sha256": "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5",
-        "status": "complete_qualified"
-      }
-    ],
-    "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2"
-  },
-  "proxy_launch_evidence": {
-    "status": "proxy_training_authorized_release_claims_blocked",
-    "contract": "research/paper-1/proxy_launch_v1.json",
-    "contract_sha256": "156dc8ae7812454f1d73a4d637fe040bfb810db29985659e16b40d3394746ce3",
-    "qualification": "results/Speck-Paper1/proxy-launch-qualified.json",
-    "qualification_sha256": "6b67d741ed15b1fd00701c2c53d749311f1454e315de6f92cebd9581f807d494",
-    "qualification_status": "proxy_training_authorized_release_claims_blocked",
-    "runner_revision": "4eba36607fe3935950019686c7c171e4ca6841a7"
-  },
-  "evaluation_evidence": {
-    "status": "ruler_v1_failed_v2_frozen_helmet_sources_dispositioned_seeded_demo_repair_qualified_not_activated",
-    "contamination_protocol": "research/paper-1/contamination_v1.json",
-    "contamination_protocol_sha256": "c61342312c9fe87ff51f851df39b296be68534fdfddfd6cd4daf6513a1837ac0",
-    "contamination_result": "results/Speck-Paper1/contamination-ruler-v1.json",
-    "contamination_result_sha256": "3f3581429f318b236ede81a0ae89f077f478c250cb4f2919045e16da7c2b490f",
-    "contamination_result_status": "failed_critical_overlap_detected",
-    "contamination_disposition_protocol": "research/paper-1/contamination_disposition_v1.json",
-    "contamination_disposition_protocol_sha256": "ad4ef9dbd10c58e0ea6148d2b8312b4e61d5d536856260b8d861dab4b4baa69b",
-    "contamination_disposition": "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
-    "contamination_disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
-    "contamination_disposition_status": "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required",
-    "active_evaluation_manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
-    "active_evaluation_manifest_sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6",
-    "active_evaluation_manifest_id": "architecture-evaluation-v2",
-    "helmet_runtime_dependency_protocol": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
-    "helmet_runtime_dependency_protocol_sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b",
-    "helmet_runtime_dependency_audit": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
-    "helmet_runtime_dependency_audit_sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2",
-    "helmet_runtime_dependency_status": "runtime_dependency_inventory_qualified_execution_blocked",
-    "helmet_materializer_preflight_protocol": "research/architecture-promotion-v1/helmet_materializer_preflight_v1.json",
-    "helmet_materializer_preflight_protocol_sha256": "11fe439568fe7163e4899dbbff992dcec9058d007950ef6b62dc484fbac1cd44",
-    "helmet_materializer_preflight": "results/Speck-Architecture-Promotion-v1/helmet-materializer-preflight.json",
-    "helmet_materializer_preflight_sha256": "24ad9ab83b2793711c723f34be80d0be11b585c4b56aa79819c61c7c529db1be",
-    "helmet_materializer_preflight_status": "two_family_offline_materializer_strategy_qualified",
-    "helmet_clinc_source_protocol": "research/architecture-promotion-v1/helmet_clinc_source_v1.json",
-    "helmet_clinc_source_protocol_sha256": "a510999385ed4dc70a55eac858094dc77b4ef692137ec9649bf90081bf8f98b7",
-    "helmet_clinc_source_qualification": "results/Speck-Architecture-Promotion-v1/helmet-clinc-source-qualified.json",
-    "helmet_clinc_source_qualification_sha256": "14c43416d2ba1b25629db473c3622ec7f66f4a14f338f8c7e32615a35eb02d7d",
-    "helmet_clinc_source_status": "clinc_plus_required_splits_qualified_offline",
-    "helmet_trec_rights_protocol": "research/architecture-promotion-v1/helmet_trec_rights_v2.json",
-    "helmet_trec_rights_protocol_sha256": "ddebbeaad0a021e8f8a1dd5ae3add715614490704359509875b55ae201ca8288",
-    "helmet_trec_rights_decision": "results/Speck-Architecture-Promotion-v1/helmet-trec-rights-decision.json",
-    "helmet_trec_rights_decision_sha256": "43a6fb0106373f55bb9671acfe62352f833eed0092520d7783828d2f2e5e68d1",
-    "helmet_trec_rights_status": "trec_metadata_audited_payload_and_use_authority_blocked",
-    "helmet_multilexsum_decision_protocol": "research/architecture-promotion-v1/helmet_multilexsum_decision_v1.json",
-    "helmet_multilexsum_decision_protocol_sha256": "514d8898f8814eb2b6c3762d0923008dc220eada35158e8b3d986bd83301340b",
-    "helmet_multilexsum_decision": "results/Speck-Architecture-Promotion-v1/helmet-multilexsum-decision.json",
-    "helmet_multilexsum_decision_sha256": "1365a9fe17e1ed7d59e7c1e66cc92d8ed89fadaf3240bf80058b012ae66289c1",
-    "helmet_multilexsum_status": "metadata_qualified_rights_and_prompt_determinism_blocked",
-    "helmet_narrativeqa_decision_protocol": "research/architecture-promotion-v1/helmet_narrativeqa_decision_v1.json",
-    "helmet_narrativeqa_decision_protocol_sha256": "136b0166275a5b3d5651b15671acd43f02a207ae077948ff4e60127f54ed933d",
-    "helmet_narrativeqa_decision": "results/Speck-Architecture-Promotion-v1/helmet-narrativeqa-decision.json",
-    "helmet_narrativeqa_decision_sha256": "5b520d1140cc04168ceece08ba81abfaea41c6efd4c68a57993899b5f6d4f6c1",
-    "helmet_narrativeqa_status": "metadata_qualified_embedded_rights_and_prompt_path_blocked",
-    "helmet_infinitebench_decision_protocol": "research/architecture-promotion-v1/helmet_infinitebench_decision_v1.json",
-    "helmet_infinitebench_decision_protocol_sha256": "a798e874bcc295f863799332fdff44c317f5fae76b54b338e0f56f7c3f7adc75",
-    "helmet_infinitebench_decision": "results/Speck-Architecture-Promotion-v1/helmet-infinitebench-decision.json",
-    "helmet_infinitebench_decision_sha256": "e93e72179f27d6d46ccae53f468be27ccb8a7d165eecff5115a62fda3b65663b",
-    "helmet_infinitebench_status": "metadata_and_seeded_path_qualified_embedded_rights_and_execution_blocked",
-    "helmet_seeded_demo_repair_protocol": "research/architecture-promotion-v1/helmet_seeded_demos_v1.json",
-    "helmet_seeded_demo_repair_protocol_sha256": "7672b45d8222591849b4faa893d7ef46d560740fe22bb2f334f42c671d0beef7",
-    "helmet_seeded_demo_repair_qualification": "results/Speck-Architecture-Promotion-v1/helmet-seeded-demos-qualified.json",
-    "helmet_seeded_demo_repair_qualification_sha256": "8b3eaca25312ea3e300772dbb49e3be2bea2e4e2bbfd08a078c88fcd044dcd56",
-    "helmet_seeded_demo_repair_status": "two_loader_seeded_demo_patch_qualified_on_fixtures",
-    "ruler_v1_decision": "failed_critical_overlap_preserved",
-    "ruler_v2_decision": "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending"
-  },
-  "controls": {
-    "primary_conventional": {
-      "id": "dense_global_transformer",
-      "description": "PreNorm dense Transformer with global GQA, standard residuals, dense SwiGLU, and the same tokenizer, data, optimizer policy, and active parameter target.",
-      "reason": "Anchors the claim against a conventional architecture rather than only against earlier Speck variants."
-    },
-    "primary_hybrid": {
-      "id": "five_cache_kda_gqa",
-      "description": "Current conservative KDA/sigmoid/NoPE model with five independently refreshed global GQA memories, standard residuals, and dense SwiGLU.",
-      "reason": "Separates new depth, width, and attention-compression effects from the established Speck long-context control."
-    },
-    "mechanism_controls": [
-      "GDN/sigmoid/RoPE hybrid",
-      "full global attention",
-      "SWA-only attention",
-      "dense SwiGLU",
-      "standard residual"
-    ]
-  },
-  "matching_views": [
-    "fixed training tokens",
-    "fixed analytic training FLOPs",
-    "fixed active non-embedding parameters",
-    "fixed total non-embedding parameters",
-    "fixed wall-clock budget on named hardware",
-    "time and energy to locked quality"
-  ],
-  "scales": [
-    {
-      "id": "mechanism",
-      "active_parameters": [30000000, 60000000],
-      "minimum_tokens_per_parameter": 2,
-      "purpose": "correctness, optimization calibration, task qualification, and broad rejection",
-      "promotion_authority": false
-    },
-    {
-      "id": "proxy_discovery",
-      "active_parameters": [130000000, 170000000],
-      "training_tokens": 131072000,
-      "purpose": "one-axis discovery under the existing RTX 3090 envelope",
-      "promotion_authority": false
-    },
-    {
-      "id": "proxy_finalist",
-      "active_parameters": [130000000, 170000000],
-      "minimum_tokens_per_parameter": 10,
-      "replication": "three initialization seeds crossed with two packed-data orders",
-      "purpose": "longer-horizon finalist replication",
-      "promotion_authority": true
-    },
-    {
-      "id": "medium_transfer",
-      "active_parameters": [300000000, 600000000],
-      "minimum_tokens_per_parameter": 10,
-      "replication": "three paired seeds with distinct data orders",
-      "purpose": "scale-transfer and systems confirmation",
-      "promotion_authority": true,
-      "launch_blocker": "named hardware, parallelism, storage, and absolute cost envelope"
-    },
-    {
-      "id": "target_sentinel",
-      "active_parameters": [1000000000, 1500000000],
-      "training_tokens": 20000000000,
-      "replication": "one paired candidate/control run",
-      "purpose": "detect a costly integration or ranking reversal, not establish population equivalence",
-      "promotion_authority": false
-    },
-    {
-      "id": "paper_scale",
-      "active_parameters": null,
-      "training_tokens": null,
-      "purpose": "final matched pretraining only after every large_pretraining_gate item passes",
-      "promotion_authority": false
-    }
-  ],
-  "axes": [
-    {
-      "id": "sequence",
-      "claim_ids": ["C1", "C4", "C6"],
-      "ordered_families": [
-        {
-          "id": "sequence_backbone",
-          "fixed": "standard residual, dense SwiGLU, five global read positions, GQA3 cache representation",
-          "arms": [
-            "dense global attention",
-            "SWA-only attention",
-            "GDN plus global GQA",
-            "KDA plus global GQA"
-          ],
-          "decision": "select the recurrent/local backbone without changing cache compression or sparsity"
-        },
-        {
-          "id": "exact_cache_representation",
-          "fixed": "promoted backbone, five independent global memories, placements and read count",
-          "arms": ["GQA3", "MQA1", "NoPE MLA"],
-          "decision": "select cache representation using quality, state, batch-1 decode, and maximum-resident-batch throughput"
-        },
-        {
-          "id": "coarse_global_compression",
-          "fixed": "selected exact-cache representation and local/recurrent backbone",
-          "arms": ["uncompressed exact global", "HCA at multiple compression rates"],
-          "decision": "test whether dense coarse summaries preserve integration and composition"
-        },
-        {
-          "id": "precise_sparse_retrieval",
-          "fixed": "selected local and coarse-global branches",
-          "arms": ["dense compressed attention", "CSA block selection", "token-level selection only if CSA fails selector recall"],
-          "decision": "select the simplest granularity whose selector recall and end-to-end quality pass"
-        },
-        {
-          "id": "raw_local_branch",
-          "fixed": "selected compressed/sparse global operator",
-          "arms": ["without raw local branch", "SWA windows 64, 128, 256, 512"],
-          "decision": "retain the smallest window that recovers within-block causality and local quality"
-        },
-        {
-          "id": "ratio_and_placement",
-          "fixed": "selected operator types and parameter/FLOP budgets",
-          "arms": ["1:1", "3:1", "7:1", "middle-plus-final", "uniform", "integration-heavy", "readout-heavy"],
-          "decision": "separate integration, memory refresh, and readout roles rather than assume a published ratio"
-        }
-      ],
-      "required_diagnostics": [
-        "KDA decay and overwrite distributions",
-        "attention mass captured by selected compressed entries",
-        "selector recall against dense attention",
-        "compression reconstruction and downstream sufficiency",
-        "route, payload, and direct composition",
-        "position-binned and trailing-token loss",
-        "per-layer state, prefill, and decode cost"
-      ]
-    },
-    {
-      "id": "depth",
-      "claim_ids": ["C2", "C4", "C6"],
-      "ordered_families": [
-        {
-          "id": "attnres_isolation",
-          "fixed": "selected or conservative sequence backbone and dense SwiGLU",
-          "arms": ["standard PreNorm residual", "Full AttnRes", "Block AttnRes with approximately eight sources"],
-          "decision": "promote only content-dependent routing that beats a parameter/FLOP-matched standard residual"
-        },
-        {
-          "id": "attnres_block_count",
-          "fixed": "promoted AttnRes formulation",
-          "arms": ["4 summaries", "8 summaries", "12 summaries", "full depth"],
-          "decision": "find the quality versus activation/communication frontier"
-        },
-        {
-          "id": "depth_width_cross_sweep",
-          "fixed": "training compute and parameter budget",
-          "arms": ["at least three depths by three widths for standard residual", "same grid for promoted AttnRes"],
-          "decision": "prevent comparison against a baseline shape optimized for a different residual rule"
-        }
-      ],
-      "required_diagnostics": [
-        "hidden and residual RMS by logical depth",
-        "module update fraction",
-        "gradient norm by depth",
-        "AttnRes source weights and entropy",
-        "effective source age and embedding reliance",
-        "activation memory and recomputation",
-        "incremental decode and export parity"
-      ]
-    },
-    {
-      "id": "width",
-      "claim_ids": ["C3", "C4", "C6"],
-      "ordered_families": [
-        {
-          "id": "dense_vs_conventional_moe",
-          "fixed": "selected or conservative sequence/depth stack",
-          "arms": ["dense SwiGLU", "top-k routed SwiGLU plus shared expert"],
-          "decision": "establish whether conditional width helps before adding stability machinery"
-        },
-        {
-          "id": "latent_projection",
-          "fixed": "expert count, top-k, active parameters, and routing",
-          "arms": ["direct experts", "LatentMoE", "normalized LatentMoE"],
-          "decision": "isolate latent parameterization and normalization"
-        },
-        {
-          "id": "bounded_activation",
-          "fixed": "promoted expert geometry",
-          "arms": ["SwiGLU", "clamped SwiGLU", "SiTU-GLU or justified bounded alternative"],
-          "decision": "separate quality from outlier and stability effects"
-        },
-        {
-          "id": "balancing",
-          "fixed": "promoted expert and activation geometry",
-          "arms": ["auxiliary load loss", "bias-based balancing", "quantile balancing"],
-          "decision": "choose using quality, load tails, communication, and instability—not mean load alone"
-        },
-        {
-          "id": "expert_geometry",
-          "fixed": "active parameter/FLOP target",
-          "arms": [
-            "low expert count with a higher activated fraction",
-            "medium expert count and activated fraction",
-            "high expert count with a lower activated fraction"
-          ],
-          "decision": "select total/active capacity only after the mechanism is stable"
-        }
-      ],
-      "required_diagnostics": [
-        "per-expert token counts and coefficient of variation",
-        "maximum load and capacity overflow",
-        "routing probability and margin distributions",
-        "expert specialization and redundancy",
-        "activation and gradient outliers",
-        "expert memory and communication bytes",
-        "batch-1, single-device, and expert-parallel serving"
-      ]
-    }
-  ],
-  "interaction_program": {
-    "claim_ids": ["C0", "C4"],
-    "entry_rule": "only independently promoted mechanisms enter",
-    "pairwise_cells": [
-      "sequence × depth",
-      "sequence × width",
-      "depth × width"
-    ],
-    "full_factorial_requirement": "run the 2^3 presence/absence cube at the discovery scale for the final three mechanisms",
-    "final_removals": [
-      "remove promoted sequence novelty",
-      "replace depth routing with retuned standard residual",
-      "replace MoE with parameter/FLOP-matched dense SwiGLU",
-      "remove every auxiliary stability mechanism individually"
-    ],
-    "failure_rule": "delete any component whose combined-model effect does not clear its quality or systems threshold"
-  },
-  "scaling_program": {
-    "claim_ids": ["C5"],
-    "entry_rule": "final candidate and strongest conventional baseline fixed before fitting",
-    "minimum_points_per_architecture": 5,
-    "fit_views": ["loss versus analytic compute", "loss versus wall-clock", "quality versus energy"],
-    "requirements": [
-      "identical data family and tuning budget",
-      "compute-optimal token allocation",
-      "fit parameter uncertainty and residuals",
-      "one held-out scale or compute point",
-      "architecture-by-training-horizon interaction"
-    ]
-  },
-  "evaluation_program": {
-    "base_quality": [
-      "held-out aggregate and per-source language loss",
-      "general knowledge and commonsense",
-      "code",
-      "mathematics",
-      "reasoning",
-      "multilingual only if claimed"
-    ],
-    "mechanism": [
-      "MQAR",
-      "palindrome/copy",
-      "state tracking",
-      "structured retrieval v2",
-      "symbolic composition v2"
-    ],
-    "long_context": [
-      "RULER only under a post-contamination successor manifest",
-      "NoLiMa",
-      "HELMET",
-      "real long-document loss"
-    ],
-    "systems": [
-      "training time and energy to fixed quality",
-      "TTFT and TPOT percentiles",
-      "output throughput under arrival-rate sweeps",
-      "maximum resident batch",
-      "persistent state and peak allocation",
-      "compile and kernel startup",
-      "production-runtime parity"
-    ],
-    "reporting": "all primary and guardrail metrics use architecture-promotion-v1 decision rules"
-  },
   "analysis_program": [
     {
       "id": "causal_mechanism",
@@ -431,8 +17,414 @@
       "requirement": "attribute wall-clock and memory to operators, communication, scheduling, fragmentation, and data rather than only whole-step totals"
     }
   ],
+  "axes": [
+    {
+      "claim_ids": [
+        "C1",
+        "C4",
+        "C6"
+      ],
+      "id": "sequence",
+      "ordered_families": [
+        {
+          "arms": [
+            "dense global attention",
+            "SWA-only attention",
+            "GDN plus global GQA",
+            "KDA plus global GQA"
+          ],
+          "decision": "select the recurrent/local backbone without changing cache compression or sparsity",
+          "fixed": "standard residual, dense SwiGLU, five global read positions, GQA3 cache representation",
+          "id": "sequence_backbone"
+        },
+        {
+          "arms": [
+            "GQA3",
+            "MQA1",
+            "NoPE MLA"
+          ],
+          "decision": "select cache representation using quality, state, batch-1 decode, and maximum-resident-batch throughput",
+          "fixed": "promoted backbone, five independent global memories, placements and read count",
+          "id": "exact_cache_representation"
+        },
+        {
+          "arms": [
+            "uncompressed exact global",
+            "HCA at multiple compression rates"
+          ],
+          "decision": "test whether dense coarse summaries preserve integration and composition",
+          "fixed": "selected exact-cache representation and local/recurrent backbone",
+          "id": "coarse_global_compression"
+        },
+        {
+          "arms": [
+            "dense compressed attention",
+            "CSA block selection",
+            "token-level selection only if CSA fails selector recall"
+          ],
+          "decision": "select the simplest granularity whose selector recall and end-to-end quality pass",
+          "fixed": "selected local and coarse-global branches",
+          "id": "precise_sparse_retrieval"
+        },
+        {
+          "arms": [
+            "without raw local branch",
+            "SWA windows 64, 128, 256, 512"
+          ],
+          "decision": "retain the smallest window that recovers within-block causality and local quality",
+          "fixed": "selected compressed/sparse global operator",
+          "id": "raw_local_branch"
+        },
+        {
+          "arms": [
+            "1:1",
+            "3:1",
+            "7:1",
+            "middle-plus-final",
+            "uniform",
+            "integration-heavy",
+            "readout-heavy"
+          ],
+          "decision": "separate integration, memory refresh, and readout roles rather than assume a published ratio",
+          "fixed": "selected operator types and parameter/FLOP budgets",
+          "id": "ratio_and_placement"
+        }
+      ],
+      "required_diagnostics": [
+        "KDA decay and overwrite distributions",
+        "attention mass captured by selected compressed entries",
+        "selector recall against dense attention",
+        "compression reconstruction and downstream sufficiency",
+        "route, payload, and direct composition",
+        "position-binned and trailing-token loss",
+        "per-layer state, prefill, and decode cost"
+      ]
+    },
+    {
+      "claim_ids": [
+        "C2",
+        "C4",
+        "C6"
+      ],
+      "id": "depth",
+      "ordered_families": [
+        {
+          "arms": [
+            "standard PreNorm residual",
+            "Full AttnRes",
+            "Block AttnRes with approximately eight sources"
+          ],
+          "decision": "promote only content-dependent routing that beats a parameter/FLOP-matched standard residual",
+          "fixed": "selected or conservative sequence backbone and dense SwiGLU",
+          "id": "attnres_isolation"
+        },
+        {
+          "arms": [
+            "4 summaries",
+            "8 summaries",
+            "12 summaries",
+            "full depth"
+          ],
+          "decision": "find the quality versus activation/communication frontier",
+          "fixed": "promoted AttnRes formulation",
+          "id": "attnres_block_count"
+        },
+        {
+          "arms": [
+            "at least three depths by three widths for standard residual",
+            "same grid for promoted AttnRes"
+          ],
+          "decision": "prevent comparison against a baseline shape optimized for a different residual rule",
+          "fixed": "training compute and parameter budget",
+          "id": "depth_width_cross_sweep"
+        }
+      ],
+      "required_diagnostics": [
+        "hidden and residual RMS by logical depth",
+        "module update fraction",
+        "gradient norm by depth",
+        "AttnRes source weights and entropy",
+        "effective source age and embedding reliance",
+        "activation memory and recomputation",
+        "incremental decode and export parity"
+      ]
+    },
+    {
+      "claim_ids": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "id": "width",
+      "ordered_families": [
+        {
+          "arms": [
+            "dense SwiGLU",
+            "top-k routed SwiGLU plus shared expert"
+          ],
+          "decision": "establish whether conditional width helps before adding stability machinery",
+          "fixed": "selected or conservative sequence/depth stack",
+          "id": "dense_vs_conventional_moe"
+        },
+        {
+          "arms": [
+            "direct experts",
+            "LatentMoE",
+            "normalized LatentMoE"
+          ],
+          "decision": "isolate latent parameterization and normalization",
+          "fixed": "expert count, top-k, active parameters, and routing",
+          "id": "latent_projection"
+        },
+        {
+          "arms": [
+            "SwiGLU",
+            "clamped SwiGLU",
+            "SiTU-GLU or justified bounded alternative"
+          ],
+          "decision": "separate quality from outlier and stability effects",
+          "fixed": "promoted expert geometry",
+          "id": "bounded_activation"
+        },
+        {
+          "arms": [
+            "auxiliary load loss",
+            "bias-based balancing",
+            "quantile balancing"
+          ],
+          "decision": "choose using quality, load tails, communication, and instability\u2014not mean load alone",
+          "fixed": "promoted expert and activation geometry",
+          "id": "balancing"
+        },
+        {
+          "arms": [
+            "low expert count with a higher activated fraction",
+            "medium expert count and activated fraction",
+            "high expert count with a lower activated fraction"
+          ],
+          "decision": "select total/active capacity only after the mechanism is stable",
+          "fixed": "active parameter/FLOP target",
+          "id": "expert_geometry"
+        }
+      ],
+      "required_diagnostics": [
+        "per-expert token counts and coefficient of variation",
+        "maximum load and capacity overflow",
+        "routing probability and margin distributions",
+        "expert specialization and redundancy",
+        "activation and gradient outliers",
+        "expert memory and communication bytes",
+        "batch-1, single-device, and expert-parallel serving"
+      ]
+    }
+  ],
+  "baseline_evidence": {
+    "analysis_plan": "research/paper-1/baseline_analysis.json",
+    "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+    "audit": "results/Speck-Paper1/baseline-audit.json",
+    "audit_sha256": "b1dd59e9392c4223f706ff3b64434f80195f0a265734c11ea18e55ab8ee46244",
+    "automation_contract": "research/paper-1/baseline_automation_v1.json",
+    "automation_contract_sha256": "bd8f8673f2a5e359e49f4c39e33509735a7067144a0285f1ad1217866245e084",
+    "automation_contract_status": "frozen_before_dense_control_2_completion",
+    "cache_equivalence_v2_analysis": "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
+    "cache_equivalence_v2_analysis_sha256": "f0f49a3a696a2b21950afe4cc5ac28ecb4ae12a8b32223f38821458e4e746f0e",
+    "cache_equivalence_v2_contract": "research/paper-1/cache_equivalence_v2.json",
+    "cache_equivalence_v2_contract_sha256": "3deccc06de69969492ef0f2c396097524c85fc7fa2de93fc9a8db26b24d2954e",
+    "cache_equivalence_v2_control_lock": "results/Speck-Paper1/cache-equivalence-v2-control-lock.json",
+    "cache_equivalence_v2_control_lock_sha256": "121deb26010b2b8f25232eebe469130cc1bab060cfe129350222c8b3ee7aadb5",
+    "cache_equivalence_v2_status": "failed",
+    "cache_equivalence_v3_analysis": "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
+    "cache_equivalence_v3_analysis_sha256": "43d2ca48287f1425a207f80d57cf130fab89413ff173eee12d997f6d1ff0d4ac",
+    "cache_equivalence_v3_contract": "research/paper-1/cache_equivalence_v3.json",
+    "cache_equivalence_v3_contract_sha256": "f90bbfb95c098a26793d5d71b74f02dba02505cb87062bd8cc7e470f4f51bc83",
+    "cache_equivalence_v3_status": "qualified",
+    "collection_correction": "research/paper-1/baseline_collection_v2.json",
+    "collection_correction_sha256": "2fe52ac3447429d4ccbf3c5672267d33e93642c461ff2aeb77f2c8a540641a12",
+    "collection_correction_status": "frozen_after_control_0_before_candidate_results",
+    "cuda_decode_contract": "research/paper-1/cuda_decode_diagnostic.json",
+    "cuda_decode_contract_sha256": "24bf8c0b6732089dc69a005893600152812834b4977b99658dce976008daa5fb",
+    "cuda_decode_result": "results/Speck-Paper1/cuda-decode-diagnostic.json",
+    "cuda_decode_result_sha256": "3f09952c22cb1dfe950d6dd3c59b3a7d50cdb2559e437969202ce80517b40ec0",
+    "dense_control_results": [
+      {
+        "pair": 0,
+        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
+        "sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526",
+        "status": "complete_qualified"
+      },
+      {
+        "pair": 1,
+        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
+        "sha256": "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5",
+        "status": "complete_qualified"
+      },
+      {
+        "pair": 2,
+        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json",
+        "sha256": "77c7f7e5d1ffee91009c5732cab20ced4de31851b3650bd54aea64902ecf389d",
+        "status": "complete_qualified"
+      }
+    ],
+    "materialization": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
+    "materialization_sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b",
+    "matrix": "research/paper-1/baseline_matrix.json",
+    "matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+    "preflight": "results/Speck-Paper1/baseline-preflight.json",
+    "preflight_sha256": "164cd1409afd01a25c776dd4471ade27c79eb0d28028042864abb58ed39f5f60",
+    "preflight_status": "failed",
+    "preflight_v2": "results/Speck-Paper1/baseline-preflight-v2.json",
+    "preflight_v2_sha256": "91012edc3a597dcf8cddd28bbe846b81cd6d99d1eec359ce66bf4ccf7deede86",
+    "preflight_v2_status": "qualified",
+    "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2",
+    "runtime_preflight_classification": "full-model CUDA/BF16 execution sensitivity with architecture-dependent depth amplification; new versioned behavioral contract required",
+    "status": "historical_evidence_qualified_proxy_launch_blocked",
+    "storage_qualification": "results/Speck-Paper1/baseline-storage-volume-qualified.json",
+    "storage_qualification_sha256": "e0b482987207efafd1e6273b0d3d39290ca2b40bc80584035fdd48244760d9df",
+    "storage_qualification_status": "qualified_dedicated_proxy_and_finalist_checkpoint_volume",
+    "time_to_quality_target": {
+      "path": "results/Speck-Paper1/baseline-time-to-quality-target.json",
+      "sha256": "48424759ccb7f954f55487ebdc773f03ca04ab44661377eede47d5b23a7dd6a2",
+      "status": "locked_from_controls_before_candidate_analysis"
+    },
+    "trained_decode_contract": "research/paper-1/cuda_decode_trained_sentinel.json",
+    "trained_decode_contract_sha256": "17d4011757425f0f0a7e8a6ceaa98a807069b3ef8f028646f47aae90501e651c",
+    "trained_decode_result": "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
+    "trained_decode_result_sha256": "a966e92d06574f1b80902799fa62d6e8d643365d06283c1e6b505a011393db8a"
+  },
+  "controls": {
+    "mechanism_controls": [
+      "GDN/sigmoid/RoPE hybrid",
+      "full global attention",
+      "SWA-only attention",
+      "dense SwiGLU",
+      "standard residual"
+    ],
+    "primary_conventional": {
+      "description": "PreNorm dense Transformer with global GQA, standard residuals, dense SwiGLU, and the same tokenizer, data, optimizer policy, and active parameter target.",
+      "id": "dense_global_transformer",
+      "reason": "Anchors the claim against a conventional architecture rather than only against earlier Speck variants."
+    },
+    "primary_hybrid": {
+      "description": "Current conservative KDA/sigmoid/NoPE model with five independently refreshed global GQA memories, standard residuals, and dense SwiGLU.",
+      "id": "five_cache_kda_gqa",
+      "reason": "Separates new depth, width, and attention-compression effects from the established Speck long-context control."
+    }
+  },
+  "evaluation_evidence": {
+    "active_evaluation_manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
+    "active_evaluation_manifest_id": "architecture-evaluation-v2",
+    "active_evaluation_manifest_sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6",
+    "contamination_disposition": "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
+    "contamination_disposition_protocol": "research/paper-1/contamination_disposition_v1.json",
+    "contamination_disposition_protocol_sha256": "ad4ef9dbd10c58e0ea6148d2b8312b4e61d5d536856260b8d861dab4b4baa69b",
+    "contamination_disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
+    "contamination_disposition_status": "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required",
+    "contamination_protocol": "research/paper-1/contamination_v1.json",
+    "contamination_protocol_sha256": "c61342312c9fe87ff51f851df39b296be68534fdfddfd6cd4daf6513a1837ac0",
+    "contamination_result": "results/Speck-Paper1/contamination-ruler-v1.json",
+    "contamination_result_sha256": "3f3581429f318b236ede81a0ae89f077f478c250cb4f2919045e16da7c2b490f",
+    "contamination_result_status": "failed_critical_overlap_detected",
+    "helmet_clinc_source_protocol": "research/architecture-promotion-v1/helmet_clinc_source_v1.json",
+    "helmet_clinc_source_protocol_sha256": "a510999385ed4dc70a55eac858094dc77b4ef692137ec9649bf90081bf8f98b7",
+    "helmet_clinc_source_qualification": "results/Speck-Architecture-Promotion-v1/helmet-clinc-source-qualified.json",
+    "helmet_clinc_source_qualification_sha256": "14c43416d2ba1b25629db473c3622ec7f66f4a14f338f8c7e32615a35eb02d7d",
+    "helmet_clinc_source_status": "clinc_plus_required_splits_qualified_offline",
+    "helmet_infinitebench_decision": "results/Speck-Architecture-Promotion-v1/helmet-infinitebench-decision.json",
+    "helmet_infinitebench_decision_protocol": "research/architecture-promotion-v1/helmet_infinitebench_decision_v1.json",
+    "helmet_infinitebench_decision_protocol_sha256": "a798e874bcc295f863799332fdff44c317f5fae76b54b338e0f56f7c3f7adc75",
+    "helmet_infinitebench_decision_sha256": "e93e72179f27d6d46ccae53f468be27ccb8a7d165eecff5115a62fda3b65663b",
+    "helmet_infinitebench_status": "metadata_and_seeded_path_qualified_embedded_rights_and_execution_blocked",
+    "helmet_materializer_preflight": "results/Speck-Architecture-Promotion-v1/helmet-materializer-preflight.json",
+    "helmet_materializer_preflight_protocol": "research/architecture-promotion-v1/helmet_materializer_preflight_v1.json",
+    "helmet_materializer_preflight_protocol_sha256": "11fe439568fe7163e4899dbbff992dcec9058d007950ef6b62dc484fbac1cd44",
+    "helmet_materializer_preflight_sha256": "24ad9ab83b2793711c723f34be80d0be11b585c4b56aa79819c61c7c529db1be",
+    "helmet_materializer_preflight_status": "two_family_offline_materializer_strategy_qualified",
+    "helmet_multilexsum_decision": "results/Speck-Architecture-Promotion-v1/helmet-multilexsum-decision.json",
+    "helmet_multilexsum_decision_protocol": "research/architecture-promotion-v1/helmet_multilexsum_decision_v1.json",
+    "helmet_multilexsum_decision_protocol_sha256": "514d8898f8814eb2b6c3762d0923008dc220eada35158e8b3d986bd83301340b",
+    "helmet_multilexsum_decision_sha256": "1365a9fe17e1ed7d59e7c1e66cc92d8ed89fadaf3240bf80058b012ae66289c1",
+    "helmet_multilexsum_status": "metadata_qualified_rights_and_prompt_determinism_blocked",
+    "helmet_narrativeqa_decision": "results/Speck-Architecture-Promotion-v1/helmet-narrativeqa-decision.json",
+    "helmet_narrativeqa_decision_protocol": "research/architecture-promotion-v1/helmet_narrativeqa_decision_v1.json",
+    "helmet_narrativeqa_decision_protocol_sha256": "136b0166275a5b3d5651b15671acd43f02a207ae077948ff4e60127f54ed933d",
+    "helmet_narrativeqa_decision_sha256": "5b520d1140cc04168ceece08ba81abfaea41c6efd4c68a57993899b5f6d4f6c1",
+    "helmet_narrativeqa_status": "metadata_qualified_embedded_rights_and_prompt_path_blocked",
+    "helmet_runtime_dependency_audit": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
+    "helmet_runtime_dependency_audit_sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2",
+    "helmet_runtime_dependency_protocol": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
+    "helmet_runtime_dependency_protocol_sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b",
+    "helmet_runtime_dependency_status": "runtime_dependency_inventory_qualified_execution_blocked",
+    "helmet_seeded_demo_repair_protocol": "research/architecture-promotion-v1/helmet_seeded_demos_v1.json",
+    "helmet_seeded_demo_repair_protocol_sha256": "7672b45d8222591849b4faa893d7ef46d560740fe22bb2f334f42c671d0beef7",
+    "helmet_seeded_demo_repair_qualification": "results/Speck-Architecture-Promotion-v1/helmet-seeded-demos-qualified.json",
+    "helmet_seeded_demo_repair_qualification_sha256": "8b3eaca25312ea3e300772dbb49e3be2bea2e4e2bbfd08a078c88fcd044dcd56",
+    "helmet_seeded_demo_repair_status": "two_loader_seeded_demo_patch_qualified_on_fixtures",
+    "helmet_trec_rights_decision": "results/Speck-Architecture-Promotion-v1/helmet-trec-rights-decision.json",
+    "helmet_trec_rights_decision_sha256": "43a6fb0106373f55bb9671acfe62352f833eed0092520d7783828d2f2e5e68d1",
+    "helmet_trec_rights_protocol": "research/architecture-promotion-v1/helmet_trec_rights_v2.json",
+    "helmet_trec_rights_protocol_sha256": "ddebbeaad0a021e8f8a1dd5ae3add715614490704359509875b55ae201ca8288",
+    "helmet_trec_rights_status": "trec_metadata_audited_payload_and_use_authority_blocked",
+    "ruler_v1_decision": "failed_critical_overlap_preserved",
+    "ruler_v2_decision": "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending",
+    "status": "ruler_v1_failed_v2_frozen_helmet_sources_dispositioned_seeded_demo_repair_qualified_not_activated"
+  },
+  "evaluation_program": {
+    "base_quality": [
+      "held-out aggregate and per-source language loss",
+      "general knowledge and commonsense",
+      "code",
+      "mathematics",
+      "reasoning",
+      "multilingual only if claimed"
+    ],
+    "long_context": [
+      "RULER only under a post-contamination successor manifest",
+      "NoLiMa",
+      "HELMET",
+      "real long-document loss"
+    ],
+    "mechanism": [
+      "MQAR",
+      "palindrome/copy",
+      "state tracking",
+      "structured retrieval v2",
+      "symbolic composition v2"
+    ],
+    "reporting": "all primary and guardrail metrics use architecture-promotion-v1 decision rules",
+    "systems": [
+      "training time and energy to fixed quality",
+      "TTFT and TPOT percentiles",
+      "output throughput under arrival-rate sweeps",
+      "maximum resident batch",
+      "persistent state and peak allocation",
+      "compile and kernel startup",
+      "production-runtime parity"
+    ]
+  },
+  "format": "speck_paper_experiment_program",
+  "format_version": 1,
+  "interaction_program": {
+    "claim_ids": [
+      "C0",
+      "C4"
+    ],
+    "entry_rule": "only independently promoted mechanisms enter",
+    "failure_rule": "delete any component whose combined-model effect does not clear its quality or systems threshold",
+    "final_removals": [
+      "remove promoted sequence novelty",
+      "replace depth routing with retuned standard residual",
+      "replace MoE with parameter/FLOP-matched dense SwiGLU",
+      "remove every auxiliary stability mechanism individually"
+    ],
+    "full_factorial_requirement": "run the 2^3 presence/absence cube at the discovery scale for the final three mechanisms",
+    "pairwise_cells": [
+      "sequence \u00d7 depth",
+      "sequence \u00d7 width",
+      "depth \u00d7 width"
+    ]
+  },
   "large_pretraining_gate": {
-    "status": "blocked",
+    "decision": "no paper-scale or release-scale pretraining begins until every required item has a checked artifact",
     "required": [
       "one Speck-specific novelty satisfies the README novelty gate",
       "sequence, depth, and width finalists pass isolated architecture-promotion-v1 gates",
@@ -445,6 +437,110 @@
       "storage, compute, energy, and failure-recovery budgets cover every declared arm",
       "paper claims and analysis plan are frozen before results"
     ],
-    "decision": "no paper-scale or release-scale pretraining begins until every required item has a checked artifact"
-  }
+    "status": "blocked"
+  },
+  "matching_views": [
+    "fixed training tokens",
+    "fixed analytic training FLOPs",
+    "fixed active non-embedding parameters",
+    "fixed total non-embedding parameters",
+    "fixed wall-clock budget on named hardware",
+    "time and energy to locked quality"
+  ],
+  "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "proxy_launch_evidence": {
+    "contract": "research/paper-1/proxy_launch_v1.json",
+    "contract_sha256": "156dc8ae7812454f1d73a4d637fe040bfb810db29985659e16b40d3394746ce3",
+    "qualification": "results/Speck-Paper1/proxy-launch-qualified.json",
+    "qualification_sha256": "6b67d741ed15b1fd00701c2c53d749311f1454e315de6f92cebd9581f807d494",
+    "qualification_status": "proxy_training_authorized_release_claims_blocked",
+    "runner_revision": "4eba36607fe3935950019686c7c171e4ca6841a7",
+    "status": "proxy_training_authorized_release_claims_blocked"
+  },
+  "scales": [
+    {
+      "active_parameters": [
+        30000000,
+        60000000
+      ],
+      "id": "mechanism",
+      "minimum_tokens_per_parameter": 2,
+      "promotion_authority": false,
+      "purpose": "correctness, optimization calibration, task qualification, and broad rejection"
+    },
+    {
+      "active_parameters": [
+        130000000,
+        170000000
+      ],
+      "id": "proxy_discovery",
+      "promotion_authority": false,
+      "purpose": "one-axis discovery under the existing RTX 3090 envelope",
+      "training_tokens": 131072000
+    },
+    {
+      "active_parameters": [
+        130000000,
+        170000000
+      ],
+      "id": "proxy_finalist",
+      "minimum_tokens_per_parameter": 10,
+      "promotion_authority": true,
+      "purpose": "longer-horizon finalist replication",
+      "replication": "three initialization seeds crossed with two packed-data orders"
+    },
+    {
+      "active_parameters": [
+        300000000,
+        600000000
+      ],
+      "id": "medium_transfer",
+      "launch_blocker": "named hardware, parallelism, storage, and absolute cost envelope",
+      "minimum_tokens_per_parameter": 10,
+      "promotion_authority": true,
+      "purpose": "scale-transfer and systems confirmation",
+      "replication": "three paired seeds with distinct data orders"
+    },
+    {
+      "active_parameters": [
+        1000000000,
+        1500000000
+      ],
+      "id": "target_sentinel",
+      "promotion_authority": false,
+      "purpose": "detect a costly integration or ranking reversal, not establish population equivalence",
+      "replication": "one paired candidate/control run",
+      "training_tokens": 20000000000
+    },
+    {
+      "active_parameters": null,
+      "id": "paper_scale",
+      "promotion_authority": false,
+      "purpose": "final matched pretraining only after every large_pretraining_gate item passes",
+      "training_tokens": null
+    }
+  ],
+  "scaling_program": {
+    "claim_ids": [
+      "C5"
+    ],
+    "entry_rule": "final candidate and strongest conventional baseline fixed before fitting",
+    "fit_views": [
+      "loss versus analytic compute",
+      "loss versus wall-clock",
+      "quality versus energy"
+    ],
+    "minimum_points_per_architecture": 5,
+    "requirements": [
+      "identical data family and tuning budget",
+      "compute-optimal token allocation",
+      "fit parameter uncertainty and residuals",
+      "one held-out scale or compute point",
+      "architecture-by-training-horizon interaction"
+    ]
+  },
+  "status": "preregistered_program_no_architecture_selected",
+  "updated_on": "2026-09-05"
 }

@@ -1,0 +1,28 @@
+{
+  "analysis_plan_sha256": "f917d22cebd1d30faa89e38c430c26102eb2b1ee2c634b059db43878a17eb6cb",
+  "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+  "control_arm": "dense_global_param_match",
+  "control_results": [
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
+      "sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
+      "sha256": "fdffea05f4e7aed509599ea95a34e44504f014ce5092d8e4b9c936903e181fe5"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json",
+      "sha256": "77c7f7e5d1ffee91009c5732cab20ced4de31851b3650bd54aea64902ecf389d"
+    }
+  ],
+  "format": "speck_paper_baseline_time_to_quality_lock",
+  "format_version": 1,
+  "locked_at": "2026-09-05T19:43:45.345604+00:00",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "round_up_decimals": 6,
+  "rule": "maximum final validation loss across the three complete dense-control runs, rounded upward",
+  "status": "locked_from_controls_before_candidate_analysis",
+  "validation_loss_target": 2.839127
+}
