@@ -103,9 +103,11 @@ def validate_external_suite(path):
         )
     ):
         raise ValueError("external suite lengths must be sorted unique positive integers")
-    for section in ("data", "model_adapter"):
-        if "blocked" not in config[section].get("status", ""):
-            raise ValueError(f"external suite {section} must state its unresolved blocker")
+    data_status = config["data"].get("status", "")
+    if "blocked" not in data_status and "qualified" not in data_status:
+        raise ValueError("external suite data must state qualification or an unresolved blocker")
+    if "blocked" not in config["model_adapter"].get("status", ""):
+        raise ValueError("external suite model_adapter must state its unresolved blocker")
     data = config["data"]
     if config["suite_id"] == "ruler" and data["status"].startswith("source_bundle_qualified"):
         _require(
@@ -160,8 +162,11 @@ def validate_external_suite(path):
                 {"status", "compatibility_patch", "qualified_lengths", "remaining_lengths"},
                 "RULER case generation",
             )
-            if "blocked" not in case_generation["status"]:
-                raise ValueError("partial RULER case generation must preserve its blocker status")
+            if case_generation["remaining_lengths"]:
+                if "blocked" not in case_generation["status"]:
+                    raise ValueError("partial RULER case generation must preserve its blocker status")
+            elif case_generation["status"] != "qualified_all_declared_lengths":
+                raise ValueError("complete RULER case generation must state full qualification")
             patch = case_generation["compatibility_patch"]
             _require(
                 patch,
