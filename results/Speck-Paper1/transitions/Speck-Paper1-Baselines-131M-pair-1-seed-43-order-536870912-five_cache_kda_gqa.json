@@ -1,0 +1,16 @@
+{
+  "automation_contract_sha256": "bd8f8673f2a5e359e49f4c39e33509735a7067144a0285f1ad1217866245e084",
+  "completed_run": "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa",
+  "created_at": "2026-09-05T22:04:23.265579+00:00",
+  "format": "speck_paper_baseline_automatic_transition",
+  "format_version": 1,
+  "next_run": "Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa",
+  "polling": false,
+  "quality_dependent_branching": false,
+  "result": {
+    "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
+    "sha256": "e971627804813deecc9fb650b644d8b5983047250f6f1c1915945a9a5824afa4"
+  },
+  "status": "complete",
+  "trigger_disabled_before_collection": true
+}

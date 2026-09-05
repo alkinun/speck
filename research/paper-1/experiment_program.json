@@ -1,4 +1,9 @@
 {
+  "adakv_code_audit": {
+    "audit": "research/paper-1/adakv_code_audit_v1.json",
+    "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
+    "status": "immutable_source_audited_execution_blocked"
+  },
   "adaptive_cache_budget": {
     "protocol": "research/paper-1/adaptive_cache_budget_v1.json",
     "protocol_sha256": "10b69c80bc7e44086489e19627579be94f4dd79a27b78ef244cbffc4dc8aba8e",
@@ -24,11 +29,6 @@
     "contract": "research/paper-1/adaptive_cache_salience_readiness_v1.json",
     "sha256": "0dd1d1c2e3e3cb1b029ff8eaec269bf9869672e6fc7046d443f0b9439e030d7c",
     "status": "design_blocked_instrumentation_acquisition_and_runtime_unqualified"
-  },
-  "adakv_code_audit": {
-    "audit": "research/paper-1/adakv_code_audit_v1.json",
-    "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
-    "status": "immutable_source_audited_execution_blocked"
   },
   "analysis_program": [
     {
@@ -280,6 +280,12 @@
         "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa.json",
         "sha256": "2c877c4bca749c49bcad70aa3d597ad1a7c8c372039533194f3df3d5299b3bb1",
         "status": "complete_qualified"
+      },
+      {
+        "pair": 1,
+        "path": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
+        "sha256": "e971627804813deecc9fb650b644d8b5983047250f6f1c1915945a9a5824afa4",
+        "status": "complete_qualified"
       }
     ],
     "collection_correction": "research/paper-1/baseline_collection_v2.json",
@@ -519,15 +525,15 @@
     "fixed wall-clock budget on named hardware",
     "time and energy to locked quality"
   ],
-  "novelty_code_availability": {
-    "audit": "research/paper-1/novelty_code_availability_v3.json",
-    "sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e",
-    "status": "twelve_sources_one_root_rights_path_no_new_reproduction_authority"
-  },
   "novelty_claim_overlap": {
     "contract": "research/paper-1/novelty_claim_overlap_v1.json",
     "sha256": "f178592fdd13185fe1fdd69faa8a1edabb6161bebd6ff22fa0398f5e62655158",
     "status": "twelve_source_table_n1_primary_n2_deferred_no_novelty"
+  },
+  "novelty_code_availability": {
+    "audit": "research/paper-1/novelty_code_availability_v3.json",
+    "sha256": "a5fea16c4cbb493b5e15108b77ce9474411abfe601d24fc1a6d3bae03ea9915e",
+    "status": "twelve_sources_one_root_rights_path_no_new_reproduction_authority"
   },
   "novelty_landscape": {
     "audit": "research/paper-1/novelty_landscape_v4.json",
