@@ -76,6 +76,9 @@ the final combined model.
 - [`hca_readiness_v1.json`](hca_readiness_v1.json) records why HCA is not implementation-ready and
   freezes the causal tail/prefix semantics, compressor-isolation requirement, conditional rate grid,
   accounting, and realized-cost gates needed before it can become an experiment.
+- [`csa_readiness_v1.json`](csa_readiness_v1.json) keeps sparse precision separate from HCA/local/cache
+  changes and freezes oracle-first block selection, selector diagnostics, conditional geometry,
+  causal state, complexity accounting, and sparse-prefill/sparse-decode gates.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

@@ -1,0 +1,174 @@
+{
+  "format": "speck_csa_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-csa-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_parent_oracle_and_selector_unqualified",
+  "frozen_on": "2026-09-05",
+  "purpose": "Prevent compressed sparse attention from conflating high-resolution compression, selector quality, sparse execution, and dense coarse coverage.",
+  "evidence_basis": [
+    {
+      "path": "papers/22_deepseek_v4.md",
+      "supported": "CSA selects less-compressed entries for precise access while HCA supplies a separate dense coarse view",
+      "not_transferred": "compression 4, top-k 512/1024, FP4 indexer, quality, and system ratios"
+    },
+    {
+      "path": "papers/19_native_sparse_attention.md",
+      "supported": "coarse scan, selected contiguous fine blocks, and raw local context should be separately measurable; hardware-aware block grouping matters",
+      "not_transferred": "NSA block sizes, gates, sparsity, and kernel speedups"
+    },
+    {
+      "path": "papers/21_deepseek_v3_2.md",
+      "supported": "a learned indexer can be distilled against dense attention before sparse joint continuation",
+      "not_transferred": "top-2048, detached indexer recipe, trillion-token adaptation, and deployed parity"
+    },
+    {
+      "path": "papers/20_moba.md",
+      "supported": "block routing is simpler and more contiguous than token routing, but execution modes and trailing-token loss must be disclosed",
+      "not_transferred": "mean-key sufficiency, block 512/top-3, or prefill-only quality as sparse-decode evidence"
+    }
+  ],
+  "ordered_prerequisites": [
+    "select the recurrent/local sequence backbone",
+    "select the exact global-cache representation",
+    "select and qualify the dense coarse HCA compressor and rate",
+    "qualify genuine long-dependency data and the existing evaluation gates",
+    "freeze dense teacher, selector targets, budgets, execution modes, and analysis before sparse outputs"
+  ],
+  "factorization": {
+    "coarse_global": "selected HCA branch attends densely to aggressive summaries and is held fixed",
+    "precise_sparse": "CSA attends to selected less-compressed historical units and is the only intervention",
+    "local": "KDA remains fixed; a raw SWA branch is a later separate family",
+    "rule": "no result may attribute a gain to CSA if HCA, raw local coverage, cache representation, or attention placement changes in the same cell"
+  },
+  "causal_and_state_semantics_required": {
+    "high_resolution_entries": "each entry names an immutable causal source span and becomes visible only after all contributing tokens are available",
+    "selection_mask": "future entries are excluded before scoring and top-k",
+    "unfinished_tail": "partial compressed spans and current selection blocks are represented separately and never leak future tokens",
+    "selected_blocks": "historical blocks are contiguous and shared across the query-head group for reusable K/V fetch",
+    "current_block": "if included, it uses an explicit causal mask rather than historical-block semantics",
+    "softmax": "selected historical/current contributions use one mathematically equivalent normalization, not separately normalized sums",
+    "ties": "top-k tie breaking is deterministic and pinned",
+    "prefix_reuse": "index keys, compressed entries, block identities, and tails have exact cache-hit/recompute rules",
+    "eviction_resume": "selection indices and all state identities survive checkpoint, eviction, and resume",
+    "decode_modes": "sparse prefill/sparse decode is primary; sparse prefill/full decode and full/full are separately labeled controls"
+  },
+  "selector_feasibility_sequence": [
+    {
+      "id": "oracle_block_mass",
+      "input": "frozen dense-attention probabilities aggregated into candidate causal source blocks",
+      "selection": "top blocks by true dense-attention mass under each frozen budget",
+      "purpose": "upper-bound whether the block granularity and budget can retain the required evidence",
+      "failure": "stop; do not train a learned selector at that granularity/budget"
+    },
+    {
+      "id": "mean_key",
+      "input": "query dot mean key per causal block",
+      "selection": "same granularity, budget, deterministic ties, and head sharing as the oracle",
+      "purpose": "parameter-free MoBA-style control",
+      "failure": "does not authorize token-level selection; compare the learned block indexer next if the oracle passed"
+    },
+    {
+      "id": "learned_block_indexer",
+      "input": "compact query/index-key scores with inputs and precision frozen before training",
+      "target": "L1-normalized dense block-mass distribution with a separately reported selected-set objective",
+      "gradient": "selector objective and language-model objective paths are reported separately; detachment is an experimental choice, not silently assumed",
+      "purpose": "test whether learned block routing closes the oracle gap"
+    }
+  ],
+  "conditional_geometry_grid": {
+    "high_resolution_compression_tokens": [
+      2,
+      4,
+      8
+    ],
+    "selection_block_raw_tokens": [
+      32,
+      64,
+      128
+    ],
+    "attended_raw_token_budgets": [
+      512,
+      2048,
+      8192
+    ],
+    "budget_rule": "attend to min(history, budget) raw-token-equivalent capacity; report actual unique causal source tokens and compressed entries",
+    "screening_rule": "mechanism-scale oracle screening eliminates infeasible cells before any learned selector; freeze the smallest passing block and budget frontier on held-out cases",
+    "token_level_escape_hatch": "requires a successor contract proving block-level oracle or learned recall fails while a token-level oracle passes at a realizable kernel budget"
+  },
+  "selector_metrics": {
+    "dense_mass_recall": "fraction of dense-attention probability mass contained in selected causal blocks",
+    "critical_source_recall": "fraction of every declared route, payload, and distractor source span included by selection",
+    "all_required_sources": "example passes only when every required constituent source is selected",
+    "ranking": [
+      "top-k block precision/recall",
+      "MRR of required blocks",
+      "margin between last required and first excluded distractor block"
+    ],
+    "calibration": [
+      "KL divergence to normalized dense block mass",
+      "captured mass by layer, head group, query position, distance, and load"
+    ],
+    "rule": "index overlap alone is never sufficient because dense blocks carry unequal probability and causal importance"
+  },
+  "quality_endpoints": [
+    "aggregate and every-source language-loss non-inferiority",
+    "structured retrieval candidate accuracy, specificity, and retention",
+    "symbolic route, payload, and direct composition with all-required-source recall",
+    "position-binned and trailing-token loss",
+    "independent long-context suites only after their existing gates qualify",
+    "full/full, sparse/sparse, and sparse-prefill/full-decode outputs reported separately"
+  ],
+  "complexity_and_state_accounting": {
+    "compressor": "O(L) construction for high-resolution entries",
+    "dense_index_scan": "O(L^2/m) when every query scores every L/m compressed index entry; a lower coefficient is not linear complexity",
+    "selected_attention": "O(Lk) in selected compressed entries or raw-token-equivalent budget",
+    "coarse_hca": "retain the separately measured dense-summary O(L^2/m') term",
+    "state": [
+      "all high-resolution compressed entries",
+      "index keys and quantization scales",
+      "selected-block dispatch metadata",
+      "unfinished compression and selection tails",
+      "HCA and KDA state reported separately"
+    ]
+  },
+  "training_sequence_if_qualified": [
+    "train or select a matched dense teacher under a separately frozen contract",
+    "qualify oracle block granularity and budgets on held-out mechanism cases",
+    "train the indexer only against frozen dense targets and report selector metrics",
+    "freeze one selector/budget before joint sparse continuation",
+    "run matched sparse and dense continuation with identical tokens/data/optimizer",
+    "from-scratch architecture claims require their own matched from-scratch replication; converted checkpoints alone cannot promote CSA"
+  ],
+  "systems_gate": {
+    "custom_runtime_minimum_primary_improvement": 0.2,
+    "minimum_state_reduction": 0.25,
+    "repeats": 5,
+    "interleave_arms": true,
+    "maximum_start_temperature_c": 50,
+    "required_lengths": [
+      4096,
+      32768,
+      131072,
+      1048576
+    ],
+    "required_loads": [
+      "batch 1",
+      "maximum resident batch",
+      "arrival-rate sweep"
+    ],
+    "rule": "selector recall, analytic sparsity, or a prefill-only kernel cannot substitute for end-to-end sparse-prefill/sparse-decode improvement"
+  },
+  "decision": {
+    "block_granularity_selected": false,
+    "compression_selected": false,
+    "budget_selected": false,
+    "selector_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "token_level_selection_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after parent and HCA selection, execute only the frozen oracle block-mass feasibility matrix"
+  }
+}

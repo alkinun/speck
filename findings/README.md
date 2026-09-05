@@ -69,6 +69,7 @@ Read in order:
 61. [60 — Paper 1 proxy disposition frozen before candidates](60_paper_1_proxy_disposition.md)
 62. [61 — Conditional five-cache GQA3/MQA1/MLA design](61_five_cache_representation_design.md)
 63. [62 — HCA readiness gate before implementation](62_hca_readiness_gate.md)
+64. [63 — CSA selector-readiness gate before implementation](63_csa_readiness_gate.md)
 
 Conventions:
 
@@ -300,3 +301,9 @@ compressor are unselected, and causal partial-block state is unspecified. The ne
 three-arm compressor isolation before a 32/64/128/256 rate curve, exact tail/prefix/resume semantics,
 complete state/compute accounting, and realized 20% systems plus 25% state thresholds. No training is
 authorized.
+
+Finding 63 separates CSA from HCA, local coverage, and cache representation before implementation.
+Block-mass oracle feasibility precedes mean-key and learned selectors; captured probability and
+all-required-source recall replace index overlap as primary diagnostics. A 2/4/8 compression,
+32/64/128 block, and 512/2,048/8,192 budget grid is conditional. Dense index scan remains `O(L²/m)`,
+and token-level routing needs a successor contract. No training is authorized.

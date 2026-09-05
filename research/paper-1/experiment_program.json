@@ -313,6 +313,11 @@
       "reason": "Separates new depth, width, and attention-compression effects from the established Speck long-context control."
     }
   },
+  "csa_readiness": {
+    "contract": "research/paper-1/csa_readiness_v1.json",
+    "sha256": "2174170a3503d2e9d1e94797ab5fd49d89e4b571d58c0a369b7dee20baa3ba1b",
+    "status": "design_blocked_parent_oracle_and_selector_unqualified"
+  },
   "evaluation_evidence": {
     "active_evaluation_manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
     "active_evaluation_manifest_id": "architecture-evaluation-v2",

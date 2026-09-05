@@ -15,6 +15,7 @@ PROGRAM_FILES = (
     "proxy_disposition_v1.json",
     "sequence_cache_representation_v1.json",
     "hca_readiness_v1.json",
+    "csa_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -635,6 +636,52 @@ def _validate_hca_readiness(reference, repository_root, paper_id, policy_id):
         raise ValueError("HCA readiness design is incomplete")
 
 
+def _validate_csa_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "CSA readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("CSA readiness gate does not match its pin")
+    gate = _load_json(path)
+    selectors = gate.get("selector_feasibility_sequence", ())
+    grid = gate.get("conditional_geometry_grid", {})
+    complexity = gate.get("complexity_and_state_accounting", {})
+    systems = gate.get("systems_gate", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_csa_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("ordered_prerequisites", ())) < 5
+        or [selector.get("id") for selector in selectors]
+        != ["oracle_block_mass", "mean_key", "learned_block_indexer"]
+        or grid.get("high_resolution_compression_tokens") != [2, 4, 8]
+        or grid.get("selection_block_raw_tokens") != [32, 64, 128]
+        or grid.get("attended_raw_token_budgets") != [512, 2048, 8192]
+        or "O(L^2/m)" not in complexity.get("dense_index_scan", "")
+        or "O(Lk)" not in complexity.get("selected_attention", "")
+        or systems.get("custom_runtime_minimum_primary_improvement") != 0.2
+        or systems.get("minimum_state_reduction") != 0.25
+        or systems.get("repeats") != 5
+        or systems.get("interleave_arms") is not True
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "block_granularity_selected",
+                "compression_selected",
+                "budget_selected",
+                "selector_selected",
+                "implementation_authorized",
+                "training_authorized",
+                "token_level_selection_authorized",
+                "promotion_authority",
+            )
+        )
+    ):
+        raise ValueError("CSA readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -702,6 +749,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "large_pretraining_gate",
             "sequence_cache_representation",
             "hca_readiness",
+            "csa_readiness",
         },
         "paper experiment program",
     )
@@ -717,6 +765,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_hca_readiness(
         program["hca_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_csa_readiness(
+        program["csa_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],
