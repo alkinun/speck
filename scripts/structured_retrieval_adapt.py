@@ -198,7 +198,7 @@ def candidate_shift(reference, changed, from_indices, to_indices):
 
 
 def candidate_ranking_loss(hidden, cases, embedding_weight):
-    """Compute ten-way first-answer-token loss at each case's response position."""
+    """Compute candidate first-answer-token loss at each case's response position."""
 
     device = hidden.device
     rows = torch.arange(hidden.size(0), device=device)

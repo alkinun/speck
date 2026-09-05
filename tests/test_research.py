@@ -98,3 +98,11 @@ def test_protocol_rejects_an_undeclared_base_seed():
     loaded = load_promotion_protocol(contract / "internal" / "structured_retrieval_v2.json")
     with pytest.raises(ValueError, match="not declared"):
         resolve_adaptation_protocol(loaded, seed=45)
+
+
+def test_runner_rejects_an_unpinned_protocol_copy(tmp_path):
+    source = contract / "internal" / "structured_retrieval_v2.json"
+    copied = tmp_path / source.name
+    shutil.copyfile(source, copied)
+    with pytest.raises(ValueError, match="not pinned"):
+        load_promotion_protocol(copied, repository_root=root)

@@ -304,15 +304,31 @@ def _validate_internal_protocols(manifest, repository_root, policy_id, tokenizer
     return protocols
 
 
-def load_promotion_protocol(path, tokenizer=None):
+def load_promotion_protocol(path, tokenizer=None, repository_root=None):
     """Load and validate one frozen retrieval protocol for an execution runner."""
 
     path = Path(path).expanduser().resolve()
-    repository_root = _repository_root(path)
+    repository_root = (
+        _repository_root(path)
+        if repository_root is None
+        else Path(repository_root).expanduser().resolve()
+    )
     protocol = _load_json(path)
     policy_path = repository_root / "research" / protocol.get("policy_id", "") / "policy.json"
     policy = _load_json(policy_path)
     _validate_policy(policy)
+    manifest_path = policy_path.parent / "evaluation_manifest.json"
+    manifest = _load_json(manifest_path)
+    pinned = [
+        suite
+        for suite in manifest.get("internal_suites", ())
+        if suite.get("id") == protocol.get("protocol_id")
+    ]
+    if len(pinned) != 1:
+        raise ValueError("promotion protocol is not uniquely pinned by the evaluation manifest")
+    pinned_path = (repository_root / pinned[0].get("protocol", "")).resolve()
+    if path != pinned_path or _file_sha256(path) != pinned[0].get("protocol_sha256"):
+        raise ValueError("promotion protocol path or hash is not pinned by the evaluation manifest")
     summary = _validate_promotion_protocol(
         path,
         repository_root,
