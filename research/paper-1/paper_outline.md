@@ -231,4 +231,3 @@ benchmark contamination risk, energy/resource usage, and the exact claims the ex
 
 List code revision, environment images, raw configs/results, seeds/data orders, dataset and benchmark
 revisions, tokenizer/checkpoint hashes, kernel qualifications, hardware, commands, and artifact licenses.
-

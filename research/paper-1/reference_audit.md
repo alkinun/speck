@@ -70,4 +70,3 @@ component must pass alone, in every pairwise combination, in the complete tri-ax
 cube, and in a final removal test. Scaling, kernel, and independent evaluation evidence must be linked
 to the same versioned architecture and result lineage. If resource limits prevent that standard, the
 paper narrows its claim rather than substituting an unmatched whole-system comparison.
-

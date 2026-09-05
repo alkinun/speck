@@ -107,4 +107,3 @@ Primary reference reports:
 - [Kimi Linear](https://arxiv.org/abs/2510.26692)
 - [Kimi K3](https://arxiv.org/abs/2607.24653)
 - [DeepSeek-V4](https://arxiv.org/abs/2606.19348)
-

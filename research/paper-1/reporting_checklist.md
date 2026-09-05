@@ -100,4 +100,3 @@ artifact. “Not applicable” requires a written reason.
 - [ ] Code, kernels, model weights, data recipes, and evaluation outputs have compatible licenses.
 - [ ] Independent rerun or artifact audit is complete.
 - [ ] Known limitations, compute/energy use, and failure cases are prominent.
-
