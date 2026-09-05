@@ -30,21 +30,25 @@ PROGRAM_FILES = (
     "novelty_landscape_v5.json",
     "novelty_landscape_v6.json",
     "novelty_landscape_v7.json",
+    "novelty_landscape_v8.json",
     "novelty_claim_overlap_v1.json",
     "novelty_claim_overlap_v2.json",
     "novelty_claim_overlap_v3.json",
     "novelty_claim_overlap_v4.json",
+    "novelty_claim_overlap_v5.json",
     "novelty_code_availability_v1.json",
     "novelty_code_availability_v2.json",
     "novelty_code_availability_v3.json",
     "novelty_code_availability_v4.json",
     "novelty_code_availability_v5.json",
     "novelty_code_availability_v6.json",
+    "novelty_code_availability_v7.json",
     "adakv_code_audit_v1.json",
     "headkv_code_audit_v1.json",
     "brief_code_audit_v1.json",
     "rethinking_hybrid_code_audit_v1.json",
     "massive_hla_code_audit_v1.json",
+    "halo_code_audit_v1.json",
     "adaptive_cache_budget_v1.json",
     "adaptive_cache_gqa_v1.json",
     "adaptive_cache_safeguard_v1.json",
@@ -1122,14 +1126,14 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
     predecessor = audit.get("predecessor", {})
     if (
         audit.get("format") != "speck_novelty_landscape_audit"
-        or audit.get("format_version") != 7
+        or audit.get("format_version") != 8
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
-        or predecessor.get("path") != "research/paper-1/novelty_landscape_v6.json"
+        or predecessor.get("path") != "research/paper-1/novelty_landscape_v7.json"
         or not (repository_root / predecessor["path"]).is_file()
         or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
         or [source.get("id") for source in sources]
-        != ["arxiv_2608_12149v2"]
+        != ["arxiv_2601_22156v1"]
         or any(source.get("review_scope") != "full_text" for source in sources)
         or any(
             not (repository_root / source.get("local_note", "")).is_file()
@@ -1137,14 +1141,14 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
             != source.get("local_note_sha256")
             for source in sources
         )
-        or audit.get("aggregate_source_count") != 17
-        or len(overlaps) < 4
+        or audit.get("aggregate_source_count") != 18
+        or len(overlaps) < 5
         or any(overlap.get("decision") == "novel" for overlap in overlaps)
-        or residual.get("id") != "N1_prospective_arbitrary_unseen_layout_prediction"
+        or residual.get("id") != "N1_heldout_from_scratch_interaction_aware_placement_prediction"
         or residual.get("experiment_authorized") is not False
         or residual.get("novelty_status")
-        != "no_novelty_established_independent_review_may_retire_residual"
-        or len(audit.get("source_limitations", ())) < 5
+        != "no_novelty_established_independent_review_should_retain_or_retire_n1"
+        or len(audit.get("source_limitations", ())) < 6
         or decision.get("novel_mechanism_established") is not False
         or decision.get("novel_composition_rule_established") is not False
         or decision.get("novel_generalizable_law_established") is not False
@@ -1154,6 +1158,7 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
         or decision.get("n1_broad_role_novelty_rejected") is not True
         or decision.get("n1_nonuniform_from_scratch_placement_novelty_rejected") is not True
         or decision.get("n1_pas_isp_diagnostic_novelty_rejected") is not True
+        or decision.get("n1_task_guided_layer_selection_novelty_rejected") is not True
         or decision.get("n1_residual_predictive_law_established") is not False
         or decision.get("placement_experiment_authorized") is not False
         or decision.get("paper_novelty_gate_pass") is not False
@@ -1175,20 +1180,20 @@ def _validate_novelty_claim_overlap(reference, repository_root, paper_id):
     predecessor = table.get("predecessor", {})
     if (
         table.get("format") != "speck_novelty_claim_overlap_table"
-        or table.get("format_version") != 4
+        or table.get("format_version") != 5
         or table.get("paper_id") != paper_id
         or table.get("status") != reference["status"]
-        or predecessor.get("path") != "research/paper-1/novelty_claim_overlap_v3.json"
+        or predecessor.get("path") != "research/paper-1/novelty_claim_overlap_v4.json"
         or not (repository_root / predecessor["path"]).is_file()
         or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
-        or table.get("inherited_claims") != 22
+        or table.get("inherited_claims") != 25
         or len(claims) != 3
         or len({claim.get("id") for claim in claims}) != 3
-        or table.get("aggregate_claim_rows") != 25
+        or table.get("aggregate_claim_rows") != 28
         or [entry.get("rank") for entry in priority] != [1, 2]
         or [entry.get("id") for entry in priority]
         != [
-            "N1_prospective_multidiagnostic_unseen_layout_prediction",
+            "N1_heldout_from_scratch_interaction_aware_placement_prediction",
             "N2_internal_state_completeness_predictor_law",
         ]
         or any(entry.get("experiment_authorized") is not False for entry in priority)
@@ -1197,6 +1202,7 @@ def _validate_novelty_claim_overlap(reference, repository_root, paper_id):
         or decision.get("n1_broad_role_novelty_rejected") is not True
         or decision.get("n1_nonuniform_placement_novelty_rejected") is not True
         or decision.get("n1_pas_isp_diagnostic_novelty_rejected") is not True
+        or decision.get("n1_task_guided_selection_novelty_rejected") is not True
         or decision.get("n1_predictive_law_established") is not False
         or decision.get("n1_experiment_authorized") is not False
         or decision.get("n1_retirement_review_required") is not True
@@ -1232,38 +1238,38 @@ def _validate_novelty_code_availability(reference, repository_root, paper_id):
     landscape = audit.get("landscape", {})
     if (
         audit.get("format") != "speck_novelty_code_availability_audit"
-        or audit.get("format_version") != 6
+        or audit.get("format_version") != 7
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
-        or predecessor.get("path") != "research/paper-1/novelty_code_availability_v5.json"
+        or predecessor.get("path") != "research/paper-1/novelty_code_availability_v6.json"
         or not (repository_root / predecessor["path"]).is_file()
         or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
-        or landscape.get("path") != "research/paper-1/novelty_landscape_v7.json"
+        or landscape.get("path") != "research/paper-1/novelty_landscape_v8.json"
         or not (repository_root / landscape["path"]).is_file()
         or _file_sha256(repository_root / landscape["path"]) != landscape.get("sha256")
-        or set(sources) != {"massive_activations_hla"}
-        or sources["massive_activations_hla"].get("revision")
-        != "190e1b795262b91159a01f846ebbca799c45be8f"
-        or sources["massive_activations_hla"].get("checkpoint_revision")
-        != "5a98aec28a52efe0303545d929d0964a5973b127"
-        or sources["massive_activations_hla"].get("root_license") != "MIT"
-        or sources["massive_activations_hla"].get("checkpoint_license") != "Apache-2.0"
-        or not (repository_root / sources["massive_activations_hla"].get("audit", "")).is_file()
-        or _file_sha256(repository_root / sources["massive_activations_hla"]["audit"])
-        != sources["massive_activations_hla"].get("audit_sha256")
-        or summary.get("sources") != 17
-        or summary.get("immutable_repository_snapshots") != 8
-        or summary.get("repositories_with_code") != 6
+        or set(sources) != {"halo_hypenet"}
+        or sources["halo_hypenet"].get("revision")
+        != "229e3013740266394640af8cff7f24cd35795ec9"
+        or sources["halo_hypenet"].get("root_license") is not None
+        or sources["halo_hypenet"].get("evaluation_log_files") != 206
+        or not (repository_root / sources["halo_hypenet"].get("audit", "")).is_file()
+        or _file_sha256(repository_root / sources["halo_hypenet"]["audit"])
+        != sources["halo_hypenet"].get("audit_sha256")
+        or summary.get("sources") != 18
+        or summary.get("immutable_repository_snapshots") != 9
+        or summary.get("repositories_with_code") != 7
         or summary.get("repositories_with_root_license_covering_code") != 3
         or summary.get("new_full_reproduction_paths_qualified") != 0
-        or summary.get("metadata_only_tree_clones") != 5
+        or summary.get("metadata_only_tree_clones") != 6
         or summary.get("working_trees_checked_out") != 0
         or summary.get("third_party_code_imported") is not False
         or summary.get("third_party_code_executed") is not False
-        or decision.get("massive_hla_source_identity_qualified") is not True
-        or decision.get("massive_hla_root_rights_qualified") is not True
-        or decision.get("massive_hla_bounded_analysis_reproduction_authorized") is not False
-        or decision.get("massive_hla_full_reproduction_authorized") is not False
+        or decision.get("halo_source_identity_qualified") is not True
+        or decision.get("halo_result_log_presence_qualified") is not True
+        or decision.get("halo_root_rights_qualified") is not False
+        or decision.get("halo_execution_authorized") is not False
+        or decision.get("halo_reuse_authorized") is not False
+        or decision.get("halo_reproduction_authorized") is not False
         or decision.get("n1_placement_protocol_authorized") is not False
         or decision.get("novelty_gate_changed") is not False
         or decision.get("architecture_freeze_authorized") is not False
@@ -1538,6 +1544,61 @@ def _validate_massive_hla_code_audit(reference, repository_root, paper_id):
         or decision.get("novelty_status_changed") is not False
     ):
         raise ValueError("massive HLA code audit is incomplete")
+
+
+def _validate_halo_code_audit(reference, repository_root, paper_id):
+    _require(reference, {"audit", "sha256", "status"}, "HALO code reference")
+    path = repository_root / reference["audit"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("HALO code audit does not match its pin")
+    audit = _load_json(path)
+    repository = audit.get("repository", {})
+    files = {entry.get("path"): entry for entry in audit.get("pinned_files", ())}
+    decision = audit.get("decision", {})
+    if (
+        audit.get("format") != "speck_halo_code_audit"
+        or audit.get("format_version") != 1
+        or audit.get("paper_id") != paper_id
+        or audit.get("status") != reference["status"]
+        or repository.get("revision") != "229e3013740266394640af8cff7f24cd35795ec9"
+        or repository.get("files") != 271
+        or repository.get("python_files") != 31
+        or repository.get("shell_files") != 12
+        or repository.get("json_files") != 8
+        or repository.get("evaluation_log_files") != 206
+        or repository.get("test_files") != 0
+        or repository.get("root_license") is not None
+        or repository.get("metadata_only_clone") is not True
+        or repository.get("working_tree_checked_out") is not False
+        or repository.get("third_party_code_imported") is not False
+        or repository.get("third_party_code_executed") is not False
+        or set(files)
+        != {
+            "attn-layer-selection/layer_analysis.py",
+            "attn-layer-selection/README.md",
+            "halo/requirements.txt",
+            "halo/configs/model/hypenet/hypenet-2b.json",
+            "halo/configs/training/stage1.json",
+            "halo/data/README.md",
+        }
+        or len(audit.get("available_components", ())) < 6
+        or len(audit.get("identity_and_behavior_findings", ())) < 8
+        or decision.get("source_identity_qualified") is not True
+        or decision.get("precomputed_selection_logs_present") is not True
+        or decision.get("paper_layer_count_ambiguity_resolved") is not True
+        or decision.get("root_rights_qualified") is not False
+        or decision.get("paper_code_semantics_identical") is not False
+        or decision.get("portable_environment_qualified") is not False
+        or decision.get("training_data_identity_qualified") is not False
+        or decision.get("checkpoint_identity_qualified") is not False
+        or decision.get("behavior_qualified") is not False
+        or decision.get("upstream_execution_authorized") is not False
+        or decision.get("direct_reuse_authorized") is not False
+        or decision.get("full_reproduction_authorized") is not False
+        or decision.get("n1_placement_protocol_authorized") is not False
+        or decision.get("novelty_status_changed") is not False
+    ):
+        raise ValueError("HALO code audit is incomplete")
 
 
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
@@ -1974,6 +2035,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "brief_code_audit",
             "rethinking_hybrid_code_audit",
             "massive_hla_code_audit",
+            "halo_code_audit",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2022,6 +2084,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_massive_hla_code_audit(
         program["massive_hla_code_audit"],
+        repository_root,
+        paper_id,
+    )
+    _validate_halo_code_audit(
+        program["halo_code_audit"],
         repository_root,
         paper_id,
     )

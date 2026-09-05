@@ -526,19 +526,19 @@
     "time and energy to locked quality"
   ],
   "novelty_claim_overlap": {
-    "contract": "research/paper-1/novelty_claim_overlap_v4.json",
-    "sha256": "2b476bb00d5464699e579fd198b8c952cb9de04775d8211356161c2b61e5e861",
-    "status": "seventeen_source_table_zero_architecture_novelty_n1_retirement_review_pending"
+    "contract": "research/paper-1/novelty_claim_overlap_v5.json",
+    "sha256": "996468bba779753bd8af6e8269d84487bc3a9b8fa71a1582054968d785680739",
+    "status": "eighteen_source_table_zero_architecture_novelty_n1_procedural_residual_review_pending"
   },
   "novelty_code_availability": {
-    "audit": "research/paper-1/novelty_code_availability_v6.json",
-    "sha256": "d6e541cc24b33fc022305578c0a1ba6d21f4e33bc7220762ffd972350df6f418",
-    "status": "seventeen_sources_three_root_rights_paths_no_new_full_reproduction"
+    "audit": "research/paper-1/novelty_code_availability_v7.json",
+    "sha256": "02934bceedba087bc45c3bcef288cb3be30feb8c5860a7cbc9c9032a8811dbde",
+    "status": "eighteen_sources_three_root_rights_paths_no_new_full_reproduction"
   },
   "novelty_landscape": {
-    "audit": "research/paper-1/novelty_landscape_v7.json",
-    "sha256": "1df67600b997f8d550283211aa38e5ac9227f4cb902830d2c8fc29aaed34f14c",
-    "status": "seventeen_full_text_audits_n1_placement_and_activation_diagnostics_overlapped_no_novelty"
+    "audit": "research/paper-1/novelty_landscape_v8.json",
+    "sha256": "2968774ad615108d88b362381423cc12a8d19501763b6a2159e0a5fb08c5b920",
+    "status": "eighteen_full_text_audits_task_guided_layer_selection_overlapped_no_novelty"
   },
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
   "paper_id": "speck-paper-1",
@@ -566,6 +566,11 @@
     "audit": "research/paper-1/massive_hla_code_audit_v1.json",
     "sha256": "fa6c57e1346b03aa6978cb76e468c264b48da8eba930a5a3316e927fd285882e",
     "status": "analysis_code_and_baseline_checkpoint_identity_qualified_training_and_full_reproduction_blocked"
+  },
+  "halo_code_audit": {
+    "audit": "research/paper-1/halo_code_audit_v1.json",
+    "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",
+    "status": "source_identity_and_result_logs_qualified_root_rights_behavior_and_reproduction_blocked"
   },
   "raw_local_readiness": {
     "contract": "research/paper-1/raw_local_readiness_v1.json",
