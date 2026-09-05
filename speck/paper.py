@@ -9,6 +9,7 @@ PROGRAM_FILES = (
     "claims.json",
     "baseline_matrix.json",
     "baseline_analysis.json",
+    "baseline_collection_v2.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -647,6 +648,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "storage_qualification",
             "storage_qualification_sha256",
             "storage_qualification_status",
+            "collection_correction",
+            "collection_correction_sha256",
+            "collection_correction_status",
+            "control_0_result",
+            "control_0_result_sha256",
+            "control_0_result_status",
             "runner_revision",
         },
         "paper baseline evidence",
@@ -673,6 +680,8 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
         ("storage_qualification", "storage_qualification_sha256"),
+        ("collection_correction", "collection_correction_sha256"),
+        ("control_0_result", "control_0_result_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -776,6 +785,42 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         != evidence["cache_equivalence_v3_analysis_sha256"]
     ):
         raise ValueError("paper baseline cache-equivalence v3/preflight evidence is invalid")
+    collection = _load_json(repository_root / evidence["collection_correction"])
+    control_0 = _load_json(repository_root / evidence["control_0_result"])
+    correction = collection.get("correction", {})
+    trigger_checkpoint = collection.get("trigger", {}).get("checkpoint", {})
+    if (
+        collection.get("format") != "speck_paper_baseline_collection_correction"
+        or collection.get("status") != evidence["collection_correction_status"]
+        or collection.get("predecessor", {}).get("analysis_plan_sha256")
+        != evidence["analysis_plan_sha256"]
+        or correction.get("tokens_per_validation_step") != 16_384
+        or correction.get("intermediate", {}).get("requested_tokens") != 5_000_000
+        or correction.get("intermediate", {}).get("evaluated_tokens") != 4_997_120
+        or correction.get("final", {}).get("requested_tokens") != 20_000_000
+        or correction.get("final", {}).get("evaluated_tokens") != 19_988_480
+        or collection.get("decision", {}).get("retain_completed_control") is not True
+        or collection.get("decision", {}).get("rerun_control") is not False
+        or collection.get("decision", {}).get("candidate_access_changed") is not False
+        or collection.get("implementation", {}).get("collector_sha256")
+        != _file_sha256(repository_root / "speck/paper_baseline_analysis.py")
+        or collection.get("implementation", {}).get("tests_sha256")
+        != _file_sha256(repository_root / "tests/test_paper_baseline_analysis.py")
+        or control_0.get("format") != "speck_paper_baseline_run_result"
+        or control_0.get("status") != evidence["control_0_result_status"]
+        or control_0.get("arm_id") != "dense_global_param_match"
+        or control_0.get("pair", {}).get("pair") != 0
+        or control_0.get("training_tokens") != 131_072_000
+        or control_0.get("final_validation", {}).get("validation_tokens") != 19_988_480
+        or control_0.get("non_finite_steps") != 0
+        or control_0.get("checkpoint", {}).get("model_sha256")
+        != trigger_checkpoint.get("model_sha256")
+        or control_0.get("checkpoint", {}).get("optimizer_sha256")
+        != trigger_checkpoint.get("optimizer_sha256")
+        or control_0.get("checkpoint", {}).get("metadata_sha256")
+        != trigger_checkpoint.get("metadata_sha256")
+    ):
+        raise ValueError("paper baseline control-0 collection evidence is invalid")
     _validate_proxy_launch_evidence(program, repository_root)
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():

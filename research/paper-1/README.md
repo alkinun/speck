@@ -61,6 +61,9 @@ the final combined model.
 - [`baseline_analysis.json`](baseline_analysis.json) freezes the paired estimand, confidence bound,
   source guardrails, interpolation rules, control-only time-to-quality lock, censoring, and fixed-sample
   stopping rule before any new baseline result exists.
+- [`baseline_collection_v2.json`](baseline_collection_v2.json) preserves the first collector failure
+  and freezes the complete-validation-batch arithmetic correction after dense control 0 but before
+  any candidate checkpoint or result exists.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.
@@ -161,6 +164,11 @@ lock, materialization, behavioral/hardware preflight, storage, evaluation defini
 disposition, thresholds, and missing-suite failure rule were frozen and rehashed before output. The
 clean live gate passed, so the proxy is authorized in strict control-first order. RULER, NoLiMa, and
 HELMET remain required failed release gates until they are independently qualified and executed.
+Dense control 0 is now complete and qualified at 2.833646 final validation loss. Its first collection
+attempt exposed a tooling-only mismatch between the requested 20M-token final validation budget and
+the runtime's 19,988,480 complete-batch count. The frozen pre-candidate correction derives the latter
+from the existing 4-by-4,096 single-GPU geometry and changes no loss, threshold, sample, or decision.
+Dense controls 1 and 2 remain mandatory before target lock and candidate execution.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

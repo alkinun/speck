@@ -46,6 +46,12 @@
     "storage_qualification": "results/Speck-Paper1/baseline-storage-volume-qualified.json",
     "storage_qualification_sha256": "e0b482987207efafd1e6273b0d3d39290ca2b40bc80584035fdd48244760d9df",
     "storage_qualification_status": "qualified_dedicated_proxy_and_finalist_checkpoint_volume",
+    "collection_correction": "research/paper-1/baseline_collection_v2.json",
+    "collection_correction_sha256": "2fe52ac3447429d4ccbf3c5672267d33e93642c461ff2aeb77f2c8a540641a12",
+    "collection_correction_status": "frozen_after_control_0_before_candidate_results",
+    "control_0_result": "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
+    "control_0_result_sha256": "e6c5c773074ce6cfdb67bf2871558c07990dc80fe06831d9c0d27cd449c20526",
+    "control_0_result_status": "complete_qualified",
     "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2"
   },
   "proxy_launch_evidence": {

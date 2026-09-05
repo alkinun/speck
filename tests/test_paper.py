@@ -20,6 +20,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "claims.json",
             "baseline_matrix.json",
             "baseline_analysis.json",
+            "baseline_collection_v2.json",
             "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
@@ -72,6 +73,18 @@ def test_paper_program_rejects_proxy_launch_qualification_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="proxy launch qualification"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_control_0_result_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["baseline_evidence"]["control_0_result_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="control_0_result"):
         validate_paper_program(copied, repository_root=root)
 
 
