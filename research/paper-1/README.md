@@ -224,6 +224,9 @@ the final combined model.
 - [`proxy-launch-qualified.json`](../../results/Speck-Paper1/proxy-launch-qualified.json) rehashes the
   complete freeze and records the clean live GPU, host-memory, output-absence, and storage gate that
   authorizes proxy training while preserving blocked release claims.
+- [`baseline-analysis.json`](../../results/Speck-Paper1/baseline-analysis.json) completes the frozen
+  three-pair proxy: aggregate and all source quality bounds pass, time-to-quality is uncensored, and
+  only separate finalist materialization/qualification becomes eligible.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
@@ -312,14 +315,15 @@ Control 0's first collection
 attempt exposed a tooling-only mismatch between the requested 20M-token final validation budget and
 the runtime's 19,988,480 complete-batch count. The frozen pre-candidate correction derives the latter
 from the existing 4-by-4,096 single-GPU geometry and changes no loss, threshold, sample, or decision.
-Candidate pair 0 is now complete and qualified at 2.794477 final loss. Its descriptive paired delta is
--0.039170 nats, steady time is 10.09% shorter, and peak allocation is 20.84% higher. These single-cell
-values have no decision authority.
-Candidate pair 1 is also complete and qualified at 2.796465 final loss. Its descriptive paired delta is
--0.042662 nats; all eleven source deltas are negative. Steady/active time is 10.12%/10.16% shorter,
-analytic FLOPs are 21.49% lower, and peak allocation is 20.74% higher than its paired dense control.
-Pair 2 is scheduled by the frozen event chain after cooldown; the final paired analysis remains
-mandatory and no two-cell decision is permitted.
+All three candidate pairs are complete and qualified at 2.794477, 2.796465, and 2.795503 final loss.
+Their paired fixed-token differences are -0.039170, -0.042662, and -0.037184 nats. The mean is
+-0.039672 and its upper one-sided 95% bound is -0.034996, below the +0.01 non-inferiority margin. All
+eleven source bounds pass, all arms reach the locked target, and the mean time-to-quality improvement is
+19.48% with a 16.83% lower bound. At the endpoint, candidate steady time is 10.01% shorter and analytic
+FLOPs/token are 21.49% lower on average, while peak allocation is 20.77% higher. The whole-architecture
+proxy quality screen passes. Under the frozen disposition this authorizes only materializing and
+separately qualifying the exact six-pair finalist; it grants no component attribution, architecture
+promotion, novelty, release claim, finalist training, or paper-scale authority.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
@@ -331,5 +335,6 @@ promotion infrastructure. It does **not** yet have:
 - independent long-context results; or
 - a production serving runtime.
 
-Accordingly, the paper has entered **matched proxy execution**, not architecture-promotion,
+Accordingly, the paper has completed its **matched proxy quality screen** and may enter finalist
+materialization/qualification. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.

@@ -2,7 +2,7 @@
   "format": "speck_architecture_evidence_matrix",
   "format_version": 1,
   "policy_id": "architecture-promotion-v1",
-  "updated_on": "2026-09-05",
+  "updated_on": "2026-09-06",
   "status_values": [
     "retained_control",
     "research_control_not_promoted",
@@ -42,6 +42,7 @@
         "findings/70_systems_cost_readiness_gate.md",
         "findings/74_paper_1_candidate_0.md",
         "findings/85_paper_1_candidate_1.md",
+        "findings/105_paper_1_paired_proxy_analysis.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
@@ -53,21 +54,22 @@
         "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
         "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json",
         "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa.json",
-        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json"
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa.json",
+        "results/Speck-Paper1/baseline-analysis.json"
       ],
-      "quality": "The dense controls finish at 2.833646, 2.839127, and 2.832686 nats and lock the 2.839127 target. Candidate pairs 0/1 finish at 2.794477/2.796465, descriptive paired deltas -0.039170/-0.042662; all eleven source deltas are negative in both cells. Two cells cannot estimate the preregistered three-pair confidence bound or authorize a decision.",
-      "systems": "At 128K the historical dense geometry has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token. Candidate pairs 0/1 use 21.49% fewer analytic FLOPs and 10.09%/10.12% less steady time, but 20.84%/20.74% more peak allocation than their dense controls. All dense controls fail the frozen 1.0-hour envelope; the first two candidates individually pass it, which does not make the paired hard envelope pass.",
+      "quality": "All six frozen cells are complete. Candidate-minus-control endpoint loss is -0.039170/-0.042662/-0.037184 nats; mean -0.039672 and upper one-sided 95% bound -0.034996 pass the +0.01 margin. All eleven source bounds pass, so the whole-architecture proxy quality screen passes without component attribution.",
+      "systems": "At 128K the historical dense geometry has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token. Across the proxy pairs, the candidate uses 21.49% fewer analytic FLOPs/token, 10.01% less steady time, 10.42% less active time, and 11.13% more steady throughput, but 20.77% more peak allocation. Mean time-to-quality improvement is 19.48% with lower one-sided 95% bound 16.83%; no pair is censored. Dense controls still fail the frozen 1.0-hour envelope, so no paired hard-envelope or serving claim passes.",
       "scale_transfer": "not replicated under policy v1",
       "runtime_support": "standard PyTorch attention path",
       "unresolved_risks": [
-        "only two of three fixed candidate cells are complete",
         "short training horizon",
-        "lack of time-to-quality comparison",
+        "six-pair finalist is not yet materialized or qualified",
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
         "HELMET still needs archive-external datasets, a gated truncation tokenizer, and model-judge qualification",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
-      "next_gate": "complete the fixed three-pair KDA/GQA candidate and paired proxy analysis; retain unavailable external suites as failed release gates"
+      "next_gate": "materialize and separately qualify the exact six-pair finalist without launching it; retain unavailable external suites as failed release gates"
     },
     {
       "id": "gated_deltanet",
@@ -121,6 +123,9 @@
         "findings/54_helmet_seeded_demo_repair.md",
         "findings/55_paper_1_proxy_launch_boundary.md",
         "findings/60_paper_1_proxy_disposition.md",
+        "findings/74_paper_1_candidate_0.md",
+        "findings/85_paper_1_candidate_1.md",
+        "findings/105_paper_1_paired_proxy_analysis.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
@@ -129,23 +134,28 @@
         "results/Speck-Paper1/contamination-ruler-v1.json",
         "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
         "results/Speck-Paper1/baseline-preflight.json",
-        "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
+        "results/Speck-Architecture-Promotion-v1/retrospective-audit.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
+        "results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa.json",
+        "results/Speck-Paper1/baseline-analysis.json"
       ],
-      "quality": "Replicated long-range sensitivity, but mean base loss is 0.006909 nats worse and the old strict tie passes only two of three seeds.",
-      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB. Failed v1/v2 results are preserved. Powered v3 passes all 60 common-history endpoint cells and 12 hard-guardrail cells on disjoint cases; exact free-running divergence remains a reported risk. Baseline preflight v2 passes.",
+      "quality": "The complete five-cache KDA/GQA architecture passes the three-pair whole-architecture proxy quality screen: mean paired endpoint loss -0.039672 nats, upper one-sided 95% bound -0.034996, and all eleven source bounds below their margins. This does not isolate or promote KDA, NoPE, GQA, or the 3:1 ratio.",
+      "systems": "At the fixed endpoint the whole candidate averages 21.49% fewer analytic FLOPs/token, 10.01% less steady training time, and 11.13% higher throughput than dense, while peak allocation is 20.77% higher. Mean time-to-quality improves 19.48% with lower bound 16.83%. Exact-shape and cache-equivalence qualifications remain as previously recorded; no serving or paired hard-envelope claim follows.",
       "scale_transfer": "not established",
       "runtime_support": "Torch reference and isolated FLA kernels pass; powered trained-topology CUDA cache equivalence and exact-shape Paper 1 preflight v2 pass, while the hybrid production runtime remains incomplete",
       "unresolved_risks": [
         "independent long-context quality",
         "exact eight-record decoding",
         "two-hop composition",
-        "training-horizon transfer",
+        "finalist-horizon and scale transfer",
+        "whole-architecture result has no component attribution",
         "free-running low-margin path divergence",
         "production runtime parity",
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
         "HELMET's RAG/long-QA guardrail remains data, rights, tokenizer, and scorer blocked"
       ],
-      "next_gate": "complete the in-progress three-pair whole-architecture proxy and apply the frozen disposition without component attribution"
+      "next_gate": "materialize and separately qualify the exact six-pair, twelve-run finalist design without launching it"
     },
     {
       "id": "reader_attention_three_cache",

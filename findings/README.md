@@ -565,3 +565,10 @@ Finding 104 freezes an independent-review packet for N1 before any future outcom
 qualified reviews must identify a non-procedural causal claim, unique prediction, falsifier, baselines,
 replication, and evidence cost. Only unanimous support permits a preregistration draft; disagreement
 requires a third review. No review, execution, protocol, architecture freeze, or training is authorized.
+
+Finding 105 completes the frozen three-pair proxy. Mean candidate-minus-control loss is -0.039672 nats
+with upper one-sided 95% bound -0.034996; all eleven source bounds pass and no time-to-quality pair is
+censored. Mean time-to-quality improves 19.48% (lower bound 16.83%); endpoint steady time is 10.01%
+shorter and analytic FLOPs/token 21.49% lower, while peak allocation is 20.77% higher. The quality screen
+passes and authorizes finalist materialization/qualification only—not component attribution, promotion,
+novelty, release claims, finalist training, or paper-scale execution.
