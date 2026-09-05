@@ -156,16 +156,17 @@ def run(args):
     configs = load_experiment(args.experiment, "tokenizer", "train")
     tokenizer = get_tokenizer(**configs["tokenizer"])
     protocol_identity = None
+    protocol_length = getattr(args, "protocol_length", None)
     if protocol_path := getattr(args, "protocol", None):
-        if args.protocol_length is None:
+        if protocol_length is None:
             raise ValueError("protocol evaluation requires one explicit --protocol-length")
         loaded_protocol = load_promotion_protocol(protocol_path, tokenizer=tokenizer)
         settings = resolve_evaluation_protocol(
-            loaded_protocol, selected_length=args.protocol_length
+            loaded_protocol, selected_length=protocol_length
         )
         protocol_identity = loaded_protocol["identity"]
     else:
-        if args.protocol_length is not None:
+        if protocol_length is not None:
             raise ValueError("--protocol-length requires --protocol")
         samples = positive_integer(args.samples, "samples")
         records = positive_integer(args.records, "records")
