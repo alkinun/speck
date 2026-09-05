@@ -2,9 +2,14 @@
   "format": "speck_promotion_retrieval_protocol",
   "format_version": 1,
   "protocol_id": "symbolic_composition_v2",
-  "status": "frozen_runner_integration_pending",
+  "status": "runner_bound_unexecuted",
   "policy_id": "architecture-promotion-v1",
   "purpose": "Separate route-edge retrieval, payload-edge retrieval, and direct two-hop composition with a 100-way tokenizer-qualified intermediate vocabulary.",
+  "runner": {
+    "adaptation_module": "scripts.structured_retrieval_adapt",
+    "length_evaluation_module": "scripts.structured_retrieval_eval",
+    "revision": "5650e19c027817636f3cbb9248b9bb39cac2526e"
+  },
   "comparison": {
     "unit": "paired candidate and control adapters",
     "parent_requirement": "paired base checkpoints from the same architecture comparison run",
@@ -68,6 +73,18 @@
     "composition_absolute_floor": {
       "candidate_accuracy": 0.8
     }
+  },
+  "length_evaluation": {
+    "lengths": [4096, 32768, 131072],
+    "samples_per_condition": 200,
+    "record_counts": [8],
+    "chains": 6,
+    "template": "directory",
+    "answer_set": "phrases_validation_v2",
+    "response_cue": "native",
+    "kv_cache_dtype": "bfloat16",
+    "effective_threshold": 0.9,
+    "sequential_stop": "route and payload must qualify at the current length before composition or the next length is interpreted"
   },
   "leakage_controls": {
     "template_split": "directory appears only in validation",

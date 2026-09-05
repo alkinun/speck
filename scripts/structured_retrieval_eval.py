@@ -61,6 +61,12 @@ def arguments(argv=None):
         default=None,
         help="freeze all scientific settings from a promotion protocol",
     )
+    parser.add_argument(
+        "--protocol-length",
+        type=int,
+        default=None,
+        help="run one declared protocol length after its preceding gate has passed",
+    )
     parser.add_argument("--checkpoint-dir", type=Path, default=None)
     parser.add_argument("--step", type=int, default=None)
     parser.add_argument("--tasks", type=parse_tasks, default=PRIMARY_TASKS)
@@ -151,10 +157,16 @@ def run(args):
     tokenizer = get_tokenizer(**configs["tokenizer"])
     protocol_identity = None
     if protocol_path := getattr(args, "protocol", None):
+        if args.protocol_length is None:
+            raise ValueError("protocol evaluation requires one explicit --protocol-length")
         loaded_protocol = load_promotion_protocol(protocol_path, tokenizer=tokenizer)
-        settings = resolve_evaluation_protocol(loaded_protocol)
+        settings = resolve_evaluation_protocol(
+            loaded_protocol, selected_length=args.protocol_length
+        )
         protocol_identity = loaded_protocol["identity"]
     else:
+        if args.protocol_length is not None:
+            raise ValueError("--protocol-length requires --protocol")
         samples = positive_integer(args.samples, "samples")
         records = positive_integer(args.records, "records")
         chains = positive_integer(args.chains, "chains")
@@ -333,7 +345,7 @@ def run(args):
     output = args.output or Path(base_dir()) / "evaluations" / "structured-retrieval" / configs[
         "train"
     ]["run"] / (
-        f"{step}-{protocol_identity['id']}.json"
+        f"{step}-{protocol_identity['id']}-{settings['lengths'][0]}.json"
         if protocol_identity is not None
         else f"{step}.json"
     )

@@ -28,6 +28,40 @@ uv run --extra cpu python -m scripts.research_contract_validate \
   --tokenizer-experiment experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope
 ```
 
+Run one protocol-bound adapter. The protocol supplies every scientific setting, including the
+training/validation split, synthetic streams, replay source, optimizer, and sample counts:
+
+```bash
+uv run --extra gpu --extra linear python -m scripts.structured_retrieval_adapt \
+  experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope \
+  --protocol research/architecture-promotion-v1/internal/structured_retrieval_v2.json \
+  --seed 42 \
+  --checkpoint-dir <parent-checkpoint> \
+  --output-dir <adapter-checkpoint> \
+  --report <adapter-report.json>
+```
+
+Then run the protocol's exact 4K/32K/128K condition grid:
+
+```bash
+uv run --extra gpu --extra linear python -m scripts.structured_retrieval_eval \
+  experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope \
+  --protocol research/architecture-promotion-v1/internal/structured_retrieval_v2.json \
+  --protocol-length 4096 \
+  --checkpoint-dir <adapter-checkpoint> \
+  --step 400 \
+  --output <length-report.json>
+```
+
+Run 32K only after the paired 4K gate passes, and 128K only after the paired 32K gate passes.
+`--protocol-length` must name exactly one length declared by the protocol, preventing one invocation
+from charging through a failed shorter-length gate.
+
+Operational arguments select paths, device, and compilation. When `--protocol` is present, the runner
+replaces all scientific CLI values with the pinned protocol and records its absolute path and SHA-256
+in the checkpoint and report. A copied or edited protocol is rejected unless the active evaluation
+manifest pins that exact path and hash.
+
 ## Decision principle
 
 Speck does not combine quality and cost into one opaque score. Quality and correctness are hard

@@ -59,6 +59,21 @@ training positions without RoPE scaling; treat such results as diagnostics, not 
 Use the per-length warm-up when comparing prefill latency so one-time kernel compilation is not
 charged to the first architecture or sample.
 
+### Architecture-promotion retrieval protocols
+
+The active [architecture-promotion contract](../research/architecture-promotion-v1/) freezes two
+200-case internal protocols. Pass one with `--protocol` to both
+`scripts.structured_retrieval_adapt` and `scripts.structured_retrieval_eval`. Protocol mode overrides
+all scientific CLI settings, verifies the protocol path and SHA-256 against the active evaluation
+manifest, qualifies its answer and route vocabulary against the prepared tokenizer, and embeds the
+identity in every checkpoint and report.
+
+`structured_retrieval_v2` separates two- and eight-record load and uses disjoint two-token training
+and validation answer sets. `symbolic_composition_v2` reports route, payload, and direct composition
+separately over 100 tokenizer-qualified intermediate nodes. Protocol evaluation requires exactly one
+`--protocol-length`: run 4K first, then 32K and 128K only after the paired current-length capability
+gate passes.
+
 ## Open SLM Leaderboard
 
 Run every stage in the checked Open SLM configuration:

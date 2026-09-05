@@ -2,9 +2,14 @@
   "format": "speck_promotion_retrieval_protocol",
   "format_version": 1,
   "protocol_id": "structured_retrieval_v2",
-  "status": "frozen_runner_integration_pending",
+  "status": "runner_bound_unexecuted",
   "policy_id": "architecture-promotion-v1",
   "purpose": "Measure learned association retention and specificity across unseen wording, unseen two-token answers, record load, and context length.",
+  "runner": {
+    "adaptation_module": "scripts.structured_retrieval_adapt",
+    "length_evaluation_module": "scripts.structured_retrieval_eval",
+    "revision": "5650e19c027817636f3cbb9248b9bb39cac2526e"
+  },
   "comparison": {
     "unit": "paired candidate and control adapters",
     "parent_requirement": "paired base checkpoints from the same architecture comparison run",
@@ -71,7 +76,9 @@
     "template": "directory",
     "answer_set": "phrases_validation_v2",
     "response_cue": "native",
-    "kv_cache_dtype": "bfloat16"
+    "kv_cache_dtype": "bfloat16",
+    "effective_threshold": 0.9,
+    "sequential_stop": "do not evaluate the next length when either candidate or control fails an absolute floor at the current length"
   },
   "leakage_controls": {
     "template_split": "directory appears only in validation",

@@ -13,9 +13,10 @@ def test_parse_tasks_is_strict():
 
 
 def test_cli_accepts_a_frozen_protocol():
-    args = arguments(["experiment", "--protocol", "protocol.json"])
+    args = arguments(["experiment", "--protocol", "protocol.json", "--protocol-length", "4096"])
     assert args.experiment.name == "experiment"
     assert args.protocol.name == "protocol.json"
+    assert args.protocol_length == 4096
 
 
 def test_build_case_is_deterministic_and_counterfactual():

@@ -162,8 +162,22 @@ def _validate_promotion_protocol(path, repository_root, policy_id, tokenizer=Non
         raise ValueError(f"promotion protocol {path.name} must use format version 1")
     if protocol["policy_id"] != policy_id:
         raise ValueError(f"promotion protocol {path.name} references a different policy")
-    if protocol["status"] != "frozen_runner_integration_pending":
+    if protocol["status"] != "runner_bound_unexecuted":
         raise ValueError(f"promotion protocol {path.name} has an unexpected status")
+    runner = protocol.get("runner", {})
+    _require_keys(
+        runner,
+        {"adaptation_module", "length_evaluation_module", "revision"},
+        f"promotion protocol {path.name} runner",
+    )
+    if not COMMIT_PATTERN.fullmatch(runner["revision"]):
+        raise ValueError(f"promotion protocol {path.name} runner revision is invalid")
+    for module in (runner["adaptation_module"], runner["length_evaluation_module"]):
+        module_path = repository_root / f"{module.replace('.', '/')}.py"
+        if not module_path.is_file():
+            raise ValueError(
+                f"promotion protocol {path.name} runner module does not exist: {module}"
+            )
 
     comparison = protocol["comparison"]
     seeds = comparison.get("base_model_seeds")
@@ -246,6 +260,24 @@ def _validate_promotion_protocol(path, repository_root, policy_id, tokenizer=Non
     if not isinstance(samples, int) or samples < 200:
         raise ValueError(f"promotion protocol {path.name} requires at least 200 validation cases")
 
+    length_evaluation = protocol.get("length_evaluation", {})
+    if length_evaluation.get("lengths") != [4096, 32768, 131072]:
+        raise ValueError(f"promotion protocol {path.name} must freeze 4K, 32K, and 128K")
+    if length_evaluation.get("samples_per_condition", 0) < 200:
+        raise ValueError(f"promotion protocol {path.name} length cells require at least 200 cases")
+    if length_evaluation.get("kv_cache_dtype") not in {
+        "bfloat16",
+        "float16",
+        "float32",
+        "int8",
+    }:
+        raise ValueError(f"promotion protocol {path.name} has an invalid KV cache dtype")
+    _probability(
+        length_evaluation.get("effective_threshold"),
+        f"promotion protocol {path.name} effective threshold",
+        allow_one=True,
+    )
+
     route_count = 0
     if protocol["protocol_id"] == "structured_retrieval_v2":
         if adaptation.get("train_record_counts") != [2, 8] or validation.get("record_counts") != [
@@ -253,11 +285,6 @@ def _validate_promotion_protocol(path, repository_root, policy_id, tokenizer=Non
             8,
         ]:
             raise ValueError("structured retrieval v2 must report two- and eight-record loads")
-        length_evaluation = protocol.get("length_evaluation", {})
-        if length_evaluation.get("lengths") != [4096, 32768, 131072]:
-            raise ValueError("structured retrieval v2 must freeze 4K, 32K, and 128K")
-        if length_evaluation.get("samples_per_condition", 0) < 200:
-            raise ValueError("structured retrieval v2 length cells require at least 200 cases")
     elif protocol["protocol_id"] == "symbolic_composition_v2":
         route_reference = protocol.get("route_vocabulary")
         route_hash = protocol.get("route_vocabulary_sha256")
@@ -277,7 +304,11 @@ def _validate_promotion_protocol(path, repository_root, policy_id, tokenizer=Non
             raise ValueError("symbolic composition v2 must preserve all three task views")
     else:
         raise ValueError(f"unknown promotion protocol: {protocol['protocol_id']}")
-    return {"id": protocol["protocol_id"], "route_values": route_count}
+    return {
+        "id": protocol["protocol_id"],
+        "route_values": route_count,
+        "runner_revision": runner["revision"],
+    }
 
 
 def _validate_internal_protocols(manifest, repository_root, policy_id, tokenizer=None):
@@ -295,6 +326,8 @@ def _validate_internal_protocols(manifest, repository_root, policy_id, tokenizer
         protocol = _validate_promotion_protocol(path, repository_root, policy_id, tokenizer)
         if protocol["id"] != suite["id"]:
             raise ValueError(f"evaluation suite {suite['id']} pins the wrong protocol")
+        if protocol["runner_revision"] != suite.get("generator_revision"):
+            raise ValueError(f"evaluation suite {suite['id']} pins the wrong runner revision")
         protocols.append(protocol)
     if {protocol["id"] for protocol in protocols} != {
         "structured_retrieval_v2",
@@ -405,13 +438,20 @@ def resolve_adaptation_protocol(loaded, seed):
     }
 
 
-def resolve_evaluation_protocol(loaded):
+def resolve_evaluation_protocol(loaded, selected_length=None):
     """Resolve the exact condition grid for a frozen multi-length evaluation."""
 
     protocol = loaded["protocol"]
     evaluation = protocol.get("length_evaluation")
     if evaluation is None:
         raise ValueError(f"protocol {protocol['protocol_id']} has no length evaluation")
+    lengths = tuple(evaluation["lengths"])
+    if selected_length is not None:
+        if selected_length not in lengths:
+            raise ValueError(
+                f"length {selected_length} is not declared by protocol {protocol['protocol_id']}"
+            )
+        lengths = (selected_length,)
     validation = protocol["validation"]
     tasks = tuple(validation["tasks"])
     templates = tuple(validation["templates"])
@@ -436,7 +476,7 @@ def resolve_evaluation_protocol(loaded):
                         }
                     )
     return {
-        "lengths": tuple(evaluation["lengths"]),
+        "lengths": lengths,
         "samples": evaluation["samples_per_condition"],
         "seed_offset": protocol["comparison"]["fixed_validation_seed_offset"],
         "kv_cache_dtype": evaluation["kv_cache_dtype"],

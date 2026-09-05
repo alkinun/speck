@@ -92,12 +92,39 @@ def test_structured_protocol_resolves_exact_runner_settings():
     assert evaluation["lengths"] == (4096, 32768, 131072)
     assert evaluation["samples"] == 200
     assert [condition["records"] for condition in evaluation["conditions"]] == [2, 8]
+    staged = resolve_evaluation_protocol(loaded, selected_length=4096)
+    assert staged["lengths"] == (4096,)
+
+
+def test_symbolic_protocol_resolves_three_views_and_large_route_vocabulary():
+    loaded = load_promotion_protocol(contract / "internal" / "symbolic_composition_v2.json")
+    adaptation = resolve_adaptation_protocol(loaded, seed=42)
+    assert adaptation["tasks"] == (
+        "two_hop_route",
+        "two_hop_payload",
+        "two_hop_symbolic",
+    )
+    assert len(adaptation["route_values"]) == 100
+    evaluation = resolve_evaluation_protocol(loaded)
+    assert [condition["task"] for condition in evaluation["conditions"]] == [
+        "two_hop_route",
+        "two_hop_payload",
+        "two_hop_symbolic",
+    ]
+    assert evaluation["effective_threshold"] == 0.9
+    assert len(evaluation["route_values"]) == 100
 
 
 def test_protocol_rejects_an_undeclared_base_seed():
     loaded = load_promotion_protocol(contract / "internal" / "structured_retrieval_v2.json")
     with pytest.raises(ValueError, match="not declared"):
         resolve_adaptation_protocol(loaded, seed=45)
+
+
+def test_protocol_rejects_an_undeclared_evaluation_length():
+    loaded = load_promotion_protocol(contract / "internal" / "structured_retrieval_v2.json")
+    with pytest.raises(ValueError, match="not declared"):
+        resolve_evaluation_protocol(loaded, selected_length=65536)
 
 
 def test_runner_rejects_an_unpinned_protocol_copy(tmp_path):

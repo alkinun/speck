@@ -3,7 +3,7 @@
   "format_version": 1,
   "policy_id": "architecture-promotion-v1",
   "manifest_id": "architecture-evaluation-v1",
-  "status": "frozen_with_runner_integrations_pending",
+  "status": "frozen_internal_runners_bound_external_pending",
   "frozen_on": "2026-09-05",
   "repository_baseline_revision": "4073be6e4d161d0208f611d45f3a05a594808d82",
   "rules": {
@@ -42,10 +42,10 @@
     },
     {
       "id": "structured_retrieval_v2",
-      "status": "protocol_frozen_runner_integration_pending",
+      "status": "runner_bound_unexecuted",
       "protocol": "research/architecture-promotion-v1/internal/structured_retrieval_v2.json",
-      "protocol_sha256": "94e2633a2ce0de854061491d71e216f2202efab67f0722aa5dd2538b085d8626",
-      "generator_revision": "5cd419d9aad7f04a4b69b860cf63004a29a2dab8",
+      "protocol_sha256": "5585cd2a990c15339cc40acf16543d303dd987c6c6c5cc12bb9b5273226a049d",
+      "generator_revision": "5650e19c027817636f3cbb9248b9bb39cac2526e",
       "lengths": [
         4096,
         32768,
@@ -73,10 +73,10 @@
     },
     {
       "id": "symbolic_composition_v2",
-      "status": "protocol_frozen_runner_integration_pending",
+      "status": "runner_bound_unexecuted",
       "protocol": "research/architecture-promotion-v1/internal/symbolic_composition_v2.json",
-      "protocol_sha256": "4c7ad8ce9056cb696953f0eb63720c2ed7c83cbdb8c64a7886c2eaeb2b45a3cb",
-      "generator_revision": "5cd419d9aad7f04a4b69b860cf63004a29a2dab8",
+      "protocol_sha256": "38bc726f36cf82cadb70c5a8ab8f60d507adabecb1af81ec9dc91a371f392630",
+      "generator_revision": "5650e19c027817636f3cbb9248b9bb39cac2526e",
       "samples_per_view": 200,
       "minimum_distinct_intermediate_nodes": 100,
       "required_views": [
