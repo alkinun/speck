@@ -131,3 +131,15 @@ def test_paper_program_rejects_multilexsum_decision_pin_drift(tmp_path):
 
     with pytest.raises(ValueError, match="helmet_multilexsum_decision"):
         validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_narrativeqa_decision_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["evaluation_evidence"]["helmet_narrativeqa_decision_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="helmet_narrativeqa_decision"):
+        validate_paper_program(copied, repository_root=root)

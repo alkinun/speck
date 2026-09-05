@@ -71,6 +71,7 @@ Finding 48 subsequently qualifies the isolated-materializer strategy for Banking
 Data only; it does not extend that result to any blocked source.
 Findings 50 and 51 separately preserve TREC and Multi-LexSum rights/prompt blockers without acquiring
 their payloads.
+Finding 52 does the same for NarrativeQA's embedded full texts and unseeded prompt path.
 
 ## Artifacts
 

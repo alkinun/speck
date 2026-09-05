@@ -49,7 +49,7 @@
     "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2"
   },
   "evaluation_evidence": {
-    "status": "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_trec_and_multilexsum_blocked",
+    "status": "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_trec_multilexsum_and_narrativeqa_blocked",
     "contamination_protocol": "research/paper-1/contamination_v1.json",
     "contamination_protocol_sha256": "c61342312c9fe87ff51f851df39b296be68534fdfddfd6cd4daf6513a1837ac0",
     "contamination_result": "results/Speck-Paper1/contamination-ruler-v1.json",
@@ -61,7 +61,7 @@
     "contamination_disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
     "contamination_disposition_status": "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required",
     "active_evaluation_manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
-    "active_evaluation_manifest_sha256": "563b7a21b6aad2a29b2738e08c047b4d1ac8f95059871c28cf4b99fc07570810",
+    "active_evaluation_manifest_sha256": "34ecbd49fa9fbce6662959719e33c4df292543f63c9659f4cb0035dda270884f",
     "active_evaluation_manifest_id": "architecture-evaluation-v2",
     "helmet_runtime_dependency_protocol": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
     "helmet_runtime_dependency_protocol_sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b",
@@ -88,6 +88,11 @@
     "helmet_multilexsum_decision": "results/Speck-Architecture-Promotion-v1/helmet-multilexsum-decision.json",
     "helmet_multilexsum_decision_sha256": "1365a9fe17e1ed7d59e7c1e66cc92d8ed89fadaf3240bf80058b012ae66289c1",
     "helmet_multilexsum_status": "metadata_qualified_rights_and_prompt_determinism_blocked",
+    "helmet_narrativeqa_decision_protocol": "research/architecture-promotion-v1/helmet_narrativeqa_decision_v1.json",
+    "helmet_narrativeqa_decision_protocol_sha256": "136b0166275a5b3d5651b15671acd43f02a207ae077948ff4e60127f54ed933d",
+    "helmet_narrativeqa_decision": "results/Speck-Architecture-Promotion-v1/helmet-narrativeqa-decision.json",
+    "helmet_narrativeqa_decision_sha256": "5b520d1140cc04168ceece08ba81abfaea41c6efd4c68a57993899b5f6d4f6c1",
+    "helmet_narrativeqa_status": "metadata_qualified_embedded_rights_and_prompt_path_blocked",
     "ruler_v1_decision": "failed_critical_overlap_preserved",
     "ruler_v2_decision": "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending"
   },

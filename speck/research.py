@@ -981,6 +981,44 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 is not False
             ):
                 raise ValueError("HELMET Multi-LexSum evidence is invalid")
+            narrativeqa_protocol_path = repository_root / suite.get(
+                "narrativeqa_decision_protocol", ""
+            )
+            narrativeqa_path = repository_root / suite.get("narrativeqa_decision", "")
+            if (
+                not narrativeqa_protocol_path.is_file()
+                or _file_sha256(narrativeqa_protocol_path)
+                != suite.get("narrativeqa_decision_protocol_sha256")
+                or not narrativeqa_path.is_file()
+                or _file_sha256(narrativeqa_path)
+                != suite.get("narrativeqa_decision_sha256")
+            ):
+                raise ValueError("HELMET NarrativeQA evidence has an invalid pin")
+            narrativeqa_protocol = _load_json(narrativeqa_protocol_path)
+            narrativeqa = _load_json(narrativeqa_path)
+            narrative_analysis = narrativeqa.get("helmet_analysis", {})
+            if (
+                "narrativeqa_embedded_rights_and_prompt_blocked" not in suite["status"]
+                or narrativeqa_protocol.get("status") != "executed_blocked"
+                or narrativeqa_protocol.get("result", {}).get("sha256")
+                != suite.get("narrativeqa_decision_sha256")
+                or narrativeqa.get("status")
+                != "metadata_qualified_embedded_rights_and_prompt_path_blocked"
+                or narrativeqa.get("payload_files_acquired") != 0
+                or narrativeqa.get("source", {}).get("verified_document_inventory", {}).get(
+                    "documents"
+                )
+                != 1_572
+                or narrative_analysis.get("entries") != 5
+                or narrative_analysis.get("shots") != 2
+                or narrative_analysis.get("unseeded_training_demo_shuffle_calls") != 1
+                or narrative_analysis.get("prompt_deterministic") is not False
+                or narrativeqa.get("decision", {}).get("embedded_work_rights_qualified")
+                is not False
+                or narrativeqa.get("decision", {}).get("evaluation_use_authorized")
+                is not False
+            ):
+                raise ValueError("HELMET NarrativeQA evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

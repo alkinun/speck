@@ -2,7 +2,7 @@
   "format": "speck_helmet_narrativeqa_decision_protocol",
   "format_version": 1,
   "protocol_id": "helmet-narrativeqa-decision-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_blocked",
   "scope": "metadata-only embedded-work rights, prompt-determinism, tokenizer, and scorer decision for HELMET NarrativeQA",
   "source": {
     "hub_repository": "https://huggingface.co/datasets/deepmind/narrativeqa",
@@ -133,5 +133,14 @@
       "an unseeded cached map operation is a reproducible prompt definition",
       "this operational decision is legal advice or a final ownership determination"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-narrativeqa-decision.json",
+    "sha256": "5b520d1140cc04168ceece08ba81abfaea41c6efd4c68a57993899b5f6d4f6c1",
+    "status": "metadata_qualified_embedded_rights_and_prompt_path_blocked",
+    "created_at": "2026-09-05T15:29:50.894316+00:00",
+    "payload_files_acquired": 0,
+    "embedded_work_rights_qualified": false,
+    "prompt_determinism_qualified": false
   }
 }

@@ -104,6 +104,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_multilexsum_decision",
             "helmet_multilexsum_decision_sha256",
             "helmet_multilexsum_status",
+            "helmet_narrativeqa_decision_protocol",
+            "helmet_narrativeqa_decision_protocol_sha256",
+            "helmet_narrativeqa_decision",
+            "helmet_narrativeqa_decision_sha256",
+            "helmet_narrativeqa_status",
             "ruler_v1_decision",
             "ruler_v2_decision",
         },
@@ -111,7 +116,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     if (
         evidence["status"]
-        != "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_trec_and_multilexsum_blocked"
+        != "ruler_v1_failed_v2_frozen_helmet_three_runtime_sources_qualified_trec_multilexsum_and_narrativeqa_blocked"
     ):
         raise ValueError("paper evaluation evidence must preserve v1, RULER v2, and HELMET")
     for path_key, hash_key in (
@@ -145,6 +150,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_multilexsum_decision_protocol_sha256",
         ),
         ("helmet_multilexsum_decision", "helmet_multilexsum_decision_sha256"),
+        (
+            "helmet_narrativeqa_decision_protocol",
+            "helmet_narrativeqa_decision_protocol_sha256",
+        ),
+        ("helmet_narrativeqa_decision", "helmet_narrativeqa_decision_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -180,6 +190,12 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     helmet_multilexsum = _load_json(
         repository_root / evidence["helmet_multilexsum_decision"]
+    )
+    helmet_narrativeqa_protocol = _load_json(
+        repository_root / evidence["helmet_narrativeqa_decision_protocol"]
+    )
+    helmet_narrativeqa = _load_json(
+        repository_root / evidence["helmet_narrativeqa_decision"]
     )
     expected_unaffected = {
         "cwe",
@@ -339,6 +355,21 @@ def _validate_evaluation_evidence(evidence, repository_root):
         is not False
     ):
         raise ValueError("paper HELMET Multi-LexSum evidence is invalid")
+    if (
+        helmet_narrativeqa_protocol.get("format")
+        != "speck_helmet_narrativeqa_decision_protocol"
+        or helmet_narrativeqa_protocol.get("status") != "executed_blocked"
+        or helmet_narrativeqa_protocol.get("result", {}).get("sha256")
+        != evidence["helmet_narrativeqa_decision_sha256"]
+        or helmet_narrativeqa.get("format") != "speck_helmet_narrativeqa_decision"
+        or helmet_narrativeqa.get("status") != evidence["helmet_narrativeqa_status"]
+        or helmet_narrativeqa.get("payload_files_acquired") != 0
+        or helmet_narrativeqa.get("helmet_analysis", {}).get("prompt_deterministic")
+        is not False
+        or helmet_narrativeqa.get("decision", {}).get("embedded_work_rights_qualified")
+        is not False
+    ):
+        raise ValueError("paper HELMET NarrativeQA evidence is invalid")
 
 
 def _validate_claims(claims):

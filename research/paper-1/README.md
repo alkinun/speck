@@ -97,6 +97,9 @@ the final combined model.
 - [`helmet_multilexsum_decision_v1.json`](../architecture-promotion-v1/helmet_multilexsum_decision_v1.json)
   separates database and summary rights and proves that noncommercial summaries enter two-shot prompts
   through an unseeded selection path.
+- [`helmet_narrativeqa_decision_v1.json`](../architecture-promotion-v1/helmet_narrativeqa_decision_v1.json)
+  separates Apache metadata from 1,572 embedded external works and freezes independent rights,
+  unseeded-demo, tokenizer, and judge blockers.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -134,6 +137,8 @@ TREC blocked on written authority or pre-results removal, followed by final prom
 before the ICL category can qualify.
 Multi-LexSum independently blocks summarization on organizational scope, unseeded demonstrations, the
 truncation tokenizer, and the model judge.
+NarrativeQA independently blocks the source-document guardrail on embedded-work rights, another
+unseeded two-shot path, the same truncation tokenizer, and its proprietary judge.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

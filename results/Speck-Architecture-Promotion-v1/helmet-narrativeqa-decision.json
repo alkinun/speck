@@ -1,0 +1,177 @@
+{
+  "contact_attempted": false,
+  "created_at": "2026-09-05T15:29:50.894316+00:00",
+  "decision": {
+    "commercial_scope_authorized": false,
+    "contact_authorized": false,
+    "embedded_work_rights_qualified": false,
+    "evaluation_use_authorized": false,
+    "metadata_audit_qualified": true,
+    "model_judge_qualified": false,
+    "payload_acquisition_authorized": false,
+    "prompt_determinism_qualified": false,
+    "required_next": "complete work-level and jurisdiction-specific rights review for the embedded full texts or freeze a pre-results replacement; seed and replay demonstration selection; then qualify the Llama 2 truncation tokenizer, proprietary judge or replacement metric, immutable payload, exact prompts, and contamination",
+    "tokenizer_qualified": false
+  },
+  "evidence": [
+    {
+      "bytes": 10572,
+      "canonical_visible_text_sha256": "b9a1bffe945a40847fdafeaa08726fb3066f8a4c6801b7edbb5c0a104c7f3365",
+      "id": "hub_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/huggingface-readme.md",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "6bb0cf93487ba1c63b7039892958ea6f23d07513fa2ad9b16c73ce813bbfa3d1",
+      "url": "https://huggingface.co/datasets/deepmind/narrativeqa/resolve/2e643e7363944af1c33a652d1c87320d0871c4e4/README.md"
+    },
+    {
+      "bytes": 3840,
+      "canonical_visible_text_sha256": "113a7a522406041a0f7a731acffd9e21673d5330c988b035d1d01e2cf0c83b19",
+      "id": "upstream_readme",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/upstream-readme.md",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "85b32d79619a8f2fec88ac62ace984bfb60544c6a90766580032a380bbf1262a",
+      "url": "https://raw.githubusercontent.com/google-deepmind/narrativeqa/904246f6d1fe99a99a08a03501fe3e619af2cee5/README.md"
+    },
+    {
+      "bytes": 11358,
+      "canonical_visible_text_sha256": "0ffddef9e48f8a09aed5caf2d44f7ba1c1be2d9b8e0a6f693b1635b2d5566645",
+      "id": "upstream_license",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/upstream-license.txt",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "url": "https://raw.githubusercontent.com/google-deepmind/narrativeqa/904246f6d1fe99a99a08a03501fe3e619af2cee5/LICENSE"
+    },
+    {
+      "bytes": 341683,
+      "canonical_visible_text_sha256": "140da4efa4dc642f06f0d53b08a5382f1b057a04f1e0f386d6b124cbfa310074",
+      "id": "documents_csv",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/documents.csv",
+      "raw_transport_identity_frozen": true,
+      "required_assertions_present": true,
+      "sha256": "6dffa4cc0b5c9963fe3a097c87f04aa7767da36627500cc7a0d69e2405e1144a",
+      "url": "https://raw.githubusercontent.com/google-deepmind/narrativeqa/904246f6d1fe99a99a08a03501fe3e619af2cee5/documents.csv"
+    },
+    {
+      "bytes": 8711,
+      "canonical_visible_text_sha256": "54561e814d8aa78b3be11861845f8f9020fbf591eed0cbe89f0d22080b6b54ea",
+      "id": "imsdb_disclaimer",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/imsdb-disclaimer.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "3998036a7441e24980d984fb1851e2e302feb256f76a918777fa5d5f8450a5ab",
+      "url": "https://imsdb.com/disclaimer.html"
+    },
+    {
+      "bytes": 12142,
+      "canonical_visible_text_sha256": "d8271ff76c1682213f1390b6ca94b1650239a85af5593daa97b380923324d05c",
+      "id": "dailyscript_homepage",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/dailyscript-homepage.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "f322a9a150e5402e3bb7519a176040142456bca15881355946b1fb8cedb97618",
+      "url": "https://www.dailyscript.com/"
+    },
+    {
+      "bytes": 32321,
+      "canonical_visible_text_sha256": "96a036ed2aaed2bd169d59122ffb41883810b688f798770b3a78638cd6275833",
+      "id": "gutenberg_license",
+      "path": "/mnt/speck-data/speck/helmet-runtime-sources-v1/narrativeqa-metadata/gutenberg-license.html",
+      "raw_transport_identity_frozen": false,
+      "required_assertions_present": true,
+      "sha256": "2f018de8ec2a9be209c1be3931f99d14d97ff056287d571e0cb7629a20793ced",
+      "url": "https://www.gutenberg.org/policy/license"
+    }
+  ],
+  "format": "speck_helmet_narrativeqa_decision",
+  "format_version": 1,
+  "helmet_analysis": {
+    "entries": 5,
+    "llama2_length_filter_and_truncation_required": true,
+    "prompt_deterministic": false,
+    "proprietary_judge_required": true,
+    "seeded_test_shuffle": true,
+    "shots": 2,
+    "unseeded_training_demo_shuffle_calls": 1
+  },
+  "non_claims": [
+    "Apache-2.0 on the metadata repository grants rights to every linked or embedded full story",
+    "Project Gutenberg status in the United States determines rights in every operating jurisdiction",
+    "educational-only script hosting is affirmative commercial evaluation authority",
+    "an unseeded cached map operation is a reproducible prompt definition",
+    "this operational decision is legal advice or a final ownership determination"
+  ],
+  "payload_files_acquired": 0,
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_narrativeqa_decision_v1.json",
+    "spec_identity_sha256": "9cbc01c83a7c521d24b960fee0bfa8e38ab0184540c1426847f6badbab8aef28"
+  },
+  "runner_revision": "32c915c1583f3ecb931c1515b50fb33fc080846d",
+  "runner_sha256": "e61904c68fa6b89cfc4847ab7f74b2819540a9a17f6eea2488923246b0843c55",
+  "source": {
+    "document_inventory": {
+      "documents": 1572,
+      "kinds": {
+        "gutenberg": 783,
+        "movie": 789
+      },
+      "splits": {
+        "test": 355,
+        "train": 1102,
+        "valid": 115
+      },
+      "story_domains": {
+        "www.awesomefilm.com": 7,
+        "www.dailyscript.com": 15,
+        "www.gutenberg.org": 783,
+        "www.imsdb.com": 767
+      }
+    },
+    "hub_repository": "https://huggingface.co/datasets/deepmind/narrativeqa",
+    "hub_revision": "2e643e7363944af1c33a652d1c87320d0871c4e4",
+    "metadata_license": "Apache-2.0",
+    "parquet_payload": {
+      "bytes": 3232805701,
+      "files": 35,
+      "pointer_tree_identity_sha256": "aa2b9e602e6ab94987e3310831e05a6e34e48d8f9814b5b5721aed0825f05ca8",
+      "splits": {
+        "test": {
+          "bytes": 859965070,
+          "files": 8
+        },
+        "train": {
+          "bytes": 2269966933,
+          "files": 24
+        },
+        "validation": {
+          "bytes": 102873698,
+          "files": 3
+        }
+      },
+      "status": "metadata_observed_payload_not_acquired"
+    },
+    "upstream_repository": "https://github.com/google-deepmind/narrativeqa.git",
+    "upstream_revision": "904246f6d1fe99a99a08a03501fe3e619af2cee5",
+    "verified_document_inventory": {
+      "documents": 1572,
+      "kinds": {
+        "gutenberg": 783,
+        "movie": 789
+      },
+      "splits": {
+        "test": 355,
+        "train": 1102,
+        "valid": 115
+      },
+      "story_domains": {
+        "www.awesomefilm.com": 7,
+        "www.dailyscript.com": 15,
+        "www.gutenberg.org": 783,
+        "www.imsdb.com": 767
+      }
+    }
+  },
+  "status": "metadata_qualified_embedded_rights_and_prompt_path_blocked"
+}
