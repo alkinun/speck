@@ -2,7 +2,7 @@
   "format": "speck_contamination_protocol",
   "format_version": 1,
   "protocol_id": "paper1-contamination-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_failed_critical_overlap_detected",
   "scope": "exact token overlap between evaluation prompts and the three packed training windows consumed by the Paper 1 proxy",
   "training": {
     "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
@@ -76,5 +76,16 @@
       "shared overlap does not validate absolute benchmark capability",
       "this protocol does not scan training data outside the exact proxy windows"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Paper1/contamination-ruler-v1.json",
+    "sha256": "3f3581429f318b236ede81a0ae89f077f478c250cb4f2919045e16da7c2b490f",
+    "status": "failed_critical_overlap_detected",
+    "created_at": "2026-09-05T14:16:31.763205+00:00",
+    "total_training_tokens_scanned": 393216000,
+    "total_ruler_cases": 7800,
+    "unique_answer_anchored_matches": 28,
+    "unique_context_matches": 42,
+    "unique_full_prompt_matches": 0
   }
 }

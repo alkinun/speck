@@ -20,6 +20,8 @@ def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
             "claims.json",
             "baseline_matrix.json",
             "baseline_analysis.json",
+            "contamination_v1.json",
+            "contamination_disposition_v1.json",
             "experiment_program.json",
             "paper_outline.md",
             "reference_audit.md",
@@ -56,4 +58,16 @@ def test_paper_program_rejects_baseline_audit_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="baseline audit"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_contamination_disposition_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["evaluation_evidence"]["contamination_disposition_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="contamination_disposition"):
         validate_paper_program(copied, repository_root=root)

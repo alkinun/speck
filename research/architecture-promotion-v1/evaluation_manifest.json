@@ -3,12 +3,12 @@
   "format_version": 1,
   "policy_id": "architecture-promotion-v1",
   "manifest_id": "architecture-evaluation-v1",
-  "status": "frozen_internal_runners_bound_external_pending",
+  "status": "frozen_v1_ruler_contamination_failed_external_pending",
   "frozen_on": "2026-09-05",
   "repository_baseline_revision": "4073be6e4d161d0208f611d45f3a05a594808d82",
   "rules": {
     "candidate_access": "internal cases are reproducible and public, but their frozen settings cannot be changed after candidate results; external suites run only after candidates and thresholds are frozen",
-    "contamination": "record exact training-data source revisions and scan benchmark prompts plus normalized n-grams before promotion",
+    "contamination": "freeze exact training windows and prompt probes before scanning; any critical match preserves the failed manifest and requires a successor version before candidate execution",
     "reporting": "publish raw per-example outputs, aggregate scores, confidence bounds, failures, model hash, tokenizer hash, and runtime identity",
     "missing_suite": "a required suite that cannot run is a failed release gate, not an omitted metric",
     "prompt_changes": "any prompt, parser, generator, task, length, or scoring change requires a new manifest version"
@@ -94,7 +94,7 @@
   "external_suites": [
     {
       "id": "ruler",
-      "status": "source_qualified_case_data_qualified_candidate_execution_blocked",
+      "status": "source_qualified_case_data_qualified_contamination_failed_manifest_revision_blocked",
       "repository": "https://github.com/NVIDIA/RULER",
       "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
       "contract": "research/architecture-promotion-v1/external/ruler_v1.json",
@@ -142,6 +142,15 @@
           "case_identity_sha256": "f14b9372cd2bb15e3254d4f3bccd0ad56b7fb9b53754e520854df8e852b668f8"
         }
       ],
+      "contamination": {
+        "audit": "results/Speck-Paper1/contamination-ruler-v1.json",
+        "audit_sha256": "3f3581429f318b236ede81a0ae89f077f478c250cb4f2919045e16da7c2b490f",
+        "audit_status": "failed_critical_overlap_detected",
+        "disposition": "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
+        "disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
+        "quarantine_tasks": ["qa_1", "qa_2"],
+        "decision": "v1_failed_successor_manifest_required_before_candidate_execution"
+      },
       "lengths": [
         4096,
         8192,

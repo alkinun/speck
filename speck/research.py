@@ -737,6 +737,30 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             or qualified.get("config_sha256") != contract_hash
         ):
             raise ValueError(f"external suite {suite['id']} source qualification does not match")
+        if suite["id"] == "ruler":
+            contamination = suite.get("contamination", {})
+            audit_path = repository_root / contamination.get("audit", "")
+            disposition_path = repository_root / contamination.get("disposition", "")
+            if (
+                not audit_path.is_file()
+                or _file_sha256(audit_path) != contamination.get("audit_sha256")
+                or not disposition_path.is_file()
+                or _file_sha256(disposition_path)
+                != contamination.get("disposition_sha256")
+            ):
+                raise ValueError("RULER contamination evidence has an invalid pin")
+            audit = _load_json(audit_path)
+            disposition = _load_json(disposition_path)
+            if (
+                "contamination_failed" not in suite["status"]
+                or audit.get("status") != "failed_critical_overlap_detected"
+                or disposition.get("status")
+                != "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required"
+                or disposition.get("decision", {}).get("ruler_v1") != "failed"
+                or disposition.get("decision", {}).get("candidate_execution_authorized")
+                is not False
+            ):
+                raise ValueError("RULER contamination failure is not preserved in the manifest")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

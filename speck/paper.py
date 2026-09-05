@@ -9,6 +9,8 @@ PROGRAM_FILES = (
     "claims.json",
     "baseline_matrix.json",
     "baseline_analysis.json",
+    "contamination_v1.json",
+    "contamination_disposition_v1.json",
     "experiment_program.json",
     "paper_outline.md",
     "reference_audit.md",
@@ -50,6 +52,123 @@ def _unique_ids(values, context):
     if duplicates:
         raise ValueError(f"duplicate {context} ids: {', '.join(duplicates)}")
     return set(identifiers)
+
+
+def _identity_without_status_and_result(value):
+    payload = {key: value[key] for key in value if key not in {"status", "result"}}
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
+def _validate_evaluation_evidence(evidence, repository_root):
+    _require(
+        evidence,
+        {
+            "status",
+            "contamination_protocol",
+            "contamination_protocol_sha256",
+            "contamination_result",
+            "contamination_result_sha256",
+            "contamination_result_status",
+            "contamination_disposition_protocol",
+            "contamination_disposition_protocol_sha256",
+            "contamination_disposition",
+            "contamination_disposition_sha256",
+            "contamination_disposition_status",
+            "ruler_manifest_decision",
+        },
+        "paper evaluation evidence",
+    )
+    if evidence["status"] != "ruler_v1_contamination_failed_manifest_revision_required":
+        raise ValueError("paper evaluation evidence must preserve the failed RULER v1 decision")
+    for path_key, hash_key in (
+        ("contamination_protocol", "contamination_protocol_sha256"),
+        ("contamination_result", "contamination_result_sha256"),
+        (
+            "contamination_disposition_protocol",
+            "contamination_disposition_protocol_sha256",
+        ),
+        ("contamination_disposition", "contamination_disposition_sha256"),
+    ):
+        path = repository_root / evidence[path_key]
+        if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
+            raise ValueError(f"paper evaluation {path_key} does not match its pin")
+
+    protocol = _load_json(repository_root / evidence["contamination_protocol"])
+    result = _load_json(repository_root / evidence["contamination_result"])
+    disposition_protocol = _load_json(
+        repository_root / evidence["contamination_disposition_protocol"]
+    )
+    disposition = _load_json(repository_root / evidence["contamination_disposition"])
+    expected_unaffected = {
+        "cwe",
+        "fwe",
+        "niah_multikey_1",
+        "niah_multikey_2",
+        "niah_multikey_3",
+        "niah_multiquery",
+        "niah_multivalue",
+        "niah_single_1",
+        "niah_single_2",
+        "niah_single_3",
+        "vt",
+    }
+    if (
+        protocol.get("format") != "speck_contamination_protocol"
+        or protocol.get("status") != "executed_failed_critical_overlap_detected"
+        or protocol.get("result", {}).get("path") != evidence["contamination_result"]
+        or protocol.get("result", {}).get("sha256") != evidence["contamination_result_sha256"]
+        or result.get("format") != "speck_contamination_audit"
+        or result.get("status") != evidence["contamination_result_status"]
+        or result.get("protocol", {}).get("spec_identity_sha256")
+        != _identity_without_status_and_result(protocol)
+        or result.get("training", {}).get("total_tokens_scanned") != 393_216_000
+        or result.get("evaluation", {}).get("total_cases") != 7_800
+        or result.get("evaluation", {}).get("native_transformers_parity_samples") != 78
+        or result.get("decisions")
+        != {"full_prompt": True, "answer_anchored": False, "context": "descriptive_only"}
+        or result.get("matches", {}).get("unique_patterns_by_kind", {}).get(
+            "answer_anchored"
+        )
+        != 28
+        or result.get("matches", {}).get("unique_patterns_by_kind", {}).get("context") != 42
+        or result.get("matches", {}).get("unique_patterns_by_kind", {}).get(
+            "full_prompt", 0
+        )
+        != 0
+    ):
+        raise ValueError("paper contamination audit evidence is invalid")
+    if (
+        disposition_protocol.get("format")
+        != "speck_contamination_disposition_protocol"
+        or disposition_protocol.get("status") != "executed_failed"
+        or disposition_protocol.get("audit", {}).get("sha256")
+        != evidence["contamination_result_sha256"]
+        or disposition_protocol.get("result", {}).get("path")
+        != evidence["contamination_disposition"]
+        or disposition_protocol.get("result", {}).get("sha256")
+        != evidence["contamination_disposition_sha256"]
+        or disposition.get("format") != "speck_contamination_disposition"
+        or disposition.get("status") != evidence["contamination_disposition_status"]
+        or disposition.get("protocol", {}).get("spec_identity_sha256")
+        != _identity_without_status_and_result(disposition_protocol)
+        or disposition.get("audit", {}).get("sha256")
+        != evidence["contamination_result_sha256"]
+        or disposition.get("derived", {}).get("all_matched_references_reconstructed") is not True
+        or set(disposition.get("derived", {}).get("critical_quarantine_tasks", ()))
+        != {"qa_1", "qa_2"}
+        or set(disposition.get("derived", {}).get("context_overlap_tasks", ()))
+        != {"qa_1", "qa_2"}
+        or set(disposition.get("derived", {}).get("no_detected_critical_match_tasks", ()))
+        != expected_unaffected
+        or len(disposition.get("derived", {}).get("critical_affected_cells", ())) != 12
+        or disposition.get("decision", {}).get("ruler_v1") != "failed"
+        or disposition.get("decision", {}).get("threshold_changed") is not False
+        or disposition.get("decision", {}).get("candidate_execution_authorized") is not False
+        or evidence["ruler_manifest_decision"] != "v1_failed_revision_required"
+    ):
+        raise ValueError("paper contamination disposition evidence is invalid")
 
 
 def _validate_claims(claims):
@@ -106,6 +225,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "policy_id",
             "status",
             "baseline_evidence",
+            "evaluation_evidence",
             "controls",
             "matching_views",
             "scales",
@@ -122,6 +242,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("paper experiment program must use format version 1")
     if program["paper_id"] != paper_id:
         raise ValueError("claims and experiment program use different paper ids")
+    _validate_evaluation_evidence(program["evaluation_evidence"], repository_root)
     evidence = program["baseline_evidence"]
     _require(
         evidence,

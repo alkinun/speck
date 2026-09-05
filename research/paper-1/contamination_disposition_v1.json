@@ -2,7 +2,7 @@
   "format": "speck_contamination_disposition_protocol",
   "format_version": 1,
   "protocol_id": "paper1-contamination-disposition-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_failed",
   "created_after_audit": true,
   "scope": {
     "suite": "ruler",
@@ -57,5 +57,15 @@
       "shared contamination makes an absolute capability score valid",
       "post-audit task quarantine retroactively makes evaluation manifest v1 pass"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
+    "sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
+    "status": "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required",
+    "created_at": "2026-09-05T14:29:29.638088+00:00",
+    "matched_patterns_reconstructed": 70,
+    "critical_affected_cases": 28,
+    "critical_affected_cells": 12,
+    "quarantine_tasks": ["qa_1", "qa_2"]
   }
 }

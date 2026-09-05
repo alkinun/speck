@@ -1,0 +1,2896 @@
+{
+  "created_at": "2026-09-05T14:16:31.763205+00:00",
+  "decisions": {
+    "answer_anchored": false,
+    "context": "descriptive_only",
+    "full_prompt": true
+  },
+  "evaluation": {
+    "native_transformers_parity_samples": 78,
+    "probe_references_by_kind": {
+      "answer_anchored": 3189180,
+      "context": 30798,
+      "full_prompt": 1300
+    },
+    "ruler_cases": [
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "cwe"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "fwe"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_multikey_1"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_multikey_2"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_multikey_3"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_multiquery"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_multivalue"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_single_1"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_single_2"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "niah_single_3"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "qa_1"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "qa_2"
+      },
+      {
+        "cases": 100,
+        "length": 4096,
+        "task": "vt"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "cwe"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "fwe"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_multikey_1"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_multikey_2"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_multikey_3"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_multiquery"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_multivalue"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_single_1"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_single_2"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "niah_single_3"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "qa_1"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "qa_2"
+      },
+      {
+        "cases": 100,
+        "length": 8192,
+        "task": "vt"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "cwe"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "fwe"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_multikey_1"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_multikey_2"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_multikey_3"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_multiquery"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_multivalue"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_single_1"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_single_2"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "niah_single_3"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "qa_1"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "qa_2"
+      },
+      {
+        "cases": 100,
+        "length": 16384,
+        "task": "vt"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "cwe"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "fwe"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_multikey_1"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_multikey_2"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_multikey_3"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_multiquery"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_multivalue"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_single_1"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_single_2"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "niah_single_3"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "qa_1"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "qa_2"
+      },
+      {
+        "cases": 100,
+        "length": 32768,
+        "task": "vt"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "cwe"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "fwe"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_multikey_1"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_multikey_2"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_multikey_3"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_multiquery"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_multivalue"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_single_1"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_single_2"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "niah_single_3"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "qa_1"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "qa_2"
+      },
+      {
+        "cases": 100,
+        "length": 65536,
+        "task": "vt"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "cwe"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "fwe"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_multikey_1"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_multikey_2"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_multikey_3"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_multiquery"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_multivalue"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_single_1"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_single_2"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "niah_single_3"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "qa_1"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "qa_2"
+      },
+      {
+        "cases": 100,
+        "length": 131072,
+        "task": "vt"
+      }
+    ],
+    "skipped_answer_occurrences": 165,
+    "total_cases": 7800,
+    "unique_probes_by_kind": {
+      "answer_anchored": 3180930,
+      "context": 15780,
+      "full_prompt": 1300
+    }
+  },
+  "format": "speck_contamination_audit",
+  "format_version": 1,
+  "matches": {
+    "occurrences_by_kind": {
+      "answer_anchored": 29,
+      "context": 42
+    },
+    "patterns": [
+      {
+        "id": "98b006f4b9b505ec4569b4e5604e0f992cba52bd482de0d70f48259d1464c06c",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 4245,
+            "pair": 1,
+            "row": 3,
+            "source": "pes2o",
+            "token_position": 1149
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 12,
+        "references": [
+          {
+            "length": 4096,
+            "row": 97,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 4096,
+            "row": 97,
+            "slot": "answer_2_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 8192,
+            "row": 97,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 8192,
+            "row": 97,
+            "slot": "answer_2_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 97,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 97,
+            "slot": "answer_2_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 97,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 97,
+            "slot": "answer_2_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 97,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 97,
+            "slot": "answer_2_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "d045fab971e2cef6fa28d88bd1b2e5a3570872a0a69e0a659d42282a1ab7205c",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 4245,
+            "pair": 1,
+            "row": 3,
+            "source": "pes2o",
+            "token_position": 1148
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 4096,
+            "row": 97,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 8192,
+            "row": 97,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 97,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 97,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 97,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 97,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "7c7b95e96b043ae0c996936e0401b8e46ed18dfef150730b51b7b83ac85556fc",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 2065,
+            "pair": 0,
+            "row": 0,
+            "source": "finemath_4plus",
+            "token_position": 3323
+          },
+          {
+            "batch": 4245,
+            "pair": 1,
+            "row": 3,
+            "source": "pes2o",
+            "token_position": 1143
+          }
+        ],
+        "occurrences": 2,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 4096,
+            "row": 98,
+            "slot": "answer_0_1",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 8192,
+            "row": 98,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 98,
+            "slot": "answer_0_3",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 98,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 98,
+            "slot": "answer_0_2",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 98,
+            "slot": "answer_0_4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "2e9315b5364df8360ed628b3ed789798b8813df79f6e8a2e37a9016842221625",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 4245,
+            "pair": 1,
+            "row": 3,
+            "source": "pes2o",
+            "token_position": 1161
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 4096,
+            "row": 98,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 8192,
+            "row": 98,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 98,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 98,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 98,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 98,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "0dada04bbfbdb992e8509e518a47b98af7c59c5fc8084d47ad25811e7db068db",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 4245,
+            "pair": 1,
+            "row": 3,
+            "source": "pes2o",
+            "token_position": 1162
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 4096,
+            "row": 98,
+            "slot": "answer_2_1",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 8192,
+            "row": 98,
+            "slot": "answer_2_6",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 98,
+            "slot": "answer_2_5",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 98,
+            "slot": "answer_2_1",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 98,
+            "slot": "answer_2_4",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 98,
+            "slot": "answer_2_4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "05062c8775ba561bf8c8648107412340d6624f31d8496984416a5e5c062287f0",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 527,
+            "pair": 2,
+            "row": 1,
+            "source": "wikimedia",
+            "token_position": 3357
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 4096,
+            "row": 78,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_2"
+          },
+          {
+            "length": 8192,
+            "row": 78,
+            "slot": "answer_0_4",
+            "suite": "ruler",
+            "task": "qa_2"
+          },
+          {
+            "length": 16384,
+            "row": 78,
+            "slot": "answer_0_1",
+            "suite": "ruler",
+            "task": "qa_2"
+          },
+          {
+            "length": 32768,
+            "row": 78,
+            "slot": "answer_0_6",
+            "suite": "ruler",
+            "task": "qa_2"
+          },
+          {
+            "length": 65536,
+            "row": 78,
+            "slot": "answer_0_14",
+            "suite": "ruler",
+            "task": "qa_2"
+          },
+          {
+            "length": 131072,
+            "row": 78,
+            "slot": "answer_0_6",
+            "suite": "ruler",
+            "task": "qa_2"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "025de540e3f92eefe09cc586b308357e3405db7f953fd1f3852690fd88f3ae28",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6631,
+            "pair": 0,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 1648
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 8192,
+            "row": 48,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "bd5acf146e34ac8fcee8abf8bdfa3eb14801fe0adfaffe6b193e48ae0e164c31",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 3975,
+            "pair": 1,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 3764
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 8192,
+            "row": 78,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_2"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "da3a83ad06392a4d626726d1f7577791a15fba8354bbad470fd6925908d9e0df",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 4778,
+            "pair": 2,
+            "row": 0,
+            "source": "fineweb_edu",
+            "token_position": 304
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 4,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "4f93e65c6d3392a0ae6073053e46d5fad868ab2c7d2e12e4028ffe6d09ea301b",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2317
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 4,
+            "slot": "answer_0_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "809892abc3f0f4882858a9d5dcd4bbf0f7cf989475106958e52a716847994b07",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2316
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 2,
+        "references": [
+          {
+            "length": 16384,
+            "row": 4,
+            "slot": "answer_2_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 16384,
+            "row": 4,
+            "slot": "answer_3_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "c3b4dc746d496095e6ff228e809a4f20c398435d7597eb1bf6f3bebbfb0e5900",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 5777,
+            "pair": 1,
+            "row": 1,
+            "source": "fineweb_edu",
+            "token_position": 1525
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 13,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "549feef8bc310a959cbe91fc3fd2f8aea6d421fc645045d894528f009c22be21",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2446
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 20,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "ce68c7f71f01d21dda986e64a20941fc922f261c88a64db0b2ec8eafee3e8d6c",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2137
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 21,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "32fee649e7e92014bcd3ea4cf902eb738784faff5c79e50b052b0ff340f825d1",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 0,
+            "source": "dclm_edu",
+            "token_position": 2047
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 22,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "fb810b41e5ba6c416c7c262cec59b4bfd1dca3bbbe25c71e47a9bb95f549e697",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 5777,
+            "pair": 1,
+            "row": 1,
+            "source": "fineweb_edu",
+            "token_position": 3211
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 22,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "8a420dd22d81580bb82e3be484c4cb1e657c72799cb40d7132b7ae40ece9a118",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 0,
+            "source": "dclm_edu",
+            "token_position": 1810
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 32,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "4fefdecc004500208aca7f20b474d63dd1a11297ad4d29f81af339cd60861a7f",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 5777,
+            "pair": 1,
+            "row": 1,
+            "source": "fineweb_edu",
+            "token_position": 750
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 49,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "7de63d47365d4a3c553f1d5d6c9712c6ed0297fe407212f42b7d5423542a06a1",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 569
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 16384,
+            "row": 54,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "cd3bbae915367210d99516ed935937de07c84a51e3a7df0fa48607dc656a9414",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2451
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 8,
+        "references": [
+          {
+            "length": 32768,
+            "row": 0,
+            "slot": "answer_0_15",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 0,
+            "slot": "answer_1_15",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 0,
+            "slot": "answer_2_15",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 0,
+            "slot": "answer_3_15",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_0_8",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_1_8",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_2_8",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_3_8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "742596a352b5e21e5eaf89c0d91e43c9ef3a391758b604ba01a2a3d53a29eed7",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 5777,
+            "pair": 1,
+            "row": 2,
+            "source": "fineweb_edu",
+            "token_position": 112
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 1,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "b1186d08cfa9c17d8868612227b174673baf22c763fc4ba1d6faa3340c62c33c",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2976
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 9,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "23f8c0457e235a848d9110dbce37f58c4db06286114c18431c339dd80f48e07d",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 4778,
+            "pair": 2,
+            "row": 0,
+            "source": "fineweb_edu",
+            "token_position": 2037
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 15,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "d557816f88807ea0ad84b83d8333048a46d17f3c6c2d0688fc73e1c926113e7c",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 3166
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 60,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "d444da28f1fb6a6e3ef9b2aa9ed0f04921226e02f6e739aeee153a4c1b0a0065",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 1452
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 64,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "0d014ed9c257a8a98c49a37be28b707c828c4ee3c420850e1c48cfbe74895f74",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6631,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 995
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 66,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "27f89c8d5e402c8485744e74d7db2bf24756c8a21926f94a747b23bbe0cf14b6",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 1841
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 74,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "4c21317ccdea86a1f14ddc7162e417f05aed8dd69336761b81d080bd19228f2e",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2763
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 32768,
+            "row": 79,
+            "slot": "answer_0_1",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 79,
+            "slot": "answer_1_1",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 32768,
+            "row": 79,
+            "slot": "answer_2_1",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "f4a127e9d5e3bdf2a2411409606ea431d5861846ab528a7d94eba291953eda60",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2412
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 80,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "f37f3d3ff3118482ab83f8beb0708584d426a9c5de9b0c63f040b2a23038770c",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 3655
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 80,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "074fc362eb95d30bf8b9b88cfdb991e6589e4e7820f8e827cbb75e4803381976",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 5777,
+            "pair": 1,
+            "row": 1,
+            "source": "fineweb_edu",
+            "token_position": 1115
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 94,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "2e0ab1c401ed50a83f366138771123706826c521e9b0bb6d86704425a5cd3873",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 3331
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 94,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "52338f209645588b4a2d7d95698cf2f4f260a2f5b4d3a7696cfc3625a68a59be",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 0,
+            "source": "dclm_edu",
+            "token_position": 628
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 32768,
+            "row": 96,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "4b7a0ffbe47b9db48838a094083a58d21dc2f889dd795aa73425db71cc6a2764",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2506
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 4,
+        "references": [
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_0_10",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_1_10",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_2_10",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_3_10",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "178ac129d9f329537eca54ff43ced7cb3db6869b71b7e65435e02886269f3936",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 2546,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 432
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 4,
+        "references": [
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_0_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_1_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_2_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 0,
+            "slot": "answer_3_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "45f70958bf8da381c132411f789d39c050f5cba83df3f159e15fc38a37f92e2e",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2777
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 10,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "141795f0da0c3b023a3ad8d89c205cbc0d398eea7ce3e5ae0f5dc41d5a5c556a",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 1842
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 14,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "4ff839d15f21cbe90ce35e98a87431f33bdbbad561622d2ad9a1ac0c9ae42af5",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2056
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 15,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "8a41190c9c178d7397112f0791fe7bdfe0c3add8dee56da81f714dea66f4d907",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 3420
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 17,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "f9eac8cf2fc86cb61ae302f4795bce85629c737b5e822b7d4a170b5561d4589b",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 1506
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 34,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "caedaa2d445ad4da9ca4ebe0d84ae3a2ab12ba910d1bec1eedc8d8f4836835e0",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 5777,
+            "pair": 1,
+            "row": 1,
+            "source": "fineweb_edu",
+            "token_position": 2474
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 38,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "976dea2c32c9e1489017db6d5bff25587ba95023b14ef2d10f4d7bda23c0b731",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2813
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 47,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "f1560f2fd3135bf05f6cc476b0b36bede621c54720eec1317086c36a602e7474",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6631,
+            "pair": 0,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 1702
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 58,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "add7042e284629d9aa970157cc3b73d303c2b4210250cbc9296a9864695c53d1",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 4245,
+            "pair": 1,
+            "row": 3,
+            "source": "pes2o",
+            "token_position": 1174
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 61,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "068b309a481e2113c82ab74ea64b9b2925917471e6bfaa65b442d4d83fe0b656",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 1607
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 75,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "73680502f3b002cc12541b1a1cfa974518a7f9d86aa6802534e21380565edeb5",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 0,
+            "source": "dclm_edu",
+            "token_position": 615
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_0_5",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_1_5",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_2_5",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_22",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_22",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_22",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "c797924969fff2d6a499a5cbbccb6ed158e9bf8fe770d86087bb52108b6faf88",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 907
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_0_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_1_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_2_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_14",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_14",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_14",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "1a1188a90feab63d0542aa9a0c6059340ceda8d8fe81881cc855bc28a30c2f16",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6631,
+            "pair": 0,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 431
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 6,
+        "references": [
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_0_23",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_1_23",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 65536,
+            "row": 77,
+            "slot": "answer_2_23",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_88",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_88",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_88",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "af8043e386c5ff78b7b8bc149ddc96f7029fb9b283df74d57f801e94e4d5c074",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 3254
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 81,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "4c772423f0daad6423782da529e0e567f102dcc5118a58a8998d3f1926c139f8",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2965
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 86,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "f12921f6c042fbfede57b0880c2b277c51fa1e4b181a78b6ab1cf83637071ead",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2183
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 87,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "b8c6c17bd7c183a78fa6405386b553f68caefbfbe4986291aa094f0d0b7ed09e",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6781,
+            "pair": 2,
+            "row": 0,
+            "source": "dclm_edu",
+            "token_position": 1624
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 65536,
+            "row": 89,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "cb5352c3adeb4f10e2f1af29ab271f1ea6cfd687c2b7d72b85ff647b22c8acf9",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 4778,
+            "pair": 2,
+            "row": 0,
+            "source": "fineweb_edu",
+            "token_position": 2129
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 2,
+        "references": [
+          {
+            "length": 131072,
+            "row": 7,
+            "slot": "answer_0_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 7,
+            "slot": "answer_2_19",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "5ae8aa7a34f8fc2c1b455eb12caf8f7a3fe058543fe1291402cdbf8a344472dd",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 912
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 2,
+        "references": [
+          {
+            "length": 131072,
+            "row": 15,
+            "slot": "answer_0_15",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 15,
+            "slot": "answer_2_15",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "127b0b670206fe4db4acad2d75ae012e1a14640870e996a1afc0bc99c7177a91",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 1444
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 131072,
+            "row": 18,
+            "slot": "context_0.2",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "94e8e0d8c78b2a4f7a3abea1a82b4cb5e9b1c841ca8766cf2188d4b3f7a472a5",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6631,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2739
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 131072,
+            "row": 20,
+            "slot": "context_0.8",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "504a05c1a21af8bc6ec64dc2f7da9267f56ebf6057673ec664047bf1d52cc40d",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 2082,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 2205
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 131072,
+            "row": 43,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "ba3258bd5eaff4d35fe0452a1aeeb5e7cbda322c86ad6847105e234500e14cbc",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 4778,
+            "pair": 2,
+            "row": 1,
+            "source": "fineweb_edu",
+            "token_position": 1546
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 47,
+            "slot": "answer_0_4",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 47,
+            "slot": "answer_1_4",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 47,
+            "slot": "answer_2_4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "af895f7623a578ce693bfc264ca7f5fc28cde20290a5124cc179e9cd0cae770c",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 1089
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 131072,
+            "row": 51,
+            "slot": "context_0.6",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "85fa15c7bdacec2b1c61d4fb5a24293482e023040d487f72793eca70e61f9ea9",
+        "kind": "context",
+        "locations": [
+          {
+            "batch": 6631,
+            "pair": 0,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 1562
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 131072,
+            "row": 64,
+            "slot": "context_0.4",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "f67b59fcb9a66c0f7b3feb10b387b55560213000d20c3554b816d81967b121fe",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 3227
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 1,
+        "references": [
+          {
+            "length": 131072,
+            "row": 68,
+            "slot": "answer_1_0",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "21ff123ab4b54669a0ec25e8125b00cecb520dd3da63c21c0438362d32878aaa",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6037,
+            "pair": 0,
+            "row": 1,
+            "source": "dclm_edu",
+            "token_position": 3742
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_54",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_54",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_54",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "3b8f07575fabfff8e1d7e9b806e5c0c05376724c3b08aef12f1026693be1b1e9",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 3686
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_83",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_83",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_83",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "54bc34f2f401c3cb031d7563d3c89ecfe3745cbf817fdf9056e4e451c6473f01",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 2975
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_84",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_84",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_84",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "89dd3a1b22d9699b6f28780c6fb4a45746adba0b6a8d9e38e221ae0a21e5c324",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 486
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_107",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_107",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_107",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "7e4053ab214c842904541c2f894ce158bc3d244b29ec80a0707ee5698435d5f1",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 540
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_108",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_108",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_108",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "c9e96becccdc804e6d4929566ec55795865488e856bba6b643a2b85cf0430b21",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 582
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_109",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_109",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_109",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "d9e401590bdf9cc5d3400aad8899f3afc061aa73d566da204c72e4f5f475d975",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 597
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_110",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_110",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_110",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "6b5dc580a18b1bfdecaa05f75b51ad4bff62ed32f101ea24ec76b48659104dbf",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 6776,
+            "pair": 2,
+            "row": 3,
+            "source": "dclm_edu",
+            "token_position": 637
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_111",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_111",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_111",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      },
+      {
+        "id": "da4152d4f0ae394450d6b7abeed86592943dcd3ec958b71398c2c3524acaa419",
+        "kind": "answer_anchored",
+        "locations": [
+          {
+            "batch": 1831,
+            "pair": 0,
+            "row": 2,
+            "source": "dclm_edu",
+            "token_position": 1465
+          }
+        ],
+        "occurrences": 1,
+        "reference_count": 3,
+        "references": [
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_0_114",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_1_114",
+            "suite": "ruler",
+            "task": "qa_1"
+          },
+          {
+            "length": 131072,
+            "row": 77,
+            "slot": "answer_2_114",
+            "suite": "ruler",
+            "task": "qa_1"
+          }
+        ],
+        "tokens": 32
+      }
+    ],
+    "unique_patterns_by_kind": {
+      "answer_anchored": 28,
+      "context": 42
+    }
+  },
+  "non_claims": [
+    "zero sampled context-probe matches does not prove absence of contamination",
+    "token overlap does not prove training-example provenance",
+    "shared overlap does not validate absolute benchmark capability",
+    "this protocol does not scan training data outside the exact proxy windows"
+  ],
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/paper-1/contamination_v1.json",
+    "spec_identity_sha256": "f56460638f66d59e795da13be033a071c31f5e34696bd84847fbd6a5e998ffe7"
+  },
+  "runner_revision": "b1d40000f7f172c2333ec1fad2c24269fd0869ee",
+  "runner_sha256": "910aeeab0495222b709e26f186a51781faaeb1d2f8836f74a80fe9e504ddaf11",
+  "status": "failed_critical_overlap_detected",
+  "training": {
+    "manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+    "total_tokens_scanned": 393216000,
+    "windows": [
+      {
+        "data_token_offset": 0,
+        "elapsed_seconds": 85.52815387910232,
+        "matched_occurrences_by_kind": {
+          "answer_anchored": 11,
+          "context": 18
+        },
+        "pair": 0,
+        "seed": 42,
+        "source_tokens": {
+          "cosmopedia_v2": 7864320,
+          "dclm": 7864320,
+          "dclm_edu": 26214400,
+          "finemath_4plus": 9175040,
+          "fineweb_edu": 41943040,
+          "math_multi_style": 1310720,
+          "math_textbook_exercise": 2621440,
+          "pes2o": 5242880,
+          "ufw_l3_multi_style": 6553600,
+          "ultra_fineweb": 17039360,
+          "wikimedia": 5242880
+        },
+        "tokens_scanned": 131072000
+      },
+      {
+        "data_token_offset": 536870912,
+        "elapsed_seconds": 89.45080322795548,
+        "matched_occurrences_by_kind": {
+          "answer_anchored": 5,
+          "context": 8
+        },
+        "pair": 1,
+        "seed": 43,
+        "source_tokens": {
+          "cosmopedia_v2": 7864320,
+          "dclm": 7864320,
+          "dclm_edu": 26214400,
+          "finemath_4plus": 9175040,
+          "fineweb_edu": 41943040,
+          "math_multi_style": 1310720,
+          "math_textbook_exercise": 2621440,
+          "pes2o": 5242880,
+          "ufw_l3_multi_style": 6553600,
+          "ultra_fineweb": 17039360,
+          "wikimedia": 5242880
+        },
+        "tokens_scanned": 131072000
+      },
+      {
+        "data_token_offset": 1073741824,
+        "elapsed_seconds": 95.92572114104405,
+        "matched_occurrences_by_kind": {
+          "answer_anchored": 13,
+          "context": 16
+        },
+        "pair": 2,
+        "seed": 44,
+        "source_tokens": {
+          "cosmopedia_v2": 7864320,
+          "dclm": 7864320,
+          "dclm_edu": 26214400,
+          "finemath_4plus": 9175040,
+          "fineweb_edu": 41943040,
+          "math_multi_style": 1310720,
+          "math_textbook_exercise": 2621440,
+          "pes2o": 5242880,
+          "ufw_l3_multi_style": 6553600,
+          "ultra_fineweb": 17039360,
+          "wikimedia": 5242880
+        },
+        "tokens_scanned": 131072000
+      }
+    ]
+  },
+  "unscanned_suites": [
+    {
+      "status": "authorized_acceptance_blocked_not_scanned",
+      "suite": "nolima"
+    },
+    {
+      "status": "archive_transfer_or_data_qualification_blocked_not_scanned",
+      "suite": "helmet"
+    }
+  ]
+}

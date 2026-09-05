@@ -75,6 +75,10 @@ the final combined model.
 - [`baseline-storage-volume-qualified.json`](../../results/Speck-Paper1/baseline-storage-volume-qualified.json)
   binds all six proxy checkpoint paths to a dedicated physical filesystem without moving or deleting
   prior evidence.
+- [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
+  training windows. Its checked result fails the answer-anchor gate without changing the threshold.
+- [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
+  hash reference, quarantines the implicated tasks, and requires a new manifest version.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -100,9 +104,10 @@ The checked analysis plan contains the exact CLI input and result contracts.
 The five historical sequence controls are now identity-audited as discovery evidence only. A new
 153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
 cells. Its analysis and stopping rule are frozen, and the versioned RTX 3090 training/export/cache
-preflight now passes. Launch remains blocked on the evaluation-manifest dependency and the
-storage-provisioning gate is now qualified on the dedicated volume tracked in SPE-104.
-The dedicated volume passes both proxy and finalist floors. The project otherwise has strong evidence for GDN/KDA
+preflight now passes. The dedicated volume passes both proxy and finalist floors. The frozen RULER
+contamination audit, however, detects 28 answer-anchored patterns in `qa_1`/`qa_2`; v1 is failed and a
+new evaluation-manifest version is required before candidate execution. NoLiMa and HELMET
+contamination checks remain blocked on their separate data/legal qualifications. The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
 

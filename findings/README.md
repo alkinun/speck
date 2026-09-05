@@ -51,6 +51,7 @@ Read in order:
 43. [42 — NoLiMa license and metadata decision gate](42_nolima_license_decision.md)
 44. [43 — HELMET data metadata and storage plan](43_helmet_data_metadata_and_storage_plan.md)
 45. [44 — Paper 1 dedicated checkpoint-volume qualification](44_paper_1_dedicated_checkpoint_volume.md)
+46. [45 — Paper 1 RULER contamination audit and v1 failure](45_paper_1_ruler_contamination.md)
 
 Conventions:
 
@@ -180,3 +181,9 @@ remain blocked.
 Finding 44 uses that separately mounted physical filesystem to close Paper 1 checkpoint capacity with
 positive provenance: six unique proxy paths, both proxy/finalist floors passed, unchanged packed data,
 and zero historical evidence moved or deleted. SPE-58 remains the only proxy launch blocker.
+
+Finding 45 executes the frozen exact-token contamination audit over 393,216,000 proxy training tokens
+and all 7,800 RULER cases. The full-prompt gate passes, but 28 answer-anchored patterns match and fail
+the critical gate; complete reference reconstruction localizes them to `qa_1` and `qa_2`. RULER v1 is
+preserved as failed, both tasks are quarantined, and a new manifest version is required before any
+candidate execution or uncontaminated capability claim.

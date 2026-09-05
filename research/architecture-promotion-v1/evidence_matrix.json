@@ -25,10 +25,13 @@
         "findings/30_cuda_decode_failure_classification.md",
         "findings/31_cache_equivalence_v2.md",
         "findings/32_cache_equivalence_v3_and_preflight_v2.md",
+        "findings/45_paper_1_ruler_contamination.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
+        "results/Speck-Paper1/contamination-ruler-v1.json",
+        "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
         "results/Speck-Paper1/baseline-preflight.json"
       ],
       "quality": "The one-seed 131M-token full-global result is within the measured seed range of the strongest attention-bearing hybrids and cannot be ranked against them.",
@@ -39,9 +42,10 @@
         "one-seed evidence",
         "short training horizon",
         "lack of time-to-quality comparison",
+        "RULER v1 failed its answer-anchored contamination gate and requires a successor manifest",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
-      "next_gate": "include a matched dense reference in finalist horizon and medium-scale comparisons"
+      "next_gate": "freeze a post-contamination RULER successor, then include this matched dense reference in finalist horizon and medium-scale comparisons"
     },
     {
       "id": "gated_deltanet",
@@ -83,11 +87,14 @@
         "findings/30_cuda_decode_failure_classification.md",
         "findings/31_cache_equivalence_v2.md",
         "findings/32_cache_equivalence_v3_and_preflight_v2.md",
+        "findings/45_paper_1_ruler_contamination.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
         "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
+        "results/Speck-Paper1/contamination-ruler-v1.json",
+        "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
         "results/Speck-Paper1/baseline-preflight.json",
         "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
       ],
@@ -101,9 +108,10 @@
         "two-hop composition",
         "training-horizon transfer",
         "free-running low-margin path divergence",
-        "production runtime parity"
+        "production runtime parity",
+        "RULER v1 failed its answer-anchored contamination gate"
       ],
-      "next_gate": "close SPE-58, then execute the frozen three-pair whole-architecture proxy without component attribution"
+      "next_gate": "freeze a post-contamination RULER successor, close the remaining SPE-58 gates, then execute the three-pair whole-architecture proxy without component attribution"
     },
     {
       "id": "reader_attention_three_cache",
