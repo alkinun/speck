@@ -98,10 +98,12 @@ to a checked experiment artifact.
     architecture-aligned pre-attention spikes and plateaus, including controlled placement and gates.
 37. [HALO and HypeNet](41_halo_hypenet.md) — select retained full-attention layers from recall/CSR
     sensitivity during efficient Transformer-to-hybrid distillation.
+38. [KL-guided hybrid layer selection](42_kl_guided_layer_selection.md) — rank restore-one-layer
+    hybrids by generic-text KL and test non-uniform placement across tasks, scales, and mixers.
 
 ### Supporting eviction baselines
 
-38. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+39. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
 ## Decision map for Speck
@@ -119,7 +121,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, eighteen later direct
+The collection contains all 22 papers supplied in the research brief, nineteen later direct
 novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
