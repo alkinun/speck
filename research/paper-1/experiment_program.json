@@ -472,8 +472,8 @@
   ],
   "novelty_landscape": {
     "audit": "research/paper-1/novelty_landscape_v1.json",
-    "sha256": "9ddd0396cc45734a705da72f800814256ba998460e26a8a38b492be4c97f368a",
-    "status": "four_full_text_two_abstract_audits_no_novelty_established"
+    "sha256": "00ced5b0ddce708adf51ba0da97d24e6e3a457a3c64cdefe81de7d732a4961d2",
+    "status": "six_full_text_audits_no_novelty_established"
   },
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
   "paper_id": "speck-paper-1",

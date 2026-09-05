@@ -2,10 +2,9 @@
 
 ## Scope
 
-FlashMorph, Sparse Prefix Caching, Ada-KV, and SqueezeAttention now have full-text audits. Two additional
-sources remain primary arXiv metadata/abstract audits. Exact versions are pinned, but released code, the other full
-texts, backward references, forward citations, proceedings, patents, technical reports, deployed
-systems, and independent expert review remain mandatory.
+All six recent direct sources now have full-text audits. Exact versions are pinned, but released code,
+backward references, forward citations, proceedings, patents, technical reports, deployed systems, and
+independent expert review remain mandatory.
 
 ## Direct overlaps
 
@@ -41,6 +40,12 @@ selecting attention weights across heads. It remains within-layer post-hoc evict
 SqueezeAttention audit establishes before/after-attention cosine and prompt-specific layer clustering as
 stronger N1 baselines; its largest throughput gains come from larger feasible batches, while batch-one
 throughput is approximately tied to full cache.
+
+Budgeted Attention Allocation confirms that a monotone requested-cost head controller from one checkpoint
+is prior art; soft cost does not automatically produce speed, and hard execution needs adaptation. The
+full ASA audit strengthens the N1 overlap further: it already assigns language/local and retrieval roles
+to window and selective branches and alternates them across layers. N1 must quantitatively predict unseen
+placements beyond that qualitative specialization and compare against ASA directly.
 
 ## Two hypotheses that survive provisionally
 

@@ -3,9 +3,9 @@
   "format_version": 1,
   "audit_id": "speck-paper-1-novelty-landscape-v1",
   "paper_id": "speck-paper-1",
-  "status": "four_full_text_two_abstract_audits_no_novelty_established",
+  "status": "six_full_text_audits_no_novelty_established",
   "audited_on": "2026-09-05",
-  "scope": "Full-text audits for FlashMorph, Sparse Prefix Caching, Ada-KV, and SqueezeAttention plus primary arXiv metadata/abstract audits for two further direct overlaps; released code, the remaining two full texts, references, citations, patents, and non-arXiv literature remain mandatory before a novelty claim.",
+  "scope": "Full-text audits for six recent direct overlaps; released code, backward references, forward citations, patents, proceedings, deployed systems, and non-arXiv literature remain mandatory before a novelty claim.",
   "sources": [
     {
       "id": "arxiv_2606_30562v1",
@@ -50,7 +50,8 @@
       "title": "Budgeted Attention Allocation: Cost-Conditioned Compute Control for Efficient Transformers",
       "submitted": "2026-05-07",
       "url": "https://arxiv.org/abs/2605.05697v1",
-      "review_scope": "metadata_and_abstract",
+      "review_scope": "full_text",
+      "local_note": "papers/27_budgeted_attention_allocation.md",
       "relevant_claim": "one checkpoint with monotone attention-head gates conditioned on a requested compute budget"
     },
     {
@@ -58,7 +59,8 @@
       "title": "Optimizing Native Sparse Attention with Latent Attention and Local Global Alternating Strategies",
       "submitted": "2025-11-02",
       "url": "https://arxiv.org/abs/2511.00819v1",
-      "review_scope": "metadata_and_abstract",
+      "review_scope": "full_text",
+      "local_note": "papers/28_alternating_sparse_attention.md",
       "relevant_claim": "alternating local and global sparse-attention layers combined with latent cache representations"
     }
   ],
@@ -105,6 +107,8 @@
         "independent layerwise sensitivity ranking",
         "greedy replacement",
         "FlashMorph-style jointly optimized gates where reproducibly implementable",
+        "Alternating Sparse Attention's local-versus-selective placement",
+        "SqueezeAttention before/after-attention cosine layer clustering",
         "parameter/state/FLOP-matched random placements"
       ],
       "fit_data": "discovery layouts only, with diagnostics measured before held-out placement quality is exposed",
@@ -131,6 +135,7 @@
       "distinction_to_test": "The candidate connects selector/compressor diagnostics to constituent-complete composition, not merely attention-output error, cache importance, or single-needle recall.",
       "required_baselines": [
         "captured dense attention mass",
+        "Ada-KV attention-output loss bound and adaptive head allocation",
         "top-k block/token recall",
         "single required-source recall",
         "attention-output reconstruction error",

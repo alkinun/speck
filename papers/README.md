@@ -70,6 +70,10 @@ to a checked experiment artifact.
 22. [Ada-KV](25_adakv.md) — attention-output-loss-guided head-wise KV eviction budgets.
 23. [SqueezeAttention](26_squeezeattention.md) — before/after-attention layer importance and layer-wise
     allocation over sequence KV compressors.
+24. [Budgeted Attention Allocation](27_budgeted_attention_allocation.md) — monotone externally
+    requested head budgets from one checkpoint.
+25. [Alternating Sparse Attention](28_alternating_sparse_attention.md) — redistribute local and
+    compressed/selective latent branches across layers.
 
 ## Decision map for Speck
 
@@ -86,7 +90,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief plus four later direct
+The collection contains all 22 papers supplied in the research brief plus six later direct
 novelty-overlap audits. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
