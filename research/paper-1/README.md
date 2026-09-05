@@ -114,6 +114,9 @@ the final combined model.
 - [`novelty_landscape_v5.json`](novelty_landscape_v5.json) adds the strongest N1 role/scaling, 72-model
   ratio/mixer, and greedy conversion baselines; it rejects the broad role claim and leaves only an
   unestablished prospective non-uniform from-scratch placement law.
+- [`novelty_landscape_v6.json`](novelty_landscape_v6.json) adds a direct from-scratch ratio/placement
+  study, rejects novelty of non-uniform placement and early/middle role recipes, and leaves prospective
+  unseen-layout prediction only as an unestablished incremental question with no experiment authority.
 - [`novelty_claim_overlap_v1.json`](novelty_claim_overlap_v1.json) maps fourteen candidate claims to
   their strongest overlap, keeps N1 as the only primary architecture hypothesis, and defers the residual
   N2 diagnostic before any experimental budget is spent.

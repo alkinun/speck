@@ -483,3 +483,9 @@ N1 and N2 survive only as unestablished empirical-law questions, with no experim
 deferred and N1 receives landscape/artifact/expert review only. The fixed Paper 1 proxy continues because
 it estimates the conservative parent independently of novelty, but even a proxy pass cannot satisfy the
 separate novelty gate.
+
+Finding 89 adds the closest direct N1 overlap: a 60B-token from-scratch study crosses Transformer/Mamba
+ratios and early/middle/late placements at 350M and 1B, finds a consistent front-attention penalty, and
+links it to early uniform attention versus Mamba locality. Non-uniform placement and the middle/later
+recipe are prior art. Only prospective prediction of arbitrary unseen layouts remains technically
+distinct, with no demonstrated value and no experiment authority.
