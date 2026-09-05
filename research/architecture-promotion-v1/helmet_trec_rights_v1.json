@@ -1,0 +1,94 @@
+{
+  "format": "speck_helmet_rights_decision_protocol",
+  "format_version": 1,
+  "protocol_id": "helmet-trec-rights-v1",
+  "status": "frozen_unexecuted",
+  "scope": "metadata-only authority decision for the TREC question-classification source required by HELMET ICL",
+  "source": {
+    "hub_repository": "https://huggingface.co/datasets/CogComp/trec",
+    "hub_revision": "eb1e45c1ba990fecca7cf84b67ce845edbcf49bf",
+    "conversion_ref": {
+      "revision": "65752bf53af25bc935a0dce92fb5b6c930728450",
+      "files": [
+        {"path": "default/train/0000.parquet", "git_blob_sha1": "12848ae46d93896ace720c25d03e4a0775a67cc3", "bytes": 213208},
+        {"path": "default/test/0000.parquet", "git_blob_sha1": "29a327eca2a3c25593a4d34ad5db1cd89c47d89d", "bytes": 17084}
+      ],
+      "status": "metadata_observed_payload_not_acquired"
+    },
+    "composition": [
+      "approximately 4,500 English questions attributed to USC",
+      "approximately 500 manually constructed rare-class questions",
+      "894 TREC 8 and TREC 9 questions",
+      "500 TREC 10 questions used as the test set",
+      "CogComp fine and coarse manual class labels"
+    ]
+  },
+  "evidence": [
+    {
+      "id": "hub_readme",
+      "filename": "huggingface-readme.md",
+      "url": "https://huggingface.co/datasets/CogComp/trec/resolve/eb1e45c1ba990fecca7cf84b67ce845edbcf49bf/README.md",
+      "bytes": 10630,
+      "sha256": "043293095f8ac7b434fc9054f45e1908483b2f8f2e8d371c16edc9591fef5ef8",
+      "required_substrings": ["license:\n- unknown", "num_examples: 5452", "num_examples: 500"]
+    },
+    {
+      "id": "hub_loader",
+      "filename": "trec.py",
+      "url": "https://huggingface.co/datasets/CogComp/trec/resolve/eb1e45c1ba990fecca7cf84b67ce845edbcf49bf/trec.py",
+      "bytes": 5090,
+      "sha256": "c3495dd4de1d681aa63d456276fcabc5576a5eb128d5a1511c6ee4900bb4677d",
+      "required_substrings": ["https://cogcomp.seas.upenn.edu/Data/QA/QC/train_5500.label", "https://cogcomp.seas.upenn.edu/Data/QA/QC/TREC_10.label"]
+    },
+    {
+      "id": "cogcomp_question_classification",
+      "filename": "cogcomp-question-classification.html",
+      "url": "https://cogcomp.seas.upenn.edu/Data/QA/QC/",
+      "bytes": 2333,
+      "sha256": "031efcf2b97d377931b397fc4a9b3961402ed299e8825d6863073287136e92f4",
+      "required_substrings": ["Experimental Data for Question Classification", "Questions or comments can be directed to", "xli1@uiuc.edu"],
+      "absent_casefold_substrings": ["license", "copyright", "terms of use"]
+    },
+    {
+      "id": "cogcomp_qa_index",
+      "filename": "cogcomp-qa-index.html",
+      "url": "https://cogcomp.seas.upenn.edu/Data/QA/",
+      "bytes": 1283,
+      "sha256": "2a9b5ddd2bda9d3f913a9daf6f2f7725e126a2ead16c57ee3cc5e26e216e42bd",
+      "required_substrings": ["Corpora for Question Answering Task", "Question Classification"],
+      "absent_casefold_substrings": ["license", "copyright", "terms of use"]
+    },
+    {
+      "id": "nist_trec_faq",
+      "filename": "nist-trec-faq.html",
+      "url": "https://trec.nist.gov/faq.html",
+      "bytes": 7559,
+      "sha256": "1f0772c9c1bbcbd00a395476d80893f167e99a3d72e6ac6b9d61ed8ac6d5ab45",
+      "required_substrings": ["topics and relevance judgments can be downloaded", "document sets are ususally", "must be licensed", "organization with the authority to distribute"]
+    }
+  ],
+  "storage": {
+    "directory": "/mnt/speck-data/speck/helmet-runtime-sources-v1/trec-metadata",
+    "device_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+    "filesystem": "ext4",
+    "required_mount_options": ["rw", "nodev", "nosuid", "noexec"],
+    "required_directory_mode": "0o700"
+  },
+  "decision": {
+    "metadata_audit_rule": "public availability and general TREC download guidance are not treated as a license for CogComp's mixed-source labeled derivative",
+    "payload_acquisition_authorized": false,
+    "evaluation_use_authorized": false,
+    "redistribution_authorized": false,
+    "commercial_scope_authorized": false,
+    "contact_authorized": false,
+    "required_next": "obtain and record authoritative written terms or permission from a rights-bearing source for the exact labeled collection and intended organizational scope, or freeze a new HELMET manifest version that removes TREC before candidate results"
+  },
+  "reporting": {
+    "non_claims": [
+      "a public download link grants evaluation, commercial, or redistribution rights",
+      "NIST's general statement about downloadable topics licenses CogComp's annotations",
+      "the Hugging Face conversion service supplies missing rights",
+      "this operational decision is legal advice or a final ownership determination"
+    ]
+  }
+}
