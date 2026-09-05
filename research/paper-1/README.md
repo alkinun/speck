@@ -79,6 +79,9 @@ the final combined model.
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
   hash reference, quarantines the implicated tasks, and requires a new manifest version.
+- [`evaluation_manifest.json`](../architecture-promotion-v1/evaluation_manifest.json) is now the v2
+  successor: eleven official synthetic RULER tasks are primary, both QA tasks have zero primary
+  weight, and HELMET RAG/long-QA is the separately gated source-document guardrail.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -105,9 +108,10 @@ The five historical sequence controls are now identity-audited as discovery evid
 153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
 cells. Its analysis and stopping rule are frozen, and the versioned RTX 3090 training/export/cache
 preflight now passes. The dedicated volume passes both proxy and finalist floors. The frozen RULER
-contamination audit, however, detects 28 answer-anchored patterns in `qa_1`/`qa_2`; v1 is failed and a
-new evaluation-manifest version is required before candidate execution. NoLiMa and HELMET
-contamination checks remain blocked on their separate data/legal qualifications. The project otherwise has strong evidence for GDN/KDA
+contamination audit, however, detects 28 answer-anchored patterns in `qa_1`/`qa_2`; v1 remains failed.
+The v2 successor is frozen before model outputs with the other eleven tasks as its primary matrix and
+HELMET RAG/long-QA as the source-document guardrail. NoLiMa and HELMET contamination checks remain
+blocked on their separate data/legal qualifications. The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
 

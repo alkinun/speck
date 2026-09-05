@@ -2,10 +2,18 @@
   "format": "speck_architecture_evaluation_manifest",
   "format_version": 1,
   "policy_id": "architecture-promotion-v1",
-  "manifest_id": "architecture-evaluation-v1",
-  "status": "frozen_v1_ruler_contamination_failed_external_pending",
+  "manifest_id": "architecture-evaluation-v2",
+  "status": "frozen_v2_ruler_synthetic_primary_external_data_pending",
   "frozen_on": "2026-09-05",
   "repository_baseline_revision": "4073be6e4d161d0208f611d45f3a05a594808d82",
+  "supersedes": {
+    "manifest_id": "architecture-evaluation-v1",
+    "repository_revision": "8fbdefe9fefdc62b19c469b0cf2d79ed057caac3",
+    "path": "research/architecture-promotion-v1/evaluation_manifest.json",
+    "sha256": "b5439be0ffb37c8b8b46aec9791068b8e145dd5292419e90a335a447969b21ab",
+    "status": "frozen_v1_ruler_contamination_failed_external_pending",
+    "reason": "v1 failed its preregistered RULER answer-anchor contamination gate before any candidate output existed"
+  },
   "rules": {
     "candidate_access": "internal cases are reproducible and public, but their frozen settings cannot be changed after candidate results; external suites run only after candidates and thresholds are frozen",
     "contamination": "freeze exact training windows and prompt probes before scanning; any critical match preserves the failed manifest and requires a successor version before candidate execution",
@@ -94,7 +102,7 @@
   "external_suites": [
     {
       "id": "ruler",
-      "status": "source_qualified_case_data_qualified_contamination_failed_manifest_revision_blocked",
+      "status": "source_qualified_case_data_qualified_contamination_disposition_qualified_candidate_execution_blocked",
       "repository": "https://github.com/NVIDIA/RULER",
       "revision": "e8bbff677ca2c239640dc90f93310dcf32408c93",
       "contract": "research/architecture-promotion-v1/external/ruler_v1.json",
@@ -149,7 +157,30 @@
         "disposition": "results/Speck-Paper1/contamination-ruler-v1-disposition.json",
         "disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
         "quarantine_tasks": ["qa_1", "qa_2"],
-        "decision": "v1_failed_successor_manifest_required_before_candidate_execution"
+        "decision": "v1_failed_v2_quarantines_qa_before_candidate_execution",
+        "scope_limit": "zero detected critical matches apply only to the exact sampled proxy windows and do not establish contamination-free tasks"
+      },
+      "primary_tasks": [
+        "niah_single_1",
+        "niah_single_2",
+        "niah_single_3",
+        "niah_multikey_1",
+        "niah_multikey_2",
+        "niah_multikey_3",
+        "niah_multivalue",
+        "niah_multiquery",
+        "vt",
+        "cwe",
+        "fwe"
+      ],
+      "quarantined_tasks": ["qa_1", "qa_2"],
+      "primary_cases": 6600,
+      "quarantined_cases": 1200,
+      "source_document_qa_guardrail": {
+        "suite": "helmet",
+        "categories": ["rag", "longqa"],
+        "status": "data_rights_and_contamination_qualification_blocked",
+        "rule": "HELMET RAG and long-QA must be separately rights-qualified and contamination-audited before supporting an absolute source-document QA claim; a failure remains a failed guardrail"
       },
       "lengths": [
         4096,
@@ -159,8 +190,8 @@
         65536,
         131072
       ],
-      "configuration": "official synthetic task set at the pinned revision",
-      "scoring": "upstream exact-match scoring without local prompt edits",
+      "configuration": "the eleven official synthetic non-QA tasks at the pinned revision; no prompt, case, answer, seed, length, generator, or per-task scorer edits",
+      "scoring": "upstream exact-match per-task scoring; primary score is the unweighted mean of the eleven frozen primary task accuracies at each length; qa_1 and qa_2 are excluded from the primary aggregate and may appear only as labeled contaminated sensitivity analyses",
       "release_required": true
     },
     {

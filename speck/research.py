@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import re
+import subprocess
 from pathlib import Path
 
 CONTRACT_FILES = (
@@ -660,8 +661,45 @@ def _validate_evaluations(manifest, policy_id, repository_root):
         raise ValueError("evaluation manifest must use format version 1")
     if manifest["policy_id"] != policy_id:
         raise ValueError("evaluation manifest references a different promotion policy")
+    if manifest["manifest_id"] != "architecture-evaluation-v2":
+        raise ValueError("the active evaluation manifest must be version 2")
     if not COMMIT_PATTERN.fullmatch(manifest["repository_baseline_revision"]):
         raise ValueError("evaluation manifest repository revision must be a full commit")
+    supersedes = manifest.get("supersedes", {})
+    if (
+        supersedes.get("manifest_id") != "architecture-evaluation-v1"
+        or not COMMIT_PATTERN.fullmatch(supersedes.get("repository_revision", ""))
+        or not SHA256_PATTERN.fullmatch(supersedes.get("sha256", ""))
+    ):
+        raise ValueError("evaluation manifest v2 does not pin its v1 predecessor")
+    predecessor = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repository_root),
+            "show",
+            f"{supersedes['repository_revision']}:{supersedes['path']}",
+        ],
+        check=True,
+        capture_output=True,
+    ).stdout
+    if hashlib.sha256(predecessor).hexdigest() != supersedes["sha256"]:
+        raise ValueError("evaluation manifest v1 predecessor does not match its pin")
+    predecessor_manifest = json.loads(predecessor)
+    predecessor_ruler = next(
+        (
+            suite
+            for suite in predecessor_manifest.get("external_suites", ())
+            if suite.get("id") == "ruler"
+        ),
+        {},
+    )
+    if (
+        predecessor_manifest.get("manifest_id") != supersedes["manifest_id"]
+        or predecessor_manifest.get("status") != supersedes.get("status")
+        or "contamination_failed" not in predecessor_ruler.get("status", "")
+    ):
+        raise ValueError("evaluation manifest v1 predecessor did not preserve the failed gate")
 
     internal_ids = _unique_ids(manifest["internal_suites"], "internal evaluation suite")
     external_ids = _unique_ids(manifest["external_suites"], "external evaluation suite")
@@ -751,16 +789,40 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 raise ValueError("RULER contamination evidence has an invalid pin")
             audit = _load_json(audit_path)
             disposition = _load_json(disposition_path)
+            expected_primary = {
+                "cwe",
+                "fwe",
+                "niah_multikey_1",
+                "niah_multikey_2",
+                "niah_multikey_3",
+                "niah_multiquery",
+                "niah_multivalue",
+                "niah_single_1",
+                "niah_single_2",
+                "niah_single_3",
+                "vt",
+            }
             if (
-                "contamination_failed" not in suite["status"]
+                "contamination_disposition_qualified" not in suite["status"]
                 or audit.get("status") != "failed_critical_overlap_detected"
                 or disposition.get("status")
                 != "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required"
                 or disposition.get("decision", {}).get("ruler_v1") != "failed"
                 or disposition.get("decision", {}).get("candidate_execution_authorized")
                 is not False
+                or set(suite.get("primary_tasks", ())) != expected_primary
+                or set(suite.get("quarantined_tasks", ())) != {"qa_1", "qa_2"}
+                or suite.get("primary_cases") != 6_600
+                or suite.get("quarantined_cases") != 1_200
+                or suite.get("source_document_qa_guardrail", {}).get("suite") != "helmet"
+                or set(
+                    suite.get("source_document_qa_guardrail", {}).get("categories", ())
+                )
+                != {"rag", "longqa"}
+                or "blocked"
+                not in suite.get("source_document_qa_guardrail", {}).get("status", "")
             ):
-                raise ValueError("RULER contamination failure is not preserved in the manifest")
+                raise ValueError("RULER v2 contamination disposition is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

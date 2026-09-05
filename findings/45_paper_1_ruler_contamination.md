@@ -40,6 +40,7 @@ absolute-capability claims. The zero-match threshold is unchanged, and candidate
 is not authorized. A new evaluation-manifest version must be frozen before candidate results. It must
 either regenerate/replace the quarantined cells using inputs demonstrably disjoint from the training
 data and rescan them, or remove them explicitly and add an independent source-document QA guardrail.
+Finding 46 records the subsequently frozen second choice without changing this v1 decision.
 
 Matched candidate/control results on the quarantined tasks may only be disclosed as contaminated
 sensitivity analysis. Shared training windows can help interpret a paired contrast, but cannot validate

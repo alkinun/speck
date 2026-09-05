@@ -76,12 +76,16 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "contamination_disposition",
             "contamination_disposition_sha256",
             "contamination_disposition_status",
-            "ruler_manifest_decision",
+            "active_evaluation_manifest",
+            "active_evaluation_manifest_sha256",
+            "active_evaluation_manifest_id",
+            "ruler_v1_decision",
+            "ruler_v2_decision",
         },
         "paper evaluation evidence",
     )
-    if evidence["status"] != "ruler_v1_contamination_failed_manifest_revision_required":
-        raise ValueError("paper evaluation evidence must preserve the failed RULER v1 decision")
+    if evidence["status"] != "ruler_v1_failed_v2_frozen_external_data_pending":
+        raise ValueError("paper evaluation evidence must preserve v1 and freeze RULER v2")
     for path_key, hash_key in (
         ("contamination_protocol", "contamination_protocol_sha256"),
         ("contamination_result", "contamination_result_sha256"),
@@ -90,6 +94,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "contamination_disposition_protocol_sha256",
         ),
         ("contamination_disposition", "contamination_disposition_sha256"),
+        ("active_evaluation_manifest", "active_evaluation_manifest_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -101,6 +106,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
         repository_root / evidence["contamination_disposition_protocol"]
     )
     disposition = _load_json(repository_root / evidence["contamination_disposition"])
+    active_manifest = _load_json(repository_root / evidence["active_evaluation_manifest"])
     expected_unaffected = {
         "cwe",
         "fwe",
@@ -166,9 +172,26 @@ def _validate_evaluation_evidence(evidence, repository_root):
         or disposition.get("decision", {}).get("ruler_v1") != "failed"
         or disposition.get("decision", {}).get("threshold_changed") is not False
         or disposition.get("decision", {}).get("candidate_execution_authorized") is not False
-        or evidence["ruler_manifest_decision"] != "v1_failed_revision_required"
+        or evidence["ruler_v1_decision"] != "failed_critical_overlap_preserved"
     ):
         raise ValueError("paper contamination disposition evidence is invalid")
+    ruler = next(
+        (suite for suite in active_manifest.get("external_suites", ()) if suite.get("id") == "ruler"),
+        {},
+    )
+    if (
+        active_manifest.get("manifest_id") != evidence["active_evaluation_manifest_id"]
+        or active_manifest.get("manifest_id") != "architecture-evaluation-v2"
+        or active_manifest.get("supersedes", {}).get("sha256")
+        != "b5439be0ffb37c8b8b46aec9791068b8e145dd5292419e90a335a447969b21ab"
+        or set(ruler.get("primary_tasks", ())) != expected_unaffected
+        or set(ruler.get("quarantined_tasks", ())) != {"qa_1", "qa_2"}
+        or ruler.get("primary_cases") != 6_600
+        or ruler.get("source_document_qa_guardrail", {}).get("suite") != "helmet"
+        or evidence["ruler_v2_decision"]
+        != "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending"
+    ):
+        raise ValueError("paper RULER v2 evaluation manifest is invalid")
 
 
 def _validate_claims(claims):

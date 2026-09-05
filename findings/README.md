@@ -52,6 +52,7 @@ Read in order:
 44. [43 — HELMET data metadata and storage plan](43_helmet_data_metadata_and_storage_plan.md)
 45. [44 — Paper 1 dedicated checkpoint-volume qualification](44_paper_1_dedicated_checkpoint_volume.md)
 46. [45 — Paper 1 RULER contamination audit and v1 failure](45_paper_1_ruler_contamination.md)
+47. [46 — Post-contamination RULER v2 successor manifest](46_ruler_v2_successor_manifest.md)
 
 Conventions:
 
@@ -187,3 +188,9 @@ and all 7,800 RULER cases. The full-prompt gate passes, but 28 answer-anchored p
 the critical gate; complete reference reconstruction localizes them to `qa_1` and `qa_2`. RULER v1 is
 preserved as failed, both tasks are quarantined, and a new manifest version is required before any
 candidate execution or uncontaminated capability claim.
+
+Finding 46 freezes the successor before any model output exists. RULER v2 retains 6,600 cases over the
+eleven untouched official synthetic tasks and gives the quarantined QA tasks zero primary weight.
+HELMET RAG/long-QA becomes the explicit source-document guardrail after its own data, rights, and
+contamination qualification. The failed v1 identity remains pinned and external execution remains
+blocked.

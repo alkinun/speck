@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from speck.research import (
+    _validate_evaluations,
     load_promotion_protocol,
     resolve_adaptation_protocol,
     resolve_evaluation_protocol,
@@ -40,6 +41,16 @@ def test_checked_architecture_promotion_contract_is_valid():
         "evidence_components": 10,
         "status": "valid",
     }
+
+
+def test_ruler_v2_primary_tasks_cannot_restore_quarantined_qa():
+    path = contract / "evaluation_manifest.json"
+    value = json.loads(path.read_text(encoding="utf-8"))
+    ruler = next(suite for suite in value["external_suites"] if suite["id"] == "ruler")
+    ruler["primary_tasks"].append("qa_1")
+
+    with pytest.raises(ValueError, match="RULER v2 contamination disposition"):
+        _validate_evaluations(value, "architecture-promotion-v1", root)
 
 
 def test_contract_rejects_equivalence_ratio_drift(tmp_path):
