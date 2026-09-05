@@ -74,10 +74,14 @@ to a checked experiment artifact.
     requested head budgets from one checkpoint.
 25. [Alternating Sparse Attention](28_alternating_sparse_attention.md) — redistribute local and
     compressed/selective latent branches across layers.
+26. [HeadKV-R2](30_headkv.md) — profile retrieval-plus-reasoning heads and redistribute cache globally
+    across layer/head cells.
+27. [KV-compression attention dynamics](31_kv_compression_physics.md) — distinguish retention,
+    reachability, and utilization under multi-hop cache eviction.
 
 ### Supporting eviction baselines
 
-26. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
+28. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
 ## Decision map for Speck
@@ -95,7 +99,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, six later direct
+The collection contains all 22 papers supplied in the research brief, eight later direct
 novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
 dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
 DeepSeek-V2/V3.2/V4).
