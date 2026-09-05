@@ -42,9 +42,11 @@
     },
     {
       "id": "structured_retrieval_v2",
-      "status": "runner_bound_unexecuted",
+      "status": "case_stream_qualified_gpu_unexecuted",
       "protocol": "research/architecture-promotion-v1/internal/structured_retrieval_v2.json",
       "protocol_sha256": "fd7b3175abf77c7f103f0fb1e1f1b04a887a3fb61df266f9e999bfebfaa0bbb9",
+      "preflight_result": "results/Speck-Architecture-Promotion-v1/protocol-case-preflight.json",
+      "preflight_result_sha256": "32c81a5281a2e04382496ae663e94b0cf0a414b2ba991c6d0b47080d492ce4b5",
       "generator_revision": "b8238581be135ff9165ca1dd0124ee7b6e5b7011",
       "lengths": [
         4096,
@@ -73,9 +75,11 @@
     },
     {
       "id": "symbolic_composition_v2",
-      "status": "runner_bound_unexecuted",
+      "status": "case_stream_qualified_gpu_unexecuted",
       "protocol": "research/architecture-promotion-v1/internal/symbolic_composition_v2.json",
       "protocol_sha256": "1555e918c80bb03a6e3a1ad1dca8266b48f5da688195ad704c6a46b9a2028d82",
+      "preflight_result": "results/Speck-Architecture-Promotion-v1/protocol-case-preflight.json",
+      "preflight_result_sha256": "32c81a5281a2e04382496ae663e94b0cf0a414b2ba991c6d0b47080d492ce4b5",
       "generator_revision": "b8238581be135ff9165ca1dd0124ee7b6e5b7011",
       "samples_per_view": 200,
       "minimum_distinct_intermediate_nodes": 100,

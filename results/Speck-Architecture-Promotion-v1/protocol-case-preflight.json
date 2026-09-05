@@ -1,0 +1,100 @@
+{
+  "format": "speck_promotion_protocol_preflight_summary",
+  "format_version": 1,
+  "status": "complete",
+  "runner_revision": "365a0da0bdc8b7dbbd4a0ef893e7b966073dedd9",
+  "tokenizer": {
+    "repo": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+    "fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "method": {
+    "length": 4096,
+    "reason": "the shortest declared length is the strictest exact-prompt geometry check; longer cells add filler only",
+    "controls_per_sample": ["factual", "target_counterfactual", "distractor_counterfactual"],
+    "checks": [
+      "exact prompt-plus-answer token length",
+      "stable candidate vocabulary across controls",
+      "stable target label and query index",
+      "changed answer under the target mutation",
+      "unchanged queried answer under the distractor mutation",
+      "complete deterministic token-stream SHA-256"
+    ]
+  },
+  "protocols": {
+    "structured_retrieval_v2": {
+      "protocol_sha256": "fd7b3175abf77c7f103f0fb1e1f1b04a887a3fb61df266f9e999bfebfaa0bbb9",
+      "samples_per_condition": 200,
+      "generated_cases": 1200,
+      "conditions": [
+        {
+          "task": "multi_key",
+          "template": "directory",
+          "answer_set": "phrases_validation_v2",
+          "records": 2,
+          "candidate_count": 16,
+          "answer_token_length": 2,
+          "observed_query_indices": [0, 1],
+          "case_stream_sha256": "e164463a010c19de77d3c89d6a1e9796c518f2def1b9e7e0d1d818666071cab0"
+        },
+        {
+          "task": "multi_key",
+          "template": "directory",
+          "answer_set": "phrases_validation_v2",
+          "records": 8,
+          "candidate_count": 16,
+          "answer_token_length": 2,
+          "observed_query_indices": [0, 1, 2, 3, 4, 5, 6, 7],
+          "case_stream_sha256": "5aa0f94670118fd288a8b903bf676400f20547cc5bec67ea9179b8d71044d108"
+        }
+      ]
+    },
+    "symbolic_composition_v2": {
+      "protocol_sha256": "1555e918c80bb03a6e3a1ad1dca8266b48f5da688195ad704c6a46b9a2028d82",
+      "samples_per_condition": 200,
+      "generated_cases": 1800,
+      "conditions": [
+        {
+          "task": "two_hop_route",
+          "template": "directory",
+          "answer_set": "phrases_validation_v2",
+          "chains": 6,
+          "candidate_count": 100,
+          "answer_token_length": 1,
+          "observed_query_indices": [0, 1, 2, 3, 4, 5],
+          "case_stream_sha256": "4d2099a99b350095592f32a0ae17bda3d7bc5c5dc20a9e26674ce278cb5d9ed3"
+        },
+        {
+          "task": "two_hop_payload",
+          "template": "directory",
+          "answer_set": "phrases_validation_v2",
+          "chains": 6,
+          "candidate_count": 16,
+          "answer_token_length": 2,
+          "observed_query_indices": [0, 1, 2, 3, 4, 5],
+          "case_stream_sha256": "478098425b09d1f67a1dd3ff717852bf66f3fb8fb512677582c179ec5d0b8d1e"
+        },
+        {
+          "task": "two_hop_symbolic",
+          "template": "directory",
+          "answer_set": "phrases_validation_v2",
+          "chains": 6,
+          "candidate_count": 16,
+          "answer_token_length": 2,
+          "observed_query_indices": [0, 1, 2, 3, 4, 5],
+          "case_stream_sha256": "5546fc44c53cc3f4888155b77fa70a9334de30d52c24303db4fc6227460c6129"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "declared_conditions": 5,
+    "samples": 1000,
+    "generated_cases": 3000
+  },
+  "limitations": [
+    "This is generator and tokenizer qualification, not model-quality evidence.",
+    "Only the shortest exact-length geometry is materialized; longer declared cells reuse the same content stream with additional filler.",
+    "GPU adaptation and staged 4K, 32K, and 128K evaluation have not run."
+  ]
+}

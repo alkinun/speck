@@ -676,6 +676,20 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             samples = suite.get("samples_per_length_load_cell", suite.get("samples_per_view", 0))
             if not isinstance(samples, int) or samples < 200:
                 raise ValueError(f"evaluation suite {suite['id']} requires at least 200 samples")
+            preflight_path = repository_root / suite.get("preflight_result", "")
+            preflight_hash = suite.get("preflight_result_sha256")
+            if (
+                not preflight_path.is_file()
+                or not SHA256_PATTERN.fullmatch(preflight_hash or "")
+                or _file_sha256(preflight_path) != preflight_hash
+            ):
+                raise ValueError(f"evaluation suite {suite['id']} has an invalid preflight pin")
+            preflight = _load_json(preflight_path)
+            protocol_result = preflight.get("protocols", {}).get(suite["id"], {})
+            if preflight.get("status") != "complete" or protocol_result.get(
+                "protocol_sha256"
+            ) != suite.get("protocol_sha256"):
+                raise ValueError(f"evaluation suite {suite['id']} preflight does not qualify it")
     for suite in manifest["external_suites"]:
         if not COMMIT_PATTERN.fullmatch(suite.get("revision", "")):
             raise ValueError(f"external suite {suite['id']} must pin a full commit")

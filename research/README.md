@@ -28,6 +28,17 @@ uv run --extra cpu python -m scripts.research_contract_validate \
   --tokenizer-experiment experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope
 ```
 
+Preflight every declared validation case without loading a checkpoint:
+
+```bash
+uv run --extra cpu python -m scripts.promotion_case_preflight \
+  research/architecture-promotion-v1/internal/structured_retrieval_v2.json \
+  --tokenizer-experiment experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope
+```
+
+The checked [preflight summary](../results/Speck-Architecture-Promotion-v1/protocol-case-preflight.json)
+contains the resulting case-stream hashes for both internal protocols.
+
 Run one protocol-bound adapter. The protocol supplies every scientific setting, including the
 training/validation split, synthetic streams, replay source, optimizer, and sample counts:
 
