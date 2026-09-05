@@ -153,6 +153,101 @@ def validate_external_suite(path):
         }
         if manifest_assets != expected_assets:
             raise ValueError("RULER source asset hashes do not match")
+        case_generation = data.get("case_generation")
+        if case_generation is not None:
+            _require(
+                case_generation,
+                {"status", "compatibility_patch", "qualified_lengths", "remaining_lengths"},
+                "RULER case generation",
+            )
+            if "blocked" not in case_generation["status"]:
+                raise ValueError("partial RULER case generation must preserve its blocker status")
+            patch = case_generation["compatibility_patch"]
+            _require(
+                patch,
+                {"path", "sha256", "target", "upstream_sha256", "patched_sha256"},
+                "RULER compatibility patch",
+            )
+            patch_path = repository_root / patch["path"]
+            if (
+                not patch_path.is_file()
+                or _file_sha256(patch_path) != patch["sha256"]
+                or not all(
+                    SHA256_PATTERN.fullmatch(patch[field])
+                    for field in ("sha256", "upstream_sha256", "patched_sha256")
+                )
+            ):
+                raise ValueError("RULER compatibility patch does not match its pin")
+            qualifications = case_generation["qualified_lengths"]
+            qualified_lengths = [entry.get("length") for entry in qualifications]
+            remaining_lengths = case_generation["remaining_lengths"]
+            if (
+                not qualifications
+                or qualified_lengths != sorted(set(qualified_lengths))
+                or remaining_lengths != sorted(set(remaining_lengths))
+                or set(qualified_lengths).intersection(remaining_lengths)
+                or sorted((*qualified_lengths, *remaining_lengths)) != lengths
+            ):
+                raise ValueError("RULER qualified and remaining lengths do not partition the suite")
+            scorer_sha256 = next(
+                entry["sha256"]
+                for dependency in config["dependencies"]
+                if dependency["id"] == "nemo_skills"
+                for entry in dependency["required_files"]
+                if entry["path"] == "nemo_skills/dataset/ruler/ruler_score.py"
+            )
+            for qualification in qualifications:
+                _require(
+                    qualification,
+                    {
+                        "length",
+                        "report",
+                        "report_sha256",
+                        "case_identity_sha256",
+                        "tokenizer_identity_sha256",
+                        "total_cases",
+                    },
+                    "RULER length qualification",
+                )
+                report_path = repository_root / qualification["report"]
+                if (
+                    not report_path.is_file()
+                    or _file_sha256(report_path) != qualification["report_sha256"]
+                ):
+                    raise ValueError("RULER case qualification report does not match its pin")
+                report = _load_json(report_path)
+                case_tasks = [entry.get("task") for entry in report.get("cases", ())]
+                if (
+                    report.get("format") != "speck_ruler_case_qualification"
+                    or report.get("status") != "qualified_offline_deterministic_case_stream"
+                    or report.get("length") != qualification["length"]
+                    or report.get("tasks") != config["benchmark"]["tasks"]
+                    or case_tasks != config["benchmark"]["tasks"]
+                    or report.get("samples_per_task")
+                    != config["benchmark"]["samples_per_task_length"]
+                    or report.get("total_cases") != qualification["total_cases"]
+                    or any(
+                        entry.get("rows") != config["benchmark"]["samples_per_task_length"]
+                        or entry.get("maximum_accounted_length", qualification["length"] + 1)
+                        > qualification["length"]
+                        for entry in report.get("cases", ())
+                    )
+                    or report.get("case_identity_sha256")
+                    != qualification["case_identity_sha256"]
+                    or report.get("tokenizer", {}).get("identity_sha256")
+                    != qualification["tokenizer_identity_sha256"]
+                    or report.get("source_bundle", {}).get("identity_sha256")
+                    != data["bundle_identity_sha256"]
+                    or report.get("generator", {}).get("revision") != data["generator_revision"]
+                    or report.get("generator", {}).get("compatibility_patch", {}).get("sha256")
+                    != patch["sha256"]
+                    or report.get("nemo_skills", {}).get("scorer_sha256") != scorer_sha256
+                    or report.get("network_denial", {}).get("generation_attempts") != 0
+                    or report.get("network_denial", {}).get("self_test") != "denied_as_expected"
+                    or report.get("determinism", {}).get("complete_generations", 0) < 2
+                    or not report.get("determinism", {}).get("all_task_hashes_equal")
+                ):
+                    raise ValueError("RULER case qualification report is invalid")
     adapter = config["model_adapter"]
     if adapter["status"].startswith("endpoint_protocol_qualified"):
         _require(
