@@ -91,6 +91,7 @@ Read in order:
 83. [82 — STEC adjacent evidence-verification baseline](82_stec_baseline.md)
 84. [83 — BRIEF-family artifact availability audit](83_brief_code_availability.md)
 85. [84 — Claim-granular novelty overlap and priority](84_novelty_claim_overlap.md)
+86. [85 — Paper 1 KDA/GQA candidate pair 1](85_paper_1_candidate_1.md)
 
 Conventions:
 
@@ -456,3 +457,8 @@ adjacent baselines and cannot be claimed; N1's prospective from-scratch placemen
 primary architecture hypothesis left. N2's concept is rejected and its possible internal-state
 empirical law is deferred before protocol or experiment budget pending independent expert review. No
 novelty or architecture is established.
+
+Finding 85 completes candidate pair 1 at 2.796465 nats, a descriptive -0.042662 paired loss difference;
+all eleven sources again favor the candidate. Steady/active time is 10.12%/10.16% shorter and analytic
+FLOPs are 21.49% lower, while peak allocation is 20.74% higher. Two pairs still have no decision
+authority. The one-shot finalizer committed the result and scheduled pair 2 after the fixed cooldown.

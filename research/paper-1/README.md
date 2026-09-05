@@ -252,10 +252,14 @@ Control 0's first collection
 attempt exposed a tooling-only mismatch between the requested 20M-token final validation budget and
 the runtime's 19,988,480 complete-batch count. The frozen pre-candidate correction derives the latter
 from the existing 4-by-4,096 single-GPU geometry and changes no loss, threshold, sample, or decision.
-The control phase is complete; candidate pair 0 is the next fixed cell after cooldown and live checks.
 Candidate pair 0 is now complete and qualified at 2.794477 final loss. Its descriptive paired delta is
 -0.039170 nats, steady time is 10.09% shorter, and peak allocation is 20.84% higher. These single-cell
-values have no decision authority; pairs 1 and 2 and the frozen paired analysis remain mandatory.
+values have no decision authority.
+Candidate pair 1 is also complete and qualified at 2.796465 final loss. Its descriptive paired delta is
+-0.042662 nats; all eleven source deltas are negative. Steady/active time is 10.12%/10.16% shorter,
+analytic FLOPs are 21.49% lower, and peak allocation is 20.74% higher than its paired dense control.
+Pair 2 is scheduled by the frozen event chain after cooldown; the final paired analysis remains
+mandatory and no two-cell decision is permitted.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
