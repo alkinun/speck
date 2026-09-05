@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "ruler",
   "suite_version": "rulerv1-ns",
-  "status": "source_qualified_case_generation_through_16384_qualified_remaining_lengths_blocked",
+  "status": "source_qualified_case_generation_through_32768_qualified_remaining_lengths_blocked",
   "upstream": {
     "id": "ruler_pipeline",
     "repository": "https://github.com/NVIDIA/RULER.git",
@@ -74,7 +74,7 @@
     "staging": "run one length at a time; advance only after the current paired capability gate"
   },
   "data": {
-    "status": "source_bundle_qualified_case_generation_through_16384_qualified_remaining_lengths_blocked",
+    "status": "source_bundle_qualified_case_generation_through_32768_qualified_remaining_lengths_blocked",
     "source_manifest": "results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json",
     "source_manifest_sha256": "9d207d1c6e8a6c2a7ace67c953604feabce0b6c0c307473497d19f022d45d1ce",
     "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
@@ -94,7 +94,7 @@
       "paul_graham": "mixed upstream essay rights; local research cache only; redistribution forbidden"
     },
     "case_generation": {
-      "status": "qualified_through_16384_remaining_lengths_blocked",
+      "status": "qualified_through_32768_remaining_lengths_blocked",
       "compatibility_patch": {
         "path": "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch",
         "sha256": "5063fdb5f1737fdfd39f955e19a2cfa6418acd15cbcd24f513518295fa15f6a7",
@@ -127,11 +127,19 @@
           "case_identity_sha256": "7ddcb6b201298fd3d6c6501b0d307719b7c411580f76b84c8e94e1e138042084",
           "tokenizer_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
           "total_cases": 1300
+        },
+        {
+          "length": 32768,
+          "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-32768-qualified.json",
+          "report_sha256": "2e06cbf3175f28cb95bc2d4a317e6999abe7eeb798bf5967f50cbcc2dc198087",
+          "case_identity_sha256": "a0826626d51c75e01d5846c0a646b982226a7fced674dda469f780e1eebd5c39",
+          "tokenizer_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+          "total_cases": 1300
         }
       ],
-      "remaining_lengths": [32768, 65536, 131072]
+      "remaining_lengths": [65536, 131072]
     },
-    "reason": "all source inputs and the complete 4096-, 8192-, and 16384-token case matrices are qualified; three longer declared lengths are not generated or hashed yet",
+    "reason": "all source inputs and the complete 4096- through 32768-token case matrices are qualified; the 65536- and 131072-token matrices are not generated or hashed yet",
     "qualification_rule": "generate all declared task/length cells from the offline bundle, hash inputs/prompts/outputs, and prove the runner makes no network request"
   },
   "model_adapter": {

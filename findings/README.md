@@ -43,6 +43,7 @@ Read in order:
 35. [34 — RULERv1 4K deterministic case qualification](34_ruler_4k_case_qualification.md)
 36. [35 — RULERv1 8K deterministic case qualification](35_ruler_8k_case_qualification.md)
 37. [36 — RULERv1 16K deterministic case qualification](36_ruler_16k_case_qualification.md)
+38. [37 — RULERv1 32K deterministic case qualification](37_ruler_32k_case_qualification.md)
 
 Conventions:
 
@@ -135,4 +136,8 @@ model capability runs remain blocked.
 
 Finding 36 carries the gate through 16K with the same deterministic and network-denied result. The
 retained artifact is 69MB and every accounted case fits. Three longer matrices and all model
+capability runs remain blocked.
+
+Finding 37 carries the gate through 32K. All reproducibility controls pass, every accounted case fits,
+and retained storage remains approximately linear at 140MB. The 64K and 128K matrices and all model
 capability runs remain blocked.
