@@ -253,6 +253,66 @@ def validate_external_suite(path):
                     or not report.get("determinism", {}).get("all_task_hashes_equal")
                 ):
                     raise ValueError("RULER case qualification report is invalid")
+    if config["suite_id"] == "nolima" and data["status"].startswith(
+        "metadata_and_license_audited"
+    ):
+        _require(
+            data,
+            {
+                "license_decision",
+                "license_decision_sha256",
+                "license_audit_runner_revision",
+                "dataset_license_sha256",
+                "haystack_licenses_sha256",
+                "metadata_audit",
+            },
+            "audited NoLiMa license decision",
+        )
+        repository_root = path.parents[3]
+        decision_path = repository_root / data["license_decision"]
+        if (
+            not decision_path.is_file()
+            or _file_sha256(decision_path) != data["license_decision_sha256"]
+            or not SHA256_PATTERN.fullmatch(data["license_decision_sha256"])
+            or not COMMIT_PATTERN.fullmatch(data["license_audit_runner_revision"])
+            or not SHA256_PATTERN.fullmatch(data["dataset_license_sha256"])
+            or not SHA256_PATTERN.fullmatch(data["haystack_licenses_sha256"])
+        ):
+            raise ValueError("NoLiMa license decision does not match its pin")
+        decision = _load_json(decision_path)
+        cache = decision.get("cache_audit", {})
+        metadata = data["metadata_audit"]
+        if (
+            decision.get("format") != "speck_nolima_license_decision"
+            or decision.get("status")
+            != "metadata_and_license_audited_authorized_acceptance_blocked"
+            or decision.get("runner_revision") != data["license_audit_runner_revision"]
+            or decision.get("dataset", {}).get("revision") != data["revision"]
+            or decision.get("dataset", {}).get("restricted_payload_bytes")
+            != metadata["restricted_payload_bytes"]
+            or len(decision.get("dataset", {}).get("restricted_payloads", ()))
+            != metadata["restricted_payloads"]
+            or decision.get("dataset", {})
+            .get("optional_lfs_book_archive", {})
+            .get("oid_sha256")
+            != metadata["optional_book_archive_lfs_sha256"]
+            or decision.get("dataset", {})
+            .get("optional_lfs_book_archive", {})
+            .get("bytes")
+            != metadata["optional_book_archive_bytes"]
+            or decision.get("adobe_research_license", {}).get("sha256")
+            != data["dataset_license_sha256"]
+            or decision.get("haystack_rights", {}).get("source_file_sha256")
+            != data["haystack_licenses_sha256"]
+            or cache.get("restricted_blobs_cached") != metadata["restricted_blobs_cached"]
+            or cache.get("working_tree_materialized")
+            != metadata["working_tree_materialized"]
+            or cache.get("new_objects_fetched") != metadata["new_objects_fetched"]
+            or decision.get("decision", {}).get("download_or_use_authorized") is not False
+            or decision.get("decision", {}).get("raw_payload_git_redistribution_authorized")
+            is not False
+        ):
+            raise ValueError("NoLiMa license decision artifact is invalid")
     adapter = config["model_adapter"]
     if adapter["status"].startswith("endpoint_protocol_qualified"):
         _require(
