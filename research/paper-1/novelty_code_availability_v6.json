@@ -1,0 +1,70 @@
+{
+  "format": "speck_novelty_code_availability_audit",
+  "format_version": 6,
+  "audit_id": "speck-paper-1-novelty-code-availability-v6",
+  "paper_id": "speck-paper-1",
+  "status": "seventeen_sources_three_root_rights_paths_no_new_full_reproduction",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_code_availability_v5.json",
+    "sha256": "a561649842f29be759eec5412d96afc9044e8b297e094019484c10d27e99eaa1",
+    "sources_inherited": 16
+  },
+  "landscape": {
+    "path": "research/paper-1/novelty_landscape_v7.json",
+    "sha256": "1df67600b997f8d550283211aa38e5ac9227f4cb902830d2c8fc29aaed34f14c"
+  },
+  "additional_sources": [
+    {
+      "id": "massive_activations_hla",
+      "paper": "arxiv_2608_12149v2",
+      "repository": "https://github.com/StartLuxLabs/Massive-Activations-HLA",
+      "revision": "190e1b795262b91159a01f846ebbca799c45be8f",
+      "files": 57,
+      "package_python_files": 23,
+      "test_files": 5,
+      "root_license": "MIT",
+      "checkpoint_repository": "https://huggingface.co/startlux-models/Massive-Activations-HLA",
+      "checkpoint_revision": "5a98aec28a52efe0303545d929d0964a5973b127",
+      "checkpoint_directories": 10,
+      "checkpoint_license": "Apache-2.0",
+      "audit": "research/paper-1/massive_hla_code_audit_v1.json",
+      "audit_sha256": "fa6c57e1346b03aa6978cb76e468c264b48da8eba930a5a3316e927fd285882e",
+      "status": "analysis_code_and_baseline_checkpoint_identity_qualified_training_gated_fa_and_full_reproduction_blocked"
+    }
+  ],
+  "release_boundary": {
+    "root_code_rights_qualified": true,
+    "analysis_code_available": true,
+    "aggregate_checkpoint_identity_qualified": true,
+    "baseline_checkpoint_analysis_potentially_reproducible": true,
+    "from_scratch_training_code_available": false,
+    "gated_full_attention_implementation_available": false,
+    "exact_paper_inputs_available": false,
+    "paper_table_parity_qualified": false,
+    "upstream_execution_authorized": false,
+    "full_reproduction_authorized": false
+  },
+  "summary": {
+    "sources": 17,
+    "immutable_repository_snapshots": 8,
+    "repositories_with_code": 6,
+    "repositories_with_root_license_covering_code": 3,
+    "new_full_reproduction_paths_qualified": 0,
+    "metadata_only_tree_clones": 5,
+    "working_trees_checked_out": 0,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false,
+    "novelty_status_changed": false
+  },
+  "decision": {
+    "massive_hla_source_identity_qualified": true,
+    "massive_hla_root_rights_qualified": true,
+    "massive_hla_bounded_analysis_reproduction_authorized": false,
+    "massive_hla_full_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "independent N1 review must justify a bounded checkpoint-analysis reproduction before any download or execution"
+  }
+}

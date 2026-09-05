@@ -510,3 +510,8 @@ Finding 93 pins the official massive-activation analysis tree and aggregate chec
 checkout or execution. MIT code rights, Apache-2.0 model-card rights, ten named checkpoint directories,
 package pins, and tests are visible. Training code, gated-full-attention behavior, exact sampled inputs,
 and table parity remain missing, so neither upstream execution nor full reproduction is authorized.
+
+Finding 94 updates the artifact inventory to seventeen sources, eight immutable code/checkpoint
+snapshots, six repositories with code, and three root-licensed code paths. The massive-activation
+release may support bounded analysis later, but no new full reproduction is qualified and no download,
+execution, or N1 protocol is authorized before independent review.
