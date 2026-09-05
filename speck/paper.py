@@ -14,6 +14,7 @@ PROGRAM_FILES = (
     "baseline_automation_v1.json",
     "proxy_disposition_v1.json",
     "sequence_cache_representation_v1.json",
+    "hca_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -589,6 +590,51 @@ def _validate_sequence_cache_design(reference, repository_root, paper_id, policy
         raise ValueError("sequence cache representation decision gate is invalid")
 
 
+def _validate_hca_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "HCA readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("HCA readiness gate does not match its pin")
+    gate = _load_json(path)
+    if (
+        gate.get("format") != "speck_hca_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("current_blockers", ())) < 7
+    ):
+        raise ValueError("HCA readiness gate identity is invalid")
+    causal = gate.get("causal_semantics_required", {})
+    compression = gate.get("compressor_isolation_before_rate_selection", {})
+    compressor_arms = compression.get("reference_arms", ())
+    rate = gate.get("conditional_rate_grid", {})
+    systems = gate.get("systems_gate", {})
+    decision = gate.get("decision", {})
+    if (
+        len(compressor_arms) != 3
+        or {arm.get("id") for arm in compressor_arms}
+        != {"block_mean", "scalar_position_softmax", "channel_position_softmax"}
+        or rate.get("rates_tokens_per_summary") != [32, 64, 128, 256]
+        or rate.get("completed_summaries_at_4096") != [128, 64, 32, 16]
+        or rate.get("completed_summaries_at_131072") != [4096, 2048, 1024, 512]
+        or rate.get("completed_summaries_at_1048576")
+        != [32768, 16384, 8192, 4096]
+        or "O(L^2/m)" not in gate.get("accounting_required", {}).get(
+            "complexity_statement", ""
+        )
+        or len(causal) < 8
+        or systems.get("custom_runtime_minimum_primary_improvement") != 0.2
+        or systems.get("minimum_state_reduction") != 0.25
+        or decision.get("compressor_selected") is not False
+        or decision.get("compression_rate_selected") is not False
+        or decision.get("implementation_authorized") is not False
+        or decision.get("training_authorized") is not False
+        or decision.get("promotion_authority") is not False
+    ):
+        raise ValueError("HCA readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -655,6 +701,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "analysis_program",
             "large_pretraining_gate",
             "sequence_cache_representation",
+            "hca_readiness",
         },
         "paper experiment program",
     )
@@ -664,6 +711,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("claims and experiment program use different paper ids")
     _validate_sequence_cache_design(
         program["sequence_cache_representation"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_hca_readiness(
+        program["hca_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],

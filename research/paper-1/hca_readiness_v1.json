@@ -1,0 +1,150 @@
+{
+  "format": "speck_hca_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-hca-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_parent_and_compressor_unselected",
+  "frozen_on": "2026-09-05",
+  "purpose": "Prevent Heavily Compressed Attention from being treated as a named component before its parent representation, compressor, causal state, and evidence program are explicit.",
+  "evidence_basis": [
+    {
+      "path": "papers/22_deepseek_v4.md",
+      "supported": "HCA uses dense attention over non-overlapping aggressively compressed summaries and complements a separate selective path",
+      "not_transferred": "compression rate 128, quality, cache ratio, kernel speed, and million-token capability"
+    },
+    {
+      "path": "papers/19_native_sparse_attention.md",
+      "supported": "coarse global summaries, precise selected raw blocks, and a local branch solve distinct information needs",
+      "not_transferred": "NSA compressor, gate, block size, sparsity, and kernel gains"
+    },
+    {
+      "path": "research/paper-1/reference_audit.md",
+      "supported": "compression rate, selection, local window, positional path, precision, and tail state must be reported separately",
+      "not_transferred": "whole-system feasibility as component attribution"
+    }
+  ],
+  "current_blockers": [
+    "the recurrent/global sequence backbone is not selected",
+    "the exact global-cache representation feeding HCA is not selected",
+    "no local HCA compressor or state object exists",
+    "compressor parameterization is not isolated from compression rate",
+    "causal incomplete-block and prefix-reuse semantics are not implemented",
+    "no production-shaped HCA prefill/decode kernel exists",
+    "no local quality, compression-sufficiency, or realized-cost evidence exists"
+  ],
+  "causal_semantics_required": {
+    "blocks": "non-overlapping contiguous source blocks of exactly m tokens",
+    "emission": "a compressed entry becomes visible only after every token in its source block is causally available",
+    "incomplete_block": "never expose a partial summary to a query that precedes any contributing source token",
+    "tail_state": "record the exact partial-block accumulator or retained raw tail, position within the block, dtype, and bytes",
+    "prefill_decode_parity": "chunk boundaries and one-token decode must emit byte-identical block identities and numerically qualified summaries",
+    "prefix_reuse": "completed summaries may be cached; an incomplete tail must be retained with identity or deterministically recomputed",
+    "eviction_resume": "summary and tail eviction, serialization, and resume must preserve block numbering and causal visibility",
+    "local_coverage": "the existing KDA path remains fixed; adding a raw SWA branch is a later separate intervention"
+  },
+  "compressor_isolation_before_rate_selection": {
+    "fixed": [
+      "one selected sequence backbone",
+      "one selected exact cache representation",
+      "one compression rate and summary budget",
+      "global layer count and placement",
+      "NoPE and standard residual path",
+      "data, optimization, and evaluation"
+    ],
+    "reference_arms": [
+      {
+        "id": "block_mean",
+        "role": "parameterless information-loss control"
+      },
+      {
+        "id": "scalar_position_softmax",
+        "role": "learn one within-block weight per position, shared across channels"
+      },
+      {
+        "id": "channel_position_softmax",
+        "role": "learn within-block weights separately per hidden channel; parameter-match downstream"
+      }
+    ],
+    "selection_rule": "freeze one compressor using independent mechanism-scale discovery and held-out compression-sufficiency plus language/capability floors before comparing rates",
+    "no_promotion_authority": true
+  },
+  "conditional_rate_grid": {
+    "rates_tokens_per_summary": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "reason": "a four-point powers-of-two grid measures a local rate curve around, rather than copying, the published 128-token setting",
+    "completed_summaries_at_4096": [
+      128,
+      64,
+      32,
+      16
+    ],
+    "completed_summaries_at_131072": [
+      4096,
+      2048,
+      1024,
+      512
+    ],
+    "completed_summaries_at_1048576": [
+      32768,
+      16384,
+      8192,
+      4096
+    ],
+    "control": "uncompressed exact global attention using the selected cache representation",
+    "discovery_selection": "select the largest rate that passes all hard quality floors and lies on the measured state/prefill Pareto frontier",
+    "confirmation": "freeze the selected rate before independent paired finalist cells; do not reuse discovery cells for promotion"
+  },
+  "accounting_required": {
+    "state": [
+      "completed compressed entries",
+      "partial-block tail or accumulator",
+      "block position and metadata",
+      "quantization scales",
+      "recurrent KDA state reported separately"
+    ],
+    "compute": [
+      "compressor construction",
+      "dense query-to-summary attention",
+      "normalization and projection",
+      "tail finalization",
+      "kernel dispatch and padding"
+    ],
+    "complexity_statement": "dense attention over L/m summaries reduces the quadratic coefficient but remains O(L^2/m) for length-L prefill"
+  },
+  "quality_and_mechanism_endpoints": [
+    "aggregate and every-source language-loss non-inferiority",
+    "structured retrieval candidate accuracy and specificity",
+    "symbolic route, payload, and direct composition",
+    "position-binned and trailing-token loss",
+    "dense-attention block-mass versus summary-attention agreement",
+    "held-out reconstruction or prediction sufficiency of compressed summaries",
+    "failure by source-block distance and information load"
+  ],
+  "systems_gate": {
+    "custom_runtime_minimum_primary_improvement": 0.2,
+    "minimum_state_reduction": 0.25,
+    "repeats": 5,
+    "interleave_arms": true,
+    "maximum_start_temperature_c": 50,
+    "required_lengths": [
+      4096,
+      32768,
+      131072,
+      1048576
+    ],
+    "rule": "analytic compression is insufficient; a qualified implementation must improve realized prefill or maximum-resident-batch throughput without failing any quality constraint"
+  },
+  "decision": {
+    "compressor_selected": false,
+    "compression_rate_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after parent selection, freeze a mechanism-scale compressor-isolation contract and implement only its reference cases"
+  }
+}

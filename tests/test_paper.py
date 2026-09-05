@@ -24,6 +24,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "baseline_automation_v1.json",
             "proxy_disposition_v1.json",
             "sequence_cache_representation_v1.json",
+            "hca_readiness_v1.json",
             "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
@@ -131,6 +132,18 @@ def test_paper_program_rejects_sequence_cache_design_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="sequence cache representation"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_hca_readiness_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["hca_readiness"]["sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="HCA readiness"):
         validate_paper_program(copied, repository_root=root)
 
 

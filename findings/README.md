@@ -68,6 +68,7 @@ Read in order:
 60. [59 — Paper 1 dense controls complete and target locked](59_paper_1_dense_controls_and_target_lock.md)
 61. [60 — Paper 1 proxy disposition frozen before candidates](60_paper_1_proxy_disposition.md)
 62. [61 — Conditional five-cache GQA3/MQA1/MLA design](61_five_cache_representation_design.md)
+63. [62 — HCA readiness gate before implementation](62_hca_readiness_gate.md)
 
 Conventions:
 
@@ -293,3 +294,9 @@ Five independent memories and the KDA/NoPE backbone stay fixed. MQA1 and a Speck
 reduce BF16 state by 66.7%; uniform FFN compensation matches MQA1 within 0.00998%, while MLA128 matches
 GQA3 projection weights and MQA1 state. Correctness, realized systems thresholds, backbone selection,
 and multiplicity-controlled quality remain mandatory.
+
+Finding 62 shows HCA is not yet an implementable architecture choice. The parent representation and
+compressor are unselected, and causal partial-block state is unspecified. The new gate requires a
+three-arm compressor isolation before a 32/64/128/256 rate curve, exact tail/prefix/resume semantics,
+complete state/compute accounting, and realized 20% systems plus 25% state thresholds. No training is
+authorized.

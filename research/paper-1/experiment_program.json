@@ -406,6 +406,11 @@
   },
   "format": "speck_paper_experiment_program",
   "format_version": 1,
+  "hca_readiness": {
+    "contract": "research/paper-1/hca_readiness_v1.json",
+    "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
+    "status": "design_blocked_parent_and_compressor_unselected"
+  },
   "interaction_program": {
     "claim_ids": [
       "C0",
