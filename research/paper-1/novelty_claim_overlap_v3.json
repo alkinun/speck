@@ -1,0 +1,85 @@
+{
+  "format": "speck_novelty_claim_overlap_table",
+  "format_version": 3,
+  "table_id": "speck-paper-1-novelty-claim-overlap-v3",
+  "paper_id": "speck-paper-1",
+  "status": "sixteen_source_table_zero_architecture_novelty_residual_n1_value_unestablished",
+  "created_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_claim_overlap_v2.json",
+    "sha256": "2c420a79c6ceae5bec2bc5990ae06ee5519f810990f6a1b5fdd77419b2734fb2",
+    "claims": 19,
+    "superseded_decision": "N1 prospective unseen non-uniform prediction remains the highest-ranked empirical question"
+  },
+  "inputs": {
+    "landscape": "research/paper-1/novelty_landscape_v6.json",
+    "landscape_sha256": "e66e94e652171353374c915508df535373a37f74ee7a9d24d1272b1e725b21b7",
+    "code_availability": "research/paper-1/novelty_code_availability_v5.json",
+    "code_availability_sha256": "a561649842f29be759eec5412d96afc9044e8b297e094019484c10d27e99eaa1"
+  },
+  "inherited_claims": 19,
+  "additional_claims": [
+    {
+      "id": "P11_from_scratch_nonuniform_hybrid_placement",
+      "strongest_source": "Hybrid Architectures for Language Models: Systematic Analysis and Design Insights",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "the source trains early, scattered-middle, and later Transformer/Mamba layouts from scratch across four ratios and two scales"
+    },
+    {
+      "id": "P12_avoid_early_attention_middle_later_recipe",
+      "strongest_source": "Hybrid Architectures for Language Models: Systematic Analysis and Design Insights",
+      "classification": "direct_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "the source directly reports a front-attention penalty, recommends middle or later scattering, and supplies attention-map and learned-mixture role explanations"
+    },
+    {
+      "id": "R4_prospective_arbitrary_unseen_layout_prediction",
+      "strongest_source": "no exact source established; closest is the systematic from-scratch placement study, followed by the hybrid-role paper, DtR, and FlashMorph",
+      "classification": "technical_residual_with_unestablished_incremental_scientific_value",
+      "decision": "independent_claim_review_only",
+      "reason": "freezing a predictor before arbitrary held-out layout outcomes is not performed, but no evidence shows that doing so is feasible, causal, more useful than the middle/later recipe, or capable of selecting an improved architecture"
+    }
+  ],
+  "aggregate_claim_rows": 22,
+  "residual_questions": [
+    {
+      "rank": 1,
+      "id": "N1_prospective_arbitrary_unseen_layout_prediction",
+      "classification": "unestablished_incremental_empirical_question_not_an_architecture_mechanism",
+      "authorized_action": "remaining literature, patent, deployed-system, and independent claim-level review only",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false,
+      "retention_gate": "retain only if independent review finds a meaningful claim not reduced to forecasting already-occupied middle/later placement recipes"
+    },
+    {
+      "rank": 2,
+      "id": "N2_internal_state_completeness_predictor_law",
+      "classification": "deferred_unestablished_empirical_diagnostic_law",
+      "authorized_action": "none before independent claim review finds incremental value",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false
+    }
+  ],
+  "baseline_disposition": {
+    "paper_1_three_pair_proxy": "continue through frozen completion because it estimates the conservative five-cache KDA/GQA parent versus dense attention and is independent of novelty selection",
+    "promotion_limit": "a quality/cost pass may retain a conservative research parent under the architecture policy but cannot satisfy the separate Paper 1 novelty gate",
+    "post_analysis": "after the paired result, decide whether to retain the parent for future isolation; do not infer N1 or N2 evidence"
+  },
+  "decision": {
+    "established_architecture_novelty_candidates": 0,
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_placement_novelty_rejected": true,
+    "n1_predictive_law_established": false,
+    "n1_experiment_authorized": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "n2_experiment_authorized": false,
+    "baseline_completion_authorized": true,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "new_training_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "finish the frozen proxy, then independently review whether the narrow prospective-prediction residual has scientific value beyond occupied placement recipes before retaining or retiring N1"
+  }
+}

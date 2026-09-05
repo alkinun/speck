@@ -494,3 +494,8 @@ Finding 90 records that the systematic placement paper declares no official code
 or immutable data-order artifact. It remains a mandatory conceptual baseline but adds no qualified
 reproduction path. Across sixteen sources, only two repositories have root code rights; no N1
 execution or placement protocol is authorized.
+
+Finding 91 updates the claim table after direct placement overlap. From-scratch non-uniform placement
+and the avoid-early-attention/middle-later recipe are explicit do-not-claim rows. Prospective prediction
+of arbitrary unseen layouts is only a technical residual with no demonstrated feasibility or scientific
+value; independent review may retire it, and no placement experiment is authorized.

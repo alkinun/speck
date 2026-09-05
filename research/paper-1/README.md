@@ -123,6 +123,9 @@ the final combined model.
 - [`novelty_claim_overlap_v2.json`](novelty_claim_overlap_v2.json) supersedes that priority after the
   N1 role audit: zero architecture-novelty candidates are established, both residual laws lack experiment
   authority, and only the already-frozen baseline sequence continues.
+- [`novelty_claim_overlap_v3.json`](novelty_claim_overlap_v3.json) adds direct from-scratch placement
+  and early/middle role overlap, leaving prospective arbitrary-layout prediction only as a technical
+  residual whose incremental scientific value must pass independent review before any protocol.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.
