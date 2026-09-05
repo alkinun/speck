@@ -1,0 +1,21 @@
+diff --git a/data.py b/data.py
+--- a/data.py
++++ b/data.py
+@@ -199,7 +199,7 @@ def load_narrativeqa(dataset, shots=0, max_samples=None, seed=42):
+         "context": example["document"]["text"],
+         "question": example["question"]["text"],
+         "answer": [ex["text"] for ex in example["answers"]],
+-        "demo": "" if shots == 0 else "For example:\n\n" + "\n\n".join([f"Question: {ex['question']['text']}\nAnswer: {ex['answers'][0]['text']}" for ex in all_data["train"].shuffle().select(range(shots))]) + "\n\nNow, use the following story to answer the question:\n\n"
++        "demo": "" if shots == 0 else "For example:\n\n" + "\n\n".join([f"Question: {ex['question']['text']}\nAnswer: {ex['answers'][0]['text']}" for ex in all_data["train"].shuffle(seed=seed).select(range(shots))]) + "\n\nNow, use the following story to answer the question:\n\n"
+     }, remove_columns=["document", "answers"])
+ 
+     data = filter_length(data, 131072, "context")
+@@ -226,7 +226,7 @@ def load_multi_lexsum(dataset, shots=0, max_samples=None, seed=42):
+ 
+     all_data = all_data.map(lambda x: {
+         "context": '\n\n'.join(x["sources"]),
+-        "demo": "" if shots == 0 else "Example summaries:\n\n" + "\n\n".join(["Summary: {}".format(ex["summary/short"]) for ex in train_data.shuffle().select(range(shots))]) + "\n\nNow, write a summary of the following legal documents.\n",
++        "demo": "" if shots == 0 else "Example summaries:\n\n" + "\n\n".join(["Summary: {}".format(ex["summary/short"]) for ex in train_data.shuffle(seed=seed).select(range(shots))]) + "\n\nNow, write a summary of the following legal documents.\n",
+         "answer": x["summary/short"],
+         "question": "",
+     })

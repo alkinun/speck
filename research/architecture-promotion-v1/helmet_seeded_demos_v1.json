@@ -1,0 +1,61 @@
+{
+  "format": "speck_helmet_seeded_demos_protocol",
+  "format_version": 1,
+  "protocol_id": "helmet-seeded-demos-v1",
+  "status": "frozen_unexecuted",
+  "scope": "minimal deterministic demonstration-selection repair for rights-blocked NarrativeQA and Multi-LexSum loaders",
+  "upstream": {
+    "repository": "https://github.com/princeton-nlp/HELMET",
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+    "target": "data.py",
+    "target_sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348"
+  },
+  "patch": {
+    "path": "research/architecture-promotion-v1/patches/helmet_seeded_demos.patch",
+    "sha256": "ddb855f062e8240018e67678f21fff4532fd9652b25b9fee41cf545950f4a5d6",
+    "patched_target_sha256": "eb085cae6ebd296c578eccb2fee240589d0bd3c4d11e8e001594b87eb3235958",
+    "changes": [
+      "NarrativeQA training demonstration shuffle receives seed=seed",
+      "Multi-LexSum training-summary demonstration shuffle receives seed=seed"
+    ],
+    "allowed_semantic_change": "demonstration identity becomes an explicit deterministic function of the existing loader seed",
+    "forbidden_changes": ["dataset rows", "test ordering", "shots", "templates", "answers", "length filtering", "truncation", "metrics"]
+  },
+  "fixtures": {
+    "training_rows": 8,
+    "evaluation_rows": 3,
+    "shots": 2,
+    "primary_seed": 42,
+    "contrast_seed": 43,
+    "process_hash_seeds": [1, 999],
+    "loaders": ["narrativeqa", "multi_lexsum"],
+    "expected": {
+      "narrativeqa": {
+        "primary": {"loader": "narrativeqa", "seed": 42, "rows": 3, "demo_sha256": "b04478e1f34bb7d78c7dd4a8b8ecc9a9d305c230c52dbf3c8d034f8be336917f", "prompts_sha256": "9545e9aebf48c1e22ae319e9b258a76c96faa814fba1af24cfd3082f9b9e0301"},
+        "contrast": {"loader": "narrativeqa", "seed": 43, "rows": 3, "demo_sha256": "5ee680fa8c437f21df3f2ab6cdfb5450ef42e4e35c218fcf64ffb77061832715", "prompts_sha256": "b64a95cfc69554e8f55f15c5bb4fd3ca84f4299fa898b4d955a38816f43b99cd"}
+      },
+      "multi_lexsum": {
+        "primary": {"loader": "multi_lexsum", "seed": 42, "rows": 3, "demo_sha256": "87924fe72664853975bab64c1247aece9edd9b1a35e0933d4e57ab5d84aa484a", "prompts_sha256": "f77442a1a462fbae821e14d6862d07c8ad626fec914f67290e239bf9a73e5fe3"},
+        "contrast": {"loader": "multi_lexsum", "seed": 43, "rows": 3, "demo_sha256": "4bf5adfcb779012cf12009f7a6ab5174d3b43eee75f6f903c6f25ec51a673a9e", "prompts_sha256": "0b4bf45d16515af4f9098200ccb731efd7afb00cc09de08075b4bc31abae6b6e"}
+      }
+    }
+  },
+  "runtime": {
+    "datasets": "5.0.1",
+    "numpy": "2.2.6",
+    "pyarrow": "25.0.1"
+  },
+  "decision": {
+    "pass": "the exact patch applies; upstream has two unseeded target shuffles and patched source has zero; independent processes with different PYTHONHASHSEED values produce identical full prompts at seed 42; seed 43 changes the demonstration/prompt identity",
+    "authority": "qualifies the two-line prompt-determinism repair on synthetic fixtures",
+    "manifest_rule": "a new HELMET evaluation-manifest version must pin this patch before either loader can be used",
+    "does_not_authorize": ["NarrativeQA payload or execution", "Multi-LexSum payload or execution", "Llama 2 access", "model-judge use", "capability claims"]
+  },
+  "reporting": {
+    "non_claims": [
+      "fixture determinism establishes real-dataset prompt identity",
+      "the patch resolves dataset rights, tokenizer identity, model-judge reproducibility, or contamination",
+      "a source patch may be applied to the current frozen manifest without a successor version"
+    ]
+  }
+}
