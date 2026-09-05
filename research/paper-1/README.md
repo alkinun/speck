@@ -58,6 +58,9 @@ the final combined model.
 - [`claims.json`](claims.json) is the claim and falsification ledger.
 - [`baseline_matrix.json`](baseline_matrix.json) audits historical controls and freezes the first
   parameter-matched dense/KDA paired design, data orders, matching views, storage gate, and non-claims.
+- [`baseline_analysis.json`](baseline_analysis.json) freezes the paired estimand, confidence bound,
+  source guardrails, interpolation rules, control-only time-to-quality lock, censoring, and fixed-sample
+  stopping rule before any new baseline result exists.
 - [`baseline-audit.json`](../../results/Speck-Paper1/baseline-audit.json) rehashes the five historical
   checkpoints, verifies the materialized pair/data windows, and records the live storage deficit.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
@@ -76,12 +79,16 @@ uv run --extra cpu python -m scripts.paper_baseline_prepare \
   research/paper-1/baseline_matrix.json --check
 ```
 
+Each completed baseline checkpoint is normalized with `scripts.paper_baseline_analyze collect`. Collect
+the three dense controls first, run `lock-target`, and only then collect and analyze the hybrid results.
+The checked analysis plan contains the exact CLI input and result contracts.
+
 ## Current state
 
 The five historical sequence controls are now identity-audited as discovery evidence only. A new
 153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
-cells, but launch remains blocked on the evaluation-manifest dependency, paired GPU preflight, frozen
-analysis code, and the 16GiB free-space floor. The project otherwise has strong evidence for GDN/KDA
+cells. Its analysis and stopping rule are frozen, but launch remains blocked on the evaluation-manifest
+dependency, paired GPU preflight, and durable storage qualification. The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
 

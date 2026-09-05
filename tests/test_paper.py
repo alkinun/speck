@@ -19,6 +19,7 @@ def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
             "README.md",
             "claims.json",
             "baseline_matrix.json",
+            "baseline_analysis.json",
             "experiment_program.json",
             "paper_outline.md",
             "reference_audit.md",

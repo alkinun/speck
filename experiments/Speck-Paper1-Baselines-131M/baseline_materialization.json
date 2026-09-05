@@ -10,7 +10,7 @@
     }
   },
   "contract": "research/paper-1/baseline_matrix.json",
-  "contract_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+  "contract_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
   "family_id": "Speck-Paper1-Baselines-131M",
   "format": "speck_paper_baseline_materialization",
   "format_version": 1,

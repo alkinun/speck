@@ -74,8 +74,25 @@ contract. Intervals are optimizer steps; zero disables that periodic action, whi
 token-milestone artifacts still run. For example, `--save-every 1526` is approximately every 100M
 tokens at the 65,536-token optimizer batch.
 
-Validation reports the equal-batch aggregate and each source separately. Checkpoints retain the
-latest per-source losses alongside the aggregate so later data decisions do not depend on W&B.
+Validation reports the equal-batch aggregate and each source separately. Checkpoints and the final
+run summary retain the complete validation trace, including cumulative optimizer and steady-training
+time at every validation boundary, so paired fixed-token, fixed-compute, and fixed-time analyses do
+not depend on W&B. Startup/compile time is retained separately from steady training time.
+
+Paper 1 baseline results use the checked `research/paper-1/baseline_analysis.json` contract. Normalize
+each complete final checkpoint, lock the quality target from all three dense controls before creating
+candidate result records, and then run the six-cell analysis:
+
+```bash
+uv run --extra cpu python -m scripts.paper_baseline_analyze collect \
+  research/paper-1/baseline_analysis.json <run-experiment> --output <run-result.json>
+uv run --extra cpu python -m scripts.paper_baseline_analyze lock-target \
+  research/paper-1/baseline_analysis.json <three-control-results...> \
+  --output <target-lock.json>
+uv run --extra cpu python -m scripts.paper_baseline_analyze analyze \
+  research/paper-1/baseline_analysis.json <all-six-results...> \
+  --target-lock <target-lock.json> --output <analysis.json>
+```
 
 Despite its historical name, `train.json`'s `min_lr` is a multiplier of the peak `lr`, not an
 absolute learning rate. A value of `0.1` ends the schedule at 10% of the peak rate.

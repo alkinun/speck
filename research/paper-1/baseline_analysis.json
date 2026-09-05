@@ -1,0 +1,128 @@
+{
+  "format": "speck_paper_baseline_analysis_plan",
+  "format_version": 1,
+  "analysis_id": "speck-paper-1-primary-baselines-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_before_results",
+  "frozen_on": "2026-09-05",
+  "baseline_matrix": "research/paper-1/baseline_matrix.json",
+  "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+  "scientific_scope": "paired whole-architecture proxy evidence only; no component attribution or architecture promotion",
+  "arms": {
+    "control": "dense_global_param_match",
+    "candidate": "five_cache_kda_gqa"
+  },
+  "pairs": [
+    {
+      "pair": 0,
+      "seed": 42,
+      "data_token_offset": 0
+    },
+    {
+      "pair": 1,
+      "seed": 43,
+      "data_token_offset": 536870912
+    },
+    {
+      "pair": 2,
+      "seed": 44,
+      "data_token_offset": 1073741824
+    }
+  ],
+  "input_contract": {
+    "format": "speck_paper_baseline_run_result",
+    "format_version": 1,
+    "required_complete_model_runs": 6,
+    "checkpoint_retention": "exactly one complete final checkpoint per run",
+    "validation_steps": [
+      0,
+      488,
+      976,
+      1464,
+      1952,
+      2000
+    ],
+    "intermediate_validation_tokens": 5000000,
+    "final_validation_tokens": 20000000,
+    "trace_fields": [
+      "training_tokens",
+      "validation_loss",
+      "validation_source_losses",
+      "optimizer_seconds",
+      "steady_training_seconds"
+    ],
+    "integrity": [
+      "analysis-plan and baseline-matrix hashes match",
+      "seed and packed-data offset match the frozen pair",
+      "checkpoint and run-summary identities are retained",
+      "training reaches the fixed 131072000-token endpoint",
+      "every loss and timing value is finite",
+      "source-loss keys are identical across all six runs"
+    ]
+  },
+  "statistical_contract": {
+    "paired_runs": 3,
+    "candidate_minus_control": "five_cache_kda_gqa-minus-dense_global_param_match",
+    "one_sided_confidence_level": 0.95,
+    "student_t_critical_df_2": 2.919985580353724,
+    "language_loss_non_inferiority_margin_nats": 0.01,
+    "source_guardrail_nats": 0.02,
+    "primary_rule": "the upper one-sided paired 95% Student-t bound must be at or below 0.01 nats and every source-loss upper bound must be at or below 0.02 nats",
+    "multiplicity": "one frozen whole-architecture candidate is tested; source guardrails form an intersection gate and are not separate discovery claims",
+    "small_sample_limit": "n=3 estimates paired variance for proxy screening only and has no promotion authority"
+  },
+  "analysis_views": {
+    "primary_fixed_tokens": {
+      "training_tokens_per_arm": 131072000,
+      "endpoint": "20M-token final validation loss",
+      "estimand": "mean paired candidate-minus-control loss"
+    },
+    "fixed_analytic_flops": {
+      "candidate_training_tokens": 131072000,
+      "control_training_tokens": 102891520,
+      "method": "piecewise-linear interpolation in training tokens between the two enclosing frozen validation boundaries",
+      "authority": "secondary descriptive view"
+    },
+    "fixed_steady_training_time": {
+      "budget": "minimum final steady_training_seconds across the two arms within each pair",
+      "method": "piecewise-linear interpolation in steady training seconds; compile/startup, validation, checkpoint, and orchestration time are excluded",
+      "authority": "secondary descriptive view"
+    },
+    "time_to_quality": {
+      "target": "locked by the separate control-only procedure below",
+      "method": "first piecewise-linear downward crossing in steady training seconds",
+      "censoring": "if either arm does not reach the target, retain the pair as right-censored and do not form a complete-case confidence bound",
+      "authority": "secondary descriptive view"
+    }
+  },
+  "time_to_quality_target": {
+    "control_only": true,
+    "rule": "maximum final validation loss across the three complete dense-control runs, rounded upward",
+    "round_up_decimals": 6,
+    "workflow": [
+      "collect and qualify all three dense-control result records",
+      "write and hash the target-lock artifact",
+      "only then create or inspect candidate result records",
+      "pass the immutable target-lock artifact to the final analysis"
+    ],
+    "reason": "the target is guaranteed reachable by every control while candidate failures remain explicit right-censoring"
+  },
+  "stopping_rule": {
+    "design": "fixed sample",
+    "required_complete_model_runs": 6,
+    "interim_efficacy_looks": 0,
+    "interim_futility_looks": 0,
+    "quality_based_early_stopping": "forbidden",
+    "pair_abandonment": "forbidden after seeing either arm's quality",
+    "allowed_interruptions": [
+      "non-finite loss or gradient raised by the training runtime",
+      "hardware or filesystem safety limit",
+      "checkpoint, data-lineage, or evaluation-integrity failure",
+      "operator correctness failure"
+    ],
+    "recovery": "resume the same frozen cell from its latest valid checkpoint; if it cannot be resumed, retain the failed attempt, document root cause, and preregister any rerun rather than silently replacing it",
+    "analysis_on_incomplete_sample": "integrity report only; no paired confidence bound or proxy pass decision"
+  },
+  "decision_authority": "The analysis may pass or fail the whole-architecture proxy quality screen and estimate paired variance. It cannot promote KDA, NoPE, GQA, the 3:1 mixer ratio, a systems claim, or the architecture, and it cannot authorize paper-scale training."
+}

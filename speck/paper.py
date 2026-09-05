@@ -8,6 +8,7 @@ PROGRAM_FILES = (
     "README.md",
     "claims.json",
     "baseline_matrix.json",
+    "baseline_analysis.json",
     "experiment_program.json",
     "paper_outline.md",
     "reference_audit.md",
@@ -128,6 +129,8 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "status",
             "matrix",
             "matrix_sha256",
+            "analysis_plan",
+            "analysis_plan_sha256",
             "materialization",
             "materialization_sha256",
             "audit",
@@ -140,6 +143,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("paper baseline evidence cannot claim an unexecuted launch")
     for path_key, hash_key in (
         ("matrix", "matrix_sha256"),
+        ("analysis_plan", "analysis_plan_sha256"),
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
     ):
@@ -237,6 +241,7 @@ def _validate_baseline_matrix(matrix, program, paper_id, repository_root):
             "historical_evidence",
             "planned_primary_baselines",
             "future_finalist_design",
+            "analysis_contract",
             "storage_contract",
             "launch_gates",
         },
@@ -373,6 +378,31 @@ def _validate_baseline_matrix(matrix, program, paper_id, repository_root):
         or not 0 < compute.get("dense_global_tokens", 0) < training_tokens
     ):
         raise ValueError("planned baseline compute-matched view is invalid")
+
+    analysis_contract = matrix["analysis_contract"]
+    analysis_path = repository_root / analysis_contract.get("path", "")
+    evidence = program["baseline_evidence"]
+    if (
+        analysis_contract.get("status") != "frozen_before_results"
+        or analysis_contract.get("path") != evidence.get("analysis_plan")
+        or not analysis_path.is_file()
+        or _file_sha256(analysis_path) != evidence.get("analysis_plan_sha256")
+    ):
+        raise ValueError("paper baseline analysis contract does not match its pin")
+    analysis = _load_json(analysis_path)
+    if (
+        analysis.get("format") != "speck_paper_baseline_analysis_plan"
+        or analysis.get("format_version") != 1
+        or analysis.get("status") != "frozen_before_results"
+        or analysis.get("paper_id") != paper_id
+        or analysis.get("policy_id") != program["policy_id"]
+        or analysis.get("baseline_matrix_sha256") != evidence.get("matrix_sha256")
+        or analysis.get("pairs") != pairs
+        or analysis.get("stopping_rule", {}).get("required_complete_model_runs") != 2 * len(pairs)
+        or analysis.get("stopping_rule", {}).get("interim_efficacy_looks") != 0
+        or analysis.get("stopping_rule", {}).get("interim_futility_looks") != 0
+    ):
+        raise ValueError("paper baseline analysis contract is invalid")
 
     finalist = matrix["future_finalist_design"]
     if (

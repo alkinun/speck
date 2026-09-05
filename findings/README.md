@@ -34,6 +34,7 @@ Read in order:
 26. [25 — Architecture promotion policy and cost envelopes](25_architecture_promotion_policy.md)
 27. [26 — Paper 1 research program](26_paper_1_research_program.md)
 28. [27 — Paper 1 matched-baseline audit and launch contract](27_paper_1_baseline_audit.md)
+29. [28 — Paper 1 baseline analysis and stopping contract](28_paper_1_baseline_analysis.md)
 
 Conventions:
 
@@ -78,5 +79,10 @@ evidence; and blocks paper-scale pretraining until ten checked prerequisites pas
 Finding 27 audits five historical sequence controls without granting them retrospective promotion
 authority, materializes a 0.0118%-parameter-matched dense/KDA baseline pair across three disjoint
 seed/data-order cells, and records a 9.40GiB storage deficit against the proxy launch floor. Training
-remains blocked pending evaluation-manifest closure, storage, paired GPU/export preflight, and frozen
-analysis code.
+remains blocked pending evaluation-manifest closure, durable storage qualification, and paired
+GPU/export preflight.
+
+Finding 28 freezes the paired baseline analysis before results. It makes the three seed/data-order
+cells the statistical units, fixes one-sided language-loss and per-source guardrails, separates
+fixed-token/FLOP/steady-time views, locks time-to-quality from controls only, preserves right-censoring,
+and forbids interim quality stopping. The proxy still has no architecture-promotion authority.

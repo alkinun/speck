@@ -476,6 +476,7 @@ class BaseTrainer:
         self.elapsed_evaluation = 0.0
         self.elapsed_active = 0.0
         self.elapsed_checkpoint = 0.0
+        self.validation_history = []
         if args.resume is not None:
             metadata = self.metadata
             if metadata is None:
@@ -506,6 +507,7 @@ class BaseTrainer:
             self.elapsed_evaluation = timing.get("evaluation_seconds", 0.0)
             self.elapsed_active = timing.get("active_seconds", self.elapsed_training)
             self.elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
+            self.validation_history = list(metadata.get("validation_history", ()))
         elif self.parent_metadata:
             self._restore_parent_checkpoint()
 
@@ -694,6 +696,18 @@ class BaseTrainer:
             metrics[f"validation/source/{source_id}/loss"] = source_loss
             metrics[f"validation/source/{source_id}/perplexity"] = math.exp(min(source_loss, 20))
         self.tracking.log(metrics)
+        self.validation_history.append(
+            {
+                "step": step,
+                "global_step": global_step,
+                "training_tokens": global_tokens,
+                "validation_loss": loss,
+                "validation_source_losses": source_losses,
+                "validation_tokens": evaluated_tokens,
+                "optimizer_seconds": self.elapsed_optimizer,
+                "steady_training_seconds": self.elapsed_training,
+            }
+        )
         print0(f"step {global_step:,} ({global_tokens:,} tokens) | validation loss {loss:.5f}")
         return loss, source_losses, evaluated_tokens
 
@@ -728,6 +742,7 @@ class BaseTrainer:
                     else None
                 ),
                 "validation_tokens": validation_tokens,
+                "validation_history": self.validation_history,
                 "milestone_tokens": milestone,
                 "partial": step < self.steps,
                 "training_seconds": self.elapsed_training,
@@ -738,7 +753,13 @@ class BaseTrainer:
                     "active_seconds": self.elapsed_active
                     + time.perf_counter()
                     - self.session_started,
+                    "startup_optimizer_seconds": self.elapsed_optimizer - self.elapsed_training,
                 },
+                "peak_allocated_bytes": (
+                    torch.cuda.max_memory_allocated(self.device)
+                    if self.device.type == "cuda"
+                    else None
+                ),
                 "wandb_id": self.tracking.id,
             }
             save(
@@ -754,6 +775,7 @@ class BaseTrainer:
                     "active_seconds": self.elapsed_active
                     + time.perf_counter()
                     - self.session_started,
+                    "startup_optimizer_seconds": self.elapsed_optimizer - self.elapsed_training,
                 },
             )
         if self.distributed:
@@ -900,9 +922,15 @@ class BaseTrainer:
             "partial": self.completed_step < self.steps,
             "stop_at_tokens": self.args.stop_at_tokens,
             "optimizer_seconds": self.elapsed_optimizer,
+            "steady_training_seconds": self.elapsed_training,
+            "startup_optimizer_seconds": self.elapsed_optimizer - self.elapsed_training,
             "evaluation_seconds": self.elapsed_evaluation,
             "checkpoint_seconds": self.elapsed_checkpoint,
             "active_seconds": self.elapsed_active + time.perf_counter() - self.session_started,
+            "peak_allocated_bytes": (
+                torch.cuda.max_memory_allocated(self.device) if self.device.type == "cuda" else None
+            ),
+            "validation_history": self.validation_history,
         }
         path = Path(self.args.output_dir) / "run_summary.json"
         temporary = path.with_suffix(".json.tmp")

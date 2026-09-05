@@ -379,11 +379,25 @@ def audit_baselines(matrix_path, cache_root, runner_revision):
     gdn = by_id["gdn_global_sigmoid_nope"]
     storage = matrix["storage_contract"]
     disk = shutil.disk_usage(cache_root)
+    matrix_sha256 = file_sha256(matrix_path)
+    analysis_contract = matrix.get("analysis_contract", {})
+    analysis_path = repository_root / analysis_contract.get("path", "")
+    analysis = (
+        json.loads(analysis_path.read_text(encoding="utf-8")) if analysis_path.is_file() else {}
+    )
+    analysis_qualified = (
+        analysis_contract.get("status") == "frozen_before_results"
+        and analysis.get("format") == "speck_paper_baseline_analysis_plan"
+        and analysis.get("format_version") == 1
+        and analysis.get("status") == "frozen_before_results"
+        and analysis.get("baseline_matrix_sha256") == matrix_sha256
+    )
     blockers = [
         "SPE-58 evaluation-manifest dependency remains open",
         "paired compiled/runtime/export preflight has not run",
-        "paired analysis and stopping script is not frozen",
     ]
+    if not analysis_qualified:
+        blockers.append("paired analysis and stopping script is not frozen")
     if disk.free < storage["minimum_free_bytes_before_proxy_launch"]:
         blockers.append("free storage is below the proxy launch minimum")
     return {
@@ -393,7 +407,12 @@ def audit_baselines(matrix_path, cache_root, runner_revision):
         "status": "historical_evidence_qualified_proxy_launch_blocked",
         "runner_revision": runner_revision,
         "contract": str(matrix_path.relative_to(repository_root)),
-        "contract_sha256": file_sha256(matrix_path),
+        "contract_sha256": matrix_sha256,
+        "analysis_contract": {
+            "path": analysis_contract.get("path"),
+            "sha256": file_sha256(analysis_path) if analysis_path.is_file() else None,
+            "status": "qualified_frozen_before_results" if analysis_qualified else "unqualified",
+        },
         "source_artifacts": source_artifacts,
         "historical_arms": arms,
         "historical_comparisons": {

@@ -160,7 +160,7 @@
         "dense_global_tokens": 102891520,
         "rounding": "floor to a complete 65536-token optimizer batch"
       },
-      "wall_clock_matched": "interpolate validation loss against optimizer_seconds at shared evaluation boundaries; do not use end-to-end time with unequal validation cost",
+      "wall_clock_matched": "interpolate validation loss against steady_training_seconds at the smaller arm-specific endpoint; compile/startup, validation, checkpoint, and end-to-end time are reported separately",
       "time_to_quality": "report only thresholds reached by both arms and include right-censored thresholds"
     },
     "decision_rule": "the three paired discovery runs estimate the whole-architecture effect and paired variance but have no promotion authority; no mixer, positional, or systems component may be credited from this comparison"
@@ -175,6 +175,12 @@
     "total_model_runs": 12,
     "compute_matched_dense_tokens": 1208877056,
     "rule": "cross all seeds and data orders and keep candidate/control paired within every cell"
+  },
+  "analysis_contract": {
+    "path": "research/paper-1/baseline_analysis.json",
+    "status": "frozen_before_results",
+    "primary_estimand": "mean paired five-cache-KDA/GQA-minus-dense-global final validation loss at 131072000 training tokens",
+    "stopping_rule": "fixed six-run sample with zero interim efficacy or futility looks"
   },
   "storage_contract": {
     "checkpoint_retention": "one complete final model, optimizer, metadata, timing, and completion marker per run; intermediate quality stays in immutable tracking logs",
