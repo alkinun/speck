@@ -1,0 +1,87 @@
+{
+  "format": "speck_novelty_claim_overlap_table",
+  "format_version": 4,
+  "table_id": "speck-paper-1-novelty-claim-overlap-v4",
+  "paper_id": "speck-paper-1",
+  "status": "seventeen_source_table_zero_architecture_novelty_n1_retirement_review_pending",
+  "created_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_claim_overlap_v3.json",
+    "sha256": "1fdda562036094436ca8aa3b498e0e7b72364b734dd71c8ad9d13884cb5b281f",
+    "claims": 22,
+    "superseded_decision": "prospective arbitrary-layout prediction remains a technical residual with unestablished scientific value"
+  },
+  "inputs": {
+    "landscape": "research/paper-1/novelty_landscape_v7.json",
+    "landscape_sha256": "1df67600b997f8d550283211aa38e5ac9227f4cb902830d2c8fc29aaed34f14c",
+    "code_availability": "research/paper-1/novelty_code_availability_v6.json",
+    "code_availability_sha256": "d6e541cc24b33fc022305578c0a1ba6d21f4e33bc7220762ffd972350df6f418"
+  },
+  "inherited_claims": 22,
+  "additional_claims": [
+    {
+      "id": "P13_hybrid_pas_isp_activation_morphology",
+      "strongest_source": "Massive Activations in Hybrid Linear Attention Large Language Models",
+      "classification": "direct_overlap",
+      "decision": "do_not_claim",
+      "reason": "PAS, ISP, sink-conditioned tracing, cross-mixer recurrence, and full/GDN gate interventions are already defined and measured"
+    },
+    {
+      "id": "P14_activation_diagnostic_guided_placement",
+      "strongest_source": "Massive Activations in Hybrid Linear Attention Large Language Models",
+      "classification": "direct_counterevidence_to_simple_predictor",
+      "decision": "mandatory_counterexample",
+      "reason": "PAS alignment saturates at 99.53 to 100 percent for early, middle, and late single-attention layouts while retrieval differs sharply and task-dependently"
+    },
+    {
+      "id": "R5_prospective_multidiagnostic_unseen_layout_prediction",
+      "strongest_source": "no exact source established; closest are the massive-activation and systematic-placement studies, hybrid-role analysis, DtR, and FlashMorph",
+      "classification": "low_prior_technical_residual_pending_retirement_review",
+      "decision": "independent_retention_or_retirement_review_only",
+      "reason": "an incremental multidiagnostic predictor is not tested, but existing diagnostics either encode layout directly or fail to rank quality, and no new mechanism or improved architecture is established"
+    }
+  ],
+  "aggregate_claim_rows": 25,
+  "residual_questions": [
+    {
+      "rank": 1,
+      "id": "N1_prospective_multidiagnostic_unseen_layout_prediction",
+      "classification": "low_prior_unestablished_empirical_question_not_an_architecture_mechanism",
+      "authorized_action": "independent claim-level retention-or-retirement review only",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false,
+      "retention_gate": "review must identify incremental scientific value beyond forecasting occupied recipes and explain how saturated or post-outcome diagnostics can support prospective prediction"
+    },
+    {
+      "rank": 2,
+      "id": "N2_internal_state_completeness_predictor_law",
+      "classification": "deferred_unestablished_empirical_diagnostic_law",
+      "authorized_action": "none before independent claim review finds incremental value",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false
+    }
+  ],
+  "baseline_disposition": {
+    "paper_1_three_pair_proxy": "continue through frozen completion because it estimates the conservative five-cache KDA/GQA parent versus dense attention and is independent of novelty selection",
+    "promotion_limit": "a quality/cost pass may retain a conservative research parent under the architecture policy but cannot satisfy the separate Paper 1 novelty gate",
+    "post_analysis": "after the paired result, decide whether to retain the parent for future isolation; do not infer N1 or N2 evidence"
+  },
+  "decision": {
+    "established_architecture_novelty_candidates": 0,
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n1_predictive_law_established": false,
+    "n1_experiment_authorized": false,
+    "n1_retirement_review_required": true,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "n2_experiment_authorized": false,
+    "baseline_completion_authorized": true,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "new_training_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "finish the frozen proxy and conduct independent retention-or-retirement review of N1 before any further artifact execution, protocol, or placement-research budget"
+  }
+}

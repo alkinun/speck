@@ -129,6 +129,9 @@ the final combined model.
 - [`novelty_claim_overlap_v3.json`](novelty_claim_overlap_v3.json) adds direct from-scratch placement
   and early/middle role overlap, leaving prospective arbitrary-layout prediction only as a technical
   residual whose incremental scientific value must pass independent review before any protocol.
+- [`novelty_claim_overlap_v4.json`](novelty_claim_overlap_v4.json) adds PAS/ISP overlap and saturated
+  diagnostic counterevidence, making N1 a low-prior multidiagnostic question that requires explicit
+  independent retention-or-retirement review before any further budget.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.

@@ -515,3 +515,8 @@ Finding 94 updates the artifact inventory to seventeen sources, eight immutable 
 snapshots, six repositories with code, and three root-licensed code paths. The massive-activation
 release may support bounded analysis later, but no new full reproduction is qualified and no download,
 execution, or N1 protocol is authorized before independent review.
+
+Finding 95 updates N1's claim rows with PAS/ISP direct overlap and saturated diagnostic
+counterevidence. The remaining multidiagnostic prospective-prediction question has a low prior and is
+not an architecture contribution. It now requires independent retention-or-retirement review before
+any further artifact execution, protocol, experiment, or training budget.
