@@ -1,0 +1,93 @@
+{
+  "format": "speck_halo_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-halo-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "source_identity_and_result_logs_qualified_root_rights_behavior_and_reproduction_blocked",
+  "audited_on": "2026-09-06",
+  "paper": {
+    "id": "arxiv_2601_22156v1",
+    "url": "https://arxiv.org/abs/2601.22156v1",
+    "local_note": "papers/41_halo_hypenet.md",
+    "local_note_sha256": "76f7d5b7b47f7b50267e373788518c224a826f14f6e6ccc8b535023b82d9bc79"
+  },
+  "repository": {
+    "url": "https://github.com/thunlp/hybrid-linear-attention",
+    "branch": "main",
+    "revision": "229e3013740266394640af8cff7f24cd35795ec9",
+    "revision_date": "2026-04-10T02:19:05+08:00",
+    "files": 271,
+    "code_or_config_or_doc_files": 58,
+    "python_files": 31,
+    "shell_files": 12,
+    "json_files": 8,
+    "evaluation_log_files": 206,
+    "test_files": 0,
+    "root_license": null,
+    "metadata_only_clone": true,
+    "working_tree_checked_out": false,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false
+  },
+  "pinned_files": [
+    {
+      "path": "attn-layer-selection/layer_analysis.py",
+      "git_blob_sha1": "5776d05d258f7f8f6a58dba8c730bb6bc8787dbf"
+    },
+    {
+      "path": "attn-layer-selection/README.md",
+      "git_blob_sha1": "4e6dd4b0247559deef85f8a5d53204750f3aa21b"
+    },
+    {
+      "path": "halo/requirements.txt",
+      "git_blob_sha1": "b2c6440691607ea44824748dc1a4a22cad820afc"
+    },
+    {
+      "path": "halo/configs/model/hypenet/hypenet-2b.json",
+      "git_blob_sha1": "67677339e46d75ee0e06888bd1d247fb145e5eab"
+    },
+    {
+      "path": "halo/configs/training/stage1.json",
+      "git_blob_sha1": "61ef351e812036f9564016e1507e09f9c825fe73"
+    },
+    {
+      "path": "halo/data/README.md",
+      "git_blob_sha1": "f6bda3f379acc637a9706586076544cb7776d53f"
+    }
+  ],
+  "available_components": [
+    "stage 1 hidden-state alignment and stage 2/3 training source",
+    "layerwise replacement, evaluation, and importance-ranking source",
+    "HypeNet 2B, 5B, and 9B architecture/training configs",
+    "206 per-layer commonsense and retrieval evaluation logs across three scales",
+    "custom Lightning Attention, GDN, KDA, cache, and Hugging Face model source",
+    "declared exact development stack and eight-A800 hardware in README files"
+  ],
+  "identity_and_behavior_findings": [
+    "the 2B config contains seven full-attention and twenty-one Lightning Attention layers, resolving the paper HTML table ambiguity",
+    "the paper defines epsilon as 1e-6 but layer_analysis.py uses 1e-10 and clips the importance score at 50",
+    "the repository has no root license, so source inspection does not grant reuse rights",
+    "requirements.txt is unpinned despite exact versions being listed narratively in the README",
+    "training configs contain machine-local or placeholder paths and the streamed FineWeb-Edu revision/order is not pinned",
+    "the selection README references one stale script name and requires a Stage-1 checkpoint not shipped in the Git tree",
+    "no assertion-based test suite is present",
+    "model checkpoints are linked externally and their immutable revisions, weights, custom-code identity, and parity remain unaudited"
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "precomputed_selection_logs_present": true,
+    "paper_layer_count_ambiguity_resolved": true,
+    "root_rights_qualified": false,
+    "paper_code_semantics_identical": false,
+    "portable_environment_qualified": false,
+    "training_data_identity_qualified": false,
+    "checkpoint_identity_qualified": false,
+    "behavior_qualified": false,
+    "upstream_execution_authorized": false,
+    "direct_reuse_authorized": false,
+    "full_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_status_changed": false,
+    "next_action": "treat HALO as a mandatory conceptual and logged-result baseline; do not execute or reuse upstream code before rights and semantic reconciliation"
+  }
+}

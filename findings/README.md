@@ -520,3 +520,8 @@ Finding 95 updates N1's claim rows with PAS/ISP direct overlap and saturated dia
 counterevidence. The remaining multidiagnostic prospective-prediction question has a low prior and is
 not an architecture contribution. It now requires independent retention-or-retirement review before
 any further artifact execution, protocol, experiment, or training budget.
+
+Finding 96 pins HALO's 271-file source tree, including training/selection code and 206 layer-sweep
+logs. The config resolves HypeNet-2B as seven attention plus twenty-one recurrent layers, but the code's
+epsilon/clipping differs from the paper, and root rights, tests, dependency/data/checkpoint identity,
+and behavior are missing. No upstream execution, reuse, or reproduction is authorized.
