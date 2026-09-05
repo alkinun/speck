@@ -676,23 +676,68 @@ def check(args):
     contract, contract_path, source, source_manifest_path = _load_contract(
         args.contract, args.length
     )
+    generator = _require_clean_checkout(
+        args.generator_checkout, GENERATOR_REVISION, "RULER generator"
+    )
+    skills = _require_clean_checkout(args.skills_checkout, SKILLS_REVISION, "NeMo-Skills")
+    tokenizer = args.tokenizer.expanduser().resolve()
+    upstream_code = directory_identity(
+        generator / "scripts",
+        include=lambda path: path.suffix in {".py", ".yaml", ".sh"},
+    )
+    scorer = skills / "nemo_skills/dataset/ruler/ruler_score.py"
+    nemo_prepare = skills / "nemo_skills/dataset/ruler/prepare.py"
+    compatibility_patch = (
+        Path(__file__).parents[1]
+        / "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch"
+    )
+    generation_source = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(Path(__file__).parents[1]),
+            "show",
+            f"{report['runner_revision']}:scripts/ruler_case_prepare.py",
+        ],
+        check=True,
+        capture_output=True,
+    ).stdout
+    generation_source_sha256 = hashlib.sha256(generation_source).hexdigest()
+    with tempfile.TemporaryDirectory(prefix="speck-ruler-check-") as temporary:
+        staged_ruler, _ = _stage_sources(
+            Path(temporary), generator, source, compatibility_patch
+        )
+        executed_code = directory_identity(
+            staged_ruler / "scripts",
+            include=lambda path: path.suffix in {".py", ".yaml", ".sh"},
+        )
     if (
         report["contract"]["generation_spec_sha256"]
         != generation_contract_identity(contract)
         or report["source_bundle"]["manifest_sha256"] != file_sha256(source_manifest_path)
         or report["source_bundle"]["identity_sha256"] != source["bundle_identity_sha256"]
-        or report["runner_sha256"] != file_sha256(__file__)
+        or report["runner_sha256"] != generation_source_sha256
+        or report["generator"]["upstream_code_identity_sha256"] != upstream_code["sha256"]
+        or report["generator"]["upstream_files"] != upstream_code["files"]
+        or report["generator"]["executed_code_identity_sha256"] != executed_code["sha256"]
+        or report["nemo_skills"]["revision"] != SKILLS_REVISION
+        or report["nemo_skills"]["prepare_sha256"] != file_sha256(nemo_prepare)
+        or report["nemo_skills"]["scorer_sha256"] != file_sha256(scorer)
+        or report["tokenizer"]["identity_sha256"] != directory_identity(tokenizer)["sha256"]
+        or report["network_denial"]["guard_sha256"]
+        != hashlib.sha256(NETWORK_GUARD.encode()).hexdigest()
         or report["generator"]["compatibility_patch"]["sha256"]
-        != file_sha256(
-            Path(__file__).parents[1]
-            / "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch"
-        )
+        != file_sha256(compatibility_patch)
         or report["environment"]["uv_lock_sha256"]
         != file_sha256(Path(__file__).parents[1] / "uv.lock")
         or runtime_versions() != report["environment"]["package_versions"]
     ):
         raise ValueError("RULER case qualification inputs changed")
     output_dir = Path(report["local_output_dir"])
+    if output_dir.resolve() != args.output_dir.expanduser().resolve():
+        raise ValueError("RULER retained output does not match --output-dir")
+    if len(report["cases"]) != len(TASKS):
+        raise ValueError("RULER case qualification has the wrong task count")
     summaries = []
     for task, recorded in zip(TASKS, report["cases"], strict=True):
         summary = case_summary(
@@ -701,11 +746,21 @@ def check(args):
             report["samples_per_task"],
             args.length,
         )
+        wrapper_tokens = recorded["model_template_tokens"]
+        maximum_accounted = summary["maximum_declared_length"] + wrapper_tokens + TEMPLATE_TOKENS
+        if (
+            isinstance(wrapper_tokens, bool)
+            or not isinstance(wrapper_tokens, int)
+            or wrapper_tokens < 0
+            or maximum_accounted > args.length
+            or recorded["maximum_accounted_length"] != maximum_accounted
+        ):
+            raise ValueError(f"{task} recorded template accounting is invalid")
         summaries.append(
             {
                 **summary,
-                "model_template_tokens": recorded["model_template_tokens"],
-                "maximum_accounted_length": recorded["maximum_accounted_length"],
+                "model_template_tokens": wrapper_tokens,
+                "maximum_accounted_length": maximum_accounted,
             }
         )
     if summaries != report["cases"]:
