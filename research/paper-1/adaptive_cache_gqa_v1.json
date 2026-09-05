@@ -1,0 +1,175 @@
+{
+  "format": "speck_adaptive_cache_gqa_protocol",
+  "format_version": 1,
+  "protocol_id": "speck-paper-1-adaptive-cache-gqa-v1",
+  "paper_id": "speck-paper-1",
+  "status": "frozen_before_local_implementation",
+  "frozen_on": "2026-09-06",
+  "purpose": "Qualify the exact condition under which query-head attention salience may be reduced onto shared physical GQA cache heads before applying the clean-room adaptive budget allocator.",
+  "sources": [
+    {
+      "paper": "https://arxiv.org/abs/2407.11550v5",
+      "sections": [
+        "Theorems 3.1 through 3.3",
+        "Section 3.5"
+      ],
+      "local_note": "papers/25_adakv.md",
+      "local_note_sha256": "686de1c604bca4ffc9dc72b1078086b26910de2443a4ef47d155effde4861e5d",
+      "use": "the paper defines a shared-norm retained-attention-mass bound and specifies arithmetic-mean salience within a GQA group"
+    },
+    {
+      "audit": "research/paper-1/adakv_code_audit_v1.json",
+      "sha256": "d7f1beebc44bed21c831bef11b43e1ca8144657b48ccad03994532844a073535",
+      "pinned_source": "adaptive_snapkv/monkeypatch/snapkv_utils.py",
+      "pinned_source_sha256": "16ae10649a54fd5dad7d8a177d153d6d23096ff65b3061b07801155a658d14be",
+      "use": "the pinned code accepts mean or max group reduction and applies a separately ambiguous safeguard"
+    },
+    {
+      "protocol": "research/paper-1/adaptive_cache_budget_v1.json",
+      "protocol_sha256": "10b69c80bc7e44086489e19627579be94f4dd79a27b78ef244cbffc4dc8aba8e",
+      "qualification": "results/Speck-Paper1/adaptive-cache-budget-qualified.json",
+      "qualification_sha256": "c8f46842b62d97e0890c4b6325f118b5a472b03dcb8f0b9bf6df03194df80a86",
+      "use": "qualified physical-head allocator and exhaustive oracle"
+    }
+  ],
+  "source_disposition": {
+    "paper_statement": "Section 3.5 uses the arithmetic mean of query-head attention weights within each GQA group as the physical-cache-head selection criterion.",
+    "code_statement": "The pinned implementation defaults its CLI to mean but also accepts max; this protocol does not treat those choices as equivalent.",
+    "speck_derivation": "For equal-size groups and the paper's single shared maximum transformed-value norm C, mean is sum divided by one common positive constant and therefore preserves the physical slot ordering that minimizes the query-head bound.",
+    "derivation_not_author_claim": true
+  },
+  "input_contract": {
+    "query_salience": "rectangular K-by-G-by-T finite non-negative weights: K physical KV heads, exactly G query heads sharing each physical head, and T candidate token slots",
+    "normalization": "reduction and allocation accept unnormalized salience; every query-head row must sum to one when evaluating the query-level eviction bound",
+    "equal_group_size": "G is identical for every physical head; unequal groups are outside the mean/sum equivalence claim",
+    "group_identity": "physical head k owns query heads k*G through (k+1)*G-1; ordering is representational and cannot change reductions",
+    "budget": "integer B in [0,K*T] counts physical KV token slots, never replicated query-head slots",
+    "scope": "one layer and one already-observed salience tensor; observation windows, pooling, recency retention, cross-layer allocation, and question-aware versus question-agnostic acquisition are excluded"
+  },
+  "derivation": {
+    "shared_indicator": "I[k,t] is one physical eviction decision and therefore applies to every query head q in group k",
+    "query_retained_mass": "R_query=sum(k,g,t) I[k,t]*A[k,g,t]",
+    "mean_salience": "M[k,t]=(1/G)*sum(g) A[k,g,t]",
+    "rank_equivalence": "R_query=G*sum(k,t) I[k,t]*M[k,t]; because G is common, global top-B mean and sum select identical physical slots under identical tie-breaking",
+    "query_level_bound": "for normalized query heads and one shared C, epsilon_query=2*K*G*C-2*C*R_query",
+    "scaled_physical_bound": "epsilon_query=G*(2*K*C-2*C*retained_mean_mass)",
+    "limits": [
+      "head-specific transformed-value/output norm weights require a weighted successor objective",
+      "unequal G requires summed or group-size-weighted salience rather than unweighted means",
+      "a smaller theoretical upper bound does not guarantee smaller realized output error or task loss"
+    ]
+  },
+  "reference_contract": {
+    "mean": "arithmetic mean over the G query heads for each physical (head,token) slot",
+    "sum_control": "arithmetic sum over the same group; must induce exactly the same budgets and selected identities as mean",
+    "max_negative_control": "maximum over query heads; must be deterministic but receives no optimality authority and must lose to mean/sum on the frozen counterexample",
+    "allocation": "pass reduced K-by-T salience to the qualified adaptive_head_budgets reference",
+    "query_mass": "evaluate retained mass directly from the original K-by-G-by-T tensor and physical head budgets",
+    "bound": "evaluate the query-level bound directly and verify equality with G times the physical-mean bound",
+    "tie_breaking": "descending reduced weight, then ascending physical head, then ascending token"
+  },
+  "max_counterexample": {
+    "query_salience": [
+      [
+        [
+          0.9,
+          0.1
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.6,
+          0.4
+        ],
+        [
+          0.6,
+          0.4
+        ]
+      ]
+    ],
+    "budget": 1,
+    "mean_selection": [
+      1,
+      0
+    ],
+    "mean_query_retained_mass": 1.2,
+    "max_selection": [
+      0,
+      1
+    ],
+    "max_query_retained_mass": 1.1,
+    "purpose": "disprove interchangeability of mean and max even with equal-size normalized groups"
+  },
+  "safeguard_disposition": {
+    "paper": "Algorithm 2 writes alpha*adaptive+(1-alpha)*uniform and reports alpha=0.2.",
+    "pinned_code": "The audited path computes round((1-floor_ratio)*adaptive+int(base_capacity*floor_ratio)) independently per head and checks conservation only before that operation.",
+    "conservation_witness": "For three heads, average capacity two, adaptive budgets (4,1,1), and floor_ratio 0.2, code-like rounding yields (3,1,1), total five rather than six.",
+    "decision": "exclude all safeguard mixing and integerization from this reference; require a separately frozen conservation-preserving successor"
+  },
+  "qualification_cases": {
+    "physical_head_counts": [
+      1,
+      2,
+      3
+    ],
+    "equal_query_heads_per_group": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "tokens_per_head": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "random_seeds_per_shape": 10,
+    "weights": "integer values zero through seven with deterministic ties; replace an all-zero query row at token zero before normalizing",
+    "budgets": "every integer from zero through K*T",
+    "oracle": "enumerate every feasible physical K-vector in [0,T]^K with sum B and maximize original query-head retained mass",
+    "required_special_cases": [
+      "the frozen 3-physical-by-4-query-head Speck GQA3 geometry",
+      "zero and full physical budgets",
+      "all weights equal",
+      "the frozen max-aggregation counterexample",
+      "the frozen safeguard conservation witness",
+      "ragged physical/query/token shapes rejected"
+    ]
+  },
+  "success_gates": [
+    "mean and sum reductions induce identical selected physical identities and head budgets in every random and special case",
+    "mean-based allocation attains the exhaustive maximum original query-head retained mass within 1e-12",
+    "direct query-level bound equals the scaled physical-mean bound within 1e-12 and never increases with budget",
+    "physical capacity is conserved for every allocation",
+    "max aggregation is deterministic and the frozen counterexample demonstrates strictly lower query-head retained mass",
+    "the safeguard witness demonstrates that independent code-like rounding is not conservation-safe"
+  ],
+  "required_outputs": [
+    "case and oracle-comparison counts",
+    "maximum mean-versus-sum reduction and retained-mass gaps",
+    "maximum allocation optimality gap",
+    "maximum direct-versus-scaled-bound gap",
+    "max counterexample selections and retained masses",
+    "safeguard witness budgets and conservation deficit"
+  ],
+  "decision": {
+    "upstream_code_used": false,
+    "upstream_execution_authorized": false,
+    "local_reference_implementation_authorized": true,
+    "max_aggregation_authorized_as_primary": false,
+    "safeguard_implementation_authorized": false,
+    "observation_window_implementation_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "novelty_gate_changed": false,
+    "architecture_claim_authorized": false,
+    "failure": "retain the result and block GQA use of the adaptive allocation baseline",
+    "success": "qualify only equal-size mean-reduced GQA as a clean-room reference primitive"
+  }
+}
