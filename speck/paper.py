@@ -15,6 +15,8 @@ PROGRAM_FILES = (
     "proxy_disposition_v1.json",
     "finalist_analysis_v1.json",
     "finalist_materialization_v1.json",
+    "finalist_launch_v1.json",
+    "finalist_automation_v1.json",
     "sequence_cache_representation_v1.json",
     "hca_readiness_v1.json",
     "csa_readiness_v1.json",
@@ -1983,6 +1985,169 @@ def _validate_finalist_runtime_preflight(reference, repository_root, paper_id):
             raise ValueError("finalist runtime used a different training config")
 
 
+def _validate_finalist_launch(reference, repository_root, paper_id):
+    _require(reference, {"contract", "sha256", "status"}, "finalist launch reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist launch contract does not match its pin")
+    contract = _load_json(path)
+    forecast = contract.get("resource_forecast", {})
+    automatic = contract.get("automatic_sequence", {})
+    live = contract.get("live_gate_before_initial_and_every_successor_launch", {})
+    decision = contract.get("decision", {})
+    if (
+        contract.get("format") != "speck_paper_finalist_launch_contract"
+        or contract.get("format_version") != 1
+        or contract.get("paper_id") != paper_id
+        or contract.get("status") != reference["status"]
+        or len(contract.get("execution_order", ())) != 14
+        or forecast.get("total_steady_gpu_hours") != 121.2303502872009
+        or forecast.get("expected_elapsed_days_before_overhead") != 5.0512645953000375
+        or automatic.get("polling") is not False
+        or automatic.get("quality_dependent_branching") is not False
+        or automatic.get("automatic_retry") is not False
+        or automatic.get("control_first") is not True
+        or live.get("gpu_compute_processes") != 0
+        or live.get("maximum_start_temperature_c") != 50
+        or live.get("minimum_free_bytes") != 25769803776
+        or live.get("conflicting_services_inactive") != ["speck-helmet-download.service"]
+        or len(contract.get("forbidden", ())) < 7
+        or decision.get("release_suites_required_before_checkpoint_training") is not False
+        or decision.get("release_suites_required_before_promotion_or_release") is not True
+        or decision.get("automatic_sequence_implementation_authorized") is not True
+        or decision.get("live_launch_qualification_authorized") is not True
+        or decision.get("initial_launch_authorized") is not False
+        or decision.get("architecture_promotion_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("finalist launch contract is incomplete")
+    for entry in contract.get("inputs", {}).values():
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist launch input does not match its pin")
+
+
+def _validate_finalist_automation(reference, repository_root, paper_id):
+    _require(reference, {"contract", "sha256", "status"}, "finalist automation reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist automation contract does not match its pin")
+    contract = _load_json(path)
+    implementation = contract.get("implementation", {})
+    event = contract.get("event_contract", {})
+    decision_contract = contract.get("decision_contract", {})
+    decision = contract.get("decision", {})
+    if (
+        contract.get("format") != "speck_paper_finalist_automation_contract"
+        or contract.get("format_version") != 1
+        or contract.get("paper_id") != paper_id
+        or contract.get("status") != reference["status"]
+        or len(contract.get("execution_order", ())) != 12
+        or implementation.get("runner_sha256")
+        != _file_sha256(repository_root / implementation.get("runner", ""))
+        or implementation.get("base_train_sha256")
+        != _file_sha256(repository_root / implementation.get("base_train", ""))
+        or implementation.get("collector_analyzer_sha256")
+        != _file_sha256(repository_root / implementation.get("collector_analyzer", ""))
+        or implementation.get("focused_tests_passed") != 5
+        or implementation.get("ruff") != "passed"
+        or event.get("polling") is not False
+        or event.get("automatic_retry") is not False
+        or event.get("commit_after_each_result") is not True
+        or decision_contract.get("controls_before_target_lock") != 6
+        or decision_contract.get("candidate_record_before_target_lock") is not False
+        or decision_contract.get("quality_dependent_branching") is not False
+        or decision_contract.get("final_analysis_after_candidate_results") != 6
+        or decision_contract.get("failure_stops_chain") is not True
+        or decision_contract.get("failed_cell_skipping") is not False
+        or decision.get("implementation_qualified") is not True
+        or decision.get("state_machine_qualified") is not True
+        or decision.get("event_driven_no_polling") is not True
+        or decision.get("live_launch_qualification_required") is not True
+        or decision.get("initial_launch_authorized") is not False
+        or decision.get("training_authorized") is not False
+    ):
+        raise ValueError("finalist automation contract is incomplete")
+    for stem in (
+        "launch_contract",
+        "analysis_plan",
+        "materialization_contract",
+        "qualification",
+        "analysis_qualification",
+        "runtime_preflight",
+    ):
+        source = repository_root / contract.get("inputs", {}).get(stem, "")
+        if not source.is_file() or _file_sha256(source) != contract["inputs"].get(
+            f"{stem}_sha256"
+        ):
+            raise ValueError(f"finalist automation {stem} does not match its pin")
+
+
+def _validate_finalist_evidence(evidence, automation_reference, repository_root):
+    required = {
+        "status",
+        "control_results",
+        "candidate_results",
+        "time_to_quality_target",
+        "analysis_result",
+        "next_run",
+    }
+    if not required <= set(evidence):
+        raise ValueError("finalist evidence ledger is incomplete")
+    automation = _load_json(repository_root / automation_reference["contract"])
+    order = automation["execution_order"]
+    control_order = order[:6]
+    candidate_order = order[6:]
+    controls = evidence["control_results"]
+    candidates = evidence["candidate_results"]
+    if (
+        len(controls) > 6
+        or len(candidates) > 6
+        or [entry.get("pair") for entry in controls] != list(range(len(controls)))
+        or [entry.get("pair") for entry in candidates] != list(range(len(candidates)))
+    ):
+        raise ValueError("finalist evidence is outside the frozen prefix")
+    for entry in [*controls, *candidates]:
+        source = repository_root / entry.get("path", "")
+        if (
+            entry.get("status") != "complete_qualified"
+            or not source.is_file()
+            or _file_sha256(source) != entry.get("sha256")
+        ):
+            raise ValueError("finalist run evidence does not match its pin")
+    target = evidence["time_to_quality_target"]
+    analysis = evidence["analysis_result"]
+    if len(controls) < 6:
+        expected_next = control_order[len(controls)]
+        valid = not candidates and target is None and analysis is None
+    elif len(candidates) < 6:
+        expected_next = candidate_order[len(candidates)]
+        valid = target is not None and analysis is None
+    else:
+        expected_next = None
+        valid = target is not None and analysis is not None
+    if not valid or evidence["next_run"] != expected_next:
+        raise ValueError("finalist evidence violates frozen control/candidate ordering")
+    for entry, expected_status in (
+        (target, "locked_from_six_controls_before_candidates"),
+        (analysis, "complete_finalist_language_evidence_no_standalone_promotion"),
+    ):
+        if entry is None:
+            continue
+        source = repository_root / entry.get("path", "")
+        if (
+            entry.get("status") != expected_status
+            or not source.is_file()
+            or _file_sha256(source) != entry.get("sha256")
+        ):
+            raise ValueError("finalist derived evidence does not match its pin")
+    expected_status = "complete" if expected_next is None else (
+        "qualified_unexecuted" if not controls else "in_progress"
+    )
+    if evidence["status"] != expected_status:
+        raise ValueError("finalist evidence status is inconsistent")
+
+
 def _validate_adaptive_cache_budget(reference, repository_root, paper_id):
     _require(
         reference,
@@ -2425,6 +2590,9 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "finalist_qualification",
             "finalist_analysis_qualification",
             "finalist_runtime_preflight",
+            "finalist_launch",
+            "finalist_automation",
+            "finalist_evidence",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
             "adaptive_cache_safeguard",
@@ -2515,6 +2683,21 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         program["finalist_runtime_preflight"],
         repository_root,
         paper_id,
+    )
+    _validate_finalist_launch(
+        program["finalist_launch"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_automation(
+        program["finalist_automation"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_evidence(
+        program["finalist_evidence"],
+        program["finalist_automation"],
+        repository_root,
     )
     _validate_adaptive_cache_budget(
         program["adaptive_cache_budget"],

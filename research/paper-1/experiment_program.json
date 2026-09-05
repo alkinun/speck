@@ -504,6 +504,24 @@
     "sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231",
     "status": "qualified"
   },
+  "finalist_launch": {
+    "contract": "research/paper-1/finalist_launch_v1.json",
+    "sha256": "ec0a5d783a318790a7cc98ad18de040e6fba49ef61023d087cb199066e510d50",
+    "status": "frozen_before_automation_implementation_and_any_finalist_output"
+  },
+  "finalist_automation": {
+    "contract": "research/paper-1/finalist_automation_v1.json",
+    "sha256": "f16d89749784cccc5784890828e55fa7227982382e68ee11bd78360a9f6330da",
+    "status": "frozen_before_any_finalist_output"
+  },
+  "finalist_evidence": {
+    "status": "qualified_unexecuted",
+    "control_results": [],
+    "candidate_results": [],
+    "time_to_quality_target": null,
+    "analysis_result": null,
+    "next_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+  },
   "halo_code_audit": {
     "audit": "research/paper-1/halo_code_audit_v1.json",
     "sha256": "218072ed81ceb843a1e2f737510d0775a3c2c8102c0e03b3dc271f89dadd903a",
