@@ -92,6 +92,7 @@ Read in order:
 84. [83 — BRIEF-family artifact availability audit](83_brief_code_availability.md)
 85. [84 — Claim-granular novelty overlap and priority](84_novelty_claim_overlap.md)
 86. [85 — Paper 1 KDA/GQA candidate pair 1](85_paper_1_candidate_1.md)
+87. [86 — N1 role-overlap audit and scope reduction](86_n1_role_overlap.md)
 
 Conventions:
 
@@ -462,3 +463,9 @@ Finding 85 completes candidate pair 1 at 2.796465 nats, a descriptive -0.042662 
 all eleven sources again favor the candidate. Steady/active time is 10.12%/10.16% shorter and analytic
 FLOPs are 21.49% lower, while peak allocation is 20.74% higher. Two pairs still have no decision
 authority. The one-shot finalizer committed the result and scheduled pair 2 after the fixed cooldown.
+
+Finding 86 rejects N1's broad role novelty. A five-scale from-scratch study already shows middle full
+attention carries retrieval while efficient mixers shape its learning trajectory; a 72-model study
+crosses mixer and uniform ratio; DtR greedily selects non-uniform conversion layouts and shows static
+probes miss interactions. Only prospective prediction of unseen non-uniform from-scratch layouts may
+remain, as an unestablished empirical law. No placement experiment or architecture freeze is authorized.

@@ -27,6 +27,7 @@ PROGRAM_FILES = (
     "novelty_landscape_v2.json",
     "novelty_landscape_v3.json",
     "novelty_landscape_v4.json",
+    "novelty_landscape_v5.json",
     "novelty_claim_overlap_v1.json",
     "novelty_code_availability_v1.json",
     "novelty_code_availability_v2.json",
@@ -1113,14 +1114,14 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
     code_followup = audit.get("code_followup", {})
     if (
         audit.get("format") != "speck_novelty_landscape_audit"
-        or audit.get("format_version") != 4
+        or audit.get("format_version") != 5
         or audit.get("paper_id") != paper_id
         or audit.get("status") != reference["status"]
-        or predecessor.get("path") != "research/paper-1/novelty_landscape_v3.json"
+        or predecessor.get("path") != "research/paper-1/novelty_landscape_v4.json"
         or not (repository_root / predecessor["path"]).is_file()
         or _file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
         or [source.get("id") for source in sources]
-        != ["arxiv_2607_10795v1"]
+        != ["arxiv_2606_15378v1", "arxiv_2507_06457v2", "arxiv_2601_11667v2"]
         or any(source.get("review_scope") != "full_text" for source in sources)
         or any(
             not (repository_root / source.get("local_note", "")).is_file()
@@ -1128,16 +1129,22 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
             != source.get("local_note_sha256")
             for source in sources
         )
-        or audit.get("aggregate_source_count") != 12
-        or len(overlaps) != 1
+        or audit.get("aggregate_source_count") != 15
+        or len(overlaps) < 9
         or any(overlap.get("decision") == "novel" for overlap in overlaps)
-        or overlaps[0].get("decision") != "mandatory_adjacent_external_baseline"
         or [hypothesis.get("id") for hypothesis in hypotheses]
-        != ["N1_role_grounded_placement_law", "N2_internal_state_completeness_predictor_law"]
+        != [
+            "N1_prospective_nonuniform_from_scratch_placement_law",
+            "N2_internal_state_completeness_predictor_law",
+        ]
         or hypotheses[0].get("novelty_status")
-        != "plausibly_distinct_full_landscape_and_evidence_pending"
+        != "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
         or hypotheses[1].get("novelty_status")
         != "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
+        or hypotheses[0].get("supersedes") != "N1_role_grounded_placement_law"
+        or len(hypotheses[0].get("required_baselines", ())) < 8
+        or [entry.get("id") for entry in audit.get("rejected_hypotheses", ())]
+        != ["N1_role_grounded_placement_law", "N2_concept_family"]
         or code_followup.get("execution_authorized") is not False
         or len(claim_gate.get("full_landscape_before_claim", ())) < 5
         or len(claim_gate.get("evidence_before_claim", ())) < 6
@@ -1147,7 +1154,9 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
         or decision.get("novel_inseparable_systems_method_established") is not False
         or decision.get("n2_concept_novelty_rejected") is not True
         or decision.get("n2_empirical_law_established") is not False
-        or decision.get("stec_classification") != "adjacent_external_baseline"
+        or decision.get("n1_broad_role_novelty_rejected") is not True
+        or decision.get("n1_residual_empirical_law_established") is not False
+        or decision.get("placement_experiment_authorized") is not False
         or decision.get("paper_novelty_gate_pass") is not False
         or decision.get("architecture_freeze_authorized") is not False
     ):

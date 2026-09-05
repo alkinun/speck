@@ -1,0 +1,191 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 5,
+  "audit_id": "speck-paper-1-novelty-landscape-v5",
+  "paper_id": "speck-paper-1",
+  "status": "fifteen_full_text_audits_n1_role_and_n2_concept_overlapped_no_novelty",
+  "audited_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_landscape_v4.json",
+    "sha256": "7c551044b5f9f37d0942477a8cdae9535e16220bdfce05eb993e43369609080f",
+    "full_text_sources": 12,
+    "n2_concept_novelty_rejected": true
+  },
+  "additional_sources": [
+    {
+      "id": "arxiv_2606_15378v1",
+      "title": "Rethinking the Role of Efficient Attention in Hybrid Architectures",
+      "url": "https://arxiv.org/abs/2606.15378v1",
+      "review_scope": "full_text",
+      "local_note": "papers/36_rethinking_hybrid_attention.md",
+      "local_note_sha256": "3e5fb5ea19799de5fd0f8572b7df33b0aeed86e6dcede00e8e6cb42a4ee802fc",
+      "relevant_claim": "from-scratch scaling, middle full-attention retrieval roles, receptive-field interventions, retrieval-head learning dynamics, efficient attention as optimization prior, and NoPE design"
+    },
+    {
+      "id": "arxiv_2507_06457v2",
+      "title": "A Systematic Analysis of Hybrid Linear Attention",
+      "url": "https://arxiv.org/abs/2507.06457v2",
+      "review_scope": "full_text",
+      "local_note": "papers/37_systematic_hybrid_linear.md",
+      "local_note_sha256": "accf79a362f4e781ef46f4b5034b6ea7123950ebf8ba219613f3af6634e12cbb",
+      "relevant_claim": "72-model from-scratch mixer-by-uniform-ratio comparison separating language quality, recall, and cache efficiency"
+    },
+    {
+      "id": "arxiv_2601_11667v2",
+      "title": "Distill-then-Replace: Efficient Task-Specific Hybrid Attention Model Construction",
+      "url": "https://arxiv.org/abs/2601.11667v2",
+      "review_scope": "full_text",
+      "local_note": "papers/38_distill_then_replace.md",
+      "local_note_sha256": "b3c3e8c68e964b96503e1af3ec4c8236566f4935caf3bafe7042c4f856ace12f",
+      "relevant_claim": "greedy interaction-aware non-uniform layer replacement and hidden-state probe substitutability for task-specific conversion"
+    }
+  ],
+  "aggregate_source_count": 15,
+  "new_overlap_decisions": [
+    {
+      "id": "full_attention_as_long_range_carrier",
+      "decision": "not novel by itself",
+      "reason": "arXiv:2606.15378 restricts receptive fields and probes layers, finding long-range information carried mainly by full attention"
+    },
+    {
+      "id": "middle_full_attention_integration_role",
+      "decision": "not novel by itself",
+      "reason": "layer-wise NIAH probe gains concentrate in middle full-attention layers across six from-scratch hybrid families"
+    },
+    {
+      "id": "efficient_attention_as_optimization_prior",
+      "decision": "not novel by itself",
+      "reason": "scaling and retrieval-head traces already model efficient mixers as changing emergence speed of full-attention retrieval"
+    },
+    {
+      "id": "retrieval_head_training_diagnostics",
+      "decision": "not novel by itself",
+      "reason": "entropy, Q/K distance, gradient norms, and distance-gradient influence are already used to explain hybrid learning"
+    },
+    {
+      "id": "small_local_window_pressures_global_learning",
+      "decision": "not novel by itself",
+      "reason": "Large-Window Laziness and SWA-128/512/2048 comparisons directly occupy this mechanism"
+    },
+    {
+      "id": "full_path_Nope_hybrid_design",
+      "decision": "not novel by itself",
+      "reason": "SWA-128-NoPE already applies NoPE only to full layers and validates scale/long-context gains"
+    },
+    {
+      "id": "mixer_by_uniform_ratio_recall_law",
+      "decision": "not novel by itself",
+      "reason": "the 72-model study crosses six mixers and five ratios, shows language/recall separation, and recommends gated 3:1 to 6:1 hybrids"
+    },
+    {
+      "id": "greedy_interaction_aware_nonuniform_placement",
+      "decision": "not novel by itself",
+      "reason": "DtR repeatedly evaluates and commits the best layer replacement, outperforming uniform, random, and local-sensitivity layouts"
+    },
+    {
+      "id": "static_hidden_state_probe_placement",
+      "decision": "not novel and empirically insufficient",
+      "reason": "DtR's probe impact score correlates with order but loses 2.6 to 3.8 task points to greedy feedback at the same replacement count"
+    }
+  ],
+  "surviving_hypotheses": [
+    {
+      "id": "N1_prospective_nonuniform_from_scratch_placement_law",
+      "supersedes": "N1_role_grounded_placement_law",
+      "type": "unestablished empirical architecture law",
+      "statement": "A predictor frozen on discovery layouts forecasts the rank and absolute failure margins of unseen non-uniform full/recurrent placements trained from scratch across tasks, scales, and a different mixer without evaluating those held-out layouts, beyond count/ratio, middle-full roles, scaling, probes, sensitivity, greedy conversion, and joint-gate baselines.",
+      "concessions": [
+        "middle full attention as the main retrieval carrier is prior art",
+        "efficient mixers as optimization priors and retrieval-head emergence dynamics are prior art",
+        "small-window pressure and full-layer NoPE are prior art",
+        "mixer-by-ratio language/recall tradeoffs are prior art",
+        "greedy non-uniform replacement and static probe substitutability are prior art"
+      ],
+      "required_baselines": [
+        "uniform count and ratio using mixer-specific controls",
+        "Rethinking Hybrid LongPPL scaling and middle-layer/retrieval-head diagnostics",
+        "systematic HGRN-2 and GatedDeltaNet 3:1 to 6:1 recipes",
+        "independent sensitivity and static hidden-state probe impact",
+        "DtR greedy validation-feedback replacement where conversion is applicable",
+        "FlashMorph joint gates where reproducible",
+        "ASA and hand-designed role layouts",
+        "random placements matched on count, state, parameters, FLOPs, and training compute"
+      ],
+      "held_out": [
+        "non-uniform placement configurations",
+        "dependency templates and source loads",
+        "at least one larger scale",
+        "one different recurrent mixer or cache representation"
+      ],
+      "success": "the frozen predictor beats every baseline on held-out rank, margin, and calibration with paired uncertainty, and fixed-budget role interventions move diagnostics and end quality as predicted",
+      "falsifiers": [
+        "middle-full presence, count, ratio, or LongPPL scaling explains equal variance",
+        "greedy conversion or joint gates match held-out choice without explanatory loss",
+        "coefficients or rankings fail across scales/mixers",
+        "fixed-budget interventions do not move quality",
+        "predictor requires seeing held-out layout outcomes"
+      ],
+      "novelty_status": "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
+    },
+    {
+      "id": "N2_internal_state_completeness_predictor_law",
+      "type": "deferred empirical diagnostic law",
+      "novelty_status": "unestablished_empirical_law_only_full_landscape_and_evidence_pending"
+    }
+  ],
+  "rejected_hypotheses": [
+    {
+      "id": "N1_role_grounded_placement_law",
+      "decision": "broad_role_novelty_rejected",
+      "reason": "the main integration, long-range carrier, optimization-prior, and training-diagnostic roles are directly occupied by arXiv:2606.15378v1"
+    },
+    {
+      "id": "N2_concept_family",
+      "decision": "rejection_preserved",
+      "reason": "v3/v4 complete-source and missing-source overlap remains unchanged"
+    }
+  ],
+  "code_followup": {
+    "rethinking_hybrid_attention": "official MIT repository and checkpoint collections are declared but immutable tree, environment, model/data revisions, and behavioral parity are unaudited",
+    "systematic_hybrid_linear": "model collection is declared; code/config/data revision and 72-model identity audit remains",
+    "distill_then_replace": "no official implementation is declared on the arXiv record",
+    "execution_authorized": false
+  },
+  "priority": {
+    "architecture_novelty_candidates_established": 0,
+    "n1": "continue landscape and expert review; do not authorize a placement experiment yet",
+    "n2": "remain deferred",
+    "baseline_proxy": "complete independently because it evaluates the conservative parent, not either novelty claim"
+  },
+  "claim_gate": {
+    "full_landscape_before_claim": [
+      "audit immutable source, environment, checkpoint, data, and rights identities for the released N1 baselines",
+      "follow backward and forward citations for the residual prospective-placement question",
+      "search patents, proceedings, deployed systems, technical reports, and non-English literature with dated queries",
+      "update the claim-granular overlap table with all placement/mechanism baselines",
+      "obtain independent expert review before any placement protocol"
+    ],
+    "evidence_before_claim": [
+      "freeze predictor, layouts, scales, tasks, splits, mechanisms, and analysis before held-out outcomes",
+      "compare count/ratio, middle-role, LongPPL, probe, sensitivity, greedy, joint-gate, role, and random baselines",
+      "use paired uncertainty over at least three scales and a held-out mechanism",
+      "hold out non-uniform layouts, tasks/templates, and source loads",
+      "perform fixed-count/state/FLOP role interventions",
+      "retain negative rankings, coefficient reversals, and counterexamples"
+    ]
+  },
+  "decision": {
+    "n1_broad_role_novelty_rejected": true,
+    "n1_residual_empirical_law_established": false,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "placement_experiment_authorized": false,
+    "next_action": "audit source/code identity for the two released N1 baselines, complete backward/forward/patent/deployed-system review, and obtain claim-granular expert review before deciding whether the residual N1 law is defensible"
+  }
+}

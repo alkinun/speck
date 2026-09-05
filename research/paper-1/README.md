@@ -111,6 +111,9 @@ the final combined model.
   unestablished cheap internal-state predictive/causal law for possible later review.
 - [`novelty_landscape_v4.json`](novelty_landscape_v4.json) classifies STEC's structured candidate-
   evidence verification as a mandatory adjacent baseline while preserving the N2 concept rejection.
+- [`novelty_landscape_v5.json`](novelty_landscape_v5.json) adds the strongest N1 role/scaling, 72-model
+  ratio/mixer, and greedy conversion baselines; it rejects the broad role claim and leaves only an
+  unestablished prospective non-uniform from-scratch placement law.
 - [`novelty_claim_overlap_v1.json`](novelty_claim_overlap_v1.json) maps fourteen candidate claims to
   their strongest overlap, keeps N1 as the only primary architecture hypothesis, and defers the residual
   N2 diagnostic before any experimental budget is spent.

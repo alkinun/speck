@@ -536,9 +536,9 @@
     "status": "twelve_sources_one_root_rights_path_no_new_reproduction_authority"
   },
   "novelty_landscape": {
-    "audit": "research/paper-1/novelty_landscape_v4.json",
-    "sha256": "7c551044b5f9f37d0942477a8cdae9535e16220bdfce05eb993e43369609080f",
-    "status": "twelve_full_text_audits_n2_concept_overlapped_no_novelty_established"
+    "audit": "research/paper-1/novelty_landscape_v5.json",
+    "sha256": "36e03f06000a4b614a1c17f0d4d221376f6e6313e85299745b9113322a821984",
+    "status": "fifteen_full_text_audits_n1_role_and_n2_concept_overlapped_no_novelty"
   },
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
   "paper_id": "speck-paper-1",
