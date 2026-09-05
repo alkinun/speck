@@ -546,3 +546,8 @@ Finding 100 adds generic-text KL selection with held-out recall, cross-scale Qwe
 probe transfer, teacher-dependent clustering, spacing interventions, and a ranking-stability early stop.
 Those N1 distinctions are occupied. Only teacher-free prediction of interacting from-scratch layouts
 remains, and retirement is evidence-favored pending independent review. No placement work is authorized.
+
+Finding 101 pins the KL-selector's 203-file tree with 24 Python files and 171 experiment configs. The
+paper specifies held-out KL, but released ranking code consumes W&B training loss; the early-stop rule,
+root rights, tests, deterministic data, checkpoint/log identity, and full parity are absent. No upstream
+execution, reuse, reproduction, or N1 protocol is authorized.

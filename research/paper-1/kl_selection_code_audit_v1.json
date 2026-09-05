@@ -1,0 +1,97 @@
+{
+  "format": "speck_kl_selection_code_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-kl-selection-code-audit-v1",
+  "paper_id": "speck-paper-1",
+  "status": "source_and_config_identity_qualified_root_rights_semantics_data_and_reproduction_blocked",
+  "audited_on": "2026-09-06",
+  "paper": {
+    "id": "arxiv_2512_20569v1",
+    "url": "https://arxiv.org/abs/2512.20569v1",
+    "local_note": "papers/42_kl_guided_layer_selection.md",
+    "local_note_sha256": "fa38b0836b1d1f141f62faf6bdeffd9efeb153a51908508f97f4287b20f2150f"
+  },
+  "repository": {
+    "url": "https://github.com/fla-org/hybrid-distillation",
+    "branch": "main",
+    "revision": "d7467e37d359ac873242d2902d23a9fd47de746b",
+    "revision_date": "2025-12-31T14:08:40-08:00",
+    "files": 203,
+    "code_or_config_or_doc_files": 202,
+    "python_files": 24,
+    "yaml_files": 171,
+    "test_files": 0,
+    "root_license": null,
+    "metadata_only_clone": true,
+    "working_tree_checked_out": false,
+    "third_party_code_imported": false,
+    "third_party_code_executed": false
+  },
+  "pinned_files": [
+    {
+      "path": "README.md",
+      "git_blob_sha1": "383bcadb96b81f02f6563bc3d564bef99335ca5c"
+    },
+    {
+      "path": "requirements.txt",
+      "git_blob_sha1": "7c48e2f44f5ed7691ba8b3fd06de9e6a13511566"
+    },
+    {
+      "path": "layer_selection/evaluate_layer_importance.py",
+      "git_blob_sha1": "32f8791a4624017c67adbf6a0df21f914a906f75"
+    },
+    {
+      "path": "layer_selection/generate_layer_configs_ga_s2.py",
+      "git_blob_sha1": "156c94aab5f9821dd375e639cad3807981ceba91"
+    },
+    {
+      "path": "layer_selection/get_ranking_from_wandb_loss_log.py",
+      "git_blob_sha1": "f29e529db019d0b49eac88c69343a3f6a452254c"
+    },
+    {
+      "path": "configs/qwen2_3b_gdn_v4_hybrid_0_25_ga_s2/stage2.yaml",
+      "git_blob_sha1": "b78eb9319bb1db7718866e58b8c405774dc2a263"
+    },
+    {
+      "path": "configs/qwen2_3b_gdn_v4_hybrid_0_125_uniform/stage1.yaml",
+      "git_blob_sha1": "db7f1d32485decd5e8408f6f457f1d04f0c03058"
+    }
+  ],
+  "available_components": [
+    "RADLADS-style conversion, Stage-1 alignment, and Stage-2 KL training source",
+    "one-restoration GA-S2 config generation and W&B loss-ranking scripts",
+    "synthetic layer-ablation baselines for seven diagnostic task families",
+    "171 YAML files spanning teachers, scales, mixers, budgets, selectors, and per-layer sweeps",
+    "fixed selected-layer configs including the reported Qwen and Llama layouts",
+    "Qwen2.5, Qwen3, and Llama 3.2 conversion adapters"
+  ],
+  "identity_and_behavior_findings": [
+    "the repository has no root license, so source inspection does not grant reuse rights",
+    "the paper scores expected KL on a held-out slice, while the documented code ranks sampled W&B train/loss values",
+    "the rolling-Jaccard and K-minus-one early-stop rule is not implemented in the inspected ranking script",
+    "per-layer config generation hard-codes a Stage-1 checkpoint path and expects manual editing",
+    "W&B entity/project/output constants and run naming require manual external state",
+    "torch, transformers, triton, and deepspeed are pinned but datasets, FLA, evaluation, and other dependencies are not",
+    "teacher/tokenizer/dataset repository revisions and DCLM mixture/order are not pinned",
+    "no checkpoints, W&B loss exports, final result tables, or assertion-based tests are stored in the tree",
+    "the evaluation task generator uses unseeded Python random calls unless external process state happens to set them",
+    "configuration count is broad, but behavioral parity across the reported matrix is not established"
+  ],
+  "decision": {
+    "source_identity_qualified": true,
+    "configuration_matrix_present": true,
+    "root_rights_qualified": false,
+    "paper_code_semantics_identical": false,
+    "early_stop_implementation_qualified": false,
+    "portable_environment_qualified": false,
+    "data_identity_and_order_qualified": false,
+    "checkpoint_and_log_identity_qualified": false,
+    "behavior_qualified": false,
+    "upstream_execution_authorized": false,
+    "direct_reuse_authorized": false,
+    "full_reproduction_authorized": false,
+    "n1_placement_protocol_authorized": false,
+    "novelty_status_changed": false,
+    "next_action": "retain as mandatory conceptual/config evidence; do not execute or reuse before rights, held-out-KL semantics, data identity, and deterministic evaluation are resolved"
+  }
+}

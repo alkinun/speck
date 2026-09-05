@@ -180,6 +180,9 @@ the final combined model.
 - [`halo_code_audit_v1.json`](halo_code_audit_v1.json) pins HALO's training/selection source and 206
   evaluation logs, while blocking absent root rights/tests, paper-code epsilon drift, unpinned
   environment/data/checkpoints, execution, reuse, and full reproduction.
+- [`kl_selection_code_audit_v1.json`](kl_selection_code_audit_v1.json) pins the official 203-file
+  selector/config tree while blocking absent root rights/tests, held-out-KL versus training-loss drift,
+  missing early-stop code, external state, data/log/checkpoint identity, and reproduction.
 - [`adaptive_cache_budget_v1.json`](adaptive_cache_budget_v1.json) freezes and qualifies a clean-room,
   within-layer physical-head allocation reference against exhaustive small cases, while keeping GQA
   reduction, model integration, training, novelty, and architecture claims blocked.
