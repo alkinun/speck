@@ -603,3 +603,9 @@ powered trained-topology cache reference. Dense/candidate peaks are 10.24/14.14 
 native diagnostic still fails elementwise, and candidate argmax agreement is only 87.5%; this has no v2
 pass/fail authority but remains a mandatory risk. Release gates, training, and automatic launch stay
 blocked.
+
+Finding 112 freezes the multi-day finalist launch boundary. Missing release suites remain failed
+promotion gates but do not circularly block checkpoint production. The 121.23 projected steady GPU-
+hour sequence is six controls, target lock, six candidates, and final analysis via one-shot events,
+15-minute gaps, no polling/branch/retry, and per-result commits. Automation may be built; launch remains
+blocked while its source/hash is absent and HELMET acquisition is active.

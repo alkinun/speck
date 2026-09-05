@@ -246,6 +246,9 @@ the final combined model.
 - [`finalist-preflight-v1.json`](../../results/Speck-Paper1/finalist-preflight-v1.json) qualifies
   exact-config compiled CUDA steps, temporary Transformers export, and the powered trained-topology
   cache reference. Random-weight native drift remains explicit; release gates and training stay blocked.
+- [`finalist_launch_v1.json`](finalist_launch_v1.json) separates checkpoint production from mandatory
+  checkpoint-consuming release suites, freezes the 121.23-hour control-first event sequence and live
+  gates, and authorizes automation implementation but not the initial launch.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched

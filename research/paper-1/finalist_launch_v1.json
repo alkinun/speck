@@ -1,0 +1,157 @@
+{
+  "format": "speck_paper_finalist_launch_contract",
+  "format_version": 1,
+  "contract_id": "speck-paper-1-finalist-launch-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_before_automation_implementation_and_any_finalist_output",
+  "frozen_on": "2026-09-06",
+  "purpose": "Separate checkpoint-producing finalist replication from checkpoint-consuming release suites, and freeze the multi-day execution order and failure behavior before any finalist output exists.",
+  "inputs": {
+    "proxy_launch_boundary": {
+      "path": "research/paper-1/proxy_launch_v1.json",
+      "sha256": "156dc8ae7812454f1d73a4d637fe040bfb810db29985659e16b40d3394746ce3"
+    },
+    "finalist_analysis": {
+      "path": "research/paper-1/finalist_analysis_v1.json",
+      "sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1"
+    },
+    "materialization_contract": {
+      "path": "research/paper-1/finalist_materialization_v1.json",
+      "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "data_storage_qualification": {
+      "path": "results/Speck-Paper1/finalist-qualification-v1.json",
+      "sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605"
+    },
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
+      "sha256": "a464004a51bdf45fb7e427e2e7915925687e641b5c065b823b9909cc666dd506"
+    },
+    "runtime_preflight": {
+      "path": "results/Speck-Paper1/finalist-preflight-v1.json",
+      "sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231"
+    },
+    "base_train": {
+      "path": "scripts/base_train.py",
+      "sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2"
+    },
+    "collector_analyzer": {
+      "path": "scripts/paper_finalist_analyze.py",
+      "sha256": "a4926db2922a98f3326bca0a8ece39650823c3778b5c8aa3704c5e4ce7ead218"
+    }
+  },
+  "release_gate_separation": {
+    "precedent": "proxy_launch_v1 and Finding 55 freeze evaluation manifests and missing-suite failure semantics before training while allowing checkpoint production",
+    "checkpoint_producers": [
+      "the twelve materialized base-training runs",
+      "the six-control target lock",
+      "the twelve normalized result records",
+      "the final paired language analysis"
+    ],
+    "checkpoint_consumers": [
+      "RULER v2",
+      "NoLiMa",
+      "HELMET",
+      "serving and online systems evaluation"
+    ],
+    "rule": "unavailable consumers remain failed promotion/release gates and cannot be relabeled, but do not create a circular prerequisite for producing the checkpoint they require",
+    "unchanged": "no finalist language result can promote, release, or satisfy novelty until every required consumer and systems gate is qualified, executed, and passing"
+  },
+  "execution_order": [
+    "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-dense_global_param_match",
+    "lock_time_to_quality_from_all_six_controls",
+    "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-five_cache_kda_gqa",
+    "analyze_exactly_twelve_results"
+  ],
+  "resource_forecast": {
+    "basis": "linear extrapolation from the mean completed three-pair proxy steady-training seconds at unchanged model/batch/sequence/hardware geometry",
+    "horizon_multiplier": 11.748,
+    "dense_steady_hours_per_run": 10.634925868590923,
+    "candidate_steady_hours_per_run": 9.57013251260923,
+    "six_dense_steady_hours": 63.80955521154553,
+    "six_candidate_steady_hours": 57.420795075655384,
+    "total_steady_gpu_hours": 121.2303502872009,
+    "expected_elapsed_days_before_overhead": 5.0512645953000375,
+    "planning_contingency": "allow up to seven elapsed days for validation, checkpointing, thermal gaps, and non-destructive stops; no energy or monetary claim is inferred without measurement"
+  },
+  "automatic_sequence": {
+    "mechanism": "one transient training service plus one PathExists final-summary trigger at a time",
+    "polling": false,
+    "cooldown_between_runs": "15m",
+    "quality_dependent_branching": false,
+    "control_first": true,
+    "candidate_record_before_target_lock": "forbidden",
+    "commit_after_each_qualified_result": true,
+    "automatic_retry": false,
+    "failure_behavior": "stop the chain, retain all output and logs, diagnose, and preregister any rerun; never skip or silently replace a cell",
+    "resume_behavior": "resume only the same cell from an existing contract-valid checkpoint; the final-only retention design normally has no intermediate recovery point"
+  },
+  "live_gate_before_initial_and_every_successor_launch": {
+    "repository_clean": true,
+    "program_validation_passes": true,
+    "all_unfinished_checkpoint_and_result_paths_absent": true,
+    "exactly_one_RTX_3090_UUID": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd",
+    "gpu_compute_processes": 0,
+    "gpu_utilization_percent": 0,
+    "maximum_start_temperature_c": 50,
+    "minimum_total_vram_bytes": 25295323136,
+    "minimum_host_available_bytes": 12884901888,
+    "filesystem_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+    "filesystem_type": "ext4",
+    "minimum_free_bytes": 25769803776,
+    "required_mount_options": [
+      "rw",
+      "nosuid",
+      "nodev",
+      "noexec"
+    ],
+    "conflicting_services_inactive": [
+      "speck-helmet-download.service"
+    ]
+  },
+  "failure_and_safety": {
+    "non_finite_runtime": "base_train stops and the sequence does not advance",
+    "thermal_memory_or_filesystem_gate": "launch fails closed before the next model process",
+    "materialization_or_hash_drift": "launch and collection fail closed",
+    "unexpected_checkpoint_or_result": "launch fails rather than overwrite",
+    "user_interrupt": "stop the current transient unit cleanly; do not delete outputs or mark the cell complete",
+    "machine_restart": "do not infer success or skip a cell; inspect retained state and require contract-valid recovery"
+  },
+  "forbidden": [
+    "running HELMET acquisition concurrently with GPU training",
+    "creating a candidate result before the six-control target lock",
+    "changing pair order, seed, data offset, horizon, margins, cadence, or stopping after output",
+    "quality-based early stopping, pair abandonment, or extra pairs",
+    "automatic deletion, cleanup-as-capacity, or overwrite",
+    "crediting KDA, NoPE, GQA, or the 3:1 ratio",
+    "architecture promotion, novelty, release, serving, or paper-scale claims from finalist language loss"
+  ],
+  "decision": {
+    "release_suites_required_before_checkpoint_training": false,
+    "release_suites_required_before_promotion_or_release": true,
+    "automatic_sequence_implementation_authorized": true,
+    "live_launch_qualification_authorized": true,
+    "initial_launch_authorized": false,
+    "reason_initial_launch_blocked": "automation source and its immutable hash do not yet exist, and the HELMET acquisition service is active",
+    "component_attribution_authorized": false,
+    "architecture_promotion_authorized": false,
+    "novelty_claim_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "implement and test the exact event-driven automation, wait for or cleanly stop HELMET acquisition, then record one live qualification before deciding the initial control launch"
+  }
+}
