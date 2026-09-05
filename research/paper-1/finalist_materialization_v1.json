@@ -1,0 +1,177 @@
+{
+  "format": "speck_paper_finalist_materialization_contract",
+  "format_version": 1,
+  "contract_id": "speck-paper-1-finalist-materialization-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_after_proxy_pass_before_finalist_materialization",
+  "frozen_on": "2026-09-06",
+  "inputs": {
+    "baseline_matrix": "research/paper-1/baseline_matrix.json",
+    "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+    "proxy_disposition": "research/paper-1/proxy_disposition_v1.json",
+    "proxy_disposition_sha256": "983a881b849a158314ce327736a721b3f97cb1e6b9ea95a93caa5d2309e256b8",
+    "proxy_analysis": "results/Speck-Paper1/baseline-analysis.json",
+    "proxy_analysis_sha256": "6455b9d4949fcad397fd333afb425b518b13691e6eac2f533b3ddbf5865268b3",
+    "proxy_materialization": "experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
+    "proxy_materialization_sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b",
+    "finalist_analysis": "research/paper-1/finalist_analysis_v1.json",
+    "finalist_analysis_sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1"
+  },
+  "eligibility": {
+    "proxy_quality_screen_pass": true,
+    "matched_disposition_branch": "quality_screen_passed",
+    "finalist_materialization_authorized": true,
+    "finalist_training_authorized": false
+  },
+  "identity": {
+    "family_id": "Speck-Paper1-Finalist-131M",
+    "output_root": "experiments/Speck-Paper1-Finalist-131M",
+    "checkpoint_root": "/mnt/speck-data/speck/paper1-finalist-131m",
+    "result_root": "results/Speck-Paper1/finalist-runs",
+    "analysis_result": "results/Speck-Paper1/finalist-analysis.json",
+    "time_to_quality_lock": "results/Speck-Paper1/finalist-time-to-quality-target.json"
+  },
+  "parent_arms": {
+    "dense_global_param_match": {
+      "directory": "experiments/Speck-Paper1-Baselines-131M/arms/dense_global_param_match",
+      "parameters": 153977088,
+      "flops_per_token_at_4096": 1301237760,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "long_context.json": "b28de7e108905d7f2cfb30ac2afcaaa57c969dcc4266b7b99ea4ae16ad99ce1c",
+        "model.json": "1103bb44c960d9d1286810c81d6190d1058ac551e50a976f8d3216aad121434c",
+        "runtime.json": "89b1e79bd21c53519f736fa472844c4715c461486343897d5495c850dbdddd2b",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "934100d5755bb0cebc3bd93fdb941c50060830d37916801fc9c3985b9de5fdc7"
+      }
+    },
+    "five_cache_kda_gqa": {
+      "directory": "experiments/Speck-Paper1-Baselines-131M/arms/five_cache_kda_gqa",
+      "parameters": 153958938,
+      "flops_per_token_at_4096": 1021601280,
+      "config_sha256": {
+        "data.json": "2d7498312122c7ec7a0eea27830fc66a4bb32407cf8b5125ef611b0fe67cc9ca",
+        "long_context.json": "b28de7e108905d7f2cfb30ac2afcaaa57c969dcc4266b7b99ea4ae16ad99ce1c",
+        "model.json": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09",
+        "runtime.json": "89b1e79bd21c53519f736fa472844c4715c461486343897d5495c850dbdddd2b",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "ec14f4bd9cf33b6d4846ad010f9ecb7729e3d2610b12ce1b68dd319994c8dc14"
+      }
+    }
+  },
+  "pairs": [
+    {
+      "pair": 0,
+      "seed": 42,
+      "data_token_offset": 0,
+      "end_token_offset": 1539833856
+    },
+    {
+      "pair": 1,
+      "seed": 42,
+      "data_token_offset": 1610612736,
+      "end_token_offset": 3150446592
+    },
+    {
+      "pair": 2,
+      "seed": 43,
+      "data_token_offset": 0,
+      "end_token_offset": 1539833856
+    },
+    {
+      "pair": 3,
+      "seed": 43,
+      "data_token_offset": 1610612736,
+      "end_token_offset": 3150446592
+    },
+    {
+      "pair": 4,
+      "seed": 44,
+      "data_token_offset": 0,
+      "end_token_offset": 1539833856
+    },
+    {
+      "pair": 5,
+      "seed": 44,
+      "data_token_offset": 1610612736,
+      "end_token_offset": 3150446592
+    }
+  ],
+  "materialized_training": {
+    "inherit_unchanged": [
+      "data",
+      "long_context",
+      "model",
+      "runtime",
+      "tokenizer",
+      "optimizer",
+      "learning_rate",
+      "weight_decay",
+      "warmup_steps",
+      "minimum_learning_rate_multiplier",
+      "schedule",
+      "gradient_clip",
+      "loss_backend",
+      "sequence_length",
+      "batch_tokens",
+      "device_batch_size"
+    ],
+    "training_tokens": 1539833856,
+    "optimizer_steps": 23496,
+    "save_every": 23496,
+    "checkpoint_tokens": [],
+    "evaluation_every_steps": 5874,
+    "evaluation_tokens": 5000000,
+    "final_evaluation_tokens": 20000000,
+    "training_phase": "base",
+    "checkpoint_retention": "final_only",
+    "compute_matched_dense_tokens": 1208877056
+  },
+  "materialization_rules": [
+    "create two finalist arm templates by copying the resolved proxy arm configs and changing only the fields explicitly declared in materialized_training",
+    "create exactly six pair directories by crossing all three seeds with both data offsets in the frozen order",
+    "create exactly two run configs per pair and preserve identical seed, data offset, optimizer, data, tokenizer, and training recipe within each pair",
+    "bind each run name to one unique absent checkpoint directory under checkpoint_root",
+    "write a deterministic manifest containing every generated JSON path and SHA-256",
+    "fail rather than overwrite any existing finalist experiment, checkpoint, result, target-lock, or analysis path"
+  ],
+  "qualification_requirements": {
+    "data": [
+      "manifest identity matches the proxy",
+      "both data windows resolve start and end loader states",
+      "the two distinct windows do not overlap",
+      "repeated windows across seeds have identical boundaries and distinct seed identities",
+      "resume replay is exact at start, quartile, and terminal states"
+    ],
+    "storage": {
+      "filesystem_uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff",
+      "filesystem_type": "ext4",
+      "minimum_free_bytes_before_launch": 25769803776,
+      "estimated_finalist_checkpoint_bytes": 16800000000,
+      "deletion_policy": "none"
+    },
+    "analysis": "materialized configs and future collector must match finalist_analysis_v1 exactly",
+    "runtime": "the exact finalized configs require a fresh no-output CUDA BF16 forward/backward/optimizer/export/cache preflight on the named RTX 3090",
+    "release_dependencies": "RULER v2, NoLiMa, and HELMET remain separate required gates and are not made valid by materialization"
+  },
+  "pre_materialization_observation": {
+    "experiment_root_absent": true,
+    "checkpoint_root_absent": true,
+    "result_root_absent": true,
+    "analysis_result_absent": true,
+    "time_to_quality_lock_absent": true
+  },
+  "decision": {
+    "contract_frozen": true,
+    "materialization_authorized": true,
+    "qualification_authorized": true,
+    "training_authorized": false,
+    "automatic_launch_authorized": false,
+    "component_attribution_authorized": false,
+    "architecture_promotion_authorized": false,
+    "novelty_claim_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "implement and test a deterministic fail-on-overwrite materializer, create the twelve configs, then separately qualify every declared gate without launching training"
+  }
+}

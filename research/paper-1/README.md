@@ -230,6 +230,9 @@ the final combined model.
 - [`finalist_analysis_v1.json`](finalist_analysis_v1.json) freezes the exact six-pair, 23,496-step
   longer-horizon analysis, df=5 bounds, unchanged margins, control-only target, and zero-interim stopping
   rule before finalist materialization, while explicitly withholding training authority.
+- [`finalist_materialization_v1.json`](finalist_materialization_v1.json) pins both proxy parent arms,
+  the six-pair crossing, new config/checkpoint roots, exact longer-horizon changes, fail-on-overwrite
+  behavior, and data/storage/runtime/release qualification gates without authorizing training.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched

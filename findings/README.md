@@ -577,3 +577,8 @@ Finding 106 freezes the eligible finalist analysis before config creation: six c
 pairs, twelve 1.540B-token runs, exact quartile validation, df=5 one-sided bounds, unchanged aggregate/
 source margins, six controls before target lock, and zero interim looks. Materialization is authorized;
 training, component attribution, promotion, novelty, and scale/release claims remain blocked.
+
+Finding 107 freezes finalist materialization before implementation: SHA-pinned proxy parents, a new
+family/root, six seed-by-order pairs, twelve 1.540B-token runs, final-only checkpoints, exact quartile
+validation, fail-on-overwrite behavior, disjoint/replayable data windows, and fresh storage/runtime/
+analysis qualification. Config work is authorized; training and promotion remain blocked.
