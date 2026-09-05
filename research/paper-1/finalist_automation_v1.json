@@ -1,0 +1,112 @@
+{
+  "format": "speck_paper_finalist_automation_contract",
+  "format_version": 1,
+  "automation_id": "speck-paper-1-finalist-automation-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_before_any_finalist_output",
+  "frozen_on": "2026-09-06",
+  "inputs": {
+    "launch_contract": "research/paper-1/finalist_launch_v1.json",
+    "launch_contract_sha256": "ec0a5d783a318790a7cc98ad18de040e6fba49ef61023d087cb199066e510d50",
+    "analysis_plan": "research/paper-1/finalist_analysis_v1.json",
+    "analysis_plan_sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1",
+    "materialization_contract": "research/paper-1/finalist_materialization_v1.json",
+    "materialization_contract_sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3",
+    "qualification": "results/Speck-Paper1/finalist-qualification-v1.json",
+    "qualification_sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605",
+    "analysis_qualification": "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
+    "analysis_qualification_sha256": "a464004a51bdf45fb7e427e2e7915925687e641b5c065b823b9909cc666dd506",
+    "runtime_preflight": "results/Speck-Paper1/finalist-preflight-v1.json",
+    "runtime_preflight_sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231"
+  },
+  "implementation": {
+    "runner": "scripts/paper_finalist_continue.py",
+    "runner_revision": "bce09bbfd8962d619d424ec2c12a978ce1c7552b",
+    "runner_sha256": "64cfbc569441f15fd648bb3f4704cf402b51910a83d4b257a6a4e0884a3db836",
+    "base_train": "scripts/base_train.py",
+    "base_train_sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2",
+    "collector_analyzer": "scripts/paper_finalist_analyze.py",
+    "collector_analyzer_sha256": "a4926db2922a98f3326bca0a8ece39650823c3778b5c8aa3704c5e4ce7ead218",
+    "tests": "tests/test_paper_finalist_continue.py",
+    "focused_tests_passed": 5,
+    "ruff": "passed"
+  },
+  "execution_order": [
+    "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-dense_global_param_match",
+    "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-1-seed-42-order-1610612736-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-2-seed-43-order-0-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-3-seed-43-order-1610612736-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-4-seed-44-order-0-five_cache_kda_gqa",
+    "Speck-Paper1-Finalist-131M-pair-5-seed-44-order-1610612736-five_cache_kda_gqa"
+  ],
+  "initial_program_state": {
+    "status": "qualified_unexecuted",
+    "control_results": [],
+    "candidate_results": [],
+    "time_to_quality_target": null,
+    "analysis_result": null,
+    "next_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+  },
+  "event_contract": {
+    "one_training_service_at_a_time": true,
+    "one_path_trigger_at_a_time": true,
+    "trigger": "PathExists on the current run's final run_summary.json",
+    "trigger_disabled_before_collection": true,
+    "wait_for_training_pid_exit": true,
+    "polling": false,
+    "cooldown_between_runs": "15m",
+    "automatic_retry": false,
+    "commit_after_each_result": true
+  },
+  "decision_contract": {
+    "control_first": true,
+    "controls_before_target_lock": 6,
+    "candidate_record_before_target_lock": false,
+    "quality_dependent_branching": false,
+    "interim_efficacy_looks": 0,
+    "interim_futility_looks": 0,
+    "final_analysis_after_candidate_results": 6,
+    "failure_stops_chain": true,
+    "failed_cell_skipping": false,
+    "automatic_rerun": false
+  },
+  "live_gate": {
+    "applied_before_initial_and_every_successor": true,
+    "repository_and_program": "clean and validator-passing",
+    "all_unfinished_outputs": "absent",
+    "gpu": "idle RTX 3090 UUID GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd at or below 50C",
+    "host_available_bytes_minimum": 12884901888,
+    "volume": "ext4 UUID b64b59d1-ea2c-4206-9171-b7cd739f3eff with rw,nosuid,nodev,noexec and at least 25769803776 free bytes",
+    "conflict": "speck-helmet-download.service inactive"
+  },
+  "output_contract": {
+    "results": "results/Speck-Paper1/finalist-runs/<run>.json",
+    "transitions": "results/Speck-Paper1/finalist-transitions/<run>.json",
+    "target": "results/Speck-Paper1/finalist-time-to-quality-target.json",
+    "analysis": "results/Speck-Paper1/finalist-analysis.json",
+    "checkpoint_root": "/mnt/speck-data/speck/paper1-finalist-131m",
+    "overwrite": false,
+    "deletion": false
+  },
+  "decision": {
+    "implementation_qualified": true,
+    "state_machine_qualified": true,
+    "event_driven_no_polling": true,
+    "live_launch_qualification_required": true,
+    "initial_launch_authorized": false,
+    "training_authorized": false,
+    "reason": "the immutable automation exists, but a live qualification must be recorded after the HELMET transfer becomes inactive",
+    "component_attribution_authorized": false,
+    "architecture_promotion_authorized": false,
+    "novelty_claim_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "register the empty finalist program state, validate every pin, then wait for HELMET completion and record a clean live launch qualification"
+  }
+}

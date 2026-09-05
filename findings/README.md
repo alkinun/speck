@@ -609,3 +609,8 @@ promotion gates but do not circularly block checkpoint production. The 121.23 pr
 hour sequence is six controls, target lock, six candidates, and final analysis via one-shot events,
 15-minute gaps, no polling/branch/retry, and per-result commits. Automation may be built; launch remains
 blocked while its source/hash is absent and HELMET acquisition is active.
+
+Finding 113 pins and qualifies the finalist event runner before output. Five tests enforce six controls,
+target lock, six candidates, final analysis, and invalid-state rejection. Every successor uses one path
+event plus live repository/GPU/memory/storage/HELMET gates, 15-minute cooldown, no polling/branch/retry,
+and per-result commits. Training waits for a post-HELMET live qualification.
