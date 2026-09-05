@@ -472,6 +472,11 @@
     "runner_revision": "4eba36607fe3935950019686c7c171e4ca6841a7",
     "status": "proxy_training_authorized_release_claims_blocked"
   },
+  "raw_local_readiness": {
+    "contract": "research/paper-1/raw_local_readiness_v1.json",
+    "sha256": "b75bb4114421a90599a78fbc8a4e188cc31dd38b9377f56d27caee64d5670dc0",
+    "status": "design_blocked_parent_and_fusion_unqualified"
+  },
   "scales": [
     {
       "active_parameters": [

@@ -16,6 +16,7 @@ PROGRAM_FILES = (
     "sequence_cache_representation_v1.json",
     "hca_readiness_v1.json",
     "csa_readiness_v1.json",
+    "raw_local_readiness_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -682,6 +683,50 @@ def _validate_csa_readiness(reference, repository_root, paper_id, policy_id):
         raise ValueError("CSA readiness design is incomplete")
 
 
+def _validate_raw_local_readiness(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "raw-local readiness reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("raw-local readiness gate does not match its pin")
+    gate = _load_json(path)
+    fixed = gate.get("fixed_parent", {})
+    formulation = gate.get("first_formulation", {})
+    causal = gate.get("causal_and_state_semantics_required", {})
+    windows = gate.get("conditional_window_grid", {})
+    systems = gate.get("systems_and_accounting", {})
+    decision = gate.get("decision", {})
+    if (
+        gate.get("format") != "speck_raw_local_readiness_gate"
+        or gate.get("format_version") != 1
+        or gate.get("paper_id") != paper_id
+        or gate.get("policy_id") != policy_id
+        or gate.get("status") != reference["status"]
+        or len(gate.get("ordered_prerequisites", ())) < 5
+        or fixed.get("global_slots") != [3, 7, 11, 15, 19]
+        or formulation.get("placement")
+        != "one local ring at each of the same five global integration slots; do not add attention to the fifteen KDA-only layers"
+        or "one causal softmax" not in formulation.get("normalization", "")
+        or len(causal) < 8
+        or windows.get("control") != 0
+        or windows.get("windows") != [64, 128, 256, 512]
+        or systems.get("simple_component_minimum_primary_improvement") != 0.1
+        or systems.get("repeats") != 5
+        or systems.get("interleave_arms") is not True
+        or any(
+            decision.get(key) is not False
+            for key in (
+                "fusion_qualified",
+                "window_selected",
+                "placement_selected",
+                "implementation_authorized",
+                "training_authorized",
+                "promotion_authority",
+            )
+        )
+    ):
+        raise ValueError("raw-local readiness design is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -750,6 +795,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "sequence_cache_representation",
             "hca_readiness",
             "csa_readiness",
+            "raw_local_readiness",
         },
         "paper experiment program",
     )
@@ -771,6 +817,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_csa_readiness(
         program["csa_readiness"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
+    _validate_raw_local_readiness(
+        program["raw_local_readiness"],
         repository_root,
         paper_id,
         program["policy_id"],

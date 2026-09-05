@@ -70,6 +70,7 @@ Read in order:
 62. [61 — Conditional five-cache GQA3/MQA1/MLA design](61_five_cache_representation_design.md)
 63. [62 — HCA readiness gate before implementation](62_hca_readiness_gate.md)
 64. [63 — CSA selector-readiness gate before implementation](63_csa_readiness_gate.md)
+65. [64 — Raw-local branch readiness gate](64_raw_local_readiness_gate.md)
 
 Conventions:
 
@@ -307,3 +308,9 @@ Block-mass oracle feasibility precedes mean-key and learned selectors; captured 
 all-required-source recall replace index overlap as primary diagnostics. A 2/4/8 compression,
 32/64/128 block, and 512/2,048/8,192 budget grid is conditional. Dense index scan remains `O(L²/m)`,
 and token-level routing needs a successor contract. No training is authorized.
+
+Finding 64 freezes a conditional raw-local formulation without authorizing it. Exact local rings occur
+only at the five global slots and share one causal, deduplicated softmax with CSA's precise path; HCA and
+KDA stay fixed. Windows 64/128/256/512 are selected by local-specific floors, not copied. Local state is
+an explicit added cost, and a retained branch must clear the 10% systems threshold without erasing its
+parent's benefit.

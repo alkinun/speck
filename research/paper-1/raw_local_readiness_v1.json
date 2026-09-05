@@ -1,0 +1,127 @@
+{
+  "format": "speck_raw_local_readiness_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-raw-local-readiness-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "design_blocked_parent_and_fusion_unqualified",
+  "frozen_on": "2026-09-05",
+  "purpose": "Determine whether an exact raw-token local branch recovers within-block causality after compression/sparsity without conflating window, placement, normalization, or parent changes.",
+  "evidence_basis": [
+    {
+      "path": "papers/22_deepseek_v4.md",
+      "supported": "compressed causal blocks need a small uncompressed local path for unfinished-block detail",
+      "not_transferred": "128-token window, branch fusion, quality, or runtime benefit"
+    },
+    {
+      "path": "papers/19_native_sparse_attention.md",
+      "supported": "raw local, compressed global, and selected fine branches serve distinct roles and require joint normalization/gating to be explicit",
+      "not_transferred": "512-token window, three-way learned gate, and kernel speed"
+    },
+    {
+      "path": "papers/20_moba.md",
+      "supported": "current local block and selected historical blocks require causal handling and mathematically consistent softmax normalization",
+      "not_transferred": "block 512, top-3 routing, or prefill-only evaluation"
+    },
+    {
+      "path": "findings/02_correctness_and_kernel_calibration.md",
+      "supported": "Speck's earlier sliding FlexAttention path can be slower than dense attention at modest length, so a local branch needs realized kernel evidence",
+      "not_transferred": "one historical kernel shape as a permanent rejection of SWA"
+    }
+  ],
+  "ordered_prerequisites": [
+    "select the recurrent backbone and exact-cache representation",
+    "select and qualify dense HCA and precise CSA parents",
+    "freeze the causal identities and compatible key/value dimensions of compressed, selected, and raw entries",
+    "qualify a production-shaped local attention kernel for every window and execution mode",
+    "freeze local-specific quality probes, parameter matching, and analysis before outputs"
+  ],
+  "fixed_parent": {
+    "recurrent_path": "selected KDA backbone including its internal short convolution",
+    "coarse_global_path": "selected HCA compressor and rate",
+    "precise_global_path": "selected CSA compression, block, budget, and selector",
+    "cache_representation": "selected exact representation",
+    "global_slots": [
+      3,
+      7,
+      11,
+      15,
+      19
+    ],
+    "position": "NoPE unless the parent selection explicitly changes it",
+    "residual": "standard PreNorm",
+    "rule": "no HCA, CSA, KDA, cache, placement, or residual parameter changes within the raw-local isolation"
+  },
+  "first_formulation": {
+    "placement": "one local ring at each of the same five global integration slots; do not add attention to the fifteen KDA-only layers",
+    "queries": "share the precise CSA query representation within a slot",
+    "keys_values": "retain exact raw K/V for the most recent W causal tokens using the selected cache representation",
+    "normalization": "combine raw-local and selected-precise logits in one causal softmax over their deduplicated union",
+    "duplicate_rule": "a raw token represented by both the local ring and a selected precise unit appears once at the highest-resolution raw identity",
+    "coarse_hca": "remains a separately measured branch; its fusion rule is fixed by the selected parent and cannot change here",
+    "reason": "a shared query and single precise/local softmax add no separate output gate and avoid confounding window utility with independently normalized branch scale",
+    "alternatives_not_authorized": [
+      "parallel local attention with an unscaled output sum",
+      "learned local/global branch gate",
+      "local attention at every KDA layer",
+      "prefill-only local execution"
+    ]
+  },
+  "causal_and_state_semantics_required": {
+    "window": "retain exactly min(history, W) most recent causal raw-token identities",
+    "current_query": "a query may attend to itself and earlier raw tokens, never a later token",
+    "chunking": "full prefill, arbitrary prefill chunks, and one-token decode yield the same retained ring and output within frozen tolerances",
+    "deduplication": "raw/CSA overlap is deterministic before softmax and preserves one source identity",
+    "prefix_reuse": "local ring identity and write position are retained or deterministically reconstructed on a prefix hit",
+    "eviction_resume": "ring chronology, position, dtype, and quantization scales survive eviction, serialization, and resume",
+    "unfinished_compression": "raw local coverage does not authorize partial HCA/CSA summaries to violate their own causal emission rules",
+    "state_accounting": "report local raw K/V, scales, ring metadata, HCA, CSA, and KDA state separately"
+  },
+  "conditional_window_grid": {
+    "control": 0,
+    "windows": [
+      64,
+      128,
+      256,
+      512
+    ],
+    "reason": "the frozen powers-of-two grid brackets the KDA convolution scale and the published local-window regimes without importing a preferred window",
+    "selection": "choose the smallest window that passes every language and local-specific floor and lies on the measured state/decode frontier",
+    "discovery": "all windows remain visible; selection uses mechanism-scale data and has no promotion authority",
+    "confirmation": "freeze one selected window before independent paired finalist cells"
+  },
+  "local_specific_endpoints": [
+    "within-block order and exact-copy accuracy stratified by distance",
+    "boundary-straddling retrieval where evidence and query occupy adjacent compression blocks",
+    "unfinished-block retrieval before HCA/CSA summary emission",
+    "position-binned and trailing-token language loss",
+    "structured retrieval specificity under recent distractors",
+    "symbolic composition with one local and one distant edge",
+    "original aggregate and every-source language-loss non-inferiority"
+  ],
+  "systems_and_accounting": {
+    "analytic_state": "five times W times the selected per-token exact-cache bytes plus ring metadata and scales",
+    "compute": "local score/value work, raw K/V projection or reuse, deduplication, union-softmax, dispatch, and tail handling",
+    "required_modes": [
+      "full prefill and sparse decode",
+      "chunked prefill and sparse decode",
+      "prefix reuse",
+      "maximum resident batch"
+    ],
+    "simple_component_minimum_primary_improvement": 0.1,
+    "minimum_state_reduction_claim": "none relative to the no-local parent; local state is an explicit cost",
+    "repeats": 5,
+    "interleave_arms": true,
+    "maximum_start_temperature_c": 50,
+    "rule": "retain a local branch only if its quality recovery justifies its added state and it does not erase the parent system's primary benefit"
+  },
+  "decision": {
+    "fusion_qualified": false,
+    "window_selected": false,
+    "placement_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after all parents qualify, implement reference union/deduplication/state semantics and run correctness only"
+  }
+}
