@@ -59,3 +59,16 @@ def test_baseline_preflight_retains_export_failure(monkeypatch, tmp_path):
     assert result["failure_type"] == "ValueError"
     assert result["failure"] == "parity failed"
     assert "model.safetensors" in result["files"]
+
+
+def test_baseline_preflight_parity_metrics_retain_extent_and_argmax():
+    expected = torch.tensor([[[1.0, 0.0], [0.5, 1.0]]])
+    actual = torch.tensor([[[1.01, 0.0], [1.1, 1.0]]])
+
+    result = preflight._parity_metrics(actual, expected)
+
+    assert result["passed"] is False
+    assert result["mismatched_logits"] == 1
+    assert result["total_logits"] == 4
+    assert result["argmax_agreement"] == 0.5
+    assert result["maximum_absolute_logit_error"] == pytest.approx(0.6)

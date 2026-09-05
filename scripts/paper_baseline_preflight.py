@@ -57,8 +57,28 @@ def atomic_json(path, value):
     os.replace(temporary, path)
 
 
-def _maximum_error(actual, expected):
-    return (actual.float() - expected.float()).abs().max().item()
+def _parity_metrics(actual, expected, rtol=0.02, atol=0.02):
+    actual = actual.float()
+    expected = expected.float()
+    difference = (actual - expected).abs()
+    allowed = atol + rtol * expected.abs()
+    mismatched = difference > allowed
+    rms = difference.square().mean().sqrt().item()
+    reference_rms = expected.square().mean().sqrt().item()
+    return {
+        "maximum_absolute_logit_error": difference.max().item(),
+        "rms_logit_error": rms,
+        "relative_rms_logit_error": rms / reference_rms if reference_rms else None,
+        "mismatched_logits": mismatched.sum().item(),
+        "total_logits": mismatched.numel(),
+        "argmax_agreement": (actual.argmax(dim=-1) == expected.argmax(dim=-1))
+        .float()
+        .mean()
+        .item(),
+        "relative_tolerance": rtol,
+        "absolute_tolerance": atol,
+        "passed": not mismatched.any().item(),
+    }
 
 
 def _file_inventory(directory):
@@ -119,10 +139,16 @@ def _export_case(state, metadata, directory):
     try:
         validate_export(directory, metadata)
         parity = validate_parity(directory, state, metadata)
-        return {"passed": True, "parity": parity, "files": _file_inventory(directory)}
+        return {
+            "passed": True,
+            "device": "cpu",
+            "parity": parity,
+            "files": _file_inventory(directory),
+        }
     except Exception as error:
         return {
             "passed": False,
+            "device": "cpu",
             "failure_type": type(error).__name__,
             "failure": str(error),
             "files": _file_inventory(directory),
@@ -197,19 +223,7 @@ def preflight_arm(arm, output_root, device):
             ],
             dim=1,
         )
-    incremental_error = _maximum_error(cached_logits, full_logits)
-    incremental_rtol = 0.02
-    incremental_atol = 0.02
-    try:
-        torch.testing.assert_close(
-            cached_logits,
-            full_logits,
-            rtol=incremental_rtol,
-            atol=incremental_atol,
-        )
-        incremental_passed = True
-    except AssertionError:
-        incremental_passed = False
+    incremental = _parity_metrics(cached_logits, full_logits)
     state = {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
     metadata = {
         "config": model.config.settings(),
@@ -256,17 +270,11 @@ def preflight_arm(arm, output_root, device):
             "hard_peak_allocated_bytes": hard_peak,
             "within_peak_envelope": peak_allocated <= hard_peak,
         },
-        "native_incremental": {
-            "tokens": 8,
-            "maximum_absolute_logit_error": incremental_error,
-            "relative_tolerance": incremental_rtol,
-            "absolute_tolerance": incremental_atol,
-            "passed": incremental_passed,
-        },
+        "native_incremental": {"tokens": 8, **incremental},
         "transformers_export": export,
         "start_temperature_c": start_temperature,
         "thermal_wait_seconds": thermal_wait_seconds,
-        "passed": peak_allocated <= hard_peak and incremental_passed and export["passed"],
+        "passed": peak_allocated <= hard_peak and incremental["passed"] and export["passed"],
     }
 
 
