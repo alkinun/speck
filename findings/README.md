@@ -63,6 +63,7 @@ Read in order:
 55. [54 — HELMET seeded-demonstration repair qualification](54_helmet_seeded_demo_repair.md)
 56. [55 — Paper 1 proxy-launch and release-claim boundary](55_paper_1_proxy_launch_boundary.md)
 57. [56 — Paper 1 dense control 0 and collection correction](56_paper_1_dense_control_0.md)
+58. [57 — Paper 1 dense control 1](57_paper_1_dense_control_1.md)
 
 Conventions:
 
@@ -262,3 +263,8 @@ Finding 56 completes and qualifies the first dense control at seed 42/order zero
 runtime evaluates complete 16,384-token batches, yielding 19,988,480 of the requested 20M final
 tokens. A pre-candidate correction now derives and validates that exact count without changing any
 loss, threshold, stopping rule, or execution order. Two dense controls remain before target lock.
+
+Finding 57 completes dense control 1 at seed 43 and packed offset 536,870,912. Final validation loss is
+2.839127 nats, steady training time is 3,260.22 seconds, and all source/identity checks pass. Two of
+three control observations are now qualified; target lock and candidate records remain forbidden until
+control 2 completes.

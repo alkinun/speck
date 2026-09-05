@@ -651,9 +651,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "collection_correction",
             "collection_correction_sha256",
             "collection_correction_status",
-            "control_0_result",
-            "control_0_result_sha256",
-            "control_0_result_status",
+            "dense_control_results",
             "runner_revision",
         },
         "paper baseline evidence",
@@ -681,7 +679,6 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("audit", "audit_sha256"),
         ("storage_qualification", "storage_qualification_sha256"),
         ("collection_correction", "collection_correction_sha256"),
-        ("control_0_result", "control_0_result_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -786,7 +783,6 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     ):
         raise ValueError("paper baseline cache-equivalence v3/preflight evidence is invalid")
     collection = _load_json(repository_root / evidence["collection_correction"])
-    control_0 = _load_json(repository_root / evidence["control_0_result"])
     correction = collection.get("correction", {})
     trigger_checkpoint = collection.get("trigger", {}).get("checkpoint", {})
     if (
@@ -806,21 +802,43 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         != _file_sha256(repository_root / "speck/paper_baseline_analysis.py")
         or collection.get("implementation", {}).get("tests_sha256")
         != _file_sha256(repository_root / "tests/test_paper_baseline_analysis.py")
-        or control_0.get("format") != "speck_paper_baseline_run_result"
-        or control_0.get("status") != evidence["control_0_result_status"]
-        or control_0.get("arm_id") != "dense_global_param_match"
-        or control_0.get("pair", {}).get("pair") != 0
-        or control_0.get("training_tokens") != 131_072_000
-        or control_0.get("final_validation", {}).get("validation_tokens") != 19_988_480
-        or control_0.get("non_finite_steps") != 0
-        or control_0.get("checkpoint", {}).get("model_sha256")
+    ):
+        raise ValueError("paper baseline collection correction evidence is invalid")
+    control_entries = evidence["dense_control_results"]
+    if (
+        not 1 <= len(control_entries) <= 3
+        or [entry.get("pair") for entry in control_entries] != list(range(len(control_entries)))
+    ):
+        raise ValueError("paper dense-control result sequence is invalid")
+    controls = []
+    for entry in control_entries:
+        path = repository_root / entry.get("path", "")
+        if not path.is_file() or _file_sha256(path) != entry.get("sha256"):
+            raise ValueError("paper dense-control result does not match its pin")
+        control = _load_json(path)
+        expected_pair = baseline_matrix["planned_primary_baselines"][
+            "proxy_confirmation_pairs"
+        ][entry["pair"]]
+        if (
+            control.get("format") != "speck_paper_baseline_run_result"
+            or control.get("status") != entry.get("status")
+            or control.get("arm_id") != "dense_global_param_match"
+            or control.get("pair") != expected_pair
+            or control.get("training_tokens") != 131_072_000
+            or control.get("final_validation", {}).get("validation_tokens") != 19_988_480
+            or control.get("non_finite_steps") != 0
+        ):
+            raise ValueError("paper dense-control result evidence is invalid")
+        controls.append(control)
+    if (
+        controls[0].get("checkpoint", {}).get("model_sha256")
         != trigger_checkpoint.get("model_sha256")
-        or control_0.get("checkpoint", {}).get("optimizer_sha256")
+        or controls[0].get("checkpoint", {}).get("optimizer_sha256")
         != trigger_checkpoint.get("optimizer_sha256")
-        or control_0.get("checkpoint", {}).get("metadata_sha256")
+        or controls[0].get("checkpoint", {}).get("metadata_sha256")
         != trigger_checkpoint.get("metadata_sha256")
     ):
-        raise ValueError("paper baseline control-0 collection evidence is invalid")
+        raise ValueError("paper dense-control zero does not match the correction trigger")
     _validate_proxy_launch_evidence(program, repository_root)
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():

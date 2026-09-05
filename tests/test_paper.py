@@ -76,15 +76,15 @@ def test_paper_program_rejects_proxy_launch_qualification_pin_drift(tmp_path):
         validate_paper_program(copied, repository_root=root)
 
 
-def test_paper_program_rejects_control_0_result_pin_drift(tmp_path):
+def test_paper_program_rejects_dense_control_result_pin_drift(tmp_path):
     copied = tmp_path / "paper-1"
     shutil.copytree(program, copied)
     path = copied / "experiment_program.json"
     value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
-    value["baseline_evidence"]["control_0_result_sha256"] = "0" * 64
+    value["baseline_evidence"]["dense_control_results"][0]["sha256"] = "0" * 64
     path.write_text(json.dumps(value), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="control_0_result"):
+    with pytest.raises(ValueError, match="dense-control result"):
         validate_paper_program(copied, repository_root=root)
 
 
