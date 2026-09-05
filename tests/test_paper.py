@@ -83,3 +83,15 @@ def test_paper_program_rejects_helmet_runtime_audit_pin_drift(tmp_path):
 
     with pytest.raises(ValueError, match="helmet_runtime_dependency_audit"):
         validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_helmet_materializer_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["evaluation_evidence"]["helmet_materializer_preflight_sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="helmet_materializer_preflight"):
+        validate_paper_program(copied, repository_root=root)

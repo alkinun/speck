@@ -54,6 +54,7 @@ Read in order:
 46. [45 — Paper 1 RULER contamination audit and v1 failure](45_paper_1_ruler_contamination.md)
 47. [46 — Post-contamination RULER v2 successor manifest](46_ruler_v2_successor_manifest.md)
 48. [47 — HELMET archive-external runtime and scorer boundary](47_helmet_runtime_dependency_boundary.md)
+49. [48 — HELMET two-family offline materializer preflight](48_helmet_two_family_materializer_preflight.md)
 
 Conventions:
 
@@ -201,3 +202,9 @@ Finding 47 proves that HELMET's 11GB archive is not a complete execution bundle.
 Four source families are incompatible with the pinned `datasets==5.0.1`; long QA and summarization also
 need a gated Llama 2 tokenizer, and NarrativeQA/summarization depend on unqualified proprietary judges.
 The inventory is now frozen, but archive completion alone cannot authorize HELMET execution.
+
+Finding 48 qualifies the proposed compatibility bridge on two CC-BY-4.0 families. A hash-locked
+datasets-3.6 materializer produces deterministic Banking77 Parquet and exactly matches the official NLU
+conversion across all 25,715 rows and feature labels. The datasets-5 reader reproduces all retained
+identities offline. This qualifies the mechanism for those two sources only; blocked licenses,
+tokenizers, judges, and the rest of HELMET are unchanged.

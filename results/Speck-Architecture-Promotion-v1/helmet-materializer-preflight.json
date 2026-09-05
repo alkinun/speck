@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-09-05T14:58:46.954370+00:00",
+  "decision": {
+    "extension_to_blocked_sources_authorized": false,
+    "helmet_execution_authorized": false,
+    "strategy_qualified_for": [
+      "banking77",
+      "nlu_evaluation_data"
+    ]
+  },
+  "format": "speck_helmet_materializer_preflight",
+  "format_version": 1,
+  "network": {
+    "allowed_hosts": [
+      "huggingface.co",
+      "raw.githubusercontent.com"
+    ],
+    "authentication": "none",
+    "credentials_exposed": false
+  },
+  "non_claims": [
+    "two-family parity proves every HELMET loader can be converted",
+    "technical parity resolves license or underlying-work rights",
+    "Parquet byte identity is required across different source representations",
+    "this preflight qualifies any model score or HELMET prompt"
+  ],
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/research/architecture-promotion-v1/helmet_materializer_preflight_v1.json",
+    "spec_identity_sha256": "2a5c9bf0bdbea5f56e04db18fcee7673d6a104b21130102f48bcf196e0a46e9b"
+  },
+  "raw_inputs": [
+    {
+      "bytes": 5867439,
+      "cached_path": "/mnt/speck-data/speck/helmet-runtime-materializer-v1/cache/datasets/downloads/77772a1af29b16a8b4b432e0c54aada395dad80c42a11f8d81daedcae806842a",
+      "dataset": "nlu_evaluation_data",
+      "path": "AnnotatedData/NLU-Data-Home-Domain-Annotated-All.csv",
+      "sha256": "5f6dbf6d38fc111217924945ac59c554e0b926d5aa836ecdd0d089d2ca48e1d9"
+    },
+    {
+      "bytes": 839073,
+      "cached_path": "/mnt/speck-data/speck/helmet-runtime-materializer-v1/cache/datasets/downloads/bc5a3d80c133c109ecaffda500a00cd8dc8af9bf734036bff41520f5ffdbc23b",
+      "dataset": "banking77",
+      "path": "banking_data/train.csv",
+      "sha256": "b06e26ac675513959a63135f11b94ea7786ed02da65db93a5650d8838cbc664b"
+    },
+    {
+      "bytes": 239961,
+      "cached_path": "/mnt/speck-data/speck/helmet-runtime-materializer-v1/cache/datasets/downloads/4d2945a4325688f0222a55e1f815b923080633734cc4b1606318611338ff5043",
+      "dataset": "banking77",
+      "path": "banking_data/test.csv",
+      "sha256": "d12d6e3bc4c3103966ae786dc435913c0c563dfa328f5a3646d0e62cfeeb474d"
+    }
+  ],
+  "runner_revision": "a254e1b69d7e6e71825c90a2d8f377da1280d6c7",
+  "runner_sha256": "11fdb98bdc4df171457713471475df2e9459ee91b2ce74a4973653d362b121b7",
+  "runtime": {
+    "dataset_module_factory_sha256": "3f937813e0250e8778ef6612cd220b5b8de643d899651ed4638dc8f6faec0aa0",
+    "datasets": "3.6.0",
+    "huggingface_hub": "0.36.0",
+    "pyarrow": "25.0.1",
+    "python": "3.10.20"
+  },
+  "snapshots": {
+    "banking77": {
+      "test": {
+        "bytes": 92409,
+        "canonical_rows_sha256": "42c73a6a4b13ab08a1eaf81d7a24fcc251b46a743f54f8e62d6f3e8456bb0898",
+        "features_sha256": "8bb6a853dd697a75171a0a8b8ed0e42f05ead3311995abb9eac9f45348c359a8",
+        "path": "/mnt/speck-data/speck/helmet-runtime-materializer-v1/snapshots/banking77/test.parquet",
+        "replay_byte_identical": true,
+        "rows": 3080,
+        "sha256": "8b8373cf2cc5afdb2f43166c9eb6962e2e9943adc3582f2e14fd5f303e21c1ba"
+      },
+      "train": {
+        "bytes": 293553,
+        "canonical_rows_sha256": "c0bbd5c915f4d5d91d16c297eebcd551b75d00ab6aa9665301185ba554c47979",
+        "features_sha256": "8bb6a853dd697a75171a0a8b8ed0e42f05ead3311995abb9eac9f45348c359a8",
+        "path": "/mnt/speck-data/speck/helmet-runtime-materializer-v1/snapshots/banking77/train.parquet",
+        "replay_byte_identical": true,
+        "rows": 10003,
+        "sha256": "01aa7c72ef52c30becc144c73f1d164562da1fe733385e837425094d362cf02b"
+      }
+    },
+    "nlu_evaluation_data": {
+      "train": {
+        "bytes": 546704,
+        "canonical_rows_sha256": "dd8f86990854442c3b3d89677c8f1a12b96f5c9e06a768d8f373b6e05eb11656",
+        "features_sha256": "f559f7194f53f17e7203228efb71dfe0c8395275d0bd05859c8a08a4010af426",
+        "legacy_conversion_full_parity": true,
+        "path": "/mnt/speck-data/speck/helmet-runtime-materializer-v1/snapshots/nlu_evaluation_data/train.parquet",
+        "rows": 25715,
+        "sha256": "0d832d98cce4ce75f622b03d3077efaea75c21d2864d9868aaf2b9445c46ad53"
+      }
+    }
+  },
+  "status": "two_family_offline_materializer_strategy_qualified",
+  "storage": {
+    "device_id": 2050,
+    "directory": "/mnt/speck-data/speck/helmet-runtime-materializer-v1",
+    "filesystem": "ext4",
+    "mode": "0o700",
+    "options": [
+      "nodev",
+      "noexec",
+      "nosuid",
+      "relatime",
+      "rw"
+    ],
+    "uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff"
+  }
+}

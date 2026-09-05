@@ -854,6 +854,42 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or runtime_audit.get("decision", {}).get("execution_authorized") is not False
             ):
                 raise ValueError("HELMET runtime dependency evidence is invalid")
+            materializer_protocol_path = repository_root / suite.get(
+                "materializer_preflight_protocol", ""
+            )
+            materializer_path = repository_root / suite.get("materializer_preflight", "")
+            if (
+                not materializer_protocol_path.is_file()
+                or _file_sha256(materializer_protocol_path)
+                != suite.get("materializer_preflight_protocol_sha256")
+                or not materializer_path.is_file()
+                or _file_sha256(materializer_path)
+                != suite.get("materializer_preflight_sha256")
+            ):
+                raise ValueError("HELMET materializer preflight evidence has an invalid pin")
+            materializer_protocol = _load_json(materializer_protocol_path)
+            materializer = _load_json(materializer_path)
+            banking = materializer.get("snapshots", {}).get("banking77", {})
+            nlu = materializer.get("snapshots", {}).get("nlu_evaluation_data", {})
+            if (
+                "two_family_materializer_qualified" not in suite["status"]
+                or materializer_protocol.get("status") != "executed_qualified"
+                or materializer_protocol.get("result", {}).get("sha256")
+                != suite.get("materializer_preflight_sha256")
+                or materializer.get("status")
+                != "two_family_offline_materializer_strategy_qualified"
+                or set(materializer.get("decision", {}).get("strategy_qualified_for", ()))
+                != {"banking77", "nlu_evaluation_data"}
+                or materializer.get("decision", {}).get("helmet_execution_authorized")
+                is not False
+                or set(banking) != {"train", "test"}
+                or set(nlu) != {"train"}
+                or not all(
+                    split.get("replay_byte_identical") for split in banking.values()
+                )
+                or nlu.get("train", {}).get("legacy_conversion_full_parity") is not True
+            ):
+                raise ValueError("HELMET materializer preflight evidence is invalid")
 
     gate = manifest["release_gate"]
     if set(gate["required_internal"]) != internal_ids:

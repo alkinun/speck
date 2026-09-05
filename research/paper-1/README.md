@@ -85,6 +85,9 @@ the final combined model.
 - [`helmet_runtime_dependencies_v1.json`](../architecture-promotion-v1/helmet_runtime_dependencies_v1.json)
   proves that 50 of HELMET's 105 entries are not supplied by the main archive and freezes the external
   dataset, tokenizer, runtime-compatibility, rights, and model-judge blockers.
+- [`helmet_materializer_preflight_v1.json`](../architecture-promotion-v1/helmet_materializer_preflight_v1.json)
+  qualifies a hash-locked legacy-to-Parquet bridge for Banking77 and NLU Evaluation Data with complete
+  row, order, value, feature, replay, and current-offline-reader parity.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -116,6 +119,8 @@ The v2 successor is frozen before model outputs with the other eleven tasks as i
 HELMET RAG/long-QA as the source-document guardrail. NoLiMa and HELMET contamination checks remain
 blocked on their separate data/legal qualifications. HELMET's runtime audit additionally shows that
 archive completion alone cannot qualify 50 externally loaded entries or the proprietary-judge metrics.
+Its isolated materialization strategy now qualifies for two permissive ICL sources, but no broader
+HELMET execution authority follows.
 The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:

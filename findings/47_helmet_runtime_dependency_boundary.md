@@ -67,6 +67,8 @@ safely inspect the archive; resolve component and underlying-work rights; pin an
 payload; choose and parity-test a compatible offline loader; obtain an authorized tokenizer decision
 or validate a semantics-preserving replacement; qualify or replace model judges; then materialize and
 contamination-scan exact cases. Adapter qualification is not evidence for any of those steps.
+Finding 48 subsequently qualifies the isolated-materializer strategy for Banking77 and NLU Evaluation
+Data only; it does not extend that result to any blocked source.
 
 ## Artifacts
 

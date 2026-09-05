@@ -84,6 +84,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_runtime_dependency_audit",
             "helmet_runtime_dependency_audit_sha256",
             "helmet_runtime_dependency_status",
+            "helmet_materializer_preflight_protocol",
+            "helmet_materializer_preflight_protocol_sha256",
+            "helmet_materializer_preflight",
+            "helmet_materializer_preflight_sha256",
+            "helmet_materializer_preflight_status",
             "ruler_v1_decision",
             "ruler_v2_decision",
         },
@@ -91,7 +96,7 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     if (
         evidence["status"]
-        != "ruler_v1_failed_v2_frozen_helmet_runtime_audited_external_data_pending"
+        != "ruler_v1_failed_v2_frozen_helmet_materializer_preflight_qualified_external_data_pending"
     ):
         raise ValueError("paper evaluation evidence must preserve v1, RULER v2, and HELMET")
     for path_key, hash_key in (
@@ -108,6 +113,11 @@ def _validate_evaluation_evidence(evidence, repository_root):
             "helmet_runtime_dependency_protocol_sha256",
         ),
         ("helmet_runtime_dependency_audit", "helmet_runtime_dependency_audit_sha256"),
+        (
+            "helmet_materializer_preflight_protocol",
+            "helmet_materializer_preflight_protocol_sha256",
+        ),
+        ("helmet_materializer_preflight", "helmet_materializer_preflight_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -125,6 +135,12 @@ def _validate_evaluation_evidence(evidence, repository_root):
     )
     helmet_runtime_audit = _load_json(
         repository_root / evidence["helmet_runtime_dependency_audit"]
+    )
+    helmet_materializer_protocol = _load_json(
+        repository_root / evidence["helmet_materializer_preflight_protocol"]
+    )
+    helmet_materializer = _load_json(
+        repository_root / evidence["helmet_materializer_preflight"]
     )
     expected_unaffected = {
         "cwe",
@@ -225,6 +241,23 @@ def _validate_evaluation_evidence(evidence, repository_root):
         or helmet_runtime_audit.get("decision", {}).get("execution_authorized") is not False
     ):
         raise ValueError("paper HELMET runtime dependency evidence is invalid")
+    if (
+        helmet_materializer_protocol.get("format")
+        != "speck_helmet_materializer_preflight_protocol"
+        or helmet_materializer_protocol.get("status") != "executed_qualified"
+        or helmet_materializer_protocol.get("result", {}).get("sha256")
+        != evidence["helmet_materializer_preflight_sha256"]
+        or helmet_materializer.get("format") != "speck_helmet_materializer_preflight"
+        or helmet_materializer.get("status")
+        != evidence["helmet_materializer_preflight_status"]
+        or set(
+            helmet_materializer.get("decision", {}).get("strategy_qualified_for", ())
+        )
+        != {"banking77", "nlu_evaluation_data"}
+        or helmet_materializer.get("decision", {}).get("helmet_execution_authorized")
+        is not False
+    ):
+        raise ValueError("paper HELMET materializer preflight evidence is invalid")
 
 
 def _validate_claims(claims):

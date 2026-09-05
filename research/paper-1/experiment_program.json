@@ -49,7 +49,7 @@
     "runner_revision": "7266d6bf42942f62ea14f26892926399dfe754e2"
   },
   "evaluation_evidence": {
-    "status": "ruler_v1_failed_v2_frozen_helmet_runtime_audited_external_data_pending",
+    "status": "ruler_v1_failed_v2_frozen_helmet_materializer_preflight_qualified_external_data_pending",
     "contamination_protocol": "research/paper-1/contamination_v1.json",
     "contamination_protocol_sha256": "c61342312c9fe87ff51f851df39b296be68534fdfddfd6cd4daf6513a1837ac0",
     "contamination_result": "results/Speck-Paper1/contamination-ruler-v1.json",
@@ -61,13 +61,18 @@
     "contamination_disposition_sha256": "c5347e2e2363f1c5dd0e93efda144b5fdd23826fa7ba099b80a5cda5953cbd19",
     "contamination_disposition_status": "ruler_v1_failed_critical_tasks_quarantined_manifest_revision_required",
     "active_evaluation_manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
-    "active_evaluation_manifest_sha256": "f2f74351405fafcb94b8238090cf4a42dc5e275aadd0060b3886c36eee7008f3",
+    "active_evaluation_manifest_sha256": "cd5310497840b230a6684a8e0ab00e913d2928a2a0d518c12ad1635b323f5f47",
     "active_evaluation_manifest_id": "architecture-evaluation-v2",
     "helmet_runtime_dependency_protocol": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
     "helmet_runtime_dependency_protocol_sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b",
     "helmet_runtime_dependency_audit": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
     "helmet_runtime_dependency_audit_sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2",
     "helmet_runtime_dependency_status": "runtime_dependency_inventory_qualified_execution_blocked",
+    "helmet_materializer_preflight_protocol": "research/architecture-promotion-v1/helmet_materializer_preflight_v1.json",
+    "helmet_materializer_preflight_protocol_sha256": "11fe439568fe7163e4899dbbff992dcec9058d007950ef6b62dc484fbac1cd44",
+    "helmet_materializer_preflight": "results/Speck-Architecture-Promotion-v1/helmet-materializer-preflight.json",
+    "helmet_materializer_preflight_sha256": "24ad9ab83b2793711c723f34be80d0be11b585c4b56aa79819c61c7c529db1be",
+    "helmet_materializer_preflight_status": "two_family_offline_materializer_strategy_qualified",
     "ruler_v1_decision": "failed_critical_overlap_preserved",
     "ruler_v2_decision": "eleven_synthetic_tasks_primary_qa_quarantined_helmet_qa_guardrail_pending"
   },

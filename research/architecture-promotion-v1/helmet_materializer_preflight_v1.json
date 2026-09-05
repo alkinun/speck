@@ -2,7 +2,7 @@
   "format": "speck_helmet_materializer_preflight_protocol",
   "format_version": 1,
   "protocol_id": "helmet-materializer-preflight-v1",
-  "status": "frozen_unexecuted",
+  "status": "executed_qualified",
   "scope": "technical parity for two CC-BY-4.0 legacy-loader families only; not HELMET data or execution qualification",
   "environments": {
     "legacy_materializer": {
@@ -88,5 +88,13 @@
       "Parquet byte identity is required across different source representations",
       "this preflight qualifies any model score or HELMET prompt"
     ]
+  },
+  "result": {
+    "path": "results/Speck-Architecture-Promotion-v1/helmet-materializer-preflight.json",
+    "sha256": "24ad9ab83b2793711c723f34be80d0be11b585c4b56aa79819c61c7c529db1be",
+    "status": "two_family_offline_materializer_strategy_qualified",
+    "created_at": "2026-09-05T14:58:46.954370+00:00",
+    "qualified_sources": ["banking77", "nlu_evaluation_data"],
+    "helmet_execution_authorized": false
   }
 }
