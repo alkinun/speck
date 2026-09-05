@@ -1,0 +1,117 @@
+{
+  "capacity": {
+    "estimated_finalist_checkpoint_bytes": 16800000000,
+    "estimated_proxy_checkpoint_bytes": 8400000000,
+    "finalist_floor_passed": true,
+    "minimum_free_bytes_before_finalist_launch": 25769803776,
+    "minimum_free_bytes_before_proxy_launch": 17179869184,
+    "proxy_floor_passed": true
+  },
+  "created_at": "2026-09-05T13:25:17.050364+00:00",
+  "format": "speck_paper_baseline_storage_qualification",
+  "format_version": 1,
+  "limitations": [
+    "mount is not configured in /etc/fstab and must be requalified after remount or reboot",
+    "storage qualification does not satisfy SPE-58 or authorize baseline training by itself"
+  ],
+  "materialization": {
+    "path": "/home/alkin/Desktop/speck/experiments/Speck-Paper1-Baselines-131M/baseline_materialization.json",
+    "sha256": "5a29bac9a393c022c77eafa1c297cd11dc1f0eff816ef853451656e3e3fb0c7b"
+  },
+  "matrix": {
+    "path": "/home/alkin/Desktop/speck/research/paper-1/baseline_matrix.json",
+    "storage_spec_sha256": "25bb191fc4753cc8acfc5cc9fed0388c7298b0ff748d6fab8e2b94a4ef89695f"
+  },
+  "operational_binding": {
+    "base_train_output_override": "--output-dir",
+    "base_train_sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2",
+    "runs": [
+      {
+        "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+        "collect": "uv run --extra cpu python -m scripts.paper_baseline_analyze collect research/paper-1/baseline_analysis.json experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/dense_global_param_match --checkpoint-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match --output results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match.json",
+        "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+        "data_manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+        "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/dense_global_param_match",
+        "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/dense_global_param_match --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match",
+        "run": "Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-dense_global_param_match"
+      },
+      {
+        "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+        "collect": "uv run --extra cpu python -m scripts.paper_baseline_analyze collect research/paper-1/baseline_analysis.json experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa --checkpoint-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa --output results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa.json",
+        "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+        "data_manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+        "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa",
+        "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa",
+        "run": "Speck-Paper1-Baselines-131M-pair-0-seed-42-order-0-five_cache_kda_gqa"
+      },
+      {
+        "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match",
+        "collect": "uv run --extra cpu python -m scripts.paper_baseline_analyze collect research/paper-1/baseline_analysis.json experiments/Speck-Paper1-Baselines-131M/runs/pair-1-seed-43-order-536870912/dense_global_param_match --checkpoint-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match --output results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match.json",
+        "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+        "data_manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+        "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-1-seed-43-order-536870912/dense_global_param_match",
+        "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-1-seed-43-order-536870912/dense_global_param_match --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match",
+        "run": "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match"
+      },
+      {
+        "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa",
+        "collect": "uv run --extra cpu python -m scripts.paper_baseline_analyze collect research/paper-1/baseline_analysis.json experiments/Speck-Paper1-Baselines-131M/runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa --checkpoint-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa --output results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa.json",
+        "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+        "data_manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+        "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa",
+        "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa",
+        "run": "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa"
+      },
+      {
+        "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match",
+        "collect": "uv run --extra cpu python -m scripts.paper_baseline_analyze collect research/paper-1/baseline_analysis.json experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/dense_global_param_match --checkpoint-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match --output results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match.json",
+        "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+        "data_manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+        "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/dense_global_param_match",
+        "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/dense_global_param_match --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match",
+        "run": "Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-dense_global_param_match"
+      },
+      {
+        "checkpoint_directory": "/mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa",
+        "collect": "uv run --extra cpu python -m scripts.paper_baseline_analyze collect research/paper-1/baseline_analysis.json experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa --checkpoint-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa --output results/Speck-Paper1/runs/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa.json",
+        "data_directory": "/home/alkin/.cache/speck/data/Speck1.5-140M",
+        "data_manifest_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+        "experiment": "experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa",
+        "launch": "uv run --extra gpu --extra linear python -m scripts.base_train experiments/Speck-Paper1-Baselines-131M/runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa --output-dir /mnt/speck-data/speck/paper1-baselines-131m/Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa",
+        "run": "Speck-Paper1-Baselines-131M-pair-2-seed-44-order-1073741824-five_cache_kda_gqa"
+      }
+    ],
+    "scientific_config_changed": false
+  },
+  "provenance": {
+    "cleanup_counted_as_capacity": false,
+    "existing_checkpoint_or_optimizer_artifacts_deleted": 0,
+    "existing_checkpoint_or_optimizer_artifacts_moved": 0,
+    "initial_directory_empty": true,
+    "method": "new dedicated directory on a separately mounted physical ext4 filesystem"
+  },
+  "runner_revision": "5cf1d88f83a28c3dd7f5296c6111a11f05e96014",
+  "runner_sha256": "4116f5e4bb2439a10ff6ff801f19505e0466a3626a39ad5b9d1516f8a34c01fa",
+  "status": "qualified_dedicated_proxy_and_finalist_checkpoint_volume",
+  "volume": {
+    "device_id": 2050,
+    "directory": "/mnt/speck-data/speck/paper1-baselines-131m",
+    "directory_mode": "0o700",
+    "directory_uid": 1000,
+    "filesystem": "ext4",
+    "free_bytes": 5652097011712,
+    "minimum_free_bytes": 17179869184,
+    "options": [
+      "rw",
+      "nosuid",
+      "nodev",
+      "noexec",
+      "relatime"
+    ],
+    "source": "/dev/sda2",
+    "target": "/mnt/speck-data",
+    "total_bytes": 5952676323328,
+    "used_bytes": 504700928,
+    "uuid": "b64b59d1-ea2c-4206-9171-b7cd739f3eff"
+  }
+}

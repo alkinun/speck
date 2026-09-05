@@ -162,6 +162,9 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "materialization_sha256",
             "audit",
             "audit_sha256",
+            "storage_qualification",
+            "storage_qualification_sha256",
+            "storage_qualification_status",
             "runner_revision",
         },
         "paper baseline evidence",
@@ -187,6 +190,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("preflight_v2", "preflight_v2_sha256"),
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
+        ("storage_qualification", "storage_qualification_sha256"),
     ):
         path = repository_root / evidence[path_key]
         if not path.is_file() or _file_sha256(path) != evidence[hash_key]:
@@ -200,6 +204,37 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         or audit.get("contract_sha256") != evidence["matrix_sha256"]
     ):
         raise ValueError("paper baseline audit is invalid")
+    storage_qualification = _load_json(repository_root / evidence["storage_qualification"])
+    baseline_matrix = _load_json(repository_root / evidence["matrix"])
+    storage_runs = storage_qualification.get("operational_binding", {}).get("runs", ())
+    checkpoint_directories = [run.get("checkpoint_directory") for run in storage_runs]
+    if (
+        storage_qualification.get("format")
+        != "speck_paper_baseline_storage_qualification"
+        or storage_qualification.get("status") != evidence["storage_qualification_status"]
+        or storage_qualification.get("matrix", {}).get("path")
+        != str((repository_root / evidence["matrix"]).resolve())
+        or storage_qualification.get("capacity", {}).get("proxy_floor_passed") is not True
+        or storage_qualification.get("capacity", {}).get("finalist_floor_passed") is not True
+        or storage_qualification.get("provenance", {}).get(
+            "existing_checkpoint_or_optimizer_artifacts_moved"
+        )
+        != 0
+        or storage_qualification.get("provenance", {}).get(
+            "existing_checkpoint_or_optimizer_artifacts_deleted"
+        )
+        != 0
+        or storage_qualification.get("provenance", {}).get("cleanup_counted_as_capacity")
+        is not False
+        or storage_qualification.get("operational_binding", {}).get(
+            "scientific_config_changed"
+        )
+        is not False
+        or len(storage_runs)
+        != baseline_matrix["storage_contract"]["proxy_confirmation_model_runs"]
+        or len(set(checkpoint_directories)) != len(checkpoint_directories)
+    ):
+        raise ValueError("paper baseline storage qualification is invalid")
     preflight = _load_json(repository_root / evidence["preflight"])
     if (
         preflight.get("format") != "speck_paper_baseline_preflight"

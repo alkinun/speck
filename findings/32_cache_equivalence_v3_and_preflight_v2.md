@@ -88,7 +88,9 @@ decode/preflight blocker from the baseline launch audit.
 It does not rank the architectures, credit KDA, establish language quality, or authorize Paper 1
 training by itself. The historical dense control has one seed and 2.08% more parameters; it is valid
 for runtime calibration, not the planned quality comparison. SPE-58 evaluation-manifest closure and
-SPE-104 storage-provenance closeout remain blockers before the six proxy runs.
+SPE-104 storage-provenance closeout remained a blocker at this point. Finding 44 later qualifies a
+new dedicated checkpoint filesystem without depending on the unattributed cleanup. SPE-58 remains the
+only pre-launch governance blocker before the six proxy runs.
 
 ## Artifacts
 

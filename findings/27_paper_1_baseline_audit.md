@@ -86,6 +86,10 @@ free, 2,029,752,320 bytes (1.89GiB) above the proxy floor. The machine-readable 
 the capacity blocker. The repository does not identify every path changed by the intervening external
 cleanup, so SPE-104 retains that provenance closeout rather than inventing an archive record.
 
+A later independent provisioning event in Finding 44 supersedes this unresolved cleanup path: a new
+dedicated physical filesystem is bound to the six proxy outputs with no historical evidence moved or
+deleted. The old cleanup remains unattributed, but Paper 1 no longer depends on it for capacity.
+
 ## Decision
 
 The historical evidence qualifies as reproducible discovery context only. The new primary pair and

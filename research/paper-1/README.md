@@ -72,6 +72,9 @@ the final combined model.
   decision.
 - [`baseline-audit.json`](../../results/Speck-Paper1/baseline-audit.json) rehashes the five historical
   checkpoints, verifies the materialized pair/data windows, and records the live storage deficit.
+- [`baseline-storage-volume-qualified.json`](../../results/Speck-Paper1/baseline-storage-volume-qualified.json)
+  binds all six proxy checkpoint paths to a dedicated physical filesystem without moving or deleting
+  prior evidence.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -98,8 +101,8 @@ The five historical sequence controls are now identity-audited as discovery evid
 153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
 cells. Its analysis and stopping rule are frozen, and the versioned RTX 3090 training/export/cache
 preflight now passes. Launch remains blocked on the evaluation-manifest dependency and the
-storage-provisioning provenance closeout tracked in SPE-104.
-The current capacity audit passes the 16GiB floor. The project otherwise has strong evidence for GDN/KDA
+storage-provisioning gate is now qualified on the dedicated volume tracked in SPE-104.
+The dedicated volume passes both proxy and finalist floors. The project otherwise has strong evidence for GDN/KDA
 trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
 promotion infrastructure. It does **not** yet have:
 

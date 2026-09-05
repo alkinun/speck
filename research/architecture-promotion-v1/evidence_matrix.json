@@ -103,7 +103,7 @@
         "free-running low-margin path divergence",
         "production runtime parity"
       ],
-      "next_gate": "close SPE-58 and storage provenance, then execute the frozen three-pair whole-architecture proxy without component attribution"
+      "next_gate": "close SPE-58, then execute the frozen three-pair whole-architecture proxy without component attribution"
     },
     {
       "id": "reader_attention_three_cache",

@@ -50,6 +50,7 @@ Read in order:
 42. [41 — HELMET offline native scorer runtime](41_helmet_offline_scorer_runtime.md)
 43. [42 — NoLiMa license and metadata decision gate](42_nolima_license_decision.md)
 44. [43 — HELMET data metadata and storage plan](43_helmet_data_metadata_and_storage_plan.md)
+45. [44 — Paper 1 dedicated checkpoint-volume qualification](44_paper_1_dedicated_checkpoint_volume.md)
 
 Conventions:
 
@@ -175,3 +176,7 @@ Finding 43 pins HELMET's required 11.27GB archive, excludes the unused v2 archiv
 14 active configs and a 64GiB storage floor without downloading data. The 5.5TB candidate partition
 passes capacity but is unmounted; component licenses, download, extraction, loader checks, and execution
 remain blocked.
+
+Finding 44 uses that separately mounted physical filesystem to close Paper 1 checkpoint capacity with
+positive provenance: six unique proxy paths, both proxy/finalist floors passed, unchanged packed data,
+and zero historical evidence moved or deleted. SPE-58 remains the only proxy launch blocker.
