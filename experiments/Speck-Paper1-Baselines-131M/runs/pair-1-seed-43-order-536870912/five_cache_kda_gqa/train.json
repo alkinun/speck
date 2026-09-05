@@ -1,0 +1,6 @@
+{
+  "data_token_offset": 536870912,
+  "extends": "../../../arms/five_cache_kda_gqa/train.json",
+  "run": "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-five_cache_kda_gqa",
+  "seed": 43
+}

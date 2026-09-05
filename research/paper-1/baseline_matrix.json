@@ -1,0 +1,198 @@
+{
+  "format": "speck_paper_baseline_matrix",
+  "format_version": 1,
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "historical_evidence_audited_new_launch_blocked",
+  "updated_on": "2026-09-05",
+  "purpose": "Establish a conventional dense-global control and the conservative five-cache KDA/GQA hybrid before attributing any Paper 1 component effect.",
+  "historical_evidence": {
+    "authority": "discovery context only; no architecture promotion or component attribution",
+    "shared_expected": {
+      "checkpoint_step": 2000,
+      "training_tokens": 131072000,
+      "sequence_length": 4096,
+      "batch_tokens": 65536,
+      "optimizer": "muon",
+      "learning_rate": 0.0015,
+      "warmup_steps": 13,
+      "seed": 42,
+      "data_manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e",
+      "tokenizer_revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da"
+    },
+    "source_artifacts": [
+      {
+        "path": "experiments/SpeckLC-150M-MixerScreen-131M/sweep.json",
+        "sha256": "897752be9914209d3ca7d48e5cfe3eb980aa8bca42c6abb879aaeedd192c0a72"
+      },
+      {
+        "path": "results/SpeckLC-150M-KimiTransfer131M/summary.json",
+        "sha256": "f21ccc432aef318ddae086098d91fbb6fc1a6a4d8b15332437753fcc9dc797eb"
+      },
+      {
+        "path": "results/SpeckLC-150M-KimiReplication131M/summary.json",
+        "sha256": "212171bcd62951ef56b82f2256f1346ce08febd781a24d48a6895cf24b0865df"
+      },
+      {
+        "path": "results/SpeckLC-150M-NoiseFloor-131M/summary.json",
+        "sha256": "93eee53a601e781e768b0c9eb5f354405c1eaa9877647edeeee5cb16cd7dfaba"
+      }
+    ],
+    "arms": [
+      {
+        "id": "dense_global",
+        "role": "historical conventional whole-architecture control",
+        "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/full-global",
+        "checkpoint_run": "SpeckLC-150M-MixerScreen-131M-full-global",
+        "parameters": 157156608,
+        "flops_per_token_at_4096": 1320314880,
+        "validation_loss": 2.826206684112549,
+        "mixer_counts": {"attention_global": 20}
+      },
+      {
+        "id": "swa_2048",
+        "role": "historical bounded-attention systems control",
+        "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/full-local",
+        "checkpoint_run": "SpeckLC-150M-MixerScreen-131M-full-local",
+        "parameters": 157156608,
+        "flops_per_token_at_4096": 1225896960,
+        "validation_loss": 2.8226680755615234,
+        "mixer_counts": {"attention_sliding_2048": 20}
+      },
+      {
+        "id": "gdn_global_silu_rope",
+        "role": "historical recurrent/global mixer-screen control",
+        "experiment": "experiments/SpeckLC-150M-MixerScreen-131M/gdn-global",
+        "checkpoint_run": "SpeckLC-150M-MixerScreen-131M-gdn-global",
+        "parameters": 152916468,
+        "flops_per_token_at_4096": 1019435520,
+        "validation_loss": 2.8193776607513428,
+        "mixer_counts": {"gated_deltanet": 15, "attention_global": 5}
+      },
+      {
+        "id": "gdn_global_sigmoid_nope",
+        "role": "historical KDA-isolation predecessor",
+        "experiment": "experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-nope",
+        "checkpoint_run": "SpeckLC-150M-KimiTransfer131M-gdn-fla-sigmoid-nope",
+        "parameters": 152916468,
+        "flops_per_token_at_4096": 1019435520,
+        "validation_loss": 2.814995765686035,
+        "mixer_counts": {"gated_deltanet": 15, "attention_global": 5}
+      },
+      {
+        "id": "kda_global_sigmoid_nope",
+        "role": "historical conservative hybrid candidate",
+        "experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+        "checkpoint_run": "SpeckLC-150M-KimiTransfer131M-kda-sigmoid-nope",
+        "parameters": 153958938,
+        "flops_per_token_at_4096": 1021601280,
+        "validation_loss": 2.795380115509033,
+        "mixer_counts": {"kimi_delta_attention": 15, "attention_global": 5}
+      }
+    ],
+    "known_limits": [
+      "all five historical arms use seed 42 and packed-stream offset zero",
+      "the dense and SWA arms differ from the KDA hybrid in mixer count, positional treatment, parameters, FLOPs, and realized runtime",
+      "the historical GDN/KDA replication varies initialization seed while holding packed-data order fixed",
+      "historical long-context passkey exact match is zero and cannot establish capability",
+      "historical results predate the current frozen promotion protocols"
+    ]
+  },
+  "planned_primary_baselines": {
+    "family_id": "Speck-Paper1-Baselines-131M",
+    "output_root": "experiments/Speck-Paper1-Baselines-131M",
+    "scientific_scope": "whole-architecture baseline comparison only; component attribution is forbidden",
+    "arms": [
+      {
+        "id": "dense_global_param_match",
+        "control_id": "dense_global_transformer",
+        "template_experiment": "experiments/SpeckLC-150M-MixerScreen-131M/full-global",
+        "transform": {"all_swiglu_intermediate_size": 2235},
+        "parameters": 153977088,
+        "flops_per_token_at_4096": 1301237760,
+        "device_batch_size": 4
+      },
+      {
+        "id": "five_cache_kda_gqa",
+        "control_id": "five_cache_kda_gqa",
+        "template_experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+        "transform": {},
+        "parameters": 153958938,
+        "flops_per_token_at_4096": 1021601280,
+        "device_batch_size": 4
+      }
+    ],
+    "parameter_matching": {
+      "reference_arm": "five_cache_kda_gqa",
+      "maximum_relative_difference": 0.00025,
+      "actual_parameter_difference": 18150,
+      "actual_relative_difference": 0.0001178885762385,
+      "reason": "uniform dense FFN width 2235 is the closest conventional geometry without layer-specific widths"
+    },
+    "shared_training": {
+      "training_tokens": 131072000,
+      "sequence_length": 4096,
+      "batch_tokens": 65536,
+      "optimizer": "muon",
+      "learning_rate": 0.0015,
+      "weight_decay": 0.1,
+      "warmup_steps": 13,
+      "minimum_learning_rate_multiplier": 0.1,
+      "schedule": "cosine",
+      "gradient_clip": 1.0,
+      "evaluation_every_steps": 488,
+      "evaluation_tokens": 5000000,
+      "final_evaluation_tokens": 20000000,
+      "loss_backend": "torch",
+      "data_manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e"
+    },
+    "proxy_confirmation_pairs": [
+      {"pair": 0, "seed": 42, "data_token_offset": 0},
+      {"pair": 1, "seed": 43, "data_token_offset": 536870912},
+      {"pair": 2, "seed": 44, "data_token_offset": 1073741824}
+    ],
+    "matching_views": {
+      "token_matched": {"training_tokens_per_arm": 131072000},
+      "parameter_matched": {"maximum_relative_difference": 0.00025},
+      "compute_matched": {
+        "reference_arm": "five_cache_kda_gqa",
+        "reference_tokens": 131072000,
+        "dense_global_tokens": 102891520,
+        "rounding": "floor to a complete 65536-token optimizer batch"
+      },
+      "wall_clock_matched": "interpolate validation loss against optimizer_seconds at shared evaluation boundaries; do not use end-to-end time with unequal validation cost",
+      "time_to_quality": "report only thresholds reached by both arms and include right-censored thresholds"
+    },
+    "decision_rule": "the three paired discovery runs estimate the whole-architecture effect and paired variance but have no promotion authority; no mixer, positional, or systems component may be credited from this comparison"
+  },
+  "future_finalist_design": {
+    "status": "not_materialized_until_proxy_confirmation",
+    "seeds": [42, 43, 44],
+    "data_token_offsets": [0, 1610612736],
+    "training_tokens_per_run": 1539833856,
+    "minimum_tokens_per_larger_parameter_arm": 10.0,
+    "paired_runs": 6,
+    "total_model_runs": 12,
+    "compute_matched_dense_tokens": 1208877056,
+    "rule": "cross all seeds and data orders and keep candidate/control paired within every cell"
+  },
+  "storage_contract": {
+    "checkpoint_retention": "one complete final model, optimizer, metadata, timing, and completion marker per run; intermediate quality stays in immutable tracking logs",
+    "estimated_max_bytes_per_run": 1400000000,
+    "proxy_confirmation_model_runs": 6,
+    "estimated_proxy_checkpoint_bytes": 8400000000,
+    "future_finalist_model_runs": 12,
+    "estimated_finalist_checkpoint_bytes": 16800000000,
+    "minimum_free_bytes_before_proxy_launch": 17179869184,
+    "minimum_free_bytes_before_finalist_launch": 25769803776,
+    "deletion_policy": "no checkpoint, optimizer, data, result, or export is deleted automatically; archive targets require explicit review"
+  },
+  "launch_gates": [
+    "SPE-58 freezes every evaluation manifest required at this stage",
+    "the checked experiment materialization matches this contract",
+    "distinct packed-data offsets pass loader, resume, and disjoint-window validation",
+    "free storage meets the proxy minimum before the first run",
+    "both arms pass compiled forward, backward, optimizer, export, and incremental-generation preflight on the named RTX 3090 environment",
+    "the analysis script and paired stopping rule are frozen before results"
+  ]
+}

@@ -18,6 +18,7 @@ def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
         "program_files": [
             "README.md",
             "claims.json",
+            "baseline_matrix.json",
             "experiment_program.json",
             "paper_outline.md",
             "reference_audit.md",
@@ -27,6 +28,9 @@ def test_checked_paper_program_is_valid_and_pretraining_is_blocked():
         "non_claims": 8,
         "scales": 6,
         "axes": 3,
+        "historical_baseline_arms": 5,
+        "planned_primary_baseline_arms": 2,
+        "proxy_confirmation_pairs": 3,
         "paper_scale_pretraining": "blocked",
     }
 

@@ -831,6 +831,48 @@ def test_exact_resume_before_at_and_after_phase_change(packed_dataset):
         )
 
 
+def test_training_loader_can_start_from_a_distinct_packed_stream_offset(packed_dataset):
+    path, tokenizer, manifest = packed_dataset
+    expected = loader_state_for_offset(manifest, "train", 200, 4, 1)
+
+    loader = packed_loader(
+        tokenizer,
+        1,
+        4,
+        "train",
+        device="cpu",
+        data_dir=path,
+        initial_token_offset=200,
+    )
+
+    assert next(loader)[2] == expected
+    with pytest.raises(ValueError, match="cannot be combined"):
+        next(
+            packed_loader(
+                tokenizer,
+                1,
+                4,
+                "train",
+                device="cpu",
+                data_dir=path,
+                resume_state_dict=expected,
+                initial_token_offset=200,
+            )
+        )
+    with pytest.raises(ValueError, match="only for training"):
+        next(
+            packed_loader(
+                tokenizer,
+                1,
+                4,
+                "val",
+                device="cpu",
+                data_dir=path,
+                initial_token_offset=200,
+            )
+        )
+
+
 def test_validation_schedule_is_equal_and_absolute_offsets_are_disjoint(packed_dataset):
     path, tokenizer, manifest = packed_dataset
     selected = [scheduled_source(manifest, "val", offset, 4)[0] for offset in range(0, 40, 4)]

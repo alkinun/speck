@@ -134,6 +134,7 @@ def test_legacy_resume_defaults_to_cosine_schedule():
     current = {
         "lr_schedule": "cosine",
         "global_token_offset": 0,
+        "data_token_offset": 0,
         "checkpoint_tokens": [],
         "training_phase": "base",
     }
@@ -141,6 +142,9 @@ def test_legacy_resume_defaults_to_cosine_schedule():
     assert changed_resume_settings(legacy, current) == []
     assert changed_resume_settings(legacy, {**current, "lr_schedule": "constant"}) == [
         "lr_schedule"
+    ]
+    assert changed_resume_settings(legacy, {**current, "data_token_offset": 65_536}) == [
+        "data_token_offset"
     ]
 
 
@@ -155,6 +159,7 @@ def test_runtime_cadence_arguments_are_optional():
     assert arguments(["experiment", "--stop-at-tokens", "50000000"]).stop_at_tokens == 50_000_000
     base = {
         "global_token_offset": 0,
+        "data_token_offset": 0,
         "checkpoint_tokens": [],
         "training_phase": "base",
     }
@@ -179,6 +184,7 @@ def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
     )
     assert trainer.args.stop_at_tokens == 50_000_000
     assert trainer.args.seed == 42
+    assert trainer.args.data_token_offset == 0
 
     with pytest.raises(ValueError, match="configured checkpoint"):
         BaseTrainer(

@@ -1,0 +1,6 @@
+{
+  "data_token_offset": 536870912,
+  "extends": "../../../arms/dense_global_param_match/train.json",
+  "run": "Speck-Paper1-Baselines-131M-pair-1-seed-43-order-536870912-dense_global_param_match",
+  "seed": 43
+}

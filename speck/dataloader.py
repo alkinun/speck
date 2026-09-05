@@ -310,6 +310,7 @@ def packed_loader(
     device: str | torch.device = "cuda",
     resume_state_dict=None,
     data_dir=None,
+    initial_token_offset=0,
 ):
     """Yield one-source microbatches and their exact batch-start cursor state."""
 
@@ -334,9 +335,18 @@ def packed_loader(
     required = local_stride + 1
     if split == "train":
         _validate_training_capacity(manifest, global_stride)
+    if resume_state_dict is not None and initial_token_offset:
+        raise ValueError("initial token offset cannot be combined with resume state")
+    if split != "train" and initial_token_offset:
+        raise ValueError("initial token offset is supported only for training")
     if resume_state_dict is None:
         initial = loader_state_for_offset(
-            manifest, split, 0, sequence_length, batch_size, world_size
+            manifest,
+            split,
+            initial_token_offset,
+            sequence_length,
+            batch_size,
+            world_size,
         )
     else:
         initial = _validate_resume_state(

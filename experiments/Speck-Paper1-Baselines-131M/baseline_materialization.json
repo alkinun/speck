@@ -1,0 +1,85 @@
+{
+  "arms": {
+    "dense_global_param_match": {
+      "flops_per_token_at_4096": 1301237760,
+      "parameters": 153977088
+    },
+    "five_cache_kda_gqa": {
+      "flops_per_token_at_4096": 1021601280,
+      "parameters": 153958938
+    }
+  },
+  "contract": "research/paper-1/baseline_matrix.json",
+  "contract_sha256": "8e04471c43d2041dee28e79e3d60b04cf5ec7cb7c76da586784f02d2f6326928",
+  "family_id": "Speck-Paper1-Baselines-131M",
+  "format": "speck_paper_baseline_materialization",
+  "format_version": 1,
+  "generated_files": [
+    "arms/dense_global_param_match/data.json",
+    "arms/dense_global_param_match/long_context.json",
+    "arms/dense_global_param_match/model.json",
+    "arms/dense_global_param_match/runtime.json",
+    "arms/dense_global_param_match/tokenizer.json",
+    "arms/dense_global_param_match/train.json",
+    "arms/five_cache_kda_gqa/data.json",
+    "arms/five_cache_kda_gqa/long_context.json",
+    "arms/five_cache_kda_gqa/model.json",
+    "arms/five_cache_kda_gqa/runtime.json",
+    "arms/five_cache_kda_gqa/tokenizer.json",
+    "arms/five_cache_kda_gqa/train.json",
+    "runs/pair-0-seed-42-order-0/dense_global_param_match/data.json",
+    "runs/pair-0-seed-42-order-0/dense_global_param_match/long_context.json",
+    "runs/pair-0-seed-42-order-0/dense_global_param_match/model.json",
+    "runs/pair-0-seed-42-order-0/dense_global_param_match/runtime.json",
+    "runs/pair-0-seed-42-order-0/dense_global_param_match/tokenizer.json",
+    "runs/pair-0-seed-42-order-0/dense_global_param_match/train.json",
+    "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/data.json",
+    "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/long_context.json",
+    "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/model.json",
+    "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/runtime.json",
+    "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/tokenizer.json",
+    "runs/pair-0-seed-42-order-0/five_cache_kda_gqa/train.json",
+    "runs/pair-1-seed-43-order-536870912/dense_global_param_match/data.json",
+    "runs/pair-1-seed-43-order-536870912/dense_global_param_match/long_context.json",
+    "runs/pair-1-seed-43-order-536870912/dense_global_param_match/model.json",
+    "runs/pair-1-seed-43-order-536870912/dense_global_param_match/runtime.json",
+    "runs/pair-1-seed-43-order-536870912/dense_global_param_match/tokenizer.json",
+    "runs/pair-1-seed-43-order-536870912/dense_global_param_match/train.json",
+    "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/data.json",
+    "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/long_context.json",
+    "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/model.json",
+    "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/runtime.json",
+    "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/tokenizer.json",
+    "runs/pair-1-seed-43-order-536870912/five_cache_kda_gqa/train.json",
+    "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/data.json",
+    "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/long_context.json",
+    "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/model.json",
+    "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/runtime.json",
+    "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/tokenizer.json",
+    "runs/pair-2-seed-44-order-1073741824/dense_global_param_match/train.json",
+    "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/data.json",
+    "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/long_context.json",
+    "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/model.json",
+    "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/runtime.json",
+    "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/tokenizer.json",
+    "runs/pair-2-seed-44-order-1073741824/five_cache_kda_gqa/train.json"
+  ],
+  "pairs": [
+    {
+      "data_token_offset": 0,
+      "pair": 0,
+      "seed": 42
+    },
+    {
+      "data_token_offset": 536870912,
+      "pair": 1,
+      "seed": 43
+    },
+    {
+      "data_token_offset": 1073741824,
+      "pair": 2,
+      "seed": 44
+    }
+  ],
+  "status": "materialized_unexecuted"
+}

@@ -56,6 +56,8 @@ the final combined model.
 ## Files
 
 - [`claims.json`](claims.json) is the claim and falsification ledger.
+- [`baseline_matrix.json`](baseline_matrix.json) audits historical controls and freezes the first
+  parameter-matched dense/KDA paired design, data orders, matching views, storage gate, and non-claims.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -68,12 +70,18 @@ Validate the program with:
 
 ```bash
 uv run --extra cpu python -m scripts.paper_program_validate research/paper-1
+uv run --extra cpu python -m scripts.paper_baseline_prepare \
+  research/paper-1/baseline_matrix.json --check
 ```
 
 ## Current state
 
-The project has strong evidence for GDN/KDA trade-offs, the need for some global attention, a
-global-cache sharing failure frontier, and rigorous promotion infrastructure. It does **not** yet have:
+The five historical sequence controls are now identity-audited as discovery evidence only. A new
+153.96M-parameter dense/KDA baseline pair is materialized across three paired initialization/data-order
+cells, but launch remains blocked on the evaluation-manifest dependency, paired GPU preflight, frozen
+analysis code, and the 16GiB free-space floor. The project otherwise has strong evidence for GDN/KDA
+trade-offs, the need for some global attention, a global-cache sharing failure frontier, and rigorous
+promotion infrastructure. It does **not** yet have:
 
 - a promoted sequence architecture;
 - a local implementation or isolation of HCA/CSA, AttnRes, or Stable LatentMoE;

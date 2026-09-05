@@ -71,6 +71,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "optimizer",
     "world_size",
     "global_token_offset",
+    "data_token_offset",
     "checkpoint_tokens",
     "training_phase",
     "branch_kind",
@@ -79,6 +80,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
 _LEGACY_RESUME_DEFAULTS = {
     "lr_schedule": "cosine",
     "global_token_offset": 0,
+    "data_token_offset": 0,
     "checkpoint_tokens": [],
     "training_phase": "base",
     "seed": 42,
@@ -258,13 +260,12 @@ class BaseTrainer:
         args.resume = self.cli.resume
         args.no_compile = self.cli.no_compile
         args.global_token_offset = getattr(args, "global_token_offset", 0)
+        args.data_token_offset = getattr(args, "data_token_offset", 0)
         args.checkpoint_tokens = getattr(args, "checkpoint_tokens", [])
         args.training_phase = getattr(args, "training_phase", "base")
         args.activation_checkpointing = getattr(args, "activation_checkpointing", False)
         args.loss_backend = getattr(args, "loss_backend", "torch")
-        args.allow_attention_scope_change = getattr(
-            args, "allow_attention_scope_change", False
-        )
+        args.allow_attention_scope_change = getattr(args, "allow_attention_scope_change", False)
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
         args.wandb_group = getattr(args, "wandb_group", None)
@@ -324,7 +325,9 @@ class BaseTrainer:
             args.global_token_offset = self.metadata["resolved"].get("global_token_offset", 0)
             args.branch_kind = self.metadata["resolved"].get("branch_kind", "same")
         self.data_token_offset = (
-            self.metadata["resolved"].get("data_token_offset", 0) if self.metadata else 0
+            self.metadata["resolved"].get("data_token_offset", 0)
+            if self.metadata
+            else args.data_token_offset
         )
         if self.parent_metadata and self.cli.branch_kind == "context":
             self.data_token_offset = 0
@@ -430,6 +433,15 @@ class BaseTrainer:
             or args.global_token_offset % args.batch_tokens
         ):
             raise ValueError("global token offset must align with optimizer batches")
+        if (
+            not isinstance(self.data_token_offset, int)
+            or isinstance(self.data_token_offset, bool)
+            or self.data_token_offset < 0
+            or self.data_token_offset % args.batch_tokens
+        ):
+            raise ValueError("data token offset must align with optimizer batches")
+        if self.data_token_offset + self.consumed_tokens > self.manifest["requested_train_tokens"]:
+            raise ValueError("data token offset and training run exceed the packed data schedule")
         if self.parent_metadata and self.cli.branch_kind == "context":
             self.global_step_offset = self.parent_metadata.get(
                 "global_step", self.parent_metadata["step"]
@@ -611,6 +623,7 @@ class BaseTrainer:
             device=self.device,
             resume_state_dict=self.data_state,
             data_dir=args.data_dir,
+            initial_token_offset=self.data_token_offset if self.data_state is None else 0,
         )
         self.inputs, self.targets, self.data_state = next(self.train_data)
         train_model: Any = self.model

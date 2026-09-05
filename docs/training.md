@@ -44,6 +44,13 @@ base training performs 76,294 optimizer steps and consumes 5,000,003,584 tokens.
 Mixture phases are selected from each global microbatch's starting token position, so a microbatch
 that begins before a phase boundary stays in that phase even when it crosses the boundary.
 
+Set `data_token_offset` in `train.json` only for a preregistered fresh-run comparison that requires a
+different packed-data order. It moves the initial packed-stream cursor without moving learning-rate or
+reported training progress. The offset is immutable on resume, must align with `batch_tokens`, cannot
+be combined with a resume cursor, and the complete run must remain inside the prepared data schedule.
+Pair candidate and control at the same offset; changing the offset for only one arm confounds the
+architecture effect with training data.
+
 Compiled base training also batches same-shaped Muon matrices for the Newton-Schulz update and
 compiles that optimizer step independently. Both compiled graphs enable aggressive kernel fusion
 and exhaustive GEMM autotuning. The fixed-width causal convolution branches use a compiler-fused

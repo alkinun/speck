@@ -86,6 +86,7 @@ configuration:
 | `experiments/SpeckLC-150M-GDN` | 3:1 Gated DeltaNet/GQA long-context proxy and 4K base-training recipe. |
 | `experiments/SpeckLC-1.2B` | Materialized dense 1.218B-parameter research target with a 1M allocation ceiling. |
 | `experiments/SpeckLC-150M-ReaderAttention131M` | Parameter- and FLOP-matched staircase over the number of shared global key-value caches. |
+| `experiments/Speck-Paper1-Baselines-131M` | Unexecuted three-pair, parameter-matched dense-global/KDA baseline matrix for Paper 1. |
 | `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 supervised fine-tuning of `Speck1-140M`. |
 | `experiments/Speck1.1-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the original base weights. |
 | `experiments/Speck1.1-140M-Instruct-2ep` | Retained two-epoch SpeckChat2 variant. |

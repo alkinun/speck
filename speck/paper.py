@@ -1,16 +1,26 @@
 """Validate the preregistered Speck Paper 1 research program."""
 
+import hashlib
 import json
 from pathlib import Path
 
 PROGRAM_FILES = (
     "README.md",
     "claims.json",
+    "baseline_matrix.json",
     "experiment_program.json",
     "paper_outline.md",
     "reference_audit.md",
     "reporting_checklist.md",
 )
+
+
+def _file_sha256(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _load_json(path):
@@ -180,6 +190,184 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     return {"scales": len(scale_ids), "axes": len(axis_ids)}
 
 
+def _validate_baseline_matrix(matrix, program, paper_id, repository_root):
+    _require(
+        matrix,
+        {
+            "format",
+            "format_version",
+            "paper_id",
+            "policy_id",
+            "status",
+            "historical_evidence",
+            "planned_primary_baselines",
+            "future_finalist_design",
+            "storage_contract",
+            "launch_gates",
+        },
+        "paper baseline matrix",
+    )
+    if matrix["format"] != "speck_paper_baseline_matrix" or matrix["format_version"] != 1:
+        raise ValueError("paper baseline matrix must use format version 1")
+    if matrix["paper_id"] != paper_id or matrix["policy_id"] != program["policy_id"]:
+        raise ValueError("paper baseline matrix references a different paper or policy")
+    if matrix["status"] != "historical_evidence_audited_new_launch_blocked":
+        raise ValueError("paper baseline launch must remain blocked before paired preflight")
+
+    historical = matrix["historical_evidence"]
+    _require(
+        historical,
+        {"authority", "shared_expected", "source_artifacts", "arms", "known_limits"},
+        "historical baseline evidence",
+    )
+    historical_ids = _unique_ids(historical["arms"], "historical baseline arm")
+    if historical_ids != {
+        "dense_global",
+        "swa_2048",
+        "gdn_global_silu_rope",
+        "gdn_global_sigmoid_nope",
+        "kda_global_sigmoid_nope",
+    }:
+        raise ValueError("historical baseline inventory is incomplete")
+    required_arm = {
+        "id",
+        "role",
+        "experiment",
+        "checkpoint_run",
+        "parameters",
+        "flops_per_token_at_4096",
+        "validation_loss",
+        "mixer_counts",
+    }
+    for arm in historical["arms"]:
+        _require(arm, required_arm, f"historical baseline {arm.get('id')}")
+        experiment = repository_root / arm["experiment"]
+        if not experiment.is_dir() or any(
+            not (experiment / f"{name}.json").is_file()
+            for name in ("data", "model", "tokenizer", "train")
+        ):
+            raise ValueError(f"historical baseline {arm['id']} experiment is missing")
+        if arm["parameters"] < 130_000_000 or arm["parameters"] > 170_000_000:
+            raise ValueError(f"historical baseline {arm['id']} is outside the proxy scale")
+    for artifact in historical["source_artifacts"]:
+        _require(artifact, {"path", "sha256"}, "historical baseline source artifact")
+        path = repository_root / artifact["path"]
+        if not path.is_file() or _file_sha256(path) != artifact["sha256"]:
+            raise ValueError("historical baseline source artifact does not match its pin")
+
+    planned = matrix["planned_primary_baselines"]
+    _require(
+        planned,
+        {
+            "family_id",
+            "output_root",
+            "scientific_scope",
+            "arms",
+            "parameter_matching",
+            "shared_training",
+            "proxy_confirmation_pairs",
+            "matching_views",
+            "decision_rule",
+        },
+        "planned primary baselines",
+    )
+    planned_ids = _unique_ids(planned["arms"], "planned baseline arm")
+    if planned_ids != {"dense_global_param_match", "five_cache_kda_gqa"}:
+        raise ValueError("planned primary baseline arms are incomplete")
+    control_ids = {arm["control_id"] for arm in planned["arms"]}
+    if control_ids != {
+        program["controls"]["primary_conventional"]["id"],
+        program["controls"]["primary_hybrid"]["id"],
+    }:
+        raise ValueError("planned baseline arms do not implement the paper controls")
+    for arm in planned["arms"]:
+        _require(
+            arm,
+            {
+                "id",
+                "control_id",
+                "template_experiment",
+                "transform",
+                "parameters",
+                "flops_per_token_at_4096",
+                "device_batch_size",
+            },
+            f"planned baseline {arm.get('id')}",
+        )
+        if not (repository_root / arm["template_experiment"]).is_dir():
+            raise ValueError(f"planned baseline {arm['id']} template is missing")
+    parameters = [arm["parameters"] for arm in planned["arms"]]
+    relative = (max(parameters) - min(parameters)) / min(parameters)
+    matching = planned["parameter_matching"]
+    if (
+        relative > matching.get("maximum_relative_difference", 0)
+        or abs(relative - matching.get("actual_relative_difference", -1)) > 1e-15
+        or max(parameters) - min(parameters) != matching.get("actual_parameter_difference")
+    ):
+        raise ValueError("planned primary baseline parameter match is invalid")
+    training = planned["shared_training"]
+    batch_tokens = training.get("batch_tokens")
+    training_tokens = training.get("training_tokens")
+    if (
+        batch_tokens != 65_536
+        or training_tokens != 131_072_000
+        or training_tokens % batch_tokens
+        or training.get("sequence_length") != 4_096
+    ):
+        raise ValueError("planned baseline training geometry is invalid")
+    pairs = planned["proxy_confirmation_pairs"]
+    if [pair.get("seed") for pair in pairs] != [42, 43, 44]:
+        raise ValueError("planned baseline confirmation requires seeds 42, 43, and 44")
+    offsets = [pair.get("data_token_offset") for pair in pairs]
+    if (
+        len(set(offsets)) != 3
+        or any(
+            isinstance(offset, bool)
+            or not isinstance(offset, int)
+            or offset < 0
+            or offset % batch_tokens
+            for offset in offsets
+        )
+        or any(left + training_tokens > right for left, right in zip(offsets, offsets[1:]))
+    ):
+        raise ValueError("planned baseline packed-data windows must be aligned and disjoint")
+    compute = planned["matching_views"].get("compute_matched", {})
+    if (
+        compute.get("reference_tokens") != training_tokens
+        or compute.get("dense_global_tokens", 0) % batch_tokens
+        or not 0 < compute.get("dense_global_tokens", 0) < training_tokens
+    ):
+        raise ValueError("planned baseline compute-matched view is invalid")
+
+    finalist = matrix["future_finalist_design"]
+    if (
+        finalist.get("status") != "not_materialized_until_proxy_confirmation"
+        or finalist.get("seeds") != [42, 43, 44]
+        or len(finalist.get("data_token_offsets", ())) != 2
+        or finalist.get("paired_runs") != 6
+        or finalist.get("total_model_runs") != 12
+        or finalist.get("training_tokens_per_run", 0) < max(parameters) * 10
+    ):
+        raise ValueError("future finalist baseline design is invalid")
+    storage = matrix["storage_contract"]
+    if (
+        storage.get("proxy_confirmation_model_runs") != 2 * len(pairs)
+        or storage.get("future_finalist_model_runs") != finalist["total_model_runs"]
+        or storage.get("minimum_free_bytes_before_proxy_launch", 0)
+        < storage.get("estimated_proxy_checkpoint_bytes", 0)
+        or storage.get("minimum_free_bytes_before_finalist_launch", 0)
+        < storage.get("estimated_finalist_checkpoint_bytes", 0)
+    ):
+        raise ValueError("paper baseline storage contract is insufficient")
+    if len(matrix["launch_gates"]) < 6:
+        raise ValueError("paper baseline launch gates are incomplete")
+    return {
+        "historical_arms": len(historical_ids),
+        "planned_arms": len(planned_ids),
+        "proxy_pairs": len(pairs),
+    }
+
+
 def _validate_markdown(directory):
     required_headings = {
         "README.md": ("## Working thesis", "## Novelty gate", "## Current state"),
@@ -224,6 +412,12 @@ def validate_paper_program(directory, repository_root=None):
         else Path(repository_root).expanduser().resolve()
     )
     inventory = _validate_program(program, claims["paper_id"], claim_ids, repository_root)
+    baseline = _validate_baseline_matrix(
+        _load_json(directory / "baseline_matrix.json"),
+        program,
+        claims["paper_id"],
+        repository_root,
+    )
     _validate_markdown(directory)
     return {
         "paper_id": claims["paper_id"],
@@ -233,5 +427,8 @@ def validate_paper_program(directory, repository_root=None):
         "non_claims": len(claims["non_claims"]),
         "scales": inventory["scales"],
         "axes": inventory["axes"],
+        "historical_baseline_arms": baseline["historical_arms"],
+        "planned_primary_baseline_arms": baseline["planned_arms"],
+        "proxy_confirmation_pairs": baseline["proxy_pairs"],
         "paper_scale_pretraining": "blocked",
     }
