@@ -1,0 +1,316 @@
+{
+  "format": "speck_paper_experiment_program",
+  "format_version": 1,
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "preregistered_program_no_architecture_selected",
+  "updated_on": "2026-09-05",
+  "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
+  "controls": {
+    "primary_conventional": {
+      "id": "dense_global_transformer",
+      "description": "PreNorm dense Transformer with global GQA, standard residuals, dense SwiGLU, and the same tokenizer, data, optimizer policy, and active parameter target.",
+      "reason": "Anchors the claim against a conventional architecture rather than only against earlier Speck variants."
+    },
+    "primary_hybrid": {
+      "id": "five_cache_kda_gqa",
+      "description": "Current conservative KDA/sigmoid/NoPE model with five independently refreshed global GQA memories, standard residuals, and dense SwiGLU.",
+      "reason": "Separates new depth, width, and attention-compression effects from the established Speck long-context control."
+    },
+    "mechanism_controls": [
+      "GDN/sigmoid/RoPE hybrid",
+      "full global attention",
+      "SWA-only attention",
+      "dense SwiGLU",
+      "standard residual"
+    ]
+  },
+  "matching_views": [
+    "fixed training tokens",
+    "fixed analytic training FLOPs",
+    "fixed active non-embedding parameters",
+    "fixed total non-embedding parameters",
+    "fixed wall-clock budget on named hardware",
+    "time and energy to locked quality"
+  ],
+  "scales": [
+    {
+      "id": "mechanism",
+      "active_parameters": [30000000, 60000000],
+      "minimum_tokens_per_parameter": 2,
+      "purpose": "correctness, optimization calibration, task qualification, and broad rejection",
+      "promotion_authority": false
+    },
+    {
+      "id": "proxy_discovery",
+      "active_parameters": [130000000, 170000000],
+      "training_tokens": 131072000,
+      "purpose": "one-axis discovery under the existing RTX 3090 envelope",
+      "promotion_authority": false
+    },
+    {
+      "id": "proxy_finalist",
+      "active_parameters": [130000000, 170000000],
+      "minimum_tokens_per_parameter": 10,
+      "replication": "three initialization seeds crossed with two packed-data orders",
+      "purpose": "longer-horizon finalist replication",
+      "promotion_authority": true
+    },
+    {
+      "id": "medium_transfer",
+      "active_parameters": [300000000, 600000000],
+      "minimum_tokens_per_parameter": 10,
+      "replication": "three paired seeds with distinct data orders",
+      "purpose": "scale-transfer and systems confirmation",
+      "promotion_authority": true,
+      "launch_blocker": "named hardware, parallelism, storage, and absolute cost envelope"
+    },
+    {
+      "id": "target_sentinel",
+      "active_parameters": [1000000000, 1500000000],
+      "training_tokens": 20000000000,
+      "replication": "one paired candidate/control run",
+      "purpose": "detect a costly integration or ranking reversal, not establish population equivalence",
+      "promotion_authority": false
+    },
+    {
+      "id": "paper_scale",
+      "active_parameters": null,
+      "training_tokens": null,
+      "purpose": "final matched pretraining only after every large_pretraining_gate item passes",
+      "promotion_authority": false
+    }
+  ],
+  "axes": [
+    {
+      "id": "sequence",
+      "claim_ids": ["C1", "C4", "C6"],
+      "ordered_families": [
+        {
+          "id": "sequence_backbone",
+          "fixed": "standard residual, dense SwiGLU, five global read positions, GQA3 cache representation",
+          "arms": [
+            "dense global attention",
+            "SWA-only attention",
+            "GDN plus global GQA",
+            "KDA plus global GQA"
+          ],
+          "decision": "select the recurrent/local backbone without changing cache compression or sparsity"
+        },
+        {
+          "id": "exact_cache_representation",
+          "fixed": "promoted backbone, five independent global memories, placements and read count",
+          "arms": ["GQA3", "MQA1", "NoPE MLA"],
+          "decision": "select cache representation using quality, state, batch-1 decode, and maximum-resident-batch throughput"
+        },
+        {
+          "id": "coarse_global_compression",
+          "fixed": "selected exact-cache representation and local/recurrent backbone",
+          "arms": ["uncompressed exact global", "HCA at multiple compression rates"],
+          "decision": "test whether dense coarse summaries preserve integration and composition"
+        },
+        {
+          "id": "precise_sparse_retrieval",
+          "fixed": "selected local and coarse-global branches",
+          "arms": ["dense compressed attention", "CSA block selection", "token-level selection only if CSA fails selector recall"],
+          "decision": "select the simplest granularity whose selector recall and end-to-end quality pass"
+        },
+        {
+          "id": "raw_local_branch",
+          "fixed": "selected compressed/sparse global operator",
+          "arms": ["without raw local branch", "SWA windows 64, 128, 256, 512"],
+          "decision": "retain the smallest window that recovers within-block causality and local quality"
+        },
+        {
+          "id": "ratio_and_placement",
+          "fixed": "selected operator types and parameter/FLOP budgets",
+          "arms": ["1:1", "3:1", "7:1", "middle-plus-final", "uniform", "integration-heavy", "readout-heavy"],
+          "decision": "separate integration, memory refresh, and readout roles rather than assume a published ratio"
+        }
+      ],
+      "required_diagnostics": [
+        "KDA decay and overwrite distributions",
+        "attention mass captured by selected compressed entries",
+        "selector recall against dense attention",
+        "compression reconstruction and downstream sufficiency",
+        "route, payload, and direct composition",
+        "position-binned and trailing-token loss",
+        "per-layer state, prefill, and decode cost"
+      ]
+    },
+    {
+      "id": "depth",
+      "claim_ids": ["C2", "C4", "C6"],
+      "ordered_families": [
+        {
+          "id": "attnres_isolation",
+          "fixed": "selected or conservative sequence backbone and dense SwiGLU",
+          "arms": ["standard PreNorm residual", "Full AttnRes", "Block AttnRes with approximately eight sources"],
+          "decision": "promote only content-dependent routing that beats a parameter/FLOP-matched standard residual"
+        },
+        {
+          "id": "attnres_block_count",
+          "fixed": "promoted AttnRes formulation",
+          "arms": ["4 summaries", "8 summaries", "12 summaries", "full depth"],
+          "decision": "find the quality versus activation/communication frontier"
+        },
+        {
+          "id": "depth_width_cross_sweep",
+          "fixed": "training compute and parameter budget",
+          "arms": ["at least three depths by three widths for standard residual", "same grid for promoted AttnRes"],
+          "decision": "prevent comparison against a baseline shape optimized for a different residual rule"
+        }
+      ],
+      "required_diagnostics": [
+        "hidden and residual RMS by logical depth",
+        "module update fraction",
+        "gradient norm by depth",
+        "AttnRes source weights and entropy",
+        "effective source age and embedding reliance",
+        "activation memory and recomputation",
+        "incremental decode and export parity"
+      ]
+    },
+    {
+      "id": "width",
+      "claim_ids": ["C3", "C4", "C6"],
+      "ordered_families": [
+        {
+          "id": "dense_vs_conventional_moe",
+          "fixed": "selected or conservative sequence/depth stack",
+          "arms": ["dense SwiGLU", "top-k routed SwiGLU plus shared expert"],
+          "decision": "establish whether conditional width helps before adding stability machinery"
+        },
+        {
+          "id": "latent_projection",
+          "fixed": "expert count, top-k, active parameters, and routing",
+          "arms": ["direct experts", "LatentMoE", "normalized LatentMoE"],
+          "decision": "isolate latent parameterization and normalization"
+        },
+        {
+          "id": "bounded_activation",
+          "fixed": "promoted expert geometry",
+          "arms": ["SwiGLU", "clamped SwiGLU", "SiTU-GLU or justified bounded alternative"],
+          "decision": "separate quality from outlier and stability effects"
+        },
+        {
+          "id": "balancing",
+          "fixed": "promoted expert and activation geometry",
+          "arms": ["auxiliary load loss", "bias-based balancing", "quantile balancing"],
+          "decision": "choose using quality, load tails, communication, and instability—not mean load alone"
+        },
+        {
+          "id": "expert_geometry",
+          "fixed": "active parameter/FLOP target",
+          "arms": [
+            "low expert count with a higher activated fraction",
+            "medium expert count and activated fraction",
+            "high expert count with a lower activated fraction"
+          ],
+          "decision": "select total/active capacity only after the mechanism is stable"
+        }
+      ],
+      "required_diagnostics": [
+        "per-expert token counts and coefficient of variation",
+        "maximum load and capacity overflow",
+        "routing probability and margin distributions",
+        "expert specialization and redundancy",
+        "activation and gradient outliers",
+        "expert memory and communication bytes",
+        "batch-1, single-device, and expert-parallel serving"
+      ]
+    }
+  ],
+  "interaction_program": {
+    "claim_ids": ["C0", "C4"],
+    "entry_rule": "only independently promoted mechanisms enter",
+    "pairwise_cells": [
+      "sequence × depth",
+      "sequence × width",
+      "depth × width"
+    ],
+    "full_factorial_requirement": "run the 2^3 presence/absence cube at the discovery scale for the final three mechanisms",
+    "final_removals": [
+      "remove promoted sequence novelty",
+      "replace depth routing with retuned standard residual",
+      "replace MoE with parameter/FLOP-matched dense SwiGLU",
+      "remove every auxiliary stability mechanism individually"
+    ],
+    "failure_rule": "delete any component whose combined-model effect does not clear its quality or systems threshold"
+  },
+  "scaling_program": {
+    "claim_ids": ["C5"],
+    "entry_rule": "final candidate and strongest conventional baseline fixed before fitting",
+    "minimum_points_per_architecture": 5,
+    "fit_views": ["loss versus analytic compute", "loss versus wall-clock", "quality versus energy"],
+    "requirements": [
+      "identical data family and tuning budget",
+      "compute-optimal token allocation",
+      "fit parameter uncertainty and residuals",
+      "one held-out scale or compute point",
+      "architecture-by-training-horizon interaction"
+    ]
+  },
+  "evaluation_program": {
+    "base_quality": [
+      "held-out aggregate and per-source language loss",
+      "general knowledge and commonsense",
+      "code",
+      "mathematics",
+      "reasoning",
+      "multilingual only if claimed"
+    ],
+    "mechanism": [
+      "MQAR",
+      "palindrome/copy",
+      "state tracking",
+      "structured retrieval v2",
+      "symbolic composition v2"
+    ],
+    "long_context": ["RULER", "NoLiMa", "HELMET", "real long-document loss"],
+    "systems": [
+      "training time and energy to fixed quality",
+      "TTFT and TPOT percentiles",
+      "output throughput under arrival-rate sweeps",
+      "maximum resident batch",
+      "persistent state and peak allocation",
+      "compile and kernel startup",
+      "production-runtime parity"
+    ],
+    "reporting": "all primary and guardrail metrics use architecture-promotion-v1 decision rules"
+  },
+  "analysis_program": [
+    {
+      "id": "causal_mechanism",
+      "requirement": "intervene on the proposed mechanism and show the predicted diagnostic and capability move together"
+    },
+    {
+      "id": "failure_taxonomy",
+      "requirement": "classify optimization, capacity, retrieval, composition, routing, numerical, kernel, and runtime failures separately"
+    },
+    {
+      "id": "diagnostic_validity",
+      "requirement": "measure whether internal diagnostics predict held-out quality across arms, seeds, horizons, and scales"
+    },
+    {
+      "id": "cost_attribution",
+      "requirement": "attribute wall-clock and memory to operators, communication, scheduling, fragmentation, and data rather than only whole-step totals"
+    }
+  ],
+  "large_pretraining_gate": {
+    "status": "blocked",
+    "required": [
+      "one Speck-specific novelty satisfies the README novelty gate",
+      "sequence, depth, and width finalists pass isolated architecture-promotion-v1 gates",
+      "all pairwise interactions and the discovery-scale 2^3 cube are complete",
+      "finalist proxy runs satisfy the six-pair and ten-token-per-parameter policy",
+      "medium-scale transfer passes without sign reversal",
+      "RULER, NoLiMa, HELMET, short-quality, code, math, and reasoning manifests are qualified",
+      "training and serving kernels pass correctness on target hardware",
+      "consumer and datacenter cost envelopes are measured",
+      "storage, compute, energy, and failure-recovery budgets cover every declared arm",
+      "paper claims and analysis plan are frozen before results"
+    ],
+    "decision": "no paper-scale or release-scale pretraining begins until every required item has a checked artifact"
+  }
+}

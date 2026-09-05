@@ -1,0 +1,166 @@
+{
+  "format": "speck_paper_claims",
+  "format_version": 1,
+  "paper_id": "speck-paper-1",
+  "status": "hypotheses_only",
+  "updated_on": "2026-09-05",
+  "central_claim_id": "C0",
+  "claims": [
+    {
+      "id": "C0",
+      "type": "central",
+      "statement": "A jointly selected sequence/depth/width architecture can improve both quality per training cost and quality per serving cost over strong conventional and hybrid baselines.",
+      "status": "hypothesis",
+      "required_evidence": [
+        "all retained components pass isolated policy-v1 promotion",
+        "final removal and pairwise interaction matrix",
+        "three-scale sign-consistent transfer including medium scale",
+        "matched longer-horizon pretraining comparison",
+        "independent short- and long-context evaluation",
+        "realized training and production-runtime serving measurements"
+      ],
+      "falsifiers": [
+        "final candidate fails any hard quality floor",
+        "cost improvement disappears in the production runtime",
+        "architecture ranking reverses at medium scale or longer horizon",
+        "combined model is Pareto-dominated by a simpler ablation"
+      ],
+      "paper_sections": ["1", "8", "10", "14"]
+    },
+    {
+      "id": "C1",
+      "type": "sequence",
+      "statement": "A hierarchical sequence mixer can retain local detail, coarse global coverage, and precise retrieval with lower long-context cost than dense global attention.",
+      "status": "hypothesis",
+      "candidate_family": ["SWA", "KDA", "GQA", "MQA", "MLA", "HCA", "CSA"],
+      "required_evidence": [
+        "operator-by-operator isolation",
+        "global ratio and placement sweep",
+        "compression fidelity and selector recall",
+        "retrieval, composition, position-binned loss, and independent long-context suites",
+        "prefill, decode, state, and peak-memory curves"
+      ],
+      "falsifiers": [
+        "loss or task non-inferiority fails",
+        "route or payload constituent retrieval fails",
+        "sparse selector misses required dense-attention support",
+        "theoretical cache/FLOP savings do not become realized cost savings"
+      ],
+      "paper_sections": ["3.1", "6.1", "9", "11"]
+    },
+    {
+      "id": "C2",
+      "type": "depth",
+      "statement": "Content-dependent blockwise depth routing improves the compute-optimal depth/width frontier without unacceptable activation or serving complexity.",
+      "status": "hypothesis",
+      "candidate_family": ["standard residual", "Full AttnRes", "Block AttnRes"],
+      "required_evidence": [
+        "matched standard/full/block comparison",
+        "depth-width cross-sweep",
+        "three-seed and data-order replication",
+        "hidden-state, gradient, source-weight, entropy, and source-age analysis",
+        "checkpoint, export, prefill, decode, and activation-memory qualification"
+      ],
+      "falsifiers": [
+        "gain is inside the predeclared non-inferiority resolution",
+        "a retuned standard-residual depth/width point matches it",
+        "runtime or activation overhead exceeds its declared systems benefit",
+        "routing collapses to static or near-uniform weights without quality contribution"
+      ],
+      "paper_sections": ["3.2", "6.2", "11"]
+    },
+    {
+      "id": "C3",
+      "type": "width",
+      "statement": "A stable latent expert design improves quality per active training FLOP without losing small-batch serving efficiency to expert memory or routing overhead.",
+      "status": "hypothesis",
+      "candidate_family": [
+        "dense SwiGLU",
+        "conventional top-k MoE",
+        "normalized LatentMoE",
+        "bounded-activation LatentMoE",
+        "balanced Stable LatentMoE"
+      ],
+      "required_evidence": [
+        "dense-versus-MoE comparison with total and active parameter views",
+        "separate normalization, activation, and balancing ablations",
+        "expert load, routing margin, specialization, dropped-token, and outlier analysis",
+        "communication and resident-weight measurements",
+        "single-device and expert-parallel serving profiles"
+      ],
+      "falsifiers": [
+        "quality gain vanishes at equal wall-clock or memory budget",
+        "routing instability requires frequent rescue interventions",
+        "communication removes the active-FLOP advantage",
+        "small-batch serving is Pareto-dominated by dense SwiGLU"
+      ],
+      "paper_sections": ["3.3", "6.3", "10", "11"]
+    },
+    {
+      "id": "C4",
+      "type": "composition",
+      "statement": "The selected sequence, depth, and width mechanisms provide complementary rather than redundant gains when combined.",
+      "status": "hypothesis",
+      "required_evidence": [
+        "every component passes alone",
+        "all three pairwise interactions are measured",
+        "full combination beats every one-component removal",
+        "mechanism diagnostics remain healthy in the combined model"
+      ],
+      "falsifiers": [
+        "a negative pairwise interaction exceeds a component's isolated gain",
+        "the full model is tied by a simpler removal",
+        "one mechanism suppresses another's claimed diagnostic"
+      ],
+      "paper_sections": ["6.4", "8", "11"]
+    },
+    {
+      "id": "C5",
+      "type": "scaling",
+      "statement": "The Speck candidate has a better empirical loss-compute frontier than the strongest conventional baseline over the tested scale range.",
+      "status": "hypothesis",
+      "required_evidence": [
+        "at least five compute-optimal scale points per architecture",
+        "shared fitting function and disclosed hyperparameter search",
+        "fit uncertainty and residual diagnostics",
+        "held-out scale or compute confirmation",
+        "time-to-quality alongside analytic compute"
+      ],
+      "falsifiers": [
+        "fitted advantage is not distinguishable under uncertainty",
+        "held-out point falls outside the predicted advantage",
+        "wall-clock frontier contradicts the analytic-compute frontier"
+      ],
+      "paper_sections": ["7", "8"]
+    },
+    {
+      "id": "C6",
+      "type": "systems",
+      "statement": "The architecture's theoretical sparsity and compression produce realized end-to-end training and serving savings on named hardware and a production runtime.",
+      "status": "hypothesis",
+      "required_evidence": [
+        "reference and optimized kernel parity",
+        "time-to-quality and energy-to-quality",
+        "batch-1 and saturation TTFT/TPOT/throughput",
+        "complete persistent and peak-memory accounting",
+        "at least one consumer and one datacenter hardware profile"
+      ],
+      "falsifiers": [
+        "custom kernels fail correctness or determinism contracts",
+        "scheduler, communication, or dequantization erases the claimed gain",
+        "benefit appears only in an unrepresentative microbenchmark"
+      ],
+      "paper_sections": ["4", "10"]
+    }
+  ],
+  "non_claims": [
+    "A configured context length proves effective or usable context.",
+    "A lower analytic FLOP count proves lower wall-clock or dollar cost.",
+    "Synthetic recall proves long-document reasoning.",
+    "A collection of published components is itself a novel architecture.",
+    "One seed, one data order, or one training horizon establishes an architecture ranking.",
+    "A 150M proxy result automatically transfers to a billion-parameter model.",
+    "Post-training gains can be attributed to architecture when data or algorithms differ.",
+    "A whole-system comparison isolates every component."
+  ]
+}

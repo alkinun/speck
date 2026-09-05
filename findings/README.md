@@ -32,6 +32,7 @@ Read in order:
 24. [23 — Symbolic two-hop composition](23_symbolic_two_hop_composition.md)
 25. [24 — Speck Reader Attention and the global cache-count staircase](24_reader_attention.md)
 26. [25 — Architecture promotion policy and cost envelopes](25_architecture_promotion_policy.md)
+27. [26 — Paper 1 research program](26_paper_1_research_program.md)
 
 Conventions:
 
@@ -67,3 +68,8 @@ Finding 25 replaces informal equivalence reasoning with the versioned
 one-sided non-inferiority, staged replication, realized systems thresholds, named RTX 3090 cost
 envelopes, frozen evaluation revisions, and a live evidence matrix. External long-context integrations,
 200-case internal confirmation suites, and a production hardware profile remain explicit blockers.
+
+Finding 26 establishes the first-paper program without selecting an architecture. It organizes
+candidate research across sequence, depth, and width; requires a Speck-specific novelty rather than a
+bundle of published mechanisms; mandates isolated, interaction, scaling, systems, and mechanistic
+evidence; and blocks paper-scale pretraining until ten checked prerequisites pass.

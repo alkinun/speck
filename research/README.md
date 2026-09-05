@@ -1,4 +1,9 @@
-# Architecture promotion research
+# Research programs
+
+The active [Speck Paper 1 program](paper-1/) defines the thesis, novelty gate, claim ledger,
+tri-axis experiment sequence, manuscript structure, and paper-scale pretraining gate.
+
+## Architecture promotion
 
 This directory contains the versioned decision contract for selecting Speck architecture
 components. It sits between the literature notes in `papers/`, the experiment definitions in

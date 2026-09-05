@@ -118,6 +118,7 @@ prepared conversation dataset.
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context research](docs/long_context.md) | Claims, architecture, experiment sequence, reference models, data, and known boundaries. |
 | [Architecture promotion research](research/README.md) | Versioned statistical policy, cost envelopes, evaluation manifest, and evidence matrix. |
+| [Paper 1 research program](research/paper-1/README.md) | Thesis, novelty gate, claims, experiment ladder, manuscript outline, and reporting contract. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
 | [Evaluation and benchmarking](docs/evaluation.md) | Open SLM, BananaMind, optimization, inference performance, and checked results. |
 | [Releasing models](docs/releasing.md) | Maintainer-only Transformers, code-only, and GGUF publication workflows. |
