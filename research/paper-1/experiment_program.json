@@ -544,6 +544,11 @@
       "architecture-by-training-horizon interaction"
     ]
   },
+  "sequence_cache_representation": {
+    "contract": "research/paper-1/sequence_cache_representation_v1.json",
+    "sha256": "e02d5c7bc9642975b5f70575f7b1c5c21da75e7fcabd723ec92719a0aa0c39fb",
+    "status": "conditional_design_frozen_training_blocked"
+  },
   "status": "preregistered_program_no_architecture_selected",
   "updated_on": "2026-09-05"
 }

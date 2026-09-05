@@ -70,6 +70,9 @@ the final combined model.
 - [`proxy_disposition_v1.json`](proxy_disposition_v1.json) freezes the integrity, aggregate-failure,
   source-failure, and quality-pass branches before candidate 0, including the exact limits on finalist
   eligibility and non-claims.
+- [`sequence_cache_representation_v1.json`](sequence_cache_representation_v1.json) conditionally
+  freezes the five-memory GQA3/MQA1/NoPE-MLA128 isolation, analytic geometry, implementation gates,
+  multiplicity, and realized systems thresholds without authorizing training.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

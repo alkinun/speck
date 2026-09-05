@@ -1,0 +1,194 @@
+{
+  "format": "speck_sequence_cache_representation_design",
+  "format_version": 1,
+  "design_id": "speck-paper-1-five-cache-representation-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "conditional_design_frozen_training_blocked",
+  "frozen_on": "2026-09-05",
+  "purpose": "Isolate exact global-cache representation after selection of the five-memory recurrent/global sequence backbone.",
+  "causal_question": "Can each of five independent exact global memories be compressed from GQA3 to MQA1 or a 128-dimensional NoPE latent without losing language, retrieval, or composition quality, while reducing realized serving state and decode cost?",
+  "evidence_basis": [
+    {
+      "path": "papers/16_deepseek_v2_mla.md",
+      "use": "MLA is exact global attention with a compressed per-token KV latent; published headline ratios are not imported as Speck measurements"
+    },
+    {
+      "path": "findings/24_reader_attention.md",
+      "use": "sharing memories across attention positions reduces state but fails the route edge; this study therefore retains five independent memories"
+    },
+    {
+      "path": "research/architecture-promotion-v1/evidence_matrix.json",
+      "use": "MQA is expressible, MLA is not implemented, and quality/kernel risks remain unmeasured locally"
+    }
+  ],
+  "launch_blockers": [
+    "the current six-cell whole-architecture proxy must pass its frozen disposition",
+    "the five-cache KDA/GQA sequence backbone must pass the separately frozen proxy-finalist replication required by the ordered sequence program",
+    "MLA reference and optimized paths must pass every correctness/export gate before any MLA language-model training",
+    "the comparison analysis, multiplicity correction, data cells, and realized systems protocol must be frozen before results",
+    "all run-specific storage and hardware gates must pass"
+  ],
+  "fixed_backbone": {
+    "hidden_size": 768,
+    "layers": 20,
+    "recurrent_layers": 15,
+    "recurrent_operator": "kimi_delta_attention",
+    "recurrent_gate": "sigmoid",
+    "global_attention_layers": 5,
+    "global_layer_indices_zero_based": [
+      3,
+      7,
+      11,
+      15,
+      19
+    ],
+    "independent_global_memories": 5,
+    "query_heads": 12,
+    "head_dim": 64,
+    "rope_dim": 0,
+    "position_rule": "NoPE remains fixed; do not introduce a decoupled RoPE path in this isolation",
+    "residual": "standard PreNorm",
+    "feed_forward": "dense SwiGLU",
+    "reader_attention": false
+  },
+  "arms": [
+    {
+      "id": "gqa3",
+      "role": "shared control",
+      "kv_heads": 3,
+      "ffn_intermediate_size": 2304,
+      "parameters": 153958938,
+      "analytic_flops_per_token_at_4096": 1021601280,
+      "bf16_cache_bytes_per_token_all_five_memories": 3840,
+      "bf16_cache_bytes_at_131072_batch_1": 503316480,
+      "bf16_cache_bytes_at_1048576_batch_1": 4026531840,
+      "implementation": "existing Attention and AttentionState"
+    },
+    {
+      "id": "mqa1",
+      "role": "simple compression candidate",
+      "kv_heads": 1,
+      "ffn_intermediate_size": 2325,
+      "raw_attention_parameter_reduction": 983040,
+      "uniform_ffn_parameter_reallocation": 967680,
+      "parameters": 153943578,
+      "parameter_difference_from_control": -15360,
+      "absolute_relative_parameter_difference": 0.00009976686121334508,
+      "analytic_flops_per_token_at_4096": 1021509120,
+      "bf16_cache_bytes_per_token_all_five_memories": 1280,
+      "bf16_cache_bytes_at_131072_batch_1": 167772160,
+      "bf16_cache_bytes_at_1048576_batch_1": 1342177280,
+      "state_reduction_from_gqa3": 0.6666666666666666,
+      "implementation": "existing Attention with num_key_value_heads=1 and enable_gqa",
+      "matching_reason": "adding 21 uniformly to every SwiGLU width is closer than adding 22 and remains below the frozen 0.025% parameter tolerance"
+    },
+    {
+      "id": "nope_mla128",
+      "role": "custom latent-cache candidate",
+      "kv_latent_dim": 128,
+      "query_compression": false,
+      "expanded_key_heads": 12,
+      "expanded_value_heads": 12,
+      "ffn_intermediate_size": 2304,
+      "parameters_before_implementation_audit": 153959258,
+      "parameter_difference_from_control_before_implementation_audit": 320,
+      "absolute_relative_parameter_difference_before_implementation_audit": 0.0000020784762752780224,
+      "nominal_analytic_flops_per_token_at_4096_before_kernel_audit": 1021603200,
+      "bf16_cache_bytes_per_token_all_five_memories": 1280,
+      "bf16_cache_bytes_at_131072_batch_1": 167772160,
+      "bf16_cache_bytes_at_1048576_batch_1": 1342177280,
+      "state_reduction_from_gqa3": 0.6666666666666666,
+      "implementation": "not implemented",
+      "dimension_reason": "128 latent elements match MQA1's BF16 state while 768x128 plus two 128x768 KV projections match GQA3's existing K/V projection weights; this isolates representation rather than choosing a published ratio",
+      "normalization": "one 128-dimensional latent RMSNorm replaces the existing 64-dimensional key RMSNorm; exact parameter and FLOP counts must be regenerated from code",
+      "reference_path": "expand per-head keys and values from the cached latent before ordinary exact attention",
+      "optimized_path": "absorb key up-projections into queries and value up-projections into the output path without materializing expanded cached K/V",
+      "kernel_requirement": "reference and optimized prefill/decode paths must agree before systems measurements"
+    }
+  ],
+  "matching": {
+    "maximum_absolute_relative_parameter_difference": 0.00025,
+    "shared_control_candidates": 2,
+    "multiplicity": "Holm-correct both confirmation candidates against the shared GQA3 control",
+    "identical_within_cell": [
+      "initialization seed",
+      "packed-data order",
+      "training tokens",
+      "sequence length",
+      "optimizer and schedule",
+      "tokenizer and data manifest",
+      "five attention positions and five independent memories",
+      "KDA layers, residual path, and NoPE",
+      "evaluation manifest"
+    ],
+    "not_matched_away": [
+      "exact cache bytes",
+      "projection and specialized-kernel work intrinsic to the representation",
+      "realized prefill and decode behavior"
+    ]
+  },
+  "correctness_before_training": {
+    "mqa1": [
+      "materialized parameter and FLOP geometry",
+      "full versus cached decode parity",
+      "checkpoint and Transformers export round trip",
+      "state bytes at every declared length and dtype"
+    ],
+    "nope_mla128": [
+      "float64 reference equations",
+      "reference versus optimized forward parity",
+      "input and parameter gradient parity",
+      "prefill and incremental state parity",
+      "multi-token continuation and greedy-generation parity",
+      "checkpoint and Transformers export round trip",
+      "no expanded K/V tensors retained in optimized decode state",
+      "exact state, temporary workspace, and FLOP accounting"
+    ]
+  },
+  "evidence_stages": {
+    "discovery": "three paired seed/data cells at the frozen proxy budget; no promotion authority",
+    "finalist": "three seeds crossed with two data orders and at least ten training tokens per larger parameter; promotion authority only if every policy endpoint passes",
+    "systems": {
+      "lengths": [
+        4096,
+        32768,
+        131072,
+        1048576
+      ],
+      "loads": [
+        "batch 1",
+        "maximum resident batch"
+      ],
+      "metrics": [
+        "persistent state bytes",
+        "peak allocated and reserved bytes",
+        "prefill latency and throughput",
+        "decode TPOT and throughput",
+        "time and energy to locked quality",
+        "compile and kernel startup"
+      ],
+      "minimum_state_reduction": 0.25,
+      "minimum_primary_improvement_mqa1": 0.1,
+      "minimum_primary_improvement_mla128": 0.2,
+      "repeats": 5,
+      "interleave_arms": true,
+      "maximum_start_temperature_c": 50
+    }
+  },
+  "quality_endpoints": [
+    "aggregate and every-source language-loss non-inferiority",
+    "structured retrieval v2",
+    "symbolic composition v2 with both constituent edges qualified",
+    "MQAR load and distance",
+    "independent long-context suites only when their existing gates qualify"
+  ],
+  "decision": {
+    "rule": "Among candidates passing correctness, all quality constraints, and their representation-specific realized systems threshold, choose the cheapest non-dominated cache representation; otherwise retain GQA3.",
+    "no_quality_cost_trade": true,
+    "analytic_savings_are_not_sufficient": true,
+    "failed_reader_topology_forbidden": true,
+    "promotion_authority_now": false,
+    "training_authorized_now": false
+  }
+}

@@ -13,6 +13,7 @@ PROGRAM_FILES = (
     "baseline_collection_v2.json",
     "baseline_automation_v1.json",
     "proxy_disposition_v1.json",
+    "sequence_cache_representation_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -535,6 +536,59 @@ def _validate_proxy_launch_evidence(program, repository_root):
         raise ValueError("paper proxy launch qualification is invalid")
 
 
+def _validate_sequence_cache_design(reference, repository_root, paper_id, policy_id):
+    _require(reference, {"contract", "sha256", "status"}, "sequence cache design reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("sequence cache representation design does not match its pin")
+    design = _load_json(path)
+    if (
+        design.get("format") != "speck_sequence_cache_representation_design"
+        or design.get("format_version") != 1
+        or design.get("paper_id") != paper_id
+        or design.get("policy_id") != policy_id
+        or design.get("status") != reference["status"]
+        or len(design.get("launch_blockers", ())) < 5
+    ):
+        raise ValueError("sequence cache representation design identity is invalid")
+    arms = {arm.get("id"): arm for arm in design.get("arms", ())}
+    if set(arms) != {"gqa3", "mqa1", "nope_mla128"}:
+        raise ValueError("sequence cache representation arms are incomplete")
+    control = arms["gqa3"]
+    mqa = arms["mqa1"]
+    mla = arms["nope_mla128"]
+    if (
+        control.get("parameters") != 153_958_938
+        or control.get("bf16_cache_bytes_per_token_all_five_memories") != 3_840
+        or mqa.get("raw_attention_parameter_reduction") != 983_040
+        or mqa.get("uniform_ffn_parameter_reallocation") != 967_680
+        or mqa.get("parameters") != 153_943_578
+        or mqa.get("analytic_flops_per_token_at_4096") != 1_021_509_120
+        or mqa.get("bf16_cache_bytes_per_token_all_five_memories") != 1_280
+        or mqa.get("state_reduction_from_gqa3") != 2 / 3
+        or mla.get("kv_latent_dim") != 128
+        or mla.get("query_compression") is not False
+        or mla.get("parameters_before_implementation_audit") != 153_959_258
+        or mla.get("bf16_cache_bytes_per_token_all_five_memories") != 1_280
+        or mla.get("implementation") != "not implemented"
+    ):
+        raise ValueError("sequence cache representation geometry is invalid")
+    systems = design.get("evidence_stages", {}).get("systems", {})
+    decision = design.get("decision", {})
+    if (
+        systems.get("minimum_state_reduction") != 0.25
+        or systems.get("minimum_primary_improvement_mqa1") != 0.1
+        or systems.get("minimum_primary_improvement_mla128") != 0.2
+        or systems.get("repeats") != 5
+        or systems.get("interleave_arms") is not True
+        or decision.get("no_quality_cost_trade") is not True
+        or decision.get("analytic_savings_are_not_sufficient") is not True
+        or decision.get("promotion_authority_now") is not False
+        or decision.get("training_authorized_now") is not False
+    ):
+        raise ValueError("sequence cache representation decision gate is invalid")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -600,6 +654,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "evaluation_program",
             "analysis_program",
             "large_pretraining_gate",
+            "sequence_cache_representation",
         },
         "paper experiment program",
     )
@@ -607,6 +662,12 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("paper experiment program must use format version 1")
     if program["paper_id"] != paper_id:
         raise ValueError("claims and experiment program use different paper ids")
+    _validate_sequence_cache_design(
+        program["sequence_cache_representation"],
+        repository_root,
+        paper_id,
+        program["policy_id"],
+    )
     _validate_evaluation_evidence(program["evaluation_evidence"], repository_root)
     evidence = program["baseline_evidence"]
     _require(

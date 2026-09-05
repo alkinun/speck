@@ -67,6 +67,7 @@ Read in order:
 59. [58 — Event-driven Paper 1 baseline continuation](58_paper_1_event_continuation.md)
 60. [59 — Paper 1 dense controls complete and target locked](59_paper_1_dense_controls_and_target_lock.md)
 61. [60 — Paper 1 proxy disposition frozen before candidates](60_paper_1_proxy_disposition.md)
+62. [61 — Conditional five-cache GQA3/MQA1/MLA design](61_five_cache_representation_design.md)
 
 Conventions:
 
@@ -286,3 +287,9 @@ Finding 60 freezes proxy disposition before candidate 0. Integrity failure, aggr
 source-guardrail failure, and complete quality pass have explicit non-overlapping consequences.
 Efficiency views cannot rescue failed quality, censoring stays explicit, and only a complete quality
 pass may authorize finalist materialization. No branch grants component attribution or promotion.
+
+Finding 61 freezes the conditional exact-cache representation isolation without authorizing it.
+Five independent memories and the KDA/NoPE backbone stay fixed. MQA1 and a Speck-derived MLA128 both
+reduce BF16 state by 66.7%; uniform FFN compensation matches MQA1 within 0.00998%, while MLA128 matches
+GQA3 projection weights and MQA1 state. Correctness, realized systems thresholds, backbone selection,
+and multiplicity-controlled quality remain mandatory.
