@@ -77,6 +77,7 @@ Read in order:
 69. [68 — Tri-axis interaction and removal readiness gate](68_interaction_readiness_gate.md)
 70. [69 — Scaling and held-out prediction readiness gate](69_scaling_readiness_gate.md)
 71. [70 — Systems-cost readiness and proxy envelope failure](70_systems_cost_readiness_gate.md)
+72. [71 — Recent novelty landscape and surviving hypotheses](71_novelty_landscape_audit.md)
 
 Conventions:
 
@@ -356,3 +357,9 @@ finite-state limits but exceed the frozen 1.0 total GPU-hour envelope at 1.0455/
 threshold is not widened or relabeled. Analytic, operator, model, serving, energy/memory, and monetary
 evidence are separated; online and datacenter profiles plus price inputs remain blocked. This does not
 alter the fixed proxy quality experiment.
+
+Finding 71 audits recent direct novelty overlaps from pinned primary arXiv records. Joint hybrid-layer
+selection, adaptive cache budgeting, sparse recurrent prefix checkpoints, budget-conditioned attention,
+and alternating local/global latent sparse attention are not novel alone. Only a role-grounded
+from-scratch placement law and an all-required-source composition predictor remain provisionally
+distinct; both still require full landscape and held-out causal evidence. No novelty is claimed.

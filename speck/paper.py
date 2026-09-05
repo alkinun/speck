@@ -23,6 +23,7 @@ PROGRAM_FILES = (
     "interaction_readiness_v1.json",
     "scaling_readiness_v1.json",
     "systems_cost_readiness_v1.json",
+    "novelty_landscape_v1.json",
     "proxy_launch_v1.json",
     "contamination_v1.json",
     "contamination_disposition_v1.json",
@@ -1083,6 +1084,52 @@ def _validate_systems_cost_readiness(reference, repository_root, paper_id, polic
             raise ValueError("systems-cost dense-control audit does not match result evidence")
 
 
+def _validate_novelty_landscape(reference, repository_root, paper_id):
+    _require(reference, {"audit", "sha256", "status"}, "novelty landscape reference")
+    path = repository_root / reference["audit"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("novelty landscape audit does not match its pin")
+    audit = _load_json(path)
+    sources = audit.get("sources", ())
+    overlaps = audit.get("overlap_decisions", ())
+    hypotheses = audit.get("surviving_hypotheses", ())
+    claim_gate = audit.get("claim_gate", {})
+    decision = audit.get("decision", {})
+    if (
+        audit.get("format") != "speck_novelty_landscape_audit"
+        or audit.get("format_version") != 1
+        or audit.get("paper_id") != paper_id
+        or audit.get("status") != reference["status"]
+        or [source.get("id") for source in sources]
+        != [
+            "arxiv_2606_30562v1",
+            "arxiv_2605_05219v1",
+            "arxiv_2407_11550v5",
+            "arxiv_2404_04793v2",
+            "arxiv_2605_05697v1",
+            "arxiv_2511_00819v1",
+        ]
+        or len(overlaps) < 6
+        or any(overlap.get("decision") == "novel" for overlap in overlaps)
+        or [hypothesis.get("id") for hypothesis in hypotheses]
+        != ["N1_role_grounded_placement_law", "N2_all_required_source_recall_law"]
+        or any(
+            hypothesis.get("novelty_status")
+            != "plausibly_distinct_full_landscape_and_evidence_pending"
+            for hypothesis in hypotheses
+        )
+        or len(claim_gate.get("full_landscape_before_claim", ())) < 5
+        or len(claim_gate.get("evidence_before_claim", ())) < 6
+        or decision.get("novel_mechanism_established") is not False
+        or decision.get("novel_composition_rule_established") is not False
+        or decision.get("novel_generalizable_law_established") is not False
+        or decision.get("novel_inseparable_systems_method_established") is not False
+        or decision.get("paper_novelty_gate_pass") is not False
+        or decision.get("architecture_freeze_authorized") is not False
+    ):
+        raise ValueError("novelty landscape audit is incomplete")
+
+
 def _validate_claims(claims):
     _require(
         claims,
@@ -1158,6 +1205,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "interaction_readiness",
             "scaling_readiness",
             "systems_cost_readiness",
+            "novelty_landscape",
         },
         "paper experiment program",
     )
@@ -1165,6 +1213,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         raise ValueError("paper experiment program must use format version 1")
     if program["paper_id"] != paper_id:
         raise ValueError("claims and experiment program use different paper ids")
+    _validate_novelty_landscape(
+        program["novelty_landscape"],
+        repository_root,
+        paper_id,
+    )
     _validate_sequence_cache_design(
         program["sequence_cache_representation"],
         repository_root,

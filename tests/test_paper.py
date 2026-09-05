@@ -33,6 +33,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "interaction_readiness_v1.json",
             "scaling_readiness_v1.json",
             "systems_cost_readiness_v1.json",
+            "novelty_landscape_v1.json",
             "proxy_launch_v1.json",
             "contamination_v1.json",
             "contamination_disposition_v1.json",
@@ -248,6 +249,18 @@ def test_paper_program_rejects_systems_cost_readiness_pin_drift(tmp_path):
     path.write_text(json.dumps(value), encoding="utf-8")
 
     with pytest.raises(ValueError, match="systems-cost readiness"):
+        validate_paper_program(copied, repository_root=root)
+
+
+def test_paper_program_rejects_novelty_landscape_pin_drift(tmp_path):
+    copied = tmp_path / "paper-1"
+    shutil.copytree(program, copied)
+    path = copied / "experiment_program.json"
+    value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["novelty_landscape"]["sha256"] = "0" * 64
+    path.write_text(json.dumps(value), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="novelty landscape"):
         validate_paper_program(copied, repository_root=root)
 
 

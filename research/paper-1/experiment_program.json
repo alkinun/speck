@@ -470,6 +470,11 @@
     "fixed wall-clock budget on named hardware",
     "time and energy to locked quality"
   ],
+  "novelty_landscape": {
+    "audit": "research/paper-1/novelty_landscape_v1.json",
+    "sha256": "419b677f2a1d78bd93eb35a2ede309fffc9b13725e69e8441dd99191cd6df185",
+    "status": "primary_metadata_audited_no_novelty_established"
+  },
   "objective": "Select and explain a quality-non-inferior architecture that improves measured training and serving cost across sequence, depth, and width.",
   "paper_id": "speck-paper-1",
   "policy_id": "architecture-promotion-v1",

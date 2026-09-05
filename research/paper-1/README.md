@@ -100,6 +100,9 @@ the final combined model.
 - [`systems_cost_readiness_v1.json`](systems_cost_readiness_v1.json) preserves the failed 1.0-hour dense
   proxy envelope and freezes the analytic/operator/model/serving/monetary evidence hierarchy, energy,
   memory, online load, datacenter, and prospective-envelope requirements.
+- [`novelty_landscape_v1.json`](novelty_landscape_v1.json) pins recent direct prior-art overlaps,
+  rejects several easy novelty stories, and retains two falsifiable hypotheses without claiming either
+  is novel before full-text/code/citation and held-out causal review.
 - [`proxy_launch_v1.json`](proxy_launch_v1.json) freezes the boundary between checkpoint-producing
   proxy execution and checkpoint-consuming release evaluation, including control-first ordering and
   explicit non-claims.

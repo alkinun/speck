@@ -1,0 +1,191 @@
+{
+  "format": "speck_novelty_landscape_audit",
+  "format_version": 1,
+  "audit_id": "speck-paper-1-novelty-landscape-v1",
+  "paper_id": "speck-paper-1",
+  "status": "primary_metadata_audited_no_novelty_established",
+  "audited_on": "2026-09-05",
+  "scope": "Primary arXiv metadata and abstracts for recent direct overlaps; full text, code, references, citations, patents, and non-arXiv literature remain mandatory before a novelty claim.",
+  "sources": [
+    {
+      "id": "arxiv_2606_30562v1",
+      "title": "Morphing into Hybrid Attention Models",
+      "submitted": "2026-06-29",
+      "url": "https://arxiv.org/abs/2606.30562v1",
+      "relevant_claim": "budget-constrained joint optimization of interdependent full-versus-linear attention layer placement using learned gates"
+    },
+    {
+      "id": "arxiv_2605_05219v1",
+      "title": "Sparse Prefix Caching for Hybrid and Recurrent LLM Serving",
+      "submitted": "2026-04-17",
+      "url": "https://arxiv.org/abs/2605.05219v1",
+      "relevant_claim": "distribution-aware exact dynamic-program placement of sparse recurrent-state prefix checkpoints"
+    },
+    {
+      "id": "arxiv_2407_11550v5",
+      "title": "Ada-KV: Optimizing KV Cache Eviction by Adaptive Budget Allocation for Efficient LLM Inference",
+      "submitted": "2024-07-16",
+      "revised": "2025-10-16",
+      "url": "https://arxiv.org/abs/2407.11550v5",
+      "relevant_claim": "head-wise adaptive KV eviction budget allocation guided by an attention-output loss bound"
+    },
+    {
+      "id": "arxiv_2404_04793v2",
+      "title": "SqueezeAttention: 2D Management of KV-Cache in LLM Inference via Layer-wise Optimal Budget",
+      "submitted": "2024-04-07",
+      "revised": "2024-10-10",
+      "url": "https://arxiv.org/abs/2404.04793v2",
+      "relevant_claim": "joint layer-wise and sequence-wise KV budget allocation using measured layer importance"
+    },
+    {
+      "id": "arxiv_2605_05697v1",
+      "title": "Budgeted Attention Allocation: Cost-Conditioned Compute Control for Efficient Transformers",
+      "submitted": "2026-05-07",
+      "url": "https://arxiv.org/abs/2605.05697v1",
+      "relevant_claim": "one checkpoint with monotone attention-head gates conditioned on a requested compute budget"
+    },
+    {
+      "id": "arxiv_2511_00819v1",
+      "title": "Optimizing Native Sparse Attention with Latent Attention and Local Global Alternating Strategies",
+      "submitted": "2025-11-02",
+      "url": "https://arxiv.org/abs/2511.00819v1",
+      "relevant_claim": "alternating local and global sparse-attention layers combined with latent cache representations"
+    }
+  ],
+  "overlap_decisions": [
+    {
+      "id": "joint_hybrid_layer_selection",
+      "decision": "not novel by itself",
+      "reason": "FlashMorph already formulates placement as interdependent budget-constrained subset optimization and jointly learns layer gates"
+    },
+    {
+      "id": "adaptive_cache_budget_by_layer_or_head",
+      "decision": "not novel by itself",
+      "reason": "Ada-KV and SqueezeAttention already allocate cache budgets non-uniformly across heads/layers and sequences"
+    },
+    {
+      "id": "sparse_recurrent_prefix_checkpoints",
+      "decision": "not novel by itself",
+      "reason": "Sparse Prefix Caching already gives an exact distribution-aware checkpoint-placement formulation for recurrent/hybrid models"
+    },
+    {
+      "id": "alternating_local_global_latent_sparse_attention",
+      "decision": "not novel by itself",
+      "reason": "arXiv:2511.00819 already combines alternating local/global NSA strategies with latent attention"
+    },
+    {
+      "id": "one_checkpoint_budget_conditioned_attention",
+      "decision": "not novel by itself",
+      "reason": "Budgeted Attention Allocation already conditions structural attention usage on a requested cost budget"
+    },
+    {
+      "id": "bundle_kda_mla_attnres_moe_hca_csa",
+      "decision": "not novel by itself",
+      "reason": "combining named published components does not create a mechanism, predictive law, or inseparable systems contribution"
+    }
+  ],
+  "surviving_hypotheses": [
+    {
+      "id": "N1_role_grounded_placement_law",
+      "type": "predictive composition rule",
+      "statement": "A small set of causal information-flow quantities—middle integration contribution, maximum recurrent refresh gap, final readout distance, and all-required-source recall—predicts which from-scratch recurrent/global layer placements preserve language, retrieval, and composition quality at a fixed state/compute budget.",
+      "distinction_to_test": "Unlike FlashMorph's task-driven conversion gates, the proposed contribution is an explanatory law fitted on some layouts/scales and prospectively predicting unseen from-scratch layouts, tasks, and scales without architecture search on the held-out cells.",
+      "required_baselines": [
+        "uniform and role-designed placements",
+        "independent layerwise sensitivity ranking",
+        "greedy replacement",
+        "FlashMorph-style jointly optimized gates where reproducibly implementable",
+        "parameter/state/FLOP-matched random placements"
+      ],
+      "fit_data": "discovery layouts only, with diagnostics measured before held-out placement quality is exposed",
+      "held_out": [
+        "unseen placement configurations",
+        "unseen dependency templates and source loads",
+        "at least one larger scale",
+        "one different recurrent or cache representation"
+      ],
+      "success": "the preregistered law predicts held-out ranking and absolute failure margins materially better than every baseline with uncertainty, and its intervention moves both diagnostics and outcomes as predicted",
+      "falsifiers": [
+        "joint gate optimization matches or beats prediction with no explanatory loss",
+        "coefficients change sign across seeds or scales",
+        "held-out placement ranking is wrong",
+        "diagnostic interventions do not move capability",
+        "the law reduces to count, FLOPs, or final-layer presence"
+      ],
+      "novelty_status": "plausibly_distinct_full_landscape_and_evidence_pending"
+    },
+    {
+      "id": "N2_all_required_source_recall_law",
+      "type": "mechanism-quality relationship",
+      "statement": "For compressed/sparse long-context models, the probability that every causally required route and payload source survives representation and selection predicts multi-hop composition failure more reliably than total dense-attention mass recall, top-k overlap, or single-source retrieval.",
+      "distinction_to_test": "The candidate connects selector/compressor diagnostics to constituent-complete composition, not merely attention-output error, cache importance, or single-needle recall.",
+      "required_baselines": [
+        "captured dense attention mass",
+        "top-k block/token recall",
+        "single required-source recall",
+        "attention-output reconstruction error",
+        "random and distance-only selection"
+      ],
+      "fit_data": "mechanism-scale route/payload cases with source identities frozen independently of candidate outputs",
+      "held_out": [
+        "unseen graph structures and hop counts",
+        "unseen document/domain sources",
+        "unseen compression rates and selection budgets",
+        "at least three model scales"
+      ],
+      "success": "the diagnostic prospectively predicts example- and cell-level composition failures beyond baselines, calibrates across scales, and supports causal source-restoration interventions",
+      "falsifiers": [
+        "dense mass or reconstruction error predicts equally well",
+        "all-source recall is nearly always one or zero and adds no resolution",
+        "selected-source restoration does not recover composition",
+        "relationship fails on real multi-document tasks",
+        "effect disappears after controlling for distance and load"
+      ],
+      "novelty_status": "plausibly_distinct_full_landscape_and_evidence_pending"
+    }
+  ],
+  "rejected_or_deferred_hypotheses": [
+    {
+      "id": "heterogeneous_prefix_checkpointing",
+      "decision": "overlapped",
+      "reason": "exact sparse recurrent-state checkpoint placement is already explicit in arXiv:2605.05219"
+    },
+    {
+      "id": "adaptive_state_budget_allocation",
+      "decision": "overlapped_without_a_new_theorem_or_cross-axis_result",
+      "reason": "head-, layer-, sequence-, and requested-budget allocation all have direct prior art"
+    },
+    {
+      "id": "alternating_local_global_latent_stack",
+      "decision": "overlapped",
+      "reason": "directly described in arXiv:2511.00819"
+    }
+  ],
+  "claim_gate": {
+    "full_landscape_before_claim": [
+      "read and archive exact full-text versions and licenses for every direct source",
+      "audit released code and experiment boundaries where available",
+      "follow backward references and forward citations",
+      "search arXiv, proceedings, patents, technical reports, and deployed system documentation with recorded queries/dates",
+      "obtain independent expert review of the closest-overlap table"
+    ],
+    "evidence_before_claim": [
+      "freeze the hypothesis and model before held-out results",
+      "at least three scales with paired uncertainty",
+      "unseen architecture/task cells",
+      "causal intervention, not correlation alone",
+      "comparison to the strongest direct prior-art method",
+      "negative and counterexample retention"
+    ],
+    "decision": "Paper 1 may claim novelty only if at least one surviving hypothesis clears both the full landscape and held-out evidence gates; otherwise the paper narrows to a replication/systems study or is not positioned as a novel architecture paper."
+  },
+  "decision": {
+    "novel_mechanism_established": false,
+    "novel_composition_rule_established": false,
+    "novel_generalizable_law_established": false,
+    "novel_inseparable_systems_method_established": false,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "next_action": "complete full-text/code/reference/citation review for N1 and N2, then freeze one prospectively powered held-out falsification protocol before collecting supporting results"
+  }
+}
