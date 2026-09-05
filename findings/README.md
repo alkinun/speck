@@ -42,6 +42,7 @@ Read in order:
 34. [33 — RULERv1 offline source-bundle qualification](33_ruler_offline_source_bundle.md)
 35. [34 — RULERv1 4K deterministic case qualification](34_ruler_4k_case_qualification.md)
 36. [35 — RULERv1 8K deterministic case qualification](35_ruler_8k_case_qualification.md)
+37. [36 — RULERv1 16K deterministic case qualification](36_ruler_16k_case_qualification.md)
 
 Conventions:
 
@@ -131,3 +132,7 @@ scorer. The 4K cases qualify; five longer matrices and all model capability runs
 Finding 35 carries the identical gate through 8K. All task hashes reproduce, every accounted case
 fits, and retained storage scales from 17MB to 34MB. The 8K cases qualify; four longer matrices and all
 model capability runs remain blocked.
+
+Finding 36 carries the gate through 16K with the same deterministic and network-denied result. The
+retained artifact is 69MB and every accounted case fits. Three longer matrices and all model
+capability runs remain blocked.

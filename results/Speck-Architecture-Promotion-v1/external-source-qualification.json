@@ -7,8 +7,8 @@
   "suites": {
     "ruler": {
       "config": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "config_sha256": "7e8bbcb70827f779dfcdce1c05ae695e2e92e88776b65e2da874d2d5ad19232f",
-      "status": "source_qualified_case_generation_through_8192_qualified_remaining_lengths_blocked",
+      "config_sha256": "fdba207cf950d4dc6dd8f3eb7569fca2baf7e0740b8a711fcae2e31a83a2e476",
+      "status": "source_qualified_case_generation_through_16384_qualified_remaining_lengths_blocked",
       "sources": [
         {
           "id": "ruler_pipeline",
@@ -43,8 +43,8 @@
         "status": "offline_sources_complete_unredistributable"
       },
       "case_generation_qualification": {
-        "qualified_lengths": [4096, 8192],
-        "remaining_lengths": [16384, 32768, 65536, 131072],
+        "qualified_lengths": [4096, 8192, 16384],
+        "remaining_lengths": [32768, 65536, 131072],
         "artifacts": [
           {
             "length": 4096,
@@ -59,6 +59,13 @@
             "sha256": "9f025b2ed9f079f25adda7e7d0ee0963b605eacb420cd2ca5ec53cfb30b34948",
             "case_identity_sha256": "d7f4894fd29c8139c8af324ae3c643c4535993bf938eaf45ee73f8ac0ea5b954",
             "total_cases": 1300
+          },
+          {
+            "length": 16384,
+            "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-16384-qualified.json",
+            "sha256": "b668ec71b046c7f7f3b695e8b0e8349bbc909205b626612ea5905ceaaa85ec03",
+            "case_identity_sha256": "7ddcb6b201298fd3d6c6501b0d307719b7c411580f76b84c8e94e1e138042084",
+            "total_cases": 1300
           }
         ],
         "complete_generations": 2,
@@ -67,7 +74,7 @@
         "status": "qualified_offline_deterministic_case_stream"
       },
       "blockers": [
-        "official cases at 16384, 32768, 65536, and 131072 tokens are not generated or hashed",
+        "official cases at 32768, 65536, and 131072 tokens are not generated or hashed",
         "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
@@ -125,7 +132,7 @@
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive inputs and complete 4096- and 8192-token case matrices now qualify offline with deterministic reruns and application-layer network denial; four longer case matrices and every candidate execution remain blocked. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive inputs and complete 4096-, 8192-, and 16384-token case matrices now qualify offline with deterministic reruns and application-layer network denial; three longer case matrices and every candidate execution remain blocked. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

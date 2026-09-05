@@ -62,9 +62,9 @@ binds an attested instruction export to the exact serialized OpenAI request shap
 pinned NeMo-Skills adapter and NoLiMa. It does not qualify long-context capability or serving speed.
 RULER's transitive source bundle is now locally retained and content-pinned, including dynamic essay
 canonicalization, SQuAD, HotpotQA, word lists, NLTK resources, and an exact dependency group. Its
-complete 4K and 8K matrices are also qualified across two byte-identical, network-denied generations
+complete 4K, 8K, and 16K matrices are also qualified across two byte-identical, network-denied generations
 per length. A pinned compatibility patch repairs an upstream HotpotQA non-termination without changing
-prompt or scoring semantics. The four longer RULER matrices are not generated yet. NoLiMa requires
+prompt or scoring semantics. The three longer RULER matrices are not generated yet. NoLiMa requires
 acceptance of a
 non-commercial research license and a data manifest; HELMET remains blocked on a separate 34GB data
 volume and its own model-adapter smoke.
