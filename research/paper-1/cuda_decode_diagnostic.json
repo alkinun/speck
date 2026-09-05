@@ -1,0 +1,139 @@
+{
+  "format": "speck_cuda_decode_diagnostic_contract",
+  "format_version": 1,
+  "diagnostic_id": "speck-paper-1-cuda-decode-v1",
+  "paper_id": "speck-paper-1",
+  "status": "frozen_after_length8_pilot_before_matrix_execution",
+  "frozen_on": "2026-09-05",
+  "issue": "SPE-105",
+  "baseline_matrix": "research/paper-1/baseline_matrix.json",
+  "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+  "trigger_result": "results/Speck-Paper1/baseline-preflight.json",
+  "trigger_result_sha256": "164cd1409afd01a25c776dd4471ade27c79eb0d28028042864abb58ed39f5f60",
+  "pilot_disclosure": "A seed-42 length-8 pilot already showed small first-KDA error, depth amplification, and persistence under the Torch KDA recurrence. The full matrix confirms or rejects that disclosed routing hypothesis; it is not a blind discovery experiment.",
+  "arms": [
+    "dense_global_param_match",
+    "five_cache_kda_gqa"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "lengths": [
+    8,
+    64,
+    512
+  ],
+  "prefix_rule": "For each seed, generate one deterministic 512-token sequence and use exact prefixes for shorter lengths in every execution mode.",
+  "execution_matrices": [
+    {
+      "id": "native_cuda",
+      "device": "cuda",
+      "arms": [
+        "dense_global_param_match",
+        "five_cache_kda_gqa"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "lengths": [
+        8,
+        64,
+        512
+      ],
+      "kda_backend": "FLA chunk for full sequence and FLA fused recurrent for one-token decode",
+      "purpose": "primary full-depth target-runtime comparison"
+    },
+    {
+      "id": "torch_kda_cuda",
+      "device": "cuda",
+      "arms": [
+        "five_cache_kda_gqa"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "lengths": [
+        8,
+        64,
+        512
+      ],
+      "kda_backend": "auditable Torch recurrence for both full sequence and one-token decode",
+      "purpose": "test whether FLA chunk-versus-recurrent kernels are the sole source"
+    },
+    {
+      "id": "torch_kda_no_conv_history_cuda",
+      "device": "cuda",
+      "arms": [
+        "five_cache_kda_gqa"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "lengths": [
+        8,
+        64,
+        512
+      ],
+      "kda_backend": "auditable Torch recurrence with every delayed causal-convolution tap set to zero after initialization",
+      "purpose": "test whether causal-convolution history is the sole source while retaining current-token convolution scaling"
+    },
+    {
+      "id": "cpu_sentinel",
+      "device": "cpu",
+      "arms": [
+        "dense_global_param_match",
+        "five_cache_kda_gqa"
+      ],
+      "seeds": [
+        42
+      ],
+      "lengths": [
+        8
+      ],
+      "kda_backend": "auditable Torch recurrence",
+      "purpose": "detect a device-independent cache/state-semantics bug"
+    }
+  ],
+  "capture": {
+    "modules": [
+      "every Linear projection output",
+      "every RMSNorm output",
+      "every mixer/FFN Operation output",
+      "every Stage residual output"
+    ],
+    "layerwise_position": "last token of each tested prefix",
+    "logits": "all positions",
+    "metrics": [
+      "maximum absolute error",
+      "RMS error",
+      "relative RMS error",
+      "mismatched elements under the frozen tolerance",
+      "cosine similarity",
+      "actual/reference norm ratio",
+      "token argmax agreement and disagreement positions"
+    ]
+  },
+  "numerical_contract": {
+    "relative_tolerance": 0.02,
+    "absolute_tolerance": 0.02,
+    "source": "the existing Paper 1 preflight and Transformers parity gate",
+    "change_rule": "This diagnostic may classify the failure but cannot widen the observed tolerance. Any revised numerical contract requires a separately justified version."
+  },
+  "analysis": {
+    "first_failure": "first execution-ordered module whose last-token output has at least one element outside tolerance",
+    "amplification": "final-logit relative RMS divided by first-operation relative RMS; report undefined values rather than adding epsilon",
+    "fla_sole_cause_falsifier": "Torch-KDA CUDA retains token disagreement or at least half of native KDA final-logit relative RMS in the matching seed/length cell",
+    "convolution_history_sole_cause_falsifier": "Torch-KDA with delayed convolution taps removed retains token disagreement or at least half of Torch-KDA final-logit relative RMS in the matching seed/length cell",
+    "state_semantics_bug_signal": "CPU sentinel violates the same tolerance",
+    "reporting": "retain every cell; summarize medians and ranges across seeds without promotion-authority inference"
+  },
+  "decision_scope": "Classify and route the preflight failure only. No architecture quality, efficiency, tolerance, or promotion claim is authorized."
+}
