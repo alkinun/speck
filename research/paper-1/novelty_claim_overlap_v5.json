@@ -1,0 +1,88 @@
+{
+  "format": "speck_novelty_claim_overlap_table",
+  "format_version": 5,
+  "table_id": "speck-paper-1-novelty-claim-overlap-v5",
+  "paper_id": "speck-paper-1",
+  "status": "eighteen_source_table_zero_architecture_novelty_n1_procedural_residual_review_pending",
+  "created_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/novelty_claim_overlap_v4.json",
+    "sha256": "2b476bb00d5464699e579fd198b8c952cb9de04775d8211356161c2b61e5e861",
+    "claims": 25,
+    "superseded_decision": "N1 remains a low-prior multidiagnostic prospective-prediction question"
+  },
+  "inputs": {
+    "landscape": "research/paper-1/novelty_landscape_v8.json",
+    "landscape_sha256": "2968774ad615108d88b362381423cc12a8d19501763b6a2159e0a5fb08c5b920",
+    "code_availability": "research/paper-1/novelty_code_availability_v7.json",
+    "code_availability_sha256": "02934bceedba087bc45c3bcef288cb3be30feb8c5860a7cbc9c9032a8811dbde"
+  },
+  "inherited_claims": 25,
+  "additional_claims": [
+    {
+      "id": "P15_task_guided_single_replacement_attention_retention",
+      "strongest_source": "HALO in Hybrid Linear Attention Done Right",
+      "classification": "direct_conversion_overlap",
+      "decision": "mandatory_baseline_only",
+      "reason": "HALO hidden-state-aligns every recurrent substitute, evaluates each single replacement on recall and commonsense outcomes, and keeps the top-ranked attention quarter"
+    },
+    {
+      "id": "P16_hype_long_context_hybrid_bundle",
+      "strongest_source": "HypeNet in Hybrid Linear Attention Done Right",
+      "classification": "direct_composition_overlap",
+      "decision": "do_not_claim_as_bundle",
+      "reason": "HyPE, recurrent QK normalization, GQA-to-MHA expansion, output gates, and Lightning Attention are already combined and ablated for long-context conversion"
+    },
+    {
+      "id": "R6_heldout_from_scratch_interaction_aware_prediction",
+      "strongest_source": "no exact source established; closest are HALO, DtR, FlashMorph, systematic placement, hybrid-role analysis, and massive-activation diagnostics",
+      "classification": "procedural_low_prior_residual_not_an_architecture_mechanism",
+      "decision": "independent_retention_or_retirement_review_only",
+      "reason": "the remaining difference is prediction without held-out outcomes for jointly trained from-scratch layouts; no evidence establishes feasibility, transfer, causal value, or superiority to cheaper conversion selection"
+    }
+  ],
+  "aggregate_claim_rows": 28,
+  "residual_questions": [
+    {
+      "rank": 1,
+      "id": "N1_heldout_from_scratch_interaction_aware_placement_prediction",
+      "classification": "procedural_low_prior_unestablished_empirical_question",
+      "authorized_action": "independent claim-level retention-or-retirement review only",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false,
+      "retention_gate": "review must show architecture-level scientific value beyond a costlier analogue of HALO/DtR/FlashMorph conversion selection"
+    },
+    {
+      "rank": 2,
+      "id": "N2_internal_state_completeness_predictor_law",
+      "classification": "deferred_unestablished_empirical_diagnostic_law",
+      "authorized_action": "none before independent claim review finds incremental value",
+      "experiment_authorized": false,
+      "architecture_novelty_established": false
+    }
+  ],
+  "baseline_disposition": {
+    "paper_1_three_pair_proxy": "continue through frozen completion because it estimates the conservative five-cache KDA/GQA parent versus dense attention and is independent of novelty selection",
+    "promotion_limit": "a quality/cost pass may retain a conservative research parent under the architecture policy but cannot satisfy the separate Paper 1 novelty gate",
+    "post_analysis": "after the paired result, decide whether to retain the parent for future isolation; do not infer N1 or N2 evidence"
+  },
+  "decision": {
+    "established_architecture_novelty_candidates": 0,
+    "n1_broad_role_novelty_rejected": true,
+    "n1_nonuniform_placement_novelty_rejected": true,
+    "n1_pas_isp_diagnostic_novelty_rejected": true,
+    "n1_task_guided_selection_novelty_rejected": true,
+    "n1_predictive_law_established": false,
+    "n1_experiment_authorized": false,
+    "n1_retirement_review_required": true,
+    "n2_concept_novelty_rejected": true,
+    "n2_empirical_law_established": false,
+    "n2_experiment_authorized": false,
+    "baseline_completion_authorized": true,
+    "paper_novelty_gate_pass": false,
+    "architecture_freeze_authorized": false,
+    "new_training_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "finish the frozen proxy and independently retain or retire N1 before any more placement research"
+  }
+}

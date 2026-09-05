@@ -135,6 +135,9 @@ the final combined model.
 - [`novelty_claim_overlap_v4.json`](novelty_claim_overlap_v4.json) adds PAS/ISP overlap and saturated
   diagnostic counterevidence, making N1 a low-prior multidiagnostic question that requires explicit
   independent retention-or-retirement review before any further budget.
+- [`novelty_claim_overlap_v5.json`](novelty_claim_overlap_v5.json) adds HALO task-guided layer
+  selection and the HypeNet composition bundle, leaving only a procedural held-out from-scratch
+  interaction-prediction residual for independent retention-or-retirement review.
 - [`novelty_code_availability_v1.json`](novelty_code_availability_v1.json) pins official repository
   revisions, tree/code counts, and license scopes without executing third-party code; only Ada-KV
   currently has a qualified code-plus-root-rights path for deeper audit.
