@@ -282,6 +282,68 @@ def validate_external_suite(path):
             or qualification.get("export", {}).get("maximum_context", 0) < min(lengths)
         ):
             raise ValueError("external model-adapter qualification artifact is invalid")
+    elif config["suite_id"] == "helmet" and adapter["status"].startswith(
+        "native_hf_cpu_eager_qualified"
+    ):
+        _require(
+            adapter,
+            {
+                "qualification",
+                "qualification_sha256",
+                "runner_revision",
+                "environment_group",
+                "export_identity_sha256",
+                "settings",
+                "scoring_scope",
+            },
+            "qualified HELMET model adapter",
+        )
+        repository_root = path.parents[3]
+        qualification_path = repository_root / adapter["qualification"]
+        if (
+            not SHA256_PATTERN.fullmatch(adapter["qualification_sha256"])
+            or not COMMIT_PATTERN.fullmatch(adapter["runner_revision"])
+            or not SHA256_PATTERN.fullmatch(adapter["export_identity_sha256"])
+            or not qualification_path.is_file()
+            or _file_sha256(qualification_path) != adapter["qualification_sha256"]
+        ):
+            raise ValueError("HELMET model-adapter qualification does not match its pin")
+        qualification = _load_json(qualification_path)
+        result = qualification.get("results", {})
+        model = result.get("model", {})
+        scoring = result.get("scoring", {})
+        settings = adapter["settings"]
+        if (
+            qualification.get("format") != "speck_helmet_adapter_qualification"
+            or qualification.get("status") != "qualified_native_hf_cpu_eager_adapter"
+            or qualification.get("runner_revision") != adapter["runner_revision"]
+            or qualification.get("helmet", {}).get("revision")
+            != config["upstream"]["revision"]
+            or qualification.get("export", {}).get("identity_sha256")
+            != adapter["export_identity_sha256"]
+            or not qualification.get("export", {}).get("parity_passed")
+            or qualification.get("runtime", {}).get("environment_group")
+            != adapter["environment_group"]
+            or model.get("device") != settings["device"]
+            or model.get("dtype") != settings["dtype"]
+            or model.get("attention_implementation") != settings["attn_implementation"]
+            or model.get("compiled") != settings["torch_compile"]
+            or model.get("device_map") != settings["device_map"]
+            or result.get("tokenizer", {}).get("padding_side") != "left"
+            or result.get("tokenizer", {}).get("truncation_side") != "left"
+            or result.get("prepared_input", {}).get("maximum_tokens_after_generation_reserve")
+            != settings["input_max_length"] - settings["generation_max_length"]
+            or not result.get("truncation", {}).get("retained_prefix")
+            or result.get("truncation", {}).get("prepared_tokens", settings["input_max_length"] + 1)
+            > settings["input_max_length"] - settings["generation_max_length"]
+            or not result.get("generation", {}).get("repeated_raw_outputs_identical")
+            or scoring.get("ruler_full_recall") != 1.0
+            or scoring.get("ruler_partial_recall") != 0.5
+            or qualification.get("network_denial", {}).get("qualification_attempts") != 0
+            or qualification.get("network_denial", {}).get("self_test")
+            != "denied_as_expected"
+        ):
+            raise ValueError("HELMET model-adapter qualification artifact is invalid")
     return config
 
 
