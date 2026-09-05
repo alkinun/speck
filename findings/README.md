@@ -65,6 +65,7 @@ Read in order:
 57. [56 — Paper 1 dense control 0 and collection correction](56_paper_1_dense_control_0.md)
 58. [57 — Paper 1 dense control 1](57_paper_1_dense_control_1.md)
 59. [58 — Event-driven Paper 1 baseline continuation](58_paper_1_event_continuation.md)
+60. [59 — Paper 1 dense controls complete and target locked](59_paper_1_dense_controls_and_target_lock.md)
 
 Conventions:
 
@@ -274,3 +275,8 @@ Finding 58 freezes event-driven continuation before control 2 completes. Success
 trigger one-shot collectors that disable themselves and wait on process-exit events rather than poll.
 Every result is validated and committed before a fixed successor is scheduled after a single cooldown;
 any failure stops the chain. No loss-dependent branch or promotion authority is introduced.
+
+Finding 59 completes the three-control phase. Dense control 2 finishes at 2.832686 nats; the three
+controls average 2.835153 with a 0.006440-nat range, while steady-time spread is only 0.135%. The
+predeclared worst-control rule locks the candidate time-to-quality target at 2.839127 before any
+candidate output exists. Candidate pair 0 is now the next fixed cell.

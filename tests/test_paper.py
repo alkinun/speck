@@ -94,6 +94,9 @@ def test_paper_program_rejects_target_lock_before_all_dense_controls(tmp_path):
     shutil.copytree(program, copied)
     path = copied / "experiment_program.json"
     value = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    value["baseline_evidence"]["dense_control_results"] = value["baseline_evidence"][
+        "dense_control_results"
+    ][:2]
     value["baseline_evidence"]["time_to_quality_target"] = {
         "path": "not-allowed.json",
         "sha256": "0" * 64,
