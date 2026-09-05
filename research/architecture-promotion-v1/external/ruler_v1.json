@@ -3,7 +3,7 @@
   "format_version": 1,
   "suite_id": "ruler",
   "suite_version": "rulerv1-ns",
-  "status": "source_qualified_transitive_data_qualified_case_generation_blocked",
+  "status": "source_qualified_case_generation_4096_qualified_remaining_lengths_blocked",
   "upstream": {
     "id": "ruler_pipeline",
     "repository": "https://github.com/NVIDIA/RULER.git",
@@ -44,6 +44,7 @@
         {"path": "scripts/config_tasks.sh", "sha256": "bd2b228b303951ff6e1dba2dd551270744b50d78f5d51493b0c4abfb41a0c544"},
         {"path": "scripts/synthetic.yaml", "sha256": "34bc71dcacdc41a829a170f04b528fbf48d62c616338005ab4991680fbf8cb0b"},
         {"path": "scripts/data/prepare.py", "sha256": "f2d210860fbf5c640cb41ed104c7a923c9f4043f6e6c354277daacc73afc643d"},
+        {"path": "scripts/data/synthetic/qa.py", "sha256": "f00c0b59cf8698e90831bbf461c2c4f40f2a30f2469534c27455808c717281d0"},
         {"path": "scripts/eval/evaluate.py", "sha256": "b9a5fcbded7209663d97670496c74dbcd6358ddbe3d9887a0c5f0c4f974bfe1c"}
       ]
     }
@@ -73,7 +74,7 @@
     "staging": "run one length at a time; advance only after the current paired capability gate"
   },
   "data": {
-    "status": "source_bundle_qualified_case_generation_blocked",
+    "status": "source_bundle_qualified_case_generation_4096_qualified_remaining_lengths_blocked",
     "source_manifest": "results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json",
     "source_manifest_sha256": "9d207d1c6e8a6c2a7ace67c953604feabce0b6c0c307473497d19f022d45d1ce",
     "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
@@ -92,7 +93,29 @@
       "hotpotqa": "CC-BY-SA-4.0",
       "paul_graham": "mixed upstream essay rights; local research cache only; redistribution forbidden"
     },
-    "reason": "all network and package inputs are pinned in an offline local bundle; official cases at every declared length are not generated or hashed yet",
+    "case_generation": {
+      "status": "qualified_4096_remaining_lengths_blocked",
+      "compatibility_patch": {
+        "path": "research/architecture-promotion-v1/patches/ruler_qa_required_docs.patch",
+        "sha256": "5063fdb5f1737fdfd39f955e19a2cfa6418acd15cbcd24f513518295fa15f6a7",
+        "target": "scripts/data/synthetic/qa.py",
+        "upstream_sha256": "f00c0b59cf8698e90831bbf461c2c4f40f2a30f2469534c27455808c717281d0",
+        "patched_sha256": "727c4c898daad0f73445f32c7a3381426d0da51df63a2ae9e0213f3faa558836",
+        "scope": "termination repair only; no prompt, answer, source-order, seed, or scorer change"
+      },
+      "qualified_lengths": [
+        {
+          "length": 4096,
+          "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json",
+          "report_sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f",
+          "case_identity_sha256": "d3b6e1da567cc6ad4853a545680de68dff5edf82a14ed9886c00c554ca731fba",
+          "tokenizer_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+          "total_cases": 1300
+        }
+      ],
+      "remaining_lengths": [8192, 16384, 32768, 65536, 131072]
+    },
+    "reason": "all source inputs and the complete 4096-token case matrix are qualified; five longer declared lengths are not generated or hashed yet",
     "qualification_rule": "generate all declared task/length cells from the offline bundle, hash inputs/prompts/outputs, and prove the runner makes no network request"
   },
   "model_adapter": {

@@ -40,6 +40,7 @@ Read in order:
 32. [31 — Control-first CUDA cache-equivalence v2](31_cache_equivalence_v2.md)
 33. [32 — Powered cache equivalence v3 and baseline preflight v2](32_cache_equivalence_v3_and_preflight_v2.md)
 34. [33 — RULERv1 offline source-bundle qualification](33_ruler_offline_source_bundle.md)
+35. [34 — RULERv1 4K deterministic case qualification](34_ruler_4k_case_qualification.md)
 
 Conventions:
 
@@ -120,3 +121,8 @@ Finding 33 audits RULERv1's hidden network/package dependencies and replaces the
 offline bundle: 218 essay sources, the consolidated essay artifact, SQuAD, HotpotQA, the English-word
 LFS payload, Wonderwords assets, and NLTK archives. Mixed-rights payloads stay outside Git. Transitive
 sources now qualify, while official task/length case generation and candidate execution remain blocked.
+
+Finding 34 qualifies the complete 4K RULER matrix: 13 tasks, 100 cases each, and two byte-identical
+offline generations. It also exposes a pinned upstream `qa_2` non-termination at HotpotQA example 7
+and applies a hashed, control-flow-only repair that preserves prompts, answers, sources, seed, and
+scorer. The 4K cases qualify; five longer matrices and all model capability runs remain blocked.

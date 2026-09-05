@@ -2,13 +2,13 @@
   "format": "speck_external_source_qualification_summary",
   "format_version": 1,
   "status": "source_qualified_execution_blocked",
-  "runner_revision": "cd711dc01d2533edf5d9cae9f78e59949b99e5c6",
+  "runner_revision": "a919c25c49e71433f2a31f6ed0dc998dded34206",
   "created_on": "2026-09-05",
   "suites": {
     "ruler": {
       "config": "research/architecture-promotion-v1/external/ruler_v1.json",
-      "config_sha256": "c4272d700c7e6df4c6c408e19e519a367151f3245ab1f101ed0d5cb502994bdd",
-      "status": "source_qualified_transitive_data_qualified_case_generation_blocked",
+      "config_sha256": "0ef09bcf6014124dba0088f7a28a30fe762de7e013acbdf7fe3648a8850a9a9d",
+      "status": "source_qualified_case_generation_4096_qualified_remaining_lengths_blocked",
       "sources": [
         {
           "id": "ruler_pipeline",
@@ -29,7 +29,7 @@
           "ref": "main consumed transitively by the pinned preparer"
         }
       ],
-      "qualified_files": 15,
+      "qualified_files": 16,
       "correction": "the previously pinned RULER main pipeline is deprecated; the active contract now uses the official rulerv1-ns branch and pins its NeMo-Skills dependency",
       "model_adapter_qualification": {
         "artifact": "results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json",
@@ -42,8 +42,20 @@
         "bundle_identity_sha256": "9a32cac9a3d6e02024930b2eb34173a565189c7ef15abfea8fa9661a2222ba00",
         "status": "offline_sources_complete_unredistributable"
       },
+      "case_generation_qualification": {
+        "qualified_lengths": [4096],
+        "remaining_lengths": [8192, 16384, 32768, 65536, 131072],
+        "artifact": "results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json",
+        "sha256": "df725e2d1abeac40902aaa96db976459800612ffe840f20e23db77eb4be9646f",
+        "case_identity_sha256": "d3b6e1da567cc6ad4853a545680de68dff5edf82a14ed9886c00c554ca731fba",
+        "total_cases": 1300,
+        "complete_generations": 2,
+        "network_attempts": 0,
+        "compatibility_patch_sha256": "5063fdb5f1737fdfd39f955e19a2cfa6418acd15cbcd24f513518295fa15f6a7",
+        "status": "qualified_offline_deterministic_case_stream"
+      },
       "blockers": [
-        "official cases for every declared task/length cell are not generated or hashed",
+        "official cases at 8192, 16384, 32768, 65536, and 131072 tokens are not generated or hashed",
         "each frozen candidate still requires an attested export at its declared context ceiling"
       ]
     },
@@ -101,7 +113,7 @@
       ]
     }
   },
-  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive network/package inputs now have a locally retained offline manifest, and the shared serialized OpenAI endpoint protocol qualifies for RULER and NoLiMa. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
+  "conclusion": "All three upstream source contracts and required file hashes qualify. RULER's transitive inputs and complete 4096-token case matrix now qualify offline with deterministic rerun and application-layer network denial; five longer case matrices and every candidate execution remain blocked. No external suite has complete case and execution qualification, so none may contribute to a promotion claim yet.",
   "storage_event": {
     "event": "an attempted ad-hoc HELMET adapter environment began resolving a duplicate CUDA stack and was stopped before model load",
     "action": "pruned only unused uv cache artifacts",

@@ -62,9 +62,11 @@ binds an attested instruction export to the exact serialized OpenAI request shap
 pinned NeMo-Skills adapter and NoLiMa. It does not qualify long-context capability or serving speed.
 RULER's transitive source bundle is now locally retained and content-pinned, including dynamic essay
 canonicalization, SQuAD, HotpotQA, word lists, NLTK resources, and an exact dependency group. Its
-official task/length cases are not generated yet. NoLiMa requires acceptance of a non-commercial
-research license and a data manifest; HELMET remains blocked on a separate 34GB data volume and its
-own model-adapter smoke.
+complete 4K matrix is also qualified across two byte-identical, network-denied generations. A pinned
+compatibility patch repairs an upstream HotpotQA non-termination without changing prompt or scoring
+semantics. The five longer RULER matrices are not generated yet. NoLiMa requires acceptance of a
+non-commercial research license and a data manifest; HELMET remains blocked on a separate 34GB data
+volume and its own model-adapter smoke.
 
 Build or revalidate the non-redistributable RULER source bundle with:
 
@@ -75,6 +77,20 @@ uv run --extra cpu --group ruler python -m scripts.ruler_source_prepare \
   --nltk-data <pinned-nltk-download-directory> \
   --bundle ~/.cache/speck/evaluations/ruler-v1-sources-c3f5e3b4 \
   --manifest results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json --check
+```
+
+Generate or revalidate one tokenizer-specific RULER case matrix with two complete offline passes:
+
+```bash
+uv run --extra cpu --group ruler python -m scripts.ruler_case_prepare \
+  --contract research/architecture-promotion-v1/external/ruler_v1.json \
+  --generator-checkout <RULER-c3f5e3b4-checkout> \
+  --skills-checkout <NeMo-Skills-f4a3fd8-checkout> \
+  --tokenizer <local-Speck-export> \
+  --length 4096 \
+  --output-dir ~/.cache/speck/evaluations/<case-set>/4096 \
+  --report results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json \
+  --repeats 2
 ```
 
 Reproduce the endpoint protocol check for an attested instruction export with:
