@@ -61,6 +61,9 @@ the final combined model.
 - [`baseline_analysis.json`](baseline_analysis.json) freezes the paired estimand, confidence bound,
   source guardrails, interpolation rules, control-only time-to-quality lock, censoring, and fixed-sample
   stopping rule before any new baseline result exists.
+- [`cuda_decode_diagnostic.json`](cuda_decode_diagnostic.json) and
+  [`cuda_decode_trained_sentinel.json`](cuda_decode_trained_sentinel.json) freeze the multi-seed
+  failure-classification matrix and its immutable trained-checkpoint follow-up.
 - [`baseline-audit.json`](../../results/Speck-Paper1/baseline-audit.json) rehashes the five historical
   checkpoints, verifies the materialized pair/data windows, and records the live storage deficit.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the

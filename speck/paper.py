@@ -134,6 +134,15 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "preflight",
             "preflight_sha256",
             "preflight_status",
+            "cuda_decode_contract",
+            "cuda_decode_contract_sha256",
+            "cuda_decode_result",
+            "cuda_decode_result_sha256",
+            "trained_decode_contract",
+            "trained_decode_contract_sha256",
+            "trained_decode_result",
+            "trained_decode_result_sha256",
+            "runtime_preflight_classification",
             "materialization",
             "materialization_sha256",
             "audit",
@@ -148,6 +157,10 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         ("matrix", "matrix_sha256"),
         ("analysis_plan", "analysis_plan_sha256"),
         ("preflight", "preflight_sha256"),
+        ("cuda_decode_contract", "cuda_decode_contract_sha256"),
+        ("cuda_decode_result", "cuda_decode_result_sha256"),
+        ("trained_decode_contract", "trained_decode_contract_sha256"),
+        ("trained_decode_result", "trained_decode_result_sha256"),
         ("materialization", "materialization_sha256"),
         ("audit", "audit_sha256"),
     ):
@@ -171,6 +184,23 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         or preflight.get("matrix_sha256") != evidence["matrix_sha256"]
     ):
         raise ValueError("paper baseline preflight is invalid")
+    decode_contract = _load_json(repository_root / evidence["cuda_decode_contract"])
+    decode_result = _load_json(repository_root / evidence["cuda_decode_result"])
+    trained_contract = _load_json(repository_root / evidence["trained_decode_contract"])
+    trained_result = _load_json(repository_root / evidence["trained_decode_result"])
+    if (
+        decode_contract.get("format") != "speck_cuda_decode_diagnostic_contract"
+        or decode_contract.get("trigger_result_sha256") != evidence["preflight_sha256"]
+        or decode_result.get("format") != "speck_cuda_decode_diagnostic"
+        or decode_result.get("status") != "complete_failure_classification"
+        or decode_result.get("contract_sha256") != evidence["cuda_decode_contract_sha256"]
+        or trained_contract.get("format") != "speck_cuda_decode_trained_sentinel_contract"
+        or trained_contract.get("trigger_result_sha256") != evidence["cuda_decode_result_sha256"]
+        or trained_result.get("format") != "speck_cuda_decode_trained_sentinel"
+        or trained_result.get("status") != "complete"
+        or trained_result.get("contract_sha256") != evidence["trained_decode_contract_sha256"]
+    ):
+        raise ValueError("paper baseline CUDA decode diagnosis is invalid")
     policy = repository_root / "research" / program["policy_id"] / "policy.json"
     if not policy.is_file():
         raise ValueError("paper experiment program references a missing promotion policy")

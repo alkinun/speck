@@ -36,6 +36,7 @@ Read in order:
 28. [27 — Paper 1 matched-baseline audit and launch contract](27_paper_1_baseline_audit.md)
 29. [28 — Paper 1 baseline analysis and stopping contract](28_paper_1_baseline_analysis.md)
 30. [29 — Paper 1 baseline hardware preflight failure](29_paper_1_baseline_preflight.md)
+31. [30 — Full-depth CUDA decode failure classification](30_cuda_decode_failure_classification.md)
 
 Conventions:
 
@@ -93,3 +94,10 @@ training steps within the 16GiB allocation envelope, and CPU Transformers export
 CUDA full-versus-cached decode gate fails. Dense attention has one tail-logit miss with unchanged
 argmax; KDA has 8,180/256,000 mismatched logits and only 0.75 token argmax agreement. Training remains
 blocked pending a layerwise CUDA decode diagnosis; the observed tolerance is not relaxed post hoc.
+
+Finding 30 classifies the failure across three seeds, three lengths, CUDA/CPU, FLA/Torch KDA, removed
+convolution history, and four trained checkpoints. CPU state semantics pass; CUDA BF16 shape-dependent
+differences are amplified by depth, about 2.2–3.1× more in random-weight KDA than dense. FLA and
+convolution history are not sole causes. Training damps relative error, but KDA still produces three
+greedy-generation counterexamples across nine seed/length sentinels. The old full-model elementwise
+gate also fails dense and must be replaced only through a new versioned, behavior-linked contract.

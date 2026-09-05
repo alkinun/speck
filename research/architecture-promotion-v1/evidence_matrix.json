@@ -22,10 +22,13 @@
       "evidence": [
         "findings/01_mixer_screen_131m.md",
         "findings/29_paper_1_baseline_preflight.md",
+        "findings/30_cuda_decode_failure_classification.md",
+        "results/Speck-Paper1/cuda-decode-diagnostic.json",
+        "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/baseline-preflight.json"
       ],
       "quality": "The one-seed 131M-token full-global result is within the measured seed range of the strongest attention-bearing hybrids and cannot be ranked against them.",
-      "systems": "At 128K it has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls. The exact-shape Paper 1 preflight completes a finite compiled batch-4 4K step at 10.23 GiB peak allocation.",
+      "systems": "At 128K it has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token, far above the hybrid controls. The exact-shape Paper 1 preflight completes a finite compiled batch-4 4K step at 10.23 GiB peak allocation. Random-weight CUDA full/cached relative RMS is 0.017-0.020; the trained seed-42 sentinel falls to 0.0048-0.0060 and matches all three 32-token greedy continuations.",
       "scale_transfer": "not replicated under policy v1",
       "runtime_support": "standard PyTorch attention path",
       "unresolved_risks": [
@@ -73,13 +76,16 @@
         "findings/17_kimi_frontier_replication.md",
         "findings/18_kimi_context32k.md",
         "findings/29_paper_1_baseline_preflight.md",
+        "findings/30_cuda_decode_failure_classification.md",
+        "results/Speck-Paper1/cuda-decode-diagnostic.json",
+        "results/Speck-Paper1/cuda-decode-trained-sentinel.json",
         "results/Speck-Paper1/baseline-preflight.json",
         "results/Speck-Architecture-Promotion-v1/retrospective-audit.json"
       ],
       "quality": "Replicated long-range sensitivity, but mean base loss is 0.006909 nats worse and the old strict tie passes only two of three seeds.",
-      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB peak allocation, but native CUDA full-versus-cached decode fails on 8180 of 256000 logits and changes two of eight token argmaxes.",
+      "systems": "About 7.3% lower realized training throughput than the GDN/RoPE control and 481.47 MiB BF16 resident state at 128K. The exact-shape compiled batch-4 4K step is finite at 14.14 GiB. Random-weight CUDA full/cached relative RMS is 2.2-3.1x dense; Torch recurrence and removed convolution history retain the failure. Trained relative RMS falls to 0.0045-0.0066, but 3/9 seed/length sentinels diverge within 32 greedy tokens.",
       "scale_transfer": "not established",
-      "runtime_support": "Torch reference and isolated FLA kernels exist; full-depth CUDA chunk/fused-recurrent parity is unqualified and the hybrid production runtime is incomplete",
+      "runtime_support": "Torch reference and isolated FLA kernels exist; full-depth CUDA BF16 cache equivalence is unqualified under both FLA and Torch recurrence, and the hybrid production runtime is incomplete",
       "unresolved_risks": [
         "independent long-context quality",
         "exact eight-record decoding",
@@ -87,7 +93,7 @@
         "training-horizon transfer",
         "full-depth CUDA chunk-versus-recurrent decode drift"
       ],
-      "next_gate": "isolate the full-depth CUDA decode drift across layers, recurrent/convolution state, seeds, and lengths before baseline training"
+      "next_gate": "freeze and qualify a behavior-linked full-model CUDA cache-equivalence contract against the dense control before baseline training"
     },
     {
       "id": "reader_attention_three_cache",
