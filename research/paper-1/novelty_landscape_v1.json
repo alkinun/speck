@@ -3,15 +3,17 @@
   "format_version": 1,
   "audit_id": "speck-paper-1-novelty-landscape-v1",
   "paper_id": "speck-paper-1",
-  "status": "primary_metadata_audited_no_novelty_established",
+  "status": "two_full_text_four_abstract_audits_no_novelty_established",
   "audited_on": "2026-09-05",
-  "scope": "Primary arXiv metadata and abstracts for recent direct overlaps; full text, code, references, citations, patents, and non-arXiv literature remain mandatory before a novelty claim.",
+  "scope": "Full-text v1 audits for FlashMorph and Sparse Prefix Caching plus primary arXiv metadata/abstract audits for four further direct overlaps; released code, full text for the remaining four, references, citations, patents, and non-arXiv literature remain mandatory before a novelty claim.",
   "sources": [
     {
       "id": "arxiv_2606_30562v1",
       "title": "Morphing into Hybrid Attention Models",
       "submitted": "2026-06-29",
       "url": "https://arxiv.org/abs/2606.30562v1",
+      "review_scope": "full_text",
+      "local_note": "papers/23_flashmorph.md",
       "relevant_claim": "budget-constrained joint optimization of interdependent full-versus-linear attention layer placement using learned gates"
     },
     {
@@ -19,6 +21,8 @@
       "title": "Sparse Prefix Caching for Hybrid and Recurrent LLM Serving",
       "submitted": "2026-04-17",
       "url": "https://arxiv.org/abs/2605.05219v1",
+      "review_scope": "full_text",
+      "local_note": "papers/24_sparse_prefix_caching.md",
       "relevant_claim": "distribution-aware exact dynamic-program placement of sparse recurrent-state prefix checkpoints"
     },
     {
@@ -27,6 +31,7 @@
       "submitted": "2024-07-16",
       "revised": "2025-10-16",
       "url": "https://arxiv.org/abs/2407.11550v5",
+      "review_scope": "metadata_and_abstract",
       "relevant_claim": "head-wise adaptive KV eviction budget allocation guided by an attention-output loss bound"
     },
     {
@@ -35,6 +40,7 @@
       "submitted": "2024-04-07",
       "revised": "2024-10-10",
       "url": "https://arxiv.org/abs/2404.04793v2",
+      "review_scope": "metadata_and_abstract",
       "relevant_claim": "joint layer-wise and sequence-wise KV budget allocation using measured layer importance"
     },
     {
@@ -42,6 +48,7 @@
       "title": "Budgeted Attention Allocation: Cost-Conditioned Compute Control for Efficient Transformers",
       "submitted": "2026-05-07",
       "url": "https://arxiv.org/abs/2605.05697v1",
+      "review_scope": "metadata_and_abstract",
       "relevant_claim": "one checkpoint with monotone attention-head gates conditioned on a requested compute budget"
     },
     {
@@ -49,6 +56,7 @@
       "title": "Optimizing Native Sparse Attention with Latent Attention and Local Global Alternating Strategies",
       "submitted": "2025-11-02",
       "url": "https://arxiv.org/abs/2511.00819v1",
+      "review_scope": "metadata_and_abstract",
       "relevant_claim": "alternating local and global sparse-attention layers combined with latent cache representations"
     }
   ],

@@ -2,9 +2,10 @@
 
 ## Scope
 
-This is a primary arXiv metadata/abstract audit, not a completed novelty search. Exact versions are
-pinned, but full text, released code, backward references, forward citations, proceedings, patents,
-technical reports, deployed systems, and independent expert review remain mandatory.
+FlashMorph and Sparse Prefix Caching now have full-text v1 audits. Four additional sources remain
+primary arXiv metadata/abstract audits. Exact versions are pinned, but released code, the other full
+texts, backward references, forward citations, proceedings, patents, technical reports, deployed
+systems, and independent expert review remain mandatory.
 
 ## Direct overlaps
 
@@ -25,6 +26,14 @@ Several easy Speck novelty stories are already occupied:
 Therefore joint hybrid placement, adaptive state allocation, sparse recurrent prefix checkpointing,
 budget-conditioned attention, local/global alternation, and a bundle of named published components are
 not novel by themselves.
+
+The full FlashMorph audit strengthens the placement overlap: it trains a linear replacement for every
+layer against a frozen full-attention teacher, jointly optimizes scalar full/linear gates using
+answer-token hidden alignment plus a linearization penalty and synthetic retrieval, then discretizes a
+preset budget before recovery training. Its boundary is conversion, not a prospective from-scratch law.
+The full Sparse Prefix audit confirms an exact `O(NM)` distribution-aware dynamic program while retaining
+all attention KV. It isolates recurrent checkpoint positions under block granularity and a fixed last-K
+admission policy; production extraction/restoration and joint trie/eviction optimization remain open.
 
 ## Two hypotheses that survive provisionally
 

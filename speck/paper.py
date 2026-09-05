@@ -1109,6 +1109,19 @@ def _validate_novelty_landscape(reference, repository_root, paper_id):
             "arxiv_2605_05697v1",
             "arxiv_2511_00819v1",
         ]
+        or [source.get("review_scope") for source in sources]
+        != [
+            "full_text",
+            "full_text",
+            "metadata_and_abstract",
+            "metadata_and_abstract",
+            "metadata_and_abstract",
+            "metadata_and_abstract",
+        ]
+        or any(
+            not (repository_root / source.get("local_note", "")).is_file()
+            for source in sources[:2]
+        )
         or len(overlaps) < 6
         or any(overlap.get("decision") == "novel" for overlap in overlaps)
         or [hypothesis.get("id") for hypothesis in hypotheses]

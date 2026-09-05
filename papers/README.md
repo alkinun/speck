@@ -61,6 +61,13 @@ to a checked experiment artifact.
 19. [Kimi K3](04_kimi_k3.md) — a frontier-scale integration of KDA, gated MLA, Block AttnRes, and
     an extremely sparse MoE.
 
+### Direct novelty-overlap audits
+
+20. [FlashMorph](23_flashmorph.md) — jointly optimize interdependent full/linear layer placement during
+    Transformer-to-hybrid conversion.
+21. [Sparse Prefix Caching](24_sparse_prefix_caching.md) — exact distribution-aware recurrent-state
+    checkpoint placement under a prefix-overlap law.
+
 ## Decision map for Speck
 
 | Question | Best starting papers | What must still be measured locally |
@@ -76,6 +83,7 @@ to a checked experiment artifact.
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief. This is slightly above the
-requested approximate range because dropping two papers would break useful comparison pairs (especially
-MiniMax-01/M2 and DeepSeek-V2/V3.2/V4).
+The collection contains all 22 papers supplied in the research brief plus two later direct
+novelty-overlap audits. The original set is slightly above the requested approximate range because
+dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
+DeepSeek-V2/V3.2/V4).
