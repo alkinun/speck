@@ -7,6 +7,7 @@ parameters fixed by scaling expert width inversely with the expert count.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -33,7 +34,10 @@ def arguments(argv=None):
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--train-tokens", type=int, default=500_000_000)
     parser.add_argument("--seed", type=int, default=42)
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.train_tokens < 1:
+        parser.error("--train-tokens must be positive")
+    return args
 
 
 def dense_width(source):
@@ -109,17 +113,17 @@ def arm_definitions(width, experts=8, top_k=2):
         *granularity,
         (
             "p-dense-first",
-            "placement",
+            "placement_capacity",
             lambda index: dense if index < 2 else routed,
         ),
         (
             "p-interleaved",
-            "placement",
+            "placement_capacity",
             lambda index: routed if index % 2 == 0 else dense,
         ),
         (
             "p-shared",
-            "placement",
+            "placement_capacity",
             lambda _index: routed_stage(width, experts, top_k, shared=True),
         ),
     )
@@ -150,7 +154,12 @@ def accounting(config):
 
 
 def train_settings(name, train_tokens, seed, routed):
-    steps = train_tokens // 65_536
+    steps = (train_tokens + 65_535) // 65_536
+    checkpoints = sorted(
+        token
+        for token in {min(50_000_000, train_tokens), train_tokens // 2, train_tokens}
+        if token > 0
+    )
     return {
         "batch_tokens": 65_536,
         # Operational only; accumulation absorbs the difference and recomputation is
@@ -158,6 +167,7 @@ def train_settings(name, train_tokens, seed, routed):
         # replicate every token top-k ways through the permutation, so they take the
         # smaller batch. Checkpointing is uniform so no arm is memory-advantaged.
         "activation_checkpointing": True,
+        "checkpoint_tokens": checkpoints,
         "device_batch_size": 4 if routed else 8,
         "diagnostics_every": 100,
         "eval_every": max(steps // 10, 1),
@@ -172,6 +182,7 @@ def train_settings(name, train_tokens, seed, routed):
         "optimizer": "muon",
         "output_dir": None,
         "router_z_loss_coefficient": 0.001,
+        "router_bias_update_rate": 0.0,
         "run": f"SpeckLC-150M-MoEScreen-{name}",
         "save_every": 0,
         "seed": seed,
@@ -194,6 +205,8 @@ def prepare(args):
     data = json.loads((Path(__file__).parent / "moe_screen_data.json").read_text())
     if data["output_name"] != CORPUS:
         raise ValueError("the screen corpus must be the prepared DCLM-Edu stream")
+    if args.train_tokens > data["requested_train_tokens"]:
+        raise ValueError("the screen cannot exceed the prepared training-token schedule")
 
     width = dense_width(source)
     arms = {}
@@ -220,12 +233,78 @@ def prepare(args):
 
     contract = {
         "format": "speck_moe_design_screen",
-        "format_version": 1,
+        "format_version": 2,
+        "stage": "granularity_and_practical_placement_screen",
         "source_experiment": str(args.source_experiment),
         "corpus": CORPUS,
         "dense_feed_forward_width": width,
         "seed": args.seed,
         "train_tokens": args.train_tokens,
+        "trained_tokens": ((args.train_tokens + 65_535) // 65_536) * 65_536,
+        "launch_order": [
+            "dense",
+            "g8",
+            "g16",
+            "g32",
+            "p-dense-first",
+            "p-interleaved",
+            "p-shared",
+        ],
+        "scope": {
+            "can_select": ["expert_granularity", "practical_placement_capacity_bundle"],
+            "cannot_select": [
+                "dense_versus_moe",
+                "hopper_wall_clock",
+                "balancing_rule",
+                "expert_optimizer",
+            ],
+            "routing_weights": "selected raw router logits renormalized across top-k",
+            "placement_caveat": (
+                "dense/routed placement arms intentionally differ in total parameters; "
+                "interpret them as practical placement-capacity bundles, not isolated placement"
+            ),
+        },
+        "analysis": {
+            "primary_metric": "final 20M-token DCLM-Edu validation loss",
+            "lower_is_better": True,
+            "single_seed_tie_margin_nats": 0.00965,
+            "stability_window_starts_at_tokens": min(50_000_000, args.train_tokens),
+            "stability_limits": {
+                "all_values_finite": True,
+                "maximum_normalized_utilization_cv": 0.5,
+                "maximum_zero_load_experts": 0,
+                "minimum_normalized_entropy": 0.25,
+            },
+            "tie_break_order": {
+                "granularity": ["g8", "g16", "g32"],
+                "placement_capacity": [
+                    "p-shared",
+                    "g8",
+                    "p-dense-first",
+                    "p-interleaved",
+                ],
+                "overall_moe_design": [
+                    "p-shared",
+                    "g8",
+                    "g16",
+                    "g32",
+                    "p-dense-first",
+                    "p-interleaved",
+                ],
+            },
+            "dense_is_reference_only": True,
+        },
+        "followup": {
+            "after_this_stage": [
+                "select one exact observed arm; do not synthesize untested axis winners",
+                "compare auxiliary-loss balancing with loss-free selection bias on that arm",
+                "compare Muon expert banks with AdamW expert banks on the balancing winner",
+                "confirm dense and the final MoE design at seeds 43 and 44",
+                "run routed-layer masking on the final checkpoints",
+            ],
+            "materialized_now": False,
+        },
+        "implementation_artifacts": {},
         "arms": {
             name: {key: value for key, value in arm.items() if key != "model"}
             for name, arm in arms.items()
@@ -236,6 +315,20 @@ def prepare(args):
     shutil.rmtree(building, ignore_errors=True)
     try:
         building.mkdir(parents=True)
+        repository = Path(__file__).parents[1]
+        implementation_files = (
+            "scripts/base_train.py",
+            "scripts/moe_screen_analyze.py",
+            "scripts/moe_screen_prepare.py",
+            "scripts/moe_screen_run.py",
+            "speck/architecture.py",
+            "speck/model.py",
+            "speck/train.py",
+        )
+        contract["implementation_artifacts"] = {
+            relative: hashlib.sha256((repository / relative).read_bytes()).hexdigest()
+            for relative in implementation_files
+        }
         for name, arm in arms.items():
             directory = building / name
             directory.mkdir()
@@ -251,6 +344,10 @@ def prepare(args):
                 (directory / filename).write_text(
                     json.dumps(values, indent=2, sort_keys=True) + "\n", encoding="utf-8"
                 )
+            contract["arms"][name]["artifacts"] = {
+                filename: hashlib.sha256((directory / filename).read_bytes()).hexdigest()
+                for filename in files
+            }
         (building / "screen.json").write_text(
             json.dumps(contract, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )

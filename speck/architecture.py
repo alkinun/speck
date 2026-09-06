@@ -143,6 +143,7 @@ class RoutedSwiGLUSpec:
     intermediate_size: int
     num_experts: int
     top_k: int
+    selection_bias: bool = False
     kind: str = field(init=False, default="routed_swiglu")
 
     def __post_init__(self):
@@ -152,6 +153,8 @@ class RoutedSwiGLUSpec:
             raise ValueError("routed SwiGLU expert counts must be positive")
         if not 1 <= self.top_k <= self.num_experts:
             raise ValueError("routed SwiGLU top_k must be between one and num_experts")
+        if not isinstance(self.selection_bias, bool):
+            raise ValueError("routed SwiGLU selection_bias must be boolean")
 
 
 OperationSpec = (

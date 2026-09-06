@@ -948,6 +948,45 @@ def test_selected_top_k_logits_are_softmax_normalized_before_combining():
     torch.testing.assert_close(actual, expected)
 
 
+def test_selection_bias_changes_routes_without_changing_mixture_weights():
+    operation = RoutedSwiGLU(
+        2,
+        RoutedSwiGLUSpec(2, num_experts=2, top_k=1, selection_bias=True),
+    )
+    inputs = torch.tensor([[[1.0, 0.0]]])
+    with torch.no_grad():
+        operation.router.weight.copy_(torch.tensor([[2.0, 0.0], [1.0, 0.0]]))
+        operation.selection_bias.copy_(torch.tensor([0.0, 2.0]))
+        for bank in (operation.gate_proj, operation.up_proj, operation.down_proj):
+            bank.zero_()
+        operation.gate_proj[1].copy_(torch.eye(2))
+        operation.up_proj[1].copy_(torch.eye(2))
+        operation.down_proj[1].copy_(torch.eye(2))
+
+    actual, stats = operation(inputs)
+    hidden = F.silu(F.linear(inputs, operation.gate_proj[1]))
+    expected = F.linear(hidden * F.linear(inputs, operation.up_proj[1]), operation.down_proj[1])
+
+    torch.testing.assert_close(actual, expected)
+    assert stats.utilization.tolist() == [0.0, 1.0]
+    assert stats.logit_rms.item() > 0
+    assert stats.selection_bias_rms.item() > 0
+
+
+def test_loss_free_selection_bias_update_moves_load_toward_underused_experts():
+    operation = RoutedSwiGLU(
+        2,
+        RoutedSwiGLUSpec(2, num_experts=4, top_k=1, selection_bias=True),
+    )
+    operation.update_selection_bias(torch.tensor([1.0, 0.0, 0.0, 0.0]), 0.01)
+
+    torch.testing.assert_close(
+        operation.selection_bias,
+        torch.tensor([-0.015, 0.005, 0.005, 0.005]),
+    )
+    assert operation.selection_bias.mean().item() == pytest.approx(0.0, abs=1e-8)
+
+
 def test_router_math_stays_fp32_with_bfloat16_expert_compute():
     operation = RoutedSwiGLU(8, RoutedSwiGLUSpec(8, num_experts=4, top_k=2))
     inputs = torch.randn(2, 3, 8, dtype=torch.bfloat16, requires_grad=True)
@@ -1034,8 +1073,65 @@ def test_expert_banks_and_router_use_muon_while_convolution_stays_adamw():
             "intermediate_size": 4,
             "num_experts": 4,
             "top_k": 2,
+            "selection_bias": False,
         }
     ]
+
+
+def test_hybrid_optimizer_keeps_router_on_muon_and_moves_expert_banks_to_adamw():
+    model = model_with(RoutedSwiGLUSpec(4, num_experts=4, top_k=2))
+    optimizer = model.optimizer(name="muon-expert-adamw")
+    operation = model.cores["group_0_repeat_0"].stages[0].branches[0].operation
+    muon_parameters = {
+        id(parameter)
+        for group in optimizer.optimizers["muon"].param_groups
+        for parameter in group["params"]
+    }
+    adamw_parameters = {
+        id(parameter)
+        for group in optimizer.optimizers["adamw"].param_groups
+        for parameter in group["params"]
+    }
+
+    assert isinstance(operation, RoutedSwiGLU)
+    assert id(operation.router.weight) in muon_parameters
+    assert {
+        id(operation.gate_proj),
+        id(operation.up_proj),
+        id(operation.down_proj),
+    } <= adamw_parameters
+    assert muon_parameters.isdisjoint(adamw_parameters)
+    assert muon_parameters | adamw_parameters == {id(parameter) for parameter in model.parameters()}
+    roles = model.optimizer_role_counts(optimizer)
+    assert roles["adamw_expert_decay"]["parameters"] == sum(
+        parameter.numel()
+        for parameter in (operation.gate_proj, operation.up_proj, operation.down_proj)
+    )
+
+
+def test_loss_free_routing_and_hybrid_optimizer_complete_an_update_and_round_trip():
+    model = model_with(RoutedSwiGLUSpec(4, num_experts=4, top_k=2, selection_bias=True))
+    model.init_weights()
+    optimizer = model.optimizer(name="muon-expert-adamw")
+    tokens = torch.randint(0, 16, (2, 4))
+
+    output = model(
+        tokens,
+        tokens,
+        return_training_output=True,
+        load_balance_coefficient=0.0,
+    )
+    output.total_loss.backward()
+    optimizer.step()
+    model.update_routing_biases(output.routing, 0.001)
+
+    operation = model.cores["group_0_repeat_0"].stages[0].branches[0].operation
+    assert isinstance(operation, RoutedSwiGLU)
+    assert torch.isfinite(operation.selection_bias).all()
+    restored = model_with(RoutedSwiGLUSpec(4, num_experts=4, top_k=2, selection_bias=True))
+    restored.load_state_dict(model.state_dict())
+    restored_operation = restored.cores["group_0_repeat_0"].stages[0].branches[0].operation
+    torch.testing.assert_close(restored_operation.selection_bias, operation.selection_bias)
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="grouped GEMM requires CUDA")

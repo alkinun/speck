@@ -27,6 +27,7 @@ from speck.config import load_experiment
 from speck.model import CausalLMTrainingOutput, SpeckForCausalLM
 from speck.train import (
     assert_finite,
+    average_routing_utilization,
     branch_position,
     checkpoint_global_tokens,
     checkpoint_milestones,
@@ -480,3 +481,28 @@ def test_optimization_step_averages_typed_moe_losses_and_routing():
     )
     assert torch.isfinite(grad_norm)
     assert next_batch[2] == {"batch": 2}
+
+
+def test_routing_utilization_average_is_a_noop_without_distributed_training():
+    config = ArchitectureConfig(
+        (
+            BlockGroup(
+                BlockConfig(
+                    8,
+                    (StageConfig((RoutedSwiGLUSpec(4, 4, 2),)),),
+                )
+            ),
+        ),
+        embedding_size=8,
+        vocab_size=16,
+    )
+    model = SpeckForCausalLM(config)
+    output = model(
+        torch.randint(0, 16, (1, 4)),
+        torch.randint(0, 16, (1, 4)),
+        return_training_output=True,
+    )
+    before = output.routing[0].utilization.clone()
+
+    assert average_routing_utilization(output, False) is output
+    torch.testing.assert_close(output.routing[0].utilization, before)

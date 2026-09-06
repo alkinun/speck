@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -24,6 +25,14 @@ def test_every_arm_is_materialized_with_a_complete_config(screen):
         for filename in ("model.json", "data.json", "tokenizer.json", "train.json"):
             assert (output / name / filename).is_file()
     assert json.loads((output / "screen.json").read_text())["corpus"] == CORPUS
+    assert contract["format_version"] == 2
+    assert contract["scope"]["cannot_select"] == [
+        "dense_versus_moe",
+        "hopper_wall_clock",
+        "balancing_rule",
+        "expert_optimizer",
+    ]
+    assert contract["followup"]["materialized_now"] is False
 
 
 def test_arms_hold_active_feed_forward_parameters_fixed(screen):
@@ -127,9 +136,26 @@ def test_training_recipe_is_shared_and_routing_aware(screen):
     assert reference["sequence_length"] == 2_048
     assert reference["load_balance_coefficient"] == 0.01
     assert reference["router_z_loss_coefficient"] == 0.001
+    assert reference["router_bias_update_rate"] == 0.0
+    assert reference["checkpoint_tokens"] == [50_000_000, 250_000_000, 500_000_000]
     assert recipes["dense"]["device_batch_size"] == 8
     assert reference["activation_checkpointing"] is True
     assert all(recipes[name]["device_batch_size"] == 4 for name in recipes if name != "dense")
+
+
+def test_contract_binds_every_generated_artifact(screen):
+    output, contract = screen
+    for name, arm in contract["arms"].items():
+        for filename, expected in arm["artifacts"].items():
+            assert hashlib.sha256((output / name / filename).read_bytes()).hexdigest() == expected
+
+
+def test_placement_is_not_misrepresented_as_an_isolated_factor(screen):
+    _, contract = screen
+    assert "total parameters" in contract["scope"]["placement_caveat"]
+    assert {
+        arm["question"] for arm in contract["arms"].values() if arm["question"] != "control"
+    } == {"granularity", "placement_capacity"}
 
 
 def test_preparation_refuses_to_overwrite(screen, tmp_path):

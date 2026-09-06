@@ -198,7 +198,9 @@ not regress 32K or 128K retention on the built-in curve. Ties keep the default.
    The `torch._grouped_mm` path targets Hopper, so the Ampere measurement from 2026-09-01 does not
    transfer and must be redone.
 2. Expert banks on AdamW rather than Muon, so orthogonalization cost scales with active rather than
-   total parameters. The 2026-09-01 pilot's optimizer time tracked the total parameter ratio.
+   total parameters. The trainer now exposes this mixed optimizer, but it still requires a compiled
+   forward/backward/update qualification on Hopper. The 2026-09-01 pilot's optimizer time tracked the
+   total parameter ratio.
 3. Total parameters under about 4B, so optimizer state fits under DDP without sharding. At 10 to 14
    bytes per total parameter that is 40 to 56 GB per GPU; 7B would need FSDP, which does not exist in
    this trainer.
@@ -247,32 +249,47 @@ path targets Hopper and the 3090 is Ampere. Those belong to D1 and to the rented
 
 Setup reuses what exists. The 1B-token DCLM-Edu corpus is already packed and cached with 1,000,131,351
 training and 20,000,161 validation tokens, so no data preparation is needed. The backbone is the
-current 150M KDA/NoPE hybrid rather than the retired convolution hybrid, at sequence length 2048 and
-1B tokens per run: roughly 6 GPU-hours dense and 15 routed. Arms land near 900M total and 260M active
-parameters, which fits 24GB with activation checkpointing. One seed ranks, three seeds confirm the
-winner.
+current 153.959M-parameter KDA/NoPE hybrid rather than the retired convolution hybrid. Each screen run
+uses sequence length 2048 and requests 500M tokens. The dense arm is the unmodified backbone. Routed
+arms keep the same active feed-forward width and land between 313M and 473M total parameters with
+about 154M active. One seed screens; seeds 43 and 44 confirm only the final dense/MoE pair.
 
-Granularity is isolated correctly only when the expert count and top-k scale together, holding the
-sparsity ratio fixed, so that active and total parameters are both constant across arms. The three M1
-arms are verified at 896.2M, 896.6M, and 897.1M total and 259.2M, 259.6M, and 260.1M active. The
-dense control has a matched active FFN width rather than the 2304 of the current 150M config.
+Granularity is isolated by scaling expert count and top-k together at a fixed 25% activation ratio.
+The three banks contain the same number of expert parameters; their small total/active differences are
+only the growing router matrices. All use the source model's 2304 active feed-forward width: 8/top-2
+at width 1152, 16/top-4 at 576, and 32/top-8 at 288.
 
-| ID | Question | Arms | Runs | Hours |
-| --- | --- | --- | ---: | ---: |
-| M1 | Expert granularity, active and total both matched | 8 experts top-2 at 2304, 32 top-8 at 576, 64 top-16 at 288 | 3 | 45 |
-| M2 | Where does sparsity belong? | every block routed, dense first two blocks, interleaved every other block, routed plus one shared expert | 4 | 60 |
-| M3 | Balancing rule | auxiliary loss, bias-based loss-free | 2 | 30 |
-| M4 | Optimizer on expert banks | Muon, AdamW | 2 | 30 |
-| C | Dense control and three-seed winner confirmation | dense 150M, best MoE | 5 | 42 |
-| | | | **16** | **207** |
+| ID | Question | Arms | Logical runs | Materialization |
+| --- | --- | --- | ---: | --- |
+| M1 | Expert granularity at matched expert-bank capacity | 8/top-2 at 1152, 16/top-4 at 576, 32/top-8 at 288 | 3 | current screen |
+| M2 | Practical placement/capacity bundle | every block routed, dense first two blocks, interleaved, routed plus one shared expert | 4 | current screen |
+| M3 | Balancing rule on the selected design | auxiliary loss, bias-based loss-free | 2 | after M1/M2 |
+| M4 | Optimizer on expert banks | Muon, AdamW | 2 | after M3 |
+| C | Dense control and final MoE confirmation | seed 42 screen plus seeds 43 and 44 | 5 | after M4 |
+| | | | **16** | |
 
-M2 is the question this architecture makes interesting. A shared expert and a dense block buy the
-same always-on capacity by different means, and neither has been compared inside a recurrent-global
-stack. Whatever wins replaces the shared expert as a default rather than sitting beside it.
+M2 is deliberately a practical bundle comparison, not an isolated placement effect. Replacing routed
+blocks with dense blocks reduces total dormant capacity: the all-routed/shared arms have about 473M
+total parameters, dense-first 441M, and interleaved 313M. The paper must report that trade rather than
+attribute a difference to position alone. A genuinely isolated placement study would keep the routed
+block count and expert geometry fixed and move only their layer indices.
 
-The screen's most important output is not a ranking but a stability verdict. For the winning arm,
-track expert utilization spread, routing entropy, router logit magnitude, and load-balance loss across
-the whole run. A design that ranks first but drifts is not eligible for a 25-day flagship.
+The versioned screen contract freezes the result logic before routed output exists. Final held-out
+loss is primary; differences inside 0.00965 nats use the declared conservative tie order. From 50M
+tokens onward, every eligible routed arm requires finite diagnostics, normalized utilization CV at
+most 0.5, no zero-load expert in a diagnostic global batch, and normalized routing entropy at least
+0.25. Router-logit RMS, selection-bias RMS, load loss, expert norms, and gradients remain descriptive.
+A design that ranks first but fails stability is ineligible for a 25-day flagship.
+
+The current seven arms use auxiliary balancing, Muon expert banks, and selected-score-renormalized
+softmax routing. The frozen collector selects one exact observed arm across M1/M2; it cannot combine
+the winning granularity and placement attributes into an untrained architecture. M3 and M4 are
+causally downstream and are not silently implied by these runs. The
+trainer contains loss-free next-step selection-bias updates and a Muon-backbone/AdamW-expert optimizer
+for those later arms, but both require their own preflight. Checkpoints at 50M, 250M, and 500M make
+every run resumable; the checked runner verifies artifact hashes and keeps logs and W&B files on the
+data volume. Inductor's generated shared libraries remain in its executable `/tmp` cache because the
+checkpoint volume is mounted `noexec`. The checked analyzer cannot emit a dense-versus-MoE decision.
 
 Sparsity ratio is not screened. It is set by the DDP memory ceiling in the D1 gate.
 

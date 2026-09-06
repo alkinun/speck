@@ -1,7 +1,47 @@
 {
+  "analysis": {
+    "dense_is_reference_only": true,
+    "lower_is_better": true,
+    "primary_metric": "final 20M-token DCLM-Edu validation loss",
+    "single_seed_tie_margin_nats": 0.00965,
+    "stability_limits": {
+      "all_values_finite": true,
+      "maximum_normalized_utilization_cv": 0.5,
+      "maximum_zero_load_experts": 0,
+      "minimum_normalized_entropy": 0.25
+    },
+    "stability_window_starts_at_tokens": 50000000,
+    "tie_break_order": {
+      "granularity": [
+        "g8",
+        "g16",
+        "g32"
+      ],
+      "overall_moe_design": [
+        "p-shared",
+        "g8",
+        "g16",
+        "g32",
+        "p-dense-first",
+        "p-interleaved"
+      ],
+      "placement_capacity": [
+        "p-shared",
+        "g8",
+        "p-dense-first",
+        "p-interleaved"
+      ]
+    }
+  },
   "arms": {
     "dense": {
       "active_parameters": 153958938,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "2172257206a533a2aba906b55fce71827f47a36825a0948b5f6b83060d46a309",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "5b3884e13d3486002ccfaba1395dedaa0f9dda02f13eb5f2e42d6f7f1e083037"
+      },
       "flops_per_token_at_2048": 974415360.0,
       "matched_active_delta": 0,
       "matched_active_parameters": 153958938,
@@ -11,6 +51,12 @@
     },
     "g16": {
       "active_parameters": 154204698,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "76a2ed790178da91ca75a05bf2af7703723afd687b4b6ec25f5d1e6d026c36ff",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "cd85b408ca7e61449ce6fe045ee0a5857ed1385ad5794e76317f7318042de18b"
+      },
       "flops_per_token_at_2048": 975889920.0,
       "matched_active_delta": 0,
       "matched_active_parameters": 153958938,
@@ -20,6 +66,12 @@
     },
     "g32": {
       "active_parameters": 154450458,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "6c41fb3b08f0aae5e2bcc65f6f9f64191d812950a691c3197b8ad9d176c27905",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "72f45579d7fbba4d7de34777b153bbe3b3a453a3ee6f53a99dc5884c5ec472f6"
+      },
       "flops_per_token_at_2048": 977364480.0,
       "matched_active_delta": 0,
       "matched_active_parameters": 153958938,
@@ -29,6 +81,12 @@
     },
     "g8": {
       "active_parameters": 154081818,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "f1ee5dd4030e7ac2cddcf707779eeb169e326a05a9ec9167d94290ab6c24087e",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "9d367e3fc781e9ca5bf63ece224dda2b3ee2c21e67d264da28f99bb92e49fc03"
+      },
       "flops_per_token_at_2048": 975152640.0,
       "matched_active_delta": 0,
       "matched_active_parameters": 153958938,
@@ -38,37 +96,99 @@
     },
     "p-dense-first": {
       "active_parameters": 154069530,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "f1db9fdc3b1db877c6753c24d6fc0365d0772ad7a9e6d3b66d25a21555a01d9d",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "19c0c5d5bb5dd624470c027ab96da1392598427ef28985a491212ad6423ad234"
+      },
       "flops_per_token_at_2048": 975078912.0,
       "matched_active_delta": 0,
       "matched_active_parameters": 153958938,
       "parameters": 440723994,
-      "question": "placement",
+      "question": "placement_capacity",
       "router_parameters": 110592
     },
     "p-interleaved": {
       "active_parameters": 154020378,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "9618a4232b73e8975096266be7f083b95900bd545de5fc748f2acd0ec259f4e7",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "662ef33367aa7659abb4bf09774bff2ae80638231b51e96d7e3c963e8b9a95be"
+      },
       "flops_per_token_at_2048": 974784000.0,
       "matched_active_delta": 0,
       "matched_active_parameters": 153958938,
       "parameters": 313272858,
-      "question": "placement",
+      "question": "placement_capacity",
       "router_parameters": 61440
     },
     "p-shared": {
       "active_parameters": 154081818,
+      "artifacts": {
+        "data.json": "47efa2e9b3f11f6a2fdf7cda43486853d7c8dbdaadf882105e96d3a5833d1d4b",
+        "model.json": "c8b5d952384c395a68537c01ab7e85bbb5abe5b841929194e5aeb6603c007c30",
+        "tokenizer.json": "7972e5adb8e71950ae713eecfe657168b805137bcc64d44b418d0c3127ab4fe1",
+        "train.json": "97576a1ac9c57e2495b0a0db0cf22f60f5c2e057df9beb7260652038b47168f2"
+      },
       "flops_per_token_at_2048": 975060480.0,
       "matched_active_delta": 15360,
       "matched_active_parameters": 153974298,
       "parameters": 472586778,
-      "question": "placement",
+      "question": "placement_capacity",
       "router_parameters": 107520
     }
   },
   "corpus": "dclm-edu-1b-specklabs-moe-sweep",
   "dense_feed_forward_width": 2304,
+  "followup": {
+    "after_this_stage": [
+      "select one exact observed arm; do not synthesize untested axis winners",
+      "compare auxiliary-loss balancing with loss-free selection bias on that arm",
+      "compare Muon expert banks with AdamW expert banks on the balancing winner",
+      "confirm dense and the final MoE design at seeds 43 and 44",
+      "run routed-layer masking on the final checkpoints"
+    ],
+    "materialized_now": false
+  },
   "format": "speck_moe_design_screen",
-  "format_version": 1,
+  "format_version": 2,
+  "implementation_artifacts": {
+    "scripts/base_train.py": "44c04f43c115d67c2144e659a428400b84e8b8888b35cfbf1066d4ec7b02f233",
+    "scripts/moe_screen_analyze.py": "0b53dba159ce0a15e1c349ab1b78da7cf5f6afa7baf3ce3c353a5fee7016815e",
+    "scripts/moe_screen_prepare.py": "bae649574c5366377c529d265afd6bd9781caf01d8a6c4cf431a6d522c2b7dfc",
+    "scripts/moe_screen_run.py": "72f1f68e67a4199ae3399b5b9419c27cd95f1a5a59043397b7442307d4041df5",
+    "speck/architecture.py": "e2342734fe1515dddb22cc280eaaf18adaedc5c94fc61bdbfad537f439f347d0",
+    "speck/model.py": "9cfd5417305329550e07f32af5738d08fac292f7dae29f9c1d5b57b922aed33c",
+    "speck/train.py": "15ac6fb0538d9c97036295142a68dad4c3e88c823b55c85f94f1bcd01da88911"
+  },
+  "launch_order": [
+    "dense",
+    "g8",
+    "g16",
+    "g32",
+    "p-dense-first",
+    "p-interleaved",
+    "p-shared"
+  ],
+  "scope": {
+    "can_select": [
+      "expert_granularity",
+      "practical_placement_capacity_bundle"
+    ],
+    "cannot_select": [
+      "dense_versus_moe",
+      "hopper_wall_clock",
+      "balancing_rule",
+      "expert_optimizer"
+    ],
+    "placement_caveat": "dense/routed placement arms intentionally differ in total parameters; interpret them as practical placement-capacity bundles, not isolated placement",
+    "routing_weights": "selected raw router logits renormalized across top-k"
+  },
   "seed": 42,
   "source_experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
-  "train_tokens": 500000000
+  "stage": "granularity_and_practical_placement_screen",
+  "train_tokens": 500000000,
+  "trained_tokens": 500039680
 }

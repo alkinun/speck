@@ -1164,6 +1164,8 @@ class RoutingLayerStats:
     entropy: torch.Tensor
     load_balance_loss: torch.Tensor
     z_loss: torch.Tensor
+    logit_rms: torch.Tensor
+    selection_bias_rms: torch.Tensor
 
 
 @dataclass(frozen=True)
@@ -1215,13 +1217,21 @@ class RoutedSwiGLU(nn.Module):
         self.down_proj = nn.Parameter(
             torch.empty(spec.num_experts, hidden_size, spec.intermediate_size)
         )
+        self.register_buffer(
+            "selection_bias",
+            torch.zeros(spec.num_experts) if spec.selection_bias else None,
+        )
 
     def forward(self, x):
         shape = x.shape
         tokens = x.reshape(-1, shape[-1])
         logits = F.linear(tokens.float(), self.router.weight.float())
         probabilities = logits.softmax(dim=-1)
-        selected_logits, selected_experts = logits.topk(self.spec.top_k, dim=-1)
+        selection_logits = (
+            logits if self.selection_bias is None else logits + self.selection_bias.float()
+        )
+        _, selected_experts = selection_logits.topk(self.spec.top_k, dim=-1)
+        selected_logits = logits.gather(-1, selected_experts)
         mixture = selected_logits.softmax(dim=-1)
 
         route_experts = selected_experts.flatten()
@@ -1266,6 +1276,12 @@ class RoutedSwiGLU(nn.Module):
         entropy = -(probabilities * probabilities.clamp_min(1e-20).log()).sum(dim=-1).mean()
         load_balance_loss = self.spec.num_experts * torch.sum(mean_probabilities * utilization)
         z_loss = logits.logsumexp(dim=-1).square().mean()
+        logit_rms = logits.square().mean().sqrt()
+        selection_bias_rms = (
+            logits.new_zeros(())
+            if self.selection_bias is None
+            else self.selection_bias.float().square().mean().sqrt()
+        )
         stats = RoutingLayerStats(
             layer="",
             mean_probabilities=mean_probabilities,
@@ -1273,8 +1289,24 @@ class RoutedSwiGLU(nn.Module):
             entropy=entropy,
             load_balance_loss=load_balance_loss,
             z_loss=z_loss,
+            logit_rms=logit_rms,
+            selection_bias_rms=selection_bias_rms,
         )
         return combined.view(shape), stats
+
+    @torch.no_grad()
+    def update_selection_bias(self, utilization, rate):
+        """Move next-step selection bias toward uniform expert load without a loss term."""
+
+        if self.selection_bias is None:
+            raise ValueError("routing-bias updates require selection_bias in the architecture")
+        if utilization.shape != self.selection_bias.shape:
+            raise ValueError("routing utilization does not match the selection bias")
+        if not isinstance(rate, (int, float)) or not math.isfinite(rate) or rate <= 0:
+            raise ValueError("routing-bias update rate must be a finite positive number")
+        target = utilization.new_full(utilization.shape, 1 / self.spec.num_experts)
+        self.selection_bias.add_((target - utilization).sign(), alpha=rate)
+        self.selection_bias.sub_(self.selection_bias.mean())
 
 
 class Operation(nn.Module):
@@ -1690,12 +1722,31 @@ class SpeckForCausalLM(nn.Module):
         for parameter in self.parameters():
             if parameter is embedding or parameter.ndim < 2:
                 no_decay.append(parameter)
-            elif parameter.ndim == 2 or id(parameter) in expert_banks:
+            elif parameter.ndim == 2 or (id(parameter) in expert_banks and name == "muon"):
                 matrices.append(parameter)
             else:
                 other_decay.append(parameter)
         fused = embedding.device.type == "cuda"
         if name == "muon":
+            return CombinedOptimizer(
+                muon=BatchedMuon(
+                    matrices,
+                    lr=lr,
+                    weight_decay=weight_decay,
+                    adjust_lr_fn="match_rms_adamw",
+                ),
+                adamw=DeviceAdamW(
+                    [
+                        {"params": other_decay, "weight_decay": weight_decay},
+                        {"params": no_decay, "weight_decay": 0.0},
+                    ],
+                    lr=lr,
+                    betas=(0.9, 0.95),
+                    eps=1e-8,
+                    fused=fused,
+                ),
+            )
+        if name == "muon-expert-adamw":
             return CombinedOptimizer(
                 muon=BatchedMuon(
                     matrices,
@@ -1756,9 +1807,23 @@ class SpeckForCausalLM(nn.Module):
                     "intermediate_size": operation.spec.intermediate_size,
                     "num_experts": operation.spec.num_experts,
                     "top_k": operation.spec.top_k,
+                    "selection_bias": operation.spec.selection_bias,
                 }
             )
         return values
+
+    def update_routing_biases(self, routing, rate):
+        operations = self.routed_operations()
+        if not operations:
+            raise ValueError("routing-bias updates require at least one routed operation")
+        seen = set()
+        for stats in routing:
+            if stats.layer not in operations:
+                raise ValueError(f"unknown routed layer in bias update: {stats.layer}")
+            operations[stats.layer].update_selection_bias(stats.utilization, rate)
+            seen.add(stats.layer)
+        if seen != set(operations):
+            raise ValueError("routing-bias update is missing routed operations")
 
     def optimizer_role_counts(self, optimizer):
         """Audit exact optimizer membership and summarize tensor/element roles."""
@@ -1766,6 +1831,11 @@ class SpeckForCausalLM(nn.Module):
         parameter_ids = {id(parameter) for parameter in self.parameters()}
         memberships = {}
         roles = defaultdict(list)
+        expert_banks = {
+            id(parameter)
+            for operation in self.routed_operations().values()
+            for parameter in (operation.gate_proj, operation.up_proj, operation.down_proj)
+        }
         optimizers = (
             optimizer.optimizers.items()
             if isinstance(optimizer, CombinedOptimizer)
@@ -1779,25 +1849,26 @@ class SpeckForCausalLM(nn.Module):
                     role = "adamw_decay" if group.get("weight_decay", 0.0) else "adamw_no_decay"
                 for parameter in group["params"]:
                     identifier = id(parameter)
+                    parameter_role = (
+                        "adamw_expert_decay"
+                        if role == "adamw_decay" and identifier in expert_banks
+                        else role
+                    )
                     if identifier in memberships:
                         raise ValueError("a parameter appears in more than one optimizer role")
-                    memberships[identifier] = role
-                    roles[role].append(parameter)
+                    memberships[identifier] = parameter_role
+                    roles[parameter_role].append(parameter)
         if set(memberships) != parameter_ids:
             raise ValueError("optimizer roles do not cover every model parameter exactly once")
         if isinstance(optimizer, CombinedOptimizer):
-            required_muon = {
-                id(parameter)
-                for operation in self.routed_operations().values()
-                for parameter in (
-                    operation.router.weight,
-                    operation.gate_proj,
-                    operation.up_proj,
-                    operation.down_proj,
-                )
+            router_ids = {
+                id(operation.router.weight) for operation in self.routed_operations().values()
             }
-            if any(memberships[identifier] != "muon" for identifier in required_muon):
-                raise ValueError("routed router and expert parameters must use Muon")
+            if any(memberships[identifier] != "muon" for identifier in router_ids):
+                raise ValueError("routed router parameters must use Muon")
+            expert_roles = {memberships[identifier] for identifier in expert_banks}
+            if not expert_roles <= {"muon", "adamw_expert_decay"} or len(expert_roles) > 1:
+                raise ValueError("expert banks must use one auditable optimizer role")
         return {
             role: {
                 "tensors": len(parameters),

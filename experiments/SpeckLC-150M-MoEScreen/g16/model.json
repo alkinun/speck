@@ -22,6 +22,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -53,6 +54,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -84,6 +86,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -118,6 +121,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -149,6 +153,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -180,6 +185,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -211,6 +217,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -245,6 +252,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -276,6 +284,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -307,6 +316,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -338,6 +348,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -372,6 +383,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -403,6 +415,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -434,6 +447,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -465,6 +479,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -499,6 +514,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -530,6 +546,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -561,6 +578,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -592,6 +610,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
@@ -626,6 +645,7 @@
                 "intermediate_size": 576,
                 "kind": "routed_swiglu",
                 "num_experts": 16,
+                "selection_bias": false,
                 "top_k": 4
               }
             ]
