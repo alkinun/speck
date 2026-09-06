@@ -516,6 +516,7 @@
       ],
       "evidence": [
         "papers/16_deepseek_v2_mla.md",
+        "papers/44_deepseek_moe_official_source.md",
         "papers/04_kimi_k3.md",
         "papers/43_kimi_k3_official_release.md",
         "findings/67_stable_latentmoe_readiness_gate.md",
@@ -530,12 +531,14 @@
         "findings/159_quantile_balancing_tie_policy.md",
         "research/paper-1/quantile_balancing_tie_readiness_v1.json",
         "research/paper-1/quantile_balancing_tie_readiness_v2.json",
-        "results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json"
+        "results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json",
+        "findings/160_deepseek_moe_source_gate.md",
+        "results/Speck-Paper1/deepseek-moe-primary-source-audit-v1.json"
       ],
-      "quality": "Not measured locally. Official equations and four isolated CPU oracles qualify. A corrected fresh 256-case fixed-score study qualifies midpoint as a tie-safe coordinate representative, not as a training policy.",
+      "quality": "Not measured locally. Official Stable LatentMoE and conventional DeepSeekMoE equations qualify. Four isolated CPU oracles and a fixed-score midpoint tie reference pass, but no routing or width choice is selected.",
       "systems": "not measured locally",
       "scale_transfer": "not measured locally",
-      "runtime_support": "Four dense CPU equation oracles plus a fixed-score midpoint tie reference are qualified and unused by active model paths. Official inference rejects training; hardware top-k ties, conventional-MoE dispatch, composed/distributed training, and kernels remain unqualified.",
+      "runtime_support": "Four dense CPU equation oracles plus a fixed-score midpoint tie reference qualify. DeepSeekMoE supplies a single-device dropless training path and V3 an inference-only expert-sharded path; train/inference parity, hardware top-k ties, expert-parallel training, composition, and kernels remain unqualified.",
       "unresolved_risks": [
         "sequence and depth parents",
         "dropless conventional MoE correctness",

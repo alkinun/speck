@@ -166,6 +166,7 @@ Read in order:
 158. [157 — Official K3 sources close only the Stable LatentMoE specification gap](157_kimi_k3_source_and_latentmoe_v2.md)
 159. [158 — Four Stable LatentMoE equation references qualify on CPU](158_stable_latentmoe_CPU_references.md)
 160. [159 — Midpoint resolves fixed-score QB ties, not the training policy](159_quantile_balancing_tie_policy.md)
+161. [160 — Conventional dropless MoE has a single-device source, not an EP reference](160_deepseek_moe_source_gate.md)
 
 Conventions:
 

@@ -123,6 +123,11 @@ the final combined model.
   and [its qualification](../../results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json) use fresh
   cells and qualify interval midpoint on 256/256 fixed-score CPU cases. Hardware/changing-score training
   policy, model integration, and promotion remain blocked.
+- [`deepseek-moe-primary-source-audit-v1.json`](../../results/Speck-Paper1/deepseek-moe-primary-source-audit-v1.json)
+  pins the conventional/fine-grained/shared-expert equations and official 16B dropless training path.
+  The path is single-device-per-layer; selected softmax weights are unrenormalized, and neither it nor
+  V3 supplies deterministic ties, upstream train/inference parity, or expert-parallel training semantics.
+  No local conventional-MoE implementation or training is authorized.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.

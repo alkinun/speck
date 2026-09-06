@@ -63,6 +63,10 @@ to a checked experiment artifact.
    the implementation-complete equations, inference-code boundary, and license conditions used by the
    Stable LatentMoE readiness successor.
 
+The [DeepSeekMoE official-source audit](44_deepseek_moe_official_source.md) separately pins the
+conventional/fine-grained/shared-expert equations and distinguishes its single-device dropless training
+path from the later inference-only expert-sharded V3 reference.
+
 ### Direct novelty-overlap audits
 
 20. [FlashMorph](23_flashmorph.md) — jointly optimize interdependent full/linear layer placement during
