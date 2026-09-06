@@ -1,199 +1,54 @@
-# Speck long-context research ledger
+# Findings relevant to the active flagship
 
-This directory is the narrative index for the long-context experiments. Checked JSON under
-`results/` remains the machine-readable source of truth; these files preserve the experimental
-question, controls, failures, decisions, and interpretation around those artifacts.
+The current model, paper, and compute plan live under
+[`research/flagship/`](../research/flagship/). This page routes to the evidence that constrains those
+defaults without presenting the retired 169-entry program as current work.
 
-Findings 25 through 167 belong to the retired Paper 1 gate program. The scripts, modules, tests,
-and markdown contracts they link to were removed from the tree after commit `68d3187`; the JSON
-contracts remain under `research/paper-1/` as archive data. Check out `68d3187` to reproduce them.
+Checked JSON under `results/` remains the machine-readable source of truth. The
+[`complete historical index`](ARCHIVE.md) preserves every finding, including failed and retired gates.
 
-Read in order:
+## Foundation
 
-1. [00 — Research contract](00_research_contract.md)
-2. [01 — 131M-token mixer screen](01_mixer_screen_131m.md)
-3. [02 — Correctness and kernel calibration](02_correctness_and_kernel_calibration.md)
-4. [03 — Seed noise floor](03_seed_noise_floor.md)
-5. [04 — Existing-checkpoint 128K systems frontier](04_existing_checkpoint_128k_systems.md)
-6. [05 — Long-document dataset](05_long_document_dataset.md)
-7. [06 — Matched 32K local/global continuation](06_context32k_local_vs_global.md)
-8. [07 — Counterfactual retrieval diagnostic](07_counterfactual_retrieval.md)
-9. [08 — Global-layer count and placement frontier](08_global_attention_frontier.md)
-10. [09 — Decisions, open questions, and change log](09_decisions_and_change_log.md)
-11. [10 — Kimi Linear transfer review and revised experiment order](10_kimi_linear_transfer_review.md)
-12. [11 — KDA implementation and kernel qualification](11_kda_implementation_and_qualification.md)
-13. [12 — Same-parent NoPE context activation](12_nope_context_activation.md)
-14. [13 — Synthetic MQAR calibration and mixer comparison](13_synthetic_mqar.md)
-15. [14 — MQAR distance and load scaling](14_mqar_length_scaling.md)
-16. [15 — Palindrome and 64-stack mixer qualification](15_palindrome_and_stack.md)
-17. [16 — Kimi-transfer language-model staircase](16_kimi_transfer_131m.md)
-18. [17 — Three-seed Kimi-frontier replication](17_kimi_frontier_replication.md)
-19. [18 — Matched 32K KDA/NoPE context activation](18_kimi_context32k.md)
-20. [19 — Retrieval specificity, exact completion, and language replay](19_retrieval_specificity_and_replay.md)
-21. [20 — K3 diagnostics and global attention gating](20_k3_diagnostics_and_attention_gating.md)
-22. [21 — Retrieval answer transfer and template failure](21_retrieval_template_transfer.md)
-23. [22 — Template-diverse retrieval adaptation](22_template_diverse_retrieval_adaptation.md)
-24. [23 — Symbolic two-hop composition](23_symbolic_two_hop_composition.md)
-25. [24 — Speck Reader Attention and the global cache-count staircase](24_reader_attention.md)
-26. [25 — Architecture promotion policy and cost envelopes](25_architecture_promotion_policy.md)
-27. [26 — Paper 1 research program](26_paper_1_research_program.md)
-28. [27 — Paper 1 matched-baseline audit and launch contract](27_paper_1_baseline_audit.md)
-29. [28 — Paper 1 baseline analysis and stopping contract](28_paper_1_baseline_analysis.md)
-30. [29 — Paper 1 baseline hardware preflight failure](29_paper_1_baseline_preflight.md)
-31. [30 — Full-depth CUDA decode failure classification](30_cuda_decode_failure_classification.md)
-32. [31 — Control-first CUDA cache-equivalence v2](31_cache_equivalence_v2.md)
-33. [32 — Powered cache equivalence v3 and baseline preflight v2](32_cache_equivalence_v3_and_preflight_v2.md)
-34. [33 — RULERv1 offline source-bundle qualification](33_ruler_offline_source_bundle.md)
-35. [34 — RULERv1 4K deterministic case qualification](34_ruler_4k_case_qualification.md)
-36. [35 — RULERv1 8K deterministic case qualification](35_ruler_8k_case_qualification.md)
-37. [36 — RULERv1 16K deterministic case qualification](36_ruler_16k_case_qualification.md)
-38. [37 — RULERv1 32K deterministic case qualification](37_ruler_32k_case_qualification.md)
-39. [38 — RULERv1 64K deterministic case qualification](38_ruler_64k_case_qualification.md)
-40. [39 — RULERv1 128K and all-length data qualification](39_ruler_128k_and_data_completion.md)
-41. [40 — HELMET native Speck adapter qualification](40_helmet_native_adapter_qualification.md)
-42. [41 — HELMET offline native scorer runtime](41_helmet_offline_scorer_runtime.md)
-43. [42 — NoLiMa license and metadata decision gate](42_nolima_license_decision.md)
-44. [43 — HELMET data metadata and storage plan](43_helmet_data_metadata_and_storage_plan.md)
-45. [44 — Paper 1 dedicated checkpoint-volume qualification](44_paper_1_dedicated_checkpoint_volume.md)
-46. [45 — Paper 1 RULER contamination audit and v1 failure](45_paper_1_ruler_contamination.md)
-47. [46 — Post-contamination RULER v2 successor manifest](46_ruler_v2_successor_manifest.md)
-48. [47 — HELMET archive-external runtime and scorer boundary](47_helmet_runtime_dependency_boundary.md)
-49. [48 — HELMET two-family offline materializer preflight](48_helmet_two_family_materializer_preflight.md)
-50. [49 — HELMET CLINC150 source qualification](49_helmet_clinc_source_qualification.md)
-51. [50 — HELMET TREC rights and provenance decision](50_helmet_trec_rights_decision.md)
-52. [51 — HELMET Multi-LexSum rights and prompt-determinism decision](51_helmet_multilexsum_decision.md)
-53. [52 — HELMET NarrativeQA embedded-work and prompt-path decision](52_helmet_narrativeqa_decision.md)
-54. [53 — HELMET InfiniteBench embedded-work and metric decision](53_helmet_infinitebench_decision.md)
-55. [54 — HELMET seeded-demonstration repair qualification](54_helmet_seeded_demo_repair.md)
-56. [55 — Paper 1 proxy-launch and release-claim boundary](55_paper_1_proxy_launch_boundary.md)
-57. [56 — Paper 1 dense control 0 and collection correction](56_paper_1_dense_control_0.md)
-58. [57 — Paper 1 dense control 1](57_paper_1_dense_control_1.md)
-59. [58 — Event-driven Paper 1 baseline continuation](58_paper_1_event_continuation.md)
-60. [59 — Paper 1 dense controls complete and target locked](59_paper_1_dense_controls_and_target_lock.md)
-61. [60 — Paper 1 proxy disposition frozen before candidates](60_paper_1_proxy_disposition.md)
-62. [61 — Conditional five-cache GQA3/MQA1/MLA design](61_five_cache_representation_design.md)
-63. [62 — HCA readiness gate before implementation](62_hca_readiness_gate.md)
-64. [63 — CSA selector-readiness gate before implementation](63_csa_readiness_gate.md)
-65. [64 — Raw-local branch readiness gate](64_raw_local_readiness_gate.md)
-66. [65 — Recurrent/global ratio and placement readiness gate](65_ratio_placement_readiness_gate.md)
-67. [66 — Attention Residuals readiness gate](66_attnres_readiness_gate.md)
-68. [67 — Stable LatentMoE readiness gate](67_stable_latentmoe_readiness_gate.md)
-69. [68 — Tri-axis interaction and removal readiness gate](68_interaction_readiness_gate.md)
-70. [69 — Scaling and held-out prediction readiness gate](69_scaling_readiness_gate.md)
-71. [70 — Systems-cost readiness and proxy envelope failure](70_systems_cost_readiness_gate.md)
-72. [71 — Recent novelty landscape and surviving hypotheses](71_novelty_landscape_audit.md)
-73. [72 — Novelty-baseline code and license availability](72_novelty_code_availability.md)
-74. [73 — Ada-KV immutable static code audit](73_adakv_static_code_audit.md)
-75. [74 — Paper 1 KDA/GQA candidate pair 0](74_paper_1_candidate_0.md)
-76. [75 — Adaptive cache budget clean-room reference](75_adaptive_cache_budget_reference.md)
-77. [76 — Adaptive cache GQA reduction reference](76_adaptive_cache_gqa_reference.md)
-78. [77 — Adaptive cache safeguard apportionment reference](77_adaptive_cache_safeguard_reference.md)
-79. [78 — Adaptive cache salience-acquisition readiness](78_adaptive_cache_salience_readiness.md)
-80. [79 — N2 direct-overlap audit and scope reduction](79_n2_direct_overlap_audit.md)
-81. [80 — HeadKV and routing-artifact availability audit](80_n2_code_availability.md)
-82. [81 — N2 concept rejection after evidence-compression audit](81_n2_concept_rejection.md)
-83. [82 — STEC adjacent evidence-verification baseline](82_stec_baseline.md)
-84. [83 — BRIEF-family artifact availability audit](83_brief_code_availability.md)
-85. [84 — Claim-granular novelty overlap and priority](84_novelty_claim_overlap.md)
-86. [85 — Paper 1 KDA/GQA candidate pair 1](85_paper_1_candidate_1.md)
-87. [86 — N1 role-overlap audit and scope reduction](86_n1_role_overlap.md)
-88. [87 — N1 released-artifact availability audit](87_n1_code_availability.md)
-89. [88 — Novelty priority correction after N1 audit](88_novelty_priority_correction.md)
-90. [89 — Systematic from-scratch hybrid placement overlap](89_systematic_hybrid_placement_overlap.md)
-91. [90 — Systematic hybrid-study artifact availability](90_systematic_hybrid_artifact_availability.md)
-92. [91 — N1 claim-table correction after placement overlap](91_n1_claim_table_v3.md)
-93. [92 — Hybrid massive-activation and placement overlap](92_hybrid_massive_activation_overlap.md)
-94. [93 — Hybrid massive-activation artifact audit](93_hybrid_massive_activation_code_audit.md)
-95. [94 — Novelty artifact inventory after massive-activation audit](94_novelty_code_availability_v6.md)
-96. [95 — N1 claim table after activation-diagnostic counterevidence](95_n1_claim_table_v4.md)
-97. [96 — HALO source and result-log audit](96_halo_code_audit.md)
-98. [97 — HALO task-guided layer-selection overlap](97_halo_layer_selection_overlap.md)
-99. [98 — Novelty artifact inventory after HALO audit](98_novelty_code_availability_v7.md)
-100. [99 — N1 claim table after HALO](99_n1_claim_table_v5.md)
-101. [100 — Cross-task, cross-mixer KL-guided placement overlap](100_kl_guided_selection_overlap.md)
-102. [101 — KL-guided selector source/config audit](101_kl_selection_code_audit.md)
-103. [102 — Novelty artifact inventory after KL-selector audit](102_novelty_code_availability_v8.md)
-104. [103 — N1 claim table after cross-task KL selection](103_n1_claim_table_v6.md)
-105. [104 — Frozen N1 independent-review packet](104_n1_independent_review_packet.md)
-106. [105 — Paper 1 three-pair proxy quality screen](105_paper_1_paired_proxy_analysis.md)
-107. [106 — Six-pair finalist analysis freeze](106_finalist_analysis_freeze.md)
-108. [107 — Finalist materialization boundary](107_finalist_materialization_freeze.md)
-109. [108 — Six-pair finalist configs materialized](108_finalist_materialized.md)
-110. [109 — Finalist materialization, data, and storage qualification](109_finalist_data_storage_qualified.md)
-111. [110 — Finalist collector and analysis implementation qualified](110_finalist_analysis_qualified.md)
-112. [111 — Exact finalist CUDA runtime preflight](111_finalist_runtime_preflight.md)
-113. [112 — Multi-day finalist launch boundary](112_finalist_launch_boundary.md)
-114. [113 — Event-driven finalist automation frozen](113_finalist_automation_frozen.md)
-115. [114 — Finalist crossed-factor inference correction](114_finalist_crossed_factor_correction.md)
-116. [115 — Crossed-factor finalist analysis v2 qualified](115_finalist_analysis_v2_qualified.md)
-117. [116 — Finalist launch v2 after crossed-factor correction](116_finalist_launch_v2.md)
-118. [117 — Crossed-factor finalist automation v2](117_finalist_automation_v2.md)
-119. [118 — HELMET archive acquired and hash-qualified](118_helmet_archive_acquired.md)
-120. [119 — HELMET archive path inventory qualified](119_helmet_archive_inspected.md)
-121. [120 — Finalist v2 live launch qualification](120_finalist_live_launch_qualified.md)
-122. [121 — Finalist control 0 operator interruption](121_finalist_control0_operator_interruption.md)
-123. [122 — Identical finalist control 0 restart frozen](122_finalist_control0_rerun_frozen.md)
-124. [123 — Fresh live gate for finalist control 0 attempt 2](123_finalist_rerun_live_gate.md)
-125. [124 — HELMET archive-local rights and provenance audit](124_helmet_archive_local_rights_audit.md)
-126. [125 — HELMET synthetic-recall reconstruction boundary](125_helmet_synthetic_reconstruction_readiness.md)
-127. [126 — HELMET real-data reconstruction boundary](126_helmet_real_data_reconstruction_readiness.md)
-128. [127 — HELMET truncation-tokenizer replacement gate](127_helmet_truncation_tokenizer_readiness.md)
-129. [128 — HELMET model-judge reproducibility and data boundary](128_helmet_model_judge_readiness.md)
-130. [129 — Full finalist automation transition simulation](129_finalist_automation_transition_audit.md)
-131. [130 — Crossed-factor audit of every finalist analysis view](130_finalist_crossed_views_audit.md)
-132. [131 — Finalist systems-measurement and temporal-confounding boundary](131_finalist_systems_measurement_boundary.md)
-133. [132 — Finalist finiteness and complete-source boundary](132_finalist_source_stability_boundary.md)
-134. [133 — Append-only finalist result-acceptance gate](133_finalist_result_acceptance_gate.md)
-135. [134 — Complete finite source coverage moved before commit](134_finalist_program_source_gate.md)
-136. [135 — One-control integration proof for the pre-commit source gate](135_finalist_program_source_gate_integration.md)
-137. [136 — Retained-checkpoint replay closes the result-provenance gap](136_finalist_checkpoint_provenance_replay.md)
-138. [137 — Exact append-only Git provenance for every finalist event](137_finalist_append_only_git_provenance.md)
-139. [138 — Post-language systems protocol frozen before finalist results](138_finalist_systems_protocol_frozen.md)
-140. [139 — Fail-closed systems analysis qualified offline](139_finalist_systems_analysis_qualified.md)
-141. [140 — Conservative systems telemetry integration qualified synthetically](140_finalist_systems_telemetry_integrator.md)
-142. [141 — Systems sampler implementation qualified without a live query](141_finalist_systems_sampler_mock_qualified.md)
-143. [142 — Exact systems workload plan and persistent-mutation detector](142_finalist_systems_workload_plan.md)
-144. [143 — Disposable kernel read-only isolation qualifies](143_finalist_systems_sandbox_qualified.md)
-145. [144 — Non-persisting systems engine control flow qualifies on CPU fixtures](144_finalist_systems_engine_control_flow.md)
-146. [145 — Qualified components do not yet form an executable systems pipeline](145_finalist_systems_pipeline_interface_audit.md)
-147. [146 — Additive NVML used-memory producer qualifies with mocks](146_finalist_systems_memory_supplement.md)
-148. [147 — Synthetic systems trial and block assembly qualifies](147_finalist_systems_assembly_qualified.md)
-149. [148 — Global six-block systems acceptance qualifies synthetically](148_finalist_systems_global_acceptance.md)
-150. [149 — Runtime identity and attestation builder qualifies with mocks](149_finalist_systems_runtime_attestation.md)
-151. [150 — Systems block orchestration qualifies with recording adapters](150_finalist_systems_orchestration.md)
-152. [151 — Static systems pipeline converges to five live activation gates](151_finalist_systems_pipeline_convergence.md)
-153. [152 — Raw MQA control deconfounds cache representation from FFN capacity](152_sequence_cache_representation_deconfounded.md)
-154. [153 — Raw ratio family deconfounds recurrent/global count from FFN matching](153_ratio_FFN_matching_deconfounded.md)
-155. [154 — NoPE requires the missing mixer-by-position factorial](154_nope_factorial_frozen.md)
-156. [155 — Sigmoid gate evidence is conditional and KDA-SiLU is unimplemented](155_recurrent_gate_conditional_readiness.md)
-157. [156 — Pairwise cube interactions now have exact estimands and multiplicity](156_interaction_estimands_corrected.md)
-158. [157 — Official K3 sources close only the Stable LatentMoE specification gap](157_kimi_k3_source_and_latentmoe_v2.md)
-159. [158 — Four Stable LatentMoE equation references qualify on CPU](158_stable_latentmoe_CPU_references.md)
-160. [159 — Midpoint resolves fixed-score QB ties, not the training policy](159_quantile_balancing_tie_policy.md)
-161. [160 — Conventional dropless MoE has a single-device source, not an EP reference](160_deepseek_moe_source_gate.md)
-162. [161 — Width pre-results research converges and stops before implementation](161_width_pre_results_convergence.md)
-163. [162 — AttnRes blocks must align to logical Transformer boundaries](162_attnres_source_correction.md)
-164. [163 — V4 source semantics require three sequence-readiness corrections](163_deepseek_v4_sequence_source_gate.md)
-165. [164 — HCA, CSA, and local attention now have one coherent factorization](164_sequence_compression_factorization_corrected.md)
-166. [165 — Sequence research now has one acyclic activation order](165_sequence_axis_dependency_convergence.md)
-167. [166 — V4 architecture is stable, but initial FP8 simulation is superseded](166_deepseek_v4_sequence_lineage.md)
-168. [167 — Autonomous static work closes at the live finalist event boundary](167_pre_results_closure.md)
-169. [168 — Finalist chain stopped; program replaced by the flagship plan](168_finalist_stopped_flagship_plan.md)
+| Evidence | Why it matters now |
+| --- | --- |
+| [Research contract](00_research_contract.md) | Reproducibility, controls, and claim boundaries |
+| [Mixer screen](01_mixer_screen_131m.md) | Initial recurrent/global architecture comparison |
+| [Correctness and kernel calibration](02_correctness_and_kernel_calibration.md) | Reference/optimized parity boundary |
+| [Seed resolution](03_seed_noise_floor.md) | One-seed differences below 0.00965 nats are unresolved |
+| [Existing 128K systems frontier](04_existing_checkpoint_128k_systems.md) | State and latency accounting |
+| [Long-document dataset](05_long_document_dataset.md) | Complete-document extension data |
+| [Global-layer frontier](08_global_attention_frontier.md) | Middle integration and final readout roles |
 
-Conventions:
+## KDA and NoPE selection
 
-- Losses are natural-log cross entropy (“nats”) unless stated otherwise.
+| Evidence | Why it matters now |
+| --- | --- |
+| [KDA implementation and qualification](11_kda_implementation_and_qualification.md) | Current recurrent operator and kernel contract |
+| [Same-parent NoPE activation](12_nope_context_activation.md) | Correct positional-treatment protocol |
+| [Synthetic MQAR](13_synthetic_mqar.md) | Associative-memory calibration |
+| [Distance/load scaling](14_mqar_length_scaling.md) | Capacity limits across length and load |
+| [Palindrome and stack](15_palindrome_and_stack.md) | Non-retrieval recurrent-state tests |
+| [Kimi-transfer staircase](16_kimi_transfer_131m.md) | Isolated gate, position, and decay changes |
+| [Three-seed KDA/NoPE replication](17_kimi_frontier_replication.md) | Short-loss uncertainty and replicated 128K signal |
+| [Matched 32K activation](18_kimi_context32k.md) | Extension quality and 4K retention |
+
+## Evaluation and negative results
+
+| Evidence | Why it matters now |
+| --- | --- |
+| [Retrieval specificity and replay](19_retrieval_specificity_and_replay.md) | Separates sensitivity from usable retrieval |
+| [Attention output gating](20_k3_diagnostics_and_attention_gating.md) | Rejected marginal complexity |
+| [Answer transfer failure](21_retrieval_template_transfer.md) | Held-out answer/template requirement |
+| [Template-diverse adaptation](22_template_diverse_retrieval_adaptation.md) | Adaptation protocol evidence |
+| [Symbolic composition](23_symbolic_two_hop_composition.md) | Retrieval does not imply reasoning composition |
+| [Reader Attention frontier](24_reader_attention.md) | Preserved negative architecture result |
+| [Three-pair dense/KDA proxy](105_paper_1_paired_proxy_analysis.md) | Whole-architecture quality, FLOP, and time signal |
+| [Program transition](168_finalist_stopped_flagship_plan.md) | Why the retired finalist work no longer governs |
+
+## Conventions
+
+- Losses are natural-log cross entropy (“nats”).
 - `K` means 1,024 tokens in context lengths; token budgets are written exactly.
-- Resident state is model state needed across decoding steps. Peak allocation includes runtime
-  workspaces and temporary tensors.
-- “Effective retrieval” is the longest tested length retaining at least 85% of a statistically
-  significant 4K counterfactual directional baseline.
-- “Detectable retrieval” is the longest tested length with a one-sided binomial directional test
-  at `p < 0.05`, even if it fails the 85% retention rule.
-- Internal passkey diagnostics are not RULER, NoLiMa, or HELMET results.
-- A difference below the measured `0.00965`-nat seed range is treated as unresolved on one seed.
-
-Current state: the active scope, defaults, and experiment plan are in
-[`research/flagship/README.md`](../research/flagship/README.md). Findings 00 to 24 are the evidence
-base for those defaults; findings 25 to 167 are the archived Paper 1 gate program; finding 168
-records the stop and the change of direction.
+- Resident state persists across decoding steps; peak allocation also includes temporary workspace.
+- Internal directional diagnostics are not claims of exact retrieval or RULER performance.
+- Findings 25–167 are historical unless the active flagship plan cites them explicitly.

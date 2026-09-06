@@ -83,5 +83,5 @@ they differed by up to roughly 200×. That observation redirected the project aw
 - Experiment: [experiments/SpeckLC-150M-MixerScreen-131M](../experiments/SpeckLC-150M-MixerScreen-131M)
 - Corrected sweep ledger:
   [sweep.json](../experiments/SpeckLC-150M-MixerScreen-131M/sweep.json)
-- The prepared but intentionally stopped 500M family:
-  [experiments/SpeckLC-150M-Rank-500M](../experiments/SpeckLC-150M-Rank-500M)
+- The prepared but intentionally stopped `experiments/SpeckLC-150M-Rank-500M` family was removed with
+  retired gate tooling at commit `7322c95`; Git history preserves its configs.

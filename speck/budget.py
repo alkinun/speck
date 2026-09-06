@@ -17,7 +17,8 @@ def estimate_context_budget(
     lengths,
     *,
     effective_tflops,
-    h100_hours,
+    gpu_hours=None,
+    h100_hours=None,
     weight_bits=16,
     kv_cache_dtype="bfloat16",
 ):
@@ -25,13 +26,16 @@ def estimate_context_budget(
         raise ValueError("budget lengths must be positive")
     if tuple(sorted(set(lengths))) != tuple(lengths):
         raise ValueError("budget lengths must be sorted and unique")
-    numeric = (effective_tflops, h100_hours, weight_bits)
+    if gpu_hours is not None and h100_hours is not None:
+        raise ValueError("provide gpu_hours, not both GPU-hour names")
+    gpu_hours = h100_hours if gpu_hours is None else gpu_hours
+    numeric = (effective_tflops, gpu_hours, weight_bits)
     if any(isinstance(value, bool) or not isinstance(value, (int, float)) for value in numeric):
         raise ValueError("budget compute and precision values must be numeric")
     if not math.isfinite(effective_tflops) or effective_tflops <= 0:
         raise ValueError("effective TFLOP/s must be positive and finite")
-    if not math.isfinite(h100_hours) or h100_hours <= 0:
-        raise ValueError("H100-hours must be positive and finite")
+    if not math.isfinite(gpu_hours) or gpu_hours <= 0:
+        raise ValueError("GPU-hours must be positive and finite")
     if not math.isfinite(weight_bits) or weight_bits <= 0:
         raise ValueError("weight bits must be positive and finite")
     if kv_cache_dtype not in DTYPES:
@@ -50,8 +54,8 @@ def estimate_context_budget(
             {
                 "length": length,
                 "training_flops_per_token": flops,
-                "tokens_per_h100_hour": tokens_per_hour,
-                "tokens_in_budget": tokens_per_hour * h100_hours,
+                "tokens_per_gpu_hour": tokens_per_hour,
+                "tokens_in_budget": tokens_per_hour * gpu_hours,
                 "state_bytes": memory["total_bytes"],
                 "state_by_kind": memory["by_kind"],
                 "weights_plus_state_bytes": weight_bytes + memory["total_bytes"],
@@ -66,6 +70,6 @@ def estimate_context_budget(
         "weight_bytes": weight_bytes,
         "kv_cache_dtype": kv_cache_dtype,
         "effective_tflops": effective_tflops,
-        "h100_hours": h100_hours,
+        "gpu_hours": gpu_hours,
         "points": points,
     }

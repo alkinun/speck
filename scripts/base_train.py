@@ -55,7 +55,7 @@ _BRANCH_FIXED_SETTINGS = (
     "router_z_loss_coefficient",
     "diagnostics_every",
 )
-_SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule")
+_SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_fraction")
 _CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed")
 _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
@@ -70,6 +70,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "warmup_steps",
     "min_lr",
     "lr_schedule",
+    "decay_fraction",
     "grad_clip",
     "optimizer",
     "world_size",
@@ -85,6 +86,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
 )
 _LEGACY_RESUME_DEFAULTS = {
     "lr_schedule": "cosine",
+    "decay_fraction": None,
     "global_token_offset": 0,
     "data_token_offset": 0,
     "checkpoint_tokens": [],
@@ -283,6 +285,7 @@ class BaseTrainer:
         args.allow_attention_scope_change = getattr(args, "allow_attention_scope_change", False)
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
+        args.decay_fraction = getattr(args, "decay_fraction", None)
         args.wandb_group = getattr(args, "wandb_group", None)
         args.seed = getattr(args, "seed", 42)
         args.load_balance_coefficient = getattr(args, "load_balance_coefficient", 0.01)
@@ -859,6 +862,7 @@ class BaseTrainer:
                 args.warmup_steps,
                 args.min_lr,
                 args.lr_schedule,
+                args.decay_fraction,
             )
             training_output, grad_norm, batch = optimization_step(
                 self.train_model,

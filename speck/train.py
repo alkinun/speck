@@ -58,7 +58,7 @@ def validate_loader_progress(data_state, trained_tokens):
         )
 
 
-def lr_scale(step, steps, warmup, minimum, schedule="cosine"):
+def lr_scale(step, steps, warmup, minimum, schedule="cosine", decay_fraction=None):
     if not isinstance(steps, int) or steps < 1:
         raise ValueError("steps must be a positive integer")
     if not isinstance(step, int) or not 0 <= step < steps:
@@ -69,8 +69,22 @@ def lr_scale(step, steps, warmup, minimum, schedule="cosine"):
         raise ValueError("minimum must be a finite scale")
     if not 0 <= minimum <= 1:
         raise ValueError("minimum must be between zero and one")
-    if schedule not in {"constant", "cosine"}:
+    if schedule not in {"constant", "cosine", "wsd"}:
         raise ValueError("unsupported learning-rate schedule")
+    if schedule != "wsd" and decay_fraction is not None:
+        raise ValueError(f"{schedule} schedule does not use decay_fraction")
+    if schedule == "wsd" and (
+        not isinstance(decay_fraction, (int, float))
+        or isinstance(decay_fraction, bool)
+        or not math.isfinite(decay_fraction)
+        or not 0 < decay_fraction <= 1
+    ):
+        raise ValueError("WSD decay_fraction must be in (0, 1]")
+    decay_steps = None
+    if schedule == "wsd":
+        decay_steps = max(1, math.ceil(steps * decay_fraction))
+        if warmup + decay_steps > steps:
+            raise ValueError("WSD decay must fit after warmup")
     if schedule == "constant" and (warmup != 0 or minimum != 1):
         raise ValueError("constant schedule requires zero warmup and minimum scale one")
 
@@ -78,6 +92,15 @@ def lr_scale(step, steps, warmup, minimum, schedule="cosine"):
         return 1.0
     if step < warmup:
         return (step + 1) / warmup
+    if schedule == "wsd":
+        assert decay_steps is not None
+        decay_start = steps - decay_steps
+        if step < decay_start:
+            return 1.0
+        if decay_steps == 1:
+            return minimum
+        progress = (step - decay_start) / (decay_steps - 1)
+        return minimum + (1 - minimum) * 0.5 * (1 + math.cos(math.pi * progress))
     if steps == 1:
         return minimum
     if warmup == 0:

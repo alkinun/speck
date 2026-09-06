@@ -43,19 +43,3 @@ def test_proxy_is_a_materialized_three_to_one_gdn_hybrid():
             train["sequence_length"],
             world_size,
         )
-
-
-def test_1_2b_target_has_six_gqa_layers_and_bounded_state():
-    model, configs = load_model_on_meta("SpeckLC-1.2B")
-    assert model.parameter_count() == 1_218_451_776
-    assert mixer_counts(model) == (18, 6)
-    state = model.state(
-        length=1_048_576,
-        device="meta",
-        dtype=torch.bfloat16,
-    )
-    report = state.memory_report()
-    assert report["by_kind"]["attention_kv"] == 6 * 2 * 1_048_576 * 128 * 2 * 2
-    assert report["by_kind"]["gated_deltanet"] < 32 * 1024**2
-    assert report["total_bytes"] < 6.1 * 1024**3
-    assert configs["train"]["batch_tokens"] == 4_194_304

@@ -59,9 +59,9 @@ training positions without RoPE scaling; treat such results as diagnostics, not 
 Use the per-length warm-up when comparing prefill latency so one-time kernel compilation is not
 charged to the first architecture or sample.
 
-### Architecture-promotion retrieval protocols
+### Reusable architecture-promotion retrieval protocols
 
-The active [architecture-promotion contract](../research/architecture-promotion-v1/) freezes two
+The reusable [architecture-promotion contract](../research/architecture-promotion-v1/) freezes two
 200-case internal protocols. Pass one with `--protocol` to both
 `scripts.structured_retrieval_adapt` and `scripts.structured_retrieval_eval`. Protocol mode overrides
 all scientific CLI settings, verifies the protocol path and SHA-256 against the active evaluation
@@ -76,15 +76,14 @@ gate passes.
 
 ### External long-context suites
 
-The active manifest pins suite-specific contracts under
+The reusable manifest pins suite-specific contracts under
 [`research/architecture-promotion-v1/external`](../research/architecture-promotion-v1/external/).
 `scripts.external_suite_qualify` verifies the exact upstream commit and every required source-file hash
 without installing the suite or downloading its data.
 
-- RULER uses the official `rulerv1-ns` pipeline plus its exact NeMo-Skills dependency. The old `main`
-  runner is deprecated. Its OpenAI adapter request shape is qualified, including the required
-  zero-presence-penalty override; its data preparer still has transitive downloads that must be
-  content-pinned.
+- RULER v2 uses the qualified `rulerv1-ns` source bundle and deterministic 4K–128K case matrices.
+  The active disposition gives contaminated `qa_1` and `qa_2` zero primary weight; reports must retain
+  their task-level outputs rather than silently dropping them.
 - NoLiMa and HELMET contracts remain pinned for reference but are not part of the current evaluation
   plan: NoLiMa's license is academic-only and HELMET's runtime data, tokenizer, and judge dependencies
   could not be qualified. See the findings ledger for the audits.

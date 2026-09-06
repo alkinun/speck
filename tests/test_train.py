@@ -70,6 +70,37 @@ def test_constant_lr_schedule_stays_at_peak():
         lr_scale(0, 3, 0, 0.1, "constant")
 
 
+def test_wsd_warms_up_stays_stable_and_uses_a_cosine_decay_tail():
+    scales = [lr_scale(step, 10, 2, 0.1, "wsd", 0.3) for step in range(10)]
+
+    assert scales[:2] == [0.5, 1.0]
+    assert scales[2:7] == [1.0] * 5
+    assert scales[7] == 1.0
+    assert scales[8] == pytest.approx(0.55)
+    assert scales[9] == 0.1
+
+
+@pytest.mark.parametrize(
+    ("schedule", "decay_fraction"),
+    (
+        ("unknown", None),
+        ("cosine", 0.2),
+        ("constant", 0.2),
+        ("wsd", None),
+        ("wsd", 0.0),
+        ("wsd", 1.1),
+    ),
+)
+def test_lr_scale_rejects_invalid_schedule_settings(schedule, decay_fraction):
+    with pytest.raises(ValueError):
+        lr_scale(0, 10, 2, 0.1, schedule, decay_fraction)
+
+
+def test_wsd_rejects_a_decay_tail_that_overlaps_warmup():
+    with pytest.raises(ValueError, match="fit after warmup"):
+        lr_scale(2, 10, 3, 0.1, "wsd", 0.8)
+
+
 def test_single_step_lr_schedule_uses_minimum():
     assert lr_scale(0, 1, 0, 0.25) == 0.25
 
@@ -134,6 +165,7 @@ def test_legacy_resume_defaults_to_cosine_schedule():
     legacy = {}
     current = {
         "lr_schedule": "cosine",
+        "decay_fraction": None,
         "global_token_offset": 0,
         "data_token_offset": 0,
         "checkpoint_tokens": [],
@@ -144,6 +176,10 @@ def test_legacy_resume_defaults_to_cosine_schedule():
     assert changed_resume_settings(legacy, {**current, "lr_schedule": "constant"}) == [
         "lr_schedule"
     ]
+    assert changed_resume_settings(
+        legacy,
+        {**current, "lr_schedule": "wsd", "decay_fraction": 0.2},
+    ) == ["lr_schedule", "decay_fraction"]
     assert changed_resume_settings(legacy, {**current, "data_token_offset": 65_536}) == [
         "data_token_offset"
     ]

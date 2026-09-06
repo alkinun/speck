@@ -211,15 +211,20 @@ Before budgeting a length stage, calculate from the materialized architecture ra
 `6ND` at every length:
 
 ```bash
-uv run --extra cpu python -m scripts.context_budget experiments/SpeckLC-1.2B \
-  --lengths 4096,131072,524288,1048576 --effective-tflops 400 \
-  --h100-hours 10000 --weight-bits 4 --kv-cache-dtype int8
+uv run --extra cpu python -m scripts.context_budget research/flagship/targets/shape-a \
+  --lengths 4096,131072 --effective-tflops 350 \
+  --gpu-hours 5000 --weight-bits 4 --kv-cache-dtype int8
 ```
 
 The report adds each global-attention layer's context-dependent training FLOPs, calculates the
 tokens implied by the supplied effective throughput, and builds the real inference state on the
 meta device to count attention KV, recurrent state, quantization scales, and weights. This makes the
-cost discontinuity between a 4K core run and a nominal 1M stage explicit.
+cost discontinuity between 4K base training and the 128K extension explicit. Planning targets contain
+only model and long-context settings and cannot be launched as training experiments.
+
+The trainer also supports an explicit warmup-stable-decay schedule. `decay_fraction` is required for
+`lr_schedule: "wsd"`; the stable region holds the peak LR and the final fraction follows a cosine
+decay to `min_lr`. Schedule kind and decay fraction are immutable across resume.
 
 Prepare matched inherited-schedule and constant-LR experiments without manually calculating the
 parent LR:

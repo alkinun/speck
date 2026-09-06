@@ -17,7 +17,9 @@ def arguments(argv=None):
     parser.add_argument("experiment", type=Path)
     parser.add_argument("--lengths", type=parse_lengths, default=None)
     parser.add_argument("--effective-tflops", type=float, default=400.0)
-    parser.add_argument("--h100-hours", type=float, default=10_000.0)
+    hours = parser.add_mutually_exclusive_group()
+    hours.add_argument("--gpu-hours", type=float, default=10_000.0)
+    hours.add_argument("--h100-hours", dest="gpu_hours", type=float, help=argparse.SUPPRESS)
     parser.add_argument("--weight-bits", type=float, default=4.0)
     parser.add_argument(
         "--kv-cache-dtype",
@@ -37,7 +39,7 @@ def run(args):
         model,
         lengths,
         effective_tflops=args.effective_tflops,
-        h100_hours=args.h100_hours,
+        gpu_hours=args.gpu_hours,
         weight_bits=args.weight_bits,
         kv_cache_dtype=args.kv_cache_dtype,
     )

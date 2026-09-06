@@ -11,9 +11,13 @@ def test_local_markdown_links_exist():
     documents = (
         sorted(root.glob("*.md"))
         + sorted((root / "docs").rglob("*.md"))
+        + [root / "experiments" / "README.md"]
         + [root / "findings" / "README.md"]
+        + [root / "papers" / "README.md"]
         + [root / "research" / "README.md"]
         + sorted((root / "research" / "flagship").rglob("*.md"))
+        + [root / "research" / "paper-1" / "README.md"]
+        + [root / "results" / "README.md"]
     )
     missing = []
     for document in documents:
@@ -27,8 +31,8 @@ def test_local_markdown_links_exist():
     assert not missing, "missing local documentation links:\n" + "\n".join(missing)
 
 
-def test_findings_index_covers_numbered_research_ledger():
-    index = (root / "findings" / "README.md").read_text(encoding="utf-8")
+def test_findings_archive_covers_numbered_research_ledger():
+    index = (root / "findings" / "ARCHIVE.md").read_text(encoding="utf-8")
     findings = sorted(
         (root / "findings").glob("[0-9]*_*.md"),
         key=lambda path: int(path.name.split("_", 1)[0]),

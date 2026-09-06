@@ -18,7 +18,8 @@ reproducible baselines rather than the direction of the project.
 - Deterministic corpus preparation with filtering, exact deduplication, and packed shards.
 - Single-GPU and distributed data-parallel training with explicit checkpoint resume.
 - Lineage-checked progressive-context continuation across new data and sequence lengths.
-- Local checkpoint inference, Transformers and GGUF export, and pinned benchmark wrappers.
+- Local checkpoint inference, Transformers export, GGUF export for the supported convolutional
+  release family, and pinned benchmark wrappers.
 
 Models are groups of residual blocks. Each block contains ordered stages, and a stage can execute
 one or more branches in parallel.
@@ -76,7 +77,8 @@ instruction tuning, and generation options.
 ## Experiments
 
 Checked-in experiment directories bind an architecture to its tokenizer, data, and training
-configuration:
+configuration. See [`experiments/README.md`](experiments/README.md) before treating a retained config
+as active work:
 
 | Experiment | Purpose |
 | --- | --- |
@@ -84,7 +86,6 @@ configuration:
 | `experiments/Speck1.5-140M` | Same architecture and 5B-token optimization recipe with an isolated, pinned three-phase corpus curriculum. |
 | `experiments/Speck2-140M` | Same architecture with a pinned 20B-token quality curriculum and scaled training schedule. |
 | `experiments/SpeckLC-150M-GDN` | 3:1 Gated DeltaNet/GQA long-context proxy and 4K base-training recipe. |
-| `experiments/SpeckLC-1.2B` | Materialized dense 1.218B-parameter research target with a 1M allocation ceiling. |
 | `experiments/SpeckLC-150M-ReaderAttention131M` | Parameter- and FLOP-matched staircase over the number of shared global key-value caches. |
 | `experiments/Speck-Paper1-Baselines-131M` | Completed three-pair, parameter-matched dense-global/KDA proxy; results under `results/Speck-Paper1`. |
 | `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 supervised fine-tuning of `Speck1-140M`. |
@@ -115,12 +116,14 @@ prepared conversation dataset.
 
 | Guide | Contents |
 | --- | --- |
-| [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific experiment implications for 22 architecture papers. |
+| [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific implications for 47 architecture papers and source releases. |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context tooling](docs/long_context.md) | Mixers, attention, global-layer roles, progressive context training, evaluation, and known boundaries. |
 | [Deferred MoE support](docs/moe.md) | Retained routed-expert reference, explicit non-support, and the future sparse-upcycling boundary. |
 | [Architecture promotion research](research/README.md) | Versioned statistical policy, cost envelopes, evaluation manifest, and evidence matrix. |
-| [Flagship scope](research/flagship/README.md) | Scope of the first flagship model, paper, ablations, and experiments; defaults, compute, data, evaluation, calendar. |
+| [Flagship scope](research/flagship/README.md) | Model and paper scope, defaults, evidence standard, data, and evaluation. |
+| [Flagship execution](research/flagship/EXECUTION.md) | Flexible 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
+| [Pre-grant checklist](research/flagship/PREGRANT.md) | Concrete storage, data, GH200, model, evaluation, and administrative readiness work. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
 | [Evaluation and benchmarking](docs/evaluation.md) | Open SLM, BananaMind, optimization, inference performance, and checked results. |
 | [Releasing models](docs/releasing.md) | Maintainer-only Transformers, code-only, and GGUF publication workflows. |

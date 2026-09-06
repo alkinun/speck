@@ -117,22 +117,19 @@ path from the later inference-only expert-sharded V3 reference.
 39. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
-## Decision map for Speck
+## Decision map for the active flagship
 
-| Question | Best starting papers | What must still be measured locally |
+| Question | Best starting papers | Active local decision |
 | --- | --- | --- |
-| Which finite-state mixer? | GDN, Kimi Linear, Mamba-2 | gate isolation, MQAR/copy/state tracking, LM loss, kernels |
-| How many global layers? | Kimi Linear, Nemotron-H, Mamba-2 | ratio and placement at Speck scale; multi-hop retrieval |
-| Could local attention be enough? | Samba, LFM2, MiniMax-M2 | matched full/global controls beyond 32K |
-| Layerwise or parallel hybrid? | Falcon-H1, Hymba, Kimi Linear | equal-parameter and equal-FLOP comparison |
-| How should exact attention be compressed? | MLA, CLA, YOCO | cache bytes, decode latency, quality, runtime support |
-| When should sparse attention enter? | NSA, MoBA, DSA, DeepSeek-V4 | differentiability, kernel maturity, prefill/decode parity |
-| How should depth scale? | Attention Residuals, Falcon-H1 | deep/narrow sweep including latency and activation memory |
-| What is the release gate? | MiniMax-M2, Nemotron 3 Nano | per-length RULER/NoLiMa/HELMET and multi-hop agent tests |
+| Which finite-state mixer? | GDN, Kimi Linear, Mamba-2 | KDA is the default; qualify Torch/FLA parity on GH200 |
+| How many global layers? | Kimi Linear, Nemotron-H, Mamba-2 | D3 compares 3:1 with 5:1 at matched wall-clock |
+| How should global attention encode position? | Kimi Linear, Gated Attention | D2 compares NoPE with partial RoPE |
+| How should training scale? | Kimi Linear, systematic hybrid studies | D4/D6 plus the 60M–750M dense scale ladder |
+| What is the release gate? | MiniMax-M2, Nemotron 3 Nano | RULER v2, internal retrieval/composition, 4K retention, and serving profiles |
+| What moves to a later grant? | MLA, AttnRes, NSA, MoBA, DeepSeekMoE, Kimi K3 | Cache compression, depth routing, sparse attention, and MoE sparse upcycling |
 
 ## Source set
 
-The collection contains all 22 papers supplied in the research brief, nineteen later direct
-novelty-overlap audits, and one supporting eviction baseline. The original set is slightly above the requested approximate range because
-dropping two papers would break useful comparison pairs (especially MiniMax-01/M2 and
-DeepSeek-V2/V3.2/V4).
+The collection contains the 22 papers supplied in the original research brief, nineteen later direct
+overlap audits, one supporting eviction baseline, and five official-source or release-lineage notes:
+47 files total. They are literature evidence, not an active experiment backlog.

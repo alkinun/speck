@@ -1,0 +1,25 @@
+{
+  "format": "speck_flagship_planning_target",
+  "format_version": 1,
+  "status": "planning_default_not_launchable",
+  "shape": "A",
+  "parameters": 1195878432,
+  "base_train_tokens": 400000000000,
+  "training_flops_per_token_at_4096": 7513055232.0,
+  "stable_fraction": 0.8,
+  "decay_fraction": 0.2,
+  "open_decisions": [
+    "shape A versus shape B",
+    "NoPE versus partial RoPE",
+    "3:1 versus 5:1 recurrent-global ratio",
+    "peak learning rate and global batch",
+    "bf16 versus qualified FP8",
+    "stable and decay data mixtures"
+  ],
+  "missing_launch_inputs": [
+    "selected data manifests",
+    "selected training hyperparameters",
+    "GH200 runtime qualification",
+    "frozen analysis and checkpoint contracts"
+  ]
+}

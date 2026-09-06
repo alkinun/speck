@@ -1,0 +1,261 @@
+{
+  "format": "speck_flagship_execution_plan",
+  "format_version": 1,
+  "status": "pregrant",
+  "calendar_days": 90,
+  "hardware": {
+    "accelerator": "NVIDIA GH200",
+    "gpus": 4,
+    "assumed_achieved_tflops_per_gpu": 350
+  },
+  "budget": {
+    "gpu_hours": 5000,
+    "mandatory_gpu_hours": 3932,
+    "reserve_gpu_hours": 1068,
+    "full_node_days": 52.083333333333336
+  },
+  "scope": {
+    "included": [
+      "data experiments E1-E5",
+      "dense architecture decisions C0 D2 D3 D4 D6",
+      "dense scale ladder and reversal check",
+      "dense-width flagship pretraining",
+      "32K and 128K context extension",
+      "anneal merge and supervised fine-tuning",
+      "quality long-context systems and serving evaluation",
+      "native Transformers and GGUF releases",
+      "paper and reproducibility artifacts"
+    ],
+    "excluded": [
+      "mixture of experts",
+      "depth routing",
+      "sparse or compressed attention",
+      "HELMET",
+      "NoLiMa",
+      "new architecture axes after day 1"
+    ]
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "name": "pregrant readiness",
+      "days": [
+        0,
+        0
+      ],
+      "gpu_hours": 0,
+      "depends_on": [],
+      "work": [
+        "storage and data-volume readiness",
+        "flagship corpora and neutral held-out set",
+        "20B-token data-pipeline rehearsal",
+        "4xGH200 environment and resume qualification",
+        "tokenizer decision",
+        "comparator baseline table",
+        "scale geometries and analysis contracts"
+      ],
+      "exit_gate": "every item in PREGRANT.md is complete or has an explicit owner and non-GPU fallback"
+    },
+    {
+      "id": "P1",
+      "name": "calibration and high-leverage screens",
+      "days": [
+        1,
+        4
+      ],
+      "gpu_hours": 203,
+      "depends_on": [
+        "P0"
+      ],
+      "work": [
+        "E1 web-filter screen and confirmations: 133 GPU-hours",
+        "E3 epoch and repetition policy: 32 GPU-hours",
+        "D4 LR and global-batch sweep: 33 GPU-hours",
+        "D6 LR-width transfer anchors: 5 GPU-hours"
+      ],
+      "exit_gate": "web-filter finalists repetition policy and transferable LR region are frozen"
+    },
+    {
+      "id": "P2",
+      "name": "stable mixture and dense architecture decisions",
+      "days": [
+        4,
+        11
+      ],
+      "gpu_hours": 414,
+      "depends_on": [
+        "P1"
+      ],
+      "work": [
+        "E2 stable mixture: 225 GPU-hours",
+        "C0 three-seed shared dense control: 63 GPU-hours",
+        "D2 NoPE versus partial RoPE: 63 GPU-hours",
+        "D3 3:1 versus 5:1 recurrent-global ratio: 63 GPU-hours"
+      ],
+      "exit_gate": "stable mixture position treatment and mixer ratio are selected by frozen rules"
+    },
+    {
+      "id": "P3",
+      "name": "decay curriculum and scale transfer",
+      "days": [
+        11,
+        20
+      ],
+      "gpu_hours": 440,
+      "depends_on": [
+        "P2"
+      ],
+      "work": [
+        "E4 decay-phase mixture: 50 GPU-hours",
+        "E5 curriculum shape: 100 GPU-hours",
+        "60M-750M scale ladder and reversal check: 290 GPU-hours"
+      ],
+      "exit_gate": "shape A or B is selected and every launch setting has a winner or default"
+    },
+    {
+      "id": "P4",
+      "name": "configuration freeze",
+      "days": [
+        20,
+        21
+      ],
+      "gpu_hours": 0,
+      "depends_on": [
+        "P3"
+      ],
+      "work": [
+        "freeze model data tokenizer optimizer schedule precision checkpoints context and evaluation",
+        "apply documented defaults to unresolved decisions",
+        "reject new experiment axes"
+      ],
+      "exit_gate": "one hash-bound launch manifest passes CPU and GH200 preflight"
+    },
+    {
+      "id": "P5",
+      "name": "flagship pretraining",
+      "days": [
+        21,
+        50
+      ],
+      "gpu_hours": 2425,
+      "depends_on": [
+        "P4"
+      ],
+      "work": [
+        "stable phase for approximately 80 percent of tokens",
+        "publish the pre-decay checkpoint",
+        "decay phase for approximately 20 percent of tokens",
+        "publish the final base checkpoint"
+      ],
+      "exit_gate": "complete finite base and pre-decay checkpoints with replayable lineage"
+    },
+    {
+      "id": "P6",
+      "name": "extension post-training evaluation and release",
+      "days": [
+        51,
+        65
+      ],
+      "gpu_hours": 450,
+      "depends_on": [
+        "P5"
+      ],
+      "work": [
+        "32K then 128K context extension with 4K regression gates",
+        "three annealing branches and weight merge",
+        "supervised fine-tuning",
+        "short and long-context evaluation",
+        "GH200 RTX 3090 and CPU serving profiles",
+        "native Transformers and GGUF export qualification"
+      ],
+      "exit_gate": "release candidates and every mandatory evaluation artifact are complete"
+    },
+    {
+      "id": "P7",
+      "name": "protected reserve",
+      "days": [
+        1,
+        80
+      ],
+      "gpu_hours": 1068,
+      "depends_on": [
+        "P0"
+      ],
+      "conditional": true,
+      "release_order": [
+        "recover invalid or interrupted mandatory work",
+        "preserve the flagship token target under measured throughput",
+        "repair context extension or post-training",
+        "replicate one consequential existing decision",
+        "continue flagship training only after mandatory artifacts are secure"
+      ],
+      "exit_gate": "every reserve use cites a frozen trigger and cannot introduce a new axis"
+    },
+    {
+      "id": "P8",
+      "name": "paper and public release buffer",
+      "days": [
+        66,
+        90
+      ],
+      "gpu_hours": 0,
+      "depends_on": [
+        "P6"
+      ],
+      "work": [
+        "generate tables and figures from checked results",
+        "complete claim license limitation and reproducibility audits",
+        "publish checkpoints code model cards and paper"
+      ],
+      "exit_gate": "every public number resolves to a checked artifact"
+    }
+  ],
+  "flexibility": {
+    "binding": [
+      "phase dependencies and exit gates",
+      "5000 GPU-hour ceiling",
+      "1068 GPU-hour protected reserve",
+      "dense-width flagship",
+      "day-21 configuration freeze",
+      "three-seed confirmation for architecture decisions",
+      "neutral held-out evaluation for data decisions"
+    ],
+    "advisory": [
+      "calendar day ranges",
+      "ordering of independent jobs inside a phase",
+      "which GPU runs each independent arm",
+      "post-training sub-budget split"
+    ],
+    "cut_order": [
+      "E5 curriculum-shape experiment",
+      "scale-ladder contingency runs",
+      "scale ladder beyond the two mandatory transfer points",
+      "flagship tokens from 400B to 320B"
+    ],
+    "forbidden_cuts": [
+      "neutral held-out evaluation",
+      "required seed confirmations",
+      "checkpoint and resume validation",
+      "original-4K regression checks",
+      "release parity and artifact identity"
+    ]
+  },
+  "throughput_response": [
+    {
+      "condition": "at least 350 achieved TFLOP/s/GPU",
+      "action": "keep plan and protect reserve until the pre-decay checkpoint"
+    },
+    {
+      "condition": "285-350 achieved TFLOP/s/GPU",
+      "action": "use reserve only to preserve mandatory work and the flagship token target"
+    },
+    {
+      "condition": "250-285 achieved TFLOP/s/GPU",
+      "action": "apply the cut order before reducing mandatory evaluation"
+    },
+    {
+      "condition": "below 250 achieved TFLOP/s/GPU or unreliable DDP",
+      "action": "fall back to bf16 Torch kernels as needed and reduce flagship training to 320B tokens"
+    }
+  ]
+}

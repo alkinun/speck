@@ -4,6 +4,15 @@ Status: v3, 2026-09-06. This is the single operating document for the first flag
 paper that describes it. Everything else under `research/` is either tooling contract
 (`architecture-promotion-v1`) or archived evidence (`paper-1/*.json`).
 
+The active operating surface is intentionally small:
+
+- This file freezes scope, defaults, experiments, data, evaluation, and releases.
+- [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
+- [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
+- [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
+- [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
+  created only at the day-21 freeze.
+
 ## 1. Mission
 
 Build small language models that are as efficient to train and serve as possible while giving up as
@@ -50,6 +59,10 @@ Shape A has better absolute loss. Shape B is less undertrained relative to its s
 directly with Qwen3-0.6B, SmolLM2-360M, and LFM2-700M, and serves better, which is our axis. This is
 decision **F1**, resolved by the scale ladder in section 4.4 no later than day 18, defaulting to A.
 If FP8 qualifies on the node, the extra throughput buys tokens, not saved hours.
+
+The current non-launchable Shape-A geometry is
+[`targets/shape-a`](targets/shape-a/). It materializes to 1,195,878,432 parameters; the rounded 1.2B
+label is the model-size class, not an exact count.
 
 ### 2.3 Architecture defaults
 
@@ -99,8 +112,8 @@ changes no number in the config is cut. A config line with no figure is labeled 
 3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
 4. Data ablations: E1 to E5 with per-domain held-out loss and small-scale benchmarks.
 5. Architecture ablations: C0, D2, D3, D4, and D6 with paired non-inferiority bounds.
-6. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one held-out point,
-   and the hyperparameter transfer rule from D6.
+6. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one
+   held-out point, and the hyperparameter transfer rule from D6.
 7. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
 8. Long context: extension recipe, RULER v2 through 128K, internal protocols, 4K retention.
 9. Post-training: anneal merge and SFT, with the delta each contributes.
@@ -217,11 +230,11 @@ fit. Resolves F1 in section 2.2 and provides the scaling section.
 A scaling-efficiency claim additionally requires uncertainty on the fit, residual diagnostics, and
 the flagship itself as a held-out confirmation point.
 
-### 4.5 Not gating the flagship
+### 4.5 Outside the active experiment matrix
 
-Run only on spare capacity during the extension and evaluation weeks, and only as paper sections:
-Reader Attention at 350M, MQA against GQA cache representation, and a 150M repeat of D2 and D3 for
-the scale-consistency figure.
+Reader Attention, MQA/MLA cache alternatives, attention residuals, sparse/compressed attention, and
+other archived axes receive no grant-1 runs. Existing completed evidence may appear as background or
+negative results, but spare capacity cannot reactivate them.
 
 ### 4.6 Deferred conditional width
 
@@ -303,23 +316,12 @@ must be at least two months; three is comfortable.
 | | **5,000** | |
 
 The reserve is sized for a first run on unfamiliar hardware with an untested stack, not as slack to
-fill with extra arms.
+fill with extra arms. [`plan.json`](plan.json) is authoritative for phase budgets, dependencies,
+throughput responses, and cuts; [`EXECUTION.md`](EXECUTION.md) is its readable operating view.
 
-### Schedule and dependencies
-
-| Days | Work | Depends on |
-| --- | --- | --- |
-| 1 to 3 | D4 and D6 first, since every later run needs the right LR. E3 and the E1 screens in parallel. | |
-| 4 to 10 | E1 confirmations, E2, C0, D2, D3 | D4 |
-| 11 to 16 | E5, E4, S1 reversal check | E2 winner for E4 |
-| 17 to 20 | Scale ladder, analysis, F1 size decision, config freeze | S1 |
-| 21 | Flagship launch | all decisions or their defaults |
-| 21 to 47 | Flagship, all four GPUs, nothing else on the node | |
-| 48 to 60 | Extension, anneal and merge, SFT, evaluation, serving, spare-capacity paper ablations | |
-
-Day 21 is a launch date, not a readiness gate. If the window is two months there is no slack; cut in
-this order, decided now rather than under pressure: E5, then the scale ladder to two points, then the
-flagship token budget to 320B.
+Calendar ranges are advisory. Exit gates and the day-21 configuration freeze are binding. Independent
+arms may move within a phase or across GPUs, but work may not cross an unmet dependency or introduce a
+new architecture axis.
 
 ## 8. Releases
 
@@ -339,27 +341,13 @@ flagship token budget to 320B.
 
 ## 10. Before day 1
 
-On the 3090 and CPU, in priority order. Items 1 and 2 are the critical path.
+[`PREGRANT.md`](PREGRANT.md) is the complete readiness checklist and records current status. The
+critical path is storage headroom, a code-inclusive corpus and neutral held-out set, the 20B data
+rehearsal, complete long-document data, and one four-GH200 training/resume qualification.
 
-1. **Storage.** Set `speck_base_dir` to the data volume, delete the out-of-scope 11 GB HELMET
-   archive, and bring root below 80%.
-2. **Data.** Add a code source. Run a 20B-token rehearsal to measure download bandwidth, dedup
-   memory, and shard throughput before committing to the full target. Prepare the stable-phase
-   corpus first, the decay candidates during the decision phase, and the long-document corpus in
-   parallel. Build the neutral held-out set and the decontamination pass at the same time.
-3. **One rented Hopper day.** Scripted checklist: arm64 PyTorch and Triton, FLA KDA kernels,
-   FlexAttention, Liger, FP8, four-GPU DDP, and checkpoint resume under a simulated 24-hour job
-   limit. Four-GPU training has never run in this repository. Rent GH200 rather than a consumer card:
-   the arm64 Grace host is part of the deployment target, and a 5090 does not answer that question.
-4. **D5, tokenizer.** Decide within a week.
-5. **Comparator table.** Run every comparator in section 6 through the pinned
-   harness and measure its serving cost on the 3090 and on CPU. This builds paper sections 10 and 11
-   before the flagship exists and establishes the bar.
-6. **Configs and plan.** Materialize the 60M, 150M, 220M, 350M, 750M, and 1.2B geometries, verify
-   parameter counts, and freeze the section 4 analysis plan as one file.
-
-The 3090 runs only item 5. No new architecture experiment belongs there: anything worth knowing at
-150M is an hour on the node.
+The RTX 3090 is reserved for comparator serving measurements and representative export rehearsals.
+It does not run new architecture searches. A paid allocation does not start while a launch-critical
+pre-grant item lacks either a passing artifact or an explicit non-GPU fallback.
 
 ## 11. Risks
 
