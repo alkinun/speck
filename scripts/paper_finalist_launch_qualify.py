@@ -19,8 +19,8 @@ from scripts.paper_finalist_continue import (
 from speck.paper import validate_paper_program
 
 PROGRAM = ROOT / "research/paper-1/experiment_program.json"
-LAUNCH = ROOT / "research/paper-1/finalist_launch_v1.json"
-AUTOMATION = ROOT / "research/paper-1/finalist_automation_v1.json"
+LAUNCH = ROOT / "research/paper-1/finalist_launch_v2.json"
+AUTOMATION = ROOT / "research/paper-1/finalist_automation_v2.json"
 
 
 def arguments(argv=None):
