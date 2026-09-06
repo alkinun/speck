@@ -130,6 +130,7 @@ Read in order:
 122. [121 — Finalist control 0 operator interruption](121_finalist_control0_operator_interruption.md)
 123. [122 — Identical finalist control 0 restart frozen](122_finalist_control0_rerun_frozen.md)
 124. [123 — Fresh live gate for finalist control 0 attempt 2](123_finalist_rerun_live_gate.md)
+125. [124 — HELMET archive-local rights and provenance audit](124_helmet_archive_local_rights_audit.md)
 
 Conventions:
 

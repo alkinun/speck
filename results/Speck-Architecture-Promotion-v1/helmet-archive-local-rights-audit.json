@@ -1,0 +1,224 @@
+{
+  "format": "speck_helmet_archive_local_rights_audit",
+  "format_version": 1,
+  "status": "five_families_audited_zero_extraction_qualified",
+  "created_at": "2026-09-06T00:47:04+00:00",
+  "scope": "metadata-only operational rights and provenance audit for the 52 HELMET config-declared archive-local paths; not legal advice or a final ownership determination",
+  "method": {
+    "payload_content_read": false,
+    "payload_extracted": false,
+    "archive_member_names_used": true,
+    "steps": [
+      "group the 52 path names from the twice-reproduced archive inventory by top-level data family",
+      "bind each family to the pinned HELMET configs, loader, generator-config source, README, and citations",
+      "inspect rights and provenance statements from the named upstream project or dataset owner",
+      "do not extend a repository code license to separately sourced or retrieved dataset content",
+      "fail closed when an exact payload derivation, source revision, attribution chain, acceptance record, or intended-use grant is absent"
+    ]
+  },
+  "archive": {
+    "path": "/mnt/speck-data/speck/helmet-dddb209d03e38f1f0faf76d6d05ef4ccf96240ee/downloads/data.tar.gz",
+    "bytes": 11271916108,
+    "sha256": "9d693981aa3c065b8b2ff82ddf946141cdc4ece4524f18bff6f3fbd2a86982d9",
+    "inspection": "results/Speck-Architecture-Promotion-v1/helmet-archive-inspection.json",
+    "inspection_sha256": "14f0ff11fc0f39c93c1daff3bd7645de3f4f32410588000865475205d07477ec",
+    "member_identity_sha256": "23d404071444d52686c917ab9827b604594f2faa23502d1e9b45fa9c558bbd10",
+    "config_declared_local_paths": 52,
+    "license_notice_readme_or_citation_files_in_archive": 0
+  },
+  "helmet_source": {
+    "repository": "https://github.com/princeton-nlp/HELMET",
+    "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+    "license_sha256": "f460854d0318a2e3bdaece7970c6417e2a84e3b2e7c653f0046128af01315f77",
+    "readme_sha256": "7f65d7f593f1cce2a24fb394298705c94ee5c2392bcbcd09a3a109ffd36bed1b",
+    "data_loader_sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348",
+    "config_generator_sha256": "3b424eaf9a857f90ecf717074a9556375e1564f48b51a5c40ad89e9ad49882de",
+    "observations": [
+      "the root MIT text applies to software and associated documentation and does not name component datasets",
+      "the README calls the archive preprocessed data and says recall, RAG, reranking, and ALCE data are generated or retrieved",
+      "the README asks users to cite the original dataset creators but supplies no per-file derivation, source revision, license, or attribution manifest",
+      "the pinned tree contains loaders and config generation but no local-data generation or retrieval pipeline for reproducing the 52 files"
+    ]
+  },
+  "config_pins": {
+    "recall": {
+      "full_sha256": "98b7f40da75ce06796c77fb95c37c3db191628676028ab3b29704b47dca48dce",
+      "short_sha256": "438fa82ed1279bf28c82d2f7cf88333d760aa49ce0227e43210002fc4d555367"
+    },
+    "rag": {
+      "full_sha256": "9d7378b56785c4b3bf7910252c4dd5a3160f593c1d36acee95b9a575b8bdcee2",
+      "short_sha256": "6a5d7304934b213254126b64587ce780cd4b51bcc02ca5849cb7ae86be5a72a5"
+    },
+    "rerank": {
+      "full_sha256": "e6cac9e13124fbfffdb2ae9cbe6ba0a912258dda0cd1ff9ef7c88ddfb0caf7e5",
+      "short_sha256": "d87fea7fd9831cd58a7ea52a08ac9fd1be786508f3db9987b33c1f6515b0921d"
+    },
+    "cite": {
+      "full_sha256": "58edbcc7605ce45ae4a1050f50e643045fcca450c59b0c54b5d86ed322800755",
+      "short_sha256": "b2a8b0d38272498bb75639d08b6b09439f9c776bcf942f68d5b045118806df96"
+    }
+  },
+  "authoritative_sources": [
+    {
+      "id": "ruler_root_license",
+      "owner": "NVIDIA",
+      "url": "https://raw.githubusercontent.com/NVIDIA/RULER/c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a/LICENSE",
+      "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "observation": "Apache-2.0 root code license; it does not identify the HELMET-generated payload"
+    },
+    {
+      "id": "kilt_root_license_and_readme",
+      "owner": "Meta AI / Facebook Research",
+      "url": "https://github.com/facebookresearch/KILT",
+      "revision": "2664322b9a994be686e4c3a9e8f75a0b70927f22",
+      "license_sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "readme_sha256": "d044248a4959c7adf2e7a1ba67084b08f2bc967546c7ed47ad5907e54d79ce9f",
+      "observation": "MIT root text names software; the README identifies a 2019-08-01 Wikipedia knowledge source and separately named QA datasets"
+    },
+    {
+      "id": "natural_questions_data_page",
+      "owner": "Google",
+      "url": "https://ai.google.com/research/NaturalQuestions/download",
+      "observation": "the data page states CC BY-SA 3.0 and describes questions, Wikipedia pages, and human annotations; the repository Apache license is not substituted for the data-page terms"
+    },
+    {
+      "id": "triviaqa_data_page",
+      "owner": "University of Washington",
+      "url": "https://nlp.cs.washington.edu/triviaqa/",
+      "revision": "ca43b5820b107f3970cf4b7d67f7db7a98117b79",
+      "repository_license_sha256": "5cc548335f22310a53877044624711ac3e20e5ed1117617c1fd3fc462c54330e",
+      "observation": "the official page states that the university does not own copyright in included questions and documents; the repository Apache license is not treated as an underlying-content grant"
+    },
+    {
+      "id": "hotpotqa_data_terms",
+      "owner": "HotpotQA authors",
+      "url": "https://hotpotqa.github.io/",
+      "revision": "3635853403a8735609ee997664e1528f4480762a",
+      "repository_license_sha256": "9c264489d021e5905c0544f75e292c63f78dca56acd2aec395dd36dcc41940c7",
+      "observation": "the official site states CC BY-SA 4.0 for the dataset and processed Wikipedia, while the root repository license covers code under Apache-2.0"
+    },
+    {
+      "id": "popqa_root",
+      "owner": "PopQA authors",
+      "url": "https://github.com/AlexTMallen/adaptive-retrieval",
+      "revision": "8172ab04794a1651488207c230286b0b3786d736",
+      "license_sha256": "92a1c4bb54806bcd80795775b9c7e1ce888b90a7205e7a54dc8a10a7cec8cb4c",
+      "readme_sha256": "ecd217f387b46f9a1dc303b81ca92079b4706934416ff19849a6b059aa216295",
+      "observation": "the MIT repository includes PopQA questions, but HELMET additionally supplies retrieved contexts whose corpus and derivation are not identified"
+    },
+    {
+      "id": "ms_marco_terms",
+      "owner": "Microsoft",
+      "url": "https://microsoft.github.io/msmarco/Notice.html",
+      "sha256": "94dcae8c467a0d30c9bb3b8e4c9ecb3f3a139c83bd78ddb4c95bc8cda1029832",
+      "observation": "the terms limit the datasets to non-commercial research, extend no license or other IP rights, warn that Microsoft may not own underlying documents, and make use an acceptance event"
+    },
+    {
+      "id": "alce_root_license_and_readme",
+      "owner": "Princeton NLP",
+      "url": "https://github.com/princeton-nlp/ALCE",
+      "revision": "246c476a4edfc564266b7346b6e29ef4861ae937",
+      "license_sha256": "8872dbf8660b00890b5e07ce1ea1f7a44fa7ae4e1857da56caba172b51dab3cb",
+      "readme_sha256": "cabf972df57b3c4e69bc981c889a0594f59ab60eff4430ba0cf73b08d4ba9096",
+      "observation": "the MIT root text names software; the README describes ASQA/QAMPARI plus GTR-retrieved results but does not supply a per-document rights chain"
+    },
+    {
+      "id": "qampari_root",
+      "owner": "QAMPARI authors",
+      "url": "https://github.com/samsam3232/qampari",
+      "revision": "30bed9505a74d27ffad22d9bb1e80c4e99d9b534",
+      "license_sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "readme_sha256": "5ac2f3fec84b995307fec093d938daf8a7a5e81af69a6433d86b3783521d37eb",
+      "observation": "CC0 covers the released QAMPARI material; it does not establish rights in ALCE's separately retrieved passage contents"
+    },
+    {
+      "id": "asqa_root",
+      "owner": "Google Research",
+      "url": "https://github.com/google-research/language/tree/master/language/asqa",
+      "observation": "ASQA contains AmbigQA-derived questions, annotator-written answers, and Wikipedia passages; a root code license alone is not treated as the complete derivative-content chain"
+    }
+  ],
+  "families": [
+    {
+      "id": "ruler_niah",
+      "paths": 15,
+      "categories": ["recall"],
+      "components": ["niah_multikey_2", "niah_multikey_3", "niah_multivalue"],
+      "upstream_root_license": "Apache-2.0",
+      "exact_payload_derivation_qualified": false,
+      "attribution_chain_qualified": false,
+      "extraction_authorized": false,
+      "reason": "synthetic task code is permissively licensed, but HELMET supplies no generator revision, parameters, seeds, file hashes, or output-rights/notice mapping for these 15 payloads"
+    },
+    {
+      "id": "json_kv",
+      "paths": 5,
+      "categories": ["recall"],
+      "components": ["json key-value retrieval"],
+      "upstream_root_license": "unresolved for the generated payload",
+      "exact_payload_derivation_qualified": false,
+      "attribution_chain_qualified": false,
+      "extraction_authorized": false,
+      "reason": "the pinned HELMET loader credits a Lost-in-the-Middle prompt, but the tree contains no generator or exact source/seed/license manifest for the five data files"
+    },
+    {
+      "id": "kilt_rag",
+      "paths": 24,
+      "categories": ["rag"],
+      "components": ["Natural Questions", "TriviaQA", "HotpotQA", "PopQA", "KILT Wikipedia knowledge source", "retrieved passages"],
+      "upstream_root_license": "mixed and component-specific",
+      "exact_payload_derivation_qualified": false,
+      "attribution_chain_qualified": false,
+      "extraction_authorized": false,
+      "reason": "the 24 files mix question/answer annotations and retrieved passages from separately governed sources; HELMET supplies neither an exact retrieval/derivation manifest nor the notices and share-alike provenance required to map each field"
+    },
+    {
+      "id": "ms_marco_rerank",
+      "paths": 6,
+      "categories": ["rerank"],
+      "components": ["MS MARCO queries", "MS MARCO relevance labels", "underlying web passages"],
+      "upstream_root_license": "non-commercial research terms with no extended IP license",
+      "exact_payload_derivation_qualified": false,
+      "attribution_chain_qualified": false,
+      "organizational_acceptance_recorded": false,
+      "extraction_authorized": false,
+      "reason": "official terms are purpose-restricted, trigger acceptance by use, disclaim ownership of underlying documents, and do not establish authority for Speck's intended organizational scope"
+    },
+    {
+      "id": "alce_citation",
+      "paths": 2,
+      "categories": ["cite"],
+      "components": ["ASQA", "QAMPARI", "GTR top-2000 retrieved passages", "Wikipedia-derived content"],
+      "upstream_root_license": "MIT code plus component-specific data/content",
+      "exact_payload_derivation_qualified": false,
+      "attribution_chain_qualified": false,
+      "extraction_authorized": false,
+      "reason": "ALCE's root software license and QAMPARI's CC0 release do not by themselves cover every ASQA/AmbigQA annotation and retrieved passage embedded in the two HELMET files"
+    }
+  ],
+  "decision": {
+    "families_audited": 5,
+    "paths_accounted": 52,
+    "extraction_qualified_families": [],
+    "extraction_authorized": false,
+    "evaluation_use_authorized": false,
+    "helmet_execution_authorized": false,
+    "archive_remains_unextracted": true,
+    "contact_authorized": false,
+    "required_next": [
+      "obtain an author- or rights-holder-supplied per-family bill of materials with exact source revisions, derivation commands, seeds, licenses, notices, and intended-use authority",
+      "or freeze a pre-results HELMET data-manifest successor and clean-room regenerate each needed family only from separately qualified upstream inputs",
+      "record organizational acceptance and scope review before any MS MARCO use",
+      "prove attribution and share-alike compliance for every copied or transformed Wikipedia-derived field",
+      "then authorize narrowly scoped extraction and hash every extracted file before prompt or contamination qualification"
+    ]
+  },
+  "non_claims": [
+    "the absence of extraction authority proves that research use would be unlawful",
+    "a root repository license automatically covers bundled third-party data",
+    "citation alone supplies permission or satisfies attribution/share-alike conditions",
+    "download availability or archive possession supplies evaluation, commercial, or redistribution rights",
+    "this metadata audit changes the frozen finalist model, data, analysis, or automation"
+  ]
+}

@@ -313,6 +313,10 @@ the final combined model.
 - [`helmet-archive-inspection.json`](../../results/Speck-Architecture-Promotion-v1/helmet-archive-inspection.json)
   reproduces a safe 175-member/35.63-GB inventory with all 52 local paths, but finds no license metadata;
   component rights, extraction, 50 external entries, tokenizer, judges, and execution remain blocked.
+- [`helmet-archive-local-rights-audit.json`](../../results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json)
+  accounts for all 52 local paths as RULER 15, JSON-KV 5, KILT RAG 24, MS MARCO 6, and ALCE 2.
+  Zero families qualify for extraction because exact derivation/attribution is absent and component
+  terms remain mixed or restricted. This append-only result does not modify the frozen v2 manifest.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -356,6 +360,11 @@ All seven HELMET runtime sources now have explicit dispositions: three immutable
 four sources are blocked rather than unresolved.
 The known unseeded two-shot defect now has a qualified but inactive repair; a successor manifest and
 real-data replay remain mandatory.
+The acquired archive's local-path audit now resolves its five-family inventory without opening payload
+content. None is extraction-qualified: permissive code licenses do not establish the derivative data
+chain, and MS MARCO adds an explicit noncommercial/acceptance boundary. The active v2 evaluation
+manifest remains byte-identical; any future subset or clean-room regeneration requires a pre-results
+successor rather than an in-place edit.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
