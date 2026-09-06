@@ -157,6 +157,7 @@ Read in order:
 149. [148 — Global six-block systems acceptance qualifies synthetically](148_finalist_systems_global_acceptance.md)
 150. [149 — Runtime identity and attestation builder qualifies with mocks](149_finalist_systems_runtime_attestation.md)
 151. [150 — Systems block orchestration qualifies with recording adapters](150_finalist_systems_orchestration.md)
+152. [151 — Static systems pipeline converges to five live activation gates](151_finalist_systems_pipeline_convergence.md)
 
 Conventions:
 

@@ -1,0 +1,150 @@
+{
+  "format": "speck_paper_finalist_systems_pipeline_interface_audit",
+  "format_version": 2,
+  "status": "static_interfaces_composed_live_activation_gates_blocked",
+  "created_at": "2026-09-06T02:55:55+00:00",
+  "scope": "append-only convergence audit of individually qualified static/mock systems components; no live GPU, service, finalist checkpoint, model, result, log, intermediate metric, or runtime environment accessed or changed",
+  "predecessor": {
+    "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json",
+    "sha256": "4b4e3bd70f7fe5e425dc2d0c60ab7912e3bd214450bf56c1e5a7a6b4584467e6",
+    "blocking_interfaces": 7,
+    "disposition": "preserved_historical_interface_state"
+  },
+  "successors": {
+    "memory_producer": {
+      "path": "results/Speck-Paper1/finalist-systems-memory-supplement-qualified-v1.json",
+      "sha256": "64a610708191b4ebf980e16a1b35b77f8cca2c12382f96e4531418bfd402bc39"
+    },
+    "trial_and_block_assembly": {
+      "path": "results/Speck-Paper1/finalist-systems-assembly-qualified-v1.json",
+      "sha256": "c642f4d3b38139471edfecd2501e842895f1c2a75fdd96d062f0dbdb1e7d8424"
+    },
+    "global_acceptance": {
+      "path": "results/Speck-Paper1/finalist-systems-acceptance-qualified-v1.json",
+      "sha256": "1dc4b8687b0da44c2e5378bad926e3e6d170f54808bd8fdd8ae73ec1fc606380"
+    },
+    "runtime_attestation": {
+      "path": "results/Speck-Paper1/finalist-systems-runtime-attestation-qualified-v1.json",
+      "sha256": "ae664e5e3cc640ad2fa9235e5b6f9a40070508cb6f8111a03d05b361d75333c5"
+    },
+    "orchestration": {
+      "path": "results/Speck-Paper1/finalist-systems-orchestration-qualified-v1.json",
+      "sha256": "3326b925d700cda51ea51a3da629262392a49eb6c63bef0e4c66e272a2971f4a"
+    },
+    "kernel_isolation": {
+      "path": "results/Speck-Paper1/finalist-systems-sandbox-qualified-v1.json",
+      "sha256": "79d2640ef440f82cf4bd091780bb7932b5f7d2c1d4b8d06250a2995c5300ad67"
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_finalist_systems_pipeline_audit_v2_validate.py",
+      "sha256": "26d0b3d6b2eace3d19d5513fb0f5ffcd25afd2ad91c2b088054d44b33d57b854"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_pipeline_audit_v2.py",
+      "sha256": "d81a20bdacefab5a3d58d23ef4ac9d27b53d6a14e5ffb5a3abce65e7bf0ce983"
+    }
+  },
+  "v1_blocker_dispositions": [
+    {
+      "id": "sample_series_to_trace_envelope",
+      "static_state": "orchestration order and assembler trace contract qualified",
+      "remaining": "live adapter must run one continuous sampler and write the two trace views"
+    },
+    {
+      "id": "NVML_peak_used_memory",
+      "static_state": "same-row parser, MiB-to-byte conversion, peak reduction, and assembler consumption qualified",
+      "remaining": "live RTX 3090 memory.used field compatibility"
+    },
+    {
+      "id": "thermal_idle_and_sampler_engine_orchestration",
+      "static_state": "recording-adapter state machine and failure semantics qualified",
+      "remaining": "live adapter concurrency, sleeping, gates, and artifact writes"
+    },
+    {
+      "id": "compiled_runtime_attestation",
+      "static_state": "probe schema, identity builder, and assembler consumption qualified",
+      "remaining": "real compiled-graph/fallback/OOM/CUDA-phase producer"
+    },
+    {
+      "id": "paired_batch_fingerprint_consumption",
+      "static_state": "closed",
+      "remaining": null
+    },
+    {
+      "id": "trial_block_and_failure_assembly",
+      "static_state": "pure trial/block assembly and global acceptance qualified",
+      "remaining": "automatic live failure and trace artifact production"
+    },
+    {
+      "id": "runtime_software_identity_chain",
+      "static_state": "identity builder and global 12-trial consumer qualified",
+      "remaining": "real GPU-environment identity production under one clean commit"
+    }
+  ],
+  "remaining_activation_gates": [
+    {
+      "id": "language_sequence",
+      "requires": "12 v3-accepted finalist language results, complete analysis, retained checkpoints, and inactive GPU units",
+      "current_pass": false
+    },
+    {
+      "id": "actual_path_GPU_sandbox_preflight",
+      "requires": "read-only actual experiment/checkpoint paths plus one no-output dense and candidate checkpoint-load/compiled-step preflight",
+      "current_pass": false
+    },
+    {
+      "id": "live_sampler_environment",
+      "requires": "same-row memory.used support, exact disk backing devices, driver/packages, 1 Hz deadline behavior, and PID visibility",
+      "current_pass": false
+    },
+    {
+      "id": "runtime_probe_producer",
+      "requires": "real compiled graph, zero graph-break/eager-fallback/OOM, and CUDA phase evidence bound to engine and trace",
+      "current_pass": false
+    },
+    {
+      "id": "live_adapter_integration",
+      "requires": "disposable full-block dry run with real sampler/engine concurrency, trace/failure writes, assembly, global acceptance, and cleanup",
+      "current_pass": false
+    }
+  ],
+  "activation": {
+    "artifact_present": false,
+    "may_be_created_before_all_five_gates_pass": false,
+    "individual_or_static_composition_implies_execution": false,
+    "systems_execution_authorized": false,
+    "systems_claim_authorized": false
+  },
+  "decision": {
+    "v1_audit_preserved": true,
+    "static_producer_consumer_contracts_materially_advanced": true,
+    "end_to_end_live_pipeline_qualified": false,
+    "systems_execution_authorized": false,
+    "further_live_work_during_language_sequence_authorized": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "stop expanding static systems machinery; after the language sequence, resolve the five activation gates in order and create activation only if all pass"
+  },
+  "verification": {
+    "audit_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_pipeline_audit_v2.py -q",
+    "audit_expected": "4 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_pipeline_audit_v2_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "122 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "258 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "static component composition equals a live end-to-end dry run",
+    "mock memory parsing proves live field availability",
+    "a recording adapter proves sampler-engine concurrency",
+    "a probe schema produces compiled runtime evidence",
+    "the activation artifact exists",
+    "systems measurements or claims are authorized"
+  ]
+}
