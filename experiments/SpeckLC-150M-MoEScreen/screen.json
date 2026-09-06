@@ -1,0 +1,74 @@
+{
+  "arms": {
+    "dense": {
+      "active_parameters": 153958938,
+      "flops_per_token_at_2048": 974415360.0,
+      "matched_active_delta": 0,
+      "matched_active_parameters": 153958938,
+      "parameters": 153958938,
+      "question": "control",
+      "router_parameters": 0
+    },
+    "g16": {
+      "active_parameters": 154204698,
+      "flops_per_token_at_2048": 975889920.0,
+      "matched_active_delta": 0,
+      "matched_active_parameters": 153958938,
+      "parameters": 472709658,
+      "question": "granularity",
+      "router_parameters": 245760
+    },
+    "g32": {
+      "active_parameters": 154450458,
+      "flops_per_token_at_2048": 977364480.0,
+      "matched_active_delta": 0,
+      "matched_active_parameters": 153958938,
+      "parameters": 472955418,
+      "question": "granularity",
+      "router_parameters": 491520
+    },
+    "g8": {
+      "active_parameters": 154081818,
+      "flops_per_token_at_2048": 975152640.0,
+      "matched_active_delta": 0,
+      "matched_active_parameters": 153958938,
+      "parameters": 472586778,
+      "question": "granularity",
+      "router_parameters": 122880
+    },
+    "p-dense-first": {
+      "active_parameters": 154069530,
+      "flops_per_token_at_2048": 975078912.0,
+      "matched_active_delta": 0,
+      "matched_active_parameters": 153958938,
+      "parameters": 440723994,
+      "question": "placement",
+      "router_parameters": 110592
+    },
+    "p-interleaved": {
+      "active_parameters": 154020378,
+      "flops_per_token_at_2048": 974784000.0,
+      "matched_active_delta": 0,
+      "matched_active_parameters": 153958938,
+      "parameters": 313272858,
+      "question": "placement",
+      "router_parameters": 61440
+    },
+    "p-shared": {
+      "active_parameters": 154081818,
+      "flops_per_token_at_2048": 975060480.0,
+      "matched_active_delta": 15360,
+      "matched_active_parameters": 153974298,
+      "parameters": 472586778,
+      "question": "placement",
+      "router_parameters": 107520
+    }
+  },
+  "corpus": "dclm-edu-1b-specklabs-moe-sweep",
+  "dense_feed_forward_width": 2304,
+  "format": "speck_moe_design_screen",
+  "format_version": 1,
+  "seed": 42,
+  "source_experiment": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope",
+  "train_tokens": 500000000
+}
