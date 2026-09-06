@@ -1,0 +1,134 @@
+{
+  "format": "speck_helmet_truncation_tokenizer_readiness",
+  "format_version": 1,
+  "status": "exact_identity_acceptance_and_replacement_oracle_blocked",
+  "created_at": "2026-09-06T01:05:52+00:00",
+  "scope": "metadata-only decision for HELMET's Llama-2 length-filtering and character-boundary truncation dependency; no license was accepted; no gated access was attempted; no tokenizer payload was acquired; no source dataset was accessed; no prompt was materialized; no model was executed",
+  "inputs": {
+    "runtime_protocol": {
+      "path": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
+      "sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b"
+    },
+    "runtime_audit": {
+      "path": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
+      "sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2"
+    },
+    "synthetic_reconstruction_audit": {
+      "path": "results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json",
+      "sha256": "38e1b47b26c53c6aa69d466dd8a9901a40638657fad66874840c0579312d92e3"
+    },
+    "helmet_source": {
+      "repository": "https://github.com/princeton-nlp/HELMET",
+      "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+      "data_loader_sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348",
+      "transformers_version": "5.1.0"
+    },
+    "llama2": {
+      "model_repository": "https://huggingface.co/meta-llama/Llama-2-7b-hf",
+      "model_repository_ref_in_helmet": "unversioned",
+      "anonymous_identity_resolution": "rejected_requires_credentials",
+      "local_tokenizer_payload_found": false,
+      "license": "Llama 2 Community License Agreement",
+      "license_acceptance_recorded_for_entity": false,
+      "license_scope_reviewed_for_architecture_research": false,
+      "official_license_source": "https://github.com/meta-llama/llama-models/blob/main/models/llama2/LICENSE",
+      "official_license_repository_revision": "0e0b8c519242d5833d8c11bffc1232b77ad7f301",
+      "official_license_sha256": "e30d9339da533205f88140009e32d62c1d73911b8a0bef0d0b252f549ed8e9c4"
+    }
+  },
+  "code_analysis": {
+    "auto_tokenizer_literal": "meta-llama/Llama-2-7b-hf",
+    "literal_call_sites": 3,
+    "revision_argument_present": false,
+    "trust_remote_code_argument_present": false,
+    "suffix": " ... [the rest of the text is omitted]",
+    "operations": [
+      {
+        "id": "minimum_length_filter",
+        "semantics": "tokenize the complete context with AutoTokenizer defaults and retain rows at or above the dataset-specific threshold"
+      },
+      {
+        "id": "narrativeqa_preselection",
+        "semantics": "tokenize each full document and retain rows strictly longer than 131072 tokens before the shared filter"
+      },
+      {
+        "id": "context_truncation",
+        "semantics": "tokenize the suffix and full context with offsets; if over target, slice the original Unicode string at the end offset of token index target-minus-suffix-token-count, then append the suffix"
+      }
+    ],
+    "implementation_sensitive_details": [
+      "AutoTokenizer class selection and fast-tokenizer implementation",
+      "SentencePiece model bytes, normalization, pretokenization, vocabulary, and merges",
+      "default add_special_tokens behavior, including the BOS entry in token counts and offset mappings",
+      "suffix tokenization and target-minus-suffix-token-count indexing",
+      "Unicode offset mapping and end-offset character slicing",
+      "possible retokenization changes across the cut-plus-suffix boundary",
+      "Transformers and tokenizers library versions",
+      "multiprocess mapping preserves row order but does not define tokenizer semantics"
+    ]
+  },
+  "affected_surface": {
+    "runtime_config_entries": 25,
+    "runtime_categories": {
+      "longqa": 15,
+      "summ": 10
+    },
+    "runtime_datasets": {
+      "narrativeqa": 5,
+      "infinitebench_longqa": 10,
+      "infinitebench_summarization": 5,
+      "multi_lexsum": 5
+    },
+    "separate_generation_surface": {
+      "purpose": "HELMET RULER input generation declared by the paper",
+      "archive_local_task_length_cells": 15,
+      "same_exact_identity_required": true
+    }
+  },
+  "replacement_gate": {
+    "candidate_replacements_evaluated": [],
+    "reason_none_evaluated": "the exact Llama-2 tokenizer is the oracle; without authorized bytes, any observed agreement on invented fixtures cannot establish equivalence at real-document filtering or truncation boundaries",
+    "minimum_future_protocol": [
+      "record entity-authorized Llama-2 license acceptance and intended-use review",
+      "pin the exact Hugging Face commit and every tokenizer/config file hash without downloading model weights",
+      "freeze disjoint Unicode, whitespace, punctuation, and boundary-adversarial fixtures before comparing a replacement",
+      "compare token IDs, token counts, offset mappings, keep/drop decisions, cut character offsets, output strings, and retokenized output lengths",
+      "include all qualified real datasets and every 8K through 128K target before claiming semantic preservation",
+      "require byte-identical decisions and outputs across two isolated processes",
+      "version the evaluation manifest if any tokenizer identity or truncation behavior changes"
+    ],
+    "fixture_only_equivalence_sufficient": false,
+    "real_data_equivalence_required": true,
+    "exact_oracle_required": true
+  },
+  "license_boundary": {
+    "acceptance_trigger": "acceptance or use of any portion of the Llama Materials",
+    "tokenizer_access_requires_acceptance": true,
+    "organizational_authority_to_accept_recorded": false,
+    "architecture_research_scope_decided": false,
+    "legal_conclusion_made": false,
+    "reason": "the agreement contains use restrictions whose application to tokenizer-based evaluation for improving another model requires an authorized entity decision; this audit does not make that decision"
+  },
+  "decision": {
+    "exact_tokenizer_identity_qualified": false,
+    "license_acceptance_authorized": false,
+    "tokenizer_payload_acquisition_authorized": false,
+    "anonymous_access_retry_authorized": false,
+    "replacement_oracle_available": false,
+    "replacement_protocol_ready_to_execute": false,
+    "fixture_only_replacement_authorized": false,
+    "runtime_prompt_materialization_authorized": false,
+    "ruler_regeneration_authorized": false,
+    "candidate_execution_authorized": false,
+    "evaluation_manifest_changed": false,
+    "required_next": "obtain an authorized organizational license/scope decision and pin only the exact tokenizer artifacts, then run a preregistered oracle comparison on adversarial fixtures and qualified real data; otherwise retain the tokenizer and all dependent HELMET entries as failed gates"
+  },
+  "non_claims": [
+    "the Llama-2 license forbids this intended use",
+    "public SentencePiece implementations reproduce the gated tokenizer payload",
+    "matching token counts proves matching token IDs, offsets, cut positions, or output text",
+    "fixture-only agreement proves real-document truncation parity",
+    "another Llama-family tokenizer is a semantics-preserving replacement",
+    "this audit changes the frozen evaluation manifest or finalist experiment"
+  ]
+}

@@ -325,6 +325,10 @@ the final combined model.
   accounts for the other 32 archive-local paths and separates deterministic loading from undocumented
   construction. RAG lacks pinned source/retriever/index/seed identities, reranking lacks its exact
   TREC/MS MARCO construction, and HELMET's ALCE top-2000 files have no released generation path.
+- [`helmet-truncation-tokenizer-readiness.json`](../../results/Speck-Architecture-Promotion-v1/helmet-truncation-tokenizer-readiness.json)
+  maps the gated Llama-2 tokenizer to 25 runtime entries and 15 RULER-generation cells. Exact BOS,
+  token, offset, Unicode-cut, suffix, and retokenization behavior makes fixture-only replacement
+  insufficient; authorized oracle bytes and real-data parity are required before any successor.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -381,6 +385,9 @@ The same boundary holds for all real-data files: the paper describes sensible co
 but not executable, versioned pipelines. Runtime determinism cannot establish source, retrieval,
 ordering, or byte parity, so independent rebuilds remain separately named diagnostics rather than
 HELMET substitutes.
+The gated tokenizer is likewise not replaceable by token-count resemblance: it defines row filtering
+and exact Unicode cut positions, so an oracle comparison requires the authorized Llama-2 tokenizer and
+qualified real documents. Until then every dependent entry stays failed rather than approximated.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
