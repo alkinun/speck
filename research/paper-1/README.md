@@ -380,6 +380,9 @@ the final combined model.
 - [`finalist-systems-acceptance-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-acceptance-qualified-v1.json)
   rehashes all trial references, enforces one 12-trial software vector and arm-specific model identities,
   and calls analysis only after six valid blocks. Live identity/orchestration remain blocked.
+- [`finalist-systems-runtime-attestation-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-runtime-attestation-qualified-v1.json)
+  mock-qualifies clean-git/GPU-package/driver/model/engine identity plus hash-bound compiled/no-fallback
+  probe validation. The real GPU probe producer and orchestration remain blocked.
 - [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
@@ -505,6 +508,8 @@ The pure assembler now consumes that peak and paired-batch identities into analy
 with phase/PID/runtime/software/thermal failures retained. Its live producers remain unqualified.
 Global acceptance now validates every complete block even in a failed program, then enforces all-twelve
 software identity before analysis. This closes the consumer, not the missing live identity producer.
+The corresponding identity/attestation builder now passes mocks and the trial assembler. The CPU test
+environment is explicitly ineligible; real GPU identities and compile counters remain a live preflight.
 Training non-finiteness already stops before a final event, but complete source identity needs a
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,

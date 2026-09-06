@@ -155,6 +155,7 @@ Read in order:
 147. [146 — Additive NVML used-memory producer qualifies with mocks](146_finalist_systems_memory_supplement.md)
 148. [147 — Synthetic systems trial and block assembly qualifies](147_finalist_systems_assembly_qualified.md)
 149. [148 — Global six-block systems acceptance qualifies synthetically](148_finalist_systems_global_acceptance.md)
+150. [149 — Runtime identity and attestation builder qualifies with mocks](149_finalist_systems_runtime_attestation.md)
 
 Conventions:
 

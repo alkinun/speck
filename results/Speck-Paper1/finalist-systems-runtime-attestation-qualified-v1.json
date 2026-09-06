@@ -1,0 +1,124 @@
+{
+  "format": "speck_paper_finalist_systems_runtime_attestation_qualification",
+  "format_version": 1,
+  "status": "qualified_mock_identity_and_attestation_builder_live_probe_blocked",
+  "created_at": "2026-09-06T02:50:10+00:00",
+  "scope": "static local package audit plus mocked git, GPU-driver, GPU-package, and runtime-probe sources; no live nvidia-smi, GPU initialization, service, finalist checkpoint, model, result, log, intermediate metric, or runtime mutation",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "assembly_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-assembly-qualified-v1.json",
+      "sha256": "c642f4d3b38139471edfecd2501e842895f1c2a75fdd96d062f0dbdb1e7d8424"
+    },
+    "global_acceptance_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-acceptance-qualified-v1.json",
+      "sha256": "1dc4b8687b0da44c2e5378bad926e3e6d170f54808bd8fdd8ae73ec1fc606380"
+    },
+    "pipeline_audit": {
+      "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json",
+      "sha256": "4b4e3bd70f7fe5e425dc2d0c60ab7912e3bd214450bf56c1e5a7a6b4584467e6",
+      "addressed_interface": "runtime_software_identity_chain"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_runtime.py",
+      "sha256": "89d213366fbda177f13485fe9036afbf49bbdeb62b6c30e13a5b050c67bef8c5"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_runtime_attest.py",
+      "sha256": "9a13340f2eac59f68e40baf987ca306fd992a820184c43cf666c2f2681cf4699"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_runtime.py",
+      "sha256": "7833a4e7b077472bf3754b3d9c74ecae192016d3f1a18c7ed27d6b6277263a6c"
+    }
+  },
+  "software_identity": {
+    "clean_git_required": true,
+    "git_commit_40_lowercase_hex": true,
+    "exact_GPU_UUID_driver_row_required": true,
+    "python_version": true,
+    "pytorch_version": true,
+    "CUDA_runtime_from_torch": true,
+    "CUDA_driver_from_nvidia_smi": true,
+    "flash_linear_attention_distribution_version": true,
+    "triton_distribution_version": true,
+    "model_config_SHA256": true,
+    "benchmark_engine_SHA256": true,
+    "empty_or_missing_GPU_environment_version_rejected": true
+  },
+  "runtime_probe_contract": {
+    "protocol_engine_trace_and_run_hash_bound": true,
+    "benchmark_PID_positive_integer": true,
+    "compiled_CUDA": true,
+    "minimum_compiled_graphs": 1,
+    "graph_breaks": 0,
+    "eager_fallbacks": 0,
+    "OOM": false,
+    "positive_forward_backward_optimizer_CUDA_seconds": true,
+    "phase_sum_not_above_measured_wall": true,
+    "probe_path_and_SHA256_preserved_in_attestation": true
+  },
+  "local_CPU_environment_observation": {
+    "python": "3.10.20",
+    "pytorch": "2.9.1+cpu",
+    "torch_CUDA_runtime": null,
+    "flash_linear_attention_distribution": "absent",
+    "triton_distribution": "absent",
+    "disposition": "confirms that attestation must run inside the future frozen GPU environment; this CPU observation is not accepted runtime identity"
+  },
+  "tests": {
+    "complete_mock_GPU_identity_vector_passes": true,
+    "dirty_git_rejected": true,
+    "wrong_GPU_driver_row_rejected": true,
+    "built_attestation_passes_trial_assembler": true,
+    "graph_break_rejected": true,
+    "eager_fallback_rejected": true,
+    "zero_compiled_graphs_rejected": true,
+    "OOM_rejected": true,
+    "phase_time_above_wall_rejected": true,
+    "count": 9
+  },
+  "pipeline_effect": {
+    "runtime_attestation_builder_closed": true,
+    "software_identity_consumer_compatible": true,
+    "live_runtime_probe_producer_qualified": false,
+    "live_GPU_package_and_driver_identity_qualified": false,
+    "orchestrator_qualified": false,
+    "end_to_end_pipeline_qualified": false
+  },
+  "decision": {
+    "mock_runtime_identity_and_attestation_builder_qualified": true,
+    "systems_execution_authorized": false,
+    "protocol_or_prior_components_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "instrument the engine's future GPU preflight to emit the hash-bound runtime probe and failure facts; keep activation absent until orchestration and actual-path checks pass"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_runtime.py -q",
+    "expected": "9 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_runtime_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "109 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "245 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_nvidia_smi_invoked": false,
+    "CUDA_initialized": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the live GPU environment identity has been recorded",
+    "compiled graphs or fallback counters have been measured",
+    "mock CUDA phase times are performance evidence",
+    "the runtime probe producer or orchestrator is qualified",
+    "the end-to-end pipeline is qualified",
+    "the systems protocol may execute now"
+  ]
+}
