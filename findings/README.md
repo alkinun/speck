@@ -125,6 +125,7 @@ Read in order:
 117. [116 — Finalist launch v2 after crossed-factor correction](116_finalist_launch_v2.md)
 118. [117 — Crossed-factor finalist automation v2](117_finalist_automation_v2.md)
 119. [118 — HELMET archive acquired and hash-qualified](118_helmet_archive_acquired.md)
+120. [119 — HELMET archive path inventory qualified](119_helmet_archive_inspected.md)
 
 Conventions:
 
@@ -669,3 +670,8 @@ Finding 118 completes the resumable HELMET archive acquisition in 2,622.97 secon
 byte file matches the frozen SHA-256, the isolated volume retains 5.63 TB free, and no credential or
 discard occurred. Extraction/execution remain blocked pending safe inventory and license review; the
 inactive transfer now permits a separate finalist v2 live qualification.
+
+Finding 119 reproduces the HELMET tar inventory twice without extraction. All 175 members are safe,
+154 files total 35.63 GB uncompressed, all 52 declared local paths exist, and 50 entries remain external.
+The archive contains zero license/README metadata, so component rights and extraction remain blocked,
+along with runtime datasets, tokenizer, judges, and candidate execution.

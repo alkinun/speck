@@ -298,6 +298,9 @@ the final combined model.
 - [`helmet-data-acquisition.json`](../../results/Speck-Architecture-Promotion-v1/helmet-data-acquisition.json)
   records the complete 11.27-GB revision-pinned archive and independently checked SHA-256; extraction,
   runtime-loaded sources, rights, tokenizer, judges, and execution remain blocked.
+- [`helmet-archive-inspection.json`](../../results/Speck-Architecture-Promotion-v1/helmet-archive-inspection.json)
+  reproduces a safe 175-member/35.63-GB inventory with all 52 local paths, but finds no license metadata;
+  component rights, extraction, 50 external entries, tokenizer, judges, and execution remain blocked.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
