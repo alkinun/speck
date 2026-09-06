@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PROGRAM = ROOT / "research/paper-1/experiment_program.json"
 PLAN = ROOT / "research/paper-1/finalist_analysis_v2.json"
 MATERIALIZATION_CONTRACT = ROOT / "research/paper-1/finalist_materialization_v1.json"
-LAUNCH_CONTRACT = ROOT / "research/paper-1/finalist_launch_v1.json"
-AUTOMATION = ROOT / "research/paper-1/finalist_automation_v1.json"
+LAUNCH_CONTRACT = ROOT / "research/paper-1/finalist_launch_v2.json"
+AUTOMATION = ROOT / "research/paper-1/finalist_automation_v2.json"
 QUALIFICATION = ROOT / "results/Speck-Paper1/finalist-qualification-v1.json"
 RUNTIME_PREFLIGHT = ROOT / "results/Speck-Paper1/finalist-preflight-v1.json"
 RESULTS = ROOT / "results/Speck-Paper1/finalist-runs"
@@ -88,9 +88,20 @@ def _qualification_runs():
 
 
 def ordered_runs():
-    declared = load_object(LAUNCH_CONTRACT)["execution_order"]
     runs = _qualification_runs()
-    return [entry for entry in declared if entry in runs]
+    pairs = {
+        (entry["seed"], entry["data_token_offset"]): entry["pair"]
+        for entry in load_object(MATERIALIZATION_CONTRACT)["pairs"]
+    }
+    controls = sorted(
+        (run_name for run_name in runs if run_name.endswith("dense_global_param_match")),
+        key=lambda run_name: pairs[(runs[run_name]["seed"], runs[run_name]["data_token_offset"])],
+    )
+    candidates = sorted(
+        (run_name for run_name in runs if run_name.endswith("five_cache_kda_gqa")),
+        key=lambda run_name: pairs[(runs[run_name]["seed"], runs[run_name]["data_token_offset"])],
+    )
+    return controls + candidates
 
 
 def control_runs():
@@ -138,8 +149,8 @@ def validate_automation_contract():
     contract = load_object(AUTOMATION)
     if (
         contract.get("format") != "speck_paper_finalist_automation_contract"
-        or contract.get("format_version") != 1
-        or contract.get("status") != "frozen_before_any_finalist_output"
+        or contract.get("format_version") != 2
+        or contract.get("status") != "frozen_crossed_factor_before_any_finalist_output"
         or contract.get("implementation", {}).get("runner_sha256") != file_sha256(__file__)
         or contract.get("inputs", {}).get("launch_contract_sha256")
         != file_sha256(LAUNCH_CONTRACT)
