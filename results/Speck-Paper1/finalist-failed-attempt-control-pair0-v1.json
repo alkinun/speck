@@ -1,0 +1,99 @@
+{
+  "format": "speck_paper_finalist_failed_attempt",
+  "format_version": 1,
+  "attempt_id": "speck-paper-1-finalist-control-pair0-attempt-1",
+  "paper_id": "speck-paper-1",
+  "status": "operator_interrupted_after_step_1_no_checkpoint_or_result",
+  "run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+  "pair": {
+    "pair": 0,
+    "seed": 42,
+    "data_token_offset": 0
+  },
+  "arm_id": "dense_global_param_match",
+  "timeline": {
+    "analysis_v2_frozen_commit": {
+      "revision": "38896cd841bebfc2b5e04258a1e4fa5885b76972",
+      "committed_at": "2026-09-06T03:10:11+03:00"
+    },
+    "automation_v2_frozen_commit": {
+      "revision": "41b1af6018c2bf1060ab2b478517e3aa2389533e",
+      "committed_at": "2026-09-06T03:16:23+03:00"
+    },
+    "v2_program_registered_commit": {
+      "revision": "14f7c7ce15a44c997992ed98d2e64f5a3c0eac1b",
+      "committed_at": "2026-09-06T03:17:40+03:00"
+    },
+    "live_qualification_committed": {
+      "revision": "e65e317e6aad446d3a171389d255a74f8e5ca994",
+      "committed_at": "2026-09-06T03:33:10+03:00"
+    },
+    "live_qualification_registered_commit": {
+      "revision": "41d64414d16a5c211d57a5984f90ed3e0005fca0",
+      "committed_at": "2026-09-06T03:33:49+03:00"
+    },
+    "service_started_at": "2026-09-06T03:33:58+03:00",
+    "step_0_validation_at": "2026-09-06T03:34:51+03:00",
+    "step_1_at": "2026-09-06T03:35:01+03:00",
+    "operator_stop_at": "2026-09-06T03:35:10+03:00"
+  },
+  "observed_before_interruption": {
+    "training_steps": 1,
+    "training_tokens": 65536,
+    "step_0_validation_loss": 10.40856,
+    "step_1_training_loss": 10.40802,
+    "step_1_tokens_per_second": 7007,
+    "non_finite_observed": false,
+    "use_in_analysis": false
+  },
+  "interruption": {
+    "type": "operator_error",
+    "reason": "the operator incorrectly believed the crossed-factor v2 correction had been frozen after this launch; the commit and journal timestamps prove v2 was frozen 16 to 24 minutes before launch",
+    "signal": "SIGTERM",
+    "journal_main_exit_status": 143,
+    "hardware_failure": false,
+    "model_failure": false,
+    "data_failure": false,
+    "analysis_failure": false,
+    "automatic_retry": false
+  },
+  "retained_local_tracking": {
+    "directory": "wandb/offline-run-20260906_033409-7glyfs9h",
+    "git_ignored": true,
+    "files": {
+      "files/requirements.txt": "03ef5633e36fa9b36f2cdf5b23c133b10d669dd68f6d43fb5643736b7548381d",
+      "logs/debug-internal.log": "4c846e2bb24695076a78d2e691843ff208fdc9c3172e5893355540e7594b47ce",
+      "logs/debug.log": "cea9db6425cc1ca862c2ab8dfe6f9a83162aa9c3b37cfbec73046a7d5248bbe5",
+      "run-7glyfs9h.wandb": "ab8879c80aaf6146cf198cc2fc3178d1fa598c892078b6d7ef2bcfdb231f1f8d",
+      "run-7glyfs9h.wandb.syncstate": "b69cd52925c642d3d959a42ae137b29a950f0d2b647058d57608cb34752e8c2a"
+    }
+  },
+  "output_observation_after_stop": {
+    "checkpoint_root_absent": true,
+    "run_checkpoint_directory_absent": true,
+    "normalized_result_absent": true,
+    "target_lock_absent": true,
+    "final_analysis_absent": true,
+    "model_files": 0,
+    "optimizer_files": 0,
+    "metadata_files": 0,
+    "timing_files": 0,
+    "completion_markers": 0
+  },
+  "analysis_integrity": {
+    "v2_frozen_before_attempt": true,
+    "final_outcome_observed": false,
+    "candidate_outcome_observed": false,
+    "threshold_or_analysis_changed_after_attempt": false,
+    "attempt_eligible_as_result": false,
+    "reason": "only a complete step-23,496 checkpoint can enter the v2 collector"
+  },
+  "decision": {
+    "retain_attempt": true,
+    "count_as_finalist_result": false,
+    "silent_retry_authorized": false,
+    "preregistered_identical_rerun_required": true,
+    "training_authorized": false,
+    "next_action": "freeze an identical-cell rerun contract, record a fresh live gate, and restart from step 0 without changing any scientific setting"
+  }
+}

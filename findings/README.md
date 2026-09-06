@@ -127,6 +127,7 @@ Read in order:
 119. [118 — HELMET archive acquired and hash-qualified](118_helmet_archive_acquired.md)
 120. [119 — HELMET archive path inventory qualified](119_helmet_archive_inspected.md)
 121. [120 — Finalist v2 live launch qualification](120_finalist_live_launch_qualified.md)
+122. [121 — Finalist control 0 operator interruption](121_finalist_control0_operator_interruption.md)
 
 Conventions:
 
@@ -681,3 +682,8 @@ Finding 120 records a clean v2 live gate: the RTX 3090 is idle at 45°C, 23.70 G
 TB volume space are available, required mount options hold, all 48 finalist units and unfinished outputs
 are absent, and HELMET is inactive. The exact first dense control and event successors are authorized;
 concurrency, branching, retry, attribution, promotion, novelty, release, and paper-scale work are not.
+
+Finding 121 preserves an operator-interrupted first dense attempt. V2 was frozen before launch, but the
+service was mistakenly stopped after step 1. Dense initial/step loss and all local W&B hashes are
+reported; no checkpoint/result path exists and the attempt cannot enter analysis. No silent retry is
+allowed: an identical-cell restart contract and fresh live gate are required.
