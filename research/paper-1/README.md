@@ -103,6 +103,11 @@ the final combined model.
   are conditional on a KDA/NoPE factorial winner; base exact-attention ratio and compressed-schedule
   revalidation are distinct; all stages serialize on the single GPU. Pre-results sequence expansion is
   stopped with no descendant materialization or training authority.
+- [`deepseek-v4-sequence-lineage-v1.json`](../../results/Speck-Paper1/deepseek-v4-sequence-lineage-v1.json)
+  compares the initial and current official releases. HCA/CSA architecture/state and sparse-attention
+  segments are byte-identical, but the initial in-place quantizer rounded through BF16 instead of FP8.
+  Current explicit FP8 casting is the future source reference; local low-precision behavior remains
+  unqualified and the convergence DAG stays closed.
 - [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
   ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
   selection before a fixed-count integration/readout placement successor.

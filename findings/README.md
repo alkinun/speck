@@ -172,6 +172,7 @@ Read in order:
 164. [163 — V4 source semantics require three sequence-readiness corrections](163_deepseek_v4_sequence_source_gate.md)
 165. [164 — HCA, CSA, and local attention now have one coherent factorization](164_sequence_compression_factorization_corrected.md)
 166. [165 — Sequence research now has one acyclic activation order](165_sequence_axis_dependency_convergence.md)
+167. [166 — V4 architecture is stable, but initial FP8 simulation is superseded](166_deepseek_v4_sequence_lineage.md)
 
 Conventions:
 

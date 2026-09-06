@@ -54,7 +54,9 @@ to a checked experiment artifact.
 17. [DeepSeek-V4](22_deepseek_v4.md) — combine sequence compression, sparsity, and dense attention
     at one-million-token scale. The [official-release source audit](46_deepseek_v4_official_release.md)
     pins the HCA/CSA/local equations, interleaved schedule, compressed-entry identities, causal state,
-    inference-code limitations, and license boundary used by the sequence readiness successors.
+    inference-code limitations, and license boundary used by the sequence readiness successors. The
+    [release-lineage audit](47_deepseek_v4_release_lineage.md) confirms architecture stability while
+    superseding the initial in-place FP8 simulation with the current explicit FP8 cast.
 
 ### Scaling beyond the sequence mixer
 

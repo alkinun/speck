@@ -1,0 +1,196 @@
+{
+  "format": "speck_deepseek_v4_sequence_release_lineage",
+  "format_version": 1,
+  "status": "architecture_and_state_stable_initial_low_precision_simulation_superseded",
+  "created_at": "2026-09-06T04:37:08+00:00",
+  "scope": "byte and semantic comparison of eight official source/config/license files between the initial report-aligned and current DeepSeek-V4-Flash releases; no code or weights executed",
+  "local_note": {
+    "path": "papers/47_deepseek_v4_release_lineage.md",
+    "sha256": "482a1e0ac36a3f9767ffbe813dd9d5774f72953fafff890dcdf7f0c45fb54335"
+  },
+  "repository": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
+  "revisions": {
+    "initial": {
+      "commit": "efc855127ecba8ece36817f9e4cdeeae03b10200",
+      "role": "report-aligned primary equation and initial inference source",
+      "report_present": true,
+      "files": {
+        "config.json": {
+          "sha256": "52b5a1aa87606cb5be4f3158d706594edb1c4ce97ce6b1cd6079f15df075d7f5",
+          "bytes": 1724
+        },
+        "inference/config.json": {
+          "sha256": "6cc6f816ca73a8d38750194e330398e4f6955b4b45f674f7d29c96da14ccb733",
+          "bytes": 991
+        },
+        "inference/model.py": {
+          "sha256": "6380e70f3690227155ae17fa40b99c8e6900623d00925fd8a8ccc9588e02e818",
+          "bytes": 38626
+        },
+        "inference/kernel.py": {
+          "sha256": "c4dc859a2208f9182ae00f6267cf8655deba51dcd92dfd14d0e65401658593e4",
+          "bytes": 22204
+        },
+        "inference/generate.py": {
+          "sha256": "d4d443c0be8499b20ae5eaff0a623df02f47a8309be6feeba4eb4e0eeb5342c3",
+          "bytes": 6296
+        },
+        "inference/README.md": {
+          "sha256": "b9fe8027f91f2160b46582b61eaaf7b9873b3da36ee9f98bc76a900e7c1fed94",
+          "bytes": 951
+        },
+        "README.md": {
+          "sha256": "a0fc02ff24259a911c5c14208578cd7b3cc06a1e784d7eb4b9af6111bdd19db9",
+          "bytes": 13756
+        },
+        "LICENSE": {
+          "sha256": "f2c6c602815669d292889e5be8c802f2ed950653b77999b1584e8e6aed25d040",
+          "bytes": 1084
+        }
+      }
+    },
+    "current": {
+      "commit": "60d8d70770c6776ff598c94bb586a859a38244f1",
+      "role": "current official inference source at audit time",
+      "report_present": false,
+      "files": {
+        "config.json": {
+          "sha256": "b628e63398a645abc711d92207f8737dd8140f7a4ef1e0a5b3616019e0ddd818",
+          "bytes": 1749
+        },
+        "inference/config.json": {
+          "sha256": "6cc6f816ca73a8d38750194e330398e4f6955b4b45f674f7d29c96da14ccb733",
+          "bytes": 991
+        },
+        "inference/model.py": {
+          "sha256": "ce962f1face79d4f633d36436576214057a7e11443c9789935e1deb5c6cd1d71",
+          "bytes": 38632
+        },
+        "inference/kernel.py": {
+          "sha256": "59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2",
+          "bytes": 22198
+        },
+        "inference/generate.py": {
+          "sha256": "d4d443c0be8499b20ae5eaff0a623df02f47a8309be6feeba4eb4e0eeb5342c3",
+          "bytes": 6296
+        },
+        "inference/README.md": {
+          "sha256": "b9fe8027f91f2160b46582b61eaaf7b9873b3da36ee9f98bc76a900e7c1fed94",
+          "bytes": 951
+        },
+        "README.md": {
+          "sha256": "c4d714818a4d3333542edc7d38ea065825a0cf7aa8fea3605bbd1d1c18e4a610",
+          "bytes": 13149
+        },
+        "LICENSE": {
+          "sha256": "f2c6c602815669d292889e5be8c802f2ed950653b77999b1584e8e6aed25d040",
+          "bytes": 1084
+        }
+      }
+    }
+  },
+  "stable_segments": {
+    "compressor_indexer_attention": {
+      "start_marker": "class Compressor",
+      "end_marker_exclusive": "class Gate",
+      "bytes": 14015,
+      "initial_sha256": "1c5d1900c08af592fa541ee9085eccae3c28436e82ffe4201d1304475588168b",
+      "current_sha256": "1c5d1900c08af592fa541ee9085eccae3c28436e82ffe4201d1304475588168b",
+      "byte_identical": true,
+      "covers": "HCA/CSA compression, overlap, tails, indexer, masks, local/compressed concatenation, normalization, partial RoPE, attention calls, and grouped output"
+    },
+    "sparse_attention_kernel": {
+      "start_marker": "def sparse_attn_kernel",
+      "end_marker_exclusive": "def sparse_attn(",
+      "bytes": 3439,
+      "initial_sha256": "de29320545180b4028a15c676594866a1c01be9e785a95bd30bc4907bb3abea8",
+      "current_sha256": "de29320545180b4028a15c676594866a1c01be9e785a95bd30bc4907bb3abea8",
+      "byte_identical": true,
+      "covers": "indexed KV gathering, online softmax, attention sink denominator, and weighted value accumulation"
+    },
+    "whole_files_byte_identical": [
+      "inference/config.json",
+      "inference/generate.py",
+      "inference/README.md",
+      "LICENSE"
+    ]
+  },
+  "changes": {
+    "root_config": {
+      "classification": "width-runtime serialization only",
+      "exact_change": "add expert_dtype=fp4",
+      "sequence_architecture_changed": false,
+      "already_present_in_unchanged_inference_config": true
+    },
+    "model": {
+      "classification": "width-MoE forward only",
+      "exact_change": "pass swiglu_limit to the one shared expert instead of leaving it unclamped",
+      "sequence_architecture_or_state_changed": false
+    },
+    "kernel_activation_quantizer": {
+      "classification": "material sequence numerical correction",
+      "segment_start": "def act_quant_kernel",
+      "segment_end_exclusive": "def act_quant(",
+      "initial_bytes": 2771,
+      "initial_sha256": "815f83d02b649e952901d4d49e0c08a3460bf1aff840de5c62ab48cacdc42951",
+      "current_bytes": 2765,
+      "current_sha256": "deeeef06479551a90c559dd17c94d86eef26a51e5b78bb502e9aed296212d568",
+      "initial_inner_cast": "out_dtype, which has already been rebound to input dtype under inplace=true",
+      "current_inner_cast": "FP8",
+      "impact": "initial BF16 in-place simulation can round normalized values as BF16 instead of FP8; current code explicitly performs FP8 rounding before dequantization",
+      "affected_model_calls": [
+        "main HCA/CSA compressed KV non-RoPE dimensions",
+        "raw sliding-window KV non-RoPE dimensions"
+      ],
+      "unaffected": "FP4 Lightning-Indexer query and compressed-key simulation uses the separate fp4_act_quant path"
+    },
+    "root_README": {
+      "classification": "release documentation",
+      "sequence_semantics_authority": false
+    },
+    "report_removed_from_current_tree": {
+      "classification": "provenance availability",
+      "initial_report_pin_remains_required": true
+    }
+  },
+  "bound_local_artifacts": {
+    "initial_source_audit": {
+      "path": "results/Speck-Paper1/deepseek-v4-sequence-primary-source-audit-v1.json",
+      "sha256": "37a2f5ba7f601c8bc299ba29c6abaa11ec1321c276ab2638aeba79a71b20c3d2"
+    },
+    "sequence_factorization_v2": {
+      "path": "research/paper-1/sequence_compression_factorization_v2.json",
+      "sha256": "8c99b29c23886eea40d6ee061b6d24cb8c118531670997d94820aaea384fc03a",
+      "qualification": "results/Speck-Paper1/sequence-compression-factorization-v2-qualified.json",
+      "qualification_sha256": "bdcce0e05dc3d289ec9b1856c21a1b4a30a9bbc649ac5f358e8fd3fa5dfd2034"
+    },
+    "sequence_convergence": {
+      "path": "research/paper-1/sequence_axis_convergence_v1.json",
+      "sha256": "a1671566ac9d6b12418ed1e796a070250cf02f188bc99d85acbe280f7d2f2c59",
+      "qualification": "results/Speck-Paper1/sequence-axis-convergence-qualified-v1.json",
+      "qualification_sha256": "b7c4065448cd7f63706a07f2a66f2834fb94e672bd7eea97fcab268e7ac2e6b7"
+    }
+  },
+  "disposition": {
+    "initial_report_equation_authority_retained": true,
+    "initial_architecture_and_causal_state_semantics_retained": true,
+    "initial_low_precision_numerical_behavior_authority_retained": false,
+    "current_explicit_FP8_rounding_is_source_reference": true,
+    "current_low_precision_behavior_locally_qualified": false,
+    "full_precision_correctness_precedes_precision_intervention": true,
+    "sequence_factorization_v2_remains_valid": true,
+    "sequence_convergence_DAG_remains_valid": true,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "preserve the current FP8-cast source for a future precision-specific successor after full-precision operator correctness; continue the event-driven finalist without more pre-results sequence expansion"
+  },
+  "verification": {
+    "network_files": 16,
+    "both_revision_hashes_verified": true,
+    "source_code_executed": false,
+    "model_weights_accessed": false,
+    "active_experiment_accessed": false,
+    "service_polled": false
+  }
+}
