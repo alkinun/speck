@@ -65,6 +65,7 @@
         "findings/131_finalist_systems_measurement_boundary.md",
         "findings/132_finalist_source_stability_boundary.md",
         "findings/133_finalist_result_acceptance_gate.md",
+        "findings/134_finalist_program_source_gate.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
@@ -100,7 +101,8 @@
         "results/Speck-Paper1/finalist-crossed-views-audit-v1.json",
         "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
         "results/Speck-Paper1/finalist-source-stability-audit-v1.json",
-        "results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json"
+        "results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json",
+        "results/Speck-Paper1/finalist-program-source-gate-v1.json"
       ],
       "quality": "All six frozen cells are complete. Candidate-minus-control endpoint loss is -0.039170/-0.042662/-0.037184 nats; mean -0.039672 and upper one-sided 95% bound -0.034996 pass the +0.01 margin. All eleven source bounds pass, so the whole-architecture proxy quality screen passes without component attribution.",
       "systems": "At 128K the historical dense geometry has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token. Across the proxy pairs, the candidate uses 21.49% fewer analytic FLOPs/token, 10.01% less steady time, 10.42% less active time, and 11.13% more steady throughput, but 20.77% more peak allocation. Mean time-to-quality improvement is 19.48% with lower one-sided 95% bound 16.83%; no pair is censored. Dense controls still fail the frozen 1.0-hour envelope, so no paired hard-envelope or serving claim passes.",
@@ -114,6 +116,7 @@
         "all controls precede all candidates across a five-day forecast with no power, thermal, clock, throttle, or host telemetry, so timing is descriptive and cannot support causal speedup, energy, dollar, serving, or systems-promotion claims",
         "training loss/gradient finiteness is fail-fast and the validation schedule covers all 11 sources, but the frozen analyzer checks only identical reported sets; the append-only completeness sidecar is mandatory before interpretation",
         "the append-only result-acceptance verifier must bind each committed result, complete source history, transition edge, target/analysis state, and permanent failure/rerun history before interpretation or Linear completion",
+        "the exact finite 11-source rule is additionally enforced by the existing program-validator call before automatic commit and successor scheduling, without changing the frozen runner/analyzer/plan",
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
         "HELMET's 52 archive-local paths are fully family-accounted but zero of five families is extraction-qualified; neither the synthetic nor 32 real-data files have an exact reconstruction path; the exact truncation tokenizer/oracle and archive-external datasets remain; the judge uses seed 42 but is still reproducibility, denominator, data-handling, cost, and replacement blocked",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
@@ -197,6 +200,7 @@
         "findings/131_finalist_systems_measurement_boundary.md",
         "findings/132_finalist_source_stability_boundary.md",
         "findings/133_finalist_result_acceptance_gate.md",
+        "findings/134_finalist_program_source_gate.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
@@ -231,7 +235,8 @@
         "results/Speck-Paper1/finalist-crossed-views-audit-v1.json",
         "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
         "results/Speck-Paper1/finalist-source-stability-audit-v1.json",
-        "results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json"
+        "results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json",
+        "results/Speck-Paper1/finalist-program-source-gate-v1.json"
       ],
       "quality": "The complete five-cache KDA/GQA architecture passes the three-pair whole-architecture proxy quality screen: mean paired endpoint loss -0.039672 nats, upper one-sided 95% bound -0.034996, and all eleven source bounds below their margins. This does not isolate or promote KDA, NoPE, GQA, or the 3:1 ratio.",
       "systems": "At the fixed endpoint the whole candidate averages 21.49% fewer analytic FLOPs/token, 10.01% less steady training time, and 11.13% higher throughput than dense, while peak allocation is 20.77% higher. Mean time-to-quality improves 19.48% with lower bound 16.83%. Exact-shape and cache-equivalence qualifications remain as previously recorded; no serving or paired hard-envelope claim follows.",

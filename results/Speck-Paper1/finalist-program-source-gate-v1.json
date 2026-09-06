@@ -1,0 +1,113 @@
+{
+  "format": "speck_paper_finalist_program_source_gate",
+  "format_version": 1,
+  "status": "complete_finite_11_source_gate_wired_precommit_without_scientific_change",
+  "created_at": "2026-09-06T01:40:36+00:00",
+  "scope": "validator-only hardening before the first accepted finalist result; no trainer, runner, analyzer, plan, threshold, data, checkpoint, service, GPU, or model output changed or accessed",
+  "predecessor_evidence": {
+    "source_stability_audit": {
+      "path": "results/Speck-Paper1/finalist-source-stability-audit-v1.json",
+      "sha256": "444858a4046246abe6fdcb3e083560144ae63d70e79102019f9c3b1f03e7f883",
+      "prior_state": "append-only sidecar required before interpretation but not wired into finalization"
+    },
+    "acceptance_qualification": {
+      "path": "results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json",
+      "sha256": "40862f0c21a9113c99de8b9c42a59327d68b989c2173c841ac44e9d91990c1aa"
+    }
+  },
+  "implementation": {
+    "program_validator": {
+      "path": "speck/paper.py",
+      "previous_sha256": "824982ae82f45aa53431d2cdabf65152fbdd1d6d5781455d144ebfdee77c42dd",
+      "sha256": "e2b59e24aaf3950df136142ba51bc1fb042d7efcd3241ed626a9f9ae62fb02bc",
+      "active_contract_pin_present": false
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_program_source_gate.py",
+      "sha256": "c1014b770a8e2573fdcf2993a0ff01010329cd6736b288d2dd941fb777846ee9"
+    },
+    "unchanged_frozen_code": {
+      "runner": {
+        "path": "scripts/paper_finalist_continue.py",
+        "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+      },
+      "analyzer": {
+        "path": "speck/paper_finalist_analysis.py",
+        "sha256": "466340781e58f1f330eee5f70683b53f24acb9d4eeaeda5cdb2eb13ebcd85504"
+      },
+      "plan": {
+        "path": "research/paper-1/finalist_analysis_v2.json",
+        "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+      }
+    }
+  },
+  "expected_sources": [
+    "finemath_4plus",
+    "math_textbook_exercise",
+    "math_multi_style",
+    "cosmopedia_v2",
+    "ufw_l3_multi_style",
+    "pes2o",
+    "wikimedia",
+    "dclm_edu",
+    "fineweb_edu",
+    "ultra_fineweb",
+    "dclm"
+  ],
+  "new_precommit_checks": [
+    "qualified finalist result format, version, status, run, arm, pair, training-token total, and zero-permitted-nonfinite invariant",
+    "exact five validation steps and final-validation equality",
+    "exact 11-source ID set at every validation point",
+    "finite non-boolean numeric loss for every source at every point"
+  ],
+  "finalizer_integration": {
+    "existing_call": "python -m scripts.paper_program_validate research/paper-1",
+    "call_order": [
+      "collect result and update the program/transition on disk",
+      "run the strengthened program validator",
+      "commit only after validation passes",
+      "schedule the successor only after commit"
+    ],
+    "failure_before_commit": true,
+    "failure_before_successor_schedule": true,
+    "trigger_already_disabled_on_failure": true,
+    "automatic_retry": false,
+    "scientific_result_mutation": false
+  },
+  "adversarial_tests": {
+    "complete_finite_set_passes": true,
+    "missing_source_rejected": true,
+    "extra_source_rejected": true,
+    "nan_rejected": true,
+    "positive_infinity_rejected": true,
+    "negative_infinity_rejected": true,
+    "boolean_rejected": true,
+    "qualification_identity_test": true,
+    "tests": 8
+  },
+  "decision": {
+    "program_validator_source_gate_qualified": true,
+    "equivalent_sidecar_rule_now_precommit": true,
+    "external_acceptance_verifier_still_required_after_commit": true,
+    "active_language_sequence_remains_authorized": true,
+    "missing_or_nonfinite_source_can_commit": false,
+    "missing_or_nonfinite_source_can_schedule_successor": false,
+    "source_imputation_or_deletion_authorized": false,
+    "runner_analyzer_plan_or_threshold_changed": false,
+    "training_environment_changed": false,
+    "next_action": "allow the frozen finalizer to enforce the complete finite 11-source gate through its existing program-validation call, then run the independent acceptance verifier after each successful commit"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_program_source_gate.py tests/test_paper.py -q",
+    "expected": "45 passed",
+    "empty_program_validation": "passed",
+    "live_output_accessed": false
+  },
+  "non_claims": [
+    "the sidecar script itself was inserted into the frozen runner",
+    "validator hardening changes model training or statistical thresholds",
+    "the empty-state pass validates a future result",
+    "a failed result may be repaired, imputed, retried, or skipped automatically",
+    "this gate replaces the independent post-commit acceptance verifier"
+  ]
+}

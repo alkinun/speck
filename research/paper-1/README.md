@@ -353,6 +353,10 @@ the final combined model.
   qualifies one post-event verifier for program/result/source/transition/target/analysis consistency.
   It passes the empty ledger and must pass after every automatic commit before interpretation or Linear
   completion; it intentionally remains outside the hash-frozen finalizer.
+- [`finalist-program-source-gate-v1.json`](../../results/Speck-Paper1/finalist-program-source-gate-v1.json)
+  safely moves the equivalent exact finite 11-source rule into the existing pre-commit program-validator
+  call. Missing/extra/non-finite sources now stop before commit and scheduling; the independent
+  post-commit acceptance verifier remains mandatory.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -434,6 +438,9 @@ never imputation or silent deletion.
 The result-acceptance verifier composes those gates after each event: it binds every accepted result to
 the program and transition, checks complete source coverage, validates the exact successor edge, and
 preserves the failed-attempt/rerun history. Failure blocks interpretation without rewriting evidence.
+Because the program validator is not a frozen scientific input, its complete-source rule is now also
+enforced inside finalization before commit/scheduling. Trainer, runner, analyzer, plan, thresholds, and
+the independent post-commit check remain unchanged.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination

@@ -75,6 +75,22 @@ PROGRAM_FILES = (
     "reporting_checklist.md",
 )
 
+FINALIST_SOURCE_IDS = frozenset(
+    {
+        "finemath_4plus",
+        "math_textbook_exercise",
+        "math_multi_style",
+        "cosmopedia_v2",
+        "ufw_l3_multi_style",
+        "pes2o",
+        "wikimedia",
+        "dclm_edu",
+        "fineweb_edu",
+        "ultra_fineweb",
+        "dclm",
+    }
+)
+
 
 def _file_sha256(path):
     digest = hashlib.sha256()
@@ -2238,6 +2254,18 @@ def _validate_finalist_rerun(reference, repository_root, paper_id):
             raise ValueError("finalist rerun input does not match its pin")
 
 
+def _validate_finalist_source_losses(source_losses):
+    if not isinstance(source_losses, dict) or set(source_losses) != FINALIST_SOURCE_IDS:
+        raise ValueError("finalist run does not contain every expected validation source")
+    if any(
+        isinstance(loss, bool)
+        or not isinstance(loss, (int, float))
+        or not math.isfinite(loss)
+        for loss in source_losses.values()
+    ):
+        raise ValueError("finalist run contains a non-finite validation source loss")
+
+
 def _validate_finalist_evidence(evidence, automation_reference, repository_root):
     required = {
         "status",
@@ -2272,7 +2300,7 @@ def _validate_finalist_evidence(evidence, automation_reference, repository_root)
         or [entry.get("pair") for entry in candidates] != list(range(len(candidates)))
     ):
         raise ValueError("finalist evidence is outside the frozen prefix")
-    for entry in [*controls, *candidates]:
+    for index, entry in enumerate([*controls, *candidates]):
         source = repository_root / entry.get("path", "")
         if (
             entry.get("status") != "complete_qualified"
@@ -2280,6 +2308,36 @@ def _validate_finalist_evidence(evidence, automation_reference, repository_root)
             or _file_sha256(source) != entry.get("sha256")
         ):
             raise ValueError("finalist run evidence does not match its pin")
+        report = _load_json(source)
+        expected_pair = index if index < len(controls) else index - len(controls)
+        expected_arm = (
+            "dense_global_param_match" if index < len(controls) else "five_cache_kda_gqa"
+        )
+        expected_run = (
+            control_order[expected_pair]
+            if expected_arm == "dense_global_param_match"
+            else candidate_order[expected_pair]
+        )
+        if (
+            report.get("format") != "speck_paper_finalist_run_result"
+            or report.get("format_version") != 2
+            or report.get("status") != "complete_qualified"
+            or report.get("run") != expected_run
+            or report.get("arm_id") != expected_arm
+            or report.get("pair", {}).get("pair") != expected_pair
+            or report.get("training_tokens") != 1_539_833_856
+            or report.get("non_finite_steps") != 0
+        ):
+            raise ValueError("finalist run evidence identity is invalid")
+        history = report.get("validation_history")
+        if (
+            not isinstance(history, list)
+            or [value.get("step") for value in history] != [0, 5874, 11748, 17622, 23496]
+            or report.get("final_validation") != history[-1]
+        ):
+            raise ValueError("finalist run validation history is invalid")
+        for value in history:
+            _validate_finalist_source_losses(value.get("validation_source_losses"))
     target = evidence["time_to_quality_target"]
     analysis = evidence["analysis_result"]
     if len(controls) < 6:

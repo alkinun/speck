@@ -140,6 +140,7 @@ Read in order:
 132. [131 — Finalist systems-measurement and temporal-confounding boundary](131_finalist_systems_measurement_boundary.md)
 133. [132 — Finalist finiteness and complete-source boundary](132_finalist_source_stability_boundary.md)
 134. [133 — Append-only finalist result-acceptance gate](133_finalist_result_acceptance_gate.md)
+135. [134 — Complete finite source coverage moved before commit](134_finalist_program_source_gate.md)
 
 Conventions:
 
