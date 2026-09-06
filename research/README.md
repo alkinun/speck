@@ -1,10 +1,8 @@
 # Research programs
 
-The operating plan as of 2026-09-06 is the [flagship plan](flagship/PLAN.md): the Paper 1 gate
-program below is retained as archived evidence and future work.
-
-The active [Speck Paper 1 program](paper-1/) defines the thesis, novelty gate, claim ledger,
-tri-axis experiment sequence, manuscript structure, and paper-scale pretraining gate.
+The scope of the first flagship model, its paper, and its experiments is
+[`flagship/README.md`](flagship/README.md). `paper-1/` holds only the JSON contracts of the retired
+Paper 1 gate program, kept as archive data for the result files that hash them.
 
 ## Architecture promotion
 

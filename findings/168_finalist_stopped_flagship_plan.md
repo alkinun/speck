@@ -12,5 +12,6 @@ The three-pair proxy in finding 105 remains the 150M replication evidence.
 
 The novelty gate, the tri-axis title, the HELMET and NoLiMa integrations, and the readiness
 contracts for HCA, CSA, AttnRes, Stable LatentMoE, interactions, and scaling are retired from
-Paper 1 and kept as archived future work. The operating plan is now
-[`research/flagship/PLAN.md`](../research/flagship/PLAN.md).
+Paper 1; their JSON contracts are kept under `research/paper-1/` as archive data and their
+markdown and tooling were removed. The operating plan is now
+[`research/flagship/README.md`](../research/flagship/README.md).

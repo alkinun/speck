@@ -1,14 +1,12 @@
-# Long-Context Research
+# Long-Context Tooling
 
-The complete chronological experiment ledger—including negative results, checkpoint identities,
-and decision gates—is maintained in [findings/README.md](../findings/README.md). Checked JSON under
-`results/` remains the machine-readable source of truth.
+The experiment ledger, including negative results, checkpoint identities, and decisions, is in
+[findings/README.md](../findings/README.md). Checked JSON under `results/` is the machine-readable
+source of truth. The current research scope is the [flagship document](../research/flagship/README.md).
+This page describes the long-context machinery the repository provides.
 
-The separate [paper library](../papers/README.md) records verified external evidence and transfer
-risks. A claim in that library remains a paper result until a Speck finding reproduces it.
-
-SpeckLabs treats context length as a measured capability, not a configuration value. The research
-stack is organized around four separately reported ceilings:
+SpeckLabs treats context length as a measured capability, not a configuration value. Report four
+ceilings separately and never substitute one for another in a model card or comparison:
 
 - **Allocated:** the largest state the runtime can reserve.
 - **Trained:** the largest sequence present during pretraining or post-training.
@@ -16,179 +14,87 @@ stack is organized around four separately reported ceilings:
   quality.
 - **Usable:** the longest sequence satisfying a named hardware, memory, and latency contract.
 
-Never substitute one ceiling for another in a model card or benchmark comparison.
+## Mixers
 
-## Architecture
+The recurrent mixers each have three deliberately distinct paths:
 
-The original reference is a dense 3:1 Gated DeltaNet/GQA hybrid. The current conservative research
-control is a five-cache KDA/sigmoid/NoPE recurrent-global hybrid. It is not a release selection: its
-strict base-loss tie passes only two of three seeds, its exact eight-record retrieval is fragile, and
-it has not passed independent long-context evaluation. Periodic GQA layers remain an experimental
-variable because they improve direct retrieval but make global prefill and training quadratic.
+1. A readable Torch recurrence as the numerical reference and CPU path.
+2. FLA chunkwise kernels as the CUDA training and prefill path.
+3. FLA fused recurrent kernels as the single-token decode path.
 
-The implementation has three deliberately distinct paths:
+Run `scripts.gdn_kernel_qualify` and `scripts.kda_kernel_qualify` on every new GPU and software
+combination. Kernel availability is not kernel correctness. The checked
+[RTX 3090 qualification](../results/hardware/rtx3090-gdn-fla-0.5.0.json) binds FLA 0.5.0, PyTorch
+2.9.1+cu128, driver 610.43.03, tensor geometry, raw timings, tolerances, and clean Git source; it
+attests only that exact path, not other hardware.
 
-1. `torch_gated_delta_rule` is the readable numerical reference and CPU path.
-2. FLA chunkwise Gated DeltaNet is the required CUDA training/prefill path.
-3. FLA fused recurrent Gated DeltaNet is the single-token decode path.
+Gated DeltaNet uses scalar per-head decay. Kimi Delta Attention uses channel-wise decay and is the
+lead recurrent mixer: on calibrated MQAR it matches SiLU-gated GDN at length 1,024 and passes 3/3
+seeds against 1/3 at length 2,048 (findings [13](../findings/13_synthetic_mqar.md) and
+[14](../findings/14_mqar_length_scaling.md)). The sigmoid output gate improves the 131M-token
+language loss by 0.037 nats over SiLU (finding [16](../findings/16_kimi_transfer_131m.md)).
 
-Run `scripts.gdn_kernel_qualify` on every new GPU/software combination. Kernel availability is not
-treated as kernel correctness.
-
-The checked [RTX 3090 qualification](../results/hardware/rtx3090-gdn-fla-0.5.0.json) binds FLA 0.5.0,
-PyTorch 2.9.1+cu128, driver 610.43.03, tensor geometry, raw timings, tolerances, and clean Git source.
-It passes output/final-state parity at 64, 512, and 4,096 tokens, all five input gradients, and
-bitwise repeatability. This attests only that exact software/hardware path, not future cluster GPUs.
-
-Kimi Delta Attention is also implemented as a distinct mixer with an auditable Torch recurrence,
-FLA chunk/recurrent CUDA paths, fixed-state accounting, and a checked RTX 3090 qualification. On a
-calibrated length-1,024 MQAR task, KDA-sigmoid and GDN-SiLU solve all three seeds, while
-GDN-sigmoid solves none. KDA's median convergence is nearly tied with SiLU GDN, but its observed
-step range is smaller. At two replicated length-2,048 endpoints, KDA passes 3/3 seeds and GDN-SiLU
-passes 1/3, making reliable longer-distance learning the clearer KDA advantage. See the complete
-[MQAR mixer](../findings/13_synthetic_mqar.md) and
-[length-scaling](../findings/14_mqar_length_scaling.md) findings.
-
-On exact 512-token reversal, KDA passes two of three seeds while GDN-SiLU passes none. On a
-64-stack mutable-state task, both pass all seeds with identical median convergence. This narrows
-KDA's advantage to difficult identity retention and copying rather than generic synthetic
-optimization. See [Palindrome and Stack](../findings/15_palindrome_and_stack.md).
-
-Speck Reader Attention separates the two jobs a global attention layer performs. A **writer** is an
-ordinary global attention layer that also publishes the keys and values it attends over under a named
-memory. A **reader** is a query-only layer: it owns a query projection, query norm, and output
-projection, and it attends over its writer's memory without a key projection, a value projection, or
-a cache of its own. The architecture grammar validates that each memory has exactly one writer, that
-every reader follows its writer in depth, and that reader and writer agree on head dimension,
-key-value head count, active RoPE dimensions, and scope. Readers therefore change the number of
-key-value caches without changing depth, attention placement, or the number of attention reads. See
-[finding 24](../findings/24_reader_attention.md) for the mechanism, its cost accounting, and the
-prepared staircase.
+## Attention
 
 Attention supports full, partial, or zero RoPE dimensions. RoPE frequencies are retained, but
 position tables are generated only for the active chunk. Global cached prefill uses a nonmaterialized
 causal bias. CUDA sliding prefill uses FlexAttention with block-level mask metadata; at 128K and a
-2K window the mask metadata occupies about 16 MiB instead of constructing a 16+ GiB token mask.
-Sliding decode retains the bounded ring-buffer path. In mixed models, global and sliding layers use
-separate rotary modules so global RoPE scaling does not compress local-window distances.
+2K window the mask metadata occupies about 16 MiB instead of a 16+ GiB token mask. Sliding decode
+uses a bounded ring buffer. In mixed models, global and sliding layers use separate rotary modules so
+global RoPE scaling does not compress local-window distances.
 
-## Reference models
+NoPE global layers trained from the base stage retain a directional needle signal through 128K
+after 4K training, where RoPE layers fail at 4K (findings [16](../findings/16_kimi_transfer_131m.md)
+to [18](../findings/18_kimi_context32k.md)). Converting a trained RoPE checkpoint to NoPE late
+damages both long and short loss (finding [12](../findings/12_nope_context_activation.md)); train
+NoPE from the start.
 
-`SpeckLC-150M-GDN` is the inexpensive architecture and curriculum proxy: 20 layers, 15 Gated
-DeltaNet mixers, five GQA layers, partial RoPE, 152,916,468 parameters, 4K core training, and a 128K
-allocation ceiling.
+Speck Reader Attention lets query-only reader layers share a writer layer's key-value cache. The
+grammar is `memory` and `memory_role` on the attention spec, validated across the execution plan.
+The mechanism is implemented and tested but not promoted: see
+[finding 24](../findings/24_reader_attention.md).
 
-`SpeckLC-1.2B` is a materialized target, not a claim of a trained release: 24 layers, 18 Gated
-DeltaNet mixers, six two-KV-head GQA layers, partial RoPE, 1,218,451,776 parameters, and a 1M
-allocation ceiling. At 1,048,576 tokens its portable INT8 KV state—including scales—is about 3.05
-GiB; 4-bit weights plus all recurrent/KV state are below 4 GiB before runtime workspace. Global
-attention compute, not resident state, is the dominant 1M risk.
+## Global-layer roles
 
-## Experimental sequence
+From the same-parent 32K frontier (finding [08](../findings/08_global_attention_frontier.md)): a
+middle global layer lowers long-document loss but does not surface retrieval at the output, a final
+global layer surfaces retrieval but barely improves loss, and five distributed global layers give the
+best loss and retention at the largest state cost. Global KV cache is about 99.7% of the 128K
+resident state of a five-layer 150M hybrid, which is why the number and representation of global
+caches is the state axis that matters.
 
-1. Materialize the mixer family with `scripts.mixer_ablation_prepare`.
-2. Train token-matched short-context proxies and report the compute-matched view alongside them.
-3. Qualify Torch/FLA outputs, states, gradients, determinism, and speed on the target hardware.
-4. Run the built-in exact-length curve to catch positional, memory, retrieval, and latency failures.
-5. Promote only candidates that survive the independent upstream RULER run and the internal
-   200-case retrieval and composition protocols.
-6. Prepare each progressive length stage with `scripts.context_stage_prepare`; never edit a resume
-   contract to force a new length or dataset through it.
-7. Re-run short quality evaluations at every promotion so context specialization cannot silently
-   erase the model's basic language capability.
+## Progressive context training
 
-The built-in passkey diagnostic is intentionally labeled weak evidence. Its purpose is fast
-regression detection and systems measurement. Effective-length claims intended for publication must
-come from the harder upstream suites and include full per-length curves.
+Prepare each length stage with `scripts.context_stage_prepare`. A stage binds an exact parent
+checkpoint and packed long-document dataset by hash; never edit a resume contract to force a new
+length or dataset through it. Re-run the original short-context evaluation at every stage so context
+specialization cannot silently erase basic language capability.
 
-## 150M global-layer frontier
+Extension data must contain dependencies that span the intended lengths: complete papers and books,
+deterministic repository trees, connected pages, and synthetic retrieval or aggregation tasks. Use
+source token-length filters so a nominal long source is not dominated by short documents. The loader
+retains BOS/EOS boundaries but consumes a flat stream, so adjacency must be meaningful before packing;
+concatenating unrelated documents is a stress condition, not long-context supervision.
 
-The checked 32K pilot continues every point from the same 131M-token `gdn-local` checkpoint on 32M
-tokens of complete FineMath, peS2o, and Wikipedia documents of at least 16K tokens. Retrieval uses
-paired counterfactual needles to cancel answer-token preferences. These are internal diagnostics,
-not publication-grade RULER results.
+## Evaluation
 
-| Global layers | Placement | 32K val loss | 4K loss change | Effective retrieval | Detectable retrieval | BF16 / INT8 state @128K |
-| ---: | --- | ---: | ---: | ---: | ---: | ---: |
-| 0 | none | 2.68892 | -0.00268 | 4K | 4K | 8.97 / 5.34 MiB |
-| 1 | final (19) | 2.68697 | +0.00234 | 4K | 32K | 103.47 / 54.07 MiB |
-| 1 | middle (11) | 2.65777 | +0.00396 | none | none | 103.47 / 54.07 MiB |
-| 2 | middle + final | 2.65660 | +0.00903 | 4K | 32K | 197.97 / 102.79 MiB |
-| 5 | every fourth layer | 2.63490 | +0.01568 | 16K | 32K | 481.47 / 248.97 MiB |
+- `scripts.long_context_eval` runs the built-in exact-length passkey curve. It is a fast regression
+  and systems diagnostic, not a capability claim.
+- `scripts.position_loss_eval` reports position-binned and trailing-token loss.
+- `scripts.structured_retrieval_adapt` and `scripts.structured_retrieval_eval` run the frozen
+  200-case internal protocols under `research/architecture-promotion-v1/internal`.
+- RULER v2 through `scripts.ruler_source_prepare`, `scripts.ruler_case_prepare`, and the local
+  evaluation endpoint. See [Evaluation](evaluation.md).
 
-One middle global layer captures nearly all of the two-layer language-modeling gain but does not
-surface retrieval at the output. One final global layer surfaces retrieval but barely improves
-long-document loss. The two placements therefore play different roles. Five global layers retain
-retrieval most robustly, at a steep state and short-context cost. The raw frontier is recorded in
-`results/SpeckLC-150M-GlobalCount32K`.
-
-## Global cache-count staircase
-
-The global-layer frontier above varies how many global attention layers exist. A separate prepared
-staircase holds depth, attention placement, parameters, analytic FLOPs, and the number of attention
-reads fixed at the lead KDA/sigmoid/NoPE geometry, and varies only how many distinct key-value caches
-those five attention slots share.
-
-| Arm | Caches | Reader layers | Parameters | Δ FLOP/token | BF16 state @128K | Reduction |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `caches-5` | 5 | 0 | 153,958,938 | 0 | 504,860,160 B | 1.00× |
-| `caches-3` | 3 | 2 | 153,958,810 | 0 | 303,533,568 B | 1.66× |
-| `caches-2` | 2 | 3 | 153,958,746 | 0 | 202,870,272 B | 2.49× |
-| `caches-1` | 1 | 4 | 153,958,682 | 0 | 102,206,976 B | 4.94× |
-| `caches-1-mqa1` | 1 | 4 | 153,957,914 | −4,608 | 35,098,112 B | 14.38× |
-
-Parameter counts differ only by the 64-element key-norm vector each reader drops; the multi-query arm
-is explicitly not matched and reports its residual. `caches-5` is byte-identical to the source
-architecture, so the existing seed-42 checkpoint is its result and it must not be retrained.
-
-All main staircase arms and the distance control have now been trained and evaluated. Three caches
-reduce persistent state `1.66×` and improve thermally controlled high-batch eager decode `1.31×`, but
-strict paired loss and candidate promotion pass only two of three seeds, and symbolic route retrieval
-falls to `0.53` versus `1.00` for five caches. The frontier is therefore complete without promotion;
-see [finding 24](../findings/24_reader_attention.md).
-
-Prepare it with:
-
-```bash
-uv run --extra cpu python -m scripts.reader_attention_prepare \
-  experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope \
-  experiments/SpeckLC-150M-ReaderAttention131M \
-  --caches 5 3 2 1 --mqa-caches 1
-```
-
-## NoPE context intervention
-
-A same-parent 32K control replaced partial RoPE with NoPE only in the five promoted global layers.
-After the same 32M-token continuation, NoPE finished 0.06414 nats worse on 32K long-document loss
-and 0.04837 nats worse than the RoPE control on the original 4K evaluation. However, its paired
-counterfactual retrieval direction was correct in all 30 cases at every tested length through 128K,
-versus detectable retrieval only through 32K for RoPE. Open-vocabulary exact match remained zero.
-
-This rejects late checkpoint conversion as a quality-preserving recipe but establishes positional
-encoding as a strong loss-versus-retrieval axis. The next valid comparison trains NoPE global layers
-from the base stage rather than spending more continuation tokens adapting pretrained RoPE layers.
-See [the complete NoPE finding](../findings/12_nope_context_activation.md).
-
-## Data
-
-Core pretraining may retain the existing quality mixture. Context-extension data should instead
-contain dependencies that span the intended lengths: complete papers and books, deterministic
-repository trees, hyperlink-connected pages, and synthetic retrieval/aggregation tasks. Use source
-token-length filters to prevent a nominal long-data source from being dominated by short documents.
-
-The loader retains BOS/EOS document boundaries but otherwise consumes a flat source stream.
-Therefore, adjacency must be meaningful before packing. Concatenating unrelated web documents is a
-useful stress condition, not sufficient long-context supervision.
+Effective-length claims intended for publication come from RULER and the internal protocols with
+full per-length curves, plus original-4K retention.
 
 ## Known boundaries
 
-- The 3:1 recurrent/global ratio and KDA are hypotheses to ablate, not settled SpeckLabs doctrine.
-- Full global-attention layers remain quadratic. Use the budget report before every length stage and
-  compare a local-attention hybrid where full prefill becomes uneconomic.
-- INT8 KV currently dequantizes into the SDPA compute dtype. It proves capacity and measures quality,
-  but a backend-native quantized kernel is needed for maximum decode throughput.
-- Transformers export is supported through vendored native code and parity tests. GDN GGUF is not;
-  the legacy converter deliberately accepts only the original conv hybrid.
+- Full global attention remains quadratic. Use `scripts.context_budget` before every length stage.
+- INT8 KV currently dequantizes into the SDPA compute dtype. It proves capacity and measures
+  quality; a backend-native quantized kernel is needed for maximum decode throughput.
+- Transformers export is supported through vendored native code and parity tests. Recurrent-mixer
+  GGUF export is not; the legacy converter accepts only the original conv hybrid.
 - The trainer provides DDP and activation checkpointing. Context parallelism and production FP8 are
-  hardware-stack projects and must not be claimed until their distributed checkpoint and numerical
-  parity contracts exist.
+  hardware-stack projects and must not be claimed until their parity contracts exist.
