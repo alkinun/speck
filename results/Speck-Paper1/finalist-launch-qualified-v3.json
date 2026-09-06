@@ -1,0 +1,85 @@
+{
+  "active_finalist_units": [],
+  "created_at": "2026-09-06T00:38:55.376804+00:00",
+  "decision": {
+    "architecture_promotion_authorized": false,
+    "automatic_retry_authorized": false,
+    "component_attribution_authorized": false,
+    "event_driven_successors_authorized": true,
+    "helmet_concurrency_authorized": false,
+    "initial_control_launch_authorized": true,
+    "next_action": "commit and register this qualification, revalidate the clean repository, then launch only the exact initial dense control through the event runner",
+    "novelty_claim_authorized": false,
+    "paper_scale_authorized": false,
+    "quality_dependent_branching_authorized": false,
+    "release_claim_authorized": false,
+    "training_authorized": true
+  },
+  "format": "speck_paper_finalist_launch_qualification",
+  "format_version": 1,
+  "implementation": {
+    "automation_runner_sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d",
+    "runner_revision": "eef1e7f2812e4a408d05865127f4a36a3a4fbb81",
+    "runner_sha256": "cd416992e3a498b7092f5dcd53f4ef266adb94dbe7006b56eece5d5902171c4c"
+  },
+  "initial_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+  "initial_state": {
+    "active_rerun": {
+      "attempt": 2,
+      "path": "research/paper-1/finalist_rerun_v1.json",
+      "sha256": "61c591b7c54ee9b9c6ef34c752806c79cca8fdb3d488d1486285a0b8588fcbf7",
+      "status": "frozen_after_operator_interruption_before_identical_restart"
+    },
+    "analysis_result": null,
+    "candidate_results": [],
+    "control_results": [],
+    "failed_attempts": [
+      {
+        "attempt": 1,
+        "path": "results/Speck-Paper1/finalist-failed-attempt-control-pair0-v1.json",
+        "sha256": "49da6d0a50bab66d297698712caa0bba00377ce87bb0c1f097f9689ee809d356",
+        "status": "operator_interrupted_after_step_1_no_checkpoint_or_result"
+      }
+    ],
+    "next_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "status": "qualified_unexecuted",
+    "time_to_quality_target": null
+  },
+  "inputs": {
+    "automation_contract": {
+      "path": "research/paper-1/finalist_automation_v2.json",
+      "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e"
+    },
+    "launch_contract": {
+      "path": "research/paper-1/finalist_launch_v2.json",
+      "sha256": "c0c7c5acae401053e0f6fd8f0ec21083bbf83f0580a796be95abd5606305a0f1"
+    },
+    "program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256_before_qualification_registration": "f21f685e83b0560be36aec24a4f4f3570df2bac63c01fe43506d286fe17b7dc6",
+      "validation_status": "valid_hypotheses_only"
+    }
+  },
+  "live_gate": {
+    "checkpoint_absent": true,
+    "free_bytes": 5633159589888,
+    "gpu": {
+      "compute_processes": [],
+      "name": "NVIDIA GeForce RTX 3090",
+      "temperature": 45,
+      "total_mib": 24576,
+      "used_mib": 1,
+      "utilization": 0,
+      "uuid": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd"
+    },
+    "host_available_bytes": 23536611328,
+    "mount": "b64b59d1-ea2c-4206-9171-b7cd739f3eff ext4 rw,nosuid,nodev,noexec,relatime",
+    "result_absent": true
+  },
+  "paper_id": "speck-paper-1",
+  "services": {
+    "finalist_units_active": 0,
+    "helmet_download": "inactive"
+  },
+  "status": "qualified_initial_control_launch_authorized_no_promotion_authority"
+}

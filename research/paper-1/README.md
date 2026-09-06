@@ -273,6 +273,9 @@ the final combined model.
 - [`finalist_rerun_v1.json`](finalist_rerun_v1.json) freezes attempt 2 as the identical dense pair-0
   step-0 restart, lists known ineligible observations, changes no scientific field, and requires a new
   live gate without enabling automatic retry.
+- [`finalist-launch-qualified-v3.json`](../../results/Speck-Paper1/finalist-launch-qualified-v3.json)
+  requalifies the empty v2 ledger with its failed-attempt/rerun pins and passing live GPU, memory,
+  storage, output-absence, unit, and HELMET gates for the identical attempt-2 restart.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched

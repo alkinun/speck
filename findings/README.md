@@ -129,6 +129,7 @@ Read in order:
 121. [120 — Finalist v2 live launch qualification](120_finalist_live_launch_qualified.md)
 122. [121 — Finalist control 0 operator interruption](121_finalist_control0_operator_interruption.md)
 123. [122 — Identical finalist control 0 restart frozen](122_finalist_control0_rerun_frozen.md)
+124. [123 — Fresh live gate for finalist control 0 attempt 2](123_finalist_rerun_live_gate.md)
 
 Conventions:
 
@@ -693,3 +694,8 @@ Finding 122 freezes attempt 2 as an identical step-0 restart of dense pair 0. Ev
 margin, seed, order, and horizon stays fixed; attempt-1 observations are listed and ineligible. This is
 a manual preregistered recovery, not automatic retry. Training remains false until the failed attempt,
 rerun contract, and a fresh live gate are registered.
+
+Finding 123 records the fresh attempt-2 gate after recovery registration. The failed attempt and rerun
+are present in the empty ledger; all units/outputs remain absent, the GPU is idle at 45°C, host memory
+and 5.63 TB storage pass, and HELMET is inactive. The identical restart is authorized without granting
+automatic retry, branching, attribution, promotion, novelty, release, or paper-scale authority.
