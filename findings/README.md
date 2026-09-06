@@ -174,6 +174,7 @@ Read in order:
 166. [165 — Sequence research now has one acyclic activation order](165_sequence_axis_dependency_convergence.md)
 167. [166 — V4 architecture is stable, but initial FP8 simulation is superseded](166_deepseek_v4_sequence_lineage.md)
 168. [167 — Autonomous static work closes at the live finalist event boundary](167_pre_results_closure.md)
+169. [168 — Finalist chain stopped; program replaced by the flagship plan](168_finalist_stopped_flagship_plan.md)
 
 Conventions:
 
