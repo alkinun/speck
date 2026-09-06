@@ -1,0 +1,180 @@
+{
+  "format": "speck_quantile_balancing_tie_readiness",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-quantile-balancing-ties-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "discovery_observed_unseen_validation_frozen_training_blocked",
+  "frozen_at": "2026-09-06T03:52:30+00:00",
+  "purpose": "separate finite-batch cutoff-tie behavior from the no-ties QB derivation and test candidate coordinate-minimizer representatives without granting model or training authority",
+  "evidence": {
+    "CPU_reference_qualification": {
+      "path": "results/Speck-Paper1/stable-latentmoe-cpu-reference-qualified-v1.json",
+      "sha256": "d1b012a9442dbde5ee043428c83bc85555884b19f897012f821f786d5f6edf4f"
+    },
+    "CPU_reference_protocol": {
+      "path": "research/paper-1/stable_latentmoe_cpu_reference_v1.json",
+      "sha256": "43f72971373e21701e40922fa323cb9bf1ebcbaae5d3f2ad9205dbb0d45af82c"
+    },
+    "CPU_reference_implementation": {
+      "path": "speck/stable_latentmoe_reference.py",
+      "sha256": "db6046118ae3f49d695e7e5795709bb1a73f9aca2634ad04135c9106e35bbf71"
+    }
+  },
+  "finite_batch_problem": {
+    "source_assumption": "Eq. 14's exact-load statement assumes no ties at the selected expert threshold",
+    "structural_tie": "when expert j is token i's biased top-(k+1) cutoff, r_ij = alpha_i - s_ij equals current bias b_j exactly; repeated cutoff identity therefore creates repeated required-bias values even for continuous random raw scores",
+    "valid_rank_bracket": "for target q and threshold tau, count(r < tau) <= q < count(r <= tau)",
+    "actual_topk_dependency": "equal biased scores are resolved by a top-k implementation's tie behavior, so rank-bracket validity alone does not guarantee realized exact loads",
+    "gauge": "mean-centering all next biases preserves next-step top-k selection but changes their absolute position relative to discarded old cutoffs"
+  },
+  "observed_discovery": {
+    "selection_authority": false,
+    "score_distribution": "torch.float64 Uniform[0,1), with mean-centered Normal(0,0.15) initial expert bias",
+    "shapes": [
+      {
+        "tokens": 8,
+        "experts": 4,
+        "selected": 1
+      },
+      {
+        "tokens": 12,
+        "experts": 4,
+        "selected": 2
+      },
+      {
+        "tokens": 18,
+        "experts": 6,
+        "selected": 2
+      },
+      {
+        "tokens": 20,
+        "experts": 5,
+        "selected": 1
+      }
+    ],
+    "generator_seed": "200000*shape_index + seed",
+    "seeds_per_shape": "0 through 31 inclusive",
+    "cases": 128,
+    "maximum_updates": 100,
+    "cycle_identity": "all mean-centered bias coordinates rounded to 14 decimal places",
+    "results": {
+      "source_upper_endpoint": {
+        "perfect_balance_cases": 7,
+        "cycle_cases": 121,
+        "median_updates_among_passes": 2,
+        "maximum_updates_among_passes": 3
+      },
+      "interval_midpoint": {
+        "perfect_balance_cases": 128,
+        "cycle_cases": 0,
+        "median_updates_among_passes": 5,
+        "maximum_updates_among_passes": 25
+      },
+      "lower_endpoint_nextafter": {
+        "perfect_balance_cases": 115,
+        "cycle_cases": 13,
+        "median_updates_among_passes": 4,
+        "maximum_updates_among_passes": 14
+      },
+      "histogram_10": {
+        "perfect_balance_cases": 14,
+        "cycle_cases": 114
+      },
+      "histogram_100": {
+        "perfect_balance_cases": 77,
+        "cycle_cases": 51
+      },
+      "histogram_1000": {
+        "perfect_balance_cases": 125,
+        "cycle_cases": 3,
+        "median_updates_among_passes": 4,
+        "maximum_updates_among_passes": 17
+      },
+      "histogram_10000": {
+        "perfect_balance_cases": 127,
+        "cycle_cases": 1,
+        "median_updates_among_passes": 4,
+        "maximum_updates_among_passes": 14
+      }
+    },
+    "interpretation": "bin interpolation and interval-midpoint selection can break endpoint equalities on fixed scores, but this discovery set cannot select a local policy or predict changing-score training"
+  },
+  "candidate_policies": [
+    {
+      "id": "source_upper_endpoint",
+      "update": "sort required bias ascending and choose zero-index q, the (q+1)-th value, then mean-center",
+      "role": "exact source-equation control",
+      "selection_eligible": false
+    },
+    {
+      "id": "source_histogram_1000",
+      "update": "Appendix D 1,000-bin pooled interpolation, then mean-center",
+      "role": "source production-estimator control",
+      "selection_eligible": false
+    },
+    {
+      "id": "interval_midpoint",
+      "update": "midpoint of sorted required-bias entries q-1 and q for each expert, then mean-center",
+      "role": "candidate deterministic finite-batch coordinate-minimizer representative",
+      "selection_eligible": true,
+      "source_status": "local tie-handling extension, not reported as the K3 implementation"
+    },
+    {
+      "id": "histogram_10000_sensitivity",
+      "update": "Appendix D interpolation with 10,000 rather than 1,000 bins",
+      "role": "resolution sensitivity only",
+      "selection_eligible": false
+    }
+  ],
+  "unseen_validation": {
+    "frozen_before_output": true,
+    "score_distribution": "identical to discovery",
+    "shapes": "the four discovery shapes",
+    "generator_seed": "200000*shape_index + seed",
+    "seeds_per_shape": "32 through 95 inclusive",
+    "cases": 256,
+    "maximum_updates": 50,
+    "cycle_identity": "all mean-centered bias coordinates rounded to 14 decimal places",
+    "metrics": [
+      "perfect target-load cases and update count",
+      "cycle and unresolved cases",
+      "maximum and mean per-expert absolute load error before and after",
+      "rank-bracket failures",
+      "coordinate-interval violations before mean centering",
+      "maximum absolute centered bias",
+      "route churn between updates"
+    ],
+    "candidate_gate": {
+      "policy": "interval_midpoint",
+      "perfect_balance_cases_required": 256,
+      "cycles_allowed": 0,
+      "unresolved_at_50_allowed": 0,
+      "rank_bracket_failures_allowed": 0,
+      "coordinate_interval_violations_allowed": 0,
+      "nonfinite_values_allowed": 0,
+      "scope_if_passed": "preferred fixed-score float64 CPU tie-safe reference only"
+    },
+    "controls_have_no_pass_requirement": true,
+    "failed_candidate_disposition": "retain source controls and leave tie policy unqualified"
+  },
+  "required_future_training_gate": {
+    "hardware_topk_tie_semantics_frozen": false,
+    "changing_score_and_optimizer_interaction_measured": false,
+    "distributed_partition_parity_measured": false,
+    "quality_and_specialization_effect_measured": false,
+    "load_tail_and_route_churn_effect_measured": false,
+    "histogram_precision_and_communication_measured": false,
+    "source_upper_histogram_and_midpoint_arms_required": true,
+    "decision": "a fixed-score CPU pass cannot choose a training policy"
+  },
+  "boundary": {
+    "active_architecture_or_model_code_changed": false,
+    "active_experiment_program_changed": false,
+    "active_result_checkpoint_service_GPU_or_runtime_accessed": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "implement the frozen standalone simulator and run the unseen 256-case validation once from a clean revision"
+  }
+}
