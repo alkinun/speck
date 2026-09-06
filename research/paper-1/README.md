@@ -373,6 +373,7 @@ promotion infrastructure. It does **not** yet have:
 - a production serving runtime.
 
 Accordingly, the paper has completed its **matched proxy quality screen**, finalist config
-materialization, and data/storage, collector/analysis, and exact-runtime qualification. Release-suite
-and launch authority remain. It has not entered architecture-promotion, finalist execution,
+materialization, and data/storage, crossed-factor collector/analysis v2, and exact-runtime
+qualification. V1 pooled inference is superseded. HELMET acquisition is active and v2 live-launch
+authority remains absent. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.
