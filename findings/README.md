@@ -139,6 +139,7 @@ Read in order:
 131. [130 — Crossed-factor audit of every finalist analysis view](130_finalist_crossed_views_audit.md)
 132. [131 — Finalist systems-measurement and temporal-confounding boundary](131_finalist_systems_measurement_boundary.md)
 133. [132 — Finalist finiteness and complete-source boundary](132_finalist_source_stability_boundary.md)
+134. [133 — Append-only finalist result-acceptance gate](133_finalist_result_acceptance_gate.md)
 
 Conventions:
 

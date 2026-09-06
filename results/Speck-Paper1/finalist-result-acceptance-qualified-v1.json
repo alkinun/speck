@@ -1,0 +1,107 @@
+{
+  "format": "speck_paper_finalist_result_acceptance_qualification",
+  "format_version": 1,
+  "status": "qualified_before_first_accepted_result_append_only_not_wired",
+  "created_at": "2026-09-06T01:36:49+00:00",
+  "scope": "offline accepted-result ledger, source-coverage, and transition verification; no service state, training log, checkpoint payload, unaccepted output, GPU, or intermediate metric accessed",
+  "inputs": {
+    "automation": {
+      "path": "research/paper-1/finalist_automation_v2.json",
+      "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e"
+    },
+    "transition_audit": {
+      "path": "results/Speck-Paper1/finalist-automation-transition-audit-v1.json",
+      "sha256": "d8e26518dd0af844fdbf80200aa773aa053f6bc6f308c1d101f701a0f20c090d"
+    },
+    "crossed_views_audit": {
+      "path": "results/Speck-Paper1/finalist-crossed-views-audit-v1.json",
+      "sha256": "1c02535a549c1f021a5cee5a1f749ec9a1f894290a751f405c5c22cf25e740c6"
+    },
+    "systems_audit": {
+      "path": "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
+      "sha256": "19278c3af7d161735c136dadf0d8c2b573e819dc2245a01b4dd277a7d638eabe"
+    },
+    "source_stability_audit": {
+      "path": "results/Speck-Paper1/finalist-source-stability-audit-v1.json",
+      "sha256": "444858a4046246abe6fdcb3e083560144ae63d70e79102019f9c3b1f03e7f883"
+    }
+  },
+  "implementation": {
+    "verifier": {
+      "path": "scripts/paper_finalist_result_acceptance_validate.py",
+      "sha256": "c782bea97aaa2f1cd0a32c2ffbb4510fefe58240a22b730367bb44df3f8360b6"
+    },
+    "source_sidecar": {
+      "path": "scripts/paper_finalist_source_coverage_validate.py",
+      "sha256": "9652427830fcf32d1426d7b87325c138f58e7f86ac2ccf06f0d0c574b523ec1e"
+    }
+  },
+  "checks_per_accepted_result": [
+    "program reference path, SHA-256, status, pair, arm, and frozen order",
+    "qualified v2 result identity, token total, cadence, and zero-permitted-nonfinite invariant",
+    "exact finite 11-source dictionary at all five validation points",
+    "matching v2 transition completed run and result path/hash",
+    "frozen automation contract SHA-256",
+    "no polling, quality branching, or automatic retry transition flags",
+    "exact successor edge from the 12-cell order"
+  ],
+  "checks_per_ledger": [
+    "control-first result prefix and bounded six-plus-six counts",
+    "target absent before six controls and pinned afterward",
+    "analysis absent before six candidates and pinned afterward",
+    "program status and next_run agree with accepted-result count",
+    "latest transition next_run agrees with the program",
+    "transition inventory equals accepted result inventory",
+    "interrupted attempt and identical rerun history remain present"
+  ],
+  "empty_state_qualification": {
+    "accepted_results": 0,
+    "controls": 0,
+    "candidates": 0,
+    "target_locked": false,
+    "analysis_complete": false,
+    "next_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "complete_source_coverage": true,
+    "status": "valid"
+  },
+  "adversarial_tests": {
+    "valid_one_control": true,
+    "reference_hash_drift_rejected": true,
+    "transition_edge_drift_rejected": true,
+    "incomplete_source_set_rejected": true,
+    "lost_failure_history_rejected": true,
+    "tests": 6
+  },
+  "failure_policy": {
+    "interpretation_authorized_after_failure": false,
+    "source_imputation_authorized": false,
+    "reference_rewrite_authorized": false,
+    "transition_rewrite_authorized": false,
+    "automatic_retry_authorized": false,
+    "required_action": "retain the committed evidence, stop interpretation, and diagnose the exact failed invariant without altering scientific thresholds or accepted bytes"
+  },
+  "decision": {
+    "acceptance_verifier_qualified": true,
+    "empty_ledger_qualified": true,
+    "must_run_after_every_automatic_result_commit": true,
+    "must_pass_before_result_interpretation_or_linear_completion": true,
+    "wired_into_frozen_automation": false,
+    "active_runner_or_program_modified": false,
+    "training_launch_authority_changed": false,
+    "next_action": "after each final-summary transition, run the verifier against the committed program before interpreting or reporting the result; leave the v2 runner byte-identical"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_result_acceptance.py -q",
+    "expected": "6 passed",
+    "live_empty_ledger_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_finalist_result_acceptance_validate",
+    "live_empty_ledger_result": "valid with 0 accepted results and control pair 0 next",
+    "service_polled": false
+  },
+  "non_claims": [
+    "the acceptance verifier is part of the frozen automatic finalizer",
+    "an empty-ledger check validates a future model result",
+    "passing core result hashes substitutes for complete source coverage",
+    "the sidecar authorizes result rewriting, retry, skipping, branching, or promotion",
+    "this qualification accesses training progress"
+  ]
+}

@@ -349,6 +349,10 @@ the final combined model.
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
   expected source and finite source loss before any collected result is interpreted.
+- [`finalist-result-acceptance-qualified-v1.json`](../../results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json)
+  qualifies one post-event verifier for program/result/source/transition/target/analysis consistency.
+  It passes the empty ledger and must pass after every automatic commit before interpretation or Linear
+  completion; it intentionally remains outside the hash-frozen finalizer.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -427,6 +431,9 @@ Training non-finiteness already stops before a final event, but complete source 
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,
 never imputation or silent deletion.
+The result-acceptance verifier composes those gates after each event: it binds every accepted result to
+the program and transition, checks complete source coverage, validates the exact successor edge, and
+preserves the failed-attempt/rerun history. Failure blocks interpretation without rewriting evidence.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
