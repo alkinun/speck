@@ -1,0 +1,208 @@
+{
+  "format": "speck_stable_latentmoe_CPU_reference_protocol",
+  "format_version": 1,
+  "protocol_id": "speck-paper-1-stable-latentmoe-CPU-reference-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_after_source_gate_before_qualification",
+  "frozen_at": "2026-09-06T03:46:49+00:00",
+  "purpose": "independently qualify four tiny-dimension CPU equation oracles without composing them into a trainable MoE or touching active model paths",
+  "authority": {
+    "readiness_v2": {
+      "path": "research/paper-1/stable_latentmoe_readiness_v2.json",
+      "sha256": "7e9d1bd3b14c1ee4a64fc4853a6720fc0183ae2b5581901ca7e0a537fcdaf56a"
+    },
+    "readiness_qualification": {
+      "path": "results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json",
+      "sha256": "036e164334c013555099f5d138d83cc3f065922004471d607c74be01d8e23390"
+    },
+    "primary_source_audit": {
+      "path": "results/Speck-Paper1/kimi-k3-primary-source-audit-v1.json",
+      "sha256": "6a6ab0eb61893f43bf5ecab797108d94a56d1e0207b0bf2181661ef487cda1c4"
+    }
+  },
+  "implementation": {
+    "path": "speck/stable_latentmoe_reference.py",
+    "sha256": "db6046118ae3f49d695e7e5795709bb1a73f9aca2634ad04135c9106e35bbf71",
+    "imported_by_active_model": false,
+    "device_scope": "CPU only",
+    "optimization_scope": "none; dense explicit oracles only"
+  },
+  "unit_tests": {
+    "path": "tests/test_stable_latentmoe_reference.py",
+    "sha256": "71ecab7664b4bbf6b61ddc1dca87b2effa68605adde5f58f7f591d46a45c17ad",
+    "count": 14
+  },
+  "primitives": {
+    "SiTU_GLU": {
+      "source_equation": 12,
+      "default_gate_beta": 4,
+      "default_up_beta": 25,
+      "checks": [
+        "exact direct-formula parity",
+        "absolute coordinate bound beta_1*beta_2",
+        "first-order SwiGLU agreement near zero",
+        "pointwise SwiGLU limit as both betas increase",
+        "finite input gradients on negative, origin, moderate, and saturated regions"
+      ]
+    },
+    "normalized_LatentMoE": {
+      "source_equation": 11,
+      "checks": [
+        "one shared down-projection before every routed expert",
+        "selected raw-weighted routed aggregate",
+        "one RMSNorm after aggregation and before the shared up-projection",
+        "full-width shared-expert sum",
+        "manual forward parity and finite input/projection/expert/norm gradients",
+        "route uniqueness, conservation, non-negativity, and shape rejection"
+      ],
+      "expert_network_scope": "callable shape-preserving functions; expert internals are deliberately outside Eq. 11 qualification"
+    },
+    "exact_Quantile_Balancing": {
+      "source_equations": [
+        13,
+        14
+      ],
+      "checks": [
+        "bias affects top-k selection but not selected mixture weights",
+        "stable lower-index tie breaking is explicit local reference policy",
+        "top-(k+1) biased cutoff",
+        "required bias r_ij equals cutoff_i minus raw score_ij",
+        "uncentered update is the zero-index q order statistic, equivalently the (q+1)-th smallest required bias",
+        "exactly q required biases are strictly below the update when margins have no ties",
+        "mean-centered returned bias",
+        "common old-bias offset invariance",
+        "integral target load required by the exact finite-batch oracle"
+      ],
+      "causality": "the function returns a next-step bias and never reroutes its input batch with that bias"
+    },
+    "histogram_Quantile_Balancing": {
+      "source_appendix": "D",
+      "source_bins": 1000,
+      "checks": [
+        "adaptive [b_min-1,b_max+1] range and width",
+        "int64 per-expert counts",
+        "exact count additivity across arbitrary microbatch and rank partitions",
+        "first cumulative bin reaching ceil(m*k/n)",
+        "source within-bin interpolation formula",
+        "mean-centered returned bias",
+        "estimate lies within one bin width of the valid empirical quantile interval",
+        "pooled estimate is used rather than averaging shard quantiles"
+      ],
+      "finite_sample_convention": "exact Eq. 14 chooses the upper endpoint of the load-q empirical threshold interval; histogram interpolation may choose another valid point in or within one bin of that interval, so representative equality is not required",
+      "EMA_included": false
+    }
+  },
+  "qualification_matrix": {
+    "dtype": "torch.float64",
+    "SiTU": {
+      "scalar_grid_min": -200,
+      "scalar_grid_max": 200,
+      "scalar_grid_points": 401,
+      "beta_pairs": [
+        [
+          4,
+          25
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          8,
+          32
+        ]
+      ],
+      "small_scale": 1e-05,
+      "large_beta": 100000000.0,
+      "random_seeds": 32
+    },
+    "normalized_LatentMoE": {
+      "random_seeds": 32,
+      "token_counts": [
+        1,
+        2,
+        5
+      ],
+      "full_widths": [
+        2,
+        4
+      ],
+      "latent_widths": [
+        1,
+        3
+      ],
+      "routed_expert_counts": [
+        2,
+        4
+      ],
+      "selected_expert_counts": [
+        1,
+        2
+      ],
+      "shared_expert_counts": [
+        1,
+        2
+      ],
+      "forward_absolute_tolerance": 1e-12,
+      "gradient_finite_required": true
+    },
+    "Quantile_Balancing": {
+      "random_seeds_per_shape": 32,
+      "shapes": [
+        {
+          "tokens": 8,
+          "experts": 4,
+          "selected": 1
+        },
+        {
+          "tokens": 12,
+          "experts": 4,
+          "selected": 2
+        },
+        {
+          "tokens": 18,
+          "experts": 6,
+          "selected": 2
+        },
+        {
+          "tokens": 20,
+          "experts": 5,
+          "selected": 1
+        }
+      ],
+      "histogram_bins": [
+        10,
+        100,
+        1000
+      ],
+      "partition_patterns": [
+        "one global batch",
+        "one token per shard",
+        "three uneven contiguous shards"
+      ],
+      "required_production_fidelity_bins": 1000
+    }
+  },
+  "pass_rule": {
+    "all_unit_tests_pass": true,
+    "all_matrix_cases_pass": true,
+    "no_nonfinite_forward_or_gradient": true,
+    "maximum_manual_forward_error_at_most": 1e-12,
+    "maximum_histogram_interval_error_in_bin_widths_at_most": 1.0,
+    "partition_count_mismatches": 0,
+    "source_1000_bin_cases_must_pass": true,
+    "partial_primitive_pass_does_not_qualify_composition": true
+  },
+  "boundary": {
+    "architecture_or_model_code_changed": false,
+    "active_experiment_program_changed": false,
+    "active_result_checkpoint_service_GPU_or_runtime_accessed": false,
+    "conventional_MoE_qualified": false,
+    "primitive_composition_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "run the frozen exhaustive CPU qualifier from a clean revision; only a complete pass may qualify the four isolated primitives"
+  }
+}
