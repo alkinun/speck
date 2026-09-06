@@ -131,6 +131,7 @@ Read in order:
 123. [122 — Identical finalist control 0 restart frozen](122_finalist_control0_rerun_frozen.md)
 124. [123 — Fresh live gate for finalist control 0 attempt 2](123_finalist_rerun_live_gate.md)
 125. [124 — HELMET archive-local rights and provenance audit](124_helmet_archive_local_rights_audit.md)
+126. [125 — HELMET synthetic-recall reconstruction boundary](125_helmet_synthetic_reconstruction_readiness.md)
 
 Conventions:
 

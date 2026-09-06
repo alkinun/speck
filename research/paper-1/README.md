@@ -317,6 +317,10 @@ the final combined model.
   accounts for all 52 local paths as RULER 15, JSON-KV 5, KILT RAG 24, MS MARCO 6, and ALCE 2.
   Zero families qualify for extraction because exact derivation/attribution is absent and component
   terms remain mixed or restricted. This append-only result does not modify the frozen v2 manifest.
+- [`helmet-synthetic-reconstruction-readiness.json`](../../results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json)
+  proves that Speck-tokenized RULER cases cannot substitute for HELMET's Llama-2-tokenized cases and
+  that the paper's JSON-KV concept omits the exact generator, seeds, schema, sampling unit, and hashes.
+  Neither path can currently produce an official HELMET result; no substitute is activated.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -365,6 +369,10 @@ content. None is extraction-qualified: permissive code licenses do not establish
 chain, and MS MARCO adds an explicit noncommercial/acceptance boundary. The active v2 evaluation
 manifest remains byte-identical; any future subset or clean-room regeneration requires a pre-results
 successor rather than an in-place edit.
+The synthetic-reconstruction audit also rejects a tempting shortcut: the existing RULER cases use a
+different generation tokenizer from HELMET, and the cited JSON-KV ancestor is structurally different
+from HELMET's undocumented six-depth variant. A clean-room diagnostic would need a separate name and
+cannot discharge the official-suite gate.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination

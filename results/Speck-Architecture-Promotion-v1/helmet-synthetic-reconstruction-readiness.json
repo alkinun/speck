@@ -1,0 +1,206 @@
+{
+  "format": "speck_helmet_synthetic_reconstruction_readiness",
+  "format_version": 1,
+  "status": "source_paths_audited_exact_reconstruction_and_helmet_substitution_blocked",
+  "created_at": "2026-09-06T00:57:08+00:00",
+  "scope": "metadata-only reconstruction-readiness decision for HELMET's three RULER NIAH tasks and JSON-KV task; no archive payload read, no dataset generation, and no model execution",
+  "inputs": {
+    "archive_local_rights_audit": {
+      "path": "results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json",
+      "sha256": "c7fd9daacafcf726809d6cead6649be4b21527129135c25b13cd500f65a9acf2"
+    },
+    "helmet_source": {
+      "repository": "https://github.com/princeton-nlp/HELMET",
+      "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+      "readme_sha256": "7f65d7f593f1cce2a24fb394298705c94ee5c2392bcbcd09a3a109ffd36bed1b",
+      "data_loader_sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348",
+      "config_generator_sha256": "3b424eaf9a857f90ecf717074a9556375e1564f48b51a5c40ad89e9ad49882de",
+      "recall_config_sha256": "98b7f40da75ce06796c77fb95c37c3db191628676028ab3b29704b47dca48dce",
+      "recall_short_config_sha256": "438fa82ed1279bf28c82d2f7cf88333d760aa49ce0227e43210002fc4d555367"
+    },
+    "helmet_paper": {
+      "id": "arXiv:2410.02694v3",
+      "url": "https://arxiv.org/abs/2410.02694v3",
+      "published_at": "2024-10-03T17:20:11+00:00",
+      "updated_at": "2025-03-06T18:41:54+00:00",
+      "eprint_tar_sha256": "13f6b2e82f5619a581f05f8a7508a9b7f836887130a0a17f242b5586ffe9dbd9",
+      "dataset_tex_sha256": "e8a595f04f41302b8b3cfd7ee538ff05ed302ad1b8b64a624de38790f2ea07b2",
+      "appendix_tex_sha256": "5dcb27037b68251c2fe29b763147be57ce03808f9da469f36e9c6531ebe23b3b",
+      "authoritative_statements": [
+        "RULER data were generated with the original authors' scripts and the Llama-2 tokenizer",
+        "JSON-KV consists of a JSON dictionary with randomly generated UUID keys and values",
+        "six queries are constructed for each dictionary at six evenly spaced positions",
+        "the paper reports 600 evaluated JSON-KV examples and 100 examples for the remaining synthetic datasets",
+        "HELMET treats RULER as zero-shot while other non-ICL categories receive two demonstrations"
+      ]
+    },
+    "ruler_generator": {
+      "repository": "https://github.com/NVIDIA/RULER",
+      "revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+      "license": "Apache-2.0",
+      "license_sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "niah_sha256": "e9cada0a7660d274fe73a1338a90a7087e17b630169f1aaf14a8d3221c6805b5",
+      "constants_sha256": "6296e901d495ec6200dc3f68993ea13d8282e3c0dbe1a8c47967f111105d1fde",
+      "synthetic_config_sha256": "34bc71dcacdc41a829a170f04b528fbf48d62c616338005ab4991680fbf8cb0b"
+    },
+    "lost_in_the_middle": {
+      "repository": "https://github.com/nelson-liu/lost-in-the-middle",
+      "revision": "29b8a6d042ce29abccee3db1a73171a107d7e6af",
+      "license": "MIT",
+      "license_sha256": "972d3ea8cab53ed57cf52c1ff0f93c2d0616590a75d69eda5fbd65b836c9b896",
+      "readme_sha256": "152bea0f333ea8c3c9872e420a7b5bcf9c51d0e2920cffe01f04259cd952cb25",
+      "generator_sha256": "c62dacc7558170776596b806c3de741318d188b1630a41e7ec565f9dcfa7d415",
+      "prompt_sha256": "62a513f9d0e039c3a3783d1f946e18ffdb8c549d7ccd6f4f4c0b01bddee3e450"
+    }
+  },
+  "helmet_recall_contract": {
+    "lengths": [8192, 16384, 32768, 65536, 131072],
+    "ruler_tasks": ["niah_multikey_2", "niah_multikey_3", "niah_multivalue"],
+    "json_kv_num_kvs_by_length": {
+      "8192": 105,
+      "16384": 220,
+      "32768": 440,
+      "65536": 900,
+      "131072": 1800
+    },
+    "max_test_samples_per_config_entry": 100,
+    "shots_config_value": 2,
+    "ruler_shots_applied_by_loader": 0,
+    "json_kv_shots_applied_by_loader": 2,
+    "use_chat_template": false,
+    "stop_new_line": false,
+    "configured_model_tokenizer_reference": "meta-llama/Llama-3.1-8B-Instruct",
+    "paper_generation_tokenizer_reference": "meta-llama/Llama-2-7b-hf"
+  },
+  "existing_ruler_evidence": {
+    "suite": "rulerv1-ns",
+    "generator_revision": "c3f5e3b4f87f97e048793bb510a3a6b19a46bf3a",
+    "random_seed": 42,
+    "samples_per_task_length": 100,
+    "tokenizer_identity_sha256": "08685c3046fec1e9c918cf57b281f4779dbfc55b5443682e95e4b4b4a6ddaa90",
+    "tokenizer_identity": "Speck2-140M-Instruct endpoint tokenizer, not the paper-declared Llama-2 generation tokenizer",
+    "task_length_cells": 15,
+    "cases": 1500,
+    "qualifications": [
+      {
+        "length": 8192,
+        "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-8192-qualified.json",
+        "report_sha256": "9f025b2ed9f079f25adda7e7d0ee0963b605eacb420cd2ca5ec53cfb30b34948",
+        "task_sha256": {
+          "niah_multikey_2": "4705295f7d0c2324ff84b72f1488803963930b0d07aaf5cac0fa689e2f7c00c3",
+          "niah_multikey_3": "c08b892725377418756cc6cbf10ede649a99af7e324c5392d7f34f8fed8856d0",
+          "niah_multivalue": "05519abe54b23a5c1f8fca7629a8419eecc2659062f089efba67fb24c7774be0"
+        }
+      },
+      {
+        "length": 16384,
+        "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-16384-qualified.json",
+        "report_sha256": "b668ec71b046c7f7f3b695e8b0e8349bbc909205b626612ea5905ceaaa85ec03",
+        "task_sha256": {
+          "niah_multikey_2": "6461332960f4911009274b97d89760cb761b6a88c01509204b12b180c4b65b31",
+          "niah_multikey_3": "bda80876f81467d098d9cb093550dd62ecb45ccc8faead42b789b3ed8699c06a",
+          "niah_multivalue": "dfe494e326d323f47d3548aad6e6a54e3e1cbac539e6caae066245169283832c"
+        }
+      },
+      {
+        "length": 32768,
+        "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-32768-qualified.json",
+        "report_sha256": "2e06cbf3175f28cb95bc2d4a317e6999abe7eeb798bf5967f50cbcc2dc198087",
+        "task_sha256": {
+          "niah_multikey_2": "a427da1a65b812d34b941374038f121010bf299c77ed5c1fdc966be12f1702ff",
+          "niah_multikey_3": "d2598a9196cf8709b8592a6b70a2c6fb8da52ba88a2f43a9cfc56cda39914deb",
+          "niah_multivalue": "ea2f16d82826a1e36d3d545dd57ba116cdbc90ee499ae4847313211fb21891ab"
+        }
+      },
+      {
+        "length": 65536,
+        "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-65536-qualified.json",
+        "report_sha256": "74775cb9a0c60dd3478bce88fb9ebc994a87af92f38d5085e6497608104d91ac",
+        "task_sha256": {
+          "niah_multikey_2": "65c38e7db62bf7dfe32ab809089c0337b4f1c0840e3fa63d65e2c572303c09d6",
+          "niah_multikey_3": "6ac7ed82efbb26f1723aacc356ca388d27d7a5f355c4229ba22f2791dc87d0f1",
+          "niah_multivalue": "743614011e3614539afe0afb0783a51dd411a18df172e5046820aa7043d38b41"
+        }
+      },
+      {
+        "length": 131072,
+        "report": "results/Speck-Architecture-Promotion-v1/ruler-cases-131072-qualified.json",
+        "report_sha256": "f6553b7b2d2b427fe6a1c58009ebaa2311eecf5caa6461a7def35c63b31f82b9",
+        "task_sha256": {
+          "niah_multikey_2": "3c7054e2561fba64e227432dcd935f13b888935140bdf4b562da00386f675b98",
+          "niah_multikey_3": "8f7fdd3a78a4964eb8a936d2b035b4c0dee887b21090cbacb77f552fbc93f7a5",
+          "niah_multivalue": "4396917204822b8ba212f503a82eec6531956fc86e08262555f0591fa3b7ec01"
+        }
+      }
+    ],
+    "decision": {
+      "source_and_current_case_generation_qualified": true,
+      "helmet_generation_tokenizer_matches": false,
+      "helmet_generator_revision_proven": false,
+      "helmet_archive_byte_parity_proven": false,
+      "may_be_reported_as_official_helmet": false,
+      "retained_use": "independent RULER v2 evidence only"
+    }
+  },
+  "json_kv_analysis": {
+    "paper_specified": [
+      "random UUIDs are used as keys and values",
+      "six query positions are evenly spaced through each context",
+      "the task is similar to Lost in the Middle rather than declared byte-identical to it"
+    ],
+    "helmet_code_specified": [
+      "five active files map 105, 220, 440, 900, and 1800 key-value counts to 8K through 128K",
+      "two demonstrations are consumed from each row",
+      "the loader expects context, question, answer, demos, and num_kvs semantics",
+      "the prompt is adapted from Lost in the Middle"
+    ],
+    "lost_in_the_middle_generator": {
+      "released_key_counts": [75, 140, 300],
+      "released_examples_per_key_count": 500,
+      "queries_per_dictionary": 1,
+      "schema": ["ordered_kv_records", "key", "value"],
+      "uses_uuid4": true,
+      "uses_seeded_uuid_generation": false,
+      "uses_seeded_gold_selection": false
+    },
+    "missing_exact_specification": [
+      "HELMET generator source and revision",
+      "random and UUID seed semantics",
+      "dictionary serialization and whitespace",
+      "six-depth placement and row-expansion algorithm",
+      "demonstration generation and exclusion rules",
+      "tokenizer and length-fitting algorithm",
+      "per-file row count and the reconciliation of config max_test_samples=100 with the paper's 600 evaluated examples",
+      "exact output schema and file hashes"
+    ],
+    "decision": {
+      "concept_reconstructable": true,
+      "exact_helmet_semantics_reconstructable": false,
+      "exact_helmet_bytes_reconstructable": false,
+      "may_be_reported_as_official_helmet": false,
+      "clean_room_variant_would_require_new_name_and_manifest": true
+    }
+  },
+  "decision": {
+    "archive_extraction_authorized": false,
+    "official_helmet_recall_reconstruction_qualified": false,
+    "existing_ruler_cases_substitute_for_helmet": false,
+    "json_kv_implementation_authorized_as_helmet": false,
+    "candidate_execution_authorized": false,
+    "evaluation_manifest_changed": false,
+    "priority": "do not spend experiment budget on a substitute that cannot satisfy the HELMET release gate",
+    "required_next": [
+      "obtain the exact HELMET RULER generator revision, Llama-2 tokenizer authority and identity, generation commands, seeds, and output hashes",
+      "obtain the exact HELMET JSON-KV generator, seed semantics, schema, per-file row counts, and 100-versus-600 sampling explanation",
+      "or define a separately named clean-room diagnostic that is explicitly not HELMET and does not replace its release gate",
+      "retain the already-qualified Speck-tokenized cases solely as independent RULER evidence"
+    ]
+  },
+  "non_claims": [
+    "matching task names imply matching generated cases",
+    "using the same RULER repository makes different tokenizer-generated cases equivalent",
+    "a conceptual JSON-KV description is an exact executable specification",
+    "a clean-room diagnostic can be relabeled as official HELMET",
+    "this audit changes the frozen evaluation manifest or finalist experiment"
+  ]
+}
