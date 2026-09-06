@@ -146,6 +146,7 @@ Read in order:
 138. [137 — Exact append-only Git provenance for every finalist event](137_finalist_append_only_git_provenance.md)
 139. [138 — Post-language systems protocol frozen before finalist results](138_finalist_systems_protocol_frozen.md)
 140. [139 — Fail-closed systems analysis qualified offline](139_finalist_systems_analysis_qualified.md)
+141. [140 — Conservative systems telemetry integration qualified synthetically](140_finalist_systems_telemetry_integrator.md)
 
 Conventions:
 

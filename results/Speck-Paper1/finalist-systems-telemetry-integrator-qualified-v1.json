@@ -1,0 +1,119 @@
+{
+  "format": "speck_paper_finalist_systems_telemetry_integrator_qualification",
+  "format_version": 1,
+  "status": "qualified_synthetic_schema_and_energy_integration_live_sampler_blocked",
+  "created_at": "2026-09-06T02:09:38+00:00",
+  "scope": "pure CPU validation and integration of synthetic telemetry traces; no nvidia-smi or NVML acquisition, live GPU, service, checkpoint, model, result, log, intermediate metric, or runtime mutation",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "protocol_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-protocol-qualified-v1.json",
+      "sha256": "51913d09296fdcdc7acffc9dd5054b9618938f4dd501d4ba9b21af5229593d73"
+    },
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-analysis-qualified-v1.json",
+      "sha256": "4f1bd86b426c5ab2932fa102834beb25e331ba8cf051e37db1e130fc151b5c48"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_telemetry.py",
+      "sha256": "7c4a35a66fd716d23fd1899459a8dbe1425168792a82b4aa1de68d7adffd9e65"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_energy_integrate.py",
+      "sha256": "6ce54c59f55221a5d00e82abddaebba14fe598289bfa648481e417b955b99f31"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_telemetry.py",
+      "sha256": "4ebf5deb87f2ab8cb47aaf6a0a881567847c0780e1d0aaa3db1a2252d5ceebd5"
+    }
+  },
+  "sample_schema": {
+    "strict_monotonic_ns": true,
+    "strict_timezone_aware_UTC": true,
+    "exact_GPU_UUID": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd",
+    "finite_nonnegative_GPU_fields": true,
+    "power_not_above_recorded_limit": true,
+    "temperature_utilization_and_fan_physical_bounds": true,
+    "clock_power_thermal_pstate_utilization_fan_throttle_required": true,
+    "host_CPU_load_memory_and_disk_required": true,
+    "display_GPU_process_and_benchmark_PID_inventory_required": true,
+    "at_least_two_samples": true
+  },
+  "interval_contract": {
+    "all_eight_protocol_phase_markers_required": true,
+    "phase_timestamps_nondecreasing": true,
+    "warmup_end_equals_measured_start": true,
+    "measured_markers_equal_energy_boundaries": true,
+    "process_bracketed_by_idle_intervals": true,
+    "pre_idle_seconds": 120,
+    "post_idle_seconds": 120,
+    "sample_before_or_at_and_after_or_at_every_boundary": true,
+    "sampling_hz": 1
+  },
+  "energy_integration": {
+    "point_estimate": "trapezoidal board-power integral",
+    "nominal_observed_duration_per_gap_seconds": 1,
+    "missing_duration": "gap duration beyond one nominal sampling period",
+    "missing_lower_power_watts": 0,
+    "missing_upper_power": "maximum recorded power limit spanning the gap",
+    "coverage": "one minus missing duration divided by interval duration",
+    "minimum_qualified_coverage": 0.99,
+    "maximum_qualified_gap_seconds": 2.5,
+    "idle_baseline": "duration-weighted union of flanking pre/post idle energy",
+    "incremental_lower": "gross lower minus elapsed times idle upper",
+    "incremental_estimate": "gross estimate minus elapsed times idle estimate",
+    "incremental_upper": "gross upper minus elapsed times idle lower",
+    "all_bounds_ordered_on_qualified_fixture": true
+  },
+  "adversarial_tests": {
+    "complete_trace_exact_energy_passes": true,
+    "missing_sample_expands_bounds_and_fails_coverage": true,
+    "nonmonotonic_monotonic_clock_rejected": true,
+    "nonmonotonic_UTC_rejected": true,
+    "wrong_GPU_UUID_rejected": true,
+    "power_above_limit_rejected": true,
+    "unbracketed_boundary_rejected": true,
+    "trace_protocol_hash_drift_rejected": true,
+    "missing_phase_marker_rejected": true,
+    "changed_idle_duration_rejected": true,
+    "tests": 10
+  },
+  "decision": {
+    "telemetry_schema_qualified": true,
+    "conservative_energy_integrator_qualified": true,
+    "integration_output_matches_analysis_input_fields": true,
+    "live_nvidia_smi_or_NVML_sampler_qualified": false,
+    "checkpoint_workload_harness_qualified": false,
+    "execution_authorized": false,
+    "protocol_or_analysis_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "implement a separately testable 1 Hz acquisition process and non-persisting checkpoint workload harness; use mocked command output until the active language sequence and GPU gate are complete"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_telemetry.py -q",
+    "expected": "10 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_telemetry_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "32 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "168 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_acquisition_invoked": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the live RTX 3090 telemetry fields have been acquired or qualified",
+    "synthetic power traces are measured energy",
+    "GPU-board energy is whole-system energy",
+    "the checkpoint workload harness is implemented",
+    "the systems protocol may execute now",
+    "this component changes the active language experiment"
+  ]
+}
