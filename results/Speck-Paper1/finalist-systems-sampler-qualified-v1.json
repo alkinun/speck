@@ -1,0 +1,120 @@
+{
+  "format": "speck_paper_finalist_systems_sampler_qualification",
+  "format_version": 1,
+  "status": "qualified_mock_acquisition_live_field_support_blocked",
+  "created_at": "2026-09-06T02:14:51+00:00",
+  "scope": "mocked nvidia-smi acquisition plus synthetic procfs and diskstats parsing only; no live nvidia-smi command, GPU, service, checkpoint, model, result, log, intermediate metric, or runtime mutation",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "telemetry_integrator_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-telemetry-integrator-qualified-v1.json",
+      "sha256": "2c386bbe53fd6c368938283051df8080323262a50a05b3d7b438a8bd2210a1ca"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_sampler.py",
+      "sha256": "c18f0d90599851a35ff46808a2f32c8f94924547501996fe477074a56c03c855"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_telemetry_sample.py",
+      "sha256": "7d2d4cf88148cc9bca528738fff624e880b43581f9111616b7fb5dd0dfcdc189"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_sampler.py",
+      "sha256": "5cc739cf3c34df971b2704f5f9874fbf4dae1ec5d602032025dd082d3b19fe1d"
+    }
+  },
+  "GPU_query": {
+    "format": "csv,noheader,nounits",
+    "exactly_one_GPU_row": true,
+    "fields": [
+      "uuid",
+      "power.draw",
+      "temperature.gpu",
+      "clocks.current.graphics",
+      "clocks.current.memory",
+      "power.limit",
+      "pstate",
+      "utilization.gpu",
+      "utilization.memory",
+      "fan.speed",
+      "clocks_throttle_reasons.active",
+      "display_active"
+    ],
+    "unsupported_numeric_field_fails": true,
+    "compute_process_query": "pid,gpu_uuid",
+    "processes_filtered_to_exact_GPU_UUID": true,
+    "duplicate_process_PIDs_removed": true
+  },
+  "host_query": {
+    "aggregate_CPU_delta_utilization": true,
+    "load_average_1m": true,
+    "MemAvailable_bytes": true,
+    "diskstats_sector_bytes": 512,
+    "disk_devices_must_be_explicit": true,
+    "all_selected_disk_devices_must_be_present": true,
+    "automatic_all_device_aggregation": false,
+    "reason": "automatic aggregation can double-count device-mapper and backing-device IO; the future live gate must resolve and record exact backing device names"
+  },
+  "sampling": {
+    "frequency_hz": 1,
+    "minimum_samples": 2,
+    "deadline_based_sleep_avoids_query_time_drift": true,
+    "overrun_retained_in_monotonic_timestamps": true,
+    "exact_GPU_UUID_schema_validation_after_series": true,
+    "protocol_SHA256_serialized": true,
+    "explicit_disk_devices_serialized": true,
+    "benchmark_PID_set_serialized_per_sample": true
+  },
+  "adversarial_tests": {
+    "exact_GPU_vector_parses": true,
+    "unsupported_numeric_field_rejected": true,
+    "process_filter_and_deduplication_pass": true,
+    "host_counter_parsers_pass": true,
+    "missing_explicit_disk_device_rejected": true,
+    "mocked_composed_sample_passes": true,
+    "deadline_based_series_passes_schema": true,
+    "non_1_Hz_frequency_rejected": true,
+    "serialized_series_binds_protocol_and_deduplicated_devices": true,
+    "tests": 9
+  },
+  "decision": {
+    "mock_GPU_and_host_acquisition_implementation_qualified": true,
+    "deadline_based_1_Hz_series_qualified": true,
+    "live_GPU_field_availability_qualified": false,
+    "live_sampler_process_qualified": false,
+    "backing_disk_device_selection_qualified": false,
+    "checkpoint_workload_harness_qualified": false,
+    "execution_authorized": false,
+    "protocol_integrator_or_analysis_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "after the language sequence is inactive, perform a no-workload live field/device preflight; separately qualify the checkpoint mutation firewall and benchmark engine before any systems block"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_sampler.py -q",
+    "expected": "9 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_sampler_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "42 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "178 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_nvidia_smi_invoked": false,
+    "live_procfs_or_diskstats_used": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the live RTX 3090 supports every query field",
+    "the live backing disk device is selected",
+    "the sampler has run beside a workload",
+    "mock telemetry is measured energy",
+    "the checkpoint workload harness is qualified",
+    "the systems protocol may execute now"
+  ]
+}

@@ -355,6 +355,9 @@ the final combined model.
 - [`finalist-systems-telemetry-integrator-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-telemetry-integrator-qualified-v1.json)
   binds a strict synthetic trace schema and conservative interval integration. Missing time is bounded
   from zero to power limit and propagated through idle subtraction; live acquisition remains blocked.
+- [`finalist-systems-sampler-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-sampler-qualified-v1.json)
+  qualifies exact GPU/host parsing and deadline-based 1 Hz sampling with mocks only. Disk devices are
+  explicit to prevent stacked-device double counting; live field/device support remains blocked.
 - [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
@@ -460,6 +463,9 @@ a joint systems claim. Live-sampler and checkpoint-workload qualification are st
 The conservative integrator is now qualified synthetically with exact phase/idle boundaries and explicit
 missing-sample interval arithmetic. Live acquisition and the checkpoint workload remain unqualified, so
 no GPU query or systems execution follows.
+The sampler implementation is also mock-qualified without querying the active GPU. It serializes the
+full frozen field vector, process/host counters, protocol hash, and explicit disk devices on monotonic
+deadlines; live compatibility and backing-device identity still require a post-sequence preflight.
 Training non-finiteness already stops before a final event, but complete source identity needs a
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,

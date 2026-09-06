@@ -147,6 +147,7 @@ Read in order:
 139. [138 — Post-language systems protocol frozen before finalist results](138_finalist_systems_protocol_frozen.md)
 140. [139 — Fail-closed systems analysis qualified offline](139_finalist_systems_analysis_qualified.md)
 141. [140 — Conservative systems telemetry integration qualified synthetically](140_finalist_systems_telemetry_integrator.md)
+142. [141 — Systems sampler implementation qualified without a live query](141_finalist_systems_sampler_mock_qualified.md)
 
 Conventions:
 
