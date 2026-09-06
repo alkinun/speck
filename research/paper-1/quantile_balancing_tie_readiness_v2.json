@@ -1,0 +1,112 @@
+{
+  "format": "speck_quantile_balancing_tie_readiness",
+  "format_version": 2,
+  "gate_id": "speck-paper-1-quantile-balancing-ties-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "corrected_subgradient_bracket_fresh_unseen_validation_frozen_training_blocked",
+  "frozen_at": "2026-09-06T03:55:14+00:00",
+  "purpose": "correct the finite-batch coordinate-minimizer bracket before qualification and replace the consumed v1 holdout with fresh seed cells",
+  "predecessor": {
+    "path": "research/paper-1/quantile_balancing_tie_readiness_v1.json",
+    "sha256": "7424fdb4a246a271c338ee6de6229fa9c836d0ff25bc24c2229ce5d422639a9f",
+    "preserved_append_only": true,
+    "qualification_authority": false
+  },
+  "correction": {
+    "v1_invalid_condition": "count(r < tau) <= q < count(r <= tau)",
+    "v2_coordinate_subgradient_condition": "count(r < tau) <= q <= count(r <= tau)",
+    "reason": "inside a nonzero order-statistic gap, an interval midpoint has count(r < tau) = count(r <= tau) = q and is a valid coordinate minimizer; v1 incorrectly rejected that case",
+    "strict_no_tie_exact_load_condition": "count(r < tau) = q",
+    "tie_boundary_interpretation": "when the interval collapses, inclusive rank bracketing proves coordinate optimality but actual top-k load depends on the separately unqualified tie implementation",
+    "v1_result_artifact_created": false
+  },
+  "consumed_v1_holdout": {
+    "reason": "seeds were inspected during a dry run that exposed the invalid v1 bracket, before any qualification artifact",
+    "generator_seed": "200000*shape_index + seed",
+    "seeds_per_shape": "32 through 95 inclusive",
+    "cases": 256,
+    "selection_or_qualification_authority": false,
+    "diagnostic_convergence": {
+      "source_upper_endpoint": {
+        "perfect_balance_cases": 34,
+        "cycle_cases": 221,
+        "unresolved_cases": 1
+      },
+      "source_histogram_1000": {
+        "perfect_balance_cases": 251,
+        "cycle_cases": 5,
+        "unresolved_cases": 0
+      },
+      "interval_midpoint": {
+        "perfect_balance_cases": 256,
+        "cycle_cases": 0,
+        "unresolved_cases": 0,
+        "maximum_updates_among_passes": 29
+      },
+      "histogram_10000_sensitivity": {
+        "perfect_balance_cases": 255,
+        "cycle_cases": 1,
+        "unresolved_cases": 0
+      }
+    }
+  },
+  "preserved_from_v1": {
+    "evidence": true,
+    "four_shapes": true,
+    "score_and_initial_bias_distribution": true,
+    "candidate_policies_and_roles": true,
+    "fixed_score_scope": true,
+    "maximum_updates": 50,
+    "cycle_identity": "all mean-centered bias coordinates rounded to 14 decimal places",
+    "future_training_blockers": true
+  },
+  "fresh_unseen_validation": {
+    "frozen_before_output": true,
+    "generator_seed": "200000*shape_index + seed",
+    "seeds_per_shape": "96 through 159 inclusive",
+    "cases": 256,
+    "maximum_updates": 50,
+    "metrics": [
+      "perfect target-load cases and update count",
+      "cycle and unresolved cases",
+      "maximum and mean per-expert absolute load error before and after",
+      "coordinate-subgradient bracket failures",
+      "coordinate-interval violations before mean centering",
+      "non-finite values and maximum absolute centered bias",
+      "route churn between updates"
+    ],
+    "candidate_gate": {
+      "policy": "interval_midpoint",
+      "perfect_balance_cases_required": 256,
+      "cycles_allowed": 0,
+      "unresolved_at_50_allowed": 0,
+      "coordinate_subgradient_failures_allowed": 0,
+      "coordinate_interval_violations_allowed": 0,
+      "nonfinite_values_allowed": 0,
+      "scope_if_passed": "preferred fixed-score float64 CPU tie-safe reference only"
+    },
+    "controls_have_no_pass_requirement": true,
+    "failed_candidate_disposition": "retain source controls and leave tie policy unqualified"
+  },
+  "required_future_training_gate": {
+    "hardware_topk_tie_semantics_frozen": false,
+    "changing_score_and_optimizer_interaction_measured": false,
+    "distributed_partition_parity_measured": false,
+    "quality_and_specialization_effect_measured": false,
+    "load_tail_and_route_churn_effect_measured": false,
+    "histogram_precision_and_communication_measured": false,
+    "source_upper_histogram_and_midpoint_arms_required": true,
+    "decision": "a fixed-score CPU pass cannot choose a training policy"
+  },
+  "boundary": {
+    "active_architecture_or_model_code_changed": false,
+    "active_experiment_program_changed": false,
+    "active_result_checkpoint_service_GPU_or_runtime_accessed": false,
+    "v1_holdout_reused_for_v2_qualification": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "update the standalone validator to the inclusive coordinate-subgradient bracket, freeze its source, then run fresh seeds 96-159 exactly once from a clean revision"
+  }
+}
