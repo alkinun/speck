@@ -1,0 +1,129 @@
+{
+  "format": "speck_paper_finalist_systems_orchestration_qualification",
+  "format_version": 1,
+  "status": "qualified_recording_adapter_state_machine_live_adapter_blocked",
+  "created_at": "2026-09-06T02:53:56+00:00",
+  "scope": "pure block state-machine execution against recording adapters with synthetic time and artifacts; no sleep, live sampler, nvidia-smi, GPU, systemd workload, finalist checkpoint, model, result, log, intermediate metric, or runtime mutation",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "workload_plan_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-workload-plan-qualified-v1.json",
+      "sha256": "dc20210c97f1b991914c4cad5bda75e2058e0c55e6f6687022657701b055d3a9"
+    },
+    "sampler_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-sampler-qualified-v1.json",
+      "sha256": "cc40d65de262181f9d808a28c90ffc814b100da776893d71aa705d58f281a7f1"
+    },
+    "runtime_attestation_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-runtime-attestation-qualified-v1.json",
+      "sha256": "ae664e5e3cc640ad2fa9235e5b6f9a40070508cb6f8111a03d05b361d75333c5"
+    },
+    "assembly_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-assembly-qualified-v1.json",
+      "sha256": "c642f4d3b38139471edfecd2501e842895f1c2a75fdd96d062f0dbdb1e7d8424"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_orchestration.py",
+      "sha256": "96555e6244eaa1f148046b63349d85b2302bfcee8fed99320f092b0342bc2ca1"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_orchestration.py",
+      "sha256": "fb4bff2cfa7ae4711b7e2068256b043fec9825c23be4bab2bfda95c8e4f56548"
+    }
+  },
+  "successful_event_order": [
+    "sampler_start",
+    "pre_block_idle",
+    "trial_0_gate",
+    "trial_0_engine",
+    "thermal_recovery",
+    "trial_1_gate",
+    "trial_1_engine",
+    "post_block_idle",
+    "sampler_stop",
+    "trace_build",
+    "block_assembly"
+  ],
+  "state_machine_contract": {
+    "one_continuous_sampler_per_block": true,
+    "pre_idle_seconds": 120,
+    "post_idle_seconds": 120,
+    "frozen_trial_position_and_role_order": true,
+    "live_gate_before_each_engine": true,
+    "gate_GPU_UUID": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd",
+    "gate_maximum_temperature_c": 45,
+    "gate_GPU_utilization_percent": 0,
+    "gate_other_compute_processes": 0,
+    "thermal_recovery_before_second_gate": true,
+    "thermal_recovery_timeout_seconds": 1200,
+    "paired_temperature_difference_checked_before_second_engine": true,
+    "paired_temperature_difference_c_max": 2,
+    "maximum_program_elapsed_hours": 4,
+    "trace_built_only_after_sampler_stop": true,
+    "successor_authority_only_after_qualified_assembly": true,
+    "final_block_successor_authority": false
+  },
+  "failure_semantics": {
+    "first_exception_stops_progress": true,
+    "sampler_stop_attempted_after_failure": true,
+    "sampler_cleanup_failure_retained": true,
+    "failure_type_message_and_event_prefix_retained": true,
+    "replacement_or_retry_authorized": false,
+    "successor_block_authorized": false,
+    "budget_exhaustion_before_sampler_has_no_side_effect": true
+  },
+  "tests": {
+    "complete_event_order_and_single_sampler_pass": true,
+    "first_engine_failure_stops_sampler_and_second_trial": true,
+    "hot_gate_stops_before_engine": true,
+    "paired_temperature_mismatch_stops_before_second_engine": true,
+    "changed_idle_duration_rejected": true,
+    "exhausted_budget_rejected_before_sampler": true,
+    "final_block_has_no_successor": true,
+    "count": 7
+  },
+  "pipeline_effect": {
+    "block_orchestration_control_flow_closed": true,
+    "automatic_failure_state_shape_closed": true,
+    "live_adapter_qualified": false,
+    "real_sampler_engine_concurrency_qualified": false,
+    "runtime_probe_production_qualified": false,
+    "actual_trace_and_failure_artifact_writes_qualified": false,
+    "end_to_end_pipeline_qualified": false
+  },
+  "decision": {
+    "recording_adapter_orchestration_qualified": true,
+    "systems_execution_authorized": false,
+    "activation_artifact_present": false,
+    "protocol_or_prior_components_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "implement a live adapter only after a second pipeline audit; keep actual sampler/engine/runtime/trace/failure writes behind post-language checkpoint/GPU preflight and activation"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_orchestration.py -q",
+    "expected": "7 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_orchestration_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "117 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "253 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "real_sleep_or_sampler_invoked": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "a live orchestration adapter is implemented",
+    "sampler and engine concurrency has been exercised",
+    "runtime probes, traces, or failures have been written by real processes",
+    "the end-to-end pipeline is qualified",
+    "the systems protocol may execute now",
+    "recording-adapter elapsed time is performance evidence"
+  ]
+}
