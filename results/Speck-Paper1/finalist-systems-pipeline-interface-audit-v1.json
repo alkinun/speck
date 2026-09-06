@@ -1,0 +1,184 @@
+{
+  "format": "speck_paper_finalist_systems_pipeline_interface_audit",
+  "format_version": 1,
+  "status": "components_qualified_end_to_end_pipeline_blocked",
+  "created_at": "2026-09-06T02:32:06+00:00",
+  "scope": "blind static producer-consumer interface audit after individual CPU/mock qualifications; no live GPU, service, checkpoint, model, result, log, intermediate metric, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "sampler": {
+      "path": "speck/paper_finalist_systems_sampler.py",
+      "sha256": "c18f0d90599851a35ff46808a2f32c8f94924547501996fe477074a56c03c855",
+      "qualification": "results/Speck-Paper1/finalist-systems-sampler-qualified-v1.json",
+      "qualification_sha256": "cc40d65de262181f9d808a28c90ffc814b100da776893d71aa705d58f281a7f1"
+    },
+    "integrator": {
+      "path": "speck/paper_finalist_systems_telemetry.py",
+      "sha256": "7c4a35a66fd716d23fd1899459a8dbe1425168792a82b4aa1de68d7adffd9e65",
+      "qualification": "results/Speck-Paper1/finalist-systems-telemetry-integrator-qualified-v1.json",
+      "qualification_sha256": "2c386bbe53fd6c368938283051df8080323262a50a05b3d7b438a8bd2210a1ca"
+    },
+    "engine": {
+      "path": "speck/paper_finalist_systems_engine.py",
+      "sha256": "30eff0b56460e197c42f90bdd8bfd8cbd4caf9a07045736e84683bc7e7d86681",
+      "qualification": "results/Speck-Paper1/finalist-systems-engine-qualified-v1.json",
+      "qualification_sha256": "34aafb6cf7e6ff86107d0243c2bdadfbae6679178c37b9e8f108ddbc5df82c60"
+    },
+    "analyzer": {
+      "path": "speck/paper_finalist_systems_analysis.py",
+      "sha256": "12e74d2e9202a0e00152c3fb4ff99b170ed7b7eae35e26b97ce95163c5ef6a7e",
+      "qualification": "results/Speck-Paper1/finalist-systems-analysis-qualified-v1.json",
+      "qualification_sha256": "4f1bd86b426c5ab2932fa102834beb25e331ba8cf051e37db1e130fc151b5c48"
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_finalist_systems_pipeline_audit_validate.py",
+      "sha256": "f3d5b123e464a5be86a562887687e6206d79caf4b61770059579b424dfb520b6"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_pipeline_audit.py",
+      "sha256": "0b7610dd26afc3f75d063ce808ff094d2c0e8335427b4d3332ed2c375021ed55"
+    }
+  },
+  "qualified_bridges": [
+    {
+      "id": "integrator_to_analyzer_energy",
+      "producer_fields": [
+        "gross_board_energy_joules",
+        "incremental_board_energy_joules",
+        "telemetry.measured_window_coverage",
+        "telemetry.maximum_sample_gap_seconds"
+      ],
+      "consumer_match": true
+    },
+    {
+      "id": "engine_to_analyzer_primary_time",
+      "producer": "measured_wall_seconds",
+      "consumer": "measured_wall_seconds",
+      "consumer_match": true
+    },
+    {
+      "id": "engine_to_analyzer_torch_memory",
+      "producer_fields": [
+        "peak_allocated_bytes",
+        "peak_reserved_bytes"
+      ],
+      "consumer_match": true
+    }
+  ],
+  "blocking_interfaces": [
+    {
+      "id": "sample_series_to_trace_envelope",
+      "producer_status": "samples_only",
+      "missing": [
+        "pre/post idle interval boundaries",
+        "engine phase markers",
+        "trial identity"
+      ],
+      "required_successor": "block orchestrator must start sampling before idle, merge engine markers, stop after idle, and hash the full trace"
+    },
+    {
+      "id": "NVML_peak_used_memory",
+      "producer_status": "absent",
+      "protocol_memory_output": "NVML peak used memory",
+      "sampler_missing_field": "memory.used",
+      "analyzer_required_field": "peak_nvml_used_bytes",
+      "required_successor": "add an explicit MiB-to-byte memory.used sample field and measured-window peak reduction"
+    },
+    {
+      "id": "thermal_idle_and_sampler_engine_orchestration",
+      "producer_status": "absent",
+      "missing": [
+        "120-second pre/post idle scheduling",
+        "45C start gate and 2C paired guard",
+        "20-minute recovery timeout",
+        "sampler/engine PID binding",
+        "four-hour resource envelope"
+      ],
+      "required_successor": "one fail-closed block orchestrator"
+    },
+    {
+      "id": "compiled_runtime_attestation",
+      "producer_status": "unqualified",
+      "engine_value": {
+        "kernel_fallback": null,
+        "CUDA_phase_timing": false
+      },
+      "analyzer_requires_kernel_fallback_false": true,
+      "required_successor": "post-sequence compiled CUDA preflight plus retained graph/fallback evidence"
+    },
+    {
+      "id": "paired_batch_fingerprint_consumption",
+      "producer_status": "engine_produces_SHA256",
+      "consumer_status": "no block-level equality check",
+      "required_successor": "assembler must reject unequal control/candidate fingerprints before omitting the field from primary analysis"
+    },
+    {
+      "id": "trial_block_and_failure_assembly",
+      "producer_status": "absent",
+      "analyzer_requires": "complete_qualified or failed_retained block artifact",
+      "missing": [
+        "engine plus trace integration",
+        "two-trial block identity",
+        "failed trial retention",
+        "immutable input references"
+      ],
+      "required_successor": "pure assembler with adversarial incomplete/failure fixtures"
+    },
+    {
+      "id": "runtime_software_identity_chain",
+      "producer_status": "incomplete",
+      "protocol_requires": [
+        "git commit",
+        "Python",
+        "PyTorch",
+        "CUDA runtime and driver",
+        "FLA",
+        "Triton",
+        "model config",
+        "benchmark harness"
+      ],
+      "required_successor": "persist and compare the exact identity vector across all twelve trials"
+    }
+  ],
+  "activation_boundary": {
+    "activation_artifact_present": false,
+    "component_qualification_implies_pipeline_qualification": false,
+    "component_qualification_implies_execution_authority": false,
+    "blocking_interfaces": 7
+  },
+  "decision": {
+    "individual_CPU_mock_components_remain_qualified": true,
+    "end_to_end_systems_pipeline_qualified": false,
+    "systems_execution_authorized": false,
+    "systems_claim_authorized": false,
+    "protocol_or_component_modified_by_audit": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "implement additive memory telemetry plus a pure trial/block assembler first; then implement orchestration and runtime identity/fallback attestation without creating activation authority"
+  },
+  "verification": {
+    "audit_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_pipeline_audit.py -q",
+    "audit_expected": "5 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_pipeline_audit_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "71 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "207 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "individual component tests establish end-to-end compatibility",
+    "GPU memory utilization percent is peak used bytes",
+    "engine phase markers alone form a telemetry trace",
+    "a produced batch fingerprint is automatically compared",
+    "an exception without a block artifact satisfies failed-retained semantics",
+    "this audit authorizes systems execution"
+  ]
+}

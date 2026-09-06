@@ -151,6 +151,7 @@ Read in order:
 143. [142 — Exact systems workload plan and persistent-mutation detector](142_finalist_systems_workload_plan.md)
 144. [143 — Disposable kernel read-only isolation qualifies](143_finalist_systems_sandbox_qualified.md)
 145. [144 — Non-persisting systems engine control flow qualifies on CPU fixtures](144_finalist_systems_engine_control_flow.md)
+146. [145 — Qualified components do not yet form an executable systems pipeline](145_finalist_systems_pipeline_interface_audit.md)
 
 Conventions:
 
