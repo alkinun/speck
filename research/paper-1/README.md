@@ -333,6 +333,10 @@ the final combined model.
   corrects the historical seed record to 42, then shows why best-effort seed sampling is insufficient:
   fingerprints are discarded, parse failures change denominators, schemas are unchecked, the exact
   snapshot is deprecated, and Batch data retention/deletion/cost authority is absent.
+- [`finalist-automation-transition-audit-v1.json`](../../results/Speck-Paper1/finalist-automation-transition-audit-v1.json)
+  executes all 12 frozen state transitions on temporary paths: 12 collections/commits, 11 schedules,
+  one control-only target lock, and one final analysis. It preserves failure history and records two
+  post-sequence hardening items without changing the live runner or contract.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -396,6 +400,10 @@ The judge audit similarly prevents a superficial fix: seed 42 is present, but of
 best-effort and HELMET drops fingerprints and failed parses. Full prompt uploads also require explicit
 retention/deletion and dataset-transmission authority. Neither a newer API model nor a local judge can
 inherit the original metric without a versioned, repeated, human-calibrated replacement protocol.
+The full temporary finalist simulation additionally verifies every control/candidate transition and
+the exact lock/analyze ordering. Terminal service provenance and an explicit finalizer `next_run`
+recheck remain future hardening; applying them mid-sequence would invalidate the frozen runner, so v2
+continues byte-identically under artifact-first collection.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination

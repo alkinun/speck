@@ -1,0 +1,146 @@
+{
+  "format": "speck_paper_finalist_automation_transition_audit",
+  "format_version": 1,
+  "status": "all_12_transitions_simulated_current_v2_preserved_future_hardening_identified",
+  "created_at": "2026-09-06T01:17:16+00:00",
+  "scope": "offline temporary-state simulation and static ordering audit only; no live service mutation, checkpoint access, result collection, training-log inspection, scheduling, or model execution",
+  "frozen_inputs": {
+    "runner": {
+      "path": "scripts/paper_finalist_continue.py",
+      "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+    },
+    "automation": {
+      "path": "research/paper-1/finalist_automation_v2.json",
+      "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e"
+    },
+    "base_train": {
+      "path": "scripts/base_train.py",
+      "sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2"
+    },
+    "program_observed_before_results": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "status": "qualified_unexecuted",
+      "control_results": 0,
+      "candidate_results": 0,
+      "failed_attempts": 1,
+      "active_rerun_attempt": 2
+    }
+  },
+  "simulation": {
+    "method": "invoke the frozen finalize function twelve times against temporary program/result/target/analysis/transition paths while replacing only external systemd, collector, validator, git, and scheduling effects with recording doubles",
+    "execution_order_matches_contract": true,
+    "runs": 12,
+    "controls": 6,
+    "candidates": 6,
+    "stop_trigger_calls": 12,
+    "wait_for_process_exit_calls": 12,
+    "result_collections": 12,
+    "program_validations": 12,
+    "commits": 12,
+    "successor_schedules": 11,
+    "target_locks": 1,
+    "final_analyses": 1,
+    "transition_records": 12,
+    "state_checks_use_only_temporary_nonmutation_paths": true,
+    "target_lock_after_last_control": true,
+    "target_lock_before_first_candidate": true,
+    "analysis_after_last_candidate": true,
+    "final_status": "complete",
+    "final_next_run": null,
+    "failed_attempt_history_preserved": true,
+    "active_rerun_history_preserved": true,
+    "transition_flags": {
+      "trigger_disabled_before_collection": true,
+      "quality_dependent_branching": false,
+      "polling": false,
+      "automatic_retry": false,
+      "automation_hash_bound": true
+    }
+  },
+  "static_ordering": {
+    "training": [
+      "initialize runtime, data, model, restore state, tracking, and execution",
+      "run every optimizer and validation/checkpoint step",
+      "finish tracking",
+      "atomically write run_summary.json",
+      "finally finish any remaining tracking and destroy the distributed process group"
+    ],
+    "finalization": [
+      "disable the one-shot path trigger",
+      "wait on the training MainPID through pidfd",
+      "acquire the nonblocking process lock",
+      "validate the frozen automation hashes and clean repository",
+      "derive and check the expected completed run",
+      "collect and validate the final checkpoint/result",
+      "lock the target only after control six or analyze only after candidate six",
+      "atomically update the program and write the transition",
+      "validate the full program",
+      "commit the result/program/transition and target or analysis when applicable",
+      "schedule the exact next cell after a 15-minute cooldown"
+    ],
+    "launch": [
+      "validate automation, repository, program, live GPU/mount/memory/output gates",
+      "install the exact final-summary PathExists watcher",
+      "replace the launcher process with the frozen training command"
+    ],
+    "summary_is_last_normal_training_artifact": true,
+    "collector_is_scientific_success_authority": true
+  },
+  "fail_closed_behavior": {
+    "collection_or_validation_failure": "path trigger is already disabled; no commit, schedule, skip, or automatic retry follows",
+    "schedule_failure_after_commit": "the accepted result remains committed but the chain stops before the next launch",
+    "unexpected_output_before_launch": "live gate fails before installing a watcher or executing training",
+    "dirty_repository": "finalization or launch stops before state mutation",
+    "duplicate_or_out_of_order_event": "count-derived expected-run check rejects it before collection"
+  },
+  "residual_hardening": [
+    {
+      "id": "terminal_service_provenance",
+      "current_behavior": "pidfd waits for process exit, but the transition does not record systemd Result, ExecMainStatus, invocation ID, or exit timestamp",
+      "current_risk": "run_summary is written only after successful steps and tracking finish, so the collector validates the scientific artifact; a post-summary distributed cleanup failure could still leave terminal service provenance absent",
+      "future_change": "in a post-sequence automation version, record immutable terminal unit properties and explicitly disposition cleanup-only nonzero exits",
+      "requires_current_runner_change": true
+    },
+    {
+      "id": "finalize_next_run_recheck",
+      "current_behavior": "launch requires both count-derived expected_next and stored next_run, while finalize rechecks only count-derived expected_next",
+      "current_risk": "the prior launch and program validator establish the correct next_run; a clean committed program mutation during a live cell could be overwritten rather than rejected",
+      "future_change": "in a post-sequence automation version, require stored next_run to equal the completed run before collection",
+      "requires_current_runner_change": true
+    },
+    {
+      "id": "systemd_integration_fixture",
+      "current_behavior": "unit command construction and individual helpers are covered, but the twelve-cell audit replaces external systemd/git/collector effects with recording doubles",
+      "current_risk": "the simulation proves state transitions, not a twelve-job systemd integration on disposable units",
+      "future_change": "add short disposable systemd integration fixtures after the current sequence, without GPU or scientific paths",
+      "requires_current_runner_change": false
+    }
+  ],
+  "decision": {
+    "current_v2_state_machine_simulation_qualified": true,
+    "control_first_order_qualified": true,
+    "target_lock_order_qualified": true,
+    "final_analysis_order_qualified": true,
+    "failure_stops_chain_qualified": true,
+    "current_runner_or_contract_modified": false,
+    "current_run_interruption_authorized": false,
+    "automatic_retry_authorized": false,
+    "quality_branching_authorized": false,
+    "future_hardening_applied_mid_sequence": false,
+    "next_action": "leave v2 byte-identical through the active sequence; accept only final-summary events, and defer the two runner changes plus disposable systemd integration coverage to a post-sequence automation version"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_continue.py -q",
+    "tests": 8,
+    "expected": "8 passed",
+    "gpu_or_live_service_used": false
+  },
+  "non_claims": [
+    "recording doubles prove systemd integration behavior",
+    "a path event alone proves training-service success",
+    "the residual hardening items justify mutating the active frozen runner",
+    "the simulation authorizes retry, skipping, branching, promotion, or release",
+    "this audit contains or inspects finalist model results"
+  ]
+}
