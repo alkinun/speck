@@ -1,3 +1,4 @@
+import json
 from copy import deepcopy
 from pathlib import Path
 
@@ -9,6 +10,7 @@ from scripts.paper_finalist_launch_qualify import (
     finalist_units,
     validate_initial_state,
 )
+from speck.paper import _validate_finalist_live_launch
 
 
 def initial_state():
@@ -43,3 +45,21 @@ def test_finalist_launch_qualification_covers_every_unit_type():
     assert len(units) == 48
     assert len(set(units)) == 48
     assert {Path(unit).suffix for unit in units} == {".service", ".timer", ".path"}
+
+
+def test_live_gate_is_exact_while_empty_and_historical_after_progress():
+    root = Path(__file__).parents[1]
+    program = json.loads(
+        (root / "research/paper-1/experiment_program.json").read_text(encoding="utf-8")
+    )
+    reference = program["finalist_live_launch"]
+    empty = program["finalist_evidence"]
+    _validate_finalist_live_launch(reference, root, "speck-paper-1", empty)
+    progressed = deepcopy(empty)
+    progressed["status"] = "in_progress"
+    progressed["control_results"] = [{"pair": 0}]
+    _validate_finalist_live_launch(reference, root, "speck-paper-1", progressed)
+    invalid_empty = deepcopy(empty)
+    invalid_empty["next_run"] = "wrong"
+    with pytest.raises(ValueError, match="incomplete"):
+        _validate_finalist_live_launch(reference, root, "speck-paper-1", invalid_empty)

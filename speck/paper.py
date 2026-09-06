@@ -2137,7 +2137,11 @@ def _validate_finalist_live_launch(reference, repository_root, paper_id, evidenc
         or result.get("initial_state", {}).get("status") != "qualified_unexecuted"
         or result.get("initial_state", {}).get("control_results") != []
         or result.get("initial_state", {}).get("candidate_results") != []
-        or (evidence is not None and result.get("initial_state") != evidence)
+        or (
+            evidence is not None
+            and evidence.get("status") == "qualified_unexecuted"
+            and result.get("initial_state") != evidence
+        )
         or result.get("initial_run")
         != "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
         or result.get("active_finalist_units") != []
