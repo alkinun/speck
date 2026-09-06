@@ -248,12 +248,18 @@ path targets Hopper and the 3090 is Ampere. Those belong to D1 and to the rented
 Setup reuses what exists. The 1B-token DCLM-Edu corpus is already packed and cached with 1,000,131,351
 training and 20,000,161 validation tokens, so no data preparation is needed. The backbone is the
 current 150M KDA/NoPE hybrid rather than the retired convolution hybrid, at sequence length 2048 and
-1B tokens per run: roughly 6 GPU-hours dense and 15 routed. Total parameters stay under about 800M so
-every arm fits in 24GB. One seed ranks, three seeds confirm the winner.
+1B tokens per run: roughly 6 GPU-hours dense and 15 routed. Arms land near 900M total and 260M active
+parameters, which fits 24GB with activation checkpointing. One seed ranks, three seeds confirm the
+winner.
+
+Granularity is isolated correctly only when the expert count and top-k scale together, holding the
+sparsity ratio fixed, so that active and total parameters are both constant across arms. The three M1
+arms are verified at 896.2M, 896.6M, and 897.1M total and 259.2M, 259.6M, and 260.1M active. The
+dense control has a matched active FFN width rather than the 2304 of the current 150M config.
 
 | ID | Question | Arms | Runs | Hours |
 | --- | --- | --- | ---: | ---: |
-| M1 | Expert granularity at matched active parameters | 8 experts top-2, 32 top-4, 64 top-8 | 3 | 45 |
+| M1 | Expert granularity, active and total both matched | 8 experts top-2 at 2304, 32 top-8 at 576, 64 top-16 at 288 | 3 | 45 |
 | M2 | Where does sparsity belong? | every block routed, dense first two blocks, interleaved every other block, routed plus one shared expert | 4 | 60 |
 | M3 | Balancing rule | auxiliary loss, bias-based loss-free | 2 | 30 |
 | M4 | Optimizer on expert banks | Muon, AdamW | 2 | 30 |
