@@ -124,6 +124,7 @@ Read in order:
 116. [115 — Crossed-factor finalist analysis v2 qualified](115_finalist_analysis_v2_qualified.md)
 117. [116 — Finalist launch v2 after crossed-factor correction](116_finalist_launch_v2.md)
 118. [117 — Crossed-factor finalist automation v2](117_finalist_automation_v2.md)
+119. [118 — HELMET archive acquired and hash-qualified](118_helmet_archive_acquired.md)
 
 Conventions:
 
@@ -663,3 +664,8 @@ Finding 117 pins automation v2 to the corrected analysis, qualification, launch 
 status. Five state tests and seven analysis tests pass; the same twelve-run no-poll/no-branch/no-retry
 chain remains. V1 is unauthorized, all outputs are absent, and training still requires a post-HELMET
 live qualification.
+
+Finding 118 completes the resumable HELMET archive acquisition in 2,622.97 seconds. The 11,271,916,108-
+byte file matches the frozen SHA-256, the isolated volume retains 5.63 TB free, and no credential or
+discard occurred. Extraction/execution remain blocked pending safe inventory and license review; the
+inactive transfer now permits a separate finalist v2 live qualification.

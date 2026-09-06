@@ -295,6 +295,9 @@ the final combined model.
 - [`helmet_seeded_demos_v1.json`](../architecture-promotion-v1/helmet_seeded_demos_v1.json) qualifies
   a two-line seed repair for NarrativeQA and Multi-LexSum across independent fixture processes without
   activating either rights-blocked dataset.
+- [`helmet-data-acquisition.json`](../../results/Speck-Architecture-Promotion-v1/helmet-data-acquisition.json)
+  records the complete 11.27-GB revision-pinned archive and independently checked SHA-256; extraction,
+  runtime-loaded sources, rights, tokenizer, judges, and execution remain blocked.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -374,6 +377,6 @@ promotion infrastructure. It does **not** yet have:
 
 Accordingly, the paper has completed its **matched proxy quality screen**, finalist config
 materialization, and data/storage, crossed-factor collector/analysis v2, and exact-runtime
-qualification. V1 pooled inference is superseded. HELMET acquisition is active and v2 live-launch
-authority remains absent. It has not entered architecture-promotion, finalist execution,
+qualification. V1 pooled inference is superseded. HELMET acquisition is complete and inactive, but v2
+live-launch authority remains absent until its clean gate is recorded. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.
