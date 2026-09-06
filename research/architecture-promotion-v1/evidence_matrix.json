@@ -510,7 +510,10 @@
       "evidence": [
         "research/paper-1/interaction_readiness_v1.json",
         "research/paper-1/interaction_readiness_v2.json",
-        "results/Speck-Paper1/interaction-readiness-v2-qualified.json"
+        "results/Speck-Paper1/interaction-readiness-v2-qualified.json",
+        "findings/167_pre_results_closure.md",
+        "research/paper-1/pre_results_closure_v1.json",
+        "results/Speck-Paper1/pre-results-closure-qualified-v1.json"
       ],
       "quality": "No cube output exists. V2 defines exact averaged SD/SW/DW and SDW Holm hypotheses while requiring all six conditional pairwise bounds to clear no-hiding language/source harm margins.",
       "systems": "The discovery cube remains 24 runs; realized interaction overhead and full-model removals are required and cannot be inferred from independent axis wins.",

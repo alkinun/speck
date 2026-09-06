@@ -1,0 +1,179 @@
+{
+  "format": "speck_paper1_pre_results_closure",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-pre-results-closure-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "autonomous_static_work_closed_event_and_external_authority_gates_open",
+  "frozen_at": "2026-09-06T04:43:05+00:00",
+  "purpose": "bind every current stop/activation boundary so autonomous work waits for the live finalist instead of creating unplanned adjacent research, while preserving explicit external-authority blockers",
+  "operational_chain": {
+    "active_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2"
+    },
+    "event_runner": {
+      "path": "scripts/paper_finalist_continue.py",
+      "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+    },
+    "automation": {
+      "path": "research/paper-1/finalist_automation_v2.json",
+      "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e"
+    },
+    "live_launch": {
+      "path": "results/Speck-Paper1/finalist-launch-qualified-v3.json",
+      "sha256": "33d4ad10ca7f183593ac12f67f82246fc7b7e9ecfd12fcd8f365b72efd5f046f"
+    },
+    "active_rerun": {
+      "path": "research/paper-1/finalist_rerun_v1.json",
+      "sha256": "61c591b7c54ee9b9c6ef34c752806c79cca8fdb3d488d1486285a0b8588fcbf7"
+    },
+    "program_source_gate": {
+      "path": "results/Speck-Paper1/finalist-program-source-gate-v2.json",
+      "sha256": "ee886214de037e9a57005d5f5793b2a2a6db07c2a556af627a9f965de4f78a32"
+    },
+    "postcommit_acceptance": {
+      "path": "results/Speck-Paper1/finalist-result-acceptance-qualified-v3.json",
+      "sha256": "132ee515b942b4001322316bcff525fa756584c2b9b9923eba723ea9116e9983"
+    },
+    "state": {
+      "language_sequence_terminal": false,
+      "automatic_event_chain_is_only_authorized_training_mutation": true,
+      "quality_dependent_branching": false,
+      "automatic_retry": false,
+      "manual_result_interpretation_before_v3_acceptance": false,
+      "postcommit_v3_wired_into_frozen_runner": false,
+      "postcommit_v3_must_run_before_interpretation_or_Linear_completion": true
+    }
+  },
+  "closed_autonomous_tracks": {
+    "sequence": {
+      "qualification": {
+        "path": "results/Speck-Paper1/sequence-axis-convergence-qualified-v1.json",
+        "sha256": "b7c4065448cd7f63706a07f2a66f2834fb94e672bd7eea97fcab268e7ac2e6b7"
+      },
+      "state": "source/factorization/dependency work complete; eleven-node DAG waits at F0",
+      "implementation_authorized": false,
+      "training_authorized": false
+    },
+    "depth": {
+      "qualification": {
+        "path": "results/Speck-Paper1/attnres-readiness-v2-qualified.json",
+        "sha256": "27198d1db7de80b512ddef5bb51bc93077427d27f0ce3fbc079a380679bd8b69"
+      },
+      "state": "source-corrected block boundaries and initialization frozen; waits for accepted sequence parent",
+      "implementation_authorized": false,
+      "training_authorized": false
+    },
+    "width": {
+      "qualification": {
+        "path": "results/Speck-Paper1/stable-latentmoe-readiness-v3-qualified.json",
+        "sha256": "e1884cdf2605329add7a0cca95a5e44bebcf19a24940d2866548ce66471b456b"
+      },
+      "state": "source and CPU oracles complete; seven activation prerequisites wait on sequence/depth/resources/hardware",
+      "implementation_authorized": false,
+      "training_authorized": false
+    },
+    "systems": {
+      "audit": {
+        "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v2.json",
+        "sha256": "acbd0a2afa5ab8e2429d78c5ab2bb5bdeeab096c88708ce07c9479ab2bbca7f9"
+      },
+      "state": "static interfaces complete; all five live activation gates false",
+      "further_live_work_during_language_sequence_authorized": false,
+      "systems_execution_authorized": false
+    }
+  },
+  "downstream_architecture_gates": {
+    "interaction": {
+      "qualification": {
+        "path": "results/Speck-Paper1/interaction-readiness-v2-qualified.json",
+        "sha256": "ae096f54834ac50f53729c53a177f40a3e0f889ce007e1c84b62d8854fcf5d53"
+      },
+      "state": "estimands qualified; axes unselected; cube absent and unregistered",
+      "training_authorized": false
+    },
+    "scaling": {
+      "design": {
+        "path": "research/paper-1/scaling_readiness_v1.json",
+        "sha256": "f1eff3cc5980b39332ef1bd14b09fa1823bcad8fc77b372d077fa90f1d5773ab"
+      },
+      "state": "design frozen; architectures, hardware, budget, fit, and sentinel runs blocked",
+      "paper_scale_authorized": false
+    }
+  },
+  "external_authority_gates": {
+    "evaluation_manifest": {
+      "path": "research/architecture-promotion-v1/evaluation_manifest.json",
+      "sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6",
+      "status": "frozen_v2_ruler_synthetic_primary_external_data_pending"
+    },
+    "HELMET": {
+      "archive_rights": {
+        "path": "results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json",
+        "sha256": "c7fd9daacafcf726809d6cead6649be4b21527129135c25b13cd500f65a9acf2"
+      },
+      "synthetic_reconstruction": {
+        "path": "results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json",
+        "sha256": "38e1b47b26c53c6aa69d466dd8a9901a40638657fad66874840c0579312d92e3"
+      },
+      "real_data_reconstruction": {
+        "path": "results/Speck-Architecture-Promotion-v1/helmet-real-data-reconstruction-readiness.json",
+        "sha256": "a1f6d4a7c0c617ceaa946e6131a8c1f01fad444c27819cf2b3d02f310da48e59"
+      },
+      "truncation_tokenizer": {
+        "path": "results/Speck-Architecture-Promotion-v1/helmet-truncation-tokenizer-readiness.json",
+        "sha256": "5cb5e49887ae5545231d3b942c6cead6f1b6b818ff307dc0ba684b17a9cdc6d0"
+      },
+      "model_judge": {
+        "path": "results/Speck-Architecture-Promotion-v1/helmet-model-judge-readiness.json",
+        "sha256": "68b1199f9390b4a5e9c2022775fa4573cdb957ae10faf0072c580e33ae9bc239"
+      },
+      "local_next_action_available": false,
+      "requires": [
+        "author or rights-holder exact provenance and intended-use authority",
+        "organizational dataset and Llama-2 tokenizer license/scope decisions",
+        "qualified proprietary-judge data transmission, retention, deletion, cost, and replacement policy"
+      ],
+      "extraction_or_execution_authorized": false
+    },
+    "novelty": {
+      "packet": {
+        "path": "research/paper-1/n1_independent_review_packet_v1.json",
+        "sha256": "63aa99cc22c2d2d8905fe90ae8067cb55c810cc87bb3ef1866d53e8308abd837"
+      },
+      "local_next_action_available": false,
+      "requires": "two genuinely independent domain-qualified reviews; Speck self-review cannot satisfy independence",
+      "experiment_authorized": false
+    }
+  },
+  "currently_allowed_actions": [
+    "allow the frozen systemd event runner/finalizer to complete the active language cell and successors",
+    "after an automatic result commit, run standalone result-acceptance v3 before interpreting it or completing Linear work",
+    "after accepted events, synchronize the append-only research ledger and Linear without changing frozen evidence",
+    "perform infrequent handle-specific liveness checks when enough time has elapsed; never poll logs, metrics, checkpoints, results, or GPU state during a live cell",
+    "run hash/test maintenance after unrelated repository changes",
+    "audit a new official source only when it directly changes a named blocker"
+  ],
+  "currently_forbidden_actions": [
+    "launching, retrying, stopping, or branching the active finalist outside frozen automation",
+    "reading live logs, metrics, checkpoint tensors, partial results, or GPU telemetry for an interim look",
+    "registering or materializing any sequence DAG descendant before F0 acceptance",
+    "implementing depth or width components before their parent activation gates",
+    "activating live systems work before all five systems gates pass in order",
+    "extracting or executing HELMET data without the named external authorities",
+    "performing Speck's own review as an independent N1 review",
+    "launching interaction, scaling, paper-scale, or release work before their frozen prerequisites"
+  ],
+  "decision": {
+    "autonomous_static_research_exhausted_without_named_new_evidence": true,
+    "active_event_chain_remains_progress_path": true,
+    "overall_goal_complete": false,
+    "blocked_goal_status_appropriate": false,
+    "reason_not_blocked": "a specifically identified authorized event-driven training handle remains the progress path; external authority gates do not stop that chain",
+    "implementation_authorized": false,
+    "new_training_authorized_outside_event_chain": false,
+    "promotion_authority": false,
+    "next_action": "enter event-driven wait; on the next sufficiently spaced check, inspect only the specific service/path handle and process a completed commit through acceptance v3"
+  }
+}

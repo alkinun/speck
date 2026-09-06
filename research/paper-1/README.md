@@ -108,6 +108,12 @@ the final combined model.
   segments are byte-identical, but the initial in-place quantizer rounded through BF16 instead of FP8.
   Current explicit FP8 casting is the future source reference; local low-precision behavior remains
   unqualified and the convergence DAG stays closed.
+- [`pre_results_closure_v1.json`](pre_results_closure_v1.json) and
+  [`pre-results-closure-qualified-v1.json`](../../results/Speck-Paper1/pre-results-closure-qualified-v1.json)
+  bind every current architecture, systems, evaluation, scaling, interaction, and external-authority
+  stop gate. Autonomous static work is exhausted; the active event chain remains the progress path,
+  with standalone acceptance v3 mandatory after each automatic commit. The goal is active, incomplete,
+  and not blocked.
 - [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
   ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
   selection before a fixed-count integration/readout placement successor.

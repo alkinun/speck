@@ -1,0 +1,62 @@
+{
+  "format": "speck_paper1_pre_results_closure_qualification",
+  "format_version": 1,
+  "status": "qualified_event_wait_required_goal_active_not_blocked",
+  "created_at": "2026-09-06T04:45:45+00:00",
+  "scope": "cross-program offline authority and stop-boundary qualification; no live result, checkpoint, log, metric, service, GPU, implementation, training, external communication, or dataset accessed or changed",
+  "inputs": {
+    "closure": {
+      "path": "research/paper-1/pre_results_closure_v1.json",
+      "sha256": "9b362e02b46f67887377868f27ff005fcf7f9170055b341f3e33e15e636d0b42"
+    },
+    "active_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_pre_results_closure_validate.py",
+      "sha256": "811637c1da6685ba37ab3163e5d690b0e446e31ebde09959cff4c2697d920bfe"
+    },
+    "tests": {
+      "path": "tests/test_paper_pre_results_closure.py",
+      "sha256": "61dc66119e22550972da011254b7d9875828bdfe2aec9d1a69a47b7e5ed0af42"
+    }
+  },
+  "result": {
+    "closed_autonomous_tracks": [
+      "sequence",
+      "depth",
+      "width",
+      "systems static composition"
+    ],
+    "systems_live_activation_gates": 5,
+    "external_authority_domains": [
+      "HELMET rights/tokenizer/judge",
+      "independent N1 review"
+    ],
+    "active_progress_root": "frozen event-driven finalist language sequence",
+    "postcommit_acceptance_v3_external_to_frozen_runner": true,
+    "postcommit_acceptance_required_before_interpretation_or_Linear_completion": true,
+    "autonomous_static_research_exhausted_without_named_new_evidence": true
+  },
+  "decision": {
+    "event_wait_required": true,
+    "overall_goal_complete": false,
+    "blocked_goal_status_appropriate": false,
+    "new_implementation_authorized": false,
+    "new_training_authorized_outside_event_chain": false,
+    "promotion_authority": false,
+    "next_action": "wait without short polling; at the next sufficiently spaced check inspect only the specific launch/path handle, then run acceptance v3 after any automatic commit"
+  },
+  "verification": {
+    "focused_tests": "6 passed",
+    "validator_result": "valid_event_wait_required; four tracks; five systems gates",
+    "active_program_validation": "unchanged and valid_hypotheses_only",
+    "live_output_accessed": false,
+    "checkpoint_accessed": false,
+    "service_polled": false
+  }
+}
