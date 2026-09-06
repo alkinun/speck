@@ -143,6 +143,7 @@ Read in order:
 135. [134 — Complete finite source coverage moved before commit](134_finalist_program_source_gate.md)
 136. [135 — One-control integration proof for the pre-commit source gate](135_finalist_program_source_gate_integration.md)
 137. [136 — Retained-checkpoint replay closes the result-provenance gap](136_finalist_checkpoint_provenance_replay.md)
+138. [137 — Exact append-only Git provenance for every finalist event](137_finalist_append_only_git_provenance.md)
 
 Conventions:
 

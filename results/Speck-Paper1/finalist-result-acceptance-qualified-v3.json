@@ -1,0 +1,104 @@
+{
+  "format": "speck_paper_finalist_result_acceptance_qualification",
+  "format_version": 3,
+  "status": "qualified_append_only_git_event_successor_before_first_accepted_result",
+  "created_at": "2026-09-06T01:54:20+00:00",
+  "scope": "offline append-only successor that composes v2 checkpoint replay with exact Git event-commit provenance; no active service, training log, unaccepted result, checkpoint payload, GPU, or intermediate metric accessed",
+  "predecessor": {
+    "path": "results/Speck-Paper1/finalist-result-acceptance-qualified-v2.json",
+    "sha256": "7296e9053e19cb00f8065300891ec1258ab2eaa935b54c69e005e4314a2c8cc1",
+    "verifier": {
+      "path": "scripts/paper_finalist_result_acceptance_validate_v2.py",
+      "sha256": "53d2050978cafd9a8a8761bac7743efb0df00838de1d1330351b06975c5e803a"
+    },
+    "disposition": "preserved_and_composed",
+    "limitation_closed": "v2 proves current ledger, checkpoint, and result equality but does not prove that each transition was committed atomically, alone, and append-only"
+  },
+  "implementation": {
+    "verifier": {
+      "path": "scripts/paper_finalist_result_acceptance_validate_v3.py",
+      "sha256": "642eda28f01c73f9a01866c2436840bc484428f8280c38f946249d072679b0d7"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_result_acceptance_v3.py",
+      "sha256": "07f90135aef2030618e6e759387c468a3bee508856c929d2f755a322fe4feba6"
+    },
+    "git_version": "2.55.0",
+    "unchanged_frozen_runner": {
+      "path": "scripts/paper_finalist_continue.py",
+      "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+    }
+  },
+  "event_commit_contract": {
+    "result_and_transition_added_in_same_commit": true,
+    "result_path_has_exactly_one_commit": true,
+    "transition_path_has_exactly_one_commit": true,
+    "working_result_and_transition_equal_committed_bytes": true,
+    "program_snapshot_loaded_from_event_commit": true,
+    "program_snapshot_must_equal_exact_accepted_prefix": true,
+    "stored_status_and_next_run_checked_at_each_snapshot": true,
+    "commit_subject_checked_for_each_of_12_edges": true,
+    "commit_file_set_exact": true,
+    "ordinary_transition_files": [
+      "result",
+      "transition",
+      "experiment program"
+    ],
+    "sixth_control_addition": "time-to-quality target lock",
+    "sixth_candidate_addition": "final paired analysis",
+    "target_and_analysis_paths_write_once": true,
+    "transition_commits_follow_frozen_ancestry_order": true,
+    "unrelated_intervening_research_commits_allowed": true
+  },
+  "counterexamples": {
+    "v2_accepts_valid_but_uncommitted_current_state": true,
+    "v2_accepts_unrelated_file_in_event_commit": true,
+    "v2_accepts_wrong_event_commit_subject": true,
+    "v2_accepts_later_result_timestamp_rewrite_with_rehashed_references": true,
+    "v2_accepts_uncommitted_transition_timestamp_rewrite": true,
+    "v3_rejects_each_counterexample": true,
+    "v3_accepts_exact_append_only_event_commit": true,
+    "tests": 6
+  },
+  "decision": {
+    "append_only_git_event_verifier_qualified": true,
+    "v1_or_v2_artifact_or_verifier_modified": false,
+    "must_run_after_every_automatic_result_commit": true,
+    "must_pass_before_result_interpretation_or_linear_completion": true,
+    "v3_supersedes_v2_as_operational_postcommit_command": true,
+    "wired_into_frozen_automation": false,
+    "active_runner_collector_analyzer_program_or_training_modified": false,
+    "terminal_systemd_exit_provenance_closed": false,
+    "terminal_systemd_exit_provenance_disposition": "retain Finding 129 deferral because closing it requires a frozen-runner change; valid scientific artifacts remain authoritative",
+    "next_action": "after each automatic commit, run v3 against the clean repository before interpreting or completing the result in Linear; preserve all event commits and stop on any mismatch"
+  },
+  "failure_policy": {
+    "interpretation_authorized_after_failure": false,
+    "commit_amend_rebase_result_or_transition_rewrite_authorized": false,
+    "checkpoint_or_result_repair_authorized": false,
+    "automatic_retry_skip_or_branch_authorized": false,
+    "required_action": "preserve current commits and artifacts, stop interpretation, and diagnose the exact Git or composed v2 invariant"
+  },
+  "verification": {
+    "test_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_result_acceptance_v3.py -q",
+    "test_expected": "6 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_result_acceptance_v3_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "composed_acceptance_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_result_acceptance*.py -q",
+    "composed_acceptance_expected": "19 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "140 passed",
+    "program_validation": "passed",
+    "empty_ledger_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_finalist_result_acceptance_validate_v3",
+    "empty_ledger_result": "valid with 0 accepted results, 0 checkpoint replays, 0 event commits, and control pair 0 next",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "an empty-ledger pass validates a future event commit",
+    "v3 is part of the frozen automatic finalizer",
+    "Git provenance establishes terminal systemd exit status",
+    "an unrelated research commit between event commits violates the sequence",
+    "a failed v3 check permits amend, rebase, rewrite, retry, skip, or branch"
+  ]
+}

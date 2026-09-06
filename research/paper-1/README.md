@@ -356,6 +356,9 @@ the final combined model.
 - [`finalist-result-acceptance-qualified-v2.json`](../../results/Speck-Paper1/finalist-result-acceptance-qualified-v2.json)
   composes every v1 check with deterministic recollection from the pinned experiment and retained final
   checkpoint. All stable result fields must replay exactly; the checkpoint must remain until this passes.
+- [`finalist-result-acceptance-qualified-v3.json`](../../results/Speck-Paper1/finalist-result-acceptance-qualified-v3.json)
+  additionally reconstructs each event commit. Result, transition, exact program snapshot, subject, and
+  file set must agree and remain write-once; unrelated research commits between events remain valid.
 - [`finalist-program-source-gate-v1.json`](../../results/Speck-Paper1/finalist-program-source-gate-v1.json)
   safely moves the equivalent exact finite 11-source rule into the existing pre-commit program-validator
   call. Missing/extra/non-finite sources now stop before commit and scheduling; the independent
@@ -447,6 +450,9 @@ preserves the failed-attempt/rerun history. Failure blocks interpretation withou
 Its append-only v2 successor also replays the frozen collector from each retained checkpoint. This
 closes the v1 boundary under which rehashed provenance fields or post-collection checkpoint drift could
 pass while labels, metrics, sources, and transitions remained valid.
+The v3 successor then binds acceptance to exact append-only Git history: every event's current bytes,
+commit subject, changed paths, program prefix, successor, and ancestry order must agree. It does not
+claim terminal systemd exit provenance, whose frozen-runner deferral remains unchanged.
 Because the program validator is not a frozen scientific input, its complete-source rule is now also
 enforced inside finalization before commit/scheduling. Trainer, runner, analyzer, plan, thresholds, and
 the independent post-commit check remain unchanged.
