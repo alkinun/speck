@@ -519,13 +519,32 @@
     "sha256": "f4aa2f4e54733f2682dde181706f81928b8c49586affb791247fed027b373e8b",
     "status": "qualified_initial_control_launch_authorized_no_promotion_authority"
   },
+  "finalist_rerun": {
+    "contract": "research/paper-1/finalist_rerun_v1.json",
+    "sha256": "61c591b7c54ee9b9c6ef34c752806c79cca8fdb3d488d1486285a0b8588fcbf7",
+    "status": "frozen_after_operator_interruption_before_identical_restart"
+  },
   "finalist_evidence": {
     "status": "qualified_unexecuted",
     "control_results": [],
     "candidate_results": [],
     "time_to_quality_target": null,
     "analysis_result": null,
-    "next_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+    "next_run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "failed_attempts": [
+      {
+        "attempt": 1,
+        "path": "results/Speck-Paper1/finalist-failed-attempt-control-pair0-v1.json",
+        "sha256": "49da6d0a50bab66d297698712caa0bba00377ce87bb0c1f097f9689ee809d356",
+        "status": "operator_interrupted_after_step_1_no_checkpoint_or_result"
+      }
+    ],
+    "active_rerun": {
+      "attempt": 2,
+      "path": "research/paper-1/finalist_rerun_v1.json",
+      "sha256": "61c591b7c54ee9b9c6ef34c752806c79cca8fdb3d488d1486285a0b8588fcbf7",
+      "status": "frozen_after_operator_interruption_before_identical_restart"
+    }
   },
   "halo_code_audit": {
     "audit": "research/paper-1/halo_code_audit_v1.json",

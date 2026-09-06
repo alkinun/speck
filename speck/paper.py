@@ -20,6 +20,7 @@ PROGRAM_FILES = (
     "finalist_launch_v2.json",
     "finalist_automation_v1.json",
     "finalist_automation_v2.json",
+    "finalist_rerun_v1.json",
     "sequence_cache_representation_v1.json",
     "hca_readiness_v1.json",
     "csa_readiness_v1.json",
@@ -2176,6 +2177,62 @@ def _validate_finalist_live_launch(reference, repository_root, paper_id):
             raise ValueError("finalist live launch input does not match its pin")
 
 
+def _validate_finalist_rerun(reference, repository_root, paper_id):
+    _require(reference, {"contract", "sha256", "status"}, "finalist rerun reference")
+    path = repository_root / reference["contract"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist rerun contract does not match its pin")
+    contract = _load_json(path)
+    failed = contract.get("failed_attempt", {})
+    cell = contract.get("cell", {})
+    restart = contract.get("restart", {})
+    observation = contract.get("pre_restart_observation", {})
+    execution = contract.get("execution", {})
+    decision = contract.get("decision", {})
+    if (
+        contract.get("format") != "speck_paper_finalist_rerun_contract"
+        or contract.get("format_version") != 1
+        or contract.get("paper_id") != paper_id
+        or contract.get("status") != reference["status"]
+        or cell.get("run")
+        != "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+        or cell.get("pair") != 0
+        or cell.get("seed") != 42
+        or cell.get("data_token_offset") != 0
+        or cell.get("training_tokens") != 1539833856
+        or cell.get("optimizer_steps") != 23496
+        or cell.get("train_config_sha256")
+        != "f3b8fc11a1724720f6b88d1ff4ece3066b2b5cefd2d2e76b6e185dd1562c528f"
+        or restart.get("attempt_number") != 2
+        or restart.get("mode") != "from_step_0"
+        or restart.get("resume_checkpoint") is not None
+        or restart.get("scientific_config_changes") != []
+        or restart.get("analysis_changes") != []
+        or len(restart.get("known_observations_not_used", ())) != 3
+        or any(value is not True for value in observation.values())
+        or execution.get("automatic_retry") is not False
+        or execution.get("manual_preregistered_identical_restart") is not True
+        or execution.get("fresh_live_qualification_required") is not True
+        or decision.get("failed_attempt_retained") is not True
+        or decision.get("failed_attempt_eligible_as_result") is not False
+        or decision.get("identical_restart_authorized_after_fresh_live_gate") is not True
+        or decision.get("training_authorized_now") is not False
+        or decision.get("automatic_retry_authorized") is not False
+    ):
+        raise ValueError("finalist rerun contract is incomplete")
+    failed_path = repository_root / failed.get("path", "")
+    if (
+        failed.get("status") != "operator_interrupted_after_step_1_no_checkpoint_or_result"
+        or not failed_path.is_file()
+        or _file_sha256(failed_path) != failed.get("sha256")
+    ):
+        raise ValueError("finalist failed attempt does not match its rerun pin")
+    for entry in contract.get("frozen_inputs", {}).values():
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist rerun input does not match its pin")
+
+
 def _validate_finalist_evidence(evidence, automation_reference, repository_root):
     required = {
         "status",
@@ -2184,6 +2241,8 @@ def _validate_finalist_evidence(evidence, automation_reference, repository_root)
         "time_to_quality_target",
         "analysis_result",
         "next_run",
+        "failed_attempts",
+        "active_rerun",
     }
     if not required <= set(evidence):
         raise ValueError("finalist evidence ledger is incomplete")
@@ -2193,6 +2252,14 @@ def _validate_finalist_evidence(evidence, automation_reference, repository_root)
     candidate_order = order[6:]
     controls = evidence["control_results"]
     candidates = evidence["candidate_results"]
+    failed_attempts = evidence["failed_attempts"]
+    active_rerun = evidence["active_rerun"]
+    if len(failed_attempts) != 1 or active_rerun is None:
+        raise ValueError("finalist interrupted attempt or rerun registration is missing")
+    for entry in [*failed_attempts, active_rerun]:
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist recovery evidence does not match its pin")
     if (
         len(controls) > 6
         or len(candidates) > 6
@@ -2689,6 +2756,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "finalist_launch",
             "finalist_automation",
             "finalist_live_launch",
+            "finalist_rerun",
             "finalist_evidence",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
@@ -2793,6 +2861,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_finalist_live_launch(
         program["finalist_live_launch"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_rerun(
+        program["finalist_rerun"],
         repository_root,
         paper_id,
     )

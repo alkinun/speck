@@ -30,6 +30,7 @@ def test_checked_paper_program_authorizes_proxy_but_blocks_paper_scale():
             "finalist_launch_v2.json",
             "finalist_automation_v1.json",
             "finalist_automation_v2.json",
+            "finalist_rerun_v1.json",
             "sequence_cache_representation_v1.json",
             "hca_readiness_v1.json",
             "csa_readiness_v1.json",
