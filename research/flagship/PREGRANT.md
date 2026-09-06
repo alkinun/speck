@@ -9,10 +9,10 @@ research machine on 2026-09-06.
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
 | R1 | Restore root storage headroom | Complete: root is 78% used with about 98 GiB free | Root stays below 80%; relocated checkpoint paths remain valid; all new work uses the data volume | SPE-24 |
-| R2 | Add a code source | Not started | Source, revision, rights, fields, filters, weights, and dedup behavior are frozen | SPE-114 |
-| R3 | Run the 20B data rehearsal | Not started | Download, filtering, dedup memory, packing throughput, storage, cleanup, and resume are measured | SPE-114 |
-| R4 | Build the neutral held-out set | Not started | Equal-token source slices plus an unseen source are immutable and decontaminated before outputs | SPE-114 |
-| R5 | Prepare flagship corpora | Not started | Stable-phase data is launch-ready; decay candidates can finish before E4; unique-token risk is explicit | SPE-114 |
+| R2 | Add and qualify a code source | Protocol complete; source work not started | Immutable source card passes rights, provenance, English-text, repository-split, dedup, contamination, yield, and operational gates | SPE-114 |
+| R3 | Run the 20B data rehearsal | Protocol complete; run not started | Download, filtering, exact/near dedup memory, packing throughput, storage, cleanup, and resume are measured | SPE-114 |
+| R4 | Build the evaluation firewall | Protocol complete; data not built | Tokenizer sample, equal-byte selection set, unseen-source slices, and sealed audit are immutable and decontaminated before outputs | SPE-114 |
+| R5 | Prepare flagship corpora | Experiment contract complete; data not started | Six-category stable candidates are launch-ready; decay candidates can finish before E4; unique-token risk is explicit | SPE-114 |
 | R6 | Prepare long-document data | Not started | Complete books, papers, and repositories pass provenance, split, dedup, and length checks | SPE-52 |
 | R7 | Qualify the four-GH200 stack | Not started | arm64, DDP, KDA, checkpoints, resume, storage, and achieved TFLOP/s pass a recorded rehearsal | SPE-115 |
 
@@ -27,10 +27,14 @@ parts pass or have a written fallback that consumes no undeclared GPU work.
 | R9 | Optional FP8 | Not started; bf16 is the fallback | Numerical, quality, throughput, memory, and resume gates pass on GH200, or bf16 is frozen | SPE-83 |
 | R10 | Decide tokenizer D5 | Default is Mistral 32K | Keep decision or replacement is recorded within one week; no late vocabulary change | SPE-117 |
 | R11 | Materialize scale targets | Shape-A planning target exists; shape B and ladder are missing | 60M–1.2B configs pass exact parameter/FLOP/state accounting | SPE-60 |
-| R12 | Freeze analysis contracts | Program-level rules exist; experiment manifests are missing | E1–E5, C0/D2/D3/D4/D6, and scale analyses are immutable before outputs | SPE-70 |
+| R12 | Freeze analysis contracts | Data program is specified; per-arm and architecture manifests are missing | E1W/E1S/E2–E5, C0/D2/D3/D4/D6, and scale analyses are immutable before outputs | SPE-70 |
 
 [`targets/shape-a`](targets/shape-a/) is deliberately non-launchable. A real experiment appears only
 after its data, training, hardware, and analysis contracts are complete.
+
+[`DATA.md`](DATA.md) and [`data_plan.json`](data_plan.json) freeze the data categories, bounds,
+experiment funnel, held-out firewall, statistic, guardrails, seed counts, and GPU-hour ceiling. They
+do not substitute for source cards, prepared data, or per-arm manifests.
 
 ## Evaluation and release readiness
 

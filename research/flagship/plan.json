@@ -10,8 +10,8 @@
   },
   "budget": {
     "gpu_hours": 5000,
-    "mandatory_gpu_hours": 3932,
-    "reserve_gpu_hours": 1068,
+    "mandatory_gpu_hours": 3985,
+    "reserve_gpu_hours": 1015,
     "full_node_days": 52.083333333333336
   },
   "scope": {
@@ -63,17 +63,18 @@
         1,
         4
       ],
-      "gpu_hours": 203,
+      "gpu_hours": 230,
       "depends_on": [
         "P0"
       ],
       "work": [
-        "E1 web-filter screen and confirmations: 133 GPU-hours",
+        "E1W web source-filter screen and confirmations: 133 GPU-hours",
+        "E1S code math and synthetic source screens: 27 GPU-hours",
         "E3 epoch and repetition policy: 32 GPU-hours",
         "D4 LR and global-batch sweep: 33 GPU-hours",
         "D6 LR-width transfer anchors: 5 GPU-hours"
       ],
-      "exit_gate": "web-filter finalists repetition policy and transferable LR region are frozen"
+      "exit_gate": "source treatments repetition policy and transferable LR region are frozen"
     },
     {
       "id": "P2",
@@ -82,17 +83,17 @@
         4,
         11
       ],
-      "gpu_hours": 414,
+      "gpu_hours": 440,
       "depends_on": [
         "P1"
       ],
       "work": [
-        "E2 stable mixture: 225 GPU-hours",
+        "E2 tiered stable-mixture search narrowing and confirmation: 251 GPU-hours",
         "C0 three-seed shared dense control: 63 GPU-hours",
         "D2 NoPE versus partial RoPE: 63 GPU-hours",
         "D3 3:1 versus 5:1 recurrent-global ratio: 63 GPU-hours"
       ],
-      "exit_gate": "stable mixture position treatment and mixer ratio are selected by frozen rules"
+      "exit_gate": "stable mixture passes category guardrails and sealed audit; position treatment and mixer ratio are selected by frozen rules"
     },
     {
       "id": "P3",
@@ -177,7 +178,7 @@
         1,
         80
       ],
-      "gpu_hours": 1068,
+      "gpu_hours": 1015,
       "depends_on": [
         "P0"
       ],
@@ -214,7 +215,7 @@
     "binding": [
       "phase dependencies and exit gates",
       "5000 GPU-hour ceiling",
-      "1068 GPU-hour protected reserve",
+      "1015 GPU-hour protected reserve",
       "dense-width flagship",
       "day-21 configuration freeze",
       "three-seed confirmation for architecture decisions",

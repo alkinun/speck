@@ -7,9 +7,12 @@ paper that describes it. Everything else under `research/` is either tooling con
 The active operating surface is intentionally small:
 
 - This file freezes scope, defaults, experiments, data, evaluation, and releases.
+- [`DATA.md`](DATA.md) defines source qualification, the held-out firewall, the mixture-search
+  funnel, promotion rules, and required evidence.
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
 - [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
+- [`data_plan.json`](data_plan.json) is the machine-checked category, run, and selection contract.
 - [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
   created only at the day-21 freeze.
 
@@ -110,7 +113,7 @@ changes no number in the config is cut. A config line with no figure is labeled 
 1. Introduction: the efficiency problem, the two cost axes, claims and non-claims.
 2. Architecture: every operator in one notation, with state and FLOP accounting.
 3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
-4. Data ablations: E1 to E5 with per-domain held-out loss and small-scale benchmarks.
+4. Data ablations: E1W/E1S and E2–E5 with per-domain held-out loss and small-scale benchmarks.
 5. Architecture ablations: C0, D2, D3, D4, and D6 with paired non-inferiority bounds.
 6. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one
    held-out point, and the hyperparameter transfer rule from D6.
@@ -163,20 +166,33 @@ D2 and D3.
 
 ### 4.2 Data experiments
 
-Two stages, mirroring how the flagship trains. Stable-phase questions need full runs. Decay-phase
-questions branch from one shared stable checkpoint and cost a quarter as much.
+The complete protocol is [`DATA.md`](DATA.md). Source qualification is CPU work before the grant.
+GPU experiments form a funnel: source/filter screens, cheap space-filling coverage of the constrained
+six-category simplex, medium-scale narrowing, and three-seed full-proxy confirmation. Stable-phase
+questions need full runs. Decay-phase questions branch from one shared stable checkpoint and cost a
+quarter as much.
 
 | ID | Question | Arms | Scale and tokens | Runs | GPU-h |
 | --- | --- | --- | --- | ---: | ---: |
-| E1 | Which web filter? | Ultra-FineWeb HQ, DCLM baseline, FineWeb-Edu, blend | 350M, 8B | 8 | 133 |
-| E2 | Stable mixture composition | web-heavy, balanced, code and math heavy | 350M, 12B | 9 | 225 |
+| E1W | Which web source/filter? | four treatments, screen then confirm top two | 350M, 8B | 8 | 133 |
+| E1S | Which specialist sources? | three treatments each for code, math, and synthetic | 150M, 2B | 15 | 27 |
+| E2a | Where is the stable-mixture frontier? | 24 space-filling constrained mixtures | 60M, 1.2B | 24 | 10 |
+| E2b | Which proxy winners survive scale? | six diverse Pareto candidates | 150M, 3B | 6 | 16 |
+| E2c | Which stable mixture wins? | top three, three seeds each | 350M, 12B | 9 | 225 |
 | E3 | Epoch policy at matched tokens | 1 epoch mixed, 2 epochs higher quality, 4 epochs best | 150M, 6B | 6 | 32 |
 | E4 | Decay-phase composition | four mixtures branched from the E2 winner | 350M, +3B | 8 | 50 |
-| E5 | Curriculum shape | single-stage uniform, within-source quality-sorted, two-phase | 350M, 12B | 4 | 100 |
-| | | | | **35** | **540** |
+| E5 | Curriculum shape | quality-sorted and two-phase; reuse E2c uniform control | 350M, 12B | 4 new | 100 |
+| | | | | **80** | **593** |
 
-E1 runs four one-seed screens, then three seeds on the top two. E2 uses three seeds because it sets
-the flagship mixture. E3, E4, and E5 use two seeds because their expected effects are large.
+E1W runs four one-seed screens, then adds two seeds to each finalist. Each E1S category runs three
+one-seed treatments, then adds one seed to its top two. E2c uses three seeds because it sets the
+flagship mixture. E3, E4, and E5 use two seeds because their expected effects are large. E5's count
+is four new runs because the selected E2c mixture is its two-seed uniform control.
+
+The data decision is not a single weighted loss. Selection uses equal-domain bits per UTF-8 byte,
+paired confidence intervals, and a hard no-regression guardrail for web, code, math, synthetic,
+science, and reference separately. A sealed audit is opened once after selection. Exact rules,
+bounds, fallbacks, and artifacts are frozen in [`data_plan.json`](data_plan.json).
 
 E3 is the highest-leverage experiment in the program. If repetition is close to free, as
 Muennighoff et al. report up to four epochs, the preparation target drops from 500B unique tokens to
@@ -267,23 +283,27 @@ completes; the volume does not hold raw and packed simultaneously at full scale.
 
 ### 5.2 Mixture
 
-Starting point for E2's balanced arm, weights in percent. E1 decides the web component and E2
-decides these fractions; this table is a prior, not a decision.
+Natural language is English-only. Programming syntax is exempt from language identification, while
+code comments, documentation, and notebooks are English-filtered. Starting stable-phase weights and
+search bounds are below; these are priors and constraints, not the result.
 
-| Source | Weight | Status |
-| --- | ---: | --- |
-| Web, filter chosen by E1 | 55 | Ultra-FineWeb HQ and DCLM in the pipeline, FineWeb-Edu new |
-| Code, Stack-Edu or an educational subset of The Stack v2 | 12 | **new, no code source exists today** |
-| Math, FineMath 4+ and MegaMath | 8 | partly in the pipeline |
-| Synthetic textbook, Cosmopedia v2 and similar | 10 | in the pipeline |
-| Reference, Wikipedia and peS2o | 5 | in the pipeline |
-| Held in reserve for E2's arms | 10 | |
+| Category | Prior | E2 range | Status |
+| --- | ---: | ---: | --- |
+| Web | 55% | 45–65% | incumbents integrated; E1W chooses treatment |
+| Code | 15% | 10–22% | **new; rights, provenance, repository split, and source must qualify** |
+| Math | 10% | 8–18% | partly integrated; E1S chooses treatment |
+| Synthetic | 10% | 8–18% | integrated; E1S chooses treatment |
+| Science | 5% | 3–10% | peS2o incumbent, requalified before use |
+| Reference | 5% | 3–10% | English Wikipedia incumbent, requalified before use |
 
 The absence of any code source is the largest single gap in the current pipeline. Code data improves
 reasoning as well as code, so it is not an optional category.
 
-The decay mixture raises math, code, synthetic, and instruction-style data to roughly 45% combined.
-E4 chooses among four candidates.
+E2a generates valid mixtures that sum to 100% inside these bounds rather than relying on three
+hand-written blends. E2b and E2c narrow and confirm. The decay prior raises math, code, synthetic,
+and instruction-style data to roughly 45% combined; E4 chooses among four candidates. Source gates,
+held-out construction, near-duplicate and contamination requirements, selection statistics, and
+promotion rules are in [`DATA.md`](DATA.md).
 
 ## 6. Evaluation
 
@@ -307,12 +327,12 @@ must be at least two months; three is comfortable.
 
 | Track | GPU-hours | Share |
 | --- | ---: | ---: |
-| Data experiments, E1 to E5 | 540 | 11% |
+| Data experiments, E1W/E1S and E2 to E5 | 593 | 12% |
 | Dense architecture decisions, C0 and D2 to D6 | 227 | 5% |
 | Scale ladder and reversal | 290 | 6% |
 | Flagship pretraining | 2,425 | 49% |
 | Extension, anneal, SFT, evaluation, serving | 450 | 9% |
-| Reserve | 1,068 | 21% |
+| Reserve | 1,015 | 20% |
 | | **5,000** | |
 
 The reserve is sized for a first run on unfamiliar hardware with an untested stack, not as slack to

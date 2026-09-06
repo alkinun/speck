@@ -7,19 +7,19 @@ to bypass a gate.
 ## Budget and calendar
 
 The grant supplies 5,000 GPU-hours on one four-GH200 node over approximately 90 days. That is 52.1
-fully occupied node-days. Mandatory work consumes 3,932 GPU-hours, or 41.0 node-days; the remaining
-1,068 hours are protected reserve.
+fully occupied node-days. Mandatory work consumes 3,985 GPU-hours, or 41.5 node-days; the remaining
+1,015 hours are protected reserve.
 
 | Phase | Target days | GPU-h | Output |
 | --- | ---: | ---: | --- |
 | P0 — Pre-grant readiness | before day 1 | 0 | Data, hardware, storage, targets, and contracts ready |
-| P1 — Calibration and screens | 1–4 | 203 | Web filter, repetition policy, LR/batch region |
-| P2 — Mixture and dense architecture | 4–11 | 414 | Stable mixture, position treatment, mixer ratio |
+| P1 — Calibration and screens | 1–4 | 230 | Web and specialist sources, repetition policy, LR/batch region |
+| P2 — Mixture and dense architecture | 4–11 | 440 | Stable-mixture funnel, position treatment, mixer ratio |
 | P3 — Decay, curriculum, and scale | 11–20 | 440 | Decay recipe, scale fit, flagship size |
 | P4 — Configuration freeze | 20–21 | 0 | One hash-bound launch manifest |
 | P5 — Flagship pretraining | 21–50 | 2,425 | Pre-decay and final base checkpoints |
 | P6 — Extension through release candidates | 51–65 | 450 | 128K, annealed, instruct, evaluated exports |
-| P7 — Protected reserve | 1–80 | 1,068 | Triggered recovery or continuation only |
+| P7 — Protected reserve | 1–80 | 1,015 | Triggered recovery or continuation only |
 | P8 — Paper and release buffer | 66–90 | 0 planned | Audited paper and public artifacts |
 
 Independent single-GPU arms should be packed four at a time. The flagship alone owns all four GPUs.
@@ -33,31 +33,36 @@ or resume behavior are unresolved.
 
 ### P1 — First answers first
 
-Run four independent workstreams in parallel:
+Run these independent workstreams in parallel:
 
-- E1 web filter: 133 GPU-hours.
+- E1W web source/filter screen: 133 GPU-hours.
+- E1S code, math, and synthetic source screens: 27 GPU-hours.
 - E3 repetition policy: 32 GPU-hours.
 - D4 LR/global batch: 33 GPU-hours.
 - D6 LR/width anchors: 5 GPU-hours.
 
 D4 and D6 constrain every later training recipe. E3 determines whether the data pipeline needs near
-500B unique tokens or can safely repeat roughly 150B. E1 supplies the web component for E2.
+500B unique tokens or can safely repeat roughly 150B. E1W and E1S supply qualified treatments for
+E2. Source identity, rights, language, deduplication, contamination, yield, and operational gates are
+CPU-only P0 work defined in [`DATA.md`](DATA.md).
 
 ### P2 — Select the stable model and data recipe
 
-- E2 stable mixture: 225 GPU-hours.
+- E2 stable-mixture funnel: 251 GPU-hours—24 tiny space-filling arms, six medium-scale candidates,
+  then three finalists at 350M/12B and three seeds.
 - C0 three-seed shared dense control: 63 GPU-hours.
 - D2 NoPE versus partial RoPE: 63 GPU-hours.
 - D3 3:1 versus 5:1 KDA/global ratio: 63 GPU-hours.
 
 C0 is trained once per seed and reused by D2 and D3. Architecture decisions use paired one-sided 95%
-bounds and the 0.01-nat non-inferiority margin. Data decisions use superiority analysis on the neutral
-held-out aggregate and disclose every source-level trade-off.
+bounds and the 0.01-nat non-inferiority margin. Data decisions use equal-domain bits per UTF-8 byte,
+paired bounds, per-category guardrails, and a sealed audit. The fitted E2 response surface nominates
+candidates; only retrained, replicated arms decide.
 
 ### P3 — Transfer before committing the flagship
 
 - E4 decay mixture: 50 GPU-hours, branched from the E2 stable winner.
-- E5 curriculum shape: 100 GPU-hours.
+- E5 curriculum shape: 100 GPU-hours; reuse the selected E2 stable mixture as the uniform control.
 - Dense scale ladder and 750M reversal check: 290 GPU-hours.
 
 Resolve the 1.2B/400B default versus the 600M/800B alternative by day 18. The fitted scale curve must
@@ -117,7 +122,7 @@ Flexible:
 
 Not flexible:
 
-- The 5,000-hour ceiling and 1,068-hour reserve.
+- The 5,000-hour ceiling and 1,015-hour reserve.
 - Dense-width flagship scope.
 - Dependency and exit-gate order.
 - Neutral held-out evaluation and seed confirmations.

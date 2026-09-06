@@ -19,12 +19,62 @@ def test_execution_plan_balances_the_grant_and_keeps_reserve_conditional():
     assert plan["format"] == "speck_flagship_execution_plan"
     assert plan["status"] == "pregrant"
     assert sum(phase["gpu_hours"] for phase in phases) == 5_000
-    assert sum(phase["gpu_hours"] for phase in phases if not phase.get("conditional")) == 3_932
+    assert sum(phase["gpu_hours"] for phase in phases if not phase.get("conditional")) == 3_985
     reserve = next(phase for phase in phases if phase["id"] == "P7")
-    assert reserve["gpu_hours"] == plan["budget"]["reserve_gpu_hours"] == 1_068
+    assert reserve["gpu_hours"] == plan["budget"]["reserve_gpu_hours"] == 1_015
     assert reserve["conditional"] is True
     assert "mixture of experts" in plan["scope"]["excluded"]
     assert "dense-width flagship" in plan["flexibility"]["binding"]
+
+
+def test_data_plan_has_a_complete_english_mixture_and_matches_execution_budget():
+    data_plan = json.loads((FLAGSHIP / "data_plan.json").read_text())
+    execution_plan = json.loads((FLAGSHIP / "plan.json").read_text())
+    categories = data_plan["categories"]
+    experiments = data_plan["experiments"]
+
+    assert data_plan["format"] == "speck_flagship_data_plan"
+    assert data_plan["language_scope"]["natural_language"] == ["en"]
+    assert [category["id"] for category in categories] == [
+        "web",
+        "code",
+        "math",
+        "synthetic",
+        "science",
+        "reference",
+    ]
+    assert sum(category["prior_percent"] for category in categories) == 100
+    assert all(
+        category["min_percent"] <= category["prior_percent"] <= category["max_percent"]
+        for category in categories
+    )
+    assert sum(experiment["new_runs"] for experiment in experiments) == 80
+    assert sum(experiment["gpu_hours"] for experiment in experiments) == 593
+    assert data_plan["totals"] == {"new_runs": 80, "gpu_hours": 593}
+
+    phase_hours = {phase["id"]: phase["gpu_hours"] for phase in execution_plan["phases"]}
+    assert phase_hours["P1"] == 230
+    assert phase_hours["P2"] == 440
+    assert execution_plan["budget"]["mandatory_gpu_hours"] == 3_985
+    assert execution_plan["budget"]["reserve_gpu_hours"] == 1_015
+
+
+def test_data_plan_preserves_selection_firewall_and_replication():
+    data_plan = json.loads((FLAGSHIP / "data_plan.json").read_text())
+    experiments = {experiment["id"]: experiment for experiment in data_plan["experiments"]}
+    selection = data_plan["selection"]
+
+    assert data_plan["partitions"] == [
+        "tokenizer_sample",
+        "selection_heldout",
+        "sealed_audit",
+    ]
+    assert selection["primary_unit"] == "bits_per_utf8_byte"
+    assert selection["e2a_advance"] == experiments["E2b"]["new_runs"] == 6
+    assert selection["e2b_advance"] * selection["final_confirmation_seeds"] == experiments[
+        "E2c"
+    ]["new_runs"]
+    assert experiments["E5"]["reused_control_runs"] == 2
 
 
 def test_execution_plan_dependencies_are_acyclic_and_days_fit_the_grant():
