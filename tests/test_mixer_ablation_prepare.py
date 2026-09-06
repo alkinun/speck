@@ -63,10 +63,7 @@ def test_ablation_summary_exposes_compute_matched_token_budgets():
     assert summary["full-global"]["parameters"] == full.parameter_count()
 
 
-@pytest.mark.parametrize(
-    "family",
-    ("SpeckLC-150M-MixerScreen-131M", "SpeckLC-150M-Rank-500M"),
-)
+@pytest.mark.parametrize("family", ("SpeckLC-150M-MixerScreen-131M",))
 def test_checked_sweep_accounting_matches_models(family):
     root = repository / "experiments" / family
     sweep = json.loads((root / "sweep.json").read_text())

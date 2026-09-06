@@ -28,7 +28,7 @@ The active contract is [`architecture-promotion-v1`](architecture-promotion-v1/)
   freezes route, payload, and direct-composition views over a tokenizer-qualified 100-way route
   vocabulary.
 - [`external/`](architecture-promotion-v1/external/) contains source-, revision-, file-, data-,
-  license-, and model-adapter contracts for RULERv1, NoLiMa, and HELMET.
+  license-, and model-adapter contracts for RULERv1 (active) and NoLiMa/HELMET (reference only).
 
 Validate the complete cross-file contract with:
 
@@ -53,54 +53,16 @@ Qualify an external source checkout without downloading its benchmark data:
 
 ```bash
 uv run --extra cpu python -m scripts.external_suite_qualify \
-  research/architecture-promotion-v1/external/helmet.json \
-  --checkout helmet_pipeline=<pinned-checkout>
+  research/architecture-promotion-v1/external/ruler_v1.json \
+  --checkout <pinned-checkout>
 ```
 
-The checked
-[external-source qualification](../results/Speck-Architecture-Promotion-v1/external-source-qualification.json)
-proves upstream commit and source-file identity. The separate
-[endpoint qualification](../results/Speck-Architecture-Promotion-v1/evaluation-endpoint-qualification.json)
-binds an attested instruction export to the exact serialized OpenAI request shapes used by RULER's
-pinned NeMo-Skills adapter and NoLiMa. It does not qualify long-context capability or serving speed.
-RULER's transitive source bundle is now locally retained and content-pinned, including dynamic essay
-canonicalization, SQuAD, HotpotQA, word lists, NLTK resources, and an exact dependency group. Its
-complete 4K through 128K matrices are also qualified across two byte-identical, network-denied generations
-per length. A pinned compatibility patch repairs an upstream HotpotQA non-termination without changing
-prompt or scoring semantics. RULER case data are complete, while candidate-specific execution and
-scoring remain blocked. NoLiMa's exact terms and pre-existing restricted object cache are now audited;
-it still requires authorized acceptance of its academic/noncommercial-only license and a
-post-acceptance payload manifest. HELMET's native CPU/eager model adapter now qualifies on a real
-Speck export, while its separate 34GB data volume, component licenses, dataset-bound processing, and
-candidate executions remain blocked. Its native `pytrec_eval` retrieval scorer is separately
-qualified from two identical network-denied local builds. The exact 11.27GB compressed archive, all
-14 active configs, and a 64GiB pre-download floor are also pinned; the discovered 5.5TB candidate
-partition is large enough but remains unmounted pending administrator action.
-
-Build or revalidate the non-redistributable RULER source bundle with:
-
-```bash
-uv run --extra cpu --group ruler python -m scripts.ruler_source_prepare \
-  --generator-checkout <RULER-c3f5e3b4-checkout> \
-  --needle-checkout <LLMTest_NeedleInAHaystack-021385d-checkout> \
-  --nltk-data <pinned-nltk-download-directory> \
-  --bundle ~/.cache/speck/evaluations/ruler-v1-sources-c3f5e3b4 \
-  --manifest results/Speck-Architecture-Promotion-v1/ruler-source-manifest.json --check
-```
-
-Generate or revalidate one tokenizer-specific RULER case matrix with two complete offline passes:
-
-```bash
-uv run --extra cpu --group ruler python -m scripts.ruler_case_prepare \
-  --contract research/architecture-promotion-v1/external/ruler_v1.json \
-  --generator-checkout <RULER-c3f5e3b4-checkout> \
-  --skills-checkout <NeMo-Skills-f4a3fd8-checkout> \
-  --tokenizer <local-Speck-export> \
-  --length 4096 \
-  --output-dir ~/.cache/speck/evaluations/<case-set>/4096 \
-  --report results/Speck-Architecture-Promotion-v1/ruler-cases-4096-qualified.json \
-  --repeats 2
-```
+RULER's transitive source bundle is locally retained and content-pinned, and its complete 4K through
+128K case matrices are qualified across two byte-identical, network-denied generations per length.
+The frozen contamination audit found answer-anchored overlap in `qa_1`/`qa_2`, so the active manifest
+(v2) gives those two tasks zero primary weight. NoLiMa and HELMET contracts remain pinned for
+reference only; both are out of scope for the first paper (see findings 42, 47 to 54, 124 to 128, and
+168). The HELMET and NoLiMa tooling was removed from the tree at commit `68d3187`.
 
 Reproduce the endpoint protocol check for an attested instruction export with:
 

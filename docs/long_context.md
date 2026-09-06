@@ -90,7 +90,8 @@ attention compute, not resident state, is the dominant 1M risk.
 2. Train token-matched short-context proxies and report the compute-matched view alongside them.
 3. Qualify Torch/FLA outputs, states, gradients, determinism, and speed on the target hardware.
 4. Run the built-in exact-length curve to catch positional, memory, retrieval, and latency failures.
-5. Promote only candidates that survive independent upstream RULER, NoLiMa, and HELMET runs.
+5. Promote only candidates that survive the independent upstream RULER run and the internal
+   200-case retrieval and composition protocols.
 6. Prepare each progressive length stage with `scripts.context_stage_prepare`; never edit a resume
    contract to force a new length or dataset through it.
 7. Re-run short quality evaluations at every promotion so context specialization cannot silently
@@ -105,7 +106,7 @@ come from the harder upstream suites and include full per-length curves.
 The checked 32K pilot continues every point from the same 131M-token `gdn-local` checkpoint on 32M
 tokens of complete FineMath, peS2o, and Wikipedia documents of at least 16K tokens. Retrieval uses
 paired counterfactual needles to cancel answer-token preferences. These are internal diagnostics,
-not publication-grade RULER, NoLiMa, or HELMET results.
+not publication-grade RULER results.
 
 | Global layers | Placement | 32K val loss | 4K loss change | Effective retrieval | Detectable retrieval | BF16 / INT8 state @128K |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: |

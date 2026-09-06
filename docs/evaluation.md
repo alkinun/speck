@@ -38,9 +38,9 @@ quality and capacity experiments; backend-native quantized attention kernels are
 for maximum decode speed because the portable path dequantizes values before SDPA.
 
 This built-in passkey task is a systems and literal-retrieval qualification, not evidence of robust
-long-context reasoning. Release evaluation must additionally run pinned upstream RULER, NoLiMa,
-and HELMET suites. Report their upstream revisions and raw outputs separately rather than relabeling
-the built-in diagnostic as one of those benchmarks.
+long-context reasoning. Release evaluation must additionally run the pinned upstream RULER suite.
+Report its upstream revision and raw outputs separately rather than relabeling the built-in
+diagnostic as that benchmark.
 
 For every headline length, publish four distinct values: model allocation ceiling, maximum training
 length, measured effective length, and maximum usable length under a named latency/memory contract.
@@ -85,12 +85,9 @@ without installing the suite or downloading its data.
   runner is deprecated. Its OpenAI adapter request shape is qualified, including the required
   zero-presence-penalty override; its data preparer still has transitive downloads that must be
   content-pinned.
-- NoLiMa's checked configurations cover 4K, 8K, 16K, and 32K. Its Adobe Research License permits only
-  non-commercial research use and must be accepted before data download. Its exact AsyncOpenAI chat
-  request and response fields are qualified against the local endpoint.
-- HELMET covers seven task categories through 128K and has a native `trust_remote_code` Hugging Face
-  adapter. Its advertised dataset is approximately 34GB, so it must use a separate planned volume; the
-  model adapter also requires a locked-environment Speck-export smoke.
+- NoLiMa and HELMET contracts remain pinned for reference but are not part of the current evaluation
+  plan: NoLiMa's license is academic-only and HELMET's runtime data, tokenizer, and judge dependencies
+  could not be qualified. See the findings ledger for the audits.
 
 Source qualification is not evaluation qualification. A suite contributes no promotion evidence until
 its data, licenses, model adapter, raw outputs, and official scorer all pass and are hashed.

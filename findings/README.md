@@ -4,6 +4,10 @@ This directory is the narrative index for the long-context experiments. Checked 
 `results/` remains the machine-readable source of truth; these files preserve the experimental
 question, controls, failures, decisions, and interpretation around those artifacts.
 
+Findings 25 through 167 belong to the retired Paper 1 gate program. The scripts, modules, tests,
+and contracts they link to were removed from the tree after commit `68d3187`; check out that commit
+to reproduce them. Findings 00 to 24 and 168 onward describe work that remains active.
+
 Read in order:
 
 1. [00 — Research contract](00_research_contract.md)
