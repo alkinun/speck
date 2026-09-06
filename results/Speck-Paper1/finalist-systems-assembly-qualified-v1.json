@@ -1,0 +1,139 @@
+{
+  "format": "speck_paper_finalist_systems_assembly_qualification",
+  "format_version": 1,
+  "status": "qualified_synthetic_trial_and_block_assembly_live_orchestration_blocked",
+  "created_at": "2026-09-06T02:41:53+00:00",
+  "scope": "pure CPU assembly of synthetic engine, telemetry, memory, and runtime-attestation JSON artifacts; no live GPU, service, finalist checkpoint, model, result, log, intermediate metric, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "memory_supplement": {
+      "path": "research/paper-1/finalist_systems_memory_v1.json",
+      "sha256": "6efcfe7599309434e6d1aa7c56f9cd059366976784127df873a4e46cd7f6832b",
+      "qualification": "results/Speck-Paper1/finalist-systems-memory-supplement-qualified-v1.json",
+      "qualification_sha256": "64a610708191b4ebf980e16a1b35b77f8cca2c12382f96e4531418bfd402bc39"
+    },
+    "engine_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-engine-qualified-v1.json",
+      "sha256": "34aafb6cf7e6ff86107d0243c2bdadfbae6679178c37b9e8f108ddbc5df82c60"
+    },
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-analysis-qualified-v1.json",
+      "sha256": "4f1bd86b426c5ab2932fa102834beb25e331ba8cf051e37db1e130fc151b5c48"
+    },
+    "pipeline_audit": {
+      "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json",
+      "sha256": "4b4e3bd70f7fe5e425dc2d0c60ab7912e3bd214450bf56c1e5a7a6b4584467e6"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_assembly.py",
+      "sha256": "e47e594d81adcc58323c467bf0cb52c54e4585f19a4f3bbfb071a953e592141d"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_assemble.py",
+      "sha256": "f9cc9ab36f82872ffc86e75180e762e2e65f9c662d0bfcaf9ae3525d054444dd"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_assembly.py",
+      "sha256": "d316c9d818e08a42c19c9e7f7c416f7258566627d4f43fd66d1283aa191292ec"
+    }
+  },
+  "trial_assembly": {
+    "engine_result_path_and_SHA256_bound": true,
+    "trace_path_and_SHA256_bound": true,
+    "runtime_attestation_path_and_SHA256_bound": true,
+    "protocol_and_memory_supplement_hashes_required": true,
+    "exact_run_arm_checkpoint_step_window_and_token_identity": true,
+    "tracking_validation_checkpoint_summary_and_model_output_must_be_false": true,
+    "engine_and_trace_phase_markers_equal": true,
+    "benchmark_PID_bound_during_process_interval": true,
+    "GPU_process_PID_bound_during_measured_interval": true,
+    "conservative_energy_integration_must_qualify": true,
+    "peak_NVML_used_bytes_consumed": true,
+    "start_temperature_uses_maximum_bracketing_samples": true,
+    "start_temperature_c_max": 45,
+    "compiled_CUDA_required": true,
+    "kernel_fallback_and_OOM_required_false": true,
+    "CUDA_phase_seconds_positive_and_not_above_wall_time": true,
+    "model_config_SHA256_matches_trial_experiment": true,
+    "benchmark_engine_SHA256_matches_implementation": true
+  },
+  "paired_batch_consumption": {
+    "digest_format": "64 lowercase hex characters",
+    "microbatches": 161,
+    "optimizer_steps": 40,
+    "accumulation_steps": 4,
+    "materialized_device": "cpu",
+    "H2D_inside_optimizer_windows": true,
+    "control_candidate_SHA256_equality_required": true,
+    "missing_fingerprints_cannot_compare_equal": true
+  },
+  "block_assembly": {
+    "exact_control_and_candidate_roles": true,
+    "frozen_position_order_arm_pair_and_protocol_required": true,
+    "common_software_identities_equal_except_model_config": true,
+    "paired_start_temperature_difference_c_max": 2,
+    "missing_or_duplicate_trial_retained_as_failure": true,
+    "fingerprint_mismatch_retained_as_failure": true,
+    "software_mismatch_retained_as_failure": true,
+    "temperature_mismatch_retained_as_failure": true,
+    "replacement_or_retry_authorized": false,
+    "complete_block_accepted_by_frozen_analyzer": true
+  },
+  "tests": {
+    "complete_trial_pair_and_analyzer_interface_pass": true,
+    "paired_fingerprint_mismatch_retained": true,
+    "missing_trial_retained": true,
+    "phase_mismatch_rejected": true,
+    "runtime_fallback_rejected": true,
+    "missing_memory_samples_rejected": true,
+    "unbound_process_rejected": true,
+    "incomplete_batch_identity_rejected": true,
+    "hot_start_rejected": true,
+    "common_software_mismatch_retained": true,
+    "paired_temperature_mismatch_retained": true,
+    "count": 11
+  },
+  "pipeline_effect": {
+    "static_NVML_memory_consumer_closed": true,
+    "paired_batch_fingerprint_consumer_closed": true,
+    "pure_complete_block_assembly_closed": true,
+    "live_trace_orchestrator_qualified": false,
+    "runtime_attestation_producer_qualified": false,
+    "global_12_trial_software_identity_chain_qualified": false,
+    "automatic_failed_trial_artifact_orchestration_qualified": false,
+    "end_to_end_pipeline_qualified": false
+  },
+  "decision": {
+    "synthetic_trial_and_block_assembly_qualified": true,
+    "systems_execution_authorized": false,
+    "protocol_or_prior_components_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "implement the block orchestrator and runtime-attestation producer behind the absent activation gate; retain live field/checkpoint/CUDA preflight and global identity validation"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_assembly.py -q",
+    "expected": "11 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_assembly_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "91 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "227 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "synthetic runtime attestations are real CUDA evidence",
+    "the orchestrator produces complete traces or failure artifacts",
+    "software identities are consistent across all six blocks",
+    "the live memory field or checkpoint engine is qualified",
+    "the end-to-end pipeline is qualified",
+    "the systems protocol may execute now"
+  ]
+}
