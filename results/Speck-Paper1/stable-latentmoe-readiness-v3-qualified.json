@@ -1,0 +1,66 @@
+{
+  "format": "speck_stable_latentmoe_readiness_qualification",
+  "format_version": 3,
+  "status": "qualified_pre_results_width_complete_activation_blocked",
+  "created_at": "2026-09-06T04:05:11+00:00",
+  "scope": "offline width-axis evidence convergence only; no active result, checkpoint, service, GPU, runtime, model integration, dispatcher, kernel, or training accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/stable_latentmoe_readiness_v3.json",
+      "sha256": "e5f9bd3ead575f7257807345a8eec1ae3a224071fc787ae67e9f610558e4bc8c"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false,
+      "still_pins_v1": true
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_stable_latentmoe_readiness_v3_validate.py",
+      "sha256": "870221d852a4c99da443cb12f6a9619ad70e622d6ee0f7ce571a01a17a469b84"
+    },
+    "tests": {
+      "path": "tests/test_paper_stable_latentmoe_readiness_v3.py",
+      "sha256": "3529523759f1a9f0888aaca59db93924d279896d1503a233e7d34d64ef6faf7b"
+    }
+  },
+  "convergence": {
+    "primary_Stable_LatentMoE_source_gate": "complete",
+    "isolated_CPU_equation_oracles": "complete",
+    "fixed_score_QB_tie_oracle": "complete",
+    "conventional_MoE_primary_source_gate": "complete",
+    "six_stage_causal_order_preserved": true,
+    "activation_prerequisites_open": 7,
+    "first_stage_semantics_to_freeze_after_activation": 11,
+    "pre_results_width_source_or_synthetic_expansion_stopped": true
+  },
+  "decision": {
+    "pre_results_width_reference_work_complete": true,
+    "width_architecture_selected": false,
+    "conventional_MoE_implementation_authorized": false,
+    "primitive_composition_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "wait for event-driven finalist completion, then select sequence/depth parents and freeze resource, expert-parallel hardware, and intervention gates before any conventional dropless MoE implementation"
+  },
+  "verification": {
+    "focused_test_command": ".venv-paper1-cpu/bin/pytest -q tests/test_paper_stable_latentmoe_readiness_v3.py",
+    "focused_test_result": "6 passed",
+    "validator_result": "valid_pre_results_width_complete_activation_blocked; seven prerequisites; training false",
+    "active_program_validation": "unchanged and valid_hypotheses_only",
+    "live_output_accessed": false,
+    "checkpoint_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "a width architecture or geometry is selected",
+    "conventional or Stable LatentMoE may be implemented in the active model",
+    "fixed-score midpoint is a training policy",
+    "single-device DeepSeekMoE code proves expert-parallel training",
+    "source or synthetic expansion should continue while activation prerequisites are open",
+    "the active finalist program now pins v3"
+  ]
+}

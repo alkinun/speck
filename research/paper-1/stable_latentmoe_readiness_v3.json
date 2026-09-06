@@ -1,0 +1,163 @@
+{
+  "format": "speck_stable_latentmoe_readiness_gate",
+  "format_version": 3,
+  "gate_id": "speck-paper-1-stable-latentmoe-readiness-v3",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "pre_results_width_references_complete_activation_blocked",
+  "frozen_at": "2026-09-06T04:03:44+00:00",
+  "purpose": "close the width axis against further pre-results static expansion after source and CPU-reference qualification, while preserving every causal, parent, implementation, resource, hardware, and training gate",
+  "predecessor": {
+    "path": "research/paper-1/stable_latentmoe_readiness_v2.json",
+    "sha256": "7e9d1bd3b14c1ee4a64fc4853a6720fc0183ae2b5581901ca7e0a537fcdaf56a",
+    "qualification": {
+      "path": "results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json",
+      "sha256": "036e164334c013555099f5d138d83cc3f065922004471d607c74be01d8e23390"
+    },
+    "preserved_append_only": true
+  },
+  "new_evidence": {
+    "four_isolated_CPU_primitives": {
+      "path": "results/Speck-Paper1/stable-latentmoe-cpu-reference-qualified-v1.json",
+      "sha256": "d1b012a9442dbde5ee043428c83bc85555884b19f897012f821f786d5f6edf4f",
+      "qualified": true,
+      "composition_qualified": false
+    },
+    "QB_tie_gate_v1": {
+      "path": "research/paper-1/quantile_balancing_tie_readiness_v1.json",
+      "sha256": "7424fdb4a246a271c338ee6de6229fa9c836d0ff25bc24c2229ce5d422639a9f",
+      "result_created": false,
+      "reason": "invalid strict rank bracket; intended holdout consumed during diagnosis"
+    },
+    "QB_tie_gate_v2": {
+      "path": "research/paper-1/quantile_balancing_tie_readiness_v2.json",
+      "sha256": "c6ccdab7dc9e3436935b5f8f70d2e1245ace0bcd17e85e7a42d129491a63772a",
+      "qualification": {
+        "path": "results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json",
+        "sha256": "2101014e9b905305c35fda7147a890bde427ca5238fdf4f9945bdca0119b414c"
+      },
+      "fixed_score_CPU_midpoint_qualified": true,
+      "training_tie_policy_qualified": false
+    },
+    "conventional_MoE_primary_source": {
+      "path": "results/Speck-Paper1/deepseek-moe-primary-source-audit-v1.json",
+      "sha256": "c9c9479ef44bd4df93052b22897bd57cb3c9316492bf4b0ba29154fdfeb1bf6f",
+      "primary_equations_qualified": true,
+      "single_device_per_layer_dropless_training_semantics_qualified": true,
+      "expert_parallel_training_implementation_qualified": false
+    }
+  },
+  "qualified_pre_results_knowledge": {
+    "K3_normalized_LatentMoE_SiTU_exact_QB_and_histogram_specification": true,
+    "K3_official_inference_semantics": true,
+    "K3_official_training_implementation": false,
+    "isolated_float64_CPU_equation_oracles": true,
+    "fixed_score_midpoint_tie_safe_CPU_oracle": true,
+    "fixed_score_midpoint_is_a_training_policy": false,
+    "DeepSeekMoE_conventional_fine_grained_shared_expert_equations": true,
+    "DeepSeekMoE_single_device_per_layer_dropless_training_path": true,
+    "expert_parallel_training_path": false,
+    "Speck_width_architecture_selected": false
+  },
+  "required_decomposition_order": [
+    {
+      "id": "dense_vs_conventional_moe",
+      "intervention": "replace selected dense SwiGLU modules with direct top-k routed SwiGLU experts plus one shared expert",
+      "purpose": "establish whether conditional width helps before latent or stability machinery",
+      "forbidden": "LatentMoE projection, bounded activation, quantile balancing, or changing sequence/depth"
+    },
+    {
+      "id": "latent_projection",
+      "intervention": "direct experts versus exact primary-source LatentMoE factorization",
+      "purpose": "isolate latent parameterization at fixed expert count, top-k, active parameters, routing, activation, and balancing",
+      "forbidden": "adding normalization in the same step"
+    },
+    {
+      "id": "latent_normalization",
+      "intervention": "add only the exact primary-source latent RMSNorm placement",
+      "purpose": "isolate scale control from low-rank capacity"
+    },
+    {
+      "id": "bounded_activation",
+      "intervention": "plain SwiGLU versus one exact frozen bounded activation",
+      "purpose": "separate outlier/stability behavior from latent projection",
+      "forbidden": "mixing clamping and SiTU-GLU in the same candidate"
+    },
+    {
+      "id": "balancing",
+      "intervention": "auxiliary load loss versus bias balancing versus exact Quantile Balancing",
+      "purpose": "select on quality, load tails, margins, communication, and instability rather than mean load"
+    },
+    {
+      "id": "expert_geometry",
+      "intervention": "vary total experts and top-k only after the preceding mechanism is stable",
+      "purpose": "find the total/active capacity and hardware-utilization frontier"
+    }
+  ],
+  "activation_prerequisites": {
+    "active_finalist_sequence_complete_and_accepted": false,
+    "sequence_parent_selected": false,
+    "depth_parent_selected": false,
+    "single_device_proxy_resource_envelope_frozen": false,
+    "expert_parallel_medium_transfer_hardware_named": false,
+    "expert_weight_optimizer_activation_dispatch_communication_workspace_fragmentation_checkpoint_budget_frozen": false,
+    "routing_collapse_overflow_loss_spike_intervention_policy_preregistered": false,
+    "all_required": true
+  },
+  "first_stage_semantics_to_freeze_after_activation": {
+    "placement": "which selected-parent FFN modules become MoE",
+    "shared_experts": "exactly one always-active shared expert, preserving the v1 initial comparison",
+    "routed_expert_count_and_topk": "derived from the frozen resource envelope, not copied from DeepSeekMoE or K3",
+    "router_score_family": "softmax source control versus any selected-score-renormalized alternative must be separate arms",
+    "selected_weight_normalization": "explicit false for the DeepSeekMoE source control; no silent change",
+    "ties": "CPU stable-index policy is not hardware authority; target-device top-k behavior must be frozen and tested",
+    "capacity": "dropless reference; any capacity, padding, token drop, overflow, or rescue is a separate arm",
+    "dispatch": "slow direct assignment oracle before sorted/grouped or distributed implementation",
+    "expert_initialization": "dense cloning versus independent initialization fixed across compared routing arms",
+    "auxiliary_balance": "exact formula, coefficient, gradient injection, and reporting frozen before training",
+    "accounting": "total/active parameters, analytic FLOPs, weights, optimizer, activations, dispatch, communication, workspace, fragmentation, and checkpoints"
+  },
+  "correctness_and_systems_gates_after_activation": [
+    "direct versus dispatched forward and input/expert/router gradient parity",
+    "training repeat/interleave versus grouped inference parity",
+    "dropless token and selected-weight conservation including zero-token experts",
+    "ties, extreme imbalance, empty experts, and duplicate token combine order",
+    "checkpoint/resume and export identity",
+    "single-device versus expert-parallel forward/backward/update parity",
+    "mixed-precision finite state and loss-spike history",
+    "realized training, prefill, batch-1 decode, maximum-resident-batch, memory, communication, and energy"
+  ],
+  "stop_rule": {
+    "no_further_width_source_or_synthetic_expansion_before_activation": true,
+    "allowed_maintenance": [
+      "validate existing hashes and tests after unrelated repository changes",
+      "record a new official source only if it directly changes a named blocker",
+      "accept the active finalist through its frozen event-driven automation"
+    ],
+    "forbidden_before_activation": [
+      "implementing conventional MoE in active architecture/model paths",
+      "building a dispatcher or kernel",
+      "running a conventional or latent MoE training job",
+      "choosing router normalization, expert geometry, or shared-expert count from source scale",
+      "treating fixed-score midpoint as a training policy",
+      "modifying the active experiment program to register v3"
+    ]
+  },
+  "active_program_boundary": {
+    "program": "research/paper-1/experiment_program.json",
+    "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+    "continues_to_pin": "research/paper-1/stable_latentmoe_readiness_v1.json",
+    "changed": false
+  },
+  "decision": {
+    "pre_results_width_reference_work_complete": true,
+    "source_gate_complete": true,
+    "isolated_CPU_oracles_complete": true,
+    "conventional_MoE_implementation_authorized": false,
+    "primitive_composition_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "stop width expansion; continue the active finalist event chain, then select sequence/depth parents and freeze resource/hardware/intervention prerequisites before a conventional dropless MoE protocol"
+  }
+}

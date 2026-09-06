@@ -128,6 +128,11 @@ the final combined model.
   The path is single-device-per-layer; selected softmax weights are unrenormalized, and neither it nor
   V3 supplies deterministic ties, upstream train/inference parity, or expert-parallel training semantics.
   No local conventional-MoE implementation or training is authorized.
+- [`stable_latentmoe_readiness_v3.json`](stable_latentmoe_readiness_v3.json) and
+  [`stable-latentmoe-readiness-v3-qualified.json`](../../results/Speck-Paper1/stable-latentmoe-readiness-v3-qualified.json)
+  converge the width evidence and stop further pre-results source/synthetic expansion. Seven activation
+  prerequisites and eleven conventional-first semantics remain; no width choice, implementation,
+  composition, training, or promotion is authorized, and the active program still pins v1.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.

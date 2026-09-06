@@ -533,7 +533,10 @@
         "research/paper-1/quantile_balancing_tie_readiness_v2.json",
         "results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json",
         "findings/160_deepseek_moe_source_gate.md",
-        "results/Speck-Paper1/deepseek-moe-primary-source-audit-v1.json"
+        "results/Speck-Paper1/deepseek-moe-primary-source-audit-v1.json",
+        "findings/161_width_pre_results_convergence.md",
+        "research/paper-1/stable_latentmoe_readiness_v3.json",
+        "results/Speck-Paper1/stable-latentmoe-readiness-v3-qualified.json"
       ],
       "quality": "Not measured locally. Official Stable LatentMoE and conventional DeepSeekMoE equations qualify. Four isolated CPU oracles and a fixed-score midpoint tie reference pass, but no routing or width choice is selected.",
       "systems": "not measured locally",
@@ -550,7 +553,7 @@
         "routing intervention policy",
         "small-batch serving economics"
       ],
-      "next_gate": "qualify isolated CPU equation references without model integration; after the active finalist and parent/resource gates close, qualify a dropless conventional MoE before any latent or stability intervention"
+      "next_gate": "stop further width expansion; complete the active finalist, select sequence/depth parents, and freeze resource/hardware/intervention gates before a conventional dropless MoE protocol"
     },
     {
       "id": "lower_precision_training_and_serving",
