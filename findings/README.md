@@ -148,6 +148,7 @@ Read in order:
 140. [139 — Fail-closed systems analysis qualified offline](139_finalist_systems_analysis_qualified.md)
 141. [140 — Conservative systems telemetry integration qualified synthetically](140_finalist_systems_telemetry_integrator.md)
 142. [141 — Systems sampler implementation qualified without a live query](141_finalist_systems_sampler_mock_qualified.md)
+143. [142 — Exact systems workload plan and persistent-mutation detector](142_finalist_systems_workload_plan.md)
 
 Conventions:
 

@@ -358,6 +358,9 @@ the final combined model.
 - [`finalist-systems-sampler-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-sampler-qualified-v1.json)
   qualifies exact GPU/host parsing and deadline-based 1 Hz sampling with mocks only. Disk devices are
   explicit to prevent stacked-device double counting; live field/device support remains blocked.
+- [`finalist-systems-workload-plan-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-workload-plan-qualified-v1.json)
+  derives all twelve trials without checkpoint access and detects persistent protected-tree mutation.
+  Kernel read-only isolation, the benchmark engine, live checkpoint loading, and execution stay blocked.
 - [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
@@ -466,6 +469,9 @@ no GPU query or systems execution follows.
 The sampler implementation is also mock-qualified without querying the active GPU. It serializes the
 full frozen field vector, process/host counters, protocol hash, and explicit disk devices on monotonic
 deadlines; live compatibility and backing-device identity still require a post-sequence preflight.
+The exact workload plan is now derived from frozen identities without opening checkpoints. Temporary
+fixtures qualify output-overlap rejection and before/after mutation detection, while explicitly leaving
+kernel-enforced read-only isolation and the real benchmark engine unresolved.
 Training non-finiteness already stops before a final event, but complete source identity needs a
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,

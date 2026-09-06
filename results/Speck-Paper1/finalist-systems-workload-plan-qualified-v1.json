@@ -1,0 +1,115 @@
+{
+  "format": "speck_paper_finalist_systems_workload_plan_qualification",
+  "format_version": 1,
+  "status": "qualified_static_plan_and_mutation_detection_engine_and_kernel_isolation_blocked",
+  "created_at": "2026-09-06T02:18:53+00:00",
+  "scope": "static planning from frozen JSON plus before/after hashing of temporary protected trees around mocked child commands; no finalist checkpoint, live GPU, service, model, result, log, intermediate metric, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-analysis-qualified-v1.json",
+      "sha256": "4f1bd86b426c5ab2932fa102834beb25e331ba8cf051e37db1e130fc151b5c48"
+    },
+    "integrator_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-telemetry-integrator-qualified-v1.json",
+      "sha256": "2c386bbe53fd6c368938283051df8080323262a50a05b3d7b438a8bd2210a1ca"
+    },
+    "sampler_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-sampler-qualified-v1.json",
+      "sha256": "cc40d65de262181f9d808a28c90ffc814b100da776893d71aa705d58f281a7f1"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_workload.py",
+      "sha256": "40f758e6a9291ac1078f06f4451b17daefbc86fa18da1353c5516c83210b4fdf"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_workload_guard.py",
+      "sha256": "fef674ac47416a82310faa26db66df68237e72022008a9e2b01af0b6625738dd"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_workload.py",
+      "sha256": "5ff1b0aa8b1951a3e64b8bba2806042c4be7e355797c0609dc5b6bc7726fc325"
+    }
+  },
+  "static_plan": {
+    "protocol_and_qualification_hashes_required": true,
+    "materialization_contract_hash_required": true,
+    "qualified_run_inventory_required": 12,
+    "trials": 12,
+    "frozen_block_position_and_role_order_derived": true,
+    "exact_run_experiment_checkpoint_pair_and_data_window_derived": true,
+    "checkpoint_step": 23496,
+    "warmup_steps": 10,
+    "measured_steps": 30,
+    "measured_tokens_per_trial": 1966080,
+    "unique_runs_checkpoints_and_outputs": true,
+    "output_paths_created_during_planning": false,
+    "checkpoint_paths_statted_or_opened_during_planning": false,
+    "checkpoint_write_authorized": false,
+    "model_or_optimizer_output_persisted": false,
+    "execution_authorized": false
+  },
+  "mutation_detection": {
+    "protected_directory_identity": "SHA-256 over sorted relative path and per-file SHA-256",
+    "protected_file_identity": "file SHA-256 and bytes",
+    "before_and_after_identity_required": true,
+    "output_inside_or_containing_protected_tree_rejected": true,
+    "duplicate_protected_paths_rejected": true,
+    "mutation_detected_after_success_rejected": true,
+    "mutation_detected_after_child_exception_rejected_before_propagation": true,
+    "deleted_protected_tree_rejected": true,
+    "nonzero_child_without_mutation_propagated": true,
+    "kernel_read_only_enforced": false,
+    "limitation": "before/after equality detects persistent mutation but cannot prevent or detect a transient write restored byte-for-byte; kernel-enforced read-only isolation remains required before execution"
+  },
+  "adversarial_tests": {
+    "exact_12_trial_plan_passes_without_outputs": true,
+    "qualification_relocation_rejected": true,
+    "output_overlap_both_directions_rejected": true,
+    "unchanged_trees_pass": true,
+    "checkpoint_mutation_rejected": true,
+    "mutation_plus_child_exception_rejected_as_mutation": true,
+    "deleted_protected_tree_rejected": true,
+    "nonzero_child_propagated": true,
+    "tests": 8
+  },
+  "decision": {
+    "static_workload_plan_qualified": true,
+    "persistent_mutation_detection_qualified": true,
+    "kernel_enforced_read_only_isolation_qualified": false,
+    "benchmark_engine_qualified": false,
+    "live_checkpoint_load_qualified": false,
+    "systems_execution_authorized": false,
+    "protocol_sampler_integrator_or_analysis_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "design and mock-qualify the exact systemd read-only sandbox command, then implement a CPU-fixture benchmark engine; require a post-sequence no-output GPU preflight before any real trial"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_workload.py -q",
+    "expected": "8 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_workload_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "51 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "187 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "finalist_checkpoint_accessed": false,
+    "child_commands_real": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "before/after hashing is kernel-enforced immutability",
+    "a transient write restored byte-for-byte is detected",
+    "the real benchmark engine or checkpoint load is qualified",
+    "the systems protocol may execute now",
+    "the active language run was inspected",
+    "this component changes any frozen scientific or automation input"
+  ]
+}
