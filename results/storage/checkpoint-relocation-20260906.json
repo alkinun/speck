@@ -1,0 +1,48 @@
+{
+  "format": "speck_checkpoint_storage_relocation",
+  "format_version": 1,
+  "date": "2026-09-06",
+  "source_root": "/home/alkin/.cache/speck/checkpoints",
+  "destination_root": "/mnt/speck-data/speck/checkpoints",
+  "before": {
+    "root_use_percent": 96,
+    "root_available_gib": 21,
+    "checkpoint_cache_bytes": 177450916484,
+    "checkpoint_files": 631
+  },
+  "relocated": {
+    "bytes": 82817078944,
+    "files": 306,
+    "families": [
+      "Speck1-140M",
+      "Speck1-140M-Instruct",
+      "Speck1.1-140M-Instruct",
+      "Speck1.1-140M-Instruct-2ep",
+      "Speck1.1-Instruct-Light",
+      "Speck1.5-140M",
+      "Speck1.5-140M-Instruct",
+      "Speck2-140M"
+    ]
+  },
+  "verification": {
+    "rsync_archive_metadata_preserved": true,
+    "checksum_dry_run_changes_per_family": 0,
+    "latest_checkpoint_metadata_loaded_through_symlink": true,
+    "original_paths_preserved_by_absolute_symlink": true
+  },
+  "cleanup": {
+    "verified_root_duplicates_deleted": true,
+    "interrupted_destination_fragment_deleted": true,
+    "unverified_source_families_unchanged": true
+  },
+  "after": {
+    "root_size_bytes": 490048561152,
+    "root_used_bytes": 360219648000,
+    "root_available_bytes": 104860536832,
+    "root_use_percent": 78,
+    "destination_use_percent": 3
+  },
+  "environment": {
+    "fish_universal_speck_base_dir": "/mnt/speck-data/speck"
+  }
+}

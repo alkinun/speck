@@ -68,3 +68,15 @@ def test_shape_a_is_current_bounded_and_deliberately_not_launchable():
     assert target["status"] == "planning_default_not_launchable"
     assert not (SHAPE_A / "data.json").exists()
     assert not (SHAPE_A / "train.json").exists()
+
+
+def test_storage_readiness_result_clears_the_pregrant_threshold():
+    result = json.loads(
+        (ROOT / "results" / "storage" / "checkpoint-relocation-20260906.json").read_text()
+    )
+
+    assert result["format"] == "speck_checkpoint_storage_relocation"
+    assert result["relocated"]["bytes"] > 80_000_000_000
+    assert result["verification"]["checksum_dry_run_changes_per_family"] == 0
+    assert result["verification"]["latest_checkpoint_metadata_loaded_through_symlink"] is True
+    assert result["after"]["root_use_percent"] < 80

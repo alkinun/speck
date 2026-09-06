@@ -8,7 +8,7 @@ research machine on 2026-09-06.
 
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
-| R1 | Restore root storage headroom | In progress: root is 96% used with about 21 GiB free | Root is below 80%; referenced checkpoints remain valid; all new work uses the data volume | SPE-24 |
+| R1 | Restore root storage headroom | Complete: root is 78% used with about 98 GiB free | Root stays below 80%; relocated checkpoint paths remain valid; all new work uses the data volume | SPE-24 |
 | R2 | Add a code source | Not started | Source, revision, rights, fields, filters, weights, and dedup behavior are frozen | SPE-114 |
 | R3 | Run the 20B data rehearsal | Not started | Download, filtering, dedup memory, packing throughput, storage, cleanup, and resume are measured | SPE-114 |
 | R4 | Build the neutral held-out set | Not started | Equal-token source slices plus an unseen source are immutable and decontaminated before outputs | SPE-114 |
