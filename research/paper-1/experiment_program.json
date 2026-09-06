@@ -514,6 +514,11 @@
     "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e",
     "status": "frozen_crossed_factor_before_any_finalist_output"
   },
+  "finalist_live_launch": {
+    "result": "results/Speck-Paper1/finalist-launch-qualified-v2.json",
+    "sha256": "f4aa2f4e54733f2682dde181706f81928b8c49586affb791247fed027b373e8b",
+    "status": "qualified_initial_control_launch_authorized_no_promotion_authority"
+  },
   "finalist_evidence": {
     "status": "qualified_unexecuted",
     "control_results": [],

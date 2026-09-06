@@ -2114,7 +2114,66 @@ def _validate_finalist_automation(reference, repository_root, paper_id):
         if not source.is_file() or _file_sha256(source) != contract["inputs"].get(
             f"{stem}_sha256"
         ):
-            raise ValueError(f"finalist automation {stem} does not match its pin")
+                raise ValueError(f"finalist automation {stem} does not match its pin")
+
+
+def _validate_finalist_live_launch(reference, repository_root, paper_id):
+    _require(reference, {"result", "sha256", "status"}, "finalist live launch reference")
+    path = repository_root / reference["result"]
+    if not path.is_file() or _file_sha256(path) != reference["sha256"]:
+        raise ValueError("finalist live launch qualification does not match its pin")
+    result = _load_json(path)
+    live = result.get("live_gate", {})
+    gpu = live.get("gpu", {})
+    services = result.get("services", {})
+    implementation = result.get("implementation", {})
+    decision = result.get("decision", {})
+    if (
+        result.get("format") != "speck_paper_finalist_launch_qualification"
+        or result.get("format_version") != 1
+        or result.get("paper_id") != paper_id
+        or result.get("status") != reference["status"]
+        or result.get("initial_state", {}).get("status") != "qualified_unexecuted"
+        or result.get("initial_state", {}).get("control_results") != []
+        or result.get("initial_state", {}).get("candidate_results") != []
+        or result.get("initial_run")
+        != "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+        or result.get("active_finalist_units") != []
+        or services.get("helmet_download") != "inactive"
+        or services.get("finalist_units_active") != 0
+        or gpu.get("name") != "NVIDIA GeForce RTX 3090"
+        or gpu.get("uuid") != "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd"
+        or gpu.get("compute_processes") != []
+        or gpu.get("utilization") != 0
+        or gpu.get("temperature", 51) > 50
+        or live.get("free_bytes", 0) < 25769803776
+        or live.get("host_available_bytes", 0) < 12884901888
+        or live.get("checkpoint_absent") is not True
+        or live.get("result_absent") is not True
+        or "b64b59d1-ea2c-4206-9171-b7cd739f3eff ext4 rw,nosuid,nodev,noexec"
+        not in live.get("mount", "")
+        or implementation.get("runner_sha256")
+        != _file_sha256(repository_root / "scripts/paper_finalist_launch_qualify.py")
+        or implementation.get("automation_runner_sha256")
+        != _file_sha256(repository_root / "scripts/paper_finalist_continue.py")
+        or decision.get("initial_control_launch_authorized") is not True
+        or decision.get("event_driven_successors_authorized") is not True
+        or decision.get("training_authorized") is not True
+        or decision.get("helmet_concurrency_authorized") is not False
+        or decision.get("quality_dependent_branching_authorized") is not False
+        or decision.get("automatic_retry_authorized") is not False
+        or decision.get("component_attribution_authorized") is not False
+        or decision.get("architecture_promotion_authorized") is not False
+        or decision.get("novelty_claim_authorized") is not False
+        or decision.get("release_claim_authorized") is not False
+        or decision.get("paper_scale_authorized") is not False
+    ):
+        raise ValueError("finalist live launch qualification is incomplete")
+    for key in ("launch_contract", "automation_contract"):
+        entry = result.get("inputs", {}).get(key, {})
+        source = repository_root / entry.get("path", "")
+        if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
+            raise ValueError("finalist live launch input does not match its pin")
 
 
 def _validate_finalist_evidence(evidence, automation_reference, repository_root):
@@ -2629,6 +2688,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
             "finalist_runtime_preflight",
             "finalist_launch",
             "finalist_automation",
+            "finalist_live_launch",
             "finalist_evidence",
             "adaptive_cache_budget",
             "adaptive_cache_gqa",
@@ -2728,6 +2788,11 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
     )
     _validate_finalist_automation(
         program["finalist_automation"],
+        repository_root,
+        paper_id,
+    )
+    _validate_finalist_live_launch(
+        program["finalist_live_launch"],
         repository_root,
         paper_id,
     )
