@@ -89,6 +89,10 @@ the final combined model.
 - [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
   ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
   selection before a fixed-count integration/readout placement successor.
+- [`ratio_placement_readiness_v2.json`](ratio_placement_readiness_v2.json) and
+  [`ratio-placement-v2-qualified.json`](../../results/Speck-Paper1/ratio-placement-v2-qualified.json)
+  preserve v1 but restrict selection to raw FFN2304 ratios. Parameter-matched FFN2281/2318 arms are
+  non-promotional capacity sensitivities; v2 remains unregistered and training-blocked.
 - [`attnres_readiness_v1.json`](attnres_readiness_v1.json) fixes the 40-module residual source graph,
   adds the static-depth mechanism control, and freezes Full/Block equations, correctness, activation,
   block-count, depth/width, mechanistic, and efficiency gates before implementation.

@@ -1,0 +1,149 @@
+{
+  "format": "speck_ratio_placement_v2_qualification",
+  "format_version": 1,
+  "status": "qualified_deconfounded_raw_ratio_design_training_blocked",
+  "created_at": "2026-09-06T03:07:46+00:00",
+  "scope": "offline causal-design and in-memory five-geometry qualification before ratio or placement output; no active finalist result/checkpoint, service, GPU, model training, or runtime environment accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/ratio_placement_readiness_v2.json",
+      "sha256": "f201f8f488eecea82af1a4ee018f7f21a4093978baa6a7b6a7b597a857420e2e"
+    },
+    "predecessor": {
+      "path": "research/paper-1/ratio_placement_readiness_v1.json",
+      "sha256": "d8401cfd494f53eef04f95e386fab446aedda54361919c022f0d187cf4920406"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "source_model_config": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa/model.json",
+      "sha256": "eff43e84707cf4d14111a48e50c5ee6b0d02dce66ad3c26fb481ec5c59777859"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_ratio_placement_v2_validate.py",
+      "sha256": "de2a7aac33102fdce7bb571a2235ce0b14a06f7b64158e1772100735edccc3ee"
+    },
+    "tests": {
+      "path": "tests/test_paper_ratio_placement_v2.py",
+      "sha256": "93a3aef7e6619647542d11d9f9f3dcc8e0f7a38bfdf1c918cf1262f210b5edf4"
+    }
+  },
+  "reproduced_v1_confound": {
+    "ratio_change": "change counts of qualified KDA and GQA3 global layers",
+    "matching_change": "change uniform FFN width to approach the 3:1 parameter count",
+    "pure_ratio_attribution_from_matched_arms": false,
+    "ratio_or_placement_outputs_present": false,
+    "correction_before_outputs": true
+  },
+  "raw_code_geometries": {
+    "ratio_1_to_1_raw": {
+      "recurrent_layers": 10,
+      "global_layers": 10,
+      "FFN_width": 2304,
+      "parameters": 155024828,
+      "flops_per_token_at_4096": 1121172480,
+      "BF16_global_cache_bytes_per_token": 7680
+    },
+    "ratio_3_to_1_raw": {
+      "recurrent_layers": 15,
+      "global_layers": 5,
+      "FFN_width": 2304,
+      "parameters": 153958938,
+      "flops_per_token_at_4096": 1021601280,
+      "BF16_global_cache_bytes_per_token": 3840
+    },
+    "ratio_9_to_1_raw": {
+      "recurrent_layers": 18,
+      "global_layers": 2,
+      "FFN_width": 2304,
+      "parameters": 153319404,
+      "flops_per_token_at_4096": 961858560,
+      "BF16_global_cache_bytes_per_token": 1536
+    }
+  },
+  "matched_sensitivities": {
+    "ratio_1_to_1_param_match": {
+      "FFN_width": 2281,
+      "FFN_units_per_layer_difference": -23,
+      "parameters": 153964988,
+      "parameter_difference_from_3_to_1": 6050,
+      "flops_per_token_at_4096": 1114813440,
+      "pure_ratio_attribution": false,
+      "promotion_authority": false
+    },
+    "ratio_9_to_1_param_match": {
+      "FFN_width": 2318,
+      "FFN_units_per_layer_difference": 14,
+      "parameters": 153964524,
+      "parameter_difference_from_3_to_1": 5586,
+      "flops_per_token_at_4096": 965729280,
+      "pure_ratio_attribution": false,
+      "promotion_authority": false
+    }
+  },
+  "qualified_design": {
+    "raw_selection_arms": 3,
+    "matched_capacity_sensitivities": 2,
+    "primary_shared_control_candidates": 2,
+    "primary_multiplicity": "Holm",
+    "discovery_pairs": 3,
+    "discovery_runs": 15,
+    "confirmation_pairs": 6,
+    "confirmation_raw_runs": 18,
+    "matched_sensitivities_repeat_automatically": false,
+    "placement_waits_for_raw_ratio_selection": true,
+    "matched_sensitivity_can_choose_placement_count": false
+  },
+  "tests": {
+    "five_geometries_recomputed_from_model_code": true,
+    "missing_raw_arm_rejected": true,
+    "matched_selection_authority_rejected": true,
+    "changed_raw_selection_family_rejected": true,
+    "placement_before_raw_selection_rejected": true,
+    "training_authority_rejected": true,
+    "count": 6
+  },
+  "decision": {
+    "v2_causal_design_qualified": true,
+    "v1_preserved": true,
+    "v1_future_ratio_training_authorized": false,
+    "v2_registered_in_active_program": false,
+    "v2_implementation_authorized": false,
+    "v2_training_authorized": false,
+    "ratio_selected": false,
+    "placement_selected": false,
+    "promotion_authority": false,
+    "active_finalist_language_sequence_changed": false,
+    "next_action": "after the active finalist and operator prerequisites, register v2, materialize all five discovery arms, and qualify exact geometry/correctness before training"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_ratio_placement_v2.py -q",
+    "expected": "6 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_ratio_placement_v2_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "272 passed",
+    "active_program_validation": "passed with ratio_placement_readiness_v1 still registered",
+    "validator_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_ratio_placement_v2_validate research/paper-1/ratio_placement_readiness_v2.json",
+    "validator_result": "valid_training_blocked with three raw arms and two matched sensitivities",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "1:1, 3:1, or 9:1 is selected",
+    "parameter-matched sensitivities isolate ratio",
+    "analytic geometry predicts quality or realized systems behavior",
+    "placement indices beyond the shared count rule are frozen",
+    "v2 is registered or training-authorized",
+    "this correction changes the active finalist"
+  ]
+}

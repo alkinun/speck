@@ -406,7 +406,9 @@
         "research/paper-1/hca_readiness_v1.json",
         "research/paper-1/csa_readiness_v1.json",
         "research/paper-1/raw_local_readiness_v1.json",
-        "research/paper-1/ratio_placement_readiness_v1.json"
+        "research/paper-1/ratio_placement_readiness_v1.json",
+        "research/paper-1/ratio_placement_readiness_v2.json",
+        "results/Speck-Paper1/ratio-placement-v2-qualified.json"
       ],
       "quality": "not measured locally",
       "systems": "not implemented locally",
@@ -417,7 +419,7 @@
         "kernel locality",
         "missing genuine 64K-128K dependency data"
       ],
-      "next_gate": "select the parent/cache, then isolate the HCA compressor before rate; CSA begins only with oracle block-mass feasibility, followed by raw-local and integer ratio studies"
+      "next_gate": "select the parent/cache, then isolate HCA before rate and CSA with oracle block mass; run only the deconfounded raw ratio family after all sequence operators qualify, with placement on independent cells after count selection"
     },
     {
       "id": "routed_swiglu_moe",

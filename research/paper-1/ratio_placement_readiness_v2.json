@@ -1,0 +1,232 @@
+{
+  "format": "speck_ratio_placement_readiness_gate",
+  "format_version": 2,
+  "gate_id": "speck-paper-1-ratio-placement-readiness-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "deconfounded_raw_ratio_design_frozen_training_blocked",
+  "frozen_at": "2026-09-06T03:05:45+00:00",
+  "predecessor": {
+    "path": "research/paper-1/ratio_placement_readiness_v1.json",
+    "sha256": "d8401cfd494f53eef04f95e386fab446aedda54361919c022f0d187cf4920406",
+    "disposition": "superseded_for_future_ratio_training_before_any_ratio_output",
+    "preserved": true
+  },
+  "correction": {
+    "v1_matching": "match active parameters within 0.025% using uniform FFN width where possible",
+    "confound": "changing recurrent/global count and compensating with FFN width mixes ratio with capacity adjustment",
+    "resolution": "select only among raw ratio arms with FFN2304 fixed; retain parameter-matched arms as non-promotional capacity sensitivities",
+    "finalist_results_used": false,
+    "ratio_or_placement_outputs_present": false
+  },
+  "geometry_source": {
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "candidate_model_config": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa/model.json",
+      "sha256": "eff43e84707cf4d14111a48e50c5ee6b0d02dce66ad3c26fb481ec5c59777859"
+    },
+    "derivation": "expand the existing twenty layers, copy its qualified KDA or GQA3 attention template into the frozen indices, hold every FFN at 2304 for raw arms, then call parameter_count and flops_per_token(4096)",
+    "model_or_config_file_written": false
+  },
+  "fixed": {
+    "hidden_size": 768,
+    "layers": 20,
+    "recurrent_operator": "kimi_delta_attention",
+    "recurrent_gate": "sigmoid",
+    "global_attention_KV_heads": 3,
+    "global_attention_head_dim": 64,
+    "global_attention_rope_dim": 0,
+    "raw_FFN_intermediate_size": 2304,
+    "residual": "standard PreNorm",
+    "tokenizer_data_optimizer_evaluation": "inherit the qualified sequence parent"
+  },
+  "raw_selection_arms": [
+    {
+      "id": "ratio_1_to_1_raw",
+      "role": "higher_integration_candidate",
+      "recurrent_layers": 10,
+      "global_layers": 10,
+      "global_indices_zero_based": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19
+      ],
+      "FFN_intermediate_size": 2304,
+      "parameters": 155024828,
+      "parameter_difference_from_3_to_1": 1065890,
+      "analytic_flops_per_token_at_4096": 1121172480,
+      "flops_difference_from_3_to_1": 99571200,
+      "BF16_global_cache_bytes_per_token": 7680
+    },
+    {
+      "id": "ratio_3_to_1_raw",
+      "role": "raw_control",
+      "recurrent_layers": 15,
+      "global_layers": 5,
+      "global_indices_zero_based": [
+        3,
+        7,
+        11,
+        15,
+        19
+      ],
+      "FFN_intermediate_size": 2304,
+      "parameters": 153958938,
+      "parameter_difference_from_3_to_1": 0,
+      "analytic_flops_per_token_at_4096": 1021601280,
+      "flops_difference_from_3_to_1": 0,
+      "BF16_global_cache_bytes_per_token": 3840
+    },
+    {
+      "id": "ratio_9_to_1_raw",
+      "role": "lower_cost_candidate",
+      "recurrent_layers": 18,
+      "global_layers": 2,
+      "global_indices_zero_based": [
+        9,
+        19
+      ],
+      "FFN_intermediate_size": 2304,
+      "parameters": 153319404,
+      "parameter_difference_from_3_to_1": -639534,
+      "analytic_flops_per_token_at_4096": 961858560,
+      "flops_difference_from_3_to_1": -59742720,
+      "BF16_global_cache_bytes_per_token": 1536
+    }
+  ],
+  "parameter_matched_sensitivities": [
+    {
+      "id": "ratio_1_to_1_param_match",
+      "raw_parent": "ratio_1_to_1_raw",
+      "recurrent_layers": 10,
+      "global_layers": 10,
+      "FFN_intermediate_size": 2281,
+      "FFN_units_per_layer_difference": -23,
+      "parameters": 153964988,
+      "parameter_difference_from_3_to_1": 6050,
+      "absolute_relative_parameter_difference": 0.00003929619745727835,
+      "analytic_flops_per_token_at_4096": 1114813440,
+      "flops_difference_from_3_to_1": 93212160,
+      "pure_ratio_attribution_authorized": false,
+      "promotion_authority": false
+    },
+    {
+      "id": "ratio_9_to_1_param_match",
+      "raw_parent": "ratio_9_to_1_raw",
+      "recurrent_layers": 18,
+      "global_layers": 2,
+      "FFN_intermediate_size": 2318,
+      "FFN_units_per_layer_difference": 14,
+      "parameters": 153964524,
+      "parameter_difference_from_3_to_1": 5586,
+      "absolute_relative_parameter_difference": 0.000036282404654696696,
+      "analytic_flops_per_token_at_4096": 965729280,
+      "flops_difference_from_3_to_1": -55872000,
+      "pure_ratio_attribution_authorized": false,
+      "promotion_authority": false
+    }
+  ],
+  "causal_contrasts": {
+    "raw_selection_family": [
+      "ratio_1_to_1_raw minus ratio_3_to_1_raw",
+      "ratio_9_to_1_raw minus ratio_3_to_1_raw"
+    ],
+    "raw_interpretation": "total deployable ratio effect with operator count, intrinsic parameters, FLOPs, and state allowed to change while FFN width is fixed",
+    "capacity_sensitivities": [
+      "ratio_1_to_1_param_match minus ratio_1_to_1_raw",
+      "ratio_9_to_1_param_match minus ratio_9_to_1_raw"
+    ],
+    "matched_compound_views": [
+      "ratio_1_to_1_param_match minus ratio_3_to_1_raw",
+      "ratio_9_to_1_param_match minus ratio_3_to_1_raw"
+    ],
+    "matched_compound_pure_ratio_attribution": false
+  },
+  "analysis": {
+    "primary_quality_multiplicity": "Holm correction across the two raw selection candidates against 3:1",
+    "capacity_sensitivity_intervals": "paired two-sided 95% with no selection or promotion authority",
+    "fixed_views": [
+      "training tokens",
+      "analytic FLOPs",
+      "steady time",
+      "active parameters",
+      "total parameters",
+      "device memory",
+      "time and energy to locked quality"
+    ],
+    "quality": "aggregate and every-source non-inferiority plus all frozen retrieval/composition floors",
+    "state": "report recurrent fixed state and global cache bytes separately at every length",
+    "no_interim_arm_dropping": true
+  },
+  "stages": {
+    "discovery": {
+      "pairs": 3,
+      "raw_arms": 3,
+      "sensitivity_arms": 2,
+      "model_runs": 15,
+      "promotion_authority": false
+    },
+    "finalist": {
+      "pairs": 6,
+      "raw_arms": 3,
+      "model_runs": 18,
+      "matched_sensitivity_repeated_automatically": false,
+      "rule": "confirm only the preregistered raw selection family; any future compound matched study requires its own pre-output successor"
+    },
+    "systems": {
+      "minimum_primary_improvement_simple_runtime": 0.1,
+      "thermally_interleaved_repeats": 5,
+      "prefill_decode_state_and_energy": true
+    }
+  },
+  "selection": {
+    "eligible_arms": [
+      "ratio_1_to_1_raw",
+      "ratio_3_to_1_raw",
+      "ratio_9_to_1_raw"
+    ],
+    "rule": "choose the lowest-cost raw ratio passing every quality/capability constraint and realized systems threshold; otherwise retain 3:1",
+    "matched_sensitivity_can_select": false,
+    "raw_failure_matched_pass": "does not rescue the raw ratio or authorize a compound study; freeze a new design first",
+    "inconclusive": "failure to distinguish ratios is not ratio independence",
+    "no_quality_cost_trade": true
+  },
+  "placement_successor": {
+    "status": "not_frozen_until_one_raw_ratio_is_selected",
+    "selected_count_shared_across_templates": true,
+    "independent_data_cells_required": true,
+    "templates_inherited": [
+      "uniform quantile placement",
+      "integration-heavy with final readout",
+      "readout-heavy with a middle integration slot"
+    ],
+    "matched_ratio_sensitivity_cannot_choose_placement_count": true
+  },
+  "registration_boundary": {
+    "active_experiment_program_still_references_v1": true,
+    "active_experiment_program_changed": false,
+    "v1_future_ratio_training_authorized": false,
+    "v2_training_authorized": false,
+    "reason": "register only in a clean post-finalist program successor before ratio outputs"
+  },
+  "decision": {
+    "ratio_FFN_confound_resolved_in_design": true,
+    "raw_geometries_derived_from_code": true,
+    "ratio_selected": false,
+    "placement_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after the active finalist and prerequisite operator selections, register v2, materialize five discovery arms, and qualify exact geometry/correctness before training"
+  }
+}
