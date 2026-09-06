@@ -1,0 +1,115 @@
+{
+  "format": "speck_paper_finalist_systems_analysis_qualification",
+  "format_version": 1,
+  "status": "qualified_offline_analysis_execution_still_blocked",
+  "created_at": "2026-09-06T02:05:05+00:00",
+  "scope": "pure CPU analysis of synthetic systems-block artifacts under the frozen pre-result protocol; no live GPU, service, checkpoint, model, result, log, intermediate metric, telemetry device, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "protocol_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-protocol-qualified-v1.json",
+      "sha256": "51913d09296fdcdc7acffc9dd5054b9618938f4dd501d4ba9b21af5229593d73"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_analysis.py",
+      "sha256": "12e74d2e9202a0e00152c3fb4ff99b170ed7b7eae35e26b97ce95163c5ef6a7e"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_analyze.py",
+      "sha256": "dee0e221a0e7b4e6a56903ab2117d13bc46fcc78c1d5096bd81f976365de060a"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_analysis.py",
+      "sha256": "556f1b19146e78f640e70512fa328e0b98714a5f0d7b6b703b76fb5f27754ac3"
+    }
+  },
+  "input_contract": {
+    "exact_protocol_sha256_required": true,
+    "block_and_pair_identity_required": true,
+    "frozen_trial_order_required": true,
+    "both_arm_trials_required_for_complete_block": true,
+    "measured_steps_and_tokens_required": true,
+    "finite_positive_wall_time_required": true,
+    "ordered_energy_interval_required": true,
+    "telemetry_coverage_and_gap_required": true,
+    "paired_start_temperature_guard_required": true,
+    "OOM_kernel_fallback_and_nonfinite_fail_closed": true,
+    "failed_block_retained_without_imputation": true
+  },
+  "statistical_implementation": {
+    "unit": "paired block",
+    "effect": "log candidate/control ratio",
+    "expected_blocks": 6,
+    "time_ratio_uses_equal_frozen_token_count": true,
+    "gross_energy_primary_uses_candidate_upper_over_control_lower": true,
+    "gross_energy_point_estimate_reported_separately": true,
+    "incremental_energy_requires_positive_arm_estimates_for_log_ratio": true,
+    "one_sided_confidence": 0.975,
+    "student_t_df": 5,
+    "student_t_critical": 2.570581835636314,
+    "exact_sign_flip_assignments": 64,
+    "maximum_exact_one_sided_p": 0.05,
+    "both_order_stratum_means_must_be_negative": true,
+    "metric_specific_time_and_energy_claims_separate": true,
+    "joint_claim_requires_time_energy_and_incremental_direction": true
+  },
+  "failure_semantics": {
+    "missing_block_makes_analysis_incomplete": true,
+    "retained_failed_block_makes_analysis_incomplete": true,
+    "zero_control_energy_lower_bound_makes_energy_endpoint_fail": true,
+    "time_only_pass_does_not_become_joint_pass": true,
+    "unfavorable_AB_or_BA_stratum_blocks_endpoint": true,
+    "imputation": false,
+    "outlier_deletion": false,
+    "replacement_block": false,
+    "automatic_retry": false
+  },
+  "adversarial_tests": {
+    "clear_time_and_energy_improvement_passes": true,
+    "time_only_win_not_joint": true,
+    "order_stratum_reversal_rejected": true,
+    "missing_block_rejected": true,
+    "conservative_energy_bound_overrides_favorable_point_estimate": true,
+    "zero_control_energy_lower_bound_fails_energy": true,
+    "failed_block_retained": true,
+    "paired_temperature_mismatch_rejected": true,
+    "tests": 8
+  },
+  "decision": {
+    "systems_analysis_implementation_qualified": true,
+    "protocol_modified_after_freeze": false,
+    "systems_harness_qualified": false,
+    "telemetry_sampler_qualified": false,
+    "energy_integrator_qualified": false,
+    "execution_authorized": false,
+    "active_language_sequence_or_program_changed": false,
+    "active_runner_trainer_or_analyzer_changed": false,
+    "next_action": "implement and offline-qualify the telemetry sampler and conservative interval integrator, then the non-persisting checkpoint workload harness; keep execution blocked until the language and activation gates pass"
+  },
+  "verification": {
+    "analysis_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_analysis.py -q",
+    "analysis_expected": "8 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_analysis_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "21 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "157 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "synthetic analysis fixtures are measured systems results",
+    "the telemetry sampler, energy integrator, or checkpoint harness is qualified",
+    "the systems protocol may execute now",
+    "analysis success implies the candidate will pass",
+    "the analyzer supports whole-system energy, dollars, serving, or datacenter claims",
+    "this qualification changes the active language experiment"
+  ]
+}
