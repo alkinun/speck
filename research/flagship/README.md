@@ -1,60 +1,79 @@
 # Speck flagship: scope of the model, the paper, and the experiments
 
-Status: v1, 2026-09-06. This is the single operating document for the first flagship model and the
+Status: v2, 2026-09-06. This is the single operating document for the first flagship model and the
 paper that describes it. Everything else under `research/` is either tooling contract
 (`architecture-promotion-v1`) or archived evidence (`paper-1/*.json`).
 
 ## 1. Mission
 
-Build small language models that are as efficient to train and serve as possible while giving up
-as little quality as possible, and prove it with a model people use and a paper people trust.
+Build small language models that are as efficient to train and serve as possible while giving up as
+little quality as possible, and prove it with a model people use and a paper people trust.
 
-The first flagship and its paper have to do three things at once:
+The first flagship and its paper must do three things at once:
 
-1. Ship a model that is genuinely good at its size and clearly the best on the axis we choose.
+1. Ship a model that is genuinely good at its size and clearly best on the axis we choose.
 2. Explain every design decision with a controlled experiment, so the paper is the documented
-   decision process of the model rather than a report written after the fact.
-3. Leave behind a ladder that the next grant extends instead of restarts.
+   decision process of the model rather than a report written afterwards.
+3. Leave a ladder the next grant extends instead of restarts.
 
-Non-goals for this cycle: a new operator, a novelty claim, mixture-of-experts unless it wins its
-one experiment, depth routing, sparse or compressed attention, and any claim we cannot measure on
+Data and architecture are treated as equal first-class subjects. The public evidence says data is
+the larger lever at this scale: PuRo-2B ranks a within-source quality curriculum at 2.40x
+cost-equivalent against 1.34x for FP8 and 1.19x for the optimizer, and SmolLM2's decisive sub-2B
+lesson was about data staging. Our own measured architecture effects span 0.005 to 0.05 nats, while
+published filter and mixture effects span 0.05 to 0.2 nats and several benchmark points.
+
+Non-goals this cycle: a new operator, a novelty claim, mixture-of-experts unless it wins its one
+experiment, depth routing, sparse or compressed attention, and any claim we cannot measure on
 hardware we own or rent.
 
 ## 2. The flagship model
 
 ### 2.1 Target
 
-A dense recurrent/global hybrid of about 1.2B total parameters, trained on about 450B tokens on one
-4x GH200 node, extended to 128K context, released as base, pre-decay, and instruct checkpoints.
+A dense recurrent/global hybrid trained on one 4x GH200 node, extended to 128K context, released as
+base, pre-decay, and instruct checkpoints.
 
-The axis we win on: quality per training FLOP and quality per byte of resident state at long
-context, measured on a datacenter GPU, a consumer GPU, and a CPU. We state in the paper that the
-model is not trained on 10T+ tokens and will not top 36T-token models on short benchmarks.
+The axis we win on is quality per training FLOP and quality per byte of resident state at long
+context, measured on a datacenter GPU, a consumer GPU, and a CPU. The paper states plainly that the
+model sees under 1T tokens and will not top 36T-token models on short benchmarks.
 
-### 2.2 Architecture defaults
+### 2.2 Size and token budget
 
-These are the launch configuration unless an experiment in section 4 changes them. Geometry numbers
-are targets; materialize them with the repository's parameter accounting before freezing.
+At the same 2,425 GPU-hours we can train either shape:
 
-| Component | Default | Source of the default |
+| Shape | Parameters | Tokens | Tokens per parameter |
+| --- | ---: | ---: | ---: |
+| A (default) | 1.2B | 400B | 333 |
+| B | 600M | 800B | 1,333 |
+
+Shape A has better absolute loss. Shape B is less undertrained relative to its size class, competes
+directly with Qwen3-0.6B, SmolLM2-360M, and LFM2-700M, and serves better, which is our axis. This is
+decision **F1**, resolved by the scale ladder in section 4.4 no later than day 18, defaulting to A.
+If FP8 qualifies on the node, the extra throughput buys tokens, not saved hours.
+
+### 2.3 Architecture defaults
+
+Launch configuration unless an experiment in section 4 changes it. Geometry is a target; materialize
+and verify parameter counts with the repository's accounting before freezing.
+
+| Component | Default | Source |
 | --- | --- | --- |
 | Depth and width | 24 blocks, hidden 2048 | scaled from the 150M proxy |
-| Mixer ratio | 3:1, 18 KDA blocks and 6 global attention blocks at quantile positions | findings 08, 16 to 18, 105 |
+| Mixer ratio | 3:1, 18 recurrent and 6 global blocks at quantile positions | findings 08, 16 to 18, 105 |
 | Recurrent mixer | Kimi Delta Attention, sigmoid output gate, FLA timescale init, conv kernel 4, head dim 128, 8 key heads, 16 value heads | findings 13 to 18 |
 | Global attention | GQA, 16 query heads, 4 KV heads, head dim 128, NoPE | findings 16 to 18 |
 | Feed-forward | SwiGLU, intermediate 5120 | inherited |
-| Embeddings | untied, Mistral 32K vocabulary | inherited; see decision D5 |
-| Precision | bf16, FP8 if it qualifies on the node | PuRo-2B evidence |
-| Optimizer | Muon for matrices, AdamW for the rest, weight decay 0.1, clip 1.0 | inherited |
+| Embeddings | untied, Mistral 32K vocabulary | inherited, see D5 |
+| Precision | bf16, FP8 if it qualifies on the node | PuRo-2B |
+| Optimizer | Muon for matrices, AdamW elsewhere, weight decay 0.1, clip 1.0 | inherited |
 | Schedule | WSD, 20% decay tail, global batch about 1M tokens | SmolLM2, PuRo |
-| Sequence | 4K base training, then 32K and 128K extension on complete long documents | findings 05, 06, 18 |
+| Sequence | 4K base, then 32K and 128K extension on complete long documents | findings 05, 06, 18 |
 
-### 2.3 Training recipe
+### 2.4 Recipe
 
-- Stable phase on the web-heavy mixture, then a decay phase that upweights math, code, synthetic
-  textbook, and instruction-style data.
+- Stable phase on the E2 mixture, decay phase on the E4 mixture.
 - Publish the last stable-phase checkpoint. It is the resumable seed for the next grant.
-- Context extension in two stages with original-4K regression evaluation at each stage.
+- Context extension in two stages, with original-4K regression evaluation at each stage.
 - Anneal from three seeds and weight-merge, then supervised fine-tuning on SpeckChat2-class data.
   Preference tuning only if time remains.
 
@@ -63,155 +82,280 @@ are targets; materialize them with the repository's parameter accounting before 
 ### 3.1 Thesis
 
 A small model can match dense-attention quality at a fraction of the training FLOPs and a small
-fraction of the long-context state by combining a fixed-state recurrent mixer with a few global
-attention layers, and every part of that claim can be isolated, replicated, and priced.
+fraction of the long-context state, and the data recipe that makes it good can be isolated with the
+same rigor as the architecture. Every part of both claims is replicated and priced.
 
 ### 3.2 Standard
 
-Coverage of Kimi Linear, Kimi K3, and DeepSeek-V4 reports, plus one thing they omit: isolated
-component evidence before the combined model. Concretely, each architectural line in the flagship
-config maps to one figure with three seeds, a paired one-sided 95% bound against a control, and a
-measured cost. If a section changes no number in the config, it is cut. If a config line has no
-figure, the paper says it was inherited.
+Coverage of the Kimi Linear, Kimi K3, and DeepSeek-V4 reports, plus the thing they omit: isolated
+component evidence before the combined model, for data as well as architecture. Each line of the
+flagship config maps to one figure with seeds, a paired bound, and a measured cost. A section that
+changes no number in the config is cut. A config line with no figure is labeled inherited.
 
-Statistics follow `architecture-promotion-v1`: paired candidate-minus-control differences, a 0.01
-nat non-inferiority margin, and per-source guardrails. The measured seed range at 150M (0.00965
-nats) is the reason three seeds are mandatory.
+### 3.3 Sections and required evidence
 
-### 3.3 Sections and the evidence each needs
-
-1. Introduction: the efficiency problem, the two cost axes, claims, and non-claims.
-2. Architecture: every operator in one notation with state and FLOP accounting.
-3. Sequence-mixer ablations at 350M: the decisions in section 4, three seeds each.
-4. Data ablations at 350M: mixture, code and math fraction, decay-phase composition.
-5. Scale: the selected architecture against dense at 150M, 350M, 750M, and 1.2B, a fitted curve
-   with uncertainty, and one held-out point.
-6. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
-7. Long context: extension recipe, RULER v2 through 128K, internal retrieval and composition
-   protocols, original-4K retention.
-8. Post-training: anneal merge and SFT, with the delta they contribute.
-9. Results against comparators at matched size, with each comparator's training-token budget.
-10. Serving cost: TTFT, TPOT, throughput, resident state, and peak memory at 4K, 32K, and 128K on
-    GH200, RTX 3090, and CPU via GGUF. Time and energy reported separately, no dollar figures.
-11. Mechanism: why a few global layers suffice (middle versus final role), and what the KDA state
-    retains at 128K. One diagnostic figure each.
-12. Negative results: Reader Attention, attention output gating, late NoPE conversion, MoE on the
-    3090, and whatever loses in section 4.
-13. Limitations, future work in one paragraph (depth routing, cache compression, MoE at scale),
-    and reproducibility: configs, data manifests, every ladder checkpoint, the findings ledger.
+1. Introduction: the efficiency problem, the two cost axes, claims and non-claims.
+2. Architecture: every operator in one notation, with state and FLOP accounting.
+3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
+4. Data ablations: E1 to E5 with per-domain held-out loss and small-scale benchmarks.
+5. Architecture ablations: C0 and D1 to D6 with paired non-inferiority bounds.
+6. Scale: both architectures at four scales, a fitted curve with uncertainty, one held-out point,
+   and the hyperparameter transfer rule from D6.
+7. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
+8. Long context: extension recipe, RULER v2 through 128K, internal protocols, 4K retention.
+9. Post-training: anneal merge and SFT, with the delta each contributes.
+10. Results against comparators at matched size, each comparator's token budget printed beside it.
+11. Serving cost: TTFT, TPOT, throughput, resident state, peak memory at 4K, 32K, and 128K on
+    GH200, RTX 3090, and CPU through GGUF. Time and energy separately, no dollar figures.
+12. Mechanism: why a few global layers suffice, and what the recurrent state retains at 128K.
+13. Negative results: Reader Attention, attention output gating, late NoPE conversion, MoE on the
+    3090, and every arm that loses in section 4.
+14. Limitations, one paragraph of future work, and reproducibility.
 
 ### 3.4 Headline
 
 One sentence of the form "matches model X at 1/N the training compute and 1/M the resident state at
-128K, and runs on a laptop." The exact X, N, and M come from section 9 and 10. No draft headline is
-stable before those sections exist.
+128K, and runs on a laptop." X, N, and M come from sections 10 and 11. No draft headline is stable
+before those sections exist.
 
 ## 4. Experiments
 
-All decision experiments run at 350M parameters and 7B tokens (20 tokens per parameter) on one GPU
-each, four in parallel, in the first fourteen days of the allocation. Each has a default. On day 15
-the flagship launches with the winner or the default. No decision may be added after day 1.
+### 4.1 Principles
 
-Pass rule for replacing a default: the alternative must beat it on validation loss at matched
-wall-clock with the upper one-sided 95% bound over three seeds inside the 0.01 nat margin, and must
+**Screen at one seed, confirm at three.** The measured seed range at 150M is 0.00965 nats (finding
+03). An effect several times that size is visible on one seed; quantifying it needs three. Screens
+eliminate, confirmations decide.
+
+**Architecture and data use different statistics.** Architecture ablations are non-inferiority
+tests: does the cheaper option lose anything? They use the paired one-sided 95% bound and the
+0.01-nat margin from `architecture-promotion-v1`. Data ablations are superiority tests: is the
+mixture better? They report effect size, paired bounds, and power, not a margin.
+
+**Never evaluate a mixture on its own data.** One neutral held-out set is defined before any run: an
+equal-token slice held out from every candidate source, plus at least one source that appears in no
+training mixture. Every arm reports aggregate loss and per-domain loss separately, since mixture
+changes trade domains against each other and the aggregate hides it.
+
+**Benchmarks that work at 350M.** HellaSwag, ARC-easy, PIQA, LAMBADA, WinoGrande. MMLU, GSM8K, and
+HumanEval are at or near chance at this scale and cannot decide anything; code and math fractions are
+judged on held-out domain loss at 350M and confirmed downstream at 750M and at the flagship.
+
+**Known limitation.** Ablations run near 30 tokens per parameter while the flagship runs above 300,
+and mixture effects interact with token budget more than architecture effects do. Mitigation: confirm
+the winning mixture at 750M, and treat E4 as most transferable because its structure is identical to
+the flagship's.
+
+**Shared control.** One default configuration is trained once per seed and serves as the control for
+D1, D2, and D3.
+
+### 4.2 Data experiments
+
+Two stages, mirroring how the flagship trains. Stable-phase questions need full runs. Decay-phase
+questions branch from one shared stable checkpoint and cost a quarter as much.
+
+| ID | Question | Arms | Scale and tokens | Runs | GPU-h |
+| --- | --- | --- | --- | ---: | ---: |
+| E1 | Which web filter? | Ultra-FineWeb HQ, DCLM baseline, FineWeb-Edu, blend | 350M, 8B | 8 | 133 |
+| E2 | Stable mixture composition | web-heavy, balanced, code and math heavy | 350M, 12B | 9 | 225 |
+| E3 | Epoch policy at matched tokens | 1 epoch mixed, 2 epochs higher quality, 4 epochs best | 150M, 6B | 6 | 32 |
+| E4 | Decay-phase composition | four mixtures branched from the E2 winner | 350M, +3B | 8 | 50 |
+| E5 | Curriculum shape | single-stage uniform, within-source quality-sorted, two-phase | 350M, 12B | 4 | 100 |
+| | | | | **35** | **540** |
+
+E1 runs four one-seed screens, then three seeds on the top two. E2 uses three seeds because it sets
+the flagship mixture. E3, E4, and E5 use two seeds because their expected effects are large.
+
+E3 is the highest-leverage experiment in the program. If repetition is close to free, as
+Muennighoff et al. report up to four epochs, the preparation target drops from 500B unique tokens to
+about 150B and the critical path in section 10 shrinks with it. Run it first.
+
+E5 settles a real disagreement in the literature: SmolLM2 found single-stage uniformly high-quality
+data better below 2B, while PuRo-2B found within-source quality sorting to be its single largest win.
+
+### 4.3 Architecture decisions
+
+All at 350M and 10B tokens unless noted. Each has a default. Day 21 launches the flagship with the
+winner or the default. No decision may be added after day 1.
+
+**Pass rule.** The alternative must beat the default on the neutral held-out set at matched
+wall-clock, with the upper one-sided 95% bound over three seeds inside the 0.01-nat margin, and must
 not regress 32K or 128K retention on the built-in curve. Ties keep the default.
 
-| ID | Question | Arms | Runs | Default | Cost (GPU-h) |
+| ID | Question | Arms | Runs | Default | GPU-h |
 | --- | --- | --- | ---: | --- | ---: |
-| D1 | Dense or MoE? | dense 350M; fine-grained dropless MoE at 350M active and about 1.4B total with a shared expert and bias-based balancing; dense 750M as the capacity reference | 9 | dense | 200 |
-| D2 | NoPE or partial RoPE in the global layers? | NoPE; RoPE on 32 of 128 dims | 6 | NoPE | 120 |
-| D3 | 3:1 or 5:1 recurrent to global? | 18+6; 20+4 | 6 | 3:1 | 120 |
-| D4 | Peak LR and batch at 1M tokens | four LR points on the default | 4 | scaled from 150M | 80 |
-| D5 | Tokenizer | Mistral 32K; a 64K Speck tokenizer with code coverage | pre-grant, on the 3090 at 150M | keep 32K | 0 on the node |
-| A1 | Data mixture | three stable-phase mixtures differing in code and math fraction | 9 | section 5 mixture | 180 |
-| A2 | Decay-phase composition | two decay mixtures on the same stable checkpoint | 6 | section 5 decay mixture | 60 |
-| S1 | Reversal check | selected architecture vs dense at 750M, one pair | 2 | proceed | 120 |
+| C0 | Shared control | KDA 3:1 NoPE dense | 3 | | 63 |
+| D1 | Dense or MoE? | fine-grained dropless MoE at 350M active and about 1.4B total, plus a dense 750M capacity reference | 4 | dense | 132 |
+| D2 | Global-layer position encoding | partial RoPE on 32 of 128 dims | 3 | NoPE | 63 |
+| D3 | Recurrent to global ratio | 5:1 (20 recurrent, 4 global) | 3 | 3:1 | 63 |
+| D4 | Peak LR and batch | four LR points at 1M-token batch, 4B tokens each | 4 | scaled from 150M | 33 |
+| D6 | Hyperparameter transfer rule | two extra 150M points to fit LR against width | 2 | empirical fit | 5 |
+| | | | **19** | | **359** |
 
 D1 rule: if MoE wins, the flagship becomes about 1B active and 4 to 6B total, the token budget drops
-to about 350B to pay the routed overhead, and the serving target becomes laptop and edge rather
-than phone. Conventional fine-grained MoE only; no untested operator enters the flagship.
+by roughly 15% to pay the routed overhead, and the serving target becomes laptop and edge rather than
+phone. Conventional fine-grained MoE with a shared expert and bias-based balancing only. No untested
+operator enters the flagship.
 
-Paper ablations that do not gate the flagship run only on spare GPUs during the extension and
-evaluation weeks: Reader Attention at 350M, MQA versus GQA cache representation, and a
-scaling-ladder repeat of D2 and D3 at 150M.
+D5, the tokenizer, is decided before the grant on the 3090. Default is to keep the Mistral 32K
+vocabulary. A 64K Speck vocabulary requires a trainer that does not exist yet, re-preparation of the
+corpus, and loss of comparability with every existing checkpoint.
+
+D6 is what makes the next scale cheap and is a paper figure in its own right.
+
+### 4.4 Scale ladder and reversal check
+
+The selected architecture against a dense control at four scales, plus cheap low anchors for the
+fit. Resolves F1 in section 2.2 and provides the scaling section.
+
+| Points | Scale and tokens | Runs | GPU-h |
+| --- | --- | ---: | ---: |
+| Low anchors | 60M/1.2B, 220M/5B | 4 | 14 |
+| Mid | 150M/3B, 350M/7B | 4 | 35 |
+| Reversal check S1 | 750M/15B, both arms | 2 | 134 |
+| Contingency and reruns | | 4 | 107 |
+| | | **14** | **290** |
+
+A scaling-efficiency claim additionally requires uncertainty on the fit, residual diagnostics, and
+the flagship itself as a held-out confirmation point.
+
+### 4.5 Not gating the flagship
+
+Run only on spare capacity during the extension and evaluation weeks, and only as paper sections:
+Reader Attention at 350M, MQA against GQA cache representation, and a 150M repeat of D2 and D3 for
+the scale-consistency figure.
 
 ## 5. Data
 
-Target: 500B unique tokens tokenized, globally deduplicated, decontaminated against every
-evaluation set, and packed before day 1. About 1 TB at uint16. This is the largest pre-grant task
-and the largest schedule risk. The current pipeline has prepared 20B tokens and has no code source.
+### 5.1 Targets
 
-Stable-phase mixture, starting point, weights in percent:
+Two corpora are needed.
+
+- **Pretraining corpus.** 500B unique tokens tokenized, globally deduplicated, decontaminated
+  against every evaluation set, and packed before day 1. About 1.0 TB packed at 2 bytes per token,
+  plus 2 to 3 TB of raw parquet during preparation. E3 may cut the unique-token target to about
+  150B, so run E3 before committing to the full download.
+- **Long-document extension corpus.** Complete books, papers, and repository trees, with source
+  token-length filters. Concatenated unrelated documents are a stress condition, not supervision.
+
+Set `speck_base_dir=/mnt/speck-data/speck` so packed shards, the raw download cache, and checkpoints
+land on the 5.2 TB volume rather than the 12 GB free on root. Prune raw files as each source
+completes; the volume does not hold raw and packed simultaneously at full scale.
+
+### 5.2 Mixture
+
+Starting point for E2's balanced arm, weights in percent. E1 decides the web component and E2
+decides these fractions; this table is a prior, not a decision.
 
 | Source | Weight | Status |
 | --- | ---: | --- |
-| Ultra-FineWeb HQ | 35 | in the pipeline |
-| DCLM baseline | 25 | in the pipeline |
-| FineWeb-Edu | 10 | new |
-| Code: Stack-Edu or an educational subset of The Stack v2 | 12 | new |
-| Math: FineMath 4+, MegaMath | 8 | partly in the pipeline |
-| Cosmopedia v2 and similar synthetic textbook | 5 | in the pipeline |
-| Wikipedia, peS2o | 5 | in the pipeline |
+| Web, filter chosen by E1 | 55 | Ultra-FineWeb HQ and DCLM in the pipeline, FineWeb-Edu new |
+| Code, Stack-Edu or an educational subset of The Stack v2 | 12 | **new, no code source exists today** |
+| Math, FineMath 4+ and MegaMath | 8 | partly in the pipeline |
+| Synthetic textbook, Cosmopedia v2 and similar | 10 | in the pipeline |
+| Reference, Wikipedia and peS2o | 5 | in the pipeline |
+| Held in reserve for E2's arms | 10 | |
 
-Decay phase: raise math, code, and synthetic to about 45% combined and add instruction-style
-pretraining data. Extension data: complete books, papers, and repository trees only.
+The absence of any code source is the largest single gap in the current pipeline. Code data improves
+reasoning as well as code, so it is not an optional category.
+
+The decay mixture raises math, code, synthetic, and instruction-style data to roughly 45% combined.
+E4 chooses among four candidates.
 
 ## 6. Evaluation
 
-- Short context: MMLU, HellaSwag, ARC, PIQA, WinoGrande, CommonsenseQA, TriviaQA, GSM8K, MATH,
+- **Short context:** MMLU, HellaSwag, ARC, PIQA, WinoGrande, CommonsenseQA, TriviaQA, GSM8K, MATH,
   HumanEval, MBPP, through a pinned lm-evaluation-harness or lighteval revision.
-- Long context: RULER v2 at 4K, 8K, 16K, 32K, 64K, and 128K; the internal 200-case structured
-  retrieval and symbolic composition protocols; original-4K loss after every extension stage.
-- Comparators at matched size: SmolLM2-360M and 1.7B, Qwen3-0.6B and 1.7B, Gemma 3 1B, LFM2-700M
-  and 1.2B, Llama 3.2 1B. Their training token counts are printed next to ours.
-- Serving: TTFT, TPOT, tokens per second, resident state, and peak memory at 4K, 32K, and 128K on
-  GH200, RTX 3090, and CPU via GGUF.
-- Out of scope: HELMET and NoLiMa. Their audits are in findings 42 to 54 and 124 to 128.
+- **Ablation evaluation:** the neutral held-out set from section 4.1, per-domain loss, and the
+  small-scale benchmark subset.
+- **Long context:** RULER v2 at 4K through 128K, the internal 200-case structured-retrieval and
+  symbolic-composition protocols, and original-4K loss after every extension stage.
+- **Comparators:** SmolLM2-360M and 1.7B, Qwen3-0.6B and 1.7B, Gemma 3 1B, LFM2-700M and 1.2B,
+  Llama 3.2 1B, each with its training-token budget printed alongside.
+- **Serving:** TTFT, TPOT, tokens per second, resident state, and peak memory at 4K, 32K, and 128K
+  on GH200, RTX 3090, and CPU through GGUF.
+- **Out of scope:** HELMET and NoLiMa. Audits are in findings 42 to 54 and 124 to 128.
 
-## 7. Compute and calendar
+## 7. Compute and schedule
 
-Grant: 5,000 GH200 GPU-hours on one 4-GPU node. Assumed 300 to 400 achieved TFLOPS per GPU in bf16
-near 1B parameters. The window must be at least two months; three is comfortable.
+Grant: 5,000 GH200 GPU-hours on one 4-GPU node. Estimates assume 6ND training FLOPs at 350 achieved
+TFLOPS per GPU with a 1.25x overhead factor for experiments and 1.06x for the flagship. The window
+must be at least two months; three is comfortable.
 
-| Phase | GPU-hours | Days |
-| --- | ---: | --- |
-| Decisions and data ablations (section 4) | 900 | 1 to 14 |
-| Reversal check at 750M | 150 | 12 to 14 |
-| Flagship pretraining | 2,400 | 15 to 40 |
-| Extension, anneal, SFT, evaluation, serving | 450 | 41 to 55 |
-| Paper ablations on spare capacity | 600 | 41 to 55 |
-| Reserve | 500 | as needed |
+| Track | GPU-hours | Share |
+| --- | ---: | ---: |
+| Data experiments, E1 to E5 | 540 | 11% |
+| Architecture decisions, C0 and D1 to D6 | 359 | 7% |
+| Scale ladder and reversal | 290 | 6% |
+| Flagship pretraining | 2,425 | 49% |
+| Extension, anneal, SFT, evaluation, serving | 450 | 9% |
+| Reserve | 936 | 19% |
+| | **5,000** | |
 
-Day 15 is a launch date, not a readiness gate. In a two-month window, section 4 shrinks to ten
-days and paper ablations are cut first.
+The reserve is sized for a first run on unfamiliar hardware with an untested stack, not as slack to
+fill with extra arms.
+
+### Schedule and dependencies
+
+| Days | Work | Depends on |
+| --- | --- | --- |
+| 1 to 3 | D4 and D6 first, since every later run needs the right LR. E3 and the E1 screens in parallel. | |
+| 4 to 10 | E1 confirmations, E2, C0, D1, D2, D3 | D4 |
+| 11 to 16 | E5, E4, S1 reversal check | E2 winner for E4 |
+| 17 to 20 | Scale ladder, analysis, F1 size decision, config freeze | S1 |
+| 21 | Flagship launch | all decisions or their defaults |
+| 21 to 47 | Flagship, all four GPUs, nothing else on the node | |
+| 48 to 60 | Extension, anneal and merge, SFT, evaluation, serving, spare-capacity paper ablations | |
+
+Day 21 is a launch date, not a readiness gate. If the window is two months there is no slack; cut in
+this order, decided now rather than under pressure: E5, then the scale ladder to two points, then the
+flagship token budget to 320B.
 
 ## 8. Releases
 
-- Base, pre-decay, 128K-extended, and instruct checkpoints, in native, Transformers, and GGUF form.
-- Every scaling-ladder checkpoint at 150M, 350M, 750M, and 1.2B, both arms.
-- All experiment configs, data manifests with source revisions, and the packed-data hashes.
+- Base, pre-decay, 128K-extended, and instruct checkpoints in native, Transformers, and GGUF form.
+- Every scaling-ladder checkpoint at every scale, both arms.
+- All experiment configs, data manifests with source revisions, and packed-data hashes.
 - The findings ledger and the raw result JSON.
 - A serving benchmark script others can run on their own hardware.
 
 ## 9. After this grant
 
 - The pre-decay checkpoint is designed to be continued with more tokens under the same schedule.
-- The ladder is designed to be extended upward: the same data pipeline, the same evaluation, the
-  same statistics, one more scale.
-- The hyperparameter transfer rule fixed in D4 is what makes the next scale cheap.
-- Depth routing, cache compression, and MoE at scale are the second paper, gated on the same
-  standard as this one.
+- The ladder extends upward with the same pipeline, evaluation, and statistics, one scale at a time.
+- D6's transfer rule is what keeps the next scale from needing its own sweep.
+- Depth routing, cache compression, and MoE at scale are the second paper, held to this standard.
 
-## 10. Before day 1 (on the 3090 and CPU)
+## 10. Before day 1
 
-1. Data at 500B tokens packed; stable-phase mixture first, decay mixture during section 4.
-2. A one-day rented GH200 session: PyTorch, Triton, FLA KDA kernels, FlexAttention, Liger, FP8,
-   DDP, and checkpoint resume under a 24-hour job limit, all on arm64.
-3. Routed MoE layer ported to grouped GEMM and tested on that session.
-4. Tokenizer decision D5.
-5. Flagship config materialized and the section 4 analysis plan frozen.
-6. Export, GGUF, and serving benchmark path exercised on the Speck2 checkpoint.
-7. Root disk on the 3090 machine cleared to below 80%.
+On the 3090 and CPU, in priority order. Items 1 and 2 are the critical path.
 
-No new architecture experiments on the 3090. Anything worth knowing at 150M is a one-hour job on
-the node.
+1. **Storage.** Set `speck_base_dir` to the data volume, delete the out-of-scope 11 GB HELMET
+   archive, and bring root below 80%.
+2. **Data.** Add a code source. Run a 20B-token rehearsal to measure download bandwidth, dedup
+   memory, and shard throughput before committing to the full target. Prepare the stable-phase
+   corpus first, the decay candidates during the decision phase, and the long-document corpus in
+   parallel. Build the neutral held-out set and the decontamination pass at the same time.
+3. **One rented GH200 day.** Scripted checklist: arm64 PyTorch and Triton, FLA KDA kernels,
+   FlexAttention, Liger, FP8, four-GPU DDP, and checkpoint resume under a simulated 24-hour job
+   limit. Four-GPU training has never run in this repository. Bring the grouped-GEMM MoE port to the
+   same session so D1 is a fair fight.
+4. **D5, tokenizer.** Decide within a week.
+5. **Comparator table on the idle 3090.** Run every comparator in section 6 through the pinned
+   harness and measure its serving cost on the 3090 and on CPU. This builds paper sections 10 and 11
+   before the flagship exists and establishes the bar.
+6. **Configs and plan.** Materialize the 60M, 150M, 220M, 350M, 750M, and 1.2B geometries, verify
+   parameter counts, and freeze the section 4 analysis plan as one file.
+
+No new architecture experiments on the 3090. Anything worth knowing at 150M is an hour on the node.
+
+## 11. Risks
+
+| Risk | Mitigation |
+| --- | --- |
+| Data not ready on day 1 | Start now; run E3 early to potentially cut the target by 3x; prepare the stable corpus first |
+| Volume cannot hold raw and packed together | Prune raw per source as it completes |
+| arm64 kernel or four-GPU DDP failure | The rented-node day; fall back to Torch recurrence and bf16 |
+| Job time limits and preemption | Resume path tested before the grant |
+| MoE instability if D1 wins | Dense default, conventional MoE only, no untested operator |
+| Ablations do not transfer to 300+ tokens per parameter | Confirm at 750M; weight E4 highest; state the limitation |
+| Two-month window | Pre-decided cut order in section 7 |
