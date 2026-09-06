@@ -86,7 +86,6 @@ configuration:
 | `experiments/SpeckLC-150M-GDN` | 3:1 Gated DeltaNet/GQA long-context proxy and 4K base-training recipe. |
 | `experiments/SpeckLC-1.2B` | Materialized dense 1.218B-parameter research target with a 1M allocation ceiling. |
 | `experiments/SpeckLC-150M-ReaderAttention131M` | Parameter- and FLOP-matched staircase over the number of shared global key-value caches. |
-| `experiments/SpeckLC-150M-MoEScreen` | Active-FFN-matched KDA/NoPE MoE granularity and practical placement/capacity screen. |
 | `experiments/Speck-Paper1-Baselines-131M` | Completed three-pair, parameter-matched dense-global/KDA proxy; results under `results/Speck-Paper1`. |
 | `experiments/Speck1-140M-Instruct` | One-epoch SpeckChat1 supervised fine-tuning of `Speck1-140M`. |
 | `experiments/Speck1.1-140M-Instruct` | One-epoch SpeckChat2 supervised fine-tuning of the original base weights. |
@@ -119,6 +118,7 @@ prepared conversation dataset.
 | [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific experiment implications for 22 architecture papers. |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context tooling](docs/long_context.md) | Mixers, attention, global-layer roles, progressive context training, evaluation, and known boundaries. |
+| [Deferred MoE support](docs/moe.md) | Retained routed-expert reference, explicit non-support, and the future sparse-upcycling boundary. |
 | [Architecture promotion research](research/README.md) | Versioned statistical policy, cost envelopes, evaluation manifest, and evidence matrix. |
 | [Flagship scope](research/flagship/README.md) | Scope of the first flagship model, paper, ablations, and experiments; defaults, compute, data, evaluation, calendar. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |

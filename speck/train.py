@@ -196,8 +196,6 @@ def optimization_step(
                         "entropy": stats.entropy.detach().clone(),
                         "load_balance_loss": stats.load_balance_loss.detach().clone(),
                         "z_loss": stats.z_loss.detach().clone(),
-                        "logit_rms": stats.logit_rms.detach().clone(),
-                        "selection_bias_rms": stats.selection_bias_rms.detach().clone(),
                     }
                     for stats in output.routing
                 ]
@@ -213,8 +211,6 @@ def optimization_step(
                         "entropy",
                         "load_balance_loss",
                         "z_loss",
-                        "logit_rms",
-                        "selection_bias_rms",
                     ):
                         accumulated[name].add_(getattr(stats, name).detach())
         batch = next(loader)
@@ -234,8 +230,6 @@ def optimization_step(
             entropy=accumulated["entropy"] / accumulation,
             load_balance_loss=accumulated["load_balance_loss"] / accumulation,
             z_loss=accumulated["z_loss"] / accumulation,
-            logit_rms=accumulated["logit_rms"] / accumulation,
-            selection_bias_rms=accumulated["selection_bias_rms"] / accumulation,
         )
         for accumulated in (routing_sums or [])
     )
@@ -271,19 +265,8 @@ def average_training_output(output, distributed):
                 stats.entropy,
                 stats.load_balance_loss,
                 stats.z_loss,
-                stats.logit_rms,
-                stats.selection_bias_rms,
             )
         )
     for tensor in tensors:
         dist.all_reduce(tensor, op=dist.ReduceOp.AVG)
-    return output
-
-
-def average_routing_utilization(output, distributed):
-    """Average routed load before a loss-free selection-bias update."""
-
-    if distributed:
-        for stats in output.routing:
-            dist.all_reduce(stats.utilization, op=dist.ReduceOp.AVG)
     return output

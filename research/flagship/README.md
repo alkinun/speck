@@ -1,6 +1,6 @@
 # Speck flagship: scope of the model, the paper, and the experiments
 
-Status: v2, 2026-09-06. This is the single operating document for the first flagship model and the
+Status: v3, 2026-09-06. This is the single operating document for the first flagship model and the
 paper that describes it. Everything else under `research/` is either tooling contract
 (`architecture-promotion-v1`) or archived evidence (`paper-1/*.json`).
 
@@ -22,9 +22,9 @@ cost-equivalent against 1.34x for FP8 and 1.19x for the optimizer, and SmolLM2's
 lesson was about data staging. Our own measured architecture effects span 0.005 to 0.05 nats, while
 published filter and mixture effects span 0.05 to 0.2 nats and several benchmark points.
 
-Non-goals this cycle: a new operator, a novelty claim, mixture-of-experts unless it wins its one
-experiment, depth routing, sparse or compressed attention, and any claim we cannot measure on
-hardware we own or rent.
+Non-goals this cycle: a new operator, a novelty claim, mixture-of-experts, depth routing, sparse or
+compressed attention, and any claim we cannot measure on hardware we own or rent. Conditional width
+is deferred to a follow-on allocation through sparse upcycling from the released dense checkpoint.
 
 ## 2. The flagship model
 
@@ -98,9 +98,8 @@ changes no number in the config is cut. A config line with no figure is labeled 
 2. Architecture: every operator in one notation, with state and FLOP accounting.
 3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
 4. Data ablations: E1 to E5 with per-domain held-out loss and small-scale benchmarks.
-5. Architecture ablations: C0 and D1 to D6 with paired non-inferiority bounds, and the MoE design
-   screen from section 4.6 with its routing-stability trace.
-6. Scale: both architectures at four scales, a fitted curve with uncertainty, one held-out point,
+5. Architecture ablations: C0, D2, D3, D4, and D6 with paired non-inferiority bounds.
+6. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one held-out point,
    and the hyperparameter transfer rule from D6.
 7. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
 8. Long context: extension recipe, RULER v2 through 128K, internal protocols, 4K retention.
@@ -109,8 +108,8 @@ changes no number in the config is cut. A config line with no figure is labeled 
 11. Serving cost: TTFT, TPOT, throughput, resident state, peak memory at 4K, 32K, and 128K on
     GH200, RTX 3090, and CPU through GGUF. Time and energy separately, no dollar figures.
 12. Mechanism: why a few global layers suffice, and what the recurrent state retains at 128K.
-13. Negative results: Reader Attention, attention output gating, late NoPE conversion, MoE on the
-    3090, and every arm that loses in section 4.
+13. Negative results: Reader Attention, attention output gating, late NoPE conversion, and every arm
+    that loses in section 4.
 14. Limitations, one paragraph of future work, and reproducibility.
 
 ### 3.4 Headline
@@ -147,7 +146,7 @@ the winning mixture at 750M, and treat E4 as most transferable because its struc
 the flagship's.
 
 **Shared control.** One default configuration is trained once per seed and serves as the control for
-D1, D2, and D3.
+D2 and D3.
 
 ### 4.2 Data experiments
 
@@ -185,30 +184,16 @@ not regress 32K or 128K retention on the built-in curve. Ties keep the default.
 | ID | Question | Arms | Runs | Default | GPU-h |
 | --- | --- | --- | ---: | --- | ---: |
 | C0 | Shared control | KDA 3:1 NoPE dense | 3 | | 63 |
-| D1 | Dense or MoE? | best MoE design from the 4.6 screen at 350M active and about 1.4B total, plus a dense 750M capacity reference | 4 | dense | 132 |
 | D2 | Global-layer position encoding | partial RoPE on 32 of 128 dims | 3 | NoPE | 63 |
 | D3 | Recurrent to global ratio | 5:1 (20 recurrent, 4 global) | 3 | 3:1 | 63 |
 | D4 | Peak LR and batch | four LR points at 1M-token batch, 4B tokens each | 4 | scaled from 150M | 33 |
 | D6 | Hyperparameter transfer rule | two extra 150M points to fit LR against width | 2 | empirical fit | 5 |
-| | | | **19** | | **359** |
+| | | | **15** | | **227** |
 
-**D1 infrastructure gate.** MoE is not eligible to win unless all three hold by day 10:
-
-1. Grouped GEMM measured at an acceptable fraction of dense MFU on Hopper during the rented-node day.
-   The `torch._grouped_mm` path targets Hopper, so the Ampere measurement from 2026-09-01 does not
-   transfer and must be redone.
-2. Expert banks on AdamW rather than Muon, so orthogonalization cost scales with active rather than
-   total parameters. The trainer now exposes this mixed optimizer, but it still requires a compiled
-   forward/backward/update qualification on Hopper. The 2026-09-01 pilot's optimizer time tracked the
-   total parameter ratio.
-3. Total parameters under about 4B, so optimizer state fits under DDP without sharding. At 10 to 14
-   bytes per total parameter that is 40 to 56 GB per GPU; 7B would need FSDP, which does not exist in
-   this trainer.
-
-If the gate fails, dense wins by default and MoE moves to the second paper through sparse upcycling
-from the flagship checkpoint, which is cheap. If MoE wins, the flagship becomes about 1B active and
-4B total, the token budget drops roughly 15% for routing overhead, and the Transformers and GGUF
-export path needs its own budgeted time, since the current converter handles neither.
+**D1 is retired for this allocation.** The first flagship is dense in width. This removes a late
+architecture branch plus its unqualified expert optimizer, Hopper routing kernel, distributed-state,
+export, and serving dependencies. The identifier is intentionally not reused. Its 132 GPU-hours move
+to reserve until measured GH200 throughput and the first complete flagship checkpoint are secure.
 
 D5, the tokenizer, is decided before the grant on the 3090. Default is to keep the Mistral 32K
 vocabulary. A 64K Speck vocabulary requires a trainer that does not exist yet, re-preparation of the
@@ -238,63 +223,17 @@ Run only on spare capacity during the extension and evaluation weeks, and only a
 Reader Attention at 350M, MQA against GQA cache representation, and a 150M repeat of D2 and D3 for
 the scale-consistency figure.
 
-### 4.6 Pre-grant MoE screen, on the RTX 3090
+### 4.6 Deferred conditional width
 
-Runs on the idle 3090 before the allocation opens. Its purpose is to choose the MoE *design*, so that
-D1 tests dense against our best MoE rather than a naive one.
+No MoE run belongs to this grant or gates the flagship. The repository retains a conventional
+single-device routed-SwiGLU reference, routing diagnostics, and expert-masking support so a follow-on
+program does not restart from zero. It deliberately retains no active MoE experiment, result-selection
+contract, expert-parallel claim, or release path.
 
-It deliberately cannot answer two things. It cannot decide dense against MoE, because that gap grows
-with scale and 150M is too small to read it. It cannot measure wall-clock, because the grouped-GEMM
-path targets Hopper and the 3090 is Ampere. Those belong to D1 and to the rented-node day.
-
-Setup reuses what exists. The 1B-token DCLM-Edu corpus is already packed and cached with 1,000,131,351
-training and 20,000,161 validation tokens, so no data preparation is needed. The backbone is the
-current 153.959M-parameter KDA/NoPE hybrid rather than the retired convolution hybrid. Each screen run
-uses sequence length 2048 and requests 500M tokens. The dense arm is the unmodified backbone. Routed
-arms keep the same active feed-forward width and land between 313M and 473M total parameters with
-about 154M active. One seed screens; seeds 43 and 44 confirm only the final dense/MoE pair.
-
-Granularity is isolated by scaling expert count and top-k together at a fixed 25% activation ratio.
-The three banks contain the same number of expert parameters; their small total/active differences are
-only the growing router matrices. All use the source model's 2304 active feed-forward width: 8/top-2
-at width 1152, 16/top-4 at 576, and 32/top-8 at 288.
-
-| ID | Question | Arms | Logical runs | Materialization |
-| --- | --- | --- | ---: | --- |
-| M1 | Expert granularity at matched expert-bank capacity | 8/top-2 at 1152, 16/top-4 at 576, 32/top-8 at 288 | 3 | current screen |
-| M2 | Practical placement/capacity bundle | every block routed, dense first two blocks, interleaved, routed plus one shared expert | 4 | current screen |
-| M3 | Balancing rule on the selected design | auxiliary loss, bias-based loss-free | 2 | after M1/M2 |
-| M4 | Optimizer on expert banks | Muon, AdamW | 2 | after M3 |
-| C | Dense control and final MoE confirmation | seed 42 screen plus seeds 43 and 44 | 5 | after M4 |
-| | | | **16** | |
-
-M2 is deliberately a practical bundle comparison, not an isolated placement effect. Replacing routed
-blocks with dense blocks reduces total dormant capacity: the all-routed/shared arms have about 473M
-total parameters, dense-first 441M, and interleaved 313M. The paper must report that trade rather than
-attribute a difference to position alone. A genuinely isolated placement study would keep the routed
-block count and expert geometry fixed and move only their layer indices.
-
-The versioned screen contract freezes the result logic before routed output exists. Final held-out
-loss is primary; differences inside 0.00965 nats use the declared conservative tie order. From 50M
-tokens onward, every eligible routed arm requires finite diagnostics, normalized utilization CV at
-most 0.5, no zero-load expert in a diagnostic global batch, and normalized routing entropy at least
-0.25. Router-logit RMS, selection-bias RMS, load loss, expert norms, and gradients remain descriptive.
-A design that ranks first but fails stability is ineligible for a 25-day flagship.
-
-The current seven arms use auxiliary balancing, Muon expert banks, and selected-score-renormalized
-softmax routing. The frozen collector selects one exact observed arm across M1/M2; it cannot combine
-the winning granularity and placement attributes into an untrained architecture. M3 and M4 are
-causally downstream and are not silently implied by these runs. The
-trainer contains loss-free next-step selection-bias updates and a Muon-backbone/AdamW-expert optimizer
-for those later arms, but both require their own preflight. Checkpoints at 50M, 250M, and 500M make
-every run resumable; the checked runner verifies artifact hashes and keeps logs and W&B files on the
-data volume. Inductor's generated shared libraries remain in its executable `/tmp` cache because the
-checkpoint volume is mounted `noexec`. The checked analyzer cannot emit a dense-versus-MoE decision.
-
-Sparsity ratio is not screened. It is set by the DDP memory ceiling in the D1 gate.
-
-Time box: two weeks of 3090 time, running in parallel with data preparation. If it is unfinished when
-the allocation opens, take the best arm so far and stop.
+The next program begins from the released dense pre-decay checkpoint: sparse-upcycle selected MLPs,
+compare against continued dense training at matched wall-clock, and qualify expert-parallel training,
+checkpointing, export, and serving before scaling. That work requires its own 10K–50K+ allocation and
+paper rather than sharing the first flagship's critical path.
 
 ## 5. Data
 
@@ -356,11 +295,11 @@ must be at least two months; three is comfortable.
 | Track | GPU-hours | Share |
 | --- | ---: | ---: |
 | Data experiments, E1 to E5 | 540 | 11% |
-| Architecture decisions, C0 and D1 to D6 | 359 | 7% |
+| Dense architecture decisions, C0 and D2 to D6 | 227 | 5% |
 | Scale ladder and reversal | 290 | 6% |
 | Flagship pretraining | 2,425 | 49% |
 | Extension, anneal, SFT, evaluation, serving | 450 | 9% |
-| Reserve | 936 | 19% |
+| Reserve | 1,068 | 21% |
 | | **5,000** | |
 
 The reserve is sized for a first run on unfamiliar hardware with an untested stack, not as slack to
@@ -371,7 +310,7 @@ fill with extra arms.
 | Days | Work | Depends on |
 | --- | --- | --- |
 | 1 to 3 | D4 and D6 first, since every later run needs the right LR. E3 and the E1 screens in parallel. | |
-| 4 to 10 | E1 confirmations, E2, C0, D1, D2, D3 | D4 |
+| 4 to 10 | E1 confirmations, E2, C0, D2, D3 | D4 |
 | 11 to 16 | E5, E4, S1 reversal check | E2 winner for E4 |
 | 17 to 20 | Scale ladder, analysis, F1 size decision, config freeze | S1 |
 | 21 | Flagship launch | all decisions or their defaults |
@@ -395,7 +334,8 @@ flagship token budget to 320B.
 - The pre-decay checkpoint is designed to be continued with more tokens under the same schedule.
 - The ladder extends upward with the same pipeline, evaluation, and statistics, one scale at a time.
 - D6's transfer rule is what keeps the next scale from needing its own sweep.
-- Depth routing, cache compression, and MoE at scale are the second paper, held to this standard.
+- Depth routing and cache compression remain possible later sequence/depth work. MoE is a separate
+  sparse-upcycling paper and compute proposal rooted in the released dense pre-decay checkpoint.
 
 ## 10. Before day 1
 
@@ -409,21 +349,17 @@ On the 3090 and CPU, in priority order. Items 1 and 2 are the critical path.
    parallel. Build the neutral held-out set and the decontamination pass at the same time.
 3. **One rented Hopper day.** Scripted checklist: arm64 PyTorch and Triton, FLA KDA kernels,
    FlexAttention, Liger, FP8, four-GPU DDP, and checkpoint resume under a simulated 24-hour job
-   limit. Four-GPU training has never run in this repository. Also benchmark routed against dense
-   step time, which settles the D1 infrastructure gate. Rent GH200 rather than a consumer card: the
-   arm64 Grace host and the Hopper grouped-GEMM kernels are both specific to it, and a 5090 answers
-   neither. A few x86 H100 hours are a cheap substitute for the kernel half alone.
-4. **MoE screen on the 3090.** Section 4.6. Starts immediately, needs no data preparation, and runs
-   in parallel with everything else.
-5. **D5, tokenizer.** Decide within a week.
-6. **Comparator table.** Run every comparator in section 6 through the pinned
+   limit. Four-GPU training has never run in this repository. Rent GH200 rather than a consumer card:
+   the arm64 Grace host is part of the deployment target, and a 5090 does not answer that question.
+4. **D5, tokenizer.** Decide within a week.
+5. **Comparator table.** Run every comparator in section 6 through the pinned
    harness and measure its serving cost on the 3090 and on CPU. This builds paper sections 10 and 11
    before the flagship exists and establishes the bar.
-7. **Configs and plan.** Materialize the 60M, 150M, 220M, 350M, 750M, and 1.2B geometries, verify
+6. **Configs and plan.** Materialize the 60M, 150M, 220M, 350M, 750M, and 1.2B geometries, verify
    parameter counts, and freeze the section 4 analysis plan as one file.
 
-The 3090 runs only items 4 and 6. No other architecture experiment belongs there: anything else
-worth knowing at 150M is an hour on the node.
+The 3090 runs only item 5. No new architecture experiment belongs there: anything worth knowing at
+150M is an hour on the node.
 
 ## 11. Risks
 
@@ -433,7 +369,6 @@ worth knowing at 150M is an hour on the node.
 | Volume cannot hold raw and packed together | Prune raw per source as it completes |
 | arm64 kernel or four-GPU DDP failure | The rented-node day; fall back to Torch recurrence and bf16 |
 | Job time limits and preemption | Resume path tested before the grant |
-| MoE instability if D1 wins | Dense default; stability verdict required from the 4.6 screen; conventional MoE only |
-| MoE export and serving path missing | Budgeted separately; dense wins by default if the D1 gate fails |
+| Scope expands during the allocation | Dense-width architecture is frozen; 132 retired D1 hours stay in reserve until the flagship is secure |
 | Ablations do not transfer to 300+ tokens per parameter | Confirm at 750M; weight E4 highest; state the limitation |
 | Two-month window | Pre-decided cut order in section 7 |

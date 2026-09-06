@@ -236,19 +236,9 @@ def test_routed_swiglu_round_trips_and_accounts_only_selected_experts():
         "intermediate_size": 16,
         "kind": "routed_swiglu",
         "num_experts": 4,
-        "selection_bias": False,
         "top_k": 2,
     }
     assert config.active_parameter_count(10_000) == 10_000 - 2 * 3 * 8 * 16
-
-
-def test_routed_swiglu_selection_bias_round_trips():
-    operation = RoutedSwiGLUSpec(16, num_experts=4, top_k=2, selection_bias=True)
-    block = BlockConfig(8, (StageConfig((operation,)),))
-    config = ArchitectureConfig((BlockGroup(block),), 8, vocab_size=16)
-
-    assert ArchitectureConfig.from_dict(config.export()) == config
-    assert config.export()["blocks"][0]["block"]["stages"][0]["branches"][0]["selection_bias"]
 
 
 def test_active_parameter_expectation_cannot_exceed_total():

@@ -30,7 +30,6 @@ from speck.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.model import CausalLMTrainingOutput, build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import (
-    average_routing_utilization,
     average_training_output,
     branch_position,
     checkpoint_global_tokens,
@@ -54,7 +53,6 @@ _BRANCH_FIXED_SETTINGS = (
     "seed",
     "load_balance_coefficient",
     "router_z_loss_coefficient",
-    "router_bias_update_rate",
     "diagnostics_every",
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule")
@@ -83,7 +81,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "seed",
     "load_balance_coefficient",
     "router_z_loss_coefficient",
-    "router_bias_update_rate",
     "diagnostics_every",
 )
 _LEGACY_RESUME_DEFAULTS = {
@@ -99,7 +96,6 @@ _LEGACY_RESUME_DEFAULTS = {
     "allow_attention_scope_change": False,
     "load_balance_coefficient": 0.01,
     "router_z_loss_coefficient": 0.001,
-    "router_bias_update_rate": 0.0,
     "diagnostics_every": 100,
 }
 
@@ -291,16 +287,11 @@ class BaseTrainer:
         args.seed = getattr(args, "seed", 42)
         args.load_balance_coefficient = getattr(args, "load_balance_coefficient", 0.01)
         args.router_z_loss_coefficient = getattr(args, "router_z_loss_coefficient", 0.001)
-        args.router_bias_update_rate = getattr(args, "router_bias_update_rate", 0.0)
         args.diagnostics_every = getattr(args, "diagnostics_every", 100)
         args.stop_at_tokens = getattr(self.cli, "stop_at_tokens", None)
         if not isinstance(args.seed, int) or isinstance(args.seed, bool):
             raise ValueError("seed must be an integer")
-        for key in (
-            "load_balance_coefficient",
-            "router_z_loss_coefficient",
-            "router_bias_update_rate",
-        ):
+        for key in ("load_balance_coefficient", "router_z_loss_coefficient"):
             value = getattr(args, key)
             if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
                 raise ValueError(f"{key} must be a finite non-negative number")
@@ -426,19 +417,6 @@ class BaseTrainer:
         self.model.set_gradient_checkpointing(args.activation_checkpointing)
         self.parameters = tuple(self.model.parameters())
         self.optimizer = self.model.optimizer(args.lr, args.weight_decay, args.optimizer)
-        biased_routes = [
-            operation
-            for operation in self.model.routed_operations().values()
-            if operation.spec.selection_bias
-        ]
-        if args.router_bias_update_rate > 0 and len(biased_routes) != len(
-            self.model.routed_operations()
-        ):
-            raise ValueError(
-                "positive router_bias_update_rate requires selection_bias on every routed operation"
-            )
-        if args.router_bias_update_rate == 0 and biased_routes:
-            raise ValueError("selection_bias requires a positive router_bias_update_rate")
         batch_limit = (
             args.device_batch_size
             if self.cli.device_batch_size is None
@@ -532,7 +510,6 @@ class BaseTrainer:
         self.elapsed_active = 0.0
         self.elapsed_checkpoint = 0.0
         self.validation_history = []
-        self.routing_history = []
         if args.resume is not None:
             metadata = self.metadata
             if metadata is None:
@@ -564,7 +541,6 @@ class BaseTrainer:
             self.elapsed_active = timing.get("active_seconds", self.elapsed_training)
             self.elapsed_checkpoint = timing.get("checkpoint_seconds", 0.0)
             self.validation_history = list(metadata.get("validation_history", ()))
-            self.routing_history = list(metadata.get("routing_history", ()))
         elif self.parent_metadata:
             self._restore_parent_checkpoint()
 
@@ -802,7 +778,6 @@ class BaseTrainer:
                 ),
                 "validation_tokens": validation_tokens,
                 "validation_history": self.validation_history,
-                "routing_history": self.routing_history,
                 "milestone_tokens": milestone,
                 "partial": step < self.steps,
                 "training_seconds": self.elapsed_training,
@@ -901,12 +876,6 @@ class BaseTrainer:
             )
             if not isinstance(training_output, CausalLMTrainingOutput):
                 raise TypeError("training step did not return typed loss diagnostics")
-            if args.router_bias_update_rate > 0:
-                average_routing_utilization(training_output, self.distributed)
-                self.model.update_routing_biases(
-                    training_output.routing,
-                    args.router_bias_update_rate,
-                )
             self.inputs, self.targets, self.data_state = batch
             self.completed_step = completed
             timing_steps += 1
@@ -998,8 +967,6 @@ class BaseTrainer:
             metrics[f"{prefix}/utilization_max"] = stats.utilization.max().item()
             metrics[f"{prefix}/utilization_cv"] = utilization_cv.item()
             metrics[f"{prefix}/zero_load_experts"] = int((stats.utilization == 0).sum())
-            metrics[f"{prefix}/logit_rms"] = stats.logit_rms.item()
-            metrics[f"{prefix}/selection_bias_rms"] = stats.selection_bias_rms.item()
             if diagnostics:
                 operation = routed_operations[stats.layer]
                 weight_squares = sum(
@@ -1021,31 +988,6 @@ class BaseTrainer:
                     metrics[f"{expert_prefix}/utilization"] = stats.utilization[expert].item()
                     metrics[f"{expert_prefix}/weight_norm"] = weight_norms[expert].item()
                     metrics[f"{expert_prefix}/gradient_norm"] = gradient_norms[expert].item()
-        if diagnostics and output.routing:
-            self.routing_history.append(
-                {
-                    "step": self.global_step_offset + completed,
-                    "training_tokens": args.global_token_offset + completed * args.batch_tokens,
-                    "layers": [
-                        {
-                            "layer": stats.layer,
-                            "normalized_entropy": float(
-                                stats.entropy / math.log(stats.utilization.numel())
-                            ),
-                            "utilization_min": stats.utilization.min().item(),
-                            "utilization_max": stats.utilization.max().item(),
-                            "utilization_cv": (
-                                stats.utilization.std(unbiased=False)
-                                / stats.utilization.mean().clamp_min(1e-20)
-                            ).item(),
-                            "zero_load_experts": int((stats.utilization == 0).sum()),
-                            "logit_rms": stats.logit_rms.item(),
-                            "selection_bias_rms": stats.selection_bias_rms.item(),
-                        }
-                        for stats in output.routing
-                    ],
-                }
-            )
         self.tracking.log(metrics)
         print0(
             f"step {metrics['progress/step']:,}/{self.global_step_offset + self.steps:,} | "
@@ -1076,7 +1018,6 @@ class BaseTrainer:
                 torch.cuda.max_memory_allocated(self.device) if self.device.type == "cuda" else None
             ),
             "validation_history": self.validation_history,
-            "routing_history": self.routing_history,
         }
         path = Path(self.args.output_dir) / "run_summary.json"
         temporary = path.with_suffix(".json.tmp")
