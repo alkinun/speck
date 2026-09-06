@@ -1,0 +1,103 @@
+{
+  "format": "speck_paper_finalist_program_source_gate",
+  "format_version": 2,
+  "status": "complete_finite_11_source_gate_one_control_integration_qualified",
+  "created_at": "2026-09-06T01:44:31+00:00",
+  "scope": "temporary one-control integration qualification of the strengthened pre-commit program validator; no live service, training log, checkpoint, model result, GPU, scientific input, or frozen automation code accessed or changed",
+  "predecessor": {
+    "path": "results/Speck-Paper1/finalist-program-source-gate-v1.json",
+    "sha256": "5d647c28a5ee9eeef3dd9d5f41eca8ba8084f4aa964d5808d6d466906882fb0c",
+    "disposition": "preserved_historical_evidence_byte_for_byte",
+    "limitation_closed": "v1 unit-qualified the source predicate and bound the implementation but did not execute the complete program-validator path with an accepted result"
+  },
+  "implementation": {
+    "program_validator": {
+      "path": "speck/paper.py",
+      "sha256": "e2b59e24aaf3950df136142ba51bc1fb042d7efcd3241ed626a9f9ae62fb02bc",
+      "active_contract_pin_present": false
+    },
+    "integration_tests": {
+      "path": "tests/test_paper_finalist_program_source_gate.py",
+      "sha256": "2951aff3a1e3f052d0449a9f56778ae9f5b5b84b9498c05de2933366e3a8ed84"
+    },
+    "unchanged_frozen_code": {
+      "runner": {
+        "path": "scripts/paper_finalist_continue.py",
+        "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+      },
+      "analyzer": {
+        "path": "speck/paper_finalist_analysis.py",
+        "sha256": "466340781e58f1f330eee5f70683b53f24acb9d4eeaeda5cdb2eb13ebcd85504"
+      },
+      "plan": {
+        "path": "research/paper-1/finalist_analysis_v2.json",
+        "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+      }
+    }
+  },
+  "integration_fixture": {
+    "storage": "pytest temporary directory only",
+    "accepted_prefix": [
+      "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+    ],
+    "expected_next_run": "Speck-Paper1-Finalist-131M-pair-1-seed-43-order-536870912-dense_global_param_match",
+    "result_identity": {
+      "format_version": 2,
+      "status": "complete_qualified",
+      "arm_id": "dense_global_param_match",
+      "pair": 0,
+      "training_tokens": 1539833856,
+      "non_finite_steps": 0
+    },
+    "validation_steps": [
+      0,
+      5874,
+      11748,
+      17622,
+      23496
+    ],
+    "source_count_per_step": 11,
+    "failure_and_rerun_history_preserved": true,
+    "complete_control_passes_full_program_validator": true,
+    "same_control_with_dclm_removed_rejected_by_full_program_validator": true
+  },
+  "qualification": {
+    "unit_and_identity_tests": 8,
+    "full_program_integration_tests": 2,
+    "tests": 10,
+    "positive_path_qualified": true,
+    "missing_source_failure_path_qualified": true,
+    "failure_occurs_inside_existing_precommit_validator_call": true,
+    "failure_occurs_before_commit": true,
+    "failure_occurs_before_successor_schedule": true
+  },
+  "decision": {
+    "program_validator_source_gate_integration_qualified": true,
+    "v1_mutated_or_replaced": false,
+    "external_postcommit_acceptance_verifier_still_required": true,
+    "active_language_sequence_remains_authorized": true,
+    "runner_analyzer_plan_or_threshold_changed": false,
+    "training_environment_changed": false,
+    "result_repair_imputation_retry_skip_or_branch_authorized": false,
+    "next_action": "after each event-driven collection, require the strengthened program validator before commit and the independent acceptance verifier after commit; preserve both v1 and v2 evidence"
+  },
+  "verification": {
+    "integration_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_program_source_gate.py tests/test_paper.py -q",
+    "integration_expected": "47 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_program_source_gate_v2.py -q",
+    "qualification_expected": "1 passed",
+    "finalist_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "finalist_regression_expected": "97 passed",
+    "program_validation": "passed",
+    "independent_empty_ledger_acceptance": "passed with 0 accepted results and control pair 0 next",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the temporary one-control fixture is a real finalist result",
+    "the v2 evidence changes the active model, data, optimizer, thresholds, or run order",
+    "the pre-commit gate replaces independent post-commit acceptance verification",
+    "a failed source gate permits output rewriting or automatic recovery",
+    "the active run was inspected while qualifying this artifact"
+  ]
+}

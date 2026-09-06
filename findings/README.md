@@ -141,6 +141,7 @@ Read in order:
 133. [132 — Finalist finiteness and complete-source boundary](132_finalist_source_stability_boundary.md)
 134. [133 — Append-only finalist result-acceptance gate](133_finalist_result_acceptance_gate.md)
 135. [134 — Complete finite source coverage moved before commit](134_finalist_program_source_gate.md)
+136. [135 — One-control integration proof for the pre-commit source gate](135_finalist_program_source_gate_integration.md)
 
 Conventions:
 

@@ -357,6 +357,9 @@ the final combined model.
   safely moves the equivalent exact finite 11-source rule into the existing pre-commit program-validator
   call. Missing/extra/non-finite sources now stop before commit and scheduling; the independent
   post-commit acceptance verifier remains mandatory.
+- [`finalist-program-source-gate-v2.json`](../../results/Speck-Paper1/finalist-program-source-gate-v2.json)
+  preserves v1 and exercises the complete validator with a temporary accepted-control state. The exact
+  11-source state passes, while removing only `dclm` fails through the same full pre-commit path.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -441,6 +444,9 @@ preserves the failed-attempt/rerun history. Failure blocks interpretation withou
 Because the program validator is not a frozen scientific input, its complete-source rule is now also
 enforced inside finalization before commit/scheduling. Trainer, runner, analyzer, plan, thresholds, and
 the independent post-commit check remain unchanged.
+The append-only v2 qualification now covers the full one-control validator path in both directions:
+an exact complete state passes and the identical state missing one source fails. The previously cited
+v1 artifact remains byte-identical.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
