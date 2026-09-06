@@ -161,6 +161,7 @@ Read in order:
 153. [152 — Raw MQA control deconfounds cache representation from FFN capacity](152_sequence_cache_representation_deconfounded.md)
 154. [153 — Raw ratio family deconfounds recurrent/global count from FFN matching](153_ratio_FFN_matching_deconfounded.md)
 155. [154 — NoPE requires the missing mixer-by-position factorial](154_nope_factorial_frozen.md)
+156. [155 — Sigmoid gate evidence is conditional and KDA-SiLU is unimplemented](155_recurrent_gate_conditional_readiness.md)
 
 Conventions:
 

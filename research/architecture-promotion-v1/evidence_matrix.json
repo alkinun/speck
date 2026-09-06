@@ -326,6 +326,33 @@
       "next_gate": "after the active finalist, v3-accept and reuse its six KDA/NoPE cells, register the frozen factorial unchanged, and materialize the 18 missing runs"
     },
     {
+      "id": "recurrent_output_gate_activation",
+      "claim": "Sigmoid is the preferred recurrent output-gate activation on the selected sequence parent.",
+      "status": "conditional_design_frozen_implementation_blocked",
+      "alternatives": [
+        "silu",
+        "sigmoid"
+      ],
+      "evidence": [
+        "findings/13_synthetic_mqar.md",
+        "findings/16_kimi_transfer_131m.md",
+        "research/paper-1/recurrent_gate_readiness_v1.json",
+        "results/Speck-Paper1/recurrent-gate-v1-qualified.json"
+      ],
+      "quality": "One clean seed-42 GDN/RoPE language contrast favors sigmoid by 0.037337 nats, but synthetic MQAR favors GDN-SiLU 3/3 over GDN-sigmoid 0/3. KDA-sigmoid passes 3/3 and KDA-SiLU is missing, so gate utility is parent/task conditional.",
+      "systems": "SiLU and sigmoid keep parameters and current analytic FLOPs fixed; realized activation/kernel behavior is unmeasured on the selected parent.",
+      "scale_transfer": "no replicated same-parent treatment effect",
+      "runtime_support": "GDN supports both; KDA hardcodes sigmoid and KDA-SiLU is not config-expressible",
+      "unresolved_risks": [
+        "missing KDA-SiLU implementation and cell",
+        "language-versus-synthetic reversal",
+        "mixer and positional interactions",
+        "one-seed clean language evidence",
+        "future code-successor checkpoint compatibility"
+      ],
+      "next_gate": "after mixer/position selection and the active finalist, qualify a default-sigmoid KDA code successor if needed, then run the exact six-pair same-parent SiLU/sigmoid study"
+    },
+    {
       "id": "reader_attention_three_cache",
       "claim": "Three periodically refreshed global memories can replace five independent caches.",
       "status": "research_only",

@@ -1,0 +1,123 @@
+{
+  "format": "speck_recurrent_output_gate_qualification",
+  "format_version": 1,
+  "status": "qualified_conditional_design_KDA_SiLU_implementation_blocked",
+  "created_at": "2026-09-06T03:22:04+00:00",
+  "scope": "offline historical/config/source and conditional experiment qualification; no active architecture/model code, finalist result/checkpoint, service, GPU, training, or runtime environment accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/recurrent_gate_readiness_v1.json",
+      "sha256": "8fb244590ba8dc25281984819dc644e1652d492b948d08f29580c089860cec25"
+    },
+    "architecture_module": {
+      "path": "speck/architecture.py",
+      "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+    },
+    "model_module": {
+      "path": "speck/model.py",
+      "sha256": "72620f04bcd07ff6d6b4d2bd61908195ea208d80e12a65e5ce874e72f7319c27"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_recurrent_gate_validate.py",
+      "sha256": "0d36e2ec998b1a8c39bd638fa6697e564881fb519ae5bdc5d52ec72a504cefcf"
+    },
+    "tests": {
+      "path": "tests/test_paper_recurrent_gate.py",
+      "sha256": "ba08e4aba247e893ed3f0b0878d24bacdf9c21b88c2453e7dfc67162e08ad8aa"
+    }
+  },
+  "historical_boundary": {
+    "clean_seed42_GDN_sigmoid_minus_SiLU_loss": -0.03733658790588379,
+    "clean_seed42_language_direction": "sigmoid_better",
+    "clean_seed42_same_parameters_and_flops": true,
+    "clean_seed42_only_config_field": "15 recurrent output_gate_activation values",
+    "clean_multi_seed_treatment_replication": false,
+    "synthetic_GDN_SiLU_pass_seeds": 3,
+    "synthetic_GDN_sigmoid_pass_seeds": 0,
+    "synthetic_KDA_sigmoid_pass_seeds": 3,
+    "KDA_SiLU_cell_present": false,
+    "interpretation": "gate utility is task- and mixer-conditional; stable sigmoid-arm replication is not a replicated SiLU-to-sigmoid treatment"
+  },
+  "KDA_implementation_boundary": {
+    "KimiDeltaAttentionSpec_has_activation_field": false,
+    "forward_activation": "hardcoded sigmoid",
+    "KDA_SiLU_config_currently_expressible": false,
+    "attempted_config_error": "TypeError unexpected keyword argument output_gate_activation",
+    "active_code_change_authorized": false,
+    "reason": "future finalist services import model code, so even a default-preserving code change waits until the entire active sequence completes"
+  },
+  "future_KDA_code_gate": {
+    "default": "sigmoid",
+    "field_absent_equals_explicit_sigmoid": true,
+    "strict_old_checkpoint_load": true,
+    "sigmoid_forward_backward_cached_export_geometry_identity": true,
+    "SiLU_Torch_and_FLA_paths_required": true,
+    "implementation_authorized_now": false
+  },
+  "conditional_experiment": {
+    "parent": "exact independently selected mixer, position, ratio/placement, cache, FFN, residual, data, optimizer, and evaluation",
+    "arms": [
+      "SiLU",
+      "sigmoid"
+    ],
+    "only_difference": "recurrent output_gate_activation",
+    "parameters_and_current_analytic_flops_equal": true,
+    "pairs": 6,
+    "data_order_strata": 2,
+    "seeds_per_stratum": 3,
+    "one_sided_t_critical_df_2": 2.919985580353724,
+    "sigmoid_reuse_only_on_exact_parent_and_acceptance": true,
+    "new_SiLU_runs_if_reused": 6,
+    "new_runs_without_reuse": 12,
+    "interim_arm_dropping": false
+  },
+  "decision": {
+    "conditional_design_qualified": true,
+    "sigmoid_selected": false,
+    "general_sigmoid_claim_authorized": false,
+    "one_task_can_override_other_hard_gate": false,
+    "active_code_or_program_changed": false,
+    "design_registered": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "complete the active finalist and NoPE factorial, select the exact parent, then implement KDA gate configurability only if KDA is selected and freeze run identities before training"
+  },
+  "tests": {
+    "historical_loss_and_15_path_delta_plus_KDA_blocker_reproduced": true,
+    "false_KDA_configurability_rejected": true,
+    "generic_parent_rejected": true,
+    "general_sigmoid_claim_rejected": true,
+    "partial_new_run_count_rejected": true,
+    "active_code_change_or_training_authority_rejected": true,
+    "count": 6
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_recurrent_gate.py -q",
+    "expected": "6 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_recurrent_gate_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "286 passed",
+    "active_program_validation": "passed without design registration or model-code change",
+    "validator_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_recurrent_gate_validate research/paper-1/recurrent_gate_readiness_v1.json",
+    "validator_result": "valid_training_blocked with 15 clean GDN paths and KDA-SiLU false",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "sigmoid is selected for the general architecture",
+    "the GDN language result generalizes to KDA or synthetic memory",
+    "KDA SiLU can run today",
+    "a default-preserving code patch is safe during the active sequence",
+    "the six- or twelve-run conditional study is authorized",
+    "this readiness gate changes the active finalist"
+  ]
+}

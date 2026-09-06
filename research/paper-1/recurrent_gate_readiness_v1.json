@@ -1,0 +1,143 @@
+{
+  "format": "speck_recurrent_output_gate_readiness",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-recurrent-output-gate-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "conditional_design_frozen_KDA_SiLU_unimplemented_training_blocked",
+  "frozen_at": "2026-09-06T03:20:29+00:00",
+  "purpose": "select recurrent SiLU or sigmoid only on the independently selected mixer and positional parent, without treating one-seed GDN evidence or bundled KDA results as a general gate effect",
+  "historical_evidence": {
+    "seed42_GDN_language": {
+      "result": "results/SpeckLC-150M-KimiTransfer131M/summary.json",
+      "sha256": "f21ccc432aef318ddae086098d91fbb6fc1a6a4d8b15332437753fcc9dc797eb",
+      "SiLU_loss": 2.827965259552002,
+      "sigmoid_loss": 2.790628671646118,
+      "sigmoid_minus_SiLU": -0.03733658790588379,
+      "clean_same_GDN_RoPE_parameters_and_flops": true,
+      "limitation": "one seed; later GDN/sigmoid stability runs do not contain paired GDN/SiLU controls"
+    },
+    "synthetic_MQAR": {
+      "finding": "findings/13_synthetic_mqar.md",
+      "sha256": "9741ff09a32ab507c2abe60a260b987efa877ab7695b4115e30453db5e2f0483",
+      "GDN_SiLU_pass_seeds": 3,
+      "GDN_sigmoid_pass_seeds": 0,
+      "KDA_sigmoid_pass_seeds": 3,
+      "KDA_SiLU_cell_present": false,
+      "interpretation": "the gate effect reverses between one language result and GDN synthetic memory, while KDA may interact with sigmoid; task and mixer conditionality must be measured"
+    },
+    "bundled_frontier": {
+      "finding": "findings/16_kimi_transfer_131m.md",
+      "sha256": "23cc78d5b094cec33aee5e5f79cbbbbbb1a6680bb96c99401234ba7a42a0b258",
+      "general_sigmoid_replication": false,
+      "reason": "the replicated frontier contains sigmoid in both arms and no SiLU treatment controls"
+    }
+  },
+  "config_evidence": {
+    "GDN_SiLU_RoPE": {
+      "path": "experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-silu-rope/model.json",
+      "sha256": "504779cdf8d056adaa33a1ec973c4e58ed6800d49033e8d349d7abbe1288910c"
+    },
+    "GDN_sigmoid_RoPE": {
+      "path": "experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-rope/model.json",
+      "sha256": "5917e1bd94c4ec9003f3db046d0b765e2eb3f34e01a26ceed1465787fa8ce132"
+    },
+    "KDA_sigmoid_NoPE": {
+      "path": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope/model.json",
+      "sha256": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09"
+    },
+    "clean_GDN_delta": {
+      "recurrent_branches": 15,
+      "only_field": "output_gate_activation",
+      "control_value": "silu",
+      "treatment_value": "sigmoid",
+      "parameters": 152916468,
+      "analytic_flops_per_token_at_4096": 1019435520
+    }
+  },
+  "current_KDA_implementation": {
+    "architecture_module": {
+      "path": "speck/architecture.py",
+      "sha256": "47384b48bbb558729b2f9a0476b47d17e10b089076a9fb2bfb82d183110220e7"
+    },
+    "model_module": {
+      "path": "speck/model.py",
+      "sha256": "72620f04bcd07ff6d6b4d2bd61908195ea208d80e12a65e5ce874e72f7319c27"
+    },
+    "KimiDeltaAttentionSpec_output_gate_activation_field": false,
+    "forward_activation": "hardcoded output_gate.float().sigmoid()",
+    "KDA_SiLU_config_expressible": false,
+    "attempted_extra_field_result": "TypeError unexpected keyword argument output_gate_activation"
+  },
+  "ordered_prerequisites": {
+    "parent_selection": {
+      "design": "research/paper-1/nope_factorial_v1.json",
+      "sha256": "443e9db277def8e2136837831b6b3507f8c7886f3d4b215b40455e6bc1cd0a51",
+      "qualification": "results/Speck-Paper1/nope-factorial-v1-qualified.json",
+      "qualification_sha256": "c04f56403fba8f04e8e6c4aaa6b6f296b6c9722b025c59be329011d9c9bf9268",
+      "requirement": "one recurrent mixer and one global positional treatment selected without a general NoPE claim"
+    },
+    "KDA_code_successor_if_selected": [
+      "add output_gate_activation to KimiDeltaAttentionSpec with default sigmoid",
+      "dispatch only sigmoid or silu after output_norm",
+      "prove old field-absent and explicit-sigmoid configs normalize identically",
+      "prove old sigmoid checkpoint state_dict keys and tensors load strictly without conversion",
+      "prove old and successor sigmoid forward, backward, cached decode, export, parameters, state bytes, and FLOPs are exact",
+      "qualify SiLU Torch and FLA training/cached paths"
+    ],
+    "active_sequence_rule": "do not modify architecture.py or model.py until every active finalist cell is complete because future services import those files"
+  },
+  "conditional_experiment": {
+    "parent": "exact selected mixer, global position treatment, layer count/placement, cache representation, FFN, residual, tokenizer, data, optimizer, and evaluation",
+    "arms": [
+      {
+        "id": "selected_parent_silu",
+        "output_gate_activation": "silu"
+      },
+      {
+        "id": "selected_parent_sigmoid",
+        "output_gate_activation": "sigmoid"
+      }
+    ],
+    "only_model_difference": "output_gate_activation on every recurrent branch",
+    "parameters_equal": true,
+    "analytic_flops_equal_under_current_accounting": true,
+    "paired_cells_source": "research/paper-1/finalist_analysis_v2.json",
+    "paired_cells_sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905",
+    "pairs": 6,
+    "reuse_sigmoid_rule": "reuse six results only if their full parent identity equals the selected parent and every result passes the applicable acceptance verifier",
+    "new_SiLU_runs_if_sigmoid_reused": 6,
+    "new_runs_if_no_exact_reuse": 12,
+    "no_interim_arm_dropping": true
+  },
+  "analysis": {
+    "effect": "sigmoid minus SiLU within seed and data-order cell",
+    "fixed_data_order_strata": 2,
+    "independent_seeds_per_stratum": 3,
+    "one_sided_t_critical_df_2": 2.919985580353724,
+    "language_non_inferiority_margin_nats": 0.01,
+    "source_guardrail_nats": 0.02,
+    "pooled_six_cell": "descriptive only",
+    "quality": "aggregate and every-source language non-inferiority plus all selected-parent capability floors",
+    "stability": "nonfinite events, gradient tails, loss spikes, seed variance, and convergence tails are hard reports",
+    "systems": "measure realized training time/energy and cached runtime; activation FLOPs are not assumed equal in hardware",
+    "missing_or_failed_cell": "retain and fail; no imputation, replacement, retry, or skip"
+  },
+  "decision_rule": {
+    "conditional_only": true,
+    "sigmoid_selection": "sigmoid passes all language/source/capability/stability gates and is non-dominated on realized systems evidence",
+    "SiLU_selection": "retain SiLU if sigmoid fails any hard gate or SiLU is the cheaper non-dominated passing point",
+    "general_sigmoid_claim": false,
+    "synthetic_or_language_result_can_override_other_hard_gate": false,
+    "unselected_mixer_or_position_generalization": false
+  },
+  "registration_boundary": {
+    "active_experiment_program_changed": false,
+    "active_architecture_or_model_code_changed": false,
+    "design_registered": false,
+    "KDA_gate_implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "complete the active finalist and NoPE factorial; select the parent, then implement KDA gate configurability only if needed and freeze exact run identities before training"
+  }
+}
