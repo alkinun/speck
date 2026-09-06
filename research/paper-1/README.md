@@ -246,6 +246,9 @@ the final combined model.
 - [`finalist-analysis-qualified-v1.json`](../../results/Speck-Paper1/finalist-analysis-qualified-v1.json)
   pins and qualifies the twelve-cell collector, six-control target lock, df=5 paired analysis,
   censoring, and stopping-rule implementation; runtime, release gates, and training remain blocked.
+- [`finalist-analysis-qualified-v2.json`](../../results/Speck-Paper1/finalist-analysis-qualified-v2.json)
+  supersedes that inference before results and qualifies two order-stratum df=2 bounds, hard cell/source
+  guards, descriptive-only pooling, and the unchanged collector/stopping geometry.
 - [`finalist-preflight-v1.json`](../../results/Speck-Paper1/finalist-preflight-v1.json) qualifies
   exact-config compiled CUDA steps, temporary Transformers export, and the powered trained-topology
   cache reference. Random-weight native drift remains explicit; release gates and training stay blocked.

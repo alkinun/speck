@@ -1,0 +1,78 @@
+{
+  "format": "speck_paper_finalist_analysis_qualification",
+  "format_version": 2,
+  "qualification_id": "speck-paper-1-finalist-analysis-qualified-v2",
+  "paper_id": "speck-paper-1",
+  "status": "crossed_factor_collector_and_analysis_qualified_no_training_authority",
+  "qualified_on": "2026-09-06",
+  "predecessor": {
+    "path": "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
+    "sha256": "a464004a51bdf45fb7e427e2e7915925687e641b5c065b823b9909cc666dd506",
+    "decision": "superseded_before_any_finalist_result"
+  },
+  "contracts": {
+    "analysis": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "materialization": {
+      "path": "research/paper-1/finalist_materialization_v1.json",
+      "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3"
+    },
+    "manifest": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_analysis.py",
+      "sha256": "466340781e58f1f330eee5f70683b53f24acb9d4eeaeda5cdb2eb13ebcd85504"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_analyze.py",
+      "sha256": "a4926db2922a98f3326bca0a8ece39650823c3778b5c8aa3704c5e4ce7ead218"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_analysis.py",
+      "sha256": "3156c3491186df20a5382c43e17c5d78dafbeed08c3797774ae882c24ef03c53"
+    }
+  },
+  "checked_contracts": [
+    "result and target-lock records use format version 2 and pin the v2 analysis hash",
+    "exact six seed-by-order pairs and twelve unique arm cells",
+    "three independent seed differences are grouped within each fixed data-order stratum",
+    "each order stratum uses the one-sided df=2 critical value 2.919985580353724",
+    "both order-stratum bounds and all six hard cell guards must pass",
+    "every source repeats both order-stratum bounds and all-cell guards",
+    "pooled six-cell df=5 summary is labeled descriptive-only",
+    "each seed's two-order mean is descriptive and receives no n=2 inference",
+    "one failing order cannot be averaged away by a passing order",
+    "complete-batch validation arithmetic and exact token cadence remain unchanged",
+    "six controls are required before target locking and candidates must be recorded later",
+    "censoring, analytic-FLOP, steady-time, and target views are retained by order"
+  ],
+  "test_run": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest -q tests/test_paper_finalist_analysis.py",
+    "passed": 7,
+    "failed": 0,
+    "duration_seconds": 1.72,
+    "new_case": "a pooled mean of zero cannot hide one passing -0.02 order and one failing +0.02 order",
+    "ruff": "passed"
+  },
+  "decision": {
+    "v1_analysis_qualified": false,
+    "v2_collector_qualified": true,
+    "v2_target_lock_qualified": true,
+    "v2_crossed_factor_analysis_qualified": true,
+    "v2_stopping_rule_qualified": true,
+    "generated_config_change_count": 0,
+    "automation_v1_authorized": false,
+    "runtime_preflight_remains_qualified": true,
+    "training_authorized": false,
+    "automatic_launch_authorized": false,
+    "architecture_promotion_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "freeze automation v2 against the corrected analysis and record a new live launch qualification only after HELMET becomes inactive"
+  }
+}

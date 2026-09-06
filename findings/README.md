@@ -121,6 +121,7 @@ Read in order:
 113. [112 — Multi-day finalist launch boundary](112_finalist_launch_boundary.md)
 114. [113 — Event-driven finalist automation frozen](113_finalist_automation_frozen.md)
 115. [114 — Finalist crossed-factor inference correction](114_finalist_crossed_factor_correction.md)
+116. [115 — Crossed-factor finalist analysis v2 qualified](115_finalist_analysis_v2_qualified.md)
 
 Conventions:
 
@@ -645,3 +646,8 @@ Finding 114 catches a crossed-factor inference flaw before finalist output. Six 
 not six independent replicates. V2 requires separate df=2 bounds over three seeds within each fixed data
 order, both order strata and every cell/source guard to pass, and makes pooled df=5 output descriptive
 only. Configs do not change; v1 analysis/automation authority is superseded and training stays blocked.
+
+Finding 115 qualifies the v2 collector and crossed-factor analyzer through seven fixtures. Both fixed
+orders receive separate three-seed df=2 bounds plus every-cell/source guards; pooling is descriptive.
+An adversarial pooled-zero case fails when one order is +0.02. Configs and runtime remain unchanged;
+automation v1 is invalid and training waits for automation v2 plus post-HELMET live qualification.
