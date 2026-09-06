@@ -42,3 +42,12 @@ file hashed before prompt and contamination qualification.
 ## Artifact
 
 - [HELMET archive-local rights audit](../results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json)
+
+Validate it offline with:
+
+```bash
+python -m scripts.helmet_archive_local_rights_validate \
+  --audit results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json \
+  --inspection results/Speck-Architecture-Promotion-v1/helmet-archive-inspection.json \
+  --contract research/architecture-promotion-v1/external/helmet.json
+```
