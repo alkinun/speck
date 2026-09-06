@@ -164,6 +164,7 @@ Read in order:
 156. [155 — Sigmoid gate evidence is conditional and KDA-SiLU is unimplemented](155_recurrent_gate_conditional_readiness.md)
 157. [156 — Pairwise cube interactions now have exact estimands and multiplicity](156_interaction_estimands_corrected.md)
 158. [157 — Official K3 sources close only the Stable LatentMoE specification gap](157_kimi_k3_source_and_latentmoe_v2.md)
+159. [158 — Four Stable LatentMoE equation references qualify on CPU](158_stable_latentmoe_CPU_references.md)
 
 Conventions:
 

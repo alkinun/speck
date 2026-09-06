@@ -1,0 +1,67 @@
+{
+  "created_at": "2026-09-06T03:50:09.796299+00:00",
+  "decision": {
+    "SiTU_GLU_CPU_reference_qualified": true,
+    "conventional_MoE_qualified": false,
+    "cutoff_ties_observed_and_rank_bracketed": true,
+    "exact_Quantile_Balancing_CPU_reference_qualified": true,
+    "histogram_Quantile_Balancing_CPU_reference_qualified": true,
+    "model_integration_authorized": false,
+    "next_action": "freeze the qualification artifact and retain it behind conventional-MoE, parent, resource, intervention, hardware, and active-finalist gates",
+    "normalized_LatentMoE_CPU_reference_qualified": true,
+    "primitive_composition_authorized": false,
+    "promotion_authority": false,
+    "source_1000_bin_histogram_qualified": true,
+    "training_authorized": false
+  },
+  "format": "speck_stable_latentmoe_CPU_reference_qualification",
+  "format_version": 1,
+  "implementation": {
+    "device_scope": "CPU only",
+    "imported_by_active_model": false,
+    "optimization_scope": "none; dense explicit oracles only",
+    "path": "speck/stable_latentmoe_reference.py",
+    "sha256": "db6046118ae3f49d695e7e5795709bb1a73f9aca2634ad04135c9106e35bbf71"
+  },
+  "protocol": {
+    "path": "research/paper-1/stable_latentmoe_cpu_reference_v1.json",
+    "sha256": "43f72971373e21701e40922fa323cb9bf1ebcbaae5d3f2ad9205dbb0d45af82c"
+  },
+  "results": {
+    "Quantile_Balancing": {
+      "boundary_tie_experts": 204,
+      "exact_shape_seed_cases": 128,
+      "histogram_cases": 384,
+      "maximum_interval_error_in_bin_widths": 0.798043226387682,
+      "partition_cases": 768,
+      "partition_count_mismatches": 0,
+      "pooled_estimate_differs_from_average_shard_fixture": true,
+      "source_1000_bin_cases": 128,
+      "target_rank_bracket_failures": 0,
+      "tie_free_complete_cases": 10
+    },
+    "SiTU_GLU": {
+      "finite_gradient_cases": 35,
+      "large_beta_SwiGLU_absolute_error": 1.0665826266631484e-07,
+      "maximum_coordinate_bound_ratio": 1.0,
+      "maximum_formula_error": 1.4210854715202004e-14,
+      "scalar_values": 3667,
+      "small_scale_SwiGLU_absolute_error": 1.7092653382642626e-21
+    },
+    "normalized_LatentMoE": {
+      "finite_gradient_tensors": 26112,
+      "maximum_manual_forward_error": 0.0,
+      "shape_seed_cases": 3072,
+      "valid_shape_combinations": 96
+    }
+  },
+  "runner_revision": "8a692a89ff8b8d036684ef0769ba44bd76f0a828",
+  "runner_sha256": "a235e6391f7c602858778de2d5e3ade0d27cab59064d0335973b1570502555f8",
+  "scope": "isolated float64 CPU equation references only; no conventional MoE, model integration, active experiment access, GPU, training, systems, or promotion claim",
+  "status": "four_isolated_CPU_primitives_qualified_composition_training_blocked",
+  "unit_tests": {
+    "count": 14,
+    "path": "tests/test_stable_latentmoe_reference.py",
+    "sha256": "71ecab7664b4bbf6b61ddc1dca87b2effa68605adde5f58f7f591d46a45c17ad"
+  }
+}

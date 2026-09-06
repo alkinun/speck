@@ -112,6 +112,11 @@ the final combined model.
   close only the official specification and inference-semantics gaps. They preserve the six causal
   stages, authorize four isolated CPU references, and retain every parent, conventional-MoE, training,
   distributed, resource, intervention, hardware, registration, and promotion blocker.
+- [`stable_latentmoe_cpu_reference_v1.json`](stable_latentmoe_cpu_reference_v1.json) and
+  [`stable-latentmoe-cpu-reference-qualified-v1.json`](../../results/Speck-Paper1/stable-latentmoe-cpu-reference-qualified-v1.json)
+  qualify Eq. 11/12/13/14 and histogram-QB float64 CPU oracles across 3,072 latent cases, 128 exact-QB
+  cases, 384 histograms, and 768 partitions. Cutoff-induced boundary ties require rank-bracket rather
+  than exact-load assertions. Composition, model integration, training, and promotion stay blocked.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.

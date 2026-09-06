@@ -523,15 +523,19 @@
         "findings/157_kimi_k3_source_and_latentmoe_v2.md",
         "results/Speck-Paper1/kimi-k3-primary-source-audit-v1.json",
         "research/paper-1/stable_latentmoe_readiness_v2.json",
-        "results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json"
+        "results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json",
+        "findings/158_stable_latentmoe_CPU_references.md",
+        "research/paper-1/stable_latentmoe_cpu_reference_v1.json",
+        "results/Speck-Paper1/stable-latentmoe-cpu-reference-qualified-v1.json"
       ],
-      "quality": "Not measured locally. Official normalized LatentMoE, SiTU-GLU, exact Quantile Balancing, and histogram equations are now pinned for isolated CPU reference work only.",
+      "quality": "Not measured locally. Official equations are pinned, and isolated normalized LatentMoE, SiTU-GLU, exact-QB, and histogram-QB float64 CPU oracles pass exhaustive correctness qualification only.",
       "systems": "not measured locally",
       "scale_transfer": "not measured locally",
-      "runtime_support": "Official inference semantics are pinned, but the release explicitly rejects training and contains no Quantile Balancing updater. Speck has no qualified conventional-MoE, training, or distributed implementation.",
+      "runtime_support": "Four dense CPU equation oracles are qualified and unused by active model paths. Official inference semantics are pinned, but the release rejects training; Speck has no qualified conventional-MoE dispatch, composed training, distributed implementation, or kernel.",
       "unresolved_risks": [
         "sequence and depth parents",
         "dropless conventional MoE correctness",
+        "QB cutoff-tie policy",
         "training and distributed semantics",
         "expert memory",
         "load balance",
