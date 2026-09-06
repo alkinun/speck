@@ -158,6 +158,7 @@ Read in order:
 150. [149 — Runtime identity and attestation builder qualifies with mocks](149_finalist_systems_runtime_attestation.md)
 151. [150 — Systems block orchestration qualifies with recording adapters](150_finalist_systems_orchestration.md)
 152. [151 — Static systems pipeline converges to five live activation gates](151_finalist_systems_pipeline_convergence.md)
+153. [152 — Raw MQA control deconfounds cache representation from FFN capacity](152_sequence_cache_representation_deconfounded.md)
 
 Conventions:
 

@@ -73,6 +73,10 @@ the final combined model.
 - [`sequence_cache_representation_v1.json`](sequence_cache_representation_v1.json) conditionally
   freezes the five-memory GQA3/MQA1/NoPE-MLA128 isolation, analytic geometry, implementation gates,
   multiplicity, and realized systems thresholds without authorizing training.
+- [`sequence_cache_representation_v2.json`](sequence_cache_representation_v2.json) and
+  [`sequence-cache-representation-v2-qualified.json`](../../results/Speck-Paper1/sequence-cache-representation-v2-qualified.json)
+  preserve v1 but add raw MQA1. This separates KV-head compression from the matched arm's 21-unit-per-
+  layer FFN compensation; v2 remains unregistered and training-blocked during the active finalist.
 - [`hca_readiness_v1.json`](hca_readiness_v1.json) records why HCA is not implementation-ready and
   freezes the causal tail/prefix semantics, compressor-isolation requirement, conditional rate grid,
   accounting, and realized-cost gates needed before it can become an experiment.

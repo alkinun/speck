@@ -1,0 +1,133 @@
+{
+  "format": "speck_sequence_cache_representation_v2_qualification",
+  "format_version": 1,
+  "status": "qualified_deconfounded_four_arm_design_training_blocked",
+  "created_at": "2026-09-06T03:02:06+00:00",
+  "scope": "offline causal-design and in-memory geometry qualification before any cache-representation output; no active finalist result/checkpoint, service, GPU, model training, or runtime environment accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/sequence_cache_representation_v2.json",
+      "sha256": "9ae9402a106aeb2b1789f6d9e47af1502f77fa6150d35cd21b50dbd57652fbad"
+    },
+    "predecessor": {
+      "path": "research/paper-1/sequence_cache_representation_v1.json",
+      "sha256": "e02d5c7bc9642975b5f70575f7b1c5c21da75e7fcabd723ec92719a0aa0c39fb"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "source_model_config": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa/model.json",
+      "sha256": "eff43e84707cf4d14111a48e50c5ee6b0d02dce66ad3c26fb481ec5c59777859"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_sequence_cache_v2_validate.py",
+      "sha256": "d944d66e4683073ceaaf08686528f31a2a67a5ff6da5e0419ffc6adbec6de94d"
+    },
+    "tests": {
+      "path": "tests/test_paper_sequence_cache_v2.py",
+      "sha256": "413ba076ebe61326b956edd3baaee949f87a492fe67bcda3d309f04347f1d1f1"
+    }
+  },
+  "reproduced_v1_confound": {
+    "MQA_KV_head_change": "3 to 1 in each of five global attention layers",
+    "uniform_FFN_change": "2304 to 2325 in all twenty SwiGLU layers",
+    "pure_MQA_attribution_from_v1_matched_arm": false,
+    "cache_representation_outputs_present": false,
+    "correction_before_outputs": true
+  },
+  "code_derived_raw_MQA": {
+    "source_attention_branches": 5,
+    "source_attention_KV_heads": 3,
+    "changed_attention_KV_heads": 1,
+    "FFN_branches": 20,
+    "FFN_width_unchanged": 2304,
+    "parameters": 152975898,
+    "parameter_difference_from_GQA3": -983040,
+    "absolute_relative_parameter_difference": 0.006385079117654085,
+    "analytic_flops_per_token_at_4096": 1015703040,
+    "flops_difference_from_GQA3": -5898240,
+    "BF16_cache_bytes_per_token_five_memories": 1280,
+    "state_reduction_from_GQA3": 0.6666666666666666,
+    "source_or_config_written": false
+  },
+  "compensation_geometry": {
+    "MQA_matched_FFN_width": 2325,
+    "added_FFN_units_per_layer": 21,
+    "parameters_added_to_raw_MQA": 967680,
+    "flops_per_token_added_to_raw_MQA_at_4096": 5806080,
+    "matched_parameters": 153943578,
+    "matched_flops_per_token_at_4096": 1021509120,
+    "matched_difference_from_GQA3_parameters": -15360,
+    "matched_difference_from_GQA3_flops": -92160
+  },
+  "qualified_contrasts": {
+    "raw_MQA_total_compression_effect": "mqa1_raw minus gqa3 at fixed FFN2304",
+    "FFN_compensation_effect": "mqa1_param_match minus mqa1_raw",
+    "matched_compound_effect": "mqa1_param_match minus gqa3 with no pure-MQA attribution",
+    "MLA_effect": "nope_mla128 minus gqa3 after implementation re-audit",
+    "quality_family": 3,
+    "quality_multiplicity": "Holm",
+    "decomposition_interval": "paired two-sided 95%",
+    "interim_arm_dropping": false
+  },
+  "resource_change": {
+    "v1_arms": 3,
+    "v2_arms": 4,
+    "discovery_pairs": 3,
+    "discovery_runs": 12,
+    "finalist_pairs": 6,
+    "finalist_runs": 24,
+    "reason": "one additional raw arm is required to separate representation from compensating FFN capacity"
+  },
+  "tests": {
+    "raw_geometry_recomputed_from_model_code": true,
+    "missing_raw_arm_rejected": true,
+    "matched_pure_attribution_rejected": true,
+    "changed_compensation_contrast_rejected": true,
+    "training_authority_rejected": true,
+    "active_program_mutation_claim_rejected": true,
+    "count": 6
+  },
+  "decision": {
+    "v2_causal_design_qualified": true,
+    "v1_preserved": true,
+    "v1_future_representation_training_authorized": false,
+    "v2_registered_in_active_program": false,
+    "v2_implementation_authorized": false,
+    "v2_training_authorized": false,
+    "cache_representation_selected": false,
+    "promotion_authority": false,
+    "active_finalist_language_sequence_changed": false,
+    "next_action": "after the active language sequence, register v2 in a clean program successor, materialize all four arms, and qualify correctness/systems geometry before any training"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_sequence_cache_v2.py -q",
+    "expected": "6 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_sequence_cache_v2_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "265 passed",
+    "active_program_validation": "passed with sequence_cache_representation_v1 still registered",
+    "validator_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_sequence_cache_v2_validate research/paper-1/sequence_cache_representation_v2.json",
+    "validator_result": "valid_training_blocked with four arms and 152975898 raw parameters",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "raw MQA1 preserves language or capability quality",
+    "parameter-matched MQA1 isolates cache representation",
+    "analytic parameter/FLOP/state savings are realized systems results",
+    "MLA is implemented",
+    "v2 is registered for training",
+    "this design correction changes the active finalist"
+  ]
+}

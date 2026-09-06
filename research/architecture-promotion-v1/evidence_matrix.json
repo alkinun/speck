@@ -341,16 +341,19 @@
       "status": "proposed",
       "alternatives": [
         "gqa3",
-        "mqa1",
+        "mqa1_raw",
+        "mqa1_param_match",
         "nope_mla"
       ],
       "evidence": [
         "papers/16_deepseek_v2_mla.md",
         "findings/61_five_cache_representation_design.md",
-        "research/paper-1/sequence_cache_representation_v1.json"
+        "research/paper-1/sequence_cache_representation_v1.json",
+        "research/paper-1/sequence_cache_representation_v2.json",
+        "results/Speck-Paper1/sequence-cache-representation-v2-qualified.json"
       ],
       "quality": "not measured locally",
-      "systems": "Conditional MQA1 and MLA128 each reduce five-cache BF16 state analytically by 66.7%; MQA1 parameter matching is within 0.00998%, while MLA128 is projection-parameter matched before implementation audit. No realized result exists.",
+      "systems": "Raw MQA1 and MLA128 each reduce five-cache BF16 state analytically by 66.7%. Raw MQA1 has 152,975,898 parameters and 1,015,703,040 FLOPs/token at 4K; parameter-matched MQA1 adds 967,680 FFN parameters and 5,806,080 FLOPs/token, so it is a compound sensitivity rather than pure representation evidence. No realized result exists.",
       "scale_transfer": "not measured locally",
       "runtime_support": "MQA expressible; MLA not implemented",
       "unresolved_risks": [
@@ -358,7 +361,7 @@
         "expanded projection cost",
         "specialized decode kernel"
       ],
-      "next_gate": "select the sequence backbone, then qualify MQA1 geometry and MLA128 reference/optimized correctness before any representation training"
+      "next_gate": "after the active finalist, register v2; materialize raw and matched MQA1 separately, then qualify both plus MLA128 reference/optimized correctness before representation training"
     },
     {
       "id": "block_attention_residuals",

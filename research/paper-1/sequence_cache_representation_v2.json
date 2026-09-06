@@ -1,0 +1,177 @@
+{
+  "format": "speck_sequence_cache_representation_design",
+  "format_version": 2,
+  "design_id": "speck-paper-1-five-cache-representation-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "corrected_four_arm_design_frozen_training_blocked",
+  "frozen_at": "2026-09-06T02:59:52+00:00",
+  "predecessor": {
+    "path": "research/paper-1/sequence_cache_representation_v1.json",
+    "sha256": "e02d5c7bc9642975b5f70575f7b1c5c21da75e7fcabd723ec92719a0aa0c39fb",
+    "disposition": "superseded_for_future_cache_representation_training_before_any_representation_output",
+    "preserved": true
+  },
+  "correction": {
+    "v1_arm": "mqa1",
+    "v1_change_1": "five global attention layers reduce physical KV heads from 3 to 1",
+    "v1_change_2": "all twenty SwiGLU intermediate widths increase from 2304 to 2325",
+    "confound": "the parameter-matched candidate estimates MQA1 plus uniform FFN reallocation, not cache representation alone",
+    "missing_v1_control": "MQA1 with the unchanged 2304-wide FFN",
+    "finalist_results_used": false,
+    "cache_representation_outputs_present": false
+  },
+  "geometry_source": {
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "candidate_model_config": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/five_cache_kda_gqa/model.json",
+      "sha256": "eff43e84707cf4d14111a48e50c5ee6b0d02dce66ad3c26fb481ec5c59777859"
+    },
+    "derivation": "load the resolved five-cache KDA/GQA model, change only each attention branch num_key_value_heads from 3 to 1 in memory, clear expected_parameters, and call the existing parameter_count and flops_per_token(4096)",
+    "model_or_config_file_written": false
+  },
+  "inherited_fixed_backbone": {
+    "source": "predecessor.fixed_backbone",
+    "hidden_size": 768,
+    "layers": 20,
+    "recurrent_layers": 15,
+    "recurrent_operator": "kimi_delta_attention",
+    "global_attention_layers": 5,
+    "global_indices_zero_based": [
+      3,
+      7,
+      11,
+      15,
+      19
+    ],
+    "query_heads": 12,
+    "head_dim": 64,
+    "rope_dim": 0,
+    "residual": "standard PreNorm",
+    "feed_forward": "dense SwiGLU"
+  },
+  "arms": [
+    {
+      "id": "gqa3",
+      "role": "shared_control",
+      "kv_heads": 3,
+      "ffn_intermediate_size": 2304,
+      "parameters": 153958938,
+      "analytic_flops_per_token_at_4096": 1021601280,
+      "bf16_cache_bytes_per_token_all_five_memories": 3840
+    },
+    {
+      "id": "mqa1_raw",
+      "role": "causal_cache_representation_and_deployable_low_cost_candidate",
+      "kv_heads": 1,
+      "ffn_intermediate_size": 2304,
+      "parameters": 152975898,
+      "parameter_difference_from_control": -983040,
+      "absolute_relative_parameter_difference": 0.006385079117654085,
+      "analytic_flops_per_token_at_4096": 1015703040,
+      "flops_difference_from_control": -5898240,
+      "bf16_cache_bytes_per_token_all_five_memories": 1280,
+      "state_reduction_from_control": 0.6666666666666666,
+      "only_model_change": "the five attention num_key_value_heads values change from 3 to 1"
+    },
+    {
+      "id": "mqa1_param_match",
+      "role": "fixed_parameter_compound_candidate_and_capacity_sensitivity",
+      "predecessor_arm": "mqa1",
+      "kv_heads": 1,
+      "ffn_intermediate_size": 2325,
+      "parameters": 153943578,
+      "parameter_difference_from_control": -15360,
+      "absolute_relative_parameter_difference": 0.00009976686121334508,
+      "analytic_flops_per_token_at_4096": 1021509120,
+      "flops_difference_from_control": -92160,
+      "bf16_cache_bytes_per_token_all_five_memories": 1280,
+      "state_reduction_from_control": 0.6666666666666666,
+      "compound_changes": [
+        "the five attention num_key_value_heads values change from 3 to 1",
+        "all twenty SwiGLU intermediate widths change from 2304 to 2325"
+      ],
+      "pure_cache_representation_attribution_authorized": false
+    },
+    {
+      "id": "nope_mla128",
+      "role": "custom_latent_candidate_inherited_unimplemented",
+      "kv_latent_dim": 128,
+      "ffn_intermediate_size": 2304,
+      "parameters_before_implementation_audit": 153959258,
+      "analytic_flops_per_token_at_4096_before_kernel_audit": 1021603200,
+      "bf16_cache_bytes_per_token_all_five_memories": 1280,
+      "state_reduction_from_control": 0.6666666666666666,
+      "implementation": "not implemented"
+    }
+  ],
+  "decomposition": {
+    "raw_MQA_effect": "mqa1_raw minus gqa3; total deployable compression effect with FFN width held at 2304 and intrinsic parameter/FLOP savings retained",
+    "FFN_compensation_effect": "mqa1_param_match minus mqa1_raw; effect of adding 21 SwiGLU units per layer within MQA1",
+    "matched_compound_effect": "mqa1_param_match minus gqa3; fixed-parameter architecture comparison with no pure MQA1 attribution",
+    "identity": "matched_compound_effect equals raw_MQA_effect plus FFN_compensation_effect within every paired cell",
+    "MLA_effect": "nope_mla128 minus gqa3 after implementation geometry is re-audited",
+    "FFN_compensation_parameters": 967680,
+    "FFN_compensation_flops_per_token_at_4096": 5806080
+  },
+  "analysis": {
+    "shared_control_candidates": 3,
+    "quality_family": [
+      "mqa1_raw minus gqa3",
+      "mqa1_param_match minus gqa3",
+      "nope_mla128 minus gqa3"
+    ],
+    "quality_multiplicity": "Holm correction across the three shared-control candidates",
+    "decomposition_contrast": "mqa1_param_match minus mqa1_raw reported with paired two-sided 95% interval and no standalone selection authority",
+    "all_views": [
+      "fixed training tokens",
+      "fixed analytic FLOPs",
+      "fixed active parameters",
+      "fixed steady time",
+      "time and energy to locked quality",
+      "persistent state and serving profiles"
+    ],
+    "source_and_capability_intersection_gates_inherited": true,
+    "no_interim_arm_dropping": true
+  },
+  "evidence_stages": {
+    "discovery_pairs": 3,
+    "discovery_arms": 4,
+    "discovery_model_runs": 12,
+    "finalist_pairs": 6,
+    "finalist_arms": 4,
+    "finalist_model_runs": 24,
+    "systems_repeats": 5,
+    "training_authorized": false
+  },
+  "decision_rule": {
+    "raw_passes": "MQA1 may receive representation-level attribution only if mqa1_raw passes every quality/capability gate and its realized systems threshold",
+    "raw_and_matched_pass": "choose the cheaper non-dominated MQA1 variant; the compensation contrast determines whether extra FFN capacity earns retention",
+    "raw_fails_matched_passes": "mqa1_param_match may remain a compound architecture candidate, but no result may claim MQA1 alone preserved quality",
+    "matched_fails_raw_passes": "retain mqa1_raw and report the FFN compensation as harmful or unresolved under its corrected interval",
+    "both_MQA_fail": "retain gqa3 unless independently implemented MLA passes every gate",
+    "MLA": "apply the inherited 20% custom-runtime threshold only after implementation and correctness qualification",
+    "no_quality_cost_trade": true,
+    "simpler_cheaper_tie_rule": true
+  },
+  "registration_boundary": {
+    "active_experiment_program_still_references_v1": true,
+    "active_experiment_program_changed": false,
+    "reason": "do not mutate the active finalist language ledger during a live cell; register v2 only in a future clean program successor before any cache-representation training",
+    "v1_future_training_authority": false,
+    "v2_training_authority": false
+  },
+  "decision": {
+    "causal_confound_resolved_in_design": true,
+    "raw_MQA_geometry_derived_from_code": true,
+    "matched_MQA_pure_representation_attribution": false,
+    "cache_representation_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after the active language sequence, register this successor without changing its hashes; materialize all four arms and qualify correctness/systems geometry before training"
+  }
+}
