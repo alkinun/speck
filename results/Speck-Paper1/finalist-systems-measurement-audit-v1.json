@@ -1,0 +1,184 @@
+{
+  "format": "speck_paper_finalist_systems_measurement_audit",
+  "format_version": 1,
+  "status": "timing_and_peak_allocation_descriptive_energy_and_causal_systems_claims_blocked",
+  "created_at": "2026-09-06T01:26:40+00:00",
+  "scope": "blind static audit of frozen finalist systems measurement and execution ordering; no live GPU was queried; no service was polled; no checkpoint, log, result, or intermediate metric was accessed; no runtime environment was modified",
+  "frozen_inputs": {
+    "analysis_plan": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "automation": {
+      "path": "research/paper-1/finalist_automation_v2.json",
+      "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e"
+    },
+    "launch_contract": {
+      "path": "research/paper-1/finalist_launch_v2.json",
+      "sha256": "c0c7c5acae401053e0f6fd8f0ec21083bbf83f0580a796be95abd5606305a0f1"
+    },
+    "trainer": {
+      "path": "scripts/base_train.py",
+      "sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2"
+    },
+    "continuation_runner": {
+      "path": "scripts/paper_finalist_continue.py",
+      "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+    },
+    "checkpoint_module": {
+      "path": "speck/checkpoint.py",
+      "sha256": "c009efb5dc86b8c04750f6a77015fe03501e293ac01a493ef80253a86f6cc2e1"
+    },
+    "runtime_preflight": {
+      "path": "results/Speck-Paper1/finalist-preflight-v1.json",
+      "sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231"
+    },
+    "systems_cost_contract": {
+      "path": "research/paper-1/systems_cost_readiness_v1.json",
+      "sha256": "6507a382f2786e01ad9cfad11ab9770fc4d06dd9c0652fb89c3ff1a3319bf9d8"
+    }
+  },
+  "execution_design": {
+    "runs": 12,
+    "forecast_steady_gpu_hours": 121.2303502872009,
+    "cooldown_between_runs": "15m",
+    "order": "all six dense controls, control-only target lock, then all six candidates",
+    "control_first_required_for_target_integrity": true,
+    "arms_interleaved": false,
+    "arm_order_randomized": false,
+    "calendar_time_blocked_by_arm": true,
+    "same_gpu_uuid_required_before_every_launch": true,
+    "idle_gpu_required_before_every_launch": true,
+    "maximum_start_temperature_c": 50,
+    "successor_live_gate_values_persisted": false
+  },
+  "preserved_measurements": {
+    "analytic_flops_per_token": true,
+    "parameters": true,
+    "optimizer_seconds": {
+      "preserved": true,
+      "cuda_synchronized_at_flush_boundaries": true,
+      "includes_first_10_steps": true
+    },
+    "steady_training_seconds": {
+      "preserved": true,
+      "cuda_synchronized_at_flush_boundaries": true,
+      "excludes_first_10_startup_steps": true,
+      "excludes_validation_and_checkpoint_intervals": true
+    },
+    "active_seconds": true,
+    "evaluation_seconds": true,
+    "checkpoint_seconds": true,
+    "startup_optimizer_seconds": true,
+    "peak_allocated_bytes": {
+      "preserved": true,
+      "source": "torch.cuda.max_memory_allocated",
+      "peak_reserved_bytes_preserved_per_run": false
+    },
+    "validation_history_timing_points": 5,
+    "final_checkpoint_hashes": true,
+    "final_timing_values": true,
+    "final_timing_source_file_hash": false,
+    "named_preflight_gpu": "NVIDIA GeForce RTX 3090",
+    "preflight_gpu_uuid_bound": true,
+    "preflight_driver": "610.43.03"
+  },
+  "missing_measurements": {
+    "board_power_time_series": false,
+    "gpu_energy_joules": false,
+    "host_energy_joules": false,
+    "idle_power_baseline": false,
+    "temperature_time_series": false,
+    "end_temperature": false,
+    "graphics_clock_time_series": false,
+    "memory_clock_time_series": false,
+    "power_limit_time_series": false,
+    "performance_state_time_series": false,
+    "throttle_reason_time_series": false,
+    "fan_speed_time_series": false,
+    "gpu_utilization_time_series_in_result": false,
+    "host_cpu_memory_io_load_time_series": false,
+    "background_process_or_display_activity": false,
+    "per_successor_start_gate_artifact": false,
+    "calendar_timestamp_per_timing_interval": false,
+    "whole_system_monetary_inputs": false
+  },
+  "temporal_confounding": {
+    "architecture_and_calendar_block_are_aliased": true,
+    "paired_seed_and_data_order_remove_calendar_confounding": false,
+    "same_gpu_and_start_temperature_gate_reduce_confounding": true,
+    "same_gpu_and_start_temperature_gate_eliminate_confounding": false,
+    "potential_unmeasured_drivers": [
+      "ambient and sustained thermal conditions",
+      "GPU boost clocks, power limit, and thermal throttling",
+      "display and background GPU activity",
+      "host CPU, memory, storage, and OS load",
+      "driver or runtime state changes across multiple days"
+    ],
+    "quality_endpoint_affected": false,
+    "analytic_flops_affected": false,
+    "steady_time_and_time_to_quality_causal_attribution_affected": true,
+    "energy_and_dollar_attribution_affected": true
+  },
+  "claim_boundary": {
+    "may_report": [
+      "per-run analytic FLOPs/token on the frozen geometry",
+      "per-run CUDA-synchronized optimizer and steady-training seconds",
+      "per-run active, validation, checkpoint, and startup timing",
+      "per-run peak torch allocated bytes",
+      "order-stratified fixed-time and time-to-quality summaries as secondary descriptive evidence",
+      "the fixed control-first calendar order and all missing telemetry"
+    ],
+    "may_not_report": [
+      "measured GPU or whole-system energy",
+      "energy-to-quality or carbon savings",
+      "dollar cost or cost-to-quality savings",
+      "causal architecture-only training speedup independent of calendar drift",
+      "hardware-normalized performance across devices",
+      "production serving throughput, latency, resident capacity, or cost",
+      "systems evidence sufficient for architecture promotion or a broad efficiency claim"
+    ],
+    "finalist_language_quality_authority_unchanged": true,
+    "secondary_timing_values_must_be_labeled_descriptive": true,
+    "peak_allocation_is_not_persistent_serving_state": true
+  },
+  "future_systems_protocol": {
+    "activation": "after the active fixed-sample language sequence and before any systems promotion claim",
+    "minimum_design": [
+      "at least five thermally interleaved candidate/control blocks with randomized or balanced AB/BA order",
+      "record start, interval, and end temperature, board power, clocks, power limit, P-state, utilization, fan, and throttle reasons at monotonic timestamps",
+      "bind every sample to the exact GPU UUID, driver, CUDA, PyTorch, kernels, process, and workload interval",
+      "record five thermally matched idle blocks before and after for gross and incremental energy",
+      "record missing samples and bounded energy intervals without unbounded interpolation",
+      "isolate or record display, background GPU, CPU, memory, storage, and OS activity",
+      "persist a live-gate artifact for every block rather than only enforcing it transiently",
+      "freeze production serving batch, arrival-rate, context, output, precision, and runtime profiles separately",
+      "keep energy, time, memory, and dollars separate unless every monetary input is named and dated"
+    ],
+    "may_reuse_language_results_for_systems_randomization": false,
+    "systems_repeats_are_new_prospective_measurements": true
+  },
+  "decision": {
+    "finalist_language_sequence_remains_authorized": true,
+    "analytic_flops_reporting_authorized": true,
+    "on_host_timing_reporting_authorized_as_descriptive": true,
+    "peak_allocation_reporting_authorized_as_descriptive": true,
+    "causal_training_speedup_claim_authorized": false,
+    "energy_claim_authorized": false,
+    "monetary_claim_authorized": false,
+    "serving_claim_authorized": false,
+    "systems_architecture_promotion_authorized": false,
+    "telemetry_injection_into_active_runs_authorized": false,
+    "execution_order_change_authorized": false,
+    "trainer_runner_or_analysis_modified": false,
+    "next_action": "complete the language sequence unchanged; report its physical timing and memory descriptively with the calendar-block limitation, then run a separately frozen thermally interleaved telemetry-rich systems protocol before any causal efficiency or cost claim"
+  },
+  "non_claims": [
+    "same GPU UUID and start temperature eliminate multi-day drift",
+    "paired seed/data cells make block-ordered timing causal",
+    "steady optimizer seconds are energy measurements",
+    "torch peak allocation measures persistent serving state or resident capacity",
+    "analytic FLOP reduction proves time, energy, dollar, or serving savings",
+    "this audit justifies adding telemetry to or reordering the active frozen sequence"
+  ]
+}

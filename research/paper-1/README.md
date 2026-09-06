@@ -341,6 +341,10 @@ the final combined model.
   verifies that endpoint, source, fixed-FLOP, fixed-time, and uncensored time-to-quality outputs all
   preserve the two fixed data-order strata; one censored pair suppresses every time bound. Secondary
   pooled blocks remain descriptive under the plan despite a deferred redundant inline-label gap.
+- [`finalist-systems-measurement-audit-v1.json`](../../results/Speck-Paper1/finalist-systems-measurement-audit-v1.json)
+  separates preserved synchronized timing/peak allocation from absent energy and hardware telemetry.
+  Control-first target integrity aliases architecture with multi-day calendar block, so finalist timing
+  remains descriptive until a thermally interleaved, telemetry-rich systems protocol is run.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -411,6 +415,10 @@ continues byte-identically under artifact-first collection.
 The blind crossed-views audit confirms that the v2 correction propagates beyond endpoint loss: every
 secondary view preserves order strata, any censor suppresses time bounds, and none controls the final
 language pass. Only redundant inline labels on secondary pooled summaries are deferred.
+The systems audit further limits interpretation: same-GPU/start-temperature launch gates do not remove
+the control-versus-candidate calendar-block confound over five days. Analytic FLOPs and physical timing
+may be reported separately, but energy, dollars, causal speedup, serving, and systems promotion require
+new thermally interleaved measurements after the language sequence.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
