@@ -264,6 +264,9 @@ the final combined model.
 - [`finalist_automation_v2.json`](finalist_automation_v2.json) supersedes v1 before output and binds
   the same event state machine exclusively to the corrected two-order analysis and final status; live
   qualification and training remain blocked while HELMET acquisition is active.
+- [`finalist-launch-qualified-v2.json`](../../results/Speck-Paper1/finalist-launch-qualified-v2.json)
+  records the clean empty v2 state, inactive HELMET/finalist services, and passing live GPU, memory,
+  mount, storage, and output-absence gates; only the initial dense control and event successors qualify.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched
@@ -381,5 +384,5 @@ promotion infrastructure. It does **not** yet have:
 Accordingly, the paper has completed its **matched proxy quality screen**, finalist config
 materialization, and data/storage, crossed-factor collector/analysis v2, and exact-runtime
 qualification. V1 pooled inference is superseded. HELMET acquisition is complete and inactive, but v2
-live-launch authority remains absent until its clean gate is recorded. It has not entered architecture-promotion, finalist execution,
+live launch now qualifies for the initial dense control and frozen event successors. It has not entered architecture-promotion, finalist execution,
 paper-scale-training, or manuscript-claim status.

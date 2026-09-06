@@ -126,6 +126,7 @@ Read in order:
 118. [117 — Crossed-factor finalist automation v2](117_finalist_automation_v2.md)
 119. [118 — HELMET archive acquired and hash-qualified](118_helmet_archive_acquired.md)
 120. [119 — HELMET archive path inventory qualified](119_helmet_archive_inspected.md)
+121. [120 — Finalist v2 live launch qualification](120_finalist_live_launch_qualified.md)
 
 Conventions:
 
@@ -675,3 +676,8 @@ Finding 119 reproduces the HELMET tar inventory twice without extraction. All 17
 154 files total 35.63 GB uncompressed, all 52 declared local paths exist, and 50 entries remain external.
 The archive contains zero license/README metadata, so component rights and extraction remain blocked,
 along with runtime datasets, tokenizer, judges, and candidate execution.
+
+Finding 120 records a clean v2 live gate: the RTX 3090 is idle at 45°C, 23.70 GB host memory and 5.63
+TB volume space are available, required mount options hold, all 48 finalist units and unfinished outputs
+are absent, and HELMET is inactive. The exact first dense control and event successors are authorized;
+concurrency, branching, retry, attribution, promotion, novelty, release, and paper-scale work are not.
