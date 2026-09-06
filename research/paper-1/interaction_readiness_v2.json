@@ -1,0 +1,281 @@
+{
+  "format": "speck_interaction_readiness_gate",
+  "format_version": 2,
+  "gate_id": "speck-paper-1-interaction-readiness-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "estimands_corrected_axes_unselected_training_blocked",
+  "frozen_at": "2026-09-06T03:25:03+00:00",
+  "predecessor": {
+    "path": "research/paper-1/interaction_readiness_v1.json",
+    "sha256": "0e1f5a23cbce2b9a42880e7908e5521acac9ecab59c6cf234b0763bb9d412097",
+    "disposition": "superseded_for_future_interaction_training_before_any_cube_output",
+    "preserved": true
+  },
+  "correction": {
+    "v1_ambiguity": "each pairwise interaction was listed conditionally at both levels of the third factor, while the Holm family named only SD, SW, DW, and the three-way interaction",
+    "resolved_primary_estimand": "each primary pairwise interaction is the arithmetic mean of its two conditional difference-of-differences",
+    "resolved_conditional_role": "all six conditional pairwise interactions are mandatory no-hiding harm guards and descriptive diagnostics, not six additional uncorrected superiority claims",
+    "cube_outputs_present": false,
+    "active_finalist_results_used": false
+  },
+  "updated_sequence_prerequisites": {
+    "cache_representation": {
+      "path": "research/paper-1/sequence_cache_representation_v2.json",
+      "sha256": "9ae9402a106aeb2b1789f6d9e47af1502f77fa6150d35cd21b50dbd57652fbad"
+    },
+    "ratio_placement": {
+      "path": "research/paper-1/ratio_placement_readiness_v2.json",
+      "sha256": "f201f8f488eecea82af1a4ee018f7f21a4093978baa6a7b6a7b597a857420e2e"
+    },
+    "position": {
+      "path": "research/paper-1/nope_factorial_v1.json",
+      "sha256": "443e9db277def8e2136837831b6b3507f8c7886f3d4b215b40455e6bc1cd0a51"
+    },
+    "recurrent_gate": {
+      "path": "research/paper-1/recurrent_gate_readiness_v1.json",
+      "sha256": "8fb244590ba8dc25281984819dc644e1652d492b948d08f29580c089860cec25"
+    }
+  },
+  "axis_units": {
+    "S": "entire independently selected sequence bundle versus its matched conservative sequence control",
+    "D": "selected AttnRes formulation/shape versus separately retuned standard residual",
+    "W": "selected stable expert bundle/shape versus parameter/FLOP-view-matched dense SwiGLU",
+    "internal_component_attribution": false
+  },
+  "discovery_cube": {
+    "cell_order": [
+      "000",
+      "100",
+      "010",
+      "001",
+      "110",
+      "101",
+      "011",
+      "111"
+    ],
+    "paired_cells": 3,
+    "model_runs": 24,
+    "fixed_sample": true,
+    "interim_cell_dropping": false,
+    "promotion_authority": false
+  },
+  "contrast_coefficients": {
+    "S": {
+      "000": -0.25,
+      "100": 0.25,
+      "010": -0.25,
+      "001": -0.25,
+      "110": 0.25,
+      "101": 0.25,
+      "011": -0.25,
+      "111": 0.25
+    },
+    "D": {
+      "000": -0.25,
+      "100": -0.25,
+      "010": 0.25,
+      "001": -0.25,
+      "110": 0.25,
+      "101": -0.25,
+      "011": 0.25,
+      "111": 0.25
+    },
+    "W": {
+      "000": -0.25,
+      "100": -0.25,
+      "010": -0.25,
+      "001": 0.25,
+      "110": -0.25,
+      "101": 0.25,
+      "011": 0.25,
+      "111": 0.25
+    },
+    "SD": {
+      "000": 0.5,
+      "100": -0.5,
+      "010": -0.5,
+      "001": 0.5,
+      "110": 0.5,
+      "101": -0.5,
+      "011": -0.5,
+      "111": 0.5
+    },
+    "SW": {
+      "000": 0.5,
+      "100": -0.5,
+      "010": 0.5,
+      "001": -0.5,
+      "110": -0.5,
+      "101": 0.5,
+      "011": -0.5,
+      "111": 0.5
+    },
+    "DW": {
+      "000": 0.5,
+      "100": 0.5,
+      "010": -0.5,
+      "001": -0.5,
+      "110": -0.5,
+      "101": -0.5,
+      "011": 0.5,
+      "111": 0.5
+    },
+    "SDW": {
+      "000": -1,
+      "100": 1,
+      "010": 1,
+      "001": 1,
+      "110": -1,
+      "101": -1,
+      "011": -1,
+      "111": 1
+    },
+    "SD_W0": {
+      "000": 1,
+      "100": -1,
+      "010": -1,
+      "001": 0,
+      "110": 1,
+      "101": 0,
+      "011": 0,
+      "111": 0
+    },
+    "SD_W1": {
+      "000": 0,
+      "100": 0,
+      "010": 0,
+      "001": 1,
+      "110": 0,
+      "101": -1,
+      "011": -1,
+      "111": 1
+    },
+    "SW_D0": {
+      "000": 1,
+      "100": -1,
+      "010": 0,
+      "001": -1,
+      "110": 0,
+      "101": 1,
+      "011": 0,
+      "111": 0
+    },
+    "SW_D1": {
+      "000": 0,
+      "100": 0,
+      "010": 1,
+      "001": 0,
+      "110": -1,
+      "101": 0,
+      "011": -1,
+      "111": 1
+    },
+    "DW_S0": {
+      "000": 1,
+      "100": 0,
+      "010": -1,
+      "001": -1,
+      "110": 0,
+      "101": 0,
+      "011": 1,
+      "111": 0
+    },
+    "DW_S1": {
+      "000": 0,
+      "100": 1,
+      "010": 0,
+      "001": 0,
+      "110": -1,
+      "101": -1,
+      "011": 0,
+      "111": 1
+    },
+    "S_from_full": {
+      "000": 0,
+      "100": 0,
+      "010": 0,
+      "001": 0,
+      "110": 0,
+      "101": 0,
+      "011": -1,
+      "111": 1
+    },
+    "D_from_full": {
+      "000": 0,
+      "100": 0,
+      "010": 0,
+      "001": 0,
+      "110": 0,
+      "101": -1,
+      "011": 0,
+      "111": 1
+    },
+    "W_from_full": {
+      "000": 0,
+      "100": 0,
+      "010": 0,
+      "001": 0,
+      "110": -1,
+      "101": 0,
+      "011": 0,
+      "111": 1
+    }
+  },
+  "identities": {
+    "SD": "(SD_W0 + SD_W1) / 2",
+    "SW": "(SW_D0 + SW_D1) / 2",
+    "DW": "(DW_S0 + DW_S1) / 2",
+    "SDW": "SD_W1 - SD_W0 = SW_D1 - SW_D0 = DW_S1 - DW_S0"
+  },
+  "inference": {
+    "form_contrasts_within_each_seed_data_cell_first": true,
+    "paired_cells": 3,
+    "student_t_critical_df_2_one_sided_95": 2.919985580353724,
+    "student_t_critical_df_2_two_sided_95": 4.302652729696142,
+    "harmful_language_interaction_margin_nats": 0.01,
+    "harmful_source_interaction_margin_nats": 0.02,
+    "primary_Holm_family": [
+      "SD",
+      "SW",
+      "DW",
+      "SDW"
+    ],
+    "conditional_no_hiding_guards": [
+      "SD_W0",
+      "SD_W1",
+      "SW_D0",
+      "SW_D1",
+      "DW_S0",
+      "DW_S1"
+    ],
+    "conditional_guard_rule": "every one-sided upper bound must be at or below the harmful margin; intersection safety gate with no positive interaction claim",
+    "three_way_guard": "SDW upper one-sided bound must also clear the harmful margin",
+    "source_guards": "apply the same conditional and primary structure at 0.02 nats for every source",
+    "conditional_diagnostics_published": true,
+    "averaged_interaction_cannot_hide_conditional_harm": true,
+    "failure_to_detect_interaction_is_not_independence": true
+  },
+  "retention": {
+    "axis_removal_effects": [
+      "S_from_full",
+      "D_from_full",
+      "W_from_full"
+    ],
+    "full_model_component_retention_requires_new_trained_removals": true,
+    "simpler_tie_rule_inherited": true,
+    "discovery_cube_can_diagnose_but_not_promote": true,
+    "confirmation": "repeat every interaction that changes retention and all full-model removal effects on six paired cells"
+  },
+  "registration_boundary": {
+    "active_experiment_program_still_references_v1": true,
+    "active_experiment_program_changed": false,
+    "v1_future_cube_training_authorized": false,
+    "v2_registered": false,
+    "axes_selected": false,
+    "cube_materialized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "complete independent sequence/depth/width gates, then register v2 and freeze exact eight-cell hashes/resources before any cube output"
+  }
+}

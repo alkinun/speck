@@ -110,6 +110,10 @@ the final combined model.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.
+- [`interaction_readiness_v2.json`](interaction_readiness_v2.json) and
+  [`interaction-readiness-v2-qualified.json`](../../results/Speck-Paper1/interaction-readiness-v2-qualified.json)
+  preserve the 24-run cube while defining averaged SD/SW/DW estimands, a four-term Holm family, and six
+  conditional no-hiding harm guards. Axes, registration, training, and promotion remain blocked.
 - [`scaling_readiness_v1.json`](scaling_readiness_v1.json) separates transfer from frontier claims and
   freezes five fit scales, allocation pilots, joint/compute models, full-refit uncertainty, horizon
   interaction, and a held-out 1.2B prediction sentinel without authorizing runs.

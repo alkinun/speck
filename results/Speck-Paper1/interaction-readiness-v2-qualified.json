@@ -1,0 +1,159 @@
+{
+  "format": "speck_interaction_readiness_v2_qualification",
+  "format_version": 1,
+  "status": "qualified_exact_cube_estimands_axes_unselected_training_blocked",
+  "created_at": "2026-09-06T03:27:38+00:00",
+  "scope": "offline coefficient, estimand, multiplicity, safety-guard, prerequisite, and registration qualification before any interaction-cube output; no active result/checkpoint, service, GPU, training, or runtime environment accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/interaction_readiness_v2.json",
+      "sha256": "97bc01f069914916e12872c6a5e3b6c49b9f31ecfd0a761d5d3c49520b43fdca"
+    },
+    "predecessor": {
+      "path": "research/paper-1/interaction_readiness_v1.json",
+      "sha256": "0e1f5a23cbce2b9a42880e7908e5521acac9ecab59c6cf234b0763bb9d412097"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_interaction_v2_validate.py",
+      "sha256": "fcc7e1b3ecd40505b8a9589e55a7d02ac3b77a4b8d27f284968cceda411d9de5"
+    },
+    "tests": {
+      "path": "tests/test_paper_interaction_v2.py",
+      "sha256": "49574f84a8631af3ac823917a386c3f6a0f5e7f7ca44f934a29e027aaeb4e1ba"
+    }
+  },
+  "correction": {
+    "v1_pairwise_conditionals_per_factor_pair": 2,
+    "v1_named_Holm_pairwise_terms": 3,
+    "ambiguity": "unclear whether the primary pairwise estimand was one conditional, both conditionals, or their average",
+    "v2_primary_pairwise": "arithmetic mean of both conditional difference-of-differences",
+    "v2_conditional_role": "six published no-hiding harm guards with no uncorrected positive claim",
+    "cube_outputs_present": false
+  },
+  "qualified_coefficients": {
+    "cells": 8,
+    "vectors": 16,
+    "main_effects": [
+      "S",
+      "D",
+      "W"
+    ],
+    "averaged_pairwise": [
+      "SD",
+      "SW",
+      "DW"
+    ],
+    "three_way": "SDW",
+    "conditional_pairwise": [
+      "SD_W0",
+      "SD_W1",
+      "SW_D0",
+      "SW_D1",
+      "DW_S0",
+      "DW_S1"
+    ],
+    "full_model_removals": [
+      "S_from_full",
+      "D_from_full",
+      "W_from_full"
+    ],
+    "all_vectors_reconstructed_algorithmically": true
+  },
+  "inference": {
+    "form_within_paired_seed_data_cell_first": true,
+    "paired_cells": 3,
+    "one_sided_t_critical_df_2": 2.919985580353724,
+    "two_sided_t_critical_df_2": 4.302652729696142,
+    "language_harm_margin_nats": 0.01,
+    "source_harm_margin_nats": 0.02,
+    "Holm_family": [
+      "SD",
+      "SW",
+      "DW",
+      "SDW"
+    ],
+    "conditional_intersection_guards": 6,
+    "averaged_zero_cannot_hide_positive_conditional_bound": true,
+    "failure_to_detect_is_not_independence": true
+  },
+  "synthetic_proofs": {
+    "additive_cube_main_effects": {
+      "S": 2,
+      "D": 3,
+      "W": 4,
+      "all_interactions": 0
+    },
+    "pure_SD_cube": {
+      "SD_W0": 5,
+      "SD_W1": 5,
+      "SD": 5,
+      "SDW": 0
+    },
+    "hidden_harm_cube": {
+      "SD_W0": 0.02,
+      "SD_W1": -0.02,
+      "SD_average": 0,
+      "margin": 0.01,
+      "conditional_guard_pass": false
+    }
+  },
+  "resource_and_authority": {
+    "discovery_cells": 8,
+    "paired_cells": 3,
+    "model_runs": 24,
+    "resource_change_from_v1": 0,
+    "axis_bundles_selected": false,
+    "cube_materialized": false,
+    "v2_registered": false,
+    "training_authorized": false,
+    "promotion_authority": false
+  },
+  "tests": {
+    "design_and_all_estimands_valid": true,
+    "additive_cube_proof": true,
+    "averaged_pairwise_identity_proof": true,
+    "conditional_hidden_harm_proof": true,
+    "changed_Holm_family_rejected": true,
+    "incomplete_coefficient_vector_rejected": true,
+    "complete_but_changed_coefficient_vector_rejected": true,
+    "training_or_registration_authority_rejected": true,
+    "count": 8
+  },
+  "decision": {
+    "v2_interaction_design_qualified": true,
+    "v1_preserved": true,
+    "active_program_or_finalist_changed": false,
+    "v2_registered": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "complete independent axis selections, then register v2 and freeze exact eight-cell configs/resources before any cube output"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_interaction_v2.py -q",
+    "expected": "8 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_interaction_v2_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "295 passed",
+    "active_program_validation": "passed with interaction_readiness_v1 still registered",
+    "validator_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_interaction_v2_validate research/paper-1/interaction_readiness_v2.json",
+    "validator_result": "valid_training_blocked with eight cells, four Holm hypotheses, and six conditional guards",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "sequence, depth, or width axis is selected",
+    "the 24-run cube is materialized or authorized",
+    "zero averaged interaction proves independence",
+    "conditional diagnostics receive uncorrected superiority authority",
+    "discovery interaction evidence can promote the combined architecture",
+    "this correction changes the active finalist"
+  ]
+}

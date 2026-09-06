@@ -480,6 +480,34 @@
       "next_gate": "select the parent/cache, then isolate HCA before rate and CSA with oracle block mass; run only the deconfounded raw ratio family after all sequence operators qualify, with placement on independent cells after count selection"
     },
     {
+      "id": "sequence_depth_width_interaction_cube",
+      "claim": "Independently selected sequence, depth, and width bundles combine without harmful conditional or higher-order interactions.",
+      "status": "estimands_frozen_axes_unselected",
+      "alternatives": [
+        "selected axis bundle",
+        "matched absence control",
+        "simpler full-model removal"
+      ],
+      "evidence": [
+        "research/paper-1/interaction_readiness_v1.json",
+        "research/paper-1/interaction_readiness_v2.json",
+        "results/Speck-Paper1/interaction-readiness-v2-qualified.json"
+      ],
+      "quality": "No cube output exists. V2 defines exact averaged SD/SW/DW and SDW Holm hypotheses while requiring all six conditional pairwise bounds to clear no-hiding language/source harm margins.",
+      "systems": "The discovery cube remains 24 runs; realized interaction overhead and full-model removals are required and cannot be inferred from independent axis wins.",
+      "scale_transfer": "retention-changing interactions and full-model removals require six-cell confirmation, then medium-scale full-versus-simpler comparison",
+      "runtime_support": "not materialized; exact configs wait for all three selected axes and matched controls",
+      "unresolved_risks": [
+        "sequence axis unselected",
+        "depth axis unselected",
+        "width axis unselected",
+        "winner-selection bias before cube",
+        "conditional antagonism",
+        "combined memory and communication overhead"
+      ],
+      "next_gate": "complete independent axis gates, register interaction v2, then freeze all eight config hashes and the 24-run resource envelope before output"
+    },
+    {
       "id": "routed_swiglu_moe",
       "claim": "Conditional width improves quality per active training FLOP and serving dollar.",
       "status": "blocked",
