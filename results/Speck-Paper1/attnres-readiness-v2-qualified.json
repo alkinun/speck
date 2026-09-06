@@ -1,0 +1,115 @@
+{
+  "format": "speck_attnres_readiness_qualification",
+  "format_version": 2,
+  "status": "qualified_logical_boundary_and_zero_initialization_correction_training_blocked",
+  "created_at": "2026-09-06T04:14:23+00:00",
+  "scope": "official-source and offline AttnRes readiness correction only; no active result, checkpoint, service, GPU, model implementation, training, or runtime accessed or changed",
+  "inputs": {
+    "predecessor": {
+      "path": "research/paper-1/attnres_readiness_v1.json",
+      "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",
+      "partition_authority": false
+    },
+    "primary_source_audit": {
+      "path": "results/Speck-Paper1/attnres-primary-source-audit-v1.json",
+      "sha256": "6a5247613eb071bb5f6ac443109958109beebc115251936d6ed2cd98d1bae492"
+    },
+    "design": {
+      "path": "research/paper-1/attnres_readiness_v2.json",
+      "sha256": "679c9273abab4ba1fe0739bc05b448a15afeccba1749fdafa78627b4136ba81a"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false,
+      "still_pins_v1": true
+    }
+  },
+  "implementation": {
+    "source_validator": {
+      "path": "scripts/attnres_primary_source_validate.py",
+      "sha256": "626d24decf9a4c91faa57fe4013e95a28c3ef8ae9672fffb50b67aeecacad8fd"
+    },
+    "source_tests": {
+      "path": "tests/test_attnres_primary_source.py",
+      "sha256": "97728f78d57693a4775969a78b2dd11290d8e826f7d47d623500f7e8f60ed719"
+    },
+    "readiness_validator": {
+      "path": "scripts/paper_attnres_readiness_v2_validate.py",
+      "sha256": "45c906f5267d03f7a9418acdc5ebb57b7502b3b171f1c7da5b0335fcb658c291"
+    },
+    "readiness_tests": {
+      "path": "tests/test_paper_attnres_readiness_v2.py",
+      "sha256": "195c4b661e27a6b7f58b2dc685e07cd5835cc1058259365249573ea059d5850c"
+    }
+  },
+  "correction": {
+    "residual_modules": 40,
+    "full_maximum_sources": 40,
+    "v1_eight_by_five_partition_valid": false,
+    "logical_boundary_rule": "floor(i*20/N) logical blocks, then multiply by two",
+    "N4_module_sizes": [
+      10,
+      10,
+      10,
+      10
+    ],
+    "N8_module_sizes": [
+      4,
+      6,
+      4,
+      6,
+      4,
+      6,
+      4,
+      6
+    ],
+    "N12_module_sizes": [
+      2,
+      4,
+      4,
+      2,
+      4,
+      4,
+      2,
+      4,
+      4,
+      2,
+      4,
+      4
+    ],
+    "N8_maximum_sources": 9,
+    "pseudo_query_initialization": "exact zero",
+    "released_K3_generic_initialization_is_training_authority": false
+  },
+  "source_boundary": {
+    "primary_Full_and_Block_equations_qualified": true,
+    "K3_Block_checkpoint_inference_semantics_qualified": true,
+    "K3_Full_AttnRes_implementation_present": false,
+    "K3_two_phase_online_softmax_present": false,
+    "K3_pipeline_training_cache_present": false,
+    "K3_full_model_training_supported": false,
+    "standalone_repository_code_or_license_present": false
+  },
+  "decision": {
+    "partition_correction_qualified": true,
+    "residual_selected": false,
+    "block_count_selected": false,
+    "depth_width_geometry_selected": false,
+    "sequence_parent_selected": false,
+    "reference_implementation_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after active finalist acceptance and sequence-parent selection, materialize the corrected source graph and freeze a standalone CPU reference protocol"
+  },
+  "verification": {
+    "source_test_result": "5 passed",
+    "source_network_result": "five immutable files and six-path official tree verified",
+    "readiness_test_result": "6 passed",
+    "readiness_validator_result": "valid_partition_corrected_training_blocked",
+    "live_output_accessed": false,
+    "checkpoint_accessed": false,
+    "service_polled": false
+  }
+}

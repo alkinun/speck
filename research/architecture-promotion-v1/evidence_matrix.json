@@ -424,26 +424,33 @@
     {
       "id": "block_attention_residuals",
       "claim": "Content-dependent depth routing improves quality per training FLOP in a deeper, narrower Speck model.",
-      "status": "proposed",
+      "status": "blocked",
       "alternatives": [
         "standard residual",
         "full attention residuals"
       ],
       "evidence": [
         "papers/05_attention_residuals.md",
+        "papers/45_attnres_official_source.md",
         "findings/66_attnres_readiness_gate.md",
-        "research/paper-1/attnres_readiness_v1.json"
+        "research/paper-1/attnres_readiness_v1.json",
+        "findings/162_attnres_source_correction.md",
+        "results/Speck-Paper1/attnres-primary-source-audit-v1.json",
+        "research/paper-1/attnres_readiness_v2.json",
+        "results/Speck-Paper1/attnres-readiness-v2-qualified.json"
       ],
-      "quality": "not measured locally",
+      "quality": "Not measured locally. Primary Full/Block equations and K3 Block checkpoint-inference semantics are pinned; v1's eight-by-five partition is invalid and v2 corrects it to alternating 4/6 residual-module blocks.",
       "systems": "not measured locally",
       "scale_transfer": "not measured locally",
-      "runtime_support": "not implemented",
+      "runtime_support": "K3 supplies Block checkpoint-inference semantics, but no Full mode, exact-zero training initializer, two-phase online-softmax path, pipeline training cache, or full-model training support. Speck has no implementation.",
       "unresolved_risks": [
+        "sequence parent unselected",
+        "exact-zero initialization across all construction paths",
         "activation memory",
         "export compatibility",
         "depth-width optimum shift"
       ],
-      "next_gate": "after sequence selection, materialize the 40-module source graph and small-tensor standard/static/full/eight-block references"
+      "next_gate": "after finalist acceptance and sequence selection, materialize the corrected logical-boundary source graph and freeze small-tensor standard/static/full/eight-block references"
     },
     {
       "id": "sparse_long_context_attention",

@@ -168,6 +168,7 @@ Read in order:
 160. [159 — Midpoint resolves fixed-score QB ties, not the training policy](159_quantile_balancing_tie_policy.md)
 161. [160 — Conventional dropless MoE has a single-device source, not an EP reference](160_deepseek_moe_source_gate.md)
 162. [161 — Width pre-results research converges and stops before implementation](161_width_pre_results_convergence.md)
+163. [162 — AttnRes blocks must align to logical Transformer boundaries](162_attnres_source_correction.md)
 
 Conventions:
 

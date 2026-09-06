@@ -1,0 +1,248 @@
+{
+  "format": "speck_attnres_primary_source_audit",
+  "format_version": 1,
+  "status": "report_and_K3_block_inference_semantics_qualified_local_partition_correction_required_training_blocked",
+  "created_at": "2026-09-06T04:10:32+00:00",
+  "scope": "official Attention Residuals report/repository and immutable K3 Hugging Face Block AttnRes implementation; third-party implementations excluded",
+  "local_note": {
+    "path": "papers/45_attnres_official_source.md",
+    "sha256": "87de82a31c1e6e00ca8444c829adf236ac9a8e45e4751f45757845692f700d2b"
+  },
+  "sources": {
+    "Attention_Residuals_GitHub": {
+      "repository": "https://github.com/MoonshotAI/Attention-Residuals",
+      "commit": "85e22310fe5ee860b4a023de312d791de8a5a5e6",
+      "tree_url": "https://api.github.com/repos/MoonshotAI/Attention-Residuals/git/trees/85e22310fe5ee860b4a023de312d791de8a5a5e6?recursive=1",
+      "tree_paths": [
+        "Attention_Residuals.pdf",
+        "README.md",
+        "assets/logo.png",
+        "assets/overview.png",
+        "assets/scaling_law.png",
+        "assets/training_dynamics.png"
+      ],
+      "code_files": 0,
+      "license_files": 0,
+      "files": {
+        "Attention_Residuals.pdf": {
+          "url": "https://raw.githubusercontent.com/MoonshotAI/Attention-Residuals/85e22310fe5ee860b4a023de312d791de8a5a5e6/Attention_Residuals.pdf",
+          "sha256": "e5831b0db1347606453b5176b0142115a18887b6a9c2e1d05a266d4805a26b2f",
+          "bytes": 952700,
+          "pages": 21
+        },
+        "README.md": {
+          "url": "https://raw.githubusercontent.com/MoonshotAI/Attention-Residuals/85e22310fe5ee860b4a023de312d791de8a5a5e6/README.md",
+          "sha256": "c7eea370100a97524225ce6af5b493bd02e84021183470ecf2c4055696ce7ae7",
+          "bytes": 5997
+        }
+      }
+    },
+    "Kimi_K3_HuggingFace": {
+      "repository": "https://huggingface.co/moonshotai/Kimi-K3",
+      "commit": "c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721",
+      "files": {
+        "config.json": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/config.json",
+          "sha256": "9710e121a58d03ac92c8d6da287a19541994319afbbe6d6202af001ffd379213",
+          "bytes": 7006
+        },
+        "modeling_kimi_linear.py": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/modeling_kimi_linear.py",
+          "sha256": "9e3564c70ac21854ce5a090cc946c5dc76b70d1050ef50840449181a20fff44a",
+          "bytes": 51506
+        },
+        "LICENSE": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/LICENSE",
+          "sha256": "20c797ce19af0c17de52c6afb144644768a591c521655f5ebf5712c9850f2887",
+          "bytes": 3065
+        }
+      }
+    }
+  },
+  "official_report_semantics": {
+    "Full_AttnRes": {
+      "weight_equation": 2,
+      "query_key_value_equation": 3,
+      "input_equation": 4,
+      "sources": "embedding plus every completed attention or MLP residual-module output",
+      "query": "one learned hidden-size pseudo-query per receiving residual module",
+      "keys": "each source independently RMS-normalized",
+      "scores": "unscaled pseudo-query dot normalized key",
+      "weights": "one source-axis softmax head",
+      "values": "unnormalized source values",
+      "pseudo_query_initialization": "exact zero",
+      "initial_weights": "uniform over available sources"
+    },
+    "Block_AttnRes": {
+      "block_sum_equation": 5,
+      "source_set_equation": 6,
+      "source_zero": "token embedding",
+      "completed_source": "sum of every attention and MLP update in a completed block",
+      "current_source": "partial sum within the current block after its first residual module",
+      "first_module_source_set": "embedding plus completed blocks only",
+      "later_module_source_set": "embedding plus completed blocks plus current partial sum",
+      "final_output": "attention over all completed blocks and any final partial block",
+      "block_size_unit": "attention and MLP residual sublayers",
+      "boundary_constraint": "new blocks begin only at Transformer logical-layer boundaries",
+      "two_phase_exact_online_softmax_required_for_optimized_path": true
+    }
+  },
+  "official_K3_code_boundary": {
+    "configuration": {
+      "decoder_layers": 93,
+      "attn_res_block_size": 12,
+      "block_size_unit": "decoder layers",
+      "residual_modules_per_decoder_layer": 2,
+      "residual_modules_per_full_block": 24,
+      "completed_full_blocks": 7,
+      "final_partial_decoder_layers": 9,
+      "maximum_output_sources": 9
+    },
+    "per_decoder_layer": {
+      "attention_projection_and_RMSNorm": true,
+      "MLP_projection_and_RMSNorm": true,
+      "boundary_test": "layer_idx modulo attn_res_block_size equals zero",
+      "boundary_location": "before current attention update after prior partial sum has been used as an equivalent source"
+    },
+    "apply_helper": {
+      "values": "completed block tensor concatenated with current prefix sum",
+      "score_compute_dtype": "float32",
+      "key_normalization": "RMSNorm using variance epsilon and learned norm weight",
+      "query_representation": "linear projection weight multiplied elementwise by norm weight",
+      "score_scaling": "none",
+      "normalization": "softmax over depth sources",
+      "value_normalization": false,
+      "output_dtype": "cast to input value dtype",
+      "differentiable_operations": true
+    },
+    "output_AttnRes_projection_and_RMSNorm": true,
+    "Full_AttnRes_mode_present": false,
+    "two_phase_online_softmax_path_present": false,
+    "pipeline_cache_training_path_present": false,
+    "isolated_parity_tests_present": false,
+    "full_K3_training_supported": false,
+    "generic_linear_initializer": "Normal(0, initializer_range)",
+    "special_zero_initialization_for_AttnRes_projections_present": false,
+    "released_checkpoint_overwrites_generic_initialization": true,
+    "role": "checkpoint Block AttnRes inference semantics, not from-scratch initialization or full training authority"
+  },
+  "local_v1_disposition": {
+    "path": "research/paper-1/attnres_readiness_v1.json",
+    "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",
+    "correct": {
+      "residual_modules": 40,
+      "full_maximum_sources": 40,
+      "separate_attention_and_FFN_receiving_modules": true,
+      "eight_block_maximum_sources": 9
+    },
+    "incorrect": {
+      "eight_equal_five_module_blocks": true,
+      "arbitrary_module_quantile_boundaries": true,
+      "reason": "odd module boundaries can split one logical Transformer's attention and FFN, contrary to report pseudocode and K3 implementation"
+    }
+  },
+  "corrected_Speck_boundaries": {
+    "logical_transformer_blocks": 20,
+    "residual_modules": 40,
+    "boundary_rule": "logical boundary i is floor(i*20/N), then residual-module boundary is twice that value",
+    "N4": {
+      "logical_boundaries": [
+        0,
+        5,
+        10,
+        15,
+        20
+      ],
+      "residual_module_sizes": [
+        10,
+        10,
+        10,
+        10
+      ]
+    },
+    "N8": {
+      "logical_boundaries": [
+        0,
+        2,
+        5,
+        7,
+        10,
+        12,
+        15,
+        17,
+        20
+      ],
+      "residual_module_sizes": [
+        4,
+        6,
+        4,
+        6,
+        4,
+        6,
+        4,
+        6
+      ]
+    },
+    "N12": {
+      "logical_boundaries": [
+        0,
+        1,
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        13,
+        15,
+        16,
+        18,
+        20
+      ],
+      "residual_module_sizes": [
+        2,
+        4,
+        4,
+        2,
+        4,
+        4,
+        2,
+        4,
+        4,
+        2,
+        4,
+        4
+      ]
+    }
+  },
+  "license_boundary": {
+    "Attention_Residuals_repository_license_present": false,
+    "Attention_Residuals_repository_code_present": false,
+    "report_equations_available_for_clean_room_specification": true,
+    "upstream_Attention_Residuals_code_reuse_authorized": false,
+    "K3_implementation_license": "Kimi K3 License",
+    "K3_internal_research_use_permitted": true,
+    "future_distribution_or_commercial_use_requires_recheck": true
+  },
+  "source_disposition": {
+    "primary_Full_and_Block_equations_qualified": true,
+    "official_K3_Block_inference_semantics_qualified": true,
+    "official_from_scratch_initialization_qualified": false,
+    "official_Full_AttnRes_implementation_qualified": false,
+    "official_training_implementation_qualified": false,
+    "local_v1_partition_valid": false,
+    "append_only_v2_partition_correction_authorized": true,
+    "local_reference_implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "freeze AttnRes readiness v2 with logical-layer-aligned 4/8/12 block boundaries and explicit zero initialization; retain sequence-parent and implementation/training blockers"
+  },
+  "verification": {
+    "network_file_count": 5,
+    "immutable_repository_tree_verified": true,
+    "network_bytes_SHA256_verified": true,
+    "official_upstream_code_executed": false,
+    "active_experiment_accessed": false,
+    "service_polled": false
+  }
+}

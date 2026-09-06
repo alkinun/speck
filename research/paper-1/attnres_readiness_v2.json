@@ -1,0 +1,287 @@
+{
+  "format": "speck_attnres_readiness_gate",
+  "format_version": 2,
+  "gate_id": "speck-paper-1-attnres-readiness-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "source_corrected_logical_boundaries_frozen_sequence_parent_implementation_training_blocked",
+  "frozen_at": "2026-09-06T04:13:00+00:00",
+  "purpose": "correct Block AttnRes boundaries and initialization from pinned primary sources without changing the 40-module graph or authorizing implementation before sequence-parent selection",
+  "predecessor": {
+    "path": "research/paper-1/attnres_readiness_v1.json",
+    "sha256": "aad6b5e3443982b077d2761304315fe743c8be526f7235e071b4093bf13a3615",
+    "preserved_append_only": true,
+    "partition_authority": false
+  },
+  "primary_source_audit": {
+    "path": "results/Speck-Paper1/attnres-primary-source-audit-v1.json",
+    "sha256": "6a5247613eb071bb5f6ac443109958109beebc115251936d6ed2cd98d1bae492",
+    "primary_equations_qualified": true,
+    "K3_Block_inference_semantics_qualified": true,
+    "from_scratch_initialization_qualified_by_K3_code": false,
+    "official_training_implementation_qualified": false
+  },
+  "v1_corrections": {
+    "preserved": [
+      "20 logical Transformer blocks",
+      "two ordered residual modules per logical block",
+      "40 residual modules total",
+      "Full AttnRes maximum of 40 sources",
+      "eight-block maximum of nine sources",
+      "four-arm initial isolation",
+      "one softmax depth head with RMS-normalized keys and unnormalized values",
+      "sequence-parent, implementation, training, and promotion blockers"
+    ],
+    "rejected": {
+      "eight_equal_five_module_blocks": "odd boundaries split a logical block between attention and FFN",
+      "floor_i_times_40_over_N_boundaries": "module-first quantiles can be odd and violate the source boundary constraint"
+    },
+    "replacement": "partition 20 logical blocks by floor(i*20/N), then multiply every boundary by two to obtain residual-module boundaries"
+  },
+  "module_graph": {
+    "logical_transformer_blocks": 20,
+    "residual_modules_per_logical_block": 2,
+    "residual_modules": 40,
+    "module_order": "sequence stage followed by feed-forward stage within each logical block",
+    "source_zero": "token embedding",
+    "full_source_updates": "every completed residual-module output in exact execution order",
+    "block_boundary_constraint": "only between logical Transformer blocks; never between one block's sequence and feed-forward stages"
+  },
+  "source_exact_equations": {
+    "Full_AttnRes": {
+      "source_equations": [
+        2,
+        3,
+        4
+      ],
+      "query": "one learned hidden-size pseudo-query for each receiving residual module",
+      "keys": "independent RMSNorm of every source",
+      "scores": "unscaled query-key dot products",
+      "weights": "single softmax over depth sources",
+      "values": "unnormalized sources",
+      "pseudo_query_initialization": "exact zero",
+      "initial_weights": "uniform over available sources"
+    },
+    "Block_AttnRes": {
+      "source_equations": [
+        5,
+        6
+      ],
+      "completed_block": "sum of all sequence and FFN residual updates in the logical blocks assigned to it",
+      "first_module_in_block": "embedding plus all completed block sums",
+      "later_module_in_block": "embedding plus all completed block sums plus current partial block sum",
+      "final_output": "all completed block sums plus final partial sum",
+      "optimized_path": "must be exactly equivalent via two-phase inter-block attention and sequential online-softmax merge"
+    }
+  },
+  "corrected_block_families": {
+    "N4": {
+      "logical_boundaries": [
+        0,
+        5,
+        10,
+        15,
+        20
+      ],
+      "module_boundaries": [
+        0,
+        10,
+        20,
+        30,
+        40
+      ],
+      "module_sizes": [
+        10,
+        10,
+        10,
+        10
+      ]
+    },
+    "N8": {
+      "logical_boundaries": [
+        0,
+        2,
+        5,
+        7,
+        10,
+        12,
+        15,
+        17,
+        20
+      ],
+      "module_boundaries": [
+        0,
+        4,
+        10,
+        14,
+        20,
+        24,
+        30,
+        34,
+        40
+      ],
+      "module_sizes": [
+        4,
+        6,
+        4,
+        6,
+        4,
+        6,
+        4,
+        6
+      ],
+      "maximum_sources": 9
+    },
+    "N12": {
+      "logical_boundaries": [
+        0,
+        1,
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        13,
+        15,
+        16,
+        18,
+        20
+      ],
+      "module_boundaries": [
+        0,
+        2,
+        6,
+        10,
+        12,
+        16,
+        20,
+        22,
+        26,
+        30,
+        32,
+        36,
+        40
+      ],
+      "module_sizes": [
+        2,
+        4,
+        4,
+        2,
+        4,
+        4,
+        2,
+        4,
+        4,
+        2,
+        4,
+        4
+      ]
+    }
+  },
+  "initial_isolation_arms": [
+    {
+      "id": "standard_prenorm",
+      "role": "primary conventional control"
+    },
+    {
+      "id": "static_depth_weights",
+      "role": "token-independent mechanism control with identical source sets"
+    },
+    {
+      "id": "full_attnres",
+      "role": "uncompressed depth-routing candidate",
+      "maximum_sources": 40
+    },
+    {
+      "id": "block_attnres_8",
+      "role": "logical-boundary-aligned bounded candidate",
+      "logical_block_sizes": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ],
+      "residual_module_sizes": [
+        4,
+        6,
+        4,
+        6,
+        4,
+        6,
+        4,
+        6
+      ],
+      "maximum_sources": 9
+    }
+  ],
+  "official_code_disposition": {
+    "use": "semantic cross-check for Block AttnRes checkpoint inference only",
+    "confirmed": [
+      "separate pre-attention and pre-MLP depth projections and RMSNorms",
+      "float32 score and value aggregation",
+      "softmax over completed blocks plus current partial sum",
+      "boundary tests on decoder-layer index",
+      "final output AttnRes"
+    ],
+    "not_authoritative": [
+      "from-scratch initialization because generic linear initialization is nonzero",
+      "Full AttnRes because no full residual-module mode is released",
+      "complete K3 training because sparse MoE rejects training",
+      "two-phase online-softmax or pipeline-cache behavior because neither path is released"
+    ]
+  },
+  "correctness_before_training": [
+    "derive exact source identities for every one of 40 receiving residual modules and the output",
+    "prove every N4/N8/N12 boundary is even and aligned between logical blocks",
+    "prove exact-zero pseudo-query tensors and initial uniform source weights after every supported initialization path",
+    "reference Full and Block forward plus input/query/norm/module gradient checks",
+    "online two-phase and arbitrary chunk boundaries equal direct softmax reference",
+    "full prefill, chunked prefill, and one-token decode equality",
+    "gradient checkpoint/recomputation and checkpoint/resume parity",
+    "Transformers export round trip and field-absent compatibility",
+    "no change to sequence KV or recurrent persistent state",
+    "activation, source, workspace, and pipeline-communication accounting"
+  ],
+  "ordered_activation_prerequisites": [
+    "active finalist sequence completes and is accepted",
+    "one conservative or selected sequence parent is frozen",
+    "40-module and corrected logical-boundary source identities are materialized without model execution",
+    "standalone Full, Block, and static CPU references are implemented and qualified",
+    "parameter/FLOP matching, activation memory, analysis, and depth diagnostics are frozen before training"
+  ],
+  "block_count_successor": {
+    "conditional_on": "logical-boundary-aligned block_attnres_8 passes initial isolation",
+    "summary_counts": [
+      4,
+      8,
+      12
+    ],
+    "boundary_rule": "floor(i*20/N) over logical blocks, then multiply by two",
+    "full_control": "Full AttnRes over 40 separate residual-module outputs",
+    "selection": "smallest summary count passing quality and gradient constraints on the activation/communication frontier"
+  },
+  "active_program_boundary": {
+    "program": "research/paper-1/experiment_program.json",
+    "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+    "continues_to_pin": "research/paper-1/attnres_readiness_v1.json",
+    "changed": false
+  },
+  "decision": {
+    "v1_partition_valid": false,
+    "v2_partition_corrected": true,
+    "residual_selected": false,
+    "block_count_selected": false,
+    "depth_width_geometry_selected": false,
+    "sequence_parent_selected": false,
+    "reference_implementation_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "wait for active finalist and sequence-parent selection; then materialize exact source identities and freeze a standalone CPU reference protocol against the corrected boundaries"
+  }
+}

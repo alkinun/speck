@@ -104,6 +104,11 @@ the final combined model.
 - [`attnres_readiness_v1.json`](attnres_readiness_v1.json) fixes the 40-module residual source graph,
   adds the static-depth mechanism control, and freezes Full/Block equations, correctness, activation,
   block-count, depth/width, mechanistic, and efficiency gates before implementation.
+- [`attnres_readiness_v2.json`](attnres_readiness_v2.json) and
+  [`attnres-readiness-v2-qualified.json`](../../results/Speck-Paper1/attnres-readiness-v2-qualified.json)
+  preserve 40 modules but replace invalid eight-by-five blocks with logical-boundary-aligned 4/6 module
+  blocks, require exact-zero pseudo-queries, and separate K3 checkpoint inference from training
+  initialization. Sequence-parent selection, implementation, training, and promotion remain blocked.
 - [`stable_latentmoe_readiness_v1.json`](stable_latentmoe_readiness_v1.json) records the missing primary
   specification and freezes conventional-MoE, latent, normalization, activation, balancing, and expert-
   geometry stages plus routing, stability, rescue, memory, and hardware gates.
