@@ -1,0 +1,114 @@
+{
+  "format": "speck_paper_finalist_result_acceptance_qualification",
+  "format_version": 2,
+  "status": "qualified_checkpoint_replay_successor_before_first_accepted_result",
+  "created_at": "2026-09-06T01:49:32+00:00",
+  "scope": "offline append-only successor that composes v1 ledger checks with deterministic replay from each frozen experiment and retained final checkpoint; no active service, training log, unaccepted output, GPU, or intermediate metric accessed",
+  "predecessor": {
+    "path": "results/Speck-Paper1/finalist-result-acceptance-qualified-v1.json",
+    "sha256": "40862f0c21a9113c99de8b9c42a59327d68b989c2173c841ac44e9d91990c1aa",
+    "verifier": {
+      "path": "scripts/paper_finalist_result_acceptance_validate.py",
+      "sha256": "c782bea97aaa2f1cd0a32c2ffbb4510fefe58240a22b730367bb44df3f8360b6"
+    },
+    "disposition": "preserved_and_composed",
+    "limitation_closed": "v1 validated result references, labels, sources, and transitions but did not independently replay collection from retained checkpoint evidence"
+  },
+  "implementation": {
+    "verifier": {
+      "path": "scripts/paper_finalist_result_acceptance_validate_v2.py",
+      "sha256": "53d2050978cafd9a8a8761bac7743efb0df00838de1d1330351b06975c5e803a"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_result_acceptance_v2.py",
+      "sha256": "233a206bc791f132d206b8c3864b20e96163e6a3c81c2f8cb98a86639ed6c9f8"
+    },
+    "frozen_collector_module": {
+      "path": "speck/paper_finalist_analysis.py",
+      "sha256": "466340781e58f1f330eee5f70683b53f24acb9d4eeaeda5cdb2eb13ebcd85504"
+    },
+    "unchanged_frozen_runner": {
+      "path": "scripts/paper_finalist_continue.py",
+      "sha256": "623c96f3caa694faf5272ee3b78559257986815e69f333b7a2e8d51c3684025d"
+    }
+  },
+  "frozen_inputs": {
+    "analysis_plan": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "materialization_contract": {
+      "path": "research/paper-1/finalist_materialization_v1.json",
+      "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "run_qualification": {
+      "path": "results/Speck-Paper1/finalist-qualification-v1.json",
+      "sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605"
+    }
+  },
+  "replay_contract": {
+    "qualification_reference_and_hash_required": true,
+    "experiment_path_derived_from_qualified_run_inventory": true,
+    "checkpoint_directory_derived_from_qualified_run_inventory": true,
+    "materialized_config_manifest_revalidated": true,
+    "checkpoint_metadata_and_completion_revalidated": true,
+    "summary_history_and_token_boundary_revalidated": true,
+    "model_optimizer_and_metadata_hashes_recomputed": true,
+    "timing_evidence_reloaded": true,
+    "collection_timestamp_timezone_required": true,
+    "stable_result_fields_compared_exactly": true,
+    "only_recollection_timestamp_excluded_from_equality": true
+  },
+  "counterexamples": {
+    "v1_accepts_wrong_analysis_plan_hash_after_reference_rehash": true,
+    "v1_accepts_wrong_experiment_path_after_reference_rehash": true,
+    "v1_accepts_wrong_claimed_model_hash_after_reference_rehash": true,
+    "v1_accepts_checkpoint_bytes_changed_after_collection": true,
+    "v2_rejects_each_counterexample": true,
+    "v2_accepts_exact_one_control_replay": true,
+    "v2_tests": 5,
+    "composed_v1_and_v2_tests": 11
+  },
+  "decision": {
+    "checkpoint_replay_verifier_qualified": true,
+    "v1_artifact_or_verifier_modified": false,
+    "must_run_after_every_automatic_result_commit": true,
+    "must_pass_before_result_interpretation_or_linear_completion": true,
+    "retained_checkpoint_required_until_acceptance_passes": true,
+    "wired_into_frozen_automation": false,
+    "active_runner_collector_analyzer_or_program_modified": false,
+    "training_launch_authority_changed": false,
+    "next_action": "replace the v1-only post-commit command operationally with the v2 composed command after each event; retain checkpoint bytes and stop interpretation on any replay mismatch"
+  },
+  "failure_policy": {
+    "interpretation_authorized_after_failure": false,
+    "checkpoint_or_result_rewrite_authorized": false,
+    "source_imputation_authorized": false,
+    "automatic_retry_skip_or_branch_authorized": false,
+    "required_action": "preserve committed artifacts and retained checkpoint bytes, stop interpretation, and diagnose the exact provenance mismatch"
+  },
+  "verification": {
+    "test_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_result_acceptance.py tests/test_paper_finalist_result_acceptance_v2.py -q",
+    "test_expected": "11 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_result_acceptance_v2_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "133 passed",
+    "program_validation": "passed",
+    "empty_ledger_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_finalist_result_acceptance_validate_v2",
+    "empty_ledger_result": "valid with 0 accepted results, 0 checkpoint replays, and control pair 0 next",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "an empty-ledger pass validates a future checkpoint",
+    "the v2 verifier is part of the frozen automatic finalizer",
+    "replaying collection permits changing a result or checkpoint",
+    "checkpoint provenance establishes model quality or architecture promotion",
+    "a failed replay permits retry, skipping, branching, or evidence repair"
+  ]
+}

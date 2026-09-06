@@ -353,6 +353,9 @@ the final combined model.
   qualifies one post-event verifier for program/result/source/transition/target/analysis consistency.
   It passes the empty ledger and must pass after every automatic commit before interpretation or Linear
   completion; it intentionally remains outside the hash-frozen finalizer.
+- [`finalist-result-acceptance-qualified-v2.json`](../../results/Speck-Paper1/finalist-result-acceptance-qualified-v2.json)
+  composes every v1 check with deterministic recollection from the pinned experiment and retained final
+  checkpoint. All stable result fields must replay exactly; the checkpoint must remain until this passes.
 - [`finalist-program-source-gate-v1.json`](../../results/Speck-Paper1/finalist-program-source-gate-v1.json)
   safely moves the equivalent exact finite 11-source rule into the existing pre-commit program-validator
   call. Missing/extra/non-finite sources now stop before commit and scheduling; the independent
@@ -441,6 +444,9 @@ never imputation or silent deletion.
 The result-acceptance verifier composes those gates after each event: it binds every accepted result to
 the program and transition, checks complete source coverage, validates the exact successor edge, and
 preserves the failed-attempt/rerun history. Failure blocks interpretation without rewriting evidence.
+Its append-only v2 successor also replays the frozen collector from each retained checkpoint. This
+closes the v1 boundary under which rehashed provenance fields or post-collection checkpoint drift could
+pass while labels, metrics, sources, and transitions remained valid.
 Because the program validator is not a frozen scientific input, its complete-source rule is now also
 enforced inside finalization before commit/scheduling. Trainer, runner, analyzer, plan, thresholds, and
 the independent post-commit check remain unchanged.
