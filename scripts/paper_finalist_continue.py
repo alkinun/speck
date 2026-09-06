@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROGRAM = ROOT / "research/paper-1/experiment_program.json"
-PLAN = ROOT / "research/paper-1/finalist_analysis_v1.json"
+PLAN = ROOT / "research/paper-1/finalist_analysis_v2.json"
 MATERIALIZATION_CONTRACT = ROOT / "research/paper-1/finalist_materialization_v1.json"
 LAUNCH_CONTRACT = ROOT / "research/paper-1/finalist_launch_v1.json"
 AUTOMATION = ROOT / "research/paper-1/finalist_automation_v1.json"
@@ -198,6 +198,7 @@ def _result_reference(path, expected_pair):
     report = load_object(path)
     if (
         report.get("format") != "speck_paper_finalist_run_result"
+        or report.get("format_version") != 2
         or report.get("status") != "complete_qualified"
         or report.get("pair", {}).get("pair") != expected_pair
         or report.get("training_tokens") != 1_539_833_856
@@ -267,7 +268,10 @@ def _analyze(control_entries, candidate_entries, target_reference):
         str(ANALYSIS.relative_to(ROOT)),
     )
     report = load_object(ANALYSIS)
-    if report.get("status") != "complete_finalist_language_evidence_no_standalone_promotion":
+    if (
+        report.get("status")
+        != "complete_crossed_factor_finalist_language_evidence_no_standalone_promotion"
+    ):
         raise ValueError("completed finalist analysis is invalid")
     return {
         "path": ANALYSIS.relative_to(ROOT).as_posix(),
@@ -355,7 +359,7 @@ def finalize(run_name, training_unit, trigger_unit):
         atomic_json(PROGRAM, program)
         transition = {
             "format": "speck_paper_finalist_automatic_transition",
-            "format_version": 1,
+            "format_version": 2,
             "status": "complete",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "completed_run": run_name,

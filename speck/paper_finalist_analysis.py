@@ -27,15 +27,22 @@ def load_finalist_plan(plan_path, materialization_contract_path):
     plan_path, plan = load_json(plan_path)
     contract_path, contract = load_json(materialization_contract_path)
     repository_root = plan_path.parents[2]
+    predecessor = plan.get("predecessor", {})
     if (
         plan.get("format") != "speck_paper_finalist_analysis_plan"
-        or plan.get("format_version") != 1
-        or plan.get("status") != "frozen_after_proxy_pass_before_finalist_materialization"
+        or plan.get("format_version") != 2
+        or plan.get("status") != "frozen_crossed_factor_successor_before_any_finalist_result"
         or contract.get("format") != "speck_paper_finalist_materialization_contract"
         or contract.get("format_version") != 1
-        or contract.get("inputs", {}).get("finalist_analysis")
-        != plan_path.relative_to(repository_root).as_posix()
-        or contract.get("inputs", {}).get("finalist_analysis_sha256") != file_sha256(plan_path)
+        or predecessor.get("path") != contract.get("inputs", {}).get("finalist_analysis")
+        or predecessor.get("sha256")
+        != contract.get("inputs", {}).get("finalist_analysis_sha256")
+        or not (repository_root / predecessor.get("path", "")).is_file()
+        or file_sha256(repository_root / predecessor["path"]) != predecessor.get("sha256")
+        or plan.get("inputs", {}).get("materialization_contract")
+        != contract_path.relative_to(repository_root).as_posix()
+        or plan.get("inputs", {}).get("materialization_contract_sha256")
+        != file_sha256(contract_path)
         or plan.get("paper_id") != contract.get("paper_id")
         or plan.get("policy_id") != contract.get("policy_id")
     ):
@@ -54,8 +61,10 @@ def load_finalist_plan(plan_path, materialization_contract_path):
         or shared.get("training_tokens_per_arm") != contract["materialized_training"]["training_tokens"]
         or shared.get("optimizer_steps") != contract["materialized_training"]["optimizer_steps"]
         or shared.get("evaluation_steps") != [0, 5874, 11748, 17622, 23496]
-        or statistical.get("paired_runs") != 6
-        or statistical.get("student_t_critical_df_5") != 2.0150483733330233
+        or statistical.get("paired_cells") != 6
+        or statistical.get("fixed_data_order_strata") != 2
+        or statistical.get("independent_seeds_per_stratum") != 3
+        or statistical.get("student_t_critical_df_2") != 2.919985580353724
         or statistical.get("language_loss_non_inferiority_margin_nats") != 0.01
         or statistical.get("source_guardrail_nats") != 0.02
         or stopping.get("required_complete_model_runs") != 12
@@ -178,7 +187,7 @@ def collect_run_result(plan_path, materialization_contract_path, experiment, che
     complete_path = checkpoint_dir / f"complete_{expected_step:06d}"
     return {
         "format": "speck_paper_finalist_run_result",
-        "format_version": 1,
+        "format_version": 2,
         "status": "complete_qualified",
         "created_at": _utc_now(),
         "checkpoint_completed_at": datetime.fromtimestamp(
@@ -230,7 +239,7 @@ def _validate_result(report, plan, contract, plan_sha, contract_sha, materializa
     shared = plan["shared_training"]
     if not required <= set(report) or (
         report.get("format") != "speck_paper_finalist_run_result"
-        or report.get("format_version") != 1
+        or report.get("format_version") != 2
         or report.get("status") != "complete_qualified"
         or report.get("paper_id") != plan["paper_id"]
         or report.get("policy_id") != plan["policy_id"]
@@ -305,7 +314,7 @@ def lock_time_to_quality_target(plan_path, materialization_contract_path, contro
     ) / 1_000_000
     return {
         "format": "speck_paper_finalist_time_to_quality_lock",
-        "format_version": 1,
+        "format_version": 2,
         "status": "locked_from_six_controls_before_candidates",
         "locked_at": _utc_now(),
         "paper_id": plan["paper_id"],
@@ -321,15 +330,49 @@ def lock_time_to_quality_target(plan_path, materialization_contract_path, contro
     }
 
 
-def analyze_finalist(plan_path, materialization_contract_path, target_lock_path, result_paths):
-    """Apply the frozen six-pair finalist language analysis."""
+def _by_data_order(values_by_pair, plan, t_critical, margin=None):
+    results = {}
+    for stratum in plan["fixed_data_order_strata"]:
+        values = [values_by_pair[pair_id] for pair_id in stratum["pair_ids"]]
+        summary = _paired_summary(values, t_critical)
+        summary.update(
+            {
+                "pair_ids": stratum["pair_ids"],
+                "seeds": stratum["seeds"],
+                "data_token_offset": stratum["data_token_offset"],
+            }
+        )
+        if margin is not None:
+            summary["margin_nats"] = margin
+            summary["all_cells_pass"] = all(value <= margin for value in values)
+            summary["pass"] = (
+                summary["upper_one_sided_95_bound"] <= margin
+                and summary["all_cells_pass"]
+            )
+        results[stratum["id"]] = summary
+    return results
 
-    plan_path, plan, contract_path, contract, materialization_path, results, references = _load_results(
+
+def _seed_means(values_by_pair, plan):
+    return {
+        str(seed): sum(
+            values_by_pair[pair["pair"]] for pair in plan["pairs"] if pair["seed"] == seed
+        )
+        / 2
+        for seed in (42, 43, 44)
+    }
+
+
+def analyze_finalist(plan_path, materialization_contract_path, target_lock_path, result_paths):
+    """Apply the frozen crossed-factor finalist language analysis."""
+
+    plan_path, plan, contract_path, _, materialization_path, results, references = _load_results(
         plan_path, materialization_contract_path, result_paths
     )
     target_lock_path, target_lock = load_json(target_lock_path)
     if (
         target_lock.get("format") != "speck_paper_finalist_time_to_quality_lock"
+        or target_lock.get("format_version") != 2
         or target_lock.get("status") != "locked_from_six_controls_before_candidates"
         or target_lock.get("analysis_plan_sha256") != file_sha256(plan_path)
         or target_lock.get("materialization_contract_sha256") != file_sha256(contract_path)
@@ -349,13 +392,13 @@ def analyze_finalist(plan_path, materialization_contract_path, target_lock_path,
     ):
         raise ValueError("finalist candidate results must be created after target locking")
     by_cell = {(result["pair"]["pair"], result["arm_id"]): result for result in results}
-    t_critical = plan["statistical_contract"]["student_t_critical_df_5"]
+    t_critical = plan["statistical_contract"]["student_t_critical_df_2"]
     target = target_lock["validation_loss_target"]
     compute = plan["analysis_views"]["fixed_analytic_flops"]
-    token_differences = []
-    compute_differences = []
-    time_differences = []
-    time_improvements = []
+    token_by_pair = {}
+    compute_by_pair = {}
+    time_by_pair = {}
+    improvement_by_pair = {}
     censored = []
     paired = []
     for pair in plan["pairs"]:
@@ -393,7 +436,7 @@ def analyze_finalist(plan_path, materialization_contract_path, target_lock_path,
         else:
             improvement = 1 - candidate_time / control_time if control_time else 0.0
             time_result["candidate_relative_improvement"] = improvement
-            time_improvements.append(improvement)
+            improvement_by_pair[pair["pair"]] = improvement
         paired.append(
             {
                 "pair": pair,
@@ -404,9 +447,9 @@ def analyze_finalist(plan_path, materialization_contract_path, target_lock_path,
                 "time_to_quality": time_result,
             }
         )
-        token_differences.append(token_difference)
-        compute_differences.append(compute_difference)
-        time_differences.append(time_difference)
+        token_by_pair[pair["pair"]] = token_difference
+        compute_by_pair[pair["pair"]] = compute_difference
+        time_by_pair[pair["pair"]] = time_difference
     source_names = set.intersection(
         *(set(result["final_validation"]["validation_source_losses"]) for result in results)
     )
@@ -418,31 +461,54 @@ def analyze_finalist(plan_path, materialization_contract_path, target_lock_path,
     source_guardrails = {}
     source_margin = plan["statistical_contract"]["source_guardrail_nats"]
     for source in sorted(source_names):
-        differences = [
-            by_cell[pair["pair"], arms["candidate"]]["final_validation"][
+        values = {
+            pair["pair"]: by_cell[pair["pair"], arms["candidate"]]["final_validation"][
                 "validation_source_losses"
             ][source]
             - by_cell[pair["pair"], arms["control"]]["final_validation"][
                 "validation_source_losses"
             ][source]
             for pair in plan["pairs"]
-        ]
-        summary = _paired_summary(differences, t_critical)
-        summary["margin_nats"] = source_margin
-        summary["pass"] = summary["upper_one_sided_95_bound"] <= source_margin
-        source_guardrails[source] = summary
-    fixed_tokens = _paired_summary(token_differences, t_critical)
-    fixed_tokens["margin_nats"] = plan["statistical_contract"][
-        "language_loss_non_inferiority_margin_nats"
-    ]
-    fixed_tokens["non_inferiority_pass"] = (
-        fixed_tokens["upper_one_sided_95_bound"] <= fixed_tokens["margin_nats"]
-    )
+        }
+        by_order = _by_data_order(values, plan, t_critical, source_margin)
+        source_guardrails[source] = {
+            "margin_nats": source_margin,
+            "values_by_pair": values,
+            "by_data_order": by_order,
+            "all_cells_pass": all(value <= source_margin for value in values.values()),
+            "pass": all(summary["pass"] for summary in by_order.values()),
+        }
+    margin = plan["statistical_contract"]["language_loss_non_inferiority_margin_nats"]
+    fixed_tokens_by_order = _by_data_order(token_by_pair, plan, t_critical, margin)
+    pooled_tokens = _paired_summary(list(token_by_pair.values()), 2.0150483733330233)
+    pooled_tokens["authority"] = "descriptive_only_naive_df_5"
+    fixed_tokens = {
+        "margin_nats": margin,
+        "values_by_pair": token_by_pair,
+        "by_data_order": fixed_tokens_by_order,
+        "all_cells_pass": all(value <= margin for value in token_by_pair.values()),
+        "seed_means_across_orders_descriptive": _seed_means(token_by_pair, plan),
+        "pooled_descriptive": pooled_tokens,
+        "non_inferiority_pass": all(
+            summary["pass"] for summary in fixed_tokens_by_order.values()
+        ),
+    }
     all_sources = all(value["pass"] for value in source_guardrails.values())
+    time_to_quality = {
+        "right_censored_pairs": censored,
+        "by_data_order": (
+            _by_data_order(improvement_by_pair, plan, t_critical) if not censored else None
+        ),
+        "pooled_descriptive": (
+            _paired_summary(list(improvement_by_pair.values()), 2.0150483733330233)
+            if not censored
+            else None
+        ),
+    }
     return {
         "format": "speck_paper_finalist_analysis",
-        "format_version": 1,
-        "status": "complete_finalist_language_evidence_no_standalone_promotion",
+        "format_version": 2,
+        "status": "complete_crossed_factor_finalist_language_evidence_no_standalone_promotion",
         "created_at": _utc_now(),
         "paper_id": plan["paper_id"],
         "policy_id": plan["policy_id"],
@@ -457,14 +523,19 @@ def analyze_finalist(plan_path, materialization_contract_path, target_lock_path,
         "run_results": references,
         "paired_results": paired,
         "fixed_tokens": fixed_tokens,
-        "fixed_analytic_flops": _paired_summary(compute_differences, t_critical),
-        "fixed_steady_training_time": _paired_summary(time_differences, t_critical),
-        "time_to_quality": {
-            "right_censored_pairs": censored,
-            "paired_relative_improvement": (
-                _paired_summary(time_improvements, t_critical) if not censored else None
+        "fixed_analytic_flops": {
+            "by_data_order": _by_data_order(compute_by_pair, plan, t_critical),
+            "pooled_descriptive": _paired_summary(
+                list(compute_by_pair.values()), 2.0150483733330233
             ),
         },
+        "fixed_steady_training_time": {
+            "by_data_order": _by_data_order(time_by_pair, plan, t_critical),
+            "pooled_descriptive": _paired_summary(
+                list(time_by_pair.values()), 2.0150483733330233
+            ),
+        },
+        "time_to_quality": time_to_quality,
         "source_guardrails": source_guardrails,
         "finalist_language_screen_pass": fixed_tokens["non_inferiority_pass"] and all_sources,
         "authority": plan["decision_authority"],

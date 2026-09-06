@@ -13,7 +13,7 @@ from speck.paper_finalist_analysis import (
 )
 
 root = Path(__file__).parents[1]
-plan_path = root / "research" / "paper-1" / "finalist_analysis_v1.json"
+plan_path = root / "research" / "paper-1" / "finalist_analysis_v2.json"
 contract_path = root / "research" / "paper-1" / "finalist_materialization_v1.json"
 materialization_path = (
     root / "experiments" / "Speck-Paper1-Finalist-131M" / "finalist_materialization.json"
@@ -47,7 +47,7 @@ def result(pair, arm, final_loss, created_at):
     }[arm]
     return {
         "format": "speck_paper_finalist_run_result",
-        "format_version": 1,
+        "format_version": 2,
         "status": "complete_qualified",
         "created_at": created_at,
         "paper_id": "speck-paper-1",
@@ -96,9 +96,13 @@ def test_finalist_analysis_passes_clear_noninferiority(tmp_path):
 
     report = analyze_finalist(plan_path, contract_path, target_path, controls + candidates)
 
-    assert report["status"] == "complete_finalist_language_evidence_no_standalone_promotion"
-    assert report["fixed_tokens"]["n"] == 6
-    assert report["fixed_tokens"]["mean"] == pytest.approx(-0.02)
+    assert (
+        report["status"]
+        == "complete_crossed_factor_finalist_language_evidence_no_standalone_promotion"
+    )
+    assert report["fixed_tokens"]["pooled_descriptive"]["n"] == 6
+    assert report["fixed_tokens"]["pooled_descriptive"]["mean"] == pytest.approx(-0.02)
+    assert all(value["n"] == 3 for value in report["fixed_tokens"]["by_data_order"].values())
     assert report["fixed_tokens"]["non_inferiority_pass"]
     assert report["finalist_language_screen_pass"]
     assert not report["time_to_quality"]["right_censored_pairs"]
@@ -112,7 +116,7 @@ def test_finalist_analysis_retains_all_pair_censoring(tmp_path):
     report = analyze_finalist(plan_path, contract_path, target_path, controls + candidates)
 
     assert report["time_to_quality"]["right_censored_pairs"] == list(range(6))
-    assert report["time_to_quality"]["paired_relative_improvement"] is None
+    assert report["time_to_quality"]["pooled_descriptive"] is None
     assert not report["finalist_language_screen_pass"]
 
 
@@ -133,6 +137,27 @@ def test_finalist_analysis_requires_every_cell(tmp_path):
             target_path,
             controls + candidates[:-1] + candidates[:1],
         )
+
+
+def test_finalist_analysis_does_not_average_away_one_order_failure(tmp_path):
+    controls, candidates = write_results(tmp_path, candidate_delta=-0.02)
+    for path in candidates:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if value["pair"]["data_token_offset"] == 1_610_612_736:
+            value["final_validation"]["validation_loss"] += 0.04
+            value["validation_history"][-1] = value["final_validation"]
+            for source in value["final_validation"]["validation_source_losses"]:
+                value["final_validation"]["validation_source_losses"][source] += 0.04
+            atomic_json(path, value)
+    target_path = tmp_path / "target.json"
+    atomic_json(target_path, lock_time_to_quality_target(plan_path, contract_path, controls))
+
+    report = analyze_finalist(plan_path, contract_path, target_path, controls + candidates)
+
+    assert report["fixed_tokens"]["pooled_descriptive"]["mean"] == pytest.approx(0.0)
+    assert report["fixed_tokens"]["by_data_order"]["order_0"]["pass"]
+    assert not report["fixed_tokens"]["by_data_order"]["order_1610612736"]["pass"]
+    assert not report["finalist_language_screen_pass"]
 
 
 def test_finalist_plan_matches_materialized_contract():
