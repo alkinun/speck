@@ -329,6 +329,10 @@ the final combined model.
   maps the gated Llama-2 tokenizer to 25 runtime entries and 15 RULER-generation cells. Exact BOS,
   token, offset, Unicode-cut, suffix, and retokenization behavior makes fixture-only replacement
   insufficient; authorized oracle bytes and real-data parity are required before any successor.
+- [`helmet-model-judge-readiness.json`](../../results/Speck-Architecture-Promotion-v1/helmet-model-judge-readiness.json)
+  corrects the historical seed record to 42, then shows why best-effort seed sampling is insufficient:
+  fingerprints are discarded, parse failures change denominators, schemas are unchecked, the exact
+  snapshot is deprecated, and Batch data retention/deletion/cost authority is absent.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -388,6 +392,10 @@ HELMET substitutes.
 The gated tokenizer is likewise not replaceable by token-count resemblance: it defines row filtering
 and exact Unicode cut positions, so an oracle comparison requires the authorized Llama-2 tokenizer and
 qualified real documents. Until then every dependent entry stays failed rather than approximated.
+The judge audit similarly prevents a superficial fix: seed 42 is present, but official determinism is
+best-effort and HELMET drops fingerprints and failed parses. Full prompt uploads also require explicit
+retention/deletion and dataset-transmission authority. Neither a newer API model nor a local judge can
+inherit the original metric without a versioned, repeated, human-calibrated replacement protocol.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination

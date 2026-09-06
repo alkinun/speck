@@ -134,6 +134,7 @@ Read in order:
 126. [125 — HELMET synthetic-recall reconstruction boundary](125_helmet_synthetic_reconstruction_readiness.md)
 127. [126 — HELMET real-data reconstruction boundary](126_helmet_real_data_reconstruction_readiness.md)
 128. [127 — HELMET truncation-tokenizer replacement gate](127_helmet_truncation_tokenizer_readiness.md)
+129. [128 — HELMET model-judge reproducibility and data boundary](128_helmet_model_judge_readiness.md)
 
 Conventions:
 

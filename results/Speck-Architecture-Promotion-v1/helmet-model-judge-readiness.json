@@ -1,0 +1,180 @@
+{
+  "format": "speck_helmet_model_judge_readiness",
+  "format_version": 1,
+  "status": "exact_judge_audited_reproducibility_denominator_data_handling_and_replacement_blocked",
+  "created_at": "2026-09-06T01:09:00+00:00",
+  "scope": "metadata-only audit of HELMET's NarrativeQA and summarization model-judge path; no API credential was inspected; no API request was sent; no batch or file was created; no evaluation data was read; no judge output was generated; no model score was computed",
+  "inputs": {
+    "helmet_source": {
+      "repository": "https://github.com/princeton-nlp/HELMET",
+      "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+      "model_utils_sha256": "9fd15826773fb7f213ac0629eb0db681419241c6d1773e16f1f51f01483eb848",
+      "requirements_sha256": "053c7cc7604debae4286ff33533b7937477737e230c1cfc677c55aeee771e302",
+      "longqa_judge_sha256": "9297b773cdfda8bc4f7bd52ebdac35bbd5cfefc3b3f716730dc8fdf6b910c3b7",
+      "summarization_judge_sha256": "ad89dd22953326c4036772da97d00904dbaf74129b04e5ea9cc8f6cf75b70bde"
+    },
+    "runtime_audit": {
+      "path": "results/Speck-Architecture-Promotion-v1/helmet-runtime-dependency-audit.json",
+      "sha256": "d1d0f6debcb98aa3ace81b241a549b54266c344b6100d0fab08e4b28c62a4ca2",
+      "correction": "the earlier seed=null field reflects direct judge-constructor inspection only; OpenAIModel's default seed=42 is passed to every Chat Completions batch request"
+    },
+    "runtime_protocol": {
+      "path": "research/architecture-promotion-v1/helmet_runtime_dependencies_v1.json",
+      "sha256": "b277a12757b66d3ebe22e1f4d4e3587f901ffc3eeaded74740bdd5c3f7c46e2b"
+    },
+    "official_openai_documentation": {
+      "accessed_on": "2026-09-06",
+      "model_page": {
+        "url": "https://developers.openai.com/api/docs/models/gpt-4o",
+        "markdown_sha256": "a0bd691d562c3af1dcf8c8e795ea400c05f53a8ca1feccaa632f803a8dbcdd6d",
+        "observation": "gpt-4o-2024-05-13 is listed as a deprecated snapshot"
+      },
+      "chat_completions_reference": {
+        "url": "https://developers.openai.com/api/reference/cli/resources/chat/subresources/completions/methods/create",
+        "markdown_sha256": "ffceeb786dec36b0f316a985e2dfb75cb3fe2fd5fa5dc3fae0ac54b0e0d5f015",
+        "observations": [
+          "seed is a deprecated beta parameter",
+          "same-seed deterministic sampling is best-effort and not guaranteed",
+          "system_fingerprint is the documented signal for backend changes that may affect determinism"
+        ]
+      },
+      "data_controls": {
+        "url": "https://developers.openai.com/api/docs/guides/your-data",
+        "markdown_sha256": "734670c8b018ce27f5762bb38d2047e34a5d61981d6a00c4862012c34791fb34",
+        "observations": [
+          "API data are not used to train OpenAI models unless the customer opts in",
+          "default abuse-monitoring logs may retain prompts and responses for up to 30 days",
+          "batch and file application state is retained until deleted",
+          "the table marks /v1/batches and /v1/files as not Zero Data Retention eligible"
+        ]
+      }
+    }
+  },
+  "request_contract": {
+    "endpoint": "/v1/chat/completions through the Batch API",
+    "model": "gpt-4o-2024-05-13",
+    "model_status_on_audit_date": "deprecated",
+    "organization_availability_verified": false,
+    "temperature": 0.1,
+    "top_p": 0.9,
+    "seed": 42,
+    "seed_source": "OpenAIModel default",
+    "generation_max_length": {
+      "longqa": 2048,
+      "summarization": 4096
+    },
+    "openai_sdk_version_pinned": false,
+    "requests_per_example": {
+      "narrativeqa": 1,
+      "summarization": 3
+    },
+    "system_fingerprint_returned_by_adapter": true,
+    "system_fingerprint_preserved_in_scored_json": false,
+    "system_fingerprint_consistency_gate": false,
+    "repeatability_trials": 1
+  },
+  "judge_surfaces": [
+    {
+      "id": "narrativeqa",
+      "runtime_entries": 5,
+      "prompt_inputs": ["question", "all reference answers", "parsed candidate output"],
+      "rubric": {
+        "fluency": [0, 1],
+        "correctness": [0, 1, 2, 3],
+        "per_example_score": "fluency * correctness"
+      },
+      "parser": "last non-greedy brace-delimited JSON object",
+      "schema_or_range_validation": false,
+      "judge_reasoning_preserved_in_scored_json": false,
+      "system_fingerprint_preserved_in_scored_json": false,
+      "missing_or_unparseable_handling": "excluded from numerator and denominator when output or JSON is absent; partial-key JSON can fail after warning",
+      "fixed_denominator_required": false,
+      "score_scale_in_script": [0, 3],
+      "paper_reported_scale": [0, 100]
+    },
+    {
+      "id": "summarization",
+      "runtime_entries": 10,
+      "datasets": ["InfiniteBench long-book summarization", "Multi-LexSum"],
+      "prompt_inputs": ["candidate output", "reference summary", "precomputed key points"],
+      "subjudges": ["fluency", "key-point recall", "sentence precision"],
+      "per_example_score": "fluency * harmonic_mean(recall_fraction, precision_fraction)",
+      "parser": "last non-greedy brace-delimited JSON object with fenced-JSON fallback",
+      "schema_or_range_validation": false,
+      "judge_outputs_preserved_in_scored_json": true,
+      "system_fingerprint_preserved_in_scored_json": false,
+      "missing_or_unparseable_handling": "entire example excluded when any of three calls is absent or unparseable",
+      "fixed_denominator_required": false,
+      "mean_denominator": "successfully parsed examples only"
+    }
+  ],
+  "batch_data_path": {
+    "full_dataset_text_transmitted": true,
+    "candidate_outputs_transmitted": true,
+    "reference_answers_or_summaries_transmitted": true,
+    "batch_input_file_uploaded": true,
+    "batch_output_file_created": true,
+    "remote_file_or_batch_deleted_by_helmet": false,
+    "local_raw_batch_response_retained": true,
+    "data_rights_qualified_for_transmission": false,
+    "organization_retention_controls_verified": false,
+    "data_residency_verified": false,
+    "cost_budget_frozen": false
+  },
+  "reproducibility_failures": [
+    "the exact judge snapshot is deprecated and organization availability was not queried",
+    "OpenAI documents seed as best-effort rather than guaranteed determinism",
+    "HELMET does not preserve or gate on system_fingerprint in scored artifacts",
+    "only one judge trial is made per requested subscore",
+    "the OpenAI SDK version is unpinned",
+    "parse failures change the effective denominator rather than hard-failing a frozen sample set",
+    "score keys, integer types, rubric ranges, and recall/precision denominators are not validated",
+    "raw long-QA judge reasoning and output are absent from the scored JSON",
+    "summarization key-point artifacts and real-data identities remain unqualified",
+    "no cost, retry, rate-limit, regional-processing, or remote-deletion contract is frozen"
+  ],
+  "replacement_gate": {
+    "replacement_selected": false,
+    "local_deterministic_metric_available_for_infinitebench_qa_and_choice": true,
+    "local_deterministic_metric_replaces_narrativeqa_or_summarization": false,
+    "minimum_future_protocol": [
+      "qualify the exact real-data payloads and authority to transmit every prompt field",
+      "freeze model availability, endpoint, SDK, all request parameters, region, retention controls, deletion workflow, and cost ceiling",
+      "preserve raw request/response identities, request IDs, seed, system_fingerprint, usage, and parse status for every call",
+      "hard-fail mixed fingerprints, missing outputs, invalid JSON, wrong keys/types/ranges, or denominator drift",
+      "run preregistered repeated judgments to estimate item-level and aggregate stability",
+      "construct a blinded human-labeled calibration set with released item identities and adjudication rules",
+      "qualify any local replacement against that human set and the exact historical rubric without using a newer judge as if it were the same benchmark",
+      "version and rename the evaluation if the model, rubric, prompt, parser, or missingness policy changes"
+    ],
+    "newer_model_substitution_authorized": false,
+    "local_model_substitution_authorized": false,
+    "successful_only_denominator_authorized": false
+  },
+  "decision": {
+    "historical_judge_source_identity_qualified": true,
+    "earlier_seed_record_corrected": true,
+    "exact_model_currently_deprecated": true,
+    "current_organization_availability_qualified": false,
+    "reproducibility_qualified": false,
+    "fixed_sample_denominator_qualified": false,
+    "data_transmission_authorized": false,
+    "data_retention_and_deletion_qualified": false,
+    "cost_qualified": false,
+    "replacement_qualified": false,
+    "api_execution_authorized": false,
+    "candidate_scoring_authorized": false,
+    "evaluation_manifest_changed": false,
+    "required_next": "after data rights and payload qualification, freeze a versioned judge protocol that preserves every raw response/fingerprint, forbids denominator drift, validates score schemas, establishes retention/deletion/cost authority, and passes repeated human-calibrated stability; otherwise retain NarrativeQA and summarization as failed gates"
+  },
+  "non_claims": [
+    "seed 42 makes Chat Completions deterministic",
+    "a dated snapshot freezes backend configuration",
+    "deprecated means unavailable to every organization",
+    "API inputs are used to train OpenAI models by default",
+    "successful-only averaging estimates the frozen full sample without a missingness analysis",
+    "a newer OpenAI or local judge preserves the HELMET metric",
+    "this audit authorizes data transmission, API spending, or model scoring",
+    "this audit changes the frozen evaluation manifest or finalist experiment"
+  ]
+}
