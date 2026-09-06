@@ -474,6 +474,9 @@
         "research/paper-1/raw_local_readiness_v1.json",
         "findings/163_deepseek_v4_sequence_source_gate.md",
         "results/Speck-Paper1/deepseek-v4-sequence-primary-source-audit-v1.json",
+        "findings/164_sequence_compression_factorization_corrected.md",
+        "research/paper-1/sequence_compression_factorization_v2.json",
+        "results/Speck-Paper1/sequence-compression-factorization-v2-qualified.json",
         "research/paper-1/ratio_placement_readiness_v1.json",
         "research/paper-1/ratio_placement_readiness_v2.json",
         "results/Speck-Paper1/ratio-placement-v2-qualified.json"
@@ -487,7 +490,7 @@
         "kernel locality",
         "missing genuine 64K-128K dependency data"
       ],
-      "next_gate": "select the parent/cache, then isolate HCA before rate and CSA with oracle block mass; run only the deconfounded raw ratio family after all sequence operators qualify, with placement on independent cells after count selection"
+      "next_gate": "preserve joint factorization v2; after finalist acceptance select the parent/cache, then follow its eight-stage HCA compressor/rate, local, CSA compressed-entry oracle/indexer, schedule, and independent ratio/placement order"
     },
     {
       "id": "sequence_depth_width_interaction_cube",

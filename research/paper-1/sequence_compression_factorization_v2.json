@@ -1,0 +1,254 @@
+{
+  "format": "speck_sequence_compression_factorization_gate",
+  "format_version": 2,
+  "gate_id": "speck-paper-1-sequence-compression-factorization-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "source_corrected_joint_factorization_frozen_parents_implementation_training_blocked",
+  "frozen_at": "2026-09-06T04:26:20+00:00",
+  "purpose": "replace incompatible HCA/CSA/raw-local v1 factorization with one source-faithful layer grammar, entry identity, compressor isolation, and causal experiment order while preserving all valid parent, quality, state, and systems gates",
+  "predecessors": {
+    "HCA_v1": {
+      "path": "research/paper-1/hca_readiness_v1.json",
+      "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
+      "preserved_append_only": true,
+      "factorization_authority": false
+    },
+    "CSA_v1": {
+      "path": "research/paper-1/csa_readiness_v1.json",
+      "sha256": "2174170a3503d2e9d1e94797ab5fd49d89e4b571d58c0a369b7dee20baa3ba1b",
+      "preserved_append_only": true,
+      "factorization_authority": false
+    },
+    "raw_local_v1": {
+      "path": "research/paper-1/raw_local_readiness_v1.json",
+      "sha256": "b75bb4114421a90599a78fbc8a4e188cc31dd38b9377f56d27caee64d5670dc0",
+      "preserved_append_only": true,
+      "factorization_authority": false
+    }
+  },
+  "primary_source_audit": {
+    "path": "results/Speck-Paper1/deepseek-v4-sequence-primary-source-audit-v1.json",
+    "sha256": "37a2f5ba7f601c8bc299ba29c6abaa11ec1321c276ab2638aeba79a71b20c3d2",
+    "primary_equations_qualified": true,
+    "official_inference_semantics_qualified": true,
+    "official_training_implementation_qualified": false
+  },
+  "preserved_v1_requirements": {
+    "HCA": [
+      "parent and exact-cache representation selection",
+      "compressor isolation before compression-rate selection",
+      "causal completed-entry emission and explicit unfinished tail",
+      "prefill/decode/prefix/eviction/resume parity",
+      "language, retrieval, composition, compression-sufficiency, state, compute, and realized systems gates"
+    ],
+    "CSA": [
+      "parent HCA operator selection before CSA",
+      "oracle-first selector feasibility before mean-key and learned indexers",
+      "all-required-source and dense-mass metrics",
+      "separate selector/language gradient paths and execution modes",
+      "explicit index, compressed-entry, tail, HCA, local, and recurrent state accounting"
+    ],
+    "raw_local": [
+      "shared query representation within a compressed-attention layer",
+      "one union attention normalization",
+      "exact causal raw ring and prefix/eviction/resume identities",
+      "local-specific quality endpoints and explicit added-state cost",
+      "window selected only after parent mechanisms qualify"
+    ]
+  },
+  "corrected_layer_grammar": {
+    "available_types": [
+      "exact_global",
+      "HCA_core",
+      "HCA_local",
+      "CSA_core",
+      "CSA_local"
+    ],
+    "one_compressed_type_per_layer": true,
+    "HCA_and_CSA_parallel_in_one_layer": false,
+    "HCA_core": "dense attention to every causally complete non-overlapping HCA entry without raw local entries; mechanism-isolation diagnostic only",
+    "HCA_local": "source-faithful HCA: raw local window concatenated with every causally complete HCA entry",
+    "CSA_core": "attention to indexer-selected causally complete overlapping CSA entries without raw local entries; mechanism-isolation diagnostic only",
+    "CSA_local": "source-faithful CSA: raw local window concatenated with indexer-selected causally complete CSA entries",
+    "schedule_unit": "assignment of exactly one available type to each independently selected exact-global integration slot",
+    "schedule_rule": "HCA and CSA complement one another through different slots in depth; no same-layer coarse HCA branch is retained during a CSA-layer intervention",
+    "published_V4_schedule_selected_for_Speck": false
+  },
+  "entry_identity": {
+    "identity_tuple": [
+      "representation_family",
+      "emitted_entry_index",
+      "ordered_source_span_set",
+      "projection_and_precision_identity"
+    ],
+    "HCA": {
+      "family": "HCA_compressed",
+      "source_span_for_entry_i": "[i*m', (i+1)*m'-1]",
+      "stride": "m'",
+      "overlap": false,
+      "visibility": "at and after query position (i+1)*m'-1"
+    },
+    "CSA": {
+      "family": "CSA_compressed",
+      "source_span_for_first_entry": "current a-half [0,m-1]; previous b-half is padded",
+      "source_span_after_first": "previous b-half [(i-1)*m,i*m-1] plus current a-half [i*m,(i+1)*m-1]",
+      "stride": "m",
+      "support_after_first": "2m",
+      "overlap": true,
+      "visibility": "at and after query position (i+1)*m-1"
+    },
+    "raw_local": {
+      "family": "raw_exact_KV",
+      "source_span": "one exact token position",
+      "visibility": "self and earlier positions under the causal local window"
+    },
+    "deduplication": {
+      "exact_duplicate_identity_only": true,
+      "raw_and_compressed_same_underlying_span_are_duplicates": false,
+      "HCA_and_CSA_overlapping_spans_are_duplicates": false,
+      "reason": "distinct learned projections/pooling and representation families carry different information even when source-token support overlaps"
+    }
+  },
+  "one_softmax_union": {
+    "HCA_local_entries": "raw exact window entries plus every causally complete HCA compressed entry plus one sink logit",
+    "CSA_local_entries": "raw exact window entries plus selected causally complete CSA compressed entries plus one sink logit",
+    "HCA_core_entries": "every causally complete HCA compressed entry plus one sink logit",
+    "CSA_core_entries": "selected causally complete CSA compressed entries plus one sink logit",
+    "normalization": "one source-axis softmax denominator per query head; the sink contributes only to the denominator",
+    "separately_normalized_branch_sum_forbidden": true,
+    "raw_span_deduplication_forbidden": true
+  },
+  "HCA_compressor_isolation_v2": {
+    "fixed_across_arms": [
+      "hidden-to-KV projection and output dimension",
+      "post-pool RMSNorm",
+      "query and grouped output projections",
+      "compression rate and exact block identities",
+      "layer slots, local-branch state, precision, data, optimization, and evaluation"
+    ],
+    "arms": [
+      {
+        "id": "block_mean",
+        "weights": "uniform over positions and channels",
+        "role": "parameterless weighting control"
+      },
+      {
+        "id": "static_scalar_position_softmax",
+        "weights": "one learned position logit shared across channels",
+        "role": "static position control"
+      },
+      {
+        "id": "static_channel_position_softmax",
+        "weights": "one learned position logit per output channel",
+        "role": "static channel-position control"
+      },
+      {
+        "id": "dynamic_channel_position_softmax",
+        "weights": "hidden-to-channel score projection plus learned position-by-channel bias, softmax over positions",
+        "role": "exact source compressor weighting"
+      }
+    ],
+    "parameter_accounting": "score projection and static position parameters are reported separately; downstream compensation cannot hide compressor cost",
+    "selection": "choose the simplest arm passing compression-sufficiency and language/capability floors on held-out cells before any rate grid"
+  },
+  "CSA_compressor_and_selector_v2": {
+    "compressor_control": "selected HCA dynamic compressor adapted to non-overlapping m-token entries at the CSA rate",
+    "overlap_intervention": "replace one projection/score half with separate current-a and previous-b halves and one 2m per-channel softmax",
+    "first_entry_padding": "previous-b values zero and logits negative infinity",
+    "oracle_unit": "causally complete CSA compressed entry with its full ordered source-span set",
+    "oracle_target": "dense teacher probability mass aggregated onto compressed entry identities, not raw block indices",
+    "selection_sequence": [
+      "oracle compressed-entry mass",
+      "mean compressed index key",
+      "learned Lightning-style compressed-entry indexer"
+    ],
+    "unfinished_current_entry": "excluded from compressed selection; any current-block access is supplied by the separately frozen raw local window",
+    "head_sharing": "one selected compressed-entry set shared across main MQA query heads",
+    "token_level_escape_hatch": "requires a successor showing compressed-entry oracle failure and a realizable token-level oracle win"
+  },
+  "raw_local_v2": {
+    "placement": "one local raw ring in every selected HCA_local or CSA_local slot; placement ablation is separate",
+    "query": "shared main attention query for the layer",
+    "keys_values": "exact raw projected/normalized KV identities for min(history,W) most recent causal tokens",
+    "union": "concatenate raw identities with the layer's HCA or selected CSA compressed identities before one softmax",
+    "deduplication": "remove only repeated exact raw cache indices or repeated exact compressed cache indices; never remove across representation families",
+    "current_query": "may attend to itself and earlier raw tokens; no unfinished compressed entry",
+    "state": "raw ring chronology/write position plus HCA or CSA compressor tails and completed entries are distinct",
+    "window_grid": [
+      0,
+      64,
+      128,
+      256,
+      512
+    ],
+    "published_128_selected_for_Speck": false
+  },
+  "causal_execution_contract": {
+    "source_reference_modes": [
+      "one full prefill at start position zero",
+      "one-token incremental decode"
+    ],
+    "source_reference_does_not_cover": [
+      "arbitrary nonzero-start chunked prefill",
+      "multiple request identities in reused nonpersistent buffers",
+      "prefix hit and partial-tail reconstruction",
+      "eviction, serialization, checkpoint, and resume",
+      "training and backward"
+    ],
+    "local_successor_must_cover": [
+      "full versus every partition of chunked prefill",
+      "chunked prefill followed by one-token decode",
+      "prefix hits ending at every offset modulo m, m', and W",
+      "independent request interleaving and cache-slot reuse",
+      "eviction/serialization/resume of raw ring, HCA tail, CSA prior/current halves, and completed entries",
+      "forward and input/compressor/indexer/query/output gradients"
+    ]
+  },
+  "ordered_experiment_sequence": [
+    "select recurrent backbone, exact cache representation, global-slot count/placement, and positional treatment",
+    "isolate four HCA compressor arms at one fixed rate in HCA_core slots",
+    "select HCA_core rate on a held-out rate grid",
+    "isolate raw-local window by comparing selected HCA_core with HCA_local at the same slots",
+    "qualify non-overlap versus source-overlap CSA compression at fixed rate and selected local window",
+    "run oracle compressed-entry selection before mean-key and learned indexer",
+    "freeze one CSA_local operator, then compare all-HCA_local, all-CSA_local, and preregistered interleaved slot schedules",
+    "only after operator and schedule selection, run independent ratio/placement and long-horizon confirmation"
+  ],
+  "registration_and_stop_boundary": {
+    "active_experiment_program_changed": false,
+    "HCA_CSA_raw_local_v1_files_changed": false,
+    "active_architecture_or_model_code_changed": false,
+    "exact_run_configs_materialized": false,
+    "reference_implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "stop_before": "active finalist acceptance and independent parent selection",
+    "next_action": "preserve this corrected factorization; do not implement or expand sequence compression until the active finalist and parent gates close"
+  },
+  "active_program_boundary": {
+    "program": "research/paper-1/experiment_program.json",
+    "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+    "continues_to_pin": {
+      "HCA": "research/paper-1/hca_readiness_v1.json",
+      "CSA": "research/paper-1/csa_readiness_v1.json",
+      "raw_local": "research/paper-1/raw_local_readiness_v1.json"
+    },
+    "changed": false
+  },
+  "decision": {
+    "joint_v1_factorization_valid": false,
+    "v2_factorization_corrected": true,
+    "HCA_compressor_selected": false,
+    "HCA_rate_selected": false,
+    "local_window_selected": false,
+    "CSA_compressor_selected": false,
+    "CSA_selector_selected": false,
+    "HCA_CSA_schedule_selected": false,
+    "parent_selected": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "wait for active finalist acceptance and independent parent selection; then freeze source identities and CPU correctness protocols in the eight-stage order"
+  }
+}

@@ -91,6 +91,12 @@ the final combined model.
   corrections: interleaved layer types, exact dynamic HCA compression, overlapping compressed CSA
   identities, no raw-span deduplication, and full-prefill/one-token-decode-only code scope. No local
   implementation or training is authorized.
+- [`sequence_compression_factorization_v2.json`](sequence_compression_factorization_v2.json) and
+  [`sequence-compression-factorization-v2-qualified.json`](../../results/Speck-Paper1/sequence-compression-factorization-v2-qualified.json)
+  jointly supersede only the incompatible HCA/CSA/raw-local v1 factorization. They freeze five layer
+  types, representation-family-aware entry identity, four HCA compressor controls, no raw-span dedup,
+  and an eight-stage causal order. Parents, implementation, registration, training, and promotion stay
+  blocked.
 - [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
   ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
   selection before a fixed-count integration/readout placement successor.

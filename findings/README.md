@@ -170,6 +170,7 @@ Read in order:
 162. [161 — Width pre-results research converges and stops before implementation](161_width_pre_results_convergence.md)
 163. [162 — AttnRes blocks must align to logical Transformer boundaries](162_attnres_source_correction.md)
 164. [163 — V4 source semantics require three sequence-readiness corrections](163_deepseek_v4_sequence_source_gate.md)
+165. [164 — HCA, CSA, and local attention now have one coherent factorization](164_sequence_compression_factorization_corrected.md)
 
 Conventions:
 

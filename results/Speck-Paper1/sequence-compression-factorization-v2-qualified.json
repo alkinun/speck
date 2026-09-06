@@ -1,0 +1,95 @@
+{
+  "format": "speck_sequence_compression_factorization_qualification",
+  "format_version": 2,
+  "status": "qualified_joint_HCA_CSA_local_factorization_parents_implementation_training_blocked",
+  "created_at": "2026-09-06T04:28:23+00:00",
+  "scope": "offline source-identity and experiment-order correction only; no active result, checkpoint, service, GPU, model code, implementation, training, or runtime accessed or changed",
+  "inputs": {
+    "HCA_v1": {
+      "path": "research/paper-1/hca_readiness_v1.json",
+      "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
+      "factorization_authority": false
+    },
+    "CSA_v1": {
+      "path": "research/paper-1/csa_readiness_v1.json",
+      "sha256": "2174170a3503d2e9d1e94797ab5fd49d89e4b571d58c0a369b7dee20baa3ba1b",
+      "factorization_authority": false
+    },
+    "raw_local_v1": {
+      "path": "research/paper-1/raw_local_readiness_v1.json",
+      "sha256": "b75bb4114421a90599a78fbc8a4e188cc31dd38b9377f56d27caee64d5670dc0",
+      "factorization_authority": false
+    },
+    "primary_source_audit": {
+      "path": "results/Speck-Paper1/deepseek-v4-sequence-primary-source-audit-v1.json",
+      "sha256": "37a2f5ba7f601c8bc299ba29c6abaa11ec1321c276ab2638aeba79a71b20c3d2"
+    },
+    "design": {
+      "path": "research/paper-1/sequence_compression_factorization_v2.json",
+      "sha256": "8c99b29c23886eea40d6ee061b6d24cb8c118531670997d94820aaea384fc03a"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false,
+      "still_pins_three_v1_gates": true
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_sequence_compression_factorization_v2_validate.py",
+      "sha256": "fd75f1101392831ca8adb68db517bd2ba9b1a094236cc4d2b52f949fe358abe0"
+    },
+    "tests": {
+      "path": "tests/test_paper_sequence_compression_factorization_v2.py",
+      "sha256": "858239812a1bdc7230d2d78f7b017d88d03c68f503ee924653a73247de48c1db"
+    }
+  },
+  "correction": {
+    "layer_types": [
+      "exact_global",
+      "HCA_core",
+      "HCA_local",
+      "CSA_core",
+      "CSA_local"
+    ],
+    "same_layer_HCA_plus_CSA": false,
+    "cross_depth_schedule_required": true,
+    "HCA_compressor_arms": 4,
+    "exact_dynamic_HCA_source_arm_present": true,
+    "CSA_selected_unit": "overlapping compressed entry",
+    "CSA_support_after_first": "2m",
+    "raw_compressed_cross_family_deduplication": false,
+    "one_union_softmax": true,
+    "ordered_experiment_stages": 8
+  },
+  "source_code_boundary": {
+    "full_prefill_reference": true,
+    "one_token_decode_reference": true,
+    "arbitrary_chunked_prefill_reference": false,
+    "prefix_eviction_resume_identity_reference": false,
+    "training_or_backward_reference": false
+  },
+  "decision": {
+    "joint_v1_factorization_valid": false,
+    "v2_factorization_qualified": true,
+    "parent_selected": false,
+    "HCA_or_CSA_operator_selected": false,
+    "local_window_selected": false,
+    "schedule_selected": false,
+    "reference_implementation_authorized": false,
+    "model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "preserve corrected v2 and wait for active finalist acceptance plus independent parent selection before source-identity materialization or CPU reference work"
+  },
+  "verification": {
+    "source_network_result": "nine immutable official files re-fetched and SHA-256 checked",
+    "source_tests": "6 passed",
+    "factorization_tests": "6 passed",
+    "validator_result": "valid_joint_factorization_corrected_training_blocked",
+    "live_output_accessed": false,
+    "checkpoint_accessed": false,
+    "service_polled": false
+  }
+}
