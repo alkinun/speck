@@ -361,6 +361,9 @@ the final combined model.
 - [`finalist-systems-workload-plan-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-workload-plan-qualified-v1.json)
   derives all twelve trials without checkpoint access and detects persistent protected-tree mutation.
   Kernel read-only isolation, the benchmark engine, live checkpoint loading, and execution stay blocked.
+- [`finalist-systems-sandbox-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-sandbox-qualified-v1.json)
+  qualifies systemd `ReadOnlyPaths` on one disposable sentinel: the write returns `EROFS`, bytes remain
+  identical, and the waited/collected unit disappears. Actual checkpoint/GPU preflight remains blocked.
 - [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
@@ -472,6 +475,9 @@ deadlines; live compatibility and backing-device identity still require a post-s
 The exact workload plan is now derived from frozen identities without opening checkpoints. Temporary
 fixtures qualify output-overlap rejection and before/after mutation detection, while explicitly leaving
 kernel-enforced read-only isolation and the real benchmark engine unresolved.
+The kernel mechanism itself now passes one disposable systemd namespace test without polling or touching
+an experiment. This does not qualify the actual finalist paths or GPU access; a post-language no-output
+preflight and the benchmark engine remain mandatory.
 Training non-finiteness already stops before a final event, but complete source identity needs a
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,

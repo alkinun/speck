@@ -1,0 +1,105 @@
+{
+  "format": "speck_paper_finalist_systems_sandbox_qualification",
+  "format_version": 1,
+  "status": "qualified_disposable_kernel_read_only_fixture_checkpoint_engine_execution_blocked",
+  "created_at": "2026-09-06T02:21:58+00:00",
+  "scope": "one waited and collected transient user-service against a temporary sentinel plus mocked unit tests; no finalist experiment/checkpoint, active training service, GPU, model, result, log, intermediate metric, or scientific runtime input accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "workload_plan_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-workload-plan-qualified-v1.json",
+      "sha256": "dc20210c97f1b991914c4cad5bda75e2058e0c55e6f6687022657701b055d3a9"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_sandbox.py",
+      "sha256": "c7b3a107cb61ea32398f9de4749ddefdbd893b26e21e51a8f0e2c11b5588c210"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_sandbox_qualify.py",
+      "sha256": "3145ad0144fb29784e85cb075240669cdcf94b2a740f52e119ad98af19cb1539"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_sandbox.py",
+      "sha256": "8abfb7001770d68a7a3ee7e1c7fe351721fa70754b48b8a8b2250f8816f4699a"
+    }
+  },
+  "sandbox_contract": {
+    "manager": "systemd user manager",
+    "wait": true,
+    "collect": true,
+    "pipe": true,
+    "service_type": "exec",
+    "restart": "no",
+    "protected_property": "ReadOnlyPaths",
+    "writable_property": "ReadWritePaths",
+    "receipt_must_be_in_exact_writable_directory": true,
+    "protected_and_writable_path_overlap_rejected": true,
+    "unique_unit_prefix": "speck-paper1-systems-sandbox-",
+    "polling": false
+  },
+  "mock_qualification": {
+    "exact_command_properties_pass": true,
+    "path_overlap_rejected": true,
+    "blocked_write_receipt_passes": true,
+    "successful_protected_write_receipt_rejected": true,
+    "service_failure_rejected": true,
+    "tests": 5
+  },
+  "disposable_live_fixture": {
+    "systemd": "systemd 261 (261.1-1-arch)",
+    "kernel": "7.1.3-arch1-3",
+    "unit": "speck-paper1-systems-sandbox-765788-40dcf956df72",
+    "target": "temporary directory created by tempfile.TemporaryDirectory",
+    "protected_write_attempt": "create forbidden-write.txt beside a sentinel",
+    "write_blocked": true,
+    "errno": 30,
+    "errno_name": "EROFS",
+    "sentinel_sha256_before": "c5b0d80be45495327d3d53c67535e93d71c127f2b61f6df65e2e2f6e3c48c8d1",
+    "sentinel_sha256_after": "c5b0d80be45495327d3d53c67535e93d71c127f2b61f6df65e2e2f6e3c48c8d1",
+    "forbidden_path_absent": true,
+    "service_returncode": 0,
+    "elapsed_seconds": 0.532048924,
+    "post_collect_load_state": "not-found",
+    "temporary_directory_removed": true,
+    "finalist_checkpoint_accessed": false,
+    "active_service_polled": false
+  },
+  "decision": {
+    "systemd_ReadOnlyPaths_mechanism_qualified_on_disposable_path": true,
+    "transient_unit_collection_qualified": true,
+    "actual_finalist_experiment_or_checkpoint_path_tested": false,
+    "benchmark_engine_qualified": false,
+    "live_checkpoint_load_qualified": false,
+    "systems_execution_authorized": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "implement and CPU-qualify the non-persisting benchmark engine; after the language sequence, require one no-output actual-path sandbox/checkpoint-load preflight before any measured block"
+  },
+  "verification": {
+    "mock_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_sandbox.py -q",
+    "mock_expected": "5 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_sandbox_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "57 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "193 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "fixture_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_finalist_systems_sandbox_qualify",
+    "fixture_result": "qualified with EROFS, identical sentinel SHA-256, forbidden path absent, wait/collect true, polling false",
+    "collection_check": "one-shot systemctl show returned LoadState=not-found",
+    "finalist_output_accessed": false
+  },
+  "non_claims": [
+    "the actual finalist checkpoint or experiment path has been sandboxed",
+    "the benchmark engine or live checkpoint load is qualified",
+    "the temporary fixture proves GPU access inside the sandbox",
+    "the systems protocol may execute now",
+    "a finalist training service was queried",
+    "this qualification changes the active language experiment"
+  ]
+}
