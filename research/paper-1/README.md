@@ -345,6 +345,10 @@ the final combined model.
   separates preserved synchronized timing/peak allocation from absent energy and hardware telemetry.
   Control-first target integrity aliases architecture with multi-day calendar block, so finalist timing
   remains descriptive until a thermally interleaved, telemetry-rich systems protocol is run.
+- [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
+  proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
+  reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
+  expected source and finite source loss before any collected result is interpreted.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -419,6 +423,10 @@ The systems audit further limits interpretation: same-GPU/start-temperature laun
 the control-versus-candidate calendar-block confound over five days. Analytic FLOPs and physical timing
 may be reported separately, but energy, dollars, causal speedup, serving, and systems promotion require
 new thermally interleaved measurements after the language sequence.
+Training non-finiteness already stops before a final event, but complete source identity needs a
+redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
+would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,
+never imputation or silent deletion.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination

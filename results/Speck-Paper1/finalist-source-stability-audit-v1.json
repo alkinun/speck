@@ -1,0 +1,156 @@
+{
+  "format": "speck_paper_finalist_source_stability_audit",
+  "format_version": 1,
+  "status": "training_finiteness_enforced_validation_schedule_complete_source_set_sidecar_required",
+  "created_at": "2026-09-06T01:32:58+00:00",
+  "scope": "blind static and synthetic-fixture audit of training finiteness plus finalist validation-source completeness; no live checkpoint, result, log, service, GPU, or intermediate metric accessed",
+  "frozen_inputs": {
+    "training_step": {
+      "path": "speck/train.py",
+      "sha256": "83bc7bfd41f3390d659285472679a9224dcb8c8c5824972ef962eda05efce9a2"
+    },
+    "trainer": {
+      "path": "scripts/base_train.py",
+      "sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2"
+    },
+    "analysis_module": {
+      "path": "speck/paper_finalist_analysis.py",
+      "sha256": "466340781e58f1f330eee5f70683b53f24acb9d4eeaeda5cdb2eb13ebcd85504"
+    },
+    "analysis_plan": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "proxy_analysis": {
+      "path": "results/Speck-Paper1/baseline-analysis.json",
+      "sha256": "6455b9d4949fcad397fd333afb425b518b13691e6eac2f533b3ddbf5865268b3"
+    },
+    "data_manifest": {
+      "path": "/home/alkin/.cache/speck/data/Speck1.5-140M/manifest.json",
+      "file_sha256": "2ab7773c3468fb59f49abee56727e9c9f8dfe20b210d7a0ae1a82169ed6596fb",
+      "semantic_fingerprint": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e"
+    }
+  },
+  "training_finiteness": {
+    "accumulated_loss_checked_every_optimizer_step": true,
+    "gradient_norm_checked_every_optimizer_step": true,
+    "checks_occur_before_optimizer_step": true,
+    "distributed_loss_check_reduced_across_ranks": true,
+    "finalist_world_size": 1,
+    "cuda_check_mechanism": "torch._assert_async",
+    "failure_raises_before_a_complete_final_summary": true,
+    "non_finite_steps_field": {
+      "value": 0,
+      "direct_counter_preserved": false,
+      "authority": "logical completion invariant from per-step fail-fast checks, not an observed event count",
+      "required_reporting": "the completed run permitted zero non-finite training steps"
+    }
+  },
+  "validation_schedule": {
+    "source_order": [
+      "finemath_4plus",
+      "math_textbook_exercise",
+      "math_multi_style",
+      "cosmopedia_v2",
+      "ufw_l3_multi_style",
+      "pes2o",
+      "wikimedia",
+      "dclm_edu",
+      "fineweb_edu",
+      "ultra_fineweb",
+      "dclm"
+    ],
+    "sources": 11,
+    "selection": "deterministic round-robin from source index zero for each validation loader",
+    "tokens_per_batch": 16384,
+    "intermediate": {
+      "evaluated_tokens": 4997120,
+      "batches": 305,
+      "counts": {
+        "finemath_4plus": 28,
+        "math_textbook_exercise": 28,
+        "math_multi_style": 28,
+        "cosmopedia_v2": 28,
+        "ufw_l3_multi_style": 28,
+        "pes2o": 28,
+        "wikimedia": 28,
+        "dclm_edu": 28,
+        "fineweb_edu": 27,
+        "ultra_fineweb": 27,
+        "dclm": 27
+      },
+      "minimum_batches_per_source": 27
+    },
+    "final": {
+      "evaluated_tokens": 19988480,
+      "batches": 1220,
+      "counts": {
+        "finemath_4plus": 111,
+        "math_textbook_exercise": 111,
+        "math_multi_style": 111,
+        "cosmopedia_v2": 111,
+        "ufw_l3_multi_style": 111,
+        "pes2o": 111,
+        "wikimedia": 111,
+        "dclm_edu": 111,
+        "fineweb_edu": 111,
+        "ultra_fineweb": 111,
+        "dclm": 110
+      },
+      "minimum_batches_per_source": 110
+    },
+    "every_expected_source_has_positive_denominator": true
+  },
+  "collector_and_analyzer": {
+    "aggregate_validation_loss_finiteness_checked": true,
+    "optimizer_and_steady_time_finiteness_checked": true,
+    "source_loss_finiteness_checked": false,
+    "expected_source_id_set_checked": false,
+    "identical_nonempty_reported_source_sets_required": true,
+    "all_results_omitting_same_source_can_pass_existing_set_check": true,
+    "non_finite_source_values_can_reach_json_serialization": true,
+    "non_finite_source_values_would_normally_fail_numeric_guard_comparisons": true,
+    "consistent_source_omission_is_fail_closed": false,
+    "synthetic_omission_counterexample_reproduced": true
+  },
+  "sidecar": {
+    "path": "scripts/paper_finalist_source_coverage_validate.py",
+    "sha256": "9652427830fcf32d1426d7b87325c138f58e7f86ac2ccf06f0d0c574b523ec1e",
+    "required_checks": [
+      "qualified v2 run identity and zero-permitted-nonfinite invariant",
+      "exact five-point validation cadence and token budgets",
+      "exact 11-source set at every validation point",
+      "finite numeric loss for every source at every point",
+      "final validation equality with the last history entry"
+    ],
+    "wired_into_frozen_automation": false,
+    "required_before_result_interpretation": true,
+    "failure_disposition": "reject the collected result and final language screen; do not impute, drop, skip, or replace a source"
+  },
+  "decision": {
+    "training_finiteness_invariant_qualified": true,
+    "validation_schedule_covers_all_sources": true,
+    "existing_analyzer_expected_source_completeness_qualified": false,
+    "sidecar_source_completeness_rule_qualified": true,
+    "current_language_sequence_remains_authorized": true,
+    "collected_result_interpretation_requires_sidecar": true,
+    "source_imputation_or_deletion_authorized": false,
+    "non_finite_source_result_authorized": false,
+    "analyzer_or_runner_modified": false,
+    "mid_sequence_automation_change_authorized": false,
+    "next_action": "run the append-only source-coverage sidecar on every collected finalist result before interpretation; reject any missing or non-finite source, while leaving the active hash-frozen runner and analyzer unchanged"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_source_coverage.py -q",
+    "expected": "7 passed",
+    "synthetic_fixtures_only": true,
+    "live_output_accessed": false
+  },
+  "non_claims": [
+    "non_finite_steps is a directly incremented runtime counter",
+    "identical source dictionaries prove the expected source set is complete",
+    "aggregate validation finiteness proves every source loss is finite",
+    "a missing source may be omitted from every arm and still support all-source non-inferiority",
+    "the sidecar changes the active runner, analyzer, or scientific thresholds"
+  ]
+}

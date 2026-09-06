@@ -138,6 +138,7 @@ Read in order:
 130. [129 — Full finalist automation transition simulation](129_finalist_automation_transition_audit.md)
 131. [130 — Crossed-factor audit of every finalist analysis view](130_finalist_crossed_views_audit.md)
 132. [131 — Finalist systems-measurement and temporal-confounding boundary](131_finalist_systems_measurement_boundary.md)
+133. [132 — Finalist finiteness and complete-source boundary](132_finalist_source_stability_boundary.md)
 
 Conventions:
 
