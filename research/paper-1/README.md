@@ -394,5 +394,6 @@ Accordingly, the paper has completed its **matched proxy quality screen**, final
 materialization, and data/storage, crossed-factor collector/analysis v2, and exact-runtime
 qualification. V1 pooled inference is superseded. HELMET acquisition is complete and inactive, but v2
 live qualification was consumed by an operator-interrupted step-1 attempt. No result exists; an
-identical restart contract and new live gate are required. It has not entered architecture-promotion, finalist execution,
+identical restart contract and new live gate were recorded, and attempt 2 is now running under the
+final-summary event chain. The paper has entered finalist control execution, not architecture-promotion,
 paper-scale-training, or manuscript-claim status.
