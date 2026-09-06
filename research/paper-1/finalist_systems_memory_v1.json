@@ -1,0 +1,65 @@
+{
+  "format": "speck_paper_finalist_systems_memory_supplement",
+  "format_version": 1,
+  "supplement_id": "speck-paper-1-finalist-systems-memory-v1",
+  "status": "frozen_pre_result_additive_secondary_measurement_execution_blocked",
+  "frozen_at": "2026-09-06T02:35:00+00:00",
+  "purpose": "supply the declared NVML peak-used-memory sensitivity output without changing the frozen systems protocol's primary endpoints, order, workload, thresholds, resource envelope, or activation gate",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "sampler_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-sampler-qualified-v1.json",
+      "sha256": "cc40d65de262181f9d808a28c90ffc814b100da776893d71aa705d58f281a7f1"
+    },
+    "pipeline_audit": {
+      "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json",
+      "sha256": "4b4e3bd70f7fe5e425dc2d0c60ab7912e3bd214450bf56c1e5a7a6b4584467e6",
+      "blocker": "NVML_peak_used_memory"
+    }
+  },
+  "additive_query": {
+    "field": "memory.used",
+    "same_GPU_CSV_row_as_power_and_clocks": true,
+    "reported_unit_under_nounits": "MiB",
+    "bytes_per_MiB": 1048576,
+    "serialized_field": "memory_used_bytes",
+    "conversion": "round(memory.used MiB * 1048576) after finite non-negative parsing",
+    "GPU_UUID_bound": true
+  },
+  "reduction": {
+    "interval": "inclusive measured_start_ns through measured_end_ns",
+    "required_samples": 2,
+    "statistic": "maximum memory_used_bytes",
+    "serialized_trial_field": "peak_nvml_used_bytes",
+    "no_interpolation": true,
+    "missing_or_unbracketed_interval": "fail rather than impute"
+  },
+  "unchanged": {
+    "primary_endpoints": [
+      "measured wall seconds per token",
+      "gross GPU-board joules per token"
+    ],
+    "paired_blocks": 6,
+    "trials": 12,
+    "warmup_steps": 10,
+    "measured_steps": 30,
+    "telemetry_hz": 1,
+    "statistical_thresholds": true,
+    "claim_boundary": true,
+    "resource_envelope": true,
+    "activation_gate": true,
+    "active_language_sequence": true,
+    "active_experiment_program": true
+  },
+  "decision": {
+    "supplement_frozen_before_any_accepted_finalist_result": true,
+    "v1_sampler_modified": false,
+    "v2_protocol_modified": false,
+    "primary_systems_design_changed": false,
+    "execution_authorized": false,
+    "next_action": "implement and mock-qualify the additive same-row parser and peak reducer; live field support remains a post-language preflight"
+  }
+}

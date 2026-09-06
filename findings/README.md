@@ -152,6 +152,7 @@ Read in order:
 144. [143 — Disposable kernel read-only isolation qualifies](143_finalist_systems_sandbox_qualified.md)
 145. [144 — Non-persisting systems engine control flow qualifies on CPU fixtures](144_finalist_systems_engine_control_flow.md)
 146. [145 — Qualified components do not yet form an executable systems pipeline](145_finalist_systems_pipeline_interface_audit.md)
+147. [146 — Additive NVML used-memory producer qualifies with mocks](146_finalist_systems_memory_supplement.md)
 
 Conventions:
 

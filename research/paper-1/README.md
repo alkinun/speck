@@ -370,6 +370,10 @@ the final combined model.
 - [`finalist-systems-pipeline-interface-audit-v1.json`](../../results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json)
   prevents component qualifications from being mistaken for a pipeline. Three bridges align; seven
   sampler/memory/orchestration/runtime/fingerprint/assembly/identity interfaces remain blocked.
+- [`finalist_systems_memory_v1.json`](finalist_systems_memory_v1.json) and
+  [`finalist-systems-memory-supplement-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-memory-supplement-qualified-v1.json)
+  add same-row `memory.used` with exact MiB-to-byte and measured-window peak semantics. Mocks qualify;
+  the v2 primary design stays unchanged and live support/pipeline execution remain blocked.
 - [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
@@ -489,6 +493,8 @@ artifact. It resolves the full trainer's zero-step/final-write mismatch and pres
 H2D timing, but real checkpoint/CUDA/runtime qualification remains a post-sequence gate.
 An end-to-end interface audit now makes the remaining composition work explicit, including the missing
 `memory.used` producer and block assembler. Individual qualifications do not activate the pipeline.
+The memory producer gap now has an additive mock-qualified supplement without modifying v2. Its observed
+one-hertz peak can feed the assembler, but live field compatibility remains a post-language gate.
 Training non-finiteness already stops before a final event, but complete source identity needs a
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,

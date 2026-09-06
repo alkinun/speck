@@ -1,0 +1,105 @@
+{
+  "format": "speck_paper_finalist_systems_memory_supplement_qualification",
+  "format_version": 1,
+  "status": "qualified_mock_additive_NVML_memory_producer_live_support_blocked",
+  "created_at": "2026-09-06T02:36:08+00:00",
+  "scope": "frozen additive contract plus mocked same-row GPU parsing and synthetic measured-window peak reduction; no live nvidia-smi, GPU, service, checkpoint, model, result, log, intermediate metric, or runtime mutation",
+  "inputs": {
+    "supplement": {
+      "path": "research/paper-1/finalist_systems_memory_v1.json",
+      "sha256": "6efcfe7599309434e6d1aa7c56f9cd059366976784127df873a4e46cd7f6832b"
+    },
+    "pipeline_audit": {
+      "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json",
+      "sha256": "4b4e3bd70f7fe5e425dc2d0c60ab7912e3bd214450bf56c1e5a7a6b4584467e6",
+      "addressed_interface": "NVML_peak_used_memory"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_sampler_memory.py",
+      "sha256": "510fc68a266e0b9d509fc8a1bad9643b940e02f5908268f8179019b863705c7b"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_telemetry_sample_v2.py",
+      "sha256": "5499be33276c196bea74667623aedb331c939d4bfcfb8b3a4f6e1e5229d9e660"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_sampler_memory.py",
+      "sha256": "e78e1e2cee18e65b8487504dc245abb54a1a3716c914d01191a493f9c0a8bf2b"
+    },
+    "v1_sampler_modified": false,
+    "v2_protocol_modified": false
+  },
+  "query_contract": {
+    "field": "memory.used",
+    "same_row_as_UUID_power_thermal_clocks_and_utilization": true,
+    "nvidia_smi_nounits_input": "MiB",
+    "bytes_per_MiB": 1048576,
+    "serialized_field": "memory_used_bytes",
+    "finite_nonnegative_required": true,
+    "exact_GPU_UUID_still_required": true,
+    "protocol_and_supplement_SHA256_serialized": true,
+    "explicit_disk_devices_preserved": true
+  },
+  "peak_reduction": {
+    "field": "peak_nvml_used_bytes",
+    "interval": "inclusive measured interval",
+    "minimum_in_interval_samples": 2,
+    "sample_at_or_before_start_required": true,
+    "sample_at_or_after_end_required": true,
+    "statistic": "maximum observed memory_used_bytes",
+    "interpolation": false,
+    "imputation": false
+  },
+  "unchanged_primary_design": {
+    "time_endpoint": true,
+    "gross_energy_endpoint": true,
+    "block_order": true,
+    "workload": true,
+    "confidence_and_sign_flip_thresholds": true,
+    "resource_envelope": true,
+    "activation_gate": true
+  },
+  "tests": {
+    "frozen_additive_contract_passes": true,
+    "same_row_MiB_to_bytes_conversion_passes": true,
+    "unsupported_memory_value_rejected": true,
+    "missing_or_noninteger_memory_bytes_rejected": true,
+    "peak_and_boundary_bracketing_pass": true,
+    "serialized_series_binds_protocol_and_supplement": true,
+    "strict_UTC_sample_series_passes": true,
+    "count": 7
+  },
+  "decision": {
+    "static_NVML_memory_producer_gap_closed": true,
+    "analyzer_peak_nvml_used_bytes_can_be_supplied": true,
+    "live_memory_used_field_support_qualified": false,
+    "end_to_end_pipeline_qualified": false,
+    "systems_execution_authorized": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "consume memory_used_bytes in the pure trial/block assembler; retain live field support as a post-language sampler preflight gate"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_sampler_memory.py -q",
+    "expected": "7 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_sampler_memory_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "79 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "215 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_nvidia_smi_invoked": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the active RTX 3090 has returned memory.used under the frozen query",
+    "one-hertz samples equal a hardware high-watermark register",
+    "the block assembler consumes the field yet",
+    "the end-to-end pipeline is qualified",
+    "the systems protocol may execute now",
+    "the primary statistical design changed"
+  ]
+}
