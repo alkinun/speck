@@ -1,0 +1,139 @@
+{
+  "format": "speck_paper_finalist_systems_engine_qualification",
+  "format_version": 1,
+  "status": "qualified_CPU_fixture_control_flow_GPU_checkpoint_and_execution_blocked",
+  "created_at": "2026-09-06T02:28:43+00:00",
+  "scope": "static experiment-config loading plus fake CPU trainer lifecycle and synthetic CPU batch replay; no finalist checkpoint, live GPU, service, model result, log, intermediate metric, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "workload_plan_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-workload-plan-qualified-v1.json",
+      "sha256": "dc20210c97f1b991914c4cad5bda75e2058e0c55e6f6687022657701b055d3a9"
+    },
+    "sandbox_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-sandbox-qualified-v1.json",
+      "sha256": "79d2640ef440f82cf4bd091780bb7932b5f7d2c1d4b8d06250a2995c5300ad67"
+    },
+    "frozen_base_trainer": {
+      "path": "scripts/base_train.py",
+      "sha256": "67754a0dfd6c7ae9c0e900d687c6996d9f8ca0df53e6e0f8423a9e4f29cf7bd2"
+    },
+    "frozen_optimization_step": {
+      "path": "speck/train.py",
+      "sha256": "83bc7bfd41f3390d659285472679a9224dcb8c8c5824972ef962eda05efce9a2"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_engine.py",
+      "sha256": "30eff0b56460e197c42f90bdd8bfd8cbd4caf9a07045736e84683bc7e7d86681"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_engine.py",
+      "sha256": "9d08c8fbf868d4c9512c0c400b057b2c99ae3dde3eae374b5c9544454c46445c"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_engine.py",
+      "sha256": "8fbe5a07571a0a98f00884650ead2a0229c0cad71447fc882a557fb7d38c9234"
+    }
+  },
+  "reuse_audit": {
+    "direct_final_checkpoint_resume_usable": false,
+    "reason_resume": "the frozen trainer computes the original 23,496-step horizon, so resuming its complete final checkpoint executes zero optimizer steps",
+    "ordinary_branch_usable": false,
+    "reason_branch": "the full trainer lifecycle always performs final validation, checkpoint serialization, and summary output even when periodic save/eval intervals are zero",
+    "chosen_boundary": "reuse only initialization, data verification, model/optimizer construction, parent checkpoint restoration, resolved-setting validation, compilation preparation, packed loader semantics, and frozen optimization_step"
+  },
+  "engine_contract": {
+    "fresh_same_architecture_branch_in_memory": true,
+    "parent_checkpoint_step": 23496,
+    "new_ephemeral_schedule_horizon_steps": 40,
+    "learning_rate": "frozen base LR times terminal cosine minimum multiplier",
+    "dense_and_candidate_terminal_learning_rate": 0.00015,
+    "tracking_initialized": false,
+    "validation_executed": false,
+    "checkpoint_write_executed": false,
+    "summary_write_executed": false,
+    "model_or_optimizer_output_persisted": false,
+    "cleanup_always_called": true,
+    "peak_memory_reset_after_warmup": true,
+    "warmup_optimizer_steps": 10,
+    "measured_optimizer_steps": 30,
+    "measured_tokens": 1966080
+  },
+  "paired_batch_contract": {
+    "restored_loader_state_copied_before_trainer_preparation": true,
+    "continuation_stream_rebuilt_on_CPU": true,
+    "actual_accumulation_steps": 4,
+    "actual_microbatches_per_trial": 161,
+    "formula": "1 + 40 optimizer steps * 4 accumulation steps",
+    "inputs_targets_shapes_dtypes_bytes_and_loader_states_SHA256": true,
+    "paired_arms_must_later_have_identical_fingerprint": true,
+    "CPU_to_device_transfers_inside_optimizer_windows": true,
+    "reason": "satisfy both pre-materialized identical paired data and inclusion of H2D work in the measured interval"
+  },
+  "activation_firewall": {
+    "future_activation_artifact_required": true,
+    "activation_must_pin_protocol_and_engine_SHA256": true,
+    "accepted_results_required": 12,
+    "v3_acceptance_required": true,
+    "actual_path_GPU_preflight_required": true,
+    "current_activation_artifact_present": false,
+    "missing_activation_fails_before_checkpoint_or_CUDA_access": true
+  },
+  "tests": {
+    "terminal_learning_rate_and_ephemeral_config": true,
+    "exact_10_plus_30_windows": true,
+    "fake_lifecycle_skips_all_persistent_trainer_paths": true,
+    "cleanup_after_optimization_failure": true,
+    "changed_window_rejected": true,
+    "missing_activation_rejected_without_output": true,
+    "exact_CPU_microbatch_replay_and_repeatable_fingerprint": true,
+    "count": 7
+  },
+  "remaining_runtime_gates": {
+    "actual_finalist_checkpoint_load": false,
+    "compiled_CUDA_optimizer_steps": false,
+    "GPU_access_inside_ReadOnlyPaths_sandbox": false,
+    "paired_data_fingerprint_equality_on_real_checkpoints": false,
+    "compile_or_kernel_fallback_detection": false,
+    "CUDA_forward_backward_optimizer_phase_timing": false,
+    "failure_artifact_orchestration": false,
+    "co_running_live_sampler": false
+  },
+  "decision": {
+    "CPU_fixture_engine_control_flow_qualified": true,
+    "benchmark_engine_runtime_qualified": false,
+    "systems_execution_authorized": false,
+    "protocol_or_prior_systems_components_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "keep the activation artifact absent; after language completion, combine sandbox, live sampler, and one no-output dense/candidate engine preflight to qualify real checkpoint load, CUDA compilation, fallback detection, phase timing, paired fingerprints, and retained failure output"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_engine.py -q",
+    "expected": "7 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_engine_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "65 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "201 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "finalist_checkpoint_accessed": false,
+    "CUDA_initialized": false,
+    "activation_artifact_created": false,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the engine has loaded a finalist checkpoint",
+    "compiled CUDA or kernel fallback behavior is qualified",
+    "the primary or secondary timing metrics have been measured",
+    "failure artifacts are fully orchestrated",
+    "the systems protocol may execute now",
+    "this CPU-fixture qualification is systems performance evidence"
+  ]
+}
