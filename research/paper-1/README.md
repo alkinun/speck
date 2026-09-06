@@ -93,6 +93,10 @@ the final combined model.
   [`ratio-placement-v2-qualified.json`](../../results/Speck-Paper1/ratio-placement-v2-qualified.json)
   preserve v1 but restrict selection to raw FFN2304 ratios. Parameter-matched FFN2281/2318 arms are
   non-promotional capacity sensitivities; v2 remains unregistered and training-blocked.
+- [`nope_factorial_v1.json`](nope_factorial_v1.json) and
+  [`nope-factorial-v1-qualified.json`](../../results/Speck-Paper1/nope-factorial-v1-qualified.json)
+  freeze the missing GDN/KDA × RoPE32/NoPE0 interaction. Six unseen KDA/NoPE finalist cells may be
+  reused only after v3 acceptance; 18 missing runs remain unregistered and blocked.
 - [`attnres_readiness_v1.json`](attnres_readiness_v1.json) fixes the 40-module residual source graph,
   adds the static-depth mechanism control, and freezes Full/Block equations, correctness, activation,
   block-count, depth/width, mechanistic, and efficiency gates before implementation.

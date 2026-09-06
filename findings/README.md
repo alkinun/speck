@@ -160,6 +160,7 @@ Read in order:
 152. [151 — Static systems pipeline converges to five live activation gates](151_finalist_systems_pipeline_convergence.md)
 153. [152 — Raw MQA control deconfounds cache representation from FFN capacity](152_sequence_cache_representation_deconfounded.md)
 154. [153 — Raw ratio family deconfounds recurrent/global count from FFN matching](153_ratio_FFN_matching_deconfounded.md)
+155. [154 — NoPE requires the missing mixer-by-position factorial](154_nope_factorial_frozen.md)
 
 Conventions:
 

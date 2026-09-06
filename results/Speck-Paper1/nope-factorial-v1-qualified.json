@@ -1,0 +1,145 @@
+{
+  "format": "speck_nope_factorial_qualification",
+  "format_version": 1,
+  "status": "qualified_interaction_aware_factorial_training_blocked",
+  "created_at": "2026-09-06T03:16:10+00:00",
+  "scope": "offline evidence, config-delta, missing-cell geometry, factorial, reuse, and analysis qualification before KDA/NoPE finalist output; no active result/checkpoint, service, GPU, training, or runtime environment accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/nope_factorial_v1.json",
+      "sha256": "443e9db277def8e2136837831b6b3507f8c7886f3d4b215b40455e6bc1cd0a51"
+    },
+    "historical_summary": {
+      "path": "results/SpeckLC-150M-KimiTransfer131M/summary.json",
+      "sha256": "f21ccc432aef318ddae086098d91fbb6fc1a6a4d8b15332437753fcc9dc797eb"
+    },
+    "active_materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "active_KDA_NoPE_model": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/arms/five_cache_kda_gqa/model.json",
+      "sha256": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_nope_factorial_validate.py",
+      "sha256": "8f1bc5c2b50eeca2549947a90ba5c1bb1f0cc26c61af4da65b7891d59bb638b8"
+    },
+    "tests": {
+      "path": "tests/test_paper_nope_factorial.py",
+      "sha256": "5b66551a3515c0122bf186710306e8a43b8a468fa1dabaed59840ef853a4c340"
+    }
+  },
+  "historical_boundary": {
+    "clean_seed42_GDN_NoPE_minus_RoPE_loss": 0.024367094039916992,
+    "clean_seed42_NoPE_language_direction": "worse",
+    "clean_seed42_same_parameters_and_flops": true,
+    "late_conversion_language_gate": "failed",
+    "historical_long_range_signal": "strong content sensitivity, zero open-vocabulary exact match",
+    "three_seed_NoPE_replication": false,
+    "reason": "the three-seed frontier changes GDN/RoPE to KDA/NoPE and lacks both crossed cells"
+  },
+  "config_isolation": {
+    "GDN_changed_paths": 5,
+    "global_layer_indices": [
+      3,
+      7,
+      11,
+      15,
+      19
+    ],
+    "only_field": "rope_dim",
+    "control_value": 32,
+    "treatment_value": 0,
+    "KDA_RoPE_missing_cell_attention_branches": 5,
+    "KDA_RoPE_parameters": 153958938,
+    "KDA_RoPE_flops_per_token_at_4096": 1021601280,
+    "KDA_RoPE_geometry_equal_to_KDA_NoPE": true
+  },
+  "factorial": {
+    "arms": [
+      "GDN_RoPE32",
+      "GDN_NoPE0",
+      "KDA_RoPE32",
+      "KDA_NoPE0"
+    ],
+    "pairs": 6,
+    "total_runs": 24,
+    "within_mixer_position_contrasts": 2,
+    "mixer_by_position_interaction": true,
+    "mixer_main_effects_are_total_deployable_effects": true,
+    "mixer_parameters_not_matched_away": true
+  },
+  "efficient_reuse": {
+    "source": "six still-unseen active finalist KDA/NoPE cells",
+    "future_reused_runs": 6,
+    "reuse_requires_v3_acceptance": true,
+    "current_accepted_reused_runs": 0,
+    "outcomes_inspected": false,
+    "new_arms": 3,
+    "new_runs": 18,
+    "active_execution_changed": false
+  },
+  "statistical_contract": {
+    "fixed_data_order_strata": 2,
+    "seeds_per_stratum": 3,
+    "one_sided_t_critical_df_2": 2.919985580353724,
+    "language_margin_nats": 0.01,
+    "source_margin_nats": 0.02,
+    "position_contrast_multiplicity": "Holm across two within-mixer contrasts",
+    "interaction": "two-sided 95% in each data-order stratum",
+    "pooled_six_cell": "descriptive only",
+    "all_four_arms_required": true,
+    "interim_arm_dropping": false
+  },
+  "decision": {
+    "factorial_design_qualified": true,
+    "NoPE_selected": false,
+    "mixer_selected": false,
+    "general_NoPE_claim_authorized": false,
+    "sensitivity_can_trade_against_language_failure": false,
+    "active_program_registration": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "active_finalist_changed": false,
+    "next_action": "after the active finalist, v3-accept all six KDA/NoPE results, register this unchanged design, and materialize only the 18 missing factorial runs"
+  },
+  "tests": {
+    "historical_contrast_config_delta_and_KDA_RoPE_geometry_recomputed": true,
+    "missing_KDA_RoPE_arm_rejected": true,
+    "pooled_or_incomplete_position_contrast_rejected": true,
+    "outcome_inspection_claim_rejected": true,
+    "partial_factorial_run_count_rejected": true,
+    "training_authority_rejected": true,
+    "count": 6
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_nope_factorial.py -q",
+    "expected": "6 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_nope_factorial_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "279 passed",
+    "active_program_validation": "passed without registering the factorial",
+    "validator_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_nope_factorial_validate research/paper-1/nope_factorial_v1.json",
+    "validator_result": "valid_training_blocked with four arms, six pairs, and 18 new runs",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "NoPE is language-noninferior",
+    "the replicated KDA/NoPE frontier isolates NoPE",
+    "content sensitivity is solved retrieval",
+    "KDA and positional treatment are additive",
+    "the missing 18 runs are authorized",
+    "this factorial changes the active finalist"
+  ]
+}

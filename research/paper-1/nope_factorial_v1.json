@@ -1,0 +1,232 @@
+{
+  "format": "speck_nope_factorial_design",
+  "format_version": 1,
+  "design_id": "speck-paper-1-nope-factorial-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "factorial_frozen_before_KDA_NoPE_finalist_outputs_training_blocked",
+  "frozen_at": "2026-09-06T03:12:00+00:00",
+  "purpose": "separate global NoPE from recurrent mixer choice and measure their interaction before assigning positional-treatment credit to the five-cache finalist",
+  "historical_evidence": {
+    "seed42_staircase": {
+      "result": "results/SpeckLC-150M-KimiTransfer131M/summary.json",
+      "sha256": "f21ccc432aef318ddae086098d91fbb6fc1a6a4d8b15332437753fcc9dc797eb",
+      "GDN_RoPE_loss": 2.790628671646118,
+      "GDN_NoPE_loss": 2.814995765686035,
+      "NoPE_minus_RoPE_loss": 0.024367094039916992,
+      "same_mixer_same_parameters_same_flops": true,
+      "limitation": "one seed at 131072000 tokens; counterfactual score is content sensitivity, not solved retrieval"
+    },
+    "late_context_conversion": {
+      "finding": "findings/12_nope_context_activation.md",
+      "sha256": "72d5f28c2e44ee80d6d7a514c15a53d6d633edae6068473eeb094f3d46ce3d63",
+      "outcome": "NoPE greatly increases distant-content sensitivity but fails 32K and original-4K language loss after late conversion",
+      "authority": "adaptation evidence only, not from-scratch positional selection"
+    },
+    "three_seed_frontier": {
+      "finding": "findings/17_kimi_frontier_replication.md",
+      "sha256": "da9a51950d1f79b6f80079a087048b1b02ab30ad957c43128bf35ec50062bd64",
+      "comparison": "KDA_NoPE versus GDN_RoPE",
+      "NoPE_effect_replicated": false,
+      "reason": "mixer and positional treatment change together and KDA_RoPE/GDN_NoPE cells are absent on seeds 43 and 44"
+    }
+  },
+  "config_evidence": {
+    "GDN_RoPE": {
+      "path": "experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-rope/model.json",
+      "sha256": "5917e1bd94c4ec9003f3db046d0b765e2eb3f34e01a26ceed1465787fa8ce132"
+    },
+    "GDN_NoPE": {
+      "path": "experiments/SpeckLC-150M-KimiTransfer131M/gdn-fla-sigmoid-nope/model.json",
+      "sha256": "2cc57dd226d2d542d221b9f9eea4713bacd01b2a4e5f9966bf25d19da0a1ef55"
+    },
+    "KDA_NoPE": {
+      "path": "experiments/SpeckLC-150M-KimiTransfer131M/kda-sigmoid-nope/model.json",
+      "sha256": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09"
+    },
+    "clean_GDN_delta": {
+      "differences": 5,
+      "paths": [
+        "blocks/3/block/stages/0/branches/0/rope_dim",
+        "blocks/7/block/stages/0/branches/0/rope_dim",
+        "blocks/11/block/stages/0/branches/0/rope_dim",
+        "blocks/15/block/stages/0/branches/0/rope_dim",
+        "blocks/19/block/stages/0/branches/0/rope_dim"
+      ],
+      "control_value": 32,
+      "treatment_value": 0
+    }
+  },
+  "factorial": {
+    "factors": {
+      "mixer": [
+        "GDN",
+        "KDA"
+      ],
+      "global_position": [
+        "RoPE32",
+        "NoPE0"
+      ]
+    },
+    "arms": [
+      {
+        "id": "gdn_sigmoid_rope32",
+        "mixer": "GDN",
+        "global_rope_dim": 32,
+        "parameters": 152916468,
+        "analytic_flops_per_token_at_4096": 1019435520,
+        "existing_seed42_output": true
+      },
+      {
+        "id": "gdn_sigmoid_nope0",
+        "mixer": "GDN",
+        "global_rope_dim": 0,
+        "parameters": 152916468,
+        "analytic_flops_per_token_at_4096": 1019435520,
+        "existing_seed42_output": true
+      },
+      {
+        "id": "kda_sigmoid_rope32",
+        "mixer": "KDA",
+        "global_rope_dim": 32,
+        "parameters": 153958938,
+        "analytic_flops_per_token_at_4096": 1021601280,
+        "existing_output": false,
+        "in_memory_geometry_qualified": true
+      },
+      {
+        "id": "kda_sigmoid_nope0",
+        "mixer": "KDA",
+        "global_rope_dim": 0,
+        "parameters": 153958938,
+        "analytic_flops_per_token_at_4096": 1021601280,
+        "active_finalist_arm": "five_cache_kda_gqa"
+      }
+    ],
+    "within_mixer_position_contrasts": [
+      "gdn_sigmoid_nope0 minus gdn_sigmoid_rope32",
+      "kda_sigmoid_nope0 minus kda_sigmoid_rope32"
+    ],
+    "interaction": "(kda_sigmoid_nope0-kda_sigmoid_rope32)-(gdn_sigmoid_nope0-gdn_sigmoid_rope32)",
+    "mixer_contrasts_by_position": [
+      "kda_sigmoid_rope32 minus gdn_sigmoid_rope32",
+      "kda_sigmoid_nope0 minus gdn_sigmoid_nope0"
+    ],
+    "mixer_contrasts_are_total_deployable_effects": true,
+    "mixer_parameter_difference_not_matched_away": true
+  },
+  "confirmation_cells": {
+    "source": "research/paper-1/finalist_analysis_v2.json",
+    "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905",
+    "pairs": [
+      {
+        "pair": 0,
+        "seed": 42,
+        "data_token_offset": 0
+      },
+      {
+        "pair": 1,
+        "seed": 42,
+        "data_token_offset": 1610612736
+      },
+      {
+        "pair": 2,
+        "seed": 43,
+        "data_token_offset": 0
+      },
+      {
+        "pair": 3,
+        "seed": 43,
+        "data_token_offset": 1610612736
+      },
+      {
+        "pair": 4,
+        "seed": 44,
+        "data_token_offset": 0
+      },
+      {
+        "pair": 5,
+        "seed": 44,
+        "data_token_offset": 1610612736
+      }
+    ],
+    "training_tokens_per_arm": 1539833856,
+    "optimizer_steps": 23496,
+    "sequence_length": 4096,
+    "batch_tokens": 65536,
+    "validation_steps": [
+      0,
+      5874,
+      11748,
+      17622,
+      23496
+    ]
+  },
+  "reuse_contract": {
+    "KDA_NoPE_source": "active six-cell five_cache_kda_gqa finalist arm",
+    "active_materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "active_arm_model": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/arms/five_cache_kda_gqa/model.json",
+      "sha256": "4b860a1493b98e4662e5b0ea602cca4b30bca8b22d66e101f69fd71baeba6b09"
+    },
+    "accepted_results_required": 6,
+    "v3_acceptance_qualification": {
+      "path": "results/Speck-Paper1/finalist-result-acceptance-qualified-v3.json",
+      "sha256": "132ee515b942b4001322316bcff525fa756584c2b9b9923eba723ea9116e9983"
+    },
+    "reuse_only_after_all_six_results_pass_v3": true,
+    "current_accepted_KDA_NoPE_results": 0,
+    "outcomes_inspected": false,
+    "new_future_arms": 3,
+    "new_future_runs": 18,
+    "total_factorial_runs": 24,
+    "reuse_does_not_change_active_execution": true
+  },
+  "statistical_contract": {
+    "primary_unit": "paired within seed and data-order cell",
+    "fixed_data_order_strata": 2,
+    "independent_seeds_per_stratum": 3,
+    "student_t_critical_df_2_one_sided_95": 2.919985580353724,
+    "language_non_inferiority_margin_nats": 0.01,
+    "source_guardrail_nats": 0.02,
+    "position_contrast_multiplicity": "Holm across the two within-mixer NoPE-minus-RoPE contrasts",
+    "interaction_interval": "paired two-sided 95% within each data-order stratum",
+    "pooled_six_cell_results": "descriptive only",
+    "all_four_arms_required": true,
+    "interim_arm_dropping": false,
+    "missing_or_failed_cell": "retain and fail the affected contrast; no imputation, replacement, skip, or retry"
+  },
+  "quality_and_capability": {
+    "language": "aggregate and every-source non-inferiority within the selected mixer",
+    "long_context": [
+      "structured retrieval v2",
+      "symbolic composition v2 with both constituent edges",
+      "MQAR load and distance",
+      "independent suites only after their existing gates qualify"
+    ],
+    "historical_counterfactual_curve_role": "mechanism-generating content sensitivity only",
+    "open_vocabulary_exact_match_required_for_retrieval_claim": true,
+    "RoPE_extrapolation_or_scaling": "separate post-selection context-extension question; fixed at base-stage RoPE32 versus NoPE0 here"
+  },
+  "decision_rule": {
+    "conditional_selection": "select RoPE32 or NoPE0 only within the independently selected recurrent mixer",
+    "NoPE_pass": "upper language-loss bounds and all source/capability gates pass; a sensitivity-only win cannot compensate a language failure",
+    "interaction": "if interaction is non-negligible, report mixer-specific position effects and forbid a mixer-independent NoPE claim",
+    "both_position_schemes_pass": "choose the non-dominated quality/capability point; rotary systems differences are measured, not inferred",
+    "neither_passes": "retain the selected mixer's conservative positional control and reopen the positional grid in a new pre-output successor",
+    "no_general_NoPE_claim_from_finalist": true,
+    "no_quality_capability_tradeoff": true
+  },
+  "registration_boundary": {
+    "active_experiment_program_changed": false,
+    "active_finalist_execution_changed": false,
+    "design_registered": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "after the active finalist, register the frozen factorial and materialize only the 18 missing arms; do not inspect KDA-NoPE outcomes to alter this design"
+  }
+}

@@ -295,6 +295,37 @@
       "next_gate": "complete dense finalist control 0 attempt 2 and continue only through its final-summary event"
     },
     {
+      "id": "global_position_nope_factorial",
+      "claim": "Removing global RoPE preserves language quality and improves long-context capability within the selected recurrent mixer.",
+      "status": "factorial_frozen_unexecuted",
+      "alternatives": [
+        "GDN_RoPE32",
+        "GDN_NoPE0",
+        "KDA_RoPE32",
+        "KDA_NoPE0"
+      ],
+      "evidence": [
+        "findings/12_nope_context_activation.md",
+        "findings/16_kimi_transfer_131m.md",
+        "findings/17_kimi_frontier_replication.md",
+        "research/paper-1/nope_factorial_v1.json",
+        "results/Speck-Paper1/nope-factorial-v1-qualified.json"
+      ],
+      "quality": "The only clean from-scratch same-mixer result is seed-42 GDN: NoPE is 0.024367 nats worse than RoPE32. It improves content sensitivity but not exact retrieval. The three-seed KDA/NoPE versus GDN/RoPE frontier is positionally and mixer-confounded.",
+      "systems": "Within each mixer, RoPE32 and NoPE0 have identical parameters and current analytic FLOPs; seed-42 prefill and training differences were below claim authority. Real rotary/runtime cost remains to be measured.",
+      "scale_transfer": "not established",
+      "runtime_support": "GDN RoPE/NoPE and KDA NoPE execute; KDA RoPE geometry is expressible but has no powered training preflight",
+      "unresolved_risks": [
+        "missing KDA/RoPE cell",
+        "no clean multi-seed NoPE replication",
+        "language-versus-content-sensitivity conflict",
+        "zero historical exact retrieval",
+        "mixer-by-position interaction",
+        "longer-context RoPE scaling is a separate question"
+      ],
+      "next_gate": "after the active finalist, v3-accept and reuse its six KDA/NoPE cells, register the frozen factorial unchanged, and materialize the 18 missing runs"
+    },
+    {
       "id": "reader_attention_three_cache",
       "claim": "Three periodically refreshed global memories can replace five independent caches.",
       "status": "research_only",
