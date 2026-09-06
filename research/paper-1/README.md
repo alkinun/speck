@@ -261,6 +261,9 @@ the final combined model.
 - [`finalist_automation_v1.json`](finalist_automation_v1.json) pins the event-driven twelve-run runner,
   empty program state, all-control target lock, per-result commits, live gates, cooldown, and fail-closed
   no-retry behavior; a post-HELMET live qualification is still required before launch.
+- [`finalist_automation_v2.json`](finalist_automation_v2.json) supersedes v1 before output and binds
+  the same event state machine exclusively to the corrected two-order analysis and final status; live
+  qualification and training remain blocked while HELMET acquisition is active.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched

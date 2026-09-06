@@ -123,6 +123,7 @@ Read in order:
 115. [114 — Finalist crossed-factor inference correction](114_finalist_crossed_factor_correction.md)
 116. [115 — Crossed-factor finalist analysis v2 qualified](115_finalist_analysis_v2_qualified.md)
 117. [116 — Finalist launch v2 after crossed-factor correction](116_finalist_launch_v2.md)
+118. [117 — Crossed-factor finalist automation v2](117_finalist_automation_v2.md)
 
 Conventions:
 
@@ -657,3 +658,8 @@ Finding 116 supersedes the launch boundary before output and binds the unchanged
 hour event sequence to analysis v2. V1 launch/automation authority is false. Config, runtime, release,
 and failure contracts are unchanged; automation v2 and a post-HELMET live qualification are required
 before training.
+
+Finding 117 pins automation v2 to the corrected analysis, qualification, launch boundary, and final
+status. Five state tests and seven analysis tests pass; the same twelve-run no-poll/no-branch/no-retry
+chain remains. V1 is unauthorized, all outputs are absent, and training still requires a post-HELMET
+live qualification.
