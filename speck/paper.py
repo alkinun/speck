@@ -14,9 +14,12 @@ PROGRAM_FILES = (
     "baseline_automation_v1.json",
     "proxy_disposition_v1.json",
     "finalist_analysis_v1.json",
+    "finalist_analysis_v2.json",
     "finalist_materialization_v1.json",
     "finalist_launch_v1.json",
+    "finalist_launch_v2.json",
     "finalist_automation_v1.json",
+    "finalist_automation_v2.json",
     "sequence_cache_representation_v1.json",
     "hca_readiness_v1.json",
     "csa_readiness_v1.json",
@@ -1730,7 +1733,7 @@ def _validate_finalist_analysis(reference, repository_root, paper_id):
     pairs = analysis.get("pairs", ())
     if (
         analysis.get("format") != "speck_paper_finalist_analysis_plan"
-        or analysis.get("format_version") != 1
+        or analysis.get("format_version") != 2
         or analysis.get("paper_id") != paper_id
         or analysis.get("status") != reference["status"]
         or [(pair.get("seed"), pair.get("data_token_offset")) for pair in pairs]
@@ -1745,15 +1748,25 @@ def _validate_finalist_analysis(reference, repository_root, paper_id):
         or shared.get("training_tokens_per_arm") != 1539833856
         or shared.get("optimizer_steps") != 23496
         or shared.get("evaluation_steps") != [0, 5874, 11748, 17622, 23496]
-        or statistical.get("paired_runs") != 6
-        or statistical.get("student_t_critical_df_5") != 2.0150483733330233
+        or analysis.get("predecessor", {}).get("path")
+        != "research/paper-1/finalist_analysis_v1.json"
+        or not (repository_root / analysis["predecessor"]["path"]).is_file()
+        or _file_sha256(repository_root / analysis["predecessor"]["path"])
+        != analysis["predecessor"].get("sha256")
+        or len(analysis.get("fixed_data_order_strata", ())) != 2
+        or statistical.get("paired_cells") != 6
+        or statistical.get("fixed_data_order_strata") != 2
+        or statistical.get("independent_seeds_per_stratum") != 3
+        or statistical.get("student_t_critical_df_2") != 2.919985580353724
         or statistical.get("language_loss_non_inferiority_margin_nats") != 0.01
         or statistical.get("source_guardrail_nats") != 0.02
         or stopping.get("required_complete_model_runs") != 12
         or stopping.get("required_control_runs_before_candidates") != 6
         or stopping.get("interim_efficacy_looks") != 0
         or stopping.get("interim_futility_looks") != 0
-        or execution.get("materialization_authorized") is not True
+        or execution.get("v1_analysis_authority") is not False
+        or execution.get("v2_analysis_authority") is not True
+        or execution.get("materialized_configs_remain_valid") is not True
         or execution.get("training_authorized") is not False
     ):
         raise ValueError("finalist analysis contract is incomplete")
@@ -1761,7 +1774,8 @@ def _validate_finalist_analysis(reference, repository_root, paper_id):
         "baseline_matrix",
         "proxy_disposition",
         "proxy_analysis",
-        "proxy_analysis_plan",
+        "materialization_contract",
+        "materialization",
     ):
         source = repository_root / inputs.get(stem, "")
         if not source.is_file() or _file_sha256(source) != inputs.get(f"{stem}_sha256"):
@@ -1900,20 +1914,26 @@ def _validate_finalist_analysis_qualification(reference, repository_root, paper_
     decision = result.get("decision", {})
     if (
         result.get("format") != "speck_paper_finalist_analysis_qualification"
-        or result.get("format_version") != 1
+        or result.get("format_version") != 2
         or result.get("paper_id") != paper_id
         or result.get("status") != reference["status"]
         or len(result.get("checked_contracts", ())) < 12
-        or test_run.get("passed") != 6
+        or test_run.get("passed") != 7
         or test_run.get("failed") != 0
-        or len(test_run.get("cases", ())) != 6
         or test_run.get("ruff") != "passed"
-        or decision.get("collector_implementation_qualified") is not True
-        or decision.get("target_lock_implementation_qualified") is not True
-        or decision.get("analysis_implementation_qualified") is not True
-        or decision.get("stopping_rule_implementation_qualified") is not True
-        or decision.get("runtime_preflight_qualified") is not False
-        or decision.get("release_dependencies_qualified") is not False
+        or result.get("predecessor", {}).get("path")
+        != "results/Speck-Paper1/finalist-analysis-qualified-v1.json"
+        or not (repository_root / result["predecessor"]["path"]).is_file()
+        or _file_sha256(repository_root / result["predecessor"]["path"])
+        != result["predecessor"].get("sha256")
+        or decision.get("v1_analysis_qualified") is not False
+        or decision.get("v2_collector_qualified") is not True
+        or decision.get("v2_target_lock_qualified") is not True
+        or decision.get("v2_crossed_factor_analysis_qualified") is not True
+        or decision.get("v2_stopping_rule_qualified") is not True
+        or decision.get("generated_config_change_count") != 0
+        or decision.get("automation_v1_authorized") is not False
+        or decision.get("runtime_preflight_remains_qualified") is not True
         or decision.get("training_authorized") is not False
         or decision.get("automatic_launch_authorized") is not False
         or decision.get("architecture_promotion_authorized") is not False
@@ -1991,37 +2011,39 @@ def _validate_finalist_launch(reference, repository_root, paper_id):
     if not path.is_file() or _file_sha256(path) != reference["sha256"]:
         raise ValueError("finalist launch contract does not match its pin")
     contract = _load_json(path)
-    forecast = contract.get("resource_forecast", {})
-    automatic = contract.get("automatic_sequence", {})
-    live = contract.get("live_gate_before_initial_and_every_successor_launch", {})
+    unchanged = contract.get("unchanged_execution", {})
     decision = contract.get("decision", {})
     if (
         contract.get("format") != "speck_paper_finalist_launch_contract"
-        or contract.get("format_version") != 1
+        or contract.get("format_version") != 2
         or contract.get("paper_id") != paper_id
         or contract.get("status") != reference["status"]
-        or len(contract.get("execution_order", ())) != 14
-        or forecast.get("total_steady_gpu_hours") != 121.2303502872009
-        or forecast.get("expected_elapsed_days_before_overhead") != 5.0512645953000375
-        or automatic.get("polling") is not False
-        or automatic.get("quality_dependent_branching") is not False
-        or automatic.get("automatic_retry") is not False
-        or automatic.get("control_first") is not True
-        or live.get("gpu_compute_processes") != 0
-        or live.get("maximum_start_temperature_c") != 50
-        or live.get("minimum_free_bytes") != 25769803776
-        or live.get("conflicting_services_inactive") != ["speck-helmet-download.service"]
-        or len(contract.get("forbidden", ())) < 7
-        or decision.get("release_suites_required_before_checkpoint_training") is not False
-        or decision.get("release_suites_required_before_promotion_or_release") is not True
-        or decision.get("automatic_sequence_implementation_authorized") is not True
+        or contract.get("predecessor", {}).get("path")
+        != "research/paper-1/finalist_launch_v1.json"
+        or not (repository_root / contract["predecessor"]["path"]).is_file()
+        or _file_sha256(repository_root / contract["predecessor"]["path"])
+        != contract["predecessor"].get("sha256")
+        or contract.get("crossed_factor_rule", {}).get("pooled_df_5")
+        != "descriptive_only"
+        or unchanged.get("runs") != 12
+        or unchanged.get("controls_before_target_lock") != 6
+        or unchanged.get("candidates_after_target_lock") != 6
+        or unchanged.get("total_steady_gpu_hours_forecast") != 121.2303502872009
+        or unchanged.get("polling") is not False
+        or unchanged.get("quality_dependent_branching") is not False
+        or unchanged.get("automatic_retry") is not False
+        or unchanged.get("helmet_service_must_be_inactive") is not True
+        or decision.get("v1_launch_authority") is not False
+        or decision.get("v1_automation_authority") is not False
+        or decision.get("v2_analysis_authority") is not True
+        or decision.get("v2_automation_implementation_authorized") is not True
         or decision.get("live_launch_qualification_authorized") is not True
         or decision.get("initial_launch_authorized") is not False
         or decision.get("architecture_promotion_authorized") is not False
         or decision.get("paper_scale_authorized") is not False
     ):
         raise ValueError("finalist launch contract is incomplete")
-    for entry in contract.get("inputs", {}).values():
+    for entry in contract.get("corrected_inputs", {}).values():
         source = repository_root / entry.get("path", "")
         if not source.is_file() or _file_sha256(source) != entry.get("sha256"):
             raise ValueError("finalist launch input does not match its pin")
@@ -2039,7 +2061,7 @@ def _validate_finalist_automation(reference, repository_root, paper_id):
     decision = contract.get("decision", {})
     if (
         contract.get("format") != "speck_paper_finalist_automation_contract"
-        or contract.get("format_version") != 1
+        or contract.get("format_version") != 2
         or contract.get("paper_id") != paper_id
         or contract.get("status") != reference["status"]
         or len(contract.get("execution_order", ())) != 12
@@ -2049,7 +2071,13 @@ def _validate_finalist_automation(reference, repository_root, paper_id):
         != _file_sha256(repository_root / implementation.get("base_train", ""))
         or implementation.get("collector_analyzer_sha256")
         != _file_sha256(repository_root / implementation.get("collector_analyzer", ""))
-        or implementation.get("focused_tests_passed") != 5
+        or contract.get("predecessor", {}).get("path")
+        != "research/paper-1/finalist_automation_v1.json"
+        or not (repository_root / contract["predecessor"]["path"]).is_file()
+        or _file_sha256(repository_root / contract["predecessor"]["path"])
+        != contract["predecessor"].get("sha256")
+        or implementation.get("state_tests_passed") != 5
+        or implementation.get("analysis_tests_passed") != 7
         or implementation.get("ruff") != "passed"
         or event.get("polling") is not False
         or event.get("automatic_retry") is not False
@@ -2060,8 +2088,12 @@ def _validate_finalist_automation(reference, repository_root, paper_id):
         or decision_contract.get("final_analysis_after_candidate_results") != 6
         or decision_contract.get("failure_stops_chain") is not True
         or decision_contract.get("failed_cell_skipping") is not False
-        or decision.get("implementation_qualified") is not True
-        or decision.get("state_machine_qualified") is not True
+        or contract.get("analysis_contract", {}).get("pooled_df_5")
+        != "descriptive_only"
+        or decision.get("v1_automation_authority") is not False
+        or decision.get("v2_implementation_qualified") is not True
+        or decision.get("v2_state_machine_qualified") is not True
+        or decision.get("v2_crossed_factor_analysis_bound") is not True
         or decision.get("event_driven_no_polling") is not True
         or decision.get("live_launch_qualification_required") is not True
         or decision.get("initial_launch_authorized") is not False
@@ -2130,7 +2162,10 @@ def _validate_finalist_evidence(evidence, automation_reference, repository_root)
         raise ValueError("finalist evidence violates frozen control/candidate ordering")
     for entry, expected_status in (
         (target, "locked_from_six_controls_before_candidates"),
-        (analysis, "complete_finalist_language_evidence_no_standalone_promotion"),
+        (
+            analysis,
+            "complete_crossed_factor_finalist_language_evidence_no_standalone_promotion",
+        ),
     ):
         if entry is None:
             continue

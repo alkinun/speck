@@ -478,9 +478,9 @@
   "format": "speck_paper_experiment_program",
   "format_version": 1,
   "finalist_analysis": {
-    "contract": "research/paper-1/finalist_analysis_v1.json",
-    "sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1",
-    "status": "frozen_after_proxy_pass_before_finalist_materialization"
+    "contract": "research/paper-1/finalist_analysis_v2.json",
+    "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905",
+    "status": "frozen_crossed_factor_successor_before_any_finalist_result"
   },
   "finalist_materialization": {
     "contract": "research/paper-1/finalist_materialization_v1.json",
@@ -495,9 +495,9 @@
     "status": "materialization_data_and_storage_qualified_runtime_analysis_and_release_gates_blocked"
   },
   "finalist_analysis_qualification": {
-    "result": "results/Speck-Paper1/finalist-analysis-qualified-v1.json",
-    "sha256": "a464004a51bdf45fb7e427e2e7915925687e641b5c065b823b9909cc666dd506",
-    "status": "collector_and_analysis_implementation_qualified_no_training_authority"
+    "result": "results/Speck-Paper1/finalist-analysis-qualified-v2.json",
+    "sha256": "97ea75d6c3c4c8124bb21b4bb169378aebab4cd6c1050f078fa40f4680ae643b",
+    "status": "crossed_factor_collector_and_analysis_qualified_no_training_authority"
   },
   "finalist_runtime_preflight": {
     "result": "results/Speck-Paper1/finalist-preflight-v1.json",
@@ -505,14 +505,14 @@
     "status": "qualified"
   },
   "finalist_launch": {
-    "contract": "research/paper-1/finalist_launch_v1.json",
-    "sha256": "ec0a5d783a318790a7cc98ad18de040e6fba49ef61023d087cb199066e510d50",
-    "status": "frozen_before_automation_implementation_and_any_finalist_output"
+    "contract": "research/paper-1/finalist_launch_v2.json",
+    "sha256": "c0c7c5acae401053e0f6fd8f0ec21083bbf83f0580a796be95abd5606305a0f1",
+    "status": "frozen_crossed_factor_successor_before_any_finalist_output"
   },
   "finalist_automation": {
-    "contract": "research/paper-1/finalist_automation_v1.json",
-    "sha256": "f16d89749784cccc5784890828e55fa7227982382e68ee11bd78360a9f6330da",
-    "status": "frozen_before_any_finalist_output"
+    "contract": "research/paper-1/finalist_automation_v2.json",
+    "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e",
+    "status": "frozen_crossed_factor_before_any_finalist_output"
   },
   "finalist_evidence": {
     "status": "qualified_unexecuted",
