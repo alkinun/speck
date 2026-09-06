@@ -1,0 +1,145 @@
+{
+  "format": "speck_paper_finalist_crossed_views_audit",
+  "format_version": 1,
+  "status": "all_inferential_views_order_stratified_censoring_fail_closed_pooled_labels_externalized",
+  "created_at": "2026-09-06T01:21:14+00:00",
+  "scope": "blind audit and synthetic-fixture testing of the frozen finalist v2 analysis; no finalist result, checkpoint, service, log, or intermediate metric accessed and no analyzer or analysis contract modified",
+  "frozen_inputs": {
+    "analysis_plan": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "analysis_module": {
+      "path": "speck/paper_finalist_analysis.py",
+      "sha256": "466340781e58f1f330eee5f70683b53f24acb9d4eeaeda5cdb2eb13ebcd85504"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_analyze.py",
+      "sha256": "a4926db2922a98f3326bca0a8ece39650823c3778b5c8aa3704c5e4ce7ead218"
+    },
+    "qualification": {
+      "path": "results/Speck-Paper1/finalist-analysis-qualified-v2.json",
+      "sha256": "97ea75d6c3c4c8124bb21b4bb169378aebab4cd6c1050f078fa40f4680ae643b"
+    }
+  },
+  "design": {
+    "paired_cells": 6,
+    "fixed_data_orders": 2,
+    "independent_seeds_per_order": 3,
+    "primary_t_critical_df_2": 2.919985580353724,
+    "naive_pooled_t_critical_df_5": 2.0150483733330233,
+    "pooled_authority": "descriptive_only",
+    "arbitrary_data_order_inference": false
+  },
+  "view_audit": {
+    "fixed_tokens": {
+      "by_data_order_seed_bounds": true,
+      "hard_six_cell_guard": true,
+      "pooled_six_cell_summary": true,
+      "pooled_inline_authority_label": "descriptive_only_naive_df_5",
+      "pass_fail_authority": true
+    },
+    "source_guardrails": {
+      "by_data_order_seed_bounds": true,
+      "hard_every_source_every_cell_guard": true,
+      "intersection_across_sources_and_orders": true,
+      "pass_fail_authority": true
+    },
+    "fixed_analytic_flops": {
+      "by_data_order_seed_bounds": true,
+      "pooled_six_cell_summary": true,
+      "pooled_inline_authority_label": null,
+      "plan_authority": "secondary descriptive order-stratified view",
+      "pass_fail_authority": false
+    },
+    "fixed_steady_training_time": {
+      "by_data_order_seed_bounds": true,
+      "pooled_six_cell_summary": true,
+      "pooled_inline_authority_label": null,
+      "plan_authority": "secondary descriptive order-stratified view",
+      "pass_fail_authority": false
+    },
+    "time_to_quality": {
+      "by_data_order_seed_bounds_when_all_uncensored": true,
+      "pooled_six_cell_summary_when_all_uncensored": true,
+      "pooled_inline_authority_label": null,
+      "plan_authority": "secondary; report order-stratum seed bounds only when all six pairs are uncensored",
+      "any_censor_suppresses_all_bounds": true,
+      "complete_case_bound_forbidden": true,
+      "pass_fail_authority": false
+    },
+    "final_language_screen": {
+      "depends_on_fixed_tokens": true,
+      "depends_on_source_guardrails": true,
+      "depends_on_fixed_flops": false,
+      "depends_on_fixed_time": false,
+      "depends_on_time_to_quality": false
+    }
+  },
+  "adversarial_tests": {
+    "tests": 10,
+    "clear_noninferiority": true,
+    "all_pair_censoring": true,
+    "single_pair_censoring_suppresses_all_time_bounds": true,
+    "opposed_order_time_effects": {
+      "order_0_mean_positive": true,
+      "order_1610612736_mean_negative": true,
+      "pooled_mean_positive": true,
+      "both_order_strata_preserved": true
+    },
+    "one_order_endpoint_failure_not_averaged_away": true,
+    "target_requires_all_controls": true,
+    "analysis_requires_every_cell": true,
+    "plan_matches_materialization": true,
+    "collector_qualifies_exact_checkpoint": true
+  },
+  "reporting_gap": {
+    "id": "secondary_pooled_inline_authority",
+    "affected_outputs": [
+      "fixed_analytic_flops.pooled_descriptive",
+      "fixed_steady_training_time.pooled_descriptive",
+      "time_to_quality.pooled_descriptive"
+    ],
+    "statistical_computation_wrong": false,
+    "frozen_plan_authority_unambiguous": true,
+    "risk": "a consumer reading only the result JSON could overlook that these pooled df=5 blocks have no inferential or pass/fail authority",
+    "current_mitigation": "the key is named pooled_descriptive and the pinned v2 plan governs every result interpretation",
+    "future_hardening": "after the active sequence, add authority=descriptive_only_naive_df_5 to every pooled block and retain the plan pin",
+    "requires_frozen_analyzer_change": true
+  },
+  "decision": {
+    "primary_crossed_factor_inference_qualified": true,
+    "source_crossed_factor_inference_qualified": true,
+    "secondary_order_stratification_qualified": true,
+    "censoring_rule_qualified": true,
+    "final_language_screen_dependency_qualified": true,
+    "analysis_v3_required_before_current_results": false,
+    "current_analyzer_or_plan_modified": false,
+    "interim_result_access_authorized": false,
+    "pooled_inference_authorized": false,
+    "future_inline_label_hardening_applied_mid_sequence": false,
+    "next_action": "leave v2 byte-identical, interpret every pooled block as descriptive under the pinned plan, and add redundant inline authority labels only after the active sequence"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_analysis.py tests/test_paper_finalist_crossed_views_audit.py -q",
+    "expected": "10 passed",
+    "frozen_qualification_test": {
+      "path": "tests/test_paper_finalist_analysis.py",
+      "sha256": "3156c3491186df20a5382c43e17c5d78dafbeed08c3797774ae882c24ef03c53"
+    },
+    "append_only_test": {
+      "path": "tests/test_paper_finalist_crossed_views_audit.py",
+      "sha256": "e861929499f58f626352c0181eccc0e17930d81e219314708dad775302dbbe1e"
+    },
+    "synthetic_fixtures_only": true,
+    "gpu_or_live_service_used": false
+  },
+  "non_claims": [
+    "the six crossed cells are independent replicates",
+    "pooled df=5 summaries support pass/fail inference",
+    "fixed-FLOP, fixed-time, or time-to-quality views decide the language screen",
+    "complete-case time-to-quality inference is allowed after censoring",
+    "the reporting-label gap changes numeric results or warrants a mid-sequence analyzer edit",
+    "this audit contains finalist outputs"
+  ]
+}

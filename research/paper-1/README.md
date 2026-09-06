@@ -337,6 +337,10 @@ the final combined model.
   executes all 12 frozen state transitions on temporary paths: 12 collections/commits, 11 schedules,
   one control-only target lock, and one final analysis. It preserves failure history and records two
   post-sequence hardening items without changing the live runner or contract.
+- [`finalist-crossed-views-audit-v1.json`](../../results/Speck-Paper1/finalist-crossed-views-audit-v1.json)
+  verifies that endpoint, source, fixed-FLOP, fixed-time, and uncensored time-to-quality outputs all
+  preserve the two fixed data-order strata; one censored pair suppresses every time bound. Secondary
+  pooled blocks remain descriptive under the plan despite a deferred redundant inline-label gap.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -404,6 +408,9 @@ The full temporary finalist simulation additionally verifies every control/candi
 the exact lock/analyze ordering. Terminal service provenance and an explicit finalizer `next_run`
 recheck remain future hardening; applying them mid-sequence would invalidate the frozen runner, so v2
 continues byte-identically under artifact-first collection.
+The blind crossed-views audit confirms that the v2 correction propagates beyond endpoint loss: every
+secondary view preserves order strata, any censor suppresses time bounds, and none controls the final
+language pass. Only redundant inline labels on secondary pooled summaries are deferred.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination

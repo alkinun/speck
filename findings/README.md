@@ -136,6 +136,7 @@ Read in order:
 128. [127 — HELMET truncation-tokenizer replacement gate](127_helmet_truncation_tokenizer_readiness.md)
 129. [128 — HELMET model-judge reproducibility and data boundary](128_helmet_model_judge_readiness.md)
 130. [129 — Full finalist automation transition simulation](129_finalist_automation_transition_audit.md)
+131. [130 — Crossed-factor audit of every finalist analysis view](130_finalist_crossed_views_audit.md)
 
 Conventions:
 
