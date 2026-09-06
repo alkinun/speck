@@ -154,6 +154,7 @@ Read in order:
 146. [145 — Qualified components do not yet form an executable systems pipeline](145_finalist_systems_pipeline_interface_audit.md)
 147. [146 — Additive NVML used-memory producer qualifies with mocks](146_finalist_systems_memory_supplement.md)
 148. [147 — Synthetic systems trial and block assembly qualifies](147_finalist_systems_assembly_qualified.md)
+149. [148 — Global six-block systems acceptance qualifies synthetically](148_finalist_systems_global_acceptance.md)
 
 Conventions:
 

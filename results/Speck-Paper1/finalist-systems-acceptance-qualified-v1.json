@@ -1,0 +1,122 @@
+{
+  "format": "speck_paper_finalist_systems_acceptance_qualification",
+  "format_version": 1,
+  "status": "qualified_synthetic_global_block_acceptance_live_pipeline_blocked",
+  "created_at": "2026-09-06T02:46:35+00:00",
+  "scope": "pure CPU validation of synthetic trial/block file graphs and global software identities before invoking the frozen analyzer; no live GPU, service, finalist checkpoint, model, result, log, intermediate metric, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "assembly_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-assembly-qualified-v1.json",
+      "sha256": "c642f4d3b38139471edfecd2501e842895f1c2a75fdd96d062f0dbdb1e7d8424"
+    },
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-systems-analysis-qualified-v1.json",
+      "sha256": "4f1bd86b426c5ab2932fa102834beb25e331ba8cf051e37db1e130fc151b5c48"
+    },
+    "pipeline_audit": {
+      "path": "results/Speck-Paper1/finalist-systems-pipeline-interface-audit-v1.json",
+      "sha256": "4b4e3bd70f7fe5e425dc2d0c60ab7912e3bd214450bf56c1e5a7a6b4584467e6"
+    }
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/paper_finalist_systems_acceptance.py",
+      "sha256": "f2d98a8460f7cde3261a2a7f4e485e130875962c8da176bdeb981872d1dbade0"
+    },
+    "cli": {
+      "path": "scripts/paper_finalist_systems_acceptance_validate.py",
+      "sha256": "df4e83cd8cc4bac0143505da593fe381d8ff1402b9e01dc7f283cb5b3f4c2c0b"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_acceptance.py",
+      "sha256": "bbfac18d58ea700f7fd4094f2a0297a019dd6fb4d4e73bb9b20dccedd4d1bafa"
+    }
+  },
+  "block_validation": {
+    "exact_six_block_identity": true,
+    "protocol_hash_required": true,
+    "trial_order_pair_and_no_retry_required": true,
+    "two_role_trial_references_required": true,
+    "referenced_trial_SHA256_recomputed": true,
+    "referenced_trial_bytes_equal_embedded_trial": true,
+    "trial_format_status_block_pair_position_role_and_arm_required": true,
+    "complete_software_identity_keyset_required": true,
+    "paired_batch_SHA256_required_and_equal": true,
+    "all_present_complete_blocks_validated_even_if_another_block_failed": true,
+    "failed_block_requires_reason_and_no_retry": true
+  },
+  "global_identity": {
+    "trials": 12,
+    "common_across_every_trial": [
+      "git_commit",
+      "python",
+      "pytorch",
+      "cuda_runtime",
+      "cuda_driver",
+      "fla",
+      "triton",
+      "benchmark_engine_sha256"
+    ],
+    "model_config_one_value_per_role": true,
+    "control_and_candidate_model_configs_must_differ": true,
+    "inter_block_batch_fingerprints_may_differ": true,
+    "within_block_paired_batch_fingerprint_must_match": true
+  },
+  "analysis_boundary": {
+    "frozen_analyzer_called_only_after_six_complete_valid_blocks": true,
+    "missing_block_analysis_executed": false,
+    "failed_block_analysis_executed": false,
+    "missing_or_failed_joint_claim": false,
+    "replacement_or_execution_authorized": false
+  },
+  "tests": {
+    "complete_six_blocks_run_analysis_and_joint_pass": true,
+    "referenced_trial_file_drift_rejected": true,
+    "global_software_drift_rejected": true,
+    "shared_control_candidate_model_identity_rejected": true,
+    "failed_block_retained_without_analysis": true,
+    "failed_block_cannot_mask_other_complete_block_drift": true,
+    "missing_block_retained_without_analysis": true,
+    "count": 7
+  },
+  "pipeline_effect": {
+    "global_12_trial_identity_consumer_closed": true,
+    "global_block_to_analysis_gate_closed": true,
+    "runtime_identity_producer_qualified": false,
+    "live_orchestrator_qualified": false,
+    "automatic_failure_artifact_producer_qualified": false,
+    "end_to_end_pipeline_qualified": false
+  },
+  "decision": {
+    "synthetic_global_systems_acceptance_qualified": true,
+    "systems_execution_authorized": false,
+    "protocol_or_prior_components_modified": false,
+    "active_language_sequence_or_program_changed": false,
+    "next_action": "implement the runtime identity/compiled-fallback attestation producer and block orchestrator; require live post-language preflight before activation"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_acceptance.py -q",
+    "expected": "7 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_acceptance_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "systems_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems*.py -q",
+    "systems_regression_expected": "99 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "235 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "synthetic complete blocks are measured systems evidence",
+    "runtime software identities are produced by a qualified live source",
+    "the live orchestrator or failure path is qualified",
+    "the pipeline is end-to-end qualified",
+    "the systems protocol may execute now",
+    "a failed block permits skipping validation of other evidence"
+  ]
+}
