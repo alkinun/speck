@@ -2071,6 +2071,8 @@ def _validate_finalist_automation(reference, repository_root, paper_id):
         != _file_sha256(repository_root / implementation.get("base_train", ""))
         or implementation.get("collector_analyzer_sha256")
         != _file_sha256(repository_root / implementation.get("collector_analyzer", ""))
+        or implementation.get("analysis_module_sha256")
+        != _file_sha256(repository_root / "speck/paper_finalist_analysis.py")
         or contract.get("predecessor", {}).get("path")
         != "research/paper-1/finalist_automation_v1.json"
         or not (repository_root / contract["predecessor"]["path"]).is_file()
