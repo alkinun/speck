@@ -2118,7 +2118,7 @@ def _validate_finalist_automation(reference, repository_root, paper_id):
                 raise ValueError(f"finalist automation {stem} does not match its pin")
 
 
-def _validate_finalist_live_launch(reference, repository_root, paper_id):
+def _validate_finalist_live_launch(reference, repository_root, paper_id, evidence=None):
     _require(reference, {"result", "sha256", "status"}, "finalist live launch reference")
     path = repository_root / reference["result"]
     if not path.is_file() or _file_sha256(path) != reference["sha256"]:
@@ -2137,6 +2137,7 @@ def _validate_finalist_live_launch(reference, repository_root, paper_id):
         or result.get("initial_state", {}).get("status") != "qualified_unexecuted"
         or result.get("initial_state", {}).get("control_results") != []
         or result.get("initial_state", {}).get("candidate_results") != []
+        or (evidence is not None and result.get("initial_state") != evidence)
         or result.get("initial_run")
         != "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
         or result.get("active_finalist_units") != []
@@ -2863,6 +2864,7 @@ def _validate_program(program, paper_id, claim_ids, repository_root):
         program["finalist_live_launch"],
         repository_root,
         paper_id,
+        program["finalist_evidence"],
     )
     _validate_finalist_rerun(
         program["finalist_rerun"],

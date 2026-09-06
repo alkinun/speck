@@ -515,8 +515,8 @@
     "status": "frozen_crossed_factor_before_any_finalist_output"
   },
   "finalist_live_launch": {
-    "result": "results/Speck-Paper1/finalist-launch-qualified-v2.json",
-    "sha256": "f4aa2f4e54733f2682dde181706f81928b8c49586affb791247fed027b373e8b",
+    "result": "results/Speck-Paper1/finalist-launch-qualified-v3.json",
+    "sha256": "33d4ad10ca7f183593ac12f67f82246fc7b7e9ecfd12fcd8f365b72efd5f046f",
     "status": "qualified_initial_control_launch_authorized_no_promotion_authority"
   },
   "finalist_rerun": {
