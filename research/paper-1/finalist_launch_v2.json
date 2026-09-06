@@ -1,0 +1,80 @@
+{
+  "format": "speck_paper_finalist_launch_contract",
+  "format_version": 2,
+  "contract_id": "speck-paper-1-finalist-launch-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_crossed_factor_successor_before_any_finalist_output",
+  "frozen_on": "2026-09-06",
+  "predecessor": {
+    "path": "research/paper-1/finalist_launch_v1.json",
+    "sha256": "ec0a5d783a318790a7cc98ad18de040e6fba49ef61023d087cb199066e510d50",
+    "decision": "superseded_before_live_qualification_or_output",
+    "unchanged": "release-gate separation, execution order, resource forecast, live gates, event model, failure behavior, and non-claims"
+  },
+  "corrected_inputs": {
+    "analysis": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "analysis_qualification": {
+      "path": "results/Speck-Paper1/finalist-analysis-qualified-v2.json",
+      "sha256": "97ea75d6c3c4c8124bb21b4bb169378aebab4cd6c1050f078fa40f4680ae643b"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "data_storage_qualification": {
+      "path": "results/Speck-Paper1/finalist-qualification-v1.json",
+      "sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605"
+    },
+    "runtime_preflight": {
+      "path": "results/Speck-Paper1/finalist-preflight-v1.json",
+      "sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231"
+    }
+  },
+  "crossed_factor_rule": {
+    "data_orders": [0, 1610612736],
+    "seeds_within_each_order": [42, 43, 44],
+    "primary_bounds": "two separate one-sided df=2 bounds over seeds, one per fixed order",
+    "hard_guards": "all six aggregate cells and every source in every cell must remain within their margin",
+    "pooled_df_5": "descriptive_only",
+    "scope": "both frozen orders only; no population inference over arbitrary orders"
+  },
+  "unchanged_execution": {
+    "runs": 12,
+    "controls_before_target_lock": 6,
+    "candidates_after_target_lock": 6,
+    "training_tokens_per_run": 1539833856,
+    "total_steady_gpu_hours_forecast": 121.2303502872009,
+    "cooldown_between_runs": "15m",
+    "polling": false,
+    "quality_dependent_branching": false,
+    "automatic_retry": false,
+    "commit_after_each_result": true,
+    "helmet_service_must_be_inactive": true
+  },
+  "output_observation": {
+    "checkpoint_root_absent": true,
+    "result_root_absent": true,
+    "time_to_quality_lock_absent": true,
+    "analysis_result_absent": true
+  },
+  "decision": {
+    "v1_launch_authority": false,
+    "v1_automation_authority": false,
+    "v2_analysis_authority": true,
+    "v2_automation_implementation_authorized": true,
+    "live_launch_qualification_authorized": true,
+    "initial_launch_authorized": false,
+    "training_authorized": false,
+    "reason": "automation v2 and a clean post-HELMET live qualification do not yet exist",
+    "component_attribution_authorized": false,
+    "architecture_promotion_authorized": false,
+    "novelty_claim_authorized": false,
+    "release_claim_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "pin automation v2 to the corrected runner and analysis, register the empty state, then wait for HELMET inactivity before live qualification"
+  }
+}

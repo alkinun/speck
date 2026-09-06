@@ -255,6 +255,9 @@ the final combined model.
 - [`finalist_launch_v1.json`](finalist_launch_v1.json) separates checkpoint production from mandatory
   checkpoint-consuming release suites, freezes the 121.23-hour control-first event sequence and live
   gates, and authorizes automation implementation but not the initial launch.
+- [`finalist_launch_v2.json`](finalist_launch_v2.json) supersedes v1 before output, binding that
+  unchanged sequence and release boundary to the corrected two-order, three-seed analysis and
+  withholding launch until automation v2 and a post-HELMET live gate exist.
 - [`finalist_automation_v1.json`](finalist_automation_v1.json) pins the event-driven twelve-run runner,
   empty program state, all-control target lock, per-result commits, live gates, cooldown, and fail-closed
   no-retry behavior; a post-HELMET live qualification is still required before launch.
