@@ -1,0 +1,120 @@
+{
+  "format": "speck_paper_finalist_systems_protocol_qualification",
+  "format_version": 1,
+  "status": "qualified_pre_result_protocol_execution_blocked_on_language_and_implementation_gates",
+  "created_at": "2026-09-06T02:00:21+00:00",
+  "scope": "offline structural and adversarial qualification of a prospective post-language systems protocol; no live GPU, service, checkpoint, result, log, intermediate metric, or runtime environment accessed or changed",
+  "inputs": {
+    "protocol": {
+      "path": "research/paper-1/finalist_systems_v2.json",
+      "sha256": "5188c6b3a96b61f6053ef73a23bcb393bf60223ad648df12598ba80218dc278b"
+    },
+    "measurement_boundary": {
+      "path": "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
+      "sha256": "19278c3af7d161735c136dadf0d8c2b573e819dc2245a01b4dd277a7d638eabe"
+    },
+    "systems_cost_readiness": {
+      "path": "research/paper-1/systems_cost_readiness_v1.json",
+      "sha256": "6507a382f2786e01ad9cfad11ab9770fc4d06dd9c0652fb89c3ff1a3319bf9d8"
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_finalist_systems_protocol_validate.py",
+      "sha256": "e327f9ed04cc3383cdf8f1324bdd4487151dbbee4534c1b156ea10559304204e"
+    },
+    "tests": {
+      "path": "tests/test_paper_finalist_systems_protocol.py",
+      "sha256": "3f945f94ab04f64a0f7c7c6a4eb8866d09e524c7b54d7b0d7662859476c9e8d4"
+    }
+  },
+  "qualified_design": {
+    "outcome_independent_freeze": true,
+    "blocks": 6,
+    "trials": 12,
+    "orders": {
+      "control_first": 3,
+      "candidate_first": 3,
+      "balanced_within_each_seed": true
+    },
+    "retained_checkpoint_source": true,
+    "fresh_process_per_trial": true,
+    "warmup_steps_per_trial": 10,
+    "measured_steps_per_trial": 30,
+    "all_measured_steps": 360,
+    "all_measured_tokens": 23592960,
+    "start_temperature_c_max": 45,
+    "paired_start_temperature_difference_c_max": 2,
+    "flanking_idle_blocks": 12,
+    "telemetry_hz": 1,
+    "power_thermal_clock_pstate_utilization_fan_throttle_fields_required": true,
+    "host_and_process_telemetry_required": true,
+    "missing_energy_interval_bounds": "zero watts to recorded power limit",
+    "energy_claim_uses_candidate_upper_over_control_lower": true,
+    "maximum_total_elapsed_hours": 4
+  },
+  "qualified_analysis": {
+    "unit": "paired block",
+    "effect": "log candidate/control ratio",
+    "primary_endpoints": [
+      "measured wall seconds per token",
+      "gross GPU-board joules per token"
+    ],
+    "blocks": 6,
+    "student_t_df": 5,
+    "one_sided_confidence": 0.975,
+    "student_t_critical": 2.570581835636314,
+    "critical_value_recomputed": true,
+    "exact_sign_flip_assignments": 64,
+    "exact_sign_flip_p_max": 0.05,
+    "AB_and_BA_direction_guard": true,
+    "joint_claim_requires_both_primary_endpoints": true,
+    "missing_failed_or_outlier_block_deletion": false,
+    "replacement_or_automatic_retry": false
+  },
+  "adversarial_tests": {
+    "valid_frozen_blocked_protocol_passes": true,
+    "unbalanced_order_rejected": true,
+    "short_measurement_rejected": true,
+    "missing_power_telemetry_rejected": true,
+    "nonconservative_gap_bound_rejected": true,
+    "weaker_confidence_rejected": true,
+    "premature_execution_authority_rejected": true,
+    "tests": 7
+  },
+  "decision": {
+    "protocol_structurally_qualified": true,
+    "protocol_frozen_before_any_accepted_finalist_result": true,
+    "current_execution_authorized": false,
+    "active_language_sequence_changed": false,
+    "active_program_changed": false,
+    "active_runner_trainer_analyzer_or_plan_changed": false,
+    "telemetry_injection_into_active_run_authorized": false,
+    "language_results_may_change_order_endpoints_or_thresholds": false,
+    "systems_harness_sampler_integrator_and_analyzer_still_required": true,
+    "next_action": "implement and offline-qualify the systems harness, telemetry sampler, conservative energy integrator, and preregistered analyzer; execute only after all 12 language results pass v3 acceptance and the GPU is free"
+  },
+  "verification": {
+    "command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_protocol.py -q",
+    "expected": "7 passed",
+    "qualification_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper_finalist_systems_protocol_qualification.py -q",
+    "qualification_expected": "1 passed",
+    "paper_regression_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu pytest tests/test_paper*.py -q",
+    "paper_regression_expected": "148 passed",
+    "program_validation": "passed with active experiment program unchanged",
+    "validator_command": "UV_PROJECT_ENVIRONMENT=.venv-paper1-cpu uv run --extra cpu python -m scripts.paper_finalist_systems_protocol_validate research/paper-1/finalist_systems_v2.json",
+    "validator_result": "valid_frozen_execution_blocked with 6 blocks, 12 trials, and activation false",
+    "critical_value_command": "scipy.stats.t.ppf(0.975, 5)",
+    "critical_value_result": 2.570581835636314,
+    "live_output_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the systems protocol has executed",
+    "the active language timing is causally attributable to architecture",
+    "GPU-board energy is whole-system energy",
+    "the unimplemented sampler or analyzer is qualified",
+    "the protocol supports serving, dollars, datacenter, or paper-scale claims",
+    "this qualification changes any active scientific or automation input"
+  ]
+}

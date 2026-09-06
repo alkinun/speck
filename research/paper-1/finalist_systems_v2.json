@@ -1,0 +1,346 @@
+{
+  "format": "speck_paper_finalist_systems_protocol",
+  "format_version": 2,
+  "protocol_id": "speck-paper-1-finalist-systems-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_before_any_finalist_result_execution_blocked",
+  "frozen_at": "2026-09-06T01:57:00+00:00",
+  "purpose": "prospective architecture-only training-time and GPU-board-energy comparison that removes the active language sequence's control-first calendar confound without changing or sampling that sequence",
+  "pre_result_boundary": {
+    "accepted_finalist_results": 0,
+    "active_result_or_checkpoint_inspected": false,
+    "active_service_polled": false,
+    "language_outcomes_used_to_choose_design": false,
+    "telemetry_injected_into_active_sequence": false,
+    "active_runner_trainer_analyzer_plan_or_program_changed": false
+  },
+  "inputs": {
+    "systems_cost_readiness": {
+      "path": "research/paper-1/systems_cost_readiness_v1.json",
+      "sha256": "6507a382f2786e01ad9cfad11ab9770fc4d06dd9c0652fb89c3ff1a3319bf9d8"
+    },
+    "measurement_boundary": {
+      "path": "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
+      "sha256": "19278c3af7d161735c136dadf0d8c2b573e819dc2245a01b4dd277a7d638eabe"
+    },
+    "analysis_plan": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "materialization_contract": {
+      "path": "research/paper-1/finalist_materialization_v1.json",
+      "sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "run_qualification": {
+      "path": "results/Speck-Paper1/finalist-qualification-v1.json",
+      "sha256": "e6f74cac020fc63f9476f3c7038b47685c90dee0997efa5299cc18dd6e85c605"
+    },
+    "result_acceptance": {
+      "path": "results/Speck-Paper1/finalist-result-acceptance-qualified-v3.json",
+      "sha256": "132ee515b942b4001322316bcff525fa756584c2b9b9923eba723ea9116e9983"
+    }
+  },
+  "activation_gate": {
+    "active_language_sequence_complete": true,
+    "accepted_results_required": 12,
+    "language_analysis_status": "complete_crossed_factor_finalist_language_evidence_no_standalone_promotion",
+    "v3_result_acceptance_required": true,
+    "all_12_final_checkpoints_retained": true,
+    "gpu_and_finalist_units_inactive": true,
+    "helmet_or_other_gpu_work_inactive": true,
+    "systems_harness_qualified": true,
+    "systems_analysis_qualified": true,
+    "current_activation_gate_pass": false,
+    "failure_rule": "do not start any systems trial until every gate passes; a failed language screen does not erase the protocol but blocks architecture-efficiency promotion"
+  },
+  "hardware_and_software_lock": {
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "gpu_uuid": "GPU-6e7f2d05-ac19-3812-ff41-33079fd67bfd",
+    "gpu_count": 1,
+    "precision": "bfloat16",
+    "driver_from_frozen_preflight": "610.43.03",
+    "device_batch_size": 4,
+    "sequence_length": 4096,
+    "batch_tokens": 65536,
+    "power_limit_change_authorized": false,
+    "clock_lock_change_authorized": false,
+    "software_or_kernel_change_within_protocol_authorized": false,
+    "required_runtime_identities": [
+      "git commit",
+      "Python",
+      "PyTorch",
+      "CUDA runtime",
+      "CUDA driver",
+      "FLA",
+      "Triton",
+      "model config",
+      "benchmark harness"
+    ]
+  },
+  "arms": {
+    "control": "dense_global_param_match",
+    "candidate": "five_cache_kda_gqa"
+  },
+  "paired_blocks": [
+    {
+      "block": 0,
+      "pair": 0,
+      "seed": 42,
+      "data_token_offset": 0,
+      "benchmark_data_start": 1539833856,
+      "benchmark_data_end": 1542455296,
+      "trial_order": [
+        "control",
+        "candidate"
+      ]
+    },
+    {
+      "block": 1,
+      "pair": 1,
+      "seed": 42,
+      "data_token_offset": 1610612736,
+      "benchmark_data_start": 3150446592,
+      "benchmark_data_end": 3153068032,
+      "trial_order": [
+        "candidate",
+        "control"
+      ]
+    },
+    {
+      "block": 2,
+      "pair": 2,
+      "seed": 43,
+      "data_token_offset": 0,
+      "benchmark_data_start": 1539833856,
+      "benchmark_data_end": 1542455296,
+      "trial_order": [
+        "candidate",
+        "control"
+      ]
+    },
+    {
+      "block": 3,
+      "pair": 3,
+      "seed": 43,
+      "data_token_offset": 1610612736,
+      "benchmark_data_start": 3150446592,
+      "benchmark_data_end": 3153068032,
+      "trial_order": [
+        "control",
+        "candidate"
+      ]
+    },
+    {
+      "block": 4,
+      "pair": 4,
+      "seed": 44,
+      "data_token_offset": 0,
+      "benchmark_data_start": 1539833856,
+      "benchmark_data_end": 1542455296,
+      "trial_order": [
+        "control",
+        "candidate"
+      ]
+    },
+    {
+      "block": 5,
+      "pair": 5,
+      "seed": 44,
+      "data_token_offset": 1610612736,
+      "benchmark_data_start": 3150446592,
+      "benchmark_data_end": 3153068032,
+      "trial_order": [
+        "candidate",
+        "control"
+      ]
+    }
+  ],
+  "balance_rationale": {
+    "blocks": 6,
+    "control_first_blocks": 3,
+    "candidate_first_blocks": 3,
+    "each_seed_has_one_control_first_and_one_candidate_first": true,
+    "maximum_consecutive_same_order": 2,
+    "order_frozen_without_language_results": true,
+    "pair_seed_and_data_window_reused_only_as_blocking_factors": true
+  },
+  "trial_workload": {
+    "source": "each arm's v3-accepted retained final checkpoint",
+    "checkpoint_step": 23496,
+    "checkpoint_mutation_or_rewrite": false,
+    "fresh_process_per_trial": true,
+    "restore_model_optimizer_and_loader_state": true,
+    "pre_materialize_identical_paired_batches_before_timing": true,
+    "warmup_optimizer_steps": 10,
+    "measured_optimizer_steps": 30,
+    "total_optimizer_steps_per_trial": 40,
+    "total_tokens_per_trial": 2621440,
+    "measured_tokens_per_trial": 1966080,
+    "all_trial_total_tokens": 31457280,
+    "all_trial_measured_tokens": 23592960,
+    "validation_during_trial": false,
+    "checkpoint_write_during_trial": false,
+    "model_or_optimizer_output_persisted": false,
+    "loss_used_for_decision": false,
+    "nonfinite_loss_or_gradient_action": "retain the trial, fail the block, stop the protocol, and do not replace or retry it"
+  },
+  "thermal_and_idle_design": {
+    "pre_block_idle_seconds": 120,
+    "post_block_idle_seconds": 120,
+    "idle_blocks_before": 6,
+    "idle_blocks_after": 6,
+    "maximum_trial_start_temperature_c": 45,
+    "maximum_within_pair_start_temperature_difference_c": 2,
+    "thermal_recovery_timeout_seconds": 1200,
+    "gpu_utilization_at_start_percent": 0,
+    "other_compute_processes_at_start": 0,
+    "failed_thermal_gate_action": "retain the gate artifact and stop without replacement or automatic retry",
+    "paired_idle_baseline_watts": "mean power across the flanking pre-block and post-block idle intervals",
+    "idle_and_cooldown_time_excluded_from_trial_speed": true,
+    "idle_and_cooldown_energy_reported_separately": true
+  },
+  "telemetry": {
+    "sampling_hz": 1,
+    "clock": "monotonic_ns plus UTC timestamp",
+    "gpu_uuid_bound_per_sample": true,
+    "gpu_fields": [
+      "power.draw",
+      "temperature.gpu",
+      "clocks.current.graphics",
+      "clocks.current.memory",
+      "power.limit",
+      "pstate",
+      "utilization.gpu",
+      "utilization.memory",
+      "fan.speed",
+      "clocks_throttle_reasons.active"
+    ],
+    "host_fields": [
+      "cpu utilization",
+      "load average",
+      "available memory",
+      "disk read/write bytes",
+      "display state",
+      "GPU process inventory",
+      "benchmark PID and child PIDs"
+    ],
+    "trial_phase_markers": [
+      "process_start",
+      "checkpoint_loaded",
+      "batches_materialized",
+      "warmup_start",
+      "warmup_end",
+      "measured_start",
+      "measured_end",
+      "process_end"
+    ],
+    "minimum_measured_window_coverage": 0.99,
+    "maximum_sample_gap_seconds": 2.5,
+    "gross_energy_joules": "trapezoidal integral of board-power samples over the measured interval",
+    "incremental_energy_joules": "gross measured energy minus measured seconds times the paired idle-baseline watts",
+    "gap_lower_bound": "integrate missing duration at zero board watts",
+    "gap_upper_bound": "integrate missing duration at the maximum recorded board power limit spanning the gap",
+    "energy_claim_gap_rule": "form every candidate/control block ratio from candidate upper energy divided by control lower energy; the primary energy claim must pass with these conservative ratios",
+    "unbounded_outage_interpolation_authorized": false,
+    "whole_system_energy_claim_authorized": false
+  },
+  "timing_and_memory": {
+    "primary_time": "CUDA-synchronized monotonic wall seconds for the 30-step measured interval, including host-to-device batch transfer and optimizer work",
+    "secondary_time": [
+      "CUDA-event forward seconds",
+      "CUDA-event backward seconds",
+      "CUDA-event optimizer seconds",
+      "fresh-process startup seconds",
+      "checkpoint-load seconds",
+      "batch-materialization seconds",
+      "warmup seconds"
+    ],
+    "memory": [
+      "torch peak allocated bytes",
+      "torch peak reserved bytes",
+      "NVML peak used memory",
+      "persistent checkpoint tensor bytes by category",
+      "allocator fragmentation"
+    ],
+    "cuda_synchronize_before_and_after_every_interval": true,
+    "compile_or_kernel_fallback_retained_as_failure": true,
+    "OOM_retained_as_failure": true
+  },
+  "estimands_and_analysis": {
+    "unit": "one paired block",
+    "primary_endpoints": [
+      "measured wall seconds per token",
+      "gross GPU-board joules per token"
+    ],
+    "sensitivity_endpoints": [
+      "incremental GPU-board joules per token",
+      "CUDA-event compute seconds per token",
+      "tokens per second",
+      "peak allocated, reserved, and NVML memory"
+    ],
+    "block_effect": "natural logarithm of candidate divided by control",
+    "aggregate": "mean paired log ratio across all six blocks, exponentiated as a geometric-mean ratio",
+    "one_sided_confidence": 0.975,
+    "student_t_df": 5,
+    "student_t_critical": 2.570581835636314,
+    "exact_sign_flip_assignments": 64,
+    "maximum_exact_one_sided_p": 0.05,
+    "metric_specific_improvement_rule": "upper one-sided 97.5% paired-t bound is below log(1.0), exact paired sign-flip p is at most 0.05, and AB and BA point estimates are both below zero; gross energy uses candidate-upper/control-lower gap ratios",
+    "joint_training_systems_efficiency_rule": "both primary endpoints pass their metric-specific improvement rule and incremental energy has a point estimate below zero",
+    "missing_or_failed_block": "the affected endpoint and joint claim fail; no imputation, outlier deletion, replacement block, or automatic retry",
+    "order_strata": [
+      "control_then_candidate",
+      "candidate_then_control"
+    ],
+    "data_order_strata_reported_descriptively": true,
+    "individual_trials_and_all_telemetry_published": true,
+    "quality_or_language_metric_analyzed": false
+  },
+  "resource_envelope": {
+    "trials": 12,
+    "optimizer_steps": 480,
+    "measured_optimizer_steps": 360,
+    "maximum_total_elapsed_hours": 4,
+    "maximum_GPU_count": 1,
+    "automatic_budget_extension": false,
+    "checkpoint_storage_growth_bytes": 0
+  },
+  "claim_boundary": {
+    "may_support_after_passing": [
+      "causal same-RTX-3090 model-training-step time comparison at the frozen 4K BF16 batch geometry",
+      "gross GPU-board energy comparison over the same measured optimizer windows",
+      "incremental GPU-board energy sensitivity using measured flanking idle power",
+      "training-memory comparison for the named runtime and workload"
+    ],
+    "may_not_support": [
+      "whole-system energy, carbon, or monetary savings",
+      "production serving latency, throughput, resident capacity, or cost",
+      "hardware portability",
+      "language quality or component attribution",
+      "paper-scale or datacenter efficiency",
+      "architecture promotion without every independent quality and release gate"
+    ]
+  },
+  "implementation_gate": {
+    "systems_harness_present": false,
+    "systems_harness_tests_pass": false,
+    "telemetry_sampler_qualified": false,
+    "energy_integrator_qualified": false,
+    "analysis_implementation_qualified": false,
+    "execution_authorized": false,
+    "next_action": "implement and offline-qualify the harness, sampler, integrator, and analyzer without touching the active language sequence; execute only after the activation gate passes"
+  },
+  "non_claims": [
+    "the active control-first finalist timing becomes causal",
+    "analytic FLOP reduction proves realized time or energy reduction",
+    "GPU-board energy is whole-system energy",
+    "thirty measured steps estimate time-to-quality",
+    "the protocol establishes serving or datacenter efficiency",
+    "freezing this protocol authorizes execution during the active language sequence"
+  ]
+}

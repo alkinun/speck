@@ -345,6 +345,10 @@ the final combined model.
   separates preserved synchronized timing/peak allocation from absent energy and hardware telemetry.
   Control-first target integrity aliases architecture with multi-day calendar block, so finalist timing
   remains descriptive until a thermally interleaved, telemetry-rich systems protocol is run.
+- [`finalist_systems_v2.json`](finalist_systems_v2.json) and
+  [`finalist-systems-protocol-qualified-v1.json`](../../results/Speck-Paper1/finalist-systems-protocol-qualified-v1.json)
+  freeze that successor before results: six balanced AB/BA checkpoint-replay blocks, conservative 1 Hz
+  power/thermal telemetry, exact paired estimands, and a hard execution gate behind language completion.
 - [`finalist-source-stability-audit-v1.json`](../../results/Speck-Paper1/finalist-source-stability-audit-v1.json)
   proves per-step loss/gradient fail-fast behavior and positive 11-source validation coverage, but also
   reproduces the frozen analyzer's consistent-omission gap. An append-only sidecar now requires every
@@ -440,6 +444,10 @@ The systems audit further limits interpretation: same-GPU/start-temperature laun
 the control-versus-candidate calendar-block confound over five days. Analytic FLOPs and physical timing
 may be reported separately, but energy, dollars, causal speedup, serving, and systems promotion require
 new thermally interleaved measurements after the language sequence.
+That post-language comparison is now frozen outcome-independently: six balanced paired blocks, twelve
+fresh-process checkpoint replays, matched thermal/idle gates, conservative board-energy bounds, and
+two predeclared primary endpoints. Execution remains blocked on language completion and implementation
+qualification, and the active experiment program is unchanged.
 Training non-finiteness already stops before a final event, but complete source identity needs a
 redundant sidecar: deterministic validation covers all 11 sources, while the frozen analyzer alone
 would accept the same omitted source in every result. Missing/non-finite sources now mandate rejection,
