@@ -1,0 +1,237 @@
+{
+  "format": "speck_deepseek_v4_sequence_primary_source_audit",
+  "format_version": 1,
+  "status": "official_report_and_inference_semantics_qualified_three_local_readiness_corrections_required_training_blocked",
+  "created_at": "2026-09-06T04:21:40+00:00",
+  "scope": "immutable initial official DeepSeek-V4-Flash report/config/inference/kernel release; model weights and upstream code not executed; later revisions and third-party implementations excluded",
+  "local_note": {
+    "path": "papers/46_deepseek_v4_official_release.md",
+    "sha256": "5bc77893a3a2758b69d6c58738b0616a436e72c76942fb4249cfae4295a86c31"
+  },
+  "source": {
+    "repository": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
+    "commit": "efc855127ecba8ece36817f9e4cdeeae03b10200",
+    "files": {
+      "DeepSeek_V4.pdf": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/DeepSeek_V4.pdf",
+        "sha256": "fa4a3490e2dcc03c9da61b04a8be471795e9966ebbbf292a3899fa62683a330e",
+        "bytes": 4479901,
+        "pages": 58
+      },
+      "LICENSE": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/LICENSE",
+        "sha256": "f2c6c602815669d292889e5be8c802f2ed950653b77999b1584e8e6aed25d040",
+        "bytes": 1084
+      },
+      "README.md": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/README.md",
+        "sha256": "a0fc02ff24259a911c5c14208578cd7b3cc06a1e784d7eb4b9af6111bdd19db9",
+        "bytes": 13756
+      },
+      "config.json": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/config.json",
+        "sha256": "52b5a1aa87606cb5be4f3158d706594edb1c4ce97ce6b1cd6079f15df075d7f5",
+        "bytes": 1724
+      },
+      "inference/README.md": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/inference/README.md",
+        "sha256": "b9fe8027f91f2160b46582b61eaaf7b9873b3da36ee9f98bc76a900e7c1fed94",
+        "bytes": 951
+      },
+      "inference/config.json": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/inference/config.json",
+        "sha256": "6cc6f816ca73a8d38750194e330398e4f6955b4b45f674f7d29c96da14ccb733",
+        "bytes": 991
+      },
+      "inference/model.py": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/inference/model.py",
+        "sha256": "6380e70f3690227155ae17fa40b99c8e6900623d00925fd8a8ccc9588e02e818",
+        "bytes": 38626
+      },
+      "inference/kernel.py": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/inference/kernel.py",
+        "sha256": "c4dc859a2208f9182ae00f6267cf8655deba51dcd92dfd14d0e65401658593e4",
+        "bytes": 22204
+      },
+      "inference/generate.py": {
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/efc855127ecba8ece36817f9e4cdeeae03b10200/inference/generate.py",
+        "sha256": "d4d443c0be8499b20ae5eaff0a623df02f47a8309be6feeba4eb4e0eeb5342c3",
+        "bytes": 6296
+      }
+    }
+  },
+  "official_architecture_factorization": {
+    "layerwise_not_parallel": true,
+    "Flash_main_layers": 43,
+    "Flash_schedule": {
+      "pure_SWA_prefix_layers": 2,
+      "CSA_layers": 21,
+      "HCA_layers": 20,
+      "post_prefix_pattern": "CSA then HCA interleaved"
+    },
+    "Pro_main_layers": 61,
+    "Pro_schedule": {
+      "HCA_prefix_layers": 2,
+      "CSA_layers": 30,
+      "HCA_layers_including_prefix": 31,
+      "post_prefix_pattern": "CSA then HCA interleaved"
+    },
+    "raw_local_branch_in_every_CSA_and_HCA_layer": true,
+    "same_layer_HCA_plus_CSA_branches": false,
+    "interaction": "local plus one compressed operator within a layer; CSA/HCA interact across the depth schedule"
+  },
+  "official_HCA_semantics": {
+    "equations": [
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ],
+    "source_blocks": "non-overlapping m'-token blocks",
+    "KV_projection": "one learned hidden-to-head vector per source token",
+    "score_projection": "one learned hidden-to-head channel-wise score per source token",
+    "position_bias": "learned m'-by-head-dimension bias",
+    "pooling": "per-channel softmax over m' positions followed by weighted KV sum",
+    "post_pool_RMSNorm": true,
+    "partial_RoPE_after_compression": true,
+    "compressed_entry_is_key_and_value": true,
+    "query": "shared low-rank latent then per-head up-projection and RMSNorm",
+    "output": "two-stage grouped output projection",
+    "selection": "all causally completed HCA entries",
+    "published_rate": 128,
+    "published_rate_selected_for_Speck": false
+  },
+  "official_CSA_semantics": {
+    "KV_and_score_projection_equations": [
+      9,
+      10
+    ],
+    "overlap_pooling_equations": [
+      11,
+      12
+    ],
+    "indexer_equations": [
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "main_attention_equations": [
+      18,
+      19
+    ],
+    "two_projection_halves": "a from current m-token block and b from previous m-token block",
+    "pooling": "one per-channel softmax over 2m current-a plus previous-b positions",
+    "first_entry_previous_half": "zero values and negative-infinity scores",
+    "emission_stride_tokens": "m",
+    "support_tokens_after_first_entry": "2m",
+    "adjacent_entry_support_overlap": true,
+    "selected_object": "compressed KV entry, not raw token block",
+    "indexer_key": "separate same-overlap compressed projection with rotation and low-precision simulation",
+    "indexer_score": "sum over ReLU query-key head affinities weighted by learned per-query head weights",
+    "one_selected_entry_set_shared_by_main_query_heads": true,
+    "unfinished_current_compressed_entry_visible": false,
+    "published_rate": 4,
+    "published_topk": 512,
+    "published_geometry_selected_for_Speck": false
+  },
+  "official_local_and_normalization_semantics": {
+    "sliding_window_tokens": 128,
+    "local_entry": "raw projected and normalized KV with partial RoPE",
+    "compressed_and_raw_index_spaces_concatenated": true,
+    "one_attention_softmax_over_union": true,
+    "attention_sink_equation": 27,
+    "compressed_and_raw_entries_with_overlapping_source_support_are_distinct": true,
+    "deduplicate_by_underlying_raw_source_span": false,
+    "published_window_selected_for_Speck": false
+  },
+  "official_causal_state_semantics": {
+    "completed_entry_visibility": "visible at and after the query that completes the entry's current source block",
+    "HCA_tail": "float32 KV and score state for the current non-overlapping m'-token block",
+    "CSA_tail": "float32 prior-half plus current-half KV and score state for overlapping compression",
+    "raw_local_state": "ring over the latest window-size exact KV entries",
+    "completed_compressed_state": "separate cache appended after the raw-window index space",
+    "full_prefill_start_position_zero": true,
+    "one_token_incremental_decode": true,
+    "arbitrary_nonzero_start_chunked_prefill": false,
+    "prefix_reuse_identity_contract": false,
+    "eviction_serialization_resume_contract": false,
+    "request_identity_in_nonpersistent_buffers": false
+  },
+  "official_code_boundary": {
+    "top_level_inference_mode": true,
+    "training_compressor_objective_present": false,
+    "training_indexer_objective_present": false,
+    "backward_contract_present": false,
+    "full_prefill_decode_parity_tests_present": false,
+    "arbitrary_chunk_parity_tests_present": false,
+    "prefix_cache_tests_present": false,
+    "TileLang_sparse_attention_kernel_present": true,
+    "kernel_union_softmax_and_sink_present": true,
+    "kernel_locally_qualified": false,
+    "official_code_executed": false
+  },
+  "local_gate_disposition": {
+    "HCA_v1": {
+      "path": "research/paper-1/hca_readiness_v1.json",
+      "sha256": "5a2b991f1b31c5fcc12f3886fec2ad093f1afd4f1cfe4b21cb3abb5e40864888",
+      "preserved": "non-overlap, causal completed-entry emission, incomplete tail, compressor-before-rate isolation, state/compute accounting",
+      "corrections": [
+        "add exact dynamic channel-gated projection/position-bias/RMSNorm source compressor after the three simpler controls",
+        "label no-local variant HCA core rather than the full published HCA operator",
+        "freeze HCA/CSA as an interleaved layer schedule rather than parallel same-layer branches"
+      ]
+    },
+    "CSA_v1": {
+      "path": "research/paper-1/csa_readiness_v1.json",
+      "sha256": "2174170a3503d2e9d1e94797ab5fd49d89e4b571d58c0a369b7dee20baa3ba1b",
+      "preserved": "oracle-first feasibility, selector metrics, causal exclusion, separate objectives, explicit complexity/state accounting",
+      "corrections": [
+        "selected units are overlapping compressed entries with 2m support after the first, not contiguous raw blocks",
+        "HCA remains fixed through an interleaved layer schedule rather than a simultaneous coarse branch",
+        "the unfinished compressed entry is excluded and current-block access belongs to the raw local window"
+      ]
+    },
+    "raw_local_v1": {
+      "path": "research/paper-1/raw_local_readiness_v1.json",
+      "sha256": "b75bb4114421a90599a78fbc8a4e188cc31dd38b9377f56d27caee64d5670dc0",
+      "preserved": "shared query within a compressed-attention layer, one union softmax, exact raw ring, local-specific endpoints and cost accounting",
+      "corrections": [
+        "do not deduplicate raw and compressed entries merely because their underlying source-token supports overlap",
+        "identity is representation family plus cache-entry index; only exact duplicate identities are removed",
+        "place local coverage at each selected HCA/CSA layer unless placement is itself a separate intervention"
+      ]
+    }
+  },
+  "license_boundary": {
+    "license": "MIT",
+    "clean_room_reference_permitted": true,
+    "notice_required_if_code_reused": true,
+    "model_weights_downloaded_or_executed": false
+  },
+  "source_disposition": {
+    "primary_HCA_CSA_local_equations_qualified": true,
+    "official_inference_semantics_qualified": true,
+    "official_training_implementation_qualified": false,
+    "HCA_v1_valid_without_correction": false,
+    "CSA_v1_valid_without_correction": false,
+    "raw_local_v1_valid_without_correction": false,
+    "append_only_v2_readiness_corrections_authorized": true,
+    "local_reference_implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "freeze coordinated HCA/CSA/raw-local v2 corrections before any sequence implementation; retain active-finalist and parent blockers"
+  },
+  "verification": {
+    "network_files": 9,
+    "network_bytes_SHA256_verified": true,
+    "official_source_executed": false,
+    "model_weights_accessed": false,
+    "active_experiment_accessed": false,
+    "service_polled": false
+  }
+}

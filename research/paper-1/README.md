@@ -86,6 +86,11 @@ the final combined model.
 - [`raw_local_readiness_v1.json`](raw_local_readiness_v1.json) conditionally fixes a five-slot,
   shared-query, single-softmax raw-local formulation and freezes its deduplication, causal ring,
   window-selection, quality, state, and systems gates without authorizing implementation.
+- [`deepseek-v4-sequence-primary-source-audit-v1.json`](../../results/Speck-Paper1/deepseek-v4-sequence-primary-source-audit-v1.json)
+  pins the initial official report and inference bundle. It requires coordinated HCA/CSA/raw-local v2
+  corrections: interleaved layer types, exact dynamic HCA compression, overlapping compressed CSA
+  identities, no raw-span deduplication, and full-prefill/one-token-decode-only code scope. No local
+  implementation or training is authorized.
 - [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
   ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
   selection before a fixed-count integration/readout placement successor.

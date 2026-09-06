@@ -169,6 +169,7 @@ Read in order:
 161. [160 — Conventional dropless MoE has a single-device source, not an EP reference](160_deepseek_moe_source_gate.md)
 162. [161 — Width pre-results research converges and stops before implementation](161_width_pre_results_convergence.md)
 163. [162 — AttnRes blocks must align to logical Transformer boundaries](162_attnres_source_correction.md)
+164. [163 — V4 source semantics require three sequence-readiness corrections](163_deepseek_v4_sequence_source_gate.md)
 
 Conventions:
 

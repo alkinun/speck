@@ -52,7 +52,9 @@ to a checked experiment artifact.
 16. [DeepSeek-V3.2 / DSA](21_deepseek_v3_2.md) — retrofit token-level sparse attention into an MLA
     checkpoint.
 17. [DeepSeek-V4](22_deepseek_v4.md) — combine sequence compression, sparsity, and dense attention
-    at one-million-token scale.
+    at one-million-token scale. The [official-release source audit](46_deepseek_v4_official_release.md)
+    pins the HCA/CSA/local equations, interleaved schedule, compressed-entry identities, causal state,
+    inference-code limitations, and license boundary used by the sequence readiness successors.
 
 ### Scaling beyond the sequence mixer
 
