@@ -1,0 +1,245 @@
+{
+  "format": "speck_helmet_real_data_reconstruction_readiness",
+  "format_version": 1,
+  "status": "three_families_32_paths_audited_exact_reconstruction_rights_and_substitution_blocked",
+  "created_at": "2026-09-06T01:00:51+00:00",
+  "scope": "metadata-only technical reconstruction decision for HELMET archive-local RAG, passage-reranking, and citation data; no archive payload content was read; no source dataset was acquired; no retriever was executed; no archive was extracted; no model was evaluated",
+  "inputs": {
+    "archive_local_rights_audit": {
+      "path": "results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json",
+      "sha256": "c7fd9daacafcf726809d6cead6649be4b21527129135c25b13cd500f65a9acf2"
+    },
+    "helmet_source": {
+      "repository": "https://github.com/princeton-nlp/HELMET",
+      "revision": "af609c4d51b97fc35012099380aa889da961c42d",
+      "data_loader_sha256": "559977d8f97357c77f2bc1a554e7d02dffebce99f450ba034864ca3e07c09348",
+      "config_generator_sha256": "3b424eaf9a857f90ecf717074a9556375e1564f48b51a5c40ad89e9ad49882de",
+      "configs": {
+        "rag": "9d7378b56785c4b3bf7910252c4dd5a3160f593c1d36acee95b9a575b8bdcee2",
+        "rag_short": "6a5d7304934b213254126b64587ce780cd4b51bcc02ca5849cb7ae86be5a72a5",
+        "rerank": "e6cac9e13124fbfffdb2ae9cbe6ba0a912258dda0cd1ff9ef7c88ddfb0caf7e5",
+        "rerank_short": "d87fea7fd9831cd58a7ea52a08ac9fd1be786508f3db9987b33c1f6515b0921d",
+        "cite": "58edbcc7605ce45ae4a1050f50e643045fcca450c59b0c54b5d86ed322800755",
+        "cite_short": "b2a8b0d38272498bb75639d08b6b09439f9c776bcf942f68d5b045118806df96"
+      },
+      "citation_runtime": {
+        "eval_alce_sha256": "fd64faa8e36e508b55983532f6d61c43a6c224190fd43068d4dbb90e330739cf",
+        "asqa_prompt_sha256": "99ebb9d7371895dc352a7f9135ef9e84c3757a9d9d4ce2091b4e2b1d7c39299c",
+        "qampari_prompt_sha256": "d73e184ec6d9fd6ba821ea1e537d2dec96be602aa693706862acc1b3d9586104"
+      }
+    },
+    "helmet_paper": {
+      "id": "arXiv:2410.02694v3",
+      "url": "https://arxiv.org/abs/2410.02694v3",
+      "eprint_tar_sha256": "13f6b2e82f5619a581f05f8a7508a9b7f836887130a0a17f242b5586ffe9dbd9",
+      "dataset_tex_sha256": "e8a595f04f41302b8b3cfd7ee538ff05ed302ad1b8b64a624de38790f2ea07b2",
+      "appendix_tex_sha256": "5dcb27037b68251c2fe29b763147be57ce03808f9da469f36e9c6531ebe23b3b"
+    },
+    "source_discovery": {
+      "kilt": {
+        "repository": "https://github.com/facebookresearch/KILT",
+        "revision": "2664322b9a994be686e4c3a9e8f75a0b70927f22",
+        "readme_sha256": "d044248a4959c7adf2e7a1ba67084b08f2bc967546c7ed47ad5907e54d79ce9f",
+        "license_sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "knowledge_source_date": "2019-08-01",
+        "knowledge_source_pages": 5903530,
+        "knowledge_source_payload_acquired": false
+      },
+      "helmet_rag_retriever": {
+        "model": "Alibaba-NLP/gte-large-en-v1.5",
+        "paper_revision_pinned": false,
+        "observed_head": "104333d6af6f97649377c2afbde10a7704870c7b",
+        "observed_readme_sha256": "b0d010862f59dad6d1de9fa8199af9a4cc69c06342efd23fe9df60d2d0c6ee8a",
+        "observed_config_sha256": "e1e5fa8bc1f336be995c1ec06a8f355b469328057a0e3a4cbb81fbe776513618",
+        "observed_head_is_used_identity": false
+      },
+      "popqa": {
+        "repository": "https://huggingface.co/datasets/akariasai/PopQA",
+        "observed_head": "098765c79ea10a2cb19c828324e33281b8336ec0",
+        "readme_sha256": "bb04b56bc87a3b2865cc2e2a1649ba6c766a7a44dcba5a53170fbfc72c0da9f0",
+        "rows": 14267,
+        "payload_acquired": false
+      },
+      "alce": {
+        "repository": "https://github.com/princeton-nlp/ALCE",
+        "revision": "246c476a4edfc564266b7346b6e29ef4861ae937",
+        "license_sha256": "8872dbf8660b00890b5e07ce1ea1f7a44fa7ae4e1857da56caba172b51dab3cb",
+        "readme_sha256": "cabf972df57b3c4e69bc981c889a0594f59ab60eff4430ba0cf73b08d4ba9096",
+        "download_script_sha256": "65c062bdbc19eaf70c2cf5224a310a534adcadb37be75b98156e9c15849276f4",
+        "retrieval_script_sha256": "f1273cd75c25a7b2acb41571c68e3f2c4f7047db2abf2bd20dc68d4a3d273d10",
+        "released_retrieval_depth": 100,
+        "released_data_ref": "unversioned Hugging Face main"
+      },
+      "alce_gtr_retriever": {
+        "model": "sentence-transformers/gtr-t5-xxl",
+        "alce_revision_pinned": false,
+        "observed_head": "572dbdceab0fb6ec8246dd8441d8eb653e529247",
+        "observed_head_is_used_identity": false
+      },
+      "ms_marco_terms": {
+        "url": "https://microsoft.github.io/msmarco/Notice.html",
+        "sha256": "94dcae8c467a0d30c9bb3b8e4c9ecb3f3a139c83bd78ddb4c95bc8cda1029832",
+        "scope": "non-commercial research; no extended IP license; underlying-document ownership warning; use triggers acceptance"
+      }
+    }
+  },
+  "families": [
+    {
+      "id": "kilt_rag",
+      "archive_paths": 24,
+      "test_files": 20,
+      "demo_files": 4,
+      "datasets": ["Natural Questions", "TriviaQA", "HotpotQA", "PopQA"],
+      "lengths": [8192, 16384, 32768, 65536, 131072],
+      "passages_by_length": [50, 105, 220, 440, 1000],
+      "depth_variants": {
+        "Natural Questions": 6,
+        "TriviaQA": 6,
+        "HotpotQA": 3,
+        "PopQA": 6
+      },
+      "runtime": {
+        "max_test_samples": 100,
+        "shots": 2,
+        "seed": 42,
+        "generation_max_length": 20,
+        "stop_new_line": true,
+        "sample_and_demo_selection_deterministic_given_exact_payload": true,
+        "popqa_filter": "log10(s_pop) < 3"
+      },
+      "paper_construction": [
+        "NQ, TriviaQA, and HotpotQA questions and gold provenance are sourced from KILT",
+        "PopQA positives are answer-containing retrieved passages after filtering subject popularity below 1000",
+        "distractors are hard negatives retrieved by Alibaba-NLP/gte-large-en-v1.5 from the KILT 2019-08-01 Wikipedia corpus split into 100-word passages",
+        "one gold passage is inserted at six evenly distributed positions for NQ, TriviaQA, and PopQA",
+        "two HotpotQA gold passages are combined with distractors and randomly shuffled into three permutations"
+      ],
+      "missing_exact_reconstruction_inputs": [
+        "immutable NQ, TriviaQA, HotpotQA, and PopQA input/conversion revisions and hashes",
+        "KILT knowledge-source archive hash and the exact 100-word chunking implementation",
+        "retriever model revision, remote-code files, tokenizer, environment, dtype, pooling, normalization, and query formatting",
+        "embedding/index payload identity and numerical/tie-order stability",
+        "answer-containment normalization and multi-answer matching rules",
+        "gold-passage selection when KILT provenance is absent or multiple passages qualify",
+        "mapping from target token length to k and the tokenizer used for that calculation",
+        "six-position rounding/insertion algorithm and three-permutation random seeds",
+        "source-example selection, deduplication, and exclusion rules",
+        "output schema, field normalization, serialization, and file hashes"
+      ],
+      "rights_qualified": false,
+      "exact_semantics_reconstructable": false,
+      "exact_bytes_reconstructable": false,
+      "may_substitute_for_official_helmet": false
+    },
+    {
+      "id": "ms_marco_rerank",
+      "archive_paths": 6,
+      "test_files": 5,
+      "demo_files": 1,
+      "lengths": [8192, 16384, 32768, 65536, 131072],
+      "passages_by_length": [50, 130, 285, 600, 1000],
+      "demo_passages": 10,
+      "permutations": 3,
+      "runtime": {
+        "max_test_samples": 100,
+        "shots": 2,
+        "seed": 42,
+        "generation_max_length": 200,
+        "stop_new_line": true,
+        "sample_and_demo_selection_deterministic_given_exact_payload": true,
+        "metric": "NDCG@10"
+      },
+      "paper_construction": [
+        "uses annotated TREC passage-reranking data over MS MARCO Bing queries and BM25 web passages",
+        "uses perfect, highly relevant, and not relevant labels",
+        "balances labels, randomizes passage order, and creates three permutations per input"
+      ],
+      "missing_exact_reconstruction_inputs": [
+        "exact TREC Deep Learning release, year, split, topic set, qrels, and source hashes",
+        "exact MS MARCO passage corpus and BM25 run identities",
+        "query/example selection and exclusion rules",
+        "mapping of source qrels to the three integer labels",
+        "balanced-label sampling algorithm for k not divisible by three",
+        "permutation seed schedule and document-ID assignment",
+        "target-length-to-k calculation and tokenizer",
+        "output schema, serialization, and file hashes",
+        "recorded organizational acceptance and intended-use authority"
+      ],
+      "rights_qualified": false,
+      "exact_semantics_reconstructable": false,
+      "exact_bytes_reconstructable": false,
+      "may_substitute_for_official_helmet": false
+    },
+    {
+      "id": "alce_citation",
+      "archive_paths": 2,
+      "test_files": 2,
+      "demo_files_in_code_repository": 2,
+      "datasets": ["ASQA", "QAMPARI"],
+      "lengths": [8192, 16384, 32768, 65536, 131072],
+      "documents_by_length": [30, 75, 165, 345, 700],
+      "archive_retrieval_depth": 2000,
+      "runtime": {
+        "max_test_samples": 100,
+        "shots": 2,
+        "seed": 42,
+        "generation_max_length": 300,
+        "stop_new_line": false,
+        "use_chat_template": true,
+        "sample_and_demo_selection_deterministic_given_exact_payload": true
+      },
+      "paper_construction": [
+        "uses ASQA and QAMPARI subsets from ALCE",
+        "uses the top k passages retrieved from Wikipedia with GTR",
+        "reports correctness and citation quality rather than MAUVE fluency"
+      ],
+      "source_mismatch": {
+        "alce_released_gtr_depth": 100,
+        "helmet_archive_gtr_depth": 2000,
+        "alce_download_ref_pinned": false,
+        "helmet_top2000_generation_code_released": false
+      },
+      "missing_exact_reconstruction_inputs": [
+        "immutable ASQA, QAMPARI, ALCE-data, and Wikipedia corpus payload identities",
+        "exact GTR model revision, tokenizer, environment, dtype, and embedding/index hashes",
+        "the HELMET top-2000 retrieval pipeline absent from both pinned repositories",
+        "retrieval tie-breaking, document-ID mapping, deduplication, and field normalization",
+        "the exact relation between ALCE's released top-100 files and HELMET's top-2000 files",
+        "output schema, serialization, and file hashes",
+        "complete ASQA/AmbigQA, QAMPARI, and retrieved-passage rights/attribution chain"
+      ],
+      "rights_qualified": false,
+      "exact_semantics_reconstructable": false,
+      "exact_bytes_reconstructable": false,
+      "may_substitute_for_official_helmet": false
+    }
+  ],
+  "decision": {
+    "families_audited": 3,
+    "archive_paths_accounted": 32,
+    "runtime_deterministic_given_exact_payload": true,
+    "exact_payload_construction_released": false,
+    "rights_qualified": false,
+    "exact_official_reconstruction_qualified": false,
+    "archive_extraction_authorized": false,
+    "source_payload_acquisition_authorized": false,
+    "retriever_execution_authorized": false,
+    "candidate_execution_authorized": false,
+    "evaluation_manifest_changed": false,
+    "clean_room_substitute_authorized_as_helmet": false,
+    "required_next": [
+      "obtain exact source revisions, payload hashes, construction code, retriever/index identities, seed schedules, and per-file hashes from the HELMET authors",
+      "resolve the complete component rights and attribution chain, including organizational MS MARCO scope",
+      "then reproduce each family twice offline and compare field, row, order, prompt, and metric semantics before any candidate execution",
+      "report any independently rebuilt diagnostic under a distinct name; it cannot replace the official HELMET gate without proven parity"
+    ]
+  },
+  "non_claims": [
+    "a prose construction description is an executable data specification",
+    "a current model or dataset HEAD is the revision used by HELMET",
+    "deterministic loading proves deterministic or reproducible upstream construction",
+    "matching source dataset names establishes field, row, order, retrieval, or prompt parity",
+    "an independently rebuilt dataset can be relabeled as official HELMET",
+    "this audit changes the frozen evaluation manifest or finalist experiment"
+  ]
+}

@@ -57,6 +57,7 @@
         "findings/123_finalist_rerun_live_gate.md",
         "findings/124_helmet_archive_local_rights_audit.md",
         "findings/125_helmet_synthetic_reconstruction_readiness.md",
+        "findings/126_helmet_real_data_reconstruction_readiness.md",
         "results/Speck-Paper1/cache-equivalence-v2-dense-control.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/cuda-decode-diagnostic.json",
@@ -84,7 +85,8 @@
         "research/paper-1/finalist_rerun_v1.json",
         "results/Speck-Paper1/finalist-launch-qualified-v3.json",
         "results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json",
-        "results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json"
+        "results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json",
+        "results/Speck-Architecture-Promotion-v1/helmet-real-data-reconstruction-readiness.json"
       ],
       "quality": "All six frozen cells are complete. Candidate-minus-control endpoint loss is -0.039170/-0.042662/-0.037184 nats; mean -0.039672 and upper one-sided 95% bound -0.034996 pass the +0.01 margin. All eleven source bounds pass, so the whole-architecture proxy quality screen passes without component attribution.",
       "systems": "At 128K the historical dense geometry has about 1.92 GiB analytic BF16 state and 25.10 GFLOP/token. Across the proxy pairs, the candidate uses 21.49% fewer analytic FLOPs/token, 10.01% less steady time, 10.42% less active time, and 11.13% more steady throughput, but 20.77% more peak allocation. Mean time-to-quality improvement is 19.48% with lower one-sided 95% bound 16.83%; no pair is censored. Dense controls still fail the frozen 1.0-hour envelope, so no paired hard-envelope or serving claim passes.",
@@ -94,7 +96,7 @@
         "short training horizon",
         "first dense attempt was operator-interrupted after step 1 with no checkpoint; its identical preregistered attempt 2 is in progress under the fresh v2 gate",
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
-        "HELMET's 52 archive-local paths are fully family-accounted but zero of five families is extraction-qualified; the existing RULER cases use a different generation tokenizer and JSON-KV lacks an exact reconstruction path; archive-external datasets, a gated truncation tokenizer, and model-judge qualification also remain",
+        "HELMET's 52 archive-local paths are fully family-accounted but zero of five families is extraction-qualified; neither the synthetic nor 32 real-data files have an exact reconstruction path; archive-external datasets, a gated truncation tokenizer, and model-judge qualification also remain",
         "one of 256000 native CUDA full-versus-cached logits misses the frozen parity tolerance, although all eight token argmaxes agree"
       ],
       "next_gate": "complete dense finalist control 0 attempt 2 and continue only through its final-summary event"
@@ -168,6 +170,7 @@
         "findings/123_finalist_rerun_live_gate.md",
         "findings/124_helmet_archive_local_rights_audit.md",
         "findings/125_helmet_synthetic_reconstruction_readiness.md",
+        "findings/126_helmet_real_data_reconstruction_readiness.md",
         "results/Speck-Paper1/cache-equivalence-v2-analysis.json",
         "results/Speck-Paper1/cache-equivalence-v3-analysis.json",
         "results/Speck-Paper1/baseline-preflight-v2.json",
@@ -194,7 +197,8 @@
         "research/paper-1/finalist_rerun_v1.json",
         "results/Speck-Paper1/finalist-launch-qualified-v3.json",
         "results/Speck-Architecture-Promotion-v1/helmet-archive-local-rights-audit.json",
-        "results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json"
+        "results/Speck-Architecture-Promotion-v1/helmet-synthetic-reconstruction-readiness.json",
+        "results/Speck-Architecture-Promotion-v1/helmet-real-data-reconstruction-readiness.json"
       ],
       "quality": "The complete five-cache KDA/GQA architecture passes the three-pair whole-architecture proxy quality screen: mean paired endpoint loss -0.039672 nats, upper one-sided 95% bound -0.034996, and all eleven source bounds below their margins. This does not isolate or promote KDA, NoPE, GQA, or the 3:1 ratio.",
       "systems": "At the fixed endpoint the whole candidate averages 21.49% fewer analytic FLOPs/token, 10.01% less steady training time, and 11.13% higher throughput than dense, while peak allocation is 20.77% higher. Mean time-to-quality improves 19.48% with lower bound 16.83%. Exact-shape and cache-equivalence qualifications remain as previously recorded; no serving or paired hard-envelope claim follows.",
@@ -210,7 +214,7 @@
         "free-running low-margin path divergence",
         "production runtime parity",
         "RULER v1 failed its answer-anchored contamination gate; v2 excludes both QA tasks",
-        "HELMET's archive-local families have zero extraction-qualified paths, its RULER/JSON-KV synthetic cases cannot be exactly reconstructed from current evidence, and its RAG/long-QA guardrail remains data, rights, tokenizer, and scorer blocked"
+        "HELMET's archive-local families have zero extraction-qualified paths, none of its synthetic/RAG/rerank/citation files can be exactly reconstructed from current evidence, and its RAG/long-QA guardrail remains data, rights, tokenizer, and scorer blocked"
       ],
       "next_gate": "complete dense finalist control 0 attempt 2 and continue only through its final-summary event"
     },

@@ -321,6 +321,10 @@ the final combined model.
   proves that Speck-tokenized RULER cases cannot substitute for HELMET's Llama-2-tokenized cases and
   that the paper's JSON-KV concept omits the exact generator, seeds, schema, sampling unit, and hashes.
   Neither path can currently produce an official HELMET result; no substitute is activated.
+- [`helmet-real-data-reconstruction-readiness.json`](../../results/Speck-Architecture-Promotion-v1/helmet-real-data-reconstruction-readiness.json)
+  accounts for the other 32 archive-local paths and separates deterministic loading from undocumented
+  construction. RAG lacks pinned source/retriever/index/seed identities, reranking lacks its exact
+  TREC/MS MARCO construction, and HELMET's ALCE top-2000 files have no released generation path.
 - [`experiment_program.json`](experiment_program.json) freezes baselines, stages, scales, axes, and the
   paper-scale pretraining gate.
 - [`paper_outline.md`](paper_outline.md) defines the manuscript structure and required evidence in each
@@ -373,6 +377,10 @@ The synthetic-reconstruction audit also rejects a tempting shortcut: the existin
 different generation tokenizer from HELMET, and the cited JSON-KV ancestor is structurally different
 from HELMET's undocumented six-depth variant. A clean-room diagnostic would need a separate name and
 cannot discharge the official-suite gate.
+The same boundary holds for all real-data files: the paper describes sensible construction policies,
+but not executable, versioned pipelines. Runtime determinism cannot establish source, retrieval,
+ordering, or byte parity, so independent rebuilds remain separately named diagnostics rather than
+HELMET substitutes.
 The launch boundary now distinguishes those checkpoint-consuming release gates from the
 checkpoint-producing language-model proxy. The matrix, fixed-sample analysis, control-only target
 lock, materialization, behavioral/hardware preflight, storage, evaluation definitions, contamination
