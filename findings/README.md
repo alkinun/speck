@@ -128,6 +128,7 @@ Read in order:
 120. [119 — HELMET archive path inventory qualified](119_helmet_archive_inspected.md)
 121. [120 — Finalist v2 live launch qualification](120_finalist_live_launch_qualified.md)
 122. [121 — Finalist control 0 operator interruption](121_finalist_control0_operator_interruption.md)
+123. [122 — Identical finalist control 0 restart frozen](122_finalist_control0_rerun_frozen.md)
 
 Conventions:
 
@@ -687,3 +688,8 @@ Finding 121 preserves an operator-interrupted first dense attempt. V2 was frozen
 service was mistakenly stopped after step 1. Dense initial/step loss and all local W&B hashes are
 reported; no checkpoint/result path exists and the attempt cannot enter analysis. No silent retry is
 allowed: an identical-cell restart contract and fresh live gate are required.
+
+Finding 122 freezes attempt 2 as an identical step-0 restart of dense pair 0. Every config, analysis,
+margin, seed, order, and horizon stays fixed; attempt-1 observations are listed and ineligible. This is
+a manual preregistered recovery, not automatic retry. Training remains false until the failed attempt,
+rerun contract, and a fresh live gate are registered.

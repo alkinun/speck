@@ -270,6 +270,9 @@ the final combined model.
 - [`finalist-failed-attempt-control-pair0-v1.json`](../../results/Speck-Paper1/finalist-failed-attempt-control-pair0-v1.json)
   preserves the mistaken operator stop after one step, proves v2 predated launch, hashes local logs, and
   records zero checkpoint/result files; an identical preregistered restart and fresh gate are required.
+- [`finalist_rerun_v1.json`](finalist_rerun_v1.json) freezes attempt 2 as the identical dense pair-0
+  step-0 restart, lists known ineligible observations, changes no scientific field, and requires a new
+  live gate without enabling automatic retry.
 - [`contamination_v1.json`](contamination_v1.json) freezes exact-token probes over the three proxy
   training windows. Its checked result fails the answer-anchor gate without changing the threshold.
 - [`contamination_disposition_v1.json`](contamination_disposition_v1.json) reconstructs every matched

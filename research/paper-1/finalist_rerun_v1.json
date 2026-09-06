@@ -1,0 +1,93 @@
+{
+  "format": "speck_paper_finalist_rerun_contract",
+  "format_version": 1,
+  "rerun_id": "speck-paper-1-finalist-control-pair0-rerun-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_after_operator_interruption_before_identical_restart",
+  "frozen_on": "2026-09-06",
+  "failed_attempt": {
+    "path": "results/Speck-Paper1/finalist-failed-attempt-control-pair0-v1.json",
+    "sha256": "49da6d0a50bab66d297698712caa0bba00377ce87bb0c1f097f9689ee809d356",
+    "status": "operator_interrupted_after_step_1_no_checkpoint_or_result"
+  },
+  "frozen_inputs": {
+    "analysis": {
+      "path": "research/paper-1/finalist_analysis_v2.json",
+      "sha256": "4958d4af1c1e95348f039f4d3cabdda5dfe9caeb309e8d967d6faaa36dab5905"
+    },
+    "launch": {
+      "path": "research/paper-1/finalist_launch_v2.json",
+      "sha256": "c0c7c5acae401053e0f6fd8f0ec21083bbf83f0580a796be95abd5606305a0f1"
+    },
+    "automation": {
+      "path": "research/paper-1/finalist_automation_v2.json",
+      "sha256": "7f1ea67088a1f7e7a15c7d6578b283fc2d0843b919f93ee55b062917efd3994e"
+    },
+    "materialization": {
+      "path": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+      "sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+    },
+    "runtime_preflight": {
+      "path": "results/Speck-Paper1/finalist-preflight-v1.json",
+      "sha256": "8185b62ca42699d96aba2fb29910807c4c9287d9c8eedaf3ff967837143c7231"
+    }
+  },
+  "cell": {
+    "run": "Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match",
+    "experiment": "experiments/Speck-Paper1-Finalist-131M/runs/pair-0-seed-42-order-0/dense_global_param_match",
+    "arm_id": "dense_global_param_match",
+    "pair": 0,
+    "seed": 42,
+    "data_token_offset": 0,
+    "training_tokens": 1539833856,
+    "optimizer_steps": 23496,
+    "train_config_sha256": "f3b8fc11a1724720f6b88d1ff4ece3066b2b5cefd2d2e76b6e185dd1562c528f",
+    "checkpoint_directory": "/mnt/speck-data/speck/paper1-finalist-131m/Speck-Paper1-Finalist-131M-pair-0-seed-42-order-0-dense_global_param_match"
+  },
+  "restart": {
+    "attempt_number": 2,
+    "mode": "from_step_0",
+    "resume_checkpoint": null,
+    "reason_no_resume": "the final-only checkpoint contract produced no model, optimizer, metadata, timing, or completion file before the step-1 interruption",
+    "scientific_config_changes": [],
+    "analysis_changes": [],
+    "threshold_changes": [],
+    "pair_or_order_changes": [],
+    "known_observations_not_used": [
+      "dense step-0 validation loss 10.40856",
+      "dense step-1 training loss 10.40802",
+      "step-1 startup throughput 7007 tokens per second"
+    ],
+    "result_rule": "only the complete attempt-2 step-23,496 checkpoint may produce the pair-0 dense result; attempt 1 remains permanently excluded"
+  },
+  "pre_restart_observation": {
+    "checkpoint_root_absent": true,
+    "run_checkpoint_directory_absent": true,
+    "normalized_result_absent": true,
+    "target_lock_absent": true,
+    "final_analysis_absent": true,
+    "training_unit_inactive": true,
+    "finalizer_path_inactive": true
+  },
+  "execution": {
+    "automatic_retry": false,
+    "manual_preregistered_identical_restart": true,
+    "fresh_live_qualification_required": true,
+    "event_runner": "scripts/paper_finalist_continue.py",
+    "same_control_first_state": true,
+    "successor_behavior_after_complete_result": "return to the unchanged automation-v2 sequence",
+    "failure_behavior": "stop, retain, and require another explicit preregistration; never retry automatically"
+  },
+  "decision": {
+    "failed_attempt_retained": true,
+    "failed_attempt_eligible_as_result": false,
+    "identical_restart_authorized_after_fresh_live_gate": true,
+    "training_authorized_now": false,
+    "automatic_retry_authorized": false,
+    "component_attribution_authorized": false,
+    "architecture_promotion_authorized": false,
+    "paper_scale_authorized": false,
+    "next_action": "register this rerun contract and failed attempt in the program, record a fresh clean live gate, then start only attempt 2 of the identical first dense cell"
+  }
+}
