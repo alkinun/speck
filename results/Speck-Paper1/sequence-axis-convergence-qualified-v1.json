@@ -1,0 +1,83 @@
+{
+  "format": "speck_sequence_axis_convergence_qualification",
+  "format_version": 1,
+  "status": "qualified_pre_results_dependency_DAG_active_finalist_blocked",
+  "created_at": "2026-09-06T04:33:41+00:00",
+  "scope": "offline dependency, parent-identity, run-envelope, and stop-rule qualification only; no active output, checkpoint, service, GPU, configuration materialization, implementation, or training accessed or changed",
+  "inputs": {
+    "design": {
+      "path": "research/paper-1/sequence_axis_convergence_v1.json",
+      "sha256": "a1671566ac9d6b12418ed1e796a070250cf02f188bc99d85acbe280f7d2f2c59"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false,
+      "convergence_gate_registered": false
+    }
+  },
+  "implementation": {
+    "validator": {
+      "path": "scripts/paper_sequence_axis_convergence_validate.py",
+      "sha256": "11cbf815953a3d3be464ce1dbf382f936d3ee13c5a02b93124b8446abc2508fb"
+    },
+    "tests": {
+      "path": "tests/test_paper_sequence_axis_convergence.py",
+      "sha256": "d88651e3daacf90d1daaeadce297551a9df8136ba8479c2cf0b9af4c5f4b8815"
+    }
+  },
+  "DAG": {
+    "nodes": 11,
+    "acyclic": true,
+    "root": "F0_active_finalist",
+    "first_descendant": "S1_mixer_position_factorial",
+    "parallel_single_GPU_stages_allowed": false,
+    "one_stage_registered_at_a_time": true,
+    "exact_parent_hash_required_at_every_edge": true,
+    "future_artifact_frozen_before_first_output": true
+  },
+  "critical_corrections": {
+    "cache_v2_parent_conditional": true,
+    "ratio_v2_parent_conditional": true,
+    "non_KDA_or_non_NoPE_parent_requires_successor": true,
+    "base_exact_attention_ratio_selection_is_not_compressed_schedule_revalidation": true,
+    "cache_ratio_joint_integration_successor_required": true,
+    "SiLU_selection_requires_cache_ratio_reconfirmation": true,
+    "compression_factorization_content_retained_but_order_superseded": true
+  },
+  "known_counts_not_launch_authority": {
+    "active_finalist": 12,
+    "NoPE_new": 18,
+    "cache_discovery_plus_conditional_finalist": 36,
+    "base_ratio_discovery_plus_conditional_finalist": 33,
+    "recurrent_gate_new": "6 or 12",
+    "three_axis_discovery": 24,
+    "automatic_batch_materialization": false
+  },
+  "decision": {
+    "dependency_DAG_qualified": true,
+    "pre_results_sequence_source_and_factorization_work_complete": true,
+    "sequence_parent_selected": false,
+    "descendant_configs_materialized": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "stop pre-results sequence expansion and accept F0 only through the existing event-driven finalizer; after F0, register S1 alone"
+  },
+  "verification": {
+    "focused_tests": "6 passed",
+    "validator_result": "valid_dependency_DAG_ready_for_qualification; eleven nodes; training false",
+    "active_program_validation": "unchanged and valid_hypotheses_only",
+    "live_output_accessed": false,
+    "checkpoint_accessed": false,
+    "service_polled": false
+  },
+  "non_claims": [
+    "the active finalist is complete",
+    "the sequence parent is selected",
+    "cache or ratio v2 may run under an arbitrary factorial winner",
+    "base ratio results establish compressed-attention schedule count",
+    "any descendant grid may be materialized now",
+    "the convergence DAG grants implementation, training, or promotion authority"
+  ]
+}

@@ -171,6 +171,7 @@ Read in order:
 163. [162 — AttnRes blocks must align to logical Transformer boundaries](162_attnres_source_correction.md)
 164. [163 — V4 source semantics require three sequence-readiness corrections](163_deepseek_v4_sequence_source_gate.md)
 165. [164 — HCA, CSA, and local attention now have one coherent factorization](164_sequence_compression_factorization_corrected.md)
+166. [165 — Sequence research now has one acyclic activation order](165_sequence_axis_dependency_convergence.md)
 
 Conventions:
 

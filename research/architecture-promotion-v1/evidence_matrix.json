@@ -477,6 +477,9 @@
         "findings/164_sequence_compression_factorization_corrected.md",
         "research/paper-1/sequence_compression_factorization_v2.json",
         "results/Speck-Paper1/sequence-compression-factorization-v2-qualified.json",
+        "findings/165_sequence_axis_dependency_convergence.md",
+        "research/paper-1/sequence_axis_convergence_v1.json",
+        "results/Speck-Paper1/sequence-axis-convergence-qualified-v1.json",
         "research/paper-1/ratio_placement_readiness_v1.json",
         "research/paper-1/ratio_placement_readiness_v2.json",
         "results/Speck-Paper1/ratio-placement-v2-qualified.json"
@@ -490,7 +493,7 @@
         "kernel locality",
         "missing genuine 64K-128K dependency data"
       ],
-      "next_gate": "preserve joint factorization v2; after finalist acceptance select the parent/cache, then follow its eight-stage HCA compressor/rate, local, CSA compressed-entry oracle/indexer, schedule, and independent ratio/placement order"
+      "next_gate": "stop pre-results sequence expansion; accept F0 through event automation, then register only the mixer-position factorial and follow the qualified eleven-node dependency DAG"
     },
     {
       "id": "sequence_depth_width_interaction_cube",

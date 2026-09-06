@@ -1,0 +1,250 @@
+{
+  "format": "speck_sequence_axis_convergence_gate",
+  "format_version": 1,
+  "gate_id": "speck-paper-1-sequence-axis-convergence-v1",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "pre_results_dependency_DAG_frozen_active_finalist_and_parent_selection_blocked",
+  "frozen_at": "2026-09-06T04:31:47+00:00",
+  "purpose": "converge all qualified sequence successors into one acyclic activation order that prevents parent drift, conditional-design misuse, duplicate ratio selection, and combinatorial launch",
+  "inputs": {
+    "NoPE_factorial": {
+      "design": "research/paper-1/nope_factorial_v1.json",
+      "design_sha256": "443e9db277def8e2136837831b6b3507f8c7886f3d4b215b40455e6bc1cd0a51",
+      "qualification": "results/Speck-Paper1/nope-factorial-v1-qualified.json",
+      "qualification_sha256": "c04f56403fba8f04e8e6c4aaa6b6f296b6c9722b025c59be329011d9c9bf9268"
+    },
+    "cache_representation": {
+      "design": "research/paper-1/sequence_cache_representation_v2.json",
+      "design_sha256": "9ae9402a106aeb2b1789f6d9e47af1502f77fa6150d35cd21b50dbd57652fbad",
+      "qualification": "results/Speck-Paper1/sequence-cache-representation-v2-qualified.json",
+      "qualification_sha256": "5c02e2b0735b45b34496a0ff7a88813d73e728c26663150d862b0dd20c0aae96"
+    },
+    "base_ratio": {
+      "design": "research/paper-1/ratio_placement_readiness_v2.json",
+      "design_sha256": "f201f8f488eecea82af1a4ee018f7f21a4093978baa6a7b6a7b597a857420e2e",
+      "qualification": "results/Speck-Paper1/ratio-placement-v2-qualified.json",
+      "qualification_sha256": "5b04c20d9bda5b9e08bbda943338333f084d53770295d78643dbb13b2d06c6d3"
+    },
+    "recurrent_gate": {
+      "design": "research/paper-1/recurrent_gate_readiness_v1.json",
+      "design_sha256": "8fb244590ba8dc25281984819dc644e1652d492b948d08f29580c089860cec25",
+      "qualification": "results/Speck-Paper1/recurrent-gate-v1-qualified.json",
+      "qualification_sha256": "ad0fcd395543a92ed8b353c7c2dd4c4f7ea3c19b5b39b5a18ab24ded63afa498"
+    },
+    "compressed_attention": {
+      "design": "research/paper-1/sequence_compression_factorization_v2.json",
+      "design_sha256": "8c99b29c23886eea40d6ee061b6d24cb8c118531670997d94820aaea384fc03a",
+      "qualification": "results/Speck-Paper1/sequence-compression-factorization-v2-qualified.json",
+      "qualification_sha256": "bdcce0e05dc3d289ec9b1856c21a1b4a30a9bbc649ac5f358e8fd3fa5dfd2034"
+    },
+    "depth_successor": {
+      "design": "research/paper-1/attnres_readiness_v2.json",
+      "design_sha256": "679c9273abab4ba1fe0739bc05b448a15afeccba1749fdafa78627b4136ba81a",
+      "qualification": "results/Speck-Paper1/attnres-readiness-v2-qualified.json",
+      "qualification_sha256": "27198d1db7de80b512ddef5bb51bc93077427d27f0ce3fbc079a380679bd8b69"
+    },
+    "width_successor": {
+      "design": "research/paper-1/stable_latentmoe_readiness_v3.json",
+      "design_sha256": "e5f9bd3ead575f7257807345a8eec1ae3a224071fc787ae67e9f610558e4bc8c",
+      "qualification": "results/Speck-Paper1/stable-latentmoe-readiness-v3-qualified.json",
+      "qualification_sha256": "e1884cdf2605329add7a0cca95a5e44bebcf19a24940d2866548ce66471b456b"
+    },
+    "three_axis_interaction": {
+      "design": "research/paper-1/interaction_readiness_v2.json",
+      "design_sha256": "97bc01f069914916e12872c6a5e3b6c49b9f31ecfd0a761d5d3c49520b43fdca",
+      "qualification": "results/Speck-Paper1/interaction-readiness-v2-qualified.json",
+      "qualification_sha256": "ae096f54834ac50f53729c53a177f40a3e0f889ce007e1c84b62d8854fcf5d53"
+    }
+  },
+  "detected_order_conflicts": {
+    "compression_v2_stage_one": "says global-slot count/placement is selected before HCA/CSA isolation",
+    "compression_v2_stage_eight": "says ratio/placement runs after compressed operator and schedule selection",
+    "resolution": "base exact-attention refresh count and final compressed-schedule revalidation are distinct questions with distinct successors",
+    "compression_v2_factorization_content_valid": true,
+    "compression_v2_order_authority": false,
+    "cache_v2_conditional_parent": "KDA, NoPE, five global GQA3 slots, sigmoid gate",
+    "ratio_v2_conditional_parent": "KDA, NoPE, GQA3, sigmoid gate, standard residual",
+    "conditional_design_rule": "neither v2 may be registered unchanged if the NoPE factorial selects a different mixer or positional treatment"
+  },
+  "DAG_nodes": [
+    {
+      "id": "F0_active_finalist",
+      "depends_on": [],
+      "artifact": "frozen twelve-run finalist event chain",
+      "completion": "all twelve results and final analysis pass v3 append-only acceptance",
+      "status": "running_event_driven"
+    },
+    {
+      "id": "S1_mixer_position_factorial",
+      "depends_on": [
+        "F0_active_finalist"
+      ],
+      "artifact": "NoPE_factorial",
+      "known_new_runs": 18,
+      "conditional_reuse": "six accepted KDA/NoPE finalist results only after v3 acceptance",
+      "output": "one recurrent mixer plus one global positional treatment; no general NoPE claim"
+    },
+    {
+      "id": "S2a_cache_representation",
+      "depends_on": [
+        "S1_mixer_position_factorial"
+      ],
+      "artifact": "cache_representation",
+      "conditional_identity": "current v2 is eligible only under selected KDA/NoPE with the frozen 3:1 five-slot scaffold",
+      "otherwise": "derive and qualify a parent-matched successor before materialization",
+      "known_runs": {
+        "discovery": 12,
+        "finalist_if_authorized": 24
+      },
+      "output": "selected exact global-cache representation or retained GQA3 control"
+    },
+    {
+      "id": "S2b_base_refresh_ratio",
+      "depends_on": [
+        "S1_mixer_position_factorial"
+      ],
+      "artifact": "base_ratio",
+      "conditional_identity": "current v2 is eligible only under selected KDA/NoPE with fixed GQA3 and sigmoid gate",
+      "otherwise": "derive and qualify a parent-matched successor before materialization",
+      "known_runs": {
+        "discovery": 15,
+        "finalist_if_authorized": 18
+      },
+      "output": "base exact-attention recurrent/global refresh count; placement successor remains separate"
+    },
+    {
+      "id": "S3_cache_ratio_integration",
+      "depends_on": [
+        "S2a_cache_representation",
+        "S2b_base_refresh_ratio"
+      ],
+      "artifact": "future pre-output pairwise integration successor",
+      "materialized": false,
+      "requirement": "confirm selected cache and base ratio jointly against their exact controls with difference-in-differences and conditional no-hiding guards",
+      "output": "one exact-attention sequence parent with cache and base refresh count jointly qualified"
+    },
+    {
+      "id": "S4_recurrent_gate",
+      "depends_on": [
+        "S3_cache_ratio_integration"
+      ],
+      "artifact": "recurrent_gate",
+      "conditional_identity": "only if the selected recurrent mixer exposes a configurable SiLU/sigmoid output gate",
+      "known_new_runs": "6 if exact sigmoid parent results can be reused, otherwise 12",
+      "changed_gate_rule": "if SiLU is selected, a pre-output successor must re-confirm the chosen cache and ratio effects under SiLU before compression work",
+      "output": "one exact recurrent output gate at the integrated sequence parent"
+    },
+    {
+      "id": "S5_compressed_attention",
+      "depends_on": [
+        "S4_recurrent_gate"
+      ],
+      "artifact": "compressed_attention",
+      "corrected_entry": "freeze the already selected exact-attention slots as an isolation scaffold; do not re-select base ratio here",
+      "internal_order": [
+        "HCA compressor",
+        "HCA rate",
+        "raw local window",
+        "CSA overlap compressor",
+        "compressed-entry oracle",
+        "mean-key then learned indexer",
+        "all-HCA/all-CSA/interleaved schedule"
+      ],
+      "output": "one compressed-attention operator and depth schedule or retained exact-attention parent"
+    },
+    {
+      "id": "S6_compressed_schedule_refresh_revalidation",
+      "depends_on": [
+        "S5_compressed_attention"
+      ],
+      "artifact": "future pre-output compressed-schedule count/placement successor",
+      "materialized": false,
+      "requirement": "test whether the base exact-attention refresh count/placement remains valid after HCA/CSA/local replacement; do not reuse ratio-v2 outputs as compressed-schedule evidence",
+      "output": "final selected sequence bundle"
+    },
+    {
+      "id": "D1_depth_axis",
+      "depends_on": [
+        "S6_compressed_schedule_refresh_revalidation"
+      ],
+      "artifact": "depth_successor",
+      "output": "selected depth bundle or standard residual"
+    },
+    {
+      "id": "W1_width_axis",
+      "depends_on": [
+        "S6_compressed_schedule_refresh_revalidation",
+        "D1_depth_axis"
+      ],
+      "artifact": "width_successor",
+      "output": "selected width bundle or dense SwiGLU"
+    },
+    {
+      "id": "I1_three_axis_interaction",
+      "depends_on": [
+        "S6_compressed_schedule_refresh_revalidation",
+        "D1_depth_axis",
+        "W1_width_axis"
+      ],
+      "artifact": "three_axis_interaction",
+      "known_discovery_runs": 24,
+      "output": "interaction-qualified combined architecture or simpler passing removal"
+    }
+  ],
+  "execution_rules": {
+    "topological_order_required": true,
+    "S2a_and_S2b_may_run_concurrently": false,
+    "reason_for_serial_S2": "single consumer GPU and shared control/results require clean resource accounting; concurrency would perturb timing and thermal evidence",
+    "one_stage_registered_at_a_time": true,
+    "every_future_artifact_frozen_before_its_first_output": true,
+    "failed_or_ineligible_stage": "retain its simpler parent and skip only descendants whose intervention no longer exists",
+    "no_result_can_rewrite_upstream_design": true,
+    "no_automatic_full_grid_materialization": true,
+    "exact_parent_hash_required_at_every_edge": true,
+    "active_finalist_outputs_may_only_enter_S1_through_frozen_reuse_contract": true
+  },
+  "known_run_envelopes_not_authority": {
+    "active_finalist_total": 12,
+    "NoPE_new": 18,
+    "cache_discovery": 12,
+    "cache_finalist_if_authorized": 24,
+    "base_ratio_discovery": 15,
+    "base_ratio_finalist_if_authorized": 18,
+    "recurrent_gate_new": "6 or 12",
+    "three_axis_discovery": 24,
+    "rule": "counts document maximum named stages, not a batch launch authorization; each descendant waits for accepted parent evidence and a fresh resource gate"
+  },
+  "pre_results_stop_rule": {
+    "sequence_source_and_factorization_work_complete": true,
+    "no_further_sequence_source_or_synthetic_expansion_before_F0": true,
+    "allowed": [
+      "event-driven acceptance of the active finalist",
+      "hash/test maintenance after unrelated repository changes",
+      "a new official source only if it directly changes a named DAG blocker"
+    ],
+    "forbidden": [
+      "registering any S1 or descendant while F0 is incomplete",
+      "materializing descendant configs early",
+      "modifying architecture.py or model.py while active finalist services may import them",
+      "reusing cache/ratio v2 under a non-KDA or positional-mismatched parent",
+      "treating ratio-v2 output as compressed-schedule count evidence",
+      "running sequence studies concurrently on the single consumer GPU"
+    ]
+  },
+  "active_program_boundary": {
+    "program": "research/paper-1/experiment_program.json",
+    "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+    "changed": false,
+    "convergence_gate_registered": false
+  },
+  "decision": {
+    "dependency_DAG_qualified": false,
+    "sequence_parent_selected": false,
+    "descendant_configs_materialized": false,
+    "implementation_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false,
+    "next_action": "validate and qualify this DAG, then stop pre-results sequence work and wait for F0 through the existing event-driven finalizer"
+  }
+}

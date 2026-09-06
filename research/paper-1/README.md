@@ -97,6 +97,12 @@ the final combined model.
   types, representation-family-aware entry identity, four HCA compressor controls, no raw-span dedup,
   and an eight-stage causal order. Parents, implementation, registration, training, and promotion stay
   blocked.
+- [`sequence_axis_convergence_v1.json`](sequence_axis_convergence_v1.json) and
+  [`sequence-axis-convergence-qualified-v1.json`](../../results/Speck-Paper1/sequence-axis-convergence-qualified-v1.json)
+  bind all sequence successors into an eleven-node DAG rooted at the active finalist. Cache/ratio v2
+  are conditional on a KDA/NoPE factorial winner; base exact-attention ratio and compressed-schedule
+  revalidation are distinct; all stages serialize on the single GPU. Pre-results sequence expansion is
+  stopped with no descendant materialization or training authority.
 - [`ratio_placement_readiness_v1.json`](ratio_placement_readiness_v1.json) corrects the future 20-layer
   ratio grid to exact integer counts, freezes a shared quantile placement rule, and requires count
   selection before a fixed-count integration/readout placement successor.
