@@ -59,7 +59,9 @@ to a checked experiment artifact.
 18. [Attention Residuals](05_attention_residuals.md) — content-dependent information flow over
     model depth.
 19. [Kimi K3](04_kimi_k3.md) — a frontier-scale integration of KDA, gated MLA, Block AttnRes, and
-    an extremely sparse MoE.
+   an extremely sparse MoE. The [official-release source audit](43_kimi_k3_official_release.md) pins
+   the implementation-complete equations, inference-code boundary, and license conditions used by the
+   Stable LatentMoE readiness successor.
 
 ### Direct novelty-overlap audits
 

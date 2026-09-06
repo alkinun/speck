@@ -38,7 +38,7 @@ def test_checked_architecture_promotion_contract_is_valid():
         "promotion_protocols": 2,
         "symbolic_route_values": 100,
         "tokenizer_qualified": False,
-        "evidence_components": 10,
+        "evidence_components": 13,
         "status": "valid",
     }
 

@@ -297,7 +297,7 @@
     {
       "id": "global_position_nope_factorial",
       "claim": "Removing global RoPE preserves language quality and improves long-context capability within the selected recurrent mixer.",
-      "status": "factorial_frozen_unexecuted",
+      "status": "blocked",
       "alternatives": [
         "GDN_RoPE32",
         "GDN_NoPE0",
@@ -328,7 +328,7 @@
     {
       "id": "recurrent_output_gate_activation",
       "claim": "Sigmoid is the preferred recurrent output-gate activation on the selected sequence parent.",
-      "status": "conditional_design_frozen_implementation_blocked",
+      "status": "blocked",
       "alternatives": [
         "silu",
         "sigmoid"
@@ -482,7 +482,7 @@
     {
       "id": "sequence_depth_width_interaction_cube",
       "claim": "Independently selected sequence, depth, and width bundles combine without harmful conditional or higher-order interactions.",
-      "status": "estimands_frozen_axes_unselected",
+      "status": "blocked",
       "alternatives": [
         "selected axis bundle",
         "matched absence control",
@@ -517,20 +517,29 @@
       "evidence": [
         "papers/16_deepseek_v2_mla.md",
         "papers/04_kimi_k3.md",
+        "papers/43_kimi_k3_official_release.md",
         "findings/67_stable_latentmoe_readiness_gate.md",
-        "research/paper-1/stable_latentmoe_readiness_v1.json"
+        "research/paper-1/stable_latentmoe_readiness_v1.json",
+        "findings/157_kimi_k3_source_and_latentmoe_v2.md",
+        "results/Speck-Paper1/kimi-k3-primary-source-audit-v1.json",
+        "research/paper-1/stable_latentmoe_readiness_v2.json",
+        "results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json"
       ],
-      "quality": "not measured locally",
+      "quality": "Not measured locally. Official normalized LatentMoE, SiTU-GLU, exact Quantile Balancing, and histogram equations are now pinned for isolated CPU reference work only.",
       "systems": "not measured locally",
       "scale_transfer": "not measured locally",
-      "runtime_support": "not implemented",
+      "runtime_support": "Official inference semantics are pinned, but the release explicitly rejects training and contains no Quantile Balancing updater. Speck has no qualified conventional-MoE, training, or distributed implementation.",
       "unresolved_risks": [
+        "sequence and depth parents",
+        "dropless conventional MoE correctness",
+        "training and distributed semantics",
         "expert memory",
         "load balance",
         "communication",
+        "routing intervention policy",
         "small-batch serving economics"
       ],
-      "next_gate": "pin implementation-complete primary LatentMoE/SiTU/Quantile equations, select sequence/depth parents and hardware, then qualify a dropless conventional MoE reference"
+      "next_gate": "qualify isolated CPU equation references without model integration; after the active finalist and parent/resource gates close, qualify a dropless conventional MoE before any latent or stability intervention"
     },
     {
       "id": "lower_precision_training_and_serving",

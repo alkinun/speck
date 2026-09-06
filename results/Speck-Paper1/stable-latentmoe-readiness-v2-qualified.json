@@ -1,0 +1,123 @@
+{
+  "format": "speck_stable_latentmoe_readiness_qualification",
+  "format_version": 2,
+  "status": "qualified_primary_spec_and_CPU_reference_scope_training_parent_hardware_blocked",
+  "created_at": "2026-09-06T03:40:11+00:00",
+  "scope": "official-source and offline readiness qualification only; no active result, checkpoint, service, GPU, training, architecture/model implementation, or runtime environment accessed or changed",
+  "inputs": {
+    "predecessor": {
+      "path": "research/paper-1/stable_latentmoe_readiness_v1.json",
+      "sha256": "838558a6a3d57cbb72fcc4b4b86ea12b42d9fddc4c5d5b070c89cd33c8c0450c"
+    },
+    "primary_source_audit": {
+      "path": "results/Speck-Paper1/kimi-k3-primary-source-audit-v1.json",
+      "sha256": "6a6ab0eb61893f43bf5ecab797108d94a56d1e0207b0bf2181661ef487cda1c4"
+    },
+    "design": {
+      "path": "research/paper-1/stable_latentmoe_readiness_v2.json",
+      "sha256": "7e9d1bd3b14c1ee4a64fc4853a6720fc0183ae2b5581901ca7e0a537fcdaf56a"
+    },
+    "active_experiment_program": {
+      "path": "research/paper-1/experiment_program.json",
+      "sha256": "84d09fa403179941206d7e7cccc424f5410da41ac850239a320e6f8eb4f7d9c2",
+      "modified": false,
+      "still_pins_v1": true
+    }
+  },
+  "implementation": {
+    "primary_source_validator": {
+      "path": "scripts/kimi_k3_primary_source_validate.py",
+      "sha256": "e30092559b55efab2b719c5f37e6aa6950bd9e2fd45d2a8248a959bfdddf7a54"
+    },
+    "primary_source_tests": {
+      "path": "tests/test_kimi_k3_primary_source.py",
+      "sha256": "883ff8608480b67386e01ab5bcc21f075cd52592e0d24c279434d6566b0a31d9"
+    },
+    "readiness_validator": {
+      "path": "scripts/paper_stable_latentmoe_readiness_v2_validate.py",
+      "sha256": "8b73c8c646e298d677104652e2f91ea0c2b4179590df9625eb43ee839cf6fbdd"
+    },
+    "readiness_tests": {
+      "path": "tests/test_paper_stable_latentmoe_readiness_v2.py",
+      "sha256": "a2369d7a6864a311a86e374f2890ea41306b7df7035a1e474817d43dd1641fa6"
+    }
+  },
+  "source_result": {
+    "official_report_equations_pinned": [
+      11,
+      12,
+      13,
+      14,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27
+    ],
+    "official_inference_forward_semantics_qualified": true,
+    "official_training_mode_supported": false,
+    "official_Quantile_Balancing_training_updater_present": false,
+    "third_party_code_used_as_authority": false,
+    "internal_clean_room_research_license_checked": true
+  },
+  "readiness_result": {
+    "six_stage_causal_order_preserved_exactly": true,
+    "closed_blockers": [
+      "primary normalized LatentMoE specification",
+      "primary SiTU-GLU specification",
+      "primary exact and histogram Quantile Balancing specification",
+      "official geometry and inference semantics",
+      "internal clean-room research license boundary"
+    ],
+    "isolated_CPU_primitives_authorized": 4,
+    "conventional_MoE_still_first": true,
+    "official_geometry_selected_for_Speck": false,
+    "local_model_integration_authorized": false,
+    "training_authorized": false,
+    "promotion_authority": false
+  },
+  "remaining_blockers": {
+    "sequence_parent_selected": false,
+    "depth_parent_selected": false,
+    "hardware_envelope_selected": false,
+    "conventional_dropless_MoE_qualified": false,
+    "training_and_distributed_reference_qualified": false,
+    "resource_and_storage_budget_qualified": false,
+    "routing_intervention_policy_registered": false,
+    "EMA_setting_pinned": false
+  },
+  "verification": {
+    "primary_source_test_command": ".venv-paper1-cpu/bin/pytest -q tests/test_kimi_k3_primary_source.py",
+    "primary_source_test_result": "5 passed",
+    "network_command": ".venv-paper1-cpu/bin/python scripts/kimi_k3_primary_source_validate.py results/Speck-Paper1/kimi-k3-primary-source-audit-v1.json --network",
+    "network_result": "valid; seven immutable official files re-fetched and SHA-256 checked",
+    "readiness_test_command": ".venv-paper1-cpu/bin/pytest -q tests/test_paper_stable_latentmoe_readiness_v2.py",
+    "readiness_test_result": "6 passed",
+    "readiness_validator_result": "valid_CPU_reference_authorized_training_blocked; six stages; four CPU primitives",
+    "paper_and_contract_regression_command": ".venv-paper1-cpu/bin/pytest -q tests/test_paper*.py tests/test_research.py",
+    "paper_and_contract_regression_result": "319 passed",
+    "live_output_accessed": false,
+    "checkpoint_accessed": false,
+    "service_polled": false
+  },
+  "decision": {
+    "source_gate_closed": true,
+    "CPU_reference_work_may_begin": true,
+    "architecture_choice_made": false,
+    "training_may_begin": false,
+    "next_action": "implement and independently qualify normalized LatentMoE, SiTU-GLU, exact QB, and histogram-QB CPU primitives; defer model integration and all training until active finalist, parent, conventional-MoE, resource, intervention, and hardware gates close"
+  },
+  "non_claims": [
+    "Stable LatentMoE is selected for Speck",
+    "K3 production geometry is optimal at Speck scale",
+    "the official inference release supplies training or distributed semantics",
+    "Quantile Balancing has been locally implemented or trained",
+    "the current active experiment program changed",
+    "the active finalist was observed or perturbed"
+  ]
+}

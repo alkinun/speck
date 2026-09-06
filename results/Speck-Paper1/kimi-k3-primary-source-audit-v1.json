@@ -1,0 +1,157 @@
+{
+  "format": "speck_kimi_k3_primary_source_audit",
+  "format_version": 1,
+  "status": "official_spec_and_inference_semantics_qualified_training_code_absent",
+  "created_at": "2026-09-06T03:34:34+00:00",
+  "scope": "official Moonshot GitHub report/license and official Moonshot Hugging Face config/custom-code audit; third-party implementations excluded from specification authority",
+  "local_note": {
+    "path": "papers/43_kimi_k3_official_release.md",
+    "sha256": "69129cf36dc9738966e079b001fa0eae02c00a03a3e4a332eb304cf9dea56655"
+  },
+  "sources": {
+    "official_github": {
+      "repository": "https://github.com/MoonshotAI/Kimi-K3",
+      "commit": "3cb39dfd32e51c3328e2e4b4af21341247d06c43",
+      "report": {
+        "url": "https://raw.githubusercontent.com/MoonshotAI/Kimi-K3/3cb39dfd32e51c3328e2e4b4af21341247d06c43/k3_tech_report.pdf",
+        "sha256": "86fb82a63ced501f0c3f4f404c0c6fa88a7a6cfac17aae81fd1a8f455998067c",
+        "bytes": 1795670
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/MoonshotAI/Kimi-K3/3cb39dfd32e51c3328e2e4b4af21341247d06c43/LICENSE",
+        "sha256": "f45c677fa7f42405512b67f9b18b4ccd6927c6787492867763d80368631b7c54"
+      }
+    },
+    "official_huggingface": {
+      "repository": "https://huggingface.co/moonshotai/Kimi-K3",
+      "commit": "c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721",
+      "files": {
+        "config.json": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/config.json",
+          "sha256": "9710e121a58d03ac92c8d6da287a19541994319afbbe6d6202af001ffd379213"
+        },
+        "configuration_kimi_k3.py": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/configuration_kimi_k3.py",
+          "sha256": "735eb9ebe593e17d231e08e1df7f7be9b5ee0e079f511aa201f9572077b416ae"
+        },
+        "modeling_kimi_k3.py": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/modeling_kimi_k3.py",
+          "sha256": "b9171c96726eda55234c92ac8dfae7e24c512fda68968ae8f2c3782b42665ea2"
+        },
+        "modeling_kimi_linear.py": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/modeling_kimi_linear.py",
+          "sha256": "9e3564c70ac21854ce5a090cc946c5dc76b70d1050ef50840449181a20fff44a"
+        },
+        "LICENSE": {
+          "url": "https://huggingface.co/moonshotai/Kimi-K3/resolve/c5d1dd4c428bd1ce8b88c5044f3b6ccde9e3b721/LICENSE",
+          "sha256": "20c797ce19af0c17de52c6afb144644768a591c521655f5ebf5712c9850f2887"
+        }
+      }
+    }
+  },
+  "official_report_specification": {
+    "normalized_LatentMoE": {
+      "equation": 11,
+      "shared_experts_full_width": true,
+      "routed_experts_latent_width": true,
+      "one_down_projection_before_dispatch": true,
+      "raw_weighted_routed_aggregate": true,
+      "RMSNorm_after_aggregate_before_up_projection": true,
+      "shared_plus_routed_sum": true
+    },
+    "SiTU_GLU": {
+      "equation": 12,
+      "gate_beta": 4,
+      "up_beta": 25,
+      "local_expansion_equation": 18,
+      "formal_bound_equation": 19,
+      "coordinate_bound": 100,
+      "SwiGLU_limit_as_betas_increase": true
+    },
+    "exact_Quantile_Balancing": {
+      "routing_equation": 13,
+      "update_equation": 14,
+      "router_scores": "sigmoid",
+      "selection": "raw score plus expert bias",
+      "mixture_weights": "selected raw scores normalized by their raw sum; bias excluded",
+      "cutoff": "biased Top-(k+1) entry per token",
+      "next_bias": "negative (1-k/n) quantile of raw-score-minus-cutoff margins",
+      "mean_centered": true,
+      "causal_next_step_update": true,
+      "balanced_assignment_and_dual_equations": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    "histogram_QB": {
+      "required_bias": "cutoff minus raw expert score",
+      "range": "[minimum current bias - 1, maximum current bias + 1]",
+      "bins": 1000,
+      "microbatch_local_accumulation": true,
+      "integer_global_all_reduce": true,
+      "target_rank": "m*k/n over pooled global step",
+      "within_bin_linear_interpolation": true,
+      "error_bound": "one adaptive bin width",
+      "partition_invariant": true,
+      "EMA": "described as a possible further refinement; exact production use/decay is not specified"
+    }
+  },
+  "released_geometry": {
+    "hidden_size": 7168,
+    "routed_latent_size": 3584,
+    "routed_expert_intermediate_size": 3072,
+    "routed_experts": 896,
+    "selected_experts": 16,
+    "shared_experts": 2,
+    "router_activation": "sigmoid",
+    "renormalize_selected_raw_scores": true,
+    "latent_post_aggregate_norm": true,
+    "activation": "situ",
+    "gate_beta": 4,
+    "up_beta": 25,
+    "not_a_Speck_optimum": true
+  },
+  "official_code_boundary": {
+    "SiTU_forward_implemented": true,
+    "latent_down_expert_norm_up_forward_implemented": true,
+    "shared_expert_forward_implemented": true,
+    "sigmoid_router_and_bias_selection_implemented": true,
+    "selected_raw_weight_renormalization_implemented": true,
+    "training_mode_supported": false,
+    "training_error": "NotImplementedError: Training mode is not supported in KimiSparseMoeBlock",
+    "Quantile_Balancing_update_implemented": false,
+    "histogram_QB_implemented": false,
+    "distributed_training_dispatch_implemented": false,
+    "inference_code_is_not_training_reference": true
+  },
+  "license_boundary": {
+    "license": "Kimi K3 License",
+    "internal_research_use_permitted": true,
+    "copy_modify_and_derivative_rights_present": true,
+    "notice_and_legal_compliance_required": true,
+    "large_model_as_a_service_commercial_agreement_condition": true,
+    "very_large_product_UI_attribution_condition": true,
+    "future_distribution_or_commercial_use_requires_recheck": true
+  },
+  "source_disposition": {
+    "primary_specification_qualified": true,
+    "official_inference_semantics_qualified": true,
+    "official_training_implementation_qualified": false,
+    "third_party_implementation_used_as_authority": false,
+    "local_clean_room_CPU_reference_authorized": true,
+    "local_model_training_integration_authorized": false,
+    "next_action": "freeze Stable LatentMoE readiness v2; implement equation-level CPU primitives in the existing six-stage causal order while retaining training/distributed/parent/hardware blockers"
+  },
+  "verification": {
+    "official_GitHub_clone_commit": "3cb39dfd32e51c3328e2e4b4af21341247d06c43",
+    "report_pages_extracted": 47,
+    "network_bytes_SHA256_verified": true,
+    "verified_at": "2026-09-06T03:34:34+00:00"
+  }
+}

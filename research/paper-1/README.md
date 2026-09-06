@@ -107,6 +107,11 @@ the final combined model.
 - [`stable_latentmoe_readiness_v1.json`](stable_latentmoe_readiness_v1.json) records the missing primary
   specification and freezes conventional-MoE, latent, normalization, activation, balancing, and expert-
   geometry stages plus routing, stability, rescue, memory, and hardware gates.
+- [`stable_latentmoe_readiness_v2.json`](stable_latentmoe_readiness_v2.json) and
+  [`stable-latentmoe-readiness-v2-qualified.json`](../../results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json)
+  close only the official specification and inference-semantics gaps. They preserve the six causal
+  stages, authorize four isolated CPU references, and retain every parent, conventional-MoE, training,
+  distributed, resource, intervention, hardware, registration, and promotion blocker.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.
