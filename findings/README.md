@@ -165,6 +165,7 @@ Read in order:
 157. [156 — Pairwise cube interactions now have exact estimands and multiplicity](156_interaction_estimands_corrected.md)
 158. [157 — Official K3 sources close only the Stable LatentMoE specification gap](157_kimi_k3_source_and_latentmoe_v2.md)
 159. [158 — Four Stable LatentMoE equation references qualify on CPU](158_stable_latentmoe_CPU_references.md)
+160. [159 — Midpoint resolves fixed-score QB ties, not the training policy](159_quantile_balancing_tie_policy.md)
 
 Conventions:
 

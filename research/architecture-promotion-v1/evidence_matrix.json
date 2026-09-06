@@ -526,12 +526,16 @@
         "results/Speck-Paper1/stable-latentmoe-readiness-v2-qualified.json",
         "findings/158_stable_latentmoe_CPU_references.md",
         "research/paper-1/stable_latentmoe_cpu_reference_v1.json",
-        "results/Speck-Paper1/stable-latentmoe-cpu-reference-qualified-v1.json"
+        "results/Speck-Paper1/stable-latentmoe-cpu-reference-qualified-v1.json",
+        "findings/159_quantile_balancing_tie_policy.md",
+        "research/paper-1/quantile_balancing_tie_readiness_v1.json",
+        "research/paper-1/quantile_balancing_tie_readiness_v2.json",
+        "results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json"
       ],
-      "quality": "Not measured locally. Official equations are pinned, and isolated normalized LatentMoE, SiTU-GLU, exact-QB, and histogram-QB float64 CPU oracles pass exhaustive correctness qualification only.",
+      "quality": "Not measured locally. Official equations and four isolated CPU oracles qualify. A corrected fresh 256-case fixed-score study qualifies midpoint as a tie-safe coordinate representative, not as a training policy.",
       "systems": "not measured locally",
       "scale_transfer": "not measured locally",
-      "runtime_support": "Four dense CPU equation oracles are qualified and unused by active model paths. Official inference semantics are pinned, but the release rejects training; Speck has no qualified conventional-MoE dispatch, composed training, distributed implementation, or kernel.",
+      "runtime_support": "Four dense CPU equation oracles plus a fixed-score midpoint tie reference are qualified and unused by active model paths. Official inference rejects training; hardware top-k ties, conventional-MoE dispatch, composed/distributed training, and kernels remain unqualified.",
       "unresolved_risks": [
         "sequence and depth parents",
         "dropless conventional MoE correctness",

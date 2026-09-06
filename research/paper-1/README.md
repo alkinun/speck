@@ -117,6 +117,12 @@ the final combined model.
   qualify Eq. 11/12/13/14 and histogram-QB float64 CPU oracles across 3,072 latent cases, 128 exact-QB
   cases, 384 histograms, and 768 partitions. Cutoff-induced boundary ties require rank-bracket rather
   than exact-load assertions. Composition, model integration, training, and promotion stay blocked.
+- [`quantile_balancing_tie_readiness_v1.json`](quantile_balancing_tie_readiness_v1.json) is preserved as
+  a failed pre-output gate: its strict rank bracket was invalid, and the cells used to expose that flaw
+  are consumed. [`quantile_balancing_tie_readiness_v2.json`](quantile_balancing_tie_readiness_v2.json)
+  and [its qualification](../../results/Speck-Paper1/quantile-balancing-tie-v2-qualified.json) use fresh
+  cells and qualify interval midpoint on 256/256 fixed-score CPU cases. Hardware/changing-score training
+  policy, model integration, and promotion remain blocked.
 - [`interaction_readiness_v1.json`](interaction_readiness_v1.json) freezes the axis-bundle unit, complete
   2³ cube, paired contrasts, multiplicity, retuned absence controls, subcomponent removals, and
   cross-scale retention rules without selecting a combined architecture.
