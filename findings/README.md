@@ -120,6 +120,7 @@ Read in order:
 112. [111 — Exact finalist CUDA runtime preflight](111_finalist_runtime_preflight.md)
 113. [112 — Multi-day finalist launch boundary](112_finalist_launch_boundary.md)
 114. [113 — Event-driven finalist automation frozen](113_finalist_automation_frozen.md)
+115. [114 — Finalist crossed-factor inference correction](114_finalist_crossed_factor_correction.md)
 
 Conventions:
 
@@ -639,3 +640,8 @@ Finding 113 pins and qualifies the finalist event runner before output. Five tes
 target lock, six candidates, final analysis, and invalid-state rejection. Every successor uses one path
 event plus live repository/GPU/memory/storage/HELMET gates, 15-minute cooldown, no polling/branch/retry,
 and per-result commits. Training waits for a post-HELMET live qualification.
+
+Finding 114 catches a crossed-factor inference flaw before finalist output. Six seed-by-order cells are
+not six independent replicates. V2 requires separate df=2 bounds over three seeds within each fixed data
+order, both order strata and every cell/source guard to pass, and makes pooled df=5 output descriptive
+only. Configs do not change; v1 analysis/automation authority is superseded and training stays blocked.

@@ -230,6 +230,9 @@ the final combined model.
 - [`finalist_analysis_v1.json`](finalist_analysis_v1.json) freezes the exact six-pair, 23,496-step
   longer-horizon analysis, df=5 bounds, unchanged margins, control-only target, and zero-interim stopping
   rule before finalist materialization, while explicitly withholding training authority.
+- [`finalist_analysis_v2.json`](finalist_analysis_v2.json) supersedes v1 before any result: two fixed
+  data-order strata each use three-seed df=2 bounds plus hard cell/source guards; pooled df=5 output is
+  descriptive only, and inference to arbitrary data orders is forbidden.
 - [`finalist_materialization_v1.json`](finalist_materialization_v1.json) pins both proxy parent arms,
   the six-pair crossing, new config/checkpoint roots, exact longer-horizon changes, fail-on-overwrite
   behavior, and data/storage/runtime/release qualification gates without authorizing training.

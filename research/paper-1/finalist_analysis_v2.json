@@ -1,0 +1,164 @@
+{
+  "format": "speck_paper_finalist_analysis_plan",
+  "format_version": 2,
+  "analysis_id": "speck-paper-1-five-cache-finalist-v2",
+  "paper_id": "speck-paper-1",
+  "policy_id": "architecture-promotion-v1",
+  "status": "frozen_crossed_factor_successor_before_any_finalist_result",
+  "frozen_on": "2026-09-06",
+  "purpose": "Correct the invalid independence assumption in the v1 pooled df=5 bound while every finalist checkpoint/result path remains absent and without changing any materialized run config.",
+  "predecessor": {
+    "path": "research/paper-1/finalist_analysis_v1.json",
+    "sha256": "d033c243b2c33f929f6478780406e59442bd7c1ba80f48a4bba1b2e2b75449c1",
+    "decision": "superseded_before_results",
+    "flaw": "the primary df=5 t-bound treated six seed-by-data-order cells as independent even though seeds and orders are reused in a crossed design"
+  },
+  "method_sources": [
+    {
+      "title": "Robust Inference with Multi-way Clustering",
+      "url": "https://www.nber.org/papers/t0327",
+      "use": "establishes that crossed non-nested dependence requires multi-way treatment; asymptotic cluster-robust inference is not used with only three and two clusters"
+    },
+    {
+      "title": "Inference with Few Heterogeneous Clusters",
+      "url": "https://doi.org/10.1162/REST_a_00545",
+      "use": "supports t inference over a small number of approximately independent group estimates; the three independently seeded estimates within each fixed order form the eligible groups"
+    },
+    {
+      "title": "Exploring Interaction Effects in Two-Factor Studies using the hiddenf Package in R",
+      "url": "https://journal.r-project.org/articles/RJ-2016-011/",
+      "use": "documents that one observation per crossed factor cell cannot separately identify interaction and residual error without assumptions"
+    }
+  ],
+  "inputs": {
+    "baseline_matrix": "research/paper-1/baseline_matrix.json",
+    "baseline_matrix_sha256": "caea9c7949b17f9789cdd473a2730accf2626426ee025937de9e71b1db465a2e",
+    "proxy_disposition": "research/paper-1/proxy_disposition_v1.json",
+    "proxy_disposition_sha256": "983a881b849a158314ce327736a721b3f97cb1e6b9ea95a93caa5d2309e256b8",
+    "proxy_analysis": "results/Speck-Paper1/baseline-analysis.json",
+    "proxy_analysis_sha256": "6455b9d4949fcad397fd333afb425b518b13691e6eac2f533b3ddbf5865268b3",
+    "materialization_contract": "research/paper-1/finalist_materialization_v1.json",
+    "materialization_contract_sha256": "e48468774ed4c83e203fb5eecdb94ed9200837e12802cf406671545cb995c5e3",
+    "materialization": "experiments/Speck-Paper1-Finalist-131M/finalist_materialization.json",
+    "materialization_sha256": "0ad729458cd105e7f2bbe1faecd1351c3e3079c3759551ccf46269f7a02d1792"
+  },
+  "configuration_change": {
+    "changed_generated_configs": 0,
+    "changed_run_paths": 0,
+    "changed_seeds": 0,
+    "changed_data_offsets": 0,
+    "changed_training_or_validation_tokens": 0,
+    "analysis_only_successor": true
+  },
+  "arms": {
+    "control": "dense_global_param_match",
+    "candidate": "five_cache_kda_gqa"
+  },
+  "pairs": [
+    {"pair": 0, "seed": 42, "data_token_offset": 0},
+    {"pair": 1, "seed": 42, "data_token_offset": 1610612736},
+    {"pair": 2, "seed": 43, "data_token_offset": 0},
+    {"pair": 3, "seed": 43, "data_token_offset": 1610612736},
+    {"pair": 4, "seed": 44, "data_token_offset": 0},
+    {"pair": 5, "seed": 44, "data_token_offset": 1610612736}
+  ],
+  "fixed_data_order_strata": [
+    {
+      "id": "order_0",
+      "data_token_offset": 0,
+      "pair_ids": [0, 2, 4],
+      "seeds": [42, 43, 44],
+      "independent_unit": "initialization seed"
+    },
+    {
+      "id": "order_1610612736",
+      "data_token_offset": 1610612736,
+      "pair_ids": [1, 3, 5],
+      "seeds": [42, 43, 44],
+      "independent_unit": "initialization seed"
+    }
+  ],
+  "shared_training": {
+    "training_tokens_per_arm": 1539833856,
+    "batch_tokens": 65536,
+    "optimizer_steps": 23496,
+    "sequence_length": 4096,
+    "evaluation_steps": [0, 5874, 11748, 17622, 23496],
+    "intermediate_validation_tokens": 5000000,
+    "final_validation_tokens": 20000000,
+    "data_manifest": "b84b09e0b701e35d84487cf6f91e6da9c9fb686b7f6efe67b2e2f5f301fda98e"
+  },
+  "statistical_contract": {
+    "paired_cells": 6,
+    "fixed_data_order_strata": 2,
+    "independent_seeds_per_stratum": 3,
+    "candidate_minus_control": "five_cache_kda_gqa-minus-dense_global_param_match",
+    "one_sided_confidence_level": 0.95,
+    "student_t_critical_df_2": 2.919985580353724,
+    "language_loss_non_inferiority_margin_nats": 0.01,
+    "source_guardrail_nats": 0.02,
+    "primary_rule": "within each frozen data-order stratum, the upper one-sided paired 95% Student-t bound over the three initialization seeds must be at or below 0.01 nats; every one of the six cell differences must also be at or below 0.01",
+    "source_rule": "within each frozen data-order stratum, every source-loss upper bound over seeds must be at or below 0.02 nats; every source difference in every cell must also be at or below 0.02",
+    "intersection_union": "the whole language screen passes only if both fixed data-order strata and all hard cell/source guards pass; no multiplicity correction is used to claim an intersection",
+    "pooled_cell_summary": "report mean, range, and naive df=5 bound descriptively only; it has zero pass/fail authority",
+    "seed_averaged_across_orders": "report each seed's two-order mean descriptively; n=2 within-seed inference is forbidden",
+    "scope_limit": "the decision establishes robustness only for both frozen data orders over three seeds, not inference to a population of arbitrary data orders"
+  },
+  "analysis_views": {
+    "primary_fixed_tokens": {
+      "candidate_training_tokens": 1539833856,
+      "control_training_tokens": 1539833856,
+      "endpoint": "complete-batch 20M-requested-token final validation loss",
+      "authority": "two data-order-stratum df=2 bounds plus hard six-cell guards"
+    },
+    "fixed_analytic_flops": {
+      "candidate_training_tokens": 1539833856,
+      "control_training_tokens": 1208877056,
+      "method": "piecewise-linear interpolation between enclosing frozen validation boundaries",
+      "authority": "secondary descriptive order-stratified view"
+    },
+    "fixed_steady_training_time": {
+      "budget": "minimum final steady_training_seconds across arms within each pair",
+      "method": "piecewise-linear interpolation excluding startup, validation, checkpointing, and orchestration",
+      "authority": "secondary descriptive order-stratified view"
+    },
+    "time_to_quality": {
+      "target": "lock from all six controls before any candidate result",
+      "method": "first piecewise-linear downward crossing in steady training seconds",
+      "censoring": "retain every censored pair and form no complete-case bound",
+      "authority": "secondary; report order-stratum seed bounds only when all six pairs are uncensored"
+    }
+  },
+  "control_only_target_lock": {
+    "rule": "maximum final validation loss across all six complete dense controls, rounded upward to six decimals",
+    "controls_before_candidates": 6
+  },
+  "stopping_rule": {
+    "design": "fixed sample",
+    "required_complete_model_runs": 12,
+    "required_control_runs_before_candidates": 6,
+    "interim_efficacy_looks": 0,
+    "interim_futility_looks": 0,
+    "quality_based_early_stopping": "forbidden",
+    "pair_abandonment": "forbidden after seeing either arm's quality",
+    "recovery": "resume only the same frozen cell from a contract-valid checkpoint; otherwise retain the failure and preregister any rerun",
+    "analysis_on_incomplete_sample": "integrity report only"
+  },
+  "decision_authority": {
+    "may": "pass or fail the longer-horizon language screen on both fixed data orders and supply one part of architecture-promotion evidence",
+    "may_not": [
+      "infer to arbitrary data orders",
+      "attribute benefit to KDA, NoPE, GQA, or the 3:1 ratio",
+      "promote without every capability and systems gate",
+      "establish novelty or authorize paper-scale training",
+      "make serving, long-context, or release claims from language loss"
+    ]
+  },
+  "execution": {
+    "v1_analysis_authority": false,
+    "v2_analysis_authority": true,
+    "materialized_configs_remain_valid": true,
+    "training_authorized": false,
+    "reason": "collector/analyzer qualification and automation must be updated to v2 before live launch may be reconsidered"
+  }
+}
