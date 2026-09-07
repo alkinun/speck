@@ -63,6 +63,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Math rights review packet](180_math_rights_review_packet.md) | Hashed terms, code-license chain, and required human acceptance record |
 | [Synthetic tokenizer sources](181_synthetic_tokenizer_technical_qualification.md) | Corrected lineage, synthetic quality gates, and firewall result |
 | [Synthetic rights review](182_synthetic_rights_review_packet.md) | Generator, seed-source, and redistribution decision packet |
+| [Science rights review](183_science_rights_review_packet.md) | Paper/PDF license metadata gaps and required human decision |
 
 ## Conventions
 
