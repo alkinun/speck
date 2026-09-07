@@ -58,6 +58,11 @@
     "selection_heldout",
     "sealed_audit"
   ],
+  "firewall_contract": {
+    "plan": "research/flagship/firewall_plan.json",
+    "status": "fixture_tooling_ready_real_targets_and_authority_pending",
+    "real_materialization": "blocked"
+  },
   "selection": {
     "primary_unit": "bits_per_utf8_byte",
     "primary_score": "unweighted_macro_mean_of_six_category_paired_deltas",

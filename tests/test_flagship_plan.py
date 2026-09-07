@@ -76,6 +76,11 @@ def test_data_plan_preserves_selection_firewall_and_replication():
         "E2c"
     ]["new_runs"]
     assert experiments["E5"]["reused_control_runs"] == 2
+    assert data_plan["firewall_contract"] == {
+        "plan": "research/flagship/firewall_plan.json",
+        "status": "fixture_tooling_ready_real_targets_and_authority_pending",
+        "real_materialization": "blocked",
+    }
 
 
 def test_architecture_plan_closes_causal_gaps_and_matches_execution_budget():
@@ -452,3 +457,19 @@ def test_reference_qualification_preserves_failures_and_is_non_authoritative():
     )
     assert rights["status"].endswith("training_authority_blocked")
     assert "no reference source is approved" in rights["decision"]
+
+
+def test_three_partition_firewall_tooling_is_hash_bound_and_fixture_only():
+    result = json.loads(
+        (ROOT / "results" / "data" / "data-firewall-tooling-20260907.json").read_text()
+    )
+    assert result["status"] == (
+        "fixture_qualified_real_materialization_and_training_authority_blocked"
+    )
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["fixture_validation"]["focused_tests"] == 8
+    assert result["fixture_validation"]["real_qualified_source_records_read"] == 0
+    assert result["fixture_validation"]["persistent_fixture_partitions_created"] == 0
+    assert any("no real selection-heldout" in value for value in result["limitations"])
+    assert any("no tokenizer or model training" in value for value in result["limitations"])

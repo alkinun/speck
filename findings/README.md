@@ -67,6 +67,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Science tokenizer sources](184_science_tokenizer_technical_qualification.md) | Five-source bounded qualification and fail-closed firewall successor |
 | [Reference tokenizer sources](185_reference_tokenizer_technical_qualification.md) | Six-source bounded qualification and corrected source contracts |
 | [Reference rights review](186_reference_rights_review_packet.md) | Attribution, share-alike, public-domain, and removal decisions |
+| [Three-partition firewall](187_three_partition_firewall_tooling.md) | Fixture-qualified partition, consumer, and one-opening enforcement |
 
 ## Conventions
 

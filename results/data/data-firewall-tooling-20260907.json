@@ -1,0 +1,45 @@
+{
+  "format": "speck_data_firewall_tooling_qualification",
+  "format_version": 1,
+  "status": "fixture_qualified_real_materialization_and_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "895a974",
+  "implementation": {
+    "module": ["speck/data_firewall.py", "a9f3a937d37fe24e9d55caa4c16deb9e9ed1f811de65aef5a981c03ac2ab9f25"],
+    "build_cli": ["scripts/data_firewall_build.py", "047c34341db51ae641d4eb3f14d5a2be1d495993fd176494ba24f7b55354408e"],
+    "consumer_cli": ["scripts/data_firewall_check.py", "c2f0e940a41cfd9c32ab996e8fe02f76cd595bfb9d2126d194c2ffc110649fe9"],
+    "opening_cli": ["scripts/sealed_audit_open.py", "ee309bf5a6b7fb9c04d235a77b65f21f284c5c6382660a4e717c7492fde4bd50"],
+    "tests": ["tests/test_data_firewall.py", "4289eeb73a9879fe5df982336301775ee73aa0bb4acac65b77b1daa5723f53de"],
+    "plan": ["research/flagship/firewall_plan.json", "e0b787a2ca5b6e4123f8b01de4673d387b3efade5bf81d87f7e774c6ec0d15ed"]
+  },
+  "fixture_validation": {
+    "focused_tests": 8,
+    "full_suite_passed": 584,
+    "full_suite_skipped": 8,
+    "ruff": "pass",
+    "real_qualified_source_records_read": 0,
+    "persistent_fixture_partitions_created": 0
+  },
+  "qualified_contracts": [
+    "three top-level partitions: tokenizer_sample, selection_heldout, sealed_audit",
+    "separate tokenizer_train and tokenizer_eval consumer roles",
+    "global NFKC/lower/whitespace exact disjointness across every category and destination",
+    "equal-category explicit byte targets with whole-document overshoot",
+    "per-source destination quotas, unseen-source bytes, selection domain diversity, and domains absent from tokenizer training",
+    "separate D5_tokenizer and E2_mixture identities, seeds, finalist counts, and fallbacks",
+    "file hashes and ordered content-hash commitments without sealed record contents in the manifest",
+    "unknown-path denial, model-training denial, partition-specific tokenizer/selection consumers, and generic sealed-file denial",
+    "exclusive one-opening receipt persisted before payload verification/readability; a failed opening cannot retry",
+    "fixture-only outputs cannot authorize real consumers",
+    "production construction requires hash-bound human acceptance covering every source",
+    "production construction requires global exact/near deduplication, cleanup, and resume qualification records"
+  ],
+  "limitations": [
+    "no real selection-heldout or sealed-audit byte sizes were previously specified, so none are chosen in this fixture qualification",
+    "filesystem sealing is a cooperative operational control and makes no adversarial secrecy claim against the data owner",
+    "no real partition is materialized and no tokenizer or model training is authorized",
+    "launch manifests do not yet exist; when created, their preflight must invoke the consumer authorization contract",
+    "human rights and production operation records do not yet exist"
+  ],
+  "decision": "retain the fixture-qualified firewall implementation; freeze explicit real targets and inputs only after rights and production gates pass, then materialize once before any tokenizer or model outputs"
+}
