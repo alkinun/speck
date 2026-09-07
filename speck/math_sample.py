@@ -100,6 +100,10 @@ def validate_math_sample_config(config, *, config_dir=None):
             "language_score",
             "quality_score",
             "code_language",
+            "detected_licenses",
+            "license_type",
+            "repository",
+            "file_path",
         },
         "source.fields",
     )
@@ -143,6 +147,8 @@ def validate_math_sample_config(config, *, config_dir=None):
             "allowed_email_placeholders",
             "allowed_ipv4_placeholders",
             "language_detector",
+            "accepted_detected_licenses",
+            "required_license_type",
         },
         "filters",
     )
@@ -196,7 +202,17 @@ def validate_math_sample_config(config, *, config_dir=None):
         "allowed_ipv4_placeholders": _strings(
             filters["allowed_ipv4_placeholders"], "allowed_ipv4_placeholders", allow_empty=True
         ),
+        "accepted_detected_licenses": _strings(
+            filters["accepted_detected_licenses"],
+            "accepted_detected_licenses",
+            allow_empty=True,
+        ),
     }
+    if filters["required_license_type"] is not None and (
+        not isinstance(filters["required_license_type"], str)
+        or not filters["required_license_type"]
+    ):
+        raise ValueError("required_license_type must be null or a string")
 
     partition = config["downstream_partition"]
     _exact_keys(
@@ -434,8 +450,13 @@ def sample_math_source(config, *, restart=False):
                 counts["records_considered"] += 1
                 metadata = {}
                 if source["metadata_json_field"]:
+                    raw_metadata = row[source["metadata_json_field"]]
                     try:
-                        metadata = json.loads(row[source["metadata_json_field"]])
+                        metadata = (
+                            raw_metadata
+                            if isinstance(raw_metadata, dict)
+                            else json.loads(raw_metadata)
+                        )
                     except (TypeError, json.JSONDecodeError):
                         counts["metadata_json_rejected"] += 1
                         continue
@@ -464,6 +485,26 @@ def sample_math_source(config, *, restart=False):
                     or fields["quality_score"] < minimum_quality
                 ):
                     counts["quality_score_rejected"] += 1
+                    continue
+                detected_licenses = fields["detected_licenses"] or []
+                accepted_licenses = filters["accepted_detected_licenses"]
+                if not isinstance(detected_licenses, list) or any(
+                    not isinstance(value, str) or not value for value in detected_licenses
+                ):
+                    counts["license_metadata_rejected"] += 1
+                    continue
+                if accepted_licenses and (
+                    not detected_licenses
+                    or any(value not in accepted_licenses for value in detected_licenses)
+                ):
+                    counts["license_allowlist_rejected"] += 1
+                    continue
+                required_license_type = filters["required_license_type"]
+                if (
+                    required_license_type is not None
+                    and fields["license_type"] != required_license_type
+                ):
+                    counts["license_type_rejected"] += 1
                     continue
                 raw = text.encode()
                 size = len(raw)
@@ -519,12 +560,14 @@ def sample_math_source(config, *, restart=False):
                     "source": source["id"],
                     "content_id": str(content_id),
                     "released_content_sha256": digest,
-                    "repo_path": host or source["repo"],
+                    "repo_path": fields["repository"] or host or source["repo"],
                     "repo_id": None,
                     "commit_id": source["revision"],
-                    "file_path": url or f"{source_path.name}:{batch_id}:{row_index}",
+                    "file_path": fields["file_path"]
+                    or url
+                    or f"{source_path.name}:{batch_id}:{row_index}",
                     "language": fields["code_language"] or "English",
-                    "detected_licenses": [],
+                    "detected_licenses": detected_licenses,
                     "rights_status": "math_source_terms_manual_review_required",
                     "url": url,
                     "host": host,

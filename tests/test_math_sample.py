@@ -57,6 +57,10 @@ def _config(path, output):
                 "language_score": "language_score",
                 "quality_score": "quality",
                 "code_language": None,
+                "detected_licenses": None,
+                "license_type": None,
+                "repository": None,
+                "file_path": None,
             },
         },
         "rights": {
@@ -79,6 +83,8 @@ def _config(path, output):
             "allowed_email_placeholders": [],
             "allowed_ipv4_placeholders": [],
             "language_detector": "py3langid==0.3.0",
+            "accepted_detected_licenses": [],
+            "required_license_type": None,
         },
         "downstream_partition": {
             "seed": 42,
