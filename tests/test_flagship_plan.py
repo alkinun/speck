@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -257,3 +258,34 @@ def test_storage_readiness_result_clears_the_pregrant_threshold():
     assert result["verification"]["checksum_dry_run_changes_per_family"] == 0
     assert result["verification"]["latest_checkpoint_metadata_loaded_through_symlink"] is True
     assert result["after"]["root_use_percent"] < 80
+
+
+def test_web_firewall_result_is_hash_bound_and_remains_non_authoritative():
+    result = json.loads(
+        (ROOT / "results" / "data" / "web-contamination-20260907.json").read_text()
+    )
+
+    assert result["status"] == (
+        "bounded_web_benchmark_decontamination_pass_training_authority_blocked"
+    )
+    for key, identity in result["implementation"].items():
+        if key == "git_pre_scan_freeze":
+            continue
+        path, digest = identity
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["frozen_benchmark_policy"]["payloads"] == 20
+    assert result["frozen_benchmark_policy"]["tasks"] == 63_652
+    assert result["runtime"]["records_removed_critical"] == 92
+    assert result["runtime"]["records_retained"] == 31_000
+    assert result["verification"]["residual_critical_records"] == 0
+    assert all(
+        source["training_partition_bytes"] >= source["training_target_bytes"]
+        and source["evaluation_partition_bytes"] >= source["evaluation_target_bytes"]
+        for source in result["sources"].values()
+    )
+
+    rights = json.loads(
+        (ROOT / "results" / "data" / "web-rights-review-20260907.json").read_text()
+    )
+    assert rights["status"].endswith("training_authority_blocked")
+    assert "no source is approved" in rights["decision"]
