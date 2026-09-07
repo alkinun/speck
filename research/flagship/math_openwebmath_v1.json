@@ -1,0 +1,73 @@
+{
+  "format": "speck_math_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "openwebmath",
+    "repo": "open-web-math/open-web-math",
+    "revision": "fde8ef8de2300f5e778f56261843dab89f230815",
+    "official_url": "https://huggingface.co/datasets/open-web-math/open-web-math",
+    "path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/open-web-math--open-web-math/data/train-00000-of-00114-5a023365406cb9c4.parquet",
+    "sha256": "18d7ef70a6ef61f09c020950626d7e6e61d1300f3f85beddbd3b3c6801071a41",
+    "rows": 55397,
+    "file_format": "parquet",
+    "text_field": "text",
+    "metadata_json_field": "metadata",
+    "fields": {
+      "document_id": null,
+      "url": "url",
+      "language": null,
+      "language_score": null,
+      "quality_score": null,
+      "code_language": null,
+      "detected_licenses": null,
+      "license_type": null,
+      "repository": null,
+      "file_path": null
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "upstream_terms": "Common Crawl terms and unaltered underlying-data licenses",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "minimum_prose_alphabetic_characters": 80,
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_bytes_per_host": 2000000,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "accepted_detected_licenses": [],
+    "required_license_type": null,
+    "language_policy": "math_prose",
+    "required_language": null,
+    "minimum_language_score": null,
+    "minimum_quality_score": null
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "math",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 18000000,
+    "evaluation_bytes": 1800000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-openwebmath-v1"
+}

@@ -1,5 +1,6 @@
 import hashlib
 import json
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -11,6 +12,8 @@ from speck.math_sample import (
     validate_math_sample_config,
 )
 from speck.stack_v3_refine import _sample_partition
+
+ROOT = Path(__file__).parents[1]
 
 
 def _sha256(path):
@@ -171,3 +174,23 @@ def test_math_sample_reads_jsonl_zstd_without_rewriting_rows(tmp_path):
         handle.write("".join(json.dumps(row) + "\n" for row in rows).encode())
 
     assert _jsonl_zstd_batches(path, batch_size=1) == [[rows[0]], [rows[1]]]
+
+
+def test_flagship_math_sample_plans_freeze_six_source_margins():
+    plans = []
+    for path in sorted((ROOT / "research/flagship").glob("math_*_v1.json")):
+        if path.name == "math_megamath_code_v1.json":
+            continue
+        plans.append(
+            validate_math_sample_config(json.loads(path.read_text()), config_dir=path.parent)
+        )
+
+    assert {plan["source"]["id"] for plan in plans} == {
+        "finemath_4plus",
+        "infiwebmath_4plus",
+        "megamath_web_pro",
+        "openwebmath",
+        "proof_pile_2_algebraic_stack",
+    }
+    assert sum(plan["downstream_partition"]["training_bytes"] for plan in plans) == 114_000_000
+    assert sum(plan["downstream_partition"]["evaluation_bytes"] for plan in plans) == 11_400_000

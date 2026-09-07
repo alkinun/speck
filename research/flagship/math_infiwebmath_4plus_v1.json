@@ -1,0 +1,73 @@
+{
+  "format": "speck_math_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "infiwebmath_4plus",
+    "repo": "HuggingFaceTB/finemath",
+    "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceTB/finemath",
+    "path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/HuggingFaceTB--finemath/infiwebmath-4plus/train-00000-of-00032.parquet",
+    "sha256": "8dae840ed1921e42a7e36dfa4d44db96af81f1de9bfaeddab0b1daf6c71c09a3",
+    "rows": 196757,
+    "file_format": "parquet",
+    "text_field": "text",
+    "metadata_json_field": "metadata",
+    "fields": {
+      "document_id": null,
+      "url": "url",
+      "language": "$metadata.ft_lang_label",
+      "language_score": "$metadata.ft_lang_prob",
+      "quality_score": "int_score",
+      "code_language": null,
+      "detected_licenses": null,
+      "license_type": null,
+      "repository": null,
+      "file_path": null
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "upstream_terms": "InfiMM-WebMath provenance, Common Crawl terms, and underlying page rights",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "minimum_prose_alphabetic_characters": 80,
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_bytes_per_host": 2000000,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "accepted_detected_licenses": [],
+    "required_license_type": null,
+    "language_policy": "metadata_and_math_prose",
+    "required_language": "__label__en",
+    "minimum_language_score": 0.8,
+    "minimum_quality_score": 4
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "math",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 18000000,
+    "evaluation_bytes": 1800000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1"
+}

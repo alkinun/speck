@@ -1,10 +1,14 @@
 import hashlib
+import json
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from speck.megamath_code import sample_megamath_code, validate_megamath_code_config
 from speck.stack_v3_refine import _sample_partition
+
+ROOT = Path(__file__).parents[1]
 
 
 def _row(raw, name):
@@ -111,3 +115,14 @@ def test_megamath_code_fetches_hash_verified_permissive_files(tmp_path):
     assert report["downstream_partition"]["observed"]["eval_bytes"] >= 1
     assert report["accepted_licenses"] == {"MIT": 2}
     assert report["gates"]["training_authority"] == "blocked"
+
+
+def test_flagship_megamath_code_plan_is_non_authoritative_and_margin_bound():
+    path = ROOT / "research/flagship/math_megamath_code_v1.json"
+    plan = validate_megamath_code_config(json.loads(path.read_text()), config_dir=path.parent)
+
+    assert plan["source"]["rows"] == 847_441
+    assert plan["filters"]["license_type"] == "permissive"
+    assert plan["downstream_partition"]["training_bytes"] == 6_000_000
+    assert plan["downstream_partition"]["evaluation_bytes"] == 600_000
+    assert plan["rights"]["authority"] == "manual_review_required"

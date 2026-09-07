@@ -1,0 +1,73 @@
+{
+  "format": "speck_math_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "megamath_web_pro",
+    "repo": "LLM360/MegaMath",
+    "revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d",
+    "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+    "path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/LLM360--MegaMath/megamath-web-pro/000_00000.parquet",
+    "sha256": "a50a860061fd41b5b1497a8eccb390126dfb4e547c14f3deea5bd6a75db658b3",
+    "rows": 163968,
+    "file_format": "parquet",
+    "text_field": "text",
+    "metadata_json_field": null,
+    "fields": {
+      "document_id": null,
+      "url": "url",
+      "language": "lang",
+      "language_score": "lang_score",
+      "quality_score": "math_score",
+      "code_language": null,
+      "detected_licenses": null,
+      "license_type": null,
+      "repository": null,
+      "file_path": null
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "upstream_terms": "Common Crawl terms and underlying page rights",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "minimum_prose_alphabetic_characters": 80,
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_bytes_per_host": 2000000,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "accepted_detected_licenses": [],
+    "required_license_type": null,
+    "language_policy": "metadata_and_math_prose",
+    "required_language": "en",
+    "minimum_language_score": 0.8,
+    "minimum_quality_score": 0
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "math",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 30000000,
+    "evaluation_bytes": 3000000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-megamath_web_pro-v1"
+}

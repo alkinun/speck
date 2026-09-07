@@ -1,0 +1,73 @@
+{
+  "format": "speck_math_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "finemath_4plus",
+    "repo": "HuggingFaceTB/finemath",
+    "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceTB/finemath",
+    "path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/HuggingFaceTB--finemath/finemath-4plus/train-00000-of-00064.parquet",
+    "sha256": "5d0b26114b4cf309c82a4ba8f6f45857480b27812e23a46b61b45e8bbed61fe5",
+    "rows": 104680,
+    "file_format": "parquet",
+    "text_field": "text",
+    "metadata_json_field": "metadata",
+    "fields": {
+      "document_id": null,
+      "url": "url",
+      "language": "language",
+      "language_score": "language_score",
+      "quality_score": "int_score",
+      "code_language": null,
+      "detected_licenses": null,
+      "license_type": null,
+      "repository": null,
+      "file_path": null
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "upstream_terms": "Common Crawl terms and underlying page rights",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "minimum_prose_alphabetic_characters": 80,
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_bytes_per_host": 2000000,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "accepted_detected_licenses": [],
+    "required_license_type": null,
+    "language_policy": "metadata_and_math_prose",
+    "required_language": "en",
+    "minimum_language_score": 0.8,
+    "minimum_quality_score": 4
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "math",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 36000000,
+    "evaluation_bytes": 3600000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-finemath_4plus-v1"
+}

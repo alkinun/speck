@@ -1,0 +1,68 @@
+{
+  "format": "speck_megamath_code_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "megamath_code",
+    "repo": "LLM360/MegaMath",
+    "revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d",
+    "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+    "path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/LLM360--MegaMath/megamath-code/00000.parquet",
+    "sha256": "5580b2c39e2fc05c1fdbe651fab8dcbc2f955f1b8fc54d15468d8717d8792105",
+    "rows": 847441
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0 database release",
+    "upstream_terms": "The Stack v2 and every original file license/attribution apply",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "license_type": "permissive",
+    "accepted_detected_licenses": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSL-1.0",
+      "BlueOak-1.0.0",
+      "ISC",
+      "LLVM-exception",
+      "MIT",
+      "MIT-0",
+      "Unlicense",
+      "Zlib"
+    ],
+    "accepted_encodings": [
+      "ASCII",
+      "UTF-8"
+    ],
+    "min_file_bytes": 100,
+    "max_file_bytes": 1000000,
+    "maximum_bytes_per_repository": 500000,
+    "allowed_email_placeholders": [],
+    "allowed_ipv4_placeholders": [],
+    "English_prose": {
+      "detector": "py3langid==0.3.0",
+      "minimum_alphabetic_characters": 80,
+      "minimum_probability": 0.8
+    }
+  },
+  "fetch": {
+    "base_url": "https://softwareheritage.s3.amazonaws.com/content/",
+    "workers": 32,
+    "timeout_seconds": 30,
+    "attempts": 3
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "math",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 6000000,
+    "evaluation_bytes": 600000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-megamath_code-v1"
+}

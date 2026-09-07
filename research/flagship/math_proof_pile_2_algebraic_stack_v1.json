@@ -1,0 +1,86 @@
+{
+  "format": "speck_math_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "proof_pile_2_algebraic_stack",
+    "repo": "EleutherAI/proof-pile-2",
+    "revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b",
+    "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2",
+    "path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/EleutherAI--proof-pile-2/algebraic-stack/train/agda0000.jsonl.zst",
+    "sha256": "f91684112df7423acad33fdd0d1d478a4ca6b9c2bb09c473cbf51318fd1885d3",
+    "rows": 17431,
+    "file_format": "jsonl_zstd",
+    "text_field": "text",
+    "metadata_json_field": "meta",
+    "fields": {
+      "document_id": "$metadata.hexsha",
+      "url": null,
+      "language": null,
+      "language_score": null,
+      "quality_score": null,
+      "code_language": "$metadata.lang",
+      "detected_licenses": "$metadata.max_stars_repo_licenses",
+      "license_type": null,
+      "repository": "$metadata.max_stars_repo_name",
+      "file_path": "$metadata.max_stars_repo_path"
+    }
+  },
+  "rights": {
+    "dataset_license": "no aggregate license declared",
+    "upstream_terms": "underlying repository licenses apply; only allowlisted metadata is sampled",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "minimum_prose_alphabetic_characters": 80,
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "maximum_duplicate_line_ratio": 0.8,
+    "maximum_bytes_per_host": null,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "accepted_detected_licenses": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSL-1.0",
+      "BlueOak-1.0.0",
+      "ISC",
+      "LLVM-exception",
+      "MIT",
+      "MIT-0",
+      "Unlicense",
+      "Zlib"
+    ],
+    "required_license_type": null,
+    "language_policy": "code_comments_and_docstrings",
+    "required_language": null,
+    "minimum_language_score": null,
+    "minimum_quality_score": null
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "math",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 12000000,
+    "evaluation_bytes": 1200000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-proof_pile_2_algebraic_stack-v1"
+}
