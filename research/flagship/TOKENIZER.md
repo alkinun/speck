@@ -167,6 +167,13 @@ worse than +0.01 BPB in aggregate and +0.02 BPB in every category. Among eligibl
 the lowest measured compute to fixed quality; a statistical and systems tie chooses the smaller
 vocabulary. If no custom candidate passes, retain Mistral 32K.
 
+[`tokenizer_pilot_plan.json`](tokenizer_pilot_plan.json) freezes the executable analysis details. The
+custom must pass the +0.01 macro and +0.02 category upper bounds in both fixed-document and fixed-FLOP
+views. Paired document BPB deltas are averaged over seeds before a deterministic 10,000-replicate
+bootstrap. Compute-to-quality uses Mistral seed 42's fixed-document final macro BPB; fixed wall-clock
+is secondary only. The analyzer reports parameters, throughput, peak memory, active time, seed
+dispersion, and a provisional two-finalist D5 handoff without opening the audit.
+
 The final model is opened once on a separately frozen tokenizer audit slice after ranking. Failure
 keeps Mistral; it does not start another tokenizer search.
 

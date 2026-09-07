@@ -581,3 +581,17 @@ def test_tokenizer_static_nomination_policy_is_hash_bound_and_pre_results():
     assert result["fixture"]["advancement_authority"] is False
     assert result["real_static_comparison"].startswith("blocked")
     assert result["final_tokenizer_decision"].startswith("blocked")
+
+
+def test_tokenizer_pilot_analysis_is_hash_bound_and_D5_stays_unopened():
+    result = json.loads(
+        (ROOT / "results" / "data" / "tokenizer-pilot-analysis-fixture-20260907.json").read_text()
+    )
+    assert result["status"] == "seven_run_analysis_fixture_pass_real_pilot_and_D5_audit_blocked"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["frozen_run_matrix"]["total_runs"] == 7
+    assert result["statistics"]["eligibility_requires_both_fixed_document_and_fixed_flop"] is True
+    assert result["ranking"]["audit_opening_authorized"] is False
+    assert result["validation"]["real_LM_runs"] == 0
+    assert result["validation"]["D5_audit_openings"] == 0

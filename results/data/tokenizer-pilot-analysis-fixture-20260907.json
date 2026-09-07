@@ -1,0 +1,68 @@
+{
+  "format": "speck_tokenizer_pilot_analysis_fixture_qualification",
+  "format_version": 1,
+  "status": "seven_run_analysis_fixture_pass_real_pilot_and_D5_audit_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "ae26214",
+  "implementation": {
+    "analyzer": ["speck/tokenizer_pilot.py", "01fc3c3ecf8a84d9e606d1a4f81f0121ff69b07d1857e708235456bcd73bd194"],
+    "cli": ["scripts/tokenizer_pilot_analyze.py", "a39d6bf0e1c203f44f50ac5da39569a7fdf01b91a335f05f8c35fa339f0ff1e7"],
+    "tests": ["tests/test_tokenizer_pilot.py", "afdccc84406e337bb91a6467803b7bf30b9f28925aac11d10c5b8904a8a15ecc"],
+    "plan": ["research/flagship/tokenizer_pilot_plan.json", "d7b20800fc73c92bc1a4c853bc014accf06ed79af6587eca86718c38287d9318"]
+  },
+  "frozen_run_matrix": {
+    "screen": "Mistral plus compression and compact static endpoints at seed 42",
+    "confirmation": "Mistral and selected custom at seeds 42, 43, and 44; seed-42 runs reused",
+    "total_runs": 7,
+    "scale": "60M",
+    "gpu_hour_ceiling": 30
+  },
+  "frozen_views": {
+    "fixed_document": "same raw stream ending at 1.2B Mistral tokens",
+    "fixed_flop": "all runs stop at Mistral seed-42 analytic FLOPs from fixed-document endpoint",
+    "fixed_wall_clock": "secondary report at Mistral seed-42 active seconds; never a stopping view"
+  },
+  "statistics": {
+    "unit": "bits per UTF-8 byte",
+    "pairing": "identical document IDs and byte counts",
+    "seed_aggregation": "per-document candidate-minus-Mistral delta averaged over three seeds",
+    "bootstrap_seed": 314159,
+    "bootstrap_replicates": 10000,
+    "upper_percentile": 0.95,
+    "aggregate_margin_bpb": 0.01,
+    "category_margin_bpb": 0.02,
+    "eligibility_requires_both_fixed_document_and_fixed_flop": true
+  },
+  "ranking": {
+    "quality_target": "Mistral seed-42 fixed-document final macro BPB",
+    "primary": "median analytic FLOPs to quality",
+    "tie": "smaller vocabulary",
+    "fallback": "mistral-32k",
+    "audit_identity": "D5_tokenizer",
+    "audit_required_finalists": 2,
+    "audit_opening_authorized": false
+  },
+  "fixture": {
+    "path": "/mnt/speck-data/speck/tokenizer-fixtures/pilot-analysis-v1/analysis.json",
+    "sha256": "22a919ef9d23485629f6d04f3469728c83ebf1201abae1382d1d64e4e101ce91",
+    "covered": [
+      "eligible faster custom ranking",
+      "single-category regression fallback",
+      "unpaired document rejection",
+      "incomplete seven-run matrix rejection",
+      "fixed wall-clock secondary reporting",
+      "D5 handoff remains unopened"
+    ],
+    "pilot_authority": false,
+    "selection_authority": false
+  },
+  "validation": {
+    "focused_tests": 4,
+    "full_suite_passed": 626,
+    "full_suite_skipped": 8,
+    "ruff": "pass",
+    "real_LM_runs": 0,
+    "D5_audit_openings": 0
+  },
+  "decision": "retain the frozen analyzer and seven-run contract; do not launch the real pilot until real static nominees and the authorized sample exist, and do not open D5 before provisional ranking"
+}
