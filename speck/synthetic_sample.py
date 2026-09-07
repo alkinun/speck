@@ -19,6 +19,7 @@ from speck.web_sample import (
     _duplicate_line_ratio,
     _exact_keys,
     _fingerprint,
+    _host,
     _integer,
     _path,
     _raw_pii,
@@ -120,7 +121,7 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
         fields = item["fields"]
         _exact_keys(
             fields,
-            {"text", "document_id", "prompt", "seed", "style", "answer"},
+            {"text", "document_id", "prompt", "seed", "style", "answer", "url", "domain"},
             f"input {input_id} fields",
         )
         _nonempty(fields["text"], f"input {input_id} fields.text")
@@ -185,6 +186,7 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
             "allowed_email_placeholders",
             "allowed_ipv4_placeholders",
             "seed_overlap_shingle_tokens",
+            "maximum_bytes_per_seed_domain",
         },
         "filters",
     )
@@ -215,6 +217,15 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
         ),
         "seed_overlap_shingle_tokens": _integer(
             filters["seed_overlap_shingle_tokens"], "seed_overlap_shingle_tokens", 2
+        ),
+        "maximum_bytes_per_seed_domain": (
+            None
+            if filters["maximum_bytes_per_seed_domain"] is None
+            else _integer(
+                filters["maximum_bytes_per_seed_domain"],
+                "maximum_bytes_per_seed_domain",
+                1,
+            )
         ),
         "maximum_bytes_per_template_prefix": _integer(
             filters["maximum_bytes_per_template_prefix"],
@@ -346,6 +357,7 @@ def sample_synthetic_source(config, *, restart=False):
     settings = config["downstream_partition"]
     seen = set()
     template_bytes = Counter()
+    domain_bytes = Counter()
     aggregate = Counter()
     styles = Counter()
     input_reports = []
@@ -441,6 +453,19 @@ def sample_synthetic_source(config, *, restart=False):
                     prompt = row.get(fields["prompt"]) if fields["prompt"] else None
                     seed = row.get(fields["seed"]) if fields["seed"] else None
                     answer = row.get(fields["answer"]) if fields["answer"] else None
+                    url = row.get(fields["url"]) if fields["url"] else None
+                    domain = row.get(fields["domain"]) if fields["domain"] else _host(url)
+                    if domain is not None and (not isinstance(domain, str) or not domain):
+                        counts["seed_domain_rejected"] += 1
+                        continue
+                    domain_limit = filters["maximum_bytes_per_seed_domain"]
+                    if (
+                        domain_limit is not None
+                        and domain is not None
+                        and domain_bytes[domain] + size > domain_limit
+                    ):
+                        counts["seed_domain_cap_rejected"] += 1
+                        continue
                     style = row.get(fields["style"]) if fields["style"] else item["transformation"]
                     document_id = row.get(fields["document_id"]) if fields["document_id"] else None
                     if document_id is None:
@@ -474,8 +499,8 @@ def sample_synthetic_source(config, *, restart=False):
                         "language": "English",
                         "detected_licenses": [],
                         "rights_status": "synthetic_generator_and_seed_terms_manual_review_required",
-                        "url": None,
-                        "host": None,
+                        "url": url if isinstance(url, str) else None,
+                        "host": domain,
                         "size_bytes": size,
                         "generator_id": item["generator"]["id"],
                         "generator_revision": item["generator"]["revision"],
@@ -514,6 +539,8 @@ def sample_synthetic_source(config, *, restart=False):
                     )
                     seen.add(digest)
                     template_bytes[template] += size
+                    if domain is not None:
+                        domain_bytes[domain] += size
                     styles[record["style"]] += 1
                     partitions[f"{partition}_bytes"] += size
                     partitions[f"{partition}_records"] += 1
@@ -564,6 +591,8 @@ def sample_synthetic_source(config, *, restart=False):
             "unique_styles": len(styles),
             "unique_template_prefixes": len(template_bytes),
             "largest_template_prefix_bytes": max(template_bytes.values(), default=0),
+            "unique_seed_domains": len(domain_bytes),
+            "largest_seed_domain_bytes": max(domain_bytes.values(), default=0),
         },
         "outputs": {
             "tokenizer_input": {

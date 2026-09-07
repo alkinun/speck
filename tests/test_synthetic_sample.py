@@ -82,6 +82,8 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
                         "seed": "seed",
                         "style": "style",
                         "answer": None,
+                        "url": None,
+                        "domain": None,
                     },
                 }
             ],
@@ -106,6 +108,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
             "allowed_email_placeholders": [],
             "allowed_ipv4_placeholders": [],
             "seed_overlap_shingle_tokens": 5,
+            "maximum_bytes_per_seed_domain": 10000,
         },
         "downstream_partition": {
             "seed": 42,
