@@ -524,3 +524,23 @@ def test_data_launch_gate_is_hash_bound_and_has_no_real_receipt():
     )
     assert result["validation"]["real_receipts_issued"] == 0
     assert result["validation"]["models_constructed_by_gate_tests"] == 0
+
+
+def test_data_rehearsal_orchestration_is_hash_bound_but_has_not_run_20B():
+    result = json.loads(
+        (ROOT / "results" / "data" / "data-rehearsal-tooling-20260907.json").read_text()
+    )
+    assert result["status"] == "fixture_orchestration_qualified_real_20B_rehearsal_blocked"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["stage_order"] == [
+        "source_identity",
+        "acquisition",
+        "global_dedup",
+        "packing",
+        "resume_cleanup",
+        "firewall_disjointness",
+    ]
+    assert result["validation"]["real_stage_commands_run"] == 0
+    assert result["validation"]["real_source_records_read"] == 0
+    assert result["validation"]["persistent_operations_records_issued"] == 0

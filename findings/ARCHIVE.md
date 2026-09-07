@@ -204,6 +204,7 @@ history in order only when auditing provenance or a retired decision:
 189. [188 — Production data operations qualify on fixtures, not at 20B](188_production_data_tooling.md)
 190. [189 — All selected sources are ready for one human rights decision](189_source_rights_decision_readiness.md)
 191. [190 — Marked flagship training now fails before model construction](190_data_launch_gate.md)
+192. [191 — The 20B rehearsal is orchestrated but has not run](191_data_rehearsal_orchestration.md)
 
 Conventions:
 

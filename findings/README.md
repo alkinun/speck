@@ -71,6 +71,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Production data tooling](188_production_data_tooling.md) | Disk-backed dedup, removal, cleanup, and resume fixture evidence |
 | [Source-rights decision readiness](189_source_rights_decision_readiness.md) | Consolidated 30-source human acceptance contract |
 | [Data launch gate](190_data_launch_gate.md) | Exact authority binding before flagship model construction |
+| [Data rehearsal orchestration](191_data_rehearsal_orchestration.md) | Durable six-stage 20B runner qualified only on fixtures |
 
 ## Conventions
 

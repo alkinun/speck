@@ -1,0 +1,44 @@
+{
+  "format": "speck_data_rehearsal_tooling_qualification",
+  "format_version": 1,
+  "status": "fixture_orchestration_qualified_real_20B_rehearsal_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "22a7fce",
+  "implementation": {
+    "orchestrator": ["speck/data_rehearsal.py", "4102aabc87f12514b1a27c28900f98e6eb297fe2d71d95a5d4af93960006847e"],
+    "cli": ["scripts/data_rehearsal.py", "170051d2e06f6ed93476308434c88344ec7371144d0dfc5dab5ce1b518b5da27"],
+    "tests": ["tests/test_data_rehearsal.py", "91e58713e442253dab7180d9d0327f4bce85a515798e4ccd8c320025682d099b"],
+    "plan": ["research/flagship/data_rehearsal_plan.json", "9cd4f8f1e03f41b5b6468bb772edcefbf2bb12444b21c2e61b61daa97e61e918"]
+  },
+  "stage_order": ["source_identity", "acquisition", "global_dedup", "packing", "resume_cleanup", "firewall_disjointness"],
+  "qualified_contracts": [
+    "fixed stage order, command arrays, environments, working directories, and input hashes",
+    "per-stage result schema and immutable result/stdout/stderr hashes",
+    "elapsed time, cumulative child RSS, filesystem free-space, and staging-size telemetry",
+    "durable ordered-prefix state; completed stages are skipped only after full revalidation",
+    "changed completed result or log fails closed",
+    "required exact/near dedup, packing, cleanup, interruption-resume, and firewall-disjointness gates",
+    "required acquisition throughput, filtering, records, SQLite, memory, packing throughput/bytes/tokens, and unique-token metrics",
+    "packed token count must reach the declared rehearsal target",
+    "fixture manifests cannot issue production operations authority",
+    "production mode requires exactly 20B tokens and the immutable all-approved human rights record",
+    "operations authority revalidates every stage, log, result, deny ledger, rights record, gate, and metric"
+  ],
+  "validation": {
+    "new_tests": 6,
+    "combined_data_pipeline_tests": 59,
+    "full_suite_passed": 612,
+    "full_suite_skipped": 8,
+    "ruff": "pass",
+    "real_stage_commands_run": 0,
+    "real_source_records_read": 0,
+    "persistent_operations_records_issued": 0
+  },
+  "blocked": [
+    "real selected-source rights record is unsigned",
+    "real commands, source inputs, storage targets, and interruption schedule are not frozen",
+    "20B acquisition/preprocessing/packing has not run",
+    "production throughput, memory, storage, cleanup, resume, and unique yield are unmeasured"
+  ],
+  "decision": "retain the fixture-qualified orchestrator; do not freeze or execute the real 20B manifest until accepted sources are known, and do not issue operations authority from fixture evidence"
+}
