@@ -1,0 +1,35 @@
+{
+  "format": "speck_text_gitleaks_filter",
+  "format_version": 1,
+  "status": "exclusion_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/reference-common_pile_pressbooks-v1/tokenizer-input.jsonl",
+    "sha256": "ca04460c7a837ee025bef48578a5a11f6fd27ae9fb8dc9c5541a160173aff041",
+    "parent_report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_pressbooks-v1/report.json",
+    "parent_report_sha256": "bea40d7bd388e0a264d137b04d8e6b509b6699fb1fc8baccf323d51ba9dc774a",
+    "parent_format": "speck_reference_sample_result",
+    "parent_status": "bounded_sample_complete_not_training_authority"
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "binary": "/home/alkin/.local/bin/gitleaks-8.30.1",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_pressbooks-security-v1/gitleaks.json",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "redaction_percent": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "reference",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 10000000,
+    "evaluation_bytes": 1000000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/reference-common_pile_pressbooks-v2"
+}
