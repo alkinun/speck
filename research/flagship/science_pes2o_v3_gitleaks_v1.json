@@ -1,0 +1,35 @@
+{
+  "format": "speck_text_gitleaks_filter",
+  "format_version": 1,
+  "status": "exclusion_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v1/tokenizer-input.jsonl",
+    "sha256": "280272e54a2bd173a93c46bbf7e25c9622e27f24af013145f88606a84a3066f1",
+    "parent_report": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v1/report.json",
+    "parent_report_sha256": "697866a9ea3392789d9cb550141ed832319536322862719b84b89dfb1330210b",
+    "parent_format": "speck_science_sample_result",
+    "parent_status": "bounded_sample_complete_not_training_authority"
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "binary": "/home/alkin/.local/bin/gitleaks-8.30.1",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "report": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-security-v1/gitleaks.json",
+    "report_sha256": "fc5b6c3a0c7907a8a64d23e42008988de49380f691a45876fc2fde7ef1222edf",
+    "redaction_percent": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "science",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 45000000,
+    "evaluation_bytes": 4500000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v2"
+}

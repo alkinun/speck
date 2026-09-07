@@ -1,0 +1,35 @@
+{
+  "format": "speck_text_gitleaks_filter",
+  "format_version": 1,
+  "status": "exclusion_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v1/tokenizer-input.jsonl",
+    "sha256": "61c175f7e6fcf43a2595c3768584955b8a6796fe9e30ac1e186c7f0ecf0cf523",
+    "parent_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v1/report.json",
+    "parent_report_sha256": "e06b6e98d2c1c19137f8a318f0f617624119b13f0c97dc616f64cbf419bcc942",
+    "parent_format": "speck_science_sample_result",
+    "parent_status": "bounded_sample_complete_not_training_authority"
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "binary": "/home/alkin/.local/bin/gitleaks-8.30.1",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "report": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-security-v1/gitleaks.json",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "redaction_percent": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "science",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 15000000,
+    "evaluation_bytes": 1500000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v2"
+}
