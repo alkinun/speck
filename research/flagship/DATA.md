@@ -5,6 +5,10 @@ is selected. [`data_plan.json`](data_plan.json) is the machine-checked run and m
 Dataset revisions, licenses, filters, hashes, and exact arm weights become immutable experiment
 manifests before any result from that experiment is inspected.
 
+The broad source search and pinned candidate revisions are in [`SOURCES.md`](SOURCES.md) and
+[`source_registry.json`](source_registry.json). The registry is discovery evidence, not permission to
+train; only source-card-qualified entries can enter the experiments below.
+
 There is no universally perfect corpus. The target is the best reproducible mixture for this model,
 token budget, and capability profile: a Pareto winner that improves the equal-domain objective
 without buying its average by silently sacrificing code, math, science, reference, or general
@@ -21,19 +25,21 @@ mixture, not the expected winner:
 
 | Category | Prior | Search range | Candidate sources or treatments |
 | --- | ---: | ---: | --- |
-| Web | 55% | 45–65% | Ultra-FineWeb HQ, DCLM baseline, FineWeb-Edu, and a qualified blend |
-| Code | 15% | 10–22% | Stack-Edu; a license-gated, provenance-preserving Stack v2 subset; blend |
-| Math | 10% | 8–18% | FineMath 4+, MegaMath candidate, blend |
-| Synthetic | 10% | 8–18% | Cosmopedia v2, Ultra-FineWeb L3 Multi-Style, blend |
-| Science | 5% | 3–10% | peS2o full text |
-| Reference | 5% | 3–10% | English Wikipedia |
+| Web | 55% | 45–65% | Ultra-FineWeb English v1.4/L1-HQ, DCLM, FineWeb-Edu, blend |
+| Code | 15% | 10–22% | restricted Stack v3.1, Stack-Edu, qualified blend |
+| Math | 10% | 8–18% | FineMath-4+, MegaMath Web-Pro, qualified blend |
+| Synthetic | 10% | 8–18% | Cosmopedia v2, Ultra-FineWeb-L3 Multi-Style, qualified blend |
+| Science | 5% | 3–10% | peS2o v3, qualified FinePDFs/Common Pile supplements |
+| Reference | 5% | 3–10% | FineWiki English, qualified open books/technical discussion |
 
 Every generated E2 arm sums to 100% and stays inside those bounds. Science and reference use the
 already integrated incumbents after fresh qualification; their proportions still vary in E2. Code
-is the largest missing implementation dependency. The Stack v2 is not approved merely because it
-is public: its dataset card says bulk access is mediated by Software Heritage and that original-file
-licenses, attribution, and privacy require downstream handling. The code-source decision therefore
-includes a rights and provenance gate, not just a loss comparison.
+is the largest missing implementation dependency. The newly released Stack v3.1 is now the primary
+raw-code candidate because it includes contents, preserves repository structure, and fixes v3.0's
+reported duplicate leak. It is not approved merely because it is public: exclude no-license and
+vendored files, retain per-file provenance and attribution, rescan secrets/PII and contamination,
+and qualify a repository-aware adapter. The code-source decision remains a rights and provenance
+gate, not just a loss comparison.
 
 The 32K/128K extension corpus is separate from these weights. It uses complete books, papers, and
 repository trees rather than unrelated packed fragments. It cannot leak into the base-mixture
@@ -148,5 +154,6 @@ in the grant plan; never remove the sealed audit, domain guardrails, or E2c repl
 - Stable, decay, repetition, and curriculum decisions plus the sealed-audit result.
 - The exact stable and decay manifests used by every released checkpoint.
 
-Primary dataset references: [The Stack v2 dataset card](https://huggingface.co/datasets/bigcode/the-stack-v2)
-and [peS2o dataset card](https://huggingface.co/datasets/allenai/peS2o).
+Primary dataset references: [The Stack v3 dataset card](https://huggingface.co/datasets/HuggingFaceCode/stack-v3-train),
+[the Common Pile](https://huggingface.co/common-pile), and
+[peS2o dataset card](https://huggingface.co/datasets/allenai/peS2o).

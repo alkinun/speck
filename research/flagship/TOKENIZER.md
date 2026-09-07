@@ -7,6 +7,8 @@ the final source-balanced sample and matched language-model pilot are complete.
 [`tokenizer_plan.json`](tokenizer_plan.json) freezes the research decision. The executable config is
 created under `experiments/Speck-Tokenizer-v1/` only after every input file has an immutable source
 card and SHA-256 hash. This avoids presenting placeholders as launchable inputs.
+[`source_registry.json`](source_registry.json) proposes the per-source quotas that sum to each
+category target; a failed source is replaced and the registry versioned before sampling begins.
 
 ## 1. Scope
 

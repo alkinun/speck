@@ -13,6 +13,8 @@ The active operating surface is intentionally small:
   transfer, systems measurement, and the paper evidence map.
 - [`TOKENIZER.md`](TOKENIZER.md) defines balanced sampling, deterministic candidate training,
   static qualification, the matched LM pilot, and migration.
+- [`SOURCES.md`](SOURCES.md) records the broad dataset survey, source shortlist, Stack v3 decision,
+  and qualification order.
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
 - [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
@@ -21,6 +23,8 @@ The active operating surface is intentionally small:
   promotion, scale, and systems contract.
 - [`tokenizer_plan.json`](tokenizer_plan.json) is the machine-checked tokenizer sampling and decision
   contract.
+- [`source_registry.json`](source_registry.json) pins the candidate source revisions and provisional
+  tokenizer byte quotas without granting training authority.
 - [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
   created only at the day-21 freeze.
 

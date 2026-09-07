@@ -2,6 +2,7 @@
   "format": "speck_flagship_tokenizer_plan",
   "format_version": 1,
   "status": "tooling_ready_source_inputs_pending",
+  "source_registry": "research/flagship/source_registry.json",
   "language_scope": "English natural language; programming syntax exempt; code prose English-filtered",
   "categories": [
     "web",

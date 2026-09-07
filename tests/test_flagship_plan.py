@@ -139,6 +139,46 @@ def test_architecture_plan_inherits_promotion_margins_and_separates_systems_outc
     }
 
 
+def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_category():
+    registry = json.loads((FLAGSHIP / "source_registry.json").read_text())
+    tokenizer_plan = json.loads((FLAGSHIP / "tokenizer_plan.json").read_text())
+    sources = {source["id"]: source for source in registry["sources"]}
+
+    assert registry["format"] == "speck_flagship_source_registry"
+    assert registry["status"] == "candidate_registry_not_training_authority"
+    assert len(sources) == len(registry["sources"]) == 38
+    assert all(
+        len(source["revision"]) == 40
+        and all(character in "0123456789abcdef" for character in source["revision"])
+        for source in sources.values()
+    )
+    assert all(source["official_url"].startswith("https://") for source in sources.values())
+
+    stack_v3 = sources["stack_v3_train_permissive"]
+    assert stack_v3["repo"] == "HuggingFaceCode/stack-v3-train"
+    assert stack_v3["priority"] == "primary_screen"
+    assert "license_type=permissive" in stack_v3["subset"]
+    assert stack_v3["pipeline"] == "new_repository_nested"
+
+    totals = {
+        category: {"training_bytes": 0, "evaluation_bytes": 0}
+        for category in registry["categories"]
+    }
+    for allocation in registry["tokenizer_sample_allocations"]:
+        source = sources[allocation["source_id"]]
+        assert source["priority"] != "hold_terms"
+        totals[source["category"]]["training_bytes"] += allocation["training_bytes"]
+        totals[source["category"]]["evaluation_bytes"] += allocation["evaluation_bytes"]
+
+    assert set(totals) == set(tokenizer_plan["categories"])
+    assert all(
+        value["training_bytes"] == tokenizer_plan["sample"]["training_bytes_per_category"]
+        and value["evaluation_bytes"]
+        == tokenizer_plan["sample"]["evaluation_bytes_per_category"]
+        for value in totals.values()
+    )
+
+
 def test_execution_plan_dependencies_are_acyclic_and_days_fit_the_grant():
     plan = json.loads((FLAGSHIP / "plan.json").read_text())
     positions = {phase["id"]: index for index, phase in enumerate(plan["phases"])}
