@@ -1,0 +1,70 @@
+{
+  "format": "speck_code_contamination",
+  "format_version": 1,
+  "status": "scan_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v2b/tokenizer-input.jsonl",
+    "sha256": "a946bf17666650a3e4ef45387ddb30954444588aab2d77a48fd570ddf0822ad4",
+    "report": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v2b/report.json",
+    "report_sha256": "3707f61a4570025ddd72c67dc39fd3e27566b051169068f133b563ebe0c59e6c"
+  },
+  "benchmarks": [
+    {
+      "id": "humaneval",
+      "source": "openai/human-eval",
+      "revision": "6d43fb980f9fee3c892a914eda09951f772ad10d",
+      "official_url": "https://github.com/openai/human-eval",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/HumanEval.jsonl.gz",
+      "sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "format": "jsonl_gzip",
+      "task_id_field": "task_id",
+      "text_fields": ["prompt", "canonical_solution", "test"],
+      "expected_tasks": 164
+    },
+    {
+      "id": "mbpp",
+      "source": "google-research/google-research",
+      "revision": "932d4685e23f671b9e8c2abc72dd228ba5ff9252",
+      "official_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/mbpp.jsonl",
+      "sha256": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f",
+      "format": "jsonl",
+      "task_id_field": "task_id",
+      "text_fields": ["text", "code", "test_setup_code", "test_list", "challenge_test_list"],
+      "expected_tasks": 974
+    },
+    {
+      "id": "bigcodebench-v0.1.4",
+      "source": "bigcode/bigcodebench",
+      "revision": "b74c0d0bf70d2c0bc459be537895cca163007f1a",
+      "official_url": "https://github.com/bigcode-project/bigcodebench",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/bigcodebench-v0.1.4.parquet",
+      "sha256": "d9a4965821c9507ebdfb551c288656b2d5fe553234f5183044333ca8a4018267",
+      "format": "parquet",
+      "task_id_field": "task_id",
+      "text_fields": ["complete_prompt", "instruct_prompt", "canonical_solution", "code_prompt", "test"],
+      "expected_tasks": 1140
+    }
+  ],
+  "policy": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "primary_ngram": 13,
+    "sensitivity_ngram": 10,
+    "minimum_alphanumeric_tokens": 5,
+    "minimum_unique_tokens": 5,
+    "maximum_tasks_per_ngram": 1,
+    "critical_primary_matches": 3,
+    "sensitivity_matches": 3,
+    "minimum_exact_field_characters": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "code",
+    "modulus": 10,
+    "evaluation_remainders": [0],
+    "training_bytes": 55000000,
+    "evaluation_bytes": 5500000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v3"
+}

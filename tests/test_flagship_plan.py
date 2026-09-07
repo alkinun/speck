@@ -160,7 +160,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
     assert "license_type=permissive" in stack_v3["subset"]
     assert (
         stack_v3["pipeline"]
-        == "security_language_license_refined_partition_pass_training_blocked"
+        == "security_language_license_contamination_partition_pass_training_blocked"
     )
 
     totals = {

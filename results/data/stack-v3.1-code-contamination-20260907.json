@@ -1,0 +1,109 @@
+{
+  "format": "speck_stack_v3_code_contamination_summary",
+  "format_version": 1,
+  "status": "code_benchmark_decontamination_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "parent": "results/data/stack-v3.1-refinement-20260907.json",
+  "implementation": {
+    "config": "research/flagship/code_contamination_v1.json",
+    "config_sha256": "166ef377a877c611dfe0cd809a855de538def777bad233851b9dbd19a95e8365",
+    "module": "speck/code_contamination.py",
+    "module_sha256": "fafa30c42a7533c1180e6c5ac924115e627d36f731298bb7e82966ad967547cf",
+    "cli": "scripts/code_contamination_scan.py",
+    "cli_sha256": "57045d467f3ecf6da422fdde39a31563416fd1eb813cf705bfddcdbaf88f88f4"
+  },
+  "input": {
+    "artifact": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v2b/tokenizer-input.jsonl",
+    "sha256": "a946bf17666650a3e4ef45387ddb30954444588aab2d77a48fd570ddf0822ad4",
+    "records": 17172
+  },
+  "benchmarks": [
+    {
+      "id": "humaneval",
+      "source": "openai/human-eval",
+      "revision": "6d43fb980f9fee3c892a914eda09951f772ad10d",
+      "tasks": 164,
+      "payload_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef"
+    },
+    {
+      "id": "mbpp",
+      "source": "google-research/google-research",
+      "revision": "932d4685e23f671b9e8c2abc72dd228ba5ff9252",
+      "tasks": 974,
+      "payload_sha256": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f"
+    },
+    {
+      "id": "bigcodebench-v0.1.4",
+      "source": "bigcode/bigcodebench",
+      "revision": "b74c0d0bf70d2c0bc459be537895cca163007f1a",
+      "tasks": 1140,
+      "payload_sha256": "d9a4965821c9507ebdfb551c288656b2d5fe553234f5183044333ca8a4018267"
+    }
+  ],
+  "policy": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "primary": "at least three task-unique informative 13-grams",
+    "sensitivity": "at least three task-unique informative 10-grams",
+    "exact": "normalized benchmark field of at least 100 characters",
+    "maximum_tasks_per_ngram": 1,
+    "decision": "remove primary or exact matches; disclose but retain sensitivity-only matches"
+  },
+  "index": {
+    "tasks": 2278,
+    "primary_unique_ngrams": 802353,
+    "sensitivity_unique_ngrams": 491821
+  },
+  "result": {
+    "plan_fingerprint": "9ba3d4cd55f0cc2908694abecd7ac9b149813f368cf22e0011f8a7bfe46ec68b",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v3/report.json",
+    "runtime_report_sha256": "9700a29e3b41d0d27281fa64bde5cd857d5ee06d4c1c0fd9c403e98f24938077",
+    "records_removed_critical": 125,
+    "bytes_removed_critical": 1790425,
+    "records_sensitivity_only": 66,
+    "exact_field_matches": 0,
+    "unique_critical_tasks": 72,
+    "critical_task_links_by_benchmark": {
+      "humaneval": 2,
+      "mbpp": 12,
+      "bigcodebench-v0.1.4": 128
+    },
+    "records_retained": 17047,
+    "training_partition": {
+      "records": 15288,
+      "bytes": 59883015,
+      "target_bytes": 55000000
+    },
+    "evaluation_partition": {
+      "records": 1759,
+      "bytes": 5935510,
+      "target_bytes": 5500000
+    },
+    "outputs": {
+      "tokenizer_input": {
+        "bytes": 75889300,
+        "sha256": "bed4caa5fc55bc0c6fba351b2bff40ec129364a209c0b4542c940cabbf029752"
+      },
+      "repository_sample": {
+        "bytes": 76073784,
+        "sha256": "00547c819b65fb9f39fa56e32eafad5ded7c32de6e4cd9769e72f85fd738ff99"
+      },
+      "attribution": {
+        "bytes": 6794489,
+        "sha256": "1dea0937d1b5c474b8da2ef2d31a42767310d17b63940aab711f223bb49bd82c"
+      }
+    }
+  },
+  "interpretation": "the conservative n-gram rule finds overlap, not proof that a benchmark was copied intentionally; affected files are removed because the cost is small and evaluation integrity is more valuable",
+  "passed_gates": [
+    "three authoritative benchmark payload identities and task counts",
+    "frozen exact and task-unique 13-gram policy",
+    "critical affected-content removal",
+    "post-removal 55M training and 5.5M evaluation tokenizer quotas"
+  ],
+  "blocked_gates": [
+    "manual legal acceptance and final attribution policy",
+    "cross-source near-duplicate analysis",
+    "acquisition cleanup and resume qualification"
+  ],
+  "decision": "use the v3 decontaminated artifact as the Stack v3 tokenizer input parent; retain no claim of a contamination-free full corpus"
+}

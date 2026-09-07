@@ -51,6 +51,13 @@ passed with 61.19 MB train and 6.42 MB evaluation after rejecting 1,318 license-
 near-duplicates, benchmark contamination, and acquisition cleanup/resume. See
 [finding 170](../../findings/170_stack_v3_security_language_refinement.md).
 
+The next frozen scan pins 2,278 HumanEval, MBPP, and BigCodeBench tasks. It removes 125 files
+(1.79 MB) meeting the task-unique 13-gram or exact-field rule and discloses 66 additional 10-gram-only
+sensitivities. No complete normalized benchmark field matched. The cleaned artifact still passes with
+59.88 MB train and 5.94 MB evaluation. This closes only the bounded pinned-benchmark gate—not future
+benchmark versions or the full Stack corpus. See
+[finding 171](../../findings/171_stack_v3_code_decontamination.md).
+
 ## 2. Code treatments
 
 E1S should compare exactly three treatments after CPU qualification:

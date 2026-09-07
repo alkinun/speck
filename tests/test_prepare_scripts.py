@@ -1,4 +1,5 @@
 from scripts import (
+    code_contamination_scan,
     data_prepare,
     sft_prepare,
     stack_v3_expand,
@@ -13,10 +14,12 @@ from scripts import (
 
 def test_prepare_script_argument_parsers_are_import_safe():
     tokenizer = tokenizer_prepare.parse_args([])
+    contamination = code_contamination_scan.parse_args(["code.json", "--restart"])
     data = data_prepare.parse_args(["custom-data", "--restart"])
     sft = sft_prepare.parse_args(["custom-sft", "--restart"])
 
     assert tokenizer.experiment == "experiments/Speck1-140M"
+    assert contamination.config == "code.json" and contamination.restart
     assert data.experiment == "custom-data" and data.restart
     assert sft.experiment == "custom-sft" and sft.restart
 

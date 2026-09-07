@@ -184,6 +184,7 @@ history in order only when auditing provenance or a retired decision:
 169. [168 — Finalist chain stopped; program replaced by the flagship plan](168_finalist_stopped_flagship_plan.md)
 170. [169 — Restricted Stack v3.1 passes bounded yield, not training authority](169_stack_v3_bounded_qualification.md)
 171. [170 — Stack v3.1 passes security, language, and tokenizer-partition refinement](170_stack_v3_security_language_refinement.md)
+172. [171 — Stack v3.1 code benchmark overlaps are removed before tokenizer use](171_stack_v3_code_decontamination.md)
 
 Conventions:
 
