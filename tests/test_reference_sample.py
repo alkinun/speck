@@ -114,3 +114,36 @@ def test_initial_reference_plans_freeze_five_common_pile_margins():
     }
     assert sum(plan["downstream_partition"]["training_bytes"] for plan in initial) == 78_000_000
     assert sum(plan["downstream_partition"]["evaluation_bytes"] for plan in initial) == 7_800_000
+
+    finewiki = next(plan for plan in plans if plan["source"]["id"] == "finewiki_en")
+    assert finewiki["source"]["rows"] == 421_456
+    assert finewiki["downstream_partition"]["training_bytes"] == 42_000_000
+    assert finewiki["downstream_partition"]["evaluation_bytes"] == 4_200_000
+
+
+def test_reference_failure_successors_only_correct_declared_source_treatment():
+    first_path = ROOT / "research/flagship/reference_common_pile_gutenberg_v1.json"
+    next_path = ROOT / "research/flagship/reference_common_pile_gutenberg_v2.json"
+    first = validate_reference_sample_config(
+        json.loads(first_path.read_text()), config_dir=first_path.parent
+    )
+    successor = validate_reference_sample_config(
+        json.loads(next_path.read_text()), config_dir=next_path.parent
+    )
+    assert successor["source"]["fields"]["language"] == "metadata.language"
+    assert first["source"]["fields"]["language"] is None
+    assert successor["filters"] == first["filters"]
+    assert successor["downstream_partition"] == first["downstream_partition"]
+
+    first_path = ROOT / "research/flagship/reference_common_pile_oercommons_v1.json"
+    next_path = ROOT / "research/flagship/reference_common_pile_oercommons_v2.json"
+    first = validate_reference_sample_config(
+        json.loads(first_path.read_text()), config_dir=first_path.parent
+    )
+    successor = validate_reference_sample_config(
+        json.loads(next_path.read_text()), config_dir=next_path.parent
+    )
+    changed = {**first["filters"], "maximum_bytes_per_host": None}
+    assert successor["filters"] == changed
+    assert successor["source"] == first["source"]
+    assert successor["downstream_partition"] == first["downstream_partition"]

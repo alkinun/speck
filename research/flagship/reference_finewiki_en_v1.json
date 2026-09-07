@@ -1,0 +1,77 @@
+{
+  "format": "speck_reference_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "finewiki_en",
+    "repo": "HuggingFaceFW/finewiki",
+    "revision": "8bd13e72e6a002407649b3e898535f42ceb1aeb9",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceFW/finewiki",
+    "path": "/mnt/speck-data/speck/source-qualification/reference-raw-v1/HuggingFaceFW--finewiki/data/enwiki/000_00000.parquet",
+    "sha256": "8770000c2b1fd62743601ea24cdebd784f943cf3fa7bbe33161521a6f5ca7c74",
+    "rows": 421456,
+    "file_format": "parquet",
+    "fields": {
+      "text": "text",
+      "document_id": "id",
+      "title": "title",
+      "url": "url",
+      "license": null,
+      "language": "in_language",
+      "language_score": null,
+      "quality_score": null,
+      "date": "date_modified",
+      "source_partition": "wikiname"
+    }
+  },
+  "rights": {
+    "dataset_license": "CC-BY-SA-4.0 and GFDL dataset release",
+    "upstream_terms": "Wikipedia page attribution and share-alike obligations require human review",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": "en",
+    "minimum_language_score": null,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.25,
+    "accepted_document_licenses": [],
+    "minimum_science_term_hits": 0,
+    "science_terms": [
+      "reference"
+    ],
+    "maximum_bytes_per_host": null,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": []
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "reference",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 42000000,
+    "evaluation_bytes": 4200000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/reference-finewiki_en-v1"
+}
