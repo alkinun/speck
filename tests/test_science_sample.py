@@ -208,3 +208,26 @@ def test_flagship_science_contamination_reuses_frozen_payload_policy():
     ]
     assert plan["policy"] == web["policy"]
     assert plan["benchmarks"] == web["benchmarks"]
+
+
+def test_science_quota_failure_successors_only_increase_sample_margins():
+    for source_id, expected in {
+        "common_pile_arxiv": (22_000_000, 2_200_000),
+        "proof_pile_2_arxiv": (8_000_000, 800_000),
+    }.items():
+        first_path = ROOT / f"research/flagship/science_{source_id}_v1.json"
+        successor_path = ROOT / f"research/flagship/science_{source_id}_v2.json"
+        first = validate_science_sample_config(
+            json.loads(first_path.read_text()), config_dir=first_path.parent
+        )
+        successor = validate_science_sample_config(
+            json.loads(successor_path.read_text()), config_dir=successor_path.parent
+        )
+
+        assert successor["source"] == first["source"]
+        assert successor["rights"] == first["rights"]
+        assert successor["filters"] == first["filters"]
+        assert (
+            successor["downstream_partition"]["training_bytes"],
+            successor["downstream_partition"]["evaluation_bytes"],
+        ) == expected
