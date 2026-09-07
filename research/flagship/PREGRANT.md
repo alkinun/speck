@@ -2,14 +2,14 @@
 
 This list is the P0 gate for the 5,000-GH200-hour plan. “Before grant” means before starting the paid
 three-month allocation, not necessarily before an award notice. Status reflects the repository and
-research machine on 2026-09-06.
+research machine on 2026-09-07.
 
 ## Critical path
 
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
 | R1 | Restore root storage headroom | Complete: root is 78% used with about 98 GiB free | Root stays below 80%; relocated checkpoint paths remain valid; all new work uses the data volume | SPE-24 |
-| R2 | Add and qualify a code source | 38-source registry complete; Stack v3.1 adapter, Gitleaks, engineering-license, English-prose, pinned code-benchmark contamination, and tokenizer-partition gates pass; training blocked on legal acceptance, cross-source dedup, and cleanup/resume | Restricted Stack v3.1, Stack-Edu, and blend treatments pass rights, provenance, English-text, repository-split, dedup, contamination, secret/PII, yield, and operational gates | SPE-114 |
+| R2 | Add and qualify a code source | Bounded Stack v3.1, Stack-Edu, and Common Pile samples pass provenance, filtering, secrets, pinned benchmark contamination, partition yield, and cross-source overlap; training remains blocked on human rights/attribution acceptance and production cleanup/resume/global dedup | Restricted Stack v3.1, Stack-Edu, and blend treatments pass rights, provenance, English-text, repository-split, dedup, contamination, secret/PII, yield, and operational gates | SPE-114 |
 | R3 | Run the 20B data rehearsal | Protocol complete; run not started | Download, filtering, exact/near dedup memory, packing throughput, storage, cleanup, and resume are measured | SPE-114 |
 | R4 | Build the evaluation firewall | Protocol complete; data not built | Tokenizer sample, equal-byte selection set, unseen-source slices, and sealed audit are immutable and decontaminated before outputs | SPE-114 |
 | R5 | Prepare flagship corpora | Experiment contract complete; data not started | Six-category stable candidates are launch-ready; decay candidates can finish before E4; unique-token risk is explicit | SPE-114 |

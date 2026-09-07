@@ -45,6 +45,17 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Three-pair dense/KDA proxy](105_paper_1_paired_proxy_analysis.md) | Whole-architecture quality, FLOP, and time signal |
 | [Program transition](168_finalist_stopped_flagship_plan.md) | Why the retired finalist work no longer governs |
 
+## Flagship data qualification
+
+| Evidence | Why it matters now |
+| --- | --- |
+| [Stack v3 bounded qualification](169_stack_v3_bounded_qualification.md) | Pinned repository-aware source adapter and yield boundary |
+| [Stack v3 refinement](170_stack_v3_security_language_refinement.md) | Secret, language, license, and partition gates |
+| [Stack v3 benchmark screen](171_stack_v3_code_decontamination.md) | Frozen code-contamination policy and cleaned source |
+| [Stack-Edu acquisition](172_stack_edu_bounded_swh_sample.md) | SWH identity, missing-blob, and metadata-length evidence |
+| [Code-source overlap](173_code_source_overlap_and_precedence.md) | Bounded exact/fuzzy comparison and blend precedence |
+| [Code contamination successors](174_code_contamination_successors.md) | Stack-Edu/Common Pile benchmark cleanup and final bounded code inputs |
+
 ## Conventions
 
 - Losses are natural-log cross entropy (“nats”).

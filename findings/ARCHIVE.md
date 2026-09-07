@@ -187,6 +187,7 @@ history in order only when auditing provenance or a retired decision:
 172. [171 — Stack v3.1 code benchmark overlaps are removed before tokenizer use](171_stack_v3_code_decontamination.md)
 173. [172 — Stack-Edu SWH sampling works, with two secret-flagged records pending removal](172_stack_edu_bounded_swh_sample.md)
 174. [173 — Bounded code sources pass overlap analysis; Stack-Edu wins precedence](173_code_source_overlap_and_precedence.md)
+175. [174 — Stack-Edu and Common Pile benchmark overlaps are removed](174_code_contamination_successors.md)
 
 Conventions:
 

@@ -119,7 +119,7 @@
       "priority": "primary_screen",
       "access": "software_heritage_s3_ids",
       "rights": "inherits The Stack v2 source licenses and attribution",
-      "pipeline": "bounded_swh_security_and_overlap_pass_contamination_pending"
+      "pipeline": "bounded_swh_security_contamination_partition_and_overlap_pass_training_blocked"
     },
     {
       "id": "common_pile_stackv2_edu",
@@ -131,7 +131,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "Common Pile public-domain/open-license policy; file-level audit required",
-      "pipeline": "bounded_inline_security_and_overlap_pass_contamination_pending"
+      "pipeline": "bounded_inline_security_contamination_partition_and_overlap_pass_training_blocked"
     },
     {
       "id": "python_edu",

@@ -1,0 +1,90 @@
+{
+  "format": "speck_code_contamination_successors_summary",
+  "format_version": 1,
+  "status": "bounded_code_benchmark_decontamination_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "implementation": {
+    "module": "speck/code_contamination_successor.py",
+    "module_sha256": "f9998432589004c1386becae6da7ee137473fd109cd804f93704ece2c41bc1a6",
+    "frozen_base_module": "speck/code_contamination.py",
+    "frozen_base_module_sha256": "fafa30c42a7533c1180e6c5ac924115e627d36f731298bb7e82966ad967547cf",
+    "partition_module": "speck/stack_v3_refine.py",
+    "partition_module_sha256": "b85430cc9d52e239f756abd82142020cf7bf756d5cdba3a51f751c4eeb8b6a8d",
+    "cli": "scripts/code_contamination_successor.py",
+    "cli_sha256": "0a8edede47aa0694f9b898e348c39c8fe86138302e2ef60ca675a92c3f6288e3",
+    "stack_edu_config": "research/flagship/stack_edu_code_contamination_v1.json",
+    "stack_edu_config_sha256": "77cda63b088e821fd8195f8a46eeccb53e6579929d0b60a91912d27ba115bdab",
+    "common_pile_config": "research/flagship/common_pile_code_contamination_v1.json",
+    "common_pile_config_sha256": "5f1732c72d45162c0c0a053c5e9503b92bebfd967fbe34fb622c9ff64b50716a"
+  },
+  "frozen_benchmark_policy": {
+    "benchmarks": ["HumanEval", "MBPP", "BigCodeBench v0.1.4"],
+    "tasks": 2278,
+    "primary_ngram": 13,
+    "sensitivity_ngram": 10,
+    "critical_primary_matches": 3,
+    "sensitivity_matches": 3,
+    "exact_field_minimum_characters": 100,
+    "scope_limit": "only the pinned benchmark revisions and bounded code samples"
+  },
+  "stack_edu": {
+    "status": "decontamination_complete_not_training_authority",
+    "plan_fingerprint": "7a492148ee81c58e7eea6694c6167100693fef6e74014f3ec54ef23c5af21bda",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/stack-edu-v4/report.json",
+    "runtime_report_sha256": "84dfdf62fd57ff77526abb4534266726521b1d07bfb8b17957c87eaeb91f3de6",
+    "records_seen": 9570,
+    "records_removed_critical": 32,
+    "bytes_removed_critical": 241650,
+    "unique_tasks_linked": 23,
+    "records_sensitivity_only_retained": 15,
+    "records_with_exact_field_match": 0,
+    "records_retained": 9538,
+    "training_partition_bytes": 22278582,
+    "training_target_bytes": 20000000,
+    "evaluation_partition_bytes": 2803083,
+    "evaluation_target_bytes": 2000000,
+    "tokenizer_input_sha256": "0328cc65ee9165d3a84bfd2cc175b0a6fb5b88e17f1d04e93eb1bfbba1df68a2",
+    "attribution_sha256": "f515bc602b7a031f93218213dde197350a2ef40d3dc2c6a6620f83b31a6709b9"
+  },
+  "common_pile_stackv2_edu": {
+    "status": "decontamination_complete_not_training_authority",
+    "plan_fingerprint": "42e12ded18d26f7fcae6577a0789f2f39d9cc0df151d1637b0a3e26dd2820d45",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v4/report.json",
+    "runtime_report_sha256": "5b1628a796db4b2ce4488b21c304c0766b170c5a757e164fde3aa0a3d6c8f8b7",
+    "records_seen": 4966,
+    "records_removed_critical": 14,
+    "bytes_removed_critical": 81182,
+    "unique_tasks_linked": 13,
+    "records_sensitivity_only_retained": 3,
+    "records_with_exact_field_match": 0,
+    "records_retained": 4952,
+    "training_partition_bytes": 10835054,
+    "training_target_bytes": 10000000,
+    "evaluation_partition_bytes": 1103330,
+    "evaluation_target_bytes": 1000000,
+    "tokenizer_input_sha256": "50e422008ade8dd3b610e49be19416394553829d764758a12616cfd8b512d278",
+    "attribution_sha256": "414a06d913dee5752575085bc5692421ef95dfd1d1ede400786d61d3a6a300c0"
+  },
+  "prior_bounded_cross_source_analysis": {
+    "result": "results/data/code-source-overlap-20260907.json",
+    "result_sha256": "5242ebc7676fe6cd214a1c5b167bf8b6b1b30c27d21f3757659a006a4003766c",
+    "exact_released_content_matches": 0,
+    "verified_near_duplicate_matches": 0,
+    "preservation_argument": "both decontaminated outputs are strict record-removal subsets of the analyzed inputs, so this operation cannot introduce a new cross-source duplicate"
+  },
+  "passed_gates": [
+    "parent source report and tokenizer-input identity",
+    "pinned benchmark payload identity and exact task counts",
+    "same frozen 13-gram critical and 10-gram sensitivity policy as Stack v3",
+    "critical overlap removal",
+    "bounded tokenizer train and evaluation byte quotas",
+    "bounded cross-source zero-match property preserved by subsetting"
+  ],
+  "blocked_gates": [
+    "manual legal acceptance and final attribution policy",
+    "production corpus global exact and near-duplicate processing",
+    "production acquisition cleanup and resume qualification",
+    "future benchmark revisions and broader evaluation-suite contamination"
+  ],
+  "decision": "use the v4 Stack-Edu and Common Pile artifacts for tokenizer sampling after manual rights approval; do not use the pre-decontamination v3 artifacts"
+}

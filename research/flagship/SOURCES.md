@@ -1,7 +1,8 @@
 # Flagship source exploration and shortlist
 
-Status: candidate registry v1 plus bounded Stack v3.1 profile, 2026-09-07. This document records the
-broad source search before tokenizer and corpus freeze. [`source_registry.json`](source_registry.json)
+Status: candidate registry v1 plus bounded three-source code qualification, 2026-09-07. This
+document records the broad source search before tokenizer and corpus freeze.
+[`source_registry.json`](source_registry.json)
 pins the exact repository revisions inspected today and proposes tokenizer-sample byte quotas. It is
 not training authority: every selected source still needs a source card, local file hashes, rights
 disposition, deduplication behavior, and contamination results.
@@ -47,8 +48,7 @@ fully redacted report, applies a twelve-identifier conservative engineering lice
 English-filters extracted comments/docstrings plus Markdown. Its first 70 MB input failed the exact
 tokenizer partition target and was preserved. A same-shard 85 MB successor changed no filters and
 passed with 61.19 MB train and 6.42 MB evaluation after rejecting 1,318 license-policy records and
-3,044 non-English-prose records. Training remains blocked on manual legal acceptance, cross-source
-near-duplicates, benchmark contamination, and acquisition cleanup/resume. See
+3,044 non-English-prose records. At this stage, training remained blocked on the later gates. See
 [finding 170](../../findings/170_stack_v3_security_language_refinement.md).
 
 The next frozen scan pins 2,278 HumanEval, MBPP, and BigCodeBench tasks. It removes 125 files
@@ -90,6 +90,14 @@ Stack-Edu→Stack-v3→Common-Pile precedence plus 128-permutation MinHash/LSH f
 text or verified ≥0.80 near-duplicate matches while retaining every quota. This is sample evidence,
 not a full-corpus disjointness claim. See
 [finding 173](../../findings/173_code_source_overlap_and_precedence.md).
+
+The same pinned 2,278-task benchmark policy then removes 32 Stack-Edu files (241,650 bytes) and 14
+Common Pile files (81,182 bytes). The v4 successors still exceed their 20M/2M and 10M/1M
+train/evaluation quotas. They are strict subsets of the inputs that passed the bounded cross-source
+comparison, so record removal cannot introduce a new duplicate. This closes the technical bounded
+code-sample gates. Manual rights/attribution acceptance, production-scale global deduplication, and
+acquisition cleanup/resume still block training authority. See
+[finding 174](../../findings/174_code_contamination_successors.md).
 
 The tokenizer's provisional 100 MB code allocation is 55 MB Stack v3.1, 20 MB Stack-Edu, 10 MB
 Common Pile Stack v2 educational code, 10 MB Python-Edu, and 5 MB Python language-design prose. This
@@ -164,9 +172,11 @@ must use disjoint hashes.
 ## 7. Qualification order before downloading at scale
 
 1. Freeze source cards and acceptance/attribution policy for Stack v3, Stack-Edu, FineWiki, and every
-   source with inherited terms.
-2. **Bounded pass:** the repository-aware Stack v3 adapter and twelve-shard schema, identity, filter,
-   PII-placeholder, high-confidence-secret, and language-yield profile are complete.
+   source with inherited terms. The technical bounded code screens are complete; human rights
+   disposition is not.
+2. **Bounded code pass:** the repository-aware Stack v3, Stack-Edu, and Common Pile samples now pass
+   identity, quality/language, security, benchmark-contamination, partition-yield, and bounded
+   cross-source-overlap gates.
 3. Materialize the 660 MB tokenizer sample using the provisional quotas in the registry; failed
    sources are replaced within their category before any candidate tokenizer is trained.
 4. Train and statically evaluate the three custom tokenizers plus Mistral 32K.

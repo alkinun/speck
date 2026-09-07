@@ -164,10 +164,13 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
         stack_v3["pipeline"]
         == "security_language_license_contamination_partition_and_bounded_overlap_pass_training_blocked"
     )
-    assert stack_edu["pipeline"] == "bounded_swh_security_and_overlap_pass_contamination_pending"
+    assert (
+        stack_edu["pipeline"]
+        == "bounded_swh_security_contamination_partition_and_overlap_pass_training_blocked"
+    )
     assert (
         common_pile_code["pipeline"]
-        == "bounded_inline_security_and_overlap_pass_contamination_pending"
+        == "bounded_inline_security_contamination_partition_and_overlap_pass_training_blocked"
     )
 
     totals = {
