@@ -1,0 +1,388 @@
+{
+  "format": "speck_tokenizer_inputs_freeze",
+  "format_version": 1,
+  "status": "technically_frozen_rights_and_production_blocked_not_executable",
+  "source_registry": "source_registry.json",
+  "source_registry_sha256": "98936f2e3f0c9457217d5a4acb56bc182785a05af2f853099f3ffa320ba7175e",
+  "categories": [
+    {
+      "id": "web",
+      "technical_result": "../../results/data/web-contamination-20260907.json",
+      "technical_result_sha256": "2bf69d1305b51b5f92a2365f983013a4a96a79337772a149fcdfd8350d4edea8",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/report.json",
+      "parent_report_sha256": "58e4e603d0b1ef671b8569895a073358503c2640699cf18ae5a8b859da34bb0c",
+      "parent_format": "speck_text_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "inputs": [
+        {
+          "source_id": "ultrafineweb_en_v1_4",
+          "runtime_source_id": "ultrafineweb_en_v1_4",
+          "path": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/ultrafineweb_en_v1_4.jsonl",
+          "sha256": "f6aa48587cb67a926c0001e013bb60017f3df82484d93f72d45a802cb6f6d20a",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 35000000,
+          "evaluation_bytes": 3500000
+        },
+        {
+          "source_id": "fineweb_edu",
+          "runtime_source_id": "fineweb_edu",
+          "path": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/fineweb_edu.jsonl",
+          "sha256": "36ba868099eb2e999ea6c909fcb36ebba8167bb713391746e97c462fef413143",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 30000000,
+          "evaluation_bytes": 3000000
+        },
+        {
+          "source_id": "dclm_baseline",
+          "runtime_source_id": "dclm_baseline",
+          "path": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/dclm_baseline.jsonl",
+          "sha256": "8ac513202b6bfad460476648a3b2f4180f189a0a2d3d8d71c5ea736979a478ec",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 25000000,
+          "evaluation_bytes": 2500000
+        },
+        {
+          "source_id": "fineweb_base",
+          "runtime_source_id": "fineweb_base",
+          "path": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/fineweb_base.jsonl",
+          "sha256": "3085fbc1aefcae267e4bbe6e6536477c9ab6f2fc826a9e536c181c54430b1dac",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 10000000,
+          "evaluation_bytes": 1000000
+        }
+      ]
+    },
+    {
+      "id": "code",
+      "technical_result": "../../results/data/code-tokenizer-supplements-20260907.json",
+      "technical_result_sha256": "8fb0fa59451dae7c0102aad3b91239d081ded1996f223d99c4dc2a0b998d36eb",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/report.json",
+      "parent_report_sha256": "e66ffe0f664756e7f9afc28c5e9df473ebbe691d8716acece36812612547929d",
+      "parent_format": "speck_code_cross_source_duplicates_result",
+      "parent_status": "cross_source_duplicates_complete_not_training_authority",
+      "inputs": [
+        {
+          "source_id": "stack_v3_train_permissive",
+          "runtime_source_id": "stack_v3",
+          "path": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/stack_v3.jsonl",
+          "sha256": "bed4caa5fc55bc0c6fba351b2bff40ec129364a209c0b4542c940cabbf029752",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 55000000,
+          "evaluation_bytes": 5500000
+        },
+        {
+          "source_id": "stack_edu",
+          "runtime_source_id": "stack_edu",
+          "path": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/stack_edu.jsonl",
+          "sha256": "0328cc65ee9165d3a84bfd2cc175b0a6fb5b88e17f1d04e93eb1bfbba1df68a2",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 20000000,
+          "evaluation_bytes": 2000000
+        },
+        {
+          "source_id": "common_pile_stackv2_edu",
+          "runtime_source_id": "common_pile_stackv2_edu",
+          "path": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/common_pile_stackv2_edu.jsonl",
+          "sha256": "50e422008ade8dd3b610e49be19416394553829d764758a12616cfd8b512d278",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 10000000,
+          "evaluation_bytes": 1000000
+        },
+        {
+          "source_id": "python_edu",
+          "runtime_source_id": "python_edu",
+          "path": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/python_edu.jsonl",
+          "sha256": "5d97681c4d5bb6aa98758ee0253844eb5282bf33cd80769ffb46e71e0d9995ad",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 10000000,
+          "evaluation_bytes": 1000000
+        },
+        {
+          "source_id": "common_pile_python_peps",
+          "runtime_source_id": "common_pile_python_peps",
+          "path": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/common_pile_python_peps.jsonl",
+          "sha256": "cdade5c85b66fd5b84034d163f951e740146f2cf449d4b07f85ad256b0e5d803",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 5000000,
+          "evaluation_bytes": 500000
+        }
+      ]
+    },
+    {
+      "id": "math",
+      "technical_result": "../../results/data/math-tokenizer-sources-20260907.json",
+      "technical_result_sha256": "5934b64e59130cc5652fd280b191e803bbffb561141cab3f357e70332ffbe51b",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/report.json",
+      "parent_report_sha256": "49153318c88c71b12293f484853aa50da969e4d3ea8793ce330eac7ce8c5b54a",
+      "parent_format": "speck_text_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "inputs": [
+        {
+          "source_id": "finemath_4plus",
+          "runtime_source_id": "finemath_4plus",
+          "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/finemath_4plus.jsonl",
+          "sha256": "d62031fe850344060ee76ebf7187c81a3c2d367ec3a703582e4044c5ca043fdb",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 30000000,
+          "evaluation_bytes": 3000000
+        },
+        {
+          "source_id": "infiwebmath_4plus",
+          "runtime_source_id": "infiwebmath_4plus",
+          "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/infiwebmath_4plus.jsonl",
+          "sha256": "f4a5a7154383e96971c33906aaf15bef74e557aebcf2796c993611ca996aab81",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        },
+        {
+          "source_id": "megamath_web_pro",
+          "runtime_source_id": "megamath_web_pro",
+          "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/megamath_web_pro.jsonl",
+          "sha256": "bd1683a40b48b52ba67f806588a6d38732b7122f8c3664a8e3c0fa1f22a0d1e1",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 25000000,
+          "evaluation_bytes": 2500000
+        },
+        {
+          "source_id": "openwebmath",
+          "runtime_source_id": "openwebmath",
+          "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/openwebmath.jsonl",
+          "sha256": "39f83355cccc1a59edd80de38109f9f7d783ac350f29399a82382999ec382fda",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        },
+        {
+          "source_id": "proof_pile_2_algebraic_stack",
+          "runtime_source_id": "proof_pile_2_algebraic_stack",
+          "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/proof_pile_2_algebraic_stack.jsonl",
+          "sha256": "3a7a2e0642a678eca2c763116d7938cd21825552da596abf255ae3ce56798f10",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 10000000,
+          "evaluation_bytes": 1000000
+        },
+        {
+          "source_id": "megamath_code",
+          "runtime_source_id": "megamath_code",
+          "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/megamath_code.jsonl",
+          "sha256": "9dda6d6e58438208a1dbfa0324fb6f6d5a1c5648fc2d5af15dbf500c8cedd8ed",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 5000000,
+          "evaluation_bytes": 500000
+        }
+      ]
+    },
+    {
+      "id": "synthetic",
+      "technical_result": "../../results/data/synthetic-tokenizer-sources-20260907.json",
+      "technical_result_sha256": "944bf6f9e117dc46a4f6775804cd4d0e4b160f6e78cede7447c56aa45cdde30b",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/report.json",
+      "parent_report_sha256": "a2eab58e0506c2ce77934f5ce8bd61153ad3907a29af108b4f7bea134c543f96",
+      "parent_format": "speck_text_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "inputs": [
+        {
+          "source_id": "cosmopedia_v2",
+          "runtime_source_id": "cosmopedia_v2",
+          "path": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/cosmopedia_v2.jsonl",
+          "sha256": "187b34e023fe3cc78a01798526584d3b5c62145ef7863c8d78ac04a12c6c7b7e",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 35000000,
+          "evaluation_bytes": 3500000
+        },
+        {
+          "source_id": "ultrafineweb_l3_multi_style",
+          "runtime_source_id": "ultrafineweb_l3_multi_style",
+          "path": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/ultrafineweb_l3_multi_style.jsonl",
+          "sha256": "c64a26706a283153e5e5623b31b24dc5e5c10009eef48a11201bdc181393a1f1",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 35000000,
+          "evaluation_bytes": 3500000
+        },
+        {
+          "source_id": "ultrafineweb_l3_qa",
+          "runtime_source_id": "ultrafineweb_l3_qa",
+          "path": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/ultrafineweb_l3_qa.jsonl",
+          "sha256": "22e8244c074c7eab66f405baca1f64f50ba002a804a4c8881e063cd2c172fa8b",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        },
+        {
+          "source_id": "megamath_qa",
+          "runtime_source_id": "megamath_qa",
+          "path": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/megamath_qa.jsonl",
+          "sha256": "c5ab3469b24a16f67372c003ff5853e00eb7969660fc094e35c2df764d12f0a6",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        }
+      ]
+    },
+    {
+      "id": "science",
+      "technical_result": "../../results/data/science-tokenizer-sources-20260907.json",
+      "technical_result_sha256": "b9c7c0c541cd5c3c21dea8cd17b560a1165ec0f6bb328a6c6c6c68ee705ca1be",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/report.json",
+      "parent_report_sha256": "fdb4d73768a3d9ee33fca26cff91b2e08e66d6d0816edb6c29fd5dd323e44b99",
+      "parent_format": "speck_text_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "inputs": [
+        {
+          "source_id": "pes2o_v3",
+          "runtime_source_id": "pes2o_v3",
+          "path": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/pes2o_v3.jsonl",
+          "sha256": "c5d9b36e8f657ab79e19d3a1adf905d0d48bc15f185538fc6212ad0e6c1973b8",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 45000000,
+          "evaluation_bytes": 4500000
+        },
+        {
+          "source_id": "finepdfs_edu_en",
+          "runtime_source_id": "finepdfs_edu_en",
+          "path": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/finepdfs_edu_en.jsonl",
+          "sha256": "fd0de2dbe4c6f59aac01ec3b4c5b3478f18bfffa81fc15e54324598599670123",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 25000000,
+          "evaluation_bytes": 2500000
+        },
+        {
+          "source_id": "common_pile_arxiv",
+          "runtime_source_id": "common_pile_arxiv",
+          "path": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/common_pile_arxiv.jsonl",
+          "sha256": "fe714f38961b5883d4a1ff90531029b2cb717519b82b4c5289745fcb49cad981",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        },
+        {
+          "source_id": "common_pile_pubmed",
+          "runtime_source_id": "common_pile_pubmed",
+          "path": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/common_pile_pubmed.jsonl",
+          "sha256": "815cbea4a39c1b701aae6d5cd287206e29f54fca2adbedb50c34a20067b3db2b",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 10000000,
+          "evaluation_bytes": 1000000
+        },
+        {
+          "source_id": "proof_pile_2_arxiv",
+          "runtime_source_id": "proof_pile_2_arxiv",
+          "path": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/proof_pile_2_arxiv.jsonl",
+          "sha256": "66b37dc1d8f5d0031801a636d542bf3589cf44cd24492b49db2fae84f02c3484",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 5000000,
+          "evaluation_bytes": 500000
+        }
+      ]
+    },
+    {
+      "id": "reference",
+      "technical_result": "../../results/data/reference-tokenizer-sources-20260907.json",
+      "technical_result_sha256": "380b3f1e7354a3a776cfa1edfdd0b545b20be84177ce14df62e360d6e5c0cacc",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/report.json",
+      "parent_report_sha256": "5eeeafe113a12cd7cb58e6cef896677b86d66dccbf7664fb3a9e9f0ffc2f6e95",
+      "parent_format": "speck_text_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "inputs": [
+        {
+          "source_id": "finewiki_en",
+          "runtime_source_id": "finewiki_en",
+          "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/finewiki_en.jsonl",
+          "sha256": "59292fe3342ac1ec5460b317817de5432dd087cf3647ebc54ed21af31a15fa0d",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 35000000,
+          "evaluation_bytes": 3500000
+        },
+        {
+          "source_id": "common_pile_stackexchange",
+          "runtime_source_id": "common_pile_stackexchange",
+          "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/common_pile_stackexchange.jsonl",
+          "sha256": "a2b9c4b1abf7421c18f710f9e2a85fa0dd543dfdc2373b4c7a142bf7a46e0457",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 20000000,
+          "evaluation_bytes": 2000000
+        },
+        {
+          "source_id": "common_pile_gutenberg",
+          "runtime_source_id": "common_pile_gutenberg",
+          "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/common_pile_gutenberg.jsonl",
+          "sha256": "3082d4d83ac9734b959ee8f0ff9098e8c0f6baeee3084aeab91ee05c9ed51b95",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        },
+        {
+          "source_id": "common_pile_libretexts",
+          "runtime_source_id": "common_pile_libretexts",
+          "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/common_pile_libretexts.jsonl",
+          "sha256": "8e733a5e6be1cc70da874e93737980009d2517a2295f3d55a8d3e773a15f7bfb",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 15000000,
+          "evaluation_bytes": 1500000
+        },
+        {
+          "source_id": "common_pile_oercommons",
+          "runtime_source_id": "common_pile_oercommons",
+          "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/common_pile_oercommons.jsonl",
+          "sha256": "8e82d7cefcb734569c235d1c7a778523947f17f79c57ed4fb1f76665dd4e6306",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 5000000,
+          "evaluation_bytes": 500000
+        },
+        {
+          "source_id": "common_pile_pressbooks",
+          "runtime_source_id": "common_pile_pressbooks",
+          "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/common_pile_pressbooks.jsonl",
+          "sha256": "e3cf0482f35f5e4a74fd9440de6629dfc5725d783ab2547ff2a346255b885e82",
+          "format": "jsonl",
+          "text_column": "text",
+          "training_bytes": 10000000,
+          "evaluation_bytes": 1000000
+        }
+      ]
+    }
+  ],
+  "targets": {
+    "training_bytes_per_category": 100000000,
+    "evaluation_bytes_per_category": 10000000,
+    "total_training_bytes": 600000000,
+    "total_evaluation_bytes": 60000000
+  },
+  "rights_template": "source_rights_acceptance_template.json",
+  "rights_template_sha256": "23535904dab91c9cdd4197ee3ea7ea7a8ddf9004912a3b3403829cfd3202f311",
+  "rights_status": "30_pending_0_approved_0_rejected",
+  "production_operations_status": "fixture_tooling_only_20B_rehearsal_not_run",
+  "firewall_status": "fixture_tooling_only_real_partitions_not_materialized",
+  "executable_tokenizer_config": "forbidden_until_rights_production_and_firewall_gates_pass",
+  "training_authority": "blocked"
+}
