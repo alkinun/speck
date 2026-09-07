@@ -14,6 +14,7 @@ from speck.science_sample import (
     validate_science_sample_config,
 )
 from speck.stack_v3_refine import _sample_partition
+from speck.text_contamination import validate_text_contamination_config
 from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
@@ -188,3 +189,22 @@ def test_flagship_science_overlap_prioritizes_per_document_license_sources():
     assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
     assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
     assert plan["policy"]["category"] == "science"
+
+
+def test_flagship_science_contamination_reuses_frozen_payload_policy():
+    path = ROOT / "research/flagship/science_contamination_v1.json"
+    plan = validate_text_contamination_config(json.loads(path.read_text()), config_dir=path.parent)
+    web_path = ROOT / "research/flagship/web_contamination_v1.json"
+    web = validate_text_contamination_config(
+        json.loads(web_path.read_text()), config_dir=web_path.parent
+    )
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "common_pile_pubmed",
+        "common_pile_arxiv",
+        "pes2o_v3",
+        "finepdfs_edu_en",
+        "proof_pile_2_arxiv",
+    ]
+    assert plan["policy"] == web["policy"]
+    assert plan["benchmarks"] == web["benchmarks"]
