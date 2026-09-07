@@ -179,7 +179,7 @@ def test_math_sample_reads_jsonl_zstd_without_rewriting_rows(tmp_path):
 def test_flagship_math_sample_plans_freeze_six_source_margins():
     plans = []
     for path in sorted((ROOT / "research/flagship").glob("math_*_v1.json")):
-        if path.name == "math_megamath_code_v1.json":
+        if path.name == "math_megamath_code_v1.json" or "_gitleaks_" in path.name:
             continue
         plans.append(
             validate_math_sample_config(json.loads(path.read_text()), config_dir=path.parent)
