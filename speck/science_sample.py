@@ -93,22 +93,28 @@ def validate_science_sample_config(config, *, config_dir=None):
     if source["file_format"] not in {"parquet", "jsonl_gzip", "jsonl_zstd"}:
         raise ValueError("unsupported science source format")
     fields = source["fields"]
-    _exact_keys(
-        fields,
-        {
-            "text",
-            "document_id",
-            "title",
-            "url",
-            "license",
-            "language",
-            "language_score",
-            "quality_score",
-            "date",
-            "source_partition",
-        },
-        "source.fields",
-    )
+    legacy_fields = {
+        "text",
+        "document_id",
+        "title",
+        "url",
+        "license",
+        "language",
+        "language_score",
+        "quality_score",
+        "date",
+        "source_partition",
+    }
+    extended_fields = legacy_fields | {
+        "secondary_language",
+        "secondary_language_score",
+        "is_truncated",
+        "extractor",
+        "minhash_cluster_size",
+        "duplicate_count",
+    }
+    if frozenset(fields) not in {frozenset(legacy_fields), frozenset(extended_fields)}:
+        raise ValueError("source.fields has an unsupported schema")
     _nonempty(fields["text"], "source.fields.text")
     for key, value in fields.items():
         if value is not None and (not isinstance(value, str) or not value):
@@ -130,39 +136,52 @@ def validate_science_sample_config(config, *, config_dir=None):
     ):
         raise ValueError("science rights must remain a manual-review gate")
     filters = config["filters"]
-    _exact_keys(
-        filters,
-        {
-            "required_language",
-            "minimum_language_score",
-            "minimum_quality_score",
-            "language_detector",
-            "minimum_detected_English_probability",
-            "min_document_bytes",
-            "max_document_bytes",
-            "minimum_alphabetic_ratio",
-            "maximum_duplicate_line_ratio",
-            "maximum_spaced_OCR_sequences",
-            "maximum_replacement_character_ratio",
-            "boilerplate_line_terms",
-            "maximum_boilerplate_line_ratio",
-            "accepted_document_licenses",
-            "minimum_science_term_hits",
-            "science_terms",
-            "maximum_bytes_per_host",
-            "allowed_email_placeholders",
-            "allowed_ipv4_placeholders",
-        },
-        "filters",
-    )
+    legacy_filters = {
+        "required_language",
+        "minimum_language_score",
+        "minimum_quality_score",
+        "language_detector",
+        "minimum_detected_English_probability",
+        "min_document_bytes",
+        "max_document_bytes",
+        "minimum_alphabetic_ratio",
+        "maximum_duplicate_line_ratio",
+        "maximum_spaced_OCR_sequences",
+        "maximum_replacement_character_ratio",
+        "boilerplate_line_terms",
+        "maximum_boilerplate_line_ratio",
+        "accepted_document_licenses",
+        "minimum_science_term_hits",
+        "science_terms",
+        "maximum_bytes_per_host",
+        "allowed_email_placeholders",
+        "allowed_ipv4_placeholders",
+    }
+    extended_filters = legacy_filters | {
+        "required_secondary_language",
+        "minimum_secondary_language_score",
+        "reject_truncated",
+        "accepted_extractors",
+        "maximum_minhash_cluster_size",
+        "maximum_duplicate_count",
+    }
+    if frozenset(filters) not in {frozenset(legacy_filters), frozenset(extended_filters)}:
+        raise ValueError("filters has an unsupported schema")
     if filters["language_detector"] != "py3langid==0.3.0":
         raise ValueError("science language detector must be pinned py3langid")
-    if filters["required_language"] is not None and (
-        not isinstance(filters["required_language"], str) or not filters["required_language"]
-    ):
-        raise ValueError("required_language must be null or a string")
+    for key in ("required_language", "required_secondary_language"):
+        if key not in filters:
+            continue
+        if filters[key] is not None and (not isinstance(filters[key], str) or not filters[key]):
+            raise ValueError(f"{key} must be null or a string")
     optional = {}
-    for key in ("minimum_language_score", "minimum_quality_score"):
+    for key in (
+        "minimum_language_score",
+        "minimum_secondary_language_score",
+        "minimum_quality_score",
+    ):
+        if key not in filters:
+            continue
         value = filters[key]
         optional[key] = None if value is None else _number(value, f"filters.{key}")
     ratios = {}
@@ -212,6 +231,30 @@ def validate_science_sample_config(config, *, config_dir=None):
             filters["allowed_ipv4_placeholders"], "allowed_ipv4_placeholders", allow_empty=True
         ),
     }
+    if "reject_truncated" in filters:
+        if not isinstance(filters["reject_truncated"], bool):
+            raise ValueError("reject_truncated must be boolean")
+        normalized_filters.update(
+            {
+                "accepted_extractors": _strings(
+                    filters["accepted_extractors"], "accepted_extractors", allow_empty=True
+                ),
+                "maximum_minhash_cluster_size": (
+                    None
+                    if filters["maximum_minhash_cluster_size"] is None
+                    else _integer(
+                        filters["maximum_minhash_cluster_size"],
+                        "maximum_minhash_cluster_size",
+                        1,
+                    )
+                ),
+                "maximum_duplicate_count": (
+                    None
+                    if filters["maximum_duplicate_count"] is None
+                    else _integer(filters["maximum_duplicate_count"], "maximum_duplicate_count")
+                ),
+            }
+        )
     partition = config["downstream_partition"]
     _exact_keys(
         partition,
@@ -420,6 +463,20 @@ def sample_science_source(config, *, restart=False):
                 ):
                     counts["metadata_language_score_rejected"] += 1
                     continue
+                if (
+                    filters.get("required_secondary_language") is not None
+                    and fields.get("secondary_language") != filters["required_secondary_language"]
+                ):
+                    counts["secondary_language_rejected"] += 1
+                    continue
+                minimum_secondary = filters.get("minimum_secondary_language_score")
+                if minimum_secondary is not None and (
+                    isinstance(fields.get("secondary_language_score"), bool)
+                    or not isinstance(fields.get("secondary_language_score"), (int, float))
+                    or fields.get("secondary_language_score") < minimum_secondary
+                ):
+                    counts["secondary_language_score_rejected"] += 1
+                    continue
                 minimum_quality = filters["minimum_quality_score"]
                 if minimum_quality is not None and (
                     isinstance(fields["quality_score"], bool)
@@ -431,6 +488,29 @@ def sample_science_source(config, *, restart=False):
                 license_id = fields["license"]
                 if accepted_licenses and license_id not in accepted_licenses:
                     counts["document_license_rejected"] += 1
+                    continue
+                if filters.get("reject_truncated", False) and fields.get("is_truncated") is True:
+                    counts["truncated_document_rejected"] += 1
+                    continue
+                if (
+                    filters.get("accepted_extractors")
+                    and fields.get("extractor") not in filters["accepted_extractors"]
+                ):
+                    counts["extractor_rejected"] += 1
+                    continue
+                cluster_limit = filters.get("maximum_minhash_cluster_size")
+                if cluster_limit is not None and (
+                    not isinstance(fields.get("minhash_cluster_size"), int)
+                    or fields.get("minhash_cluster_size") > cluster_limit
+                ):
+                    counts["minhash_cluster_size_rejected"] += 1
+                    continue
+                duplicate_limit = filters.get("maximum_duplicate_count")
+                if duplicate_limit is not None and (
+                    not isinstance(fields.get("duplicate_count"), int)
+                    or fields.get("duplicate_count") > duplicate_limit
+                ):
+                    counts["upstream_duplicate_count_rejected"] += 1
                     continue
                 raw = text.encode()
                 size = len(raw)
@@ -516,6 +596,7 @@ def sample_science_source(config, *, restart=False):
                     "title": _optional_string(fields["title"]),
                     "publication_date": _optional_string(fields["date"]),
                     "source_partition": _optional_string(fields["source_partition"]),
+                    "extractor": _optional_string(fields.get("extractor")),
                     "size_bytes": size,
                     "detected_English_probability": probability,
                     "science_term_hits": hits,
