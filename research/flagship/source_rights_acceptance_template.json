@@ -1,0 +1,392 @@
+{
+  "format": "speck_source_rights_acceptance_template",
+  "format_version": 1,
+  "status": "awaiting_human_decision",
+  "source_registry": "source_registry.json",
+  "source_registry_sha256": "98936f2e3f0c9457217d5a4acb56bc182785a05af2f853099f3ffa320ba7175e",
+  "evidence_packets": [
+    {
+      "category": "web",
+      "path": "../../results/data/web-rights-review-20260907.json",
+      "sha256": "be460abca1c092b95a5223634ed7428fe6a9bf2debe403bb0f0974cb140b99ed",
+      "linear_issue": "SPE-144"
+    },
+    {
+      "category": "code",
+      "path": "../../results/data/code-tokenizer-supplements-20260907.json",
+      "sha256": "8fb0fa59451dae7c0102aad3b91239d081ded1996f223d99c4dc2a0b998d36eb",
+      "linear_issue": "SPE-134"
+    },
+    {
+      "category": "math",
+      "path": "../../results/data/math-rights-review-20260907.json",
+      "sha256": "925f287c2d5532ebfff70afb5a5108d84a44c06333c1d29b1151eeb20d1fc30f",
+      "linear_issue": "SPE-147"
+    },
+    {
+      "category": "synthetic",
+      "path": "../../results/data/synthetic-rights-review-20260907.json",
+      "sha256": "8d650530f2d820670e188939bbe5c3974e3336d4e79d5d176aa49e256c5f94fd",
+      "linear_issue": "SPE-148"
+    },
+    {
+      "category": "science",
+      "path": "../../results/data/science-rights-review-20260907.json",
+      "sha256": "0250dcc0ff8d92a9b1dd34b7bc239ad2ae3974ee5a556199570bd0735bb8cc9b",
+      "linear_issue": "SPE-149"
+    },
+    {
+      "category": "reference",
+      "path": "../../results/data/reference-rights-review-20260907.json",
+      "sha256": "fe135389195541970a06422db1a1db86dd116f80dff74ed2b660b1472c454655",
+      "linear_issue": "SPE-150"
+    }
+  ],
+  "intended_scope": {
+    "research_training": null,
+    "paper_publication": null,
+    "public_model_weight_release": null,
+    "commercial_use": null,
+    "source_data_redistribution": null,
+    "derived_packed_shard_redistribution": null
+  },
+  "authority": {
+    "authority_type": null,
+    "name": null,
+    "role": null,
+    "organization": null
+  },
+  "source_decisions": [
+    {
+      "source_id": "ultrafineweb_en_v1_4",
+      "category": "web",
+      "decision": "pending",
+      "evidence_category": "web",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "fineweb_edu",
+      "category": "web",
+      "decision": "pending",
+      "evidence_category": "web",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "dclm_baseline",
+      "category": "web",
+      "decision": "pending",
+      "evidence_category": "web",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "fineweb_base",
+      "category": "web",
+      "decision": "pending",
+      "evidence_category": "web",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "stack_v3_train_permissive",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "stack_edu",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_stackv2_edu",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "python_edu",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_python_peps",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "finemath_4plus",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "infiwebmath_4plus",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "megamath_web_pro",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "openwebmath",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "proof_pile_2_algebraic_stack",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "megamath_code",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "cosmopedia_v2",
+      "category": "synthetic",
+      "decision": "pending",
+      "evidence_category": "synthetic",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "ultrafineweb_l3_multi_style",
+      "category": "synthetic",
+      "decision": "pending",
+      "evidence_category": "synthetic",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "ultrafineweb_l3_qa",
+      "category": "synthetic",
+      "decision": "pending",
+      "evidence_category": "synthetic",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "megamath_qa",
+      "category": "synthetic",
+      "decision": "pending",
+      "evidence_category": "synthetic",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "pes2o_v3",
+      "category": "science",
+      "decision": "pending",
+      "evidence_category": "science",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "finepdfs_edu_en",
+      "category": "science",
+      "decision": "pending",
+      "evidence_category": "science",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_arxiv",
+      "category": "science",
+      "decision": "pending",
+      "evidence_category": "science",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_pubmed",
+      "category": "science",
+      "decision": "pending",
+      "evidence_category": "science",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "proof_pile_2_arxiv",
+      "category": "science",
+      "decision": "pending",
+      "evidence_category": "science",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "finewiki_en",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_stackexchange",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_gutenberg",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_libretexts",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_oercommons",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    },
+    {
+      "source_id": "common_pile_pressbooks",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": null,
+      "redistribution_policy": null,
+      "removal_policy": null,
+      "conditions": [],
+      "rationale": null
+    }
+  ],
+  "signed_at": null
+}
