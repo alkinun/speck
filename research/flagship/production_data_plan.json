@@ -1,0 +1,86 @@
+{
+  "format": "speck_flagship_production_data_operations_plan",
+  "format_version": 1,
+  "status": "fixture_tooling_ready_20B_rehearsal_pending_not_training_authority",
+  "preprocessor": {
+    "implementation": "speck/production_data.py",
+    "input": "ordered precedence-bound lineage JSONL with file and per-record content hashes",
+    "exact_dedup": "global SHA-256 of NFKC/lower/whitespace-normalized content",
+    "near_dedup": "disk-backed SQLite MinHash band candidates followed by exact token-shingle Jaccard verification",
+    "candidate_policy_for_rehearsal": {
+      "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+      "shingle_tokens": 10,
+      "minimum_document_tokens": 50,
+      "maximum_document_tokens": 100000,
+      "num_perm": 128,
+      "minhash_seed": 42,
+      "bands": 16,
+      "verified_jaccard_threshold": 0.8
+    },
+    "removal_records": "content hashes, reason, source/line, retained owner, and verified similarity; no removed text",
+    "resume": "record checkpoints bind output byte slices and a SQLite accepted-document hash chain; divergence is rolled back or rejected",
+    "index": "retained SQLite database with file hash, integrity check, document and band counts"
+  },
+  "deny_ledger": {
+    "format": "speck_removal_deny_ledger",
+    "status": "human_reviewed_deny_entries",
+    "entry_kinds": ["content_sha256", "url", "domain", "blob_id"],
+    "domain_match": "exact_or_subdomain",
+    "requires": ["reason", "human authority", "recorded timestamp"],
+    "identity": "path plus SHA-256"
+  },
+  "cleanup": {
+    "scope": "explicit individual transient files only",
+    "protected": ["source inputs", "deny ledger", "output directory", "staging directory"],
+    "order": "verify cleanup file hashes before processing; publish and fsync manifest; remove exact allowlist; write cleanup receipt",
+    "recovery": "published output without a cleanup receipt resumes only the declared idempotent cleanup step"
+  },
+  "packer_integration": {
+    "implementation": "speck/dataset.py",
+    "existing_qualified_features": [
+      "revision-pinned remote files",
+      "source-separated uint16 shards",
+      "global normalized exact dedup journal",
+      "durable remote-file boundary checkpoints",
+      "committed shard, index, and journal checksum recovery",
+      "transient raw-file cleanup"
+    ],
+    "required_order": [
+      "human rights and deny-ledger freeze",
+      "global exact/near preprocessor",
+      "packed-data exact dedup and tokenization",
+      "manifest/shard verification",
+      "cleanup receipt verification",
+      "firewall construction from separately declared eligible source data"
+    ]
+  },
+  "rehearsal_20B": {
+    "status": "pending",
+    "must_measure": [
+      "download and filtering throughput",
+      "SQLite index bytes and peak memory",
+      "exact, candidate, verified-near, deny-ledger, and retained counts",
+      "packing throughput and shard storage",
+      "interruption recovery before, during, and after checkpoints and source publication",
+      "raw cleanup and post-publication cleanup recovery",
+      "unique-token yield and projected full-corpus capacity"
+    ],
+    "must_verify": [
+      "source, ledger, implementation, tokenizer, output, index, and cleanup hashes",
+      "no removed text in removal records",
+      "restarted output identity equals uninterrupted output identity",
+      "firewall and model-training data are disjoint"
+    ]
+  },
+  "production_authority_record": {
+    "format": "speck_production_data_operations_qualification",
+    "status": "must not be issued from fixture evidence",
+    "required_passes": [
+      "global_exact_deduplication",
+      "global_near_deduplication",
+      "acquisition_cleanup",
+      "interruption_resume"
+    ]
+  },
+  "training_authority": "blocked"
+}
