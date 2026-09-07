@@ -1,0 +1,121 @@
+{
+  "format": "speck_science_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "finepdfs_edu_en",
+    "repo": "HuggingFaceFW/finepdfs-edu",
+    "revision": "9cfabe2127faca99b3d5c4dc6d1fcb397399ebde",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu",
+    "path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/HuggingFaceFW--finepdfs-edu/data/eng_Latn/train/000_00000.parquet",
+    "sha256": "39d9dd3532e51f7828f762d8b7bd31cc1b3fe8063ae3a3a260169b1fe4ac2dc8",
+    "rows": 236144,
+    "file_format": "parquet",
+    "fields": {
+      "text": "text",
+      "document_id": "id",
+      "title": null,
+      "url": "url",
+      "license": null,
+      "language": "full_doc_lid",
+      "language_score": "full_doc_lid_score",
+      "secondary_language": "page_average_lid",
+      "secondary_language_score": "page_average_lid_score",
+      "quality_score": null,
+      "date": "date",
+      "source_partition": "dump",
+      "is_truncated": "is_truncated",
+      "extractor": "extractor",
+      "minhash_cluster_size": "minhash_cluster_size",
+      "duplicate_count": "duplicate_count"
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0 database release",
+    "upstream_terms": "Common Crawl and underlying PDF rights apply; no per-document content license exposed",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": "eng_Latn",
+    "minimum_language_score": 0.8,
+    "required_secondary_language": "eng_Latn",
+    "minimum_secondary_language_score": 0.8,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.4,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "download pdf",
+      "javascript is disabled",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.2,
+    "accepted_document_licenses": [],
+    "minimum_science_term_hits": 3,
+    "science_terms": [
+      "analysis",
+      "biological",
+      "biology",
+      "cell",
+      "chemical",
+      "chemistry",
+      "clinical",
+      "data",
+      "evidence",
+      "experiment",
+      "gene",
+      "method",
+      "model",
+      "molecular",
+      "physics",
+      "protein",
+      "research",
+      "result",
+      "science",
+      "scientific",
+      "study",
+      "theory"
+    ],
+    "maximum_bytes_per_host": 2000000,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "reject_truncated": true,
+    "accepted_extractors": [
+      "docling"
+    ],
+    "maximum_minhash_cluster_size": 10,
+    "maximum_duplicate_count": 10
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "science",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 30000000,
+    "evaluation_bytes": 3000000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-finepdfs_edu_en-v1"
+}
