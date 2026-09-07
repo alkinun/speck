@@ -1,0 +1,40 @@
+{
+  "format": "speck_synthetic_source_rights_review_packet",
+  "format_version": 1,
+  "status": "evidence_collected_human_acceptance_required_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "scope": "operational dataset, seed, generator, output, attribution, and removal review; not legal advice or a final ownership determination",
+  "evidence": [
+    {"id": "smollm_corpus_card", "revision": "3ba9d605774198c5868892d7a8deda78031a781f", "path": "/mnt/speck-data/speck/evaluation-sources/synthetic-rights-v1/HuggingFaceTB--smollm-corpus/README.md", "sha256": "e09544d7132303ae6bbc6e156e984db0305d81561615476be49eabd4be4b8bed", "official_url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus"},
+    {"id": "ultrafineweb_l3_card", "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f", "path": "/mnt/speck-data/speck/evaluation-sources/synthetic-rights-v1/openbmb--Ultra-FineWeb-L3/README.md", "sha256": "8ec3729c5058d8381f9bbcc0fac24c6b25202796dd079de52ac158e045db0a0a", "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3"},
+    {"id": "megamath_card", "revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d", "path": "/mnt/speck-data/speck/evaluation-sources/synthetic-rights-v1/LLM360--MegaMath/README.md", "sha256": "dd7d747251ad17a8ac2856694620fee371eb3eed04aa5bcf88dc89691aa1b2de", "official_url": "https://huggingface.co/datasets/LLM360/MegaMath"},
+    {"id": "common_crawl_terms", "terms_last_updated": "2024-03-07", "retrieved_on": "2026-09-07", "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/commoncrawl-terms.html", "sha256": "1573585e36eb372855ddb8a80718a4b52b758a7132e6c92343a828ab37cc2c60", "official_url": "https://commoncrawl.org/terms-of-use"},
+    {"id": "odc_by_1_0", "retrieved_on": "2026-09-07", "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/odc-by-1.0.html", "sha256": "7d7e622bbb4b5f21b1c5cb2dd7ce8b1b747ee2c3ab9fc8309c19082e12d13b2d", "official_url": "https://opendatacommons.org/licenses/by/1-0/"}
+  ],
+  "source_review": {
+    "cosmopedia_v2": {"dataset_release": "ODC-By-1.0", "generator": "Mixtral-8x7B-Instruct-v0.1 family; exact generation-time revision undisclosed", "seed": "web-seed mixture; seed_data contains labels while the prompt embeds excerpts; immutable seed revisions and page rights undisclosed", "human_decision_required": "accept dataset attribution, generator terms/output treatment, web-seed rights, and corrected prompt-hash lineage"},
+    "ultrafineweb_l3_multi_style": {"dataset_release": "Apache-2.0 project statement plus a separate no-unauthorized-unchanged-redistribution condition", "generator": "MiniCPM4/Qwen3 mixture; exact models, revisions, per-record assignment, and license mapping undisclosed", "seed": "Ultra-FineWeb/Common Crawl; immutable seed revision not disclosed", "human_decision_required": "resolve the license/redistribution wording and accept generator, seed, Common Crawl, and underlying-page terms"},
+    "ultrafineweb_l3_qa": {"dataset_release": "same Ultra-FineWeb-L3 terms", "generator": "MiniCPM4/Qwen3 mixture with exact identities undisclosed", "seed": "original Ultra-FineWeb text is prepended to generated Q&A but no immutable seed identity is exposed", "human_decision_required": "resolve dataset redistribution and complete generator/seed rights and attribution"},
+    "megamath_qa": {"dataset_release": "ODC-By-1.0", "generator": "directory labels identify Llama-3.3 and Qwen-2.5 families but the card does not pin exact models, revisions, licenses, prompts, or generation parameters", "seed": "web or code source URLs/domains are partly retained; immutable seed revisions and per-item rights are not", "human_decision_required": "accept generator-family license/output terms and Common Crawl/original-code seed rights, or reject the source"}
+  },
+  "non_conclusions": [
+    "a dataset-level ODC-By or Apache statement clears every web seed, code seed, generated output, or model-license obligation",
+    "a generator family name identifies the exact model artifact used",
+    "generated transformation removes copyright, privacy, contractual, or attribution obligations in seed material",
+    "technical contamination, repetition, PII, and security filters authorize training or redistribution"
+  ],
+  "acceptance_record_required": {
+    "authority": "named human with authority for the operating organization and intended use",
+    "must_record": [
+      "accepted/rejected source IDs and exact evidence hashes",
+      "research, publication, model-weight release, and any commercial scope",
+      "generator model/license/output-rights disposition despite undisclosed exact revisions",
+      "seed-source and Common Crawl acceptance plus underlying-content risk",
+      "Ultra-FineWeb-L3 unchanged-redistribution interpretation and corpus redistribution policy",
+      "dataset/model/seed attribution placement",
+      "removal contact, URL/domain/hash deny-ledger owner, response and rebuild policy",
+      "date, name, and signature or equivalent auditable approval"
+    ]
+  },
+  "decision": "no synthetic source is approved by this automated review; keep all corrected successors blocked until the required human acceptance record exists"
+}

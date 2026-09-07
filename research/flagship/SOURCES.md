@@ -186,6 +186,16 @@ model-phrase duplication must be audited separately from ordinary web filtering.
 NVIDIA's large synthetic/DQA families remain research references until their gated agreement and
 upstream model-license consequences are resolved.
 
+The corrected bounded 35/35/15/15 slice now passes lineage-aware sampling, style/repetition/model-
+phrase controls, PII/security, partition yield, four-source overlap, and the flagship firewall. Six
+Gitleaks-affected and 353 benchmark-critical records are removed; zero exact or verified near
+cross-source duplicate is found. The final 56,461 records retain 119.19 MB train and 11.91 MB
+evaluation text and rescan with zero critical match. The first Cosmopedia output is forbidden because
+its `seed_data` field was initially misread as seed text rather than a source label; the successor
+correctly hashes the seed-bearing prompt. Generator revisions, seed rights, and redistribution terms
+remain human-blocked. See [findings 181](../../findings/181_synthetic_tokenizer_technical_qualification.md)
+and [182](../../findings/182_synthetic_rights_review_packet.md).
+
 ## 6. Science, reference, books, and domain diversity
 
 - **peS2o v3** replaces the older v2 integration target and remains the primary academic source.

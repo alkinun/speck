@@ -194,6 +194,13 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
         "megamath_code",
     ):
         assert sources[source_id]["pipeline"].endswith("rights_blocked")
+    for source_id in (
+        "cosmopedia_v2",
+        "ultrafineweb_l3_multi_style",
+        "ultrafineweb_l3_qa",
+        "megamath_qa",
+    ):
+        assert sources[source_id]["pipeline"].endswith("rights_blocked")
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}
@@ -328,3 +335,37 @@ def test_math_qualification_result_is_hash_bound_and_remains_non_authoritative()
     )
     assert rights["status"].endswith("training_authority_blocked")
     assert "no math source is approved" in rights["decision"]
+
+
+def test_synthetic_qualification_is_corrected_hash_bound_and_non_authoritative():
+    result = json.loads(
+        (ROOT / "results" / "data" / "synthetic-tokenizer-sources-20260907.json").read_text()
+    )
+
+    assert result["status"] == (
+        "bounded_synthetic_technical_qualification_pass_training_authority_blocked"
+    )
+    assert result["lineage_correction"]["superseded_outputs_forbidden"] is True
+    assert result["lineage_correction"]["maximum_observed_successor_seed_prompt_jaccard"] < 0.8
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for path, digest in result["configs"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["security"]["affected_records_removed"] == 6
+    assert result["overlap"]["exact_cross_source_matches"] == 0
+    assert result["overlap"]["verified_near_cross_source_matches"] == 0
+    assert result["contamination"]["records_removed_critical"] == 353
+    assert result["contamination"]["residual_critical_records_after_full_rescan"] == 0
+    assert result["aggregate_final_partition"]["training_bytes"] >= 100_000_000
+    assert result["aggregate_final_partition"]["evaluation_bytes"] >= 10_000_000
+    assert all(
+        source["training_partition_bytes"] >= source["training_target_bytes"]
+        and source["evaluation_partition_bytes"] >= source["evaluation_target_bytes"]
+        for source in result["sources"].values()
+    )
+
+    rights = json.loads(
+        (ROOT / "results" / "data" / "synthetic-rights-review-20260907.json").read_text()
+    )
+    assert rights["status"].endswith("training_authority_blocked")
+    assert "no synthetic source is approved" in rights["decision"]

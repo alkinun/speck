@@ -194,6 +194,8 @@ history in order only when auditing provenance or a retired decision:
 179. [178 — Web rights evidence is ready for human decision](178_web_rights_review_packet.md)
 180. [179 — Six math sources pass bounded technical qualification](179_math_tokenizer_technical_qualification.md)
 181. [180 — Math rights evidence is ready for human decision](180_math_rights_review_packet.md)
+182. [181 — Four synthetic sources pass bounded technical qualification](181_synthetic_tokenizer_technical_qualification.md)
+183. [182 — Synthetic rights and generator evidence requires human decision](182_synthetic_rights_review_packet.md)
 
 Conventions:
 

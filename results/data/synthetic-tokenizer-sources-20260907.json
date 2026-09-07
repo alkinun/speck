@@ -1,0 +1,490 @@
+{
+  "format": "speck_synthetic_tokenizer_sources_summary",
+  "format_version": 1,
+  "status": "bounded_synthetic_technical_qualification_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_freezes": {
+    "initial_sampler": "e091f53",
+    "seed_copy_audit": "a0bfe01",
+    "seed_domain_lineage": "ce2059b",
+    "initial_source_plans": "df724f7",
+    "security_exclusions": "122bcce",
+    "initial_overlap": "0fb643f",
+    "initial_firewall": "e8278a0",
+    "corrected_cosmopedia_lineage": "1a23727",
+    "corrected_security": "bf4e177",
+    "corrected_overlap": "ca2c3b7",
+    "corrected_firewall": "67c0f8f"
+  },
+  "lineage_correction": {
+    "failed_plan": "research/flagship/synthetic_cosmopedia_v2_v1.json",
+    "failed_runtime_report": "/mnt/speck-data/speck/source-qualification/synthetic-cosmopedia_v2-v1/report.json",
+    "finding": "the seed_data field contains source labels such as fineweb rather than seed text",
+    "successor": "research/flagship/synthetic_cosmopedia_v2_v2.json",
+    "correction": "record seed_data as seed_source_label; hash prompt as both generation prompt and carrier of the embedded web excerpt; audit generated-text versus prompt 5-shingle Jaccard",
+    "maximum_observed_successor_seed_prompt_jaccard": 0.21773142112125163,
+    "superseded_outputs_forbidden": true
+  },
+  "implementation": {
+    "sample_module": [
+      "speck/synthetic_sample.py",
+      "518ced14f18d1d671912091d8ab46b55f1636f9cb60c92600df6635793549284"
+    ],
+    "sample_cli": [
+      "scripts/synthetic_sample.py",
+      "4ec72e283a3c29099744939c8bfca7ef56467de77534b7e3d869cab7c69b8598"
+    ],
+    "security_module": [
+      "speck/text_gitleaks_filter.py",
+      "dac2d90b75ea65726ad4a6145f618c308630f0261af7dd691fae37f19ac1c9d3"
+    ],
+    "security_cli": [
+      "scripts/text_gitleaks_filter.py",
+      "299b1011ca0abf7b7f9dca928c9e5f2c300c7b6b2cf474b08da483d035f123ed"
+    ],
+    "overlap_module": [
+      "speck/text_near_duplicates.py",
+      "439c8fabef78c2a335d6c4006385de03a1db53e187edd89bfe88844782f639ca"
+    ],
+    "overlap_cli": [
+      "scripts/text_near_duplicates.py",
+      "cc5454580dd3846006dfa15d4a80665f44789e7401b7870213abc6bdee8f3831"
+    ],
+    "contamination_module": [
+      "speck/text_contamination.py",
+      "c2f2088728a16e19d7b475e2a39b741c60e8ce79e287736c09217f39c5e3cfa3"
+    ],
+    "contamination_cli": [
+      "scripts/text_contamination.py",
+      "7f6b0624f77f2c400b185f7fe694a18eea87a700ad3edc00232580bc24bb0a49"
+    ]
+  },
+  "configs": {
+    "synthetic_contamination_v1": [
+      "research/flagship/synthetic_contamination_v1.json",
+      "73afdff976269cfeffb363bf23a7f3aa5f81d2b468a579ab0d6a3374af1cba3e"
+    ],
+    "synthetic_contamination_v2": [
+      "research/flagship/synthetic_contamination_v2.json",
+      "3d5a143622f0b7d221a591ea18f607c544ea6b051f5b75593364cfe49c385504"
+    ],
+    "synthetic_cosmopedia_v2_gitleaks_v1": [
+      "research/flagship/synthetic_cosmopedia_v2_gitleaks_v1.json",
+      "d48a9ae5bce2f9038f09851b797a8b67cd5cd0c4238d1947a2ef788a9ec0c0dd"
+    ],
+    "synthetic_cosmopedia_v2_gitleaks_v2": [
+      "research/flagship/synthetic_cosmopedia_v2_gitleaks_v2.json",
+      "d7b29f6505ad7c9989fad92ef4885ca393836cd38319076c01d6b57643b18a5d"
+    ],
+    "synthetic_cosmopedia_v2_v1": [
+      "research/flagship/synthetic_cosmopedia_v2_v1.json",
+      "ead584b8e61c2a356b8a7c1b4cf605b90d5ed50d5bcd1404d999ee5a7fdc309e"
+    ],
+    "synthetic_cosmopedia_v2_v2": [
+      "research/flagship/synthetic_cosmopedia_v2_v2.json",
+      "9dc08a52e0fdfba5ca71668cc7afa7ff4ba8dd10fdd45f29e2d3117a36d98985"
+    ],
+    "synthetic_cross_source_duplicates_v1": [
+      "research/flagship/synthetic_cross_source_duplicates_v1.json",
+      "8fe362a1c1f0ef840cb568435e92407805dfd9f25defc9274fffde2f2c8546e0"
+    ],
+    "synthetic_cross_source_duplicates_v2": [
+      "research/flagship/synthetic_cross_source_duplicates_v2.json",
+      "8c5081e5a967333e20e6364716c45958d637cb2f3c9c3c9b532ebb1af24a2401"
+    ],
+    "synthetic_megamath_qa_gitleaks_v1": [
+      "research/flagship/synthetic_megamath_qa_gitleaks_v1.json",
+      "c94639b7c6436cd98cbef7f230a4584f6fde1da7a44a2c32c803ecbe78fc258f"
+    ],
+    "synthetic_megamath_qa_v1": [
+      "research/flagship/synthetic_megamath_qa_v1.json",
+      "5a31be8425fd289fdd8a8323d253e8545f3af397c83262cd741968a9cede5581"
+    ],
+    "synthetic_ultrafineweb_l3_multi_style_gitleaks_v1": [
+      "research/flagship/synthetic_ultrafineweb_l3_multi_style_gitleaks_v1.json",
+      "ac7d7197fd9de259fb258d3847d423f98328da713d91211b4894d36571544004"
+    ],
+    "synthetic_ultrafineweb_l3_multi_style_v1": [
+      "research/flagship/synthetic_ultrafineweb_l3_multi_style_v1.json",
+      "601231755d4bf6961a18cfdc18ceb517605c173edb89ba92dd1e7152c3df6026"
+    ],
+    "synthetic_ultrafineweb_l3_qa_gitleaks_v1": [
+      "research/flagship/synthetic_ultrafineweb_l3_qa_gitleaks_v1.json",
+      "82bc0559c0ad6b7fe827bb1714be3875ee89f1b35b830fcab9ac019970aa9dbe"
+    ],
+    "synthetic_ultrafineweb_l3_qa_v1": [
+      "research/flagship/synthetic_ultrafineweb_l3_qa_v1.json",
+      "80f0eb677098171c5af7897640d2684678993e9e0ddfde332c2817b06c653553"
+    ]
+  },
+  "source_policy": {
+    "allocation": "35% Cosmopedia v2, 35% Ultra-FineWeb L3 Multi-Style, 15% Ultra-FineWeb L3 QA, 15% MegaMath QA balanced equally across Llama-3.3 and Qwen-2.5 directory labels",
+    "selection": "seeded row-group and content-hash order with 20% initial per-input partition margins",
+    "lineage": "generated text plus generator family, explicitly undisclosed generator revision, transformation, seed-source family/revision status, prompt/seed/answer hashes where exposed, and seed URL/domain where exposed",
+    "quality": "English probability, size, duplicate-line, repeated 5-gram, model-identity/refusal phrase, 12-token template concentration, and seed-domain concentration gates",
+    "answer_leakage": "all generated text is scanned against frozen benchmark prompts and reference answers by the flagship firewall"
+  },
+  "sources": {
+    "cosmopedia_v2": {
+      "sample_report": "/mnt/speck-data/speck/source-qualification/synthetic-cosmopedia_v2-v1b/report.json",
+      "sample_report_sha256": "64e7108561f717d5a530fa08c23d18b892f3e732c9dae306a488ce89fbfe467b",
+      "sample_records": 12313,
+      "style_profile": {
+        "Shannon_entropy_bits": 2.150642727326359,
+        "counts": {
+          "dialogue": 289,
+          "e-learning_module": 22,
+          "scientific_article": 11,
+          "story": 468,
+          "story_children": 436,
+          "story_forums": 181,
+          "story_life_lessons": 416,
+          "story_morality": 173,
+          "story_reddit": 370,
+          "textbook": 7640,
+          "textbook_academic": 13,
+          "textbook_narrative": 337,
+          "textbook_narrative_tone": 11,
+          "textbook_unconditionned_topic": 1289,
+          "wikihow": 657
+        },
+        "largest_seed_domain_bytes": 0,
+        "largest_template_prefix_bytes": 74002,
+        "unique_seed_domains": 0,
+        "unique_styles": 15,
+        "unique_template_prefixes": 11996
+      },
+      "generator_inputs": [
+        {
+          "id": "cosmopedia_v2_shard_00000",
+          "generator": {
+            "id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "license": "Apache-2.0 model family; generation revision undisclosed",
+            "official_url": "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "revision": "not_disclosed_by_dataset_card"
+          },
+          "seed_source": {
+            "id": "Cosmopedia_web_seed_mixture",
+            "official_url": "https://huggingface.co/blog/smollm",
+            "revision": "not_disclosed_by_dataset_card",
+            "rights": "source-specific web rights undisclosed"
+          },
+          "records_sampled": 12313,
+          "maximum_observed_seed_text_jaccard": 0.21773142112125163
+        }
+      ],
+      "security_report": "/mnt/speck-data/speck/source-qualification/synthetic-cosmopedia_v2-v2b/report.json",
+      "security_report_sha256": "5310eeb13495760db1d1ee8e2598a9e4e163c3e42ba8d035c2e9ce2f117ca4e1",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "records_removed_critical": 90,
+      "bytes_removed_critical": 422466,
+      "records_with_exact_field_match": 21,
+      "records_with_primary_ngram_match": 69,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 78,
+      "records_sensitivity_only_retained": 65,
+      "unique_sensitivity_tasks": 53,
+      "records_retained": 12223,
+      "training_partition_bytes": 41636144,
+      "training_target_bytes": 35000000,
+      "evaluation_partition_bytes": 4146279,
+      "evaluation_target_bytes": 3500000,
+      "tokenizer_input_sha256": "187b34e023fe3cc78a01798526584d3b5c62145ef7863c8d78ac04a12c6c7b7e",
+      "attribution_sha256": "3d7a5c5f1f4bfd1e4d6e9e8b8d320827830ae565d46d6961d8647a219662f982",
+      "residual_critical_records": 0
+    },
+    "ultrafineweb_l3_multi_style": {
+      "sample_report": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_multi_style-v1/report.json",
+      "sample_report_sha256": "b5e77e0ecef0d22a99464e3da7e82e8be78a3b6ca10ebc55ba48faaae515c738",
+      "sample_records": 17846,
+      "style_profile": {
+        "Shannon_entropy_bits": -0.0,
+        "counts": {
+          "multi_style": 17846
+        },
+        "largest_seed_domain_bytes": 0,
+        "largest_template_prefix_bytes": 20052,
+        "unique_seed_domains": 0,
+        "unique_styles": 1,
+        "unique_template_prefixes": 17817
+      },
+      "generator_inputs": [
+        {
+          "id": "ultrafineweb_l3_multi_style_shard_00000",
+          "generator": {
+            "id": "MiniCPM4_and_Qwen3_mixture",
+            "license": "exact model revisions and license mapping undisclosed",
+            "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3",
+            "revision": "not_disclosed_by_dataset_card"
+          },
+          "seed_source": {
+            "id": "openbmb/Ultra-FineWeb",
+            "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb",
+            "revision": "not_disclosed_by_dataset_card",
+            "rights": "Apache-2.0 project release plus upstream web terms"
+          },
+          "records_sampled": 17846,
+          "maximum_observed_seed_text_jaccard": 0.0
+        }
+      ],
+      "security_report": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_multi_style-v2/report.json",
+      "security_report_sha256": "0ee11b26887b69d0f9c48486fac8e6cba2338a924cf964275610272c019270aa",
+      "gitleaks_findings": 3,
+      "gitleaks_affected_records_removed": 2,
+      "records_removed_critical": 18,
+      "bytes_removed_critical": 59289,
+      "records_with_exact_field_match": 14,
+      "records_with_primary_ngram_match": 4,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 27,
+      "records_sensitivity_only_retained": 17,
+      "unique_sensitivity_tasks": 9,
+      "records_retained": 17826,
+      "training_partition_bytes": 41938053,
+      "training_target_bytes": 35000000,
+      "evaluation_partition_bytes": 4199196,
+      "evaluation_target_bytes": 3500000,
+      "tokenizer_input_sha256": "c64a26706a283153e5e5623b31b24dc5e5c10009eef48a11201bdc181393a1f1",
+      "attribution_sha256": "f777fedf2d532ab9bca9a7e3abde003d3c8cd3887e88c4f86aa21de04c39b10a",
+      "residual_critical_records": 0
+    },
+    "ultrafineweb_l3_qa": {
+      "sample_report": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_qa-v1/report.json",
+      "sample_report_sha256": "544a96d0f9e2090330b6e9a70b2e484dac5d2edfee32c336ccd82c1fc2d34988",
+      "sample_records": 4917,
+      "style_profile": {
+        "Shannon_entropy_bits": -0.0,
+        "counts": {
+          "qa": 4917
+        },
+        "largest_seed_domain_bytes": 0,
+        "largest_template_prefix_bytes": 9975,
+        "unique_seed_domains": 0,
+        "unique_styles": 1,
+        "unique_template_prefixes": 4914
+      },
+      "generator_inputs": [
+        {
+          "id": "ultrafineweb_l3_qa_shard_00000",
+          "generator": {
+            "id": "MiniCPM4_and_Qwen3_mixture",
+            "license": "exact model revisions and license mapping undisclosed",
+            "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3",
+            "revision": "not_disclosed_by_dataset_card"
+          },
+          "seed_source": {
+            "id": "openbmb/Ultra-FineWeb",
+            "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb",
+            "revision": "not_disclosed_by_dataset_card",
+            "rights": "Apache-2.0 project release plus upstream web terms"
+          },
+          "records_sampled": 4917,
+          "maximum_observed_seed_text_jaccard": 0.0
+        }
+      ],
+      "security_report": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_qa-v2/report.json",
+      "security_report_sha256": "b139cc62c1009dc95ccd182703905f160d00a928f7d22af90c09f390f8bf4a8e",
+      "gitleaks_findings": 1,
+      "gitleaks_affected_records_removed": 1,
+      "records_removed_critical": 9,
+      "bytes_removed_critical": 37226,
+      "records_with_exact_field_match": 7,
+      "records_with_primary_ngram_match": 2,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 17,
+      "records_sensitivity_only_retained": 8,
+      "unique_sensitivity_tasks": 8,
+      "records_retained": 4907,
+      "training_partition_bytes": 17965017,
+      "training_target_bytes": 15000000,
+      "evaluation_partition_bytes": 1797038,
+      "evaluation_target_bytes": 1500000,
+      "tokenizer_input_sha256": "22e8244c074c7eab66f405baca1f64f50ba002a804a4c8881e063cd2c172fa8b",
+      "attribution_sha256": "5ec3dc0dcadcf960288593b51723d9832ec09c113d8cd3073e7416c03497255f",
+      "residual_critical_records": 0
+    },
+    "megamath_qa": {
+      "sample_report": "/mnt/speck-data/speck/source-qualification/synthetic-megamath_qa-v1/report.json",
+      "sample_report_sha256": "ee009f161899110ee975b4b2ac98431f695a1ab90ed657c73eb9c44e34f003e1",
+      "sample_records": 21744,
+      "style_profile": {
+        "Shannon_entropy_bits": -0.0,
+        "counts": {
+          "math_QA_generation": 21744
+        },
+        "largest_seed_domain_bytes": 1999749,
+        "largest_template_prefix_bytes": 49385,
+        "unique_seed_domains": 5756,
+        "unique_styles": 1,
+        "unique_template_prefixes": 21484
+      },
+      "generator_inputs": [
+        {
+          "id": "megamath_qa_llama_3_3_shard_00000",
+          "generator": {
+            "id": "Llama_3.3_generator_family",
+            "license": "generation model identity/revision/license mapping undisclosed",
+            "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+            "revision": "not_disclosed_by_dataset_card"
+          },
+          "seed_source": {
+            "id": "MegaMath_web_or_code_seed",
+            "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+            "revision": "not_disclosed_by_dataset_card",
+            "rights": "ODC-By plus Common Crawl or original code terms"
+          },
+          "records_sampled": 10865,
+          "maximum_observed_seed_text_jaccard": 0.0
+        },
+        {
+          "id": "megamath_qa_qwen_2_5_shard_00000",
+          "generator": {
+            "id": "Qwen_2.5_generator_family",
+            "license": "generation model identity/revision/license mapping undisclosed",
+            "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+            "revision": "not_disclosed_by_dataset_card"
+          },
+          "seed_source": {
+            "id": "MegaMath_web_or_code_seed",
+            "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+            "revision": "not_disclosed_by_dataset_card",
+            "rights": "ODC-By plus Common Crawl or original code terms"
+          },
+          "records_sampled": 10879,
+          "maximum_observed_seed_text_jaccard": 0.0
+        }
+      ],
+      "security_report": "/mnt/speck-data/speck/source-qualification/synthetic-megamath_qa-v2/report.json",
+      "security_report_sha256": "0008d8f92cf444d7944ccfc007b62b52d413ec816e9443bfc68dc4c7b793bbf7",
+      "gitleaks_findings": 3,
+      "gitleaks_affected_records_removed": 3,
+      "records_removed_critical": 236,
+      "bytes_removed_critical": 384450,
+      "records_with_exact_field_match": 12,
+      "records_with_primary_ngram_match": 225,
+      "records_with_both_match_types": 1,
+      "unique_critical_tasks": 212,
+      "records_sensitivity_only_retained": 204,
+      "unique_sensitivity_tasks": 140,
+      "records_retained": 21505,
+      "training_partition_bytes": 17650757,
+      "training_target_bytes": 15000000,
+      "evaluation_partition_bytes": 1765334,
+      "evaluation_target_bytes": 1500000,
+      "tokenizer_input_sha256": "c5ab3469b24a16f67372c003ff5853e00eb7969660fc094e35c2df764d12f0a6",
+      "attribution_sha256": "8e83f2809c80fe49f4afcf84398e62b8532100f726c59e50b48bb5fec8bd2c54",
+      "residual_critical_records": 0
+    }
+  },
+  "security": {
+    "records_scanned": 56820,
+    "gitleaks_findings": 7,
+    "affected_records_removed": 6,
+    "affected_sources": [
+      "ultrafineweb_l3_multi_style",
+      "ultrafineweb_l3_qa",
+      "megamath_qa"
+    ]
+  },
+  "overlap": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/synthetic-cross-source-dedup-v2/report.json",
+    "runtime_report_sha256": "8c3506f31dfab36d1b0d1cc715e3c47b274efb944e6432562506a1e685352c1b",
+    "plan_fingerprint": "6fded6b586e027d006b85d69294b68afab1e4e8ff26a69688c645540f84db0ef",
+    "precedence": [
+      "cosmopedia_v2",
+      "ultrafineweb_l3_multi_style",
+      "ultrafineweb_l3_qa",
+      "megamath_qa"
+    ],
+    "records_retained": 56814,
+    "exact_cross_source_matches": 0,
+    "verified_near_cross_source_matches": 0
+  },
+  "contamination": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/report.json",
+    "runtime_report_sha256": "a2eab58e0506c2ce77934f5ce8bd61153ad3907a29af108b4f7bea134c543f96",
+    "plan_fingerprint": "75a3daef20fa06bb6b330b092428df5ae847e6a9a1a20a68ce0a472137722f49",
+    "payloads": 20,
+    "tasks": 63652,
+    "records_seen": 56814,
+    "records_removed_critical": 353,
+    "bytes_removed_critical": 903431,
+    "records_with_exact_field_match": 54,
+    "records_with_primary_ngram_match": 300,
+    "records_with_both_match_types": 1,
+    "unique_critical_tasks": 312,
+    "records_sensitivity_only_retained": 294,
+    "unique_sensitivity_tasks": 197,
+    "records_retained": 56461,
+    "critical_record_task_links_by_benchmark": {
+      "arc-challenge": 1,
+      "arc-easy": 13,
+      "bigcodebench-v0.1.4": 70,
+      "hellaswag": 6,
+      "humaneval": 9,
+      "math-algebra": 42,
+      "math-counting-and-probability": 14,
+      "math-geometry": 27,
+      "math-intermediate-algebra": 53,
+      "math-number-theory": 20,
+      "math-prealgebra": 31,
+      "math-precalculus": 22,
+      "mbpp": 32,
+      "mmlu-all": 77,
+      "triviaqa-rc-nocontext": 42
+    },
+    "sensitivity_record_task_links_by_benchmark": {
+      "arc-easy": 7,
+      "bigcodebench-v0.1.4": 30,
+      "gsm8k-main": 5,
+      "hellaswag": 23,
+      "humaneval": 8,
+      "lambada-openai-en": 1,
+      "math-algebra": 30,
+      "math-counting-and-probability": 17,
+      "math-geometry": 25,
+      "math-intermediate-algebra": 39,
+      "math-number-theory": 27,
+      "math-prealgebra": 22,
+      "math-precalculus": 4,
+      "mbpp": 10,
+      "mmlu-all": 56,
+      "piqa": 2,
+      "triviaqa-rc-nocontext": 1
+    },
+    "residual_critical_records_after_full_rescan": 0
+  },
+  "aggregate_final_partition": {
+    "training_bytes": 119189971,
+    "training_target_bytes": 100000000,
+    "evaluation_bytes": 11907847,
+    "evaluation_target_bytes": 10000000
+  },
+  "verification": {
+    "all_successor_output_hashes_recomputed": true,
+    "all_successors_rescanned_with_frozen_matcher": true,
+    "residual_critical_records": 0,
+    "all_four_source_partition_quotas_pass": true,
+    "post_contamination_cross_source_zero_overlap_preserved_by_strict_subsetting": true
+  },
+  "passed_gates": [
+    "immutable source shard identity/schema",
+    "source-balanced generator-family inputs",
+    "English, repetition, model-phrase, template, PII, and local secret filters",
+    "corrected Cosmopedia prompt/seed-label lineage",
+    "fully redacted Gitleaks exclusion",
+    "frozen cross-source exact/near duplicate pass",
+    "20-payload benchmark prompt/answer decontamination",
+    "zero-critical successor rescan",
+    "all final source quotas"
+  ],
+  "blocked_gates": [
+    "exact generation-time model revisions and complete generator license mapping are undisclosed",
+    "seed-source rights and immutable seed revisions are incomplete",
+    "human acceptance of ODC-By, Common Crawl, model, and source-specific terms",
+    "Ultra-FineWeb-L3 no-unchanged-redistribution condition",
+    "production global deduplication and cleanup/resume qualification"
+  ],
+  "decision": "freeze only the corrected bounded synthetic successors; forbid the initial Cosmopedia lineage output and do not authorize tokenizer sampling or training until rights and production gates pass"
+}

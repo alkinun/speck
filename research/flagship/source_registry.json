@@ -287,7 +287,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0; generated with Mixtral-8x7B-Instruct",
-      "pipeline": "integrated"
+      "pipeline": "bounded_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "ultrafineweb_l3_multi_style",
@@ -299,7 +299,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "Apache-2.0 project release; seed-source and generator terms require review",
-      "pipeline": "integrated"
+      "pipeline": "bounded_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "ultrafineweb_l3_qa",
@@ -311,7 +311,7 @@
       "priority": "decay_screen",
       "access": "open_huggingface_parquet",
       "rights": "Apache-2.0 project release; seed-source and generator terms require review",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "megamath_qa",
@@ -323,7 +323,7 @@
       "priority": "decay_screen",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus generator and source-specific terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_two_generator_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "pes2o_v3",
