@@ -1,0 +1,55 @@
+{
+  "format": "speck_flagship_data_rehearsal_orchestration_plan",
+  "format_version": 1,
+  "status": "fixture_orchestration_ready_real_20B_manifest_blocked",
+  "stage_order": [
+    "source_identity",
+    "acquisition",
+    "global_dedup",
+    "packing",
+    "resume_cleanup",
+    "firewall_disjointness"
+  ],
+  "required_gates": [
+    "source_identity",
+    "global_exact_deduplication",
+    "global_near_deduplication",
+    "packing_integrity",
+    "acquisition_cleanup",
+    "interruption_resume",
+    "firewall_training_disjointness"
+  ],
+  "required_metrics": [
+    "download_bytes",
+    "download_bytes_per_second",
+    "filtered_bytes",
+    "records_seen",
+    "records_retained",
+    "sqlite_index_bytes",
+    "peak_rss_bytes",
+    "packing_tokens_per_second",
+    "packed_tokens",
+    "packed_bytes",
+    "unique_tokens"
+  ],
+  "orchestration": {
+    "stage_commands_and_inputs_hash_bound": true,
+    "stdout_stderr_and_result_hash_bound": true,
+    "elapsed_rss_disk_and_free_space_recorded": true,
+    "completed_stages_skipped_only_after_reverification": true,
+    "changed_completed_result_or_log": "fail",
+    "packed_tokens_must_reach_target": true
+  },
+  "production_mode": {
+    "target_tokens": 20000000000,
+    "requires_signed_human_rights_record": true,
+    "operations_record_format": "speck_production_data_operations_qualification",
+    "operations_record_status": "production_data_operations_qualified",
+    "fixture_may_issue_operations_record": false
+  },
+  "real_manifest": {
+    "status": "blocked",
+    "reason": "selected source rights are unsigned; freeze commands, inputs, storage, and interruption schedule only after accepted sources are known"
+  },
+  "training_authority": "blocked"
+}
