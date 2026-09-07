@@ -67,6 +67,13 @@ The 20B-token rehearsal exercises the exact winning or fallback implementations,
 of raw shards. No source can be launch-critical if its full-scale acquisition path or legal status is
 still conditional.
 
+[`production_data_plan.json`](production_data_plan.json) freezes the pre-rehearsal operations order.
+The fixture-qualified disk-backed preprocessor applies human-reviewed deny entries, global exact and
+verified near deduplication, redacted removal records, record-level checkpoints, and post-publication
+cleanup receipts before the existing exact-dedup/tokenization packer. It does not replace the 20B
+rehearsal: production throughput, memory, storage, unique yield, interruption recovery, and cleanup
+must still be measured on the frozen real source path before an operations authority record exists.
+
 ## 3. Evaluation firewall
 
 Three disjoint data partitions are frozen before training:

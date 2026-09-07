@@ -473,3 +473,17 @@ def test_three_partition_firewall_tooling_is_hash_bound_and_fixture_only():
     assert result["fixture_validation"]["persistent_fixture_partitions_created"] == 0
     assert any("no real selection-heldout" in value for value in result["limitations"])
     assert any("no tokenizer or model training" in value for value in result["limitations"])
+
+
+def test_production_data_tooling_is_hash_bound_and_does_not_claim_rehearsal():
+    result = json.loads(
+        (ROOT / "results" / "data" / "production-data-tooling-20260907.json").read_text()
+    )
+    assert result["status"] == "fixture_qualified_20B_rehearsal_and_training_authority_blocked"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["fixture_validation"]["new_preprocessor_tests"] == 7
+    assert result["fixture_validation"]["combined_preprocessor_and_packer_tests"] == 38
+    assert result["fixture_validation"]["real_qualified_source_records_read"] == 0
+    assert any("20B rehearsal has not run" in value for value in result["limitations"])
+    assert any("no full corpus" in value for value in result["limitations"])

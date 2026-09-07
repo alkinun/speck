@@ -1,0 +1,59 @@
+{
+  "format": "speck_production_data_tooling_qualification",
+  "format_version": 1,
+  "status": "fixture_qualified_20B_rehearsal_and_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "b50b940",
+  "implementation": {
+    "preprocessor": ["speck/production_data.py", "45d2ccce8b8ef1e2564116de8c5cc1f427fb93a1feb1af4fbdfcc4c4dff51431"],
+    "preprocessor_cli": ["scripts/production_data_preprocess.py", "e2238ac4311e477790d1d4f2f0eb3260e18be1c8b71ff3293d0098aada8f450e"],
+    "preprocessor_tests": ["tests/test_production_data.py", "983bd78678fe4c269905aff420131339e21650ab3d23b4cf6cc9fcb2d24f6a10"],
+    "plan": ["research/flagship/production_data_plan.json", "ba46de229495420746061e1e1dc83987ec7444bb3e98d291414348dd97141d1e"],
+    "existing_packer": ["speck/dataset.py", "7401571b694940211694f6b4fe3f9fe0763510df79490ee8be685ef2821b78f5"],
+    "existing_packer_tests": ["tests/test_dataset.py", "f70fc7ea9320affe45f61bd5fbabc3391aa61389e7a4ab82749fa6370e70205a"]
+  },
+  "fixture_validation": {
+    "new_preprocessor_tests": 7,
+    "combined_preprocessor_and_packer_tests": 38,
+    "full_suite_passed": 592,
+    "full_suite_skipped": 8,
+    "ruff": "pass",
+    "real_qualified_source_records_read": 0,
+    "full_corpus_files_acquired": 0
+  },
+  "qualified_preprocessor_contracts": [
+    "immutable ordered lineage-JSONL inputs and contiguous source precedence",
+    "global normalized SHA-256 exact deduplication within and across sources",
+    "disk-backed SQLite MinHash band candidates followed by exact token-shingle Jaccard verification",
+    "human-reviewed content-hash, URL, exact/subdomain, and blob deny entries",
+    "removal records contain hashes/reasons/owners/similarity but no removed text",
+    "record checkpoints bind output byte slices and an accepted-document SQLite hash chain",
+    "resume rolls back uncommitted SQLite/output divergence and detects committed-prefix corruption",
+    "published output, removal ledger, SQLite hash/integrity/counts, and cleanup receipt are reverified on reuse",
+    "cleanup is restricted to individually hash-bound transient files and cannot target inputs, ledgers, output, or staging",
+    "cleanup occurs after manifest publication and can resume idempotently after interruption"
+  ],
+  "existing_packer_boundary": [
+    "revision-pinned remote file discovery and download retry",
+    "global normalized exact-dedup journal",
+    "source-separated checksummed uint16 shards",
+    "durable remote-file boundary resume",
+    "committed shard/index/journal integrity validation",
+    "transient raw-file cleanup"
+  ],
+  "required_production_order": [
+    "human rights acceptance and deny-ledger freeze",
+    "global exact/near lineage preprocessor",
+    "existing exact-dedup/tokenization packer",
+    "manifest, index, shard, and cleanup verification",
+    "separately authorized three-partition firewall construction"
+  ],
+  "limitations": [
+    "fixture evidence does not establish production throughput, memory, storage, or unique-token yield",
+    "the 20B rehearsal has not run",
+    "no speck_production_data_operations_qualification authority record is issued",
+    "no human rights decision is made",
+    "no full corpus is acquired, packed, or authorized for training"
+  ],
+  "decision": "retain the additive preprocessor ahead of the unchanged evidence-pinned packer; freeze a real rehearsal manifest only after human rights decisions, then run the 20B rehearsal before issuing any production operations authority"
+}
