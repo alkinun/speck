@@ -1,0 +1,343 @@
+{
+  "format": "speck_local_tokenizer_data_study",
+  "format_version": 1,
+  "status": "exploratory_whitespace_piece_treatment_pass_no_D5_or_launch_authority",
+  "recorded_on": "2026-09-07",
+  "scope": {
+    "purpose": "small local hypothesis-generating tokenizer study before allocated compute",
+    "source_review": "deferred_by_user_for_local_exploration",
+    "gpu_runs": 0,
+    "language_model_runs": 0,
+    "sealed_audit_openings": 0,
+    "selection_authority": false,
+    "launch_authority": false
+  },
+  "inputs": {
+    "balanced_60": {
+      "config": "/mnt/speck-data/speck/tokenizer-exploratory/bounded-60mb-v1/tokenizer_experiment.json",
+      "config_sha256": "489955c5cc0eb05ffba4eb23df5215b69902a5c142e7c855df612db6342d277f",
+      "sample_manifest": "/mnt/speck-data/speck/tokenizer-exploratory/bounded-60mb-v1/run/sample/manifest.json",
+      "sample_manifest_sha256": "8d018300bc231786b578d5d044944bb96db2cb750a192e531def67c07886d16c",
+      "training_utf8_bytes": 60381841,
+      "evaluation_utf8_bytes": 6611979
+    },
+    "balanced_180": {
+      "config": "/mnt/speck-data/speck/tokenizer-exploratory/balanced-180mb-v1/tokenizer_experiment.json",
+      "config_sha256": "850957ff3ce76796e1d18abcd56018d27cdf4e0fb7b4e66799896b7dc909f26e",
+      "sample_manifest": "/mnt/speck-data/speck/tokenizer-exploratory/balanced-180mb-v1/run/sample/manifest.json",
+      "sample_manifest_sha256": "e4bd7cfd743175f80959add0d89dd287b2ab959103e8d48ff4dfce8d30b03e10",
+      "training_utf8_bytes": 180274338,
+      "evaluation_utf8_bytes": 6611979,
+      "evaluation_split_hashes_equal_to_balanced_60": true
+    }
+  },
+  "implementation": {
+    "module": [
+      "speck/tokenizer_study.py",
+      "cac36d5e1b1982f310d214731c412534a14411c6c8f0f6ed45dbd8007d0a7921"
+    ],
+    "cli": [
+      "scripts/tokenizer_study.py",
+      "e925dc37e42c43e43a639230064ce174962d6f1610e1a6abcc69b48d89efa82e"
+    ],
+    "tests": [
+      "tests/test_tokenizer_study.py",
+      "d6661fa4676f54eba045f5aa771aa0563eab3cb00a2a07a3a8c6f563825c61a9"
+    ]
+  },
+  "evidence": {
+    "evaluation_spec": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/specs/evaluation-evidence.json",
+    "evaluation_spec_sha256": "478dda5477c6bebb6e7d01c8c872899b37c6195e4c4d2ca8e81364ebdb3c6758",
+    "evaluation": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/evaluation-evidence.json",
+    "evaluation_sha256": "be31a07e1d7b9ed0935653a646a1c0b913250ccbc40a22556d35db3a380d928e",
+    "models_evaluated": 19,
+    "paired_bootstrap_repetitions": 2000,
+    "paired_bootstrap_seed": 271828
+  },
+  "baseline_and_treatments": [
+    {
+      "id": "mistral-32k",
+      "vocab_size": 32000,
+      "macro_tokens_per_kib": 285.51423739338816,
+      "delta_vs_mistral": null,
+      "relative_delta_vs_mistral": null,
+      "embedding_and_head_parameters": 131084288,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "balanced60-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 292.97438867741226,
+      "delta_vs_mistral": 7.460151284024107,
+      "relative_delta_vs_mistral": 0.02612882408993622,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "balanced60-bpe-40960",
+      "vocab_size": 40960,
+      "macro_tokens_per_kib": 288.81707559063767,
+      "delta_vs_mistral": 3.302838197249514,
+      "relative_delta_vs_mistral": 0.011568033270084488,
+      "embedding_and_head_parameters": 167784448,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "balanced60-bpe-49152",
+      "vocab_size": 49152,
+      "macro_tokens_per_kib": 285.99301212370034,
+      "delta_vs_mistral": 0.4787747303121819,
+      "relative_delta_vs_mistral": 0.0016768856596545145,
+      "embedding_and_head_parameters": 201338880,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "balanced180-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 293.734075374127,
+      "delta_vs_mistral": 8.219837980738816,
+      "relative_delta_vs_mistral": 0.02878959051493224,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "balanced180-bpe-40960",
+      "vocab_size": 40960,
+      "macro_tokens_per_kib": 289.04370413569137,
+      "delta_vs_mistral": 3.5294667423032138,
+      "relative_delta_vs_mistral": 0.012361788940984608,
+      "embedding_and_head_parameters": 167784448,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "balanced180-bpe-49152",
+      "vocab_size": 49152,
+      "macro_tokens_per_kib": 285.78429662279274,
+      "delta_vs_mistral": 0.2700592294045805,
+      "relative_delta_vs_mistral": 0.00094586957158449,
+      "embedding_and_head_parameters": 201338880,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "paragraph-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 295.75361418698884,
+      "delta_vs_mistral": 10.239376793600684,
+      "relative_delta_vs_mistral": 0.03586292889307874,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "paragraph-bpe-40960",
+      "vocab_size": 40960,
+      "macro_tokens_per_kib": 291.5392813670899,
+      "delta_vs_mistral": 6.02504397370177,
+      "relative_delta_vs_mistral": 0.02110242917728944,
+      "embedding_and_head_parameters": 167784448,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "code20-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 294.1140782729073,
+      "delta_vs_mistral": 8.59984087951915,
+      "relative_delta_vs_mistral": 0.03012053254517766,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "code20-bpe-40960",
+      "vocab_size": 40960,
+      "macro_tokens_per_kib": 289.70944483852213,
+      "delta_vs_mistral": 4.195207445133974,
+      "relative_delta_vs_mistral": 0.01469351400278418,
+      "embedding_and_head_parameters": 167784448,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "dummy-prefix-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 292.9850473969955,
+      "delta_vs_mistral": 7.470810003607369,
+      "relative_delta_vs_mistral": 0.026166155746951025,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "unigram-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 301.0981845258929,
+      "delta_vs_mistral": 15.583947132504761,
+      "relative_delta_vs_mistral": 0.05458203161698316,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "mistral-profile-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 266.55286107515536,
+      "delta_vs_mistral": -18.961376318232794,
+      "relative_delta_vs_mistral": -0.066411316266892,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "allow-whitespace-bpe-32768",
+      "vocab_size": 32768,
+      "macro_tokens_per_kib": 264.35221947850283,
+      "delta_vs_mistral": -21.162017914885325,
+      "relative_delta_vs_mistral": -0.07411895850828554,
+      "embedding_and_head_parameters": 134230016,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "allow-whitespace-bpe-40960",
+      "vocab_size": 40960,
+      "macro_tokens_per_kib": 260.200484172003,
+      "delta_vs_mistral": -25.313753221385184,
+      "relative_delta_vs_mistral": -0.08866021341873509,
+      "embedding_and_head_parameters": 167784448,
+      "all_hard_gates_pass": true
+    },
+    {
+      "id": "allow-whitespace-bpe-32000",
+      "vocab_size": 32000,
+      "macro_tokens_per_kib": 264.8756801797706,
+      "delta_vs_mistral": -20.63855721361756,
+      "relative_delta_vs_mistral": -0.07228556236647943,
+      "embedding_and_head_parameters": 131084288,
+      "all_hard_gates_pass": true
+    }
+  ],
+  "findings": {
+    "initial_result": {
+      "mistral_macro_tokens_per_kib": 285.51423739338816,
+      "best_original_custom": "balanced60-bpe-49152",
+      "best_original_custom_macro_tokens_per_kib": 285.99301212370034,
+      "explanation": "custom gains on four categories were offset by repeated-horizontal-whitespace fragmentation in code and markup-heavy reference text"
+    },
+    "data_scale": {
+      "decision": "stop scaling after 180MB",
+      "deltas_180_minus_60_tokens_per_kib": {
+        "32768": 0.7596866967147093,
+        "40960": 0.22662854505369978,
+        "49152": -0.20871550090760138
+      },
+      "interpretation": "tripling balanced data did not consistently improve compression and the only gain was below 0.25 tokens_per_kib"
+    },
+    "negative_treatments": {
+      "paragraph_chunking": "worse at 32K and 40K despite fewer newline-bearing pieces",
+      "code_20MB_same_total": "small code improvement but worse macro at 32K and 40K",
+      "dummy_prefix": "negligible",
+      "unigram_32K": "clearly worse",
+      "train_extremely_large_corpus_false": "same metrics as original BPE control",
+      "character_coverage_0_99995": "small improvement but still worse than Mistral"
+    },
+    "isolated_cause": {
+      "setting": "allow_whitespace_only_pieces=true",
+      "standard_custom_32768_macro_tokens_per_kib": 292.97438867741226,
+      "treated_custom_32768_macro_tokens_per_kib": 264.35221947850283,
+      "mistral_declares_setting": true,
+      "original_custom_declares_setting": false,
+      "ordinary_multi_space_pieces": {
+        "mistral_32000": 14,
+        "original_custom_32768": 0,
+        "treated_custom_32000": 15
+      },
+      "whitespace_piece_token_occurrences": {
+        "mistral_32000": 69324,
+        "original_custom_32768": 262332,
+        "treated_custom_32000": 83493
+      }
+    },
+    "same_cost_custom_32000": {
+      "macro_tokens_per_kib": 264.8756801797706,
+      "delta_vs_mistral_tokens_per_kib": -20.63855721361756,
+      "relative_delta_vs_mistral": -0.07228556236647943,
+      "embedding_and_head_parameters": 131084288,
+      "same_embedding_and_head_parameters_as_mistral": true,
+      "category_deltas_vs_mistral": {
+        "code": -35.4014416809286,
+        "math": -30.63899020435406,
+        "reference": -15.354963049514652,
+        "science": -17.445172192710686,
+        "synthetic": -15.578659283657117,
+        "web": -9.41211687054033
+      },
+      "sources_improved": 30,
+      "sources_compared": 30,
+      "paired_document_macro_delta_interval_p025_p975": [
+        -23.966338822603372,
+        -22.231147937776072
+      ],
+      "collapse_all_whitespace_macro_delta_vs_mistral": -8.234904793638066,
+      "collapse_horizontal_whitespace_macro_delta_vs_mistral": -21.459751409955686,
+      "byte_piece_token_occurrences": 5475,
+      "mistral_byte_piece_token_occurrences": 93939,
+      "all_hard_gates_pass": true
+    },
+    "vocabulary_tradeoff": {
+      "custom_32768_macro_tokens_per_kib": 264.35221947850283,
+      "custom_40960_macro_tokens_per_kib": 260.200484172003,
+      "40960_relative_token_reduction_vs_32768": -0.01570531662147623,
+      "40960_additional_embedding_and_head_parameters_vs_32768": 33554432,
+      "interpretation": "32K is the attractive exploratory operating point; 40K buys little compression for substantial parameter cost"
+    },
+    "reproducibility": {
+      "custom_32768_first_model_sha256": "842367b008b668c64fee4a568c4819679e52a3d0a81dbb4b8d27643b53d1b689",
+      "custom_32768_repeat_model_sha256": "842367b008b668c64fee4a568c4819679e52a3d0a81dbb4b8d27643b53d1b689",
+      "model_hashes_equal": true,
+      "training_stream_hashes_equal": true
+    }
+  },
+  "selected_model_artifacts": {
+    "allow-whitespace-bpe-32000": {
+      "manifest_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-32000/manifest.json",
+      "manifest_sha256": "67d2b748db9e2ab7c896e1e92ae14a0d9159fcb8223c33f91afb096802fa26d2",
+      "model_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-32000/tokenizer.model",
+      "model_sha256": "f0c056123358802d1591cccedd68ba071ea3bf8e22a57f87a0d5c848836cbe37",
+      "training_stream_sha256": "27ef1231da6279c9370144dbacae744f9ff82752aed79c379a4d5c041a7c2495",
+      "training_utf8_bytes": 60381841
+    },
+    "allow-whitespace-bpe-32768": {
+      "manifest_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-32768/manifest.json",
+      "manifest_sha256": "f4ef8e1a6d6f0d6722c13792a01b7c32f1be5828e50670fc07459b06e0a3ad36",
+      "model_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-32768/tokenizer.model",
+      "model_sha256": "842367b008b668c64fee4a568c4819679e52a3d0a81dbb4b8d27643b53d1b689",
+      "training_stream_sha256": "27ef1231da6279c9370144dbacae744f9ff82752aed79c379a4d5c041a7c2495",
+      "training_utf8_bytes": 60381841
+    },
+    "allow-whitespace-bpe-32768-repeat": {
+      "manifest_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-32768-repeat/manifest.json",
+      "manifest_sha256": "182cfa86f86fec82c5b5d1c17fd9f38d0ba3d00f2c6bd37ae6bcdf59d0629641",
+      "model_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-32768-repeat/tokenizer.model",
+      "model_sha256": "842367b008b668c64fee4a568c4819679e52a3d0a81dbb4b8d27643b53d1b689",
+      "training_stream_sha256": "27ef1231da6279c9370144dbacae744f9ff82752aed79c379a4d5c041a7c2495",
+      "training_utf8_bytes": 60381841
+    },
+    "allow-whitespace-bpe-40960": {
+      "manifest_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-40960/manifest.json",
+      "manifest_sha256": "91319c4d26a24a6ae0edb786476afa2e2d7c48b75efcc88a7c24a2684b6444dd",
+      "model_path": "/mnt/speck-data/speck/tokenizer-exploratory/overnight-v1/models/allow-whitespace-bpe-40960/tokenizer.model",
+      "model_sha256": "c12ef4e0de1c2a4c933c35e2dd0fdd4ff8949a6c0daeb47afaf54567d069ecb4",
+      "training_stream_sha256": "27ef1231da6279c9370144dbacae744f9ff82752aed79c379a4d5c041a7c2495",
+      "training_utf8_bytes": 60381841
+    }
+  },
+  "recommendation": {
+    "soft_guidance": "carry an exact-32000 BPE candidate with allow_whitespace_only_pieces=true into the future formal static and matched-LM comparison against Mistral",
+    "do_not_do_now": [
+      "do not freeze D5 from static fertility",
+      "do not run the seven 60M pilots on exploratory partitions",
+      "do not open D5_tokenizer",
+      "do not change flagship launch authority"
+    ],
+    "formal_follow_up": "create a versioned tokenizer-plan successor before real outputs; preserve the original false/default treatment as the failed control"
+  },
+  "validation": {
+    "focused_tests_passed": 23,
+    "full_suite_passed": 631,
+    "full_suite_skipped": 8,
+    "ruff": "pass"
+  }
+}

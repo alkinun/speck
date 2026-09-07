@@ -208,6 +208,7 @@ history in order only when auditing provenance or a retired decision:
 193. [192 — All tokenizer sizes and Mistral qualify on generated fixtures](192_tokenizer_fullsize_fixture.md)
 194. [193 — Static tokenizer finalists have a frozen pre-results rule](193_tokenizer_static_nomination_policy.md)
 195. [194 — The seven-run tokenizer pilot analysis is frozen](194_tokenizer_pilot_analysis.md)
+196. [195 — Whitespace-piece support fixes the local custom-tokenizer deficit](195_local_tokenizer_data_study.md)
 
 Conventions:
 

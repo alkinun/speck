@@ -595,3 +595,27 @@ def test_tokenizer_pilot_analysis_is_hash_bound_and_D5_stays_unopened():
     assert result["ranking"]["audit_opening_authorized"] is False
     assert result["validation"]["real_LM_runs"] == 0
     assert result["validation"]["D5_audit_openings"] == 0
+
+
+def test_local_tokenizer_study_is_hash_bound_but_has_no_D5_authority():
+    result = json.loads(
+        (ROOT / "results" / "data" / "tokenizer-local-study-20260907.json").read_text()
+    )
+    assert result["status"] == (
+        "exploratory_whitespace_piece_treatment_pass_no_D5_or_launch_authority"
+    )
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    same_cost = result["findings"]["same_cost_custom_32000"]
+    assert same_cost["same_embedding_and_head_parameters_as_mistral"] is True
+    assert same_cost["relative_delta_vs_mistral"] < -0.07
+    assert same_cost["sources_improved"] == same_cost["sources_compared"] == 30
+    assert same_cost["all_hard_gates_pass"] is True
+    reproducibility = result["findings"]["reproducibility"]
+    assert reproducibility["model_hashes_equal"] is True
+    assert reproducibility["training_stream_hashes_equal"] is True
+    assert result["scope"]["gpu_runs"] == 0
+    assert result["scope"]["language_model_runs"] == 0
+    assert result["scope"]["sealed_audit_openings"] == 0
+    assert result["scope"]["selection_authority"] is False
+    assert result["scope"]["launch_authority"] is False

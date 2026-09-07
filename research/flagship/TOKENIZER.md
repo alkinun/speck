@@ -1,10 +1,11 @@
 # Flagship tokenizer training and qualification
 
 Status: tokenizer and three-partition firewall tooling complete; all six bounded categories and all
-30 real input identities are technically frozen but rights/production-blocked; Mistral and all three
-full-size custom paths pass generated fixtures, while every real tokenizer run remains pending,
-2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this protocol.
-Mistral 32K remains the fallback until the balanced sample and LM pilot are complete.
+30 real input identities are technically frozen but rights/production-blocked. A local 60 MB study
+found that explicit SentencePiece whitespace-only-piece support makes an exact-32K custom BPE
+statically superior to Mistral on the bounded held-out text, but every formal tokenizer run remains
+pending, 2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this
+protocol. Mistral 32K remains the fallback until the formal balanced sample and LM pilot are complete.
 
 [`tokenizer_plan.json`](tokenizer_plan.json) freezes the research decision. The executable config is
 created under `experiments/Speck-Tokenizer-v1/` only after every input file has an immutable source
@@ -143,6 +144,16 @@ requested vocabulary size, path-independent model identity, uint16 capacity, zer
 roundtrip, and parameter accounting. Fixture fertility cannot advance a candidate because the custom
 models saw that generated alphabetic distribution and Mistral did not. The real comparison begins
 only after the blocked 600/60 MB input is authorized and materialized.
+
+A separate non-authoritative local study on 60.38 MB train and 6.61 MB held out explains the first
+real-text custom deficit. Mistral enables SentencePiece `allow_whitespace_only_pieces`; the original
+custom settings implicitly disabled it, heavily fragmenting indentation and repeated spaces in code
+and markup. Enabling only that setting gives an exact-32,000-piece BPE 264.88 equal-category
+tokens/KiB versus Mistral's 285.51 at identical embedding/head parameter cost. It improves all six
+categories and all 30 bounded sources, repeats exactly at 32,768 pieces, and still leads after a
+whitespace-collapse diagnostic. Tripling data, paragraph chunking, code reweighting, dummy-prefix
+matching, and unigram did not explain or improve the original control. This result nominates a
+future versioned formal-plan treatment; it has no D5, LM-quality, audit-opening, or launch authority.
 
 If more than two custom candidates remain Pareto-valid, the pre-results
 [`tokenizer_static_nomination_policy.json`](tokenizer_static_nomination_policy.json) chooses two
