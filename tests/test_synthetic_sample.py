@@ -1,11 +1,14 @@
 import hashlib
 import json
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from speck.stack_v3_refine import _sample_partition
 from speck.synthetic_sample import sample_synthetic_source, validate_synthetic_sample_config
+
+ROOT = Path(__file__).parents[1]
 
 
 def _text_for(split):
@@ -130,3 +133,26 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
     assert report["counts"]["model_identity_phrase_rejected"] == 1
     assert report["style_profile"]["unique_styles"] == 2
     assert report["gates"]["training_authority"] == "blocked"
+
+
+def test_flagship_synthetic_plans_freeze_sources_generators_and_margins():
+    plans = []
+    for path in sorted((ROOT / "research/flagship").glob("synthetic_*_v1.json")):
+        raw = json.loads(path.read_text())
+        if raw.get("format") == "speck_synthetic_sample":
+            plans.append(validate_synthetic_sample_config(raw, config_dir=path.parent))
+
+    assert {plan["source"]["id"] for plan in plans} == {
+        "cosmopedia_v2",
+        "ultrafineweb_l3_multi_style",
+        "ultrafineweb_l3_qa",
+        "megamath_qa",
+    }
+    inputs = [item for plan in plans for item in plan["source"]["inputs"]]
+    assert len(inputs) == 5
+    assert sum(item["training_bytes"] for item in inputs) == 120_000_000
+    assert sum(item["evaluation_bytes"] for item in inputs) == 12_000_000
+    assert all(item["generator"]["revision"] == "not_disclosed_by_dataset_card" for item in inputs)
+    assert all(
+        item["seed_source"]["revision"] == "not_disclosed_by_dataset_card" for item in inputs
+    )
