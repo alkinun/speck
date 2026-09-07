@@ -12,6 +12,7 @@ from speck.math_sample import (
     validate_math_sample_config,
 )
 from speck.stack_v3_refine import _sample_partition
+from speck.text_contamination import validate_text_contamination_config
 from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
@@ -211,3 +212,25 @@ def test_flagship_math_overlap_plan_freezes_precedence_and_final_quotas():
     assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
     assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
     assert plan["policy"]["category"] == "math"
+
+
+def test_flagship_math_contamination_plan_reuses_frozen_payload_policy():
+    path = ROOT / "research/flagship/math_contamination_v1.json"
+    plan = validate_text_contamination_config(json.loads(path.read_text()), config_dir=path.parent)
+    web = json.loads((ROOT / "research/flagship/web_contamination_v1.json").read_text())
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "finemath_4plus",
+        "megamath_web_pro",
+        "openwebmath",
+        "infiwebmath_4plus",
+        "proof_pile_2_algebraic_stack",
+        "megamath_code",
+    ]
+    assert plan["policy"] == web["policy"]
+    assert (
+        plan["benchmarks"]
+        == validate_text_contamination_config(web, config_dir=ROOT / "research/flagship")[
+            "benchmarks"
+        ]
+    )
