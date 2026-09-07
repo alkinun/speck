@@ -1,0 +1,97 @@
+{
+  "format": "speck_text_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "finemath_4plus",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/math-finemath_4plus-v2/tokenizer-input.jsonl",
+      "sha256": "11d3a81e9680efc3c348fce4ccef16ea540e7da87368ee477af241d13ba96008",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-finemath_4plus-v2/report.json",
+      "parent_report_sha256": "d616c46e5764e0abc349fbd98d500c3ac8b3c4fa49dfb9906479f11293f7f359",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 30000000,
+      "evaluation_bytes": 3000000
+    },
+    {
+      "id": "megamath_web_pro",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/math-megamath_web_pro-v2/tokenizer-input.jsonl",
+      "sha256": "9704a8c0fdaeb3c3dca9021205d7452ec2dce88ccb1477c065900c760952ba33",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-megamath_web_pro-v2/report.json",
+      "parent_report_sha256": "04e1b87fd9520a9489ebc45990a0737c453b1fa49695c652966bfe174ddf7694",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 25000000,
+      "evaluation_bytes": 2500000
+    },
+    {
+      "id": "openwebmath",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/math-openwebmath-v2/tokenizer-input.jsonl",
+      "sha256": "957e6fd1ff1ad0cf551c6bfd1e0f977e3fa9c33e9a9a33d791dd72ea58afc5a7",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-openwebmath-v2/report.json",
+      "parent_report_sha256": "48be0a531302df8eec223deea347132f48e9f9f70fe5d92ff2f52398b590731c",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "id": "infiwebmath_4plus",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v2/tokenizer-input.jsonl",
+      "sha256": "3fbf4a979cb9f97bdc5e46447b5e359d547ba76940fb8c384e36ab053d08f724",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v2/report.json",
+      "parent_report_sha256": "3592795f06fc966757207e19ce99b3f2114f1b996800efb6a941468d212de9b6",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "id": "proof_pile_2_algebraic_stack",
+      "precedence": 5,
+      "path": "/mnt/speck-data/speck/source-qualification/math-proof_pile_2_algebraic_stack-v2/tokenizer-input.jsonl",
+      "sha256": "c5f831f15238aa9b140ecbc631e9e5eb5bcae6ebb9619ebb6ac2d514b98eda50",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-proof_pile_2_algebraic_stack-v2/report.json",
+      "parent_report_sha256": "debac067b71a7ddd00679f716a85b0dc5817de739b6c808a007e2f4ed2748535",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "id": "megamath_code",
+      "precedence": 6,
+      "path": "/mnt/speck-data/speck/source-qualification/math-megamath_code-v2/tokenizer-input.jsonl",
+      "sha256": "32a1bc2c40968c8dded731d6512e75eeaf4e992481f006c522e3328e2d752ef1",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/math-megamath_code-v2/report.json",
+      "parent_report_sha256": "f42830ebbdc50ee1b829d87e1e0b10bb44961195b877fc137dcb955e01e3f96b",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    }
+  ],
+  "policy": {
+    "category": "math",
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [
+      0
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/math-cross-source-dedup-v1"
+}

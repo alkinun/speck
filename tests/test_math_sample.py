@@ -12,6 +12,7 @@ from speck.math_sample import (
     validate_math_sample_config,
 )
 from speck.stack_v3_refine import _sample_partition
+from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
 
@@ -179,11 +180,10 @@ def test_math_sample_reads_jsonl_zstd_without_rewriting_rows(tmp_path):
 def test_flagship_math_sample_plans_freeze_six_source_margins():
     plans = []
     for path in sorted((ROOT / "research/flagship").glob("math_*_v1.json")):
-        if path.name == "math_megamath_code_v1.json" or "_gitleaks_" in path.name:
+        raw = json.loads(path.read_text())
+        if raw.get("format") != "speck_math_sample":
             continue
-        plans.append(
-            validate_math_sample_config(json.loads(path.read_text()), config_dir=path.parent)
-        )
+        plans.append(validate_math_sample_config(raw, config_dir=path.parent))
 
     assert {plan["source"]["id"] for plan in plans} == {
         "finemath_4plus",
@@ -194,3 +194,20 @@ def test_flagship_math_sample_plans_freeze_six_source_margins():
     }
     assert sum(plan["downstream_partition"]["training_bytes"] for plan in plans) == 114_000_000
     assert sum(plan["downstream_partition"]["evaluation_bytes"] for plan in plans) == 11_400_000
+
+
+def test_flagship_math_overlap_plan_freezes_precedence_and_final_quotas():
+    path = ROOT / "research/flagship/math_cross_source_duplicates_v1.json"
+    plan = validate_text_duplicate_config(json.loads(path.read_text()), config_dir=path.parent)
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "finemath_4plus",
+        "megamath_web_pro",
+        "openwebmath",
+        "infiwebmath_4plus",
+        "proof_pile_2_algebraic_stack",
+        "megamath_code",
+    ]
+    assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
+    assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
+    assert plan["policy"]["category"] == "math"
