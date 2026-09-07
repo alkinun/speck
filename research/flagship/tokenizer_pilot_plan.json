@@ -1,0 +1,64 @@
+{
+  "format": "speck_tokenizer_pilot_plan",
+  "format_version": 1,
+  "status": "analysis_fixture_ready_real_runs_blocked",
+  "scale": "60M",
+  "categories": ["web", "code", "math", "synthetic", "science", "reference"],
+  "primary_baseline": "mistral-32k",
+  "screen": {
+    "seed": 42,
+    "runs": ["mistral-32k", "compression_endpoint", "compact_endpoint"],
+    "custom_rule": "lowest fixed-document equal-category macro BPB; tie by lower active seconds, then smaller vocabulary, then ID"
+  },
+  "confirmation": {
+    "seeds": [42, 43, 44],
+    "runs": "baseline and selected custom at all three seeds; seed-42 screen runs are reused",
+    "total_runs": 7
+  },
+  "stopping": {
+    "fixed_document_mistral_tokens": 1200000000,
+    "fixed_flop_target": "analytic FLOPs consumed by Mistral seed 42 at the fixed-document endpoint",
+    "fixed_wall_clock": "secondary measured view only",
+    "quality_target": "Mistral seed-42 fixed-document final macro BPB, defined before custom curves are inspected"
+  },
+  "statistics": {
+    "unit": "bits_per_utf8_byte",
+    "category_score": "mean document BPB",
+    "macro_score": "unweighted mean of six category means",
+    "paired_delta": "candidate minus Mistral on identical document IDs and UTF-8 byte counts",
+    "seed_aggregation": "average each document delta over confirmation seeds before bootstrap",
+    "bootstrap_seed": 314159,
+    "bootstrap_replicates": 10000,
+    "upper_percentile": 0.95
+  },
+  "eligibility": {
+    "required_views": ["fixed_document", "fixed_flop"],
+    "aggregate_upper_95_bpb": 0.01,
+    "category_upper_95_bpb": 0.02,
+    "all_runs_finite": true
+  },
+  "ranking": {
+    "primary": "lower median analytic FLOPs to the frozen quality target",
+    "unreached_quality": "ineligible for custom selection",
+    "tie": "smaller vocabulary",
+    "fallback": "mistral-32k"
+  },
+  "sealed_audit": {
+    "identity": "D5_tokenizer",
+    "required_finalists": 2,
+    "opening": "after provisional ranking only",
+    "failure": "mistral-32k",
+    "additional_search_after_failure": false
+  },
+  "real_execution": {
+    "status": "blocked",
+    "requires": [
+      "authorized real 600MB train and 60MB evaluation sample",
+      "real static nomination with advancement authority",
+      "exact 60M model and optimizer manifests",
+      "local RTX 3090 run manifests"
+    ]
+  },
+  "gpu_hour_ceiling": 30,
+  "final_selection_authority": false
+}
