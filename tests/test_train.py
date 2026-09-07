@@ -193,6 +193,7 @@ def test_runtime_cadence_arguments_are_optional():
     assert overridden.save_every == 1526
     assert overridden.eval_every == 0
     assert defaults.stop_at_tokens is None
+    assert defaults.data_authority is None
     assert arguments(["experiment", "--stop-at-tokens", "50000000"]).stop_at_tokens == 50_000_000
     assert arguments(["experiment", "--output-dir", "/tmp/checkpoint"]).output_dir == Path(
         "/tmp/checkpoint"
@@ -207,6 +208,25 @@ def test_runtime_cadence_arguments_are_optional():
         {**base, "save_every": 10, "eval_every": 20},
         {**base, "save_every": 30, "eval_every": 40},
     )
+
+
+def test_marked_flagship_training_requires_explicit_data_authority(tmp_path):
+    experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
+    configs = load_experiment(experiment, "data", "tokenizer", "model", "train")
+    configs["train"] = {
+        **configs["train"],
+        "output_dir": str(tmp_path / "output"),
+        "requires_data_launch_authority": True,
+    }
+    with pytest.raises(ValueError, match="requires --data-authority"):
+        BaseTrainer(configs, arguments([str(experiment)]))
+
+    receipt = tmp_path / "receipt.json"
+    trainer = BaseTrainer(
+        configs,
+        arguments([str(experiment), "--data-authority", str(receipt)]),
+    )
+    assert trainer.args.requires_data_launch_authority is True
 
 
 def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):

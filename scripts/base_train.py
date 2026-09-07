@@ -25,6 +25,7 @@ from speck.checkpoint import (
 )
 from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
 from speck.config import load_experiment
+from speck.data_launch import verify_launch_receipt
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.model import CausalLMTrainingOutput, build_model
@@ -54,6 +55,7 @@ _BRANCH_FIXED_SETTINGS = (
     "load_balance_coefficient",
     "router_z_loss_coefficient",
     "diagnostics_every",
+    "requires_data_launch_authority",
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_fraction")
 _CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed")
@@ -83,6 +85,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "load_balance_coefficient",
     "router_z_loss_coefficient",
     "diagnostics_every",
+    "requires_data_launch_authority",
 )
 _LEGACY_RESUME_DEFAULTS = {
     "lr_schedule": "cosine",
@@ -99,6 +102,7 @@ _LEGACY_RESUME_DEFAULTS = {
     "load_balance_coefficient": 0.01,
     "router_z_loss_coefficient": 0.001,
     "diagnostics_every": 100,
+    "requires_data_launch_authority": False,
 }
 
 
@@ -232,6 +236,12 @@ def arguments(argv=None):
         default=None,
         help="operational checkpoint directory override; scientific settings remain config-bound",
     )
+    parser.add_argument(
+        "--data-authority",
+        type=Path,
+        default=None,
+        help="immutable data launch receipt required by marked flagship configs",
+    )
     return parser.parse_args(argv)
 
 
@@ -291,6 +301,14 @@ class BaseTrainer:
         args.load_balance_coefficient = getattr(args, "load_balance_coefficient", 0.01)
         args.router_z_loss_coefficient = getattr(args, "router_z_loss_coefficient", 0.001)
         args.diagnostics_every = getattr(args, "diagnostics_every", 100)
+        args.requires_data_launch_authority = getattr(args, "requires_data_launch_authority", False)
+        if not isinstance(args.requires_data_launch_authority, bool):
+            raise ValueError("requires_data_launch_authority must be boolean")
+        if (
+            args.requires_data_launch_authority
+            and getattr(self.cli, "data_authority", None) is None
+        ):
+            raise ValueError("marked flagship training requires --data-authority")
         args.stop_at_tokens = getattr(self.cli, "stop_at_tokens", None)
         if not isinstance(args.seed, int) or isinstance(args.seed, bool):
             raise ValueError("seed must be an integer")
@@ -404,6 +422,14 @@ class BaseTrainer:
             dist.broadcast_object_list(error, src=0)
         if error[0]:
             raise ValueError(error[0])
+        if self.args.requires_data_launch_authority:
+            verify_launch_receipt(
+                self.cli.data_authority,
+                repository=Path(__file__).parents[1],
+                experiment_directory=self.cli.experiment,
+                packed_manifest_fingerprint=self.manifest_hash,
+                tokenizer_fingerprint=self.tokenizer.fingerprint(),
+            )
 
     def _initialize_model_and_geometry(self):
         args = self.args
