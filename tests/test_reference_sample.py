@@ -7,6 +7,7 @@ import pyarrow.parquet as pq
 
 from speck.reference_sample import sample_reference_source, validate_reference_sample_config
 from speck.stack_v3_refine import _sample_partition
+from speck.text_contamination import validate_text_contamination_config
 from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
@@ -165,3 +166,23 @@ def test_reference_overlap_prioritizes_public_domain_and_item_licensed_sources()
     assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
     assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
     assert plan["policy"]["category"] == "reference"
+
+
+def test_reference_contamination_reuses_frozen_payload_policy():
+    path = ROOT / "research/flagship/reference_contamination_v1.json"
+    plan = validate_text_contamination_config(json.loads(path.read_text()), config_dir=path.parent)
+    web_path = ROOT / "research/flagship/web_contamination_v1.json"
+    web = validate_text_contamination_config(
+        json.loads(web_path.read_text()), config_dir=web_path.parent
+    )
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "common_pile_gutenberg",
+        "common_pile_oercommons",
+        "common_pile_pressbooks",
+        "common_pile_libretexts",
+        "finewiki_en",
+        "common_pile_stackexchange",
+    ]
+    assert plan["policy"] == web["policy"]
+    assert plan["benchmarks"] == web["benchmarks"]
