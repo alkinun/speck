@@ -198,6 +198,8 @@ history in order only when auditing provenance or a retired decision:
 183. [182 — Synthetic rights and generator evidence requires human decision](182_synthetic_rights_review_packet.md)
 184. [183 — Science paper and PDF rights require human decision](183_science_rights_review_packet.md)
 185. [184 — Five science sources pass bounded technical qualification](184_science_tokenizer_technical_qualification.md)
+186. [185 — Six reference sources pass bounded technical qualification](185_reference_tokenizer_technical_qualification.md)
+187. [186 — Reference attribution and share-alike terms require human decision](186_reference_rights_review_packet.md)
 
 Conventions:
 

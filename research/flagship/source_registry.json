@@ -395,7 +395,7 @@
       "priority": "primary",
       "access": "open_huggingface_parquet",
       "rights": "CC-BY-SA-4.0 and GFDL; attribution/share-alike review required",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_page_identity_language_security_overlap_contamination_and_partition_pass_sharealike_rights_blocked"
     },
     {
       "id": "common_pile_stackexchange",
@@ -407,7 +407,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "CC-BY-SA source terms through Common Pile; attribution required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_thread_identity_language_security_overlap_contamination_and_partition_pass_attribution_rights_blocked"
     },
     {
       "id": "common_pile_gutenberg",
@@ -419,7 +419,7 @@
       "priority": "long_context",
       "access": "open_huggingface",
       "rights": "public-domain/open-license selection through Common Pile",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_book_identity_language_security_overlap_contamination_and_partition_pass_work_rights_blocked"
     },
     {
       "id": "common_pile_libretexts",
@@ -431,7 +431,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "open-license selection through Common Pile; item-level attribution required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_item_license_language_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "common_pile_oercommons",
@@ -443,7 +443,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "open-license selection through Common Pile; item-level attribution required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_item_license_language_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "common_pile_pressbooks",
@@ -455,7 +455,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "open-license selection through Common Pile; item-level attribution required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_item_license_language_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "wikimedia_en_20231101",

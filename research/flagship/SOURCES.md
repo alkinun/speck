@@ -222,6 +222,16 @@ records, rescans with zero critical match, and retains 4,262 documents with 117.
 MB evaluation text. Human paper/PDF rights and production hardening remain blocked. See
 [finding 184](../../findings/184_science_tokenizer_technical_qualification.md).
 
+The bounded 35/20/15/15/5/10 reference slice now passes page/book/thread identity, English quality,
+PII/security, rights-strength overlap precedence, benchmark contamination, and partition yield. Two
+initial source-contract failures are preserved and corrected without weakening filters: Gutenberg's
+language field mapping and OER Commons' inapplicable single-platform host cap. One secret-affected
+and two verified near-duplicate records are removed, followed by 331 benchmark-critical records. The
+24,275 final records rescan with zero critical match and retain 116.95 MB train plus 11.63 MB
+evaluation text. Attribution, share-alike, Gutenberg jurisdiction, and item-license reliability remain
+human-blocked. See [findings 185](../../findings/185_reference_tokenizer_technical_qualification.md)
+and [186](../../findings/186_reference_rights_review_packet.md).
+
 ## 7. Qualification order before downloading at scale
 
 1. Freeze source cards and acceptance/attribution policy for Stack v3, Stack-Edu, FineWiki, and every

@@ -209,6 +209,15 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
         "proof_pile_2_arxiv",
     ):
         assert sources[source_id]["pipeline"].endswith("rights_blocked")
+    for source_id in (
+        "finewiki_en",
+        "common_pile_stackexchange",
+        "common_pile_gutenberg",
+        "common_pile_libretexts",
+        "common_pile_oercommons",
+        "common_pile_pressbooks",
+    ):
+        assert sources[source_id]["pipeline"].endswith("rights_blocked")
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}
@@ -414,3 +423,32 @@ def test_science_qualification_preserves_failed_gate_and_is_non_authoritative():
     )
     assert rights["status"].endswith("training_authority_blocked")
     assert "no science source is approved" in rights["decision"]
+
+
+def test_reference_qualification_preserves_failures_and_is_non_authoritative():
+    result = json.loads(
+        (ROOT / "results" / "data" / "reference-tokenizer-sources-20260907.json").read_text()
+    )
+    assert result["status"] == (
+        "bounded_reference_technical_qualification_pass_training_authority_blocked"
+    )
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for path, digest in result["configs"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert set(result["initial_source_failures"]) == {
+        "common_pile_gutenberg",
+        "common_pile_oercommons",
+    }
+    assert result["security"]["affected_records_removed"] == 1
+    assert result["overlap"]["exact_cross_source_matches"] == 0
+    assert result["overlap"]["verified_near_cross_source_matches"] == 2
+    assert result["contamination"]["records_removed_critical"] == 331
+    assert result["contamination"]["residual_critical_records_after_full_rescan"] == 0
+    assert result["aggregate_final_partition"]["training_bytes"] >= 100_000_000
+    assert result["aggregate_final_partition"]["evaluation_bytes"] >= 10_000_000
+    rights = json.loads(
+        (ROOT / "results" / "data" / "reference-rights-review-20260907.json").read_text()
+    )
+    assert rights["status"].endswith("training_authority_blocked")
+    assert "no reference source is approved" in rights["decision"]
