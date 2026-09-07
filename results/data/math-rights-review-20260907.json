@@ -1,0 +1,51 @@
+{
+  "format": "speck_math_source_rights_review_packet",
+  "format_version": 1,
+  "status": "evidence_collected_human_acceptance_required_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "scope": "operational provenance, terms, attribution, and removal review for the six bounded math sources; not legal advice or a final ownership determination",
+  "evidence": [
+    {"id": "finemath_card", "source_revision": "e92b25a616738fe95dc186b64dfb19f9c8525594", "path": "/mnt/speck-data/speck/evaluation-sources/math-rights-v1/HuggingFaceTB--finemath/README.md", "sha256": "77b9162c99fc6b5944da8793f18fb99c3b520ab7cdce0cc67ec8a1e47871da61", "official_url": "https://huggingface.co/datasets/HuggingFaceTB/finemath"},
+    {"id": "megamath_card", "source_revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d", "path": "/mnt/speck-data/speck/evaluation-sources/math-rights-v1/LLM360--MegaMath/README.md", "sha256": "dd7d747251ad17a8ac2856694620fee371eb3eed04aa5bcf88dc89691aa1b2de", "official_url": "https://huggingface.co/datasets/LLM360/MegaMath"},
+    {"id": "openwebmath_card", "source_revision": "fde8ef8de2300f5e778f56261843dab89f230815", "path": "/mnt/speck-data/speck/evaluation-sources/math-rights-v1/open-web-math--open-web-math/README.md", "sha256": "c4497f073cd93dfe104d8960f152fcbcbecd97ca1a7245a4cf66b8b8c79936ec", "official_url": "https://huggingface.co/datasets/open-web-math/open-web-math"},
+    {"id": "proof_pile_2_card", "source_revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b", "path": "/mnt/speck-data/speck/evaluation-sources/math-rights-v1/EleutherAI--proof-pile-2/README.md", "sha256": "2db677a91d955797ca3db9c95ec9a591a7887e9311cf24e4a23cdad6d74fbc4e", "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2"},
+    {"id": "odc_by_1_0_legal_code", "retrieved_on": "2026-09-07", "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/odc-by-1.0.html", "sha256": "7d7e622bbb4b5f21b1c5cb2dd7ce8b1b747ee2c3ab9fc8309c19082e12d13b2d", "official_url": "https://opendatacommons.org/licenses/by/1-0/"},
+    {"id": "common_crawl_terms", "terms_last_updated": "2024-03-07", "retrieved_on": "2026-09-07", "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/commoncrawl-terms.html", "sha256": "1573585e36eb372855ddb8a80718a4b52b758a7132e6c92343a828ab37cc2c60", "official_url": "https://commoncrawl.org/terms-of-use"}
+  ],
+  "source_review": {
+    "finemath_4plus": {"declared_release": "ODC-By-1.0", "upstream": "Common Crawl pages re-extracted from FineWeb/OpenWebMath URL sources", "human_decision_required": "accept ODC attribution, Common Crawl terms, and residual underlying-page rights risk"},
+    "infiwebmath_4plus": {"declared_release": "ODC-By-1.0 through the FineMath release", "upstream": "filtered English text-only InfiMM-WebMath material ultimately derived from web crawl data", "human_decision_required": "confirm the complete InfiMM derivation/attribution chain and accept applicable Common Crawl and page-owner terms"},
+    "megamath_web_pro": {"declared_release": "ODC-By-1.0", "upstream": "re-extracted Common Crawl mathematical documents", "human_decision_required": "accept ODC attribution, Common Crawl terms, and residual underlying-page rights risk"},
+    "openwebmath": {"declared_release": "ODC-By-1.0", "upstream": "Common Crawl", "material_observation": "the pinned card explicitly says it does not alter the license of underlying data", "human_decision_required": "accept ODC attribution, Common Crawl terms, and underlying-page licenses/terms"},
+    "proof_pile_2_algebraic_stack": {"declared_release": "no aggregate license declared", "upstream": "public code repositories; the card says underlying licenses are not altered", "bounded_filter": "2,715 final Agda records from 363 repositories carry only allowlisted detected-license metadata: MIT 2,080 links, BSD-3-Clause 425, Apache-2.0 89, BSD-2-Clause 76, Unlicense 36, 0BSD 20, and MIT-0 1; counts are license links and can exceed record count", "human_decision_required": "approve the exact original-license allowlist, attribution/notice implementation, metadata reliability, and intended model/release scope, or reject this source"},
+    "megamath_code": {"declared_release": "ODC-By-1.0 database release", "upstream": "The Stack v2 metadata and Software Heritage blobs; each original file license and attribution remains applicable", "bounded_filter": "the adapter rejected 759,621 no-license/non-permissive metadata rows and 5,850 unsupported/missing detected-license rows; 1,729 final files from 1,331 repositories carry only the conservative allowlist", "human_decision_required": "approve the exact original-license allowlist, attribution/notice implementation, metadata reliability, and intended model/release scope, or reject this source"}
+  },
+  "shared_material_observations": [
+    "ODC-By grants database rights with attribution but expressly does not govern each item of content",
+    "Common Crawl use is a binding acceptance event and its indemnification clause expressly names AI training and deployment",
+    "Software Heritage blob availability and hash identity provide transport/provenance, not permission",
+    "source-level quality, language, PII, security, deduplication, and contamination gates do not resolve copyright or contractual rights"
+  ],
+  "proposed_attribution_and_removal_controls": [
+    "retain source dataset/revision/shard, released-content hash, original URL or repository/path, blob identity, and detected licenses in immutable attribution manifests",
+    "publish ODC-By credits plus FineMath, InfiMM-WebMath, MegaMath, OpenWebMath, Proof-Pile-2, The Stack v2, Software Heritage, and Common Crawl citations as applicable",
+    "generate repository/file notice bundles for every included code record and preserve original license identifiers",
+    "name a human-controlled rights/privacy/removal contact before production acquisition",
+    "maintain URL/domain/blob/hash deny ledgers and rebuild affected packed shards rather than editing frozen evidence in place",
+    "decide source-data and packed-shard redistribution separately from model-weight release"
+  ],
+  "acceptance_record_required": {
+    "authority": "named human with authority for the operating organization and intended use",
+    "must_record": [
+      "accepted or rejected source IDs and exact evidence hashes",
+      "organization and intended research, publication, model-weight release, and any commercial scope",
+      "Common Crawl acceptance and terms date for web-derived sources",
+      "ODC-By attribution placement and underlying-page risk decision",
+      "approved original-code license allowlist and notice/attribution delivery",
+      "source-data and derived-shard redistribution decision",
+      "removal contact, deny-ledger owner, response procedure, and rebuild policy",
+      "date, name, and signature or equivalent auditable approval"
+    ]
+  },
+  "decision": "no math source is approved by this automated review; keep all six bounded successors blocked until the required human acceptance record exists"
+}

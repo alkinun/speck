@@ -164,6 +164,16 @@ The broad search found complementary, not interchangeable, sources:
 E1S compares FineMath-4+, MegaMath Web-Pro, and their blend. OpenWebMath, InfiWebMath, and Algebraic
 Stack diversify the tokenizer sample and held-out audit; they do not each receive a GPU arm.
 
+The bounded 30/15/25/15/10/5 tokenizer slice now passes immutable shard/schema, source-native
+quality, English-prose, notation preservation, PII/security, six-source overlap, flagship benchmark
+contamination, and partition-yield gates. One MegaMath Web-Pro secret-flagged record, three exact
+cross-source duplicates, seven verified ≥0.80 near duplicates, and 980 benchmark-critical records are
+removed. The 30,478-record successors rescan with zero critical matches and retain 113.32 MB train
+plus 11.49 MB evaluation text. Human approval of Common Crawl/page rights, ODC attribution, and the
+two code sources' original-license/notice chain still blocks use, as do production global dedup and
+cleanup/resume. See [findings 179](../../findings/179_math_tokenizer_technical_qualification.md) and
+[180](../../findings/180_math_rights_review_packet.md).
+
 ## 5. Synthetic and educational candidates
 
 The stable synthetic screen remains Cosmopedia v2 versus Ultra-FineWeb-L3 Multi-Style versus a

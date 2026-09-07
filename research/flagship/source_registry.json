@@ -191,7 +191,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus Common Crawl terms",
-      "pipeline": "integrated"
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "infiwebmath_4plus",
@@ -203,7 +203,7 @@
       "priority": "secondary",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus Common Crawl terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "megamath_web_pro",
@@ -215,7 +215,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus source-specific terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "openwebmath",
@@ -227,7 +227,7 @@
       "priority": "secondary",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus Common Crawl terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "proof_pile_2_algebraic_stack",
@@ -239,7 +239,7 @@
       "priority": "secondary",
       "access": "open_huggingface_zstd_jsonl",
       "rights": "source-specific licenses; repository-level license metadata is incomplete",
-      "pipeline": "new_zstd"
+      "pipeline": "bounded_license_metadata_language_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "megamath_code",
@@ -249,9 +249,9 @@
       "subset": "megamath-code",
       "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
       "priority": "tokenizer_only",
-      "access": "open_huggingface_parquet",
+      "access": "open_huggingface_metadata_plus_software_heritage",
       "rights": "ODC-By-1.0 plus inherited code-source terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_SWH_identity_license_metadata_language_PII_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "nemotron_cc_math_4plus",

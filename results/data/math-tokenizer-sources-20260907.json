@@ -1,0 +1,422 @@
+{
+  "format": "speck_math_tokenizer_sources_summary",
+  "format_version": 1,
+  "status": "bounded_math_technical_qualification_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_freezes": {
+    "source_sample_plans": "082d3a0",
+    "security_exclusions": "09bde20",
+    "cross_source_precedence": "5437eef",
+    "evaluation_firewall": "7665339"
+  },
+  "implementation": {
+    "sample_module": [
+      "speck/math_sample.py",
+      "e615e83d8e8dc68da0314ab0e6412f2b0b4edd71ec761f33ef9e5dace9684130"
+    ],
+    "sample_cli": [
+      "scripts/math_sample.py",
+      "9d913463211307019f9f57f4ebbd306c4ae0e6f674d3193b160f9abb72461dd4"
+    ],
+    "megamath_code_module": [
+      "speck/megamath_code.py",
+      "eb1bdc4d656fa1ebe7a0f9e5f3767515e62080cec7beac0dc9c615846c1540f4"
+    ],
+    "megamath_code_cli": [
+      "scripts/megamath_code.py",
+      "53ccf3d579861c0a19c5fea2b71e842b2f0b9b7ed2f1f17c932dbddb91a477ab"
+    ],
+    "security_module": [
+      "speck/text_gitleaks_filter.py",
+      "dac2d90b75ea65726ad4a6145f618c308630f0261af7dd691fae37f19ac1c9d3"
+    ],
+    "security_cli": [
+      "scripts/text_gitleaks_filter.py",
+      "299b1011ca0abf7b7f9dca928c9e5f2c300c7b6b2cf474b08da483d035f123ed"
+    ],
+    "overlap_module": [
+      "speck/text_near_duplicates.py",
+      "439c8fabef78c2a335d6c4006385de03a1db53e187edd89bfe88844782f639ca"
+    ],
+    "overlap_cli": [
+      "scripts/text_near_duplicates.py",
+      "cc5454580dd3846006dfa15d4a80665f44789e7401b7870213abc6bdee8f3831"
+    ],
+    "contamination_module": [
+      "speck/text_contamination.py",
+      "c2f2088728a16e19d7b475e2a39b741c60e8ce79e287736c09217f39c5e3cfa3"
+    ],
+    "contamination_cli": [
+      "scripts/text_contamination.py",
+      "7f6b0624f77f2c400b185f7fe694a18eea87a700ad3edc00232580bc24bb0a49"
+    ]
+  },
+  "configs": {
+    "math_contamination_v1": [
+      "research/flagship/math_contamination_v1.json",
+      "4bba63db519d5f319f19846682e110f6232db65f15b845976bfbddca47f7149f"
+    ],
+    "math_cross_source_duplicates_v1": [
+      "research/flagship/math_cross_source_duplicates_v1.json",
+      "e654752dd1b12d03592e38e23207e02fd9962e5f331e5274478d2b663237c104"
+    ],
+    "math_finemath_4plus_gitleaks_v1": [
+      "research/flagship/math_finemath_4plus_gitleaks_v1.json",
+      "d0faf7c71e0befe09cdb48b3dbe4504f4f075a139dba581fd6807d96e9fb6ba1"
+    ],
+    "math_finemath_4plus_v1": [
+      "research/flagship/math_finemath_4plus_v1.json",
+      "eb8b99c78196299452ce8e8301a978576a9dce2415b76dac9dfc14899e90b4c7"
+    ],
+    "math_infiwebmath_4plus_gitleaks_v1": [
+      "research/flagship/math_infiwebmath_4plus_gitleaks_v1.json",
+      "a518b32848b6034cfd8790ca54bf1d02325261cc94e6735553cec62a764641f5"
+    ],
+    "math_infiwebmath_4plus_v1": [
+      "research/flagship/math_infiwebmath_4plus_v1.json",
+      "0cd08ce97ab8da24abb8c55bce32c7bff00c2a39ac0048fd533bb08f3734785d"
+    ],
+    "math_megamath_code_gitleaks_v1": [
+      "research/flagship/math_megamath_code_gitleaks_v1.json",
+      "5dffe5c368a422973398645bd776e43d832b60c7f06b58e7bf8e4986f0e1408d"
+    ],
+    "math_megamath_code_v1": [
+      "research/flagship/math_megamath_code_v1.json",
+      "f37ce03cfbf7c36bb3b2340cfaa51a7a76c3f788e0928ae94ac4cface75c6e02"
+    ],
+    "math_megamath_web_pro_gitleaks_v1": [
+      "research/flagship/math_megamath_web_pro_gitleaks_v1.json",
+      "7c2e0194ebd0f616dd50a00b83ff36171c638225c2820bf14fe4c2c9d836358e"
+    ],
+    "math_megamath_web_pro_v1": [
+      "research/flagship/math_megamath_web_pro_v1.json",
+      "66cb984f40357f67592f498ab219405faf4e2c57c716d1210b06e12a3e8667b7"
+    ],
+    "math_openwebmath_gitleaks_v1": [
+      "research/flagship/math_openwebmath_gitleaks_v1.json",
+      "051146802cf81a98d6b197bde47c5754a98b3e2e0cf5dff7ef3f7400c28a7dbc"
+    ],
+    "math_openwebmath_v1": [
+      "research/flagship/math_openwebmath_v1.json",
+      "bacec7919b09f2827d45481979ffee8d3171d24b98049a652e42627bff01895c"
+    ],
+    "math_proof_pile_2_algebraic_stack_gitleaks_v1": [
+      "research/flagship/math_proof_pile_2_algebraic_stack_gitleaks_v1.json",
+      "70931c4d1b99c3174074a79f449d377e463766f23b1a4927733219f0b9c7cc8b"
+    ],
+    "math_proof_pile_2_algebraic_stack_v1": [
+      "research/flagship/math_proof_pile_2_algebraic_stack_v1.json",
+      "4d8d4f484fbd1f81c2616ab4dda745c8ecdf8072cc6d1607028b48bfac962e0a"
+    ]
+  },
+  "source_policy": {
+    "allocation": "30% FineMath-4+, 25% MegaMath Web-Pro, 15% OpenWebMath, 15% InfiWebMath-4+, 10% Proof-Pile-2 Algebraic Stack, 5% MegaMath Code",
+    "selection": "seeded row-group/batch ordering plus content-hash ordering; 20% initial partition margins",
+    "content": "accepted text copied byte-for-byte; LaTeX and code notation are not normalized or rewritten",
+    "language": "declared metadata where available plus py3langid on prose; pure notation exempt; code comments/docstrings English-filtered",
+    "security": "raw email/IP and high-confidence local checks followed by fully redacted Gitleaks v8.30.1 exclusion",
+    "code_rights_filter": "permissive license type/allowlist where supplied; original license and attribution obligations remain human-gated"
+  },
+  "sources": {
+    "finemath_4plus": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/HuggingFaceTB--finemath/finemath-4plus/train-00000-of-00064.parquet",
+      "raw_source_sha256": "5d0b26114b4cf309c82a4ba8f6f45857480b27812e23a46b61b45e8bbed61fe5",
+      "raw_source_rows": 104680,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/math-finemath_4plus-v1/report.json",
+      "sample_report_sha256": "34a7688daf6c8be376922304db39bb66f6e189cf1d52180534b728e70c677b52",
+      "sample_records": 7818,
+      "sample_training_bytes": 36002228,
+      "sample_evaluation_bytes": 3603942,
+      "gitleaks_report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "security_report": "/mnt/speck-data/speck/source-qualification/math-finemath_4plus-v2/report.json",
+      "security_report_sha256": "d616c46e5764e0abc349fbd98d500c3ac8b3c4fa49dfb9906479f11293f7f359",
+      "records_removed_critical": 288,
+      "bytes_removed_critical": 2727343,
+      "records_with_exact_field_match": 21,
+      "records_with_primary_ngram_match": 269,
+      "records_with_both_match_types": 2,
+      "unique_critical_tasks": 300,
+      "records_sensitivity_only_retained": 208,
+      "unique_sensitivity_tasks": 144,
+      "records_retained": 7530,
+      "training_partition_bytes": 33460740,
+      "training_target_bytes": 30000000,
+      "evaluation_partition_bytes": 3418087,
+      "evaluation_target_bytes": 3000000,
+      "tokenizer_input_sha256": "d62031fe850344060ee76ebf7187c81a3c2d367ec3a703582e4044c5ca043fdb",
+      "attribution_sha256": "d1c07ab9b44dddcdb255bcc1e0f4d1448331342d4019b4eeb861fd01050e1ac2",
+      "residual_critical_records": 0
+    },
+    "megamath_web_pro": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/LLM360--MegaMath/megamath-web-pro/000_00000.parquet",
+      "raw_source_sha256": "a50a860061fd41b5b1497a8eccb390126dfb4e547c14f3deea5bd6a75db658b3",
+      "raw_source_rows": 163968,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/math-megamath_web_pro-v1/report.json",
+      "sample_report_sha256": "6fcfd58c4dba8afab3d61b086552915374a497c3ea4777cc03fcf099f27064e3",
+      "sample_records": 12519,
+      "sample_training_bytes": 30001485,
+      "sample_evaluation_bytes": 3000364,
+      "gitleaks_report_sha256": "dfdd41f8d765c8571ba113c47dc0a9a18274e457d146273525e6c048369986fa",
+      "gitleaks_findings": 2,
+      "gitleaks_affected_records_removed": 1,
+      "security_report": "/mnt/speck-data/speck/source-qualification/math-megamath_web_pro-v2/report.json",
+      "security_report_sha256": "04e1b87fd9520a9489ebc45990a0737c453b1fa49695c652966bfe174ddf7694",
+      "records_removed_critical": 333,
+      "bytes_removed_critical": 1121213,
+      "records_with_exact_field_match": 21,
+      "records_with_primary_ngram_match": 313,
+      "records_with_both_match_types": 1,
+      "unique_critical_tasks": 277,
+      "records_sensitivity_only_retained": 251,
+      "unique_sensitivity_tasks": 173,
+      "records_retained": 12185,
+      "training_partition_bytes": 28979653,
+      "training_target_bytes": 25000000,
+      "evaluation_partition_bytes": 2899260,
+      "evaluation_target_bytes": 2500000,
+      "tokenizer_input_sha256": "bd1683a40b48b52ba67f806588a6d38732b7122f8c3664a8e3c0fa1f22a0d1e1",
+      "attribution_sha256": "cabea6e8c0d45611e6a25a0c32c085658691932d901b796e28feede764b96241",
+      "residual_critical_records": 0
+    },
+    "openwebmath": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/open-web-math--open-web-math/data/train-00000-of-00114-5a023365406cb9c4.parquet",
+      "raw_source_sha256": "18d7ef70a6ef61f09c020950626d7e6e61d1300f3f85beddbd3b3c6801071a41",
+      "raw_source_rows": 55397,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/math-openwebmath-v1/report.json",
+      "sample_report_sha256": "ac27224ba443b00e2955c6ee4f07d3ad320cb7131de616ca1b9505fbd5b0ded7",
+      "sample_records": 2877,
+      "sample_training_bytes": 18019892,
+      "sample_evaluation_bytes": 1811498,
+      "gitleaks_report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "security_report": "/mnt/speck-data/speck/source-qualification/math-openwebmath-v2/report.json",
+      "security_report_sha256": "48be0a531302df8eec223deea347132f48e9f9f70fe5d92ff2f52398b590731c",
+      "records_removed_critical": 107,
+      "bytes_removed_critical": 1192127,
+      "records_with_exact_field_match": 4,
+      "records_with_primary_ngram_match": 103,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 134,
+      "records_sensitivity_only_retained": 60,
+      "unique_sensitivity_tasks": 58,
+      "records_retained": 2768,
+      "training_partition_bytes": 16893721,
+      "training_target_bytes": 15000000,
+      "evaluation_partition_bytes": 1707599,
+      "evaluation_target_bytes": 1500000,
+      "tokenizer_input_sha256": "39f83355cccc1a59edd80de38109f9f7d783ac350f29399a82382999ec382fda",
+      "attribution_sha256": "4052cd761cd6388bba8621d3358020242dcf1e0b8c975b8cc0f32b35b5d8a40e",
+      "residual_critical_records": 0
+    },
+    "infiwebmath_4plus": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/HuggingFaceTB--finemath/infiwebmath-4plus/train-00000-of-00032.parquet",
+      "raw_source_sha256": "8dae840ed1921e42a7e36dfa4d44db96af81f1de9bfaeddab0b1daf6c71c09a3",
+      "raw_source_rows": 196757,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/report.json",
+      "sample_report_sha256": "9d24b2433602c05e813e9dc6b18b8061a6460fd9a1c3108866b41066af3fa873",
+      "sample_records": 3725,
+      "sample_training_bytes": 18000388,
+      "sample_evaluation_bytes": 1807642,
+      "gitleaks_report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "security_report": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v2/report.json",
+      "security_report_sha256": "3592795f06fc966757207e19ce99b3f2114f1b996800efb6a941468d212de9b6",
+      "records_removed_critical": 166,
+      "bytes_removed_critical": 1583520,
+      "records_with_exact_field_match": 11,
+      "records_with_primary_ngram_match": 159,
+      "records_with_both_match_types": 4,
+      "unique_critical_tasks": 200,
+      "records_sensitivity_only_retained": 102,
+      "unique_sensitivity_tasks": 83,
+      "records_retained": 3551,
+      "training_partition_bytes": 16494157,
+      "training_target_bytes": 15000000,
+      "evaluation_partition_bytes": 1705410,
+      "evaluation_target_bytes": 1500000,
+      "tokenizer_input_sha256": "f4a5a7154383e96971c33906aaf15bef74e557aebcf2796c993611ca996aab81",
+      "attribution_sha256": "75ce12a6c304b4dedfd9f9dcff99785868003956aa61c505d90f72bdacc156d2",
+      "residual_critical_records": 0
+    },
+    "proof_pile_2_algebraic_stack": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/EleutherAI--proof-pile-2/algebraic-stack/train/agda0000.jsonl.zst",
+      "raw_source_sha256": "f91684112df7423acad33fdd0d1d478a4ca6b9c2bb09c473cbf51318fd1885d3",
+      "raw_source_rows": 17431,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/math-proof_pile_2_algebraic_stack-v1/report.json",
+      "sample_report_sha256": "21fd529fa1235318477ee7ff01186e9f15f4130749a28fcbd078360b3b525e2d",
+      "sample_records": 2716,
+      "sample_training_bytes": 12004698,
+      "sample_evaluation_bytes": 1222748,
+      "gitleaks_report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "security_report": "/mnt/speck-data/speck/source-qualification/math-proof_pile_2_algebraic_stack-v2/report.json",
+      "security_report_sha256": "debac067b71a7ddd00679f716a85b0dc5817de739b6c808a007e2f4ed2748535",
+      "records_removed_critical": 1,
+      "bytes_removed_critical": 4764,
+      "records_with_exact_field_match": 0,
+      "records_with_primary_ngram_match": 1,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 1,
+      "records_sensitivity_only_retained": 1,
+      "unique_sensitivity_tasks": 1,
+      "records_retained": 2715,
+      "training_partition_bytes": 11999934,
+      "training_target_bytes": 10000000,
+      "evaluation_partition_bytes": 1222748,
+      "evaluation_target_bytes": 1000000,
+      "tokenizer_input_sha256": "3a7a2e0642a678eca2c763116d7938cd21825552da596abf255ae3ce56798f10",
+      "attribution_sha256": "4ae2585303dd528426bcf803e8e703dc28f566c0f6985b2d7d8e6ed54f80622e",
+      "residual_critical_records": 0
+    },
+    "megamath_code": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/math-raw-v1/LLM360--MegaMath/megamath-code/00000.parquet",
+      "raw_source_sha256": "5580b2c39e2fc05c1fdbe651fab8dcbc2f955f1b8fc54d15468d8717d8792105",
+      "raw_source_rows": 847441,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/math-megamath_code-v1/report.json",
+      "sample_report_sha256": "4d95235a53cc07a205dfb771349ecf1481c87ca6e37254f78521253066c349e8",
+      "sample_records": 1814,
+      "sample_training_bytes": 6046129,
+      "sample_evaluation_bytes": 600428,
+      "gitleaks_report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "security_report": "/mnt/speck-data/speck/source-qualification/math-megamath_code-v2/report.json",
+      "security_report_sha256": "f42830ebbdc50ee1b829d87e1e0b10bb44961195b877fc137dcb955e01e3f96b",
+      "records_removed_critical": 85,
+      "bytes_removed_critical": 619430,
+      "records_with_exact_field_match": 0,
+      "records_with_primary_ngram_match": 85,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 79,
+      "records_sensitivity_only_retained": 81,
+      "unique_sensitivity_tasks": 72,
+      "records_retained": 1729,
+      "training_partition_bytes": 5487677,
+      "training_target_bytes": 5000000,
+      "evaluation_partition_bytes": 539450,
+      "evaluation_target_bytes": 500000,
+      "tokenizer_input_sha256": "9dda6d6e58438208a1dbfa0324fb6f6d5a1c5648fc2d5af15dbf500c8cedd8ed",
+      "attribution_sha256": "b64e90d2f4f0cf824da1846d145390048b510e5337850f542c390afabd410e07",
+      "residual_critical_records": 0
+    }
+  },
+  "security": {
+    "records_scanned": 31469,
+    "gitleaks_findings": 2,
+    "affected_records_removed": 1,
+    "affected_source": "megamath_web_pro"
+  },
+  "overlap": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/math-cross-source-dedup-v1/report.json",
+    "runtime_report_sha256": "0e2cf39eefa9b5f5f73ffe6d1d0cbd210a800867f5d5d752bb508a3dac36c06f",
+    "plan_fingerprint": "e8b2923f346ae12fae07fb76b8000024652e9aa1c177de9b088ac4c29e04278d",
+    "precedence": [
+      "finemath_4plus",
+      "megamath_web_pro",
+      "openwebmath",
+      "infiwebmath_4plus",
+      "proof_pile_2_algebraic_stack",
+      "megamath_code"
+    ],
+    "records_before": 31468,
+    "records_retained": 31458,
+    "exact_cross_source_matches": 3,
+    "verified_near_cross_source_matches": 7,
+    "removed_exact_sources": {
+      "openwebmath": 2,
+      "infiwebmath_4plus": 1
+    },
+    "removed_near_sources": {
+      "infiwebmath_4plus": 7
+    }
+  },
+  "contamination": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/report.json",
+    "runtime_report_sha256": "49153318c88c71b12293f484853aa50da969e4d3ea8793ce330eac7ce8c5b54a",
+    "plan_fingerprint": "64b018b3ef2eda09219cdcdfa9b96e973bdd5a80ac71543f17ce9b17a3464f21",
+    "payloads": 20,
+    "tasks": 63652,
+    "records_seen": 31458,
+    "records_removed_critical": 980,
+    "bytes_removed_critical": 7248397,
+    "records_with_exact_field_match": 57,
+    "records_with_primary_ngram_match": 930,
+    "records_with_both_match_types": 7,
+    "unique_critical_tasks": 691,
+    "records_sensitivity_only_retained": 703,
+    "unique_sensitivity_tasks": 415,
+    "records_retained": 30478,
+    "critical_record_task_links_by_benchmark": {
+      "arc-challenge": 2,
+      "arc-easy": 7,
+      "bigcodebench-v0.1.4": 139,
+      "hellaswag": 20,
+      "humaneval": 53,
+      "math-algebra": 166,
+      "math-counting-and-probability": 83,
+      "math-geometry": 60,
+      "math-intermediate-algebra": 315,
+      "math-number-theory": 77,
+      "math-prealgebra": 71,
+      "math-precalculus": 134,
+      "mbpp": 123,
+      "mmlu-all": 197,
+      "piqa": 2,
+      "triviaqa-rc-nocontext": 8
+    },
+    "sensitivity_record_task_links_by_benchmark": {
+      "arc-challenge": 1,
+      "arc-easy": 3,
+      "bigcodebench-v0.1.4": 95,
+      "gsm8k-main": 5,
+      "hellaswag": 9,
+      "humaneval": 69,
+      "math-algebra": 59,
+      "math-counting-and-probability": 57,
+      "math-geometry": 52,
+      "math-intermediate-algebra": 108,
+      "math-number-theory": 97,
+      "math-prealgebra": 56,
+      "math-precalculus": 24,
+      "mbpp": 46,
+      "mmlu-all": 79
+    },
+    "residual_critical_records_after_full_rescan": 0
+  },
+  "aggregate_final_partition": {
+    "training_bytes": 113315882,
+    "training_target_bytes": 100000000,
+    "evaluation_bytes": 11492554,
+    "evaluation_target_bytes": 10000000
+  },
+  "verification": {
+    "all_runtime_and_output_hashes_recomputed": true,
+    "all_successors_rescanned_with_frozen_matcher": true,
+    "residual_critical_records": 0,
+    "all_six_source_partition_quotas_pass": true,
+    "post_contamination_cross_source_zero_overlap_preserved_by_strict_subsetting": true
+  },
+  "passed_gates": [
+    "immutable source shard identity and schema",
+    "source-native quality and English-prose filtering with notation exemption",
+    "byte-for-byte LaTeX/code preservation",
+    "fully redacted Gitleaks exclusion",
+    "frozen six-source exact and verified near-duplicate precedence",
+    "20-payload 63,652-task benchmark decontamination",
+    "zero-critical successor rescan",
+    "all six final train/evaluation source quotas"
+  ],
+  "blocked_gates": [
+    "human acceptance of Common Crawl and underlying page rights",
+    "human acceptance and attribution for Algebraic Stack and MegaMath Code original file licenses",
+    "production corpus global exact and near-duplicate processing",
+    "production acquisition cleanup and resume qualification",
+    "future benchmark revisions and broader evaluation-suite contamination"
+  ],
+  "decision": "freeze the six bounded technical math successors, but do not authorize tokenizer sampling or training until human rights approval and production hardening pass"
+}

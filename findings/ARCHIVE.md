@@ -192,6 +192,8 @@ history in order only when auditing provenance or a retired decision:
 177. [176 — Four web sources pass bounded sampling, security, and overlap gates](176_web_tokenizer_bounded_sources.md)
 178. [177 — The bounded web slice passes the flagship benchmark firewall](177_web_evaluation_firewall.md)
 179. [178 — Web rights evidence is ready for human decision](178_web_rights_review_packet.md)
+180. [179 — Six math sources pass bounded technical qualification](179_math_tokenizer_technical_qualification.md)
+181. [180 — Math rights evidence is ready for human decision](180_math_rights_review_packet.md)
 
 Conventions:
 

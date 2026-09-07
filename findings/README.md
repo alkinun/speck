@@ -59,6 +59,8 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Web tokenizer sources](176_web_tokenizer_bounded_sources.md) | Four-source bounded sampling, security, partition, and overlap evidence |
 | [Web evaluation firewall](177_web_evaluation_firewall.md) | Frozen flagship payloads and decontaminated bounded web successors |
 | [Web rights review packet](178_web_rights_review_packet.md) | Hashed terms, unresolved rights chain, and required human acceptance record |
+| [Math tokenizer sources](179_math_tokenizer_technical_qualification.md) | Six-source bounded technical qualification and firewall result |
+| [Math rights review packet](180_math_rights_review_packet.md) | Hashed terms, code-license chain, and required human acceptance record |
 
 ## Conventions
 
