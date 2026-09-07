@@ -9,6 +9,13 @@ The broad source search and pinned candidate revisions are in [`SOURCES.md`](SOU
 [`source_registry.json`](source_registry.json). The registry is discovery evidence, not permission to
 train; only source-card-qualified entries can enter the experiments below.
 
+[`source_rights_acceptance_template.json`](source_rights_acceptance_template.json) consolidates the
+30 selected sources and six evidence packets for a named human authority. Validation checks source
+coverage, evidence hashes, intended scope, attribution, redistribution, removal policy, and signature
+completeness, but makes no decision. Pending or rejected sources cannot produce the all-approved
+record required by production firewall construction; rejected selected sources require a versioned
+replacement and requalification.
+
 There is no universally perfect corpus. The target is the best reproducible mixture for this model,
 token budget, and capability profile: a Pareto winner that improves the equal-domain objective
 without buying its average by silently sacrificing code, math, science, reference, or general

@@ -1,0 +1,47 @@
+{
+  "format": "speck_source_rights_decision_readiness",
+  "format_version": 1,
+  "status": "all_selected_sources_covered_human_decisions_pending",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "505ed72",
+  "implementation": {
+    "module": ["speck/source_rights.py", "4464d6a2e9ea3c47b6c9fe3a329881fabdb68dcb30ee97bdceef1d44d849c92c"],
+    "cli": ["scripts/source_rights_review.py", "ed568b17e0e95996773c6c76a7707011a17d29d37794d66bf4881a01af80b91b"],
+    "tests": ["tests/test_source_rights.py", "7b7e29b3f1aa15fcefda3f9ce9982845d2f8574ee8ede046605683850de3639e"],
+    "template": ["research/flagship/source_rights_acceptance_template.json", "23535904dab91c9cdd4197ee3ea7ea7a8ddf9004912a3b3403829cfd3202f311"],
+    "source_registry": ["research/flagship/source_registry.json", "98936f2e3f0c9457217d5a4acb56bc182785a05af2f853099f3ffa320ba7175e"]
+  },
+  "coverage": {
+    "selected_sources": 30,
+    "categories": ["web", "code", "math", "synthetic", "science", "reference"],
+    "evidence_packets": 6,
+    "human_review_issues": ["SPE-144", "SPE-134", "SPE-147", "SPE-148", "SPE-149", "SPE-150"]
+  },
+  "current_assessment": {
+    "pending": 30,
+    "approved": 0,
+    "rejected": 0,
+    "scope_fields_pending": 6,
+    "authority_fields_pending": 4,
+    "signed_at_pending": true,
+    "automated_approval_made": false
+  },
+  "finalization_contract": [
+    "verify source-registry and every category evidence-packet hash",
+    "require explicit boolean intended scope for research training, paper publication, public weights, commercial use, source-data redistribution, and packed-shard redistribution",
+    "require a named human authority, role, organization, and signed timestamp",
+    "require approve or reject for every selected source in frozen allocation order",
+    "require attribution, redistribution, removal, conditions, and rationale for every approval",
+    "any pending or rejected selected source blocks the all-approved record and requires replacement/requalification where applicable",
+    "emit the production firewall's speck_human_source_rights_acceptance format only when every selected source is approved",
+    "record automated_approval_made=false"
+  ],
+  "non_conclusions": [
+    "the template, validator, or evidence packet approves a source",
+    "repository ownership or user instruction substitutes for organizational/legal authority",
+    "all current sources should necessarily be approved rather than rejected or replaced",
+    "a completed rights record alone qualifies production operations or authorizes training"
+  ],
+  "validation": {"focused_tests": 3, "full_suite_passed": 596, "full_suite_skipped": 8, "ruff": "pass"},
+  "decision": "present the consolidated template to the named human authority; do not fill decisions automatically, and do not freeze a 20B rehearsal or real firewall manifest until accepted sources are known"
+}

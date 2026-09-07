@@ -69,6 +69,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Reference rights review](186_reference_rights_review_packet.md) | Attribution, share-alike, public-domain, and removal decisions |
 | [Three-partition firewall](187_three_partition_firewall_tooling.md) | Fixture-qualified partition, consumer, and one-opening enforcement |
 | [Production data tooling](188_production_data_tooling.md) | Disk-backed dedup, removal, cleanup, and resume fixture evidence |
+| [Source-rights decision readiness](189_source_rights_decision_readiness.md) | Consolidated 30-source human acceptance contract |
 
 ## Conventions
 

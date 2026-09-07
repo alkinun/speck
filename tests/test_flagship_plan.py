@@ -487,3 +487,23 @@ def test_production_data_tooling_is_hash_bound_and_does_not_claim_rehearsal():
     assert result["fixture_validation"]["real_qualified_source_records_read"] == 0
     assert any("20B rehearsal has not run" in value for value in result["limitations"])
     assert any("no full corpus" in value for value in result["limitations"])
+
+
+def test_source_rights_decision_contract_is_hash_bound_and_all_pending():
+    result = json.loads(
+        (ROOT / "results" / "data" / "source-rights-decision-readiness-20260907.json").read_text()
+    )
+    assert result["status"] == "all_selected_sources_covered_human_decisions_pending"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["coverage"]["selected_sources"] == 30
+    assert result["coverage"]["evidence_packets"] == 6
+    assert result["current_assessment"] == {
+        "pending": 30,
+        "approved": 0,
+        "rejected": 0,
+        "scope_fields_pending": 6,
+        "authority_fields_pending": 4,
+        "signed_at_pending": True,
+        "automated_approval_made": False,
+    }
