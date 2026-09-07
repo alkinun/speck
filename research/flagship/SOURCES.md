@@ -42,6 +42,15 @@ released-text SHA-256 because upstream `content_id` is preserved as provenance b
 consistently equal plain SHA-1 of the released PII-redacted text. See
 [finding 169](../../findings/169_stack_v3_bounded_qualification.md).
 
+The security/language successor pins Gitleaks v8.30.1, excludes all 19 affected records from its
+fully redacted report, applies a twelve-identifier conservative engineering license allowlist, and
+English-filters extracted comments/docstrings plus Markdown. Its first 70 MB input failed the exact
+tokenizer partition target and was preserved. A same-shard 85 MB successor changed no filters and
+passed with 61.19 MB train and 6.42 MB evaluation after rejecting 1,318 license-policy records and
+3,044 non-English-prose records. Training remains blocked on manual legal acceptance, cross-source
+near-duplicates, benchmark contamination, and acquisition cleanup/resume. See
+[finding 170](../../findings/170_stack_v3_security_language_refinement.md).
+
 ## 2. Code treatments
 
 E1S should compare exactly three treatments after CPU qualification:

@@ -183,6 +183,7 @@ history in order only when auditing provenance or a retired decision:
 168. [167 — Autonomous static work closes at the live finalist event boundary](167_pre_results_closure.md)
 169. [168 — Finalist chain stopped; program replaced by the flagship plan](168_finalist_stopped_flagship_plan.md)
 170. [169 — Restricted Stack v3.1 passes bounded yield, not training authority](169_stack_v3_bounded_qualification.md)
+171. [170 — Stack v3.1 passes security, language, and tokenizer-partition refinement](170_stack_v3_security_language_refinement.md)
 
 Conventions:
 
@@ -200,4 +201,4 @@ Conventions:
 Current state: the active scope, defaults, and experiment plan are in
 [`research/flagship/README.md`](../research/flagship/README.md). Findings 00 to 24 are the evidence
 base for those defaults; findings 25 to 167 are the archived Paper 1 gate program; finding 168
-records the stop and change of direction; finding 169 begins the flagship's new source evidence.
+records the stop and change of direction; findings 169 onward are the flagship's new source evidence.

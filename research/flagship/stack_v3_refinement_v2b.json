@@ -1,0 +1,71 @@
+{
+  "format": "speck_stack_v3_refinement",
+  "format_version": 1,
+  "status": "refinement_authorized_not_training_authority",
+  "input": {
+    "tokenizer_jsonl": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1b/tokenizer-input.jsonl",
+    "tokenizer_jsonl_sha256": "9395049d636cf90cc933db8ca431bc705c0657ce7161260f64bca19c542a3c80",
+    "repository_jsonl": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1b/repository-sample.jsonl",
+    "repository_jsonl_sha256": "4baed4f2a66a280e8649bdbd5b3cd27d8701f75be986470cd4a176796894f279",
+    "attribution_jsonl": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1b/attribution.jsonl",
+    "attribution_jsonl_sha256": "3ad3868afe3810595b544bdc67ae3cae9ba76953638b0a5b896f19f754ff2d64"
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "binary": "/home/alkin/.local/bin/gitleaks-8.30.1",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "report": "/mnt/speck-data/speck/source-qualification/stack-v3.1-security-v1b/gitleaks.json",
+    "report_sha256": "ed157eb8a5377c316105c26221d6a46c9321dc27fc0675ad8901cc1602525b87",
+    "redaction_percent": 100
+  },
+  "license_policy": {
+    "name": "conservative-common-permissive-identifiers-v1",
+    "accepted_detected_licenses": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSL-1.0",
+      "BlueOak-1.0.0",
+      "ISC",
+      "LLVM-exception",
+      "MIT",
+      "MIT-0",
+      "Unlicense",
+      "Zlib"
+    ],
+    "manual_legal_acceptance": "pending"
+  },
+  "English_prose": {
+    "detector": "py3langid==0.3.0",
+    "languages": [
+      "Python",
+      "C++",
+      "C",
+      "Java",
+      "JavaScript",
+      "TypeScript",
+      "Rust",
+      "Go",
+      "Shell",
+      "SQL",
+      "Markdown"
+    ],
+    "minimum_alphabetic_characters": 80,
+    "minimum_probability": 0.8
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "code",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 55000000,
+    "evaluation_bytes": 5500000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v2b"
+}

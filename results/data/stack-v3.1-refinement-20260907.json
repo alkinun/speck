@@ -1,0 +1,138 @@
+{
+  "format": "speck_stack_v3_refinement_summary",
+  "format_version": 1,
+  "status": "security_language_license_and_partition_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "parent": "results/data/stack-v3.1-bounded-qualification-20260907.json",
+  "implementation": {
+    "expansion_config": "research/flagship/stack_v3_expansion_v1b.json",
+    "expansion_config_sha256": "764eb6655aff9c5b371286ba7a02249185b152ea9d24e711877be1a555fee83a",
+    "expansion_module": "speck/stack_v3_expand.py",
+    "expansion_module_sha256": "b4975c469b04d7397e40b519c0ff9460e82062b85cb0f57610c5628b06b8c037",
+    "expansion_cli": "scripts/stack_v3_expand.py",
+    "expansion_cli_sha256": "32a40ce9b913e4f432d868cd87aa9207d4b81c5a5facafaa587094cef180f08a",
+    "failed_refinement_config": "research/flagship/stack_v3_refinement_v2.json",
+    "failed_refinement_config_sha256": "f78c77e05fbb2e52188f71d248be4017a7f63f74c194d09cb57cd20fc4fd6b6a",
+    "passing_refinement_config": "research/flagship/stack_v3_refinement_v2b.json",
+    "passing_refinement_config_sha256": "48de866326eb06805e8733de342be7561dd72e88b00f601774ee05f2afe1b834",
+    "refinement_module": "speck/stack_v3_refine.py",
+    "refinement_module_sha256": "b85430cc9d52e239f756abd82142020cf7bf756d5cdba3a51f751c4eeb8b6a8d",
+    "refinement_cli": "scripts/stack_v3_refine.py",
+    "refinement_cli_sha256": "ee2162fdef85f3c5591f735c53b9f2f7c4426fe14ba1ce0f922b9e9f95fc27df"
+  },
+  "scanner": {
+    "name": "Gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "report_sha256": "ed157eb8a5377c316105c26221d6a46c9321dc27fc0675ad8901cc1602525b87",
+    "redaction_percent": 100,
+    "findings": 37,
+    "affected_records": 19,
+    "rule_counts": {
+      "generic-api-key": 9,
+      "sourcegraph-access-token": 28
+    },
+    "decision": "all affected released-content hashes excluded without copying secret values"
+  },
+  "engineering_license_policy": {
+    "name": "conservative-common-permissive-identifiers-v1",
+    "accepted_detected_licenses": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSL-1.0",
+      "BlueOak-1.0.0",
+      "ISC",
+      "LLVM-exception",
+      "MIT",
+      "MIT-0",
+      "Unlicense",
+      "Zlib"
+    ],
+    "manual_legal_acceptance": "pending",
+    "scope": "engineering filter only, not legal advice or training authorization"
+  },
+  "English_prose_policy": {
+    "detector": "py3langid==0.3.0",
+    "minimum_alphabetic_characters": 80,
+    "minimum_probability": 0.8,
+    "extractors": "Python comments/docstrings, C-style comments, Shell comments, SQL comments, and full Markdown",
+    "string_literals": "out_of_scope_and_disclosed"
+  },
+  "failed_70mb_refinement": {
+    "status": "refinement_incomplete_not_training_authority",
+    "plan_fingerprint": "422005383298e09861bc8329adbbda95e6c89cf0d4e2e53b130381931794738c",
+    "artifact_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v2-70mb-failed",
+    "records_seen": 16972,
+    "records_rejected_gitleaks": 19,
+    "records_rejected_license_allowlist": 1208,
+    "records_rejected_non_English_prose": 1580,
+    "training_bytes": 50577172,
+    "evaluation_bytes": 5296197,
+    "decision": "preserve filters and failure; expand extraction from the same twelve local shards"
+  },
+  "expanded_raw_sample": {
+    "status": "bounded_profile_complete_not_training_authority",
+    "plan_fingerprint": "581fb5eeb55809bbeef0ad79480b983c49d0be83ebd379ccf17703f9706b2189",
+    "artifact_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1b",
+    "source_shards": 12,
+    "new_source_downloads": 0,
+    "records": 21553,
+    "content_bytes": 85641453,
+    "tokenizer_input_sha256": "9395049d636cf90cc933db8ca431bc705c0657ce7161260f64bca19c542a3c80"
+  },
+  "passing_refinement": {
+    "status": "refinement_complete_not_training_authority",
+    "plan_fingerprint": "464758a466b233251f754485c939ed833a4e99215b78812c51c4017c2d0e4f23",
+    "artifact_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v2b",
+    "records_seen": 21553,
+    "records_rejected_gitleaks": 19,
+    "records_rejected_license_allowlist": 1318,
+    "records_classified_English_prose": 7257,
+    "records_with_insufficient_prose": 9915,
+    "records_rejected_non_English_prose": 3044,
+    "records_accepted": 17172,
+    "repositories": 1454,
+    "training_partition": {
+      "records": 15396,
+      "bytes": 61186107,
+      "target_bytes": 55000000
+    },
+    "evaluation_partition": {
+      "records": 1776,
+      "bytes": 6422843,
+      "target_bytes": 5500000
+    },
+    "outputs": {
+      "tokenizer_input": {
+        "bytes": 77803299,
+        "sha256": "a946bf17666650a3e4ef45387ddb30954444588aab2d77a48fd570ddf0822ad4"
+      },
+      "repository_sample": {
+        "bytes": 77989062,
+        "sha256": "ae4e0bd444677721e0451bb9600440ec55a3b86539ae31a1a09049568bd83c0e"
+      },
+      "attribution": {
+        "bytes": 6842254,
+        "sha256": "38197a8a77c07e483d61aaa39f25ff4323f84ac7c1aac14a3b0894bd26c4a45a"
+      }
+    }
+  },
+  "passed_gates": [
+    "pinned Gitleaks binary archive report and full redaction",
+    "all Gitleaks-affected records excluded by released-content SHA-256",
+    "conservative detected-license engineering allowlist",
+    "English comments documentation and Markdown filtering for declared extractors",
+    "55M training-byte and 5.5M evaluation-byte tokenizer partition targets"
+  ],
+  "blocked_gates": [
+    "manual legal acceptance and final attribution policy",
+    "cross-source near-duplicate analysis",
+    "benchmark contamination analysis",
+    "acquisition cleanup and resume qualification"
+  ],
+  "decision": "the restricted Stack v3.1 artifact technically satisfies its tokenizer quota; training remains blocked until the four remaining gates close"
+}

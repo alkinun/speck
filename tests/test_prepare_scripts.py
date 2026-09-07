@@ -1,7 +1,9 @@
 from scripts import (
     data_prepare,
     sft_prepare,
+    stack_v3_expand,
     stack_v3_qualify,
+    stack_v3_refine,
     tokenizer_evaluate,
     tokenizer_prepare,
     tokenizer_sample_prepare,
@@ -24,6 +26,10 @@ def test_prepare_script_argument_parsers_are_import_safe():
     )
     evaluate = tokenizer_evaluate.parse_args(["tokenizer.json"])
     stack = stack_v3_qualify.parse_args(["stack-v3.json", "--restart"])
+    expand = stack_v3_expand.parse_args(["stack-v3-v1b.json", "--restart"])
+    refine = stack_v3_refine.parse_args(["stack-v3-v2.json", "--restart"])
     assert sample.config == train.config == evaluate.config == "tokenizer.json"
     assert sample.restart and train.candidate == ["speck-32k"] and train.prepare_baselines
     assert stack.config == "stack-v3.json" and stack.restart
+    assert expand.config == "stack-v3-v1b.json" and expand.restart
+    assert refine.config == "stack-v3-v2.json" and refine.restart

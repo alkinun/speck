@@ -1,0 +1,21 @@
+{
+  "format": "speck_stack_v3_expansion",
+  "format_version": 1,
+  "status": "bounded_successor_authorized_not_training_authority",
+  "base_config": "stack_v3_qualification.json",
+  "base_config_sha256": "8736031480e859ba6c469c7dd1bb8e74b5795603aac6589a329595bf265282ff",
+  "language_sample_bytes": {
+    "Python": 18000000,
+    "C++": 14500000,
+    "C": 5000000,
+    "Java": 17000000,
+    "JavaScript": 10000000,
+    "TypeScript": 3500000,
+    "Rust": 3500000,
+    "Go": 3500000,
+    "Shell": 600000,
+    "SQL": 600000,
+    "Markdown": 8800000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1b"
+}
