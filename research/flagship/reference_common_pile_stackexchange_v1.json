@@ -1,0 +1,82 @@
+{
+  "format": "speck_reference_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "common_pile_stackexchange",
+    "repo": "common-pile/stackexchange_filtered",
+    "revision": "c0ac7373830c688a43fc12d1988c4b19ccd884ab",
+    "official_url": "https://huggingface.co/datasets/common-pile/stackexchange_filtered",
+    "path": "/mnt/speck-data/speck/source-qualification/reference-raw-v1/common-pile--stackexchange_filtered/stackexchange-dolma-0000.json.gz",
+    "sha256": "1bbe8be14c2b37aacd33eea6c9dc5562f270d5c4458d0be87f26a35a4e81ebe8",
+    "rows": 863130,
+    "file_format": "jsonl_gzip",
+    "fields": {
+      "text": "text",
+      "document_id": "id",
+      "title": "metadata.title",
+      "url": "metadata.url",
+      "license": "metadata.license",
+      "language": null,
+      "language_score": null,
+      "quality_score": null,
+      "date": "created",
+      "source_partition": "source"
+    }
+  },
+  "rights": {
+    "dataset_license": "CC BY-SA item licenses",
+    "upstream_terms": "item-level attribution and source-specific terms apply",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": null,
+    "minimum_language_score": null,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "javascript is disabled",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.25,
+    "accepted_document_licenses": [
+      "Creative Commons - Attribution Share-Alike - https://creativecommons.org/licenses/by-sa/2.5/",
+      "Creative Commons - Attribution Share-Alike - https://creativecommons.org/licenses/by-sa/3.0/",
+      "Creative Commons - Attribution Share-Alike - https://creativecommons.org/licenses/by-sa/4.0/"
+    ],
+    "minimum_science_term_hits": 0,
+    "science_terms": [
+      "reference"
+    ],
+    "maximum_bytes_per_host": 2000000,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": []
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "reference",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 24000000,
+    "evaluation_bytes": 2400000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/reference-common_pile_stackexchange-v1"
+}

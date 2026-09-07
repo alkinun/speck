@@ -1,10 +1,14 @@
 import hashlib
+import json
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from speck.reference_sample import sample_reference_source, validate_reference_sample_config
 from speck.stack_v3_refine import _sample_partition
+
+ROOT = Path(__file__).parents[1]
 
 
 def _text_for(split):
@@ -91,3 +95,22 @@ def test_reference_wrapper_preserves_category_and_result_identity(tmp_path):
     assert report["downstream_partition"]["category"] == "reference"
     assert report["gates"]["English_and_reference_content"] == "pass"
     assert report["gates"]["training_authority"] == "blocked"
+
+
+def test_initial_reference_plans_freeze_five_common_pile_margins():
+    plans = []
+    for path in sorted((ROOT / "research/flagship").glob("reference_*_v1.json")):
+        raw = json.loads(path.read_text())
+        if raw.get("format") == "speck_reference_sample":
+            plans.append(validate_reference_sample_config(raw, config_dir=path.parent))
+
+    initial = [plan for plan in plans if plan["source"]["id"] != "finewiki_en"]
+    assert {plan["source"]["id"] for plan in initial} == {
+        "common_pile_stackexchange",
+        "common_pile_gutenberg",
+        "common_pile_libretexts",
+        "common_pile_oercommons",
+        "common_pile_pressbooks",
+    }
+    assert sum(plan["downstream_partition"]["training_bytes"] for plan in initial) == 78_000_000
+    assert sum(plan["downstream_partition"]["evaluation_bytes"] for plan in initial) == 7_800_000

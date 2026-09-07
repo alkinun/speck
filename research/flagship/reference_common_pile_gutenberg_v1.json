@@ -1,0 +1,81 @@
+{
+  "format": "speck_reference_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "common_pile_gutenberg",
+    "repo": "common-pile/project_gutenberg_filtered",
+    "revision": "3cdf6879c807f4e4e063f2ceb23bc268d8c29ab7",
+    "official_url": "https://huggingface.co/datasets/common-pile/project_gutenberg_filtered",
+    "path": "/mnt/speck-data/speck/source-qualification/reference-raw-v1/common-pile--project_gutenberg_filtered/project_gutenberg-dolma-0000.json.gz",
+    "sha256": "f7e3716e1e2be607a044920ffec69d1395598cca178d4ccbbd343f206b31effb",
+    "rows": 4025,
+    "file_format": "jsonl_gzip",
+    "fields": {
+      "text": "text",
+      "document_id": "id",
+      "title": "metadata.title",
+      "url": "metadata.url",
+      "license": "metadata.license",
+      "language": null,
+      "language_score": null,
+      "quality_score": null,
+      "date": "created",
+      "source_partition": "source"
+    }
+  },
+  "rights": {
+    "dataset_license": "Public Domain selection",
+    "upstream_terms": "item-level attribution and source-specific terms apply",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": "en",
+    "minimum_language_score": null,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 5000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "javascript is disabled",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.25,
+    "accepted_document_licenses": [
+      "Public Domain",
+      "Creative Commons Zero - Public Domain - https://creativecommons.org/publicdomain/zero/1.0/"
+    ],
+    "minimum_science_term_hits": 0,
+    "science_terms": [
+      "reference"
+    ],
+    "maximum_bytes_per_host": null,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": []
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "reference",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 18000000,
+    "evaluation_bytes": 1800000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/reference-common_pile_gutenberg-v1"
+}
