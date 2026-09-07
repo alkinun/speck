@@ -201,6 +201,14 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
         "megamath_qa",
     ):
         assert sources[source_id]["pipeline"].endswith("rights_blocked")
+    for source_id in (
+        "pes2o_v3",
+        "finepdfs_edu_en",
+        "common_pile_arxiv",
+        "common_pile_pubmed",
+        "proof_pile_2_arxiv",
+    ):
+        assert sources[source_id]["pipeline"].endswith("rights_blocked")
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}
@@ -369,3 +377,40 @@ def test_synthetic_qualification_is_corrected_hash_bound_and_non_authoritative()
     )
     assert rights["status"].endswith("training_authority_blocked")
     assert "no synthetic source is approved" in rights["decision"]
+
+
+def test_science_qualification_preserves_failed_gate_and_is_non_authoritative():
+    result = json.loads(
+        (ROOT / "results" / "data" / "science-tokenizer-sources-20260907.json").read_text()
+    )
+
+    assert result["status"] == (
+        "bounded_science_technical_qualification_pass_training_authority_blocked"
+    )
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for path, digest in result["configs"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["initial_firewall_failure"]["policy_changed"] is False
+    assert set(result["initial_firewall_failure"]["failed_sources"]) == {
+        "common_pile_arxiv",
+        "proof_pile_2_arxiv",
+    }
+    assert result["security"]["affected_records_removed"] == 10
+    assert result["overlap"]["exact_cross_source_matches"] == 0
+    assert result["overlap"]["verified_near_cross_source_matches"] == 0
+    assert result["contamination"]["records_removed_critical"] == 137
+    assert result["contamination"]["residual_critical_records_after_full_rescan"] == 0
+    assert result["aggregate_final_partition"]["training_bytes"] >= 100_000_000
+    assert result["aggregate_final_partition"]["evaluation_bytes"] >= 10_000_000
+    assert all(
+        source["training_partition_bytes"] >= source["training_target_bytes"]
+        and source["evaluation_partition_bytes"] >= source["evaluation_target_bytes"]
+        for source in result["sources"].values()
+    )
+
+    rights = json.loads(
+        (ROOT / "results" / "data" / "science-rights-review-20260907.json").read_text()
+    )
+    assert rights["status"].endswith("training_authority_blocked")
+    assert "no science source is approved" in rights["decision"]

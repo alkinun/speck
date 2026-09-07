@@ -335,7 +335,7 @@
       "priority": "primary",
       "access": "open_huggingface_zstd_jsonl",
       "rights": "ODC-By-1.0; open-access paper metadata retained",
-      "pipeline": "upgrade_from_v2_needed"
+      "pipeline": "bounded_document_identity_license_metadata_language_OCR_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "finepdfs_edu_en",
@@ -347,7 +347,7 @@
       "priority": "secondary",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus Common Crawl and underlying-document terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_dual_language_science_OCR_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "common_pile_arxiv",
@@ -359,7 +359,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "Common Pile public-domain/open-license policy; paper-level license retained",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_document_license_language_OCR_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "common_pile_pubmed",
@@ -371,7 +371,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "Common Pile public-domain/open-license policy; article-level audit required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_document_license_language_OCR_security_overlap_contamination_and_partition_pass_rights_blocked"
     },
     {
       "id": "proof_pile_2_arxiv",
@@ -383,7 +383,7 @@
       "priority": "tokenizer_only",
       "access": "open_huggingface_zstd_jsonl",
       "rights": "source-specific arXiv licenses; overlaps Common Pile and peS2o",
-      "pipeline": "new_zstd"
+      "pipeline": "bounded_identity_language_OCR_security_overlap_contamination_and_partition_pass_per_paper_rights_blocked"
     },
     {
       "id": "finewiki_en",

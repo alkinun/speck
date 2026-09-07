@@ -64,6 +64,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Synthetic tokenizer sources](181_synthetic_tokenizer_technical_qualification.md) | Corrected lineage, synthetic quality gates, and firewall result |
 | [Synthetic rights review](182_synthetic_rights_review_packet.md) | Generator, seed-source, and redistribution decision packet |
 | [Science rights review](183_science_rights_review_packet.md) | Paper/PDF license metadata gaps and required human decision |
+| [Science tokenizer sources](184_science_tokenizer_technical_qualification.md) | Five-source bounded qualification and fail-closed firewall successor |
 
 ## Conventions
 

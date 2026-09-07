@@ -213,6 +213,15 @@ Complete Gutenberg books, open textbooks, peS2o papers, and Stack v3 repositorie
 for the separate long-document corpus. Base-mixture sampling and long-context document preservation
 must use disjoint hashes.
 
+The bounded 45/25/15/10/5 science slice now passes document identity, available license metadata,
+English/science-content, OCR/boilerplate, PII/security, overlap, contamination, and partition-yield
+gates. Gitleaks removes ten records. The first firewall correctly fails two quotas after contamination;
+same-shard successors increase only the Common Pile arXiv and Proof-Pile margins and repeat every
+downstream stage without weakening policy. The passing successor removes 137 benchmark-critical
+records, rescans with zero critical match, and retains 4,262 documents with 117.94 MB train and 12.06
+MB evaluation text. Human paper/PDF rights and production hardening remain blocked. See
+[finding 184](../../findings/184_science_tokenizer_technical_qualification.md).
+
 ## 7. Qualification order before downloading at scale
 
 1. Freeze source cards and acceptance/attribution policy for Stack v3, Stack-Edu, FineWiki, and every

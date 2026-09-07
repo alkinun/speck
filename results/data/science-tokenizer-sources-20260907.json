@@ -1,0 +1,418 @@
+{
+  "format": "speck_science_tokenizer_sources_summary",
+  "format_version": 1,
+  "status": "bounded_science_technical_qualification_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_freezes": {
+    "sampler": "593944f",
+    "compressed_input_support": "6b72218",
+    "initial_source_plans": "ab16515",
+    "finepdf_quality_gates": "9a1c54c",
+    "finepdf_source_plan": "e20dd92",
+    "initial_security": "63da68b",
+    "finepdf_security": "b024cb5",
+    "initial_overlap": "e163796",
+    "initial_firewall": "6e61c86",
+    "larger_margin_source_successors": "db4b8fa",
+    "larger_margin_security_successors": "bf39ee8",
+    "overlap_successor": "dcdd879",
+    "firewall_successor": "335319f"
+  },
+  "implementation": {
+    "sample_module": [
+      "speck/science_sample.py",
+      "c20ba549f64ee442cb130fda3cb6407c277c55423e2483178cb33cfc6b1c121d"
+    ],
+    "sample_cli": [
+      "scripts/science_sample.py",
+      "139426b5db9d94ca5fcb6cd66602bed119ea87ed62a1da02d730bf5c983e1d16"
+    ],
+    "security_module": [
+      "speck/text_gitleaks_filter.py",
+      "dac2d90b75ea65726ad4a6145f618c308630f0261af7dd691fae37f19ac1c9d3"
+    ],
+    "security_cli": [
+      "scripts/text_gitleaks_filter.py",
+      "299b1011ca0abf7b7f9dca928c9e5f2c300c7b6b2cf474b08da483d035f123ed"
+    ],
+    "overlap_module": [
+      "speck/text_near_duplicates.py",
+      "439c8fabef78c2a335d6c4006385de03a1db53e187edd89bfe88844782f639ca"
+    ],
+    "overlap_cli": [
+      "scripts/text_near_duplicates.py",
+      "cc5454580dd3846006dfa15d4a80665f44789e7401b7870213abc6bdee8f3831"
+    ],
+    "contamination_module": [
+      "speck/text_contamination.py",
+      "c2f2088728a16e19d7b475e2a39b741c60e8ce79e287736c09217f39c5e3cfa3"
+    ],
+    "contamination_cli": [
+      "scripts/text_contamination.py",
+      "7f6b0624f77f2c400b185f7fe694a18eea87a700ad3edc00232580bc24bb0a49"
+    ]
+  },
+  "configs": {
+    "science_common_pile_arxiv_gitleaks_v1": [
+      "research/flagship/science_common_pile_arxiv_gitleaks_v1.json",
+      "a745266744b141de9bb03c47abccfafdd0899702d995048a78ea984c7d3baef2"
+    ],
+    "science_common_pile_arxiv_gitleaks_v2": [
+      "research/flagship/science_common_pile_arxiv_gitleaks_v2.json",
+      "d0cdd3f73caa8c85726a8e213d53b37df5837d9d426f912f6051987eea45b557"
+    ],
+    "science_common_pile_arxiv_v1": [
+      "research/flagship/science_common_pile_arxiv_v1.json",
+      "e4871bafc73580510c822a26de646617a203fe93e78b8fa57a2b2594dd23f6e1"
+    ],
+    "science_common_pile_arxiv_v2": [
+      "research/flagship/science_common_pile_arxiv_v2.json",
+      "a2f29851054826434622729000e92f3d33f93fe2524c7917d3085ab57551775c"
+    ],
+    "science_common_pile_pubmed_gitleaks_v1": [
+      "research/flagship/science_common_pile_pubmed_gitleaks_v1.json",
+      "64e7c4f8c70076b783b02749afb6e4507755da95538dd483d7e7965f5fd2dfc7"
+    ],
+    "science_common_pile_pubmed_v1": [
+      "research/flagship/science_common_pile_pubmed_v1.json",
+      "8fd0802c9b2daaf840412bbcb7050c87ffc7935833904c19d72e0df5df59a4fa"
+    ],
+    "science_contamination_v1": [
+      "research/flagship/science_contamination_v1.json",
+      "720cf4f2a90f3402756e33753dd90d5f10afae1085c4f61c18f5a6af6625b797"
+    ],
+    "science_contamination_v2": [
+      "research/flagship/science_contamination_v2.json",
+      "59febaa0faa11d72bd4d7e221a10e134bae1f8ca5d09d796c804499c7393e585"
+    ],
+    "science_cross_source_duplicates_v1": [
+      "research/flagship/science_cross_source_duplicates_v1.json",
+      "40790a29ccbf7978da0a22a8f2d786503d82bc3405f60336a57fc0838246b4be"
+    ],
+    "science_cross_source_duplicates_v2": [
+      "research/flagship/science_cross_source_duplicates_v2.json",
+      "1f8a82bcebf8d062682fe6aaa265249584e28bcd56c9d16a702a736cd95270ad"
+    ],
+    "science_finepdfs_edu_en_gitleaks_v1": [
+      "research/flagship/science_finepdfs_edu_en_gitleaks_v1.json",
+      "ac670ed9cd8145d6b33e20f2ffcfd05773a30c58e1057a6b69927921e5421fdf"
+    ],
+    "science_finepdfs_edu_en_v1": [
+      "research/flagship/science_finepdfs_edu_en_v1.json",
+      "35db8b0c7be39d29b211de0c37e58e174767f74f4413957ba5caf88b410ab202"
+    ],
+    "science_pes2o_v3_gitleaks_v1": [
+      "research/flagship/science_pes2o_v3_gitleaks_v1.json",
+      "142899ff56997ec49935f08ac4d0740ef7e387785f7396a6480a36a5889c5403"
+    ],
+    "science_pes2o_v3_v1": [
+      "research/flagship/science_pes2o_v3_v1.json",
+      "91daba1648dddec4521321cf73c49a8fab2760f59501eda5e830a2fae8c7cb6a"
+    ],
+    "science_proof_pile_2_arxiv_gitleaks_v1": [
+      "research/flagship/science_proof_pile_2_arxiv_gitleaks_v1.json",
+      "a9967e87f579521ed99ebe25588c82eb12a383b97f6063efdffb6e2637729440"
+    ],
+    "science_proof_pile_2_arxiv_gitleaks_v2": [
+      "research/flagship/science_proof_pile_2_arxiv_gitleaks_v2.json",
+      "60d7068941c9fbe2fd0d3face0addde934bc2e9ffdc8827d63787f0d12954770"
+    ],
+    "science_proof_pile_2_arxiv_v1": [
+      "research/flagship/science_proof_pile_2_arxiv_v1.json",
+      "53b7e299d13a1712d8c520291e20adbde95052b201822176554015afd6d09007"
+    ],
+    "science_proof_pile_2_arxiv_v2": [
+      "research/flagship/science_proof_pile_2_arxiv_v2.json",
+      "73d8fe5857184cfc38c11426f40fb97202a45cb2323eb22072438e6a279e7ca5"
+    ]
+  },
+  "source_policy": {
+    "allocation": "45% peS2o v3 full text, 25% FinePDFs-Edu English, 15% Common Pile arXiv, 10% Common Pile PubMed, 5% Proof-Pile-2 arXiv",
+    "content": "accepted text copied byte-for-byte; paper/document IDs, URLs, dates, source partitions, and available licenses retained",
+    "quality": "independent English, byte/alpha, duplicate-line, spaced-OCR, replacement-character, boilerplate, and PII/security gates; FinePDF additionally requires dual English metadata, docling, non-truncation, bounded upstream duplicates, and science-term evidence",
+    "rights_filter": "peS2o and Common Pile accept only declared bounded license identifiers; FinePDF and Proof-Pile lack per-document licenses and remain human-blocked"
+  },
+  "initial_firewall_failure": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/science-contamination-v1.building/report.json",
+    "runtime_report_sha256": "c1ef3aa7c694c1e1642e3592d3ad391fc42930c343909b6af9ca27242aa53675",
+    "status": "decontamination_incomplete_not_training_authority",
+    "failed_sources": {
+      "common_pile_arxiv": {
+        "train_bytes": {
+          "bytes": 14850378,
+          "target_bytes": 15000000
+        }
+      },
+      "proof_pile_2_arxiv": {
+        "eval_bytes": {
+          "bytes": 425666,
+          "target_bytes": 500000
+        },
+        "train_bytes": {
+          "bytes": 4933248,
+          "target_bytes": 5000000
+        }
+      }
+    },
+    "policy_changed": false,
+    "disposition": "preserved; increased only Common Pile arXiv and Proof-Pile sample byte margins before rebuilding security, overlap, and firewall successors"
+  },
+  "sources": {
+    "common_pile_pubmed": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/common-pile--pubmed_filtered/licensed_pubmed-0000.json.gz",
+      "raw_source_sha256": "c94eba4da3b5bdc01a304137b57d145257e61f42f4e01809cc7ebeb6fd15df48",
+      "raw_source_rows": 275513,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_pubmed-v1/report.json",
+      "sample_report_sha256": "b6c1152f9214a9451ed99353710588cfdfa0aec90494022119a3db0705a52011",
+      "sample_records": 476,
+      "sample_training_bytes": 12009791,
+      "sample_evaluation_bytes": 1252451,
+      "security_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_pubmed-v2/report.json",
+      "security_report_sha256": "b14e77b6846b1edbe1cd16490791a6be1a77a5b4fcd7ad7b4e8b849b49327633",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "records_removed_critical": 1,
+      "bytes_removed_critical": 26932,
+      "records_with_exact_field_match": 0,
+      "records_with_primary_ngram_match": 1,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 2,
+      "records_sensitivity_only_retained": 5,
+      "unique_sensitivity_tasks": 5,
+      "records_retained": 475,
+      "training_partition_bytes": 11982859,
+      "training_target_bytes": 10000000,
+      "evaluation_partition_bytes": 1252451,
+      "evaluation_target_bytes": 1000000,
+      "tokenizer_input_sha256": "815cbea4a39c1b701aae6d5cd287206e29f54fca2adbedb50c34a20067b3db2b",
+      "attribution_sha256": "8800ffe82aaff070ee7d92df01efbd7a448ed3f9cc16c6e10efe7a3b1d480c72",
+      "residual_critical_records": 0
+    },
+    "common_pile_arxiv": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/common-pile--arxiv_papers_filtered/arxiv-papers-0000.json.gz",
+      "raw_source_sha256": "8fcc333282a73f08e870b91d685957e43dae49746621d4183ca1ecc56595cc7f",
+      "raw_source_rows": 42706,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v1b/report.json",
+      "sample_report_sha256": "2af7c3ec87b8072fc56bbef573f707f4b756c999a671dbbfa9bfa64f8df0e6d6",
+      "sample_records": 524,
+      "sample_training_bytes": 22023323,
+      "sample_evaluation_bytes": 2219889,
+      "security_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v2b/report.json",
+      "security_report_sha256": "a969f5e276ad1e45a63b15fc43f268cbf6198acab715fc8c7c06f665cf9133df",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "records_removed_critical": 65,
+      "bytes_removed_critical": 4368390,
+      "records_with_exact_field_match": 0,
+      "records_with_primary_ngram_match": 65,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 66,
+      "records_sensitivity_only_retained": 34,
+      "unique_sensitivity_tasks": 29,
+      "records_retained": 459,
+      "training_partition_bytes": 17987928,
+      "training_target_bytes": 15000000,
+      "evaluation_partition_bytes": 1886894,
+      "evaluation_target_bytes": 1500000,
+      "tokenizer_input_sha256": "fe714f38961b5883d4a1ff90531029b2cb717519b82b4c5289745fcb49cad981",
+      "attribution_sha256": "1e9c15ecd1df95eae87e8dea1ca0aa76f5597c9fcda962ec7ec285141df20fcf",
+      "residual_critical_records": 0
+    },
+    "pes2o_v3": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/allenai--peS2o/data/v3/train-0040-of-0136.zst",
+      "raw_source_sha256": "57cd1a8e4de1c1daa8e28a2721dbd7ff68e42c55e46f2345be8dfa4aec745af2",
+      "raw_source_rows": 110183,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v1/report.json",
+      "sample_report_sha256": "697866a9ea3392789d9cb550141ed832319536322862719b84b89dfb1330210b",
+      "sample_records": 2056,
+      "sample_training_bytes": 54001854,
+      "sample_evaluation_bytes": 5415417,
+      "security_report": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v2/report.json",
+      "security_report_sha256": "71453085e4b3aee24b6fde6d6af965e0a9005ce9d4825b3c0e977aa8bb2e6e59",
+      "gitleaks_findings": 2,
+      "gitleaks_affected_records_removed": 1,
+      "records_removed_critical": 18,
+      "bytes_removed_critical": 660400,
+      "records_with_exact_field_match": 6,
+      "records_with_primary_ngram_match": 12,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 10,
+      "records_sensitivity_only_retained": 17,
+      "unique_sensitivity_tasks": 13,
+      "records_retained": 2037,
+      "training_partition_bytes": 53395981,
+      "training_target_bytes": 45000000,
+      "evaluation_partition_bytes": 5317757,
+      "evaluation_target_bytes": 4500000,
+      "tokenizer_input_sha256": "c5d9b36e8f657ab79e19d3a1adf905d0d48bc15f185538fc6212ad0e6c1973b8",
+      "attribution_sha256": "1ed9f7e98b2d75616ea3b98a67984ef5c058ae54f141c5de72ee12e7d1a00839",
+      "residual_critical_records": 0
+    },
+    "finepdfs_edu_en": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/HuggingFaceFW--finepdfs-edu/data/eng_Latn/train/000_00000.parquet",
+      "raw_source_sha256": "39d9dd3532e51f7828f762d8b7bd31cc1b3fe8063ae3a3a260169b1fe4ac2dc8",
+      "raw_source_rows": 236144,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/science-finepdfs_edu_en-v1/report.json",
+      "sample_report_sha256": "a695fe39f124b18a2d4a2cda8fbea63b4448e9fba45b7e491ded48abc08cbfc5",
+      "sample_records": 1202,
+      "sample_training_bytes": 30009191,
+      "sample_evaluation_bytes": 3010177,
+      "security_report": "/mnt/speck-data/speck/source-qualification/science-finepdfs_edu_en-v2/report.json",
+      "security_report_sha256": "f86fcfa1e302725d01fb9e2c1b3e50bf09f17f44ac99af0acbfb29396d395370",
+      "gitleaks_findings": 23,
+      "gitleaks_affected_records_removed": 9,
+      "records_removed_critical": 25,
+      "bytes_removed_critical": 1128312,
+      "records_with_exact_field_match": 12,
+      "records_with_primary_ngram_match": 13,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 16,
+      "records_sensitivity_only_retained": 8,
+      "unique_sensitivity_tasks": 7,
+      "records_retained": 1168,
+      "training_partition_bytes": 28612331,
+      "training_target_bytes": 25000000,
+      "evaluation_partition_bytes": 2990617,
+      "evaluation_target_bytes": 2500000,
+      "tokenizer_input_sha256": "fd0de2dbe4c6f59aac01ec3b4c5b3478f18bfffa81fc15e54324598599670123",
+      "attribution_sha256": "d6b35a406e15e54944c72df640c222a8e37ad432399662e072287c75e5f85b98",
+      "residual_critical_records": 0
+    },
+    "proof_pile_2_arxiv": {
+      "raw_source_path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/EleutherAI--proof-pile-2/arxiv/train/arXiv_000.jsonl.zst",
+      "raw_source_sha256": "44afbfe594b8a289fd54e9937461b26629c6c5632dcfb64f78ba65bfbc1edecc",
+      "raw_source_rows": 13066,
+      "sample_report": "/mnt/speck-data/speck/source-qualification/science-proof_pile_2_arxiv-v1b/report.json",
+      "sample_report_sha256": "255eb63242bfd7ef97602f114fac16c79bdbef544937fa13f511eba212e431d4",
+      "sample_records": 151,
+      "sample_training_bytes": 8035193,
+      "sample_evaluation_bytes": 811297,
+      "security_report": "/mnt/speck-data/speck/source-qualification/science-proof_pile_2_arxiv-v2b/report.json",
+      "security_report_sha256": "f810ec4364124346208ff7c0baed65657110c9785fa5a2865d995e998a841496",
+      "gitleaks_findings": 0,
+      "gitleaks_affected_records_removed": 0,
+      "records_removed_critical": 28,
+      "bytes_removed_critical": 2269507,
+      "records_with_exact_field_match": 0,
+      "records_with_primary_ngram_match": 28,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 39,
+      "records_sensitivity_only_retained": 21,
+      "unique_sensitivity_tasks": 22,
+      "records_retained": 123,
+      "training_partition_bytes": 5959874,
+      "training_target_bytes": 5000000,
+      "evaluation_partition_bytes": 617109,
+      "evaluation_target_bytes": 500000,
+      "tokenizer_input_sha256": "66b37dc1d8f5d0031801a636d542bf3589cf44cd24492b49db2fae84f02c3484",
+      "attribution_sha256": "d49f4da04faa1964b0d1284ed891a0b95c2293f3b327d530278266680551cc72",
+      "residual_critical_records": 0
+    }
+  },
+  "security": {
+    "records_scanned": 4409,
+    "gitleaks_findings": 25,
+    "affected_records_removed": 10,
+    "affected_sources": [
+      "pes2o_v3",
+      "finepdfs_edu_en"
+    ]
+  },
+  "overlap": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/science-cross-source-dedup-v2/report.json",
+    "runtime_report_sha256": "da43000d05ebb30f35a22028c16cc39073dd3dfb557f9ace248320b2694eca75",
+    "plan_fingerprint": "9ae4f6e14ac3d4cdf17e8f2dd1dae507ee45831bccb92e9dd57319353ffee31c",
+    "precedence": [
+      "common_pile_pubmed",
+      "common_pile_arxiv",
+      "pes2o_v3",
+      "finepdfs_edu_en",
+      "proof_pile_2_arxiv"
+    ],
+    "records_retained": 4399,
+    "exact_cross_source_matches": 0,
+    "verified_near_cross_source_matches": 0
+  },
+  "contamination": {
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/report.json",
+    "runtime_report_sha256": "fdb4d73768a3d9ee33fca26cff91b2e08e66d6d0816edb6c29fd5dd323e44b99",
+    "plan_fingerprint": "bce185ce5ca7c81fde8ffe689b7e010ed877a1f81e3893b74e5b97803d9c0563",
+    "payloads": 20,
+    "tasks": 63652,
+    "records_seen": 4399,
+    "records_removed_critical": 137,
+    "bytes_removed_critical": 8453541,
+    "records_with_exact_field_match": 18,
+    "records_with_primary_ngram_match": 119,
+    "records_with_both_match_types": 0,
+    "unique_critical_tasks": 115,
+    "records_sensitivity_only_retained": 85,
+    "unique_sensitivity_tasks": 64,
+    "records_retained": 4262,
+    "critical_record_task_links_by_benchmark": {
+      "arc-easy": 9,
+      "bigcodebench-v0.1.4": 9,
+      "hellaswag": 11,
+      "math-algebra": 33,
+      "math-counting-and-probability": 6,
+      "math-geometry": 7,
+      "math-intermediate-algebra": 48,
+      "math-number-theory": 7,
+      "math-prealgebra": 16,
+      "math-precalculus": 28,
+      "mbpp": 2,
+      "mmlu-all": 8,
+      "triviaqa-rc-nocontext": 9
+    },
+    "sensitivity_record_task_links_by_benchmark": {
+      "arc-challenge": 1,
+      "arc-easy": 3,
+      "bigcodebench-v0.1.4": 11,
+      "hellaswag": 1,
+      "humaneval": 1,
+      "math-algebra": 3,
+      "math-counting-and-probability": 2,
+      "math-geometry": 3,
+      "math-intermediate-algebra": 30,
+      "math-number-theory": 11,
+      "math-prealgebra": 9,
+      "math-precalculus": 4,
+      "mbpp": 9,
+      "mmlu-all": 12
+    },
+    "residual_critical_records_after_full_rescan": 0
+  },
+  "aggregate_final_partition": {
+    "training_bytes": 117938973,
+    "training_target_bytes": 100000000,
+    "evaluation_bytes": 12064828,
+    "evaluation_target_bytes": 10000000
+  },
+  "verification": {
+    "data_volume_remounted_after_server_restart": true,
+    "runtime_report_hashes_unchanged_after_remount": true,
+    "all_successor_output_hashes_recomputed": true,
+    "all_successors_rescanned_with_frozen_matcher": true,
+    "residual_critical_records": 0,
+    "all_five_source_partition_quotas_pass": true,
+    "post_contamination_cross_source_zero_overlap_preserved_by_strict_subsetting": true
+  },
+  "passed_gates": [
+    "immutable source shard identity/schema and declared row counts",
+    "paper/document identity and available license metadata filtering",
+    "English, science-content, OCR, boilerplate, repetition, and encoding controls",
+    "fully redacted Gitleaks exclusion",
+    "frozen five-source exact/near duplicate precedence",
+    "20-payload benchmark decontamination",
+    "zero-critical successor rescan",
+    "all final source quotas"
+  ],
+  "blocked_gates": [
+    "human acceptance of peS2o v3 license-selection semantics",
+    "human acceptance of FinePDF/Common Crawl and underlying-PDF rights",
+    "Common Pile license-metadata reliability and attribution/share-alike policy",
+    "Proof-Pile per-paper license mapping or rejection",
+    "production global deduplication and cleanup/resume qualification"
+  ],
+  "decision": "freeze only the v2 science firewall successors; preserve the failed v1 firewall and do not authorize tokenizer sampling or training until human rights and production gates pass"
+}
