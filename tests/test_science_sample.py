@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import json
 
@@ -6,6 +7,7 @@ import pyarrow.parquet as pq
 
 from speck.science_sample import (
     _SPACED_OCR,
+    _compressed_rows,
     _field,
     sample_science_source,
     validate_science_sample_config,
@@ -112,3 +114,20 @@ def test_science_sample_preserves_text_and_rejects_ocr_and_license(tmp_path):
     assert _SPACED_OCR.search(rows[2]["text"])
     assert _field(rows[3], "meta.license") == "unknown"
     assert report["gates"]["training_authority"] == "blocked"
+
+
+def test_science_sample_streams_gzip_and_zstd_jsonl(tmp_path):
+    rows = [
+        {"id": "one", "text": "scientific experiment"},
+        {"id": "two", "text": "protein analysis"},
+    ]
+    payload = "".join(json.dumps(row) + "\n" for row in rows).encode()
+    gzip_path = tmp_path / "science.json.gz"
+    with gzip.open(gzip_path, "wb") as handle:
+        handle.write(payload)
+    zstd_path = tmp_path / "science.jsonl.zst"
+    with pa.output_stream(zstd_path, compression="zstd") as handle:
+        handle.write(payload)
+
+    assert list(_compressed_rows(gzip_path, "gzip")) == rows
+    assert list(_compressed_rows(zstd_path, "zstd")) == rows

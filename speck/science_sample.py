@@ -341,6 +341,10 @@ def _science_hits(text, terms):
     return sum(term in words for term in terms)
 
 
+def _optional_string(value):
+    return None if value is None else str(value)
+
+
 def sample_science_source(config, *, restart=False):
     """Select a bounded science sample while preserving accepted document text."""
 
@@ -509,9 +513,9 @@ def sample_science_source(config, *, restart=False):
                     "rights_status": "paper_or_document_rights_manual_review_required",
                     "url": url,
                     "host": host,
-                    "title": fields["title"],
-                    "publication_date": fields["date"],
-                    "source_partition": fields["source_partition"],
+                    "title": _optional_string(fields["title"]),
+                    "publication_date": _optional_string(fields["date"]),
+                    "source_partition": _optional_string(fields["source_partition"]),
                     "size_bytes": size,
                     "detected_English_probability": probability,
                     "science_term_hits": hits,
