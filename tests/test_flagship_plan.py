@@ -183,7 +183,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
         "dclm_baseline",
         "fineweb_base",
     ):
-        assert sources[source_id]["pipeline"].endswith("contamination_rights_pending")
+        assert sources[source_id]["pipeline"].endswith("contamination_pass_rights_blocked")
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}

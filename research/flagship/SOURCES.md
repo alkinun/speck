@@ -137,9 +137,16 @@ One revision-pinned shard per source now passes a bounded deterministic sample, 
 metadata plus independent-language checks, conservative PII/secret/adult-host/repetition filters,
 Gitleaks exclusion, train/evaluation yield, and four-source exact/MinHash overlap analysis. The
 31,092-document selection has zero exact or verified ≥0.80 near-duplicate cross-source matches and
-retains every 35/30/25/10 quota. This does not establish upstream disjointness. General benchmark
-contamination, human rights acceptance, production global deduplication, and cleanup/resume still
-block use. See [finding 176](../../findings/176_web_tokenizer_bounded_sources.md).
+retains every 35/30/25/10 quota. This does not establish upstream disjointness. See
+[finding 176](../../findings/176_web_tokenizer_bounded_sources.md).
+
+The pre-results flagship firewall freezes 20 immutable short-context, math, and code payloads with
+63,652 unique tasks. Independent exact-field and task-unique 13-gram matching removes 92 records
+(1.20 MB); a full successor rescan finds no remaining critical match. The 31,000 retained records
+still exceed every source's train/evaluation byte quota, and strict subsetting preserves the prior
+bounded zero-overlap result. Fifty-five 10-gram-only sensitivity records remain disclosed rather than
+silently removed. Human rights acceptance, production global deduplication, and cleanup/resume still
+block use. See [finding 177](../../findings/177_web_evaluation_firewall.md).
 
 ## 4. Math candidates
 

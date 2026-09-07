@@ -1,0 +1,214 @@
+{
+  "format": "speck_web_contamination_summary",
+  "format_version": 1,
+  "status": "bounded_web_benchmark_decontamination_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "implementation": {
+    "git_pre_scan_freeze": "9c67d05",
+    "module": [
+      "speck/text_contamination.py",
+      "c2f2088728a16e19d7b475e2a39b741c60e8ce79e287736c09217f39c5e3cfa3"
+    ],
+    "cli": [
+      "scripts/text_contamination.py",
+      "7f6b0624f77f2c400b185f7fe694a18eea87a700ad3edc00232580bc24bb0a49"
+    ],
+    "tests": [
+      "tests/test_text_contamination.py",
+      "a51d6fa0075df53ed9b6f8818d13d9423cce7b9b2044441b2222dbe91caacd41"
+    ],
+    "config": [
+      "research/flagship/web_contamination_v1.json",
+      "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+    ]
+  },
+  "frozen_benchmark_policy": {
+    "payloads": 20,
+    "tasks": 63652,
+    "benchmark_ids": [
+      "hellaswag",
+      "arc-easy",
+      "arc-challenge",
+      "piqa",
+      "winogrande-xl",
+      "lambada-openai-en",
+      "mmlu-all",
+      "commonsenseqa",
+      "triviaqa-rc-nocontext",
+      "gsm8k-main",
+      "math-algebra",
+      "math-counting-and-probability",
+      "math-geometry",
+      "math-intermediate-algebra",
+      "math-number-theory",
+      "math-prealgebra",
+      "math-precalculus",
+      "humaneval",
+      "mbpp",
+      "bigcodebench-v0.1.4"
+    ],
+    "normalization": "NFKC+lower+unicode-word-punctuation",
+    "primary_ngram": 13,
+    "sensitivity_ngram": 10,
+    "critical_primary_matches": 2,
+    "sensitivity_matches": 2,
+    "minimum_exact_field_characters": 40,
+    "minimum_exact_field_tokens": 6,
+    "exact_field_matching": "independent of n-gram task nomination",
+    "scope_limit": "only the 20 pinned payloads and four bounded web selections"
+  },
+  "runtime": {
+    "report": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/report.json",
+    "report_sha256": "58e4e603d0b1ef671b8569895a073358503c2640699cf18ae5a8b859da34bb0c",
+    "plan_fingerprint": "8f1529ba2f406656c350a827f7861898a549582474d34d6e94fb37b3b92e03c3",
+    "index": {
+      "exact_anchors": 113582,
+      "exact_fields": 136644,
+      "primary_unique_ngrams": 3939337,
+      "sensitivity_unique_ngrams": 3422504,
+      "tasks": 63652
+    },
+    "records_seen": 31092,
+    "records_removed_critical": 92,
+    "bytes_removed_critical": 1196228,
+    "records_with_exact_field_match": 68,
+    "records_with_primary_ngram_match": 25,
+    "records_with_both_match_types": 1,
+    "unique_critical_tasks": 82,
+    "records_sensitivity_only_retained": 55,
+    "unique_sensitivity_tasks": 27,
+    "records_retained": 31000,
+    "critical_record_task_links_by_benchmark": {
+      "arc-easy": 13,
+      "bigcodebench-v0.1.4": 4,
+      "hellaswag": 9,
+      "math-algebra": 1,
+      "math-intermediate-algebra": 6,
+      "math-number-theory": 2,
+      "mmlu-all": 44,
+      "triviaqa-rc-nocontext": 70
+    },
+    "sensitivity_record_task_links_by_benchmark": {
+      "arc-challenge": 1,
+      "arc-easy": 12,
+      "bigcodebench-v0.1.4": 3,
+      "hellaswag": 20,
+      "lambada-openai-en": 1,
+      "math-intermediate-algebra": 1,
+      "math-number-theory": 1,
+      "mbpp": 1,
+      "mmlu-all": 15
+    }
+  },
+  "sources": {
+    "fineweb_edu": {
+      "records_seen": 8535,
+      "records_removed_critical": 38,
+      "bytes_removed_critical": 476489,
+      "records_with_exact_field_match": 26,
+      "records_with_primary_ngram_match": 13,
+      "records_with_both_match_types": 1,
+      "unique_critical_tasks": 40,
+      "records_sensitivity_only_retained": 17,
+      "unique_sensitivity_tasks": 14,
+      "records_retained": 8497,
+      "training_partition_bytes": 35529804,
+      "training_target_bytes": 30000000,
+      "evaluation_partition_bytes": 3596772,
+      "evaluation_target_bytes": 3000000,
+      "tokenizer_input_sha256": "36ba868099eb2e999ea6c909fcb36ebba8167bb713391746e97c462fef413143",
+      "attribution_sha256": "a5a9083f953f619765ee0399fb6afb96e4e6e6eabcfa57fcd97101f43d936ab4",
+      "residual_critical_records": 0
+    },
+    "ultrafineweb_en_v1_4": {
+      "records_seen": 11877,
+      "records_removed_critical": 26,
+      "bytes_removed_critical": 433916,
+      "records_with_exact_field_match": 24,
+      "records_with_primary_ngram_match": 2,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 36,
+      "records_sensitivity_only_retained": 20,
+      "unique_sensitivity_tasks": 9,
+      "records_retained": 11851,
+      "training_partition_bytes": 41698221,
+      "training_target_bytes": 35000000,
+      "evaluation_partition_bytes": 4107013,
+      "evaluation_target_bytes": 3500000,
+      "tokenizer_input_sha256": "f6aa48587cb67a926c0001e013bb60017f3df82484d93f72d45a802cb6f6d20a",
+      "attribution_sha256": "a08e15ddd2a0a6fb72284c2473490f5f4560b0d5e1c572db6f258de6d5849e90",
+      "residual_critical_records": 0
+    },
+    "dclm_baseline": {
+      "records_seen": 6435,
+      "records_removed_critical": 20,
+      "bytes_removed_critical": 203129,
+      "records_with_exact_field_match": 12,
+      "records_with_primary_ngram_match": 8,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 28,
+      "records_sensitivity_only_retained": 15,
+      "unique_sensitivity_tasks": 8,
+      "records_retained": 6415,
+      "training_partition_bytes": 29835079,
+      "training_target_bytes": 25000000,
+      "evaluation_partition_bytes": 3033915,
+      "evaluation_target_bytes": 2500000,
+      "tokenizer_input_sha256": "8ac513202b6bfad460476648a3b2f4180f189a0a2d3d8d71c5ea736979a478ec",
+      "attribution_sha256": "229fbfcb41c8e041cf16c4ada1020616a9f1e847ec3c7d20f728b3ba5c403e25",
+      "residual_critical_records": 0
+    },
+    "fineweb_base": {
+      "records_seen": 4245,
+      "records_removed_critical": 8,
+      "bytes_removed_critical": 82694,
+      "records_with_exact_field_match": 6,
+      "records_with_primary_ngram_match": 2,
+      "records_with_both_match_types": 0,
+      "unique_critical_tasks": 13,
+      "records_sensitivity_only_retained": 3,
+      "unique_sensitivity_tasks": 2,
+      "records_retained": 4237,
+      "training_partition_bytes": 11925724,
+      "training_target_bytes": 10000000,
+      "evaluation_partition_bytes": 1207392,
+      "evaluation_target_bytes": 1000000,
+      "tokenizer_input_sha256": "3085fbc1aefcae267e4bbe6e6536477c9ab6f2fc826a9e536c181c54430b1dac",
+      "attribution_sha256": "9024c8c767d715bc7f93e9f3830c87c1f52448e3d7a4378736058476f4af84a4",
+      "residual_critical_records": 0
+    }
+  },
+  "verification": {
+    "all_recorded_output_hashes_recomputed": true,
+    "all_successors_rescanned_with_frozen_matcher": true,
+    "residual_critical_records": 0,
+    "sensitivity_only_records_remain_disclosed": true,
+    "all_four_partition_quotas_pass": true,
+    "prior_bounded_cross_source_zero_overlap_preserved_by_strict_subsetting": true
+  },
+  "prior_bounded_overlap": {
+    "result": "results/data/web-tokenizer-sources-20260907.json",
+    "result_sha256": "20aaca0ce6b27763d7eaccee19f3c4158485783ba5dc6cf3047183ef3f295c23",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/report.json",
+    "runtime_report_sha256": "7da0784a2d35f6b5c42646ad3bd033f134d96f0c86a4b91f211422cc135cddc6",
+    "exact_cross_source_matches": 0,
+    "verified_near_cross_source_matches": 0,
+    "preservation_argument": "each decontaminated output is a strict record-removal subset of its analyzed input, so removal cannot introduce a new cross-source duplicate"
+  },
+  "passed_gates": [
+    "immutable source and parent lineage",
+    "20 pinned benchmark payload identities and exact task counts",
+    "independent exact-field and task-unique 13-gram critical matching",
+    "10-gram sensitivity disclosure",
+    "critical record removal and zero-critical successor rescan",
+    "all four tokenizer train and evaluation byte quotas",
+    "bounded cross-source zero-overlap property preserved by strict subsetting"
+  ],
+  "blocked_gates": [
+    "manual dataset and Common Crawl rights acceptance",
+    "production corpus global exact and near-duplicate processing",
+    "production acquisition cleanup and resume qualification",
+    "future benchmark revisions and broader evaluation-suite contamination"
+  ],
+  "decision": "use only the web-contamination-v1 successors after human rights approval and production hardening; do not use the pre-decontamination inputs and do not authorize training"
+}

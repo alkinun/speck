@@ -83,6 +83,12 @@ Three disjoint data partitions are frozen before training:
 All benchmark prompts and reference answers are also decontaminated from training candidates before
 packing. Contamination checks and removals are recorded per source and per benchmark.
 
+The first executable firewall contract is
+[`web_contamination_v1.json`](web_contamination_v1.json). It freezes 20 short-context, math, and code
+payloads (63,652 tasks), independent normalized exact-field matching, task-unique 13-gram critical
+matching, and 10-gram sensitivity disclosure. Its bounded web successors are technical evidence, not
+training authority; source rights, production deduplication, and cleanup/resume still gate use.
+
 The primary reported unit is bits per UTF-8 byte (BPB), which avoids rewarding a mixture merely
 because the tokenizer fragments one domain differently. For each category, report paired BPB delta
 against the frozen balanced prior, bootstrap confidence intervals over documents, and seed

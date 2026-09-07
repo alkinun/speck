@@ -57,6 +57,8 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Code contamination successors](174_code_contamination_successors.md) | Stack-Edu/Common Pile benchmark cleanup and final bounded code inputs |
 | [Code tokenizer supplements](175_code_tokenizer_supplements.md) | Python-Edu/PEP qualification and the complete five-source bounded code slice |
 | [Web tokenizer sources](176_web_tokenizer_bounded_sources.md) | Four-source bounded sampling, security, partition, and overlap evidence |
+| [Web evaluation firewall](177_web_evaluation_firewall.md) | Frozen flagship payloads and decontaminated bounded web successors |
+| [Web rights review packet](178_web_rights_review_packet.md) | Hashed terms, unresolved rights chain, and required human acceptance record |
 
 ## Conventions
 
