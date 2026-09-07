@@ -206,6 +206,7 @@ history in order only when auditing provenance or a retired decision:
 191. [190 — Marked flagship training now fails before model construction](190_data_launch_gate.md)
 192. [191 — The 20B rehearsal is orchestrated but has not run](191_data_rehearsal_orchestration.md)
 193. [192 — All tokenizer sizes and Mistral qualify on generated fixtures](192_tokenizer_fullsize_fixture.md)
+194. [193 — Static tokenizer finalists have a frozen pre-results rule](193_tokenizer_static_nomination_policy.md)
 
 Conventions:
 

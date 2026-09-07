@@ -1,0 +1,40 @@
+{
+  "format": "speck_tokenizer_static_nomination_fixture_qualification",
+  "format_version": 1,
+  "status": "policy_fixture_qualified_before_real_tokenizer_outputs",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "709afcf",
+  "implementation": {
+    "module": ["speck/tokenizer_nomination.py", "50b9f82819cb22a43238c195527c4534802c1a8a25c76d86ba396070cbfb99c1"],
+    "cli": ["scripts/tokenizer_nominate.py", "7dd2068b454ec394382271d3129e48573f83bc20393f65ecf94756439c047dce"],
+    "tests": ["tests/test_tokenizer_nomination.py", "ee812f6550c1c1daba1fd87d2ae6646a090f1e39849413a50f06ed8654a3e95f"],
+    "policy": ["research/flagship/tokenizer_static_nomination_policy.json", "5d3cb5c8b6ec74ec31566dbf07fe28340d4f1998e1169ac92981e89d47986499"]
+  },
+  "policy": {
+    "required_hard_gates": ["uint16_with_chat_tokens", "zero_unknown_tokens", "probe_roundtrip_exact"],
+    "pareto_objectives": ["minimize macro tokens_per_kib", "minimize embedding_and_head_parameters"],
+    "compression_endpoint": "lowest macro tokens_per_kib on valid custom Pareto frontier",
+    "compact_endpoint": "lowest embedding_and_head_parameters among remaining valid custom Pareto candidates",
+    "failure": "stop if fewer than two distinct valid custom Pareto candidates remain",
+    "selection_authority": false
+  },
+  "fixture": {
+    "path": "/mnt/speck-data/speck/tokenizer-fixtures/fullsize-v2/run/nomination.json",
+    "sha256": "ab9cd02235b497fe736e37f2ae6f4021ec25551c673b68b916778a0dd54e8763",
+    "pareto_frontier": ["speck-bpe-32768", "speck-bpe-40960", "speck-bpe-49152"],
+    "reported_endpoints": [
+      {"role": "compression_endpoint", "id": "speck-bpe-49152"},
+      {"role": "compact_endpoint", "id": "speck-bpe-32768"}
+    ],
+    "advancement_authority": false,
+    "interpretation": "fixture endpoint behavior only; generated-distribution metrics cannot advance these candidates in the real experiment"
+  },
+  "validation": {
+    "focused_tests": 4,
+    "full_suite_passed": 621,
+    "full_suite_skipped": 8,
+    "ruff": "pass"
+  },
+  "real_static_comparison": "blocked_pending_authorized_600MB_train_60MB_eval_sample",
+  "final_tokenizer_decision": "blocked_pending_matched_LM_pilot_and_one_opening_D5_audit"
+}

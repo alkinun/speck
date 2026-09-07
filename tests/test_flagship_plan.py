@@ -563,3 +563,21 @@ def test_fullsize_tokenizer_fixture_has_no_real_selection_authority():
         for tokenizer in result["tokenizers"].values()
     )
     assert result["training_authority"] == "blocked"
+
+
+def test_tokenizer_static_nomination_policy_is_hash_bound_and_pre_results():
+    result = json.loads(
+        (
+            ROOT
+            / "results"
+            / "data"
+            / "tokenizer-static-nomination-fixture-20260907.json"
+        ).read_text()
+    )
+    assert result["status"] == "policy_fixture_qualified_before_real_tokenizer_outputs"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["policy"]["selection_authority"] is False
+    assert result["fixture"]["advancement_authority"] is False
+    assert result["real_static_comparison"].startswith("blocked")
+    assert result["final_tokenizer_decision"].startswith("blocked")

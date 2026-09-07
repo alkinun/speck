@@ -144,6 +144,13 @@ roundtrip, and parameter accounting. Fixture fertility cannot advance a candidat
 models saw that generated alphabetic distribution and Mistral did not. The real comparison begins
 only after the blocked 600/60 MB input is authorized and materialized.
 
+If more than two custom candidates remain Pareto-valid, the pre-results
+[`tokenizer_static_nomination_policy.json`](tokenizer_static_nomination_policy.json) chooses two
+endpoints: best macro compression, then lowest parameter cost among the remaining frontier. Frozen
+tie rules prefer the other objective, smaller vocabulary, then ID. Fewer than two valid distinct
+Pareto candidates stops without improvisation. Static nomination advances LM-pilot candidates only;
+it has no final D5 selection authority.
+
 ## 5. Matched language-model pilot
 
 Train Mistral 32K and the two nominated custom tokenizers with the same 60M backbone and document
