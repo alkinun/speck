@@ -1,0 +1,116 @@
+{
+  "format": "speck_stack_v3_bounded_qualification_summary",
+  "format_version": 1,
+  "status": "bounded_profile_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "source": {
+    "repo": "HuggingFaceCode/stack-v3-train",
+    "revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+    "release": "v3.1 lineage after exact-duplicate leak repair and current opt-out refresh"
+  },
+  "implementation": {
+    "config": "research/flagship/stack_v3_qualification.json",
+    "config_sha256": "8736031480e859ba6c469c7dd1bb8e74b5795603aac6589a329595bf265282ff",
+    "module": "speck/stack_v3.py",
+    "module_sha256": "5b439a15d5cc5e53fca9716313a753a4403d7be6ce5bd0da97a77f4222383f9d",
+    "cli": "scripts/stack_v3_qualify.py",
+    "cli_sha256": "0e5c1c670d5140ec6da77e27a10e42d3e9d27d3dc130a1fdddb77fd2efc37804"
+  },
+  "three_shard_pilot": {
+    "status": "failed_declared_language_yield_and_superseded_content_identity_assumption",
+    "shards": 3,
+    "plan_fingerprint": "4ed341a96d6ae41bc977e821902f0069410ce22f4ac41f125f5d9540fcc79071",
+    "artifact_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-three-shard-pilot-failed",
+    "preserved": true,
+    "observed_sample_bytes": 27489674,
+    "decision": "preserve failure; report upstream content_id separately from our released-content SHA-256; expand only to twelve smallest pinned shards"
+  },
+  "twelve_shard_profile": {
+    "status": "bounded_profile_complete_not_training_authority",
+    "plan_fingerprint": "af22159d33473f3da91dbc74a5c288f79df65fb61a50badb2bd7c4b711fa4411",
+    "shards": 12,
+    "compressed_source_bytes": 3355194472,
+    "artifact_directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1",
+    "download_directory": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1",
+    "repositories_seen": 252860,
+    "repositories_rejected_fork": 181,
+    "files_seen": 2836149,
+    "files_rejected_license_type": 2715490,
+    "files_rejected_vendor": 38358,
+    "files_rejected_license_reference": 4,
+    "files_rejected_high_confidence_secret": 3,
+    "files_upstream_content_id_not_plain_sha1": 351798,
+    "files_accepted": 48777,
+    "files_sampled": 16972,
+    "sample_repositories": 1513,
+    "sampled_content_bytes": 70227292,
+    "language_sample_bytes": {
+      "C": 4021933,
+      "C++": 12001428,
+      "Go": 3015196,
+      "Java": 14040601,
+      "JavaScript": 8035900,
+      "Markdown": 7089561,
+      "Python": 15001066,
+      "Rust": 3000495,
+      "SQL": 520477,
+      "Shell": 500455,
+      "TypeScript": 3000180
+    },
+    "upstream_pii_placeholders": {
+      "<EMAIL>": 3713,
+      "<KEY>": 614,
+      "<NAME>": 10709,
+      "<PASSWORD>": 1772
+    },
+    "high_confidence_secret_pattern_hits_rejected": {
+      "aws_access_key": 0,
+      "github_token": 0,
+      "google_api_key": 1,
+      "pem_private_key": 2
+    },
+    "dominant_detected_licenses": {
+      "Apache-2.0": 41955,
+      "Unlicense": 2551,
+      "CC0-1.0": 1721,
+      "MIT": 771,
+      "CC-BY-4.0": 730,
+      "BSL-1.0": 558,
+      "BSD-3-Clause": 309,
+      "OGL-UK-3.0": 291
+    },
+    "outputs": {
+      "tokenizer_input": {
+        "bytes": 80488744,
+        "sha256": "d2a8999f2434187c5e655b870ee1615963a504420b79db61d28375b28c051f2f"
+      },
+      "repository_sample": {
+        "bytes": 80992165,
+        "sha256": "123edaca726de56cfb5d3acee0691c3c8df2d5b0180000b8a074e84973fb08ec"
+      },
+      "attribution": {
+        "bytes": 6727500,
+        "sha256": "f09cdadc9beda5aa0cb6b94b579339e499f2609449402961c0c158085dfb0c88"
+      }
+    }
+  },
+  "passed_gates": [
+    "immutable source revision and twelve shard identities",
+    "repository-nested Parquet schema",
+    "released UTF-8 byte size and independent SHA-256 identity",
+    "permissive-only non-vendor non-fork filtering",
+    "ambiguous LicenseRef rejection",
+    "high-confidence secret-pattern rejection",
+    "eleven-language bounded sample yield",
+    "separate tokenizer repository and attribution artifacts"
+  ],
+  "blocked_gates": [
+    "manual accepted-license and attribution policy",
+    "English prose analysis for comments documentation and notebooks",
+    "dedicated secret scanner qualification",
+    "cross-source near-duplicate analysis",
+    "benchmark contamination analysis",
+    "full acquisition cleanup and resume rehearsal"
+  ],
+  "decision": "retain restricted Stack v3.1 as the primary code candidate and tokenizer input source; grant no training authority until every blocked gate closes"
+}

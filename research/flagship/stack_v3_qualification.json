@@ -1,0 +1,102 @@
+{
+  "format": "speck_stack_v3_qualification",
+  "format_version": 1,
+  "status": "bounded_profile_authorized_not_training_authority",
+  "source": {
+    "repo": "HuggingFaceCode/stack-v3-train",
+    "revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+    "release": "v3.1 lineage after exact-duplicate leak repair and current opt-out refresh",
+    "files": [
+      {
+        "path": "data/part-01304-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 272393747,
+        "sha256": "bdaf28edcb5bffffe105956eb3702f3cd6687eceaf11d80a0828907886e545c9"
+      },
+      {
+        "path": "data/part-00284-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 275237679,
+        "sha256": "f5fe7b8cf8bc2f90ef402f15170ad3e45a5f9d77d399c1156d28a0d222cab9eb"
+      },
+      {
+        "path": "data/part-03094-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 276389838,
+        "sha256": "5b7e7e2c2feaca322d4a5b3ad39df7ca47690730d95bb020316486c26bec52a4"
+      },
+      {
+        "path": "data/part-03631-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 278183069,
+        "sha256": "c238d3ffc873802b75ef03a28363da7863d20931d42c0006b6b4f69017c6e15d"
+      },
+      {
+        "path": "data/part-01670-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 278490630,
+        "sha256": "084329e6968d408aa0268e0e6ed5fbe73827790e4d2a427be379eec5b2c88a7d"
+      },
+      {
+        "path": "data/part-07833-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 281034939,
+        "sha256": "83b05e6de90172483c191cb330c57590cfde0556dfb9c9436c5ca288c681a27b"
+      },
+      {
+        "path": "data/part-03606-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 281133691,
+        "sha256": "7fa1c822b7dc30833305b5355a057ae778a79b968518c96439d9f62edd4d914b"
+      },
+      {
+        "path": "data/part-02053-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 281372892,
+        "sha256": "ac4fe1ed48b088458a768ecbe678fa637c1fd85103006e71ad8cb8c2c796d918"
+      },
+      {
+        "path": "data/part-00989-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 281822213,
+        "sha256": "0dc1ed901429f9775ca8af54a352347a441012bfa17b38e616803cc90b349be2"
+      },
+      {
+        "path": "data/part-05323-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 282211851,
+        "sha256": "cb8175c4d3ccd6e15519dcc4d7673b2946ff1578e65c632b87a3e17ec2b4d3a4"
+      },
+      {
+        "path": "data/part-03730-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 282657682,
+        "sha256": "ed6240b3dac96e038772cfe1dfa423418c5d7282aaac1b4c05f36224d03561b6"
+      },
+      {
+        "path": "data/part-07627-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "size": 284266241,
+        "sha256": "e28f3c5be3e0921e1c71343d0a5fd391bac024c64e95747d6a943117efe7b11d"
+      }
+    ]
+  },
+  "filters": {
+    "license_type": "permissive",
+    "require_detected_licenses": true,
+    "rejected_license_prefixes": [
+      "LicenseRef-"
+    ],
+    "exclude_vendor": true,
+    "exclude_forks": true,
+    "min_file_bytes": 100,
+    "max_file_bytes": 1000000,
+    "max_sample_bytes_per_language_per_repository": 1000000,
+    "language_sample_bytes": {
+      "Python": 15000000,
+      "C++": 12000000,
+      "C": 4000000,
+      "Java": 14000000,
+      "JavaScript": 8000000,
+      "TypeScript": 3000000,
+      "Rust": 3000000,
+      "Go": 3000000,
+      "Shell": 500000,
+      "SQL": 500000,
+      "Markdown": 7000000
+    }
+  },
+  "output": {
+    "directory": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v1",
+    "download_directory": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1",
+    "keep_downloads": true
+  }
+}

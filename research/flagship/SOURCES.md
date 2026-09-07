@@ -1,10 +1,10 @@
 # Flagship source exploration and shortlist
 
-Status: candidate registry v1, 2026-09-07. This document records the broad source search before
-tokenizer and corpus freeze. [`source_registry.json`](source_registry.json) pins the exact repository
-revisions inspected today and proposes tokenizer-sample byte quotas. It is not training authority:
-every selected source still needs a source card, local file hashes, rights disposition, yield audit,
-deduplication behavior, and contamination results.
+Status: candidate registry v1 plus bounded Stack v3.1 profile, 2026-09-07. This document records the
+broad source search before tokenizer and corpus freeze. [`source_registry.json`](source_registry.json)
+pins the exact repository revisions inspected today and proposes tokenizer-sample byte quotas. It is
+not training authority: every selected source still needs a source card, local file hashes, rights
+disposition, deduplication behavior, and contamination results.
 
 Exploring many sources does not mean mixing all of them. The registry separates primary screens,
 secondary diversity sources, tokenizer-only coverage, fallbacks, long-context sources, and datasets
@@ -33,6 +33,14 @@ unfiltered:
 
 The 113.7 TB `stack-v3-full` corpus is research-only for us. It is unnecessary for grant 1 and would
 create a storage and filtering program larger than the model program.
+
+A real bounded profile now supports the operational choice. Twelve pinned shards (3.36 GB) exposed
+252,860 repository rows and 2.84M files and produced 70.2 MB across eleven declared languages after
+strict filtering. The adapter rejected 2.72M files by license type, 38,358 vendored files, four
+ambiguous license references, and three high-confidence secret matches. All content receives a new
+released-text SHA-256 because upstream `content_id` is preserved as provenance but does not
+consistently equal plain SHA-1 of the released PII-redacted text. See
+[finding 169](../../findings/169_stack_v3_bounded_qualification.md).
 
 ## 2. Code treatments
 
@@ -125,8 +133,8 @@ must use disjoint hashes.
 
 1. Freeze source cards and acceptance/attribution policy for Stack v3, Stack-Edu, FineWiki, and every
    source with inherited terms.
-2. Implement a repository-aware Stack v3 adapter and download only several pinned shards for schema,
-   language, license, PII/secret, quality, and yield measurement.
+2. **Bounded pass:** the repository-aware Stack v3 adapter and twelve-shard schema, identity, filter,
+   PII-placeholder, high-confidence-secret, and language-yield profile are complete.
 3. Materialize the 660 MB tokenizer sample using the provisional quotas in the registry; failed
    sources are replaced within their category before any candidate tokenizer is trained.
 4. Train and statically evaluate the three custom tokenizers plus Mistral 32K.

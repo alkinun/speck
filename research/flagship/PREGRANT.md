@@ -9,7 +9,7 @@ research machine on 2026-09-06.
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
 | R1 | Restore root storage headroom | Complete: root is 78% used with about 98 GiB free | Root stays below 80%; relocated checkpoint paths remain valid; all new work uses the data volume | SPE-24 |
-| R2 | Add and qualify a code source | 38-source registry complete; Stack v3.1 selected as primary candidate; source cards and repository adapter pending | Restricted Stack v3.1, Stack-Edu, and blend treatments pass rights, provenance, English-text, repository-split, dedup, contamination, secret/PII, yield, and operational gates | SPE-114 |
+| R2 | Add and qualify a code source | 38-source registry complete; Stack v3.1 bounded adapter/yield passed on 12 pinned shards; training blocked on remaining rights/language/secret/dedup/contamination gates | Restricted Stack v3.1, Stack-Edu, and blend treatments pass rights, provenance, English-text, repository-split, dedup, contamination, secret/PII, yield, and operational gates | SPE-114 |
 | R3 | Run the 20B data rehearsal | Protocol complete; run not started | Download, filtering, exact/near dedup memory, packing throughput, storage, cleanup, and resume are measured | SPE-114 |
 | R4 | Build the evaluation firewall | Protocol complete; data not built | Tokenizer sample, equal-byte selection set, unseen-source slices, and sealed audit are immutable and decontaminated before outputs | SPE-114 |
 | R5 | Prepare flagship corpora | Experiment contract complete; data not started | Six-category stable candidates are launch-ready; decay candidates can finish before E4; unique-token risk is explicit | SPE-114 |

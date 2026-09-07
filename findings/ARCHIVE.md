@@ -182,6 +182,7 @@ history in order only when auditing provenance or a retired decision:
 167. [166 — V4 architecture is stable, but initial FP8 simulation is superseded](166_deepseek_v4_sequence_lineage.md)
 168. [167 — Autonomous static work closes at the live finalist event boundary](167_pre_results_closure.md)
 169. [168 — Finalist chain stopped; program replaced by the flagship plan](168_finalist_stopped_flagship_plan.md)
+170. [169 — Restricted Stack v3.1 passes bounded yield, not training authority](169_stack_v3_bounded_qualification.md)
 
 Conventions:
 
@@ -199,4 +200,4 @@ Conventions:
 Current state: the active scope, defaults, and experiment plan are in
 [`research/flagship/README.md`](../research/flagship/README.md). Findings 00 to 24 are the evidence
 base for those defaults; findings 25 to 167 are the archived Paper 1 gate program; finding 168
-records the stop and the change of direction.
+records the stop and change of direction; finding 169 begins the flagship's new source evidence.

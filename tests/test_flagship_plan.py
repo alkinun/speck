@@ -158,7 +158,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
     assert stack_v3["repo"] == "HuggingFaceCode/stack-v3-train"
     assert stack_v3["priority"] == "primary_screen"
     assert "license_type=permissive" in stack_v3["subset"]
-    assert stack_v3["pipeline"] == "new_repository_nested"
+    assert stack_v3["pipeline"] == "bounded_repository_adapter_profiled_training_blocked"
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}

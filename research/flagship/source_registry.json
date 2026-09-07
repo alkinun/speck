@@ -107,7 +107,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_nested_parquet",
       "rights": "ODC-By-1.0 dataset; every original file license and attribution still applies",
-      "pipeline": "new_repository_nested"
+      "pipeline": "bounded_repository_adapter_profiled_training_blocked"
     },
     {
       "id": "stack_edu",
