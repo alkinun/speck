@@ -203,6 +203,7 @@ history in order only when auditing provenance or a retired decision:
 188. [187 — Three-partition firewall tooling qualifies on fixtures](187_three_partition_firewall_tooling.md)
 189. [188 — Production data operations qualify on fixtures, not at 20B](188_production_data_tooling.md)
 190. [189 — All selected sources are ready for one human rights decision](189_source_rights_decision_readiness.md)
+191. [190 — Marked flagship training now fails before model construction](190_data_launch_gate.md)
 
 Conventions:
 

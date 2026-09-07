@@ -507,3 +507,20 @@ def test_source_rights_decision_contract_is_hash_bound_and_all_pending():
         "signed_at_pending": True,
         "automated_approval_made": False,
     }
+
+
+def test_data_launch_gate_is_hash_bound_and_has_no_real_receipt():
+    result = json.loads(
+        (ROOT / "results" / "data" / "data-launch-gate-20260907.json").read_text()
+    )
+    assert result["status"] == "fixture_qualified_real_receipt_and_training_authority_blocked"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["training_enforcement"]["marker"] == (
+        "train.requires_data_launch_authority=true"
+    )
+    assert result["training_enforcement"]["verification_point"].endswith(
+        "before model construction"
+    )
+    assert result["validation"]["real_receipts_issued"] == 0
+    assert result["validation"]["models_constructed_by_gate_tests"] == 0

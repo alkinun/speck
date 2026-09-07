@@ -1,0 +1,50 @@
+{
+  "format": "speck_data_launch_gate_qualification",
+  "format_version": 1,
+  "status": "fixture_qualified_real_receipt_and_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "0f12f40",
+  "implementation": {
+    "gate": ["speck/data_launch.py", "0be9672a1347ca7a452e744156a31c970731e2800534b824acb692c0b809334e"],
+    "preflight_cli": ["scripts/data_launch_preflight.py", "8b230fbae1b60b19e06db5c824f4aec6463245d9ee06e33fa6bb6216d8831d1f"],
+    "training_entrypoint": ["scripts/base_train.py", "ffc9455a292c321551f3db3b526f97334de0fe62ce38802de8a458b547e4f300"],
+    "gate_tests": ["tests/test_data_launch.py", "491559ac3dccf11f78baa02c957d0b6c7e592cfd91f954404a2d3a7cdc864025"],
+    "training_tests": ["tests/test_train.py", "2184ff28a2250c52dfecaa97a7dcd0a0e04095c53ff3b229f3262db08e41c8ba"],
+    "plan": ["research/flagship/data_launch_plan.json", "760938231032deac4c1701c681abc7c9b7e91903cb6343b943af41cf3e105b53"]
+  },
+  "qualified_bindings": [
+    "checked-out full Git commit",
+    "exact experiment directory and data/tokenizer/model/train hashes",
+    "all-approved human source-rights record with automated_approval_made=false",
+    "production operations record with global exact/near dedup, cleanup, resume, and firewall/training disjointness passing",
+    "human-reviewed deny ledger",
+    "production firewall bound to the exact rights and operations records with both audits unopened",
+    "selected and frozen tokenizer decision",
+    "packed dataset using that tokenizer and global exact deduplication"
+  ],
+  "training_enforcement": {
+    "marker": "train.requires_data_launch_authority=true",
+    "required_cli": "--data-authority PATH",
+    "verification_point": "after packed shard verification and before model construction",
+    "receipt_creation": "exclusive and non-overwriting",
+    "receipt_revalidation": "Git, experiment files, every external authority file, packed fingerprint, and tokenizer fingerprint",
+    "historical_configs_default": false
+  },
+  "validation": {
+    "new_gate_and_training_assertions": 8,
+    "focused_launch_and_training_tests": 58,
+    "full_suite_passed": 605,
+    "full_suite_skipped": 8,
+    "ruff": "pass",
+    "real_receipts_issued": 0,
+    "models_constructed_by_gate_tests": 0
+  },
+  "blocked_inputs": [
+    "human source-rights acceptance remains unsigned",
+    "20B production operations qualification does not exist",
+    "real firewall manifest does not exist",
+    "tokenizer decision does not exist",
+    "production packed dataset and flagship experiment manifests do not exist"
+  ],
+  "decision": "require every future flagship train config to set the marker; do not issue a real receipt or launch training until every bound authority artifact exists and passes"
+}
