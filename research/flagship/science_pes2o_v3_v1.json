@@ -1,0 +1,113 @@
+{
+  "format": "speck_science_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "pes2o_v3",
+    "repo": "allenai/peS2o",
+    "revision": "636a503e44a3ca1b58e01fb61eab0825cd574de0",
+    "official_url": "https://huggingface.co/datasets/allenai/peS2o",
+    "path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/allenai--peS2o/data/v3/train-0040-of-0136.zst",
+    "sha256": "57cd1a8e4de1c1daa8e28a2721dbd7ff68e42c55e46f2345be8dfa4aec745af2",
+    "rows": 110183,
+    "file_format": "jsonl_zstd",
+    "fields": {
+      "text": "text",
+      "document_id": "id",
+      "title": null,
+      "url": "metadata.oa_url",
+      "license": "metadata.oa_license",
+      "language": null,
+      "language_score": null,
+      "quality_score": null,
+      "date": "created",
+      "source_partition": "source"
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0 database release",
+    "upstream_terms": "S2ORC/open-access paper licenses and attribution apply",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": null,
+    "minimum_language_score": null,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.4,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "download pdf",
+      "javascript is disabled",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.2,
+    "accepted_document_licenses": [
+      "CC0",
+      "CCBY",
+      "CCBYSA",
+      "pd",
+      "public-domain"
+    ],
+    "minimum_science_term_hits": 0,
+    "science_terms": [
+      "analysis",
+      "biological",
+      "biology",
+      "cell",
+      "chemical",
+      "chemistry",
+      "clinical",
+      "data",
+      "evidence",
+      "experiment",
+      "gene",
+      "method",
+      "model",
+      "molecular",
+      "physics",
+      "protein",
+      "research",
+      "result",
+      "science",
+      "scientific",
+      "study",
+      "theory"
+    ],
+    "maximum_bytes_per_host": null,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ]
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "science",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 54000000,
+    "evaluation_bytes": 5400000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v1"
+}

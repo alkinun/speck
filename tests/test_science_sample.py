@@ -1,6 +1,7 @@
 import gzip
 import hashlib
 import json
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -13,6 +14,8 @@ from speck.science_sample import (
     validate_science_sample_config,
 )
 from speck.stack_v3_refine import _sample_partition
+
+ROOT = Path(__file__).parents[1]
 
 
 def _text_for(split):
@@ -131,3 +134,21 @@ def test_science_sample_streams_gzip_and_zstd_jsonl(tmp_path):
 
     assert list(_compressed_rows(gzip_path, "gzip")) == rows
     assert list(_compressed_rows(zstd_path, "zstd")) == rows
+
+
+def test_initial_flagship_science_plans_freeze_four_ready_source_margins():
+    plans = []
+    for path in sorted((ROOT / "research/flagship").glob("science_*_v1.json")):
+        raw = json.loads(path.read_text())
+        if raw.get("format") == "speck_science_sample":
+            plans.append(validate_science_sample_config(raw, config_dir=path.parent))
+
+    assert {plan["source"]["id"] for plan in plans} >= {
+        "pes2o_v3",
+        "common_pile_arxiv",
+        "common_pile_pubmed",
+        "proof_pile_2_arxiv",
+    }
+    initial = [plan for plan in plans if plan["source"]["id"] != "finepdfs_edu_en"]
+    assert sum(plan["downstream_partition"]["training_bytes"] for plan in initial) == 90_000_000
+    assert sum(plan["downstream_partition"]["evaluation_bytes"] for plan in initial) == 9_000_000

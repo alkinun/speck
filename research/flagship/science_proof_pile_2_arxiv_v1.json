@@ -1,0 +1,107 @@
+{
+  "format": "speck_science_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "proof_pile_2_arxiv",
+    "repo": "EleutherAI/proof-pile-2",
+    "revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b",
+    "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2",
+    "path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/EleutherAI--proof-pile-2/arxiv/train/arXiv_000.jsonl.zst",
+    "sha256": "44afbfe594b8a289fd54e9937461b26629c6c5632dcfb64f78ba65bfbc1edecc",
+    "rows": 13066,
+    "file_format": "jsonl_zstd",
+    "fields": {
+      "text": "text",
+      "document_id": "meta.arxiv_id",
+      "title": null,
+      "url": "meta.url",
+      "license": null,
+      "language": "meta.language",
+      "language_score": null,
+      "quality_score": null,
+      "date": "meta.timestamp",
+      "source_partition": "meta.yymm"
+    }
+  },
+  "rights": {
+    "dataset_license": "no aggregate license declared",
+    "upstream_terms": "source-specific arXiv licenses are not exposed in this shard",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": "en",
+    "minimum_language_score": null,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.4,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "download pdf",
+      "javascript is disabled",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.2,
+    "accepted_document_licenses": [],
+    "minimum_science_term_hits": 0,
+    "science_terms": [
+      "analysis",
+      "biological",
+      "biology",
+      "cell",
+      "chemical",
+      "chemistry",
+      "clinical",
+      "data",
+      "evidence",
+      "experiment",
+      "gene",
+      "method",
+      "model",
+      "molecular",
+      "physics",
+      "protein",
+      "research",
+      "result",
+      "science",
+      "scientific",
+      "study",
+      "theory"
+    ],
+    "maximum_bytes_per_host": null,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ]
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "science",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 6000000,
+    "evaluation_bytes": 600000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-proof_pile_2_arxiv-v1"
+}

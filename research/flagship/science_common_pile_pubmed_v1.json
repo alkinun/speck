@@ -1,0 +1,111 @@
+{
+  "format": "speck_science_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "common_pile_pubmed",
+    "repo": "common-pile/pubmed_filtered",
+    "revision": "c156f0569a92d8f2edc33cebe1f72f7d3e1cae84",
+    "official_url": "https://huggingface.co/datasets/common-pile/pubmed_filtered",
+    "path": "/mnt/speck-data/speck/source-qualification/science-raw-v1/common-pile--pubmed_filtered/licensed_pubmed-0000.json.gz",
+    "sha256": "c94eba4da3b5bdc01a304137b57d145257e61f42f4e01809cc7ebeb6fd15df48",
+    "rows": 275513,
+    "file_format": "jsonl_gzip",
+    "fields": {
+      "text": "text",
+      "document_id": "id",
+      "title": null,
+      "url": "metadata.url",
+      "license": "metadata.license",
+      "language": null,
+      "language_score": null,
+      "quality_score": null,
+      "date": "created",
+      "source_partition": "source"
+    }
+  },
+  "rights": {
+    "dataset_license": "CC BY/CC BY-SA/CC0 filtered collection",
+    "upstream_terms": "per-article PubMed Central license metadata applies",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "required_language": null,
+    "minimum_language_score": null,
+    "minimum_quality_score": null,
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.4,
+    "maximum_spaced_OCR_sequences": 4,
+    "maximum_replacement_character_ratio": 0.001,
+    "boilerplate_line_terms": [
+      "all rights reserved",
+      "cookie policy",
+      "download pdf",
+      "javascript is disabled",
+      "privacy policy",
+      "sign in to continue",
+      "subscribe to",
+      "terms of use"
+    ],
+    "maximum_boilerplate_line_ratio": 0.2,
+    "accepted_document_licenses": [
+      "Creative Commons - Attribution - https://creativecommons.org/licenses/by/4.0/",
+      "Creative Commons - Attribution Share-Alike - https://creativecommons.org/licenses/by-sa/4.0/",
+      "Creative Commons Zero - Public Domain - https://creativecommons.org/publicdomain/zero/1.0/"
+    ],
+    "minimum_science_term_hits": 0,
+    "science_terms": [
+      "analysis",
+      "biological",
+      "biology",
+      "cell",
+      "chemical",
+      "chemistry",
+      "clinical",
+      "data",
+      "evidence",
+      "experiment",
+      "gene",
+      "method",
+      "model",
+      "molecular",
+      "physics",
+      "protein",
+      "research",
+      "result",
+      "science",
+      "scientific",
+      "study",
+      "theory"
+    ],
+    "maximum_bytes_per_host": null,
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ]
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "science",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 12000000,
+    "evaluation_bytes": 1200000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-common_pile_pubmed-v1"
+}
