@@ -50,7 +50,7 @@
         "flagship corpora and neutral held-out set",
         "20B-token data-pipeline rehearsal",
         "4xGH200 environment and resume qualification",
-        "tokenizer decision",
+        "source-balanced tokenizer sample custom candidates matched LM pilot and D5 decision",
         "selectable backward-compatible KDA output gate",
         "comparator baseline table",
         "scale geometries and analysis contracts"

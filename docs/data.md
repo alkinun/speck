@@ -24,6 +24,12 @@ Run commands from the repository root. Download and verify the experiment tokeni
 uv run --extra cpu python -m scripts.tokenizer_prepare experiments/Speck1-140M
 ```
 
+The flagship's custom-tokenizer workflow is separate from this downloader. It builds a checksummed,
+category-balanced sample, trains deterministic candidates, and reports static metrics without giving
+them selection authority. See
+[`research/flagship/TOKENIZER.md`](../research/flagship/TOKENIZER.md) for the three commands and the
+matched language-model decision gate.
+
 Then prepare the configured data:
 
 ```bash

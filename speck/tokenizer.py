@@ -53,6 +53,10 @@ class Tokenizer:
     def eos_id(self):
         return self.processor.eos_id()
 
+    @property
+    def unk_id(self):
+        return self.processor.unk_id()
+
     def encode(self, text, bos=False, eos=False):
         tokens = self.processor.encode(text, out_type=int)
         return ([self.bos_id] if bos else []) + tokens + ([self.eos_id] if eos else [])

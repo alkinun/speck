@@ -17,6 +17,9 @@ class Processor:
     def eos_id(self):
         return 2
 
+    def unk_id(self):
+        return 0
+
     def encode(self, text, out_type=int, add_bos=False, add_eos=False, num_threads=None):
         if isinstance(text, list):
             return [self.encode(row, out_type, add_bos, add_eos) for row in text]
@@ -32,7 +35,7 @@ def test_mistral_tokenizer_roundtrip_and_load(tmp_path, monkeypatch):
     model_path = tmp_path / "tokenizer.model"
     model_path.write_bytes(b"mistral-tokenizer")
     tokenizer = Tokenizer(model_path)
-    assert tokenizer.bos_id == 1 and tokenizer.eos_id == 2
+    assert tokenizer.unk_id == 0 and tokenizer.bos_id == 1 and tokenizer.eos_id == 2
     assert tokenizer.decode(tokenizer.encode("hello")) == "hello"
     assert tokenizer.encode("hello", bos=True, eos=True)[::6] == [1, 2]
     assert tokenizer.encode_batch(["hello", "world"], bos=True, eos=True)[0][::6] == [1, 2]

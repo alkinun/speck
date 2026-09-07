@@ -1,4 +1,11 @@
-from scripts import data_prepare, sft_prepare, tokenizer_prepare
+from scripts import (
+    data_prepare,
+    sft_prepare,
+    tokenizer_evaluate,
+    tokenizer_prepare,
+    tokenizer_sample_prepare,
+    tokenizer_train,
+)
 
 
 def test_prepare_script_argument_parsers_are_import_safe():
@@ -9,3 +16,11 @@ def test_prepare_script_argument_parsers_are_import_safe():
     assert tokenizer.experiment == "experiments/Speck1-140M"
     assert data.experiment == "custom-data" and data.restart
     assert sft.experiment == "custom-sft" and sft.restart
+
+    sample = tokenizer_sample_prepare.parse_args(["tokenizer.json", "--restart"])
+    train = tokenizer_train.parse_args(
+        ["tokenizer.json", "--candidate", "speck-32k", "--prepare-baselines"]
+    )
+    evaluate = tokenizer_evaluate.parse_args(["tokenizer.json"])
+    assert sample.config == train.config == evaluate.config == "tokenizer.json"
+    assert sample.restart and train.candidate == ["speck-32k"] and train.prepare_baselines

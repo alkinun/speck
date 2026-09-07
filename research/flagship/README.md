@@ -11,12 +11,16 @@ The active operating surface is intentionally small:
   funnel, promotion rules, and required evidence.
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) defines causal ablations, shared-control identity, scale
   transfer, systems measurement, and the paper evidence map.
+- [`TOKENIZER.md`](TOKENIZER.md) defines balanced sampling, deterministic candidate training,
+  static qualification, the matched LM pilot, and migration.
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
 - [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
 - [`data_plan.json`](data_plan.json) is the machine-checked category, run, and selection contract.
 - [`architecture_plan.json`](architecture_plan.json) is the machine-checked architecture run,
   promotion, scale, and systems contract.
+- [`tokenizer_plan.json`](tokenizer_plan.json) is the machine-checked tokenizer sampling and decision
+  contract.
 - [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
   created only at the day-21 freeze.
 
@@ -83,7 +87,7 @@ and verify parameter counts with the repository's accounting before freezing.
 | Recurrent mixer | Kimi Delta Attention, sigmoid output gate, FLA timescale init, conv kernel 4, head dim 128, 8 key heads, 16 value heads | findings 13 to 18 |
 | Global attention | GQA, 16 query heads, 4 KV heads, head dim 128, NoPE | findings 16 to 18 |
 | Feed-forward | SwiGLU, intermediate 5120 | inherited |
-| Embeddings | untied, Mistral 32K vocabulary | inherited, see D5 |
+| Embeddings | untied, tokenizer D5 pending; Mistral 32K fallback | [`TOKENIZER.md`](TOKENIZER.md) |
 | Precision | bf16, FP8 if it qualifies on the node | PuRo-2B |
 | Optimizer | Muon for matrices, AdamW elsewhere, weight decay 0.1, clip 1.0 | inherited |
 | Schedule | WSD, 20% decay tail, global batch about 1M tokens | SmolLM2, PuRo |
@@ -238,9 +242,12 @@ known gate-attribution gap: KDA currently hardcodes sigmoid, while the clean nat
 sigmoid-versus-SiLU result is on GDN and only one seed. Both reuse C0 only under exact parent, data,
 training, seed, and analysis identity.
 
-D5, the tokenizer, is decided before the grant on the 3090. Default is to keep the Mistral 32K
-vocabulary. A 64K Speck vocabulary requires a trainer that does not exist yet, re-preparation of the
-corpus, and loss of comparability with every existing checkpoint.
+D5 is decided before grant experiments. The deterministic trainer and static evaluator now exist;
+final six-category inputs are not yet frozen. Compare Mistral 32K with Speck BPE vocabularies of
+32,768, 40,960, and 49,152 pieces, statically advance two custom candidates, then run the matched 60M
+local-3090 pilot in [`TOKENIZER.md`](TOKENIZER.md). Static fertility cannot select the tokenizer.
+Mistral remains the fallback if no custom candidate passes BPB, category, systems, and audit gates.
+No 64K arm fits the uint16-plus-chat and parameter-efficiency contract.
 
 D6 is what makes the next scale cheap and is a paper figure in its own right.
 
@@ -377,12 +384,13 @@ new architecture axis.
 ## 10. Before day 1
 
 [`PREGRANT.md`](PREGRANT.md) is the complete readiness checklist and records current status. The
-critical path is storage headroom, a code-inclusive corpus and neutral held-out set, the 20B data
-rehearsal, complete long-document data, and one four-GH200 training/resume qualification.
+critical path is a code-inclusive corpus and neutral held-out set, tokenizer qualification, the 20B
+data rehearsal, complete long-document data, and one four-GH200 training/resume qualification.
 
-The RTX 3090 is reserved for comparator serving measurements and representative export rehearsals.
-It does not run new architecture searches. A paid allocation does not start while a launch-critical
-pre-grant item lacks either a passing artifact or an explicit non-GPU fallback.
+The RTX 3090 is reserved for the D5 tokenizer pilot, comparator serving measurements, and
+representative export rehearsals. It does not run new architecture searches. A paid allocation does
+not start while a launch-critical pre-grant item lacks either a passing artifact or an explicit
+non-GPU fallback.
 
 ## 11. Risks
 
