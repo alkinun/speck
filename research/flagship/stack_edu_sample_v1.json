@@ -1,0 +1,69 @@
+{
+  "format": "speck_stack_edu_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "repo": "HuggingFaceTB/stack-edu",
+    "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceTB/stack-edu",
+    "metadata_files": [
+      {
+        "language": "Rust",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-rust.parquet",
+        "sha256": "38c9c6e658c273cbde075a51312fa53aec4a4f26c0bffcefe73da5c70e7061f6",
+        "rows": 1135379
+      },
+      {
+        "language": "Go",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-go.parquet",
+        "sha256": "f6111b5521738255206d446c7aad91822735013183267c00cc2a221b12cd8c3c",
+        "rows": 1917163
+      },
+      {
+        "language": "SQL",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-sql.parquet",
+        "sha256": "2f08a57e42620bdf6302fe083d48fe9954bff5c949ca3fe4fe3c2729087c141f",
+        "rows": 2504412
+      }
+    ]
+  },
+  "filters": {
+    "minimum_integer_score": 4,
+    "license_type": "permissive",
+    "accepted_detected_licenses": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSL-1.0",
+      "BlueOak-1.0.0",
+      "ISC",
+      "LLVM-exception",
+      "MIT",
+      "MIT-0",
+      "Unlicense",
+      "Zlib"
+    ],
+    "accepted_encodings": ["ASCII", "UTF-8"],
+    "min_file_bytes": 100,
+    "max_file_bytes": 1000000,
+    "max_bytes_per_language_per_repository": 500000,
+    "language_sample_bytes": {
+      "Rust": 8000000,
+      "Go": 9000000,
+      "SQL": 8000000
+    },
+    "English_prose": {
+      "detector": "py3langid==0.3.0",
+      "minimum_alphabetic_characters": 80,
+      "minimum_probability": 0.8
+    }
+  },
+  "fetch": {
+    "base_url": "https://softwareheritage.s3.amazonaws.com/content/",
+    "workers": 32,
+    "timeout_seconds": 30,
+    "attempts": 3
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/stack-edu-v2"
+}

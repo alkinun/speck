@@ -1,0 +1,89 @@
+{
+  "format": "speck_stack_edu_bounded_sample_summary",
+  "format_version": 1,
+  "status": "bounded_sample_pass_gitleaks_exclusion_pending_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "source": {
+    "repo": "HuggingFaceTB/stack-edu",
+    "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+    "content_origin": "https://softwareheritage.s3.amazonaws.com/content/",
+    "metadata_rows": 5556954,
+    "metadata_languages": ["Rust", "Go", "SQL"]
+  },
+  "implementation": {
+    "config": "research/flagship/stack_edu_sample_v1.json",
+    "config_sha256": "f4ae2b133683981b06328dc9218b6cfd216d9e2a02b4445e3168e0e0d1a39980",
+    "module": "speck/stack_edu.py",
+    "module_sha256": "c5fc33f30b7d564ac909b00dbef0e8ea6555ef6c6a01a54f3014b84266865d2a",
+    "cli": "scripts/stack_edu_sample.py",
+    "cli_sha256": "dd00571b336dc9d55f5c842802a58193854aadcccfd495a3861d9f4c56777193"
+  },
+  "strict_length_predecessor": {
+    "status": "superseded_length_metadata_interpretation",
+    "plan_fingerprint": "de47c19e107f20df0dcdfcba1b15a78f75126b93ed60bae366fa6add8d0cf523",
+    "artifact_directory": "/mnt/speck-data/speck/source-qualification/stack-edu-v1-length-strict-predecessor",
+    "content_identity_rejected": 759,
+    "finding": "sampled SWH raw blob SHA-1 matched blob_id while metadata length occasionally differed by a few bytes",
+    "decision": "preserve predecessor; make SWH SHA-1 authoritative and report length-only discrepancies"
+  },
+  "sample": {
+    "status": "bounded_sample_complete_not_training_authority",
+    "plan_fingerprint": "96f62af493734d8a9a4bee729dd899f2c156d565b8f284a8c5aac43ff7d38ee9",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/stack-edu-v2/report.json",
+    "runtime_report_sha256": "8baadb256e60baaca2ca135f5e7c4106be2671144f946b2d82c8bc8e025c11bc",
+    "metadata_rows_seen": 421748,
+    "score_rejected": 358096,
+    "license_type_rejected": 51349,
+    "license_allowlist_rejected": 1247,
+    "encoding_rejected": 45,
+    "non_English_prose_rejected": 1435,
+    "blob_fetch_ok": 11008,
+    "blob_fetch_missing": 0,
+    "blob_fetch_error": 0,
+    "content_hash_rejected": 0,
+    "content_length_metadata_mismatch": 634,
+    "records_sampled": 9572,
+    "repositories": 7394,
+    "sampled_languages": {
+      "Rust": {"bytes": 8215225, "target_bytes": 8000000},
+      "Go": {"bytes": 9002662, "target_bytes": 9000000},
+      "SQL": {"bytes": 8112430, "target_bytes": 8000000}
+    },
+    "outputs": {
+      "tokenizer_input": {
+        "bytes": 31097635,
+        "sha256": "6e0dce326e1cf42415960721d9d6b6c9656f90b6a27ebd74bc4438b14642baae"
+      },
+      "attribution": {
+        "bytes": 4136698,
+        "sha256": "bb19532dc3e710e8f871f70631d9251f06afb1e0886a9cac2b2455a07509e316"
+      }
+    }
+  },
+  "dedicated_secret_scan": {
+    "scanner": "Gitleaks 8.30.1",
+    "report": "/mnt/speck-data/speck/source-qualification/stack-edu-security-v1/gitleaks.json",
+    "report_sha256": "49daf0f7a10cce4bb0752fd5e4a033fbc049c5f123667312a7042425f07594de",
+    "redaction_percent": 100,
+    "findings": 3,
+    "affected_records": 2,
+    "rule_counts": {"generic-api-key": 3},
+    "exclusion_status": "pending_successor_filter"
+  },
+  "passed_gates": [
+    "three immutable metadata shard identities and schemas",
+    "score-4-plus permissive engineering-license subset",
+    "SWH fetch availability with zero missing or failed blobs in the bounded run",
+    "SWH blob SHA-1 identity for every sampled file",
+    "English comment filtering and per-repository caps",
+    "Rust Go and SQL bounded byte quotas"
+  ],
+  "blocked_gates": [
+    "exclude two Gitleaks-affected records and recheck quotas",
+    "code benchmark contamination",
+    "cross-source exact and near-duplicate analysis",
+    "manual legal acceptance and attribution policy",
+    "acquisition cleanup and resume qualification"
+  ],
+  "decision": "retain Stack-Edu as the educational code comparator; do not use the current sample for tokenizer training until the Gitleaks successor and remaining gates pass"
+}

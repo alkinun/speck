@@ -75,6 +75,13 @@ source. SmolLM's Python-Edu supplies narrow high-quality Python coverage for tok
 the full code mixture. The Stack v2 dedup remains a fallback only. NVIDIA Nemotron-CC-Code is held:
 it is gated by a data agreement and its downstream conditions require a separate acceptance review.
 
+A bounded Stack-Edu SWH acquisition now passes for score-4+ Rust, Go, and SQL: 25.33 MB from 9,572
+files and 7,394 repositories, with zero missing/failed blobs and exact SWH SHA-1 for every accepted
+file. Metadata length differs for 634 valid blobs and is reported rather than substituted for the
+cryptographic identity. Gitleaks finds three redacted findings across two records; removal,
+contamination, and near-duplicate successors remain mandatory. See
+[finding 172](../../findings/172_stack_edu_bounded_swh_sample.md).
+
 The tokenizer's provisional 100 MB code allocation is 55 MB Stack v3.1, 15 MB Stack-Edu, 15 MB
 Common Pile Stack v2 educational code, 10 MB Python-Edu, and 5 MB Python language-design prose. This
 is intentionally broader than the eventual stable mixture so the vocabulary is not overfit to one

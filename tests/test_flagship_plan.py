@@ -155,6 +155,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
     assert all(source["official_url"].startswith("https://") for source in sources.values())
 
     stack_v3 = sources["stack_v3_train_permissive"]
+    stack_edu = sources["stack_edu"]
     assert stack_v3["repo"] == "HuggingFaceCode/stack-v3-train"
     assert stack_v3["priority"] == "primary_screen"
     assert "license_type=permissive" in stack_v3["subset"]
@@ -162,6 +163,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
         stack_v3["pipeline"]
         == "security_language_license_contamination_partition_pass_training_blocked"
     )
+    assert stack_edu["pipeline"] == "bounded_swh_sample_profiled_gitleaks_exclusion_pending"
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}
