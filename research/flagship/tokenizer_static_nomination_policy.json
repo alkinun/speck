@@ -1,0 +1,29 @@
+{
+  "format": "speck_tokenizer_static_nomination_policy",
+  "format_version": 1,
+  "status": "frozen_before_real_tokenizer_outputs",
+  "primary_baseline": "mistral-32k",
+  "custom_candidates": ["speck-bpe-32768", "speck-bpe-40960", "speck-bpe-49152"],
+  "required_hard_gates": ["uint16_with_chat_tokens", "zero_unknown_tokens", "probe_roundtrip_exact"],
+  "pareto_objectives": {
+    "macro_tokens_per_kib": "minimize",
+    "embedding_and_head_parameters": "minimize"
+  },
+  "nomination_count": 2,
+  "nomination_roles": [
+    {
+      "id": "compression_endpoint",
+      "rule": "lowest macro tokens_per_kib on the valid custom Pareto frontier",
+      "tie_order": ["lower embedding_and_head_parameters", "smaller vocab_size", "candidate id"]
+    },
+    {
+      "id": "compact_endpoint",
+      "rule": "lowest embedding_and_head_parameters among remaining valid custom Pareto candidates",
+      "tie_order": ["lower macro tokens_per_kib", "smaller vocab_size", "candidate id"]
+    }
+  ],
+  "failure_rule": "if fewer than two distinct valid custom Pareto candidates exist, stop without substituting a dominated or hard-gate-failing candidate",
+  "selection_authority": false,
+  "fixture_nomination_authority": false,
+  "final_decision": "matched 60M LM pilot plus one-opening D5 audit; Mistral remains fallback"
+}
