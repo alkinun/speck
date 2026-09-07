@@ -9,10 +9,14 @@ The active operating surface is intentionally small:
 - This file freezes scope, defaults, experiments, data, evaluation, and releases.
 - [`DATA.md`](DATA.md) defines source qualification, the held-out firewall, the mixture-search
   funnel, promotion rules, and required evidence.
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) defines causal ablations, shared-control identity, scale
+  transfer, systems measurement, and the paper evidence map.
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
 - [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
 - [`data_plan.json`](data_plan.json) is the machine-checked category, run, and selection contract.
+- [`architecture_plan.json`](architecture_plan.json) is the machine-checked architecture run,
+  promotion, scale, and systems contract.
 - [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
   created only at the day-21 freeze.
 
@@ -114,7 +118,7 @@ changes no number in the config is cut. A config line with no figure is labeled 
 2. Architecture: every operator in one notation, with state and FLOP accounting.
 3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
 4. Data ablations: E1W/E1S and E2–E5 with per-domain held-out loss and small-scale benchmarks.
-5. Architecture ablations: C0, D2, D3, D4, and D6 with paired non-inferiority bounds.
+5. Architecture ablations: C0, D2, D3, D4, D6, D7, and D8 with paired non-inferiority bounds.
 6. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one
    held-out point, and the hyperparameter transfer rule from D6.
 7. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
@@ -203,12 +207,14 @@ data better below 2B, while PuRo-2B found within-source quality sorting to be it
 
 ### 4.3 Architecture decisions
 
-All at 350M and 10B tokens unless noted. Each has a default. Day 21 launches the flagship with the
-winner or the default. No decision may be added after day 1.
+The complete protocol and evidence map are in [`ARCHITECTURE.md`](ARCHITECTURE.md). All launch
+decisions run at 350M and 10B tokens unless noted. Each has a default. Day 21 launches the flagship
+with the winner or the default. No decision may be added after day 1.
 
-**Pass rule.** The alternative must beat the default on the neutral held-out set at matched
-wall-clock, with the upper one-sided 95% bound over three seeds inside the 0.01-nat margin, and must
-not regress 32K or 128K retention on the built-in curve. Ties keep the default.
+**Pass rule.** An alternative is eligible only when its upper one-sided 95% bound over three seeds is
+inside the 0.01-nat aggregate margin at matched wall-clock, every source bound is inside the 0.02-nat
+guardrail, and 32K/128K plus original-4K retention gates pass. Non-inferiority makes an alternative
+eligible; it promotes only by its declared quality, state, or systems benefit. Ties keep the default.
 
 | ID | Question | Arms | Runs | Default | GPU-h |
 | --- | --- | --- | ---: | --- | ---: |
@@ -217,12 +223,20 @@ not regress 32K or 128K retention on the built-in curve. Ties keep the default.
 | D3 | Recurrent to global ratio | 5:1 (20 recurrent, 4 global) | 3 | 3:1 | 63 |
 | D4 | Peak LR and batch | four LR points at 1M-token batch, 4B tokens each | 4 | scaled from 150M | 33 |
 | D6 | Hyperparameter transfer rule | two extra 150M points to fit LR against width | 2 | empirical fit | 5 |
-| | | | **15** | | **227** |
+| D7 | Recurrent operator attribution | FLA-initialized scalar-decay GDN/sigmoid/NoPE | 3 | KDA | 63 |
+| D8 | KDA output gate | SiLU | 3 | sigmoid | 63 |
+| | | | **21** | | **353** |
 
 **D1 is retired for this allocation.** The first flagship is dense in width. This removes a late
 architecture branch plus its unqualified expert optimizer, Hopper routing kernel, distributed-state,
 export, and serving dependencies. The identifier is intentionally not reused. Its 132 GPU-hours move
-to reserve until measured GH200 throughput and the first complete flagship checkpoint are secure.
+out of MoE: 126 hours fund D7 and D8, the two missing dense causal comparisons, and 6 remain in the
+overall reserve.
+
+D7 asks whether KDA itself is needed under an otherwise matched sigmoid/NoPE parent. D8 closes the
+known gate-attribution gap: KDA currently hardcodes sigmoid, while the clean natural-language
+sigmoid-versus-SiLU result is on GDN and only one seed. Both reuse C0 only under exact parent, data,
+training, seed, and analysis identity.
 
 D5, the tokenizer, is decided before the grant on the 3090. Default is to keep the Mistral 32K
 vocabulary. A 64K Speck vocabulary requires a trainer that does not exist yet, re-preparation of the
@@ -233,7 +247,8 @@ D6 is what makes the next scale cheap and is a paper figure in its own right.
 ### 4.4 Scale ladder and reversal check
 
 The selected architecture against a dense control at four scales, plus cheap low anchors for the
-fit. Resolves F1 in section 2.2 and provides the scaling section.
+fit. Resolves F1 in section 2.2 and provides the scaling section. The flagship is excluded from the
+fit and becomes its held-out transfer test.
 
 | Points | Scale and tokens | Runs | GPU-h |
 | --- | --- | ---: | ---: |
@@ -328,11 +343,11 @@ must be at least two months; three is comfortable.
 | Track | GPU-hours | Share |
 | --- | ---: | ---: |
 | Data experiments, E1W/E1S and E2 to E5 | 593 | 12% |
-| Dense architecture decisions, C0 and D2 to D6 | 227 | 5% |
+| Dense architecture decisions, C0 and D2 to D8 | 353 | 7% |
 | Scale ladder and reversal | 290 | 6% |
 | Flagship pretraining | 2,425 | 49% |
 | Extension, anneal, SFT, evaluation, serving | 450 | 9% |
-| Reserve | 1,015 | 20% |
+| Reserve | 889 | 18% |
 | | **5,000** | |
 
 The reserve is sized for a first run on unfamiliar hardware with an untested stack, not as slack to

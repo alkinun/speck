@@ -1,0 +1,174 @@
+{
+  "format": "speck_flagship_architecture_plan",
+  "format_version": 1,
+  "status": "planning",
+  "default": {
+    "width_type": "dense",
+    "sequence_mixer": "kimi_delta_attention",
+    "output_gate_activation": "sigmoid",
+    "global_position_encoding": "none",
+    "recurrent_global_ratio": "3:1"
+  },
+  "shared_control": {
+    "id": "C0",
+    "depends_on": "E2c stable-mixture freeze",
+    "parameters": 350000000,
+    "tokens": 10000000000,
+    "seeds": 3,
+    "reuse_requires_exact_identity": [
+      "tokenizer",
+      "packed_data_and_order",
+      "model_parent",
+      "optimizer_and_learning_rate",
+      "global_batch",
+      "schedule",
+      "precision",
+      "token_horizon",
+      "evaluation_manifest",
+      "seed",
+      "analysis"
+    ]
+  },
+  "decisions": [
+    {
+      "id": "C0",
+      "name": "shared KDA sigmoid NoPE 3:1 control",
+      "new_runs": 3,
+      "gpu_hours": 63
+    },
+    {
+      "id": "D2",
+      "name": "global position treatment",
+      "alternative": "partial RoPE on 32 of 128 dimensions",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0"
+    },
+    {
+      "id": "D3",
+      "name": "recurrent to global ratio",
+      "alternative": "5:1",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0"
+    },
+    {
+      "id": "D4",
+      "name": "peak learning rate and global batch calibration",
+      "new_runs": 4,
+      "gpu_hours": 33
+    },
+    {
+      "id": "D6",
+      "name": "learning-rate width transfer anchors",
+      "new_runs": 2,
+      "gpu_hours": 5
+    },
+    {
+      "id": "D7",
+      "name": "KDA recurrence attribution",
+      "alternative": "FLA-initialized scalar-decay GDN sigmoid NoPE",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0",
+      "max_parameter_relative_delta_for_isolated_claim": 0.01,
+      "max_flops_relative_delta_for_isolated_claim": 0.01
+    },
+    {
+      "id": "D8",
+      "name": "KDA output gate activation",
+      "alternative": "SiLU",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0",
+      "requires_pregrant_implementation": true
+    }
+  ],
+  "promotion": {
+    "aggregate_non_inferiority_margin_nats": 0.01,
+    "source_guardrail_nats": 0.02,
+    "confidence": 0.95,
+    "paired_seeds_for_launch_decisions": 3,
+    "capability_lengths": [
+      32768,
+      131072
+    ],
+    "original_context_regression_required": true,
+    "simple_component_cost_improvement_percent": 10,
+    "custom_runtime_cost_improvement_percent": 20,
+    "state_reduction_threshold_percent": 25,
+    "tie_rule": "keep_default"
+  },
+  "scale_program": [
+    {
+      "id": "low_anchors",
+      "scales": [
+        "60M/1.2B",
+        "220M/5B"
+      ],
+      "new_runs": 4,
+      "gpu_hours": 14
+    },
+    {
+      "id": "mid_points",
+      "scales": [
+        "150M/3B",
+        "350M/7B"
+      ],
+      "new_runs": 4,
+      "gpu_hours": 35
+    },
+    {
+      "id": "S1",
+      "scales": [
+        "750M/15B"
+      ],
+      "new_runs": 2,
+      "gpu_hours": 134
+    },
+    {
+      "id": "contingency",
+      "new_runs": 4,
+      "gpu_hours": 107,
+      "new_axes_forbidden": true
+    }
+  ],
+  "systems": {
+    "hardware": [
+      "GH200",
+      "RTX 3090",
+      "CPU GGUF"
+    ],
+    "context_lengths": [
+      4096,
+      32768,
+      131072
+    ],
+    "minimum_interleaved_blocks": 5,
+    "telemetry_hz": 1,
+    "separate_outcomes": [
+      "analytic_flops_and_state",
+      "wall_clock",
+      "energy",
+      "peak_memory"
+    ]
+  },
+  "totals": {
+    "decision_new_runs": 21,
+    "decision_gpu_hours": 353,
+    "scale_new_runs": 14,
+    "scale_gpu_hours": 290,
+    "architecture_new_runs": 35,
+    "architecture_gpu_hours": 643
+  },
+  "binding": [
+    "dense-width grant scope",
+    "exact shared-control identity",
+    "D7 and D8 causal comparisons",
+    "paired three-seed launch decisions",
+    "quality source and long-context guardrails",
+    "hybrid versus dense scale transfer",
+    "randomized interleaved systems measurements",
+    "643 GPU-hour architecture ceiling"
+  ]
+}

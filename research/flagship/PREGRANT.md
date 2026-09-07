@@ -27,7 +27,8 @@ parts pass or have a written fallback that consumes no undeclared GPU work.
 | R9 | Optional FP8 | Not started; bf16 is the fallback | Numerical, quality, throughput, memory, and resume gates pass on GH200, or bf16 is frozen | SPE-83 |
 | R10 | Decide tokenizer D5 | Default is Mistral 32K | Keep decision or replacement is recorded within one week; no late vocabulary change | SPE-117 |
 | R11 | Materialize scale targets | Shape-A planning target exists; shape B and ladder are missing | 60M–1.2B configs pass exact parameter/FLOP/state accounting | SPE-60 |
-| R12 | Freeze analysis contracts | Data program is specified; per-arm and architecture manifests are missing | E1W/E1S/E2–E5, C0/D2/D3/D4/D6, and scale analyses are immutable before outputs | SPE-70 |
+| R12 | Freeze analysis contracts | Data and architecture programs are specified; per-arm manifests are missing | E1W/E1S/E2–E5, C0/D2/D3/D4/D6/D7/D8, and scale analyses are immutable before outputs | SPE-70 |
+| R17 | Implement selectable KDA output gating | KDA hardcodes sigmoid | Missing/explicit sigmoid are identical for old configs and checkpoints; SiLU and sigmoid pass Torch/FLA, geometry, export, and strict-load tests | SPE-128 |
 
 [`targets/shape-a`](targets/shape-a/) is deliberately non-launchable. A real experiment appears only
 after its data, training, hardware, and analysis contracts are complete.
@@ -35,6 +36,11 @@ after its data, training, hardware, and analysis contracts are complete.
 [`DATA.md`](DATA.md) and [`data_plan.json`](data_plan.json) freeze the data categories, bounds,
 experiment funnel, held-out firewall, statistic, guardrails, seed counts, and GPU-hour ceiling. They
 do not substitute for source cards, prepared data, or per-arm manifests.
+
+[`ARCHITECTURE.md`](ARCHITECTURE.md) and [`architecture_plan.json`](architecture_plan.json) freeze
+the shared-control identity, D2–D8 estimands, promotion rules, scale transfer, systems measurements,
+and architecture GPU-hour ceiling. They do not authorize training before D8 support, scale targets,
+and per-arm manifests pass.
 
 ## Evaluation and release readiness
 
@@ -62,7 +68,7 @@ grant. Their absence cannot block the flagship.
 
 Before the first allocated job, create one dated record that contains:
 
-- completion or fallback for R1–R16;
+- completion or fallback for R1–R17;
 - exact Git revision and dirty-worktree check;
 - hardware/software and dataset manifest hashes;
 - measured throughput class from [`plan.json`](plan.json);

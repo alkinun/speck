@@ -19,9 +19,9 @@ def test_execution_plan_balances_the_grant_and_keeps_reserve_conditional():
     assert plan["format"] == "speck_flagship_execution_plan"
     assert plan["status"] == "pregrant"
     assert sum(phase["gpu_hours"] for phase in phases) == 5_000
-    assert sum(phase["gpu_hours"] for phase in phases if not phase.get("conditional")) == 3_985
+    assert sum(phase["gpu_hours"] for phase in phases if not phase.get("conditional")) == 4_111
     reserve = next(phase for phase in phases if phase["id"] == "P7")
-    assert reserve["gpu_hours"] == plan["budget"]["reserve_gpu_hours"] == 1_015
+    assert reserve["gpu_hours"] == plan["budget"]["reserve_gpu_hours"] == 889
     assert reserve["conditional"] is True
     assert "mixture of experts" in plan["scope"]["excluded"]
     assert "dense-width flagship" in plan["flexibility"]["binding"]
@@ -54,9 +54,9 @@ def test_data_plan_has_a_complete_english_mixture_and_matches_execution_budget()
 
     phase_hours = {phase["id"]: phase["gpu_hours"] for phase in execution_plan["phases"]}
     assert phase_hours["P1"] == 230
-    assert phase_hours["P2"] == 440
-    assert execution_plan["budget"]["mandatory_gpu_hours"] == 3_985
-    assert execution_plan["budget"]["reserve_gpu_hours"] == 1_015
+    assert phase_hours["P2"] == 566
+    assert execution_plan["budget"]["mandatory_gpu_hours"] == 4_111
+    assert execution_plan["budget"]["reserve_gpu_hours"] == 889
 
 
 def test_data_plan_preserves_selection_firewall_and_replication():
@@ -75,6 +75,68 @@ def test_data_plan_preserves_selection_firewall_and_replication():
         "E2c"
     ]["new_runs"]
     assert experiments["E5"]["reused_control_runs"] == 2
+
+
+def test_architecture_plan_closes_causal_gaps_and_matches_execution_budget():
+    architecture_plan = json.loads((FLAGSHIP / "architecture_plan.json").read_text())
+    execution_plan = json.loads((FLAGSHIP / "plan.json").read_text())
+    decisions = {decision["id"]: decision for decision in architecture_plan["decisions"]}
+    scale_program = architecture_plan["scale_program"]
+    totals = architecture_plan["totals"]
+
+    assert architecture_plan["format"] == "speck_flagship_architecture_plan"
+    assert set(decisions) == {"C0", "D2", "D3", "D4", "D6", "D7", "D8"}
+    assert sum(decision["new_runs"] for decision in decisions.values()) == 21
+    assert sum(decision["gpu_hours"] for decision in decisions.values()) == 353
+    assert sum(stage["new_runs"] for stage in scale_program) == 14
+    assert sum(stage["gpu_hours"] for stage in scale_program) == 290
+    assert totals["architecture_new_runs"] == 35
+    assert totals["architecture_gpu_hours"] == 643
+    assert decisions["D7"]["reuses_control"] == "C0"
+    assert decisions["D8"]["reuses_control"] == "C0"
+    assert decisions["D8"]["requires_pregrant_implementation"] is True
+
+    phases = {phase["id"]: phase["gpu_hours"] for phase in execution_plan["phases"]}
+    assert phases["P2"] == 566
+    assert execution_plan["budget"]["mandatory_gpu_hours"] == 4_111
+    assert execution_plan["budget"]["reserve_gpu_hours"] == 889
+    assert sum(phases[phase] for phase in ("P1", "P2", "P3")) == (
+        593 + totals["architecture_gpu_hours"]
+    )
+
+
+def test_architecture_plan_inherits_promotion_margins_and_separates_systems_outcomes():
+    architecture_plan = json.loads((FLAGSHIP / "architecture_plan.json").read_text())
+    promotion_policy = json.loads(
+        (ROOT / "research" / "architecture-promotion-v1" / "policy.json").read_text()
+    )
+    promotion = architecture_plan["promotion"]
+    statistical_policy = promotion_policy["statistical_contract"]
+    language_policy = statistical_policy["language_loss"]
+    systems_policy = statistical_policy["systems"]
+
+    assert promotion["aggregate_non_inferiority_margin_nats"] == language_policy[
+        "default_non_inferiority_margin_nats"
+    ]
+    assert promotion["source_guardrail_nats"] == language_policy["source_guardrail_nats"]
+    assert promotion["simple_component_cost_improvement_percent"] == 100 * systems_policy[
+        "simple_component_minimum_primary_improvement"
+    ]
+    assert promotion["custom_runtime_cost_improvement_percent"] == 100 * systems_policy[
+        "custom_runtime_component_minimum_primary_improvement"
+    ]
+    assert promotion["state_reduction_threshold_percent"] == 100 * systems_policy[
+        "minimum_state_reduction_for_memory_claim"
+    ]
+    assert promotion["paired_seeds_for_launch_decisions"] == 3
+    assert promotion["tie_rule"] == "keep_default"
+    assert architecture_plan["systems"]["minimum_interleaved_blocks"] >= 5
+    assert set(architecture_plan["systems"]["separate_outcomes"]) == {
+        "analytic_flops_and_state",
+        "wall_clock",
+        "energy",
+        "peak_memory",
+    }
 
 
 def test_execution_plan_dependencies_are_acyclic_and_days_fit_the_grant():

@@ -7,19 +7,20 @@ to bypass a gate.
 ## Budget and calendar
 
 The grant supplies 5,000 GPU-hours on one four-GH200 node over approximately 90 days. That is 52.1
-fully occupied node-days. Mandatory work consumes 3,985 GPU-hours, or 41.5 node-days; the remaining
-1,015 hours are protected reserve.
+fully occupied node-days. Mandatory work consumes 4,111 GPU-hours, or 42.8 node-days; the remaining
+889 hours are protected reserve. Data plus architecture decisions and scale transfer consume 1,236
+GPU-hours, or 12.9 fully occupied node-days, before the day-21 freeze.
 
 | Phase | Target days | GPU-h | Output |
 | --- | ---: | ---: | --- |
 | P0 — Pre-grant readiness | before day 1 | 0 | Data, hardware, storage, targets, and contracts ready |
 | P1 — Calibration and screens | 1–4 | 230 | Web and specialist sources, repetition policy, LR/batch region |
-| P2 — Mixture and dense architecture | 4–11 | 440 | Stable-mixture funnel, position treatment, mixer ratio |
+| P2 — Mixture and dense architecture | 4–11 | 566 | Mixture, position, ratio, recurrent operator, and output gate |
 | P3 — Decay, curriculum, and scale | 11–20 | 440 | Decay recipe, scale fit, flagship size |
 | P4 — Configuration freeze | 20–21 | 0 | One hash-bound launch manifest |
 | P5 — Flagship pretraining | 21–50 | 2,425 | Pre-decay and final base checkpoints |
 | P6 — Extension through release candidates | 51–65 | 450 | 128K, annealed, instruct, evaluated exports |
-| P7 — Protected reserve | 1–80 | 1,015 | Triggered recovery or continuation only |
+| P7 — Protected reserve | 1–80 | 889 | Triggered recovery or continuation only |
 | P8 — Paper and release buffer | 66–90 | 0 planned | Audited paper and public artifacts |
 
 Independent single-GPU arms should be packed four at a time. The flagship alone owns all four GPUs.
@@ -29,7 +30,7 @@ Independent single-GPU arms should be packed four at a time. The flagship alone 
 ### P0 — Before the allocation
 
 Complete [`PREGRANT.md`](PREGRANT.md). Do not start a paid node while corpus, storage, launch targets,
-or resume behavior are unresolved.
+selectable KDA gating, or resume behavior are unresolved.
 
 ### P1 — First answers first
 
@@ -53,11 +54,17 @@ CPU-only P0 work defined in [`DATA.md`](DATA.md).
 - C0 three-seed shared dense control: 63 GPU-hours.
 - D2 NoPE versus partial RoPE: 63 GPU-hours.
 - D3 3:1 versus 5:1 KDA/global ratio: 63 GPU-hours.
+- D7 KDA versus matched scalar-decay GDN under sigmoid/NoPE: 63 GPU-hours.
+- D8 KDA sigmoid versus SiLU output gating: 63 GPU-hours.
 
-C0 is trained once per seed and reused by D2 and D3. Architecture decisions use paired one-sided 95%
-bounds and the 0.01-nat non-inferiority margin. Data decisions use equal-domain bits per UTF-8 byte,
-paired bounds, per-category guardrails, and a sealed audit. The fitted E2 response surface nominates
-candidates; only retrained, replicated arms decide.
+C0 launches only after E2c freezes the stable mixture, then is trained once per seed and reused by
+D2, D3, D7, and D8. Architecture decisions use paired one-sided 95% bounds, the 0.01-nat aggregate
+margin, the 0.02-nat source guardrail, and mandatory 32K/128K and original-4K gates. Shared-control
+reuse requires exact identity of parent, data, training, seed, and analysis. Non-inferiority only
+establishes eligibility; each arm must produce its declared quality, state, or systems benefit. Data
+decisions use equal-domain bits per UTF-8 byte, paired bounds, per-category guardrails, and a sealed
+audit. The fitted E2 response surface nominates candidates; only retrained, replicated arms decide.
+[`ARCHITECTURE.md`](ARCHITECTURE.md) freezes the complete contract.
 
 ### P3 — Transfer before committing the flagship
 
@@ -122,7 +129,7 @@ Flexible:
 
 Not flexible:
 
-- The 5,000-hour ceiling and 1,015-hour reserve.
+- The 5,000-hour ceiling and 889-hour reserve.
 - Dense-width flagship scope.
 - Dependency and exit-gate order.
 - Neutral held-out evaluation and seed confirmations.

@@ -10,14 +10,14 @@
   },
   "budget": {
     "gpu_hours": 5000,
-    "mandatory_gpu_hours": 3985,
-    "reserve_gpu_hours": 1015,
+    "mandatory_gpu_hours": 4111,
+    "reserve_gpu_hours": 889,
     "full_node_days": 52.083333333333336
   },
   "scope": {
     "included": [
       "data experiments E1-E5",
-      "dense architecture decisions C0 D2 D3 D4 D6",
+      "dense architecture decisions C0 D2 D3 D4 D6 D7 D8",
       "dense scale ladder and reversal check",
       "dense-width flagship pretraining",
       "32K and 128K context extension",
@@ -51,6 +51,7 @@
         "20B-token data-pipeline rehearsal",
         "4xGH200 environment and resume qualification",
         "tokenizer decision",
+        "selectable backward-compatible KDA output gate",
         "comparator baseline table",
         "scale geometries and analysis contracts"
       ],
@@ -83,17 +84,19 @@
         4,
         11
       ],
-      "gpu_hours": 440,
+      "gpu_hours": 566,
       "depends_on": [
         "P1"
       ],
       "work": [
         "E2 tiered stable-mixture search narrowing and confirmation: 251 GPU-hours",
-        "C0 three-seed shared dense control: 63 GPU-hours",
+        "after E2c freezes stable data, C0 three-seed shared dense control: 63 GPU-hours",
         "D2 NoPE versus partial RoPE: 63 GPU-hours",
-        "D3 3:1 versus 5:1 recurrent-global ratio: 63 GPU-hours"
+        "D3 3:1 versus 5:1 recurrent-global ratio: 63 GPU-hours",
+        "D7 KDA versus scalar-decay GDN under sigmoid NoPE: 63 GPU-hours",
+        "D8 KDA sigmoid versus SiLU output gate: 63 GPU-hours"
       ],
-      "exit_gate": "stable mixture passes category guardrails and sealed audit; position treatment and mixer ratio are selected by frozen rules"
+      "exit_gate": "stable mixture passes category guardrails and sealed audit; position treatment mixer ratio recurrent operator and output gate are selected by frozen rules"
     },
     {
       "id": "P3",
@@ -178,7 +181,7 @@
         1,
         80
       ],
-      "gpu_hours": 1015,
+      "gpu_hours": 889,
       "depends_on": [
         "P0"
       ],
@@ -215,10 +218,11 @@
     "binding": [
       "phase dependencies and exit gates",
       "5000 GPU-hour ceiling",
-      "1015 GPU-hour protected reserve",
+      "889 GPU-hour protected reserve",
       "dense-width flagship",
       "day-21 configuration freeze",
       "three-seed confirmation for architecture decisions",
+      "D7 and D8 causal attribution",
       "neutral held-out evaluation for data decisions"
     ],
     "advisory": [
