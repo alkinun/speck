@@ -1,0 +1,96 @@
+{
+  "format": "speck_synthetic_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "cosmopedia_v2",
+    "repo": "HuggingFaceTB/smollm-corpus",
+    "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus",
+    "inputs": [
+      {
+        "id": "cosmopedia_v2_shard_00000",
+        "path": "/mnt/speck-data/speck/source-qualification/synthetic-raw-v1/HuggingFaceTB--smollm-corpus/cosmopedia-v2/train-00000-of-00104.parquet",
+        "sha256": "5a25721146377d6e7f288c244e991df93e672b8cc3e535fd4aac5da4cdb1491d",
+        "rows": 376289,
+        "format": "parquet",
+        "training_bytes": 42000000,
+        "evaluation_bytes": 4200000,
+        "generator": {
+          "id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+          "revision": "not_disclosed_by_dataset_card",
+          "official_url": "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1",
+          "license": "Apache-2.0 model family; generation revision undisclosed"
+        },
+        "transformation": "prompted_educational_document_generation",
+        "seed_source": {
+          "id": "Cosmopedia_web_seed_mixture",
+          "revision": "not_disclosed_by_dataset_card",
+          "official_url": "https://huggingface.co/blog/smollm",
+          "rights": "source-specific web rights undisclosed"
+        },
+        "fields": {
+          "text": "text",
+          "document_id": null,
+          "prompt": "prompt",
+          "seed": "prompt",
+          "style": "format",
+          "answer": null,
+          "url": null,
+          "domain": null,
+          "seed_label": "seed_data"
+        },
+        "maximum_seed_text_jaccard": 0.8
+      }
+    ]
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "upstream_terms": "web seed rights and Mixtral generation-time model revision require review",
+    "authority": "manual_review_required",
+    "redistribution": "undecided"
+  },
+  "filters": {
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8,
+    "min_document_bytes": 256,
+    "max_document_bytes": 1000000,
+    "maximum_duplicate_line_ratio": 0.5,
+    "repetition_ngram_tokens": 5,
+    "maximum_repeated_ngram_ratio": 0.35,
+    "template_prefix_tokens": 12,
+    "maximum_bytes_per_template_prefix": 2000000,
+    "maximum_bytes_per_seed_domain": 2000000,
+    "model_identity_phrases": [
+      "as a large language model",
+      "as an ai language model",
+      "i am unable to assist",
+      "i cannot comply",
+      "i cannot fulfill",
+      "i'm unable to assist",
+      "my training data cutoff"
+    ],
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "seed_overlap_shingle_tokens": 5
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "synthetic",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/synthetic-cosmopedia_v2-v1b"
+}

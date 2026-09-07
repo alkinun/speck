@@ -119,11 +119,21 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
                 _nonempty(value, f"input {input_id} {group_name}.{key}")
         _nonempty(item["transformation"], f"input {input_id} transformation")
         fields = item["fields"]
-        _exact_keys(
-            fields,
-            {"text", "document_id", "prompt", "seed", "style", "answer", "url", "domain"},
-            f"input {input_id} fields",
-        )
+        old_fields = {
+            "text",
+            "document_id",
+            "prompt",
+            "seed",
+            "style",
+            "answer",
+            "url",
+            "domain",
+        }
+        if frozenset(fields) not in {
+            frozenset(old_fields),
+            frozenset(old_fields | {"seed_label"}),
+        }:
+            raise ValueError(f"input {input_id} fields have an unsupported schema")
         _nonempty(fields["text"], f"input {input_id} fields.text")
         for key, value in fields.items():
             if value is not None and (not isinstance(value, str) or not value):
@@ -452,6 +462,8 @@ def sample_synthetic_source(config, *, restart=False):
                     fields = item["fields"]
                     prompt = row.get(fields["prompt"]) if fields["prompt"] else None
                     seed = row.get(fields["seed"]) if fields["seed"] else None
+                    seed_label_field = fields.get("seed_label")
+                    seed_label = row.get(seed_label_field) if seed_label_field else None
                     answer = row.get(fields["answer"]) if fields["answer"] else None
                     url = row.get(fields["url"]) if fields["url"] else None
                     domain = row.get(fields["domain"]) if fields["domain"] else _host(url)
@@ -508,6 +520,7 @@ def sample_synthetic_source(config, *, restart=False):
                         "transformation": item["transformation"],
                         "seed_source_id": item["seed_source"]["id"],
                         "seed_source_revision": item["seed_source"]["revision"],
+                        "seed_source_label": (str(seed_label) if seed_label is not None else None),
                         "prompt_sha256": (
                             hashlib.sha256(prompt.encode()).hexdigest()
                             if isinstance(prompt, str)

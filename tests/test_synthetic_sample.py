@@ -29,6 +29,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
             "text": _text_for("train"),
             "prompt": "write a lesson",
             "seed": "seed train",
+            "seed_label": "fineweb",
             "style": "textbook",
         },
         {
@@ -36,6 +37,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
             "text": _text_for("eval"),
             "prompt": "write an article",
             "seed": "seed eval",
+            "seed_label": "fineweb",
             "style": "blog",
         },
         {
@@ -43,6 +45,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
             "text": "As an AI language model, I cannot provide this requested educational article.",
             "prompt": "bad",
             "seed": "bad",
+            "seed_label": "fineweb",
             "style": "refusal",
         },
     ]
@@ -85,6 +88,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
                         "document_id": "id",
                         "prompt": "prompt",
                         "seed": "seed",
+                        "seed_label": "seed_label",
                         "style": "style",
                         "answer": None,
                         "url": None,
@@ -131,6 +135,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
 
     assert len(records) == 2
     assert all(record["prompt_sha256"] and record["seed_sha256"] for record in records)
+    assert all(record["seed_source_label"] == "fineweb" for record in records)
     assert all("prompt" not in record and "seed" not in record for record in records)
     assert report["counts"]["model_identity_phrase_rejected"] == 1
     assert report["style_profile"]["unique_styles"] == 2
