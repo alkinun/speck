@@ -1,0 +1,97 @@
+{
+  "format": "speck_text_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "common_pile_gutenberg",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/reference-common_pile_gutenberg-v2/tokenizer-input.jsonl",
+      "sha256": "3082d4d83ac9734b959ee8f0ff9098e8c0f6baeee3084aeab91ee05c9ed51b95",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_gutenberg-v2/report.json",
+      "parent_report_sha256": "916867b6e514038b3c33dbc3242345d362110a520a2425c6cb4949b9b67541ba",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "id": "common_pile_oercommons",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/reference-common_pile_oercommons-v2/tokenizer-input.jsonl",
+      "sha256": "2e99f9d5334cc584cb8fdb4e0dd4bd7076530fcd595f5cd9beeac441ad489148",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_oercommons-v2/report.json",
+      "parent_report_sha256": "37cb51e38a968686718423a82a9975a31028da911924ce2f6dda04fe0e29c31d",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    },
+    {
+      "id": "common_pile_pressbooks",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/reference-common_pile_pressbooks-v2/tokenizer-input.jsonl",
+      "sha256": "ca04460c7a837ee025bef48578a5a11f6fd27ae9fb8dc9c5541a160173aff041",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_pressbooks-v2/report.json",
+      "parent_report_sha256": "ef4804f534347e9c70e92e765a78ae15033e12fca336cd8d594fa345f6ac2c23",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "id": "common_pile_libretexts",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/source-qualification/reference-common_pile_libretexts-v2/tokenizer-input.jsonl",
+      "sha256": "bb63e4568f05cff17230893b00003e1728f30da8c1d8e06190839094c90d5646",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_libretexts-v2/report.json",
+      "parent_report_sha256": "27144613e2b9115dd8ff8cb9f14e9320a1380aa79c5d0d2b2e2357315330f7e4",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "id": "finewiki_en",
+      "precedence": 5,
+      "path": "/mnt/speck-data/speck/source-qualification/reference-finewiki_en-v2/tokenizer-input.jsonl",
+      "sha256": "4364eb46c90ead3dbb108552e5c2c28dd72da96074bb6c605f46234b1fc94e40",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-finewiki_en-v2/report.json",
+      "parent_report_sha256": "b3d9987cd58835202d45a98c27c2f5330d2ef5f3c04ef5361f97c86895b53312",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "id": "common_pile_stackexchange",
+      "precedence": 6,
+      "path": "/mnt/speck-data/speck/source-qualification/reference-common_pile_stackexchange-v2/tokenizer-input.jsonl",
+      "sha256": "9a2a8476970f8e41b399c770ca19a8d9f0e51f784dbb8a71cdbfe57d00bfc7a7",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/reference-common_pile_stackexchange-v2/report.json",
+      "parent_report_sha256": "488893563504c494c8451d5a92e05d8631a8ed5f5920cc23b50bc90e6513f0b4",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 20000000,
+      "evaluation_bytes": 2000000
+    }
+  ],
+  "policy": {
+    "category": "reference",
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [
+      0
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/reference-cross-source-dedup-v1"
+}

@@ -7,6 +7,7 @@ import pyarrow.parquet as pq
 
 from speck.reference_sample import sample_reference_source, validate_reference_sample_config
 from speck.stack_v3_refine import _sample_partition
+from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
 
@@ -147,3 +148,20 @@ def test_reference_failure_successors_only_correct_declared_source_treatment():
     assert successor["filters"] == changed
     assert successor["source"] == first["source"]
     assert successor["downstream_partition"] == first["downstream_partition"]
+
+
+def test_reference_overlap_prioritizes_public_domain_and_item_licensed_sources():
+    path = ROOT / "research/flagship/reference_cross_source_duplicates_v1.json"
+    plan = validate_text_duplicate_config(json.loads(path.read_text()), config_dir=path.parent)
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "common_pile_gutenberg",
+        "common_pile_oercommons",
+        "common_pile_pressbooks",
+        "common_pile_libretexts",
+        "finewiki_en",
+        "common_pile_stackexchange",
+    ]
+    assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
+    assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
+    assert plan["policy"]["category"] == "reference"
