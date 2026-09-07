@@ -1,0 +1,85 @@
+{
+  "format": "speck_text_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "common_pile_pubmed",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/science-common_pile_pubmed-v2/tokenizer-input.jsonl",
+      "sha256": "c07bed8f624035905ae7338eb2b6182572f733f5676fda0d31069efb00bc3669",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_pubmed-v2/report.json",
+      "parent_report_sha256": "b14e77b6846b1edbe1cd16490791a6be1a77a5b4fcd7ad7b4e8b849b49327633",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "id": "common_pile_arxiv",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v2/tokenizer-input.jsonl",
+      "sha256": "61c175f7e6fcf43a2595c3768584955b8a6796fe9e30ac1e186c7f0ecf0cf523",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/science-common_pile_arxiv-v2/report.json",
+      "parent_report_sha256": "fababca916806407e12c1e638c1b258fd38a5643fb0dfd8c16c42ac60b33b7fc",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "id": "pes2o_v3",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v2/tokenizer-input.jsonl",
+      "sha256": "967d4aadd33fd86bcadf22b7d7d51d8fe12780463d44879974bb2b69b1afdde9",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/science-pes2o_v3-v2/report.json",
+      "parent_report_sha256": "71453085e4b3aee24b6fde6d6af965e0a9005ce9d4825b3c0e977aa8bb2e6e59",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 45000000,
+      "evaluation_bytes": 4500000
+    },
+    {
+      "id": "finepdfs_edu_en",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/source-qualification/science-finepdfs_edu_en-v2/tokenizer-input.jsonl",
+      "sha256": "b6b9b1294dae7bf4eb53b493517f3c2f328f31d39c098669a8663cf1af2507a7",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/science-finepdfs_edu_en-v2/report.json",
+      "parent_report_sha256": "f86fcfa1e302725d01fb9e2c1b3e50bf09f17f44ac99af0acbfb29396d395370",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 25000000,
+      "evaluation_bytes": 2500000
+    },
+    {
+      "id": "proof_pile_2_arxiv",
+      "precedence": 5,
+      "path": "/mnt/speck-data/speck/source-qualification/science-proof_pile_2_arxiv-v2/tokenizer-input.jsonl",
+      "sha256": "53c4a1f04821416e1b9994e76414cc6e508a5bbf0c0e6b2b69c0c397aeea6c7d",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/science-proof_pile_2_arxiv-v2/report.json",
+      "parent_report_sha256": "7ef6ad09ddbceaf32744db471b997a37ff75a6682d18f2e006760210d3426c05",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    }
+  ],
+  "policy": {
+    "category": "science",
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [
+      0
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/science-cross-source-dedup-v1"
+}

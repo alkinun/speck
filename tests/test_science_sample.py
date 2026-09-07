@@ -14,6 +14,7 @@ from speck.science_sample import (
     validate_science_sample_config,
 )
 from speck.stack_v3_refine import _sample_partition
+from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
 
@@ -171,3 +172,19 @@ def test_flagship_science_plans_freeze_five_source_margins():
     assert finepdfs["filters"]["reject_truncated"] is True
     assert finepdfs["filters"]["accepted_extractors"] == ["docling"]
     assert finepdfs["filters"]["minimum_science_term_hits"] == 3
+
+
+def test_flagship_science_overlap_prioritizes_per_document_license_sources():
+    path = ROOT / "research/flagship/science_cross_source_duplicates_v1.json"
+    plan = validate_text_duplicate_config(json.loads(path.read_text()), config_dir=path.parent)
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "common_pile_pubmed",
+        "common_pile_arxiv",
+        "pes2o_v3",
+        "finepdfs_edu_en",
+        "proof_pile_2_arxiv",
+    ]
+    assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
+    assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
+    assert plan["policy"]["category"] == "science"
