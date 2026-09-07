@@ -1,0 +1,432 @@
+{
+  "format": "speck_text_contamination",
+  "format_version": 1,
+  "status": "scan_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "fineweb_edu",
+      "category": "web",
+      "path": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/fineweb_edu.jsonl",
+      "sha256": "8e3c09439ffc27eb1c812ba3ac3f314e95598139583d507590eb131930a3c9b6",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/report.json",
+      "parent_report_sha256": "7da0784a2d35f6b5c42646ad3bd033f134d96f0c86a4b91f211422cc135cddc6",
+      "parent_format": "speck_text_cross_source_duplicates_result",
+      "parent_status": "cross_source_duplicates_complete_not_training_authority",
+      "parent_source_id": "fineweb_edu",
+      "partition": {
+        "seed": 42,
+        "modulus": 10,
+        "evaluation_remainders": [
+          0
+        ],
+        "training_bytes": 30000000,
+        "evaluation_bytes": 3000000
+      }
+    },
+    {
+      "id": "ultrafineweb_en_v1_4",
+      "category": "web",
+      "path": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/ultrafineweb_en_v1_4.jsonl",
+      "sha256": "1724b8ceae3bb049a90b12b026938d1ffdc18c589ebb748186e0c0644ecaa1a1",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/report.json",
+      "parent_report_sha256": "7da0784a2d35f6b5c42646ad3bd033f134d96f0c86a4b91f211422cc135cddc6",
+      "parent_format": "speck_text_cross_source_duplicates_result",
+      "parent_status": "cross_source_duplicates_complete_not_training_authority",
+      "parent_source_id": "ultrafineweb_en_v1_4",
+      "partition": {
+        "seed": 42,
+        "modulus": 10,
+        "evaluation_remainders": [
+          0
+        ],
+        "training_bytes": 35000000,
+        "evaluation_bytes": 3500000
+      }
+    },
+    {
+      "id": "dclm_baseline",
+      "category": "web",
+      "path": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/dclm_baseline.jsonl",
+      "sha256": "b23534e7f33b8761466b83b75dfa5d2516934e2b0dfdf2b81a01b5e852f5b5c5",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/report.json",
+      "parent_report_sha256": "7da0784a2d35f6b5c42646ad3bd033f134d96f0c86a4b91f211422cc135cddc6",
+      "parent_format": "speck_text_cross_source_duplicates_result",
+      "parent_status": "cross_source_duplicates_complete_not_training_authority",
+      "parent_source_id": "dclm_baseline",
+      "partition": {
+        "seed": 42,
+        "modulus": 10,
+        "evaluation_remainders": [
+          0
+        ],
+        "training_bytes": 25000000,
+        "evaluation_bytes": 2500000
+      }
+    },
+    {
+      "id": "fineweb_base",
+      "category": "web",
+      "path": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/fineweb_base.jsonl",
+      "sha256": "36227d31e51816b7ba6f100af4e3da1c648ae649058944048758b9249848e7af",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1/report.json",
+      "parent_report_sha256": "7da0784a2d35f6b5c42646ad3bd033f134d96f0c86a4b91f211422cc135cddc6",
+      "parent_format": "speck_text_cross_source_duplicates_result",
+      "parent_status": "cross_source_duplicates_complete_not_training_authority",
+      "parent_source_id": "fineweb_base",
+      "partition": {
+        "seed": 42,
+        "modulus": 10,
+        "evaluation_remainders": [
+          0
+        ],
+        "training_bytes": 10000000,
+        "evaluation_bytes": 1000000
+      }
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "hellaswag",
+      "source": "Rowan/hellaswag",
+      "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "official_url": "https://huggingface.co/datasets/Rowan/hellaswag",
+      "split": "validation",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/Rowan--hellaswag/data/validation-00000-of-00001.parquet",
+      "sha256": "899813071e1e95efafec90f856e1987d2150fa4d020fc005df6962c259f660cd",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "ctx",
+        "endings"
+      ],
+      "expected_tasks": 10042
+    },
+    {
+      "id": "arc-easy",
+      "source": "allenai/ai2_arc",
+      "revision": "210d026faf9955653af8916fad021475a3f00453",
+      "official_url": "https://huggingface.co/datasets/allenai/ai2_arc",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/allenai--ai2_arc/ARC-Easy/test-00000-of-00001.parquet",
+      "sha256": "4160597d618ae851c7eb04e281574f3f654776216ac6b6641588d64527b47177",
+      "format": "parquet",
+      "task_id_field": "id",
+      "text_fields": [
+        "question",
+        "choices"
+      ],
+      "expected_tasks": 2376
+    },
+    {
+      "id": "arc-challenge",
+      "source": "allenai/ai2_arc",
+      "revision": "210d026faf9955653af8916fad021475a3f00453",
+      "official_url": "https://huggingface.co/datasets/allenai/ai2_arc",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/allenai--ai2_arc/ARC-Challenge/test-00000-of-00001.parquet",
+      "sha256": "62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9",
+      "format": "parquet",
+      "task_id_field": "id",
+      "text_fields": [
+        "question",
+        "choices"
+      ],
+      "expected_tasks": 1172
+    },
+    {
+      "id": "piqa",
+      "source": "baber/piqa",
+      "revision": "142f6d7367fd9877f0fb3b5734ea6a545f54cdd1",
+      "official_url": "https://huggingface.co/datasets/baber/piqa",
+      "split": "validation",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/baber--piqa/piqa_validation.parquet",
+      "sha256": "2b17ee1215b1ceb2ddabf4c90a05c5a8b833bef9d207960f57d111c43a2080f3",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "goal",
+        "sol1",
+        "sol2"
+      ],
+      "expected_tasks": 1838
+    },
+    {
+      "id": "winogrande-xl",
+      "source": "allenai/winogrande",
+      "revision": "01e74176c63542e6b0bcb004dcdea22d94fb67b5",
+      "official_url": "https://huggingface.co/datasets/allenai/winogrande",
+      "split": "validation",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/allenai--winogrande/winogrande_xl/validation-00000-of-00001.parquet",
+      "sha256": "f9d914d1818c0aba98cabdf8af2bc4bd943c462b9c5e7062647e05c2ce3315d1",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "sentence",
+        "option1",
+        "option2"
+      ],
+      "expected_tasks": 1267
+    },
+    {
+      "id": "lambada-openai-en",
+      "source": "EleutherAI/lambada_openai",
+      "revision": "900124bf3b8235c6daf21033af9948b3f07346c4",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/lambada_openai",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--lambada_openai/en/test/en.parquet",
+      "sha256": "99d8a9e54cda761c6340ddd4fa6feda7f846ffb0e716afa52968dea75495eea7",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "text"
+      ],
+      "expected_tasks": 5153
+    },
+    {
+      "id": "mmlu-all",
+      "source": "cais/mmlu",
+      "revision": "c30699e8356da336a370243923dbaf21066bb9fe",
+      "official_url": "https://huggingface.co/datasets/cais/mmlu",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/cais--mmlu/all/test-00000-of-00001.parquet",
+      "sha256": "74a41822ce7d3def56e1682f958469c04642a5336a5ce912fa375fdb90fb25d7",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "question",
+        "choices"
+      ],
+      "expected_tasks": 14042
+    },
+    {
+      "id": "commonsenseqa",
+      "source": "tau/commonsense_qa",
+      "revision": "94630fe30dad47192a8546eb75f094926d47e155",
+      "official_url": "https://huggingface.co/datasets/tau/commonsense_qa",
+      "split": "validation",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/tau--commonsense_qa/data/validation-00000-of-00001.parquet",
+      "sha256": "bdbd9bf9cc4d2349b24901038b2ab2f58e10e4e507ad2fd425dca55cd3cb6660",
+      "format": "parquet",
+      "task_id_field": "id",
+      "text_fields": [
+        "question",
+        "choices"
+      ],
+      "expected_tasks": 1221
+    },
+    {
+      "id": "triviaqa-rc-nocontext",
+      "source": "mandarjoshi/trivia_qa",
+      "revision": "0f7faf33a3908546c6fd5b73a660e0f8ff173c2f",
+      "official_url": "https://huggingface.co/datasets/mandarjoshi/trivia_qa",
+      "split": "validation",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/mandarjoshi--trivia_qa/rc.nocontext/validation-00000-of-00001.parquet",
+      "sha256": "48a5005c0eb4f8a4ae5b9868644297fd5bf1e694aeb3dc9c8ab958cac0d5b201",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "question",
+        "answer"
+      ],
+      "expected_tasks": 17944
+    },
+    {
+      "id": "gsm8k-main",
+      "source": "openai/gsm8k",
+      "revision": "740312add88f781978c0658806c59bc2815b9866",
+      "official_url": "https://huggingface.co/datasets/openai/gsm8k",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/openai--gsm8k/main/test-00000-of-00001.parquet",
+      "sha256": "ee7b8da9e381df27b9e3f7758a159ab2bdaa4dbaa910546cbbc47e0cb44e4f59",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "question",
+        "answer"
+      ],
+      "expected_tasks": 1319
+    },
+    {
+      "id": "math-algebra",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/algebra/test-00000-of-00001.parquet",
+      "sha256": "0e04a850dac9cfc758eac0c80afd2d0cc65e29ea72f916c8ac1045b12af937f5",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 1187
+    },
+    {
+      "id": "math-counting-and-probability",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/counting_and_probability/test-00000-of-00001.parquet",
+      "sha256": "c324818949c75a6227c0328a8499d58023cbbf6757cfc1736f5ab24cc8d87966",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 474
+    },
+    {
+      "id": "math-geometry",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/geometry/test-00000-of-00001.parquet",
+      "sha256": "98720f3a8134ad9784fd8951195245264495df03ffc5c9485a9a54ff5ae2431a",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 479
+    },
+    {
+      "id": "math-intermediate-algebra",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/intermediate_algebra/test-00000-of-00001.parquet",
+      "sha256": "e859f72486c951c2017da880541ca729940eaa986b0364eb23e238983df9bfeb",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 903
+    },
+    {
+      "id": "math-number-theory",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/number_theory/test-00000-of-00001.parquet",
+      "sha256": "ba156c9c9fa2040836ba12135fd964e6e67d6bccd8c469ec4a3ad941f8f6fbe9",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 540
+    },
+    {
+      "id": "math-prealgebra",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/prealgebra/test-00000-of-00001.parquet",
+      "sha256": "301e5d8ade5c7b5038032532e498bdc9dca799e7f1061a63f2e7d980803240cc",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 871
+    },
+    {
+      "id": "math-precalculus",
+      "source": "EleutherAI/hendrycks_math",
+      "revision": "21a5633873b6a120296cce3e2df9d5550074f4a3",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/flagship-firewall-v1/EleutherAI--hendrycks_math/precalculus/test-00000-of-00001.parquet",
+      "sha256": "da37474ba3761ae5727af3844a7ba963a735bd6a14c65e6137593669a4fe3b9c",
+      "format": "parquet",
+      "task_id_field": null,
+      "text_fields": [
+        "problem",
+        "solution"
+      ],
+      "expected_tasks": 546
+    },
+    {
+      "id": "humaneval",
+      "source": "openai/human-eval",
+      "revision": "6d43fb980f9fee3c892a914eda09951f772ad10d",
+      "official_url": "https://github.com/openai/human-eval",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/HumanEval.jsonl.gz",
+      "sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "format": "jsonl_gzip",
+      "task_id_field": "task_id",
+      "text_fields": [
+        "prompt",
+        "canonical_solution",
+        "test"
+      ],
+      "expected_tasks": 164
+    },
+    {
+      "id": "mbpp",
+      "source": "google-research/google-research",
+      "revision": "932d4685e23f671b9e8c2abc72dd228ba5ff9252",
+      "official_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+      "split": "test",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/mbpp.jsonl",
+      "sha256": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f",
+      "format": "jsonl",
+      "task_id_field": "task_id",
+      "text_fields": [
+        "text",
+        "code",
+        "test_setup_code",
+        "test_list",
+        "challenge_test_list"
+      ],
+      "expected_tasks": 974
+    },
+    {
+      "id": "bigcodebench-v0.1.4",
+      "source": "bigcode/bigcodebench",
+      "revision": "b74c0d0bf70d2c0bc459be537895cca163007f1a",
+      "official_url": "https://github.com/bigcode-project/bigcodebench",
+      "split": "v0.1.4",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/bigcodebench-v0.1.4.parquet",
+      "sha256": "d9a4965821c9507ebdfb551c288656b2d5fe553234f5183044333ca8a4018267",
+      "format": "parquet",
+      "task_id_field": "task_id",
+      "text_fields": [
+        "complete_prompt",
+        "instruct_prompt",
+        "canonical_solution",
+        "code_prompt",
+        "test"
+      ],
+      "expected_tasks": 1140
+    }
+  ],
+  "policy": {
+    "normalization": "NFKC+lower+unicode-word-punctuation",
+    "token_pattern": "[^\\W_]+(?:['\u2019][^\\W_]+)*|_+|[^\\s\\w]",
+    "primary_ngram": 13,
+    "sensitivity_ngram": 10,
+    "minimum_alphanumeric_tokens": 5,
+    "minimum_unique_tokens": 5,
+    "maximum_tasks_per_ngram": 1,
+    "critical_primary_matches": 2,
+    "sensitivity_matches": 2,
+    "minimum_exact_field_characters": 40,
+    "minimum_exact_field_tokens": 6,
+    "exact_anchor_tokens": 5
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/web-contamination-v1"
+}
