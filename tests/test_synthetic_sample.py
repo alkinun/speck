@@ -7,6 +7,7 @@ import pyarrow.parquet as pq
 
 from speck.stack_v3_refine import _sample_partition
 from speck.synthetic_sample import sample_synthetic_source, validate_synthetic_sample_config
+from speck.text_near_duplicates import validate_text_duplicate_config
 
 ROOT = Path(__file__).parents[1]
 
@@ -156,3 +157,18 @@ def test_flagship_synthetic_plans_freeze_sources_generators_and_margins():
     assert all(
         item["seed_source"]["revision"] == "not_disclosed_by_dataset_card" for item in inputs
     )
+
+
+def test_flagship_synthetic_overlap_plan_freezes_precedence_and_quotas():
+    path = ROOT / "research/flagship/synthetic_cross_source_duplicates_v1.json"
+    plan = validate_text_duplicate_config(json.loads(path.read_text()), config_dir=path.parent)
+
+    assert [source["id"] for source in plan["sources"]] == [
+        "cosmopedia_v2",
+        "ultrafineweb_l3_multi_style",
+        "ultrafineweb_l3_qa",
+        "megamath_qa",
+    ]
+    assert sum(source["training_bytes"] for source in plan["sources"]) == 100_000_000
+    assert sum(source["evaluation_bytes"] for source in plan["sources"]) == 10_000_000
+    assert plan["policy"]["category"] == "synthetic"

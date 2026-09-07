@@ -1,0 +1,73 @@
+{
+  "format": "speck_text_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "cosmopedia_v2",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/synthetic-cosmopedia_v2-v2/tokenizer-input.jsonl",
+      "sha256": "3e0989e9b711a8805d4896ea463caa1e44fb4cb5b634c733131957b7f051f0bb",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/synthetic-cosmopedia_v2-v2/report.json",
+      "parent_report_sha256": "86a15be3a0883c44550155934e937a9379305b40f2c71efa7bd807f244712939",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "id": "ultrafineweb_l3_multi_style",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_multi_style-v2/tokenizer-input.jsonl",
+      "sha256": "beffbbc169971fa27b0c1b6ab94dec0c3af11f800b61676e76a53c6435805146",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_multi_style-v2/report.json",
+      "parent_report_sha256": "0ee11b26887b69d0f9c48486fac8e6cba2338a924cf964275610272c019270aa",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "id": "ultrafineweb_l3_qa",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_qa-v2/tokenizer-input.jsonl",
+      "sha256": "8a13727679fbf266c35c1250680c2af307166450b8415000951945421c560f1c",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/synthetic-ultrafineweb_l3_qa-v2/report.json",
+      "parent_report_sha256": "b139cc62c1009dc95ccd182703905f160d00a928f7d22af90c09f390f8bf4a8e",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "id": "megamath_qa",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/source-qualification/synthetic-megamath_qa-v2/tokenizer-input.jsonl",
+      "sha256": "881a7889ff0e201ca9a55345640b8251af16f7c44bb37bda7e60b0c711798232",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/synthetic-megamath_qa-v2/report.json",
+      "parent_report_sha256": "0008d8f92cf444d7944ccfc007b62b52d413ec816e9443bfc68dc4c7b793bbf7",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    }
+  ],
+  "policy": {
+    "category": "synthetic",
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [
+      0
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/synthetic-cross-source-dedup-v1"
+}
