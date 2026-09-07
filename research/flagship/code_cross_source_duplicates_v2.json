@@ -1,0 +1,82 @@
+{
+  "format": "speck_code_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "common_pile_python_peps",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/common-pile-python-peps-v3/tokenizer-input.jsonl",
+      "sha256": "cdade5c85b66fd5b84034d163f951e740146f2cf449d4b07f85ad256b0e5d803",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/common-pile-python-peps-v3/report.json",
+      "parent_report_sha256": "ab2a10d9b6c5e2050822bba76da74dc897dff90805bb0c963f99d71ddb296295",
+      "parent_format": "speck_code_contamination_successor_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    },
+    {
+      "id": "python_edu",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/python-edu-v3/tokenizer-input.jsonl",
+      "sha256": "5d97681c4d5bb6aa98758ee0253844eb5282bf33cd80769ffb46e71e0d9995ad",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/python-edu-v3/report.json",
+      "parent_report_sha256": "5d29f8054d1c7fdc5cbab9fdbddbcd83a0d6f44c41606091ab7ae0e76766bdc7",
+      "parent_format": "speck_code_contamination_successor_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "id": "stack_edu",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/stack-edu-v4/tokenizer-input.jsonl",
+      "sha256": "0328cc65ee9165d3a84bfd2cc175b0a6fb5b88e17f1d04e93eb1bfbba1df68a2",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/stack-edu-v4/report.json",
+      "parent_report_sha256": "84dfdf62fd57ff77526abb4534266726521b1d07bfb8b17957c87eaeb91f3de6",
+      "parent_format": "speck_code_contamination_successor_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "training_bytes": 20000000,
+      "evaluation_bytes": 2000000
+    },
+    {
+      "id": "stack_v3",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v3/tokenizer-input.jsonl",
+      "sha256": "bed4caa5fc55bc0c6fba351b2bff40ec129364a209c0b4542c940cabbf029752",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v3/report.json",
+      "parent_report_sha256": "9700a29e3b41d0d27281fa64bde5cd857d5ee06d4c1c0fd9c403e98f24938077",
+      "parent_format": "speck_code_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "training_bytes": 55000000,
+      "evaluation_bytes": 5500000
+    },
+    {
+      "id": "common_pile_stackv2_edu",
+      "precedence": 5,
+      "path": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v4/tokenizer-input.jsonl",
+      "sha256": "50e422008ade8dd3b610e49be19416394553829d764758a12616cfd8b512d278",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v4/report.json",
+      "parent_report_sha256": "5b1628a796db4b2ce4488b21c304c0766b170c5a757e164fde3aa0a3d6c8f8b7",
+      "parent_format": "speck_code_contamination_successor_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    }
+  ],
+  "policy": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [0]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2"
+}

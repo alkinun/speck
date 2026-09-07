@@ -55,6 +55,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Stack-Edu acquisition](172_stack_edu_bounded_swh_sample.md) | SWH identity, missing-blob, and metadata-length evidence |
 | [Code-source overlap](173_code_source_overlap_and_precedence.md) | Bounded exact/fuzzy comparison and blend precedence |
 | [Code contamination successors](174_code_contamination_successors.md) | Stack-Edu/Common Pile benchmark cleanup and final bounded code inputs |
+| [Code tokenizer supplements](175_code_tokenizer_supplements.md) | Python-Edu/PEP qualification and the complete five-source bounded code slice |
 
 ## Conventions
 

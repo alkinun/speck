@@ -1,0 +1,72 @@
+{
+  "format": "speck_code_contamination_successor",
+  "format_version": 1,
+  "status": "scan_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/python-edu-v2/tokenizer-input.jsonl",
+    "sha256": "b6db850144c00c1123743a33cbaa5a40d312fa35527d5222fc05ff22e4a5f3ac",
+    "report": "/mnt/speck-data/speck/source-qualification/python-edu-v2/report.json",
+    "report_sha256": "d0194f1c0727b2c7a8e935541b5f860574971a2f287b7ddbbc6d10fed2d3ad2f",
+    "parent_format": "speck_gitleaks_filter_result",
+    "parent_status": "gitleaks_exclusion_complete_not_training_authority"
+  },
+  "benchmarks": [
+    {
+      "id": "humaneval",
+      "source": "openai/human-eval",
+      "revision": "6d43fb980f9fee3c892a914eda09951f772ad10d",
+      "official_url": "https://github.com/openai/human-eval",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/HumanEval.jsonl.gz",
+      "sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "format": "jsonl_gzip",
+      "task_id_field": "task_id",
+      "text_fields": ["prompt", "canonical_solution", "test"],
+      "expected_tasks": 164
+    },
+    {
+      "id": "mbpp",
+      "source": "google-research/google-research",
+      "revision": "932d4685e23f671b9e8c2abc72dd228ba5ff9252",
+      "official_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/mbpp.jsonl",
+      "sha256": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f",
+      "format": "jsonl",
+      "task_id_field": "task_id",
+      "text_fields": ["text", "code", "test_setup_code", "test_list", "challenge_test_list"],
+      "expected_tasks": 974
+    },
+    {
+      "id": "bigcodebench-v0.1.4",
+      "source": "bigcode/bigcodebench",
+      "revision": "b74c0d0bf70d2c0bc459be537895cca163007f1a",
+      "official_url": "https://github.com/bigcode-project/bigcodebench",
+      "path": "/mnt/speck-data/speck/evaluation-sources/code-contamination-v1/bigcodebench-v0.1.4.parquet",
+      "sha256": "d9a4965821c9507ebdfb551c288656b2d5fe553234f5183044333ca8a4018267",
+      "format": "parquet",
+      "task_id_field": "task_id",
+      "text_fields": ["complete_prompt", "instruct_prompt", "canonical_solution", "code_prompt", "test"],
+      "expected_tasks": 1140
+    }
+  ],
+  "policy": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "primary_ngram": 13,
+    "sensitivity_ngram": 10,
+    "minimum_alphanumeric_tokens": 5,
+    "minimum_unique_tokens": 5,
+    "maximum_tasks_per_ngram": 1,
+    "critical_primary_matches": 3,
+    "sensitivity_matches": 3,
+    "minimum_exact_field_characters": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "code",
+    "modulus": 10,
+    "evaluation_remainders": [0],
+    "training_bytes": 10000000,
+    "evaluation_bytes": 1000000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/python-edu-v3"
+}

@@ -107,7 +107,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_nested_parquet",
       "rights": "ODC-By-1.0 dataset; every original file license and attribution still applies",
-      "pipeline": "security_language_license_contamination_partition_and_bounded_overlap_pass_training_blocked"
+      "pipeline": "security_language_license_contamination_partition_and_five_source_overlap_pass_training_blocked"
     },
     {
       "id": "stack_edu",
@@ -119,7 +119,7 @@
       "priority": "primary_screen",
       "access": "software_heritage_s3_ids",
       "rights": "inherits The Stack v2 source licenses and attribution",
-      "pipeline": "bounded_swh_security_contamination_partition_and_overlap_pass_training_blocked"
+      "pipeline": "bounded_swh_security_contamination_partition_and_five_source_overlap_pass_training_blocked"
     },
     {
       "id": "common_pile_stackv2_edu",
@@ -131,7 +131,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "Common Pile public-domain/open-license policy; file-level audit required",
-      "pipeline": "bounded_inline_security_contamination_partition_and_overlap_pass_training_blocked"
+      "pipeline": "bounded_inline_security_contamination_partition_and_five_source_overlap_pass_training_blocked"
     },
     {
       "id": "python_edu",
@@ -143,7 +143,7 @@
       "priority": "secondary",
       "access": "software_heritage_s3_ids",
       "rights": "inherits The Stack v2 source licenses and attribution",
-      "pipeline": "external_blob_fetch"
+      "pipeline": "bounded_swh_score_language_security_contamination_partition_and_five_source_overlap_pass_rights_blocked"
     },
     {
       "id": "common_pile_python_peps",
@@ -155,7 +155,7 @@
       "priority": "tokenizer_only",
       "access": "open_huggingface",
       "rights": "Common Pile public-domain/open-license policy; source license audit required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_public_domain_language_security_contamination_partition_and_five_source_overlap_pass_training_blocked"
     },
     {
       "id": "stack_v2_dedup",

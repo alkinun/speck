@@ -1,0 +1,33 @@
+{
+  "format": "speck_gitleaks_filter",
+  "format_version": 1,
+  "status": "exclusion_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/common-pile-python-peps-v1/tokenizer-input.jsonl",
+    "sha256": "f3bea2c9840ee0f8772f089df0f4ea9fca20c675534febb02d6a3d997b54ac75",
+    "parent_report": "/mnt/speck-data/speck/source-qualification/common-pile-python-peps-v1/report.json",
+    "parent_report_sha256": "0a6a843d8be10e1f827b09aaa6ca0d656fb7e23485c16b93fbc61c7b11927ff5",
+    "parent_format": "speck_common_pile_peps_sample_result",
+    "parent_status": "bounded_sample_complete_not_training_authority"
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "binary": "/home/alkin/.local/bin/gitleaks-8.30.1",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "report": "/mnt/speck-data/speck/source-qualification/common-pile-python-peps-security-v1/gitleaks.json",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "redaction_percent": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "code",
+    "modulus": 10,
+    "evaluation_remainders": [0],
+    "training_bytes": 5000000,
+    "evaluation_bytes": 500000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/common-pile-python-peps-v2"
+}

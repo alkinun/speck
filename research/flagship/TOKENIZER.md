@@ -1,9 +1,9 @@
 # Flagship tokenizer training and qualification
 
-Status: tooling complete; the bounded code core is technically qualified but rights-blocked; five
-non-code categories and two code supplements remain pending, 2026-09-07. The first flagship should
-use a Speck-trained tokenizer only if it clears this protocol. Mistral 32K remains the frozen
-fallback until the final source-balanced sample and matched language-model pilot are complete.
+Status: tooling complete; the full bounded code slice is technically qualified but rights-blocked;
+five non-code categories remain pending, 2026-09-07. The first flagship should use a Speck-trained
+tokenizer only if it clears this protocol. Mistral 32K remains the frozen fallback until the final
+source-balanced sample and matched language-model pilot are complete.
 
 [`tokenizer_plan.json`](tokenizer_plan.json) freezes the research decision. The executable config is
 created under `experiments/Speck-Tokenizer-v1/` only after every input file has an immutable source
@@ -32,10 +32,10 @@ All custom candidates use the same explicit trainer settings:
 - `<unk>=0`, `<s>=1`, `</s>=2`, and no padding token;
 - exact model/vocabulary/sample hashes and path-independent model serialization.
 
-The provisional code slice uses the decontaminated Stack v3.1 artifact and v4 Stack-Edu/Common Pile
-artifacts recorded in [finding 174](../../findings/174_code_contamination_successors.md), plus
-still-unprepared Python-Edu and Python language-design prose. None may enter the sample until its
-rights disposition is accepted and the executable input manifest pins the final hashes.
+The code slice uses the decontaminated Stack v3.1, Stack-Edu, Common Pile, Python-Edu, and Python PEP
+artifacts recorded through [finding 175](../../findings/175_code_tokenizer_supplements.md). Their
+55/20/10/10/5 allocation and duplicate precedence are technically frozen. None may enter the sample
+until its rights disposition is accepted and the executable input manifest pins the final hashes.
 
 ## 2. Sample contract
 

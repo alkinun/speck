@@ -104,6 +104,15 @@ Common Pile Stack v2 educational code, 10 MB Python-Edu, and 5 MB Python languag
 is intentionally broader than the eventual stable mixture so the vocabulary is not overfit to one
 code filter.
 
+The two supplements now pass their bounded technical chain. Python-Edu contributes a cleaned 14.06
+MB/1.29 MB train/evaluation partition after five Gitleaks-affected and 247 benchmark-critical files
+are removed; its source metadata lacks file-level license identifiers, so rights approval remains
+blocked. The filtered public-domain PEP source contributes 9.96 MB/0.97 MB after nine
+benchmark-critical documents are removed. A new five-source comparison covers 40,869 documents and
+finds zero exact or verified ≥0.80 near-duplicate matches. The complete technical code slice is now
+frozen at 55/20/10/10/5, with PEP→Python-Edu→Stack-Edu→Stack-v3→Common-Pile duplicate precedence.
+See [finding 175](../../findings/175_code_tokenizer_supplements.md).
+
 ## 3. Web candidates
 
 Primary E1W treatments remain well chosen but their versions change:
@@ -174,9 +183,9 @@ must use disjoint hashes.
 1. Freeze source cards and acceptance/attribution policy for Stack v3, Stack-Edu, FineWiki, and every
    source with inherited terms. The technical bounded code screens are complete; human rights
    disposition is not.
-2. **Bounded code pass:** the repository-aware Stack v3, Stack-Edu, and Common Pile samples now pass
-   identity, quality/language, security, benchmark-contamination, partition-yield, and bounded
-   cross-source-overlap gates.
+2. **Bounded code pass:** all five code tokenizer inputs now pass identity, quality/language,
+   security, benchmark-contamination, partition-yield, and bounded cross-source-overlap gates. Rights
+   acceptance remains separate and pending.
 3. Materialize the 660 MB tokenizer sample using the provisional quotas in the registry; failed
    sources are replaced within their category before any candidate tokenizer is trained.
 4. Train and statically evaluate the three custom tokenizers plus Mistral 32K.

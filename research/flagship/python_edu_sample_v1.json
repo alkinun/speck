@@ -1,0 +1,46 @@
+{
+  "format": "speck_python_edu_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "repo": "HuggingFaceTB/smollm-corpus",
+    "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus",
+    "path": "/mnt/speck-data/speck/source-downloads/code-supplements-v1/python-edu-train-00000-of-00002.parquet",
+    "sha256": "36f2f22c267846065b5279ea13109d22f49ee93351fdafd30b24d152c7ce04b1",
+    "rows": 3839224
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "source_lineage": "The Stack v2; refer to upstream data license",
+    "file_license_metadata": "absent",
+    "authority": "manual_review_required"
+  },
+  "filters": {
+    "minimum_integer_score": 4,
+    "min_file_bytes": 256,
+    "max_file_bytes": 100000,
+    "max_bytes_per_repository": 500000,
+    "sample_bytes": 16000000,
+    "English_prose": {
+      "detector": "py3langid==0.3.0",
+      "minimum_alphabetic_characters": 80,
+      "minimum_probability": 0.8
+    }
+  },
+  "fetch": {
+    "base_url": "https://softwareheritage.s3.amazonaws.com/content/",
+    "workers": 32,
+    "timeout_seconds": 20,
+    "attempts": 4
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "code",
+    "modulus": 10,
+    "evaluation_remainders": [0],
+    "training_bytes": 10000000,
+    "evaluation_bytes": 1000000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/python-edu-v1"
+}
