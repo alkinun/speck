@@ -74,6 +74,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
                         "official_url": "https://example.com/seeds",
                         "rights": "test",
                     },
+                    "maximum_seed_text_jaccard": 0.8,
                     "fields": {
                         "text": "text",
                         "document_id": "id",
@@ -104,6 +105,7 @@ def test_synthetic_sample_preserves_lineage_and_rejects_model_identity(tmp_path)
             "model_identity_phrases": ["as an ai language model", "i cannot fulfill"],
             "allowed_email_placeholders": [],
             "allowed_ipv4_placeholders": [],
+            "seed_overlap_shingle_tokens": 5,
         },
         "downstream_partition": {
             "seed": 42,

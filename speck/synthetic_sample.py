@@ -91,6 +91,7 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
                 "transformation",
                 "seed_source",
                 "fields",
+                "maximum_seed_text_jaccard",
             },
             f"input {index}",
         )
@@ -138,8 +139,22 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
                 "evaluation_bytes": _integer(
                     item["evaluation_bytes"], f"input {input_id} evaluation_bytes", 1
                 ),
+                "maximum_seed_text_jaccard": (
+                    None
+                    if item["maximum_seed_text_jaccard"] is None
+                    else float(item["maximum_seed_text_jaccard"])
+                ),
             }
         )
+        seed_overlap = item["maximum_seed_text_jaccard"]
+        if seed_overlap is not None and (
+            isinstance(seed_overlap, bool)
+            or not isinstance(seed_overlap, (int, float))
+            or not 0 <= seed_overlap <= 1
+        ):
+            raise ValueError(
+                f"input {input_id} maximum_seed_text_jaccard must be null or in [0, 1]"
+            )
     if len(input_ids) != len(set(input_ids)):
         raise ValueError("synthetic input IDs must be unique")
 
@@ -169,6 +184,7 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
             "model_identity_phrases",
             "allowed_email_placeholders",
             "allowed_ipv4_placeholders",
+            "seed_overlap_shingle_tokens",
         },
         "filters",
     )
@@ -196,6 +212,9 @@ def validate_synthetic_sample_config(config, *, config_dir=None):
         ),
         "template_prefix_tokens": _integer(
             filters["template_prefix_tokens"], "template_prefix_tokens", 2
+        ),
+        "seed_overlap_shingle_tokens": _integer(
+            filters["seed_overlap_shingle_tokens"], "seed_overlap_shingle_tokens", 2
         ),
         "maximum_bytes_per_template_prefix": _integer(
             filters["maximum_bytes_per_template_prefix"],
@@ -273,6 +292,17 @@ def _template_prefix(text, size):
     return " ".join(_tokens(text)[:size])
 
 
+def _shingle_jaccard(left, right, size):
+    def shingles(value):
+        tokens = _tokens(value)
+        return {tuple(tokens[index : index + size]) for index in range(len(tokens) - size + 1)}
+
+    left_shingles = shingles(left)
+    right_shingles = shingles(right)
+    union = left_shingles | right_shingles
+    return len(left_shingles & right_shingles) / len(union) if union else 0.0
+
+
 def _entropy(counter):
     total = sum(counter.values())
     if not total:
@@ -332,6 +362,7 @@ def sample_synthetic_source(config, *, restart=False):
             targets = {"train": item["training_bytes"], "eval": item["evaluation_bytes"]}
             counts = Counter()
             partitions = Counter()
+            maximum_seed_overlap = 0.0
             row_groups = sorted(
                 range(parquet.num_row_groups),
                 key=lambda index: hashlib.sha256(
@@ -416,6 +447,20 @@ def sample_synthetic_source(config, *, restart=False):
                         document_id = hashlib.sha256(
                             f"{item['sha256']}\0{row_group}\0{row_index}".encode()
                         ).hexdigest()
+                    seed_overlap = (
+                        _shingle_jaccard(text, seed, filters["seed_overlap_shingle_tokens"])
+                        if isinstance(seed, str)
+                        else None
+                    )
+                    if seed_overlap is not None:
+                        maximum_seed_overlap = max(maximum_seed_overlap, seed_overlap)
+                    if (
+                        item["maximum_seed_text_jaccard"] is not None
+                        and seed_overlap is not None
+                        and seed_overlap >= item["maximum_seed_text_jaccard"]
+                    ):
+                        counts["unchanged_seed_rejected"] += 1
+                        continue
                     record = {
                         "text": text,
                         "source": config["source"]["id"],
@@ -448,6 +493,7 @@ def sample_synthetic_source(config, *, restart=False):
                             if isinstance(seed, str)
                             else None
                         ),
+                        "seed_text_shingle_jaccard": seed_overlap,
                         "answer_sha256": (
                             hashlib.sha256(answer.encode()).hexdigest()
                             if isinstance(answer, str)
@@ -483,6 +529,7 @@ def sample_synthetic_source(config, *, restart=False):
                     "counts": dict(sorted(counts.items())),
                     "row_groups_total": parquet.num_row_groups,
                     "row_groups_read": groups_read,
+                    "maximum_observed_seed_text_jaccard": maximum_seed_overlap,
                     "partition": {**dict(sorted(partitions.items())), "targets": targets},
                 }
             )
