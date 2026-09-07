@@ -19,6 +19,7 @@ dependencies = [
 
 [dependency-groups]
 dataset-build = [
+    "datasketch==2.0.0",
     "datasets==5.0.1",
 ]
 dev = [

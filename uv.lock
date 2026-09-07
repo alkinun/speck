@@ -538,6 +538,20 @@ wheels = [
 ]
 
 [[package]]
+name = "datasketch"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11' or (extra == 'extra-5-speck-cpu' and extra == 'extra-5-speck-gpu')" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/da/ae/bbcdeab67ebfe27747896618bca0f8113e79d534c5af2b06ce6693c981de/datasketch-2.0.0.tar.gz", hash = "sha256:e0570e170f7e64b8d6fb1cc2e4ce36a9f7036c5100167e50a0770addc50558c2", size = 98666, upload-time = "2026-07-05T06:36:30.681Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/54/df/9e79bf1fb2f660507dbd00d24730d107595a2f599f2524a96344149c95f1/datasketch-2.0.0-py3-none-any.whl", hash = "sha256:aea5ffafcce776e03d085740e78b874e778d779b07ee11ca636ca51b3fef09ed", size = 107247, upload-time = "2026-07-05T06:36:29.222Z" },
+]
+
+[[package]]
 name = "defusedxml"
 version = "0.7.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3106,6 +3120,7 @@ linear = [
 [package.dev-dependencies]
 dataset-build = [
     { name = "datasets" },
+    { name = "datasketch" },
 ]
 dev = [
     { name = "pytest" },
@@ -3150,7 +3165,10 @@ requires-dist = [
 provides-extras = ["cpu", "gpu", "linear"]
 
 [package.metadata.requires-dev]
-dataset-build = [{ name = "datasets", specifier = "==5.0.1" }]
+dataset-build = [
+    { name = "datasets", specifier = "==5.0.1" },
+    { name = "datasketch", specifier = "==2.0.0" },
+]
 dev = [
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "ruff", specifier = ">=0.15.0" },

@@ -1,0 +1,126 @@
+{
+  "format": "speck_code_source_overlap_summary",
+  "format_version": 1,
+  "status": "bounded_cross_source_overlap_pass_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "dependency": {
+    "name": "datasketch",
+    "version": "2.0.0",
+    "group": "dataset-build",
+    "pyproject_sha256": "20d35414856bd5f3b849bf2d7439f7b795b1e25e2a4e0123f18752a862bc1a1d",
+    "lock_sha256": "7778d5f306c02d0db17bb595c572bdfdbd7174c78f1ff227e6edb6fd1817f485"
+  },
+  "implementation": {
+    "gitleaks_module": "speck/gitleaks_filter.py",
+    "gitleaks_module_sha256": "59b6391d9c9fbfbe458839c58b83d4fb3ad30aed202052d6fdc2dab18d049fee",
+    "gitleaks_cli": "scripts/gitleaks_filter.py",
+    "gitleaks_cli_sha256": "7e39037f6953d4f5b5f2fb679ce737d8d4ecb36128e71a18539ad83ba9c88a6f",
+    "common_pile_config": "research/flagship/common_pile_code_sample_v1.json",
+    "common_pile_config_sha256": "b8e154be9e2ea5c3a4c882d402798c6909b8dc561eac3cd9c2fd0f147704e72d",
+    "common_pile_module": "speck/common_pile_code.py",
+    "common_pile_module_sha256": "bdd2c6fb059d1f44b25ed9cba0683959f4db323f89199bcac20249150da30545",
+    "common_pile_cli": "scripts/common_pile_code_sample.py",
+    "common_pile_cli_sha256": "6a4cca9b787946d54798f37117efb4bc746cb62142e4d049ec21c1d8f6ef1827",
+    "stack_edu_gitleaks_config": "research/flagship/stack_edu_gitleaks_v1.json",
+    "stack_edu_gitleaks_config_sha256": "979d12ad3ed020e1847bba0cc3cc04958fbea8011af6db05f27e8540f263c56a",
+    "common_pile_gitleaks_config": "research/flagship/common_pile_code_gitleaks_v1.json",
+    "common_pile_gitleaks_config_sha256": "ef668f96213ab95a7b02977794110df990dcc17b6751c39ab923661ea64f8918",
+    "overlap_config": "research/flagship/code_cross_source_duplicates_v1.json",
+    "overlap_config_sha256": "ba09ae52fdada1482154063e5bb4ac0cc2ed09784f28c9e3f6a79e29ac8af9df",
+    "overlap_module": "speck/code_near_duplicates.py",
+    "overlap_module_sha256": "7c78f78f29195ace7061e1d78d0d98a4ebf7456d03afd1a1fdc544515b816009",
+    "overlap_cli": "scripts/code_near_duplicates.py",
+    "overlap_cli_sha256": "b60c48a21848616debf0bb03635113729db029fd2ce47ed253a2e4228645e409"
+  },
+  "stack_edu_security": {
+    "status": "gitleaks_exclusion_complete_not_training_authority",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/stack-edu-v3/report.json",
+    "runtime_report_sha256": "58bab3f6754265c87e3cd81cde384a3a63f637816b070fe157133ffc74c49f1d",
+    "records_seen": 9572,
+    "records_excluded": 2,
+    "bytes_excluded": 7002,
+    "records_retained": 9570,
+    "training_bytes": 22471337,
+    "evaluation_bytes": 2851978,
+    "tokenizer_input_sha256": "e3e7c3f73fc5feec240fa59beb9e007636d23e401c56f05d6d00321059b3f46b"
+  },
+  "common_pile": {
+    "source": "common-pile/stackv2_edu_filtered",
+    "revision": "c354dbe88469a1153e97c6a63ac50591849654de",
+    "source_shard_sha256": "fab627a4e8add9478c5c08107cf5f2385bab1c3f741a3771a855cb1c32d09f56",
+    "failed_20mb_artifact": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-20mb-failed",
+    "failed_20mb_sample_bytes": 11775326,
+    "decision": "reduce source role to 10M train and 1M evaluation and move 5M/0.5M to Stack-Edu",
+    "passing_sample": {
+      "status": "bounded_sample_complete_not_training_authority",
+      "plan_fingerprint": "f38c31dbd309d512893057e9f0e33584197ad7b721446df16ee1cda2a0f84ca2",
+      "runtime_report": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v2/report.json",
+      "runtime_report_sha256": "202b610bc7e91a94847826f2782636ccd4a931ce27fcc09f5855e87c5ca2bdb1",
+      "source_rows": 494753,
+      "records_sampled": 4966,
+      "repositories": 3768,
+      "sampled_bytes": 12019566,
+      "non_English_prose_rejected": 658,
+      "upstream_blob_id_not_plain_released_sha1": 154,
+      "tokenizer_input_sha256": "fd4484bbea0448d7bdbe06770b248d03d05ac1351ba2e83eec4c89de4156faa0"
+    },
+    "gitleaks": {
+      "findings": 0,
+      "status": "gitleaks_exclusion_complete_not_training_authority",
+      "runtime_report": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v3/report.json",
+      "runtime_report_sha256": "a53c77d790773eacf9275cff749a783ba969b22e7bd99291a9fd840e71938f42",
+      "training_bytes": 10916236,
+      "evaluation_bytes": 1103330
+    }
+  },
+  "overlap": {
+    "status": "cross_source_duplicates_complete_not_training_authority",
+    "plan_fingerprint": "2f6e6a5820f924b73af5608d3b2c4755118f61ddb7a7a567356c0f746c0986c8",
+    "runtime_report": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v1/report.json",
+    "runtime_report_sha256": "3f61ffde2f4bfbee14dc8cff10825b5ae66ef8f7a7b03c99eee0843a2af02f13",
+    "precedence": ["stack_edu", "stack_v3", "common_pile_stackv2_edu"],
+    "policy": {
+      "normalization": "NFKC+lower+lexical-code-tokens",
+      "shingle_tokens": 10,
+      "minimum_document_tokens": 50,
+      "maximum_document_tokens": 100000,
+      "num_perm": 128,
+      "minhash_seed": 42,
+      "lsh_threshold": 0.8,
+      "verified_jaccard_threshold": 0.8
+    },
+    "retained_documents": 31583,
+    "minhash_signatures": 30444,
+    "exact_released_content_matches": 0,
+    "verified_near_duplicate_matches": 0,
+    "post_analysis_partitions": {
+      "stack_edu": {"training_bytes": 22471337, "evaluation_bytes": 2851978},
+      "stack_v3": {"training_bytes": 59883015, "evaluation_bytes": 5935510},
+      "common_pile_stackv2_edu": {"training_bytes": 10916236, "evaluation_bytes": 1103330}
+    },
+    "scope_limit": "zero matches applies only to these bounded filtered samples; upstream-ID exploration found shared blobs in the wider metadata and the full corpus still requires global deduplication"
+  },
+  "tokenizer_code_allocation_after_yield": {
+    "stack_v3": {"training_bytes": 55000000, "evaluation_bytes": 5500000},
+    "stack_edu": {"training_bytes": 20000000, "evaluation_bytes": 2000000},
+    "common_pile_stackv2_edu": {"training_bytes": 10000000, "evaluation_bytes": 1000000},
+    "python_edu": {"training_bytes": 10000000, "evaluation_bytes": 1000000},
+    "python_peps": {"training_bytes": 5000000, "evaluation_bytes": 500000}
+  },
+  "passed_gates": [
+    "bounded Stack-Edu dedicated secret exclusion and quotas",
+    "bounded Common Pile score license vendor generated English and identity filters",
+    "bounded Common Pile dedicated Gitleaks scan with zero findings",
+    "frozen source precedence",
+    "exact released-content SHA-256 cross-source comparison",
+    "MinHash LSH candidate generation and exact represented-shingle Jaccard verification",
+    "post-analysis tokenizer quotas for all three sources"
+  ],
+  "blocked_gates": [
+    "Stack-Edu and Common Pile code benchmark contamination",
+    "full-corpus global exact and near-duplicate processing",
+    "manual legal acceptance and final attribution policy",
+    "acquisition cleanup and resume qualification"
+  ],
+  "decision": "freeze 55/20/10 Stack-v3/Stack-Edu/Common-Pile tokenizer weights; use Stack-Edu before Stack v3 before Common Pile for blend dedup precedence"
+}

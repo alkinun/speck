@@ -1,0 +1,33 @@
+{
+  "format": "speck_gitleaks_filter",
+  "format_version": 1,
+  "status": "exclusion_authorized_not_training_authority",
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/stack-edu-v2/tokenizer-input.jsonl",
+    "sha256": "6e0dce326e1cf42415960721d9d6b6c9656f90b6a27ebd74bc4438b14642baae",
+    "parent_report": "/mnt/speck-data/speck/source-qualification/stack-edu-v2/report.json",
+    "parent_report_sha256": "8baadb256e60baaca2ca135f5e7c4106be2671144f946b2d82c8bc8e025c11bc",
+    "parent_format": "speck_stack_edu_sample_result",
+    "parent_status": "bounded_sample_complete_not_training_authority"
+  },
+  "scanner": {
+    "name": "gitleaks",
+    "version": "8.30.1",
+    "official_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "binary": "/home/alkin/.local/bin/gitleaks-8.30.1",
+    "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "release_archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "report": "/mnt/speck-data/speck/source-qualification/stack-edu-security-v1/gitleaks.json",
+    "report_sha256": "49daf0f7a10cce4bb0752fd5e4a033fbc049c5f123667312a7042425f07594de",
+    "redaction_percent": 100
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "code",
+    "modulus": 10,
+    "evaluation_remainders": [0],
+    "training_bytes": 15000000,
+    "evaluation_bytes": 1500000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/stack-edu-v3"
+}

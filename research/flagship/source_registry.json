@@ -107,7 +107,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_nested_parquet",
       "rights": "ODC-By-1.0 dataset; every original file license and attribution still applies",
-      "pipeline": "security_language_license_contamination_partition_pass_training_blocked"
+      "pipeline": "security_language_license_contamination_partition_and_bounded_overlap_pass_training_blocked"
     },
     {
       "id": "stack_edu",
@@ -119,7 +119,7 @@
       "priority": "primary_screen",
       "access": "software_heritage_s3_ids",
       "rights": "inherits The Stack v2 source licenses and attribution",
-      "pipeline": "bounded_swh_sample_profiled_gitleaks_exclusion_pending"
+      "pipeline": "bounded_swh_security_and_overlap_pass_contamination_pending"
     },
     {
       "id": "common_pile_stackv2_edu",
@@ -131,7 +131,7 @@
       "priority": "secondary",
       "access": "open_huggingface",
       "rights": "Common Pile public-domain/open-license policy; file-level audit required",
-      "pipeline": "new_scalar"
+      "pipeline": "bounded_inline_security_and_overlap_pass_contamination_pending"
     },
     {
       "id": "python_edu",
@@ -476,8 +476,8 @@
     {"source_id": "dclm_baseline", "training_bytes": 25000000, "evaluation_bytes": 2500000},
     {"source_id": "fineweb_base", "training_bytes": 10000000, "evaluation_bytes": 1000000},
     {"source_id": "stack_v3_train_permissive", "training_bytes": 55000000, "evaluation_bytes": 5500000},
-    {"source_id": "stack_edu", "training_bytes": 15000000, "evaluation_bytes": 1500000},
-    {"source_id": "common_pile_stackv2_edu", "training_bytes": 15000000, "evaluation_bytes": 1500000},
+    {"source_id": "stack_edu", "training_bytes": 20000000, "evaluation_bytes": 2000000},
+    {"source_id": "common_pile_stackv2_edu", "training_bytes": 10000000, "evaluation_bytes": 1000000},
     {"source_id": "python_edu", "training_bytes": 10000000, "evaluation_bytes": 1000000},
     {"source_id": "common_pile_python_peps", "training_bytes": 5000000, "evaluation_bytes": 500000},
     {"source_id": "finemath_4plus", "training_bytes": 30000000, "evaluation_bytes": 3000000},

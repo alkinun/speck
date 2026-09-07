@@ -82,7 +82,16 @@ cryptographic identity. Gitleaks finds three redacted findings across two record
 contamination, and near-duplicate successors remain mandatory. See
 [finding 172](../../findings/172_stack_edu_bounded_swh_sample.md).
 
-The tokenizer's provisional 100 MB code allocation is 55 MB Stack v3.1, 15 MB Stack-Edu, 15 MB
+The dedicated successor removes Stack-Edu's two Gitleaks-affected records. A Common Pile TypeScript
+shard supplies only 11.78 MB under the same high-quality filters, so its tokenizer allocation drops
+from 15% to 10% and Stack-Edu rises from 15% to 20%; the failed 20 MB target is preserved. A 12 MB
+successor and zero-finding Gitleaks scan pass. Across the three bounded inputs, frozen
+Stack-Edu→Stack-v3→Common-Pile precedence plus 128-permutation MinHash/LSH finds zero exact released-
+text or verified ≥0.80 near-duplicate matches while retaining every quota. This is sample evidence,
+not a full-corpus disjointness claim. See
+[finding 173](../../findings/173_code_source_overlap_and_precedence.md).
+
+The tokenizer's provisional 100 MB code allocation is 55 MB Stack v3.1, 20 MB Stack-Edu, 10 MB
 Common Pile Stack v2 educational code, 10 MB Python-Edu, and 5 MB Python language-design prose. This
 is intentionally broader than the eventual stable mixture so the vocabulary is not overfit to one
 code filter.

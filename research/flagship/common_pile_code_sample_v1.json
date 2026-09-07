@@ -1,0 +1,46 @@
+{
+  "format": "speck_common_pile_code_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "repo": "common-pile/stackv2_edu_filtered",
+    "revision": "c354dbe88469a1153e97c6a63ac50591849654de",
+    "official_url": "https://huggingface.co/datasets/common-pile/stackv2_edu_filtered",
+    "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/common-pile-stack-edu-0094.json.gz",
+    "sha256": "fab627a4e8add9478c5c08107cf5f2385bab1c3f741a3771a855cb1c32d09f56",
+    "rows": 494753,
+    "source_value": "stackv2"
+  },
+  "filters": {
+    "language": "TypeScript",
+    "minimum_integer_score": 4,
+    "license_type": "permissive",
+    "accepted_detected_licenses": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSL-1.0",
+      "BlueOak-1.0.0",
+      "ISC",
+      "LLVM-exception",
+      "MIT",
+      "MIT-0",
+      "Unlicense",
+      "Zlib"
+    ],
+    "encoding": "UTF-8",
+    "exclude_vendor": true,
+    "exclude_generated": true,
+    "min_file_bytes": 100,
+    "max_file_bytes": 1000000,
+    "max_bytes_per_repository": 500000,
+    "sample_bytes": 12000000,
+    "English_prose": {
+      "detector": "py3langid==0.3.0",
+      "minimum_alphabetic_characters": 80,
+      "minimum_probability": 0.8
+    }
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v2"
+}

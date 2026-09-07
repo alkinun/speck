@@ -1,0 +1,58 @@
+{
+  "format": "speck_code_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "stack_edu",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/stack-edu-v3/tokenizer-input.jsonl",
+      "sha256": "e3e7c3f73fc5feec240fa59beb9e007636d23e401c56f05d6d00321059b3f46b",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/stack-edu-v3/report.json",
+      "parent_report_sha256": "58bab3f6754265c87e3cd81cde384a3a63f637816b070fe157133ffc74c49f1d",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 20000000,
+      "evaluation_bytes": 2000000
+    },
+    {
+      "id": "stack_v3",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v3/tokenizer-input.jsonl",
+      "sha256": "bed4caa5fc55bc0c6fba351b2bff40ec129364a209c0b4542c940cabbf029752",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/stack-v3.1-v3/report.json",
+      "parent_report_sha256": "9700a29e3b41d0d27281fa64bde5cd857d5ee06d4c1c0fd9c403e98f24938077",
+      "parent_format": "speck_code_contamination_result",
+      "parent_status": "decontamination_complete_not_training_authority",
+      "training_bytes": 55000000,
+      "evaluation_bytes": 5500000
+    },
+    {
+      "id": "common_pile_stackv2_edu",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v3/tokenizer-input.jsonl",
+      "sha256": "fd4484bbea0448d7bdbe06770b248d03d05ac1351ba2e83eec4c89de4156faa0",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/common-pile-stackv2-edu-v3/report.json",
+      "parent_report_sha256": "a53c77d790773eacf9275cff749a783ba969b22e7bd99291a9fd840e71938f42",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    }
+  ],
+  "policy": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [0]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v1"
+}
