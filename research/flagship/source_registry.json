@@ -23,7 +23,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "Apache-2.0 project release; upstream-source terms require review",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_language_quality_PII_security_partition_and_overlap_pass_contamination_rights_pending"
     },
     {
       "id": "ultrafineweb_l1_en_hq",
@@ -47,7 +47,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus Common Crawl terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_language_quality_PII_security_partition_and_overlap_pass_contamination_rights_pending"
     },
     {
       "id": "dclm_baseline",
@@ -59,7 +59,7 @@
       "priority": "primary_screen",
       "access": "open_huggingface_parquet",
       "rights": "CC-BY-4.0 dataset release; upstream terms require review",
-      "pipeline": "integrated"
+      "pipeline": "bounded_language_quality_PII_security_partition_and_overlap_pass_contamination_rights_pending"
     },
     {
       "id": "fineweb_base",
@@ -71,7 +71,7 @@
       "priority": "secondary",
       "access": "open_huggingface_parquet",
       "rights": "ODC-By-1.0 plus Common Crawl terms",
-      "pipeline": "new_scalar_parquet"
+      "pipeline": "bounded_language_quality_PII_security_partition_and_overlap_pass_contamination_rights_pending"
     },
     {
       "id": "dolma_v1_7",

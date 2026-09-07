@@ -1,0 +1,73 @@
+{
+  "format": "speck_web_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "dclm_baseline",
+    "repo": "mlfoundations/dclm-baseline-1.0-parquet",
+    "revision": "817d6752765f6a41261085171dd546b104f60626",
+    "official_url": "https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet",
+    "path": "/mnt/speck-data/speck/source-downloads/web-tokenizer-v1/dclm-baseline.parquet",
+    "sha256": "59be41261d07495fcd5198d732dbd2b3c68733528f27ba9c8dc20f272fea7c98",
+    "rows": 57698,
+    "content_column": "text",
+    "metadata_json_column": null,
+    "fields": {
+      "document_id": "id",
+      "url": "url",
+      "language": "language",
+      "language_score": "language_score",
+      "quality_score": "fasttext_score"
+    }
+  },
+  "rights": {
+    "dataset_license": "CC-BY-4.0 dataset release",
+    "upstream_terms": "Common Crawl source terms require review",
+    "authority": "manual_review_required"
+  },
+  "filters": {
+    "required_language": "en",
+    "minimum_language_score": 0.8,
+    "minimum_quality_score": null,
+    "min_document_bytes": 256,
+    "max_document_bytes": 100000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_bytes_per_host": 2000000,
+    "adult_host_terms": [
+      "adultdating",
+      "hentai",
+      "porn",
+      "redtube",
+      "sexcam",
+      "sexdating",
+      "xvideos",
+      "xxx"
+    ],
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "web",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 30000000,
+    "evaluation_bytes": 3000000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/web-dclm-v1"
+}

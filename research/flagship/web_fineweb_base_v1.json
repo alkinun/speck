@@ -1,0 +1,73 @@
+{
+  "format": "speck_web_sample",
+  "format_version": 1,
+  "status": "bounded_sample_authorized_not_training_authority",
+  "source": {
+    "id": "fineweb_base",
+    "repo": "HuggingFaceFW/fineweb",
+    "revision": "9bb295ddab0e05d785b879661af7260fed5140fc",
+    "official_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+    "path": "/mnt/speck-data/speck/source-downloads/web-tokenizer-v1/fineweb-10bt.parquet",
+    "sha256": "7168f92a680b3e28155a6b654ebf235b19bf4d2ab35f91dbab3fb47cbd629a8e",
+    "rows": 281664,
+    "content_column": "text",
+    "metadata_json_column": null,
+    "fields": {
+      "document_id": "id",
+      "url": "url",
+      "language": "language",
+      "language_score": "language_score",
+      "quality_score": null
+    }
+  },
+  "rights": {
+    "dataset_license": "ODC-By-1.0",
+    "upstream_terms": "Common Crawl Terms of Use also apply",
+    "authority": "manual_review_required"
+  },
+  "filters": {
+    "required_language": "en",
+    "minimum_language_score": 0.8,
+    "minimum_quality_score": null,
+    "min_document_bytes": 256,
+    "max_document_bytes": 100000,
+    "minimum_alphabetic_ratio": 0.2,
+    "maximum_duplicate_line_ratio": 0.5,
+    "maximum_bytes_per_host": 2000000,
+    "adult_host_terms": [
+      "adultdating",
+      "hentai",
+      "porn",
+      "redtube",
+      "sexcam",
+      "sexdating",
+      "xvideos",
+      "xxx"
+    ],
+    "allowed_email_placeholders": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4_placeholders": [
+      "18.104.22.168",
+      "22.214.171.124",
+      "126.96.36.199",
+      "184.108.40.206",
+      "188.8.131.52",
+      "220.127.116.11"
+    ],
+    "language_detector": "py3langid==0.3.0",
+    "minimum_detected_English_probability": 0.8
+  },
+  "downstream_partition": {
+    "seed": 42,
+    "category": "web",
+    "modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "training_bytes": 12000000,
+    "evaluation_bytes": 1200000
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/web-fineweb-base-v1"
+}

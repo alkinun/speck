@@ -133,6 +133,14 @@ interesting but held behind manual terms and possible upstream model-license con
 Provisional tokenizer web bytes: 35% Ultra-FineWeb v1.4, 30% FineWeb-Edu, 25% DCLM, and 10% FineWeb
 base.
 
+One revision-pinned shard per source now passes a bounded deterministic sample, stricter English
+metadata plus independent-language checks, conservative PII/secret/adult-host/repetition filters,
+Gitleaks exclusion, train/evaluation yield, and four-source exact/MinHash overlap analysis. The
+31,092-document selection has zero exact or verified ≥0.80 near-duplicate cross-source matches and
+retains every 35/30/25/10 quota. This does not establish upstream disjointness. General benchmark
+contamination, human rights acceptance, production global deduplication, and cleanup/resume still
+block use. See [finding 176](../../findings/176_web_tokenizer_bounded_sources.md).
+
 ## 4. Math candidates
 
 The broad search found complementary, not interchangeable, sources:
@@ -186,12 +194,14 @@ must use disjoint hashes.
 2. **Bounded code pass:** all five code tokenizer inputs now pass identity, quality/language,
    security, benchmark-contamination, partition-yield, and bounded cross-source-overlap gates. Rights
    acceptance remains separate and pending.
-3. Materialize the 660 MB tokenizer sample using the provisional quotas in the registry; failed
+3. **Bounded web pass:** four source samples pass identity, language/quality/local safety, security,
+   yield, and overlap; evaluation-firewall contamination and human rights decisions remain pending.
+4. Materialize the 660 MB tokenizer sample using the provisional quotas in the registry; failed
    sources are replaced within their category before any candidate tokenizer is trained.
-4. Train and statically evaluate the three custom tokenizers plus Mistral 32K.
-5. In parallel, build small source samples for E1 and estimate unique-token capacity, overlap,
+5. Train and statically evaluate the three custom tokenizers plus Mistral 32K.
+6. In parallel, build small source samples for E1 and estimate unique-token capacity, overlap,
    document lengths, and storage/download cost.
-6. Only after the source screen shortlist is frozen, expand acquisition toward the 20B rehearsal.
+7. Only after the source screen shortlist is frozen, expand acquisition toward the 20B rehearsal.
 
 This ordering lets us inspect dozens of datasets while paying storage and engineering cost for only
 the sources that can plausibly enter the flagship.

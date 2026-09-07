@@ -1,9 +1,9 @@
 # Flagship tokenizer training and qualification
 
-Status: tooling complete; the full bounded code slice is technically qualified but rights-blocked;
-five non-code categories remain pending, 2026-09-07. The first flagship should use a Speck-trained
-tokenizer only if it clears this protocol. Mistral 32K remains the frozen fallback until the final
-source-balanced sample and matched language-model pilot are complete.
+Status: tooling complete; bounded code is technically qualified but rights-blocked; bounded web
+passes sampling/security/overlap but awaits contamination and rights; four other categories remain
+pending, 2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this
+protocol. Mistral 32K remains the fallback until the balanced sample and LM pilot are complete.
 
 [`tokenizer_plan.json`](tokenizer_plan.json) freezes the research decision. The executable config is
 created under `experiments/Speck-Tokenizer-v1/` only after every input file has an immutable source
@@ -36,6 +36,12 @@ The code slice uses the decontaminated Stack v3.1, Stack-Edu, Common Pile, Pytho
 artifacts recorded through [finding 175](../../findings/175_code_tokenizer_supplements.md). Their
 55/20/10/10/5 allocation and duplicate precedence are technically frozen. None may enter the sample
 until its rights disposition is accepted and the executable input manifest pins the final hashes.
+
+The web slice has a viable 35/30/25/10 Ultra-FineWeb/FineWeb-Edu/DCLM/FineWeb-base bounded selection
+through [finding 176](../../findings/176_web_tokenizer_bounded_sources.md). Its source identity,
+language/quality/local safety, Gitleaks, partition-yield, and bounded-overlap gates pass. It remains
+excluded from the executable sample until the evaluation firewall supplies immutable contamination
+payloads and the upstream rights review is accepted.
 
 ## 2. Sample contract
 

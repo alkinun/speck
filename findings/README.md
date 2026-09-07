@@ -56,6 +56,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Code-source overlap](173_code_source_overlap_and_precedence.md) | Bounded exact/fuzzy comparison and blend precedence |
 | [Code contamination successors](174_code_contamination_successors.md) | Stack-Edu/Common Pile benchmark cleanup and final bounded code inputs |
 | [Code tokenizer supplements](175_code_tokenizer_supplements.md) | Python-Edu/PEP qualification and the complete five-source bounded code slice |
+| [Web tokenizer sources](176_web_tokenizer_bounded_sources.md) | Four-source bounded sampling, security, partition, and overlap evidence |
 
 ## Conventions
 

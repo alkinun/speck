@@ -1,0 +1,73 @@
+{
+  "format": "speck_text_cross_source_duplicates",
+  "format_version": 1,
+  "status": "analysis_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "fineweb_edu",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/source-qualification/web-fineweb-edu-v2/tokenizer-input.jsonl",
+      "sha256": "8e3c09439ffc27eb1c812ba3ac3f314e95598139583d507590eb131930a3c9b6",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-fineweb-edu-v2/report.json",
+      "parent_report_sha256": "8f5f0f906e252eabad49a048883412584a9c62dd2c0d93c4eba9a3828ec0cd89",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 30000000,
+      "evaluation_bytes": 3000000
+    },
+    {
+      "id": "ultrafineweb_en_v1_4",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/source-qualification/web-ultrafineweb-v2/tokenizer-input.jsonl",
+      "sha256": "1724b8ceae3bb049a90b12b026938d1ffdc18c589ebb748186e0c0644ecaa1a1",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-ultrafineweb-v2/report.json",
+      "parent_report_sha256": "817e50fbe7a010f5d2593fe5cf343e4daad98edc7037fc69f84b7012c52f4f8a",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "id": "dclm_baseline",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/source-qualification/web-dclm-v2/tokenizer-input.jsonl",
+      "sha256": "b23534e7f33b8761466b83b75dfa5d2516934e2b0dfdf2b81a01b5e852f5b5c5",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-dclm-v2/report.json",
+      "parent_report_sha256": "07a7911be1b74674c0631be9e75e40a639f1d7d375f8329637a238dde693d4e5",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 25000000,
+      "evaluation_bytes": 2500000
+    },
+    {
+      "id": "fineweb_base",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/source-qualification/web-fineweb-base-v2/tokenizer-input.jsonl",
+      "sha256": "36227d31e51816b7ba6f100af4e3da1c648ae649058944048758b9249848e7af",
+      "parent_report": "/mnt/speck-data/speck/source-qualification/web-fineweb-base-v2/report.json",
+      "parent_report_sha256": "c554c55705f17e2d91f4b3ebac6bac75e272f7e5dff44e35c7dd6affcd7c31b9",
+      "parent_format": "speck_gitleaks_filter_result",
+      "parent_status": "gitleaks_exclusion_complete_not_training_authority",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    }
+  ],
+  "policy": {
+    "category": "web",
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "lsh_threshold": 0.8,
+    "verified_jaccard_threshold": 0.8,
+    "partition_seed": 42,
+    "partition_modulus": 10,
+    "partition_evaluation_remainders": [
+      0
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/source-qualification/web-cross-source-dedup-v1"
+}

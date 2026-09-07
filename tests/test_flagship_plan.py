@@ -177,6 +177,13 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
     assert "five_source_overlap_pass" in python_edu["pipeline"]
     assert python_edu["pipeline"].endswith("rights_blocked")
     assert "five_source_overlap_pass" in python_peps["pipeline"]
+    for source_id in (
+        "ultrafineweb_en_v1_4",
+        "fineweb_edu",
+        "dclm_baseline",
+        "fineweb_base",
+    ):
+        assert sources[source_id]["pipeline"].endswith("contamination_rights_pending")
 
     totals = {
         category: {"training_bytes": 0, "evaluation_bytes": 0}
