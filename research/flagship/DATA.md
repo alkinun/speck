@@ -89,6 +89,15 @@ payloads (63,652 tasks), independent normalized exact-field matching, task-uniqu
 matching, and 10-gram sensitivity disclosure. Its bounded web successors are technical evidence, not
 training authority; source rights, production deduplication, and cleanup/resume still gate use.
 
+[`firewall_plan.json`](firewall_plan.json) freezes the executable partition and consumer contract
+without choosing previously unspecified real held-out/audit byte sizes. The fixture-qualified builder
+requires explicit equal-category targets, globally disjoint content hashes, unseen-source bytes,
+held-out domains, and distinct `D5_tokenizer`/`E2_mixture` seeds. Generic consumers cannot read sealed
+files; an opening claim is durably recorded before all required finalist payloads become readable, so
+a failed opening cannot be retried. Fixture outputs cannot authorize real consumers. Production
+construction additionally requires hash-bound human rights acceptance covering every source and a
+production-operations record passing global exact/near deduplication, cleanup, and resume gates.
+
 The primary reported unit is bits per UTF-8 byte (BPB), which avoids rewarding a mixture merely
 because the tokenizer fragments one domain differently. For each category, report paired BPB delta
 against the frozen balanced prior, bootstrap confidence intervals over documents, and seed

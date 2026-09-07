@@ -1,0 +1,55 @@
+{
+  "format": "speck_flagship_firewall_plan",
+  "format_version": 1,
+  "status": "fixture_tooling_ready_real_targets_and_authority_pending",
+  "categories": ["web", "code", "math", "synthetic", "science", "reference"],
+  "top_level_partitions": ["tokenizer_sample", "selection_heldout", "sealed_audit"],
+  "tokenizer_sample": {
+    "subpartitions": ["tokenizer_train", "tokenizer_eval"],
+    "equal_category_targets": true,
+    "allowed_consumers": {"tokenizer_train": ["tokenizer_training"], "tokenizer_eval": ["tokenizer_static_evaluation"]},
+    "model_training_allowed": false
+  },
+  "selection_heldout": {
+    "equal_category_targets": true,
+    "requires_unseen_source_bytes_per_category": true,
+    "requires_domains_absent_from_tokenizer_train_per_category": true,
+    "allowed_consumers": ["data_selection"],
+    "model_training_allowed": false
+  },
+  "sealed_audit": {
+    "identities": [
+      {"id": "D5_tokenizer", "required_finalists": 2, "fallback": "mistral-32k", "seed_must_be_distinct": true},
+      {"id": "E2_mixture", "required_finalists": 3, "fallback": "balanced_prior", "seed_must_be_distinct": true}
+    ],
+    "generic_consumer_access": false,
+    "opening_rule": "hash-bind a frozen ranking naming every finalist; fsync an exclusive receipt before payload readability; failed or interrupted access consumes the opening",
+    "adversarial_security_claim": false
+  },
+  "identity_and_disjointness": {
+    "input": "lineage-preserving JSONL path plus SHA-256 and verified per-record released-content SHA-256",
+    "global_exact_dedup": "NFKC+lower+whitespace across every category and destination",
+    "partition_assignment": "distinct frozen seed per tokenizer train/eval, selection, D5 audit, and E2 audit",
+    "output": "file SHA-256 plus ordered content-hash commitment without record contents in the manifest",
+    "whole_document_overshoot": true
+  },
+  "production_authority": {
+    "human_rights_record_format": "speck_human_source_rights_acceptance",
+    "human_record_requires": ["named person, role, and organization", "signature timestamp and intended scope", "every declared source ID approved"],
+    "operations_record_format": "speck_production_data_operations_qualification",
+    "required_operations_gates": ["global_exact_deduplication", "global_near_deduplication", "acquisition_cleanup", "interruption_resume"],
+    "records_are_path_and_sha256_bound": true
+  },
+  "consumer_enforcement": {
+    "fixture_firewall_real_consumers_authorized": false,
+    "unknown_paths_authorized": false,
+    "sealed_files_require_opening_protocol": true,
+    "model_training_may_consume_firewall_files": false,
+    "cli_preflight": "scripts/data_firewall_check.py"
+  },
+  "real_materialization": {
+    "status": "blocked",
+    "byte_targets": "freeze in an executable successor before real partition outputs; tokenizer train/eval remain 100000000/10000000 bytes per category",
+    "blockers": ["SPE-134", "SPE-144", "SPE-147", "SPE-148", "SPE-149", "SPE-150", "production global near-dedup, cleanup, and resume qualification"]
+  }
+}

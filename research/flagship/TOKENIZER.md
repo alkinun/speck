@@ -1,7 +1,7 @@
 # Flagship tokenizer training and qualification
 
-Status: tooling complete; bounded code is technically qualified but rights-blocked; bounded web
-passes sampling/security/overlap but awaits contamination and rights; four other categories remain
+Status: tokenizer and three-partition firewall tooling complete; all six bounded categories are
+technically qualified but rights/production-blocked; real partitions and all tokenizer runs remain
 pending, 2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this
 protocol. Mistral 32K remains the fallback until the balanced sample and LM pilot are complete.
 
@@ -57,6 +57,12 @@ Documents are filtered by length, globally exact-deduplicated under NFKC/lowerca
 normalization, and assigned to train or evaluation by a seeded content hash. A document can never
 cross partitions or categories. The manifest records input identity, accepted documents/bytes,
 overshoot, rejections, and output hashes.
+
+The tokenizer files must be produced or authorized by the hash-bound
+[`firewall_plan.json`](firewall_plan.json) contract. `tokenizer_train` is the only partition available
+to tokenizer training and `tokenizer_eval` is the only partition available to static evaluation.
+Neither selection held-out nor either sealed audit identity may enter tokenizer or model training.
+Fixture partitions never grant real consumer authority.
 
 This tokenizer deduplication protects the qualification sample only. It does not replace the exact
 and near-duplicate requirements for the full flagship corpus.
