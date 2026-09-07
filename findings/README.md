@@ -72,6 +72,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Source-rights decision readiness](189_source_rights_decision_readiness.md) | Consolidated 30-source human acceptance contract |
 | [Data launch gate](190_data_launch_gate.md) | Exact authority binding before flagship model construction |
 | [Data rehearsal orchestration](191_data_rehearsal_orchestration.md) | Durable six-stage 20B runner qualified only on fixtures |
+| [Full-size tokenizer fixture](192_tokenizer_fullsize_fixture.md) | Three custom sizes and pinned Mistral pass non-selecting plumbing checks |
 
 ## Conventions
 

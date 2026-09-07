@@ -1,0 +1,158 @@
+{
+  "format": "speck_tokenizer_fullsize_fixture_qualification",
+  "format_version": 1,
+  "status": "fullsize_pipeline_fixture_pass_no_scientific_selection_authority",
+  "recorded_on": "2026-09-07",
+  "pre_result_commit": "6eff60a",
+  "real_inputs": {
+    "manifest": "research/flagship/tokenizer_inputs_blocked_v1.json",
+    "sha256": "93f832ac5d3bacab3753a8e79ecb439a4a0a9b50b0ea3aa55f6bba1dad9d628a",
+    "sources": 30,
+    "training_bytes": 600000000,
+    "evaluation_bytes": 60000000,
+    "status": "technically_frozen_rights_and_production_blocked_not_executable",
+    "all_runtime_files_reverified": true,
+    "materialized": false
+  },
+  "baseline": {
+    "manifest": "research/flagship/mistral_tokenizer_baseline.json",
+    "manifest_sha256": "b74acfbf54dfef53416879a02f9dc0d7fb0ec72a6d1c95919b5d08b7a319e7d1",
+    "payload_path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+    "payload_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+    "bytes": 493443,
+    "vocab_size": 32000,
+    "special_ids": {
+      "unk": 0,
+      "bos": 1,
+      "eos": 2
+    }
+  },
+  "fixture": {
+    "first_failed_attempt": {
+      "path": "/tmp/opencode/tokenizer-fullsize-fixture",
+      "config_sha256": "5135a545f8e5bc0c25dc0a59e6a547726fe4c9ecfe4e794b08c8d6c82e613422",
+      "result": "failed",
+      "reason": "generated fixture supported at most 621 pieces; hard 32768 vocabulary correctly rejected",
+      "policy_changed": false
+    },
+    "passing_path": "/mnt/speck-data/speck/tokenizer-fixtures/fullsize-v2",
+    "repeat_path": "/mnt/speck-data/speck/tokenizer-fixtures/fullsize-v2-repeat",
+    "fixture_manifest_sha256": "f57d6f6cc01deb840f924803f5e0df0e4b8835528061222a6b01db383e808bb4",
+    "repeat_fixture_manifest_sha256": "cc06d56753fcc52257b815c65d9d35d97fbc6cc3f2fcfa80b87d5b51b2eb48d8",
+    "config_sha256": "735d1254b2ba6d496dee96a4a89c6766628e663972f5492930b65f558dc00447",
+    "repeat_config_sha256": "ffbffcf130c8c8d24bfd23237ba7270258538646ce4195eebbeded338c1cd490",
+    "sample_manifest_sha256": "a6d599cb1a41aeb2951ffcaec32b77f3d325abade59da13f93aa5d532c361f1c",
+    "repeat_sample_manifest_sha256": "de4a0cb376152aa16c1ecefcc6fa444195d21154256d3f903f81e46552ec316a",
+    "training_utf8_bytes": 18001042,
+    "evaluation_utf8_bytes": 1801081,
+    "category_output_hashes_path_independent": true,
+    "evaluation_path": "/mnt/speck-data/speck/tokenizer-fixtures/fullsize-v2/run/evaluation.json",
+    "evaluation_sha256": "e73f2c3987bae9e02ec1ffc687b35b5b0ae5d6cb9ab4f02338aaa39e4195dfd0",
+    "selection_authority": false
+  },
+  "tokenizers": {
+    "speck-bpe-32768": {
+      "kind": "candidate",
+      "vocab_size": 32768,
+      "model_sha256": "4191cac23722e76b5454d5a3e896805954b6cc2eec5a2434df845230344f03fe",
+      "repeat_model_sha256": "4191cac23722e76b5454d5a3e896805954b6cc2eec5a2434df845230344f03fe",
+      "path_independent_repeat_equal": true,
+      "macro": {
+        "bytes_per_token": 2.9393318264926265,
+        "tokens_per_kib": 348.3995863398898,
+        "tokens_per_word": 4.663345946878131
+      },
+      "embedding_and_head_parameters": 134230016,
+      "static_hard_gates": {
+        "probe_roundtrip_exact": true,
+        "uint16_with_chat_tokens": true,
+        "zero_unknown_tokens": true
+      },
+      "manifest_sha256": "cdd3dde332cf9177aade6f50a6be280d9c06fdd0c71a07503198d014c44c3788"
+    },
+    "speck-bpe-40960": {
+      "kind": "candidate",
+      "vocab_size": 40960,
+      "model_sha256": "87821c72947c3bb25a34b3677554c165023bb639cdccfa6dbb537c8fcd2057fb",
+      "repeat_model_sha256": "87821c72947c3bb25a34b3677554c165023bb639cdccfa6dbb537c8fcd2057fb",
+      "path_independent_repeat_equal": true,
+      "macro": {
+        "bytes_per_token": 2.980821073501687,
+        "tokens_per_kib": 343.55327782112136,
+        "tokens_per_word": 4.598457883072791
+      },
+      "embedding_and_head_parameters": 167784448,
+      "static_hard_gates": {
+        "probe_roundtrip_exact": true,
+        "uint16_with_chat_tokens": true,
+        "zero_unknown_tokens": true
+      },
+      "manifest_sha256": "af27b673f6930da59578dfa3afdf959e7fef36e6dd46bcbb84ec3118702aba46"
+    },
+    "speck-bpe-49152": {
+      "kind": "candidate",
+      "vocab_size": 49152,
+      "model_sha256": "9308cbd8beb71744459bd527b5fdbcb526e5175fe2c38a8b790cf0cc29e6ac73",
+      "repeat_model_sha256": "9308cbd8beb71744459bd527b5fdbcb526e5175fe2c38a8b790cf0cc29e6ac73",
+      "path_independent_repeat_equal": true,
+      "macro": {
+        "bytes_per_token": 3.007741876932949,
+        "tokens_per_kib": 340.4785708300276,
+        "tokens_per_word": 4.557301529945891
+      },
+      "embedding_and_head_parameters": 201338880,
+      "static_hard_gates": {
+        "probe_roundtrip_exact": true,
+        "uint16_with_chat_tokens": true,
+        "zero_unknown_tokens": true
+      },
+      "manifest_sha256": "90ca92b311164686b4a782493004a210fbb1e4b5fb87c737f0ce9c46790317c7"
+    },
+    "mistral-32k": {
+      "kind": "baseline",
+      "vocab_size": 32000,
+      "model_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+      "repeat_model_sha256": null,
+      "path_independent_repeat_equal": true,
+      "macro": {
+        "bytes_per_token": 2.069844576672166,
+        "tokens_per_kib": 494.75947677614903,
+        "tokens_per_word": 6.62233599602413
+      },
+      "embedding_and_head_parameters": 131084288,
+      "static_hard_gates": {
+        "probe_roundtrip_exact": true,
+        "uint16_with_chat_tokens": true,
+        "zero_unknown_tokens": true
+      },
+      "manifest_sha256": "64e5f45db3c320bc2dc2229fc371b36da12ac9858d5e7d5ef9ea387f8e234e59"
+    }
+  },
+  "implementation": {
+    "real_input_validator": [
+      "speck/tokenizer_inputs.py",
+      "8aff77601fc0ba20dcdcd40f9464ebb02737156a5a26f96b084596c9f781980b"
+    ],
+    "fixture_generator": [
+      "speck/tokenizer_fixture.py",
+      "cea6734e8830c741f3eaf358f0f85bc9f2463603b443b4d17d57d35c7c296011"
+    ],
+    "tokenizer_pipeline": [
+      "speck/tokenizer_experiment.py",
+      "c1ccea27a60132da4785b598b36c81d252117518f06b0b0df928e94c1bb8ab40"
+    ],
+    "fixture_tests": [
+      "tests/test_tokenizer_inputs.py",
+      "32a6331d5891f2162cbaf0f01c6362f1d778c3cfcba6b02def9c97af950e8c87"
+    ]
+  },
+  "interpretation": [
+    "all requested full vocabulary sizes train exactly and reproducibly with frozen trainer settings",
+    "all four tokenizers pass uint16-with-chat, zero-unknown, and exact probe-roundtrip fixture gates",
+    "custom tokenizers use fewer tokens than Mistral on deliberately random alphabetic fixture words because they were trained on that fixture; this is expected overfitting and not evidence of real-data superiority",
+    "embedding/head parameter cost increases with vocabulary size",
+    "static fixture metrics cannot advance or select a tokenizer",
+    "meaningful comparison requires the rights-authorized real 600/60 MB sample followed by the matched LM pilot and sealed D5 audit"
+  ],
+  "training_authority": "blocked"
+}

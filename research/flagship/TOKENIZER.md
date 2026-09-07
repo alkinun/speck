@@ -1,15 +1,21 @@
 # Flagship tokenizer training and qualification
 
-Status: tokenizer and three-partition firewall tooling complete; all six bounded categories are
-technically qualified but rights/production-blocked; real partitions and all tokenizer runs remain
-pending, 2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this
-protocol. Mistral 32K remains the fallback until the balanced sample and LM pilot are complete.
+Status: tokenizer and three-partition firewall tooling complete; all six bounded categories and all
+30 real input identities are technically frozen but rights/production-blocked; Mistral and all three
+full-size custom paths pass generated fixtures, while every real tokenizer run remains pending,
+2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this protocol.
+Mistral 32K remains the fallback until the balanced sample and LM pilot are complete.
 
 [`tokenizer_plan.json`](tokenizer_plan.json) freezes the research decision. The executable config is
 created under `experiments/Speck-Tokenizer-v1/` only after every input file has an immutable source
 card and SHA-256 hash. This avoids presenting placeholders as launchable inputs.
 [`source_registry.json`](source_registry.json) proposes the per-source quotas that sum to each
 category target; a failed source is replaced and the registry versioned before sampling begins.
+All final bounded successors are identity-bound in
+[`tokenizer_inputs_blocked_v1.json`](tokenizer_inputs_blocked_v1.json). The manifest verifies all 30
+files and exact 600/60 MB quotas but is deliberately non-executable until rights, production, and real
+firewall gates pass. The Mistral payload is pinned independently in
+[`mistral_tokenizer_baseline.json`](mistral_tokenizer_baseline.json).
 
 ## 1. Scope
 
@@ -131,6 +137,12 @@ The probe set includes consecutive whitespace, indentation, newlines, source cod
 notation, ASCII, and non-ASCII text. Static evaluation has no selection authority. It eliminates
 broken candidates and nominates the two custom Pareto candidates; it cannot show which tokenizer
 makes a better language model.
+
+The full 32,768/40,960/49,152 plus Mistral plumbing passes on deterministic generated fixtures:
+requested vocabulary size, path-independent model identity, uint16 capacity, zero unknowns, probe
+roundtrip, and parameter accounting. Fixture fertility cannot advance a candidate because the custom
+models saw that generated alphabetic distribution and Mistral did not. The real comparison begins
+only after the blocked 600/60 MB input is authorized and materialized.
 
 ## 5. Matched language-model pilot
 

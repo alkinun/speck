@@ -544,3 +544,22 @@ def test_data_rehearsal_orchestration_is_hash_bound_but_has_not_run_20B():
     assert result["validation"]["real_stage_commands_run"] == 0
     assert result["validation"]["real_source_records_read"] == 0
     assert result["validation"]["persistent_operations_records_issued"] == 0
+
+
+def test_fullsize_tokenizer_fixture_has_no_real_selection_authority():
+    result = json.loads(
+        (ROOT / "results" / "data" / "tokenizer-fullsize-fixture-20260907.json").read_text()
+    )
+    assert result["status"] == "fullsize_pipeline_fixture_pass_no_scientific_selection_authority"
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["real_inputs"]["sources"] == 30
+    assert result["real_inputs"]["materialized"] is False
+    assert result["fixture"]["selection_authority"] is False
+    assert result["fixture"]["category_output_hashes_path_independent"] is True
+    assert all(
+        tokenizer["path_independent_repeat_equal"]
+        and all(tokenizer["static_hard_gates"].values())
+        for tokenizer in result["tokenizers"].values()
+    )
+    assert result["training_authority"] == "blocked"
