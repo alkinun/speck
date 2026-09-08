@@ -8,12 +8,14 @@
     "checkpoint": {
       "historical_evidence": "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
       "historical_evidence_sha256": "19278c3af7d161735c136dadf0d8c2b573e819dc2245a01b4dd277a7d638eabe",
+      "historical_revision": "70f9b32",
       "historical_implementation_sha256": "c009efb5dc86b8c04750f6a77015fe03501e293ac01a493ef80253a86f6cc2e1",
       "historical_evidence_modified": false
     },
     "production_data": {
       "historical_evidence": "results/data/production-data-tooling-20260907.json",
       "historical_evidence_sha256": "5b8d7c1ecd8d8b986b084286ae0a207e660f5ca2723198b5d65d452ce23a489a",
+      "historical_revision": "70f9b32",
       "historical_implementation_sha256": "45d2ccce8b8ef1e2564116de8c5cc1f427fb93a1feb1af4fbdfcc4c4dff51431",
       "historical_tests_sha256": "983bd78678fe4c269905aff420131339e21650ab3d23b4cf6cc9fcb2d24f6a10",
       "historical_evidence_modified": false
