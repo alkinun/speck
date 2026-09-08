@@ -5,7 +5,8 @@ Keep changes focused, preserve artifact contracts deliberately, and include test
 changes.
 
 The [2026-09-08 cleanup audit](docs/code_cleanup_2026-09-08.md) records source-pinned cleanup
-follow-ups and the remaining formatting failures that require evidence requalification.
+follow-ups. Source-pinned files that require evidence requalification are explicitly excluded from
+formatting, while remaining part of lint and test checks.
 
 ## Development Setup
 

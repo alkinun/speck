@@ -4,9 +4,12 @@ import hashlib
 import json
 import os
 import re
+import uuid
 from pathlib import Path
 
 import torch
+
+from speck.io import file_sha256
 
 
 def _validate_step(step):
@@ -15,35 +18,109 @@ def _validate_step(step):
     return step
 
 
+def _flush_file(path):
+    with Path(path).open("rb") as handle:
+        os.fsync(handle.fileno())
+
+
+def _flush_directory(path):
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _write_json(path, value):
+    with Path(path).open("w", encoding="utf-8") as handle:
+        json.dump(value, handle, indent=2)
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
 def save(directory, step, model, optimizer, metadata, timing=None):
     step = _validate_step(step)
-    os.makedirs(directory, exist_ok=True)
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
     paths = {
-        "model": os.path.join(directory, f"model_{step:06d}.pt"),
-        "optimizer": os.path.join(directory, f"optimizer_{step:06d}.pt"),
-        "metadata": os.path.join(directory, f"metadata_{step:06d}.json"),
-        "timing": os.path.join(directory, f"timing_{step:06d}.json"),
-        "complete": os.path.join(directory, f"complete_{step:06d}"),
+        "model": directory / f"model_{step:06d}.pt",
+        "optimizer": directory / f"optimizer_{step:06d}.pt",
+        "metadata": directory / f"metadata_{step:06d}.json",
+        "timing": directory / f"timing_{step:06d}.json",
+        "complete": directory / f"complete_{step:06d}",
     }
-    for path in paths.values():
-        if os.path.exists(path):
-            os.remove(path)
-    torch.save(model, paths["model"] + ".tmp")
-    torch.save(optimizer, paths["optimizer"] + ".tmp")
-    with open(paths["metadata"] + ".tmp", "w", encoding="utf-8") as handle:
-        json.dump(metadata, handle, indent=2)
-    timing = timing() if callable(timing) else timing
-    if timing is not None:
-        with open(paths["timing"] + ".tmp", "w", encoding="utf-8") as handle:
-            json.dump(timing, handle, indent=2)
-    os.replace(paths["model"] + ".tmp", paths["model"])
-    os.replace(paths["optimizer"] + ".tmp", paths["optimizer"])
-    os.replace(paths["metadata"] + ".tmp", paths["metadata"])
-    if timing is not None:
-        os.replace(paths["timing"] + ".tmp", paths["timing"])
-    with open(paths["complete"] + ".tmp", "w", encoding="utf-8") as handle:
-        handle.write("complete\n")
-    os.replace(paths["complete"] + ".tmp", paths["complete"])
+    transaction = f".{os.getpid()}.{uuid.uuid4().hex}"
+    staged = {
+        name: path.with_name(path.name + ".tmp" + transaction) for name, path in paths.items()
+    }
+    backups = {
+        name: path.with_name(path.name + ".backup" + transaction) for name, path in paths.items()
+    }
+    backed_up = []
+    published = []
+    rollback_complete = False
+    try:
+        torch.save(model, staged["model"])
+        torch.save(optimizer, staged["optimizer"])
+        _write_json(staged["metadata"], metadata)
+        timing = timing() if callable(timing) else timing
+        if timing is not None:
+            _write_json(staged["timing"], timing)
+        staged["complete"].write_text("complete\n", encoding="utf-8")
+        for name in ("model", "optimizer", "complete"):
+            _flush_file(staged[name])
+
+        # Hide the predecessor before moving any of its payloads. Readers either
+        # observe the old complete checkpoint, an incomplete step during this
+        # short publication window, or the fully published replacement.
+        for name in ("complete", "model", "optimizer", "metadata", "timing"):
+            if paths[name].exists():
+                os.replace(paths[name], backups[name])
+                backed_up.append(name)
+        for name in ("model", "optimizer", "metadata"):
+            os.replace(staged[name], paths[name])
+            published.append(name)
+        if timing is not None:
+            os.replace(staged["timing"], paths["timing"])
+            published.append("timing")
+        os.replace(staged["complete"], paths["complete"])
+        published.append("complete")
+        _flush_directory(directory)
+    except Exception:
+        rollback_errors = []
+        for name in reversed(published):
+            try:
+                paths[name].unlink(missing_ok=True)
+            except OSError as error:
+                rollback_errors.append(error)
+        for name in (*reversed([name for name in backed_up if name != "complete"]), "complete"):
+            if name not in backed_up:
+                continue
+            try:
+                os.replace(backups[name], paths[name])
+            except OSError as error:
+                rollback_errors.append(error)
+        try:
+            _flush_directory(directory)
+        except OSError as error:
+            rollback_errors.append(error)
+        rollback_complete = not rollback_errors
+        if rollback_errors:
+            raise RuntimeError(
+                "checkpoint publication failed and predecessor rollback was incomplete"
+            )
+        raise
+    else:
+        rollback_complete = True
+        for backup in backups.values():
+            backup.unlink(missing_ok=True)
+        _flush_directory(directory)
+    finally:
+        for temporary in staged.values():
+            temporary.unlink(missing_ok=True)
+        if rollback_complete:
+            for backup in backups.values():
+                backup.unlink(missing_ok=True)
 
 
 def completed_steps(directory):
@@ -112,14 +189,6 @@ def load_metadata(directory, step):
     if metadata.get("step") != step:
         raise ValueError(f"checkpoint metadata step does not match {step}")
     return metadata
-
-
-def file_sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def directory_identity(directory):

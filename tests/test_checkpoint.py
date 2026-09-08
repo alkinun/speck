@@ -1,8 +1,10 @@
 import json
+from pathlib import Path
 
 import pytest
 import torch
 
+import speck.checkpoint as checkpoint
 from speck.checkpoint import (
     checkpoint_identity,
     completed_steps,
@@ -109,6 +111,109 @@ def test_checkpoint_can_publish_timing_before_completion(tmp_path):
         timing=lambda: {"checkpoint_seconds": 1.25},
     )
     assert load_timing(tmp_path, 3) == {"checkpoint_seconds": 1.25}
+
+
+@pytest.mark.parametrize("failed_call", (1, 2))
+def test_failed_tensor_serialization_preserves_completed_predecessor(
+    tmp_path, monkeypatch, failed_call
+):
+    save(tmp_path, 1, {"weight": torch.tensor([1.0])}, {"old": True}, {"step": 1})
+    original_save = checkpoint.torch.save
+    calls = 0
+
+    def fail_once(value, path):
+        nonlocal calls
+        calls += 1
+        if calls == failed_call:
+            raise OSError("injected serialization failure")
+        return original_save(value, path)
+
+    monkeypatch.setattr(checkpoint.torch, "save", fail_once)
+    with pytest.raises(OSError, match="injected serialization failure"):
+        save(tmp_path, 1, {"weight": torch.tensor([2.0])}, {"old": False}, {"step": 1})
+
+    model, optimizer, metadata = load(tmp_path, 1, "cpu")
+    assert model["weight"].item() == 1.0
+    assert optimizer == {"old": True}
+    assert metadata == {"step": 1}
+    assert latest(tmp_path) == 1
+    assert not any(".tmp." in path.name or ".backup." in path.name for path in tmp_path.iterdir())
+
+
+def test_failed_metadata_or_timing_preserves_completed_predecessor(tmp_path):
+    save(
+        tmp_path,
+        1,
+        {"weight": torch.tensor([1.0])},
+        {"old": True},
+        {"step": 1},
+        timing={"active_seconds": 1.0},
+    )
+    with pytest.raises(TypeError):
+        save(tmp_path, 1, {}, {}, {"step": 1, "invalid": {1}})
+    assert load_model(tmp_path, 1, "cpu")["weight"].item() == 1.0
+    assert load_timing(tmp_path, 1) == {"active_seconds": 1.0}
+
+    def failed_timing():
+        raise RuntimeError("injected timing failure")
+
+    with pytest.raises(RuntimeError, match="injected timing failure"):
+        save(tmp_path, 1, {}, {}, {"step": 1}, timing=failed_timing)
+    assert load_model(tmp_path, 1, "cpu")["weight"].item() == 1.0
+    assert load_timing(tmp_path, 1) == {"active_seconds": 1.0}
+
+
+def test_partial_publication_failure_rolls_back_every_predecessor_file(tmp_path, monkeypatch):
+    save(
+        tmp_path,
+        1,
+        {"weight": torch.tensor([1.0])},
+        {"old": True},
+        {"step": 1},
+        timing={"active_seconds": 1.0},
+    )
+    original_replace = checkpoint.os.replace
+    injected = False
+
+    def fail_new_optimizer(source, destination):
+        nonlocal injected
+        if (
+            not injected
+            and Path(destination).name == "optimizer_000001.pt"
+            and ".tmp." in Path(source).name
+        ):
+            injected = True
+            raise OSError("injected publication failure")
+        return original_replace(source, destination)
+
+    monkeypatch.setattr(checkpoint.os, "replace", fail_new_optimizer)
+    with pytest.raises(OSError, match="injected publication failure"):
+        save(
+            tmp_path,
+            1,
+            {"weight": torch.tensor([2.0])},
+            {"old": False},
+            {"step": 1},
+            timing={"active_seconds": 2.0},
+        )
+
+    model, optimizer, metadata = load(tmp_path, 1, "cpu")
+    assert model["weight"].item() == 1.0
+    assert optimizer == {"old": True}
+    assert metadata == {"step": 1}
+    assert load_timing(tmp_path, 1) == {"active_seconds": 1.0}
+    assert not any(".tmp." in path.name or ".backup." in path.name for path in tmp_path.iterdir())
+
+
+def test_successful_same_step_replacement_removes_stale_optional_timing(tmp_path):
+    save(tmp_path, 1, {}, {}, {"step": 1}, timing={"active_seconds": 1.0})
+    save(tmp_path, 1, {"new": True}, {"new": True}, {"step": 1})
+
+    model, optimizer, metadata = load(tmp_path, 1, "cpu")
+    assert model == {"new": True}
+    assert optimizer == {"new": True}
+    assert metadata == {"step": 1}
+    assert load_timing(tmp_path, 1) is None
 
 
 @pytest.mark.parametrize("step", (-1, 1.5, True, "3"))

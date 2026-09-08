@@ -339,7 +339,10 @@ def _candidate_text(connection, sources, doc_seq, handles):
     if row is None:
         raise ValueError("near-duplicate index references a missing document")
     source_index, offset = row
-    handle = handles.setdefault(source_index, Path(sources[source_index]["path"]).open("rb"))
+    handle = handles.get(source_index)
+    if handle is None:
+        handle = Path(sources[source_index]["path"]).open("rb")
+        handles[source_index] = handle
     handle.seek(offset)
     record = json.loads(handle.readline().decode("utf-8"))
     return record[sources[source_index]["text_field"]]

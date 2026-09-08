@@ -1,10 +1,12 @@
 import hashlib
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
 
-from speck.production_data import preprocess_sources, validate_preprocess_config
+import speck.production_data as production_data
+from speck.production_data import _candidate_text, preprocess_sources, validate_preprocess_config
 
 ROOT = Path(__file__).parents[1]
 
@@ -237,6 +239,57 @@ def test_reopening_published_output_detects_output_and_index_corruption(tmp_path
     receipt.write_text("{}")
     with pytest.raises(ValueError, match="cleanup receipt is invalid"):
         preprocess_sources(receipt_config)
+
+
+def test_candidate_text_reuses_one_source_handle(tmp_path, monkeypatch):
+    source = tmp_path / "source.jsonl"
+    first = json.dumps({"text": "first candidate"}) + "\n"
+    source.write_text(first + json.dumps({"text": "second candidate"}) + "\n")
+    connection = sqlite3.connect(":memory:")
+    connection.execute(
+        "CREATE TABLE docs (doc_seq INTEGER PRIMARY KEY, source_index INTEGER, byte_offset INTEGER)"
+    )
+    connection.execute("INSERT INTO docs VALUES (1, 0, 0)")
+    connection.execute("INSERT INTO docs VALUES (2, 0, ?)", (len(first.encode()),))
+    handles = {}
+    opened = []
+    original_open = Path.open
+
+    def track_open(path, *args, **kwargs):
+        handle = original_open(path, *args, **kwargs)
+        if path == source and args == ("rb",):
+            opened.append(handle)
+        return handle
+
+    monkeypatch.setattr(Path, "open", track_open)
+    try:
+        sources = [{"path": str(source), "text_field": "text"}]
+        assert _candidate_text(connection, sources, 1, handles) == "first candidate"
+        assert _candidate_text(connection, sources, 2, handles) == "second candidate"
+        assert len(opened) == 1
+        assert handles[0] is opened[0]
+    finally:
+        connection.close()
+        for handle in handles.values():
+            handle.close()
+
+
+def test_candidate_source_handles_close_when_preprocessing_fails(tmp_path, monkeypatch):
+    config = validate_preprocess_config(_config(tmp_path, "candidate-handle-failure"))
+    original_candidate_text = production_data._candidate_text
+    captured = []
+
+    def fail_after_open(connection, sources, doc_seq, handles):
+        original_candidate_text(connection, sources, doc_seq, handles)
+        captured.extend(handles.values())
+        raise RuntimeError("injected candidate comparison failure")
+
+    monkeypatch.setattr(production_data, "_candidate_text", fail_after_open)
+    with pytest.raises(RuntimeError, match="injected candidate comparison failure"):
+        preprocess_sources(config)
+
+    assert captured
+    assert all(handle.closed for handle in captured)
 
 
 def test_flagship_production_plan_keeps_rehearsal_and_authority_pending():
