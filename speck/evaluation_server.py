@@ -39,9 +39,13 @@ def _number(value, name, minimum, maximum=None):
 def generation_settings(payload):
     """Resolve the deliberately small deterministic generation surface."""
 
-    if payload.get("stream", False):
+    stream = payload.get("stream", False)
+    if stream is not None and not isinstance(stream, bool):
+        raise RequestError("stream must be a boolean or null")
+    if stream:
         raise RequestError("streaming is not supported by the evaluation server")
-    if payload.get("n", 1) != 1:
+    n = payload.get("n", 1)
+    if isinstance(n, bool) or not isinstance(n, int) or n != 1:
         raise RequestError("the evaluation server requires n=1")
     unsupported = sorted(
         field
@@ -50,7 +54,8 @@ def generation_settings(payload):
     )
     if unsupported:
         raise RequestError(f"unsupported evaluation fields: {', '.join(unsupported)}")
-    if payload.get("logprobs") not in (None, False) or payload.get("top_logprobs") is not None:
+    logprobs = payload.get("logprobs")
+    if (logprobs is not None and logprobs is not False) or payload.get("top_logprobs") is not None:
         raise RequestError("log probabilities are not supported by the evaluation server")
     for field, expected in (
         ("frequency_penalty", 0.0),
@@ -68,8 +73,8 @@ def generation_settings(payload):
     if top_p == 0:
         raise RequestError("top_p must be greater than zero")
     seed = payload.get("seed", 42)
-    if isinstance(seed, bool) or not isinstance(seed, int):
-        raise RequestError("seed must be an integer")
+    if isinstance(seed, bool) or not isinstance(seed, int) or not -(2**63) <= seed < 2**64:
+        raise RequestError("seed must be an integer in [-2**63, 2**64 - 1]")
     stop = payload.get("stop")
     if isinstance(stop, str):
         stop = [stop]

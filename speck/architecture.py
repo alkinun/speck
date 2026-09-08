@@ -1,11 +1,32 @@
 """Define the block grammar for Speck model architectures."""
 
 import json
+import math
 from dataclasses import asdict, dataclass, field, replace
 
 
 def canonical_json(value):
     return json.dumps(value, allow_nan=False, separators=(",", ":"), sort_keys=True)
+
+
+def _integer_fields(config, *names):
+    """Reject boolean and fractional dimensions before shape arithmetic."""
+
+    for name in names:
+        value = getattr(config, name)
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise ValueError(f"{type(config).__name__}.{name} must be an integer")
+
+
+def _validate_delta_geometry(spec, name):
+    dimensions = ("key_head_dim", "value_head_dim", "num_key_heads", "num_value_heads")
+    _integer_fields(spec, *dimensions, "conv_kernel_size")
+    if any(getattr(spec, field) < 1 for field in dimensions):
+        raise ValueError(f"{name} dimensions and head counts must be positive")
+    if spec.num_value_heads % spec.num_key_heads:
+        raise ValueError(f"{name} value heads must be divisible by key heads")
+    if spec.conv_kernel_size < 2:
+        raise ValueError(f"{name} convolution kernels need at least two positions")
 
 
 @dataclass(frozen=True)
@@ -33,6 +54,11 @@ class AttentionSpec:
         return self.memory_role == "write"
 
     def __post_init__(self):
+        _integer_fields(self, "head_dim", "num_key_value_heads")
+        if self.window_size is not None:
+            _integer_fields(self, "window_size")
+        if self.rope_dim is not None:
+            _integer_fields(self, "rope_dim")
         if self.head_dim < 2 or self.head_dim % 2:
             raise ValueError("attention head dimensions must be positive and even")
         if self.num_key_value_heads < 1:
@@ -66,6 +92,7 @@ class GatedCausalConvSpec:
     kind: str = field(init=False, default="gated_causal_conv")
 
     def __post_init__(self):
+        _integer_fields(self, "inner_size", "kernel_size")
         if self.inner_size < 1:
             raise ValueError("convolution inner sizes must be positive")
         if self.kernel_size < 2:
@@ -84,18 +111,7 @@ class GatedDeltaNetSpec:
     kind: str = field(init=False, default="gated_deltanet")
 
     def __post_init__(self):
-        dimensions = (
-            self.key_head_dim,
-            self.value_head_dim,
-            self.num_key_heads,
-            self.num_value_heads,
-        )
-        if any(value < 1 for value in dimensions):
-            raise ValueError("Gated DeltaNet dimensions and head counts must be positive")
-        if self.num_value_heads % self.num_key_heads:
-            raise ValueError("Gated DeltaNet value heads must be divisible by key heads")
-        if self.conv_kernel_size < 2:
-            raise ValueError("Gated DeltaNet convolution kernels need at least two positions")
+        _validate_delta_geometry(self, "Gated DeltaNet")
         if self.output_gate_activation not in {"sigmoid", "silu"}:
             raise ValueError("Gated DeltaNet output gate activation must be sigmoid or silu")
         if self.decay_initialization not in {"fla", "speck"}:
@@ -112,20 +128,9 @@ class KimiDeltaAttentionSpec:
     kind: str = field(init=False, default="kimi_delta_attention")
 
     def __post_init__(self):
-        dimensions = (
-            self.key_head_dim,
-            self.value_head_dim,
-            self.num_key_heads,
-            self.num_value_heads,
-        )
-        if any(value < 1 for value in dimensions):
-            raise ValueError("Kimi Delta Attention dimensions and head counts must be positive")
-        if self.num_value_heads % self.num_key_heads:
-            raise ValueError("Kimi Delta Attention value heads must be divisible by key heads")
+        _validate_delta_geometry(self, "Kimi Delta Attention")
         if self.key_head_dim != self.value_head_dim:
             raise ValueError("Kimi Delta Attention requires equal key and value head dimensions")
-        if self.conv_kernel_size < 2:
-            raise ValueError("Kimi Delta Attention convolution kernels need at least two positions")
 
 
 @dataclass(frozen=True)
@@ -134,6 +139,7 @@ class SwiGLUSpec:
     kind: str = field(init=False, default="swiglu")
 
     def __post_init__(self):
+        _integer_fields(self, "intermediate_size")
         if self.intermediate_size < 1:
             raise ValueError("SwiGLU intermediate sizes must be positive")
 
@@ -146,6 +152,7 @@ class RoutedSwiGLUSpec:
     kind: str = field(init=False, default="routed_swiglu")
 
     def __post_init__(self):
+        _integer_fields(self, "intermediate_size", "num_experts", "top_k")
         if self.intermediate_size < 1:
             raise ValueError("routed SwiGLU intermediate sizes must be positive")
         if self.num_experts < 1:
@@ -202,6 +209,7 @@ class BlockConfig:
     stages: tuple[StageConfig, ...]
 
     def __post_init__(self):
+        _integer_fields(self, "hidden_size")
         if self.hidden_size < 1:
             raise ValueError("block hidden sizes must be positive")
         if not self.stages:
@@ -232,6 +240,7 @@ class BlockGroup:
     weight_sharing: str = "none"
 
     def __post_init__(self):
+        _integer_fields(self, "repeat")
         if self.repeat < 1:
             raise ValueError("block repeat counts must be positive")
         if self.weight_sharing not in {"none", "all"}:
@@ -271,12 +280,31 @@ class ArchitectureConfig:
     expected_active_parameters: int | None = None
 
     def __post_init__(self):
+        _integer_fields(
+            self,
+            "embedding_size",
+            "vocab_size",
+            "max_position_embeddings",
+            "bos_token_id",
+            "eos_token_id",
+        )
+        for name in ("expected_parameters", "expected_active_parameters"):
+            if getattr(self, name) is not None:
+                _integer_fields(self, name)
         if not self.blocks:
             raise ValueError("architectures need at least one block")
         if self.embedding_size < 1 or self.vocab_size < 1:
             raise ValueError("embedding and vocabulary sizes must be positive")
         if self.max_position_embeddings < 1:
             raise ValueError("maximum positions must be positive")
+        for name in ("rope_theta", "rope_scaling_factor", "rms_norm_eps", "initializer_range"):
+            value = getattr(self, name)
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+            ):
+                raise ValueError(f"{name} must be a finite number")
         if (
             self.rope_theta <= 0
             or self.rope_scaling_factor < 1

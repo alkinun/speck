@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -251,3 +252,57 @@ def test_active_parameter_expectation_cannot_exceed_total():
             expected_parameters=100,
             expected_active_parameters=101,
         )
+
+
+@pytest.mark.parametrize(
+    "field", ("rope_theta", "rope_scaling_factor", "rms_norm_eps", "initializer_range")
+)
+@pytest.mark.parametrize("value", (float("nan"), float("inf"), float("-inf"), True, "1", None))
+def test_model_scaling_rejects_non_finite_or_non_numeric_values(field, value):
+    block = BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),))
+    with pytest.raises(ValueError, match=field):
+        ArchitectureConfig((BlockGroup(block),), 8, vocab_size=16, **{field: value})
+
+
+@pytest.mark.parametrize(
+    "config,field",
+    (
+        (AttentionSpec(4, 1), "head_dim"),
+        (AttentionSpec(4, 1), "num_key_value_heads"),
+        (AttentionSpec(4, 1), "rope_dim"),
+        (AttentionSpec(4, 1, "sliding", 4), "window_size"),
+        (GatedCausalConvSpec(8, 3), "inner_size"),
+        (GatedCausalConvSpec(8, 3), "kernel_size"),
+        (GatedDeltaNetSpec(4, 4, 1, 1), "key_head_dim"),
+        (GatedDeltaNetSpec(4, 4, 1, 1), "num_value_heads"),
+        (KimiDeltaAttentionSpec(4, 4, 1, 1), "value_head_dim"),
+        (KimiDeltaAttentionSpec(4, 4, 1, 1), "conv_kernel_size"),
+        (SwiGLUSpec(16), "intermediate_size"),
+        (RoutedSwiGLUSpec(16, 4, 2), "num_experts"),
+        (RoutedSwiGLUSpec(16, 4, 2), "top_k"),
+        (BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),)), "hidden_size"),
+        (BlockGroup(BlockConfig(8, (StageConfig((SwiGLUSpec(16),)),))), "repeat"),
+    ),
+)
+@pytest.mark.parametrize("value", (True, 4.0, "4"))
+def test_architecture_dimensions_reject_non_integer_types(config, field, value):
+    with pytest.raises(ValueError):
+        replace(config, **{field: value})
+
+
+@pytest.mark.parametrize(
+    "field",
+    (
+        "embedding_size",
+        "vocab_size",
+        "max_position_embeddings",
+        "bos_token_id",
+        "eos_token_id",
+        "expected_parameters",
+        "expected_active_parameters",
+    ),
+)
+def test_model_integer_fields_reject_boolean_values(field):
+    config = ArchitectureConfig.from_dict(json.loads((experiment / "model.json").read_text()))
+    with pytest.raises(ValueError, match=field):
+        replace(config, **{field: True})

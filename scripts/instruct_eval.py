@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 import unicodedata
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 import torch
@@ -14,6 +15,12 @@ from speck.checkpoint import completed_steps, load_model
 from speck.generation import generate_tokens
 from speck.model import SpeckForCausalLM
 from speck.tokenizer import Tokenizer
+
+SCORING_VERSION = 2
+NUMBER_PATTERN = re.compile(
+    r"(?<![\w.,+\-/])[+-]?[ \t]*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d*)?|\.\d+)"
+    r"(?:[eE][+-]?\d+)?(?!\w|[.,]\d|/)"
+)
 
 QUESTIONS = (
     {
@@ -133,15 +140,43 @@ def normalize(value):
     return " ".join(re.findall(r"[a-z0-9]+", value))
 
 
+def _numeric_text(value):
+    return unicodedata.normalize("NFKC", value).replace("−", "-").strip()
+
+
+def _number_value(value):
+    return Decimal("".join(value.split()).replace(",", ""))
+
+
+def _score_final_number(answer, accepted):
+    text = _numeric_text(answer)
+    expected = set()
+    for value in accepted:
+        value = _numeric_text(value)
+        if NUMBER_PATTERN.fullmatch(value) is None:
+            raise ValueError(f"invalid accepted numeric answer: {value!r}")
+        expected.add(_number_value(value))
+    numbers = NUMBER_PATTERN.findall(text)
+    if not numbers:
+        return False, False
+    try:
+        correct = _number_value(numbers[-1]) in expected
+    except InvalidOperation:
+        return False, False
+    exact = correct and NUMBER_PATTERN.fullmatch(text) is not None
+    return correct, exact
+
+
 def score(answer, accepted, scoring="contains"):
+    if scoring == "final_number":
+        return _score_final_number(answer, accepted)
+    if scoring not in {"contains", "exact"}:
+        raise ValueError(f"unsupported instruction scoring mode: {scoring}")
     normalized = normalize(answer)
     expected = tuple(normalize(value) for value in accepted)
     exact = normalized in expected
     if scoring == "exact":
         correct = exact
-    elif scoring == "final_number":
-        numbers = re.findall(r"(?<![a-z0-9])-?\d+(?![a-z0-9])", normalized)
-        correct = bool(numbers) and numbers[-1] in expected
     else:
         correct = exact or any(
             re.search(rf"(?<![a-z0-9]){re.escape(value)}(?![a-z0-9])", normalized)
@@ -222,6 +257,7 @@ def main():
     device = torch.device(args.device)
     results = {
         "method": {
+            "scoring_version": SCORING_VERSION,
             "decoding": "greedy",
             "temperature": 0,
             "max_tokens": args.max_tokens,

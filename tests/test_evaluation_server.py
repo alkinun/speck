@@ -82,6 +82,12 @@ def test_chat_completion_preserves_messages_and_usage():
         ({"temperature": -1}, "temperature"),
         ({"top_p": 0}, "greater than zero"),
         ({"seed": True}, "seed"),
+        ({"seed": -(2**63) - 1}, "seed"),
+        ({"seed": 2**64}, "seed"),
+        ({"n": True}, "n=1"),
+        ({"n": 1.0}, "n=1"),
+        ({"stream": 0}, "stream"),
+        ({"logprobs": 0}, "log probabilities"),
         ({"tools": []}, "unsupported"),
         ({"logprobs": True}, "log probabilities"),
         ({"presence_penalty": 1}, "presence_penalty"),
@@ -117,6 +123,13 @@ def test_generation_settings_accepts_nemo_openai_noop_fields():
         "seed": 42,
         "stop": None,
     }
+
+
+@pytest.mark.parametrize("seed", (-(2**63), -1, 0, 2**64 - 1))
+def test_seed_boundaries_match_pytorch(seed):
+    settings = generation_settings({"seed": seed})
+    generator = torch.Generator(device="cpu").manual_seed(settings["seed"])
+    assert generator.initial_seed() == seed % (2**64)
 
 
 def test_chat_roles_and_model_identity_are_strict():
@@ -217,7 +230,15 @@ def test_generation_uses_earliest_stop_and_counts_generated_ids(stop):
     }
 
 
-def test_malformed_utf8_returns_a_client_error_over_http():
+@pytest.mark.parametrize(
+    "body",
+    (
+        b'{"prompt":"\xff"}',
+        b'{"prompt":"hello","seed":18446744073709551616}',
+        b'{"prompt":"hello","seed":-9223372036854775809}',
+    ),
+)
+def test_invalid_requests_return_client_errors_over_http(body):
     import json
     import threading
     from http.server import ThreadingHTTPServer
@@ -233,7 +254,7 @@ def test_malformed_utf8_returns_a_client_error_over_http():
         try:
             request = Request(
                 f"http://127.0.0.1:{server.server_address[1]}/v1/completions",
-                data=b'{"prompt":"\xff"}',
+                data=body,
                 headers={"Content-Type": "application/json"},
             )
             with pytest.raises(HTTPError) as error:

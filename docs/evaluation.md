@@ -102,6 +102,10 @@ Chat requests follow the tokenizer's serialization contract: an optional initial
 alternating user/assistant turns beginning and ending with a user, and no reserved chat tokens in
 message content. Invalid requests return a client error before generation.
 
+Seeds must be integers in PyTorch's supported range, `[-2**63, 2**64 - 1]`. Request fields use
+their declared types: `n` must be the integer `1`, `stream` must be `false` or `null`, and
+`logprobs` must be `false` or `null`. Boolean counts and numeric stand-ins for booleans are rejected.
+
 Stop strings are applied to decoded output at the earliest matching position, independent of their
 order in the request. `usage.completion_tokens` counts token IDs actually generated, including EOS
 and tokens removed by output trimming. It does not re-tokenize the displayed text; stop-string
@@ -125,6 +129,19 @@ count, and a Transformers `generate()` smoke. This gate specifically guards deri
 Speck's nonstandard recurrent cache from generic Transformers loading behavior. The endpoint enforces
 the export's configured context ceiling; qualifying the API at 4K does not qualify a candidate at 32K
 or 128K.
+
+### Local instruction-question scoring
+
+`scripts.instruct_eval` evaluates the fixed 15-question instruction set with greedy decoding.
+New reports include `method.scoring_version: 2`. For `final_number` questions, the scorer extracts
+the last complete numeric token and compares its value using decimal arithmetic. It preserves
+signs (including the Unicode minus), decimals, exponents, and comma-grouped thousands. For example,
+`-45` and `4.45` do not match `45`, while `45.0` and `4.5e1` do.
+
+The numeric exact-format tie-breaker additionally requires the response to contain only that
+numeric token, apart from surrounding whitespace. Text questions retain their existing normalized
+word-boundary or exact-text scoring. Reports without a scoring version use the historical scorer;
+their numeric results must be rescored or rerun before comparing them with version 2.
 
 ## Open SLM Leaderboard
 

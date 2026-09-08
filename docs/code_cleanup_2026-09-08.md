@@ -55,6 +55,27 @@ Follow-up verification: **696 passed, 8 skipped** in the full CPU suite, with 20
 cases. Lint and changed-file formatting checks pass, and all 80 source-pinned Python files remain
 byte-identical.
 
+## Scoring and configuration follow-up
+
+The next assessment reproduced three additional issues, now addressed:
+
+- Numeric instruction scoring discarded signs and decimal points, accepting both `-45` and
+  `4.45` for an expected answer of `45`. Scoring version 2 compares complete signed decimal values
+  and checks numeric exact format separately. Historical evaluation artifacts retain their original
+  values; new reports identify the revised scorer.
+- Architecture constructors accepted non-finite scaling parameters and non-integer dimensions.
+  A NaN normalization epsilon passed validation and produced NaN model logits. Constructors now
+  reject malformed numeric fields before arithmetic or tensor allocation, with shared integer and
+  DeltaNet/KDA geometry checks. Valid architecture serialization is unchanged.
+- Evaluation requests accepted seeds outside PyTorch's integer range, then failed during
+  generation. Seed boundaries and strict no-op field types are now checked before invoking the
+  engine, with loopback HTTP regressions verifying client errors.
+
+Verification: **810 passed, 8 skipped** in the full CPU suite, including 114 additional regression
+cases. Lint and changed-file formatting pass; all 80 source-pinned Python files are preserved.
+A read-only rescore of the 15 numeric answers in `experiments/instruct-eval-15.json` found no changes
+to their recorded correctness or exact-format scores.
+
 ## Deferred findings in hash-pinned code
 
 The requested provenance policy is to preserve source pins. All 80 Python files whose current
