@@ -80,6 +80,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Runtime cleanup successors](196_runtime_cleanup_successors.md) | Failure-safe checkpoint replacement and production handle reuse |
 | [Tokenizer v2 contract](197_tokenizer_v2_contract.md) | Corrected exact-32K/32,768/40,960 pre-results candidate set |
 | [Comparator parity pre-access contract](199_logprob_parity_contract.md) | Offline hash-bound correctness gate before R13 backend measurements |
+| [Parser-independent held-out contract](200_parser_independent_heldout_contract.md) | Separate parser views, global identities, and additive leakage gates |
 
 ## Conventions
 
