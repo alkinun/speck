@@ -205,6 +205,58 @@ def test_partial_publication_failure_rolls_back_every_predecessor_file(tmp_path,
     assert not any(".tmp." in path.name or ".backup." in path.name for path in tmp_path.iterdir())
 
 
+def test_discovery_recovers_predecessor_after_uncatchable_publication_interrupt(
+    tmp_path, monkeypatch
+):
+    save(
+        tmp_path,
+        1,
+        {"weight": torch.tensor([1.0])},
+        {"old": True},
+        {"step": 1},
+        timing={"active_seconds": 1.0},
+    )
+    original_replace = checkpoint.os.replace
+    injected = False
+
+    def interrupt_new_optimizer(source, destination):
+        nonlocal injected
+        if (
+            not injected
+            and Path(destination).name == "optimizer_000001.pt"
+            and ".tmp." in Path(source).name
+        ):
+            injected = True
+            raise KeyboardInterrupt
+        return original_replace(source, destination)
+
+    monkeypatch.setattr(checkpoint.os, "replace", interrupt_new_optimizer)
+    with pytest.raises(KeyboardInterrupt):
+        save(
+            tmp_path,
+            1,
+            {"weight": torch.tensor([2.0])},
+            {"old": False},
+            {"step": 1},
+            timing={"active_seconds": 2.0},
+        )
+    assert any(path.name.startswith(".checkpoint-transaction-") for path in tmp_path.iterdir())
+
+    monkeypatch.setattr(checkpoint.os, "replace", original_replace)
+    assert latest(tmp_path) == 1
+    model, optimizer, metadata = load(tmp_path, 1, "cpu")
+    assert model["weight"].item() == 1.0
+    assert optimizer == {"old": True}
+    assert metadata == {"step": 1}
+    assert load_timing(tmp_path, 1) == {"active_seconds": 1.0}
+    assert not any(
+        ".tmp." in path.name
+        or ".backup." in path.name
+        or path.name.startswith(".checkpoint-transaction-")
+        for path in tmp_path.iterdir()
+    )
+
+
 def test_successful_same_step_replacement_removes_stale_optional_timing(tmp_path):
     save(tmp_path, 1, {}, {}, {"step": 1}, timing={"active_seconds": 1.0})
     save(tmp_path, 1, {"new": True}, {"new": True}, {"step": 1})
