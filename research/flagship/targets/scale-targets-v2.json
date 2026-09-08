@@ -1,0 +1,162 @@
+{
+  "format": "speck_flagship_scale_target_spec",
+  "format_version": 2,
+  "status": "planning_geometry_tied_contract_only_not_launchable",
+  "architecture": {
+    "mixer_pattern": [
+      "kimi_delta_attention",
+      "kimi_delta_attention",
+      "kimi_delta_attention",
+      "attention"
+    ],
+    "conv_kernel_size": 4,
+    "global_rope_dim": 0,
+    "max_position_embeddings": 131072,
+    "tie_word_embeddings": true
+  },
+  "tokenizer_fallback": {
+    "id": "mistral-32k-plus-reserved-chat-roles",
+    "base_vocab_size": 32000,
+    "chat_added_tokens": 3,
+    "effective_vocab_size": 32003,
+    "selection_status": "D5_pending_fallback_only",
+    "plan": "research/flagship/tokenizer_plan_v3.json",
+    "plan_sha256": "ef5e6a22deed460723e9dc3065a1722fe54ed06a9d316be2686d4556b0f90da6"
+  },
+  "supersedes": {
+    "reason": "bind the unchanged seven geometries to the physically tied embedding/head and corrected tokenizer-cost contracts without rewriting v1",
+    "scale_target_spec_v1": {
+      "path": "research/flagship/targets/scale-targets-v1.json",
+      "sha256": "69d36b67f69a9f33c8b742bb4d2a0d0dd33d30a979862570b6ac6d91c4df9e37"
+    },
+    "scale_accounting_v1": {
+      "path": "research/flagship/targets/accounting-v1.json",
+      "sha256": "6f56698ef809d87de8a26841d59ed878bce2f0987fe83e11abf4feebfbf4c1be"
+    },
+    "legacy_shape_a": {
+      "model": [
+        "research/flagship/targets/shape-a/model.json",
+        "dde419238b0e6a393af9db1ffeb950bc729d178e7bf8136f5a7045ec405f3d09"
+      ],
+      "target": [
+        "research/flagship/targets/shape-a/target.json",
+        "edf399c334ec122cad4714cbf637bddc87db25f7c1c2da140a7bb97800ae9d8e"
+      ],
+      "long_context": [
+        "research/flagship/targets/shape-a/long_context.json",
+        "444c797b59229d598fdfa2482d58b0e7c2b059c4cac6a349604074f034b55144"
+      ]
+    }
+  },
+  "targets": [
+    {
+      "id": "ladder-60m",
+      "label_parameters": 60000000,
+      "train_tokens": 1200000000,
+      "embedding_size": 512,
+      "hidden_size": 512,
+      "depth": 16,
+      "intermediate_size": 1408,
+      "head_dim": 64,
+      "num_key_heads": 2,
+      "num_value_heads": 4,
+      "num_key_value_heads": 2
+    },
+    {
+      "id": "ladder-150m",
+      "label_parameters": 150000000,
+      "train_tokens": 3000000000,
+      "embedding_size": 640,
+      "hidden_size": 768,
+      "depth": 20,
+      "intermediate_size": 2304,
+      "head_dim": 64,
+      "num_key_heads": 3,
+      "num_value_heads": 6,
+      "num_key_value_heads": 3
+    },
+    {
+      "id": "ladder-220m",
+      "label_parameters": 220000000,
+      "train_tokens": 5000000000,
+      "embedding_size": 1024,
+      "hidden_size": 1024,
+      "depth": 16,
+      "intermediate_size": 3072,
+      "head_dim": 64,
+      "num_key_heads": 4,
+      "num_value_heads": 8,
+      "num_key_value_heads": 4
+    },
+    {
+      "id": "ladder-350m",
+      "label_parameters": 350000000,
+      "train_tokens": 7000000000,
+      "embedding_size": 1152,
+      "hidden_size": 1152,
+      "depth": 20,
+      "intermediate_size": 3200,
+      "head_dim": 128,
+      "num_key_heads": 4,
+      "num_value_heads": 8,
+      "num_key_value_heads": 3
+    },
+    {
+      "id": "flagship-600m",
+      "label_parameters": 600000000,
+      "train_tokens": 800000000000,
+      "embedding_size": 1536,
+      "hidden_size": 1536,
+      "depth": 20,
+      "intermediate_size": 3968,
+      "head_dim": 128,
+      "num_key_heads": 6,
+      "num_value_heads": 12,
+      "num_key_value_heads": 3
+    },
+    {
+      "id": "ladder-750m",
+      "label_parameters": 750000000,
+      "train_tokens": 15000000000,
+      "embedding_size": 1536,
+      "hidden_size": 1536,
+      "depth": 24,
+      "intermediate_size": 4352,
+      "head_dim": 128,
+      "num_key_heads": 6,
+      "num_value_heads": 12,
+      "num_key_value_heads": 3
+    },
+    {
+      "id": "flagship-1.2b",
+      "label_parameters": 1200000000,
+      "train_tokens": 400000000000,
+      "embedding_size": 2048,
+      "hidden_size": 2048,
+      "depth": 24,
+      "intermediate_size": 5120,
+      "head_dim": 128,
+      "num_key_heads": 8,
+      "num_value_heads": 16,
+      "num_key_value_heads": 4
+    }
+  ],
+  "launch_authority": false,
+  "requires_data_launch_authority": true,
+  "forbidden_files": [
+    "data.json",
+    "train.json",
+    "tokenizer.json"
+  ],
+  "missing_launch_inputs": [
+    "D5 tokenizer decision and immutable artifact hash",
+    "selected data manifests and data launch receipt",
+    "selected training hyperparameters",
+    "architecture decisions and per-arm analysis contracts",
+    "GH200 runtime qualification"
+  ],
+  "embedding_head_contract": {
+    "path": "research/flagship/embedding_head_contract_v1.json",
+    "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7"
+  }
+}

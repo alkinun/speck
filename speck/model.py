@@ -1442,6 +1442,17 @@ class SpeckForCausalLM(nn.Module):
             }
         )
 
+    def load_state_dict(self, state_dict, strict=True, assign=False):
+        """Strictly preserve the physical embedding/head tie across checkpoint loads."""
+
+        embedding = state_dict.get("embed_tokens.weight")
+        head = state_dict.get("lm_head.weight")
+        if embedding is not None and head is not None and not torch.equal(embedding, head):
+            raise RuntimeError("checkpoint input embedding and LM head tensors are not tied")
+        result = super().load_state_dict(state_dict, strict=strict, assign=assign)
+        self.lm_head.weight = self.embed_tokens.weight
+        return result
+
     @torch.no_grad()
     def init_weights(self):
         for module in self.modules():

@@ -1,0 +1,75 @@
+{
+  "format": "speck_embedding_head_decision",
+  "format_version": 1,
+  "status": "launch_default_frozen",
+  "decision": {
+    "tie_word_embeddings": true,
+    "physical_parameter_objects": 1,
+    "physical_parameter_formula": "V*E",
+    "untied_support": "unsupported",
+    "reason": "preserve the inherited implementation and checkpoint/export contract; repository evidence does not justify adding an untied-head experiment axis"
+  },
+  "configuration": {
+    "field": "tie_word_embeddings",
+    "missing_value_normalizes_to": true,
+    "explicit_true_normalizes_to": true,
+    "explicit_false": "reject",
+    "serialized_value": true
+  },
+  "native_model": {
+    "input_parameter": "embed_tokens.weight",
+    "output_alias": "lm_head.weight",
+    "identity_requirement": "lm_head.weight is embed_tokens.weight",
+    "state_dict_aliases": ["embed_tokens.weight", "lm_head.weight"],
+    "strict_load": "accept equal legacy aliases and reject contradictory alias values"
+  },
+  "transformers_export": {
+    "config_value": true,
+    "serialized_weight": "native.embed_tokens.weight",
+    "omitted_reconstructed_alias": "native.lm_head.weight",
+    "physical_sharing_after_load": true
+  },
+  "scope": {
+    "canonical_formats": ["native Speck checkpoint", "Transformers Speck export"],
+    "gguf_conversion_exception": "scripts/gguf_publish.py folds distinct input/output adapters into an operator-equivalent LFM2 layout and therefore declares its converted tensors untied; that derivative architecture is not a canonical Speck checkpoint or a flagship parameter-count authority"
+  },
+  "accounting": {
+    "parameters": "count V*E once",
+    "active_parameters": "count V*E once",
+    "analytic_flops": "charge the V*E output projection once; embedding lookup is zero under the repository projection-MAC convention",
+    "six_nd": "use physical N, so count V*E once",
+    "optimizer": "one shared parameter object, exactly one AdamW no-decay membership",
+    "tokenizer_cost": "effective vocabulary rows including chat additions times E"
+  },
+  "compatibility_evidence": {
+    "initial_tied_implementation_commit": "9eb384d3ed5a5c271a8130fff602253d1dd05dbb",
+    "initial_model_source_sha256": "643928379764b21fbf456c22dd13e8084134ebc0602a6c2c4f0909d41ec86f0c",
+    "transformers_tied_export_commit": "c5279f5dc45d471617274168f976080f863a89c1",
+    "transformers_configuration_source_sha256": "3bf02749b7fc09563d06c5f0822514a8b4158345959de52829a0f242ab715c23",
+    "historical_shape_a": {
+      "model": ["research/flagship/targets/shape-a/model.json", "dde419238b0e6a393af9db1ffeb950bc729d178e7bf8136f5a7045ec405f3d09"],
+      "target": ["research/flagship/targets/shape-a/target.json", "edf399c334ec122cad4714cbf637bddc87db25f7c1c2da140a7bb97800ae9d8e"]
+    },
+    "published_checkpoint_contract": "native checkpoints contain equal aliases; Transformers exports declare tie_word_embeddings=true and omit the reconstructed head alias"
+  },
+  "literature_disposition": {
+    "papers/09_nemotron_3_nano.md": "records untied weights for a 31.6B-total MoE, not controlled evidence at the flagship dense scale",
+    "papers/10_lfm2.md": "covers dense 350M/700M/1.2B practice but records no tied-versus-untied result",
+    "papers/22_deepseek_v4.md": "records separate embedding/head optimizer practice for very large MoEs but no weight-tying ablation",
+    "conclusion": "no in-repository result establishes enough benefit to spend a new launch experiment axis"
+  },
+  "superseded_claims": {
+    "tokenizer_plan_v2": {
+      "path": "research/flagship/tokenizer_plan_v2.json",
+      "sha256": "8909177223099c6d5475e2cd6a75bc70327ca1f54f752c345d2c5ce50aa3f053",
+      "disposition": "immutable predecessor whose untied cost assumption did not match the implementation"
+    },
+    "scale_accounting_v1": {
+      "path": "research/flagship/targets/accounting-v1.json",
+      "sha256": "6f56698ef809d87de8a26841d59ed878bce2f0987fe83e11abf4feebfbf4c1be",
+      "disposition": "immutable predecessor that correctly counted the tied model while also printing an unsupported untied plan"
+    }
+  },
+  "experiment_authority": false,
+  "gpu_ablation_performed": false
+}

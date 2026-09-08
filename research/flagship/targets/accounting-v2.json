@@ -1,0 +1,1366 @@
+{
+  "common_formulas": {
+    "six_nd_policy": "6*N is reported only as a conventional comparator; it is not added to or substituted for the repository analytic FLOPs/token",
+    "symbols": {
+      "D": "head dimension",
+      "E": "embedding width",
+      "G": "global block count",
+      "H": "block hidden width",
+      "I": "SwiGLU intermediate width",
+      "K": "num_key_heads * head_dim",
+      "L": "sequence/cache length",
+      "Nkv": "global-attention KV heads",
+      "Nv": "KDA value heads",
+      "R": "recurrent block count",
+      "V": "effective vocabulary rows including three chat roles",
+      "W": "num_value_heads * head_dim"
+    }
+  },
+  "embedding_head_contract": {
+    "optimizer_parameter_objects": 1,
+    "path": "research/flagship/embedding_head_contract_v1.json",
+    "physical_parameter_formula": "V*E",
+    "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7",
+    "state_dict_aliases": [
+      "embed_tokens.weight",
+      "lm_head.weight"
+    ],
+    "tie_word_embeddings": true
+  },
+  "format": "speck_flagship_scale_target_accounting",
+  "format_version": 2,
+  "launch_authority": false,
+  "missing_launch_inputs": [
+    "D5 tokenizer decision and immutable artifact hash",
+    "selected data manifests and data launch receipt",
+    "selected training hyperparameters",
+    "architecture decisions and per-arm analysis contracts",
+    "GH200 runtime qualification"
+  ],
+  "requires_data_launch_authority": true,
+  "source_spec": "research/flagship/targets/scale-targets-v2.json",
+  "source_spec_sha256": "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493",
+  "status": "planning_geometry_tied_contract_only_not_launchable",
+  "targets": [
+    {
+      "active_parameters": 60561712,
+      "depth": 16,
+      "effective_vocab_size": 32003,
+      "embedding_size": 512,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 415552512,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 50343936,
+          "length": 4096,
+          "linear_projection_macs": 60540416,
+          "lm_head_projection_macs_per_token": 16385536,
+          "lm_head_projection_training_flops_per_token": 98313216,
+          "recurrent_rule_flops": 1966080,
+          "six_times_linear_projection_macs": 363242496
+        },
+        {
+          "analytic_training_flops_per_token": 1975833600,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 1610625024,
+          "length": 131072,
+          "linear_projection_macs": 60540416,
+          "lm_head_projection_macs_per_token": 16385536,
+          "lm_head_projection_training_flops_per_token": 98313216,
+          "recurrent_rule_flops": 1966080,
+          "six_times_linear_projection_macs": 363242496
+        }
+      ],
+      "global_layers": 4,
+      "head_dim": 64,
+      "hidden_size": 512,
+      "id": "ladder-60m",
+      "instantiation_validation": {
+        "active_parameter_count": 60561712,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 60561712,
+        "state_reports_match": true
+      },
+      "intermediate_size": 1408,
+      "label_parameters": 60000000,
+      "num_key_heads": 2,
+      "num_key_value_heads": 2,
+      "num_value_heads": 4,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 16385536,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 307972840,
+        "native_bf16_state_bytes": 153986600,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 24576,
+            "tensors": 12
+          },
+          "adamw_no_decay": {
+            "parameters": 16406832,
+            "tensors": 78
+          },
+          "muon": {
+            "parameters": 44130304,
+            "tensors": 124
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 512,
+          "global_blocks": 11276800,
+          "input_and_output_adapters": 0,
+          "physically_shared_embedding_and_lm_head": 16385536,
+          "recurrent_blocks": 32898864
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 2819200,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 2741572,
+        "total_parameters": 60561712
+      },
+      "recurrent_layers": 12,
+      "six_nd_flops_per_token": 363370272,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 36864,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 18432,
+        "convolution_shape_per_layer": [
+          1,
+          512,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 823296,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 4,
+        "points": [
+          {
+            "global_kv_elements": 4194304,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 8388608,
+                  "kimi_delta_attention": 823296
+                },
+                "total_bytes": 9211904
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 4325376,
+                  "kimi_delta_attention": 823296
+                },
+                "total_bytes": 5148672
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 134217728,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 268435456,
+                  "kimi_delta_attention": 823296
+                },
+                "total_bytes": 269258752
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 138412032,
+                  "kimi_delta_attention": 823296
+                },
+                "total_bytes": 139235328
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 12,
+        "recurrent_matrix_bytes": 786432,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 196608,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          4,
+          64,
+          64
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 16385536
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 16385536
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 16778752
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 20973056
+        }
+      ],
+      "train_tokens": 1200000000
+    },
+    {
+      "active_parameters": 153960858,
+      "depth": 20,
+      "effective_vocab_size": 32003,
+      "embedding_size": 640,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 1021612800,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 94394880,
+          "length": 4096,
+          "linear_projection_macs": 153921920,
+          "lm_head_projection_macs_per_token": 20481920,
+          "lm_head_projection_training_flops_per_token": 122891520,
+          "recurrent_rule_flops": 3686400,
+          "six_times_linear_projection_macs": 923531520
+        },
+        {
+          "analytic_training_flops_per_token": 3947139840,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 3019921920,
+          "length": 131072,
+          "linear_projection_macs": 153921920,
+          "lm_head_projection_macs_per_token": 20481920,
+          "lm_head_projection_training_flops_per_token": 122891520,
+          "recurrent_rule_flops": 3686400,
+          "six_times_linear_projection_macs": 923531520
+        }
+      ],
+      "global_layers": 5,
+      "head_dim": 64,
+      "hidden_size": 768,
+      "id": "ladder-150m",
+      "instantiation_validation": {
+        "active_parameter_count": 153960858,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 153960858,
+        "state_reports_match": true
+      },
+      "intermediate_size": 2304,
+      "label_parameters": 150000000,
+      "num_key_heads": 3,
+      "num_key_value_heads": 3,
+      "num_value_heads": 6,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 20481920,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 698111632,
+        "native_bf16_state_bytes": 349056040,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 46080,
+            "tensors": 15
+          },
+          "adamw_no_decay": {
+            "parameters": 20520858,
+            "tensors": 97
+          },
+          "muon": {
+            "parameters": 133393920,
+            "tensors": 157
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 768,
+          "global_blocks": 33923200,
+          "input_and_output_adapters": 983040,
+          "physically_shared_embedding_and_lm_head": 20481920,
+          "recurrent_blocks": 98571930
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 6784640,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 6571462,
+        "total_parameters": 153960858
+      },
+      "recurrent_layers": 15,
+      "six_nd_flops_per_token": 923765148,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 69120,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 34560,
+        "convolution_shape_per_layer": [
+          1,
+          768,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 1543680,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 5,
+        "points": [
+          {
+            "global_kv_elements": 7864320,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 15728640,
+                  "kimi_delta_attention": 1543680
+                },
+                "total_bytes": 17272320
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 8110080,
+                  "kimi_delta_attention": 1543680
+                },
+                "total_bytes": 9653760
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 251658240,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 503316480,
+                  "kimi_delta_attention": 1543680
+                },
+                "total_bytes": 504860160
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 259522560,
+                  "kimi_delta_attention": 1543680
+                },
+                "total_bytes": 261066240
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 15,
+        "recurrent_matrix_bytes": 1474560,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 368640,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          6,
+          64,
+          64
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 20481920
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 20481920
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 20973440
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 26216320
+        }
+      ],
+      "train_tokens": 3000000000
+    },
+    {
+      "active_parameters": 220786016,
+      "depth": 16,
+      "effective_vocab_size": 32003,
+      "embedding_size": 1024,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 1429088256,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 100687872,
+          "length": 4096,
+          "linear_projection_macs": 220744704,
+          "lm_head_projection_macs_per_token": 32771072,
+          "lm_head_projection_training_flops_per_token": 196626432,
+          "recurrent_rule_flops": 3932160,
+          "six_times_linear_projection_macs": 1324468224
+        },
+        {
+          "analytic_training_flops_per_token": 4549650432,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 3221250048,
+          "length": 131072,
+          "linear_projection_macs": 220744704,
+          "lm_head_projection_macs_per_token": 32771072,
+          "lm_head_projection_training_flops_per_token": 196626432,
+          "recurrent_rule_flops": 3932160,
+          "six_times_linear_projection_macs": 1324468224
+        }
+      ],
+      "global_layers": 4,
+      "head_dim": 64,
+      "hidden_size": 1024,
+      "id": "ladder-220m",
+      "instantiation_validation": {
+        "active_parameter_count": 220786016,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 220786016,
+        "state_reports_match": true
+      },
+      "intermediate_size": 3072,
+      "label_parameters": 220000000,
+      "num_key_heads": 4,
+      "num_key_value_heads": 4,
+      "num_value_heads": 8,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 32771072,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 1014590568,
+        "native_bf16_state_bytes": 507295464,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 49152,
+            "tensors": 12
+          },
+          "adamw_no_decay": {
+            "parameters": 32812384,
+            "tensors": 78
+          },
+          "muon": {
+            "parameters": 187924480,
+            "tensors": 124
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 1024,
+          "global_blocks": 48243200,
+          "input_and_output_adapters": 0,
+          "physically_shared_embedding_and_lm_head": 32771072,
+          "recurrent_blocks": 139770720
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 12060800,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 11647560,
+        "total_parameters": 220786016
+      },
+      "recurrent_layers": 12,
+      "six_nd_flops_per_token": 1324716096,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 73728,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 36864,
+        "convolution_shape_per_layer": [
+          1,
+          1024,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 1646592,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 4,
+        "points": [
+          {
+            "global_kv_elements": 8388608,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 16777216,
+                  "kimi_delta_attention": 1646592
+                },
+                "total_bytes": 18423808
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 8650752,
+                  "kimi_delta_attention": 1646592
+                },
+                "total_bytes": 10297344
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 268435456,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 536870912,
+                  "kimi_delta_attention": 1646592
+                },
+                "total_bytes": 538517504
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 276824064,
+                  "kimi_delta_attention": 1646592
+                },
+                "total_bytes": 278470656
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 12,
+        "recurrent_matrix_bytes": 1572864,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 393216,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          8,
+          64,
+          64
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 32771072
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 32771072
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 33557504
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 41946112
+        }
+      ],
+      "train_tokens": 5000000000
+    },
+    {
+      "active_parameters": 351030008,
+      "depth": 20,
+      "effective_vocab_size": 32003,
+      "embedding_size": 1152,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 2262614016,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 141592320,
+          "length": 4096,
+          "linear_projection_macs": 350964096,
+          "lm_head_projection_macs_per_token": 36867456,
+          "lm_head_projection_training_flops_per_token": 221204736,
+          "recurrent_rule_flops": 15237120,
+          "six_times_linear_projection_macs": 2105784576
+        },
+        {
+          "analytic_training_flops_per_token": 6650904576,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 4529882880,
+          "length": 131072,
+          "linear_projection_macs": 350964096,
+          "lm_head_projection_macs_per_token": 36867456,
+          "lm_head_projection_training_flops_per_token": 221204736,
+          "recurrent_rule_flops": 15237120,
+          "six_times_linear_projection_macs": 2105784576
+        }
+      ],
+      "global_layers": 5,
+      "head_dim": 128,
+      "hidden_size": 1152,
+      "id": "ladder-350m",
+      "instantiation_validation": {
+        "active_parameter_count": 351030008,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 351030008,
+        "state_reports_match": true
+      },
+      "intermediate_size": 3200,
+      "label_parameters": 350000000,
+      "num_key_heads": 4,
+      "num_key_value_heads": 3,
+      "num_value_heads": 8,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 36867456,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 1552345472,
+        "native_bf16_state_bytes": 776172960,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 122880,
+            "tensors": 15
+          },
+          "adamw_no_decay": {
+            "parameters": 36933368,
+            "tensors": 97
+          },
+          "muon": {
+            "parameters": 313973760,
+            "tensors": 155
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 1152,
+          "global_blocks": 73003520,
+          "input_and_output_adapters": 0,
+          "physically_shared_embedding_and_lm_head": 36867456,
+          "recurrent_blocks": 241157880
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 14600704,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 16077192,
+        "total_parameters": 351030008
+      },
+      "recurrent_layers": 15,
+      "six_nd_flops_per_token": 2106180048,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 184320,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 92160,
+        "convolution_shape_per_layer": [
+          1,
+          2048,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 8048640,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 5,
+        "points": [
+          {
+            "global_kv_elements": 15728640,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 31457280,
+                  "kimi_delta_attention": 8048640
+                },
+                "total_bytes": 39505920
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 15974400,
+                  "kimi_delta_attention": 8048640
+                },
+                "total_bytes": 24023040
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 503316480,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 1006632960,
+                  "kimi_delta_attention": 8048640
+                },
+                "total_bytes": 1014681600
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 511180800,
+                  "kimi_delta_attention": 8048640
+                },
+                "total_bytes": 519229440
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 15,
+        "recurrent_matrix_bytes": 7864320,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 1966080,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          8,
+          128,
+          128
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 36867456
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 36867456
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 37752192
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 47189376
+        }
+      ],
+      "train_tokens": 7000000000
+    },
+    {
+      "active_parameters": 592344884,
+      "depth": 20,
+      "effective_vocab_size": 32003,
+      "embedding_size": 1536,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 3765178368,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 188789760,
+          "length": 4096,
+          "linear_projection_macs": 592255488,
+          "lm_head_projection_macs_per_token": 49156608,
+          "lm_head_projection_training_flops_per_token": 294939648,
+          "recurrent_rule_flops": 22855680,
+          "six_times_linear_projection_macs": 3553532928
+        },
+        {
+          "analytic_training_flops_per_token": 9616232448,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 6039843840,
+          "length": 131072,
+          "linear_projection_macs": 592255488,
+          "lm_head_projection_macs_per_token": 49156608,
+          "lm_head_projection_training_flops_per_token": 294939648,
+          "recurrent_rule_flops": 22855680,
+          "six_times_linear_projection_macs": 3553532928
+        }
+      ],
+      "global_layers": 5,
+      "head_dim": 128,
+      "hidden_size": 1536,
+      "id": "flagship-600m",
+      "instantiation_validation": {
+        "active_parameter_count": 592344884,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 592344884,
+        "state_reports_match": true
+      },
+      "intermediate_size": 3968,
+      "label_parameters": 600000000,
+      "num_key_heads": 6,
+      "num_key_value_heads": 3,
+      "num_value_heads": 12,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 49156608,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 2567101280,
+        "native_bf16_state_bytes": 1283550864,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 184320,
+            "tensors": 15
+          },
+          "adamw_no_decay": {
+            "parameters": 49246004,
+            "tensors": 97
+          },
+          "muon": {
+            "parameters": 542914560,
+            "tensors": 155
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 1536,
+          "global_blocks": 120930560,
+          "input_and_output_adapters": 0,
+          "physically_shared_embedding_and_lm_head": 49156608,
+          "recurrent_blocks": 422256180
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 24186112,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 28150412,
+        "total_parameters": 592344884
+      },
+      "recurrent_layers": 15,
+      "six_nd_flops_per_token": 3554069304,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 276480,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 138240,
+        "convolution_shape_per_layer": [
+          1,
+          3072,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 12072960,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 5,
+        "points": [
+          {
+            "global_kv_elements": 15728640,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 31457280,
+                  "kimi_delta_attention": 12072960
+                },
+                "total_bytes": 43530240
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 15974400,
+                  "kimi_delta_attention": 12072960
+                },
+                "total_bytes": 28047360
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 503316480,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 1006632960,
+                  "kimi_delta_attention": 12072960
+                },
+                "total_bytes": 1018705920
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 511180800,
+                  "kimi_delta_attention": 12072960
+                },
+                "total_bytes": 523253760
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 15,
+        "recurrent_matrix_bytes": 11796480,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 2949120,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          12,
+          128,
+          128
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 49156608
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 49156608
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 50336256
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 62919168
+        }
+      ],
+      "train_tokens": 800000000000
+    },
+    {
+      "active_parameters": 743449560,
+      "depth": 24,
+      "effective_vocab_size": 32003,
+      "embedding_size": 1536,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 4714030080,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 226547712,
+          "length": 4096,
+          "linear_projection_macs": 743342592,
+          "lm_head_projection_macs_per_token": 49156608,
+          "lm_head_projection_training_flops_per_token": 294939648,
+          "recurrent_rule_flops": 27426816,
+          "six_times_linear_projection_macs": 4460055552
+        },
+        {
+          "analytic_training_flops_per_token": 11735294976,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 7247812608,
+          "length": 131072,
+          "linear_projection_macs": 743342592,
+          "lm_head_projection_macs_per_token": 49156608,
+          "lm_head_projection_training_flops_per_token": 294939648,
+          "recurrent_rule_flops": 27426816,
+          "six_times_linear_projection_macs": 4460055552
+        }
+      ],
+      "global_layers": 6,
+      "head_dim": 128,
+      "hidden_size": 1536,
+      "id": "ladder-750m",
+      "instantiation_validation": {
+        "active_parameter_count": 743449560,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 743449560,
+        "state_reports_match": true
+      },
+      "intermediate_size": 4352,
+      "label_parameters": 750000000,
+      "num_key_heads": 6,
+      "num_key_value_heads": 3,
+      "num_value_heads": 12,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 49156608,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 3171737816,
+        "native_bf16_state_bytes": 1585869176,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 221184,
+            "tensors": 18
+          },
+          "adamw_no_decay": {
+            "parameters": 49263576,
+            "tensors": 116
+          },
+          "muon": {
+            "parameters": 693964800,
+            "tensors": 186
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 1536,
+          "global_blocks": 155733504,
+          "input_and_output_adapters": 0,
+          "physically_shared_embedding_and_lm_head": 49156608,
+          "recurrent_blocks": 538557912
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 25955584,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 29919884,
+        "total_parameters": 743449560
+      },
+      "recurrent_layers": 18,
+      "six_nd_flops_per_token": 4460697360,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 331776,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 165888,
+        "convolution_shape_per_layer": [
+          1,
+          3072,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 14487552,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 6,
+        "points": [
+          {
+            "global_kv_elements": 18874368,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 37748736,
+                  "kimi_delta_attention": 14487552
+                },
+                "total_bytes": 52236288
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 19169280,
+                  "kimi_delta_attention": 14487552
+                },
+                "total_bytes": 33656832
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 603979776,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 1207959552,
+                  "kimi_delta_attention": 14487552
+                },
+                "total_bytes": 1222447104
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 613416960,
+                  "kimi_delta_attention": 14487552
+                },
+                "total_bytes": 627904512
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 18,
+        "recurrent_matrix_bytes": 14155776,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 3538944,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          12,
+          128,
+          128
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 49156608
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 49156608
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 50336256
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 62919168
+        }
+      ],
+      "train_tokens": 15000000000
+    },
+    {
+      "active_parameters": 1195884576,
+      "depth": 24,
+      "effective_vocab_size": 32003,
+      "embedding_size": 2048,
+      "flop_accounting": [
+        {
+          "analytic_training_flops_per_token": 7513092096,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 302063616,
+          "length": 4096,
+          "linear_projection_macs": 1195743232,
+          "lm_head_projection_macs_per_token": 65542144,
+          "lm_head_projection_training_flops_per_token": 393252864,
+          "recurrent_rule_flops": 36569088,
+          "six_times_linear_projection_macs": 7174459392
+        },
+        {
+          "analytic_training_flops_per_token": 16874778624,
+          "embedding_lookup_flops_per_token": 0,
+          "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
+          "global_attention_flops": 9663750144,
+          "length": 131072,
+          "linear_projection_macs": 1195743232,
+          "lm_head_projection_macs_per_token": 65542144,
+          "lm_head_projection_training_flops_per_token": 393252864,
+          "recurrent_rule_flops": 36569088,
+          "six_times_linear_projection_macs": 7174459392
+        }
+      ],
+      "global_layers": 6,
+      "head_dim": 128,
+      "hidden_size": 2048,
+      "id": "flagship-1.2b",
+      "instantiation_validation": {
+        "active_parameter_count": 1195884576,
+        "device": "meta",
+        "flops_match_at_lengths": [
+          4096,
+          131072
+        ],
+        "parameter_count": 1195884576,
+        "state_reports_match": true
+      },
+      "intermediate_size": 5120,
+      "label_parameters": 1200000000,
+      "num_key_heads": 8,
+      "num_key_value_heads": 4,
+      "num_value_heads": 16,
+      "optimizer_state_estimate": {
+        "assumption": "all parameters have received gradients; no FP32 master weights; one Muon momentum buffer, two AdamW moment buffers, and one FP32 AdamW step scalar per tensor",
+        "embedding_head_membership": {
+          "optimizer_memberships": 1,
+          "optimizer_role": "adamw_no_decay",
+          "parameters": 65542144,
+          "physical_parameter_objects": 1,
+          "state_dict_aliases": [
+            "embed_tokens.weight",
+            "lm_head.weight"
+          ]
+        },
+        "fp32_state_counterfactual_bytes": 5047452440,
+        "native_bf16_state_bytes": 2523726488,
+        "roles": {
+          "adamw_decay": {
+            "parameters": 294912,
+            "tensors": 18
+          },
+          "adamw_no_decay": {
+            "parameters": 65683488,
+            "tensors": 116
+          },
+          "muon": {
+            "parameters": 1129906176,
+            "tensors": 186
+          }
+        }
+      },
+      "parameter_accounting": {
+        "components": {
+          "final_norm": 2048,
+          "global_blocks": 251684352,
+          "input_and_output_adapters": 0,
+          "physically_shared_embedding_and_lm_head": 65542144,
+          "recurrent_blocks": 878656032
+        },
+        "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
+        "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
+        "global_block_parameters": 41947392,
+        "recurrent_block_formula": "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I",
+        "recurrent_block_parameters": 48814224,
+        "total_parameters": 1195884576
+      },
+      "recurrent_layers": 18,
+      "six_nd_flops_per_token": 7175307456,
+      "state_geometry": {
+        "batch_size": 1,
+        "convolution_bytes": 442368,
+        "convolution_dtype": "bfloat16",
+        "convolution_elements": 221184,
+        "convolution_shape_per_layer": [
+          1,
+          4096,
+          3
+        ],
+        "fixed_recurrent_state_bytes": 19316736,
+        "global_kv_formula": "G*2*Nkv*L*D elements",
+        "global_layers": 6,
+        "points": [
+          {
+            "global_kv_elements": 25165824,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 50331648,
+                  "kimi_delta_attention": 19316736
+                },
+                "total_bytes": 69648384
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 25559040,
+                  "kimi_delta_attention": 19316736
+                },
+                "total_bytes": 44875776
+              }
+            },
+            "length": 4096
+          },
+          {
+            "global_kv_elements": 805306368,
+            "instantiated_state": {
+              "bf16": {
+                "by_kind": {
+                  "attention_kv": 1610612736,
+                  "kimi_delta_attention": 19316736
+                },
+                "total_bytes": 1629929472
+              },
+              "int8_with_fp16_scales": {
+                "by_kind": {
+                  "attention_kv": 817889280,
+                  "kimi_delta_attention": 19316736
+                },
+                "total_bytes": 837206016
+              }
+            },
+            "length": 131072
+          }
+        ],
+        "recurrent_layers": 18,
+        "recurrent_matrix_bytes": 18874368,
+        "recurrent_matrix_dtype": "float32",
+        "recurrent_matrix_elements": 4718592,
+        "recurrent_matrix_shape_per_layer": [
+          1,
+          16,
+          128,
+          128
+        ]
+      },
+      "status": "planning_geometry_only_not_launchable",
+      "tokenizer_embedding_and_head_costs": [
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "mistral-32k-fallback",
+          "physical_tied_embedding_and_lm_head_parameters": 65542144
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32003,
+          "id": "speck-bpe-32000-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 65542144
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 32771,
+          "id": "speck-bpe-32768-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 67115008
+        },
+        {
+          "effective_vocab_size_with_chat_tokens": 40963,
+          "id": "speck-bpe-40960-whitespace",
+          "physical_tied_embedding_and_lm_head_parameters": 83892224
+        }
+      ],
+      "train_tokens": 400000000000
+    }
+  ],
+  "tokenizer_accounting": {
+    "authority": "fallback_accounting_only_D5_not_selected",
+    "base_vocab_size": 32000,
+    "chat_added_tokens": 3,
+    "effective_vocab_size": 32003,
+    "id": "mistral-32k-plus-reserved-chat-roles",
+    "implementation_note": "tokenizer v3 and SpeckForCausalLM use one physically shared embedding/LM-head parameter; tokenizer costs and exact target totals both follow that tied model",
+    "plan": "research/flagship/tokenizer_plan_v3.json",
+    "plan_sha256": "ef5e6a22deed460723e9dc3065a1722fe54ed06a9d316be2686d4556b0f90da6",
+    "selection_status": "D5_pending_fallback_only"
+  }
+}

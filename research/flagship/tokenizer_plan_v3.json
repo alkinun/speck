@@ -1,0 +1,148 @@
+{
+  "format": "speck_flagship_tokenizer_plan",
+  "format_version": 3,
+  "status": "tied_accounting_contract_ready_formal_inputs_and_runs_blocked",
+  "supersedes": {
+    "path": "research/flagship/tokenizer_plan_v2.json",
+    "sha256": "8909177223099c6d5475e2cd6a75bc70327ca1f54f752c345d2c5ce50aa3f053",
+    "repository_revision": "33c35508c8ef83b0e7f10fcc3d6d4ead22be4b64",
+    "reason": "resolve the untied-cost assumption against the physically tied Speck model and export contract"
+  },
+  "evidence": {
+    "path": "results/data/tokenizer-local-study-20260907.json",
+    "sha256": "6ffdaad34318383b4d08f4f6ecd8940b69366daebd3512e61be1308523b02bb1",
+    "authority": "local_exploratory_nomination_only"
+  },
+  "source_registry": "research/flagship/source_registry.json",
+  "language_scope": "English natural language; programming syntax exempt; code prose English-filtered",
+  "categories": [
+    "web",
+    "code",
+    "math",
+    "synthetic",
+    "science",
+    "reference"
+  ],
+  "sample": {
+    "training_bytes_per_category": 100000000,
+    "evaluation_bytes_per_category": 10000000,
+    "evaluation_modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "min_chars": 50,
+    "max_chars": 1000000,
+    "global_exact_dedup_normalization": "NFKC+lower+whitespace",
+    "input_identity": "explicit local path plus SHA-256",
+    "source_status": "technically_frozen_rights_production_and_firewall_authority_pending"
+  },
+  "trainer": {
+    "model_type": "bpe",
+    "character_coverage": 1.0,
+    "byte_fallback": true,
+    "normalization_rule_name": "identity",
+    "remove_extra_whitespaces": false,
+    "add_dummy_prefix": false,
+    "allow_whitespace_only_pieces": true,
+    "split_digits": true,
+    "split_by_unicode_script": true,
+    "split_by_whitespace": true,
+    "split_by_number": true,
+    "max_sentence_length": 1000000,
+    "num_threads": 1,
+    "hard_vocab_limit": true,
+    "special_ids": {
+      "unk": 0,
+      "bos": 1,
+      "eos": 2,
+      "pad": -1
+    }
+  },
+  "baseline": {
+    "id": "mistral-32k",
+    "repo": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+    "filename": "tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+    "expected_vocab_size": 32000,
+    "fallback": true
+  },
+  "candidates": [
+    {
+      "id": "speck-bpe-32000-whitespace",
+      "vocab_size": 32000
+    },
+    {
+      "id": "speck-bpe-32768-whitespace",
+      "vocab_size": 32768
+    },
+    {
+      "id": "speck-bpe-40960-whitespace",
+      "vocab_size": 40960
+    }
+  ],
+  "retired_v1_candidate": {
+    "id": "speck-bpe-49152",
+    "disposition": "preserved_in_v1_not_carried_into_formal_v2_or_v3",
+    "reason": "local corrected 40960 gained only 1.57 percent compression over 32768 while adding 16.78M tied Shape-A embedding/head parameters; 49152 has still higher cost"
+  },
+  "model_accounting": {
+    "embedding_width": 2048,
+    "tied_embeddings": true,
+    "architecture_config_tie_word_embeddings": true,
+    "physical_embedding_and_head_parameter_formula": "effective_vocab_size * embedding_width",
+    "chat_added_tokens": 3,
+    "packed_token_dtype": "uint16"
+  },
+  "static_evaluation": {
+    "selection_authority": false,
+    "advance_custom_candidates": 2,
+    "policy": "research/flagship/tokenizer_static_nomination_policy_v2.json",
+    "metrics": [
+      "macro_and_category_tokens_per_kib",
+      "bytes_per_token",
+      "tokens_per_word",
+      "document_ratio_p50_p90_p99",
+      "unknown_tokens",
+      "probe_roundtrip",
+      "whitespace_piece_usage",
+      "byte_fallback_usage",
+      "embedding_and_head_parameters"
+    ]
+  },
+  "language_model_pilot": {
+    "hardware": "local RTX 3090",
+    "scale": "60M",
+    "horizon": "same document prefix ending at 1.2B Mistral tokens plus per-tokenizer fixed-FLOP stops matched to that baseline",
+    "screen_runs": 3,
+    "confirmation_runs": 4,
+    "total_runs": 7,
+    "local_gpu_hour_ceiling": 30,
+    "primary_metric": "equal-category macro bits per UTF-8 byte",
+    "aggregate_guardrail_bpb": 0.01,
+    "category_guardrail_bpb": 0.02,
+    "confirmation_seeds": 3,
+    "tie_rule": "lower compute to fixed quality, then smaller vocabulary",
+    "fallback": "mistral-32k"
+  },
+  "formal_execution": {
+    "status": "blocked",
+    "requires": [
+      "accepted source-rights record",
+      "production-operations qualification",
+      "authorized real tokenizer_train and tokenizer_eval partitions",
+      "executable 600MB/60MB input manifest"
+    ]
+  },
+  "freeze_before": [
+    "data experiments E1-E5",
+    "architecture shared control C0",
+    "full corpus packing"
+  ],
+  "selection_authority": false,
+  "training_authority": "blocked",
+  "embedding_head_contract": {
+    "path": "research/flagship/embedding_head_contract_v1.json",
+    "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7"
+  }
+}

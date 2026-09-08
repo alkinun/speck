@@ -59,6 +59,7 @@ def model_settings(target, vocab_size):
         "blocks": blocks,
         "embedding_size": target["embedding_size"],
         "vocab_size": vocab_size,
+        "tie_word_embeddings": True,
         "max_position_embeddings": 131_072,
         "rope_theta": 1_000_000.0,
         "rope_scaling_factor": 1.0,
@@ -67,7 +68,7 @@ def model_settings(target, vocab_size):
     }
 
 
-def parameter_accounting(target, vocab_size):
+def parameter_accounting(target, vocab_size, contract_version=1):
     """Count parameters from layer equations, independently of module construction."""
 
     embedding = target["embedding_size"]
@@ -103,8 +104,13 @@ def parameter_accounting(target, vocab_size):
         + 3 * hidden * intermediate
     )
     adapters = 0 if embedding == hidden else 2 * embedding * hidden
+    embedding_component = (
+        "physically_shared_embedding_and_lm_head"
+        if contract_version >= 2
+        else "shared_embedding_and_lm_head"
+    )
     components = {
-        "shared_embedding_and_lm_head": vocab_size * embedding,
+        embedding_component: vocab_size * embedding,
         "input_and_output_adapters": adapters,
         "recurrent_blocks": recurrent_layers * recurrent_block,
         "global_blocks": global_layers * global_block,
@@ -112,9 +118,7 @@ def parameter_accounting(target, vocab_size):
     }
     return {
         "formula": "V*E + adapters + R*P_kda + G*P_attn + H",
-        "recurrent_block_formula": (
-            "H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I"
-        ),
+        "recurrent_block_formula": ("H(2K+2W)+H*Nv+H*D+D*Nv*D+(2K+W)*4+Nv+Nv*D+D+W*H+2H+3H*I"),
         "global_block_formula": "2H^2+2H*Nkv*D+2D+2H+3H*I",
         "components": components,
         "recurrent_block_parameters": recurrent_block,
@@ -123,7 +127,7 @@ def parameter_accounting(target, vocab_size):
     }
 
 
-def flop_accounting(target, vocab_size, length):
+def flop_accounting(target, vocab_size, length, contract_version=1):
     """Reproduce the repository's projection-plus-sequence analytic training FLOPs."""
 
     embedding = target["embedding_size"]
@@ -145,11 +149,7 @@ def flop_accounting(target, vocab_size, length):
         + (2 * key_size + value_size) * 4
         + 3 * hidden * intermediate
     )
-    global_linear = (
-        2 * hidden * hidden
-        + 2 * hidden * kv_heads * head
-        + 3 * hidden * intermediate
-    )
+    global_linear = 2 * hidden * hidden + 2 * hidden * kv_heads * head + 3 * hidden * intermediate
     linear_macs = (
         vocab_size * embedding
         + adapters
@@ -157,13 +157,11 @@ def flop_accounting(target, vocab_size, length):
         + global_layers * global_linear
     )
     chunk = min(64, length)
-    recurrent = recurrent_layers * value_heads * (
-        6 * head**2 + 3 * chunk * head + chunk**2
-    )
+    recurrent = recurrent_layers * value_heads * (6 * head**2 + 3 * chunk * head + chunk**2)
     mean_causal_context = (length + 1) / 2
     global_attention = int(global_layers * 12 * mean_causal_context * hidden)
     total = 6 * linear_macs + recurrent + global_attention
-    return {
+    result = {
         "length": length,
         "formula": "6*linear_projection_MACs + recurrent_rule_FLOPs + global_attention_FLOPs",
         "linear_projection_macs": linear_macs,
@@ -172,9 +170,14 @@ def flop_accounting(target, vocab_size, length):
         "global_attention_flops": global_attention,
         "analytic_training_flops_per_token": total,
     }
+    if contract_version >= 2:
+        result["embedding_lookup_flops_per_token"] = 0
+        result["lm_head_projection_macs_per_token"] = vocab_size * embedding
+        result["lm_head_projection_training_flops_per_token"] = 6 * vocab_size * embedding
+    return result
 
 
-def optimizer_accounting(model):
+def optimizer_accounting(model, contract_version=1):
     """Estimate initialized optimizer state from exact repository optimizer membership."""
 
     optimizer = model.optimizer(name="muon")
@@ -186,7 +189,7 @@ def optimizer_accounting(model):
         value["tensors"] for name, value in roles.items() if name.startswith("adamw_")
     )
     muon_parameters = roles["muon"]["parameters"]
-    return {
+    result = {
         "roles": roles,
         "assumption": (
             "all parameters have received gradients; no FP32 master weights; one Muon momentum "
@@ -197,6 +200,32 @@ def optimizer_accounting(model):
             muon_parameters * 4 + adam_parameters * 8 + adam_tensors * 4
         ),
     }
+    if contract_version >= 2:
+        embedding = model.embed_tokens.weight
+        memberships = []
+        for optimizer_name, member in optimizer.optimizers.items():
+            for group in member.param_groups:
+                for parameter in group["params"]:
+                    if parameter is embedding:
+                        memberships.append(
+                            "muon"
+                            if optimizer_name == "muon"
+                            else (
+                                "adamw_decay"
+                                if group.get("weight_decay", 0.0)
+                                else "adamw_no_decay"
+                            )
+                        )
+        if memberships != ["adamw_no_decay"]:
+            raise AssertionError("shared embedding/head optimizer membership changed")
+        result["embedding_head_membership"] = {
+            "physical_parameter_objects": 1,
+            "parameters": embedding.numel(),
+            "optimizer_memberships": 1,
+            "optimizer_role": memberships[0],
+            "state_dict_aliases": ["embed_tokens.weight", "lm_head.weight"],
+        }
+    return result
 
 
 def state_accounting(target, model):
@@ -221,9 +250,7 @@ def state_accounting(target, model):
                     kv_cache_dtype=dtype,
                 )
             reports[name] = state.memory_report()
-        global_kv_elements = (
-            global_layers * 2 * target["num_key_value_heads"] * length * head
-        )
+        global_kv_elements = global_layers * 2 * target["num_key_value_heads"] * length * head
         expected = {
             "bf16": {
                 "attention_kv": global_kv_elements * 2,
@@ -265,8 +292,8 @@ def state_accounting(target, model):
     }
 
 
-def tokenizer_costs(target, tokenizer):
-    """Keep planned untied cost distinct from the currently shared instantiated storage."""
+def tokenizer_costs(target, tokenizer, contract_version=1):
+    """Price each tokenizer using the selected physical embedding/head contract."""
 
     width = target["embedding_size"]
     rows = [
@@ -275,24 +302,35 @@ def tokenizer_costs(target, tokenizer):
         ("speck-bpe-32768-whitespace", 32_768),
         ("speck-bpe-40960-whitespace", 40_960),
     ]
-    return [
-        {
-            "id": identifier,
-            "effective_vocab_size_with_chat_tokens": base_vocab + tokenizer["chat_added_tokens"],
-            "planned_untied_embedding_and_head_parameters": (
-                2 * (base_vocab + tokenizer["chat_added_tokens"]) * width
-            ),
-            "instantiated_shared_embedding_and_head_parameters": (
-                (base_vocab + tokenizer["chat_added_tokens"]) * width
-            ),
-        }
-        for identifier, base_vocab in rows
-    ]
+    costs = []
+    for identifier, base_vocab in rows:
+        effective_vocab = base_vocab + tokenizer["chat_added_tokens"]
+        if contract_version >= 2:
+            costs.append(
+                {
+                    "id": identifier,
+                    "effective_vocab_size_with_chat_tokens": effective_vocab,
+                    "physical_tied_embedding_and_lm_head_parameters": effective_vocab * width,
+                }
+            )
+            continue
+        costs.append(
+            {
+                "id": identifier,
+                "effective_vocab_size_with_chat_tokens": effective_vocab,
+                "planned_untied_embedding_and_head_parameters": 2 * effective_vocab * width,
+                "instantiated_shared_embedding_and_head_parameters": effective_vocab * width,
+            }
+        )
+    return costs
 
 
 def generate_accounting(spec, root):
     """Generate the complete deterministic accounting artifact and instantiate every geometry."""
 
+    contract_version = spec["format_version"]
+    if contract_version not in {1, 2}:
+        raise ValueError("unsupported scale target format version")
     tokenizer = spec["tokenizer_fallback"]
     plan_path = root / tokenizer["plan"]
     if hashlib.sha256(plan_path.read_bytes()).hexdigest() != tokenizer["plan_sha256"]:
@@ -300,17 +338,33 @@ def generate_accounting(spec, root):
     for path, digest in spec["supersedes"]["legacy_shape_a"].values():
         if hashlib.sha256((root / path).read_bytes()).hexdigest() != digest:
             raise ValueError(f"historical Shape-A identity changed: {path}")
+    if contract_version >= 2:
+        for predecessor_name in ("scale_target_spec_v1", "scale_accounting_v1"):
+            predecessor = spec["supersedes"][predecessor_name]
+            if (
+                hashlib.sha256((root / predecessor["path"]).read_bytes()).hexdigest()
+                != predecessor["sha256"]
+            ):
+                raise ValueError(f"historical {predecessor_name} identity changed")
+        embedding_contract = spec["embedding_head_contract"]
+        if (
+            hashlib.sha256((root / embedding_contract["path"]).read_bytes()).hexdigest()
+            != (embedding_contract["sha256"])
+        ):
+            raise ValueError("embedding/head contract identity changed")
 
     targets = []
     vocab_size = tokenizer["effective_vocab_size"]
     for target in spec["targets"]:
         settings = model_settings(target, vocab_size)
-        analytic_parameters = parameter_accounting(target, vocab_size)
+        analytic_parameters = parameter_accounting(target, vocab_size, contract_version)
         settings["expected_parameters"] = analytic_parameters["total_parameters"]
         settings["expected_active_parameters"] = analytic_parameters["total_parameters"]
         with torch.device("meta"):
             model = build_model(settings, vocab_size=vocab_size)
-        flops = [flop_accounting(target, vocab_size, length) for length in LENGTHS]
+        flops = [
+            flop_accounting(target, vocab_size, length, contract_version) for length in LENGTHS
+        ]
         for point in flops:
             if model.flops_per_token(point["length"]) != point["analytic_training_flops_per_token"]:
                 raise AssertionError(f"analytic FLOP mismatch for {target['id']}")
@@ -326,9 +380,11 @@ def generate_accounting(spec, root):
                 "active_parameters": model.active_parameter_count(),
                 "six_nd_flops_per_token": 6 * parameters,
                 "flop_accounting": flops,
-                "optimizer_state_estimate": optimizer_accounting(model),
+                "optimizer_state_estimate": optimizer_accounting(model, contract_version),
                 "state_geometry": state_accounting(target, model),
-                "tokenizer_embedding_and_head_costs": tokenizer_costs(target, tokenizer),
+                "tokenizer_embedding_and_head_costs": tokenizer_costs(
+                    target, tokenizer, contract_version
+                ),
                 "instantiation_validation": {
                     "device": "meta",
                     "parameter_count": parameters,
@@ -338,17 +394,24 @@ def generate_accounting(spec, root):
                 },
             }
         )
-    return {
+    result = {
         "format": FORMAT,
-        "format_version": 1,
+        "format_version": contract_version,
         "status": spec["status"],
-        "source_spec": "research/flagship/targets/scale-targets-v1.json",
+        "source_spec": (
+            "research/flagship/targets/scale-targets-v2.json"
+            if contract_version >= 2
+            else "research/flagship/targets/scale-targets-v1.json"
+        ),
         "tokenizer_accounting": {
             **tokenizer,
             "authority": "fallback_accounting_only_D5_not_selected",
             "implementation_note": (
-                "tokenizer v2 plans untied embedding/head cost, but current SpeckForCausalLM shares "
-                "their storage; exact target totals follow the instantiated shared model"
+                "tokenizer v3 and SpeckForCausalLM use one physically shared embedding/LM-head "
+                "parameter; tokenizer costs and exact target totals both follow that tied model"
+                if contract_version >= 2
+                else "tokenizer v2 plans untied embedding/head cost, but current SpeckForCausalLM "
+                "shares their storage; exact target totals follow the instantiated shared model"
             ),
         },
         "common_formulas": {
@@ -364,7 +427,7 @@ def generate_accounting(spec, root):
                 "Nkv": "global-attention KV heads",
                 "R": "recurrent block count",
                 "G": "global block count",
-                "L": "sequence/cache length"
+                "L": "sequence/cache length",
             },
             "six_nd_policy": (
                 "6*N is reported only as a conventional comparator; it is not added to or "
@@ -376,6 +439,15 @@ def generate_accounting(spec, root):
         "requires_data_launch_authority": True,
         "missing_launch_inputs": spec["missing_launch_inputs"],
     }
+    if contract_version >= 2:
+        result["embedding_head_contract"] = {
+            **spec["embedding_head_contract"],
+            "tie_word_embeddings": True,
+            "physical_parameter_formula": "V*E",
+            "state_dict_aliases": ["embed_tokens.weight", "lm_head.weight"],
+            "optimizer_parameter_objects": 1,
+        }
+    return result
 
 
 def load_and_generate(spec_path, root=None):

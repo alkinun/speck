@@ -88,6 +88,43 @@ def test_main_model_parameter_count():
     assert model.parameter_count() == 140_652_288
 
 
+def test_embedding_and_lm_head_are_one_physical_optimizer_parameter():
+    model = model_with(SwiGLUSpec(16))
+    embedding = model.embed_tokens.weight
+
+    assert model.lm_head.weight is embedding
+    assert (
+        model.state_dict()["lm_head.weight"].data_ptr()
+        == model.state_dict()["embed_tokens.weight"].data_ptr()
+    )
+    assert sum(parameter is embedding for parameter in model.parameters()) == 1
+
+    optimizer = model.optimizer(name="muon")
+    memberships = [
+        (name, group["weight_decay"])
+        for name, member in optimizer.optimizers.items()
+        for group in member.param_groups
+        for parameter in group["params"]
+        if parameter is embedding
+    ]
+    assert memberships == [("adamw", 0.0)]
+
+
+def test_tied_legacy_checkpoint_loads_strictly_and_contradictory_aliases_fail():
+    source = model_with(SwiGLUSpec(16))
+    state = source.state_dict()
+    restored = model_with(SwiGLUSpec(16))
+
+    loaded = restored.load_state_dict(state, strict=True)
+    assert loaded.missing_keys == loaded.unexpected_keys == []
+    assert restored.lm_head.weight is restored.embed_tokens.weight
+
+    contradictory = {name: tensor.clone() for name, tensor in state.items()}
+    contradictory["lm_head.weight"][0, 0] += 1
+    with pytest.raises(RuntimeError, match="tensors are not tied"):
+        restored.load_state_dict(contradictory, strict=True)
+
+
 def test_model_rejects_unknown_loss_backend():
     config = model_with(SwiGLUSpec(16)).config
     with pytest.raises(ValueError, match="unsupported loss backend"):

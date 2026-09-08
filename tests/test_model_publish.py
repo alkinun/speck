@@ -68,6 +68,7 @@ def test_release_config_adds_transformers_metadata():
     assert result["num_attention_heads"] == 2
     assert result["num_hidden_layers"] == 1
     assert result["expected_parameters"] == 100
+    assert result["tie_word_embeddings"] is True
 
 
 def test_release_state_converts_to_bf16_and_omits_tied_head():
@@ -183,6 +184,8 @@ def assert_current_transformers_parity(tmp_path, values):
         trust_remote_code=True,
         dtype=torch.bfloat16,
     )
+    assert exported.config.tie_word_embeddings is True
+    assert exported.get_output_embeddings().weight is exported.get_input_embeddings().weight
     expected_rotary = [buffer for buffer in native.rotary.buffers()]
     actual_rotary = [buffer for buffer in exported.native.rotary.buffers()]
     assert len(actual_rotary) == len(expected_rotary)
