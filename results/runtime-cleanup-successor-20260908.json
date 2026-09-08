@@ -1,0 +1,73 @@
+{
+  "format": "speck_runtime_cleanup_successor",
+  "format_version": 1,
+  "status": "checkpoint_recovery_and_handle_reuse_fixture_pass_gpu_and_20B_pending",
+  "recorded_on": "2026-09-08",
+  "pre_result_commit": "cd34926",
+  "supersedes": {
+    "checkpoint": {
+      "historical_evidence": "results/Speck-Paper1/finalist-systems-measurement-audit-v1.json",
+      "historical_evidence_sha256": "19278c3af7d161735c136dadf0d8c2b573e819dc2245a01b4dd277a7d638eabe",
+      "historical_implementation_sha256": "c009efb5dc86b8c04750f6a77015fe03501e293ac01a493ef80253a86f6cc2e1",
+      "historical_evidence_modified": false
+    },
+    "production_data": {
+      "historical_evidence": "results/data/production-data-tooling-20260907.json",
+      "historical_evidence_sha256": "5b8d7c1ecd8d8b986b084286ae0a207e660f5ca2723198b5d65d452ce23a489a",
+      "historical_implementation_sha256": "45d2ccce8b8ef1e2564116de8c5cc1f427fb93a1feb1af4fbdfcc4c4dff51431",
+      "historical_tests_sha256": "983bd78678fe4c269905aff420131339e21650ab3d23b4cf6cc9fcb2d24f6a10",
+      "historical_evidence_modified": false
+    }
+  },
+  "implementation": {
+    "checkpoint": ["speck/checkpoint.py", "0233da9740ac7291efabb37207fad23b9bc2f867607f3cb961857db7e7564c8b"],
+    "checkpoint_tests": ["tests/test_checkpoint.py", "f286c7aea61a130ff5fe62829a5afab76ea6e1dc40e7a4165ead112440ded2c2"],
+    "production_data": ["speck/production_data.py", "894cac4ee765c4bbd8474d520ca794456e7f1695bfb161c84e15966e7054440f"],
+    "production_data_tests": ["tests/test_production_data.py", "c620b2b2bfc1e11f21c7d34951ffdf2d8a2ab1d419c87b306bb3b5d6612d73b0"],
+    "formatter_contract": ["ruff-format.toml", "a50b23e4045ea115fc79f3ad3ae37ca0b3cef836b8376c4b5391e84ba1e06fcf"],
+    "dependency_contract": ["pyproject.toml", "20d35414856bd5f3b849bf2d7439f7b795b1e25e2a4e0123f18752a862bc1a1d"]
+  },
+  "checkpoint_qualification": {
+    "stages_all_tensor_JSON_timing_and_completion_payloads_before_replacement": true,
+    "fsyncs_staged_payloads_and_publication_directory": true,
+    "hides_completion_marker_before_multi_file_replacement": true,
+    "restores_completed_predecessor_after_first_or_second_tensor_serialization_failure": true,
+    "restores_completed_predecessor_after_metadata_or_timing_failure": true,
+    "restores_all_predecessor_files_after_partial_os_replace_failure": true,
+    "persists_transaction_journal_before_moving_predecessor": true,
+    "next_discovery_recovers_after_uncatchable_publication_interrupt": true,
+    "removes_stale_optional_timing_only_after_successful_replacement": true,
+    "retains_legacy_checkpoint_filenames_and_load_contract": true
+  },
+  "production_data_qualification": {
+    "candidate_source_open_only_on_cache_miss": true,
+    "repeated_candidates_from_one_source_reuse_one_handle": true,
+    "candidate_handles_close_after_comparison_failure": true,
+    "dedup_output_and_resume_semantics_unchanged": true,
+    "training_authority": "blocked"
+  },
+  "formatting_qualification": {
+    "documented_command": "uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .",
+    "documented_command_passes": true,
+    "source_pinned_exclusions": 17,
+    "excluded_files_remain_linted_and_tested": true,
+    "pyproject_historical_hash_preserved": true
+  },
+  "validation": {
+    "checkpoint_tests_passed": 16,
+    "production_data_tests_passed": 9,
+    "full_suite_passed": 819,
+    "full_suite_skipped": 8,
+    "ruff_lint": "pass",
+    "documented_format_check": "pass",
+    "diff_check": "pass"
+  },
+  "limitations": [
+    "CPU failure injection is not a distributed or GH200 checkpoint qualification",
+    "concurrent writers to the same checkpoint step are unsupported",
+    "an abrupt process exit before transaction-journal publication can leave unreferenced staging files but cannot replace the completed predecessor",
+    "the real 20B production-data rehearsal has not run",
+    "no production operations or training authority is issued"
+  ],
+  "decision": "use the hardened checkpoint path for future local and allocated runs; retain the handle-reuse fix for the future 20B rehearsal; keep all existing data and launch gates blocked until their real qualifications pass"
+}

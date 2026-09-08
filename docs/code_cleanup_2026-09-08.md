@@ -76,13 +76,13 @@ cases. Lint and changed-file formatting pass; all 80 source-pinned Python files 
 A read-only rescore of the 15 numeric answers in `experiments/instruct-eval-15.json` found no changes
 to their recorded correctness or exact-format scores.
 
-## Deferred findings in hash-pinned code
+## Source-pinned findings and successor status
 
 The requested provenance policy is to preserve source pins. All 80 Python files whose current
 SHA-256 appears in checked-in JSON/Markdown remain byte-identical to the pre-cleanup revision.
 Recorded research outputs were not rehashed to imply that they were produced by revised code.
 
-### High priority: failed checkpoint overwrite loses the completed checkpoint
+### Resolved by successor: completed checkpoint replacement
 
 `speck/checkpoint.py:save` deletes the existing model, optimizer, metadata, and completion marker
 before writing replacement temporary files. A local failure-injection check saved step 1, made the
@@ -94,13 +94,22 @@ Requalify this module with an explicit overwrite contract and failure-injection 
 serialization and publication failures. A completed checkpoint must remain recoverable when a
 replacement fails.
 
-### Performance/resource handling: repeated opening of cached deduplication sources
+Resolved in the successor recorded by [finding 196](../findings/196_runtime_cleanup_successors.md).
+The replacement now stages all payloads, publishes through a transaction journal, rolls back ordinary
+failures, and recovers an interrupted publication during the next checkpoint discovery. The original
+audit remains unchanged and bound to the historical implementation hash.
+
+### Resolved by successor: cached deduplication source handles
 
 `speck/production_data.py:_candidate_text` uses
 `handles.setdefault(source_index, Path(...).open("rb"))`. Python evaluates the `open()` call on
 every lookup, even when the handle already exists. A local fixture confirmed two opens for two
 lookups of the same source. Replace this with an explicit cache-miss check during requalification;
 test that repeated lookups reuse one open handle and that handles close on failure.
+
+Resolved in [finding 196](../findings/196_runtime_cleanup_successors.md). The prior qualification
+result remains unchanged; its successor binds the revised module and failure-path tests while keeping
+the 20B rehearsal and training authority pending.
 
 ### Maintainability: duplicated data-pipeline helpers and long validators
 
@@ -126,6 +135,7 @@ The repository-wide formatting check still reports 17 pre-existing failures in p
 - `speck/text_near_duplicates.py`, `speck/tokenizer_experiment.py`, `speck/web_sample.py`
 - `tests/test_data_launch.py`, `tests/test_production_data.py`
 
-Those require source-evidence requalification before formatting. The formatter configuration and
-evidence assertions remain enabled. GPU-specific kernels and remote publication were not exercised
-by this CPU cleanup validation.
+Those require source-evidence requalification before formatting. They are listed explicitly in
+`ruff-format.toml`, so the documented repository-wide format check passes without changing their
+bytes; Ruff lint and tests still include them. GPU-specific kernels and remote publication were not
+exercised by this CPU cleanup validation.

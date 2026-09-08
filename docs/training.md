@@ -101,6 +101,11 @@ Resume validates the architecture, packed-data manifest, optimizer settings, bat
 training horizon, world size, and next loader offset. It restores the optimizer, data position,
 elapsed time, and W&B run identity.
 
+Replacing the same completed step stages and flushes every new payload before publication. The
+completion marker is hidden during the switch, and a transaction journal restores the predecessor if
+publication fails or is interrupted. Concurrent writers to one step remain unsupported; schedulers
+must not launch them.
+
 Start an isolated branch from a complete checkpoint with a separate experiment whose `run`, output
 directory, and local `train_tokens` describe the branch:
 

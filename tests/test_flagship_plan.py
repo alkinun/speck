@@ -482,13 +482,42 @@ def test_production_data_tooling_is_hash_bound_and_does_not_claim_rehearsal():
         (ROOT / "results" / "data" / "production-data-tooling-20260907.json").read_text()
     )
     assert result["status"] == "fixture_qualified_20B_rehearsal_and_training_authority_blocked"
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["preprocessor"][1] == (
+        "45d2ccce8b8ef1e2564116de8c5cc1f427fb93a1feb1af4fbdfcc4c4dff51431"
+    )
+    assert result["implementation"]["preprocessor_tests"][1] == (
+        "983bd78678fe4c269905aff420131339e21650ab3d23b4cf6cc9fcb2d24f6a10"
+    )
+    for name, (path, digest) in result["implementation"].items():
+        if name not in {"preprocessor", "preprocessor_tests"}:
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     assert result["fixture_validation"]["new_preprocessor_tests"] == 7
     assert result["fixture_validation"]["combined_preprocessor_and_packer_tests"] == 38
     assert result["fixture_validation"]["real_qualified_source_records_read"] == 0
     assert any("20B rehearsal has not run" in value for value in result["limitations"])
     assert any("no full corpus" in value for value in result["limitations"])
+
+
+def test_runtime_cleanup_successor_is_hash_bound_and_non_authoritative():
+    result = json.loads((ROOT / "results" / "runtime-cleanup-successor-20260908.json").read_text())
+    assert result["status"] == (
+        "checkpoint_recovery_and_handle_reuse_fixture_pass_gpu_and_20B_pending"
+    )
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for lineage in result["supersedes"].values():
+        assert (
+            hashlib.sha256((ROOT / lineage["historical_evidence"]).read_bytes()).hexdigest()
+            == (lineage["historical_evidence_sha256"])
+        )
+        assert lineage["historical_evidence_modified"] is False
+    assert all(result["checkpoint_qualification"].values())
+    assert result["production_data_qualification"]["training_authority"] == "blocked"
+    assert result["formatting_qualification"]["pyproject_historical_hash_preserved"] is True
+    assert any("20B" in value for value in result["limitations"])
+    assert any(
+        "no production operations or training authority" in value for value in result["limitations"]
+    )
 
 
 def test_source_rights_decision_contract_is_hash_bound_and_all_pending():

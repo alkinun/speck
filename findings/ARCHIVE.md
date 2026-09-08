@@ -209,6 +209,7 @@ history in order only when auditing provenance or a retired decision:
 194. [193 — Static tokenizer finalists have a frozen pre-results rule](193_tokenizer_static_nomination_policy.md)
 195. [194 — The seven-run tokenizer pilot analysis is frozen](194_tokenizer_pilot_analysis.md)
 196. [195 — Whitespace-piece support fixes the local custom-tokenizer deficit](195_local_tokenizer_data_study.md)
+197. [196 — Checkpoint replacement now preserves its predecessor](196_runtime_cleanup_successors.md)
 
 Conventions:
 
