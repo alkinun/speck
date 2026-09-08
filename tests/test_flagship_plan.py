@@ -578,8 +578,12 @@ def test_fullsize_tokenizer_fixture_has_no_real_selection_authority():
         (ROOT / "results" / "data" / "tokenizer-fullsize-fixture-20260907.json").read_text()
     )
     assert result["status"] == "fullsize_pipeline_fixture_pass_no_scientific_selection_authority"
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["tokenizer_pipeline"][1] == (
+        "c1ccea27a60132da4785b598b36c81d252117518f06b0b0df928e94c1bb8ab40"
+    )
+    for name, (path, digest) in result["implementation"].items():
+        if name != "tokenizer_pipeline":
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     assert result["real_inputs"]["sources"] == 30
     assert result["real_inputs"]["materialized"] is False
     assert result["fixture"]["selection_authority"] is False
@@ -598,12 +602,40 @@ def test_tokenizer_static_nomination_policy_is_hash_bound_and_pre_results():
         ).read_text()
     )
     assert result["status"] == "policy_fixture_qualified_before_real_tokenizer_outputs"
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["module"][1] == (
+        "50b9f82819cb22a43238c195527c4534802c1a8a25c76d86ba396070cbfb99c1"
+    )
+    assert result["implementation"]["tests"][1] == (
+        "ee812f6550c1c1daba1fd87d2ae6646a090f1e39849413a50f06ed8654a3e95f"
+    )
+    for name, (path, digest) in result["implementation"].items():
+        if name not in {"module", "tests"}:
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     assert result["policy"]["selection_authority"] is False
     assert result["fixture"]["advancement_authority"] is False
     assert result["real_static_comparison"].startswith("blocked")
     assert result["final_tokenizer_decision"].startswith("blocked")
+
+
+def test_tokenizer_v2_successor_is_hash_bound_and_formal_runs_remain_blocked():
+    result = json.loads(
+        (ROOT / "results" / "data" / "tokenizer-v2-contract-20260908.json").read_text()
+    )
+    assert result["status"] == ("corrected_v2_contract_fixture_pass_formal_training_and_D5_blocked")
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for lineage in result["supersedes"].values():
+        assert (
+            hashlib.sha256((ROOT / lineage["path"]).read_bytes()).hexdigest() == lineage["sha256"]
+        )
+        assert lineage["modified"] is False
+    assert result["v2_contract"]["allow_whitespace_only_pieces"] is True
+    assert result["v2_contract"]["training_authority"] == "blocked"
+    assert result["local_policy_fixture"]["advancement_authority"] is False
+    assert result["local_policy_fixture"]["selection_authority"] is False
+    assert result["validation"]["formal_tokenizer_models_trained"] == 0
+    assert result["validation"]["language_model_pilot_runs"] == 0
+    assert result["validation"]["D5_tokenizer_openings"] == 0
 
 
 def test_tokenizer_pilot_analysis_is_hash_bound_and_D5_stays_unopened():

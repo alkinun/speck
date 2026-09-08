@@ -25,8 +25,8 @@ the attractive operating point for a later matched-LM test.
 
 This is static, local, hypothesis-generating evidence. It does not select D5, authorize flagship
 training, replace the formal sample, justify opening `D5_tokenizer`, or establish language-model
-quality. The formal tokenizer plan should receive a versioned successor that carries exact-32K BPE
-with explicit whitespace-only-piece support alongside Mistral; the original setting remains the
-failed control.
+quality. The formal tokenizer plan now has a [versioned v2 successor](197_tokenizer_v2_contract.md)
+that carries exact-32K BPE with explicit whitespace-only-piece support alongside Mistral; the
+original setting remains the failed control.
 
 Artifact: [checked study result](../results/data/tokenizer-local-study-20260907.json).

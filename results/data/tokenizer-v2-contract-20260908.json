@@ -1,0 +1,104 @@
+{
+  "format": "speck_tokenizer_v2_contract_qualification",
+  "format_version": 1,
+  "status": "corrected_v2_contract_fixture_pass_formal_training_and_D5_blocked",
+  "recorded_on": "2026-09-08",
+  "pre_result_commit": "33c3550",
+  "supersedes": {
+    "plan_v1": {
+      "path": "research/flagship/tokenizer_plan.json",
+      "sha256": "185feb853b3ed9dcb779c7e54fe240b2bc0c2e56a2f3e9632817311480f17cf2",
+      "repository_revision": "9089c01",
+      "modified": false
+    },
+    "nomination_policy_v1": {
+      "path": "research/flagship/tokenizer_static_nomination_policy.json",
+      "sha256": "5d3cb5c8b6ec74ec31566dbf07fe28340d4f1998e1169ac92981e89d47986499",
+      "repository_revision": "9089c01",
+      "modified": false
+    },
+    "fullsize_fixture_v1": {
+      "path": "results/data/tokenizer-fullsize-fixture-20260907.json",
+      "sha256": "0041eb934e04d0885c8f89ff519ff1cd2c24b62312a6c63a1ef8814a2415b93b",
+      "tokenizer_experiment_sha256": "c1ccea27a60132da4785b598b36c81d252117518f06b0b0df928e94c1bb8ab40",
+      "modified": false
+    },
+    "nomination_fixture_v1": {
+      "path": "results/data/tokenizer-static-nomination-fixture-20260907.json",
+      "sha256": "c0f26082406bb50cfc2a5adbc14939a6fcf402e75d60baf649d93286a0b5a63e",
+      "tokenizer_nomination_sha256": "50b9f82819cb22a43238c195527c4534802c1a8a25c76d86ba396070cbfb99c1",
+      "modified": false
+    }
+  },
+  "evidence": {
+    "local_study": ["results/data/tokenizer-local-study-20260907.json", "6ffdaad34318383b4d08f4f6ecd8940b69366daebd3512e61be1308523b02bb1"],
+    "authority": "candidate_contract_design_only"
+  },
+  "implementation": {
+    "experiment": ["speck/tokenizer_experiment.py", "eab1e71fa06d89412e1a502f7618c79b44bc0eae9382a3ef80fdbfcbc58c3a8c"],
+    "experiment_tests": ["tests/test_tokenizer_experiment.py", "c67288529b633fff957a7185f01d807bf62021b4c881322c4bb37a86233ac5ba"],
+    "nomination": ["speck/tokenizer_nomination.py", "8dde2bd62510d8e3e9accb506ac01ea22beba21316b788dfcbcd948d978824fc"],
+    "nomination_tests": ["tests/test_tokenizer_nomination.py", "f76878fb7ac13b25ca5e17abbc8d58a8dbc68a5ef41b7ad937db8615f0e16894"],
+    "v2_contract_tests": ["tests/test_tokenizer_v2.py", "ed98aad4103988bb1bd3733475a2e966a191217c6d14f1c4c0525316ba3ad716"],
+    "plan": ["research/flagship/tokenizer_plan_v2.json", "8909177223099c6d5475e2cd6a75bc70327ca1f54f752c345d2c5ce50aa3f053"],
+    "nomination_policy": ["research/flagship/tokenizer_static_nomination_policy_v2.json", "909155eee901fde29cfc8387f6560bc4fe06f4764352c0d424895c7e0e1623a6"]
+  },
+  "v2_contract": {
+    "custom_candidates": [
+      {"id": "speck-bpe-32000-whitespace", "vocab_size": 32000},
+      {"id": "speck-bpe-32768-whitespace", "vocab_size": 32768},
+      {"id": "speck-bpe-40960-whitespace", "vocab_size": 40960}
+    ],
+    "baseline": "mistral-32k",
+    "allow_whitespace_only_pieces": true,
+    "formal_sample_training_bytes": 600000000,
+    "formal_sample_evaluation_bytes": 60000000,
+    "retired_from_v2_preserved_in_v1": "speck-bpe-49152",
+    "static_nominees": 2,
+    "language_model_pilot_runs": 7,
+    "selection_authority": false,
+    "training_authority": "blocked"
+  },
+  "backward_compatibility": {
+    "v1_configs_without_allow_whitespace_only_pieces_remain_valid": true,
+    "absent_optional_field_is_not_inserted_into_normalized_v1_config": true,
+    "v1_plan_fingerprints_remain_unchanged": true,
+    "explicit_v2_field_changes_plan_fingerprint": true,
+    "trainer_manifest_records_explicit_field": true
+  },
+  "artifact_qualification": {
+    "native_sentencepiece_roundtrip_with_spaces_newlines_and_tabs": true,
+    "chat_role_ids_fit_uint16": true,
+    "chat_artifact_copies_exact_model_bytes": true,
+    "chat_metadata_binds_base_model_sha256": true,
+    "old_special_ids_0_1_2_preserved": true
+  },
+  "local_policy_fixture": {
+    "evaluation": "/mnt/speck-data/speck/tokenizer-exploratory/formal-v2-fixture/evaluation.json",
+    "evaluation_sha256": "ce1e450ef1e1fd1eda34c611db80be62e737b07b09710d67a1e9fc813e049ad0",
+    "nomination": "/mnt/speck-data/speck/tokenizer-exploratory/formal-v2-fixture/nomination.json",
+    "nomination_sha256": "b6fa0cfb0e08cf132ec4317b5e9cb6c410144dbc33047e78d27132879a9a5886",
+    "pareto_frontier": [
+      "speck-bpe-32000-whitespace",
+      "speck-bpe-32768-whitespace",
+      "speck-bpe-40960-whitespace"
+    ],
+    "reported_endpoints": [
+      {"role": "compression_endpoint", "id": "speck-bpe-40960-whitespace"},
+      {"role": "compact_endpoint", "id": "speck-bpe-32000-whitespace"}
+    ],
+    "advancement_authority": false,
+    "selection_authority": false
+  },
+  "validation": {
+    "focused_tests_passed": 20,
+    "full_suite_passed": 824,
+    "full_suite_skipped": 8,
+    "ruff_lint": "pass",
+    "documented_format_check": "pass",
+    "formal_tokenizer_models_trained": 0,
+    "language_model_pilot_runs": 0,
+    "D5_tokenizer_openings": 0
+  },
+  "decision": "use v2 as the active pre-results tokenizer contract; materialize and train it only after the existing real data authorities pass; static output may nominate but only the matched LM pilot and one-opening D5_tokenizer audit can select"
+}

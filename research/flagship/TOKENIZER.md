@@ -7,9 +7,11 @@ statically superior to Mistral on the bounded held-out text, but every formal to
 pending, 2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this
 protocol. Mistral 32K remains the fallback until the formal balanced sample and LM pilot are complete.
 
-[`tokenizer_plan.json`](tokenizer_plan.json) freezes the research decision. The executable config is
-created under `experiments/Speck-Tokenizer-v1/` only after every input file has an immutable source
-card and SHA-256 hash. This avoids presenting placeholders as launchable inputs.
+[`tokenizer_plan_v2.json`](tokenizer_plan_v2.json) freezes the active research decision.
+[`tokenizer_plan.json`](tokenizer_plan.json) and its 32,768/40,960/49,152 candidate set remain the
+immutable v1 predecessor. The executable v2 config is created under `experiments/Speck-Tokenizer-v2/`
+only after every input file has an immutable source card and SHA-256 hash. This avoids presenting
+placeholders as launchable inputs.
 [`source_registry.json`](source_registry.json) proposes the per-source quotas that sum to each
 category target; a failed source is replaced and the registry versioned before sampling begins.
 All final bounded successors are identity-bound in
@@ -25,15 +27,17 @@ science, and reference data. Programming syntax is retained as-is; surrounding n
 English-filtered before sampling. The sample is disjoint from data-mixture selection and benchmark
 evaluation data.
 
-The custom candidates are BPE vocabularies of 32,768, 40,960, and 49,152 pieces. Mistral 32K is the
-baseline and fallback. A 64K candidate is excluded: the packed loader uses uint16 IDs, chat adds three
-role tokens, and Shape A has untied 2,048-wide input/output matrices, so larger vocabularies consume
-parameters rapidly.
+The active custom candidates are BPE vocabularies of exactly 32,000, 32,768, and 40,960 pieces.
+Mistral 32K is the baseline and fallback. The v1 49,152 candidate is preserved but not carried into
+v2: corrected local evidence shows too little incremental compression for its embedding/head cost.
+A 64K candidate remains excluded because the packed loader uses uint16 IDs, chat adds three role
+tokens, and Shape A has untied 2,048-wide input/output matrices.
 
 All custom candidates use the same explicit trainer settings:
 
 - byte fallback and 100% character coverage;
 - identity normalization, no whitespace collapse, and no dummy prefix;
+- explicit whitespace-only-piece support so indentation and repeated spaces can merge losslessly;
 - deterministic preselected input order, no SentencePiece subsampling or shuffle, and one trainer
   thread;
 - `<unk>=0`, `<s>=1`, `</s>=2`, and no padding token;
@@ -76,22 +80,22 @@ and near-duplicate requirements for the full flagship corpus.
 
 ## 3. Running the pipeline
 
-After source qualification, create `experiments/Speck-Tokenizer-v1/tokenizer_experiment.json` using
-the frozen values in [`tokenizer_plan.json`](tokenizer_plan.json) plus explicit input records. Relative
+After source qualification, create `experiments/Speck-Tokenizer-v2/tokenizer_experiment.json` using
+the frozen values in [`tokenizer_plan_v2.json`](tokenizer_plan_v2.json) plus explicit input records. Relative
 input and output paths resolve against the config directory.
 
 Build the balanced sample:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_sample_prepare \
-  experiments/Speck-Tokenizer-v1/tokenizer_experiment.json
+  experiments/Speck-Tokenizer-v2/tokenizer_experiment.json
 ```
 
 Train all candidates and pin the baseline:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_train \
-  experiments/Speck-Tokenizer-v1/tokenizer_experiment.json \
+  experiments/Speck-Tokenizer-v2/tokenizer_experiment.json \
   --prepare-baselines
 ```
 
@@ -99,7 +103,7 @@ Evaluate static metrics:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_evaluate \
-  experiments/Speck-Tokenizer-v1/tokenizer_experiment.json
+  experiments/Speck-Tokenizer-v2/tokenizer_experiment.json
 ```
 
 `--restart` deletes only an incomplete `.building` directory. Completed samples and tokenizers are
@@ -152,11 +156,12 @@ and markup. Enabling only that setting gives an exact-32,000-piece BPE 264.88 eq
 tokens/KiB versus Mistral's 285.51 at identical embedding/head parameter cost. It improves all six
 categories and all 30 bounded sources, repeats exactly at 32,768 pieces, and still leads after a
 whitespace-collapse diagnostic. Tripling data, paragraph chunking, code reweighting, dummy-prefix
-matching, and unigram did not explain or improve the original control. This result nominates a
-future versioned formal-plan treatment; it has no D5, LM-quality, audit-opening, or launch authority.
+matching, and unigram did not explain or improve the original control. The versioned v2 plan now
+contains this treatment; neither the plan nor local result has D5, LM-quality, audit-opening, or
+launch authority.
 
 If more than two custom candidates remain Pareto-valid, the pre-results
-[`tokenizer_static_nomination_policy.json`](tokenizer_static_nomination_policy.json) chooses two
+[`tokenizer_static_nomination_policy_v2.json`](tokenizer_static_nomination_policy_v2.json) chooses two
 endpoints: best macro compression, then lowest parameter cost among the remaining frontier. Frozen
 tie rules prefer the other objective, smaller vocabulary, then ID. Fewer than two valid distinct
 Pareto candidates stops without improvisation. Static nomination advances LM-pilot candidates only;

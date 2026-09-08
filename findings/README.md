@@ -77,6 +77,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Tokenizer pilot analysis](194_tokenizer_pilot_analysis.md) | Seven-run BPB, compute, guardrail, and D5 handoff contract |
 | [Local tokenizer data study](195_local_tokenizer_data_study.md) | Whitespace-piece support reverses the bounded custom-tokenizer deficit |
 | [Runtime cleanup successors](196_runtime_cleanup_successors.md) | Failure-safe checkpoint replacement and production handle reuse |
+| [Tokenizer v2 contract](197_tokenizer_v2_contract.md) | Corrected exact-32K/32,768/40,960 pre-results candidate set |
 
 ## Conventions
 

@@ -21,8 +21,8 @@ The active operating surface is intentionally small:
 - [`data_plan.json`](data_plan.json) is the machine-checked category, run, and selection contract.
 - [`architecture_plan.json`](architecture_plan.json) is the machine-checked architecture run,
   promotion, scale, and systems contract.
-- [`tokenizer_plan.json`](tokenizer_plan.json) is the machine-checked tokenizer sampling and decision
-  contract.
+- [`tokenizer_plan_v2.json`](tokenizer_plan_v2.json) is the active machine-checked tokenizer sampling
+  and decision contract; [`tokenizer_plan.json`](tokenizer_plan.json) preserves v1.
 - [`source_registry.json`](source_registry.json) pins the candidate source revisions and provisional
   tokenizer byte quotas without granting training authority.
 - [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
