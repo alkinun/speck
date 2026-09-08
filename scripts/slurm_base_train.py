@@ -1,11 +1,9 @@
 """Run base training with bounded Slurm signal/checkpoint/requeue support."""
 
 import argparse
-import json
 import os
 import signal
 import sys
-import time
 from pathlib import Path
 
 import torch
@@ -14,7 +12,6 @@ from scripts import base_train
 from speck.checkpoint import latest
 from speck.common import base_dir
 from speck.config import load_experiment
-from speck.model import CausalLMTrainingOutput
 from speck.slurm import REQUEUE_EXIT_CODE
 
 
@@ -43,11 +40,14 @@ def _configure_resume(configs, cli):
     try:
         restart_count = int(os.environ.get("SLURM_RESTART_COUNT", "0"))
         retry_offset = int(os.environ.get("SPECK_RETRY_OFFSET", "0"))
-    except ValueError as error:
+        max_retries = int(os.environ["SPECK_MAX_RETRIES"])
+    except (KeyError, ValueError) as error:
         raise ValueError("Slurm retry counters must be non-negative integers") from error
-    if restart_count < 0 or retry_offset < 0:
+    if restart_count < 0 or retry_offset < 0 or max_retries < 0:
         raise ValueError("Slurm retry counters must be non-negative integers")
-    if not restart_count + retry_offset:
+    if restart_count > max_retries or retry_offset > max_retries:
+        raise ValueError("Slurm retry bound is exhausted")
+    if not max(restart_count, retry_offset):
         return
     run = configs["train"].get("run") or Path(cli.experiment).resolve().name
     output_dir = (
@@ -71,9 +71,17 @@ class SlurmBaseTrainer(base_train.BaseTrainer):
 
     def _requeue_requested(self):
         signal_file = os.environ.get("SPECK_REQUEUE_SIGNAL_FILE")
-        return self._signal_requested or bool(signal_file and Path(signal_file).is_file())
+        requested = self._signal_requested or bool(signal_file and Path(signal_file).is_file())
+        if self.distributed:
+            shared = torch.tensor(int(requested), dtype=torch.int32, device=self.device)
+            torch.distributed.all_reduce(shared, op=torch.distributed.ReduceOp.MAX)
+            requested = bool(shared.item())
+        return requested
 
-    def _signal_checkpoint(
+    def _optimizer_boundary_stop_requested(self):
+        return self._requeue_requested()
+
+    def _after_optimizer_step(
         self,
         step,
         validation_loss,
@@ -81,156 +89,26 @@ class SlurmBaseTrainer(base_train.BaseTrainer):
         validation_step,
         validation_tokens,
         milestone,
+        stop_requested,
     ):
-        steps = self.steps
-        if step == steps:
-            self.steps += 1
-        try:
-            self._checkpoint(
-                step,
-                validation_loss,
-                validation_source_losses,
-                validation_step,
-                validation_tokens,
-                milestone,
-            )
-        finally:
-            self.steps = steps
-
-    def _run_steps(self):
-        args = self.args
-        validation_loss, validation_source_losses, validation_step, validation_tokens = (
-            self._initial_validation()
+        if not stop_requested:
+            return False
+        self._checkpoint(
+            step,
+            validation_loss,
+            validation_source_losses,
+            validation_step,
+            validation_tokens,
+            milestone,
+            partial=True,
         )
-        synchronize = torch.cuda.synchronize if self.device.type == "cuda" else lambda: None
-        timing_started = time.perf_counter()
-        timing_steps = 0
-        for step in range(self.start_step, self.steps):
-            completed = step + 1
-            should_diagnose = completed % args.diagnostics_every == 0
-            should_log = completed == 1 or completed % args.log_every == 0 or should_diagnose
-            milestone = self.milestones.get(completed)
-            stop_now = self.stop_step == completed
-            should_validate = (
-                (args.eval_every > 0 and completed % args.eval_every == 0)
-                or milestone is not None
-                or completed == self.steps
-            )
-            should_save = (
-                (args.save_every > 0 and completed % args.save_every == 0)
-                or milestone is not None
-                or completed == self.steps
-            )
-            scale = base_train.lr_scale(
-                self.schedule_step_offset + step,
-                self.schedule_steps,
-                args.warmup_steps,
-                args.min_lr,
-                args.lr_schedule,
-                args.decay_fraction,
-            )
-            training_output, grad_norm, batch = base_train.optimization_step(
-                self.train_model,
-                self.parameters,
-                self.optimizer,
-                self.train_data,
-                (self.inputs, self.targets, self.data_state),
-                self.accumulation,
-                args.grad_clip,
-                args.lr * scale,
-                self.distributed,
-                return_training_output=True,
-                load_balance_coefficient=args.load_balance_coefficient,
-                router_z_loss_coefficient=args.router_z_loss_coefficient,
-            )
-            if not isinstance(training_output, CausalLMTrainingOutput):
-                raise TypeError("training step did not return typed loss diagnostics")
-            self.inputs, self.targets, self.data_state = batch
-            self.completed_step = completed
-            timing_steps += 1
-            should_flush_timing = should_log or should_validate or should_save or completed == 10
-            duration = None
-            if should_flush_timing:
-                synchronize()
-                window_duration = time.perf_counter() - timing_started
-                self.elapsed_optimizer += window_duration
-                if completed > 10:
-                    self.elapsed_training += window_duration
-                duration = window_duration / timing_steps
-            if self.distributed and should_log:
-                base_train.average_training_output(training_output, True)
-            if should_log:
-                self._log_step(
-                    completed,
-                    training_output,
-                    grad_norm,
-                    duration,
-                    should_diagnose,
-                )
-            if self._requeue_requested():
-                if not should_flush_timing:
-                    synchronize()
-                    window_duration = time.perf_counter() - timing_started
-                    self.elapsed_optimizer += window_duration
-                    if completed > 10:
-                        self.elapsed_training += window_duration
-                self._signal_checkpoint(
-                    completed,
-                    validation_loss,
-                    validation_source_losses,
-                    validation_step,
-                    validation_tokens,
-                    milestone,
-                )
-                self.interrupted_for_requeue = True
-                break
-            if should_validate:
-                validation_loss, validation_source_losses, validation_tokens = self._validate(
-                    completed
-                )
-                validation_step = completed
-            if should_save:
-                self._checkpoint(
-                    completed,
-                    validation_loss,
-                    validation_source_losses,
-                    validation_step,
-                    validation_tokens,
-                    milestone,
-                )
-            if should_flush_timing:
-                timing_started = time.perf_counter()
-                timing_steps = 0
-            if stop_now:
-                break
-        if (
-            self.start_step == self.steps
-            and validation_step != self.steps
-            and not self.interrupted_for_requeue
-        ):
-            validation_loss, validation_source_losses, validation_tokens = self._validate(
-                self.steps
-            )
-            self._checkpoint(
-                self.steps,
-                validation_loss,
-                validation_source_losses,
-                self.steps,
-                validation_tokens,
-                self.milestones.get(self.steps),
-            )
+        self.interrupted_for_requeue = True
+        return True
 
-    def _write_summary(self):
-        super()._write_summary()
-        if not self.master or not self.interrupted_for_requeue:
-            return
-        path = Path(self.args.output_dir) / "run_summary.json"
-        summary = json.loads(path.read_text(encoding="utf-8"))
-        summary["partial"] = True
-        summary["requeue_requested"] = True
-        temporary = path.with_suffix(".json.tmp")
-        temporary.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        os.replace(temporary, path)
+    def _nonfinal_summary_reason(self):
+        if self.interrupted_for_requeue:
+            return "requeue_requested"
+        return super()._nonfinal_summary_reason()
 
     def run(self):
         previous_handler = signal.getsignal(signal.SIGUSR1)

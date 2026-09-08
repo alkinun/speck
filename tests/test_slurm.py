@@ -162,10 +162,21 @@ def test_dependencies_cannot_automate_training_or_scientific_promotion(wave):
 
 
 def test_preflight_binds_clean_git_config_and_data(wave):
-    path, _, _, data = wave
+    path, value, _, data = wave
     manifest, _, _, _ = load_wave(path)
     result = preflight_wave(manifest)
     assert result["identities_verified"] == 6
+    assert len(result["git_tree"]) == 40
+
+    repository = Path(value["repository"]["path"])
+    (repository / ".opencode-state").write_text("untracked harness state\n")
+    preflight_wave(manifest)
+
+    original_plan = (repository / "plan.json").read_text()
+    (repository / "plan.json").write_text("tracked change\n")
+    with pytest.raises(ValueError, match="clean tracked Git worktree"):
+        preflight_wave(manifest)
+    (repository / "plan.json").write_text(original_plan)
 
     data.write_text("changed\n")
     with pytest.raises(ValueError, match="data identity mismatch"):
@@ -191,10 +202,21 @@ def test_render_has_clean_paths_array_and_four_gpu_contract_without_site_guesses
     assert "SPECK_REQUEUE_SIGNAL_FILE" in flagship_script
     assert "kill -USR1" not in flagship_script
     assert "SPECK_RUN_ID" in flagship_script
+    assert "SPECK_MAX_RETRIES=1" in flagship_script
+    assert "SPECK_EXPECTED_LOCAL_WORLD_SIZE=4" in flagship_script
     assert Path(rendered["frozen_manifest"]).stat().st_mode & 0o222 == 0
     assert Path(rendered["scripts"]["screen"]).stat().st_mode & 0o222 == 0
     for script in rendered["scripts"].values():
         subprocess.run(["bash", "-n", script], check=True)
+
+
+def test_slurm_training_rejects_sft_requeue_entrypoint(wave):
+    path, value, _, _ = wave
+    value["jobs"][0]["command"][2] = "scripts.sft_train"
+    path.write_text(json.dumps(value))
+
+    with pytest.raises(ValueError, match="signal-safe Slurm trainer"):
+        load_wave(path)
 
 
 def test_submit_uses_only_mechanical_dependencies_and_refuses_duplicate_or_reserve(wave, tmp_path):
@@ -395,6 +417,9 @@ def test_slurm_trainer_requires_job_and_resolves_latest_only_on_retry(tmp_path, 
         slurm_base_train._configure_resume(configs, cli)
 
     monkeypatch.setenv("SLURM_JOB_ID", "123")
+    with pytest.raises(ValueError, match="retry counters"):
+        slurm_base_train._configure_resume(configs, cli)
+    monkeypatch.setenv("SPECK_MAX_RETRIES", "1")
     slurm_base_train._configure_resume(configs, cli)
     assert cli.resume is None
 
@@ -402,6 +427,11 @@ def test_slurm_trainer_requires_job_and_resolves_latest_only_on_retry(tmp_path, 
     monkeypatch.setattr(slurm_base_train, "latest", lambda _path: 17)
     slurm_base_train._configure_resume(configs, cli)
     assert cli.resume == 17
+
+    cli.resume = None
+    monkeypatch.setenv("SPECK_RETRY_OFFSET", "2")
+    with pytest.raises(ValueError, match="bound is exhausted"):
+        slurm_base_train._configure_resume(configs, cli)
 
 
 def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
@@ -442,7 +472,9 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
     monkeypatch.setattr(trainer, "_initial_validation", lambda: (1.0, {}, 0, 8))
     monkeypatch.setattr(trainer, "_log_step", lambda *args: None)
     checkpoints = []
-    monkeypatch.setattr(trainer, "_checkpoint", lambda *args: checkpoints.append(args))
+    monkeypatch.setattr(
+        trainer, "_checkpoint", lambda *args, **kwargs: checkpoints.append((args, kwargs))
+    )
 
     def optimization(*args, **kwargs):
         trainer._signal_requested = True
@@ -455,7 +487,9 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
 
     assert trainer.completed_step == 1
     assert trainer.interrupted_for_requeue is True
-    assert checkpoints[0][0] == 1
+    assert checkpoints[0][0][0] == 1
+    assert checkpoints[0][1] == {"partial": True}
+    assert len(checkpoints) == 1
 
 
 def test_slurm_trainer_finishes_missing_final_validation_after_requeue(monkeypatch):
@@ -475,3 +509,15 @@ def test_slurm_trainer_finishes_missing_final_validation_after_requeue(monkeypat
 
     assert validated == [2]
     assert checkpoints[0][0] == checkpoints[0][3] == 2
+
+
+def test_slurm_main_uses_dedicated_requeue_exit_code(monkeypatch):
+    monkeypatch.setattr(
+        slurm_base_train, "arguments", lambda: SimpleNamespace(experiment="fixture")
+    )
+    monkeypatch.setattr(slurm_base_train, "load_experiment", lambda *args: {})
+    monkeypatch.setattr(slurm_base_train, "train", lambda configs, cli: True)
+
+    with pytest.raises(SystemExit) as raised:
+        slurm_base_train.main()
+    assert raised.value.code == 99

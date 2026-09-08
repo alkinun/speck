@@ -27,6 +27,7 @@ from speck.config import load_experiment
 from speck.model import CausalLMTrainingOutput, SpeckForCausalLM
 from speck.train import (
     assert_finite,
+    assert_finite_parameters,
     branch_position,
     checkpoint_global_tokens,
     checkpoint_milestones,
@@ -41,6 +42,9 @@ def test_cpu_finite_check_rejects_non_finite_values():
     assert_finite(torch.tensor(1.0), "bad value")
     with pytest.raises(FloatingPointError, match="bad value"):
         assert_finite(torch.tensor(float("nan")), "bad value")
+
+    with pytest.raises(FloatingPointError, match="model parameters"):
+        assert_finite_parameters((torch.nn.Parameter(torch.tensor(float("inf"))),))
 
 
 def test_lr_scale_reaches_minimum_on_last_executed_step():
@@ -400,6 +404,11 @@ def test_checkpoint_milestones_align_baseline_and_warmup_runs():
     }
     for baseline_step, initialized_step in zip(baseline, initialized):
         assert baseline_step * 65_536 == 32_768_000 + initialized_step * 65_536
+
+
+def test_checkpoint_milestones_reject_distinct_tokens_on_one_optimizer_step():
+    with pytest.raises(ValueError, match="collapse onto one optimizer step"):
+        checkpoint_milestones([1, 2], batch_tokens=8, global_token_offset=0, steps=1)
 
 
 def test_optimization_step_advances_the_loader():

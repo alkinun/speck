@@ -1,0 +1,63 @@
+{
+  "format": "speck_launch_risk_hardening_successor",
+  "format_version": 1,
+  "issue": "SPE-165",
+  "recorded_on": "2026-09-08",
+  "base_commit": "1ba72939dddea5913bea408c9041c50c4e39833f",
+  "status": "cpu_failure_injection_pass_cluster_execution_pending",
+  "supersedes": {
+    "runtime_cleanup": {
+      "path": "results/runtime-cleanup-successor-20260908.json",
+      "sha256": "a144110484dd83292db5948d37847da7d4f30c769703819f573d7d14c7f9ba97",
+      "modified": false
+    },
+    "data_launch_gate": {
+      "path": "results/data/data-launch-gate-20260907.json",
+      "sha256": "d1847d616bee13cb5d67c9aebec0acfd194552c06d41c60f6e11489c2f780d3d",
+      "modified": false
+    }
+  },
+  "implementation": {
+    "base_export": ["scripts/base_checkpoint_export.py", "94ecbe1db70f590713b8eefa97d47601826c4246d13e3abb8da72f36e7a98ee5"],
+    "base_trainer": ["scripts/base_train.py", "e8746e89465ee08f85e206485fa6eda3de872b2561cf3affe337b971b86dc24c"],
+    "slurm_trainer": ["scripts/slurm_base_train.py", "a57f0a096630b2948fd2c77ac585cb4107e536f4f67d292639b307ce0b92e744"],
+    "checkpoint": ["speck/checkpoint.py", "30bd49bd49db0e64ef6b90765bb513dd2799b0e53f81515fabc95640ed2dbb32"],
+    "runtime": ["speck/common.py", "c411a4d37f25bae59a76fa7eed4a7dcdf035b3b83c5297ad9b6b782e4473710e"],
+    "data_launch": ["speck/data_launch.py", "12ffe23df14bb420ca95b4a0054aee38bb394e6b1e1378c70a5dea20aded6ad3"],
+    "slurm_operations": ["speck/slurm.py", "77b807146c226f23e67062e92d0254efc26c5ed4218be75303048de53b5a3fe3"],
+    "training_mechanics": ["speck/train.py", "0dc0c8824916b70689f48da292fdbde25ee341aed605631b182106e078b95564"],
+    "export_tests": ["tests/test_base_checkpoint_export.py", "78acdc04f1389d6c6422287a80e4be06e1f621bab628f5264df4c9b37f384de4"],
+    "hardening_tests": ["tests/test_base_training_hardening.py", "b8ef9e096bb8ff5ff51f5dcc7accb96cc9f9885efa144e2d98eb63dcaa50aaa9"],
+    "runtime_tests": ["tests/test_common.py", "e772de8ff49c6b02c8a8ab55a5a99dd3dced2c1527d02e2405e36d2f609ac58d"],
+    "data_launch_tests": ["tests/test_data_launch.py", "20d18debaddccb56a4b0f942fb0859fededadebf7bcfff360f18457b431bc3f7"],
+    "slurm_tests": ["tests/test_slurm.py", "e9339d3b8060c2792abc61b148c6548b3fd48e2b95129afa1f5d7ba7a3d1f9bc"],
+    "training_tests": ["tests/test_train.py", "99bc9b2f57dce364eb2b24618c995dcbf5e2ec9b52b9be0941b5693f652af7a8"],
+    "slurm_documentation": ["docs/slurm.md", "b1a48b9dafdda9db5b8bfe0db95109be481df85ed89634baab4f8f83df3b6c4a"],
+    "pregrant_record": ["research/flagship/PREGRANT.md", "e2f890af3994cae104f094aef6ab83f0dca594304b58e26335eeef482cba06ed"]
+  },
+  "closed_findings": [
+    "partial and requeue runs use a non-final summary contract and cannot export",
+    "Slurm interruption checkpoints once through the shared base optimizer loop",
+    "retry resume is exact-latest and bound by the rendered retry ceiling",
+    "base validation and final parameter publication reject non-finite values",
+    "tracked launch trees and per-rank packed-manifest identity are bound",
+    "single-node rank and visible-GPU geometry fail closed before NCCL",
+    "resume compile windows remain startup rather than steady training time",
+    "distinct token milestones cannot collapse onto one optimizer step"
+  ],
+  "validation": {
+    "focused_cpu_tests_passed": 89,
+    "full_cpu_tests_passed": 892,
+    "full_cpu_tests_skipped": 10,
+    "ruff_lint": "pass",
+    "documented_formatter": "fail_preexisting_scale_target_drift_in_two_untouched_files",
+    "diff_check": "pass",
+    "gpu_or_slurm_commands_run": 0
+  },
+  "limitations": [
+    "SFT signal and requeue remain unsupported",
+    "Slurm v1 supports one-node jobs; generic multi-node topology and rendezvous are not qualified",
+    "GH200, NCCL, scheduler signal delivery, storage, and resume behavior remain cluster-pending"
+  ],
+  "authority": "engineering_evidence_only_not_training_authority"
+}

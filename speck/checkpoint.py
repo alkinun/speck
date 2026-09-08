@@ -33,7 +33,7 @@ def _flush_directory(path):
 
 def _write_json(path, value):
     with Path(path).open("w", encoding="utf-8") as handle:
-        json.dump(value, handle, indent=2)
+        json.dump(value, handle, indent=2, allow_nan=False)
         handle.flush()
         os.fsync(handle.fileno())
 
