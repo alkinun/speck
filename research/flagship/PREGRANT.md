@@ -14,7 +14,7 @@ research machine on 2026-09-07.
 | R4 | Build the evaluation firewall | Benchmark firewall complete for all six bounded categories; three-partition construction/consumer tooling fixture-qualified; real targets, authority, and partitions pending | Tokenizer sample, equal-byte selection set, unseen-source slices, and sealed audit are immutable and decontaminated before outputs | SPE-114 |
 | R5 | Prepare flagship corpora | All six bounded categories technically qualified; production/firewall/launch tooling fixture-qualified; human decision and 20B rehearsal pending | Six-category stable candidates are launch-ready; decay candidates can finish before E4; unique-token risk is explicit | SPE-114 |
 | R6 | Prepare long-document data | Not started | Complete books, papers, and repositories pass provenance, split, dedup, and length checks | SPE-52 |
-| R7 | Qualify the four-GH200 stack | Local checkpoint replacement now stages, journals, rolls back, and recovers injected interruption; GH200/DDP qualification not started | arm64, DDP, KDA, checkpoints, resume, storage, and achieved TFLOP/s pass a recorded rehearsal | SPE-115 |
+| R7 | Qualify the four-GH200 stack | Local checkpoint replacement and CPU launch-risk failure injection are qualified: tracked-tree binding, distributed tuple/manifest checks, optimizer-boundary requeue, non-final artifact separation, finite-value publication gates, and resume timing are implemented; GH200/DDP/Slurm qualification not started | arm64, DDP, KDA, checkpoints, resume, storage, and achieved TFLOP/s pass a recorded rehearsal | SPE-115, SPE-165 |
 
 The award can arrive while R2–R7 are running; the paid node must not start until their launch-critical
 parts pass or have a written fallback that consumes no undeclared GPU work.
@@ -70,6 +70,7 @@ Before the first allocated job, create one dated record that contains:
 
 - completion or fallback for R1–R17;
 - exact Git revision and dirty-worktree check;
+- exact tracked Git tree identity (untracked harness state is outside the contract unless declared);
 - hardware/software and dataset manifest hashes;
 - measured throughput class from [`plan.json`](plan.json);
 - selected contingency branch and remaining reserve;

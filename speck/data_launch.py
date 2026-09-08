@@ -127,6 +127,30 @@ def _head(repository):
     return result.stdout.strip()
 
 
+def _tree(repository):
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD^{tree}"],
+        cwd=repository,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip()
+
+
+def _require_clean_tracked_tree(repository):
+    result = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=no"],
+        cwd=repository,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    if result.stdout:
+        raise ValueError("launch requires a clean tracked Git tree")
+    return _tree(repository)
+
+
 def issue_launch_receipt(request, *, config_dir=None):
     """Issue one exclusive receipt only after every external authority cross-reference passes."""
 
@@ -134,6 +158,7 @@ def issue_launch_receipt(request, *, config_dir=None):
     repository = Path(request["repository"])
     if _head(repository) != request["git_commit"]:
         raise ValueError("launch request Git commit is not checked out")
+    git_tree = _require_clean_tracked_tree(repository)
     experiment = Path(request["experiment_directory"])
     for name, identity in request["experiment_files"].items():
         path = Path(identity["path"])
@@ -204,6 +229,7 @@ def issue_launch_receipt(request, *, config_dir=None):
         "format_version": FORMAT_VERSION,
         "status": "flagship_data_launch_preflight_passed",
         "git_commit": request["git_commit"],
+        "git_tree": git_tree,
         "repository": request["repository"],
         "experiment_directory": request["experiment_directory"],
         "experiment_files": request["experiment_files"],
@@ -252,13 +278,16 @@ def verify_launch_receipt(
     if not path.is_file():
         raise ValueError("required data launch receipt is missing")
     receipt = json.loads(path.read_text())
+    repository = Path(repository).resolve()
+    current_tree = _require_clean_tracked_tree(repository)
     if (
         receipt.get("format") != RECEIPT_FORMAT
         or receipt.get("format_version") != FORMAT_VERSION
         or receipt.get("status") != "flagship_data_launch_preflight_passed"
-        or receipt.get("repository") != str(Path(repository).resolve())
+        or receipt.get("repository") != str(repository)
         or receipt.get("experiment_directory") != str(Path(experiment_directory).resolve())
-        or receipt.get("git_commit") != _head(Path(repository).resolve())
+        or receipt.get("git_commit") != _head(repository)
+        or receipt.get("git_tree") != current_tree
         or receipt.get("packed_manifest_fingerprint") != packed_manifest_fingerprint
         or receipt.get("tokenizer_fingerprint") != tokenizer_fingerprint
     ):

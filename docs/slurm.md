@@ -11,6 +11,9 @@ A wave is a strict `speck_slurm_wave` version-1 JSON object. Unknown fields fail
 are resolved relative to the wave file; absolute paths are appropriate when the wave itself lives
 outside the checkout. Each job binds the exact Git commit and at least one `config` and one `data`
 file by SHA-256. Additional `checkpoint`, `authority`, and `tool` identities are supported.
+Preflight binds the commit's Git tree and rejects staged or unstaged changes to tracked files.
+Untracked files, including local `.opencode`-style harness state, are ignored unless a job declares
+them as an explicit identity.
 
 The following abbreviated one-job manifest shows every field:
 
@@ -72,8 +75,8 @@ arm's config files in `identities`, not just the first arm shown above. A four-G
 4, sets `array` to `null`, removes the placeholder, and normally puts
 `torchrun --nproc-per-node=4` in its immutable command. Every `train` job must use
 `torchrun -m scripts.slurm_base_train --slurm-requeue-resume`; the historical base trainer remains
-unchanged
-because it is hash-pinned by prior data-launch evidence.
+the single owner of the training loop, while the Slurm subclass supplies only an optimizer-boundary
+stop hook. SFT requeue is explicitly unsupported and fails wave validation.
 
 Maximum commitment is wall time × GPUs × array tasks × (1 + `max_retries`). Mandatory and reserve
 commitments are tracked independently against 4,111 and 889 GPU-hours. Initial submissions reserve
@@ -157,13 +160,30 @@ Rendered scripts request `USR1` before timeout. The batch-shell trap writes a pe
 than signaling the `torchrun` launcher; all trainer ranks poll that sentinel at optimizer boundaries.
 `scripts.slurm_base_train --slurm-requeue-resume` also installs a direct `SIGUSR1` handler inside a
 Slurm job, for sites that deliver the signal to tasks. The handler only sets a flag. After the current
-optimizer step finishes, every rank writes the normal exact-resume checkpoint. The trainer exits 99.
+optimizer step finishes, all ranks coordinate while rank zero writes the normal exact-resume
+checkpoint. The trainer exits 99.
 The wrapper waits for checkpoint completion, asks `scontrol requeue` only while the same manifest's
 retry bound remains, and otherwise preserves exit 99 as a terminal failure. The attempt number is
 persisted outside Git before `scontrol requeue`, so the bound does not rely only on a site's restart
 environment variable. On a scheduler or operator retry, the trainer resolves the latest complete
 checkpoint only when the retry offset or Slurm restart count is nonzero. Normal runs still require
 explicit `--resume STEP` and never resume implicitly.
+
+The rendered script exports the manifest's retry ceiling. Missing, malformed, or exhausted retry
+counters fail closed before checkpoint discovery. A requeue checkpoint and summary are always marked
+partial, including a signal received on the last optimizer step. They use
+`partial_run_summary_<step>.json` with the `speck_base_partial_run_summary` contract; only a run with
+final-step validation and finite parameters may publish canonical `run_summary.json`. Partial
+checkpoints cannot be exported. On resume, the first ten optimizer steps of that process remain
+startup/autotune overhead rather than steady-state training time.
+
+Rendered one-node jobs also export their expected local world size (one or four). Runtime startup
+requires a complete integer `RANK`/`LOCAL_RANK`/`WORLD_SIZE` tuple, agreement with that one-node
+contract, and local ranks within visible CUDA devices before NCCL initialization. Generic multi-node
+execution is outside this Slurm v1 layer: the shared runtime can validate `LOCAL_WORLD_SIZE` and local
+GPU range, but it does not infer node topology, rendezvous correctness, or cross-node fabric health.
+Every initialized rank all-gathers the packed-manifest and tokenizer identity before model
+construction and rejects disagreement.
 
 ## Cluster confirmations required before qualification
 

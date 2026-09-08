@@ -314,8 +314,9 @@ def preflight_wave(manifest):
     repository = Path(manifest["repository"]["path"])
     if _git(repository, "rev-parse", "HEAD") != manifest["repository"]["commit"]:
         raise ValueError("wave Git commit is not checked out")
-    if _git(repository, "status", "--porcelain", "--untracked-files=normal"):
-        raise ValueError("wave requires a clean Git worktree")
+    if _git(repository, "status", "--porcelain", "--untracked-files=no"):
+        raise ValueError("wave requires a clean tracked Git worktree")
+    git_tree = _git(repository, "rev-parse", "HEAD^{tree}")
     verified = []
     for job in manifest["jobs"]:
         workdir = Path(job["working_directory"])
@@ -328,6 +329,7 @@ def preflight_wave(manifest):
             verified.append({"job_id": job["id"], **identity})
     return {
         "git_commit": manifest["repository"]["commit"],
+        "git_tree": git_tree,
         "identities_verified": len(verified),
         "verified": verified,
     }
@@ -402,7 +404,10 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
         + 'if [[ -f "${attempt_file}" ]]; then read -r attempt < "${attempt_file}"; fi\n'
         + 'if [[ ! "${attempt}" =~ ^[0-9]+$ ]]; then echo "invalid retry state" >&2; exit 2; fi\n'
         + f'readonly SPECK_RUN_ID="{job["id"]}-{digest[:12]}-${{task_id}}-a${{attempt}}"\n'
-        + "export SPECK_MANIFEST_SHA256 SPECK_RUN_ID SPECK_REQUEUE_SIGNAL_FILE\n"
+        + f"readonly SPECK_MAX_RETRIES={retries}\n"
+        + f"readonly SPECK_EXPECTED_LOCAL_WORLD_SIZE={resources['gpus']}\n"
+        + "export SPECK_MANIFEST_SHA256 SPECK_RUN_ID SPECK_REQUEUE_SIGNAL_FILE "
+        + "SPECK_MAX_RETRIES SPECK_EXPECTED_LOCAL_WORLD_SIZE\n"
         + 'export SPECK_RETRY_OFFSET="${attempt}"\n'
         + 'rm -f "${SPECK_REQUEUE_SIGNAL_FILE}"\n'
         + f"cd {shlex.quote(job['working_directory'])}\n"

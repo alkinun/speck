@@ -503,8 +503,12 @@ def test_runtime_cleanup_successor_is_hash_bound_and_non_authoritative():
     assert result["status"] == (
         "checkpoint_recovery_and_handle_reuse_fixture_pass_gpu_and_20B_pending"
     )
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["checkpoint"][1] == (
+        "0233da9740ac7291efabb37207fad23b9bc2f867607f3cb961857db7e7564c8b"
+    )
+    for name, (path, digest) in result["implementation"].items():
+        if name != "checkpoint":
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     for lineage in result["supersedes"].values():
         assert (
             hashlib.sha256((ROOT / lineage["historical_evidence"]).read_bytes()).hexdigest()
@@ -543,14 +547,40 @@ def test_source_rights_decision_contract_is_hash_bound_and_all_pending():
 def test_data_launch_gate_is_hash_bound_and_has_no_real_receipt():
     result = json.loads((ROOT / "results" / "data" / "data-launch-gate-20260907.json").read_text())
     assert result["status"] == "fixture_qualified_real_receipt_and_training_authority_blocked"
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    historical = {
+        "gate": "0be9672a1347ca7a452e744156a31c970731e2800534b824acb692c0b809334e",
+        "training_entrypoint": "ffc9455a292c321551f3db3b526f97334de0fe62ce38802de8a458b547e4f300",
+        "gate_tests": "491559ac3dccf11f78baa02c957d0b6c7e592cfd91f954404a2d3a7cdc864025",
+        "training_tests": "2184ff28a2250c52dfecaa97a7dcd0a0e04095c53ff3b229f3262db08e41c8ba",
+    }
+    for name, digest in historical.items():
+        assert result["implementation"][name][1] == digest
+    for name, (path, digest) in result["implementation"].items():
+        if name not in historical:
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     assert result["training_enforcement"]["marker"] == ("train.requires_data_launch_authority=true")
     assert result["training_enforcement"]["verification_point"].endswith(
         "before model construction"
     )
     assert result["validation"]["real_receipts_issued"] == 0
     assert result["validation"]["models_constructed_by_gate_tests"] == 0
+
+
+def test_launch_risk_hardening_successor_preserves_prior_results_and_binds_current_code():
+    result = json.loads(
+        (ROOT / "results" / "launch-risk-hardening-successor-20260908.json").read_text()
+    )
+    assert result["status"] == "cpu_failure_injection_pass_cluster_execution_pending"
+    for predecessor in result["supersedes"].values():
+        assert (
+            hashlib.sha256((ROOT / predecessor["path"]).read_bytes()).hexdigest()
+            == (predecessor["sha256"])
+        )
+        assert predecessor["modified"] is False
+    for path, digest in result["implementation"].values():
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["validation"]["gpu_or_slurm_commands_run"] == 0
+    assert result["authority"] == "engineering_evidence_only_not_training_authority"
 
 
 def test_data_rehearsal_orchestration_is_hash_bound_but_has_not_run_20B():

@@ -21,6 +21,20 @@ def _json(path, value):
 
 
 def _request(tmp_path):
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    (repository / "tracked.py").write_text("launch = True\n")
+
+    def _git(*args):
+        return subprocess.run(
+            ["git", *args], cwd=repository, check=True, capture_output=True, text=True
+        ).stdout.strip()
+
+    _git("init")
+    _git("config", "user.email", "fixture@example.invalid")
+    _git("config", "user.name", "Fixture")
+    _git("add", "tracked.py")
+    _git("commit", "-m", "fixture")
     experiment = tmp_path / "experiment"
     experiment.mkdir()
     files = {
@@ -90,14 +104,18 @@ def _request(tmp_path):
     }
     packed = _json(tmp_path / "packed-manifest.json", packed_value)
     commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True
+        ["git", "rev-parse", "HEAD"],
+        cwd=repository,
+        check=True,
+        capture_output=True,
+        text=True,
     ).stdout.strip()
     return (
         {
             "format": "speck_flagship_data_launch_request",
             "format_version": 1,
             "status": "preflight_requested_not_authority",
-            "repository": str(ROOT),
+            "repository": str(repository),
             "git_commit": commit,
             "experiment_directory": str(experiment),
             "experiment_files": files,
@@ -122,7 +140,7 @@ def test_launch_receipt_binds_every_data_authority_and_exact_launch(tmp_path):
     assert (
         verify_launch_receipt(
             raw["receipt_path"],
-            repository=ROOT,
+            repository=raw["repository"],
             experiment_directory=raw["experiment_directory"],
             packed_manifest_fingerprint=manifest_fingerprint(packed),
             tokenizer_fingerprint="fixture-tokenizer",
@@ -135,9 +153,28 @@ def test_launch_receipt_binds_every_data_authority_and_exact_launch(tmp_path):
     with pytest.raises(ValueError, match="receipt rights record identity mismatch"):
         verify_launch_receipt(
             raw["receipt_path"],
-            repository=ROOT,
+            repository=raw["repository"],
             experiment_directory=raw["experiment_directory"],
             packed_manifest_fingerprint=manifest_fingerprint(packed),
+            tokenizer_fingerprint="fixture-tokenizer",
+        )
+
+
+def test_launch_receipt_rejects_tracked_changes_but_ignores_untracked_harness_state(tmp_path):
+    raw, _ = _request(tmp_path)
+    repository = Path(raw["repository"])
+    (repository / ".opencode-state").write_text("untracked\n")
+
+    receipt = issue_launch_receipt(raw)
+    assert len(receipt["git_tree"]) == 40
+
+    (repository / "tracked.py").write_text("launch = False\n")
+    with pytest.raises(ValueError, match="clean tracked Git tree"):
+        verify_launch_receipt(
+            raw["receipt_path"],
+            repository=repository,
+            experiment_directory=raw["experiment_directory"],
+            packed_manifest_fingerprint=receipt["packed_manifest_fingerprint"],
             tokenizer_fingerprint="fixture-tokenizer",
         )
 
@@ -171,12 +208,8 @@ def test_flagship_launch_plan_requires_marked_pre_model_verification():
     plan = json.loads((ROOT / "research/flagship/data_launch_plan.json").read_text())
 
     assert plan["status"] == "fixture_preflight_ready_real_authorities_pending"
-    assert plan["training_integration"]["marker"] == (
-        "train.requires_data_launch_authority=true"
-    )
-    assert plan["training_integration"]["verification_point"].endswith(
-        "before model construction"
-    )
+    assert plan["training_integration"]["marker"] == ("train.requires_data_launch_authority=true")
+    assert plan["training_integration"]["verification_point"].endswith("before model construction")
     assert plan["training_integration"]["historical_configs_default"] is False
     assert plan["training_integration"]["flagship_configs_must_set_marker"] is True
     assert plan["receipt"]["real_receipt_status"] == "blocked"

@@ -23,7 +23,14 @@ from speck.checkpoint import (
     load_timing,
     save,
 )
-from speck.common import NullRun, base_dir, cleanup, init_runtime, print0
+from speck.common import (
+    NullRun,
+    base_dir,
+    cleanup,
+    init_runtime,
+    print0,
+    verify_distributed_identity,
+)
 from speck.config import load_experiment
 from speck.data_launch import verify_launch_receipt
 from speck.dataloader import manifest_fingerprint, packed_loader
@@ -31,6 +38,7 @@ from speck.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.model import CausalLMTrainingOutput, build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import (
+    assert_finite_parameters,
     average_training_output,
     branch_position,
     checkpoint_global_tokens,
@@ -269,6 +277,22 @@ def validate(model, loader, steps, world_size, source_ids):
     return (losses.sum() / counts.sum()).item(), source_losses
 
 
+def validate_finite_losses(loss, source_losses):
+    """Reject invalid validation output before it reaches logs or durable artifacts."""
+
+    def finite(value):
+        return (
+            not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value)
+        )
+
+    if (
+        not isinstance(source_losses, dict)
+        or not finite(loss)
+        or not all(finite(value) for value in source_losses.values())
+    ):
+        raise FloatingPointError("non-finite base validation loss")
+
+
 class BaseTrainer:
     """Own one base-training lifecycle and its mutable execution state."""
 
@@ -410,7 +434,17 @@ class BaseTrainer:
         self.manifest = load_manifest(self.args.data_dir)
         self.manifest_hash = manifest_fingerprint(self.manifest)
         self.source_ids = tuple(source["id"] for source in self.manifest["sources"])
-        if self.manifest["tokenizer"]["fingerprint"] != self.tokenizer.fingerprint():
+        tokenizer_fingerprint = self.tokenizer.fingerprint()
+        verify_distributed_identity(
+            {
+                "manifest": self.manifest_hash,
+                "manifest_tokenizer": self.manifest["tokenizer"]["fingerprint"],
+                "runtime_tokenizer": tokenizer_fingerprint,
+            },
+            self.world_size,
+            "training manifest",
+        )
+        if self.manifest["tokenizer"]["fingerprint"] != tokenizer_fingerprint:
             raise ValueError("dataset and tokenizer do not match")
         error: list[str | None] = [None]
         if self.master:
@@ -428,7 +462,7 @@ class BaseTrainer:
                 repository=Path(__file__).parents[1],
                 experiment_directory=self.cli.experiment,
                 packed_manifest_fingerprint=self.manifest_hash,
-                tokenizer_fingerprint=self.tokenizer.fingerprint(),
+                tokenizer_fingerprint=tokenizer_fingerprint,
             )
 
     def _initialize_model_and_geometry(self):
@@ -744,6 +778,7 @@ class BaseTrainer:
             self.world_size,
             self.source_ids,
         )
+        validate_finite_losses(loss, source_losses)
         evaluated_tokens = val_steps * tokens_per_step
         self.elapsed_evaluation += time.perf_counter() - started
         global_step = self.global_step_offset + step
@@ -783,9 +818,16 @@ class BaseTrainer:
         validation_step,
         validation_tokens,
         milestone,
+        *,
+        partial=None,
     ):
         started = time.perf_counter()
         args = self.args
+        partial = step < self.steps if partial is None else partial
+        if not partial:
+            if step != self.steps:
+                raise ValueError("only the resolved final step can publish a completed checkpoint")
+            assert_finite_parameters(self.parameters, self.distributed)
         if self.master:
             global_tokens = args.global_token_offset + step * args.batch_tokens
             state = {
@@ -808,7 +850,7 @@ class BaseTrainer:
                 "validation_tokens": validation_tokens,
                 "validation_history": self.validation_history,
                 "milestone_tokens": milestone,
-                "partial": step < self.steps,
+                "partial": partial,
                 "training_seconds": self.elapsed_training,
                 "timing": {
                     "optimizer_seconds": self.elapsed_optimizer,
@@ -849,14 +891,33 @@ class BaseTrainer:
     def _initial_validation(self):
         metadata = self.metadata
         if metadata:
-            return (
+            result = (
                 metadata["validation_loss"],
                 metadata.get("validation_source_losses", {}),
                 metadata.get("validation_step"),
                 metadata.get("validation_tokens", 0),
             )
+            validate_finite_losses(result[0], result[1])
+            return result
         loss, source_losses, tokens = self._validate(0)
         return loss, source_losses, 0, tokens
+
+    def _optimizer_boundary_stop_requested(self):
+        return False
+
+    def _after_optimizer_step(
+        self,
+        step,
+        validation_loss,
+        validation_source_losses,
+        validation_step,
+        validation_tokens,
+        milestone,
+        stop_requested,
+    ):
+        """Return true to stop after a subclass handles this optimizer boundary."""
+
+        return False
 
     def _run_steps(self):
         args = self.args
@@ -868,6 +929,7 @@ class BaseTrainer:
         timing_steps = 0
         for step in range(self.start_step, self.steps):
             completed = step + 1
+            session_completed = completed - self.start_step
             should_diagnose = completed % args.diagnostics_every == 0
             should_log = completed == 1 or completed % args.log_every == 0 or should_diagnose
             milestone = self.milestones.get(completed)
@@ -909,13 +971,20 @@ class BaseTrainer:
             self.inputs, self.targets, self.data_state = batch
             self.completed_step = completed
             timing_steps += 1
-            should_flush_timing = should_log or should_validate or should_save or completed == 10
+            stop_requested = self._optimizer_boundary_stop_requested()
+            should_flush_timing = (
+                should_log
+                or should_validate
+                or should_save
+                or session_completed == 10
+                or stop_requested
+            )
             duration = None
             if should_flush_timing:
                 synchronize()
                 window_duration = time.perf_counter() - timing_started
                 self.elapsed_optimizer += window_duration
-                if completed > 10:
+                if session_completed > 10:
                     self.elapsed_training += window_duration
                 duration = window_duration / timing_steps
             if self.distributed and should_log:
@@ -928,6 +997,16 @@ class BaseTrainer:
                     duration,
                     should_diagnose,
                 )
+            if self._after_optimizer_step(
+                completed,
+                validation_loss,
+                validation_source_losses,
+                validation_step,
+                validation_tokens,
+                milestone,
+                stop_requested,
+            ):
+                break
             if should_validate:
                 validation_loss, validation_source_losses, validation_tokens = self._validate(
                     completed
@@ -947,6 +1026,18 @@ class BaseTrainer:
                 timing_steps = 0
             if stop_now:
                 break
+        if self.start_step == self.steps and validation_step != self.steps:
+            validation_loss, validation_source_losses, validation_tokens = self._validate(
+                self.steps
+            )
+            self._checkpoint(
+                self.steps,
+                validation_loss,
+                validation_source_losses,
+                self.steps,
+                validation_tokens,
+                self.milestones.get(self.steps),
+            )
 
     def _log_step(self, completed, output, grad_norm, duration, diagnostics):
         assert duration is not None
@@ -1025,10 +1116,24 @@ class BaseTrainer:
             f"{metrics['performance/tokens_per_second']:,.0f} tok/s"
         )
 
+    def _nonfinal_summary_reason(self):
+        if self.completed_step < self.steps:
+            return "token_milestone" if self.stop_step == self.completed_step else "incomplete"
+        return None
+
     def _write_summary(self):
         if not self.master:
             return
+        nonfinal_reason = self._nonfinal_summary_reason()
+        complete = nonfinal_reason is None and self.completed_step == self.steps
+        if complete:
+            if not self.validation_history or self.validation_history[-1]["step"] != self.steps:
+                raise RuntimeError("completed run lacks final-step validation")
+            assert_finite_parameters(self.parameters)
         summary = {
+            "format": "speck_base_run_summary" if complete else "speck_base_partial_run_summary",
+            "format_version": 1,
+            "status": "completed" if complete else nonfinal_reason,
             "training_phase": self.args.training_phase,
             "steps": self.steps,
             "completed_steps": self.completed_step,
@@ -1036,7 +1141,7 @@ class BaseTrainer:
             "global_tokens": (
                 self.args.global_token_offset + self.completed_step * self.args.batch_tokens
             ),
-            "partial": self.completed_step < self.steps,
+            "partial": not complete,
             "stop_at_tokens": self.args.stop_at_tokens,
             "optimizer_seconds": self.elapsed_optimizer,
             "steady_training_seconds": self.elapsed_training,
@@ -1049,10 +1154,31 @@ class BaseTrainer:
             ),
             "validation_history": self.validation_history,
         }
-        path = Path(self.args.output_dir) / "run_summary.json"
+        if not complete:
+            summary["non_final"] = True
+        output_dir = Path(self.args.output_dir)
+        canonical = output_dir / "run_summary.json"
+        if not complete and canonical.exists():
+            predecessor = json.loads(canonical.read_text(encoding="utf-8"))
+            if predecessor.get("partial") is not True:
+                raise RuntimeError("refusing to place a partial run beside a completed summary")
+            predecessor_step = predecessor.get("completed_steps")
+            if isinstance(predecessor_step, bool) or not isinstance(predecessor_step, int):
+                raise RuntimeError("legacy partial summary has invalid completed-step metadata")
+            preserved = output_dir / f"legacy_partial_run_summary_{predecessor_step:06d}.json"
+            if preserved.exists():
+                raise FileExistsError(
+                    f"legacy partial summary successor already exists: {preserved}"
+                )
+            os.replace(canonical, preserved)
+        path = output_dir / (
+            "run_summary.json"
+            if complete
+            else f"partial_run_summary_{self.completed_step:06d}.json"
+        )
         temporary = path.with_suffix(".json.tmp")
         temporary.write_text(
-            json.dumps(summary, indent=2, sort_keys=True) + "\n",
+            json.dumps(summary, indent=2, sort_keys=True, allow_nan=False) + "\n",
             encoding="utf-8",
         )
         os.replace(temporary, path)

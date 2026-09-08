@@ -21,6 +21,21 @@ def assert_finite(value, message, distributed=False):
         raise FloatingPointError(message)
 
 
+def assert_finite_parameters(parameters, distributed=False):
+    """Check model parameters with one bounded host synchronization per checkpoint boundary."""
+
+    parameters = tuple(parameters)
+    if not parameters:
+        return
+    finite = torch.ones((), dtype=torch.int32, device=parameters[0].device)
+    for parameter in parameters:
+        finite.mul_(torch.isfinite(parameter.detach()).all())
+    if distributed:
+        dist.all_reduce(finite, op=dist.ReduceOp.MIN)
+    if not finite.item():
+        raise FloatingPointError("non-finite model parameters")
+
+
 def set_optimizer_lr(optimizer, lr):
     """Update scalar tensor learning rates in place to keep compiled steps reusable."""
 
@@ -135,6 +150,10 @@ def checkpoint_milestones(tokens, batch_tokens, global_token_offset, steps):
             continue
         step = math.ceil((token - global_token_offset) / batch_tokens)
         if step <= steps:
+            if step in milestones:
+                raise ValueError(
+                    "distinct checkpoint token milestones collapse onto one optimizer step"
+                )
             milestones[step] = token
     return milestones
 

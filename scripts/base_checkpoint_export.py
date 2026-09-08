@@ -46,6 +46,15 @@ def load_checkpoint_metadata(checkpoint_dir, step):
     metadata = json.loads(path.read_text(encoding="utf-8"))
     if metadata.get("step") != step or metadata.get("training_phase") == "sft":
         raise ValueError("checkpoint is not a matching pretraining checkpoint")
+    resolved = metadata.get("resolved")
+    if (
+        metadata.get("partial") is not False
+        or not isinstance(resolved, dict)
+        or isinstance(resolved.get("steps"), bool)
+        or not isinstance(resolved.get("steps"), int)
+        or step != resolved["steps"]
+    ):
+        raise ValueError("only a non-partial resolved final pretraining checkpoint can be exported")
     return metadata
 
 
