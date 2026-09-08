@@ -9,6 +9,8 @@ import subprocess
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+from speck.io import file_sha256 as sha256_file
+
 FORMAT = "speck_slurm_wave"
 FORMAT_VERSION = 1
 PLAN_FORMAT = "speck_flagship_execution_plan"
@@ -45,14 +47,6 @@ _ACTIVE_STATES = {
     "SUSPENDED",
 }
 _RETRYABLE_STATES = {"BOOT_FAIL", "NODE_FAIL", "PREEMPTED", "REVOKED", "TIMEOUT"}
-
-
-def sha256_file(path):
-    hasher = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        while chunk := handle.read(8 * 1024 * 1024):
-            hasher.update(chunk)
-    return hasher.hexdigest()
 
 
 def manifest_digest(path):
