@@ -65,29 +65,6 @@ select = ["E4", "E7", "E9", "F", "I"]
 [tool.ruff.lint.isort]
 known-third-party = ["wandb"]
 
-[tool.ruff.format]
-# These files are source-hash inputs to checked research artifacts. Reformat
-# them only through an explicit successor qualification.
-exclude = [
-    "scripts/ruler_case_prepare.py",
-    "speck/code_contamination.py",
-    "speck/code_contamination_successor.py",
-    "speck/code_near_duplicates.py",
-    "speck/common_pile_code.py",
-    "speck/common_pile_peps.py",
-    "speck/gitleaks_filter.py",
-    "speck/python_edu.py",
-    "speck/stack_edu.py",
-    "speck/stack_v3.py",
-    "speck/stack_v3_expand.py",
-    "speck/stack_v3_refine.py",
-    "speck/text_near_duplicates.py",
-    "speck/tokenizer_experiment.py",
-    "speck/web_sample.py",
-    "tests/test_data_launch.py",
-    "tests/test_production_data.py",
-]
-
 # Select PyTorch builds for CUDA 12.8 or CPU.
 [tool.uv.sources]
 torch = [

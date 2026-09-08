@@ -25,7 +25,7 @@ targets the CUDA 12.8 PyTorch index.
 Run the complete local gate before submitting a change:
 
 ```bash
-uv run --extra cpu --group dev ruff format --check .
+uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
 uv run --extra cpu --group dev ruff check .
 uv run --extra cpu --group dev pytest -q
 ```

@@ -155,7 +155,7 @@ Install the development group and run the local quality gate:
 
 ```bash
 uv sync --extra cpu --group dev
-uv run --extra cpu --group dev ruff format --check .
+uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
 uv run --extra cpu --group dev ruff check .
 uv run --extra cpu --group dev pytest -q
 ```
