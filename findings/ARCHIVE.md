@@ -211,6 +211,7 @@ history in order only when auditing provenance or a retired decision:
 196. [195 — Whitespace-piece support fixes the local custom-tokenizer deficit](195_local_tokenizer_data_study.md)
 197. [196 — Checkpoint replacement now preserves its predecessor](196_runtime_cleanup_successors.md)
 198. [197 — The corrected tokenizer candidate is now a formal v2 contract](197_tokenizer_v2_contract.md)
+199. [198 — KDA output gating is selectable without changing sigmoid checkpoints](198_kda_output_gate_successor.md)
 
 Conventions:
 
@@ -228,4 +229,4 @@ Conventions:
 Current state: the active scope, defaults, and experiment plan are in
 [`research/flagship/README.md`](../research/flagship/README.md). Findings 00 to 24 are the evidence
 base for those defaults; findings 25 to 167 are the archived Paper 1 gate program; finding 168
-records the stop and change of direction; findings 169 onward are the flagship's new source evidence.
+records the stop and change of direction; findings 169 onward are the flagship's new evidence.

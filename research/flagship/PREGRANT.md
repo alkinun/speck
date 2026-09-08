@@ -28,7 +28,7 @@ parts pass or have a written fallback that consumes no undeclared GPU work.
 | R10 | Decide tokenizer D5 | Corrected v2 contract freezes exact-32K/32,768/40,960 whitespace-enabled candidates and v2 Pareto policy; formal inputs/runs and D5 audit remain blocked/pending | Materialize the authorized source-balanced sample, train corrected candidates, run static report and matched 60M pilot, open the audit once, then freeze artifact/hash and repacking branch before E1/C0 | SPE-117 |
 | R11 | Materialize scale targets | Shape-A planning target exists; shape B and ladder are missing | 60M–1.2B configs pass exact parameter/FLOP/state accounting | SPE-60 |
 | R12 | Freeze analysis contracts | Data and architecture programs are specified; per-arm manifests are missing | E1W/E1S/E2–E5, C0/D2/D3/D4/D6/D7/D8, and scale analyses are immutable before outputs | SPE-70 |
-| R17 | Implement selectable KDA output gating | KDA hardcodes sigmoid | Missing/explicit sigmoid are identical for old configs and checkpoints; SiLU and sigmoid pass Torch/FLA, geometry, export, and strict-load tests | SPE-128 |
+| R17 | Implement selectable KDA output gating | Default-compatible implementation, CPU and export gates complete; full-layer FLA integration cases await R7 CUDA execution | Missing/explicit sigmoid are identical for old configs and checkpoints; SiLU and sigmoid pass Torch/FLA, geometry, export, and strict-load tests | SPE-128 |
 
 [`targets/shape-a`](targets/shape-a/) is deliberately non-launchable. A real experiment appears only
 after its data, training, hardware, and analysis contracts are complete.
