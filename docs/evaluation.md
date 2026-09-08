@@ -4,6 +4,53 @@ Speck includes model-quality and systems-performance harnesses. Checked evaluati
 pin runner code, datasets, model identities, and expected checksums where the upstream interface
 allows it.
 
+## Parser-independent held-out contract
+
+The flagship's bounded pre-results contract is
+[`heldout_evaluation_plan_v1.json`](../research/flagship/heldout_evaluation_plan_v1.json). It applies
+Magic's pretraining lesson that formatting and parser behavior are part of the measured distribution:
+the exact production-formatted firewall output remains one view, while a separately stored alternate
+extraction with a different hash-bound parser/extractor is a second view. The views are paired by
+source ID and source-document SHA-256, scored separately, and never pooled. Parser-independent
+equal-category BPB is the ranking view, while all six category guardrails must pass in both views.
+
+Build a pre-results manifest with:
+
+```bash
+uv run --extra cpu python -m scripts.heldout_evaluation_build <config.json>
+```
+
+After separately producing complete baseline and candidate logprob reports, apply the frozen BPB
+analysis without opening an audit:
+
+```bash
+uv run --extra cpu python -m scripts.heldout_evaluation_analyze \
+  <manifest.json> <baseline-scores.json> <candidate-scores.json> --output <analysis.json>
+```
+
+The builder requires all six formal categories and reports subdomains beneath each category without
+giving them separate decision weight. It binds production and alternate view hashes, parser artifact
+identities, source/document hashes, and hash-only ledgers for aggregate training,
+`selection_heldout`, `D5_tokenizer`, and `E2_mixture`. Those ledgers must be globally disjoint by
+source-derived identity, source-document hash, and normalized-content hash; selection/audit ledgers
+must reproduce the existing firewall's ordered content commitments without opening sealed payloads.
+
+Two additional leakage channels fail closed: every sliding 96-character window after
+NFKC/lower/whitespace normalization, and exhaustive exact token-shingle Jaccard verification inside
+the declared pair bound. They do not replace, relax, or reinterpret the existing firewall, whose
+global disjointness, equal-category, unopened-audit, and consumer checks must already pass.
+
+Score reports bind model and backend identities and contain NLL plus the exact byte count for every
+document in each view. Analysis preserves the existing unweighted six-category macro BPB and +0.01
+BPB upper-95%-CI category guardrail. Subdomain values are diagnostic only. An optional helper checks
+identical external-model logprobs across two distinct backend identities against a predeclared
+per-document NLL tolerance.
+
+Fixture manifests and score reports always retain false consumer, selection, training, and audit
+opening authority. Real sizes, parsers, data, and model runs remain blocked pending a production
+successor; fixture files cannot be passed to real consumers. This repository-local contract records
+the operational lesson only; it does not add or reinterpret external evidence.
+
 Run commands from the repository root. Model-quality evaluations require network access and may
 require gated-dataset acceptance and Hugging Face authentication.
 

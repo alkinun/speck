@@ -112,6 +112,17 @@ a failed opening cannot be retried. Fixture outputs cannot authorize real consum
 construction additionally requires hash-bound human rights acceptance covering every source and a
 production-operations record passing global exact/near deduplication, cleanup, and resume gates.
 
+[`heldout_evaluation_plan_v1.json`](heldout_evaluation_plan_v1.json) is an additive pre-results
+successor for evaluation, not a replacement firewall. Following Magic's pretraining lesson that parser
+and formatting choices can materially alter loss, it keeps the exact production-formatted selection
+file separate from a source/document-paired alternate extraction made by an independently bound
+parser. Aggregate training, selection, D5, and E2 identity ledgers must be globally disjoint and must
+bind the firewall's selection/audit commitments. Sliding normalized 96-character windows and
+exhaustive verified token-shingle Jaccard are independent extra leakage gates; neither can waive an
+existing exact, near-duplicate, consumer, or sealed-opening requirement. Subdomains are reported only
+beneath the six fixed categories. Fixture qualification grants no real data, training, selection, or
+audit-opening authority.
+
 The primary reported unit is bits per UTF-8 byte (BPB), which avoids rewarding a mixture merely
 because the tokenizer fragments one domain differently. For each category, report paired BPB delta
 against the frozen balanced prior, bootstrap confidence intervals over documents, and seed
