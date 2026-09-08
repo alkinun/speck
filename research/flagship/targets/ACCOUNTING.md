@@ -1,8 +1,8 @@
 # R11 scale-target accounting
 
-Status: complete planning geometry, not launchable. The compact source contract is
-[`scale-targets-v1.json`](scale-targets-v1.json); deterministic expanded accounting is
-[`accounting-v1.json`](accounting-v1.json). Check it with:
+Status: complete planning geometry, not launchable. The active compact source contract is
+[`scale-targets-v2.json`](scale-targets-v2.json); deterministic expanded accounting is
+[`accounting-v2.json`](accounting-v2.json). Check it with:
 
 ```bash
 python -m scripts.scale_targets --check
@@ -19,11 +19,12 @@ python -m scripts.scale_targets --check
 | 1.2B flagship option | 2048/2048, 24, 5120 | 18/6 | 1,195,884,576 | 7,513,092,096 | 7,175,307,456 |
 
 All totals use the explicit D5 fallback: Mistral's 32,000 pieces plus three reserved chat roles,
-or 32,003 rows. D5 has not selected a tokenizer. The artifact prices every active v2 candidate at
-every width. It reports both the planned **untied** embedding-plus-head cost (`2*V*E`) and current
-instantiated **shared** storage (`V*E`); exact target totals follow the latter. Untying the head is a
-known launch-freeze integration decision and must not be hidden by calling logical matrices physical
-parameters.
+or 32,003 rows. D5 has not selected a tokenizer. The artifact prices every active v3 candidate at
+every width using one physically shared embedding/LM-head parameter (`V*E`). The state dict retains
+two compatibility aliases, but parameter and optimizer accounting count their one shared object once.
+The immutable [`accounting-v1.json`](accounting-v1.json) correctly counted the tied implementation
+while also printing tokenizer v2's unsupported `2*V*E` counterfactual; v2 supersedes that mismatch
+without rewriting the predecessor.
 
 The parameter equations independently count every projection, normalization vector, convolution,
 decay parameter, adapter, and shared embedding/head, then compare with models instantiated on the

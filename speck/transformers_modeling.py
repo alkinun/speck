@@ -46,6 +46,7 @@ class SpeckForCausalLM(SpeckPreTrainedModel, GenerationMixin):
 
     def set_output_embeddings(self, value):
         self.native.lm_head = value
+        self.native.lm_head.weight = self.native.embed_tokens.weight
 
     def state(self, *args, **kwargs):
         return self.native.state(*args, **kwargs)

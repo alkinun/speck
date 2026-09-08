@@ -1,6 +1,6 @@
 # Speck flagship: scope of the model, the paper, and the experiments
 
-Status: v3, 2026-09-06. This is the single operating document for the first flagship model and the
+Status: v4, 2026-09-08. This is the single operating document for the first flagship model and the
 paper that describes it. Everything else under `research/` is either tooling contract
 (`architecture-promotion-v1`) or archived evidence (`paper-1/*.json`).
 
@@ -21,8 +21,10 @@ The active operating surface is intentionally small:
 - [`data_plan.json`](data_plan.json) is the machine-checked category, run, and selection contract.
 - [`architecture_plan.json`](architecture_plan.json) is the machine-checked architecture run,
   promotion, scale, and systems contract.
-- [`tokenizer_plan_v2.json`](tokenizer_plan_v2.json) is the active machine-checked tokenizer sampling
-  and decision contract; [`tokenizer_plan.json`](tokenizer_plan.json) preserves v1.
+- [`tokenizer_plan_v3.json`](tokenizer_plan_v3.json) is the active machine-checked tokenizer sampling
+  and decision contract; v1 and v2 remain immutable predecessors.
+- [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json) freezes one physically shared
+  token embedding/LM-head parameter and its config, accounting, checkpoint, optimizer, and export rules.
 - [`source_registry.json`](source_registry.json) pins the candidate source revisions and provisional
   tokenizer byte quotas without granting training authority.
 - [`targets/`](targets/) contains seven exact, machine-checked, non-launchable scale geometries;
@@ -75,7 +77,7 @@ directly with Qwen3-0.6B, SmolLM2-360M, and LFM2-700M, and serves better, which 
 decision **F1**, resolved by the scale ladder in section 4.4 no later than day 18, defaulting to A.
 If FP8 qualifies on the node, the extra throughput buys tokens, not saved hours.
 
-The active R11 planning successor is [`targets/scale-targets-v1.json`](targets/scale-targets-v1.json),
+The active R11 planning successor is [`targets/scale-targets-v2.json`](targets/scale-targets-v2.json),
 with exact accounting in [`targets/ACCOUNTING.md`](targets/ACCOUNTING.md). Under the explicit 32,003-row
 D5 fallback, Shape A materializes to 1,195,884,576 shared-head parameters; the rounded 1.2B label is
 the model-size class, not an exact count. The old 32,000-row
@@ -93,7 +95,7 @@ and verify parameter counts with the repository's accounting before freezing.
 | Recurrent mixer | Kimi Delta Attention, sigmoid output gate, FLA timescale init, conv kernel 4, head dim 128, 8 key heads, 16 value heads | findings 13 to 18 |
 | Global attention | GQA, 16 query heads, 4 KV heads, head dim 128, NoPE | findings 16 to 18 |
 | Feed-forward | SwiGLU, intermediate 5120 | inherited |
-| Embeddings | untied, tokenizer D5 pending; Mistral 32K fallback | [`TOKENIZER.md`](TOKENIZER.md) |
+| Embeddings | physically tied input/LM head; tokenizer D5 pending; Mistral 32K fallback | [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json), [`TOKENIZER.md`](TOKENIZER.md) |
 | Precision | bf16, FP8 if it qualifies on the node | PuRo-2B |
 | Optimizer | Muon for matrices, AdamW elsewhere, weight decay 0.1, clip 1.0 | inherited |
 | Schedule | WSD, 20% decay tail, global batch about 1M tokens | SmolLM2, PuRo |

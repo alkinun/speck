@@ -26,12 +26,27 @@ def test_main_architecture_round_trips():
     assert config.logical_depth == 18
     assert config.expected_parameters == 140_652_288
     assert config.embedding_size == 640
+    assert config.tie_word_embeddings is True
+    assert config.export()["tie_word_embeddings"] is True
     assert ArchitectureConfig.from_dict(config.export()).settings() == config.settings()
     mixers = [invocation.block.stages[0].branches[0].kind for invocation in config.execution_plan]
     assert mixers.count("attention") == 8
     assert mixers.count("gated_causal_conv") == 10
     assert config.execution_plan[0].block.stages[0].branches[0].kind == "gated_causal_conv"
     assert config.execution_plan[1].block.stages[0].branches[0].kind == "attention"
+
+
+def test_missing_and_explicit_tied_configs_normalize_identically_and_untied_is_rejected():
+    raw = json.loads((experiment / "model.json").read_text())
+    missing = ArchitectureConfig.from_dict(raw)
+    explicit = ArchitectureConfig.from_dict({**raw, "tie_word_embeddings": True})
+
+    assert missing == explicit
+    assert missing.settings() == explicit.settings()
+    with pytest.raises(ValueError, match="untied word embeddings are not supported"):
+        ArchitectureConfig.from_dict({**raw, "tie_word_embeddings": False})
+    with pytest.raises(ValueError, match="tie_word_embeddings must be boolean"):
+        ArchitectureConfig.from_dict({**raw, "tie_word_embeddings": 1})
 
 
 def test_unshared_repetitions_preserve_grouping_identity():

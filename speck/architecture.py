@@ -281,6 +281,7 @@ class ArchitectureConfig:
     initializer_range: float = 0.02
     expected_parameters: int | None = None
     expected_active_parameters: int | None = None
+    tie_word_embeddings: bool = True
 
     def __post_init__(self):
         _integer_fields(
@@ -296,6 +297,10 @@ class ArchitectureConfig:
                 _integer_fields(self, name)
         if not self.blocks:
             raise ValueError("architectures need at least one block")
+        if not isinstance(self.tie_word_embeddings, bool):
+            raise ValueError("tie_word_embeddings must be boolean")
+        if not self.tie_word_embeddings:
+            raise ValueError("untied word embeddings are not supported")
         if self.embedding_size < 1 or self.vocab_size < 1:
             raise ValueError("embedding and vocabulary sizes must be positive")
         if self.max_position_embeddings < 1:

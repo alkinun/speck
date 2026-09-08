@@ -7,8 +7,8 @@ from pathlib import Path
 from speck.scale_targets import load_and_generate
 
 ROOT = Path(__file__).parents[1]
-DEFAULT_SPEC = ROOT / "research" / "flagship" / "targets" / "scale-targets-v1.json"
-DEFAULT_OUTPUT = ROOT / "research" / "flagship" / "targets" / "accounting-v1.json"
+DEFAULT_SPEC = ROOT / "research" / "flagship" / "targets" / "scale-targets-v2.json"
+DEFAULT_OUTPUT = ROOT / "research" / "flagship" / "targets" / "accounting-v2.json"
 
 
 def main():
