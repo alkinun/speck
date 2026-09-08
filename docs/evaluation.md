@@ -130,6 +130,46 @@ Speck's nonstandard recurrent cache from generic Transformers loading behavior. 
 the export's configured context ceiling; qualifying the API at 4K does not qualify a candidate at 32K
 or 128K.
 
+### Offline cross-backend log-probability parity
+
+Before using an optimized backend for R13/SPE-116 comparator measurements, compare backend-native
+per-token log-probability exports with a declared trusted native or Hugging Face reference:
+
+```bash
+uv run --extra cpu python -m scripts.logprob_parity \
+  research/flagship/logprob_parity_plan.json \
+  <trusted-reference.json> <optimized-backend.json> [<optimized-backend.json> ...] \
+  --output <new-report.json>
+```
+
+This is a local file comparator, not an evaluator or collector. It never contacts a server, installs
+a backend, loads a model, or changes the evaluation endpoint above (which continues to reject
+`logprobs=true`). Generate each input using a separately reviewed backend-native adapter. Inputs bind
+an evaluation manifest, model, tokenizer, canonical request payloads, ordered case IDs, and scored
+token IDs. Every payload and complete record set carries a SHA-256. Missing, non-finite, unhashed, or
+misaligned values fail validation rather than becoming threshold failures.
+
+Record schema version 1 is:
+
+```text
+format, format_version
+producer: role, backend, revision, dtype, environment_sha256, synthetic_fixture
+identity:
+  evaluation: id, manifest_sha256
+  model/tokenizer: id, revision, artifact_sha256
+records[]:
+  case_id, payload, payload_sha256
+  tokens[]: position, token_id, logprob
+records_sha256, payload_token_ids_sha256
+```
+
+Reports retain input hashes and give maximum and mean absolute error plus both provisional threshold
+checks for every backend/dtype pair. Output paths are create-only to avoid replacing earlier evidence.
+The checked plan and fixtures are pre-access diagnostics only: they do not qualify vLLM, SGLang,
+generation/cache behavior, performance, model quality, or any external evaluation suite. Any real
+comparison requires a successor plan frozen before its outputs, with exact backend revisions,
+hardware/software identities, payload selection, and independently reviewed dtype thresholds.
+
 ### Local instruction-question scoring
 
 `scripts.instruct_eval` evaluates the fixed 15-question instruction set with greedy decoding.

@@ -79,6 +79,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Local tokenizer data study](195_local_tokenizer_data_study.md) | Whitespace-piece support reverses the bounded custom-tokenizer deficit |
 | [Runtime cleanup successors](196_runtime_cleanup_successors.md) | Failure-safe checkpoint replacement and production handle reuse |
 | [Tokenizer v2 contract](197_tokenizer_v2_contract.md) | Corrected exact-32K/32,768/40,960 pre-results candidate set |
+| [Comparator parity pre-access contract](199_logprob_parity_contract.md) | Offline hash-bound correctness gate before R13 backend measurements |
 
 ## Conventions
 

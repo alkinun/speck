@@ -1,0 +1,80 @@
+{
+  "comparisons": [
+    {
+      "artifact_sha256": "5870b30a03db76b23e675e784bdea5201e90bb0cce16273722bb13feb86f455c",
+      "backend": "vllm",
+      "case_count": 2,
+      "checks": {
+        "max_absolute_error_pass": true,
+        "mean_absolute_error_pass": true
+      },
+      "dtype": "bfloat16",
+      "max_absolute_error": 0.020000000000000018,
+      "mean_absolute_error": 0.014999999999999847,
+      "passed": true,
+      "revision": "synthetic-vllm-fixture-v1",
+      "synthetic_fixture": true,
+      "thresholds": {
+        "max_absolute_error": 0.04,
+        "mean_absolute_error": 0.02
+      },
+      "token_count": 4
+    },
+    {
+      "artifact_sha256": "ecab44ccfb06f89c7ad63f6cc4fc9b22162b9df085a70dc1677142ee120c38e7",
+      "backend": "sglang",
+      "case_count": 2,
+      "checks": {
+        "max_absolute_error_pass": true,
+        "mean_absolute_error_pass": true
+      },
+      "dtype": "float16",
+      "max_absolute_error": 0.01499999999999968,
+      "mean_absolute_error": 0.008749999999999813,
+      "passed": true,
+      "revision": "synthetic-sglang-fixture-v1",
+      "synthetic_fixture": true,
+      "thresholds": {
+        "max_absolute_error": 0.02,
+        "mean_absolute_error": 0.01
+      },
+      "token_count": 4
+    }
+  ],
+  "evidence_authority": "pre_access_diagnostic_only",
+  "format": "speck_cross_backend_logprob_parity_report",
+  "format_version": 1,
+  "identity": {
+    "evaluation": {
+      "id": "synthetic-r13-logprob-fixture",
+      "manifest_sha256": "e91555bcfebea1da8f4ba331425e88acfcabdca3e278eafd1a52ec74e1c33fa4"
+    },
+    "model": {
+      "artifact_sha256": "c7a3a8c7435ef8e4cf1ca2d261f7e09ca85de6cdb70f7c689a836680523a180c",
+      "id": "synthetic/SpeckParity",
+      "revision": "fixture-model-v1"
+    },
+    "payload_token_ids_sha256": "5a81dae42789c642515c7bc0403d1a2e87d4ccc9183389190660d3ec95cca829",
+    "tokenizer": {
+      "artifact_sha256": "1d24d1c30e3fd07659913f4e6e73e7f60e71db3892323d79a8f4e7437ba2e602",
+      "id": "synthetic/SpeckParityTokenizer",
+      "revision": "fixture-tokenizer-v1"
+    }
+  },
+  "network_access": {
+    "attempted": false,
+    "mode": "local_files_only"
+  },
+  "passed": true,
+  "plan_sha256": "2ff2caf75b00c15566d8ae8e3e3e8007ced7c161001badb165ab27091dddb780",
+  "reference": {
+    "artifact_sha256": "32062122fb305c8b14d8cd71fd525140a623b21514cc32deb36c09d896c9957a",
+    "backend": "transformers",
+    "dtype": "float32",
+    "environment_sha256": "d1244ffc2102f13b378b14fed08f0a7e38888edea3108d53fd739a3480ba3706",
+    "revision": "synthetic-transformers-fixture-v1",
+    "role": "trusted_reference",
+    "synthetic_fixture": true
+  },
+  "status": "passed_thresholds"
+}

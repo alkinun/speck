@@ -1,0 +1,11 @@
+{
+  "format": "speck_logprob_parity_synthetic_evaluation_manifest",
+  "format_version": 1,
+  "status": "deterministic_fixture_only_no_evaluation_authority",
+  "evaluation_id": "synthetic-r13-logprob-fixture",
+  "case_ids": [
+    "fixture-00",
+    "fixture-01"
+  ],
+  "purpose": "Exercise exact payload and scored-token identity without loading a model or backend."
+}

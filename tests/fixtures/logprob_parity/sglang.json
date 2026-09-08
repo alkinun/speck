@@ -1,0 +1,85 @@
+{
+  "format": "speck_per_token_logprob_record",
+  "format_version": 1,
+  "identity": {
+    "evaluation": {
+      "id": "synthetic-r13-logprob-fixture",
+      "manifest_sha256": "e91555bcfebea1da8f4ba331425e88acfcabdca3e278eafd1a52ec74e1c33fa4"
+    },
+    "model": {
+      "artifact_sha256": "c7a3a8c7435ef8e4cf1ca2d261f7e09ca85de6cdb70f7c689a836680523a180c",
+      "id": "synthetic/SpeckParity",
+      "revision": "fixture-model-v1"
+    },
+    "tokenizer": {
+      "artifact_sha256": "1d24d1c30e3fd07659913f4e6e73e7f60e71db3892323d79a8f4e7437ba2e602",
+      "id": "synthetic/SpeckParityTokenizer",
+      "revision": "fixture-tokenizer-v1"
+    }
+  },
+  "payload_token_ids_sha256": "5a81dae42789c642515c7bc0403d1a2e87d4ccc9183389190660d3ec95cca829",
+  "producer": {
+    "backend": "sglang",
+    "dtype": "float16",
+    "environment_sha256": "ce3e692f4d9c2d72e5f6f331c41ae6ad9c0b9568978a38f2a43874b47b47ea8a",
+    "revision": "synthetic-sglang-fixture-v1",
+    "role": "optimized_backend",
+    "synthetic_fixture": true
+  },
+  "records": [
+    {
+      "case_id": "fixture-00",
+      "payload": {
+        "body": {
+          "model": "synthetic/SpeckParity",
+          "prompt": "alpha beta",
+          "temperature": 0
+        },
+        "endpoint": "/v1/completions"
+      },
+      "payload_sha256": "cf7940e23c348fa10b212807400e0c3b0253cb98762ea7ac0526bdfdfe1a5d1c",
+      "tokens": [
+        {
+          "logprob": -1.005,
+          "position": 0,
+          "token_id": 13
+        },
+        {
+          "logprob": -1.995,
+          "position": 1,
+          "token_id": 21
+        }
+      ]
+    },
+    {
+      "case_id": "fixture-01",
+      "payload": {
+        "body": {
+          "messages": [
+            {
+              "content": "two plus two",
+              "role": "user"
+            }
+          ],
+          "model": "synthetic/SpeckParity",
+          "temperature": 0
+        },
+        "endpoint": "/v1/chat/completions"
+      },
+      "payload_sha256": "125a8339eccb8bae163215af992d9f452645f50838d6d3cbbda4c9e514f61429",
+      "tokens": [
+        {
+          "logprob": -2.99,
+          "position": 0,
+          "token_id": 34
+        },
+        {
+          "logprob": -4.015,
+          "position": 1,
+          "token_id": 55
+        }
+      ]
+    }
+  ],
+  "records_sha256": "1f5431f56cd8ef3fff53ce85a39233611605cc560d67cb985ac31ae01293ba56"
+}

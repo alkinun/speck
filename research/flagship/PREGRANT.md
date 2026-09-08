@@ -46,7 +46,7 @@ and per-arm manifests pass.
 
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
-| R13 | Comparator baseline table | Not started | Named comparator revisions, token budgets, quality results, and 3090/CPU serving profiles are recorded | SPE-116 |
+| R13 | Comparator baseline table | Pre-access offline log-probability parity contract is fixture-qualified; backend access, revisions, evaluations, and baseline table are pending | Named comparator revisions, token budgets, quality results, and 3090/CPU serving profiles are recorded | SPE-116 |
 | R14 | RULER v2 and internal protocols | Sources/cases are qualified | Launch manifests pin the exact active tasks, lengths, prompts, and scoring | SPE-63 |
 | R15 | Export rehearsal | KDA Transformers support exists; recurrent-mixer GGUF is missing | One representative KDA/NoPE checkpoint passes native/Transformers/GGUF identity and generation parity | SPE-76 |
 | R16 | Release destinations and credentials | Not audited | Model, code, artifact, and paper destinations plus credentials and licenses are verified | SPE-91 |

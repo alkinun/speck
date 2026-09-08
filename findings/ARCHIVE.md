@@ -212,6 +212,7 @@ history in order only when auditing provenance or a retired decision:
 197. [196 — Checkpoint replacement now preserves its predecessor](196_runtime_cleanup_successors.md)
 198. [197 — The corrected tokenizer candidate is now a formal v2 contract](197_tokenizer_v2_contract.md)
 199. [198 — KDA output gating is selectable without changing sigmoid checkpoints](198_kda_output_gate_successor.md)
+200. [199 — R13 now has a pre-access log-probability parity contract](199_logprob_parity_contract.md)
 
 Conventions:
 

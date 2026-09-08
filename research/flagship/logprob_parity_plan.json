@@ -1,0 +1,77 @@
+{
+  "format": "speck_cross_backend_logprob_parity_plan",
+  "format_version": 1,
+  "status": "pre_access_non_authoritative_fixture_only",
+  "recorded_on": "2026-09-08",
+  "readiness": {
+    "item": "R13",
+    "linear_issue": "SPE-116",
+    "scope": "pre-access numerical correctness gate before comparator quality or serving measurements",
+    "r13_completion_authority": false
+  },
+  "motivation": "Optimized serving baselines can silently diverge from trusted native or Hugging Face execution; compare exact scored token log probabilities before accepting their downstream measurements.",
+  "risk_context": "Pre-access response to the failure class highlighted by Magic's reported vLLM/SGLang baseline issues; the report itself is not Speck qualification evidence.",
+  "thresholds": {
+    "bfloat16": {
+      "max_absolute_error": 0.04,
+      "mean_absolute_error": 0.02
+    },
+    "float16": {
+      "max_absolute_error": 0.02,
+      "mean_absolute_error": 0.01
+    },
+    "float32": {
+      "max_absolute_error": 0.0001,
+      "mean_absolute_error": 0.00005
+    }
+  },
+  "required_identity": [
+    "evaluation manifest ID and SHA-256",
+    "model ID, immutable revision, and artifact SHA-256",
+    "tokenizer ID, immutable revision, and artifact SHA-256",
+    "canonical payload and SHA-256 for every case",
+    "ordered case IDs, token positions, and token IDs"
+  ],
+  "planned_backends": [
+    {
+      "backend": "vllm",
+      "status": "unaccessed_revision_install_and_native_evaluation_pending"
+    },
+    {
+      "backend": "sglang",
+      "status": "unaccessed_revision_install_and_native_evaluation_pending"
+    }
+  ],
+  "reference": {
+    "allowed": [
+      "trusted native implementation",
+      "trusted Hugging Face implementation"
+    ],
+    "trust_is_external_to_tool": true
+  },
+  "external_evaluation_binding": {
+    "manifest": "research/architecture-promotion-v1/evaluation_manifest.json",
+    "manifest_id": "architecture-evaluation-v2",
+    "manifest_sha256": "36e5fccdfd6d7b7df7f667b6cb6b0fca4657248a8929ac4a0452b3588207d8d6",
+    "use": "identity and evidence precedent only; this plan does not alter or qualify any external suite"
+  },
+  "evaluation_server_boundary": {
+    "implementation": "speck/evaluation_server.py",
+    "implementation_sha256": "f5aba702e5ffd56c4598a698896373cbd7bb6d1ca0422a6f482e0c0695dd7ae8",
+    "current_behavior": "logprobs=true is rejected",
+    "decision": "do not widen the parser-independent endpoint; collect records separately through trusted backend-native adapters"
+  },
+  "execution": {
+    "collector": "out_of_scope_backend_native_export",
+    "comparator": "python -m scripts.logprob_parity",
+    "network_access": "forbidden_in_comparator",
+    "output_overwrite": "forbidden"
+  },
+  "promotion_rule": "none; thresholds are provisional diagnostics until exact model, hardware, backend revisions, dtype policy, payload set, and independent review are frozen before access",
+  "limitations": [
+    "No vLLM or SGLang package is installed or exercised by this plan.",
+    "Synthetic fixtures do not estimate real backend error or select final thresholds.",
+    "A declared trusted reference is not authenticated by the comparator.",
+    "Passing scored-token log probabilities does not qualify generation, cache behavior, throughput, memory, quality, or an external suite."
+  ]
+}
