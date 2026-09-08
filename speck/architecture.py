@@ -125,12 +125,15 @@ class KimiDeltaAttentionSpec:
     num_key_heads: int
     num_value_heads: int
     conv_kernel_size: int = 4
+    output_gate_activation: str = "sigmoid"
     kind: str = field(init=False, default="kimi_delta_attention")
 
     def __post_init__(self):
         _validate_delta_geometry(self, "Kimi Delta Attention")
         if self.key_head_dim != self.value_head_dim:
             raise ValueError("Kimi Delta Attention requires equal key and value head dimensions")
+        if self.output_gate_activation not in {"sigmoid", "silu"}:
+            raise ValueError("Kimi Delta Attention output gate activation must be sigmoid or silu")
 
 
 @dataclass(frozen=True)
@@ -392,6 +395,14 @@ class ArchitectureConfig:
             for group in self.blocks
         )
         values = asdict(replace(self, blocks=groups))
+        for group in values["blocks"]:
+            for stage in group["block"]["stages"]:
+                for branch in stage["branches"]:
+                    if (
+                        branch["kind"] == "kimi_delta_attention"
+                        and branch["output_gate_activation"] == "sigmoid"
+                    ):
+                        branch.pop("output_gate_activation")
         values.pop("expected_parameters")
         values.pop("expected_active_parameters")
         return json.loads(canonical_json(values))

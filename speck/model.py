@@ -1143,7 +1143,11 @@ class KimiDeltaAttention(nn.Module):
             self.spec.num_value_heads,
             self.spec.value_head_dim,
         )
-        output = self.output_norm(output) * output_gate.float().sigmoid().to(output.dtype)
+        if self.spec.output_gate_activation == "sigmoid":
+            output_gate = output_gate.float().sigmoid()
+        else:
+            output_gate = F.silu(output_gate.float())
+        output = self.output_norm(output) * output_gate.to(output.dtype)
         return self.output_projection(output.flatten(2))
 
 

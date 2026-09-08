@@ -1,3 +1,4 @@
+import importlib.metadata
 import json
 from pathlib import Path
 
@@ -398,9 +399,10 @@ def test_channel_constant_kda_reduces_to_grouped_gated_deltanet():
     torch.testing.assert_close(actual[1], expected[1])
 
 
-def test_kimi_delta_attention_state_matches_full_forward():
+@pytest.mark.parametrize("activation", ("sigmoid", "silu"))
+def test_kimi_delta_attention_state_matches_full_forward(activation):
     torch.manual_seed(47)
-    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3)
+    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3, output_gate_activation=activation)
     model = model_with(spec, SwiGLUSpec(16))
     tokens = torch.randint(0, 16, (1, 8))
     assert torch.allclose(model(tokens), cached_logits(model, tokens), atol=2e-5)
@@ -417,12 +419,83 @@ def test_kimi_delta_attention_state_is_independent_of_context_length():
     assert short.memory_report()["by_kind"] == {"kimi_delta_attention": expected}
 
 
-def test_kimi_delta_attention_backward_is_finite():
-    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3)
+@pytest.mark.parametrize("activation", ("sigmoid", "silu"))
+def test_kimi_delta_attention_backward_is_finite(activation):
+    spec = KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3, output_gate_activation=activation)
     model = model_with(spec)
     tokens = torch.randint(0, 16, (2, 8))
     loss = model(tokens, tokens)
     loss.backward()
+    assert all(
+        parameter.grad is None or torch.isfinite(parameter.grad).all()
+        for parameter in model.parameters()
+    )
+
+
+def test_default_kimi_sigmoid_preserves_forward_backward_and_strict_checkpoint_loading():
+    torch.manual_seed(49)
+    legacy = model_with(KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3))
+    explicit = model_with(
+        KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3, output_gate_activation="sigmoid")
+    )
+    loaded = explicit.load_state_dict(legacy.state_dict(), strict=True)
+    assert loaded.missing_keys == []
+    assert loaded.unexpected_keys == []
+    assert legacy.state_dict().keys() == explicit.state_dict().keys()
+
+    tokens = torch.randint(0, 16, (2, 8))
+    legacy_loss = legacy(tokens, tokens)
+    explicit_loss = explicit(tokens, tokens)
+    torch.testing.assert_close(explicit_loss, legacy_loss, rtol=0, atol=0)
+    legacy_loss.backward()
+    explicit_loss.backward()
+    for legacy_parameter, explicit_parameter in zip(legacy.parameters(), explicit.parameters()):
+        torch.testing.assert_close(explicit_parameter.grad, legacy_parameter.grad, rtol=0, atol=0)
+
+
+def test_kimi_output_gate_activation_changes_only_behavior_not_geometry():
+    torch.manual_seed(51)
+    sigmoid = model_with(
+        KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3, output_gate_activation="sigmoid")
+    )
+    silu = model_with(
+        KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3, output_gate_activation="silu")
+    )
+    silu.load_state_dict(sigmoid.state_dict(), strict=True)
+    tokens = torch.randint(0, 16, (2, 8))
+
+    sigmoid_logits = sigmoid(tokens)
+    silu_logits = silu(tokens)
+
+    assert torch.isfinite(sigmoid_logits).all()
+    assert torch.isfinite(silu_logits).all()
+    assert not torch.allclose(sigmoid_logits, silu_logits)
+    assert sigmoid.parameter_count() == silu.parameter_count()
+    assert sigmoid.flops_per_token(16) == silu.flops_per_token(16)
+    assert sigmoid.state(length=8).memory_report() == silu.state(length=8).memory_report()
+    assert {name: tuple(tensor.shape) for name, tensor in sigmoid.state_dict().items()} == {
+        name: tuple(tensor.shape) for name, tensor in silu.state_dict().items()
+    }
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="FLA KDA requires CUDA")
+@pytest.mark.parametrize("activation", ("sigmoid", "silu"))
+def test_kimi_output_gates_cover_fla_chunk_backward_and_stateful_decode(activation):
+    pytest.importorskip("fla.ops.kda")
+    assert importlib.metadata.version("flash-linear-attention") == "0.5.0"
+    torch.manual_seed(52)
+    model = model_with(
+        KimiDeltaAttentionSpec(4, 4, 1, 2, conv_kernel_size=3, output_gate_activation=activation)
+    ).cuda()
+    model.to(torch.bfloat16)
+    tokens = torch.randint(0, 16, (1, 8), device="cuda")
+
+    with torch.no_grad():
+        full = model(tokens)
+        decoded = cached_logits(model, tokens)
+    torch.testing.assert_close(decoded, full, rtol=2e-2, atol=2e-2)
+
+    model(tokens).float().square().mean().backward()
     assert all(
         parameter.grad is None or torch.isfinite(parameter.grad).all()
         for parameter in model.parameters()

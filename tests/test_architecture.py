@@ -108,10 +108,38 @@ def test_gated_deltanet_rejects_unknown_decay_initialization():
 
 
 def test_kimi_delta_attention_grammar_round_trips():
-    operation = KimiDeltaAttentionSpec(8, 8, 2, 4, conv_kernel_size=3)
+    operation = KimiDeltaAttentionSpec(
+        8, 8, 2, 4, conv_kernel_size=3, output_gate_activation="silu"
+    )
     block = BlockConfig(16, (StageConfig((operation,)),))
     config = ArchitectureConfig((BlockGroup(block),), 16, vocab_size=32)
     assert ArchitectureConfig.from_dict(config.export()) == config
+    assert (
+        config.export()["blocks"][0]["block"]["stages"][0]["branches"][0]["output_gate_activation"]
+        == "silu"
+    )
+
+
+def test_kimi_delta_attention_default_and_explicit_sigmoid_serialize_as_legacy_config():
+    default = KimiDeltaAttentionSpec(8, 8, 2, 4, conv_kernel_size=3)
+    explicit = KimiDeltaAttentionSpec(
+        8, 8, 2, 4, conv_kernel_size=3, output_gate_activation="sigmoid"
+    )
+    assert default == explicit
+
+    config = ArchitectureConfig(
+        (BlockGroup(BlockConfig(16, (StageConfig((explicit,)),))),),
+        16,
+        vocab_size=32,
+    )
+    branch = config.export()["blocks"][0]["block"]["stages"][0]["branches"][0]
+    assert "output_gate_activation" not in branch
+    assert ArchitectureConfig.from_dict(config.export()) == config
+
+
+def test_kimi_delta_attention_rejects_unknown_output_gate_activation():
+    with pytest.raises(ValueError, match="output gate activation"):
+        KimiDeltaAttentionSpec(4, 4, 2, 4, output_gate_activation="relu")
 
 
 def test_kimi_delta_attention_requires_supported_head_geometry():
