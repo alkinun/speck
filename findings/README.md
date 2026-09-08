@@ -31,6 +31,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Kimi-transfer staircase](16_kimi_transfer_131m.md) | Isolated gate, position, and decay changes |
 | [Three-seed KDA/NoPE replication](17_kimi_frontier_replication.md) | Short-loss uncertainty and replicated 128K signal |
 | [Matched 32K activation](18_kimi_context32k.md) | Extension quality and 4K retention |
+| [Selectable KDA output gate](198_kda_output_gate_successor.md) | Default-sigmoid compatibility and explicit SiLU successor |
 
 ## Evaluation and negative results
 
