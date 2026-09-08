@@ -124,6 +124,7 @@ prepared conversation dataset.
 | [Flagship scope](research/flagship/README.md) | Model and paper scope, defaults, evidence standard, data, and evaluation. |
 | [Flagship execution](research/flagship/EXECUTION.md) | Flexible 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
 | [Pre-grant checklist](research/flagship/PREGRANT.md) | Concrete storage, data, GH200, model, evaluation, and administrative readiness work. |
+| [Slurm operations](docs/slurm.md) | Immutable wave validation, one/four-GPU rendering, preflight, bounded retry, accounting, and scheduler observation. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
 | [Evaluation and benchmarking](docs/evaluation.md) | Open SLM, BananaMind, optimization, inference performance, and checked results. |
 | [Releasing models](docs/releasing.md) | Maintainer-only Transformers, code-only, and GGUF publication workflows. |
@@ -144,6 +145,7 @@ Runtime artifacts use `~/.cache/speck` by default:
   releases/      Local Transformers exports.
   tokenizer/     Downloaded tokenizer artifacts.
   tools/         Pinned tool checkouts such as llama.cpp.
+  slurm/         Frozen wave copies, rendered scripts, logs, submissions, and sacct observations.
 ```
 
 Set `speck_base_dir` before running a command to move the cache root. Explicit output paths in an
