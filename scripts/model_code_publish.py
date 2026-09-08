@@ -1,7 +1,6 @@
 """Validate and publish a code-only Transformers compatibility update."""
 
 import argparse
-import hashlib
 import json
 import shutil
 import tempfile
@@ -12,6 +11,7 @@ from huggingface_hub import CommitOperationAdd, HfApi, hf_hub_download, snapshot
 
 from scripts.model_publish import PADDING_DESTINATION, PADDING_SOURCE, patch_modeling_source
 from speck.common import base_dir
+from speck.io import file_sha256 as sha256
 
 DEFAULT_REPO = "specklabs/Speck1-140M"
 DEFAULT_SOURCE_REVISION = "32675011a75e3bb3f180983a0014de10d1fa6693"
@@ -42,14 +42,6 @@ def arguments():
     parser.add_argument("--no-upload", action="store_true", help="validate without uploading")
     parser.add_argument("--force", action="store_true", help="replace an existing output directory")
     return parser.parse_args()
-
-
-def sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        while chunk := handle.read(1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def weight_sha256(files):

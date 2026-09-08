@@ -1080,3 +1080,34 @@ def test_grouped_cuda_expert_output_and_gradients_match_reference(num_experts, i
     torch.testing.assert_close(inputs.grad, reference_inputs.grad, rtol=3e-2, atol=3e-2)
     for bank, reference in zip(banks, reference_banks):
         torch.testing.assert_close(bank.grad, reference.grad, rtol=3e-2, atol=3e-2)
+
+
+@pytest.mark.parametrize("magnitude", (0.0, 1e-6, 1e-4, 1.0))
+def test_int8_cache_quantizes_using_representable_nonzero_scales(magnitude):
+    from speck.model import AttentionState
+
+    state = AttentionState(1, 1, 2, 4, "cpu", torch.float32, storage_dtype=torch.int8)
+    values = torch.tensor([[[[-1.0, -0.5, 0.5, 1.0]]]]) * magnitude
+    state.append(values, values)
+    keys, cached_values = state.current()
+    assert torch.all(state.key_scales[:, :, :1] > 0)
+    tolerance = max(magnitude / 127, 6e-8)
+    torch.testing.assert_close(keys, values, rtol=0, atol=tolerance)
+    torch.testing.assert_close(cached_values, values, rtol=0, atol=tolerance)
+
+
+def test_resizing_embeddings_clears_both_parameter_count_expectations():
+    from dataclasses import replace
+
+    model = model_with(RoutedSwiGLUSpec(4, num_experts=4, top_k=2))
+    model.config = replace(
+        model.config,
+        expected_parameters=model.parameter_count(),
+        expected_active_parameters=model.active_parameter_count(),
+    )
+    original = model.embed_tokens.weight.detach().clone()
+    model.resize_token_embeddings(model.config.vocab_size + 3)
+    assert model.config.expected_parameters is None
+    assert model.config.expected_active_parameters is None
+    assert model.lm_head.weight is model.embed_tokens.weight
+    torch.testing.assert_close(model.embed_tokens.weight[: len(original)], original)

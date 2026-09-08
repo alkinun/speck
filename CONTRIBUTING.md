@@ -4,6 +4,9 @@ Speck is a research codebase with reproducibility-sensitive data, training, and 
 Keep changes focused, preserve artifact contracts deliberately, and include tests for behavioral
 changes.
 
+The [2026-09-08 cleanup audit](docs/code_cleanup_2026-09-08.md) records source-pinned cleanup
+follow-ups and the remaining formatting failures that require evidence requalification.
+
 ## Development Setup
 
 Run commands from the repository root. Install the CPU environment and development tools for the

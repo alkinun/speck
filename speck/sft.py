@@ -1,6 +1,5 @@
 """Prepare and load masked packed data for supervised instruction tuning."""
 
-import hashlib
 import json
 import os
 import shutil
@@ -17,6 +16,8 @@ from huggingface_hub import hf_hub_download
 from speck.chat import ChatFormatError
 from speck.common import base_dir, dist_info
 from speck.dataloader import manifest_fingerprint
+from speck.io import atomic_json as _write_json
+from speck.io import file_sha256 as _file_hash
 from speck.train import assert_finite, set_optimizer_lr
 
 FORMAT_VERSION = 3
@@ -30,21 +31,6 @@ def resolve_sft_data_dir(config, output_dir=None):
         return Path(output_dir).expanduser()
     dataset_name = config["repo"].rsplit("/", 1)[-1]
     return Path(base_dir()) / "data" / f"{dataset_name}-v{FORMAT_VERSION}"
-
-
-def _file_hash(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        while chunk := handle.read(8 * 1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def _write_json(path, value):
-    path = Path(path)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def _validate_dataset_config(config):

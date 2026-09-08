@@ -3,7 +3,6 @@
 import argparse
 import json
 import math
-import os
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -18,6 +17,7 @@ from speck.checkpoint import checkpoint_identity, latest, save
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
+from speck.io import atomic_json
 from speck.long_context import (
     ANSWER_SETS,
     RETRIEVAL_TEMPLATES,
@@ -120,14 +120,6 @@ def positive_integer(value, name):
     if isinstance(value, bool) or not isinstance(value, int) or value < 1:
         raise ValueError(f"{name} must be a positive integer")
     return value
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def git_revision():

@@ -42,8 +42,10 @@ class PackedTokenSource:
         self.total_tokens = total
 
     def read(self, start, count, dtype=np.int64):
-        if start < 0 or start + count > self.total_tokens:
+        if start < 0 or count < 0 or start + count > self.total_tokens:
             raise IndexError(f"packed token read is out of range for source {self.source_id}")
+        if count == 0:
+            return np.empty(0, dtype=dtype)
         pieces = []
         position = start
         remaining = count
@@ -186,6 +188,14 @@ def _shard_diagnostic(source, split, source_offset):
     }
 
 
+def _validate_geometry(sequence_length, batch_size, world_size):
+    if any(
+        isinstance(value, bool) or not isinstance(value, int) or value < 1
+        for value in (sequence_length, batch_size, world_size)
+    ):
+        raise ValueError("loader geometry must contain positive integers")
+
+
 def loader_state_for_offset(
     manifest,
     split,
@@ -198,8 +208,7 @@ def loader_state_for_offset(
 
     if split not in {"train", "val"}:
         raise ValueError("split must be train or val")
-    if min(sequence_length, batch_size, world_size) < 1:
-        raise ValueError("loader geometry must be positive")
+    _validate_geometry(sequence_length, batch_size, world_size)
     global_stride = sequence_length * batch_size * world_size
     if global_consumed_tokens < 0 or global_consumed_tokens % global_stride:
         raise ValueError("loader offset must align with distributed microbatches")
@@ -218,9 +227,7 @@ def loader_state_for_offset(
             raise ValueError(
                 f"packed source {source_id} is smaller than one distributed microbatch"
             )
-        if split == "val":
-            epoch, batch_offset = divmod(count, batches_per_epoch)
-        elif global_consumed_tokens >= schedule_end:
+        if split == "val" or global_consumed_tokens >= schedule_end:
             epoch, batch_offset = divmod(count, batches_per_epoch)
         else:
             epoch, batch_offset = 0, count
@@ -317,6 +324,8 @@ def packed_loader(
     if split not in {"train", "val"}:
         raise ValueError("split must be train or val")
     data_dir = Path(data_dir or default_data_dir / "packed")
+    rank, _, world_size = dist_info()
+    _validate_geometry(sequence_length, batch_size, world_size)
     manifest = load_manifest(data_dir)
     tokenizer_manifest = manifest["tokenizer"]
     if tokenizer.vocab_size != tokenizer_manifest["vocab_size"]:
@@ -329,7 +338,6 @@ def packed_loader(
         source_id: PackedTokenSource(data_dir, source, split)
         for source_id, source in sources.items()
     }
-    rank, _, world_size = dist_info()
     local_stride = batch_size * sequence_length
     global_stride = local_stride * world_size
     required = local_stride + 1

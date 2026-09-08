@@ -17,9 +17,7 @@ def _sha256(path):
 
 
 def test_expansion_overlay_hash_binds_base_and_changes_only_quota_and_output(tmp_path):
-    base = json.loads(
-        (ROOT / "research" / "flagship" / "stack_v3_qualification.json").read_text()
-    )
+    base = json.loads((ROOT / "research" / "flagship" / "stack_v3_qualification.json").read_text())
     base["output"]["directory"] = str(tmp_path / "old")
     base["output"]["download_directory"] = str(tmp_path / "downloads")
     base_path = tmp_path / "base.json"
@@ -39,9 +37,7 @@ def test_expansion_overlay_hash_binds_base_and_changes_only_quota_and_output(tmp
 
     assert materialized["filters"]["language_sample_bytes"] == {"Python": 123}
     assert materialized["output"]["directory"] == str((tmp_path / "new").resolve())
-    assert materialized["output"]["download_directory"] == str(
-        (tmp_path / "downloads").resolve()
-    )
+    assert materialized["output"]["download_directory"] == str((tmp_path / "downloads").resolve())
     assert materialized["source"]["files"] == base["source"]["files"]
 
     base_path.write_text(base_path.read_text() + "\n")

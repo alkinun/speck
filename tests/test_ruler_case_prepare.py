@@ -45,10 +45,7 @@ def test_convert_cases_matches_nemo_skills_shape(tmp_path):
 def test_case_summary_enforces_reserved_context_ceiling(tmp_path):
     path = tmp_path / "test.jsonl"
     path.write_text(
-        json.dumps(
-            {"index": 0, "question": "q", "expected_answer": ["a"], "length": 4047}
-        )
-        + "\n",
+        json.dumps({"index": 0, "question": "q", "expected_answer": ["a"], "length": 4047}) + "\n",
         encoding="utf-8",
     )
 

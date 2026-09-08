@@ -1,7 +1,6 @@
 """Build, validate, and publish llama.cpp-compatible Speck GGUF files."""
 
 import argparse
-import hashlib
 import json
 import os
 import shutil
@@ -19,6 +18,7 @@ from huggingface_hub import (
 from safetensors.torch import load_file, save_file
 
 from speck.common import base_dir
+from speck.io import file_sha256 as sha256
 
 SOURCE_REPO = "specklabs/Speck1-140M-Instruct"
 DESTINATION_REPO = "specklabs/Speck1-140M-Instruct-GGUF"
@@ -102,14 +102,6 @@ def run(command, *, cwd=None, capture=False, timeout=None):
         text=capture,
         timeout=timeout,
     )
-
-
-def sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        while chunk := handle.read(8 * 1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def validate_config(config):

@@ -12,6 +12,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from speck.io import atomic_json, file_sha256
+
 PINNED_PACKAGES = {
     "beautifulsoup4": "4.15.0",
     "html2text": "2025.4.15",
@@ -67,22 +69,6 @@ def arguments(argv=None):
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--check", action="store_true")
     return parser.parse_args(argv)
-
-
-def file_sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def git_revision(directory):

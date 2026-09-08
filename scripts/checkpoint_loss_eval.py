@@ -1,9 +1,7 @@
 """Evaluate a checkpoint's causal loss on an explicitly selected packed dataset."""
 
 import argparse
-import json
 import math
-import os
 import time
 from dataclasses import replace
 from datetime import datetime, timezone
@@ -18,6 +16,7 @@ from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
+from speck.io import atomic_json
 from speck.tokenizer import get_tokenizer
 
 
@@ -36,14 +35,6 @@ def arguments(argv=None):
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def _positive_integer(value, name):
@@ -69,14 +60,10 @@ def run(args):
         args.sequence_length or train["sequence_length"], "sequence length"
     )
     eval_tokens = _positive_integer(args.eval_tokens, "evaluation tokens")
-    batch_size = _positive_integer(
-        args.batch_size or train["device_batch_size"], "batch size"
-    )
+    batch_size = _positive_integer(args.batch_size or train["device_batch_size"], "batch size")
     loss_backend = args.loss_backend or train.get("loss_backend", "torch")
     device = torch.device(args.device)
-    model, metadata = load_checkpoint_model(
-        checkpoint_dir, step, device, loss_backend=loss_backend
-    )
+    model, metadata = load_checkpoint_model(checkpoint_dir, step, device, loss_backend=loss_backend)
     checkpoint_rope_scaling_factor = model.config.rope_scaling_factor
     if args.rope_scaling_factor is not None:
         if not math.isfinite(args.rope_scaling_factor) or args.rope_scaling_factor <= 0:

@@ -80,10 +80,7 @@ def resolved_settings(args):
             raise ValueError(f"{name.replace('_', ' ')} must be positive and finite")
     if not math.isfinite(args.weight_decay) or args.weight_decay < 0:
         raise ValueError("weight decay must be non-negative and finite")
-    if (
-        not math.isfinite(args.early_stop_accuracy)
-        or not 0 < args.early_stop_accuracy <= 1
-    ):
+    if not math.isfinite(args.early_stop_accuracy) or not 0 < args.early_stop_accuracy <= 1:
         raise ValueError("early-stop accuracy must be in (0, 1]")
     if args.task == "mqar":
         positive_integer(args.num_pairs, "number of key-value pairs")
@@ -330,8 +327,7 @@ def run(args):
                 f"grad {float(grad_norm):.3f}"
             )
         should_evaluate = (
-            completed % settings["eval_every"] == 0
-            or completed == settings["max_steps"]
+            completed % settings["eval_every"] == 0 or completed == settings["max_steps"]
         )
         if should_evaluate:
             validation = evaluate(model, settings, device)
@@ -339,10 +335,7 @@ def run(args):
             report["completed_steps"] = completed
             report["training_seconds"] = training_seconds
             report["tokens_per_training_second"] = (
-                completed
-                * settings["batch_size"]
-                * settings["sequence_length"]
-                / training_seconds
+                completed * settings["batch_size"] * settings["sequence_length"] / training_seconds
             )
             atomic_json(output, report)
             print(
@@ -360,10 +353,7 @@ def run(args):
         training_seconds=training_seconds,
         wall_seconds=time.perf_counter() - started,
         tokens_per_training_second=(
-            completed
-            * settings["batch_size"]
-            * settings["sequence_length"]
-            / training_seconds
+            completed * settings["batch_size"] * settings["sequence_length"] / training_seconds
         ),
         best_validation_accuracy=max(point["accuracy"] for point in report["history"]),
         best_validation_loss=min(point["loss"] for point in report["history"]),

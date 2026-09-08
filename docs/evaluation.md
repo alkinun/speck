@@ -98,6 +98,15 @@ OpenAI chat and text-completion endpoints used for evaluation. It is a serialize
 not a production serving or throughput claim. The loader stays offline, refuses exports without a
 successful `speck_parity.json`, and rejects decoding options that would be silently ignored.
 
+Chat requests follow the tokenizer's serialization contract: an optional initial system message,
+alternating user/assistant turns beginning and ending with a user, and no reserved chat tokens in
+message content. Invalid requests return a client error before generation.
+
+Stop strings are applied to decoded output at the earliest matching position, independent of their
+order in the request. `usage.completion_tokens` counts token IDs actually generated, including EOS
+and tokens removed by output trimming. It does not re-tokenize the displayed text; stop-string
+trimming currently happens after generation completes.
+
 Export an instruction checkpoint and start the endpoint with:
 
 ```bash

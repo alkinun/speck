@@ -31,8 +31,12 @@ def _record(text, identity, repo):
 
 
 def _config(tmp_path):
-    benchmark_code = "def calculate_special_total(values):\n    return sum(value * value for value in values)\n"
-    contaminated = _record(benchmark_code + "print(calculate_special_total([1, 2]))\n", "1", "bad/repo")
+    benchmark_code = (
+        "def calculate_special_total(values):\n    return sum(value * value for value in values)\n"
+    )
+    contaminated = _record(
+        benchmark_code + "print(calculate_special_total([1, 2]))\n", "1", "bad/repo"
+    )
     clean = _record(
         "def unrelated_parser(payload):\n    return {'length': len(payload), 'empty': not payload}\n",
         "2",
@@ -159,7 +163,5 @@ def test_recorded_code_contamination_binds_code_and_preserves_quota():
     assert scan["records_removed_critical"] == 125
     assert scan["exact_field_matches"] == 0
     assert scan["training_partition"]["bytes"] >= scan["training_partition"]["target_bytes"]
-    assert scan["evaluation_partition"]["bytes"] >= scan["evaluation_partition"][
-        "target_bytes"
-    ]
+    assert scan["evaluation_partition"]["bytes"] >= scan["evaluation_partition"]["target_bytes"]
     assert "cross-source near-duplicate analysis" in result["blocked_gates"]

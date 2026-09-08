@@ -1,7 +1,6 @@
 """Run and summarize the benchmarks on the pinned Open SLM Leaderboard."""
 
 import argparse
-import hashlib
 import importlib.util
 import json
 import os
@@ -12,6 +11,7 @@ from pathlib import Path
 from huggingface_hub import HfApi, hf_hub_download
 
 from speck.checkpoint import directory_identity
+from speck.io import file_sha256 as _sha256
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = REPOSITORY_ROOT / "experiments" / "Speck1-140M" / "open_slm.json"
@@ -71,14 +71,6 @@ def _bind_local_model(output_dir, local_model):
         )
         os.replace(temporary, path)
     return identity
-
-
-def _sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _verify_checksum(path, expected, label):

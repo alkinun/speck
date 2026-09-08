@@ -7,6 +7,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from speck.io import file_sha256 as _file_sha256
+
 CONTRACT_FILES = (
     "policy.json",
     "cost_envelopes.json",
@@ -40,14 +42,6 @@ def _load_json(path):
     return value
 
 
-def _file_sha256(path):
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def _require_keys(value, keys, context):
     missing = sorted(set(keys) - set(value))
     if missing:
@@ -55,14 +49,12 @@ def _require_keys(value, keys, context):
 
 
 def _probability(value, context, *, allow_one=False):
-    maximum = 1 if allow_one else 1.0
-    valid_upper = value <= maximum if allow_one else value < maximum
     if (
         isinstance(value, bool)
         or not isinstance(value, (int, float))
         or not math.isfinite(value)
         or value <= 0
-        or not valid_upper
+        or (value > 1 if allow_one else value >= 1)
     ):
         boundary = "(0, 1]" if allow_one else "(0, 1)"
         raise ValueError(f"{context} must be in {boundary}")
@@ -783,8 +775,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 not audit_path.is_file()
                 or _file_sha256(audit_path) != contamination.get("audit_sha256")
                 or not disposition_path.is_file()
-                or _file_sha256(disposition_path)
-                != contamination.get("disposition_sha256")
+                or _file_sha256(disposition_path) != contamination.get("disposition_sha256")
             ):
                 raise ValueError("RULER contamination evidence has an invalid pin")
             audit = _load_json(audit_path)
@@ -815,26 +806,20 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or suite.get("primary_cases") != 6_600
                 or suite.get("quarantined_cases") != 1_200
                 or suite.get("source_document_qa_guardrail", {}).get("suite") != "helmet"
-                or set(
-                    suite.get("source_document_qa_guardrail", {}).get("categories", ())
-                )
+                or set(suite.get("source_document_qa_guardrail", {}).get("categories", ()))
                 != {"rag", "longqa"}
-                or "blocked"
-                not in suite.get("source_document_qa_guardrail", {}).get("status", "")
+                or "blocked" not in suite.get("source_document_qa_guardrail", {}).get("status", "")
             ):
                 raise ValueError("RULER v2 contamination disposition is invalid")
         if suite["id"] == "helmet":
-            runtime_protocol_path = repository_root / suite.get(
-                "runtime_dependency_protocol", ""
-            )
+            runtime_protocol_path = repository_root / suite.get("runtime_dependency_protocol", "")
             runtime_audit_path = repository_root / suite.get("runtime_dependency_audit", "")
             if (
                 not runtime_protocol_path.is_file()
                 or _file_sha256(runtime_protocol_path)
                 != suite.get("runtime_dependency_protocol_sha256")
                 or not runtime_audit_path.is_file()
-                or _file_sha256(runtime_audit_path)
-                != suite.get("runtime_dependency_audit_sha256")
+                or _file_sha256(runtime_audit_path) != suite.get("runtime_dependency_audit_sha256")
             ):
                 raise ValueError("HELMET runtime dependency evidence has an invalid pin")
             runtime_protocol = _load_json(runtime_protocol_path)
@@ -849,8 +834,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or runtime_audit.get("inventory", {}).get("by_mode")
                 != {"archive_local": 55, "runtime_loaded": 50}
                 or runtime_audit.get("guardrail", {}).get("rag", {}).get("entries") != 20
-                or runtime_audit.get("guardrail", {}).get("longqa", {}).get("entries")
-                != 15
+                or runtime_audit.get("guardrail", {}).get("longqa", {}).get("entries") != 15
                 or runtime_audit.get("decision", {}).get("execution_authorized") is not False
             ):
                 raise ValueError("HELMET runtime dependency evidence is invalid")
@@ -863,8 +847,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or _file_sha256(materializer_protocol_path)
                 != suite.get("materializer_preflight_protocol_sha256")
                 or not materializer_path.is_file()
-                or _file_sha256(materializer_path)
-                != suite.get("materializer_preflight_sha256")
+                or _file_sha256(materializer_path) != suite.get("materializer_preflight_sha256")
             ):
                 raise ValueError("HELMET materializer preflight evidence has an invalid pin")
             materializer_protocol = _load_json(materializer_protocol_path)
@@ -880,13 +863,10 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 != "two_family_offline_materializer_strategy_qualified"
                 or set(materializer.get("decision", {}).get("strategy_qualified_for", ()))
                 != {"banking77", "nlu_evaluation_data"}
-                or materializer.get("decision", {}).get("helmet_execution_authorized")
-                is not False
+                or materializer.get("decision", {}).get("helmet_execution_authorized") is not False
                 or set(banking) != {"train", "test"}
                 or set(nlu) != {"train"}
-                or not all(
-                    split.get("replay_byte_identical") for split in banking.values()
-                )
+                or not all(split.get("replay_byte_identical") for split in banking.values())
                 or nlu.get("train", {}).get("legacy_conversion_full_parity") is not True
             ):
                 raise ValueError("HELMET materializer preflight evidence is invalid")
@@ -894,11 +874,9 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             clinc_path = repository_root / suite.get("clinc_source_qualification", "")
             if (
                 not clinc_protocol_path.is_file()
-                or _file_sha256(clinc_protocol_path)
-                != suite.get("clinc_source_protocol_sha256")
+                or _file_sha256(clinc_protocol_path) != suite.get("clinc_source_protocol_sha256")
                 or not clinc_path.is_file()
-                or _file_sha256(clinc_path)
-                != suite.get("clinc_source_qualification_sha256")
+                or _file_sha256(clinc_path) != suite.get("clinc_source_qualification_sha256")
             ):
                 raise ValueError("HELMET CLINC source evidence has an invalid pin")
             clinc_protocol = _load_json(clinc_protocol_path)
@@ -924,8 +902,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
             trec_path = repository_root / suite.get("trec_rights_decision", "")
             if (
                 not trec_protocol_path.is_file()
-                or _file_sha256(trec_protocol_path)
-                != suite.get("trec_rights_protocol_sha256")
+                or _file_sha256(trec_protocol_path) != suite.get("trec_rights_protocol_sha256")
                 or not trec_path.is_file()
                 or _file_sha256(trec_path) != suite.get("trec_rights_decision_sha256")
             ):
@@ -938,11 +915,9 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or trec_protocol.get("status") != "executed_blocked"
                 or trec_protocol.get("result", {}).get("sha256")
                 != suite.get("trec_rights_decision_sha256")
-                or trec.get("status")
-                != "trec_metadata_audited_payload_and_use_authority_blocked"
+                or trec.get("status") != "trec_metadata_audited_payload_and_use_authority_blocked"
                 or trec.get("payload_files_acquired") != 0
-                or trec.get("loader_analysis", {}).get("license_assignment_present")
-                is not False
+                or trec.get("loader_analysis", {}).get("license_assignment_present") is not False
                 or trec.get("decision", {}).get("payload_acquisition_authorized") is not False
                 or trec.get("decision", {}).get("evaluation_use_authorized") is not False
             ):
@@ -956,8 +931,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or _file_sha256(multilexsum_protocol_path)
                 != suite.get("multilexsum_decision_protocol_sha256")
                 or not multilexsum_path.is_file()
-                or _file_sha256(multilexsum_path)
-                != suite.get("multilexsum_decision_sha256")
+                or _file_sha256(multilexsum_path) != suite.get("multilexsum_decision_sha256")
             ):
                 raise ValueError("HELMET Multi-LexSum evidence has an invalid pin")
             multilexsum_protocol = _load_json(multilexsum_protocol_path)
@@ -975,10 +949,8 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or analysis.get("shots") != 2
                 or analysis.get("unseeded_train_data_shuffle_calls") != 1
                 or analysis.get("prompt_deterministic") is not False
-                or multilexsum.get("decision", {}).get("commercial_scope_authorized")
-                is not False
-                or multilexsum.get("decision", {}).get("evaluation_use_authorized")
-                is not False
+                or multilexsum.get("decision", {}).get("commercial_scope_authorized") is not False
+                or multilexsum.get("decision", {}).get("evaluation_use_authorized") is not False
             ):
                 raise ValueError("HELMET Multi-LexSum evidence is invalid")
             narrativeqa_protocol_path = repository_root / suite.get(
@@ -990,8 +962,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or _file_sha256(narrativeqa_protocol_path)
                 != suite.get("narrativeqa_decision_protocol_sha256")
                 or not narrativeqa_path.is_file()
-                or _file_sha256(narrativeqa_path)
-                != suite.get("narrativeqa_decision_sha256")
+                or _file_sha256(narrativeqa_path) != suite.get("narrativeqa_decision_sha256")
             ):
                 raise ValueError("HELMET NarrativeQA evidence has an invalid pin")
             narrativeqa_protocol = _load_json(narrativeqa_protocol_path)
@@ -1005,9 +976,9 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or narrativeqa.get("status")
                 != "metadata_qualified_embedded_rights_and_prompt_path_blocked"
                 or narrativeqa.get("payload_files_acquired") != 0
-                or narrativeqa.get("source", {}).get("verified_document_inventory", {}).get(
-                    "documents"
-                )
+                or narrativeqa.get("source", {})
+                .get("verified_document_inventory", {})
+                .get("documents")
                 != 1_572
                 or narrative_analysis.get("entries") != 5
                 or narrative_analysis.get("shots") != 2
@@ -1015,8 +986,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or narrative_analysis.get("prompt_deterministic") is not False
                 or narrativeqa.get("decision", {}).get("embedded_work_rights_qualified")
                 is not False
-                or narrativeqa.get("decision", {}).get("evaluation_use_authorized")
-                is not False
+                or narrativeqa.get("decision", {}).get("evaluation_use_authorized") is not False
             ):
                 raise ValueError("HELMET NarrativeQA evidence is invalid")
             infinitebench_protocol_path = repository_root / suite.get(
@@ -1028,8 +998,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or _file_sha256(infinitebench_protocol_path)
                 != suite.get("infinitebench_decision_protocol_sha256")
                 or not infinitebench_path.is_file()
-                or _file_sha256(infinitebench_path)
-                != suite.get("infinitebench_decision_sha256")
+                or _file_sha256(infinitebench_path) != suite.get("infinitebench_decision_sha256")
             ):
                 raise ValueError("HELMET InfiniteBench evidence has an invalid pin")
             infinitebench_protocol = _load_json(infinitebench_protocol_path)
@@ -1048,8 +1017,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or infinite_analysis.get("summarization_entries") != 5
                 or infinite_analysis.get("prompt_selection_deterministic") is not True
                 or infinite_analysis.get("longqa_metrics_local") is not True
-                or infinite_analysis.get("summarization_metric_differs_from_upstream")
-                is not True
+                or infinite_analysis.get("summarization_metric_differs_from_upstream") is not True
                 or infinitebench.get("decision", {}).get("embedded_work_rights_qualified")
                 is not False
                 or set(disposition.get("qualified_immutable_paths", ()))
@@ -1059,19 +1027,14 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or disposition.get("complete_inventory") is not True
             ):
                 raise ValueError("HELMET InfiniteBench or runtime disposition evidence is invalid")
-            seeded_protocol_path = repository_root / suite.get(
-                "seeded_demo_repair_protocol", ""
-            )
-            seeded_path = repository_root / suite.get(
-                "seeded_demo_repair_qualification", ""
-            )
+            seeded_protocol_path = repository_root / suite.get("seeded_demo_repair_protocol", "")
+            seeded_path = repository_root / suite.get("seeded_demo_repair_qualification", "")
             if (
                 not seeded_protocol_path.is_file()
                 or _file_sha256(seeded_protocol_path)
                 != suite.get("seeded_demo_repair_protocol_sha256")
                 or not seeded_path.is_file()
-                or _file_sha256(seeded_path)
-                != suite.get("seeded_demo_repair_qualification_sha256")
+                or _file_sha256(seeded_path) != suite.get("seeded_demo_repair_qualification_sha256")
             ):
                 raise ValueError("HELMET seeded-demo repair evidence has an invalid pin")
             seeded_protocol = _load_json(seeded_protocol_path)
@@ -1083,8 +1046,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                 or seeded_protocol.get("status") != "executed_qualified"
                 or seeded_protocol.get("result", {}).get("sha256")
                 != suite.get("seeded_demo_repair_qualification_sha256")
-                or seeded.get("status")
-                != "two_loader_seeded_demo_patch_qualified_on_fixtures"
+                or seeded.get("status") != "two_loader_seeded_demo_patch_qualified_on_fixtures"
                 or seeded_qualification.get("upstream_unseeded_shuffles")
                 != {"load_multi_lexsum": 1, "load_narrativeqa": 1}
                 or seeded_qualification.get("patched_unseeded_shuffles")
@@ -1096,8 +1058,7 @@ def _validate_evaluations(manifest, policy_id, repository_root):
                     for result in loaders.values()
                 )
                 or seeded.get("decision", {}).get("patch_qualified") is not True
-                or seeded.get("decision", {}).get("real_dataset_prompts_qualified")
-                is not False
+                or seeded.get("decision", {}).get("real_dataset_prompts_qualified") is not False
                 or seeded.get("decision", {}).get("current_manifest_changed") is not False
             ):
                 raise ValueError("HELMET seeded-demo repair evidence is invalid")

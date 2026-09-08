@@ -30,7 +30,9 @@ def _record(text, identity):
 
 
 def _config(tmp_path):
-    benchmark_code = "def special_total(values):\n    return sum(value * value for value in values)\n"
+    benchmark_code = (
+        "def special_total(values):\n    return sum(value * value for value in values)\n"
+    )
     contaminated = _record(benchmark_code + "print(special_total([1, 2]))\n", "1")
     clean = _record("def unrelated(value):\n    return value is not None\n", "2")
     input_path = tmp_path / "input.jsonl"

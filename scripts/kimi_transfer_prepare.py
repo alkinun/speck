@@ -134,8 +134,7 @@ def prepare(args):
         "train_tokens": train_tokens,
         "seed": 42,
         "intervention_order": [
-            {"variant": name, "change_from_previous": INTERVENTIONS[name]}
-            for name in VARIANTS
+            {"variant": name, "change_from_previous": INTERVENTIONS[name]} for name in VARIANTS
         ],
         "variants": summary,
         "result": "../../results/SpeckLC-150M-KimiTransfer131M/summary.json",

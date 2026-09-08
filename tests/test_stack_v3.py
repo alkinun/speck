@@ -75,7 +75,11 @@ def _config(tmp_path):
             "revision": "c" * 40,
             "release": "v3.1-test",
             "files": [
-                {"path": "data/fixture.parquet", "size": path.stat().st_size, "sha256": _sha256(path)}
+                {
+                    "path": "data/fixture.parquet",
+                    "size": path.stat().st_size,
+                    "sha256": _sha256(path),
+                }
             ],
         },
         "filters": {
@@ -126,9 +130,10 @@ def test_bounded_stack_v3_profile_filters_and_preserves_provenance(tmp_path):
     assert tokenizer_record["text"].startswith("print")
     assert "text" not in attribution_record
     assert repository_record["files"][0]["content_id"] == tokenizer_record["content_id"]
-    assert tokenizer_record["released_content_sha256"] == hashlib.sha256(
-        tokenizer_record["text"].encode()
-    ).hexdigest()
+    assert (
+        tokenizer_record["released_content_sha256"]
+        == hashlib.sha256(tokenizer_record["text"].encode()).hexdigest()
+    )
     with pytest.raises(FileExistsError, match="already exists"):
         qualify_stack_v3(config, local_files=[path])
 

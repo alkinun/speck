@@ -1,7 +1,6 @@
 """Qualify an attested Speck export against external-suite endpoint request shapes."""
 
 import argparse
-import hashlib
 import json
 import platform
 import subprocess
@@ -12,6 +11,7 @@ import torch
 import transformers
 
 from speck.evaluation_server import TransformersEvaluationEngine, exercise_endpoint
+from speck.io import file_sha256
 
 REQUIRED_EXPORT_FILES = (
     "architecture_speck.py",
@@ -41,14 +41,6 @@ def arguments(argv=None):
     )
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def file_sha256(path):
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def repository_revision():

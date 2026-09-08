@@ -22,9 +22,7 @@ class FakeTokenizer:
         return "long-data-test"
 
 
-def test_long_document_derivation_preserves_only_complete_filtered_documents(
-    tmp_path, monkeypatch
-):
+def test_long_document_derivation_preserves_only_complete_filtered_documents(tmp_path, monkeypatch):
     monkeypatch.setattr(
         dataset,
         "_is_validation_document",
@@ -40,9 +38,9 @@ def test_long_document_derivation_preserves_only_complete_filtered_documents(
         "metadata_columns": {},
         "filters": {},
     }
-    documents = [
-        {"content": f"val-{index}-" + "v" * 80} for index in range(2)
-    ] + [{"content": f"train-{index}-" + "t" * 80} for index in range(10)]
+    documents = [{"content": f"val-{index}-" + "v" * 80} for index in range(2)] + [
+        {"content": f"train-{index}-" + "t" * 80} for index in range(10)
+    ]
     dataset.prepare_dataset(
         sources=[source],
         mixture={"phases": [{"end_tokens": 400, "weights": {"papers": 100}}]},

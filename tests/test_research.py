@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from speck.research import (
+    _probability,
     _validate_evaluations,
     load_promotion_protocol,
     resolve_adaptation_protocol,
@@ -227,3 +228,9 @@ def test_runner_rejects_an_unpinned_protocol_copy(tmp_path):
     shutil.copyfile(source, copied)
     with pytest.raises(ValueError, match="not pinned"):
         load_promotion_protocol(copied, repository_root=root)
+
+
+@pytest.mark.parametrize("value", (None, "0.5", [], {}, True, float("nan")))
+def test_probability_rejects_non_numeric_values_with_a_contract_error(value):
+    with pytest.raises(ValueError, match="probability must be in"):
+        _probability(value, "probability")

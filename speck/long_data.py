@@ -10,14 +10,7 @@ import numpy as np
 
 from speck.dataloader import PackedTokenSource, manifest_fingerprint
 from speck.dataset import TokenShardWriter, derive_source_quotas, load_manifest, verify_shards
-
-
-def _sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+from speck.io import file_sha256 as _sha256
 
 
 def _positive_integer(value, name):
@@ -64,8 +57,7 @@ def _selected_source(
         for split in ("train", "val")
     }
     writers = {
-        split: TokenShardWriter(source_directory, split, shard_tokens)
-        for split in ("train", "val")
+        split: TokenShardWriter(source_directory, split, shard_tokens) for split in ("train", "val")
     }
     targets = {"train": train_target, "val": validation_requested}
     document_counts = {"train": 0, "val": 0}
@@ -125,8 +117,7 @@ def _selected_source(
             "overshoot_tokens": writer.total_tokens - target,
             "documents": document_counts[split],
             "shards": [
-                {**shard, "path": f"sources/{source_id}/{shard['path']}"}
-                for shard in writer.shards
+                {**shard, "path": f"sources/{source_id}/{shard['path']}"} for shard in writer.shards
             ],
         }
     return {
@@ -173,9 +164,7 @@ def derive_long_document_dataset(
     validation_tokens_per_source = _positive_integer(
         validation_tokens_per_source, "validation tokens per source"
     )
-    minimum_document_tokens = _positive_integer(
-        minimum_document_tokens, "minimum document tokens"
-    )
+    minimum_document_tokens = _positive_integer(minimum_document_tokens, "minimum document tokens")
     shard_tokens = _positive_integer(shard_tokens, "shard tokens")
     maximum_loader_microbatch_tokens = _positive_integer(
         maximum_loader_microbatch_tokens, "maximum loader microbatch tokens"

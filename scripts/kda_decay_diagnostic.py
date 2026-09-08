@@ -1,9 +1,7 @@
 """Measure trained KDA log-decay distributions on packed data."""
 
 import argparse
-import json
 import math
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,6 +14,7 @@ from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
+from speck.io import atomic_json
 from speck.model import KimiDeltaAttention
 from speck.tokenizer import get_tokenizer
 
@@ -42,14 +41,6 @@ def positive_integer(value, name):
     if isinstance(value, bool) or not isinstance(value, int) or value < 1:
         raise ValueError(f"{name} must be a positive integer")
     return value
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 class DecayAccumulator:

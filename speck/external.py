@@ -1,10 +1,11 @@
 """Validate and source-qualify pinned external evaluation suites."""
 
-import hashlib
 import json
 import re
 import subprocess
 from pathlib import Path
+
+from speck.io import file_sha256 as _file_sha256
 
 COMMIT_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
@@ -18,14 +19,6 @@ def _load_json(path):
     if not isinstance(value, dict):
         raise ValueError(f"external suite config must contain an object: {path}")
     return value
-
-
-def _file_sha256(path):
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _require(value, keys, context):
@@ -164,7 +157,9 @@ def validate_external_suite(path):
             )
             if case_generation["remaining_lengths"]:
                 if "blocked" not in case_generation["status"]:
-                    raise ValueError("partial RULER case generation must preserve its blocker status")
+                    raise ValueError(
+                        "partial RULER case generation must preserve its blocker status"
+                    )
             elif case_generation["status"] != "qualified_all_declared_lengths":
                 raise ValueError("complete RULER case generation must state full qualification")
             patch = case_generation["compatibility_patch"]
@@ -237,8 +232,7 @@ def validate_external_suite(path):
                         > qualification["length"]
                         for entry in report.get("cases", ())
                     )
-                    or report.get("case_identity_sha256")
-                    != qualification["case_identity_sha256"]
+                    or report.get("case_identity_sha256") != qualification["case_identity_sha256"]
                     or report.get("tokenizer", {}).get("identity_sha256")
                     != qualification["tokenizer_identity_sha256"]
                     or report.get("source_bundle", {}).get("identity_sha256")
@@ -253,9 +247,7 @@ def validate_external_suite(path):
                     or not report.get("determinism", {}).get("all_task_hashes_equal")
                 ):
                     raise ValueError("RULER case qualification report is invalid")
-    if config["suite_id"] == "nolima" and data["status"].startswith(
-        "metadata_and_license_audited"
-    ):
+    if config["suite_id"] == "nolima" and data["status"].startswith("metadata_and_license_audited"):
         _require(
             data,
             {
@@ -292,21 +284,16 @@ def validate_external_suite(path):
             != metadata["restricted_payload_bytes"]
             or len(decision.get("dataset", {}).get("restricted_payloads", ()))
             != metadata["restricted_payloads"]
-            or decision.get("dataset", {})
-            .get("optional_lfs_book_archive", {})
-            .get("oid_sha256")
+            or decision.get("dataset", {}).get("optional_lfs_book_archive", {}).get("oid_sha256")
             != metadata["optional_book_archive_lfs_sha256"]
-            or decision.get("dataset", {})
-            .get("optional_lfs_book_archive", {})
-            .get("bytes")
+            or decision.get("dataset", {}).get("optional_lfs_book_archive", {}).get("bytes")
             != metadata["optional_book_archive_bytes"]
             or decision.get("adobe_research_license", {}).get("sha256")
             != data["dataset_license_sha256"]
             or decision.get("haystack_rights", {}).get("source_file_sha256")
             != data["haystack_licenses_sha256"]
             or cache.get("restricted_blobs_cached") != metadata["restricted_blobs_cached"]
-            or cache.get("working_tree_materialized")
-            != metadata["working_tree_materialized"]
+            or cache.get("working_tree_materialized") != metadata["working_tree_materialized"]
             or cache.get("new_objects_fetched") != metadata["new_objects_fetched"]
             or decision.get("decision", {}).get("download_or_use_authorized") is not False
             or decision.get("decision", {}).get("raw_payload_git_redistribution_authorized")
@@ -434,8 +421,7 @@ def validate_external_suite(path):
             qualification.get("format") != "speck_helmet_adapter_qualification"
             or qualification.get("status") != "qualified_native_hf_cpu_eager_adapter"
             or qualification.get("runner_revision") != adapter["runner_revision"]
-            or qualification.get("helmet", {}).get("revision")
-            != config["upstream"]["revision"]
+            or qualification.get("helmet", {}).get("revision") != config["upstream"]["revision"]
             or qualification.get("export", {}).get("identity_sha256")
             != adapter["export_identity_sha256"]
             or not qualification.get("export", {}).get("parity_passed")
@@ -457,8 +443,7 @@ def validate_external_suite(path):
             or scoring.get("ruler_full_recall") != 1.0
             or scoring.get("ruler_partial_recall") != 0.5
             or qualification.get("network_denial", {}).get("qualification_attempts") != 0
-            or qualification.get("network_denial", {}).get("self_test")
-            != "denied_as_expected"
+            or qualification.get("network_denial", {}).get("self_test") != "denied_as_expected"
         ):
             raise ValueError("HELMET model-adapter qualification artifact is invalid")
         if "scorer_runtime_qualified" in adapter["status"]:

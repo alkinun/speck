@@ -90,23 +90,38 @@ def _settings(value):
         "keep_checkpoints",
     )
     if any(
-        not isinstance(getattr(args, key), int) or getattr(args, key) < 1
+        isinstance(getattr(args, key), bool)
+        or not isinstance(getattr(args, key), int)
+        or getattr(args, key) < 1
         for key in integer_positive
     ):
         raise ValueError(
             "SFT batch-token count, device batch size, epoch count, logging interval, sequence "
             "length, and checkpoint retention must be positive"
         )
-    if args.eval_every < 0 or args.save_every < 0 or args.warmup_steps < 0:
-        raise ValueError("SFT step intervals must not be negative")
+    if any(
+        isinstance(interval, bool) or not isinstance(interval, int) or interval < 0
+        for interval in (args.eval_every, args.save_every, args.warmup_steps)
+    ):
+        raise ValueError("SFT step intervals must be non-negative integers")
     if (
         not isinstance(args.sequence_lengths, list)
+        or not args.sequence_lengths
+        or any(
+            isinstance(length, bool) or not isinstance(length, int) or length < 1
+            for length in args.sequence_lengths
+        )
         or sorted(set(args.sequence_lengths)) != args.sequence_lengths
         or args.sequence_lengths[-1] != args.sequence_length
     ):
         raise ValueError(
             "SFT sequence lengths must be unique, in ascending order, and end at sequence_length"
         )
+    if any(
+        isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)
+        for value in (args.lr, args.weight_decay, args.grad_clip, args.min_lr)
+    ):
+        raise ValueError("SFT optimization settings must be finite numbers")
     if args.lr <= 0 or args.weight_decay < 0 or args.grad_clip <= 0:
         raise ValueError("invalid SFT optimization settings")
     if not 0 <= args.min_lr <= 1:

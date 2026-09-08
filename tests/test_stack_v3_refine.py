@@ -172,9 +172,10 @@ def test_real_refinement_plan_is_pinned_and_keeps_legal_gate_open():
     successor_config = validate_refinement_config(
         json.loads(successor.read_text()), config_dir=successor.parent
     )
-    assert successor_config["input"]["tokenizer_jsonl_sha256"] != config["input"][
-        "tokenizer_jsonl_sha256"
-    ]
+    assert (
+        successor_config["input"]["tokenizer_jsonl_sha256"]
+        != config["input"]["tokenizer_jsonl_sha256"]
+    )
     assert successor_config["scanner"]["report_sha256"] != config["scanner"]["report_sha256"]
     assert successor_config["license_policy"] == config["license_policy"]
     assert successor_config["English_prose"] == config["English_prose"]
@@ -187,7 +188,10 @@ def test_recorded_refinement_binds_code_and_keeps_training_blocked():
     implementation = result["implementation"]
     passing = result["passing_refinement"]
 
-    assert result["status"] == "security_language_license_and_partition_pass_training_authority_blocked"
+    assert (
+        result["status"]
+        == "security_language_license_and_partition_pass_training_authority_blocked"
+    )
     for path_key, hash_key in (
         ("expansion_config", "expansion_config_sha256"),
         ("expansion_module", "expansion_module_sha256"),
@@ -200,11 +204,9 @@ def test_recorded_refinement_binds_code_and_keeps_training_blocked():
         assert implementation[hash_key] == _sha256(ROOT / implementation[path_key])
     assert result["scanner"]["findings"] == 37
     assert result["scanner"]["affected_records"] == 19
-    assert passing["training_partition"]["bytes"] >= passing["training_partition"][
-        "target_bytes"
-    ]
-    assert passing["evaluation_partition"]["bytes"] >= passing["evaluation_partition"][
-        "target_bytes"
-    ]
+    assert passing["training_partition"]["bytes"] >= passing["training_partition"]["target_bytes"]
+    assert (
+        passing["evaluation_partition"]["bytes"] >= passing["evaluation_partition"]["target_bytes"]
+    )
     assert result["engineering_license_policy"]["manual_legal_acceptance"] == "pending"
     assert "benchmark contamination analysis" in result["blocked_gates"]

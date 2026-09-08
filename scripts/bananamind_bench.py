@@ -15,20 +15,13 @@ from speck.chat import ChatTokenizer
 from speck.checkpoint import latest, load_model
 from speck.common import base_dir
 from speck.config import load_experiment
+from speck.io import file_sha256 as _file_sha256
 from speck.model import SpeckForCausalLM
 from speck.tokenizer import get_tokenizer
 
 DATASET_ID = "BananaMind/BananaMind-Base-Bench-1.1"
 DATASET_REVISION = "d4aade51312889e8580963e1ce960c6eaef1a450"
 RUNNER_SHA256 = "973a81d09d1c4075d031e1369b4278c52a7813d1ab3b11b33eef665d3247bf2c"
-
-
-def _file_sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _official_runner():

@@ -161,9 +161,7 @@ def run(args):
         if protocol_length is None:
             raise ValueError("protocol evaluation requires one explicit --protocol-length")
         loaded_protocol = load_promotion_protocol(protocol_path, tokenizer=tokenizer)
-        settings = resolve_evaluation_protocol(
-            loaded_protocol, selected_length=protocol_length
-        )
+        settings = resolve_evaluation_protocol(loaded_protocol, selected_length=protocol_length)
         protocol_identity = loaded_protocol["identity"]
     else:
         if protocol_length is not None:

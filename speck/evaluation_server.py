@@ -10,6 +10,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from speck.chat import ChatFormatError
+from speck.chat import validate_messages as validate_chat_messages
+
 
 class RequestError(ValueError):
     """Represent a client-visible evaluation request error."""
@@ -89,22 +92,15 @@ def generation_settings(payload):
 def validate_messages(messages):
     if not isinstance(messages, list) or not messages:
         raise RequestError("messages must be a non-empty list")
-    previous = None
-    for index, message in enumerate(messages):
+    for message in messages:
         if not isinstance(message, dict) or set(message) != {"role", "content"}:
             raise RequestError("each message must contain only role and content")
-        role, content = message["role"], message["content"]
-        if role not in {"system", "user", "assistant"}:
-            raise RequestError(f"unsupported message role: {role!r}")
-        if not isinstance(content, str) or not content:
-            raise RequestError("message content must be a non-empty string")
-        if role == "system" and index != 0:
-            raise RequestError("system message must be first")
-        if role != "system" and previous == role:
-            raise RequestError("user and assistant roles must alternate")
-        previous = role
     if messages[-1]["role"] != "user":
         raise RequestError("chat completion requires a final user message")
+    try:
+        validate_chat_messages(messages, add_generation_prompt=True)
+    except ChatFormatError as error:
+        raise RequestError(str(error)) from error
     return messages
 
 
@@ -290,17 +286,19 @@ class TransformersEvaluationEngine:
                 kwargs.update(temperature=settings["temperature"], top_p=settings["top_p"])
             sequence = self.model.generate(tensor, **kwargs)[0]
         generated = sequence[len(input_ids) :].tolist()
+        completion_tokens = len(generated)
         finish_reason = (
             "stop" if generated and generated[-1] == self.tokenizer.eos_token_id else "length"
         )
         if generated and generated[-1] == self.tokenizer.eos_token_id:
             generated = generated[:-1]
         text = self.tokenizer.decode(generated, skip_special_tokens=True)
-        for stop in settings["stop"] or ():
-            if stop in text:
-                text = text.split(stop, 1)[0]
-                finish_reason = "stop"
-        completion_tokens = len(self.tokenizer.encode(text, add_special_tokens=False))
+        stop_positions = [
+            position for stop in settings["stop"] or () if (position := text.find(stop)) >= 0
+        ]
+        if stop_positions:
+            text = text[: min(stop_positions)]
+            finish_reason = "stop"
         return {
             "text": text,
             "prompt_tokens": len(input_ids),
@@ -372,7 +370,7 @@ def handler_class(service, maximum_request_bytes=16 * 1024 * 1024):
                         raise RequestError("request body size is invalid")
                     try:
                         payload = json.loads(self.rfile.read(length))
-                    except json.JSONDecodeError as error:
+                    except (json.JSONDecodeError, UnicodeDecodeError) as error:
                         raise RequestError("request body is not valid JSON") from error
                 status, response = service.handle(method, self.path, payload)
             except RequestError as error:
@@ -485,19 +483,19 @@ def serve(engine, host="127.0.0.1", port=8000):
     """Serve until interrupted; intended only for controlled local evaluation."""
 
     service = EvaluationService(engine)
-    server = ThreadingHTTPServer((host, port), handler_class(service))
-    print(
-        json.dumps(
-            {
-                "status": "serving",
-                "host": host,
-                "port": port,
-                "model": engine.model_id,
-                "maximum_context": engine.maximum_context,
-                "created": int(time.time()),
-            },
-            sort_keys=True,
-        ),
-        flush=True,
-    )
-    server.serve_forever()
+    with ThreadingHTTPServer((host, port), handler_class(service)) as server:
+        print(
+            json.dumps(
+                {
+                    "status": "serving",
+                    "host": host,
+                    "port": server.server_address[1],
+                    "model": engine.model_id,
+                    "maximum_context": engine.maximum_context,
+                    "created": int(time.time()),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
+        server.serve_forever()

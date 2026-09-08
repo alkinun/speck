@@ -254,9 +254,7 @@ def test_text_overlap_removes_exact_cross_source_match_with_web_partition(tmp_pa
 
 
 def test_recorded_web_sources_bind_implementation_and_preserve_scope():
-    result = json.loads(
-        (ROOT / "results/data/web-tokenizer-sources-20260907.json").read_text()
-    )
+    result = json.loads((ROOT / "results/data/web-tokenizer-sources-20260907.json").read_text())
     assert result["status"] == (
         "bounded_web_sampling_security_overlap_pass_training_authority_blocked"
     )

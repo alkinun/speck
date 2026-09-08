@@ -40,14 +40,22 @@ def _config(tmp_path):
     source_rows = {}
     files = []
     texts = {
-        "Rust": ["// This English comment explains safe ownership and borrowing behavior.\nfn main() {}"],
-        "Go": ["// This English comment explains a deterministic server implementation.\npackage main"],
-        "SQL": ["-- This English comment explains the customer query and expected rows.\nSELECT 1;"],
+        "Rust": [
+            "// This English comment explains safe ownership and borrowing behavior.\nfn main() {}"
+        ],
+        "Go": [
+            "// This English comment explains a deterministic server implementation.\npackage main"
+        ],
+        "SQL": [
+            "-- This English comment explains the customer query and expected rows.\nSELECT 1;"
+        ],
     }
     for language, contents in texts.items():
         path = tmp_path / f"{language}.parquet"
         rows = _metadata(path, language, contents)
-        source_rows.update({row["blob_id"]: contents[index].encode() for index, row in enumerate(rows)})
+        source_rows.update(
+            {row["blob_id"]: contents[index].encode() for index, row in enumerate(rows)}
+        )
         files.append(
             {
                 "language": language,
@@ -112,8 +120,12 @@ def test_stack_edu_sample_fetches_verified_blobs_and_preserves_attribution(tmp_p
     assert report["counts"]["content_length_metadata_mismatch"] == 1
     assert report["repositories"] == 3
     assert report["gates"]["training_authority"] == "blocked"
-    records = [json.loads(line) for line in (output / "tokenizer-input.jsonl").read_text().splitlines()]
-    attribution = [json.loads(line) for line in (output / "attribution.jsonl").read_text().splitlines()]
+    records = [
+        json.loads(line) for line in (output / "tokenizer-input.jsonl").read_text().splitlines()
+    ]
+    attribution = [
+        json.loads(line) for line in (output / "attribution.jsonl").read_text().splitlines()
+    ]
     assert {record["language"] for record in records} == {"Rust", "Go", "SQL"}
     assert all("text" not in record for record in attribution)
     assert all(record["source"] == "stack_edu" for record in records)
@@ -137,7 +149,10 @@ def test_recorded_stack_edu_sample_binds_code_and_preserves_open_gates():
     implementation = result["implementation"]
     sample = result["sample"]
 
-    assert result["status"] == "bounded_sample_pass_gitleaks_exclusion_pending_training_authority_blocked"
+    assert (
+        result["status"]
+        == "bounded_sample_pass_gitleaks_exclusion_pending_training_authority_blocked"
+    )
     assert implementation["config_sha256"] == _sha256(ROOT / implementation["config"])
     assert implementation["module_sha256"] == _sha256(ROOT / implementation["module"])
     assert implementation["cli_sha256"] == _sha256(ROOT / implementation["cli"])

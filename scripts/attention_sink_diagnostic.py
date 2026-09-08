@@ -1,9 +1,7 @@
 """Measure attention-sink behavior from sampled late-query attention rows."""
 
 import argparse
-import json
 import math
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -15,6 +13,7 @@ from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
+from speck.io import atomic_json
 from speck.model import Attention, rotate
 from speck.tokenizer import get_tokenizer
 
@@ -55,14 +54,6 @@ def query_indices(sequence_length, queries, minimum_fraction):
     return tuple(
         first + index * (sequence_length - 1 - first) // (queries - 1) for index in range(queries)
     )
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 class SinkAccumulator:

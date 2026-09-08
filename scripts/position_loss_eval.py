@@ -1,9 +1,7 @@
 """Evaluate checkpoint loss by absolute sequence position and trailing region."""
 
 import argparse
-import json
 import math
-import os
 import time
 from dataclasses import replace
 from datetime import datetime, timezone
@@ -17,6 +15,7 @@ from speck.common import base_dir
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
+from speck.io import atomic_json
 from speck.tokenizer import get_tokenizer
 
 
@@ -37,14 +36,6 @@ def arguments(argv=None):
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def positive_integer(value, name):

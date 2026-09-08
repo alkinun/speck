@@ -56,6 +56,36 @@ class ChatFormatError(ValueError):
     """Indicate that a conversation cannot satisfy the chat template."""
 
 
+def validate_messages(messages, add_generation_prompt=False):
+    """Validate the shared local-tokenizer and evaluation-server chat contract."""
+
+    if not isinstance(messages, list) or not messages:
+        raise ChatFormatError("messages must be a non-empty list")
+    if not isinstance(messages[0], dict):
+        raise ChatFormatError("each message must be an object")
+    offset = int(messages[0].get("role") == "system")
+    for index, message in enumerate(messages):
+        if not isinstance(message, dict):
+            raise ChatFormatError("each message must be an object")
+        role = message.get("role")
+        content = message.get("content")
+        if not isinstance(role, str) or role not in ROLE_TOKENS:
+            raise ChatFormatError(f"unsupported message role: {role!r}")
+        if role == "system":
+            if index != 0:
+                raise ChatFormatError("system message must be first")
+        else:
+            expected = "user" if (index - offset) % 2 == 0 else "assistant"
+            if role != expected:
+                raise ChatFormatError("conversation roles must alternate user/assistant")
+        if not isinstance(content, str) or not content:
+            raise ChatFormatError("message content must be a non-empty string")
+        if any(token in content for token in RESERVED_TOKENS):
+            raise ChatFormatError("message content contains a reserved chat token")
+    if add_generation_prompt and messages[-1]["role"] != "user":
+        raise ChatFormatError("generation prompt requires a final user message")
+
+
 class ChatTokenizer:
     """Extend the base SentencePiece tokenizer with three fixed role tokens."""
 
@@ -84,37 +114,10 @@ class ChatTokenizer:
     def newline_ids(self):
         return tuple(self._newline)
 
-    def _validate(self, messages, add_generation_prompt):
-        if not isinstance(messages, list) or not messages:
-            raise ChatFormatError("messages must be a non-empty list")
-        if not isinstance(messages[0], dict):
-            raise ChatFormatError("each message must be an object")
-        offset = int(messages[0].get("role") == "system")
-        for index, message in enumerate(messages):
-            if not isinstance(message, dict):
-                raise ChatFormatError("each message must be an object")
-            role = message.get("role")
-            content = message.get("content")
-            if role == "system":
-                if index != 0:
-                    raise ChatFormatError("system message must be first")
-            elif role in {"user", "assistant"}:
-                expected = "user" if (index - offset) % 2 == 0 else "assistant"
-                if role != expected:
-                    raise ChatFormatError("conversation roles must alternate user/assistant")
-            else:
-                raise ChatFormatError(f"unsupported message role: {role!r}")
-            if not isinstance(content, str) or not content:
-                raise ChatFormatError("message content must be a non-empty string")
-            if any(token in content for token in RESERVED_TOKENS):
-                raise ChatFormatError("message content contains a reserved chat token")
-        if add_generation_prompt and messages[-1]["role"] != "user":
-            raise ChatFormatError("generation prompt requires a final user message")
-
     def encode_messages(self, messages, add_generation_prompt=False):
         """Return template tokens and a mask selecting assistant content and EOS."""
 
-        self._validate(messages, add_generation_prompt)
+        validate_messages(messages, add_generation_prompt)
         tokens = [self.bos_id]
         assistant_mask = [False]
         for message in messages:
@@ -140,7 +143,7 @@ class ChatTokenizer:
         return tokens, assistant_mask
 
     def render(self, messages, add_generation_prompt=False):
-        self._validate(messages, add_generation_prompt)
+        validate_messages(messages, add_generation_prompt)
         parts = ["<s>"]
         for message in messages:
             parts.append(f"{ROLE_TOKENS[message['role']]}\n{message['content']}</s>\n")

@@ -19,9 +19,7 @@ from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
 
 repository = Path(__file__).parents[1]
-source_experiment = (
-    repository / "experiments" / "SpeckLC-150M-MixerScreen-131M" / "gdn-global"
-)
+source_experiment = repository / "experiments" / "SpeckLC-150M-MixerScreen-131M" / "gdn-global"
 
 
 def mixers(config):
@@ -54,14 +52,10 @@ def test_kimi_transfer_staircase_is_one_intervention_at_each_step():
         if isinstance(mixer, GatedDeltaNetSpec)
     )
     nope = mixers(variants["gdn-fla-sigmoid-nope"])
-    assert all(
-        mixer.rope_dim == 0 for mixer in nope if isinstance(mixer, AttentionSpec)
-    )
+    assert all(mixer.rope_dim == 0 for mixer in nope if isinstance(mixer, AttentionSpec))
     kda = mixers(variants["kda-sigmoid-nope"])
     assert sum(isinstance(mixer, KimiDeltaAttentionSpec) for mixer in kda) == 15
-    assert all(
-        mixer.rope_dim == 0 for mixer in kda if isinstance(mixer, AttentionSpec)
-    )
+    assert all(mixer.rope_dim == 0 for mixer in kda if isinstance(mixer, AttentionSpec))
 
 
 def test_kimi_transfer_summary_is_compute_accounted():
@@ -80,9 +74,7 @@ def test_kimi_transfer_summary_is_compute_accounted():
 
 def test_prepare_materializes_shared_training_contract(tmp_path):
     output = tmp_path / "KimiTransfer"
-    contract = prepare(
-        SimpleNamespace(source_experiment=source_experiment, output_dir=output)
-    )
+    contract = prepare(SimpleNamespace(source_experiment=source_experiment, output_dir=output))
     assert set(contract["variants"]) == set(VARIANTS)
     assert [item["variant"] for item in contract["intervention_order"]] == list(VARIANTS)
     source = load_experiment(source_experiment, "data", "long_context", "tokenizer", "train")

@@ -1,8 +1,6 @@
 """Measure held-out LM-loss sensitivity to masking each routed layer."""
 
 import argparse
-import json
-import os
 from pathlib import Path
 
 import torch
@@ -12,6 +10,7 @@ from speck.checkpoint import checkpoint_identity, latest, load_metadata, load_mo
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir, verify_shards
+from speck.io import atomic_json
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 
@@ -94,14 +93,6 @@ def materialize_validation_batches(
         inputs, targets, _ = next(loader)
         replay.append((inputs.clone(), targets.clone()))
     return tuple(replay), batches * tokens_per_batch
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def run(args):

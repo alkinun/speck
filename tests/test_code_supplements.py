@@ -165,9 +165,7 @@ def test_python_edu_fetches_hash_bound_blobs_and_keeps_rights_blocked(tmp_path):
             "output_directory": str(tmp_path / "python-output"),
         }
     )
-    report = sample_python_edu(
-        config, fetch_blob=lambda blob_id: ("ok", blobs[blob_id])
-    )
+    report = sample_python_edu(config, fetch_blob=lambda blob_id: ("ok", blobs[blob_id]))
 
     assert report["status"] == "bounded_sample_complete_not_training_authority"
     assert report["counts"]["blob_fetch_ok"] == 2

@@ -305,13 +305,6 @@ class AttentionState:
         self.write_position = 0
 
     def current(self):
-        if self.used == 0:
-            return self._decode(
-                self.keys[:, :, :0],
-                self.values[:, :, :0],
-                self.key_scales[:, :, :0] if self.key_scales is not None else None,
-                self.value_scales[:, :, :0] if self.value_scales is not None else None,
-            )
         if self.used < self.capacity:
             return self._decode(
                 self.keys[:, :, : self.used],
@@ -365,9 +358,18 @@ class AttentionState:
     def _encode(self, tensor):
         if self.storage_dtype != torch.int8:
             return tensor.to(self.storage_dtype), None
-        scale = tensor.float().abs().amax(dim=-1, keepdim=True).clamp_min(1e-8) / 127
-        quantized = (tensor.float() / scale).round().clamp(-127, 127).to(torch.int8)
-        return quantized, scale.to(torch.float16)
+        # Round scales upward to a nonzero representable FP16 value. Rounding
+        # downward can saturate the largest value; underflow used to erase a head.
+        minimum_scale = torch.finfo(torch.float16).tiny * torch.finfo(torch.float16).eps
+        scale = (tensor.float().abs().amax(dim=-1, keepdim=True) / 127).clamp_min(minimum_scale)
+        stored_scale = scale.to(torch.float16)
+        stored_scale = torch.where(
+            stored_scale.float() < scale,
+            torch.nextafter(stored_scale, torch.full_like(stored_scale, float("inf"))),
+            stored_scale,
+        )
+        quantized = (tensor.float() / stored_scale.float()).round().clamp(-127, 127).to(torch.int8)
+        return quantized, stored_scale
 
     def append(self, keys, values):
         keys, key_scales = self._encode(keys)
@@ -1491,6 +1493,7 @@ class SpeckForCausalLM(nn.Module):
             self.config,
             vocab_size=vocab_size,
             expected_parameters=None,
+            expected_active_parameters=None,
         )
         return self.embed_tokens
 
@@ -1551,7 +1554,7 @@ class SpeckForCausalLM(nn.Module):
                             device,
                             dtype,
                         )
-                    elif isinstance(branch, GatedDeltaNetSpec):
+                    elif isinstance(branch, (GatedDeltaNetSpec, KimiDeltaAttentionSpec)):
                         key_dim = branch.num_key_heads * branch.key_head_dim
                         value_dim = branch.num_value_heads * branch.value_head_dim
                         entries[key] = DeltaNetState(
@@ -1563,20 +1566,7 @@ class SpeckForCausalLM(nn.Module):
                             branch.conv_kernel_size - 1,
                             device,
                             dtype,
-                        )
-                    elif isinstance(branch, KimiDeltaAttentionSpec):
-                        key_dim = branch.num_key_heads * branch.key_head_dim
-                        value_dim = branch.num_value_heads * branch.value_head_dim
-                        entries[key] = DeltaNetState(
-                            batch_size,
-                            branch.num_value_heads,
-                            branch.key_head_dim,
-                            branch.value_head_dim,
-                            2 * key_dim + value_dim,
-                            branch.conv_kernel_size - 1,
-                            device,
-                            dtype,
-                            kind="kimi_delta_attention",
+                            kind=branch.kind,
                         )
         return SequenceState(entries, length)
 

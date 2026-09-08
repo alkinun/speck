@@ -72,9 +72,10 @@ def test_data_plan_preserves_selection_firewall_and_replication():
     ]
     assert selection["primary_unit"] == "bits_per_utf8_byte"
     assert selection["e2a_advance"] == experiments["E2b"]["new_runs"] == 6
-    assert selection["e2b_advance"] * selection["final_confirmation_seeds"] == experiments[
-        "E2c"
-    ]["new_runs"]
+    assert (
+        selection["e2b_advance"] * selection["final_confirmation_seeds"]
+        == experiments["E2c"]["new_runs"]
+    )
     assert experiments["E5"]["reused_control_runs"] == 2
     assert data_plan["firewall_contract"] == {
         "plan": "research/flagship/firewall_plan.json",
@@ -121,19 +122,23 @@ def test_architecture_plan_inherits_promotion_margins_and_separates_systems_outc
     language_policy = statistical_policy["language_loss"]
     systems_policy = statistical_policy["systems"]
 
-    assert promotion["aggregate_non_inferiority_margin_nats"] == language_policy[
-        "default_non_inferiority_margin_nats"
-    ]
+    assert (
+        promotion["aggregate_non_inferiority_margin_nats"]
+        == language_policy["default_non_inferiority_margin_nats"]
+    )
     assert promotion["source_guardrail_nats"] == language_policy["source_guardrail_nats"]
-    assert promotion["simple_component_cost_improvement_percent"] == 100 * systems_policy[
-        "simple_component_minimum_primary_improvement"
-    ]
-    assert promotion["custom_runtime_cost_improvement_percent"] == 100 * systems_policy[
-        "custom_runtime_component_minimum_primary_improvement"
-    ]
-    assert promotion["state_reduction_threshold_percent"] == 100 * systems_policy[
-        "minimum_state_reduction_for_memory_claim"
-    ]
+    assert (
+        promotion["simple_component_cost_improvement_percent"]
+        == 100 * systems_policy["simple_component_minimum_primary_improvement"]
+    )
+    assert (
+        promotion["custom_runtime_cost_improvement_percent"]
+        == 100 * systems_policy["custom_runtime_component_minimum_primary_improvement"]
+    )
+    assert (
+        promotion["state_reduction_threshold_percent"]
+        == 100 * systems_policy["minimum_state_reduction_for_memory_claim"]
+    )
     assert promotion["paired_seeds_for_launch_decisions"] == 3
     assert promotion["tie_rule"] == "keep_default"
     assert architecture_plan["systems"]["minimum_interleaved_blocks"] >= 5
@@ -237,8 +242,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
     assert set(totals) == set(tokenizer_plan["categories"])
     assert all(
         value["training_bytes"] == tokenizer_plan["sample"]["training_bytes_per_category"]
-        and value["evaluation_bytes"]
-        == tokenizer_plan["sample"]["evaluation_bytes_per_category"]
+        and value["evaluation_bytes"] == tokenizer_plan["sample"]["evaluation_bytes_per_category"]
         for value in totals.values()
     )
 
@@ -299,9 +303,7 @@ def test_storage_readiness_result_clears_the_pregrant_threshold():
 
 
 def test_web_firewall_result_is_hash_bound_and_remains_non_authoritative():
-    result = json.loads(
-        (ROOT / "results" / "data" / "web-contamination-20260907.json").read_text()
-    )
+    result = json.loads((ROOT / "results" / "data" / "web-contamination-20260907.json").read_text())
 
     assert result["status"] == (
         "bounded_web_benchmark_decontamination_pass_training_authority_blocked"
@@ -322,9 +324,7 @@ def test_web_firewall_result_is_hash_bound_and_remains_non_authoritative():
         for source in result["sources"].values()
     )
 
-    rights = json.loads(
-        (ROOT / "results" / "data" / "web-rights-review-20260907.json").read_text()
-    )
+    rights = json.loads((ROOT / "results" / "data" / "web-rights-review-20260907.json").read_text())
     assert rights["status"].endswith("training_authority_blocked")
     assert "no source is approved" in rights["decision"]
 
@@ -334,7 +334,9 @@ def test_math_qualification_result_is_hash_bound_and_remains_non_authoritative()
         (ROOT / "results" / "data" / "math-tokenizer-sources-20260907.json").read_text()
     )
 
-    assert result["status"] == "bounded_math_technical_qualification_pass_training_authority_blocked"
+    assert (
+        result["status"] == "bounded_math_technical_qualification_pass_training_authority_blocked"
+    )
     for path, digest in result["implementation"].values():
         assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     for path, digest in result["configs"].values():
@@ -510,15 +512,11 @@ def test_source_rights_decision_contract_is_hash_bound_and_all_pending():
 
 
 def test_data_launch_gate_is_hash_bound_and_has_no_real_receipt():
-    result = json.loads(
-        (ROOT / "results" / "data" / "data-launch-gate-20260907.json").read_text()
-    )
+    result = json.loads((ROOT / "results" / "data" / "data-launch-gate-20260907.json").read_text())
     assert result["status"] == "fixture_qualified_real_receipt_and_training_authority_blocked"
     for path, digest in result["implementation"].values():
         assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
-    assert result["training_enforcement"]["marker"] == (
-        "train.requires_data_launch_authority=true"
-    )
+    assert result["training_enforcement"]["marker"] == ("train.requires_data_launch_authority=true")
     assert result["training_enforcement"]["verification_point"].endswith(
         "before model construction"
     )
@@ -558,8 +556,7 @@ def test_fullsize_tokenizer_fixture_has_no_real_selection_authority():
     assert result["fixture"]["selection_authority"] is False
     assert result["fixture"]["category_output_hashes_path_independent"] is True
     assert all(
-        tokenizer["path_independent_repeat_equal"]
-        and all(tokenizer["static_hard_gates"].values())
+        tokenizer["path_independent_repeat_equal"] and all(tokenizer["static_hard_gates"].values())
         for tokenizer in result["tokenizers"].values()
     )
     assert result["training_authority"] == "blocked"
@@ -568,10 +565,7 @@ def test_fullsize_tokenizer_fixture_has_no_real_selection_authority():
 def test_tokenizer_static_nomination_policy_is_hash_bound_and_pre_results():
     result = json.loads(
         (
-            ROOT
-            / "results"
-            / "data"
-            / "tokenizer-static-nomination-fixture-20260907.json"
+            ROOT / "results" / "data" / "tokenizer-static-nomination-fixture-20260907.json"
         ).read_text()
     )
     assert result["status"] == "policy_fixture_qualified_before_real_tokenizer_outputs"

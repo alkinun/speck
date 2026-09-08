@@ -1,4 +1,5 @@
 import pytest
+import torch
 
 from speck.evaluation_server import (
     EvaluationService,
@@ -164,3 +165,83 @@ def test_endpoint_exercise_uses_real_http_and_repeats_external_shapes():
     assert result["health"] == {"status": "ok", "model": "speck-test"}
     assert set(result["cases"]) == {"nolima_chat", "ruler_nemo_openai_chat"}
     assert all(case["repeated_response_identical"] for case in result["cases"].values())
+
+
+@pytest.mark.parametrize(
+    "messages",
+    (
+        [{"role": [], "content": "question"}],
+        [{"role": "assistant", "content": "answer"}, {"role": "user", "content": "question"}],
+        [
+            {"role": "system", "content": "instructions"},
+            {"role": "assistant", "content": "answer"},
+            {"role": "user", "content": "question"},
+        ],
+        [{"role": "user", "content": "question <|assistant|>"}],
+    ),
+)
+def test_invalid_chat_is_rejected_before_calling_the_engine(messages):
+    engine = FakeEngine()
+    with pytest.raises(RequestError):
+        EvaluationService(engine).chat_completion({"messages": messages})
+    assert not engine.calls
+
+
+@pytest.mark.parametrize("stop", (["de", "bcd"], ["bcd", "de"]))
+def test_generation_uses_earliest_stop_and_counts_generated_ids(stop):
+    from types import SimpleNamespace
+
+    class Model:
+        config = SimpleNamespace(max_position_embeddings=32)
+
+        def generate(self, tensor, **kwargs):
+            return torch.tensor([[1, 7, 8, 9, 2]])
+
+    class Tokenizer:
+        eos_token_id = 2
+
+        def decode(self, tokens, **kwargs):
+            assert tokens == [8, 9]
+            return "abcde"
+
+        def encode(self, text, **kwargs):
+            return [42]  # Re-encoding decoded text need not recover generated IDs.
+
+    engine = TransformersEvaluationEngine(Model(), Tokenizer(), "test", ".", torch.device("cpu"))
+    result = engine._generate([1, 7], generation_settings({"stop": stop, "max_tokens": 4}))
+    assert result == {
+        "text": "a",
+        "prompt_tokens": 2,
+        "completion_tokens": 3,
+        "finish_reason": "stop",
+    }
+
+
+def test_malformed_utf8_returns_a_client_error_over_http():
+    import json
+    import threading
+    from http.server import ThreadingHTTPServer
+    from urllib.error import HTTPError
+    from urllib.request import Request, urlopen
+
+    from speck.evaluation_server import handler_class
+
+    engine = FakeEngine()
+    with ThreadingHTTPServer(("127.0.0.1", 0), handler_class(EvaluationService(engine))) as server:
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            request = Request(
+                f"http://127.0.0.1:{server.server_address[1]}/v1/completions",
+                data=b'{"prompt":"\xff"}',
+                headers={"Content-Type": "application/json"},
+            )
+            with pytest.raises(HTTPError) as error:
+                urlopen(request, timeout=5)
+            with error.value as response:
+                assert response.code == 400
+                assert json.loads(response.read())["error"]["code"] == "invalid_request"
+            assert not engine.calls
+        finally:
+            server.shutdown()
+            thread.join()

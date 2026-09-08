@@ -10,10 +10,7 @@ from speck.config import load_experiment
 
 experiment = Path(__file__).parents[1] / "experiments" / "Speck1-140M"
 local_experiment = (
-    Path(__file__).parents[1]
-    / "experiments"
-    / "SpeckLC-150M-MixerScreen-131M"
-    / "gdn-local"
+    Path(__file__).parents[1] / "experiments" / "SpeckLC-150M-MixerScreen-131M" / "gdn-local"
 )
 
 

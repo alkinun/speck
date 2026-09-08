@@ -44,8 +44,15 @@ def _row(text, index, **metadata_overrides):
 
 def _config(tmp_path):
     rows = [
-        _row("// This English comment describes a deterministic TypeScript function.\nconst value = 1;", 1),
-        _row("// This record is rejected by its detected license.\nconst other = 2;", 2, detected_licenses=["CC0-1.0"]),
+        _row(
+            "// This English comment describes a deterministic TypeScript function.\nconst value = 1;",
+            1,
+        ),
+        _row(
+            "// This record is rejected by its detected license.\nconst other = 2;",
+            2,
+            detected_licenses=["CC0-1.0"],
+        ),
     ]
     path = tmp_path / "source.json.gz"
     with gzip.open(path, "wt", encoding="utf-8") as handle:

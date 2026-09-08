@@ -1,6 +1,5 @@
 """Load pinned Hugging Face weights into a local Speck model."""
 
-import hashlib
 import json
 from dataclasses import fields
 from pathlib import Path
@@ -9,14 +8,7 @@ from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
 
 from speck.architecture import ArchitectureConfig
-
-
-def _sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        while chunk := handle.read(8 * 1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest()
+from speck.io import file_sha256 as _sha256
 
 
 def load_pretrained(model, repo, revision, filename="model.safetensors"):

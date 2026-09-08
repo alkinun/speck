@@ -1,7 +1,6 @@
 """Benchmark normalized prefill and cached decode speed across small language models."""
 
 import argparse
-import hashlib
 import importlib.metadata
 import json
 import os
@@ -18,6 +17,7 @@ from speck.architecture import ArchitectureConfig
 from speck.checkpoint import load_model
 from speck.common import base_dir
 from speck.config import load_experiment
+from speck.io import file_sha256 as _file_sha256
 from speck.model import SpeckForCausalLM
 
 os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
@@ -97,14 +97,6 @@ def _synchronize(device):
 
 def _parameter_count(model):
     return sum(parameter.numel() for parameter in model.parameters())
-
-
-def _file_sha256(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        while chunk := handle.read(1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _git_revision():
