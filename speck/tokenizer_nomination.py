@@ -16,31 +16,60 @@ def _exact_keys(value, expected, name):
 def validate_nomination_policy(policy):
     """Validate the exact endpoint policy frozen before real tokenizer outputs."""
 
-    _exact_keys(
-        policy,
-        {
-            "format",
-            "format_version",
-            "status",
-            "primary_baseline",
-            "custom_candidates",
-            "required_hard_gates",
-            "pareto_objectives",
-            "nomination_count",
-            "nomination_roles",
-            "failure_rule",
-            "selection_authority",
-            "fixture_nomination_authority",
-            "final_decision",
-        },
-        "tokenizer nomination policy",
-    )
+    version = policy.get("format_version") if isinstance(policy, dict) else None
+    common = {
+        "format",
+        "format_version",
+        "status",
+        "primary_baseline",
+        "custom_candidates",
+        "required_hard_gates",
+        "pareto_objectives",
+        "nomination_count",
+        "nomination_roles",
+        "failure_rule",
+        "selection_authority",
+        "final_decision",
+    }
+    if version == 1:
+        _exact_keys(
+            policy,
+            common | {"fixture_nomination_authority"},
+            "tokenizer nomination policy",
+        )
+        expected_status = "frozen_before_real_tokenizer_outputs"
+        expected_candidates = ["speck-bpe-32768", "speck-bpe-40960", "speck-bpe-49152"]
+        no_fixture_authority = policy["fixture_nomination_authority"] is False
+    elif version == 2:
+        _exact_keys(
+            policy,
+            common | {"supersedes", "evidence", "local_evidence_nomination_authority"},
+            "tokenizer nomination policy",
+        )
+        expected_status = "v2_frozen_before_formal_tokenizer_outputs"
+        expected_candidates = [
+            "speck-bpe-32000-whitespace",
+            "speck-bpe-32768-whitespace",
+            "speck-bpe-40960-whitespace",
+        ]
+        no_fixture_authority = policy["local_evidence_nomination_authority"] is False
+        if policy["supersedes"] != {
+            "path": "research/flagship/tokenizer_static_nomination_policy.json",
+            "sha256": "5d3cb5c8b6ec74ec31566dbf07fe28340d4f1998e1169ac92981e89d47986499",
+            "repository_revision": "9089c01",
+        } or policy["evidence"] != {
+            "path": "results/data/tokenizer-local-study-20260907.json",
+            "sha256": "6ffdaad34318383b4d08f4f6ecd8940b69366daebd3512e61be1308523b02bb1",
+            "authority": "candidate_set_design_only",
+        }:
+            raise ValueError("tokenizer nomination v2 lineage differs from the frozen contract")
+    else:
+        raise ValueError("tokenizer nomination policy differs from the frozen contract")
     if (
         policy["format"] != POLICY_FORMAT
-        or policy["format_version"] != FORMAT_VERSION
-        or policy["status"] != "frozen_before_real_tokenizer_outputs"
+        or policy["status"] != expected_status
         or policy["primary_baseline"] != "mistral-32k"
-        or policy["custom_candidates"] != ["speck-bpe-32768", "speck-bpe-40960", "speck-bpe-49152"]
+        or policy["custom_candidates"] != expected_candidates
         or policy["required_hard_gates"]
         != ["uint16_with_chat_tokens", "zero_unknown_tokens", "probe_roundtrip_exact"]
         or policy["pareto_objectives"]
@@ -52,7 +81,7 @@ def validate_nomination_policy(policy):
         or [role.get("id") for role in policy["nomination_roles"]]
         != ["compression_endpoint", "compact_endpoint"]
         or policy["selection_authority"] is not False
-        or policy["fixture_nomination_authority"] is not False
+        or not no_fixture_authority
     ):
         raise ValueError("tokenizer nomination policy differs from the frozen contract")
     return policy
@@ -131,7 +160,7 @@ def nominate_static_candidates(evaluation, policy, *, fixture=False):
         {"role": "compression_endpoint", "id": compression["id"]},
         {"role": "compact_endpoint", "id": compact["id"]},
     ]
-    return {
+    result = {
         "format": RESULT_FORMAT,
         "format_version": FORMAT_VERSION,
         "status": (
@@ -163,6 +192,9 @@ def nominate_static_candidates(evaluation, policy, *, fixture=False):
         "advancement_authority": not fixture,
         "final_decision_authority": False,
     }
+    if policy["format_version"] == 2:
+        result["policy_format_version"] = 2
+    return result
 
 
 def nominate_from_files(evaluation_path, policy_path, output_path, *, fixture=False):

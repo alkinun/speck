@@ -6,6 +6,8 @@ from pathlib import Path
 import pytest
 
 import speck.tokenizer_experiment as tokenizer_experiment
+from speck.chat import ChatTokenizer
+from speck.tokenizer import Tokenizer
 from speck.tokenizer_experiment import (
     evaluate_tokenizers,
     prepare_baseline,
@@ -164,6 +166,35 @@ def test_config_requires_explicit_input_quotas_to_cover_each_category(tmp_path):
     config["sample"]["categories"][0]["inputs"][0]["training_bytes"] -= 1
     with pytest.raises(ValueError, match="input training bytes must sum"):
         validate_experiment_config(config)
+
+
+def test_whitespace_only_piece_setting_is_explicit_hash_bound_and_forwarded(tmp_path):
+    legacy = validate_experiment_config(_config(tmp_path, "legacy"))
+    raw = _config(tmp_path, "whitespace")
+    raw["trainer"]["allow_whitespace_only_pieces"] = True
+    config = validate_experiment_config(raw)
+
+    assert "allow_whitespace_only_pieces" not in legacy["trainer"]
+    assert config["trainer"]["allow_whitespace_only_pieces"] is True
+    assert config["plan_fingerprint"] != legacy["plan_fingerprint"]
+    prepare_sample(config)
+    manifest = train_candidate(config, "speck-test-300")
+    assert manifest["trainer"]["allow_whitespace_only_pieces"] is True
+    model_path = Path(config["output_dir"]) / "candidates/speck-test-300/tokenizer.model"
+    tokenizer = Tokenizer(model_path)
+    assert (
+        tokenizer.decode(tokenizer.encode("two  spaces\n\tand code")) == "two  spaces\n\tand code"
+    )
+    export = tmp_path / "tokenizer-export"
+    ChatTokenizer(tokenizer).save_pretrained(export)
+    metadata = json.loads((export / "tokenizer_metadata.json").read_text())
+    assert metadata["base_fingerprint"] == manifest["model"]["sha256"]
+    assert metadata["vocab_size"] == tokenizer.vocab_size + 3
+    assert (export / "tokenizer.model").read_bytes() == model_path.read_bytes()
+
+    raw["trainer"]["allow_whitespace_only_pieces"] = 1
+    with pytest.raises(ValueError, match="allow_whitespace_only_pieces"):
+        validate_experiment_config(raw)
 
 
 def test_normalized_config_cannot_change_after_its_fingerprint_is_frozen(tmp_path):

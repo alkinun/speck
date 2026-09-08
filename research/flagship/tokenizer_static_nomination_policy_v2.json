@@ -1,0 +1,47 @@
+{
+  "format": "speck_tokenizer_static_nomination_policy",
+  "format_version": 2,
+  "status": "v2_frozen_before_formal_tokenizer_outputs",
+  "supersedes": {
+    "path": "research/flagship/tokenizer_static_nomination_policy.json",
+    "sha256": "5d3cb5c8b6ec74ec31566dbf07fe28340d4f1998e1169ac92981e89d47986499",
+    "repository_revision": "9089c01"
+  },
+  "evidence": {
+    "path": "results/data/tokenizer-local-study-20260907.json",
+    "sha256": "6ffdaad34318383b4d08f4f6ecd8940b69366daebd3512e61be1308523b02bb1",
+    "authority": "candidate_set_design_only"
+  },
+  "primary_baseline": "mistral-32k",
+  "custom_candidates": [
+    "speck-bpe-32000-whitespace",
+    "speck-bpe-32768-whitespace",
+    "speck-bpe-40960-whitespace"
+  ],
+  "required_hard_gates": [
+    "uint16_with_chat_tokens",
+    "zero_unknown_tokens",
+    "probe_roundtrip_exact"
+  ],
+  "pareto_objectives": {
+    "macro_tokens_per_kib": "minimize",
+    "embedding_and_head_parameters": "minimize"
+  },
+  "nomination_count": 2,
+  "nomination_roles": [
+    {
+      "id": "compression_endpoint",
+      "rule": "lowest macro tokens_per_kib on the valid custom Pareto frontier",
+      "tie_order": ["lower embedding_and_head_parameters", "smaller vocab_size", "candidate id"]
+    },
+    {
+      "id": "compact_endpoint",
+      "rule": "lowest embedding_and_head_parameters among remaining valid custom Pareto candidates",
+      "tie_order": ["lower macro tokens_per_kib", "smaller vocab_size", "candidate id"]
+    }
+  ],
+  "failure_rule": "if fewer than two distinct valid custom Pareto candidates exist, stop without substituting a dominated or hard-gate-failing candidate",
+  "selection_authority": false,
+  "local_evidence_nomination_authority": false,
+  "final_decision": "matched 60M LM pilot plus one-opening D5_tokenizer audit; Mistral remains fallback"
+}

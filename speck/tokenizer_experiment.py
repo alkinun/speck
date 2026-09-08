@@ -214,7 +214,15 @@ def validate_experiment_config(config, *, config_dir=None):
         "num_threads",
         "hard_vocab_limit",
     }
-    _exact_keys(trainer, trainer_keys, "trainer")
+    optional_trainer_keys = {"allow_whitespace_only_pieces"}
+    if (
+        not isinstance(trainer, dict)
+        or not trainer_keys <= set(trainer)
+        or set(trainer) - trainer_keys - optional_trainer_keys
+    ):
+        raise ValueError(
+            "trainer must contain the frozen keys and only supported optional settings"
+        )
     if trainer["model_type"] not in {"bpe", "unigram"}:
         raise ValueError("trainer.model_type must be bpe or unigram")
     coverage = trainer["character_coverage"]
@@ -229,6 +237,10 @@ def validate_experiment_config(config, *, config_dir=None):
     }:
         if not isinstance(trainer[name], bool):
             raise ValueError(f"trainer.{name} must be boolean")
+    if "allow_whitespace_only_pieces" in trainer and not isinstance(
+        trainer["allow_whitespace_only_pieces"], bool
+    ):
+        raise ValueError("trainer.allow_whitespace_only_pieces must be boolean")
     if not isinstance(trainer["normalization_rule_name"], str) or not trainer[
         "normalization_rule_name"
     ]:
