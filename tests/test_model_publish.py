@@ -277,25 +277,25 @@ def test_current_transformers_wrapper_exports_gated_deltanet(tmp_path):
     assert_current_transformers_parity(tmp_path, values)
 
 
-def test_current_transformers_wrapper_exports_kimi_delta_attention(tmp_path):
+@pytest.mark.parametrize("activation", (None, "sigmoid", "silu"))
+def test_current_transformers_wrapper_exports_kimi_delta_attention(tmp_path, activation):
     values = metadata()
+    kda = {
+        "kind": "kimi_delta_attention",
+        "key_head_dim": 2,
+        "value_head_dim": 2,
+        "num_key_heads": 1,
+        "num_value_heads": 2,
+        "conv_kernel_size": 3,
+    }
+    if activation is not None:
+        kda["output_gate_activation"] = activation
     values["config"]["blocks"] = [
         {
             "block": {
                 "hidden_size": 4,
                 "stages": [
-                    {
-                        "branches": [
-                            {
-                                "kind": "kimi_delta_attention",
-                                "key_head_dim": 2,
-                                "value_head_dim": 2,
-                                "num_key_heads": 1,
-                                "num_value_heads": 2,
-                                "conv_kernel_size": 3,
-                            }
-                        ]
-                    },
+                    {"branches": [kda]},
                     {"branches": [{"kind": "swiglu", "intermediate_size": 8}]},
                 ],
             }
