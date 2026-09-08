@@ -40,6 +40,21 @@ Final verification in the installed CPU development environment:
 - `git diff --check`: passed.
 - Source-pin comparison: all 80 currently pinned Python files preserved exactly.
 
+## Follow-up refinement
+
+After committing the initial cleanup, local inference and instruction evaluation were migrated to
+`speck/generation.py`. Their duplicated loops both computed unused logits after emitting the final
+requested token. The shared loop performs one prompt prefill and only the decode calls needed for
+subsequent tokens. It preserves greedy/top-k decoding and excludes EOS from returned token IDs.
+
+Sampling settings are validated before checkpoint loading in the inference CLI and before cache
+allocation in the shared helper. Regression coverage includes token-budget and EOS stopping,
+top-k clamping, invalid inputs, and cached-generation parity with a full-prefix model reference.
+
+Follow-up verification: **696 passed, 8 skipped** in the full CPU suite, with 20 additional test
+cases. Lint and changed-file formatting checks pass, and all 80 source-pinned Python files remain
+byte-identical.
+
 ## Deferred findings in hash-pinned code
 
 The requested provenance policy is to preserve source pins. All 80 Python files whose current

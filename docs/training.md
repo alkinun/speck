@@ -345,3 +345,8 @@ uv run --extra gpu python -m scripts.infer "Explain why the sky is blue." \
 
 Useful controls include `--max-tokens`, `--temperature`, `--top-k`, `--device`, `--step`,
 `--checkpoint-dir`, and `--system`.
+
+`--max-tokens` and `--top-k` must be positive integers. Temperature must be finite and
+non-negative; zero selects greedy decoding. Invalid sampling settings are rejected before loading
+a checkpoint. Local inference and instruction evaluation share the native cached-generation loop,
+which stops on EOS or the requested token budget without an unused final forward pass.

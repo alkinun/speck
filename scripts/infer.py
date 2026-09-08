@@ -10,6 +10,7 @@ from speck.chat import ChatTokenizer
 from speck.checkpoint import latest, load_metadata, load_model
 from speck.common import base_dir
 from speck.config import load_experiment
+from speck.generation import generate_tokens, validate_sampling
 from speck.model import SpeckForCausalLM
 from speck.tokenizer import get_tokenizer
 
@@ -59,7 +60,12 @@ def arguments(argv=None):
     parser.add_argument(
         "--system", default=None, help="optional system prompt for an SFT checkpoint"
     )
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    try:
+        validate_sampling(args.max_tokens, args.temperature, args.top_k)
+    except ValueError as error:
+        parser.error(str(error))
+    return args
 
 
 def load_checkpoint_model(checkpoint_dir, step, device, loss_backend="torch"):
@@ -103,29 +109,15 @@ def main(argv=None):
         raise ValueError("system prompts require an SFT checkpoint")
     else:
         tokens = tokenizer.encode(args.prompt, bos=True)
-    if len(tokens) + args.max_tokens > model.config.max_position_embeddings:
-        raise ValueError("prompt and generated tokens exceed the model context")
-
-    with torch.inference_mode():
-        state = model.state(length=len(tokens) + args.max_tokens)
-        logits = model(
-            torch.tensor([tokens], device=device),
-            state=state,
-            last_token_only=True,
-        )[:, -1]
-        generated = []
-        for _ in range(args.max_tokens):
-            if args.temperature == 0:
-                token = logits.argmax(dim=-1)
-            else:
-                values, indices = torch.topk(logits, min(args.top_k, logits.size(-1)))
-                probabilities = torch.softmax(values / args.temperature, dim=-1)
-                token = indices.gather(-1, torch.multinomial(probabilities, 1)).squeeze(-1)
-            token_id = token.item()
-            if token_id == tokenizer.eos_id:
-                break
-            generated.append(token_id)
-            logits = model(token[:, None], state=state, last_token_only=True)[:, -1]
+    generated = generate_tokens(
+        model,
+        tokens,
+        max_tokens=args.max_tokens,
+        eos_token_id=tokenizer.eos_id,
+        device=device,
+        temperature=args.temperature,
+        top_k=args.top_k,
+    )
 
     if isinstance(tokenizer, ChatTokenizer):
         print(tokenizer.decode(generated, skip_special_tokens=True))

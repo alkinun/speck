@@ -11,6 +11,7 @@ import torch
 from speck.architecture import ArchitectureConfig
 from speck.chat import ChatTokenizer
 from speck.checkpoint import completed_steps, load_model
+from speck.generation import generate_tokens
 from speck.model import SpeckForCausalLM
 from speck.tokenizer import Tokenizer
 
@@ -153,19 +154,9 @@ def generate(model, tokenizer, prompt, max_tokens, device):
     tokens, _ = tokenizer.encode_messages(
         [{"role": "user", "content": prompt}], add_generation_prompt=True
     )
-    with torch.inference_mode():
-        state = model.state(length=len(tokens) + max_tokens)
-        logits = model(torch.tensor([tokens], device=device), state=state, last_token_only=True)[
-            :, -1
-        ]
-        generated = []
-        for _ in range(max_tokens):
-            token = logits.argmax(dim=-1)
-            token_id = token.item()
-            if token_id == tokenizer.eos_id:
-                break
-            generated.append(token_id)
-            logits = model(token[:, None], state=state, last_token_only=True)[:, -1]
+    generated = generate_tokens(
+        model, tokens, max_tokens=max_tokens, eos_token_id=tokenizer.eos_id, device=device
+    )
     return tokenizer.decode(generated, skip_special_tokens=True).strip(), len(generated)
 
 

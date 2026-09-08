@@ -1,3 +1,5 @@
+import pytest
+
 from scripts.infer import arguments, load_checkpoint_model
 from speck.architecture import ArchitectureConfig, BlockConfig, BlockGroup, StageConfig, SwiGLUSpec
 from speck.checkpoint import save
@@ -50,3 +52,21 @@ def test_inference_argument_parser_is_import_safe():
     assert args.prompt == "hello"
     assert args.device == "cpu"
     assert args.step == 3
+
+
+@pytest.mark.parametrize(
+    "option,value",
+    (
+        ("--max-tokens", "0"),
+        ("--max-tokens", "-1"),
+        ("--temperature", "-0.1"),
+        ("--temperature", "nan"),
+        ("--temperature", "inf"),
+        ("--top-k", "0"),
+        ("--top-k", "-1"),
+    ),
+)
+def test_invalid_sampling_arguments_fail_during_parsing(option, value):
+    with pytest.raises(SystemExit) as error:
+        arguments(["hello", option, value])
+    assert error.value.code == 2
