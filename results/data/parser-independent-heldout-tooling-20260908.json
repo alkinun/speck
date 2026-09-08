@@ -1,0 +1,78 @@
+{
+  "format": "speck_parser_independent_heldout_tooling_qualification",
+  "format_version": 1,
+  "status": "fixture_qualified_real_bundle_results_and_authority_blocked",
+  "recorded_on": "2026-09-08",
+  "pre_result_commit": "6adc65c",
+  "successor_relationship": {
+    "kind": "additive_evaluation_successor_not_firewall_replacement",
+    "preserved_predecessors": [
+      {
+        "path": "research/flagship/firewall_plan.json",
+        "sha256": "e0b787a2ca5b6e4123f8b01de4673d387b3efade5bf81d87f7e774c6ec0d15ed",
+        "repository_revision": "6adc65c",
+        "modified": false
+      },
+      {
+        "path": "results/data/data-firewall-tooling-20260907.json",
+        "sha256": "fb73983f88a9140fbe3c68a61573bf89848de71e67fbe67017362e5758330963",
+        "repository_revision": "6adc65c",
+        "modified": false
+      },
+      {
+        "path": "research/flagship/data_plan.json",
+        "sha256": "9adda80ed0c53f2eef376191223c8df8e444f448cf05c6326432a5b283fa4363",
+        "repository_revision": "6adc65c",
+        "modified": false
+      }
+    ]
+  },
+  "implementation": {
+    "module": ["speck/heldout_evaluation.py", "bea5f0c02d1324913c08156b810cf53b79e442811b2545bd06bcaa8c3262e220"],
+    "build_cli": ["scripts/heldout_evaluation_build.py", "95f67ae098d274131e5b28510d71e03fca443a97c360c00b0d2a87ef8633255f"],
+    "analysis_cli": ["scripts/heldout_evaluation_analyze.py", "174b79748e06e2040155cc65df280413c9811101e23ccfca4199bbefe66a00e2"],
+    "tests": ["tests/test_heldout_evaluation.py", "aff3b82eea7869385ff35437115be807646d32b105ca9dbf75f067f658763047"],
+    "plan": ["research/flagship/heldout_evaluation_plan_v1.json", "7d91244932661084e09a29546357526116ce0933ac20ad5592c5dae9a54090e9"]
+  },
+  "grounding": {
+    "magic_pretraining_lesson": "production formatting remains an explicit measured distribution, but one production parser cannot define the conclusion",
+    "flagship_data_contract": "six fixed categories, equal-category BPB, +0.01 BPB upper paired 95% category guardrail, and existing one-opening/fallback behavior are unchanged",
+    "tokenizer_contract": "different tokenization is compared in bits per UTF-8 byte rather than token-normalized loss",
+    "firewall_contract": "existing global exact disjointness, equal targets, unopened audits, and consumer authorization must pass before the additive checks"
+  },
+  "qualified_contracts": [
+    "separate production-formatted and parser-independent files with no pooling or substitution",
+    "different parser/extractor IDs, revisions, artifact paths, and artifact SHA-256 values",
+    "pairing by source ID plus source-document SHA-256, with separate view-text and file hashes",
+    "all six categories in frozen order with subdomains reported beneath categories and zero independent decision weight",
+    "aggregate training, selection-heldout, D5-tokenizer, and E2-mixture ledgers globally disjoint by source-derived document identity, source-document hash, and normalized-content hash",
+    "selection and sealed-audit identity ledgers reproduce the existing firewall's ordered per-category content commitments without opening audit payloads",
+    "all sliding normalized 96-character windows and exhaustive exact token-shingle Jaccard inside an explicit comparison bound are separate fail-closed leakage channels",
+    "additional leakage checks cannot replace, relax, or reinterpret exact/near deduplication, firewall consumer checks, or sealed-opening rules",
+    "paired document BPB, unweighted six-category macro delta, deterministic document bootstrap, and the existing +0.01 category upper-bound guardrail in both separate views",
+    "model and backend identity binding plus optional same-model cross-backend per-document NLL parity",
+    "fixture outputs always deny real consumer, selection, training, and audit-opening authority"
+  ],
+  "fixture_validation": {
+    "focused_new_tests_passed": 7,
+    "focused_integration_tests_passed": 28,
+    "full_cpu_suite_passed": 831,
+    "full_cpu_suite_skipped": 8,
+    "ruff_lint": "pass",
+    "documented_format_check": "pass",
+    "real_corpus_documents_read": 0,
+    "external_data_or_model_network_requests": 0,
+    "sealed_audit_openings": 0,
+    "model_evaluations": 0,
+    "external_backend_parity_runs": 0
+  },
+  "limitations": [
+    "real per-category document/byte and exhaustive-pair bounds remain unspecified and must be frozen in an executable successor before materialization",
+    "the fixture uses small in-memory exhaustive window and Jaccard indexes; a real-scale successor may need disk-backed indexing while retaining exact verification and the same fail rule",
+    "the aggregate training ledger's completeness must be bound to the eventual tokenizer and packed model-training manifests",
+    "no production formatter or alternate parser/extractor revision has been selected or qualified",
+    "cross-backend parity is a contract/helper only and has no real external-model evidence",
+    "no evaluation result, ranking, selection, training, consumer access, or audit opening is authorized"
+  ],
+  "decision": "retain this as the bounded parser-independent pre-results successor; do not materialize real views or score models until real bounds, complete training identities, production firewall authority, and independently pinned parser artifacts exist"
+}

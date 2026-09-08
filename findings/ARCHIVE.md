@@ -211,6 +211,7 @@ history in order only when auditing provenance or a retired decision:
 196. [195 — Whitespace-piece support fixes the local custom-tokenizer deficit](195_local_tokenizer_data_study.md)
 197. [196 — Checkpoint replacement now preserves its predecessor](196_runtime_cleanup_successors.md)
 198. [197 — The corrected tokenizer candidate is now a formal v2 contract](197_tokenizer_v2_contract.md)
+199. [198 — Held-out evaluation now has a parser-independent pre-results contract](198_parser_independent_heldout_contract.md)
 
 Conventions:
 
