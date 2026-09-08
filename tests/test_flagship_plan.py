@@ -577,10 +577,35 @@ def test_launch_risk_hardening_successor_preserves_prior_results_and_binds_curre
             == (predecessor["sha256"])
         )
         assert predecessor["modified"] is False
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["pregrant_record"][1] == (
+        "e2f890af3994cae104f094aef6ab83f0dca594304b58e26335eeef482cba06ed"
+    )
+    for name, (path, digest) in result["implementation"].items():
+        if name != "pregrant_record":
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     assert result["validation"]["gpu_or_slurm_commands_run"] == 0
     assert result["authority"] == "engineering_evidence_only_not_training_authority"
+
+
+def test_preaccess_engineering_integration_is_hash_bound_and_not_launch_authority():
+    result = json.loads(
+        (ROOT / "results" / "preaccess-engineering-integration-20260908.json").read_text()
+    )
+    assert result["status"] == (
+        "cpu_preaccess_integration_pass_hardware_and_real_data_gates_pending"
+    )
+    for section in ("implementation", "contracts"):
+        for path, digest in result[section].values():
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["completed_preaccess_work"]["embedding_head"]["tie_word_embeddings"] is True
+    assert result["completed_preaccess_work"]["slurm"]["scientific_promotion_automated"] is False
+    assert result["completed_preaccess_work"]["slurm"]["reserve_spend_automated"] is False
+    assert result["completed_preaccess_work"]["slurm"]["live_scheduler_commands_run"] == 0
+    assert result["remaining_hardware_gates"]
+    assert result["remaining_data_gates"]
+    assert result["authority"] == (
+        "CPU_engineering_integration_only_not_paid_launch_or_training_authority"
+    )
 
 
 def test_data_rehearsal_orchestration_is_hash_bound_but_has_not_run_20B():

@@ -1,0 +1,109 @@
+{
+  "format": "speck_preaccess_engineering_integration",
+  "format_version": 1,
+  "status": "cpu_preaccess_integration_pass_hardware_and_real_data_gates_pending",
+  "recorded_on": "2026-09-08",
+  "pre_result_commit": "75b8b71",
+  "implementation": {
+    "architecture": ["speck/architecture.py", "7806e7a1c02f6db07301242c4250fdb653e6fbb7e6c7bba5cf0bb435fab04bdc"],
+    "model": ["speck/model.py", "f3c63ea75bd12589205375e3384238ea4f728bd9b2675676dd25a7e75b489bdf"],
+    "scale_accounting": ["speck/scale_targets.py", "02ca2f3e27457fc0438dc1918c9be795a2dfe2789ebf755214b0e764e5293ea6"],
+    "slurm_operations": ["speck/slurm.py", "77b807146c226f23e67062e92d0254efc26c5ed4218be75303048de53b5a3fe3"],
+    "base_trainer": ["scripts/base_train.py", "e8746e89465ee08f85e206485fa6eda3de872b2561cf3affe337b971b86dc24c"],
+    "slurm_trainer": ["scripts/slurm_base_train.py", "a57f0a096630b2948fd2c77ac585cb4107e536f4f67d292639b307ce0b92e744"],
+    "runtime": ["speck/common.py", "c411a4d37f25bae59a76fa7eed4a7dcdf035b3b83c5297ad9b6b782e4473710e"],
+    "data_launch": ["speck/data_launch.py", "12ffe23df14bb420ca95b4a0054aee38bb394e6b1e1378c70a5dea20aded6ad3"],
+    "training_mechanics": ["speck/train.py", "0dc0c8824916b70689f48da292fdbde25ee341aed605631b182106e078b95564"],
+    "heldout_evaluation": ["speck/heldout_evaluation.py", "bea5f0c02d1324913c08156b810cf53b79e442811b2545bd06bcaa8c3262e220"],
+    "logprob_parity": ["speck/logprob_parity.py", "c2797312cee9311bf121657e127133d506faabf9a5b0ce03477e07d705c6d521"]
+  },
+  "contracts": {
+    "embedding_head": ["research/flagship/embedding_head_contract_v1.json", "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7"],
+    "tokenizer_v3": ["research/flagship/tokenizer_plan_v3.json", "ef5e6a22deed460723e9dc3065a1722fe54ed06a9d316be2686d4556b0f90da6"],
+    "scale_targets_v2": ["research/flagship/targets/scale-targets-v2.json", "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493"],
+    "scale_accounting_v2": ["research/flagship/targets/accounting-v2.json", "8eef2d167b2b50c7425315162a69350cb0cae9a7bbbbbfad07920b2435cddfc4"],
+    "launch_risk_successor": ["results/launch-risk-hardening-successor-20260908.json", "e3492ce6985e64884d5c144942e96a058e51219ca88e5dc8f8a12f27cc9b54b2"],
+    "parser_independent_heldout": ["results/data/parser-independent-heldout-tooling-20260908.json", "8efbeab2e19ccbfebcfaabf7f7e98e096e053e05d8534e5ec1b1bcb00531d286"],
+    "logprob_parity_fixture": ["results/evaluation/logprob-parity-fixture-20260908.json", "62652e8f85e238d5b44ac789644c8e9d9ea590bfc2908b28a830f7eaa1a085b3"]
+  },
+  "completed_preaccess_work": {
+    "selectable_KDA_output_gate": {
+      "default": "sigmoid",
+      "alternative": "silu",
+      "legacy_config_and_checkpoint_compatibility": true,
+      "CPU_and_export_tests": "pass",
+      "CUDA_FLA_execution": "pending_GH200"
+    },
+    "scale_targets": {
+      "targets": ["60M", "150M", "220M", "350M", "600M", "750M", "1.2B"],
+      "independent_and_instantiated_accounting": true,
+      "lengths": [4096, 131072],
+      "launch_authority": false
+    },
+    "embedding_head": {
+      "tie_word_embeddings": true,
+      "untied_supported": false,
+      "missing_and_explicit_true_compatible": true,
+      "strict_load_rejects_contradictory_aliases": true,
+      "physical_parameter_formula": "V*E"
+    },
+    "slurm": {
+      "one_GPU_arrays": true,
+      "four_GPU_jobs": true,
+      "mandatory_GPU_hours": 4111,
+      "protected_reserve_GPU_hours": 889,
+      "scientific_promotion_automated": false,
+      "reserve_spend_automated": false,
+      "live_scheduler_commands_run": 0
+    },
+    "training_hardening": {
+      "partial_summary_is_nonfinal": true,
+      "partial_checkpoint_export_rejected": true,
+      "optimizer_boundary_signal_checkpoint": true,
+      "bounded_exact_resume": true,
+      "nonfinite_validation_and_final_parameters_rejected": true,
+      "clean_tracked_git_tree_bound": true,
+      "distributed_manifest_identity_bound": true,
+      "single_node_rank_and_visible_GPU_geometry_checked": true,
+      "resume_compile_time_excluded_from_steady_time": true,
+      "collapsed_token_milestones_rejected": true
+    },
+    "evaluation": {
+      "production_and_independent_parser_views_separate": true,
+      "six_category_and_subdomain_reporting": true,
+      "normalized_96_character_leakage_gate": true,
+      "verified_Jaccard_gate": true,
+      "cross_backend_token_logprob_identity_and_error_gate": true,
+      "real_model_evaluations": 0
+    }
+  },
+  "validation": {
+    "focused_integration_passed": 330,
+    "focused_integration_skipped": 10,
+    "full_suite_passed": 898,
+    "full_suite_skipped": 10,
+    "ruff_lint": "pass",
+    "documented_format_check": "pass",
+    "scale_v1_regeneration_check": "pass",
+    "scale_v2_regeneration_check": "pass",
+    "diff_check": "pass"
+  },
+  "remaining_hardware_gates": [
+    "actual Slurm account partition QOS walltime and signal semantics",
+    "GH200 arm64 CUDA NCCL PyTorch Triton FLA and Liger environment",
+    "KDA sigmoid and SiLU full-layer CUDA FLA parity",
+    "one-GPU and four-GPU DDP equivalence",
+    "scheduler signal checkpoint requeue and exact resume",
+    "shared filesystem and storage throughput",
+    "achieved TFLOP/s memory and throughput contingency class",
+    "real backend logprob parity"
+  ],
+  "remaining_data_gates": [
+    "human source decisions",
+    "real 20B operations rehearsal",
+    "real firewall and parser-independent partitions",
+    "formal tokenizer v3 training pilot and D5 audit",
+    "packed corpus and data-launch receipt"
+  ],
+  "authority": "CPU_engineering_integration_only_not_paid_launch_or_training_authority"
+}

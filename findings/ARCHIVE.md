@@ -214,6 +214,8 @@ history in order only when auditing provenance or a retired decision:
 199. [198 — KDA output gating is selectable without changing sigmoid checkpoints](198_kda_output_gate_successor.md)
 200. [199 — R13 now has a pre-access log-probability parity contract](199_logprob_parity_contract.md)
 201. [200 — Held-out evaluation now has a parser-independent pre-results contract](200_parser_independent_heldout_contract.md)
+202. [201 — The flagship keeps physically tied token embeddings](201_tied_embedding_head_contract.md)
+203. [202 — Pre-access training and Slurm failure boundaries are explicit](202_preaccess_training_and_slurm_hardening.md)
 
 Conventions:
 
