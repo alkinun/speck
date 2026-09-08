@@ -25,8 +25,8 @@ The active operating surface is intentionally small:
   and decision contract; [`tokenizer_plan.json`](tokenizer_plan.json) preserves v1.
 - [`source_registry.json`](source_registry.json) pins the candidate source revisions and provisional
   tokenizer byte quotas without granting training authority.
-- [`targets/`](targets/) contains non-launchable geometry targets; complete launch experiments are
-  created only at the day-21 freeze.
+- [`targets/`](targets/) contains seven exact, machine-checked, non-launchable scale geometries;
+  complete launch experiments are created only at the day-21 freeze.
 
 ## 1. Mission
 
@@ -75,9 +75,11 @@ directly with Qwen3-0.6B, SmolLM2-360M, and LFM2-700M, and serves better, which 
 decision **F1**, resolved by the scale ladder in section 4.4 no later than day 18, defaulting to A.
 If FP8 qualifies on the node, the extra throughput buys tokens, not saved hours.
 
-The current non-launchable Shape-A geometry is
-[`targets/shape-a`](targets/shape-a/). It materializes to 1,195,878,432 parameters; the rounded 1.2B
-label is the model-size class, not an exact count.
+The active R11 planning successor is [`targets/scale-targets-v1.json`](targets/scale-targets-v1.json),
+with exact accounting in [`targets/ACCOUNTING.md`](targets/ACCOUNTING.md). Under the explicit 32,003-row
+D5 fallback, Shape A materializes to 1,195,884,576 shared-head parameters; the rounded 1.2B label is
+the model-size class, not an exact count. The old 32,000-row
+[`targets/shape-a`](targets/shape-a/) record remains hash-pinned history.
 
 ### 2.3 Architecture defaults
 
