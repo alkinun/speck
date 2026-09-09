@@ -1,0 +1,196 @@
+{
+  "format": "speck_production_rehearsal_plan",
+  "format_version": 1,
+  "status": "frozen_20B_rehearsal_not_training_authority",
+  "target_tokens": 20000000000,
+  "seed": 42,
+  "source_registry": {
+    "path": "../source_registry_v2.json",
+    "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+  },
+  "rights_record": {
+    "path": "../source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "deny_ledger": {
+    "path": "deny_ledger_v1.json",
+    "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+  },
+  "tokenizer": {
+    "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "filtering": {
+    "min_chars": 200,
+    "max_chars": 100000
+  },
+  "partition": {
+    "holdout_modulus": 20,
+    "holdout_remainders": [
+      0
+    ],
+    "normalization": "NFKC+lower+whitespace"
+  },
+  "deduplication": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "bands": 16,
+    "verified_jaccard_threshold": 0.8,
+    "domain_match": "exact_or_subdomain",
+    "checkpoint_records": 10000
+  },
+  "packing": {
+    "shard_tokens": 100000000,
+    "acquisition_margin_percent": 20
+  },
+  "sources": [
+    {
+      "id": "ultrafineweb_en_v1_4",
+      "category": "web",
+      "target_tokens": 11000000000,
+      "reader": {
+        "id": "ultrafineweb_en_v1_4",
+        "repo": "openbmb/Ultra-FineWeb",
+        "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+        "tree_path": "data/ultrafineweb_en_v1_4",
+        "content_column": "content",
+        "score_column": "score",
+        "metadata_columns": {
+          "uid": "uid",
+          "url": "source"
+        },
+        "filters": {
+          "min_score": 0.5
+        }
+      }
+    },
+    {
+      "id": "common_pile_stackv2_edu",
+      "category": "code",
+      "target_tokens": 3000000000,
+      "reader": {
+        "id": "common_pile_stackv2_edu",
+        "repo": "common-pile/stackv2_edu_filtered",
+        "revision": "c354dbe88469a1153e97c6a63ac50591849654de",
+        "tree_path": "",
+        "content_column": "text",
+        "file_format": "jsonl_gzip",
+        "score_column": "int_score",
+        "metadata_columns": {
+          "id": "id",
+          "blob": "id",
+          "source": "source"
+        },
+        "filters": {
+          "min_score": 4
+        }
+      }
+    },
+    {
+      "id": "finemath_4plus",
+      "category": "math",
+      "target_tokens": 2000000000,
+      "reader": {
+        "id": "finemath_4plus",
+        "repo": "HuggingFaceTB/finemath",
+        "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+        "tree_path": "finemath-4plus",
+        "content_column": "text",
+        "metadata_columns": {
+          "url": "url",
+          "score": "score"
+        },
+        "filters": {}
+      }
+    },
+    {
+      "id": "cosmopedia_v2",
+      "category": "synthetic",
+      "target_tokens": 2000000000,
+      "reader": {
+        "id": "cosmopedia_v2",
+        "repo": "HuggingFaceTB/smollm-corpus",
+        "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+        "tree_path": "cosmopedia-v2",
+        "content_column": "text",
+        "metadata_columns": {
+          "audience": "audience",
+          "format": "format"
+        },
+        "filters": {}
+      }
+    },
+    {
+      "id": "common_pile_pubmed",
+      "category": "science",
+      "target_tokens": 1000000000,
+      "reader": {
+        "id": "common_pile_pubmed",
+        "repo": "common-pile/pubmed_filtered",
+        "revision": "c156f0569a92d8f2edc33cebe1f72f7d3e1cae84",
+        "tree_path": "",
+        "content_column": "text",
+        "file_format": "jsonl_gzip",
+        "metadata_columns": {
+          "id": "id",
+          "url": "id",
+          "source": "source"
+        },
+        "filters": {}
+      }
+    },
+    {
+      "id": "finewiki_en",
+      "category": "reference",
+      "target_tokens": 1000000000,
+      "reader": {
+        "id": "finewiki_en",
+        "repo": "HuggingFaceFW/finewiki",
+        "revision": "8bd13e72e6a002407649b3e898535f42ceb1aeb9",
+        "tree_path": "data/enwiki",
+        "content_column": "text",
+        "language_column": "in_language",
+        "metadata_columns": {
+          "id": "id",
+          "title": "title",
+          "url": "url"
+        },
+        "filters": {
+          "language": "en"
+        }
+      }
+    }
+  ],
+  "output_directory": "/mnt/speck-data/speck/data-rehearsal-20b-v1/work",
+  "contamination_plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+    "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+  },
+  "security": {
+    "gitleaks_binary": {
+      "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+      "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+    },
+    "gitleaks_version": "8.30.1",
+    "maximum_duplicate_line_ratio": 0.5,
+    "adult_host_terms": [
+      "adult",
+      "porn",
+      "xxx",
+      "sexcam",
+      "hentai"
+    ],
+    "allowed_emails": [
+      "email@example.com",
+      "firstname.lastname@example.org"
+    ],
+    "allowed_ipv4": [
+      "127.0.0.1"
+    ]
+  }
+}

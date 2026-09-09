@@ -1,0 +1,400 @@
+{
+  "format": "speck_data_rehearsal",
+  "format_version": 1,
+  "status": "orchestration_authorized_not_training_authority",
+  "mode": "production_20B",
+  "target_tokens": 20000000000,
+  "rights_record": {
+    "path": "../source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "deny_ledger": {
+    "path": "deny_ledger_v1.json",
+    "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+  },
+  "stages": [
+    {
+      "id": "source_identity",
+      "command": [
+        "uv",
+        "run",
+        "--extra",
+        "cpu",
+        "python",
+        "-m",
+        "scripts.production_rehearsal",
+        "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+        "source_identity",
+        "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/source_identity.json"
+      ],
+      "cwd": "/home/alkin/Desktop/speck",
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "inputs": [
+        {
+          "path": "/home/alkin/Desktop/speck/speck/production_rehearsal.py",
+          "sha256": "6d9d03f814b760ebfd28c6a81cb6acb8b493af6548b06fd3bfde29f5fcb62a9c"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/scripts/production_rehearsal.py",
+          "sha256": "be1b216e24d31f7072fe54f5cb9e97882d7cb16547b3b7e2eacb21d63ec774f5"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+          "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_registry_v2.json",
+          "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+          "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+          "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+        },
+        {
+          "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+          "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+        },
+        {
+          "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+          "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        }
+      ],
+      "result": {
+        "path": "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/source_identity.json"
+      }
+    },
+    {
+      "id": "acquisition",
+      "command": [
+        "uv",
+        "run",
+        "--extra",
+        "cpu",
+        "python",
+        "-m",
+        "scripts.production_rehearsal",
+        "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+        "acquisition",
+        "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/acquisition.json"
+      ],
+      "cwd": "/home/alkin/Desktop/speck",
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "inputs": [
+        {
+          "path": "/home/alkin/Desktop/speck/speck/production_rehearsal.py",
+          "sha256": "6d9d03f814b760ebfd28c6a81cb6acb8b493af6548b06fd3bfde29f5fcb62a9c"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/scripts/production_rehearsal.py",
+          "sha256": "be1b216e24d31f7072fe54f5cb9e97882d7cb16547b3b7e2eacb21d63ec774f5"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+          "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_registry_v2.json",
+          "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+          "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+          "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+        },
+        {
+          "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+          "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+        },
+        {
+          "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+          "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        }
+      ],
+      "result": {
+        "path": "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/acquisition.json"
+      }
+    },
+    {
+      "id": "global_dedup",
+      "command": [
+        "uv",
+        "run",
+        "--extra",
+        "cpu",
+        "python",
+        "-m",
+        "scripts.production_rehearsal",
+        "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+        "global_dedup",
+        "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/global_dedup.json"
+      ],
+      "cwd": "/home/alkin/Desktop/speck",
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "inputs": [
+        {
+          "path": "/home/alkin/Desktop/speck/speck/production_rehearsal.py",
+          "sha256": "6d9d03f814b760ebfd28c6a81cb6acb8b493af6548b06fd3bfde29f5fcb62a9c"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/scripts/production_rehearsal.py",
+          "sha256": "be1b216e24d31f7072fe54f5cb9e97882d7cb16547b3b7e2eacb21d63ec774f5"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+          "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_registry_v2.json",
+          "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+          "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+          "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+        },
+        {
+          "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+          "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+        },
+        {
+          "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+          "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        }
+      ],
+      "result": {
+        "path": "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/global_dedup.json"
+      }
+    },
+    {
+      "id": "packing",
+      "command": [
+        "uv",
+        "run",
+        "--extra",
+        "cpu",
+        "python",
+        "-m",
+        "scripts.production_rehearsal",
+        "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+        "packing",
+        "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/packing.json"
+      ],
+      "cwd": "/home/alkin/Desktop/speck",
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "inputs": [
+        {
+          "path": "/home/alkin/Desktop/speck/speck/production_rehearsal.py",
+          "sha256": "6d9d03f814b760ebfd28c6a81cb6acb8b493af6548b06fd3bfde29f5fcb62a9c"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/scripts/production_rehearsal.py",
+          "sha256": "be1b216e24d31f7072fe54f5cb9e97882d7cb16547b3b7e2eacb21d63ec774f5"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+          "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_registry_v2.json",
+          "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+          "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+          "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+        },
+        {
+          "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+          "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+        },
+        {
+          "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+          "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        }
+      ],
+      "result": {
+        "path": "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/packing.json"
+      }
+    },
+    {
+      "id": "resume_cleanup",
+      "command": [
+        "uv",
+        "run",
+        "--extra",
+        "cpu",
+        "python",
+        "-m",
+        "scripts.production_rehearsal",
+        "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+        "resume_cleanup",
+        "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/resume_cleanup.json"
+      ],
+      "cwd": "/home/alkin/Desktop/speck",
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "inputs": [
+        {
+          "path": "/home/alkin/Desktop/speck/speck/production_rehearsal.py",
+          "sha256": "6d9d03f814b760ebfd28c6a81cb6acb8b493af6548b06fd3bfde29f5fcb62a9c"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/scripts/production_rehearsal.py",
+          "sha256": "be1b216e24d31f7072fe54f5cb9e97882d7cb16547b3b7e2eacb21d63ec774f5"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+          "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_registry_v2.json",
+          "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+          "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+          "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+        },
+        {
+          "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+          "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+        },
+        {
+          "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+          "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        }
+      ],
+      "result": {
+        "path": "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/resume_cleanup.json"
+      }
+    },
+    {
+      "id": "firewall_disjointness",
+      "command": [
+        "uv",
+        "run",
+        "--extra",
+        "cpu",
+        "python",
+        "-m",
+        "scripts.production_rehearsal",
+        "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+        "firewall_disjointness",
+        "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/firewall_disjointness.json"
+      ],
+      "cwd": "/home/alkin/Desktop/speck",
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "inputs": [
+        {
+          "path": "/home/alkin/Desktop/speck/speck/production_rehearsal.py",
+          "sha256": "6d9d03f814b760ebfd28c6a81cb6acb8b493af6548b06fd3bfde29f5fcb62a9c"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/scripts/production_rehearsal.py",
+          "sha256": "be1b216e24d31f7072fe54f5cb9e97882d7cb16547b3b7e2eacb21d63ec774f5"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/production_plan.json",
+          "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_registry_v2.json",
+          "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+          "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        {
+          "path": "/home/alkin/Desktop/speck/research/flagship/web_contamination_v1.json",
+          "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+        },
+        {
+          "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+          "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+        },
+        {
+          "path": "/mnt/speck-data/speck/evaluation-sources/tokenizer-baselines/mistral-7b-v0.1/tokenizer.model",
+          "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        }
+      ],
+      "result": {
+        "path": "/mnt/speck-data/speck/data-rehearsal-20b-v1/stage-results/firewall_disjointness.json"
+      }
+    }
+  ],
+  "required_gates": [
+    "source_identity",
+    "global_exact_deduplication",
+    "global_near_deduplication",
+    "packing_integrity",
+    "acquisition_cleanup",
+    "interruption_resume",
+    "firewall_training_disjointness"
+  ],
+  "required_metrics": [
+    "download_bytes",
+    "download_bytes_per_second",
+    "filtered_bytes",
+    "records_seen",
+    "records_retained",
+    "sqlite_index_bytes",
+    "peak_rss_bytes",
+    "packing_tokens_per_second",
+    "packed_tokens",
+    "packed_bytes",
+    "unique_tokens"
+  ],
+  "output_directory": "/mnt/speck-data/speck/data-rehearsal-20b-v1/orchestration"
+}

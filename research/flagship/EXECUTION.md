@@ -39,7 +39,8 @@ files, human rights, production operations, deny ledger, firewall, selected toke
 data. The trainer revalidates those artifacts after shard verification and before model construction.
 No real receipt exists while the P0 data gates remain open.
 
-The future 20B rehearsal runs through [`data_rehearsal_plan_v2.json`](data_rehearsal_plan_v2.json): source
+The 20B rehearsal runs through [`data_rehearsal_plan_v3.json`](data_rehearsal_plan_v3.json) and the
+frozen [`data_rehearsal_20b_v1/`](data_rehearsal_20b_v1/) manifest: source
 identity, acquisition, global deduplication, packing, resume/cleanup, then firewall disjointness. The
 runner durably verifies completed stages and captures required resource/yield telemetry, but fixture
 qualification is not a rehearsal result and cannot issue production authority.

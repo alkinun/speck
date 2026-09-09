@@ -19,6 +19,8 @@ The active operating surface is intentionally small:
   and qualification order.
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
+- [`data_rehearsal_20b_v1/`](data_rehearsal_20b_v1/) contains the first frozen real six-category
+  production rehearsal; it is operations evidence, not a selected mixture or training authority.
 - [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
 - [`data_plan_v2.json`](data_plan_v2.json) is the active machine-checked category, run, and selection
   contract; `data_plan.json` preserves the pre-integration predecessor.
@@ -433,7 +435,9 @@ new architecture axis.
 
 [`PREGRANT.md`](PREGRANT.md) is the complete readiness checklist and records current status. The
 critical path is a code-inclusive corpus and neutral held-out set, tokenizer qualification, the 20B
-data rehearsal, complete long-document data, and one four-GH200 training/resume qualification.
+data rehearsal, complete long-document data, and one four-GH200 training/resume qualification. The
+20B production manifest is frozen and ready to run; no production result or operations authority
+exists yet.
 
 The RTX 3090 is reserved for the D5 tokenizer pilot, comparator serving measurements, and
 representative export rehearsals. It does not run new architecture searches. A paid allocation does

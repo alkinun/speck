@@ -1,0 +1,78 @@
+{
+  "format": "speck_flagship_data_rehearsal_orchestration_plan",
+  "format_version": 3,
+  "status": "real_20B_manifest_frozen_launch_pending",
+  "stage_order": [
+    "source_identity",
+    "acquisition",
+    "global_dedup",
+    "packing",
+    "resume_cleanup",
+    "firewall_disjointness"
+  ],
+  "required_gates": [
+    "source_identity",
+    "global_exact_deduplication",
+    "global_near_deduplication",
+    "packing_integrity",
+    "acquisition_cleanup",
+    "interruption_resume",
+    "firewall_training_disjointness"
+  ],
+  "required_metrics": [
+    "download_bytes",
+    "download_bytes_per_second",
+    "filtered_bytes",
+    "records_seen",
+    "records_retained",
+    "sqlite_index_bytes",
+    "peak_rss_bytes",
+    "packing_tokens_per_second",
+    "packed_tokens",
+    "packed_bytes",
+    "unique_tokens"
+  ],
+  "orchestration": {
+    "stage_commands_and_inputs_hash_bound": true,
+    "stdout_stderr_and_result_hash_bound": true,
+    "elapsed_rss_disk_and_free_space_recorded": true,
+    "completed_stages_skipped_only_after_reverification": true,
+    "changed_completed_result_or_log": "fail",
+    "packed_tokens_must_reach_target": true
+  },
+  "production_mode": {
+    "target_tokens": 20000000000,
+    "requires_signed_human_rights_record": true,
+    "operations_record_format": "speck_production_data_operations_qualification",
+    "operations_record_status": "production_data_operations_qualified",
+    "fixture_may_issue_operations_record": false
+  },
+  "real_manifest": {
+    "status": "frozen_launch_pending",
+    "production_plan": {
+      "path": "research/flagship/data_rehearsal_20b_v1/production_plan.json",
+      "sha256": "0bb070a5095f69ccdb12341c331524c5b45c2e09ea3ebc0b8820d2e42aa22c75"
+    },
+    "orchestration": {
+      "path": "research/flagship/data_rehearsal_20b_v1/orchestration.json",
+      "sha256": "0dfc7309714e1a49c48938a0edddfc9306d0dfc9c3328a3381edf75b7c0e1d45"
+    },
+    "target_tokens": 20000000000,
+    "data_authority": "operations_rehearsal_only_not_training"
+  },
+  "training_authority": "blocked_pending_real_20B_rehearsal_firewall_tokenizer_and_packed_data",
+  "supersedes": {
+    "path": "research/flagship/data_rehearsal_plan_v2.json",
+    "sha256": "ec70381f2136f4b0462169e0f9821485feafd9ea227baeff2aac4eda71064471",
+    "repository_revision": "5988d9f",
+    "reason": "materialize the first exact six-category 20B production plan and six-stage orchestration after human source approval"
+  },
+  "rights_record": {
+    "path": "research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "release_policy": {
+    "path": "research/flagship/release_and_data_use_policy_v1.json",
+    "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+  }
+}

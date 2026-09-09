@@ -81,7 +81,7 @@ def test_execution_budget_reassigns_e5_hours_without_touching_reserve():
         "release_policy": "research/flagship/release_and_data_use_policy_v1.json",
         "source_registry": "research/flagship/source_registry_v2.json",
         "source_rights": "research/flagship/source_rights_acceptance_v1.json",
-        "data_rehearsal": "research/flagship/data_rehearsal_plan_v2.json",
+        "data_rehearsal": "research/flagship/data_rehearsal_plan_v3.json",
         "data_launch": "research/flagship/data_launch_plan_v2.json",
     }
     assert all((ROOT / path).is_file() for path in execution["active_contracts"].values())

@@ -116,3 +116,14 @@ def test_active_successor_plans_remove_only_the_completed_rights_blocker():
         _sha256(ROOT / tokenizer["source_rights_acceptance"]["path"])
         == tokenizer["source_rights_acceptance"]["sha256"]
     )
+
+
+def test_real_20b_rehearsal_successor_binds_frozen_production_and_orchestration_plans():
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v3.json").read_text())
+
+    assert plan["status"] == "real_20B_manifest_frozen_launch_pending"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    assert plan["real_manifest"]["target_tokens"] == 20_000_000_000
+    for key in ("production_plan", "orchestration"):
+        identity = plan["real_manifest"][key]
+        assert _sha256(ROOT / identity["path"]) == identity["sha256"]
