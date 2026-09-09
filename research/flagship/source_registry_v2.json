@@ -1,0 +1,676 @@
+{
+  "format": "speck_flagship_source_registry",
+  "format_version": 2,
+  "status": "human_guarded_use_approved_production_authority_pending",
+  "audited_on": "2026-09-09",
+  "language_scope": "English natural language; programming syntax exempt; code prose English-filtered",
+  "categories": [
+    "web",
+    "code",
+    "math",
+    "synthetic",
+    "science",
+    "reference"
+  ],
+  "sources": [
+    {
+      "id": "ultrafineweb_en_v1_4",
+      "category": "web",
+      "repo": "openbmb/Ultra-FineWeb",
+      "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+      "subset": "data/ultrafineweb_en_v1_4",
+      "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "Apache-2.0 project release; upstream-source terms require review",
+      "pipeline": "bounded_language_quality_PII_security_partition_overlap_and_contamination_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "ultrafineweb_l1_en_hq",
+      "category": "web",
+      "repo": "openbmb/Ultra-FineWeb",
+      "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+      "subset": "data/ultrafineweb_l1_en_hq",
+      "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "Apache-2.0 project release; upstream-source terms require review",
+      "pipeline": "integrated"
+    },
+    {
+      "id": "fineweb_edu",
+      "category": "web",
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "subset": "default score>=3",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus Common Crawl terms",
+      "pipeline": "bounded_language_quality_PII_security_partition_overlap_and_contamination_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "dclm_baseline",
+      "category": "web",
+      "repo": "mlfoundations/dclm-baseline-1.0-parquet",
+      "revision": "817d6752765f6a41261085171dd546b104f60626",
+      "subset": "filtered/OH_eli5_vs_rw_v2_bigram_200k_train",
+      "official_url": "https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "CC-BY-4.0 dataset release; upstream terms require review",
+      "pipeline": "bounded_language_quality_PII_security_partition_overlap_and_contamination_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "fineweb_base",
+      "category": "web",
+      "repo": "HuggingFaceFW/fineweb",
+      "revision": "9bb295ddab0e05d785b879661af7260fed5140fc",
+      "subset": "English base",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "priority": "secondary",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus Common Crawl terms",
+      "pipeline": "bounded_language_quality_PII_security_partition_overlap_and_contamination_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "dolma_v1_7",
+      "category": "web",
+      "repo": "allenai/dolma",
+      "revision": "7f48140530a023e9ea4c5cfb141160922727d4d3",
+      "subset": "v1_7 web components",
+      "official_url": "https://huggingface.co/datasets/allenai/dolma",
+      "priority": "reference_only",
+      "access": "external_url_lists",
+      "rights": "ODC-By-1.0 plus source-specific terms",
+      "pipeline": "external_fetch"
+    },
+    {
+      "id": "nemotron_cc_v2",
+      "category": "web",
+      "repo": "nvidia/Nemotron-CC-v2",
+      "revision": "2669787c66d18601c0e91167fd520be6c1245865",
+      "subset": "high-quality English organic web",
+      "official_url": "https://huggingface.co/datasets/nvidia/Nemotron-CC-v2",
+      "priority": "hold_terms",
+      "access": "manual_gated",
+      "rights": "NVIDIA Data Agreement and possible upstream model-license conditions",
+      "pipeline": "gated"
+    },
+    {
+      "id": "stack_v3_train_permissive",
+      "category": "code",
+      "repo": "HuggingFaceCode/stack-v3-train",
+      "revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+      "subset": "v3.1; license_type=permissive; is_vendor=false; repository grouped",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceCode/stack-v3-train",
+      "priority": "primary_screen",
+      "access": "open_huggingface_nested_parquet",
+      "rights": "ODC-By-1.0 dataset; every original file license and attribution still applies",
+      "pipeline": "security_language_license_contamination_partition_and_five_source_overlap_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "stack_edu",
+      "category": "code",
+      "repo": "HuggingFaceTB/stack-edu",
+      "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+      "subset": "selected languages; permissive files only",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceTB/stack-edu",
+      "priority": "primary_screen",
+      "access": "software_heritage_s3_ids",
+      "rights": "inherits The Stack v2 source licenses and attribution",
+      "pipeline": "bounded_swh_security_contamination_partition_and_five_source_overlap_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_stackv2_edu",
+      "category": "code",
+      "repo": "common-pile/stackv2_edu_filtered",
+      "revision": "c354dbe88469a1153e97c6a63ac50591849654de",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/stackv2_edu_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "Common Pile public-domain/open-license policy; file-level audit required",
+      "pipeline": "bounded_inline_security_contamination_partition_and_five_source_overlap_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "python_edu",
+      "category": "code",
+      "repo": "HuggingFaceTB/smollm-corpus",
+      "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+      "subset": "python-edu score>=4",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus",
+      "priority": "secondary",
+      "access": "software_heritage_s3_ids",
+      "rights": "inherits The Stack v2 source licenses and attribution",
+      "pipeline": "bounded_swh_score_language_security_contamination_partition_and_five_source_overlap_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_python_peps",
+      "category": "code",
+      "repo": "common-pile/python_enhancement_proposals_filtered",
+      "revision": "582170907dd303c207770fceacd38e6abf133edc",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/python_enhancement_proposals_filtered",
+      "priority": "tokenizer_only",
+      "access": "open_huggingface",
+      "rights": "Common Pile public-domain/open-license policy; source license audit required",
+      "pipeline": "bounded_public_domain_language_security_contamination_partition_and_five_source_overlap_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "stack_v2_dedup",
+      "category": "code",
+      "repo": "bigcode/the-stack-v2-dedup",
+      "revision": "611ef38fbfab78b65b38be47e870e4b3d70de038",
+      "subset": "near-deduplicated",
+      "official_url": "https://huggingface.co/datasets/bigcode/the-stack-v2-dedup",
+      "priority": "fallback",
+      "access": "auto_gated_software_heritage",
+      "rights": "mixed original licenses and attribution",
+      "pipeline": "external_blob_fetch"
+    },
+    {
+      "id": "nemotron_cc_code_v1",
+      "category": "code",
+      "repo": "nvidia/Nemotron-CC-Code-v1",
+      "revision": "5c5bebce9f9a85c237d63b2afad516ee532f950f",
+      "subset": "pretraining code",
+      "official_url": "https://huggingface.co/datasets/nvidia/Nemotron-CC-Code-v1",
+      "priority": "hold_terms",
+      "access": "manual_gated",
+      "rights": "NVIDIA Data Agreement and upstream-model conditions require acceptance review",
+      "pipeline": "gated"
+    },
+    {
+      "id": "finemath_4plus",
+      "category": "math",
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "subset": "finemath-4plus",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceTB/finemath",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus Common Crawl terms",
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "infiwebmath_4plus",
+      "category": "math",
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "subset": "infiwebmath-4plus",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceTB/finemath",
+      "priority": "secondary",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus Common Crawl terms",
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "megamath_web_pro",
+      "category": "math",
+      "repo": "LLM360/MegaMath",
+      "revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d",
+      "subset": "megamath-web-pro",
+      "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus source-specific terms",
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "openwebmath",
+      "category": "math",
+      "repo": "open-web-math/open-web-math",
+      "revision": "fde8ef8de2300f5e778f56261843dab89f230815",
+      "subset": "train",
+      "official_url": "https://huggingface.co/datasets/open-web-math/open-web-math",
+      "priority": "secondary",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus Common Crawl terms",
+      "pipeline": "bounded_identity_quality_language_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "proof_pile_2_algebraic_stack",
+      "category": "math",
+      "repo": "EleutherAI/proof-pile-2",
+      "revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b",
+      "subset": "algebraic-stack",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2",
+      "priority": "secondary",
+      "access": "open_huggingface_zstd_jsonl",
+      "rights": "source-specific licenses; repository-level license metadata is incomplete",
+      "pipeline": "bounded_license_metadata_language_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "megamath_code",
+      "category": "math",
+      "repo": "LLM360/MegaMath",
+      "revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d",
+      "subset": "megamath-code",
+      "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+      "priority": "tokenizer_only",
+      "access": "open_huggingface_metadata_plus_software_heritage",
+      "rights": "ODC-By-1.0 plus inherited code-source terms",
+      "pipeline": "bounded_SWH_identity_license_metadata_language_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "nemotron_cc_math_4plus",
+      "category": "math",
+      "repo": "nvidia/Nemotron-CC-Math-v1",
+      "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa",
+      "subset": "4plus",
+      "official_url": "https://huggingface.co/datasets/nvidia/Nemotron-CC-Math-v1",
+      "priority": "hold_terms",
+      "access": "auto_gated",
+      "rights": "NVIDIA agreement and possible Phi-4 redistribution conditions",
+      "pipeline": "gated"
+    },
+    {
+      "id": "proof_pile_2_full",
+      "category": "math",
+      "repo": "EleutherAI/proof-pile-2",
+      "revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b",
+      "subset": "all",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2",
+      "priority": "reference_only",
+      "access": "open_huggingface_zstd_jsonl",
+      "rights": "source-specific licenses; overlaps separately listed sources",
+      "pipeline": "new_zstd"
+    },
+    {
+      "id": "cosmopedia_v2",
+      "category": "synthetic",
+      "repo": "HuggingFaceTB/smollm-corpus",
+      "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+      "subset": "cosmopedia-v2",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0; generated with Mixtral-8x7B-Instruct",
+      "pipeline": "bounded_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "ultrafineweb_l3_multi_style",
+      "category": "synthetic",
+      "repo": "openbmb/Ultra-FineWeb-L3",
+      "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+      "subset": "data/ultrafineweb_en_l3/multi_style",
+      "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3",
+      "priority": "primary_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "Apache-2.0 project release; seed-source and generator terms require review",
+      "pipeline": "bounded_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "ultrafineweb_l3_qa",
+      "category": "synthetic",
+      "repo": "openbmb/Ultra-FineWeb-L3",
+      "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+      "subset": "data/ultrafineweb_en_l3/qa",
+      "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3",
+      "priority": "decay_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "Apache-2.0 project release; seed-source and generator terms require review",
+      "pipeline": "bounded_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "megamath_qa",
+      "category": "synthetic",
+      "repo": "LLM360/MegaMath",
+      "revision": "3cbc64616594d6bc8759abaa0b2a71858f880f0d",
+      "subset": "megamath-qa",
+      "official_url": "https://huggingface.co/datasets/LLM360/MegaMath",
+      "priority": "decay_screen",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus generator and source-specific terms",
+      "pipeline": "bounded_two_generator_lineage_style_repetition_PII_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "pes2o_v3",
+      "category": "science",
+      "repo": "allenai/peS2o",
+      "revision": "636a503e44a3ca1b58e01fb61eab0825cd574de0",
+      "subset": "data/v3 full text",
+      "official_url": "https://huggingface.co/datasets/allenai/peS2o",
+      "priority": "primary",
+      "access": "open_huggingface_zstd_jsonl",
+      "rights": "ODC-By-1.0; open-access paper metadata retained",
+      "pipeline": "bounded_document_identity_license_metadata_language_OCR_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "finepdfs_edu_en",
+      "category": "science",
+      "repo": "HuggingFaceFW/finepdfs-edu",
+      "revision": "9cfabe2127faca99b3d5c4dc6d1fcb397399ebde",
+      "subset": "eng_Latn",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu",
+      "priority": "secondary",
+      "access": "open_huggingface_parquet",
+      "rights": "ODC-By-1.0 plus Common Crawl and underlying-document terms",
+      "pipeline": "bounded_dual_language_science_OCR_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_arxiv",
+      "category": "science",
+      "repo": "common-pile/arxiv_papers_filtered",
+      "revision": "033cf7f53f9b348deec868c1a5a48484f3ee9e52",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/arxiv_papers_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "Common Pile public-domain/open-license policy; paper-level license retained",
+      "pipeline": "bounded_document_license_language_OCR_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_pubmed",
+      "category": "science",
+      "repo": "common-pile/pubmed_filtered",
+      "revision": "c156f0569a92d8f2edc33cebe1f72f7d3e1cae84",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/pubmed_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "Common Pile public-domain/open-license policy; article-level audit required",
+      "pipeline": "bounded_document_license_language_OCR_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "proof_pile_2_arxiv",
+      "category": "science",
+      "repo": "EleutherAI/proof-pile-2",
+      "revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b",
+      "subset": "arxiv",
+      "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2",
+      "priority": "tokenizer_only",
+      "access": "open_huggingface_zstd_jsonl",
+      "rights": "source-specific arXiv licenses; overlaps Common Pile and peS2o",
+      "pipeline": "bounded_identity_language_OCR_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "finewiki_en",
+      "category": "reference",
+      "repo": "HuggingFaceFW/finewiki",
+      "revision": "8bd13e72e6a002407649b3e898535f42ceb1aeb9",
+      "subset": "en",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceFW/finewiki",
+      "priority": "primary",
+      "access": "open_huggingface_parquet",
+      "rights": "CC-BY-SA-4.0 and GFDL; attribution/share-alike review required",
+      "pipeline": "bounded_page_identity_language_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_stackexchange",
+      "category": "reference",
+      "repo": "common-pile/stackexchange_filtered",
+      "revision": "c0ac7373830c688a43fc12d1988c4b19ccd884ab",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/stackexchange_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "CC-BY-SA source terms through Common Pile; attribution required",
+      "pipeline": "bounded_thread_identity_language_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_gutenberg",
+      "category": "reference",
+      "repo": "common-pile/project_gutenberg_filtered",
+      "revision": "3cdf6879c807f4e4e063f2ceb23bc268d8c29ab7",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/project_gutenberg_filtered",
+      "priority": "long_context",
+      "access": "open_huggingface",
+      "rights": "public-domain/open-license selection through Common Pile",
+      "pipeline": "bounded_book_identity_language_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_libretexts",
+      "category": "reference",
+      "repo": "common-pile/libretexts_filtered",
+      "revision": "70388bca52b4a93515e14b1d56618fd7944988fd",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/libretexts_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "open-license selection through Common Pile; item-level attribution required",
+      "pipeline": "bounded_item_license_language_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_oercommons",
+      "category": "reference",
+      "repo": "common-pile/oercommons_filtered",
+      "revision": "506b6159dadcbc0dc67611cea024eedb04232fb2",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/oercommons_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "open-license selection through Common Pile; item-level attribution required",
+      "pipeline": "bounded_item_license_language_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "common_pile_pressbooks",
+      "category": "reference",
+      "repo": "common-pile/pressbooks_filtered",
+      "revision": "1a1d3b50d77f834370f8eb4c0d174668dd1676bb",
+      "subset": "filtered",
+      "official_url": "https://huggingface.co/datasets/common-pile/pressbooks_filtered",
+      "priority": "secondary",
+      "access": "open_huggingface",
+      "rights": "open-license selection through Common Pile; item-level attribution required",
+      "pipeline": "bounded_item_license_language_security_overlap_contamination_and_partition_pass_human_rights_approved_production_blocked",
+      "human_use_decision": "approved_guarded_internal_training_no_corpus_redistribution"
+    },
+    {
+      "id": "wikimedia_en_20231101",
+      "category": "reference",
+      "repo": "wikimedia/wikipedia",
+      "revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+      "subset": "20231101.en",
+      "official_url": "https://huggingface.co/datasets/wikimedia/wikipedia",
+      "priority": "fallback",
+      "access": "open_huggingface_parquet",
+      "rights": "CC-BY-SA-3.0 and GFDL; attribution/share-alike review required",
+      "pipeline": "integrated"
+    }
+  ],
+  "tokenizer_sample_allocations": [
+    {
+      "source_id": "ultrafineweb_en_v1_4",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "source_id": "fineweb_edu",
+      "training_bytes": 30000000,
+      "evaluation_bytes": 3000000
+    },
+    {
+      "source_id": "dclm_baseline",
+      "training_bytes": 25000000,
+      "evaluation_bytes": 2500000
+    },
+    {
+      "source_id": "fineweb_base",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "source_id": "stack_v3_train_permissive",
+      "training_bytes": 55000000,
+      "evaluation_bytes": 5500000
+    },
+    {
+      "source_id": "stack_edu",
+      "training_bytes": 20000000,
+      "evaluation_bytes": 2000000
+    },
+    {
+      "source_id": "common_pile_stackv2_edu",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "source_id": "python_edu",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "source_id": "common_pile_python_peps",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    },
+    {
+      "source_id": "finemath_4plus",
+      "training_bytes": 30000000,
+      "evaluation_bytes": 3000000
+    },
+    {
+      "source_id": "infiwebmath_4plus",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "megamath_web_pro",
+      "training_bytes": 25000000,
+      "evaluation_bytes": 2500000
+    },
+    {
+      "source_id": "openwebmath",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "proof_pile_2_algebraic_stack",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "source_id": "megamath_code",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    },
+    {
+      "source_id": "cosmopedia_v2",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "source_id": "ultrafineweb_l3_multi_style",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "source_id": "ultrafineweb_l3_qa",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "megamath_qa",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "pes2o_v3",
+      "training_bytes": 45000000,
+      "evaluation_bytes": 4500000
+    },
+    {
+      "source_id": "finepdfs_edu_en",
+      "training_bytes": 25000000,
+      "evaluation_bytes": 2500000
+    },
+    {
+      "source_id": "common_pile_arxiv",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "common_pile_pubmed",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    },
+    {
+      "source_id": "proof_pile_2_arxiv",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    },
+    {
+      "source_id": "finewiki_en",
+      "training_bytes": 35000000,
+      "evaluation_bytes": 3500000
+    },
+    {
+      "source_id": "common_pile_stackexchange",
+      "training_bytes": 20000000,
+      "evaluation_bytes": 2000000
+    },
+    {
+      "source_id": "common_pile_gutenberg",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "common_pile_libretexts",
+      "training_bytes": 15000000,
+      "evaluation_bytes": 1500000
+    },
+    {
+      "source_id": "common_pile_oercommons",
+      "training_bytes": 5000000,
+      "evaluation_bytes": 500000
+    },
+    {
+      "source_id": "common_pile_pressbooks",
+      "training_bytes": 10000000,
+      "evaluation_bytes": 1000000
+    }
+  ],
+  "hard_gates": [
+    "immutable revision and local file checksum",
+    "source-level rights and attribution disposition",
+    "English natural-language policy",
+    "schema and usable-yield audit",
+    "exact and near-duplicate behavior",
+    "benchmark contamination audit",
+    "PII and secret scan",
+    "download pack cleanup and resume rehearsal"
+  ],
+  "supersedes": {
+    "path": "research/flagship/source_registry.json",
+    "sha256": "98936f2e3f0c9457217d5a4acb56bc182785a05af2f853099f3ffa320ba7175e",
+    "repository_revision": "ae0d935",
+    "reason": "bind the project-owner guarded-use decision, Apache-2.0 weight-release scope, and no-corpus-redistribution policy without rewriting the technically qualified predecessor"
+  },
+  "release_and_data_use_policy": {
+    "path": "research/flagship/release_and_data_use_policy_v1.json",
+    "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+  },
+  "training_authority": "blocked_pending_production_operations_firewall_tokenizer_and_packed_data"
+}

@@ -175,6 +175,9 @@ or integration validation in addition to these checks.
 
 ## License
 
-Speck is available under the [MIT License](LICENSE).
+Speck source code is available under the [MIT License](LICENSE). The first flagship model weights are
+planned for Apache-2.0 under the checked
+[`release and data-use policy`](research/flagship/release_and_data_use_policy_v1.json). Training corpus
+text and packed shards will not be redistributed.
 Citation metadata is provided in [`CITATION.cff`](CITATION.cff); add the flagship paper citation after
 its archival release exists.

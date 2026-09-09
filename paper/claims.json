@@ -13,9 +13,13 @@
       "decision_rule": "Use E1W/E1S and E2-E4 with paired BPB uncertainty, six category guardrails, and the one-opening sealed audit.",
       "contracts": [
         "research/flagship/DATA.md",
-        "research/flagship/data_plan_v2.json"
+        "research/flagship/data_plan_v2.json",
+        "research/flagship/release_and_data_use_policy_v1.json",
+        "research/flagship/source_rights_acceptance_v1.json"
       ],
-      "evidence": [],
+      "evidence": [
+        "findings/204_release_and_source_use_policy.md"
+      ],
       "planned_outputs": [
         "data funnel and source-treatment table",
         "six-category mixture frontier",

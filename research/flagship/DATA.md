@@ -7,8 +7,10 @@ Dataset revisions, licenses, filters, hashes, and exact arm weights become immut
 manifests before any result from that experiment is inspected.
 
 The broad source search and pinned candidate revisions are in [`SOURCES.md`](SOURCES.md) and
-[`source_registry.json`](source_registry.json). The registry is discovery evidence, not permission to
-train; only source-card-qualified entries can enter the experiments below.
+[`source_registry_v2.json`](source_registry_v2.json). The v2 successor preserves the selected sources
+and allocations while binding the project owner's guarded-use decision. Source approval permits data
+preparation under [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json); it does
+not replace production operations, firewall, tokenizer, packing, or launch authority.
 
 [`source_rights_acceptance_template.json`](source_rights_acceptance_template.json) consolidates the
 30 selected sources and six evidence packets for a named human authority. Validation checks source
@@ -16,6 +18,12 @@ coverage, evidence hashes, intended scope, attribution, redistribution, removal 
 completeness, but makes no decision. Pending or rejected sources cannot produce the all-approved
 record required by production firewall construction; rejected selected sources require a versioned
 replacement and requalification.
+
+The completed [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) approves all 30
+selected sources for commercial-capable research training and public Apache-2.0 model weights under
+declared residual risk, attribution, deny-ledger, removal, and rebuild controls. Source text and packed
+shards will not be redistributed. Any future explicit prohibition or material terms change triggers a
+new human decision rather than inheriting this approval.
 
 There is no universally perfect corpus. The target is the best reproducible mixture for this model,
 token budget, and capability profile: a Pareto winner that improves the equal-domain objective

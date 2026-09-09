@@ -32,13 +32,14 @@ Independent single-GPU arms should be packed four at a time. The flagship alone 
 Complete [`PREGRANT.md`](PREGRANT.md). Do not start a paid node while corpus, storage, launch targets,
 selectable KDA gating, or resume behavior are unresolved.
 
-Future flagship train configs must set `requires_data_launch_authority=true`. The fixture-qualified
-[`data_launch_plan.json`](data_launch_plan.json) requires an immutable receipt binding Git, experiment
+Future flagship train configs must set `requires_data_launch_authority=true`. The active
+[`data_launch_plan_v2.json`](data_launch_plan_v2.json) binds the completed human source approval while
+still requiring an immutable receipt binding Git, experiment
 files, human rights, production operations, deny ledger, firewall, selected tokenizer, and packed
 data. The trainer revalidates those artifacts after shard verification and before model construction.
 No real receipt exists while the P0 data gates remain open.
 
-The future 20B rehearsal runs through [`data_rehearsal_plan.json`](data_rehearsal_plan.json): source
+The future 20B rehearsal runs through [`data_rehearsal_plan_v2.json`](data_rehearsal_plan_v2.json): source
 identity, acquisition, global deduplication, packing, resume/cleanup, then firewall disjointness. The
 runner durably verifies completed stages and captures required resource/yield telemetry, but fixture
 qualification is not a rehearsal result and cannot issue production authority.

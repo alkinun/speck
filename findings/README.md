@@ -87,6 +87,7 @@ status is tracked in [`paper/claims.json`](../paper/claims.json).
 | [Tied embedding/head contract](201_tied_embedding_head_contract.md) | Inherited physical sharing is now explicit across accounting and export |
 | [Pre-access training and Slurm hardening](202_preaccess_training_and_slurm_hardening.md) | Safe-point requeue, completion, finite-value, identity, and budget gates |
 | [Integrated flagship evidence plan](203_flagship_integrated_evidence_plan.md) | E5 retirement, I1 data transfer, I2 assembled-recipe confirmation, and the paper claim spine |
+| [Release and source-use policy](204_release_and_source_use_policy.md) | MIT code, Apache-2.0 weights, no corpus redistribution, guarded source approval, and remaining production gates |
 
 ## Conventions
 

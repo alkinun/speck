@@ -1,0 +1,69 @@
+{
+  "format": "speck_flagship_data_rehearsal_orchestration_plan",
+  "format_version": 2,
+  "status": "human_rights_approved_real_20B_manifest_pending",
+  "stage_order": [
+    "source_identity",
+    "acquisition",
+    "global_dedup",
+    "packing",
+    "resume_cleanup",
+    "firewall_disjointness"
+  ],
+  "required_gates": [
+    "source_identity",
+    "global_exact_deduplication",
+    "global_near_deduplication",
+    "packing_integrity",
+    "acquisition_cleanup",
+    "interruption_resume",
+    "firewall_training_disjointness"
+  ],
+  "required_metrics": [
+    "download_bytes",
+    "download_bytes_per_second",
+    "filtered_bytes",
+    "records_seen",
+    "records_retained",
+    "sqlite_index_bytes",
+    "peak_rss_bytes",
+    "packing_tokens_per_second",
+    "packed_tokens",
+    "packed_bytes",
+    "unique_tokens"
+  ],
+  "orchestration": {
+    "stage_commands_and_inputs_hash_bound": true,
+    "stdout_stderr_and_result_hash_bound": true,
+    "elapsed_rss_disk_and_free_space_recorded": true,
+    "completed_stages_skipped_only_after_reverification": true,
+    "changed_completed_result_or_log": "fail",
+    "packed_tokens_must_reach_target": true
+  },
+  "production_mode": {
+    "target_tokens": 20000000000,
+    "requires_signed_human_rights_record": true,
+    "operations_record_format": "speck_production_data_operations_qualification",
+    "operations_record_status": "production_data_operations_qualified",
+    "fixture_may_issue_operations_record": false
+  },
+  "real_manifest": {
+    "status": "pending_materialization",
+    "reason": "human source use is approved; freeze exact production commands, source inputs, storage paths, and interruption schedule before execution"
+  },
+  "training_authority": "blocked_pending_real_20B_rehearsal_firewall_tokenizer_and_packed_data",
+  "supersedes": {
+    "path": "research/flagship/data_rehearsal_plan.json",
+    "sha256": "9cd4f8f1e03f41b5b6468bb772edcefbf2bb12444b21c2e61b61daa97e61e918",
+    "repository_revision": "ae0d935",
+    "reason": "replace the unsigned-rights blocker with the project-owner guarded-use acceptance while preserving the qualified six-stage orchestration"
+  },
+  "rights_record": {
+    "path": "research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "release_policy": {
+    "path": "research/flagship/release_and_data_use_policy_v1.json",
+    "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+  }
+}

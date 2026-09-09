@@ -1,0 +1,62 @@
+{
+  "format": "speck_flagship_data_launch_plan",
+  "format_version": 2,
+  "status": "rights_approved_remaining_real_authorities_pending",
+  "request_format": "speck_flagship_data_launch_request",
+  "receipt_format": "speck_flagship_data_launch_receipt",
+  "bindings": [
+    "checked-out full Git commit",
+    "exact experiment directory and data/tokenizer/model/train file hashes",
+    "speck_human_source_rights_acceptance with automated_approval_made=false",
+    "speck_production_data_operations_qualification with all required gates passing",
+    "human-reviewed deny ledger",
+    "production three-partition firewall with unopened D5 and E2 audits",
+    "speck_tokenizer_decision selected and frozen",
+    "global-exact-deduplicated packed dataset using the selected tokenizer"
+  ],
+  "cross_checks": [
+    "firewall binds the exact rights and production operations records",
+    "operations record binds the exact deny ledger and passes firewall/training disjointness",
+    "packed dataset tokenizer fingerprint equals the selected tokenizer",
+    "every experiment file remains unchanged after receipt issuance",
+    "every external authority record is rehashed and revalidated immediately before model construction"
+  ],
+  "training_integration": {
+    "marker": "train.requires_data_launch_authority=true",
+    "required_cli": "--data-authority PATH",
+    "verification_point": "after packed shard verification and before model construction",
+    "historical_configs_default": false,
+    "flagship_configs_must_set_marker": true
+  },
+  "receipt": {
+    "creation": "exclusive create; an existing path is never overwritten",
+    "authority": "data preflight only; the marked training launch must still explicitly provide it",
+    "real_receipt_status": "blocked"
+  },
+  "blockers": [
+    "20B production operations rehearsal",
+    "real three-partition firewall manifest",
+    "frozen tokenizer decision",
+    "verified production packed dataset",
+    "flagship experiment manifests"
+  ],
+  "training_authority": "blocked",
+  "supersedes": {
+    "path": "research/flagship/data_launch_plan.json",
+    "sha256": "760938231032deac4c1701c681abc7c9b7e91903cb6343b943af41cf3e105b53",
+    "repository_revision": "ae0d935",
+    "reason": "remove the completed human source-rights blocker without changing any production operations firewall tokenizer packed-data or experiment gate"
+  },
+  "release_policy": {
+    "path": "research/flagship/release_and_data_use_policy_v1.json",
+    "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+  },
+  "source_registry": {
+    "path": "research/flagship/source_registry_v2.json",
+    "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+  },
+  "source_rights_acceptance": {
+    "path": "research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  }
+}

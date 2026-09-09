@@ -272,7 +272,12 @@
     "data": "research/flagship/data_plan_v2.json",
     "architecture": "research/flagship/architecture_plan.json",
     "integration": "research/flagship/integration_plan.json",
-    "tokenizer": "research/flagship/tokenizer_plan_v4.json",
-    "paper_claims": "paper/claims.json"
+    "tokenizer": "research/flagship/tokenizer_plan_v5.json",
+    "paper_claims": "paper/claims.json",
+    "release_policy": "research/flagship/release_and_data_use_policy_v1.json",
+    "source_registry": "research/flagship/source_registry_v2.json",
+    "source_rights": "research/flagship/source_rights_acceptance_v1.json",
+    "data_rehearsal": "research/flagship/data_rehearsal_plan_v2.json",
+    "data_launch": "research/flagship/data_launch_plan_v2.json"
   }
 }

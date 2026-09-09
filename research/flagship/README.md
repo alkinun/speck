@@ -26,12 +26,17 @@ The active operating surface is intentionally small:
   promotion, scale, and systems contract.
 - [`integration_plan.json`](integration_plan.json) is the 100-GPU-hour crossed data-architecture and
   assembled-recipe confirmation contract.
-- [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) is the active machine-checked tokenizer sampling
-  and decision contract; v1 through v3 remain immutable predecessors.
+- [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) preserves the pre-approval tokenizer scope.
+- [`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) is the active tokenizer contract after human
+  source-use approval; candidates, trainer, accounting, and pilot are unchanged from v4.
+- [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json) freezes MIT code,
+  Apache-2.0 model weights, metadata-only corpus disclosure, attribution, and removal controls.
+- [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) records the project owner's
+  guarded-use approval of all 30 selected sources without granting production or training authority.
 - [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json) freezes one physically shared
   token embedding/LM-head parameter and its config, accounting, checkpoint, optimizer, and export rules.
-- [`source_registry.json`](source_registry.json) pins the candidate source revisions and provisional
-  tokenizer byte quotas without granting training authority.
+- [`source_registry_v2.json`](source_registry_v2.json) pins the human-approved source revisions and
+  tokenizer byte quotas without granting production or training authority.
 - [`targets/`](targets/) contains seven exact, machine-checked, non-launchable scale geometries;
   complete launch experiments are created only at the day-21 freeze.
 
@@ -408,9 +413,11 @@ new architecture axis.
 
 ## 8. Releases
 
-- Base, pre-decay, 128K-extended, and instruct checkpoints in native, Transformers, and GGUF form.
+- Base, pre-decay, 128K-extended, and instruct checkpoints in native, Transformers, and GGUF form,
+  with model weights under Apache-2.0; repository source code remains MIT.
 - Every scaling-ladder checkpoint at every scale, both arms.
-- All experiment configs, data manifests with source revisions, and packed-data hashes.
+- All experiment configs, source/data manifests, revisions, filters, aggregate statistics, attribution,
+  and packed-data hashes. Raw source text and derived packed shards are not redistributed.
 - The findings ledger and the raw result JSON.
 - A serving benchmark script others can run on their own hardware.
 

@@ -5,6 +5,12 @@ These workflows are for maintainers publishing Speck artifacts. They default to 
 has write access and review every source revision, destination, and generated artifact before
 uploading.
 
+Repository source code remains MIT. The first flagship model weights are released under Apache-2.0
+according to `research/flagship/release_and_data_use_policy_v1.json`; every generated model repository
+must include the full Apache-2.0 text and model-card license metadata. Source corpus text and derived
+packed shards are not release artifacts. Publish source/revision/filter/mixture metadata, aggregate
+statistics, citations, attribution, and removal policy instead.
+
 Run local validation with `--no-upload` first.
 
 ## Transformers Export

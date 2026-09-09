@@ -1,11 +1,13 @@
 # Flagship source exploration and shortlist
 
-Status: candidate registry v1 plus bounded three-source code qualification, 2026-09-07. This
+Status: candidate registry v2 with bounded six-category technical qualification and project-owner
+guarded-use approval, 2026-09-09. This
 document records the broad source search before tokenizer and corpus freeze.
-[`source_registry.json`](source_registry.json)
-pins the exact repository revisions inspected today and proposes tokenizer-sample byte quotas. It is
-not training authority: every selected source still needs a source card, local file hashes, rights
-disposition, deduplication behavior, and contamination results.
+[`source_registry_v2.json`](source_registry_v2.json) pins the selected revisions and quotas and binds
+[`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json). All 30 selected sources
+have human guarded-use approval in [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json).
+This is source-use authority, not training authority: production operations, real firewall partitions,
+tokenizer selection, packing, and launch receipt remain required.
 
 Exploring many sources does not mean mixing all of them. The registry separates primary screens,
 secondary diversity sources, tokenizer-only coverage, fallbacks, long-context sources, and datasets
@@ -95,8 +97,9 @@ The same pinned 2,278-task benchmark policy then removes 32 Stack-Edu files (241
 Common Pile files (81,182 bytes). The v4 successors still exceed their 20M/2M and 10M/1M
 train/evaluation quotas. They are strict subsets of the inputs that passed the bounded cross-source
 comparison, so record removal cannot introduce a new duplicate. This closes the technical bounded
-code-sample gates. Manual rights/attribution acceptance, production-scale global deduplication, and
-acquisition cleanup/resume still block training authority. See
+code-sample gates. The later guarded-use decision accepts the declared source terms and residual
+metadata risk; production-scale global deduplication and acquisition cleanup/resume still block
+training authority. See
 [finding 174](../../findings/174_code_contamination_successors.md).
 
 The tokenizer's provisional 100 MB code allocation is 55 MB Stack v3.1, 20 MB Stack-Edu, 10 MB
@@ -106,8 +109,8 @@ code filter.
 
 The two supplements now pass their bounded technical chain. Python-Edu contributes a cleaned 14.06
 MB/1.29 MB train/evaluation partition after five Gitleaks-affected and 247 benchmark-critical files
-are removed; its source metadata lacks file-level license identifiers, so rights approval remains
-blocked. The filtered public-domain PEP source contributes 9.96 MB/0.97 MB after nine
+are removed; its source metadata lacks file-level license identifiers, which the guarded-use record
+accepts as a disclosed residual risk without corpus redistribution. The filtered public-domain PEP source contributes 9.96 MB/0.97 MB after nine
 benchmark-critical documents are removed. A new five-source comparison covers 40,869 documents and
 finds zero exact or verified ≥0.80 near-duplicate matches. The complete technical code slice is now
 frozen at 55/20/10/10/5, with PEP→Python-Edu→Stack-Edu→Stack-v3→Common-Pile duplicate precedence.
@@ -145,8 +148,8 @@ The pre-results flagship firewall freezes 20 immutable short-context, math, and 
 (1.20 MB); a full successor rescan finds no remaining critical match. The 31,000 retained records
 still exceed every source's train/evaluation byte quota, and strict subsetting preserves the prior
 bounded zero-overlap result. Fifty-five 10-gram-only sensitivity records remain disclosed rather than
-silently removed. Human rights acceptance, production global deduplication, and cleanup/resume still
-block use. See [finding 177](../../findings/177_web_evaluation_firewall.md).
+silently removed. Human guarded-use approval is complete; production global deduplication and
+cleanup/resume still block use. See [finding 177](../../findings/177_web_evaluation_firewall.md).
 
 ## 4. Math candidates
 
@@ -169,9 +172,9 @@ quality, English-prose, notation preservation, PII/security, six-source overlap,
 contamination, and partition-yield gates. One MegaMath Web-Pro secret-flagged record, three exact
 cross-source duplicates, seven verified ≥0.80 near duplicates, and 980 benchmark-critical records are
 removed. The 30,478-record successors rescan with zero critical matches and retain 113.32 MB train
-plus 11.49 MB evaluation text. Human approval of Common Crawl/page rights, ODC attribution, and the
-two code sources' original-license/notice chain still blocks use, as do production global dedup and
-cleanup/resume. See [findings 179](../../findings/179_math_tokenizer_technical_qualification.md) and
+plus 11.49 MB evaluation text. The guarded-use record accepts Common Crawl/page and code-license
+metadata risk under attribution and no corpus redistribution; production global dedup and
+cleanup/resume still block use. See [findings 179](../../findings/179_math_tokenizer_technical_qualification.md) and
 [180](../../findings/180_math_rights_review_packet.md).
 
 ## 5. Synthetic and educational candidates
@@ -192,8 +195,8 @@ Gitleaks-affected and 353 benchmark-critical records are removed; zero exact or 
 cross-source duplicate is found. The final 56,461 records retain 119.19 MB train and 11.91 MB
 evaluation text and rescan with zero critical match. The first Cosmopedia output is forbidden because
 its `seed_data` field was initially misread as seed text rather than a source label; the successor
-correctly hashes the seed-bearing prompt. Generator revisions, seed rights, and redistribution terms
-remain human-blocked. See [findings 181](../../findings/181_synthetic_tokenizer_technical_qualification.md)
+correctly hashes the seed-bearing prompt. Missing generator/seed details are accepted as disclosed
+limitations, and source/packed bytes will not be redistributed. See [findings 181](../../findings/181_synthetic_tokenizer_technical_qualification.md)
 and [182](../../findings/182_synthetic_rights_review_packet.md).
 
 ## 6. Science, reference, books, and domain diversity
@@ -219,7 +222,7 @@ gates. Gitleaks removes ten records. The first firewall correctly fails two quot
 same-shard successors increase only the Common Pile arXiv and Proof-Pile margins and repeat every
 downstream stage without weakening policy. The passing successor removes 137 benchmark-critical
 records, rescans with zero critical match, and retains 4,262 documents with 117.94 MB train and 12.06
-MB evaluation text. Human paper/PDF rights and production hardening remain blocked. See
+MB evaluation text. Guarded paper/PDF use is approved; production hardening remains blocked. See
 [finding 184](../../findings/184_science_tokenizer_technical_qualification.md).
 
 The bounded 35/20/15/15/5/10 reference slice now passes page/book/thread identity, English quality,
@@ -228,21 +231,20 @@ initial source-contract failures are preserved and corrected without weakening f
 language field mapping and OER Commons' inapplicable single-platform host cap. One secret-affected
 and two verified near-duplicate records are removed, followed by 331 benchmark-critical records. The
 24,275 final records rescan with zero critical match and retain 116.95 MB train plus 11.63 MB
-evaluation text. Attribution, share-alike, Gutenberg jurisdiction, and item-license reliability remain
-human-blocked. See [findings 185](../../findings/185_reference_tokenizer_technical_qualification.md)
+evaluation text. The guarded-use record accepts attribution, share-alike, Gutenberg jurisdiction, and
+item-license metadata risks without corpus redistribution. See [findings 185](../../findings/185_reference_tokenizer_technical_qualification.md)
 and [186](../../findings/186_reference_rights_review_packet.md).
 
 ## 7. Qualification order before downloading at scale
 
-1. Freeze source cards and acceptance/attribution policy for Stack v3, Stack-Edu, FineWiki, and every
-   source with inherited terms. The technical bounded code screens are complete; human rights
-   disposition is not.
+1. Source cards and the guarded-use/attribution policy are frozen for all 30 selected sources.
 2. **Bounded code pass:** all five code tokenizer inputs now pass identity, quality/language,
-   security, benchmark-contamination, partition-yield, and bounded cross-source-overlap gates. Rights
-   acceptance remains separate and pending.
+   security, benchmark-contamination, partition-yield, and bounded cross-source-overlap gates. Source
+   use is approved; production operation remains separate.
 3. **Bounded web pass:** four source samples pass identity, language/quality/local safety, security,
-   yield, and overlap; evaluation-firewall contamination and human rights decisions remain pending.
-4. Materialize the 660 MB tokenizer sample using the provisional quotas in the registry; failed
+   yield, overlap, contamination, and guarded-use approval.
+4. Run the real 20B operations rehearsal, materialize real firewall partitions, then materialize the
+   660 MB tokenizer sample using the frozen quotas; failed
    sources are replaced within their category before any candidate tokenizer is trained.
 5. Train and statically evaluate the three custom tokenizers plus Mistral 32K.
 6. In parallel, build small source samples for E1 and estimate unique-token capacity, overlap,

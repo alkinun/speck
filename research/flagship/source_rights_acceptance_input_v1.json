@@ -1,0 +1,512 @@
+{
+  "format": "speck_source_rights_acceptance_template",
+  "format_version": 1,
+  "status": "awaiting_human_decision",
+  "source_registry": "source_registry_v2.json",
+  "source_registry_sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e",
+  "evidence_packets": [
+    {
+      "category": "web",
+      "path": "../../results/data/web-rights-review-20260907.json",
+      "sha256": "be460abca1c092b95a5223634ed7428fe6a9bf2debe403bb0f0974cb140b99ed",
+      "linear_issue": "SPE-144"
+    },
+    {
+      "category": "code",
+      "path": "../../results/data/code-tokenizer-supplements-20260907.json",
+      "sha256": "8fb0fa59451dae7c0102aad3b91239d081ded1996f223d99c4dc2a0b998d36eb",
+      "linear_issue": "SPE-134"
+    },
+    {
+      "category": "math",
+      "path": "../../results/data/math-rights-review-20260907.json",
+      "sha256": "925f287c2d5532ebfff70afb5a5108d84a44c06333c1d29b1151eeb20d1fc30f",
+      "linear_issue": "SPE-147"
+    },
+    {
+      "category": "synthetic",
+      "path": "../../results/data/synthetic-rights-review-20260907.json",
+      "sha256": "8d650530f2d820670e188939bbe5c3974e3336d4e79d5d176aa49e256c5f94fd",
+      "linear_issue": "SPE-148"
+    },
+    {
+      "category": "science",
+      "path": "../../results/data/science-rights-review-20260907.json",
+      "sha256": "0250dcc0ff8d92a9b1dd34b7bc239ad2ae3974ee5a556199570bd0735bb8cc9b",
+      "linear_issue": "SPE-149"
+    },
+    {
+      "category": "reference",
+      "path": "../../results/data/reference-rights-review-20260907.json",
+      "sha256": "fe135389195541970a06422db1a1db86dd116f80dff74ed2b660b1472c454655",
+      "linear_issue": "SPE-150"
+    }
+  ],
+  "intended_scope": {
+    "research_training": true,
+    "paper_publication": true,
+    "public_model_weight_release": true,
+    "commercial_use": true,
+    "source_data_redistribution": false,
+    "derived_packed_shard_redistribution": false
+  },
+  "authority": {
+    "authority_type": "human",
+    "name": "Alkin Unlu",
+    "role": "Project owner",
+    "organization": "SpeckLabs"
+  },
+  "source_decisions": [
+    {
+      "source_id": "ultrafineweb_en_v1_4",
+      "category": "web",
+      "decision": "approve",
+      "evidence_category": "web",
+      "attribution_plan": "Cite each source dataset and Common Crawl in the paper and model card; include ODC-By, CC-BY, or Apache notices declared by the dataset and retain source URLs where supplied.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "fineweb_edu",
+      "category": "web",
+      "decision": "approve",
+      "evidence_category": "web",
+      "attribution_plan": "Cite each source dataset and Common Crawl in the paper and model card; include ODC-By, CC-BY, or Apache notices declared by the dataset and retain source URLs where supplied.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "dclm_baseline",
+      "category": "web",
+      "decision": "approve",
+      "evidence_category": "web",
+      "attribution_plan": "Cite each source dataset and Common Crawl in the paper and model card; include ODC-By, CC-BY, or Apache notices declared by the dataset and retain source URLs where supplied.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "The CC-BY-4.0 dataset release is accepted; the card research-oriented and production-readiness language is treated as an intended-use warning rather than an explicit commercial-use prohibition."
+    },
+    {
+      "source_id": "fineweb_base",
+      "category": "web",
+      "decision": "approve",
+      "evidence_category": "web",
+      "attribution_plan": "Cite each source dataset and Common Crawl in the paper and model card; include ODC-By, CC-BY, or Apache notices declared by the dataset and retain source URLs where supplied.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "stack_v3_train_permissive",
+      "category": "code",
+      "decision": "approve",
+      "evidence_category": "code",
+      "attribution_plan": "Cite each code dataset, The Stack and Software Heritage lineage as applicable; retain available repository, path, blob, detected-license, and notice metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain repository, path, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "stack_edu",
+      "category": "code",
+      "decision": "approve",
+      "evidence_category": "code",
+      "attribution_plan": "Cite each code dataset, The Stack and Software Heritage lineage as applicable; retain available repository, path, blob, detected-license, and notice metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain repository, path, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "common_pile_stackv2_edu",
+      "category": "code",
+      "decision": "approve",
+      "evidence_category": "code",
+      "attribution_plan": "Cite each code dataset, The Stack and Software Heritage lineage as applicable; retain available repository, path, blob, detected-license, and notice metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain repository, path, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "python_edu",
+      "category": "code",
+      "decision": "approve",
+      "evidence_category": "code",
+      "attribution_plan": "Cite each code dataset, The Stack and Software Heritage lineage as applicable; retain available repository, path, blob, detected-license, and notice metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain repository, path, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Missing file-level license identifiers are accepted as a disclosed residual risk for internal training only; no source files or packed shards will be redistributed."
+    },
+    {
+      "source_id": "common_pile_python_peps",
+      "category": "code",
+      "decision": "approve",
+      "evidence_category": "code",
+      "attribution_plan": "Cite each code dataset, The Stack and Software Heritage lineage as applicable; retain available repository, path, blob, detected-license, and notice metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain repository, path, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "The Common Pile public-domain selection is accepted for internal training with dataset-level citation and no text redistribution."
+    },
+    {
+      "source_id": "finemath_4plus",
+      "category": "math",
+      "decision": "approve",
+      "evidence_category": "math",
+      "attribution_plan": "Cite each math dataset and its Common Crawl, repository, The Stack, Software Heritage, or Proof-Pile lineage as applicable; retain available source and license metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, repository, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "infiwebmath_4plus",
+      "category": "math",
+      "decision": "approve",
+      "evidence_category": "math",
+      "attribution_plan": "Cite each math dataset and its Common Crawl, repository, The Stack, Software Heritage, or Proof-Pile lineage as applicable; retain available source and license metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, repository, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "megamath_web_pro",
+      "category": "math",
+      "decision": "approve",
+      "evidence_category": "math",
+      "attribution_plan": "Cite each math dataset and its Common Crawl, repository, The Stack, Software Heritage, or Proof-Pile lineage as applicable; retain available source and license metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, repository, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "openwebmath",
+      "category": "math",
+      "decision": "approve",
+      "evidence_category": "math",
+      "attribution_plan": "Cite each math dataset and its Common Crawl, repository, The Stack, Software Heritage, or Proof-Pile lineage as applicable; retain available source and license metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, repository, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "proof_pile_2_algebraic_stack",
+      "category": "math",
+      "decision": "approve",
+      "evidence_category": "math",
+      "attribution_plan": "Cite each math dataset and its Common Crawl, repository, The Stack, Software Heritage, or Proof-Pile lineage as applicable; retain available source and license metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, repository, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "megamath_code",
+      "category": "math",
+      "decision": "approve",
+      "evidence_category": "math",
+      "attribution_plan": "Cite each math dataset and its Common Crawl, repository, The Stack, Software Heritage, or Proof-Pile lineage as applicable; retain available source and license metadata internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain URL, domain, repository, blob, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Approved for guarded internal research training under the declared dataset/source terms, attribution, non-redistribution, removal, and disclosed residual-risk policy."
+    },
+    {
+      "source_id": "cosmopedia_v2",
+      "category": "synthetic",
+      "decision": "approve",
+      "evidence_category": "synthetic",
+      "attribution_plan": "Cite each synthetic dataset, disclosed generator families, and seed-source lineage in the paper and model card; disclose missing exact generator revisions.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain dataset-record, seed URL/domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Undisclosed exact generator and seed revisions are accepted as a disclosed lineage limitation."
+    },
+    {
+      "source_id": "ultrafineweb_l3_multi_style",
+      "category": "synthetic",
+      "decision": "approve",
+      "evidence_category": "synthetic",
+      "attribution_plan": "Cite each synthetic dataset, disclosed generator families, and seed-source lineage in the paper and model card; disclose missing exact generator revisions.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain dataset-record, seed URL/domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Generator/license mapping and seed-source gaps are accepted as disclosed limitations; the no-unchanged-redistribution condition is respected by publishing no corpus text."
+    },
+    {
+      "source_id": "ultrafineweb_l3_qa",
+      "category": "synthetic",
+      "decision": "approve",
+      "evidence_category": "synthetic",
+      "attribution_plan": "Cite each synthetic dataset, disclosed generator families, and seed-source lineage in the paper and model card; disclose missing exact generator revisions.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain dataset-record, seed URL/domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Generator/license mapping and seed-source gaps are accepted as disclosed limitations; the no-unchanged-redistribution condition is respected by publishing no corpus text."
+    },
+    {
+      "source_id": "megamath_qa",
+      "category": "synthetic",
+      "decision": "approve",
+      "evidence_category": "synthetic",
+      "attribution_plan": "Cite each synthetic dataset, disclosed generator families, and seed-source lineage in the paper and model card; disclose missing exact generator revisions.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain dataset-record, seed URL/domain, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or rights correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Incomplete generator and seed identities are accepted as disclosed lineage limitations."
+    },
+    {
+      "source_id": "pes2o_v3",
+      "category": "science",
+      "decision": "approve",
+      "evidence_category": "science",
+      "attribution_plan": "Cite each science dataset and underlying paper collection; retain available document IDs, URLs, and CC/public-domain metadata and publish applicable attribution notices.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain document ID, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Use is conditioned on the existing allowlist of records marked CC0, CC BY, CC BY-SA, public-domain, or pd; incomplete v3 documentation is disclosed."
+    },
+    {
+      "source_id": "finepdfs_edu_en",
+      "category": "science",
+      "decision": "approve",
+      "evidence_category": "science",
+      "attribution_plan": "Cite each science dataset and underlying paper collection; retain available document IDs, URLs, and CC/public-domain metadata and publish applicable attribution notices.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain document ID, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Missing per-document license metadata and underlying-PDF risk are accepted for internal training with Common Crawl attribution and no text redistribution."
+    },
+    {
+      "source_id": "common_pile_arxiv",
+      "category": "science",
+      "decision": "approve",
+      "evidence_category": "science",
+      "attribution_plan": "Cite each science dataset and underlying paper collection; retain available document IDs, URLs, and CC/public-domain metadata and publish applicable attribution notices.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain document ID, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Common Pile per-record open-license selection and its stated metadata-reliability risk are accepted with correction and removal controls."
+    },
+    {
+      "source_id": "common_pile_pubmed",
+      "category": "science",
+      "decision": "approve",
+      "evidence_category": "science",
+      "attribution_plan": "Cite each science dataset and underlying paper collection; retain available document IDs, URLs, and CC/public-domain metadata and publish applicable attribution notices.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain document ID, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Common Pile per-record open-license selection and its stated metadata-reliability risk are accepted with correction and removal controls."
+    },
+    {
+      "source_id": "proof_pile_2_arxiv",
+      "category": "science",
+      "decision": "approve",
+      "evidence_category": "science",
+      "attribution_plan": "Cite each science dataset and underlying paper collection; retain available document IDs, URLs, and CC/public-domain metadata and publish applicable attribution notices.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain document ID, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or license correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Missing per-paper license mapping is accepted as a disclosed residual risk for internal training only; no source text or packed shards will be redistributed."
+    },
+    {
+      "source_id": "finewiki_en",
+      "category": "reference",
+      "decision": "approve",
+      "evidence_category": "reference",
+      "attribution_plan": "Cite each reference dataset and underlying project; publish applicable CC BY, CC BY-SA, GFDL, CC0, or public-domain attribution at dataset level and retain item identifiers internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain page, thread, book, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or attribution correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Wikipedia CC BY-SA/GFDL training use is accepted with dataset-level attribution and no corpus redistribution."
+    },
+    {
+      "source_id": "common_pile_stackexchange",
+      "category": "reference",
+      "decision": "approve",
+      "evidence_category": "reference",
+      "attribution_plan": "Cite each reference dataset and underlying project; publish applicable CC BY, CC BY-SA, GFDL, CC0, or public-domain attribution at dataset level and retain item identifiers internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain page, thread, book, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or attribution correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Missing sampled author arrays are accepted for internal training with retained site/question URLs and dataset-level attribution; no corpus redistribution."
+    },
+    {
+      "source_id": "common_pile_gutenberg",
+      "category": "reference",
+      "decision": "approve",
+      "evidence_category": "reference",
+      "attribution_plan": "Cite each reference dataset and underlying project; publish applicable CC BY, CC BY-SA, GFDL, CC0, or public-domain attribution at dataset level and retain item identifiers internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain page, thread, book, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or attribution correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Common Pile public-domain/open-license selection and jurisdiction/trademark residual risk are accepted for internal training with no corpus redistribution."
+    },
+    {
+      "source_id": "common_pile_libretexts",
+      "category": "reference",
+      "decision": "approve",
+      "evidence_category": "reference",
+      "attribution_plan": "Cite each reference dataset and underlying project; publish applicable CC BY, CC BY-SA, GFDL, CC0, or public-domain attribution at dataset level and retain item identifiers internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain page, thread, book, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or attribution correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Common Pile item-license selection and metadata-reliability risk are accepted with attribution and correction controls."
+    },
+    {
+      "source_id": "common_pile_oercommons",
+      "category": "reference",
+      "decision": "approve",
+      "evidence_category": "reference",
+      "attribution_plan": "Cite each reference dataset and underlying project; publish applicable CC BY, CC BY-SA, GFDL, CC0, or public-domain attribution at dataset level and retain item identifiers internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain page, thread, book, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or attribution correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Common Pile item-license selection and metadata-reliability risk are accepted with attribution and correction controls."
+    },
+    {
+      "source_id": "common_pile_pressbooks",
+      "category": "reference",
+      "decision": "approve",
+      "evidence_category": "reference",
+      "attribution_plan": "Cite each reference dataset and underlying project; publish applicable CC BY, CC BY-SA, GFDL, CC0, or public-domain attribution at dataset level and retain item identifiers internally.",
+      "redistribution_policy": "Do not redistribute source text or derived packed shards; publish source metadata, aggregate statistics, citations, and required notices only.",
+      "removal_policy": "Maintain page, thread, book, URL, and content-hash deny ledgers; provide a public contact before release and rebuild future shards after verified removal or attribution correction.",
+      "conditions": [
+        "Governed by research/flagship/release_and_data_use_policy_v1.json.",
+        "Use for internal training, evaluation preparation, paper publication, public Apache-2.0 model weights, and commercial-capable downstream use.",
+        "Re-review if binding source terms materially change or an explicit commercial-training or public-weight prohibition is identified."
+      ],
+      "rationale": "Common Pile item-license selection and metadata-reliability risk are accepted with attribution and correction controls."
+    }
+  ],
+  "signed_at": "2026-09-09T18:54:46Z"
+}
