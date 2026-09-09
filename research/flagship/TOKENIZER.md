@@ -4,14 +4,17 @@ Status: tokenizer and three-partition firewall tooling complete; all six bounded
 30 real input identities are technically frozen but rights/production-blocked. A local 60 MB study
 found that explicit SentencePiece whitespace-only-piece support makes an exact-32K custom BPE
 statically superior to Mistral on the bounded held-out text, but every formal tokenizer run remains
-pending, 2026-09-07. The first flagship should use a Speck-trained tokenizer only if it clears this
+pending, 2026-09-09. The first flagship should use a Speck-trained tokenizer only if it clears this
 protocol. Mistral 32K remains the fallback until the formal balanced sample and LM pilot are complete.
 
-[`tokenizer_plan_v3.json`](tokenizer_plan_v3.json) freezes the active research decision and binds its
-costs to the physically tied model contract. [`tokenizer_plan_v2.json`](tokenizer_plan_v2.json)
+[`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) is the active scope-only successor: it preserves the
+complete v3 research decision and physically tied cost contract while replacing the retired E1–E5
+downstream binding with E1–E4 plus I1/I2. [`tokenizer_plan_v3.json`](tokenizer_plan_v3.json) remains
+the immutable predecessor used by the already-checked scale-v2 accounting; candidate geometry and
+costs are identical. [`tokenizer_plan_v2.json`](tokenizer_plan_v2.json)
 preserves the corrected candidate plan with its now-superseded untied-cost assumption;
 [`tokenizer_plan.json`](tokenizer_plan.json) and its 32,768/40,960/49,152 candidate set remain the
-immutable v1 predecessor. The executable v3 config is created under `experiments/Speck-Tokenizer-v3/`
+immutable v1 predecessor. The executable v4 config is created under `experiments/Speck-Tokenizer-v4/`
 only after every input file has an immutable source card and SHA-256 hash. This avoids presenting
 placeholders as launchable inputs.
 [`source_registry.json`](source_registry.json) proposes the per-source quotas that sum to each
@@ -32,7 +35,7 @@ evaluation data.
 The active custom candidates are BPE vocabularies of exactly 32,000, 32,768, and 40,960 pieces.
 Mistral 32K is the baseline and fallback. The v1 49,152 candidate is preserved but not carried into
 v2 and v3: corrected local evidence shows too little incremental compression for its
-embedding/head cost.
+embedding/head cost. It remains absent from v4.
 A 64K candidate remains excluded because the packed loader uses uint16 IDs, chat adds three role
 tokens, and Shape A has one physically shared 2,048-wide input/LM-head matrix. At Shape A, 32,003,
 32,771, and 40,963 effective rows cost exactly 65,542,144, 67,115,008, and 83,892,224 parameters.
@@ -84,8 +87,8 @@ and near-duplicate requirements for the full flagship corpus.
 
 ## 3. Running the pipeline
 
-After source qualification, create `experiments/Speck-Tokenizer-v3/tokenizer_experiment.json` using
-the frozen values in [`tokenizer_plan_v3.json`](tokenizer_plan_v3.json) plus explicit input records.
+After source qualification, create `experiments/Speck-Tokenizer-v4/tokenizer_experiment.json` using
+the frozen values in [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) plus explicit input records.
 Relative
 input and output paths resolve against the config directory.
 
@@ -93,14 +96,14 @@ Build the balanced sample:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_sample_prepare \
-  experiments/Speck-Tokenizer-v3/tokenizer_experiment.json
+  experiments/Speck-Tokenizer-v4/tokenizer_experiment.json
 ```
 
 Train all candidates and pin the baseline:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_train \
-  experiments/Speck-Tokenizer-v3/tokenizer_experiment.json \
+  experiments/Speck-Tokenizer-v4/tokenizer_experiment.json \
   --prepare-baselines
 ```
 
@@ -108,7 +111,7 @@ Evaluate static metrics:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_evaluate \
-  experiments/Speck-Tokenizer-v3/tokenizer_experiment.json
+  experiments/Speck-Tokenizer-v4/tokenizer_experiment.json
 ```
 
 `--restart` deletes only an incomplete `.building` directory. Completed samples and tokenizers are
@@ -161,13 +164,13 @@ and markup. Enabling only that setting gives an exact-32,000-piece BPE 264.88 eq
 tokens/KiB versus Mistral's 285.51 at identical embedding/head parameter cost. It improves all six
 categories and all 30 bounded sources, repeats exactly at 32,768 pieces, and still leads after a
 whitespace-collapse diagnostic. Tripling data, paragraph chunking, code reweighting, dummy-prefix
-matching, and unigram did not explain or improve the original control. The versioned v2/v3 plans
+matching, and unigram did not explain or improve the original control. The versioned v2–v4 plans
 contain this treatment; neither plan nor the local result has D5, LM-quality, audit-opening, or
 launch authority.
 
 If more than two custom candidates remain Pareto-valid, the pre-results
 [`tokenizer_static_nomination_policy_v2.json`](tokenizer_static_nomination_policy_v2.json) chooses two
-endpoints: best macro compression, then lowest parameter cost among the remaining frontier. The v3
+endpoints: best macro compression, then lowest parameter cost among the remaining frontier. The v3/v4
 tied accounting halves every v2 embedding/head value without changing candidate ordering: moving
 from 32,768 to 40,960 pieces adds exactly 16,777,216 Shape-A parameters rather than 33,554,432.
 Frozen tie rules prefer the other objective, smaller vocabulary, then ID. Fewer than two valid distinct
@@ -213,4 +216,5 @@ static report, pilot configs/results, audit outcome, parameter cost, and rejecti
 6. forbid comparison of token-normalized loss across different tokenizers—use BPB or downstream
    metrics.
 
-No existing checkpoint is converted to the new vocabulary. D5 is frozen before E1–E5 and C0 launch.
+No existing checkpoint is converted to the new vocabulary. D5 is frozen before E1–E4, I1/I2, and C0
+launch.

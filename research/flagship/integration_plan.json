@@ -1,0 +1,141 @@
+{
+  "format": "speck_flagship_integrated_validation_plan",
+  "format_version": 1,
+  "status": "planning",
+  "purpose": "test whether the selected data transfers across dense and hybrid architectures and whether individually selected architecture settings compose into one launchable flagship recipe",
+  "gpu_hour_ceiling": 100,
+  "experiments": [
+    {
+      "id": "I1",
+      "name": "crossed data-mixture by architecture transfer",
+      "depends_on": [
+        "E2c stable-mixture freeze",
+        "D4 learning-rate and batch calibration",
+        "D6 width-transfer calibration"
+      ],
+      "parameters": 150000000,
+      "tokens": 3000000000,
+      "factors": {
+        "architecture": [
+          "matched dense global-attention control",
+          "C0 KDA sigmoid NoPE 3:1 hybrid"
+        ],
+        "data": [
+          "balanced six-category prior",
+          "E2c-selected stable mixture"
+        ]
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "new_runs": 12,
+      "gpu_hours": 32,
+      "primary_analysis": "paired two-factor data and architecture main effects plus their interaction on parser-independent equal-category BPB",
+      "estimands": {
+        "primary_endpoint": "fixed-token 3B parser-independent equal-category macro BPB",
+        "data_main_effect": "one half times ((selected minus prior within dense) plus (selected minus prior within hybrid))",
+        "architecture_main_effect": "one half times ((hybrid minus dense on prior) plus (hybrid minus dense on selected))",
+        "interaction": "(selected minus prior within hybrid) minus (selected minus prior within dense)",
+        "seed_unit": "compute each estimand within seed before aggregation",
+        "uncertainty": "two-sided 95 percent Student-t interval over the three paired seed estimands",
+        "null_interpretation": "an interval spanning zero is unresolved and must not be described as proof of no interaction"
+      },
+      "required_views": [
+        "production-formatted equal-category BPB",
+        "parser-independent equal-category BPB",
+        "all six category guardrails",
+        "fixed-token quality",
+        "fixed-analytic-FLOP quality",
+        "fixed-wall-clock quality",
+        "small-scale benchmark subset"
+      ],
+      "decision_authority": "none; E2c remains the data-selection authority and any interaction narrows the transfer claim rather than reopening mixture search"
+    },
+    {
+      "id": "I2",
+      "name": "assembled flagship recipe confirmation",
+      "depends_on": [
+        "E2c stable-mixture freeze",
+        "C0",
+        "D2",
+        "D3",
+        "D7",
+        "D8"
+      ],
+      "parameters": 350000000,
+      "tokens": 10000000000,
+      "control": "C0 KDA sigmoid NoPE 3:1 default",
+      "treatment": "one configuration applying every individually promoted compatible D2 D3 D7 D8 setting",
+      "assembly_rule": "D2 and D3 apply when promoted; D7 selects the recurrent operator; D8 applies only if KDA remains selected; no untested setting or subset may enter",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "maximum_new_runs": 3,
+      "maximum_gpu_hours": 63,
+      "control_reuse": "C0 only under exact tokenizer data order optimizer schedule precision horizon evaluation and analysis identity",
+      "analysis": {
+        "primary_operational_view": "paired treatment-minus-C0 loss at matched wall-clock",
+        "required_secondary_views": [
+          "fixed-token",
+          "fixed-analytic-FLOP"
+        ],
+        "aggregate_bound": "upper one-sided 95 percent paired Student-t bound at or below 0.01 nats",
+        "source_bound": "every upper one-sided 95 percent paired Student-t bound at or below 0.02 nats",
+        "individual_pairs_retained": true
+      },
+      "pass_rule": "the assembled treatment must pass the architecture aggregate and source non-inferiority bounds, 32K and 128K capability gates, original-4K retention, and each promoted component's declared promotion benefit",
+      "failure_rule": "launch the complete C0 default; do not search post-hoc subsets or spend reserve on rescue combinations",
+      "no_new_run_rule": "if no compatible alternative promotes, C0 is already the assembled recipe and the unused envelope is not spent"
+    },
+    {
+      "id": "I3",
+      "name": "integrated capability and systems analysis",
+      "depends_on": [
+        "I1",
+        "I2"
+      ],
+      "new_training_runs": 0,
+      "gpu_hours": 5,
+      "required_outputs": [
+        "I1 factorial effect and interaction plot with seed uncertainty",
+        "I2 assembled-versus-C0 forest plot with every source and seed",
+        "position-wise and trailing-token loss",
+        "32K and 128K retrieval and composition gates",
+        "original-4K retention",
+        "analytic FLOPs and state",
+        "measured training time memory and energy"
+      ]
+    }
+  ],
+  "analysis_rules": {
+    "confidence": 0.95,
+    "paired_seed_reporting": true,
+    "individual_seed_reporting": true,
+    "interaction_is_reported_even_when_zero_or_adverse": true,
+    "no_quality_dependent_run_creation": true,
+    "no_reopening_E2_selection": true,
+    "no_post_hoc_component_subset_search": true
+  },
+  "paper_outputs": [
+    "one crossed data-by-architecture transfer figure",
+    "one assembled-recipe confirmation figure",
+    "an explicit statement of whether data and architecture gains transfer independently",
+    "an explicit statement of whether individually selected architecture settings compose"
+  ],
+  "totals": {
+    "maximum_new_training_runs": 15,
+    "gpu_hours": 100
+  },
+  "binding": [
+    "no new operator",
+    "no new data source or mixture search",
+    "three paired seeds",
+    "I2 completes before the scale ladder",
+    "the scale ladder and flagship use only I2-confirmed assembly or complete C0 fallback",
+    "protected reserve is untouched"
+  ]
+}

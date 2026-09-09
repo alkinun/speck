@@ -2,13 +2,13 @@
 
 This list is the P0 gate for the 5,000-GH200-hour plan. “Before grant” means before starting the paid
 three-month allocation, not necessarily before an award notice. Status reflects the repository and
-research machine on 2026-09-07.
+research machine on 2026-09-09.
 
 ## Critical path
 
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
-| R1 | Restore root storage headroom | Complete: root is 78% used with about 98 GiB free | Root stays below 80%; relocated checkpoint paths remain valid; all new work uses the data volume | SPE-24 |
+| R1 | Restore root storage headroom | Complete: root is 72% used with about 125 GiB free; `/mnt/speck-data` has about 5.1 TiB available | Root stays below 80%; relocated checkpoint paths remain valid; all new work uses the data volume | SPE-24 |
 | R2 | Add and qualify a code source | All five bounded tokenizer code inputs pass provenance, filtering, secrets, pinned benchmark contamination, partition yield, and five-source overlap; training remains blocked on human rights/attribution acceptance (especially Python-Edu's absent file-license metadata) and production cleanup/resume/global dedup | Restricted Stack v3.1, Stack-Edu, and blend treatments pass rights, provenance, English-text, repository-split, dedup, contamination, secret/PII, yield, and operational gates | SPE-114 |
 | R3 | Run the 20B data rehearsal | Six-stage orchestration fixture-qualified; candidate-source handle reuse fixed and failure-tested; real rights-bound manifest and run pending | Download, filtering, exact/near dedup memory, packing throughput, storage, cleanup, and resume are measured | SPE-114 |
 | R4 | Build the evaluation firewall | Benchmark firewall complete for all six bounded categories; three-partition construction/consumer tooling fixture-qualified; real targets, authority, and partitions pending | Tokenizer sample, equal-byte selection set, unseen-source slices, and sealed audit are immutable and decontaminated before outputs | SPE-114 |
@@ -25,15 +25,15 @@ parts pass or have a written fallback that consumes no undeclared GPU work.
 | --- | --- | --- | --- | --- |
 | R8 | WSD schedule support | CPU implementation complete; GH200 qualification pending | Warmup/stable/cosine-decay behavior, resume identity, and D4 integration pass | SPE-115 |
 | R9 | Optional FP8 | Not started; bf16 is the fallback | Numerical, quality, throughput, memory, and resume gates pass on GH200, or bf16 is frozen | SPE-83 |
-| R10 | Decide tokenizer D5 | Corrected v2 contract freezes exact-32K/32,768/40,960 whitespace-enabled candidates and v2 Pareto policy; formal inputs/runs and D5 audit remain blocked/pending | Materialize the authorized source-balanced sample, train corrected candidates, run static report and matched 60M pilot, open the audit once, then freeze artifact/hash and repacking branch before E1/C0 | SPE-117 |
+| R10 | Decide tokenizer D5 | Active v4 scope successor preserves exact-32K/32,768/40,960 whitespace-enabled candidates and v2 Pareto policy; formal inputs/runs and D5 audit remain blocked/pending | Materialize the authorized source-balanced sample, train corrected candidates, run static report and matched 60M pilot, open the audit once, then freeze artifact/hash and repacking branch before E1/C0 | SPE-117 |
 | R11 | Materialize scale targets | Complete as non-launchable v2 successor geometry: seven targets pass independent and instantiated parameter/FLOP/state/optimizer accounting; D5 remains open and the inherited physically tied head is frozen by contract | 60M–1.2B configs pass exact parameter/FLOP/state accounting | SPE-60, SPE-166 |
-| R12 | Freeze analysis contracts | Data and architecture programs are specified; per-arm manifests are missing | E1W/E1S/E2–E5, C0/D2/D3/D4/D6/D7/D8, and scale analyses are immutable before outputs | SPE-70 |
+| R12 | Freeze analysis contracts | Data, architecture, integration, and paper contracts are specified; per-arm manifests are missing | E1W/E1S/E2–E4, C0/D2/D3/D4/D6/D7/D8, I1/I2/I3, and scale analyses are immutable before outputs | SPE-70 |
 | R17 | Implement selectable KDA output gating | Default-compatible implementation, CPU and export gates complete; full-layer FLA integration cases await R7 CUDA execution | Missing/explicit sigmoid are identical for old configs and checkpoints; SiLU and sigmoid pass Torch/FLA, geometry, export, and strict-load tests | SPE-128 |
 
 [`targets/shape-a`](targets/shape-a/) is deliberately non-launchable. A real experiment appears only
 after its data, training, hardware, and analysis contracts are complete.
 
-[`DATA.md`](DATA.md) and [`data_plan.json`](data_plan.json) freeze the data categories, bounds,
+[`DATA.md`](DATA.md) and [`data_plan_v2.json`](data_plan_v2.json) freeze the data categories, bounds,
 experiment funnel, held-out firewall, statistic, guardrails, seed counts, and GPU-hour ceiling. They
 do not substitute for source cards, prepared data, or per-arm manifests.
 
@@ -41,6 +41,11 @@ do not substitute for source cards, prepared data, or per-arm manifests.
 the shared-control identity, D2–D8 estimands, promotion rules, scale transfer, systems measurements,
 and architecture GPU-hour ceiling. They do not authorize training before D8 support, scale targets,
 and per-arm manifests pass.
+
+[`integration_plan.json`](integration_plan.json) separately freezes I1's data-by-architecture transfer,
+I2's assembled-recipe confirmation and complete-C0 fallback, and I3's analysis inside 100 GPU-hours.
+[`PAPER.md`](PAPER.md) maps those results and the existing programs to one claim ladder. Neither may
+introduce a new mechanism or reopen a completed selection after outputs.
 
 ## Evaluation and release readiness
 

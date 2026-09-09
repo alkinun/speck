@@ -16,8 +16,9 @@
   },
   "scope": {
     "included": [
-      "data experiments E1-E5",
+      "data experiments E1-E4",
       "dense architecture decisions C0 D2 D3 D4 D6 D7 D8",
+      "integrated data-architecture and assembled-recipe validation I1-I3",
       "dense scale ladder and reversal check",
       "dense-width flagship pretraining",
       "32K and 128K context extension",
@@ -53,7 +54,7 @@
         "source-balanced tokenizer sample custom candidates matched LM pilot and D5 decision",
         "selectable backward-compatible KDA output gate",
         "comparator baseline table",
-        "scale geometries and analysis contracts"
+        "scale geometries plus data architecture integration and paper analysis contracts"
       ],
       "exit_gate": "every item in PREGRANT.md is complete or has an explicit owner and non-GPU fallback"
     },
@@ -100,7 +101,7 @@
     },
     {
       "id": "P3",
-      "name": "decay curriculum and scale transfer",
+      "name": "decay integrated validation and scale transfer",
       "days": [
         11,
         20
@@ -111,10 +112,12 @@
       ],
       "work": [
         "E4 decay-phase mixture: 50 GPU-hours",
-        "E5 curriculum shape: 100 GPU-hours",
-        "60M-750M scale ladder and reversal check: 290 GPU-hours"
+        "I1 crossed data-mixture by architecture transfer: 32 GPU-hours",
+        "I2 assembled flagship recipe confirmation: up to 63 GPU-hours",
+        "I3 integrated capability and systems analysis: 5 GPU-hours",
+        "60M-750M scale ladder and reversal check after I2: 290 GPU-hours"
       ],
-      "exit_gate": "shape A or B is selected and every launch setting has a winner or default"
+      "exit_gate": "data-architecture transfer is measured, the assembled recipe or complete C0 fallback is confirmed, and flagship size is selected"
     },
     {
       "id": "P4",
@@ -223,7 +226,8 @@
       "day-21 configuration freeze",
       "three-seed confirmation for architecture decisions",
       "D7 and D8 causal attribution",
-      "neutral held-out evaluation for data decisions"
+      "neutral held-out evaluation for data decisions",
+      "I1 data-architecture transfer and I2 assembled-recipe confirmation"
     ],
     "advisory": [
       "calendar day ranges",
@@ -232,7 +236,6 @@
       "post-training sub-budget split"
     ],
     "cut_order": [
-      "E5 curriculum-shape experiment",
       "scale-ladder contingency runs",
       "scale ladder beyond the two mandatory transfer points",
       "flagship tokens from 400B to 320B"
@@ -242,7 +245,8 @@
       "required seed confirmations",
       "checkpoint and resume validation",
       "original-4K regression checks",
-      "release parity and artifact identity"
+      "release parity and artifact identity",
+      "integrated data-architecture and assembled-recipe validation"
     ]
   },
   "throughput_response": [
@@ -262,5 +266,12 @@
       "condition": "below 250 achieved TFLOP/s/GPU or unreliable DDP",
       "action": "fall back to bf16 Torch kernels as needed and reduce flagship training to 320B tokens"
     }
-  ]
+  ],
+  "active_contracts": {
+    "paper": "research/flagship/PAPER.md",
+    "data": "research/flagship/data_plan_v2.json",
+    "architecture": "research/flagship/architecture_plan.json",
+    "integration": "research/flagship/integration_plan.json",
+    "tokenizer": "research/flagship/tokenizer_plan_v4.json"
+  }
 }

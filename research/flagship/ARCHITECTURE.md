@@ -1,6 +1,6 @@
 # Flagship architecture evidence protocol
 
-Status: planning contract, 2026-09-07. This document defines how the dense-width KDA/global
+Status: planning contract, 2026-09-09. This document defines how the dense-width KDA/global
 flagship architecture is selected and how its efficiency claims are supported.
 [`architecture_plan.json`](architecture_plan.json) is the machine-checked run and budget contract.
 Per-arm manifests become immutable before any output from their comparison is inspected.
@@ -13,7 +13,7 @@ energy advantages that this chain directly measures.
 
 ## 1. Evidence ladder
 
-Four evidence levels have different authority:
+Five evidence levels have different authority:
 
 1. **Completed discovery:** the 150M studies establish candidates and negative results. They include
    the mixer screens, [Kimi-transfer staircase](../../findings/16_kimi_transfer_131m.md),
@@ -23,9 +23,12 @@ Four evidence levels have different authority:
 2. **Grant decisions:** D4/D6 calibrate on the qualified incumbent in P1. C0, D2, D3, D7, and D8
    then run on the frozen tokenizer, E2 stable data, optimizer, schedule, and paired data order. They
    isolate the remaining launch settings at 350M.
-3. **Scale transfer:** the selected hybrid and matched dense control form a 60M–750M ladder. The
+3. **Integrated validation:** I1 tests the E2-selected mixture across dense and C0 hybrid models;
+   I2 tests the one assembled set of compatible promoted settings against exact C0. These close
+   transfer and composition gaps without reopening data or component search.
+4. **Scale transfer:** the I2-confirmed hybrid and matched dense control form a 60M–750M ladder. The
    flagship is excluded from the fit and becomes its held-out confirmation.
-4. **Systems realization:** randomized, interleaved measurements on GH200, RTX 3090, and CPU verify
+5. **Systems realization:** randomized, interleaved measurements on GH200, RTX 3090, and CPU verify
    whether analytic FLOP/state advantages produce actual training and serving gains.
 
 The completed [whole-architecture proxy evidence](../architecture-promotion-v1/evidence_matrix.json)
@@ -87,7 +90,27 @@ D4 is a screen, not an architecture claim. D6 is judged by held-out scale-predic
 the fit on its anchors. Decisions and defaults are frozen before day 21; an unresolved result takes
 the documented default rather than causing more search.
 
-## 4. Scale and reversal program
+## 4. Integrated validation before scale
+
+[`integration_plan.json`](integration_plan.json) is a separate 100-hour contract because component
+ablation is not evidence that components compose and hybrid-only data selection is not evidence that
+data gains transfer.
+
+- **I1:** three-seed 2×2 comparison at 150M/3B: matched dense versus C0 hybrid, each on the balanced
+  prior and E2c-selected stable mixture. Report data and architecture main effects, their interaction,
+  both held-out parser views, six-category guardrails, and fixed-token/FLOP/time views. I1 cannot
+  change the E2 selection; an interaction narrows the transfer claim.
+- **I2:** three-seed assembled configuration at 350M/10B versus exact C0. The treatment contains every
+  compatible individually promoted D2/D3/D7/D8 setting and nothing else. Failure returns the entire
+  flagship to C0; no output-dependent subset search is allowed. If all settings retain defaults, C0
+  is already the confirmed assembly and the unused envelope is not spent.
+- **I3:** hash-bound capability and systems analysis, including position/trailing loss, 32K/128K
+  retrieval and composition, original-4K retention, and measured cost.
+
+The scale ladder cannot launch before I2 resolves. This makes every fitted scale point a measurement
+of the architecture that can actually become the flagship.
+
+## 5. Scale and reversal program
 
 | Stage | Scale and tokens | New runs | GPU-h |
 | --- | --- | ---: | ---: |
@@ -105,7 +128,7 @@ parameters, tokens, wall-clock, peak allocation, and time to fixed quality. The 
 The 107-hour contingency can repeat an invalid or high-leverage existing cell. It cannot introduce a
 new operator, choose a favorable scale after results, or turn a failed reversal into a claim.
 
-## 5. Systems evidence
+## 6. Systems evidence
 
 Analytic savings are necessary but insufficient. Training and serving measurements use pinned model
 and artifact hashes, synchronized timers, fixed power limits and software, warmup exclusion, and at
@@ -127,7 +150,7 @@ Time, energy, and memory are separate outcomes. A speedup cannot be inferred fro
 gain cannot be inferred from time, and an analytic state reduction cannot be substituted for peak
 allocated memory.
 
-## 6. Paper evidence map
+## 7. Paper evidence map
 
 The architecture section is complete only when it can generate these artifacts from checked results:
 
@@ -135,27 +158,29 @@ The architecture section is complete only when it can generate these artifacts f
    identity tests.
 2. A completed-discovery intervention staircase, including failed and superseded claims.
 3. A D2/D3/D7/D8 forest plot with seed pairs, source bounds, capability gates, and cost deltas.
-4. Hybrid-versus-dense quality/FLOP scaling curves with the flagship held out.
-5. State and peak-memory curves over context length with their constant and length-growing terms.
-6. Interleaved training and serving time/energy results on the named hardware.
-7. Long-context capability and original-4K retention through both extension stages.
-8. Negative results: gated convolution, pure recurrence, attention output gating, late NoPE
+4. I1 data-by-architecture interaction and I2 assembled-recipe confirmation with all paired seeds.
+5. Hybrid-versus-dense quality/FLOP scaling curves with the flagship held out.
+6. State and peak-memory curves over context length with their constant and length-growing terms.
+7. Interleaved training and serving time/energy results on the named hardware.
+8. Long-context capability, position/trailing loss, and original-4K retention through both extension stages.
+9. Negative results: gated convolution, pure recurrence, attention output gating, late NoPE
    conversion, Reader Attention promotion failure, and every losing grant arm.
 
 This is enough for a deep architecture paper because it connects component causality, scale transfer,
 and hardware realization. It does not support a claim of architectural novelty for inherited pieces,
 or parity with the absolute capabilities or development scale of a frontier laboratory.
 
-## 7. Budget and flexibility
+## 8. Budget and flexibility
 
 The decision matrix costs 353 GPU-hours and the scale program 290, for 643 architecture GPU-hours.
-Data remains 593 hours. Together they require 1,236 GPU-hours, or 12.9 fully occupied four-GPU node
-days, before the flagship freeze. The grant retains 889 hours of protected reserve.
+Data costs 493 hours and integrated validation costs 100. Together they require 1,236 GPU-hours, or
+12.9 fully occupied four-GPU node days, before the flagship freeze. The grant retains 889 hours of
+protected reserve.
 
-D7 and D8 are now mandatory for the corresponding component claims. If throughput misses plan, cut
-E5 first, then unused scale contingency, then nonmandatory scale points. If a D7 or D8 implementation
-or evidence gate fails, keep the default and narrow the paper claim; do not spend reserve inventing a
-replacement axis.
+D7 and D8 are mandatory for the corresponding component claims, and I1/I2 are mandatory for transfer
+and assembly claims. If throughput misses plan, cut unused scale contingency, then nonmandatory scale
+points. If a D7 or D8 implementation or evidence gate fails, keep the default and narrow the paper
+claim; do not spend reserve inventing a replacement axis.
 
 Primary methodological references: [DeepSeek-V2](https://arxiv.org/abs/2405.04434) for the combination
 of architecture ablation, cache accounting, and measured efficiency, and

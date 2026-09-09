@@ -22,6 +22,9 @@ All totals use the explicit D5 fallback: Mistral's 32,000 pieces plus three rese
 or 32,003 rows. D5 has not selected a tokenizer. The artifact prices every active v3 candidate at
 every width using one physically shared embedding/LM-head parameter (`V*E`). The state dict retains
 two compatibility aliases, but parameter and optimizer accounting count their one shared object once.
+The active tokenizer v4 successor changes only the downstream experiment-scope binding; its
+candidates, trainer, pilot, and tied accounting are identical to v3, so these scale-v2 numbers do not
+require regeneration.
 The immutable [`accounting-v1.json`](accounting-v1.json) correctly counted the tied implementation
 while also printing tokenizer v2's unsupported `2*V*E` counterfactual; v2 supersedes that mismatch
 without rewriting the predecessor.

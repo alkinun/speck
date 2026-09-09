@@ -122,6 +122,7 @@ prepared conversation dataset.
 | [Deferred MoE support](docs/moe.md) | Retained routed-expert reference, explicit non-support, and the future sparse-upcycling boundary. |
 | [Architecture promotion research](research/README.md) | Versioned statistical policy, cost envelopes, evaluation manifest, and evidence matrix. |
 | [Flagship scope](research/flagship/README.md) | Model and paper scope, defaults, evidence standard, data, and evaluation. |
+| [Flagship paper contract](research/flagship/PAPER.md) | Central question, claim ladder, narrative spine, required figures, headline gate, and scope discipline. |
 | [Flagship execution](research/flagship/EXECUTION.md) | Flexible 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
 | [Pre-grant checklist](research/flagship/PREGRANT.md) | Concrete storage, data, GH200, model, evaluation, and administrative readiness work. |
 | [Slurm operations](docs/slurm.md) | Immutable wave validation, one/four-GPU rendering, preflight, bounded retry, accounting, and scheduler observation. |

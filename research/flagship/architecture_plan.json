@@ -107,7 +107,8 @@
         "220M/5B"
       ],
       "new_runs": 4,
-      "gpu_hours": 14
+      "gpu_hours": 14,
+      "depends_on": "I2 assembled-recipe confirmation"
     },
     {
       "id": "mid_points",
@@ -116,7 +117,8 @@
         "350M/7B"
       ],
       "new_runs": 4,
-      "gpu_hours": 35
+      "gpu_hours": 35,
+      "depends_on": "I2 assembled-recipe confirmation"
     },
     {
       "id": "S1",
@@ -124,13 +126,15 @@
         "750M/15B"
       ],
       "new_runs": 2,
-      "gpu_hours": 134
+      "gpu_hours": 134,
+      "depends_on": "I2 assembled-recipe confirmation"
     },
     {
       "id": "contingency",
       "new_runs": 4,
       "gpu_hours": 107,
-      "new_axes_forbidden": true
+      "new_axes_forbidden": true,
+      "depends_on": "I2 assembled-recipe confirmation"
     }
   ],
   "systems": {
@@ -169,6 +173,15 @@
     "quality source and long-context guardrails",
     "hybrid versus dense scale transfer",
     "randomized interleaved systems measurements",
+    "I1 transfer and I2 assembly complete before the scale ladder",
     "643 GPU-hour architecture ceiling"
-  ]
+  ],
+  "integrated_validation": {
+    "plan": "research/flagship/integration_plan.json",
+    "gpu_hours_outside_architecture_ceiling": 100,
+    "I1": "three-seed crossed data-mixture by dense-versus-C0 architecture transfer",
+    "I2": "three-seed assembled compatible D2 D3 D7 D8 recipe versus exact C0",
+    "I2_failure": "launch complete C0 without post-hoc subset search",
+    "scale_ladder_requires_I2": true
+  }
 }

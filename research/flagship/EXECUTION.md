@@ -16,7 +16,7 @@ GPU-hours, or 12.9 fully occupied node-days, before the day-21 freeze.
 | P0 — Pre-grant readiness | before day 1 | 0 | Data, hardware, storage, targets, and contracts ready |
 | P1 — Calibration and screens | 1–4 | 230 | Web and specialist sources, repetition policy, LR/batch region |
 | P2 — Mixture and dense architecture | 4–11 | 566 | Mixture, position, ratio, recurrent operator, and output gate |
-| P3 — Decay, curriculum, and scale | 11–20 | 440 | Decay recipe, scale fit, flagship size |
+| P3 — Decay, integration, and scale | 11–20 | 440 | Decay recipe, transfer/composition checks, scale fit, flagship size |
 | P4 — Configuration freeze | 20–21 | 0 | One hash-bound launch manifest |
 | P5 — Flagship pretraining | 21–50 | 2,425 | Pre-decay and final base checkpoints |
 | P6 — Extension through release candidates | 51–65 | 450 | 128K, annealed, instruct, evaluated exports |
@@ -77,11 +77,20 @@ decisions use equal-domain bits per UTF-8 byte, paired bounds, per-category guar
 audit. The fitted E2 response surface nominates candidates; only retrained, replicated arms decide.
 [`ARCHITECTURE.md`](ARCHITECTURE.md) freezes the complete contract.
 
-### P3 — Transfer before committing the flagship
+### P3 — Integrate and transfer before committing the flagship
 
 - E4 decay mixture: 50 GPU-hours, branched from the E2 stable winner.
-- E5 curriculum shape: 100 GPU-hours; reuse the selected E2 stable mixture as the uniform control.
-- Dense scale ladder and 750M reversal check: 290 GPU-hours.
+- I1 crossed data-mixture × architecture transfer: 32 GPU-hours, 150M/3B, dense and C0 hybrid on
+  balanced-prior and E2-selected data at three seeds.
+- I2 assembled flagship recipe confirmation: up to 63 GPU-hours, one compatible D2/D3/D7/D8
+  assembly against exact C0 at 350M/10B and three seeds.
+- I3 integrated capability and systems analysis: 5 GPU-hours.
+- Dense scale ladder and 750M reversal check after I2 resolves: 290 GPU-hours.
+
+I1 reports an adverse or null interaction rather than reopening E2. I2 is not a subset search: if the
+complete assembled treatment fails, use complete C0. If no alternative setting promotes, C0 is already
+the confirmed assembly and the unused allowance is not spent. See
+[`integration_plan.json`](integration_plan.json).
 
 Resolve the 1.2B/400B default versus the 600M/800B alternative by day 18. The fitted scale curve must
 exclude the eventual flagship point, which remains a held-out check.
@@ -147,6 +156,6 @@ Not flexible:
 - Day-21 freeze.
 - Original-4K regression, checkpoint/resume, and release-parity requirements.
 
-When throughput misses plan, cut E5 first, then scale contingency runs, then nonmandatory scale points,
-then reduce the flagship from 400B to 320B tokens. Never save compute by dropping evaluation or
+When throughput misses plan, cut scale contingency runs first, then nonmandatory scale points, then
+reduce the flagship from 400B to 320B tokens. Never save compute by dropping I1/I2, evaluation, or
 replication while retaining the associated claim.

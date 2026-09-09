@@ -1,12 +1,14 @@
 # Speck flagship: scope of the model, the paper, and the experiments
 
-Status: v4, 2026-09-08. This is the single operating document for the first flagship model and the
+Status: v5, 2026-09-09. This is the single operating document for the first flagship model and the
 paper that describes it. Everything else under `research/` is either tooling contract
 (`architecture-promotion-v1`) or archived evidence (`paper-1/*.json`).
 
 The active operating surface is intentionally small:
 
 - This file freezes scope, defaults, experiments, data, evaluation, and releases.
+- [`PAPER.md`](PAPER.md) freezes the central question, claim ladder, paper spine, required figures,
+  headline gate, and scope discipline.
 - [`DATA.md`](DATA.md) defines source qualification, the held-out firewall, the mixture-search
   funnel, promotion rules, and required evidence.
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) defines causal ablations, shared-control identity, scale
@@ -18,11 +20,14 @@ The active operating surface is intentionally small:
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
 - [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
-- [`data_plan.json`](data_plan.json) is the machine-checked category, run, and selection contract.
+- [`data_plan_v2.json`](data_plan_v2.json) is the active machine-checked category, run, and selection
+  contract; `data_plan.json` preserves the pre-integration predecessor.
 - [`architecture_plan.json`](architecture_plan.json) is the machine-checked architecture run,
   promotion, scale, and systems contract.
-- [`tokenizer_plan_v3.json`](tokenizer_plan_v3.json) is the active machine-checked tokenizer sampling
-  and decision contract; v1 and v2 remain immutable predecessors.
+- [`integration_plan.json`](integration_plan.json) is the 100-GPU-hour crossed data-architecture and
+  assembled-recipe confirmation contract.
+- [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) is the active machine-checked tokenizer sampling
+  and decision contract; v1 through v3 remain immutable predecessors.
 - [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json) freezes one physically shared
   token embedding/LM-head parameter and its config, accounting, checkpoint, optimizer, and export rules.
 - [`source_registry.json`](source_registry.json) pins the candidate source revisions and provisional
@@ -41,6 +46,11 @@ The first flagship and its paper must do three things at once:
 2. Explain every design decision with a controlled experiment, so the paper is the documented
    decision process of the model rather than a report written afterwards.
 3. Leave a ladder the next grant extends instead of restarts.
+
+The paper's central question is how data quality and the allocation of recurrent versus exact-attention
+memory determine quality, training cost, and long-context serving cost in a small language model. Every
+active experiment must select an input to the released model, test whether selected inputs transfer or
+compose, validate scale/length transfer, or price the released system. Unrelated exploration is excluded.
 
 Data and architecture are treated as equal first-class subjects. The public evidence says data is
 the larger lever at this scale: PuRo-2B ranks a within-source quality curriculum at 2.40x
@@ -74,7 +84,7 @@ At the same 2,425 GPU-hours we can train either shape:
 
 Shape A has better absolute loss. Shape B is less undertrained relative to its size class, competes
 directly with Qwen3-0.6B, SmolLM2-360M, and LFM2-700M, and serves better, which is our axis. This is
-decision **F1**, resolved by the scale ladder in section 4.4 no later than day 18, defaulting to A.
+decision **F1**, resolved by the scale ladder in section 4.5 no later than day 18, defaulting to A.
 If FP8 qualifies on the node, the extra throughput buys tokens, not saved hours.
 
 The active R11 planning successor is [`targets/scale-targets-v2.json`](targets/scale-targets-v2.json),
@@ -129,20 +139,21 @@ changes no number in the config is cut. A config line with no figure is labeled 
 1. Introduction: the efficiency problem, the two cost axes, claims and non-claims.
 2. Architecture: every operator in one notation, with state and FLOP accounting.
 3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
-4. Data ablations: E1W/E1S and E2–E5 with per-domain held-out loss and small-scale benchmarks.
+4. Data ablations: E1W/E1S and E2–E4 with per-domain held-out loss and small-scale benchmarks.
 5. Architecture ablations: C0, D2, D3, D4, D6, D7, and D8 with paired non-inferiority bounds.
-6. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one
+6. Integrated validation: the I1 data-by-architecture factorial and I2 assembled-recipe confirmation.
+7. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one
    held-out point, and the hyperparameter transfer rule from D6.
-7. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
-8. Long context: extension recipe, RULER v2 through 128K, internal protocols, 4K retention.
-9. Post-training: anneal merge and SFT, with the delta each contributes.
-10. Results against comparators at matched size, each comparator's token budget printed beside it.
-11. Serving cost: TTFT, TPOT, throughput, resident state, peak memory at 4K, 32K, and 128K on
-    GH200, RTX 3090, and CPU through GGUF. Time and energy separately, no dollar figures.
-12. Mechanism: why a few global layers suffice, and what the recurrent state retains at 128K.
-13. Negative results: Reader Attention, attention output gating, late NoPE conversion, and every arm
-    that loses in section 4.
-14. Limitations, one paragraph of future work, and reproducibility.
+8. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
+9. Long context: extension recipe, RULER v2 through 128K, internal protocols, trailing loss, and 4K retention.
+10. Post-training: anneal merge and SFT, with the delta each contributes.
+11. Results against comparators at matched size, each comparator's token budget printed beside it.
+12. Serving cost: TTFT, TPOT, throughput, resident state, peak memory at 4K, 32K, and 128K on
+     GH200, RTX 3090, and CPU through GGUF. Time and energy separately, no dollar figures.
+13. Mechanism: why a few global layers suffice, and what the recurrent state retains at 128K.
+14. Negative results: Reader Attention, attention output gating, late NoPE conversion, and every arm
+     that loses in section 4.
+15. Limitations, one paragraph of future work, and reproducibility.
 
 ### 3.4 Headline
 
@@ -197,25 +208,25 @@ quarter as much.
 | E2c | Which stable mixture wins? | top three, three seeds each | 350M, 12B | 9 | 225 |
 | E3 | Epoch policy at matched tokens | 1 epoch mixed, 2 epochs higher quality, 4 epochs best | 150M, 6B | 6 | 32 |
 | E4 | Decay-phase composition | four mixtures branched from the E2 winner | 350M, +3B | 8 | 50 |
-| E5 | Curriculum shape | quality-sorted and two-phase; reuse E2c uniform control | 350M, 12B | 4 new | 100 |
-| | | | | **80** | **593** |
+| | | | | **76** | **493** |
 
 E1W runs four one-seed screens, then adds two seeds to each finalist. Each E1S category runs three
 one-seed treatments, then adds one seed to its top two. E2c uses three seeds because it sets the
-flagship mixture. E3, E4, and E5 use two seeds because their expected effects are large. E5's count
-is four new runs because the selected E2c mixture is its two-seed uniform control.
+flagship mixture. E3 and E4 use two seeds because their expected effects are large.
 
 The data decision is not a single weighted loss. Selection uses equal-domain bits per UTF-8 byte,
 paired confidence intervals, and a hard no-regression guardrail for web, code, math, synthetic,
 science, and reference separately. A sealed audit is opened once after selection. Exact rules,
-bounds, fallbacks, and artifacts are frozen in [`data_plan.json`](data_plan.json).
+bounds, fallbacks, and artifacts are frozen in [`data_plan_v2.json`](data_plan_v2.json).
 
 E3 is the highest-leverage experiment in the program. If repetition is close to free, as
 Muennighoff et al. report up to four epochs, the preparation target drops from 500B unique tokens to
 about 150B and the critical path in section 10 shrinks with it. Run it first.
 
-E5 settles a real disagreement in the literature: SmolLM2 found single-stage uniformly high-quality
-data better below 2B, while PuRo-2B found within-source quality sorting to be its single largest win.
+E5 curriculum shape was retired before outputs. Stable training defaults to uniform sampling within
+the E2-selected source treatments, followed by the E4-selected decay mixture. This is an operational
+default, not a curriculum claim. Its former 100-hour envelope now closes two direct threats to the
+paper: architecture-specific data gains and non-composing individually selected mechanisms.
 
 ### 4.3 Architecture decisions
 
@@ -252,14 +263,33 @@ training, seed, and analysis identity.
 
 D5 is decided before grant experiments. The deterministic trainer and static evaluator now exist;
 final six-category inputs are not yet frozen. Compare Mistral 32K with Speck BPE vocabularies of
-32,768, 40,960, and 49,152 pieces, statically advance two custom candidates, then run the matched 60M
+32,000, 32,768, and 40,960 pieces, statically advance two custom candidates, then run the matched 60M
 local-3090 pilot in [`TOKENIZER.md`](TOKENIZER.md). Static fertility cannot select the tokenizer.
 Mistral remains the fallback if no custom candidate passes BPB, category, systems, and audit gates.
 No 64K arm fits the uint16-plus-chat and parameter-efficiency contract.
 
 D6 is what makes the next scale cheap and is a paper figure in its own right.
 
-### 4.4 Scale ladder and reversal check
+### 4.4 Integrated validation
+
+The active [`integration_plan.json`](integration_plan.json) spends the retired E5 envelope on two
+questions that directly threaten the paper and released model:
+
+| ID | Question | Design | New training runs | GPU-h |
+| --- | --- | --- | ---: | ---: |
+| I1 | Does the E2-selected data improvement transfer between architectures? | 150M/3B, dense versus C0 hybrid crossed with balanced-prior versus selected data, three seeds | 12 | 32 |
+| I2 | Do individually promoted D2/D3/D7/D8 settings compose? | 350M/10B assembled recipe versus exact C0, three seeds | at most 3 | 63 |
+| I3 | Do the integrated capability and systems analyses agree with the component decisions? | Frozen held-out, 32K/128K, 4K retention, cost and energy reports | 0 | 5 |
+| | | | **at most 15** | **100** |
+
+I1 reports data, architecture, and interaction effects but cannot reopen E2 selection. I2 applies every
+compatible individually promoted setting exactly once. If that assembly fails any aggregate, source,
+long-context, retention, or declared-benefit gate, the flagship uses complete C0; no favorable subset
+search is allowed. If no alternative promotes, C0 already satisfies I2 and the unused hours are not
+spent. This confirmation completes before the scale ladder so every scale point measures the same
+launchable architecture.
+
+### 4.5 Scale ladder and reversal check
 
 The selected architecture against a dense control at four scales, plus cheap low anchors for the
 fit. Resolves F1 in section 2.2 and provides the scaling section. The flagship is excluded from the
@@ -276,13 +306,13 @@ fit and becomes its held-out transfer test.
 A scaling-efficiency claim additionally requires uncertainty on the fit, residual diagnostics, and
 the flagship itself as a held-out confirmation point.
 
-### 4.5 Outside the active experiment matrix
+### 4.6 Outside the active experiment matrix
 
 Reader Attention, MQA/MLA cache alternatives, attention residuals, sparse/compressed attention, and
 other archived axes receive no grant-1 runs. Existing completed evidence may appear as background or
 negative results, but spare capacity cannot reactivate them.
 
-### 4.6 Deferred conditional width
+### 4.7 Deferred conditional width
 
 No MoE run belongs to this grant or gates the flagship. The repository retains a conventional
 single-device routed-SwiGLU reference, routing diagnostics, and expert-masking support so a follow-on
@@ -308,8 +338,9 @@ Two corpora are needed.
   token-length filters. Concatenated unrelated documents are a stress condition, not supervision.
 
 Set `speck_base_dir=/mnt/speck-data/speck` so packed shards, the raw download cache, and checkpoints
-land on the 5.2 TB volume rather than the 12 GB free on root. Prune raw files as each source
-completes; the volume does not hold raw and packed simultaneously at full scale.
+land on the data volume. On 2026-09-09 root has about 125 GiB free and the data volume about 5.1 TiB
+available. Prune raw files as each source completes; the volume does not hold raw and packed
+simultaneously at full scale.
 
 ### 5.2 Mixture
 
@@ -342,7 +373,8 @@ promotion rules are in [`DATA.md`](DATA.md).
 - **Ablation evaluation:** the neutral held-out set from section 4.1, per-domain loss, and the
   small-scale benchmark subset.
 - **Long context:** RULER v2 at 4K through 128K, the internal 200-case structured-retrieval and
-  symbolic-composition protocols, and original-4K loss after every extension stage.
+  symbolic-composition protocols, position-wise and trailing-token loss on complete documents, and
+  original-4K loss after every extension stage.
 - **Comparators:** SmolLM2-360M and 1.7B, Qwen3-0.6B and 1.7B, Gemma 3 1B, LFM2-700M and 1.2B,
   Llama 3.2 1B, each with its training-token budget printed alongside.
 - **Serving:** TTFT, TPOT, tokens per second, resident state, and peak memory at 4K, 32K, and 128K
@@ -357,8 +389,9 @@ must be at least two months; three is comfortable.
 
 | Track | GPU-hours | Share |
 | --- | ---: | ---: |
-| Data experiments, E1W/E1S and E2 to E5 | 593 | 12% |
+| Data experiments, E1W/E1S and E2 to E4 | 493 | 10% |
 | Dense architecture decisions, C0 and D2 to D8 | 353 | 7% |
+| Integrated validation, I1 to I3 | 100 | 2% |
 | Scale ladder and reversal | 290 | 6% |
 | Flagship pretraining | 2,425 | 49% |
 | Extension, anneal, SFT, evaluation, serving | 450 | 9% |
@@ -408,6 +441,8 @@ non-GPU fallback.
 | Volume cannot hold raw and packed together | Prune raw per source as it completes |
 | arm64 kernel or four-GPU DDP failure | The rented-node day; fall back to Torch recurrence and bf16 |
 | Job time limits and preemption | Resume path tested before the grant |
-| Scope expands during the allocation | Dense-width architecture is frozen; 132 retired D1 hours stay in reserve until the flagship is secure |
+| Scope expands during the allocation | Dense-width architecture and the I1/I2 integration questions are frozen; no new axis may use reserve |
+| Data gains do not transfer across architectures | I1 measures the interaction and narrows the claim without reopening E2 |
+| Individually selected mechanisms do not compose | I2 falls back to complete C0 without post-hoc subset search |
 | Ablations do not transfer to 300+ tokens per parameter | Confirm at 750M; weight E4 highest; state the limitation |
 | Two-month window | Pre-decided cut order in section 7 |

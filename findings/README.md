@@ -83,6 +83,7 @@ Checked JSON under `results/` remains the machine-readable source of truth. The
 | [Parser-independent held-out contract](200_parser_independent_heldout_contract.md) | Separate parser views, global identities, and additive leakage gates |
 | [Tied embedding/head contract](201_tied_embedding_head_contract.md) | Inherited physical sharing is now explicit across accounting and export |
 | [Pre-access training and Slurm hardening](202_preaccess_training_and_slurm_hardening.md) | Safe-point requeue, completion, finite-value, identity, and budget gates |
+| [Integrated flagship evidence plan](203_flagship_integrated_evidence_plan.md) | E5 retirement, I1 data transfer, I2 assembled-recipe confirmation, and the paper claim spine |
 
 ## Conventions
 

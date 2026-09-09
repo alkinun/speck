@@ -216,6 +216,7 @@ history in order only when auditing provenance or a retired decision:
 201. [200 — Held-out evaluation now has a parser-independent pre-results contract](200_parser_independent_heldout_contract.md)
 202. [201 — The flagship keeps physically tied token embeddings](201_tied_embedding_head_contract.md)
 203. [202 — Pre-access training and Slurm failure boundaries are explicit](202_preaccess_training_and_slurm_hardening.md)
+204. [203 — The flagship now validates transfer and assembly before scale](203_flagship_integrated_evidence_plan.md)
 
 Conventions:
 

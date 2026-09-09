@@ -1,7 +1,8 @@
 # Flagship data experiment protocol
 
-Status: planning contract, 2026-09-06. This document defines how the English-first flagship corpus
-is selected. [`data_plan.json`](data_plan.json) is the machine-checked run and mixture contract.
+Status: planning contract, 2026-09-09. This document defines how the English-first flagship corpus
+is selected. [`data_plan_v2.json`](data_plan_v2.json) is the active machine-checked run and mixture
+contract; `data_plan.json` preserves the pre-integration predecessor.
 Dataset revisions, licenses, filters, hashes, and exact arm weights become immutable experiment
 manifests before any result from that experiment is inspected.
 
@@ -88,7 +89,8 @@ Three disjoint data partitions are frozen before training:
 - **Tokenizer sample:** balanced across the six categories and used only to train or evaluate
   tokenizer candidates.
 - **Selection held-out:** equal bytes per category, with held-out domains and an unseen source in
-  each category where feasible. It is used by E1–E5 but never mixed into training.
+  each category where feasible. It is used by E1–E4 and the I1 transfer analysis but never mixed into
+  training.
 - **Sealed audit:** separately hashed, never inspected during selection, and opened once after the E2
   finalists are ranked. Evaluate all three finalists in that one opening; choose the highest-ranked
   candidate that passes the same category guardrail, falling back to the balanced prior if none pass.
@@ -145,8 +147,7 @@ one closest to the prior. This order is frozen before outputs.
 | E2c | Confirm the top three mixtures at full proxy scale and three seeds | 350M, 12B | 9 | 225 |
 | E3 | One, two, and four effective epochs at matched tokens, two seeds | 150M, 6B | 6 | 32 |
 | E4 | Four decay mixtures branched from the stable winner, two seeds | 350M, +3B | 8 | 50 |
-| E5 | Within-source quality order and two-phase curriculum, two seeds; reuse the E2c winner as the uniform control | 350M, 12B | 4 | 100 |
-| | | | **80** | **593** |
+| | | | **76** | **493** |
 
 E2a uses a deterministic maximin/space-filling design over the constrained simplex; it is not a
 hand-picked set of stories such as “web-heavy.” Fit per-category response surfaces with uncertainty,
@@ -156,8 +157,14 @@ scratch and make the decision.
 
 E3 starts in parallel with E1 on the current high-quality incumbent mixture because its result
 determines whether corpus preparation needs roughly 500B unique tokens or can safely use about 150B
-with repetition. E4 branches from the same E2c stable checkpoint family. E5 counts only four new
-runs because the two-seed uniform control is reused from the selected E2c mixture.
+with repetition. E4 branches from the same E2c stable checkpoint family.
+
+E5 curriculum shape is retired before outputs. The stable-phase default is uniform sampling within
+each selected source treatment at the E2 mixture weights, followed by the E4-selected decay mixture
+under WSD. This is a declared operational default rather than a supported curriculum-shape claim. The
+former 100-hour envelope is governed by [`integration_plan.json`](integration_plan.json), where I1
+tests whether the selected mixture's effect transfers across dense and hybrid architectures without
+reopening E2 selection.
 
 ## 5. Promotion and transfer
 
@@ -165,7 +172,7 @@ runs because the two-seed uniform control is reused from the selected E2c mixtur
   specialist category after two total seeds for each finalist.
 - E2a advances six candidates using the preregistered model plus diversity constraints; E2b advances
   three. E2c freezes one stable mixture using the eligibility and tie-break rules above.
-- E3, E4, and E5 use paired two-seed comparisons because their expected effects are larger. A result
+- E3 and E4 use paired two-seed comparisons because their expected effects are larger. A result
   that is indistinguishable from noise retains the simpler incumbent.
 - The stable winner receives a 750M transfer check already budgeted in the scale ladder. Code and
   math task conclusions are deferred to that scale and the flagship; chance-level 350M benchmark
@@ -181,8 +188,9 @@ selection statistic, guardrail, seed counts, and advancement counts are binding.
 
 If a source fails rights, capacity, or operational qualification, replace it with the documented
 fallback before its first GPU output. If E2a response surfaces are unstable, promote the best six
-observed diverse arms rather than spending more runs. If compute is cut, remove E5 first as specified
-in the grant plan; never remove the sealed audit, domain guardrails, or E2c replication.
+observed diverse arms rather than spending more runs. If compute is cut, follow the grant plan's scale
+contingency cuts; never remove the sealed audit, domain guardrails, E2c replication, or I1 transfer
+measurement.
 
 ## 7. Artifacts required for the paper
 
@@ -191,7 +199,8 @@ in the grant plan; never remove the sealed audit, domain guardrails, or E2c repl
 - Exact arm weights, seeds, tokenizer hash, code revision, packed-shard hashes, and runtime cost.
 - Per-source and per-category BPB with document bootstrap intervals and seed dispersion.
 - E2 response-surface predictions, diagnostics, advancement record, and all losing arms.
-- Stable, decay, repetition, and curriculum decisions plus the sealed-audit result.
+- Stable, decay, and repetition decisions, the declared curriculum default, I1 transfer result, and
+  the sealed-audit result.
 - The exact stable and decay manifests used by every released checkpoint.
 
 Primary dataset references: [The Stack v3 dataset card](https://huggingface.co/datasets/HuggingFaceCode/stack-v3-train),
