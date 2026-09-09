@@ -54,7 +54,8 @@ introduce a new mechanism or reopen a completed selection after outputs.
 | R13 | Comparator baseline table | Pre-access offline log-probability parity contract is fixture-qualified; backend access, revisions, evaluations, and baseline table are pending | Named comparator revisions, token budgets, quality results, and 3090/CPU serving profiles are recorded | SPE-116 |
 | R14 | RULER v2 and internal protocols | Sources/cases are qualified | Launch manifests pin the exact active tasks, lengths, prompts, and scoring | SPE-63 |
 | R15 | Export rehearsal | KDA Transformers support exists; recurrent-mixer GGUF is missing | One representative KDA/NoPE checkpoint passes native/Transformers/GGUF identity and generation parity | SPE-76 |
-| R16 | Release destinations and credentials | Not audited | Model, code, artifact, and paper destinations plus credentials and licenses are verified | SPE-91 |
+| R16 | Release destinations, backup, and credentials | Compendium metadata and retention policy exist; independent backup, restore rehearsal, DOI archive, destinations, and credentials are not complete | Model, code, artifact, and paper destinations plus credentials/licenses pass; a representative R3 tree restores from an independent verified copy | SPE-91, SPE-172 |
+| R18 | Research compendium and claim governance | Complete locally: catalog, notebook, workflow, data-management plan, paper workspace, claim registry, validator, and CI workflow exist | Catalog/claims resolve from a clean checkout; ongoing work follows the notebook→result→finding→claim boundary | SPE-70 |
 
 HELMET, NoLiMa, MoE, depth routing, and sparse/compressed attention are not readiness work for this
 grant. Their absence cannot block the flagship.
@@ -67,13 +68,14 @@ grant. Their absence cannot block the flagship.
   single-GPU jobs are supported.
 - Record support contacts and the escalation path for scheduler, storage, and node failures.
 - Keep at least two independent copies of the launch manifest and every irreplaceable checkpoint.
+- Complete SPE-172's hash-verified backup/restore rehearsal before the first irreplaceable flagship checkpoint.
 - Decide who can authorize reserve use; no automatic process may spend it.
 
 ## P0 exit record
 
 Before the first allocated job, create one dated record that contains:
 
-- completion or fallback for R1–R17;
+- completion or fallback for R1–R18;
 - exact Git revision and dirty-worktree check;
 - exact tracked Git tree identity (untracked harness state is outside the contract unless declared);
 - hardware/software and dataset manifest hashes;

@@ -16,3 +16,7 @@ dist/
 
 # Experiment logs.
 wandb/
+
+# Non-authoritative research and manuscript working state.
+research/scratch/
+paper/build/

@@ -5,6 +5,10 @@ from [`findings/`](../findings/README.md): papers record what other teams report
 Speck has actually reproduced. A result in this directory is not a Speck result unless a finding links
 to a checked experiment artifact.
 
+These notes are reading records, not the publication bibliography. The exact bibliography exported for
+the flagship manuscript belongs under [`paper/references/`](../paper/references/) and should link back
+to these notes where available.
+
 ## Reading conventions
 
 - Every note was checked against the linked paper version, not only its abstract.

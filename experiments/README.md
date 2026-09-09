@@ -34,3 +34,8 @@ Before running a directory, require all of the following:
 4. Its expected GPU-hour charge fits the current phase and leaves protected reserve untouched.
 
 Planning-only geometry under `research/flagship/targets/` intentionally fails this launch rule.
+
+Experiment directories are reproducibility inputs, not lab notes or conclusions. Record chronological
+context under `research/notebook/`, machine-readable outcomes under `results/`, distilled conclusions
+under `findings/`, and paper use under `paper/claims.json`. See
+[`research/WORKFLOW.md`](../research/WORKFLOW.md).

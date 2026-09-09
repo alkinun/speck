@@ -1,0 +1,207 @@
+{
+  "format": "speck_paper_claim_registry",
+  "format_version": 1,
+  "paper_id": "speck-flagship-1",
+  "status": "pre_results",
+  "contract": "research/flagship/PAPER.md",
+  "claims": [
+    {
+      "id": "C-DATA",
+      "title": "Reproducible data improvement",
+      "status": "planned",
+      "question": "Which source treatments, mixture, repetition policy, and decay mixture improve equal-category quality without sacrificing a domain?",
+      "decision_rule": "Use E1W/E1S and E2-E4 with paired BPB uncertainty, six category guardrails, and the one-opening sealed audit.",
+      "contracts": [
+        "research/flagship/DATA.md",
+        "research/flagship/data_plan_v2.json"
+      ],
+      "evidence": [],
+      "planned_outputs": [
+        "data funnel and source-treatment table",
+        "six-category mixture frontier",
+        "repetition and decay effect plot"
+      ],
+      "paper_sections": [
+        "Data",
+        "Data ablations"
+      ],
+      "headline_eligible": false
+    },
+    {
+      "id": "C-DATA-TRANSFER",
+      "title": "Data effects transfer across architectures",
+      "status": "planned",
+      "question": "Does the E2-selected mixture help dense and KDA/global models similarly, or interact with architecture?",
+      "decision_rule": "Report I1 data and architecture main effects and the paired difference-of-differences with a two-sided 95% interval; never treat an unresolved interval as proof of no interaction.",
+      "contracts": [
+        "research/flagship/integration_plan.json"
+      ],
+      "evidence": [],
+      "planned_outputs": [
+        "I1 two-by-two effect and interaction figure"
+      ],
+      "paper_sections": [
+        "Integrated validation"
+      ],
+      "headline_eligible": false
+    },
+    {
+      "id": "C-HYBRID",
+      "title": "Hybrid quality and compute advantage",
+      "status": "prior_evidence_only",
+      "question": "Can the KDA/global hybrid match or improve dense-attention quality with lower training FLOPs and time to quality?",
+      "decision_rule": "Require the prior three-pair proxy, grant component decisions, scale transfer, and the held-out flagship point; remove any equivalence or scaling claim whose gate fails.",
+      "contracts": [
+        "research/flagship/ARCHITECTURE.md",
+        "research/flagship/architecture_plan.json"
+      ],
+      "evidence": [
+        "findings/105_paper_1_paired_proxy_analysis.md",
+        "results/Speck-Paper1/baseline-analysis.json"
+      ],
+      "planned_outputs": [
+        "hybrid versus dense quality-FLOP scaling figure",
+        "time and energy to fixed quality table"
+      ],
+      "paper_sections": [
+        "Architecture",
+        "Scale",
+        "Training systems"
+      ],
+      "headline_eligible": true
+    },
+    {
+      "id": "C-COMPONENTS",
+      "title": "Sequence component causality",
+      "status": "prior_evidence_only",
+      "question": "Which recurrent operator, output gate, position treatment, and recurrent/global ratio earn their quality or systems cost?",
+      "decision_rule": "Apply the D2/D3/D7/D8 paired non-inferiority and benefit rules against exact C0; ties and failed gates keep declared defaults.",
+      "contracts": [
+        "research/flagship/ARCHITECTURE.md",
+        "research/flagship/architecture_plan.json"
+      ],
+      "evidence": [
+        "findings/16_kimi_transfer_131m.md",
+        "findings/17_kimi_frontier_replication.md",
+        "findings/18_kimi_context32k.md",
+        "findings/24_reader_attention.md"
+      ],
+      "planned_outputs": [
+        "D2 D3 D7 D8 paired forest plot",
+        "negative-result and mechanism table"
+      ],
+      "paper_sections": [
+        "Architecture ablations",
+        "Mechanism and negative results"
+      ],
+      "headline_eligible": false
+    },
+    {
+      "id": "C-ASSEMBLY",
+      "title": "Selected mechanisms compose",
+      "status": "planned",
+      "question": "Do individually promoted architecture settings remain valid when assembled into one model?",
+      "decision_rule": "I2 compares one complete compatible assembly with exact C0 over three seeds; failure launches complete C0 without searching subsets.",
+      "contracts": [
+        "research/flagship/integration_plan.json"
+      ],
+      "evidence": [],
+      "planned_outputs": [
+        "I2 assembled-recipe confirmation forest plot"
+      ],
+      "paper_sections": [
+        "Integrated validation"
+      ],
+      "headline_eligible": false
+    },
+    {
+      "id": "C-SCALE",
+      "title": "Hybrid efficiency transfers with scale",
+      "status": "planned",
+      "question": "Does the I2-confirmed hybrid advantage persist from 60M through 750M and predict a held-out flagship point?",
+      "decision_rule": "Fit dense and hybrid quality against training FLOPs with uncertainty and residual diagnostics, exclude the flagship from fitting, and retain every reversal.",
+      "contracts": [
+        "research/flagship/ARCHITECTURE.md",
+        "research/flagship/architecture_plan.json"
+      ],
+      "evidence": [],
+      "planned_outputs": [
+        "dense and hybrid scale curves",
+        "held-out flagship residual and reversal analysis"
+      ],
+      "paper_sections": [
+        "Scale"
+      ],
+      "headline_eligible": true
+    },
+    {
+      "id": "C-LONG-CONTEXT",
+      "title": "Useful long-context capability through 128K",
+      "status": "prior_evidence_only",
+      "question": "What is the longest context at which the released model retains measured retrieval, composition, document modeling, and short-context quality?",
+      "decision_rule": "Report allocation, training, effective, and usable lengths separately using RULER v2, internal protocols, position and trailing loss, and original-4K retention.",
+      "contracts": [
+        "research/flagship/PAPER.md",
+        "research/architecture-promotion-v1/evaluation_manifest.json"
+      ],
+      "evidence": [
+        "findings/17_kimi_frontier_replication.md",
+        "findings/18_kimi_context32k.md"
+      ],
+      "planned_outputs": [
+        "position and trailing-token loss curves",
+        "RULER and internal capability curves through 128K",
+        "original-4K retention table"
+      ],
+      "paper_sections": [
+        "Long context"
+      ],
+      "headline_eligible": true
+    },
+    {
+      "id": "C-SYSTEMS",
+      "title": "Analytic savings become real systems savings",
+      "status": "prior_evidence_only",
+      "question": "Do lower analytic FLOPs and resident state improve measured training and serving outcomes on named hardware?",
+      "decision_rule": "Use randomized interleaved measurements and report time, energy, state, peak memory, TTFT, TPOT, throughput, and resident batch separately on GH200, RTX 3090, and CPU.",
+      "contracts": [
+        "research/flagship/ARCHITECTURE.md",
+        "research/flagship/PAPER.md"
+      ],
+      "evidence": [
+        "findings/24_reader_attention.md",
+        "findings/202_preaccess_training_and_slurm_hardening.md"
+      ],
+      "planned_outputs": [
+        "training time-energy-to-quality figure",
+        "serving quality-state-latency frontier"
+      ],
+      "paper_sections": [
+        "Training systems",
+        "Serving"
+      ],
+      "headline_eligible": true
+    },
+    {
+      "id": "C-MODEL",
+      "title": "Strong released model at its size",
+      "status": "planned",
+      "question": "Does the released flagship deliver competitive quality at its parameter, token, state, and hardware envelope?",
+      "decision_rule": "Compare pinned model revisions under identical evaluation contracts, disclose every known training-token budget, and withhold a best-at-size headline unless the checked table supports it.",
+      "contracts": [
+        "research/flagship/PAPER.md",
+        "research/flagship/plan.json"
+      ],
+      "evidence": [],
+      "planned_outputs": [
+        "comparator quality and training-token table",
+        "released model card and reproducibility package"
+      ],
+      "paper_sections": [
+        "Comparator results",
+        "Releases and limitations"
+      ],
+      "headline_eligible": true
+    }
+  ]
+}

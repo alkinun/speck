@@ -14,7 +14,10 @@ def test_local_markdown_links_exist():
         + [root / "experiments" / "README.md"]
         + [root / "findings" / "README.md"]
         + [root / "papers" / "README.md"]
+        + sorted((root / "paper").rglob("*.md"))
         + [root / "research" / "README.md"]
+        + [root / "research" / "WORKFLOW.md", root / "research" / "DATA_MANAGEMENT.md"]
+        + sorted((root / "research" / "notebook").rglob("*.md"))
         + sorted((root / "research" / "flagship").rglob("*.md"))
         + [root / "research" / "paper-1" / "README.md"]
         + [root / "results" / "README.md"]

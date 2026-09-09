@@ -272,6 +272,7 @@
     "data": "research/flagship/data_plan_v2.json",
     "architecture": "research/flagship/architecture_plan.json",
     "integration": "research/flagship/integration_plan.json",
-    "tokenizer": "research/flagship/tokenizer_plan_v4.json"
+    "tokenizer": "research/flagship/tokenizer_plan_v4.json",
+    "paper_claims": "paper/claims.json"
   }
 }

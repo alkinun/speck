@@ -1,0 +1,212 @@
+{
+  "format": "speck_research_catalog",
+  "format_version": 1,
+  "project": "Speck flagship model and paper",
+  "status": "active_pregrant",
+  "active_program": {
+    "id": "flagship",
+    "path": "research/flagship",
+    "charter": "research/flagship/README.md",
+    "execution": "research/flagship/EXECUTION.md",
+    "paper_contract": "research/flagship/PAPER.md"
+  },
+  "collections": [
+    {
+      "id": "flagship",
+      "name": "Active flagship program",
+      "path": "research/flagship",
+      "index": "research/flagship/README.md",
+      "role": "Current hypotheses, preregistrations, budgets, data contracts, and launch gates",
+      "authority": "active_scope",
+      "mutability": "versioned_successors"
+    },
+    {
+      "id": "promotion_protocol",
+      "name": "Reusable architecture-promotion protocol",
+      "path": "research/architecture-promotion-v1",
+      "index": "research/README.md",
+      "role": "Reusable statistical, evaluation, and cost-governance contracts",
+      "authority": "reproducibility_input",
+      "mutability": "immutable_history"
+    },
+    {
+      "id": "paper1_archive",
+      "name": "Retired Paper 1 program",
+      "path": "research/paper-1",
+      "index": "research/README.md",
+      "role": "Retired preregistrations and source audits retained for provenance",
+      "authority": "historical_only",
+      "mutability": "immutable_history"
+    },
+    {
+      "id": "notebook",
+      "name": "Research notebook",
+      "path": "research/notebook",
+      "index": "research/notebook/README.md",
+      "role": "Chronological context, attempts, discussions, open questions, and handoffs",
+      "authority": "process_record",
+      "mutability": "append_only"
+    },
+    {
+      "id": "literature",
+      "name": "External literature notes",
+      "path": "papers",
+      "index": "papers/README.md",
+      "role": "Versioned summaries of claims made by other researchers",
+      "authority": "external_evidence",
+      "mutability": "append_only"
+    },
+    {
+      "id": "findings",
+      "name": "Speck findings",
+      "path": "findings",
+      "index": "findings/README.md",
+      "role": "Distilled Speck conclusions, limitations, and decisions linked to evidence",
+      "authority": "scientific_evidence",
+      "mutability": "append_only"
+    },
+    {
+      "id": "experiments",
+      "name": "Experiment configurations",
+      "path": "experiments",
+      "index": "experiments/README.md",
+      "role": "Immutable runnable or historical model, data, training, and evaluation inputs",
+      "authority": "reproducibility_input",
+      "mutability": "versioned_successors"
+    },
+    {
+      "id": "results",
+      "name": "Checked result records",
+      "path": "results",
+      "index": "results/README.md",
+      "role": "Append-only machine-readable summaries and bounded audit evidence",
+      "authority": "scientific_evidence",
+      "mutability": "append_only"
+    },
+    {
+      "id": "paper_workspace",
+      "name": "Flagship manuscript workspace",
+      "path": "paper",
+      "index": "paper/README.md",
+      "role": "Claim registry, manuscript source, generated figures, tables, and references",
+      "authority": "publication_output",
+      "mutability": "generated_from_evidence"
+    },
+    {
+      "id": "software",
+      "name": "Research software",
+      "path": "speck",
+      "index": "README.md",
+      "role": "Model, data, training, evaluation, analysis, and provenance implementation",
+      "authority": "method_implementation",
+      "mutability": "normal_version_control"
+    }
+  ],
+  "systems": [
+    {
+      "id": "git",
+      "name": "Git repository",
+      "location": "repository checkout and remote Git host",
+      "role": "Code, contracts, small results, findings, notebook, claims, and paper source",
+      "authority": "Canonical text and small machine-readable record"
+    },
+    {
+      "id": "runtime_store",
+      "name": "Speck runtime artifact store",
+      "location": "speck_base_dir, normally /mnt/speck-data/speck for flagship work",
+      "role": "Datasets, checkpoints, full logs, predictions, traces, exports, and temporary files",
+      "authority": "Artifact bytes only when identified by a checked manifest and digest"
+    },
+    {
+      "id": "wandb",
+      "name": "Weights & Biases",
+      "location": "remote service plus ignored local wandb directory",
+      "role": "Live metrics, charts, and operational monitoring",
+      "authority": "Convenience mirror; never the sole scientific record"
+    },
+    {
+      "id": "linear",
+      "name": "Linear",
+      "location": "SpeckLabs workspace",
+      "role": "Work queue, ownership, dependencies, and status communication",
+      "authority": "Operational state; never the sole scientific record"
+    },
+    {
+      "id": "publication_archive",
+      "name": "Publication archive",
+      "location": "Hugging Face and a DOI-minting repository selected before release",
+      "role": "Public models, data metadata, code snapshot, paper, and research compendium",
+      "authority": "Immutable release snapshot after publication audit"
+    }
+  ],
+  "lifecycle": [
+    {
+      "id": "question",
+      "order": 1,
+      "name": "Question and context",
+      "record": "Notebook entry and Linear issue",
+      "exit_gate": "The uncertainty and its relevance to the flagship are explicit"
+    },
+    {
+      "id": "literature",
+      "order": 2,
+      "name": "Literature and prior evidence",
+      "record": "Versioned paper notes and prior Speck findings",
+      "exit_gate": "Claims, versions, limitations, and overlap are separated from Speck evidence"
+    },
+    {
+      "id": "preregistration",
+      "order": 3,
+      "name": "Preregistration",
+      "record": "Machine-readable experiment and analysis contract",
+      "exit_gate": "Controls, seeds, metrics, stopping, decision rule, budget, and fallbacks are frozen"
+    },
+    {
+      "id": "implementation",
+      "order": 4,
+      "name": "Implementation qualification",
+      "record": "Code, tests, reference parity, and hardware preflight",
+      "exit_gate": "Correctness is separated from quality and production performance"
+    },
+    {
+      "id": "execution",
+      "order": 5,
+      "name": "Execution",
+      "record": "Immutable run manifest plus external raw artifacts",
+      "exit_gate": "Code, data, model, environment, hardware, seeds, and outputs are identified"
+    },
+    {
+      "id": "analysis",
+      "order": 6,
+      "name": "Analysis",
+      "record": "Append-only result JSON generated by frozen analysis code",
+      "exit_gate": "All arms, seeds, failures, uncertainty, and preregistered guardrails are reported"
+    },
+    {
+      "id": "finding",
+      "order": 7,
+      "name": "Finding and decision",
+      "record": "Finding linked to contracts and machine-readable results",
+      "exit_gate": "Conclusion, limitations, failed gates, and next decision are explicit"
+    },
+    {
+      "id": "claim",
+      "order": 8,
+      "name": "Paper claim",
+      "record": "Claim-registry status and generated figure/table sources",
+      "exit_gate": "The claim is no broader than its evidence and every number is traceable"
+    },
+    {
+      "id": "release",
+      "order": 9,
+      "name": "Archival release",
+      "record": "Model card, code snapshot, manifests, paper, and DOI/archive identities",
+      "exit_gate": "An independent reader can inspect and reproduce the supported results"
+    }
+  ],
+  "paper": {
+    "workspace": "paper",
+    "contract": "research/flagship/PAPER.md",
+    "claims": "paper/claims.json"
+  }
+}

@@ -4,6 +4,10 @@ Status: pre-results narrative and evidence contract, 2026-09-09. This document d
 the grant is intended to support. It is not a promise that every hoped-for claim will pass. Failed
 gates narrow the claim; they do not trigger an unrelated experiment search.
 
+[`paper/claims.json`](../../paper/claims.json) is the machine-readable status and evidence registry for
+the claim families below. Manuscript prose, figures, and tables cannot promote a claim independently of
+that registry and its checked sources.
+
 ## Central question
 
 > How do data quality and the allocation of recurrent versus exact-attention memory determine the
@@ -84,3 +88,5 @@ sentence must come from a checked result; otherwise the sentence is narrowed.
 - Protected reserve repairs mandatory work or preserves the flagship; it never creates a new axis.
 - A failed interaction, reversal, or scale transfer is reported and narrows the paper instead of being
   hidden by a new control or favorable subset.
+- Before release, SPE-171 performs an independent clean-room regeneration and claim audit; unresolved
+  reviewer findings remain limitations rather than being removed from the record.

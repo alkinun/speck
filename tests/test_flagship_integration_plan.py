@@ -77,6 +77,7 @@ def test_execution_budget_reassigns_e5_hours_without_touching_reserve():
         "architecture": "research/flagship/architecture_plan.json",
         "integration": "research/flagship/integration_plan.json",
         "tokenizer": "research/flagship/tokenizer_plan_v4.json",
+        "paper_claims": "paper/claims.json",
     }
     assert all((ROOT / path).is_file() for path in execution["active_contracts"].values())
     assert sum(phase["gpu_hours"] for phase in phases.values()) == 5_000

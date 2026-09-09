@@ -116,6 +116,8 @@ prepared conversation dataset.
 
 | Guide | Contents |
 | --- | --- |
+| [Research compendium](research/README.md) | Authority map, lifecycle, notebook, artifact policy, and paper claim registry. |
+| [Research workflow](research/WORKFLOW.md) | Question-to-release process for preregistration, execution, findings, claims, and archival. |
 | [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific implications for 47 architecture papers and source releases. |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context tooling](docs/long_context.md) | Mixers, attention, global-layer roles, progressive context training, evaluation, and known boundaries. |
@@ -123,6 +125,7 @@ prepared conversation dataset.
 | [Architecture promotion research](research/README.md) | Versioned statistical policy, cost envelopes, evaluation manifest, and evidence matrix. |
 | [Flagship scope](research/flagship/README.md) | Model and paper scope, defaults, evidence standard, data, and evaluation. |
 | [Flagship paper contract](research/flagship/PAPER.md) | Central question, claim ladder, narrative spine, required figures, headline gate, and scope discipline. |
+| [Paper workspace](paper/README.md) | Claim registry and generated manuscript, figure, table, and bibliography boundaries. |
 | [Flagship execution](research/flagship/EXECUTION.md) | Flexible 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
 | [Pre-grant checklist](research/flagship/PREGRANT.md) | Concrete storage, data, GH200, model, evaluation, and administrative readiness work. |
 | [Slurm operations](docs/slurm.md) | Immutable wave validation, one/four-GPU rendering, preflight, bounded retry, accounting, and scheduler observation. |
@@ -161,7 +164,11 @@ uv sync --extra cpu --group dev
 uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
 uv run --extra cpu --group dev ruff check .
 uv run --extra cpu --group dev pytest -q
+uv run --extra cpu python -m scripts.research_catalog
 ```
+
+The same complete gate is available as `make quality`; `make setup` installs the locked CPU
+development environment.
 
 The test suite is CPU-only by default. CUDA behavior and remote publishing require targeted manual
 or integration validation in addition to these checks.
@@ -169,3 +176,5 @@ or integration validation in addition to these checks.
 ## License
 
 Speck is available under the [MIT License](LICENSE).
+Citation metadata is provided in [`CITATION.cff`](CITATION.cff); add the flagship paper citation after
+its archival release exists.

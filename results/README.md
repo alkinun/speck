@@ -13,3 +13,9 @@ Result JSON is append-only evidence, not a work queue.
 Current decisions must be derived through [`research/flagship/`](../research/flagship/) and cite the
 exact result artifacts they reuse. New flagship results should receive a dedicated family and must not
 overwrite historical JSON.
+
+Large corpora, checkpoints, complete logs, predictions, and traces stay in the runtime artifact store.
+Checked manifests identify those bytes; Git retains compact results and bounded raw evidence needed to
+audit a conclusion. Retention and backup classes are defined in
+[`research/DATA_MANAGEMENT.md`](../research/DATA_MANAGEMENT.md). Paper-level use is tracked separately
+in [`paper/claims.json`](../paper/claims.json).

@@ -4,6 +4,10 @@ Speck is a research codebase with reproducibility-sensitive data, training, and 
 Keep changes focused, preserve artifact contracts deliberately, and include tests for behavioral
 changes.
 
+Consequential research follows the [research workflow](research/WORKFLOW.md). The central
+[research catalog](research/catalog.json) defines collection roles and authority; validate it with
+`uv run --extra cpu python -m scripts.research_catalog`.
+
 The [2026-09-08 cleanup audit](docs/code_cleanup_2026-09-08.md) records source-pinned cleanup
 follow-ups. Source-pinned files that require evidence requalification are explicitly excluded from
 formatting, while remaining part of lint and test checks.
@@ -28,7 +32,11 @@ Run the complete local gate before submitting a change:
 uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
 uv run --extra cpu --group dev ruff check .
 uv run --extra cpu --group dev pytest -q
+uv run --extra cpu python -m scripts.research_catalog
 ```
+
+`make quality` runs the same four checks, and `make setup` installs the locked CPU development
+environment.
 
 Apply the formatter with:
 
@@ -53,6 +61,14 @@ they are explicitly isolated as integration tests.
 - Write commands in documentation so they run from a clean checkout at the repository root.
 - Update nearby documentation when changing a CLI, configuration key, artifact path, or runtime
   prerequisite.
+- Record consequential work context in a dated `research/notebook/` entry, then promote stable
+  conclusions into `findings/` only when checked evidence exists.
+- Keep external-paper claims in `papers/`, Speck conclusions in `findings/`, and manuscript claims in
+  `paper/claims.json`; do not collapse these evidence levels.
+- Treat Linear as the work queue and W&B as a monitoring mirror. Neither may be the only record of a
+  scientific result, failed gate, or artifact identity.
+- Assign retention and backup requirements before producing expensive or irreplaceable artifacts;
+  follow [the data and artifact management plan](research/DATA_MANAGEMENT.md).
 
 ## Documentation
 

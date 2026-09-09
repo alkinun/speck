@@ -6,6 +6,9 @@ defaults without presenting the retired 169-entry program as current work.
 
 Checked JSON under `results/` remains the machine-readable source of truth. The
 [`complete historical index`](ARCHIVE.md) preserves every finding, including failed and retired gates.
+Chronological attempts and discussion belong in [`research/notebook/`](../research/notebook/); a
+finding is added here only after evidence supports a stable conclusion or decision. Paper-level claim
+status is tracked in [`paper/claims.json`](../paper/claims.json).
 
 ## Foundation
 
