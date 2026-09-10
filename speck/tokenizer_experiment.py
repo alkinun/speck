@@ -16,6 +16,7 @@ import sentencepiece as sentencepiece
 from huggingface_hub import hf_hub_download
 from sentencepiece import sentencepiece_model_pb2
 
+from speck.data_firewall import authorize_consumer
 from speck.tokenizer import Tokenizer
 
 FORMAT = "speck_tokenizer_experiment"
@@ -74,30 +75,79 @@ def _resolve_path(path, config_dir):
     return (config_dir / path).resolve() if not path.is_absolute() else path.resolve()
 
 
-def validate_experiment_config(config, *, config_dir=None):
-    """Validate and normalize one executable tokenizer experiment configuration."""
+def _validate_sample(sample, config_dir):
+    if not isinstance(sample, dict):
+        raise ValueError("sample must be an object")
+    training_bytes = _integer(
+        sample.get("training_bytes_per_category"), "training_bytes_per_category", 1
+    )
+    evaluation_bytes = _integer(
+        sample.get("evaluation_bytes_per_category"), "evaluation_bytes_per_category", 1
+    )
+    min_chars = _integer(sample.get("min_chars"), "sample.min_chars", 1)
+    max_chars = _integer(sample.get("max_chars"), "sample.max_chars", 1)
+    if min_chars > max_chars:
+        raise ValueError("sample.min_chars cannot exceed sample.max_chars")
+    if sample.get("kind") == "production_firewall":
+        _exact_keys(
+            sample,
+            {
+                "kind",
+                "training_bytes_per_category",
+                "evaluation_bytes_per_category",
+                "min_chars",
+                "max_chars",
+                "firewall_manifest",
+                "firewall_manifest_sha256",
+                "categories",
+            },
+            "production firewall sample",
+        )
+        manifest_path = _resolve_path(sample["firewall_manifest"], config_dir)
+        if not isinstance(sample["firewall_manifest_sha256"], str) or not _SHA256.fullmatch(
+            sample["firewall_manifest_sha256"]
+        ):
+            raise ValueError("firewall manifest sha256 must be lowercase hexadecimal")
+        categories = sample["categories"]
+        if not isinstance(categories, list) or not categories:
+            raise ValueError("sample.categories must be a non-empty list")
+        normalized_categories = []
+        category_ids = []
+        for category_index, category in enumerate(categories):
+            _exact_keys(category, {"id", "train", "eval"}, f"category {category_index}")
+            category_id = _identifier(category["id"], f"category {category_index} id")
+            category_ids.append(category_id)
+            normalized = {"id": category_id}
+            for split in ("train", "eval"):
+                item = category[split]
+                _exact_keys(
+                    item,
+                    {"path", "sha256", "format", "text_column"},
+                    f"category {category_id} {split}",
+                )
+                if item["format"] != "jsonl" or not isinstance(item["text_column"], str):
+                    raise ValueError(
+                        "firewall tokenizer partitions must be JSONL with a text column"
+                    )
+                if not isinstance(item["sha256"], str) or not _SHA256.fullmatch(item["sha256"]):
+                    raise ValueError(
+                        "firewall tokenizer partition sha256 must be lowercase hexadecimal"
+                    )
+                normalized[split] = {**item, "path": str(_resolve_path(item["path"], config_dir))}
+            normalized_categories.append(normalized)
+        if len(category_ids) != len(set(category_ids)):
+            raise ValueError("category IDs must be unique")
+        return {
+            "kind": "production_firewall",
+            "training_bytes_per_category": training_bytes,
+            "evaluation_bytes_per_category": evaluation_bytes,
+            "min_chars": min_chars,
+            "max_chars": max_chars,
+            "firewall_manifest": str(manifest_path),
+            "firewall_manifest_sha256": sample["firewall_manifest_sha256"],
+            "categories": normalized_categories,
+        }
 
-    config_dir = Path(config_dir or ".").resolve()
-    top_level = {
-        "format",
-        "format_version",
-        "seed",
-        "output_dir",
-        "sample",
-        "trainer",
-        "candidates",
-        "baselines",
-        "evaluation",
-    }
-    _exact_keys(config, top_level, "tokenizer experiment")
-    if config["format"] != FORMAT or config["format_version"] != FORMAT_VERSION:
-        raise ValueError("unsupported tokenizer experiment format")
-    seed = _integer(config["seed"], "seed")
-    if not isinstance(config["output_dir"], str) or not config["output_dir"]:
-        raise ValueError("output_dir must be a non-empty path")
-    output_dir = _resolve_path(config["output_dir"], config_dir)
-
-    sample = config["sample"]
     _exact_keys(
         sample,
         {
@@ -111,12 +161,6 @@ def validate_experiment_config(config, *, config_dir=None):
         },
         "sample",
     )
-    training_bytes = _integer(
-        sample["training_bytes_per_category"], "training_bytes_per_category", 1
-    )
-    evaluation_bytes = _integer(
-        sample["evaluation_bytes_per_category"], "evaluation_bytes_per_category", 1
-    )
     modulus = _integer(sample["evaluation_modulus"], "evaluation_modulus", 2)
     remainders = sample["evaluation_remainders"]
     if (
@@ -128,10 +172,6 @@ def validate_experiment_config(config, *, config_dir=None):
         or len(remainders) == modulus
     ):
         raise ValueError("evaluation_remainders must be unique values inside evaluation_modulus")
-    min_chars = _integer(sample["min_chars"], "sample.min_chars", 1)
-    max_chars = _integer(sample["max_chars"], "sample.max_chars", 1)
-    if min_chars > max_chars:
-        raise ValueError("sample.min_chars cannot exceed sample.max_chars")
     categories = sample["categories"]
     if not isinstance(categories, list) or not categories:
         raise ValueError("sample.categories must be a non-empty list")
@@ -193,10 +233,47 @@ def validate_experiment_config(config, *, config_dir=None):
         if sum(item["training_bytes"] for item in normalized_inputs) != training_bytes:
             raise ValueError(f"category {category_id} input training bytes must sum to its target")
         if sum(item["evaluation_bytes"] for item in normalized_inputs) != evaluation_bytes:
-            raise ValueError(f"category {category_id} input evaluation bytes must sum to its target")
+            raise ValueError(
+                f"category {category_id} input evaluation bytes must sum to its target"
+            )
         normalized_categories.append({"id": category_id, "inputs": normalized_inputs})
     if len(category_ids) != len(set(category_ids)):
         raise ValueError("category IDs must be unique")
+    return {
+        "training_bytes_per_category": training_bytes,
+        "evaluation_bytes_per_category": evaluation_bytes,
+        "evaluation_modulus": modulus,
+        "evaluation_remainders": sorted(remainders),
+        "min_chars": min_chars,
+        "max_chars": max_chars,
+        "categories": normalized_categories,
+    }
+
+
+def validate_experiment_config(config, *, config_dir=None):
+    """Validate and normalize one executable tokenizer experiment configuration."""
+
+    config_dir = Path(config_dir or ".").resolve()
+    top_level = {
+        "format",
+        "format_version",
+        "seed",
+        "output_dir",
+        "sample",
+        "trainer",
+        "candidates",
+        "baselines",
+        "evaluation",
+    }
+    _exact_keys(config, top_level, "tokenizer experiment")
+    if config["format"] != FORMAT or config["format_version"] != FORMAT_VERSION:
+        raise ValueError("unsupported tokenizer experiment format")
+    seed = _integer(config["seed"], "seed")
+    if not isinstance(config["output_dir"], str) or not config["output_dir"]:
+        raise ValueError("output_dir must be a non-empty path")
+    output_dir = _resolve_path(config["output_dir"], config_dir)
+
+    normalized_sample = _validate_sample(config["sample"], config_dir)
 
     trainer = config["trainer"]
     trainer_keys = {
@@ -226,7 +303,11 @@ def validate_experiment_config(config, *, config_dir=None):
     if trainer["model_type"] not in {"bpe", "unigram"}:
         raise ValueError("trainer.model_type must be bpe or unigram")
     coverage = trainer["character_coverage"]
-    if isinstance(coverage, bool) or not isinstance(coverage, (int, float)) or not 0.98 <= coverage <= 1:
+    if (
+        isinstance(coverage, bool)
+        or not isinstance(coverage, (int, float))
+        or not 0.98 <= coverage <= 1
+    ):
         raise ValueError("trainer.character_coverage must be in [0.98, 1]")
     for name in trainer_keys - {
         "model_type",
@@ -241,9 +322,10 @@ def validate_experiment_config(config, *, config_dir=None):
         trainer["allow_whitespace_only_pieces"], bool
     ):
         raise ValueError("trainer.allow_whitespace_only_pieces must be boolean")
-    if not isinstance(trainer["normalization_rule_name"], str) or not trainer[
-        "normalization_rule_name"
-    ]:
+    if (
+        not isinstance(trainer["normalization_rule_name"], str)
+        or not trainer["normalization_rule_name"]
+    ):
         raise ValueError("trainer.normalization_rule_name must be non-empty")
     _integer(trainer["max_sentence_length"], "trainer.max_sentence_length", 1)
     _integer(trainer["num_threads"], "trainer.num_threads", 1)
@@ -268,16 +350,22 @@ def validate_experiment_config(config, *, config_dir=None):
     normalized_baselines = []
     baseline_ids = []
     for index, baseline in enumerate(baselines):
-        _exact_keys(
-            baseline,
-            {"id", "repo", "revision", "filename", "expected_vocab_size"},
-            f"baseline {index}",
-        )
+        required_baseline = {"id", "repo", "revision", "filename", "expected_vocab_size"}
+        if (
+            not isinstance(baseline, dict)
+            or not required_baseline <= set(baseline)
+            or set(baseline) - required_baseline - {"sha256"}
+        ):
+            raise ValueError(f"baseline {index} fields are invalid")
         baseline_id = _identifier(baseline["id"], f"baseline {index} id")
         baseline_ids.append(baseline_id)
         for key in ("repo", "revision", "filename"):
             if not isinstance(baseline[key], str) or not baseline[key]:
                 raise ValueError(f"baseline {baseline_id} {key} must be non-empty")
+        if "sha256" in baseline and (
+            not isinstance(baseline["sha256"], str) or not _SHA256.fullmatch(baseline["sha256"])
+        ):
+            raise ValueError(f"baseline {baseline_id} sha256 must be lowercase hexadecimal")
         normalized_baselines.append(
             {
                 **baseline,
@@ -316,15 +404,7 @@ def validate_experiment_config(config, *, config_dir=None):
         "format_version": FORMAT_VERSION,
         "seed": seed,
         "output_dir": str(output_dir),
-        "sample": {
-            "training_bytes_per_category": training_bytes,
-            "evaluation_bytes_per_category": evaluation_bytes,
-            "evaluation_modulus": modulus,
-            "evaluation_remainders": sorted(remainders),
-            "min_chars": min_chars,
-            "max_chars": max_chars,
-            "categories": normalized_categories,
-        },
+        "sample": normalized_sample,
         "trainer": dict(trainer),
         "candidates": normalized_candidates,
         "baselines": normalized_baselines,
@@ -429,10 +509,142 @@ def _partition(config, category_id, content_hash):
     )
 
 
+def _prepare_firewall_sample(config, *, restart=False):
+    sample = config["sample"]
+    manifest_path = Path(sample["firewall_manifest"])
+    if not manifest_path.is_file() or _sha256(manifest_path) != sample["firewall_manifest_sha256"]:
+        raise ValueError("tokenizer firewall manifest identity mismatch")
+    firewall = json.loads(manifest_path.read_text())
+    required_gates = {
+        "input_identity",
+        "global_content_disjointness",
+        "equal_category_targets",
+        "sealed_audits_unopened",
+    }
+    if (
+        firewall.get("format") != "speck_data_firewall_manifest"
+        or firewall.get("status") != "production_firewall_complete_rights_and_operations_bound"
+        or firewall.get("authority", {}).get("mode") != "production"
+        or any(firewall.get("gates", {}).get(gate) != "pass" for gate in required_gates)
+    ):
+        raise ValueError("tokenizer production firewall is incomplete")
+    firewall_categories = {category["id"]: category for category in firewall["categories"]}
+    declared_ids = [category["id"] for category in sample["categories"]]
+    if declared_ids != [category["id"] for category in firewall["categories"]]:
+        raise ValueError("tokenizer categories differ from the production firewall")
+    root = Path(config["output_dir"])
+    output = root / "sample"
+    staging = root / "sample.building"
+    if output.exists():
+        raise FileExistsError(f"tokenizer sample already exists: {output}")
+    if staging.exists():
+        if not restart:
+            raise FileExistsError(f"incomplete tokenizer sample exists: {staging}; pass --restart")
+        shutil.rmtree(staging)
+    destinations = {"train": "tokenizer_train", "eval": "tokenizer_eval"}
+    paths = {split: [] for split in destinations}
+    for category in sample["categories"]:
+        firewall_category = firewall_categories[category["id"]]
+        for split, destination in destinations.items():
+            entry = firewall_category["outputs"][destination]
+            item = category[split]
+            path = Path(item["path"])
+            if (
+                path.resolve() != (manifest_path.parent / entry["path"]).resolve()
+                or item["sha256"] != entry["sha256"]
+            ):
+                raise ValueError(f"tokenizer {category['id']} {split} differs from firewall")
+            paths[split].append(path)
+    authorize_consumer(manifest_path, "tokenizer_training", paths["train"])
+    authorize_consumer(manifest_path, "tokenizer_static_evaluation", paths["eval"])
+    staging.mkdir(parents=True)
+    category_manifests = []
+    try:
+        for category in sample["categories"]:
+            category_id = category["id"]
+            splits = {}
+            for split, destination in destinations.items():
+                item = category[split]
+                source_path = Path(item["path"])
+                output_path = staging / f"{split}-{category_id}.jsonl"
+                documents = utf8_bytes = 0
+                with (
+                    source_path.open(encoding="utf-8") as source,
+                    output_path.open("w", encoding="utf-8") as target,
+                ):
+                    for row, line in enumerate(source):
+                        record = json.loads(line)
+                        text = record.get(item["text_column"])
+                        if (
+                            not isinstance(text, str)
+                            or not text.strip()
+                            or not sample["min_chars"] <= len(text) <= sample["max_chars"]
+                            or record.get("category") != category_id
+                            or record.get("partition_detail") != destination
+                        ):
+                            raise ValueError(
+                                f"invalid tokenizer firewall record: {category_id}:{split}:{row}"
+                            )
+                        target.write(line)
+                        documents += 1
+                        utf8_bytes += len(text.encode())
+                    target.flush()
+                    os.fsync(target.fileno())
+                required = sample[
+                    "training_bytes_per_category"
+                    if split == "train"
+                    else "evaluation_bytes_per_category"
+                ]
+                firewall_entry = firewall_categories[category_id]["outputs"][destination]
+                if (
+                    utf8_bytes < required
+                    or utf8_bytes != firewall_entry["utf8_bytes"]
+                    or documents != firewall_entry["documents"]
+                ):
+                    raise ValueError(
+                        f"tokenizer firewall statistics mismatch: {category_id}:{split}"
+                    )
+                splits[split] = {
+                    "path": output_path.name,
+                    "sha256": _sha256(output_path),
+                    "file_bytes": output_path.stat().st_size,
+                    "documents": documents,
+                    "utf8_bytes": utf8_bytes,
+                    "target_utf8_bytes": required,
+                    "overshoot_bytes": utf8_bytes - required,
+                    "firewall_source": item,
+                }
+            category_manifests.append({"id": category_id, "splits": splits})
+        manifest = {
+            "format": SAMPLE_FORMAT,
+            "format_version": FORMAT_VERSION,
+            "plan_fingerprint": config["plan_fingerprint"],
+            "seed": config["seed"],
+            "dedup": {
+                "normalization": "NFKC+lower+whitespace",
+                "scope": "inherited_global_production_firewall",
+            },
+            "partition": {
+                "kind": "production_firewall",
+                "manifest": str(manifest_path),
+                "manifest_sha256": sample["firewall_manifest_sha256"],
+            },
+            "categories": category_manifests,
+        }
+        _write_json(staging / "manifest.json", manifest)
+        root.mkdir(parents=True, exist_ok=True)
+        os.replace(staging, output)
+        return manifest
+    except Exception:
+        raise
+
+
 def prepare_sample(config, *, restart=False):
     """Build a deterministic, category-balanced, disjoint tokenizer sample."""
 
     config = _validated_config(config)
+    if config["sample"].get("kind") == "production_firewall":
+        return _prepare_firewall_sample(config, restart=restart)
     root = Path(config["output_dir"])
     output = root / "sample"
     staging = root / "sample.building"
@@ -457,8 +669,7 @@ def prepare_sample(config, *, restart=False):
                 for split in ("train", "eval")
             }
             stats = {
-                split: {"documents": 0, "utf8_bytes": 0, "overshoot_bytes": 0}
-                for split in handles
+                split: {"documents": 0, "utf8_bytes": 0, "overshoot_bytes": 0} for split in handles
             }
             rejected = {"duplicate": 0, "length": 0, "filled_partition": 0}
             input_manifests = []
@@ -479,9 +690,12 @@ def prepare_sample(config, *, restart=False):
                             for split in input_stats
                         ):
                             break
-                        if not text.strip() or not config["sample"]["min_chars"] <= len(
-                            text
-                        ) <= config["sample"]["max_chars"]:
+                        if (
+                            not text.strip()
+                            or not config["sample"]["min_chars"]
+                            <= len(text)
+                            <= config["sample"]["max_chars"]
+                        ):
                             rejected["length"] += 1
                             input_rejected["length"] += 1
                             continue
@@ -505,7 +719,9 @@ def prepare_sample(config, *, restart=False):
                             "text": text,
                         }
                         handles[split].write(
-                            json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                            json.dumps(
+                                record, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+                            )
                             + "\n"
                         )
                         stats[split]["documents"] += 1
@@ -542,15 +758,15 @@ def prepare_sample(config, *, restart=False):
                     handle.flush()
                     os.fsync(handle.fileno())
                     handle.close()
-            missing = [
-                split for split in stats if stats[split]["utf8_bytes"] < targets[split]
-            ]
+            missing = [split for split in stats if stats[split]["utf8_bytes"] < targets[split]]
             if missing:
                 values = ", ".join(
                     f"{split}={stats[split]['utf8_bytes']:,}/{targets[split]:,} bytes"
                     for split in missing
                 )
-                raise RuntimeError(f"category {category_id} exhausted before sample target: {values}")
+                raise RuntimeError(
+                    f"category {category_id} exhausted before sample target: {values}"
+                )
             split_manifests = {}
             for split in ("train", "eval"):
                 path = staging / f"{split}-{category_id}.jsonl"
@@ -619,7 +835,9 @@ def _iter_sample_texts(sample_dir, sample_manifest, split):
                 try:
                     record = json.loads(line)
                 except json.JSONDecodeError as error:
-                    raise ValueError(f"invalid tokenizer sample JSON in {path} row {row}") from error
+                    raise ValueError(
+                        f"invalid tokenizer sample JSON in {path} row {row}"
+                    ) from error
                 if record.get("category") != category["id"] or not isinstance(
                     record.get("text"), str
                 ):
@@ -651,7 +869,9 @@ def train_candidate(config, candidate_id, *, restart=False):
         raise FileExistsError(f"tokenizer candidate already exists: {output}")
     if staging.exists():
         if not restart:
-            raise FileExistsError(f"incomplete tokenizer candidate exists: {staging}; pass --restart")
+            raise FileExistsError(
+                f"incomplete tokenizer candidate exists: {staging}; pass --restart"
+            )
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
     model_prefix = staging / "tokenizer"
@@ -677,7 +897,10 @@ def train_candidate(config, candidate_id, *, restart=False):
         vocab_path = model_prefix.with_suffix(".vocab")
         _canonicalize_sentencepiece_model(model_path)
         tokenizer = Tokenizer(model_path)
-        if config["trainer"]["hard_vocab_limit"] and tokenizer.vocab_size != candidate["vocab_size"]:
+        if (
+            config["trainer"]["hard_vocab_limit"]
+            and tokenizer.vocab_size != candidate["vocab_size"]
+        ):
             raise ValueError("trained tokenizer did not produce the requested vocabulary size")
         if (tokenizer.unk_id, tokenizer.bos_id, tokenizer.eos_id) != (0, 1, 2):
             raise ValueError("trained tokenizer special IDs do not match the Speck contract")
@@ -722,7 +945,9 @@ def prepare_baseline(config, baseline_id, *, restart=False):
         raise FileExistsError(f"tokenizer baseline already exists: {output}")
     if staging.exists():
         if not restart:
-            raise FileExistsError(f"incomplete tokenizer baseline exists: {staging}; pass --restart")
+            raise FileExistsError(
+                f"incomplete tokenizer baseline exists: {staging}; pass --restart"
+            )
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
     try:
@@ -733,6 +958,8 @@ def prepare_baseline(config, baseline_id, *, restart=False):
             local_dir=staging,
         )
         model_path = Path(downloaded)
+        if "sha256" in baseline and _sha256(model_path) != baseline["sha256"]:
+            raise ValueError(f"baseline {baseline_id} checksum mismatch")
         tokenizer = Tokenizer(model_path)
         if tokenizer.vocab_size != baseline["expected_vocab_size"]:
             raise ValueError(f"baseline {baseline_id} vocabulary size mismatch")
@@ -778,7 +1005,9 @@ def _load_tokenizers(config):
     ]
     loaded = []
     for kind, declaration in declarations:
-        directory = root / ("candidates" if kind == "candidate" else "baselines") / declaration["id"]
+        directory = (
+            root / ("candidates" if kind == "candidate" else "baselines") / declaration["id"]
+        )
         manifest_path = directory / "manifest.json"
         if not manifest_path.is_file():
             raise FileNotFoundError(f"tokenizer {declaration['id']} is not prepared")

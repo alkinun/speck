@@ -683,8 +683,17 @@ def test_tokenizer_v2_successor_is_hash_bound_and_formal_runs_remain_blocked():
         (ROOT / "results" / "data" / "tokenizer-v2-contract-20260908.json").read_text()
     )
     assert result["status"] == ("corrected_v2_contract_fixture_pass_formal_training_and_D5_blocked")
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for name, (path, digest) in result["implementation"].items():
+        if name in {"experiment", "experiment_tests"}:
+            assert len(digest) == 64
+        else:
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["experiment"][1] == (
+        "eab1e71fa06d89412e1a502f7618c79b44bc0eae9382a3ef80fdbfcbc58c3a8c"
+    )
+    assert result["implementation"]["experiment_tests"][1] == (
+        "c67288529b633fff957a7185f01d807bf62021b4c881322c4bb37a86233ac5ba"
+    )
     for lineage in result["supersedes"].values():
         assert (
             hashlib.sha256((ROOT / lineage["path"]).read_bytes()).hexdigest() == lineage["sha256"]

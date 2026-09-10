@@ -128,6 +128,89 @@ def test_sample_is_balanced_disjoint_and_checksum_bound(tmp_path):
         prepare_sample(validate_experiment_config(changed))
 
 
+def test_production_firewall_partitions_are_adopted_without_repartitioning(tmp_path):
+    firewall_root = tmp_path / "firewall"
+    firewall_root.mkdir()
+    categories = []
+    sample_categories = []
+    for category_id in ("web", "code"):
+        outputs = {}
+        declaration = {"id": category_id}
+        for split, destination, documents in (
+            ("train", "tokenizer_train", 100),
+            ("eval", "tokenizer_eval", 30),
+        ):
+            path = firewall_root / f"{split}-{category_id}.jsonl"
+            rows = []
+            utf8_bytes = 0
+            for index in range(documents):
+                text = f"{category_id} {split} firewall document {index} with fixed distinct text."
+                utf8_bytes += len(text.encode())
+                rows.append(
+                    {
+                        "category": category_id,
+                        "partition_detail": destination,
+                        "content_sha256": hashlib.sha256(text.encode()).hexdigest(),
+                        "text": text,
+                    }
+                )
+            path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+            outputs[destination] = {
+                "path": path.name,
+                "sha256": _sha256(path),
+                "documents": documents,
+                "utf8_bytes": utf8_bytes,
+            }
+            declaration[split] = {
+                "path": str(path),
+                "sha256": _sha256(path),
+                "format": "jsonl",
+                "text_column": "text",
+            }
+        categories.append({"id": category_id, "outputs": outputs})
+        sample_categories.append(declaration)
+    firewall_manifest = firewall_root / "manifest.json"
+    firewall_manifest.write_text(
+        json.dumps(
+            {
+                "format": "speck_data_firewall_manifest",
+                "format_version": 1,
+                "status": "production_firewall_complete_rights_and_operations_bound",
+                "authority": {"mode": "production"},
+                "gates": {
+                    "input_identity": "pass",
+                    "global_content_disjointness": "pass",
+                    "equal_category_targets": "pass",
+                    "sealed_audits_unopened": "pass",
+                },
+                "categories": categories,
+            }
+        )
+    )
+    raw = _config(tmp_path)
+    raw["sample"] = {
+        "kind": "production_firewall",
+        "training_bytes_per_category": 4_000,
+        "evaluation_bytes_per_category": 1_000,
+        "min_chars": 1,
+        "max_chars": 1_000,
+        "firewall_manifest": str(firewall_manifest),
+        "firewall_manifest_sha256": _sha256(firewall_manifest),
+        "categories": sample_categories,
+    }
+    config = validate_experiment_config(raw)
+    manifest = prepare_sample(config)
+
+    assert manifest["dedup"]["scope"] == "inherited_global_production_firewall"
+    for category in manifest["categories"]:
+        for split in ("train", "eval"):
+            source = Path(
+                next(x for x in sample_categories if x["id"] == category["id"])[split]["path"]
+            )
+            adopted = Path(config["output_dir"]) / "sample" / category["splits"][split]["path"]
+            assert adopted.read_bytes() == source.read_bytes()
+
+
 def test_training_is_path_independent_and_static_evaluation_is_non_authoritative(tmp_path):
     first = validate_experiment_config(_config(tmp_path, "first"))
     second = validate_experiment_config(_config(tmp_path, "second"))
@@ -261,3 +344,15 @@ def test_flagship_tokenizer_plan_is_balanced_and_requires_an_lm_pilot():
     )
     assert plan["static_evaluation"]["selection_authority"] is False
     assert plan["language_model_pilot"]["fallback"] == "mistral-32k"
+
+
+def test_formal_tokenizer_successor_binds_firewall_config_and_implementation():
+    plan = json.loads((ROOT / "research/flagship/tokenizer_plan_v6.json").read_text())
+
+    assert plan["status"] == "formal_production_firewall_inputs_frozen_runs_pending_audit_unopened"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    config = plan["formal_execution"]["config"]
+    assert _sha256(ROOT / config["path"]) == config["sha256"]
+    for path, digest in plan["implementation"].values():
+        assert _sha256(ROOT / path) == digest
+    assert plan["training_authority"] == "tokenizer_training_only_model_training_blocked"

@@ -1,16 +1,16 @@
 # Flagship tokenizer training and qualification
 
-Status: tokenizer and three-partition firewall tooling complete; all six bounded categories and all
-30 real input identities are technically frozen and human guarded-use approval is complete, while
-production operations and real firewall materialization remain blocked. A local 60 MB study
+Status: production operations and the real six-category firewall pass; its 600 MB training and 60 MB
+static-evaluation partitions are executable while both sealed audits remain unopened. A local 60 MB study
 found that explicit SentencePiece whitespace-only-piece support makes an exact-32K custom BPE
 statically superior to Mistral on the bounded held-out text, but every formal tokenizer run remains
 pending, 2026-09-09. The first flagship should use a Speck-trained tokenizer only if it clears this
-protocol. Mistral 32K remains the fallback until the formal balanced sample and LM pilot are complete.
+protocol. Mistral 32K remains the fallback until the formal production sample and LM pilot are complete.
 
-[`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) is active and binds the approved release/data-use
-policy, source-registry successor, and human acceptance record without changing the tokenizer research
-decision. [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) is its immutable scope predecessor: it
+[`tokenizer_plan_v6.json`](tokenizer_plan_v6.json) is active and binds the completed production firewall,
+its exact tokenizer partitions, and the executable experiment without changing the tokenizer research
+decision. [`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) is its human-rights predecessor, and
+[`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) is the immutable scope predecessor that
 preserves the complete v3 research decision and physically tied cost contract while replacing the
 retired E1–E5
 downstream binding with E1–E4 plus I1/I2. [`tokenizer_plan_v3.json`](tokenizer_plan_v3.json) remains
@@ -18,9 +18,9 @@ the immutable predecessor used by the already-checked scale-v2 accounting; candi
 costs are identical. [`tokenizer_plan_v2.json`](tokenizer_plan_v2.json)
 preserves the corrected candidate plan with its now-superseded untied-cost assumption;
 [`tokenizer_plan.json`](tokenizer_plan.json) and its 32,768/40,960/49,152 candidate set remain the
-immutable v1 predecessor. The executable v5 config is created under `experiments/Speck-Tokenizer-v5/`
-only after production operations and real firewall gates pass. This avoids presenting technically
-qualified bounded inputs as launchable production data.
+immutable v1 predecessor. The executable v6 config is
+[`tokenizer_d5_v1/experiment.json`](tokenizer_d5_v1/experiment.json); it adopts, without repartitioning,
+the firewall's already disjoint train/evaluation files.
 [`source_registry_v2.json`](source_registry_v2.json) freezes the approved per-source quotas that sum
 to each category target; a failed or newly prohibited source is replaced and requalified through a
 new successor before sampling begins.
@@ -72,17 +72,13 @@ The production sample contains at least 100,000,000 training bytes and 10,000,00
 bytes from each of the six categories: 600 MB train and 60 MB evaluation before JSONL framing.
 Whole documents are retained, so each category may overshoot slightly.
 
-Each local input is declared explicitly with an ID, format, text column, path, SHA-256, and separate
-training/evaluation byte quotas. Input quotas must sum exactly to the category target, so one early
-file cannot silently crowd every other source out. Supported formats are plain text, JSONL, gzip
-JSONL, and Parquet. Input order and category order are binding.
-Documents are filtered by length, globally exact-deduplicated under NFKC/lowercase/whitespace
-normalization, and assigned to train or evaluation by a seeded content hash. A document can never
-cross partitions or categories. The manifest records input identity, accepted documents/bytes,
-overshoot, rejections, and output hashes.
+The active config declares each firewall train/evaluation path and SHA-256 directly. Preparation
+reverifies the production manifest and consumer authorization, validates every record/category/detail,
+and copies the partitions without resampling. Their global deduplication and assignment are inherited
+from the firewall. The older raw-input path remains available for fixtures and historical studies.
 
 The tokenizer files must be produced or authorized by the hash-bound
-[`firewall_plan.json`](firewall_plan.json) contract. `tokenizer_train` is the only partition available
+[`firewall_plan_v4.json`](firewall_plan_v4.json) contract. `tokenizer_train` is the only partition available
 to tokenizer training and `tokenizer_eval` is the only partition available to static evaluation.
 Neither selection held-out nor either sealed audit identity may enter tokenizer or model training.
 Fixture partitions never grant real consumer authority.
@@ -92,24 +88,20 @@ and near-duplicate requirements for the full flagship corpus.
 
 ## 3. Running the pipeline
 
-After production and firewall qualification, create
-`experiments/Speck-Tokenizer-v5/tokenizer_experiment.json` using the frozen values in
-[`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) plus explicit input records.
-Relative
-input and output paths resolve against the config directory.
+The exact executable config is frozen at `tokenizer_d5_v1/experiment.json`.
 
 Build the balanced sample:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_sample_prepare \
-  experiments/Speck-Tokenizer-v5/tokenizer_experiment.json
+  research/flagship/tokenizer_d5_v1/experiment.json
 ```
 
 Train all candidates and pin the baseline:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_train \
-  experiments/Speck-Tokenizer-v5/tokenizer_experiment.json \
+  research/flagship/tokenizer_d5_v1/experiment.json \
   --prepare-baselines
 ```
 
@@ -117,7 +109,7 @@ Evaluate static metrics:
 
 ```bash
 uv run --extra cpu python -m scripts.tokenizer_evaluate \
-  experiments/Speck-Tokenizer-v5/tokenizer_experiment.json
+  research/flagship/tokenizer_d5_v1/experiment.json
 ```
 
 `--restart` deletes only an incomplete `.building` directory. Completed samples and tokenizers are

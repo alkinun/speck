@@ -1,0 +1,160 @@
+{
+  "format": "speck_tokenizer_experiment",
+  "format_version": 1,
+  "seed": 20260911,
+  "output_dir": "/mnt/speck-data/speck/tokenizer-d5-v1",
+  "sample": {
+    "kind": "production_firewall",
+    "training_bytes_per_category": 100000000,
+    "evaluation_bytes_per_category": 10000000,
+    "min_chars": 50,
+    "max_chars": 1000000,
+    "firewall_manifest": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+    "firewall_manifest_sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4",
+    "categories": [
+      {
+        "id": "web",
+        "train": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-train-web.jsonl",
+          "sha256": "5feea9d58bdfd5b14e4e7afb96c8a21f22a7e6ccfddacac416e804eb02c659e3",
+          "format": "jsonl",
+          "text_column": "text"
+        },
+        "eval": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-eval-web.jsonl",
+          "sha256": "e4c8310539332996a2bcb3995fdd960ab6e896f950c68740c64bf6294dc0ee52",
+          "format": "jsonl",
+          "text_column": "text"
+        }
+      },
+      {
+        "id": "code",
+        "train": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-train-code.jsonl",
+          "sha256": "7ba4bfe19613713b35f63ef184798ad81554f8a87d4e663da4711fd6e98a6f76",
+          "format": "jsonl",
+          "text_column": "text"
+        },
+        "eval": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-eval-code.jsonl",
+          "sha256": "817d3fda05631640ae6e9ef82bc1e946efb6c0a675269d4d82d884b62083d9f6",
+          "format": "jsonl",
+          "text_column": "text"
+        }
+      },
+      {
+        "id": "math",
+        "train": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-train-math.jsonl",
+          "sha256": "702e78963c3b57cc4cd22a25936139547b08c416b638caf4f8714b3c0908676e",
+          "format": "jsonl",
+          "text_column": "text"
+        },
+        "eval": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-eval-math.jsonl",
+          "sha256": "14e50c4a535ceaec1c6a40dc6a924e7fcdc167da991b2d5fa44d47405786b372",
+          "format": "jsonl",
+          "text_column": "text"
+        }
+      },
+      {
+        "id": "synthetic",
+        "train": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-train-synthetic.jsonl",
+          "sha256": "c7380b5d66826afa71bca12b4fe01d989d00a75bc216894b6930035b74817db9",
+          "format": "jsonl",
+          "text_column": "text"
+        },
+        "eval": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-eval-synthetic.jsonl",
+          "sha256": "e3eac200ef294d346a73edd6da0d7041adc41a9ee92c2214f2434f24eaa46fc6",
+          "format": "jsonl",
+          "text_column": "text"
+        }
+      },
+      {
+        "id": "science",
+        "train": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-train-science.jsonl",
+          "sha256": "9590da1ffc69cd034bf54c5f3d7df6c748f623e9917c46b279e70de7a13e302f",
+          "format": "jsonl",
+          "text_column": "text"
+        },
+        "eval": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-eval-science.jsonl",
+          "sha256": "3d626013ad4a4bf0a2304601678b84ffd2891cc40dc7b1adb0cdbd7ee8876889",
+          "format": "jsonl",
+          "text_column": "text"
+        }
+      },
+      {
+        "id": "reference",
+        "train": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-train-reference.jsonl",
+          "sha256": "0673d0e9496d0e207f274c4f31863df056f13b7a264af50fb64e7a68410d6cc4",
+          "format": "jsonl",
+          "text_column": "text"
+        },
+        "eval": {
+          "path": "/mnt/speck-data/speck/firewall-v2/tokenizer-eval-reference.jsonl",
+          "sha256": "3c90252eee0f5cb7df335f799b8746031a06c6b0a6cb9103c3f5206ff3f3518a",
+          "format": "jsonl",
+          "text_column": "text"
+        }
+      }
+    ]
+  },
+  "trainer": {
+    "model_type": "bpe",
+    "character_coverage": 1.0,
+    "byte_fallback": true,
+    "normalization_rule_name": "identity",
+    "remove_extra_whitespaces": false,
+    "add_dummy_prefix": false,
+    "allow_whitespace_only_pieces": true,
+    "split_digits": true,
+    "split_by_unicode_script": true,
+    "split_by_whitespace": true,
+    "split_by_number": true,
+    "max_sentence_length": 1000000,
+    "num_threads": 1,
+    "hard_vocab_limit": true
+  },
+  "candidates": [
+    {
+      "id": "speck-bpe-32000-whitespace",
+      "vocab_size": 32000
+    },
+    {
+      "id": "speck-bpe-32768-whitespace",
+      "vocab_size": 32768
+    },
+    {
+      "id": "speck-bpe-40960-whitespace",
+      "vocab_size": 40960
+    }
+  ],
+  "baselines": [
+    {
+      "id": "mistral-32k",
+      "repo": "mistralai/Mistral-7B-v0.1",
+      "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+      "filename": "tokenizer.model",
+      "expected_vocab_size": 32000,
+      "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    }
+  ],
+  "evaluation": {
+    "embedding_width": 2048,
+    "tied_embeddings": true,
+    "chat_added_tokens": 3,
+    "probe_strings": [
+      "def f(x):\n\treturn x + 1\n",
+      "x² + y₁ = 42; ∫₀¹ f(x) dx",
+      "two  spaces\n\nnext paragraph",
+      "PMCID: PMC9441053; p < 0.001",
+      "SELECT count(*) FROM results WHERE status = 'pass';",
+      "Unicode café — naïve résumé — Ελληνικά"
+    ]
+  }
+}
