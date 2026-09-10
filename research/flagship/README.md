@@ -38,8 +38,8 @@ The active operating surface is intentionally small:
   Apache-2.0 model weights, metadata-only corpus disclosure, attribution, and removal controls.
 - [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) records the project owner's
   guarded-use approval of all 30 selected sources without granting production or training authority.
-- [`firewall_plan_v3.json`](firewall_plan_v3.json) binds prepared real tokenizer, selection, and
-  sealed-audit inputs plus the final construction config; model training remains forbidden.
+- [`firewall_plan_v4.json`](firewall_plan_v4.json) binds the completed real tokenizer, selection, and
+  sealed-audit partitions; the audits remain unopened and model training remains forbidden.
 - [`precision_plan_v1.json`](precision_plan_v1.json) freezes bf16 for grant 1 and defers optional FP8
   unless a reviewed GH200-qualified successor passes without consuming protected reserve.
 - [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json) freezes one physically shared
@@ -435,7 +435,7 @@ production-data calibration and conservative 20B plus 150B/500B projections, com
 data, and one four-GH200 training/resume qualification. The complete 2B calibration passes all six
 stages; R3 closes by project-owner fallback through a conditional 150B branch. The 20B attempt remains
 paused and 500B remains blocked pending E3 plus an operations/storage successor. R4's twelve real
-primary/unseen input views pass global near deduplication; partition construction is next.
+primary/unseen input views pass global near deduplication and the final R4 partitions pass every gate.
 
 The RTX 3090 is reserved for the D5 tokenizer pilot, comparator serving measurements, and
 representative export rehearsals. It does not run new architecture searches. A paid allocation does

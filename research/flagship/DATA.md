@@ -113,7 +113,7 @@ payloads (63,652 tasks), independent normalized exact-field matching, task-uniqu
 matching, and 10-gram sensitivity disclosure. Its bounded web successors are technical evidence, not
 training authority; source rights, production deduplication, and cleanup/resume still gate use.
 
-[`firewall_plan_v3.json`](firewall_plan_v3.json) is the active calibrated-production successor. It
+[`firewall_plan_v4.json`](firewall_plan_v4.json) is the active calibrated-production successor. It
 freezes real held-out/audit byte targets, primary/unseen source roles, the accepted 2B operations
 fallback, deterministic view preparation, global exact/verified-near deduplication, and unchanged
 consumer/sealed-audit boundaries. The fixture-qualified predecessor builder requires explicit
@@ -125,6 +125,8 @@ calibration fallback; neither permits model training or audit opening.
 Because calibration-primary firewall records are sampled from otherwise eligible source files, final
 corpus preparation must give every firewall record precedence and remove exact plus verified-near
 matches before packing. Consumer-path denial alone is not evidence of model-training disjointness.
+The materialized result passes all declared gates with both sealed audits unopened; finding 210 records
+the exact operational boundary.
 
 [`heldout_evaluation_plan_v1.json`](heldout_evaluation_plan_v1.json) is an additive pre-results
 successor for evaluation, not a replacement firewall. Following Magic's pretraining lesson that parser

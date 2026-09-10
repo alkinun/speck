@@ -1,12 +1,12 @@
 {
   "format": "speck_flagship_firewall_plan",
-  "format_version": 3,
-  "status": "calibrated_inputs_prepared_construction_config_frozen_not_training_authority",
+  "format_version": 4,
+  "status": "production_firewall_complete_audits_unopened_not_model_training_authority",
   "supersedes": {
-    "path": "research/flagship/firewall_plan_v2.json",
-    "sha256": "067fe840080cdb26b80c20a0ee566ee05da9796f97b8b36df2333e9cf7f802ba",
-    "repository_revision": "a180cd5",
-    "reason": "bind the completed twelve-view global near-dedup result and final six-category construction configuration"
+    "path": "research/flagship/firewall_plan_v3.json",
+    "sha256": "b451279437d4945b534328c765af14007834437eced04e3d96bd798329ae9bca",
+    "repository_revision": "5b356cc",
+    "reason": "bind the completed six-category production firewall, consumer authorization checks, and unopened audit commitments"
   },
   "authority": {
     "rights_record": {
@@ -114,7 +114,16 @@
       "path": "research/flagship/firewall_v2/construction_config.json",
       "sha256": "59726b4bd9ace4030a0a233150f6c2a62065b3f1b03d50c3b2cfd8bfb25d25d6"
     },
-    "status": "pending",
-    "output_directory": "/mnt/speck-data/speck/firewall-v2"
-  }
+    "status": "complete",
+    "output_directory": "/mnt/speck-data/speck/firewall-v2",
+    "result": {
+      "path": "results/data/production-data-firewall-20260910.json",
+      "sha256": "c19acc208a4c2064e8ac5a7263f91fe38c9a6912568e45118f9ef44f33e99bb7"
+    },
+    "runtime_manifest": {
+      "path": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+      "sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+    }
+  },
+  "next_gate": "prepare and run tokenizer D5 without opening the sealed D5 audit until finalists are frozen"
 }

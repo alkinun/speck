@@ -50,7 +50,7 @@
     "final firewall construction remains required",
     "final model-training candidates must exclude all firewall exact and verified-near matches before launch"
   ],
-  "peak_service_memory_bytes": 5600000000,
+  "peak_service_memory_journal_display": "5.6G",
   "plan": {
     "fingerprint": "8a4affdeeb55150cdd748fed3eb043a7467ff07cfdb8953da92e552d0a317e44",
     "path": "research/flagship/firewall_v2/input_plan.json",

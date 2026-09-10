@@ -1,0 +1,113 @@
+{
+  "aggregate_partitions": {
+    "D5_tokenizer": {
+      "categories": 6,
+      "documents": 12596,
+      "file_bytes": 67223859,
+      "sealed": true,
+      "target_utf8_bytes": 60000000,
+      "utf8_bytes": 60047430
+    },
+    "E2_mixture": {
+      "categories": 6,
+      "documents": 24846,
+      "file_bytes": 134135198,
+      "sealed": true,
+      "target_utf8_bytes": 120000000,
+      "utf8_bytes": 120031131
+    },
+    "selection_heldout": {
+      "categories": 6,
+      "documents": 28604,
+      "file_bytes": 136633211,
+      "sealed": false,
+      "target_utf8_bytes": 120000000,
+      "utf8_bytes": 120125768
+    },
+    "tokenizer_eval": {
+      "categories": 6,
+      "documents": 12470,
+      "file_bytes": 67195852,
+      "sealed": false,
+      "target_utf8_bytes": 60000000,
+      "utf8_bytes": 60035301
+    },
+    "tokenizer_train": {
+      "categories": 6,
+      "documents": 124373,
+      "file_bytes": 671937930,
+      "sealed": false,
+      "target_utf8_bytes": 600000000,
+      "utf8_bytes": 600078199
+    }
+  },
+  "construction_config": {
+    "fingerprint": "2ed340afcf374770bdf64aa0d53938424317f05d3510cf8ef4a048c1210ac3fa",
+    "path": "research/flagship/firewall_v2/construction_config.json",
+    "sha256": "59726b4bd9ace4030a0a233150f6c2a62065b3f1b03d50c3b2cfd8bfb25d25d6"
+  },
+  "final_corpus_exclusion": "required: all exact and verified-near firewall matches must be removed from final model-training candidates before data launch",
+  "format": "speck_production_data_firewall_result",
+  "format_version": 1,
+  "gates": {
+    "equal_category_targets": "pass",
+    "global_content_disjointness": "pass",
+    "input_identity": "pass",
+    "model_training_consumer_denial": "pass",
+    "sealed_audits_unopened": "pass",
+    "sealed_file_mode_zero": "pass",
+    "selection_consumer_hash_reverification": "pass",
+    "selection_domain_diversity": "pass",
+    "selection_heldout_domains": "pass",
+    "selection_unseen_source_quota": "pass",
+    "separate_D5_and_E2_audit_identity": "pass",
+    "tokenizer_eval_consumer_hash_reverification": "pass",
+    "tokenizer_train_consumer_hash_reverification": "pass",
+    "training_authority": "bound_to_external_rights_and_operations_records"
+  },
+  "git_revision": "5b356cc",
+  "model_training_authority": false,
+  "plan": {
+    "path": "research/flagship/firewall_plan_v3.json",
+    "sha256": "b451279437d4945b534328c765af14007834437eced04e3d96bd798329ae9bca"
+  },
+  "publication_policy": "metadata and commitments only; no corpus text or firewall partition is committed or redistributed",
+  "recorded_on": "2026-09-10",
+  "runtime": {
+    "cpu_seconds": 19.262,
+    "invocation_id": "c99dff829c484faf8fd97a70d45bb575",
+    "peak_service_memory_journal_display": "1.1G",
+    "wall_seconds": 26.827
+  },
+  "runtime_manifest": {
+    "path": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+    "sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+  },
+  "sealed_audits": {
+    "D5_tokenizer_content_commitments": [
+      "fa7e7931304f0c6d59960e1e17f5ab0c653980a71fe2ad9c16efd82d3a68c4a5",
+      "ab2f391372ee28e411150f9243f54a4bec83616a20012fcea13cf3233bec161c",
+      "d506f346824254b1550685d3f588d3af24c0694e3682b665cde2865b8e61c859",
+      "7d3f19799942d4bc24ebbb92cedd7c7d5e5f6a9d92738a721553106a01ba465b",
+      "7ddf068c7acc05ca005d833a5abb3a8a794990349342d901b3bb885c3a1cb577",
+      "8dbf92e20af840a23e68cbf0522dea8252c2bd4a69851c7702a6bb28e45486f5"
+    ],
+    "E2_mixture_content_commitments": [
+      "b1e5c082c8a6cccd8752c5a99b913ea357648f714895f2213c62772ba9a97da1",
+      "5ebfa4a2f8b3f51dfd46b4c2a5053757b85ee0db90814102536e1798b727224f",
+      "218ce927d3b442ce9a4b0f88cf914ec939908bc9e3a15772344fa0a7ceb1d4f4",
+      "607443fc0c03417acc62e65843c5ae3f96647adb51a38bb2b2caf69381111c6e",
+      "d1de4aa58e111c1b499d7173ff53d172fcc3e3e0602dcb908d2d80615088831e",
+      "145244a6e63e87f3598a48a7a6767618c71f9cc9292e04c06b59a386c71953c9"
+    ],
+    "files": 12,
+    "status": "unopened"
+  },
+  "selection": {
+    "minimum_domains": 2,
+    "minimum_heldout_domains": 1,
+    "minimum_unseen_utf8_bytes": 10000920
+  },
+  "status": "production_firewall_complete_all_declared_gates_pass",
+  "tokenizer_training_authority": true
+}
