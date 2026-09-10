@@ -95,3 +95,43 @@ def test_checked_2b_plan_preserves_six_categories_and_exact_quota():
         "science",
         "reference",
     ]
+
+
+def test_calibration_loader_preserves_normalized_reader_defaults(tmp_path, monkeypatch):
+    raw = {
+        "format": "speck_production_calibration_plan",
+        "format_version": 1,
+        "status": "frozen_2B_calibration_not_operations_or_training_authority",
+        "target_tokens": 2_000_000_000,
+        "sources": [
+            {
+                "id": "source",
+                "category": "web",
+                "target_tokens": 2_000_000_000,
+                "reader": {"id": "source"},
+            }
+        ],
+    }
+    path = tmp_path / "plan.json"
+    path.write_text(json.dumps(raw))
+
+    def fake_validate(candidate, **kwargs):
+        assert candidate["target_tokens"] == 20_000_000_000
+        assert candidate["sources"][0]["target_tokens"] == 20_000_000_000
+        return {
+            **candidate,
+            "sources": [
+                {
+                    **candidate["sources"][0],
+                    "reader": {"id": "source", "file_format": "parquet"},
+                }
+            ],
+            "plan_fingerprint": "old",
+        }
+
+    monkeypatch.setattr(production_calibration, "validate_production_rehearsal_plan", fake_validate)
+    normalized = production_calibration.load_production_calibration_plan(path)
+
+    assert normalized["target_tokens"] == 2_000_000_000
+    assert normalized["sources"][0]["target_tokens"] == 2_000_000_000
+    assert normalized["sources"][0]["reader"]["file_format"] == "parquet"

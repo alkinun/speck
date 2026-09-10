@@ -39,13 +39,15 @@ def load_production_calibration_plan(path):
         ],
     }
     normalized = validate_production_rehearsal_plan(candidate, config_dir=path.parent)
+    targets = {source["id"]: source["target_tokens"] for source in value["sources"]}
     normalized.update(
         {
             "format": FORMAT,
             "status": value["status"],
             "target_tokens": value["target_tokens"],
             "sources": [
-                {**source, "target_tokens": source["target_tokens"]} for source in value["sources"]
+                {**source, "target_tokens": targets[source["id"]]}
+                for source in normalized["sources"]
             ],
         }
     )
