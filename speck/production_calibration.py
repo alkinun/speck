@@ -100,17 +100,29 @@ def run_production_calibration(plan):
         raise RuntimeError(
             f"production calibration is incomplete: failed_gates={failed}, missing_metrics={missing}"
         )
-    scale = 20_000_000_000 / plan["target_tokens"]
-    projections = {
-        "target_tokens": 20_000_000_000,
-        "linear_scale_factor": scale,
-        "projected_download_bytes": int(metrics["download_bytes"] * scale),
-        "projected_filtered_bytes": int(metrics["filtered_bytes"] * scale),
-        "projected_sqlite_index_bytes": int(metrics["sqlite_index_bytes"] * scale),
-        "projected_packed_bytes": int(metrics["packed_bytes"] * scale),
-        "measured_peak_rss_bytes": metrics["peak_rss_bytes"],
-        "caveat": "byte and elapsed work are projected linearly from 2B; peak memory and source-specific throughput require confirmation during final-corpus preparation",
-    }
+    if metrics["download_bytes_per_second"] <= 0 or metrics["packing_tokens_per_second"] <= 0:
+        raise RuntimeError(
+            "production calibration throughput must be positive for scale projection"
+        )
+    projections = {}
+    for target in (20_000_000_000, 150_000_000_000, 500_000_000_000):
+        scale = target / plan["target_tokens"]
+        projections[str(target)] = {
+            "target_tokens": target,
+            "linear_scale_factor": scale,
+            "projected_download_bytes": int(metrics["download_bytes"] * scale),
+            "projected_filtered_bytes": int(metrics["filtered_bytes"] * scale),
+            "projected_sqlite_index_bytes": int(metrics["sqlite_index_bytes"] * scale),
+            "projected_packed_bytes": int(metrics["packed_bytes"] * scale),
+            "projected_acquisition_seconds_at_measured_rate": (
+                metrics["download_bytes"] * scale / metrics["download_bytes_per_second"]
+            ),
+            "projected_packing_seconds_at_measured_rate": (
+                target / metrics["packing_tokens_per_second"]
+            ),
+            "measured_peak_rss_bytes_not_linearly_scaled": metrics["peak_rss_bytes"],
+            "caveat": "bytes and isolated acquisition/packing time are linear projections; global-dedup runtime, peak memory, source exhaustion, and filesystem behavior require explicit fallback review",
+        }
     manifest = {
         "format": "speck_production_data_scale_calibration",
         "format_version": 1,
@@ -122,7 +134,8 @@ def run_production_calibration(plan):
         "stages": completed,
         "gates": gates,
         "metrics": metrics,
-        "projection_20B": projections,
+        "projection_20B": projections["20000000000"],
+        "scale_projections": projections,
         "source_counts": dict(
             sorted(Counter(source["category"] for source in plan["sources"]).items())
         ),

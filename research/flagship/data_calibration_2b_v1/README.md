@@ -15,8 +15,8 @@ target:
 | Reference | FineWiki English | 100M |
 
 The calibration uses the Mistral fallback tokenizer and a 5% heldout-candidate partition. It measures
-real throughput, disk, SQLite index size, peak RSS, cleanup, and resume, then prints a conservative
-20B linear byte projection. It cannot issue the `speck_production_data_operations_qualification`
+real throughput, disk, SQLite index size, peak RSS, cleanup, and resume, then prints conservative
+20B, 150B, and 500B byte plus isolated acquisition/packing-time projections. It cannot issue the `speck_production_data_operations_qualification`
 record and cannot authorize training. Final corpus preparation after D5/E3 must confirm source
 capacity and any non-linear memory/runtime behavior.
 

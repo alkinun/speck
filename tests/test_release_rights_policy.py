@@ -140,3 +140,18 @@ def test_time_bounded_calibration_successor_preserves_paused_20b_fallback():
     assert plan["real_manifest"]["operations_authority"] is False
     assert plan["real_manifest"]["training_authority"] is False
     assert plan["real_manifest"]["paused_20B_attempt"].endswith("data-rehearsal-20b-v1")
+
+
+def test_active_calibration_successor_records_resume_and_all_scale_projections():
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v5.json").read_text())
+
+    assert plan["status"] == "2B_acquisition_complete_global_dedup_resume_pending"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    assert plan["real_manifest"]["required_projection_targets"] == [
+        20_000_000_000,
+        150_000_000_000,
+        500_000_000_000,
+    ]
+    checkpoint = plan["real_manifest"]["observed_checkpoint"]
+    assert checkpoint["records_seen"] == 505_534
+    assert checkpoint["checkpoint_id"] == 54

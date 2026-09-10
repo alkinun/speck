@@ -75,6 +75,13 @@ def test_six_stage_2b_calibration_projects_without_issuing_authority(tmp_path, m
     assert result["training_authority"] is False
     assert result["projection_20B"]["linear_scale_factor"] == 10
     assert result["projection_20B"]["projected_packed_bytes"] == 40_000_000_000
+    assert set(result["scale_projections"]) == {
+        "20000000000",
+        "150000000000",
+        "500000000000",
+    }
+    assert result["scale_projections"]["150000000000"]["linear_scale_factor"] == 75
+    assert result["scale_projections"]["500000000000"]["linear_scale_factor"] == 250
     assert json.loads((tmp_path / "calibration-manifest.json").read_text()) == result
 
 

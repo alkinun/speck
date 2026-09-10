@@ -427,9 +427,9 @@ highest-value question.
 
 [`PREGRANT.md`](PREGRANT.md) is the complete readiness checklist and records current status. The
 critical path is a code-inclusive corpus and neutral held-out set, tokenizer qualification, a real
-production-data calibration and conservative 20B projection, complete long-document data, and one
-four-GH200 training/resume qualification. The 2B calibration is frozen but cannot start until the data
-volume is mounted; the longer 20B attempt remains safely paused.
+production-data calibration and conservative 20B plus 150B/500B projections, complete long-document
+data, and one four-GH200 training/resume qualification. The 2B acquisition is complete and global
+deduplication resumes from its durable checkpoint; the longer 20B attempt remains safely paused.
 
 The RTX 3090 is reserved for the D5 tokenizer pilot, comparator serving measurements, and
 representative export rehearsals. It does not run new architecture searches. A paid allocation does
