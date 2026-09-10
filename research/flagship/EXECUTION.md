@@ -39,11 +39,14 @@ files, human rights, production operations, deny ledger, firewall, selected toke
 data. The trainer revalidates those artifacts after shard verification and before model construction.
 No real receipt exists while the P0 data gates remain open.
 
-The 20B rehearsal runs through [`data_rehearsal_plan_v3.json`](data_rehearsal_plan_v3.json) and the
-frozen [`data_rehearsal_20b_v1/`](data_rehearsal_20b_v1/) manifest: source
+The active pre-access calibration runs through
+[`data_rehearsal_plan_v4.json`](data_rehearsal_plan_v4.json) and the frozen
+[`data_calibration_2b_v1/`](data_calibration_2b_v1/) plan: source
 identity, acquisition, global deduplication, packing, resume/cleanup, then firewall disjointness. The
-runner durably verifies completed stages and captures required resource/yield telemetry, but fixture
-qualification is not a rehearsal result and cannot issue production authority.
+runner durably verifies completed stages and captures required resource/yield telemetry at 2B, then
+projects the 20B byte envelope. It cannot issue 20B operations or training authority. The paused full
+20B attempt is resumed only if measured non-linearity or fallback review requires it; final corpus
+preparation follows D5 and E3 so expensive tokenization is not knowingly repeated.
 
 ### P1 — First answers first
 

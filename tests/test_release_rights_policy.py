@@ -127,3 +127,16 @@ def test_real_20b_rehearsal_successor_binds_frozen_production_and_orchestration_
     for key in ("production_plan", "orchestration"):
         identity = plan["real_manifest"][key]
         assert _sha256(ROOT / identity["path"]) == identity["sha256"]
+
+
+def test_time_bounded_calibration_successor_preserves_paused_20b_fallback():
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v4.json").read_text())
+
+    assert plan["status"] == "time_bounded_2B_calibration_frozen_storage_mount_required"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    assert plan["real_manifest"]["target_tokens"] == 2_000_000_000
+    identity = plan["real_manifest"]["calibration_plan"]
+    assert _sha256(ROOT / identity["path"]) == identity["sha256"]
+    assert plan["real_manifest"]["operations_authority"] is False
+    assert plan["real_manifest"]["training_authority"] is False
+    assert plan["real_manifest"]["paused_20B_attempt"].endswith("data-rehearsal-20b-v1")
