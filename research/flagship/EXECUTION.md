@@ -1,6 +1,6 @@
 # Flagship execution plan
 
-This is the human operating view of [`plan.json`](plan.json). The JSON freezes budgets,
+This is the human operating view of [`plan_v2.json`](plan_v2.json). The JSON freezes budgets,
 dependencies, exit gates, fallback rules, and scope. Calendar ranges are targets rather than reasons
 to bypass a gate.
 
@@ -8,15 +8,21 @@ to bypass a gate.
 
 The grant supplies 5,000 GPU-hours on one four-GH200 node over approximately 90 days. That is 52.1
 fully occupied node-days. Mandatory work consumes 4,111 GPU-hours, or 42.8 node-days; the remaining
-889 hours are protected reserve. Data plus architecture decisions and scale transfer consume 1,236
-GPU-hours, or 12.9 fully occupied node-days, before the day-21 freeze.
+889 hours are protected reserve. Data, architecture, integrated validation, and scale/horizon transfer
+consume 1,236 GPU-hours, or 12.9 fully occupied node-days, before the day-21 freeze.
+
+One GPU-hour means one allocated GPU for one hour; a fully occupied four-GPU node hour consumes four.
+The current 1.2B geometry requires about 2,385 ideal GPU-hours for 400B tokens at 350 analytic TFLOP/s
+per GPU, but 2,528 if a separate 1.06 overhead is also applied. P0 must replace this ambiguous planning
+arithmetic with measured exact-shape end-to-end tokens/s and checkpoint/evaluation overhead. Do not
+double-count overhead. Freeze 320B when 400B does not fit the authorized envelope.
 
 | Phase | Target days | GPU-h | Output |
 | --- | ---: | ---: | --- |
 | P0 — Pre-grant readiness | before day 1 | 0 | Data, hardware, storage, targets, and contracts ready |
 | P1 — Calibration and screens | 1–4 | 230 | Web and specialist sources, repetition policy, LR/batch region |
 | P2 — Mixture and dense architecture | 4–11 | 566 | Mixture, position, ratio, recurrent operator, and output gate |
-| P3 — Decay, integration, and scale | 11–20 | 440 | Decay recipe, transfer/composition checks, scale fit, flagship size |
+| P3 — Decay, integration, and scale | 11–20 | 440 | Decay recipe, transfer/composition checks, scale and mature-horizon evidence |
 | P4 — Configuration freeze | 20–21 | 0 | One hash-bound launch manifest |
 | P5 — Flagship pretraining | 21–50 | 2,425 | Pre-decay and final base checkpoints |
 | P6 — Extension through release candidates | 51–65 | 450 | 128K, annealed, instruct, evaluated exports |
@@ -85,30 +91,31 @@ audit. The fitted E2 response surface nominates candidates; only retrained, repl
 ### P3 — Integrate and transfer before committing the flagship
 
 - E4 decay mixture: 50 GPU-hours, branched from the E2 stable winner.
-- I1 crossed data-mixture × architecture transfer: 32 GPU-hours, 150M/3B, dense and C0 hybrid on
-  balanced-prior and E2-selected data at three seeds.
+- I1 crossed data-mixture × architecture transfer: 54 GPU-hours, 150M/3B, dense and C0 hybrid on
+  balanced-prior and E2-selected data at five seeds.
 - I2 assembled flagship recipe confirmation: up to 63 GPU-hours, one compatible D2/D3/D7/D8
   assembly against exact C0 at 350M/10B and three seeds.
-- I3 integrated capability and systems analysis: 5 GPU-hours.
-- Dense scale ladder and 750M reversal check after I2 resolves: 290 GPU-hours.
+- I3 integrated capability, systems, and mechanism analysis: 5 GPU-hours.
+- Dense scale ladder, 750M reversal, and 350M mature-horizon sentinel after I2: 268 GPU-hours.
 
 I1 reports an adverse or null interaction rather than reopening E2. I2 is not a subset search: if the
 complete assembled treatment fails, use complete C0. If no alternative setting promotes, C0 is already
 the confirmed assembly and the unused allowance is not spent. See
-[`integration_plan.json`](integration_plan.json).
+[`integration_plan_v2.json`](integration_plan_v2.json).
 
-Resolve the 1.2B/400B default versus the 600M/800B alternative by day 18. The fitted scale curve must
-exclude the eventual flagship point, which remains a held-out check.
+The public target is fixed before results at 1.2B/400B, with 1.2B/320B as the throughput fallback.
+The scale ladder tests architecture transfer and excludes the flagship from fitting. The S2
+mature-horizon pair replaces generic rerun contingency and must retain an adverse reversal.
 
 ### P4 — Day-21 freeze
 
-Freeze model, tokenizer, stable/decay data, optimizer, LR, global batch, WSD tail, precision,
+Freeze the fixed 1.2B model, tokenizer, stable/decay data, optimizer, LR, global batch, WSD tail, precision,
 checkpoints, context stages, evaluation, and release paths. An unresolved decision takes its declared
 default. No new axis may enter after day 1, and no new experiment may delay the freeze.
 
 ### P5 — Flagship
 
-The selected shape receives 2,425 GPU-hours. The default is 1.2B parameters over 400B tokens:
+The fixed 1.2B shape receives 2,425 GPU-hours over a 400B-token target:
 
 - approximately 320B stable-phase tokens;
 - publish the pre-decay checkpoint;
@@ -155,12 +162,12 @@ Flexible:
 Not flexible:
 
 - The 5,000-hour ceiling and 889-hour reserve.
-- Dense-width flagship scope.
+- Fixed 1.2B dense-width flagship scope, with only the 320B throughput fallback.
 - Dependency and exit-gate order.
-- Neutral held-out evaluation and seed confirmations.
+- Neutral held-out evaluation, five-seed I1, and three-seed architecture confirmations.
 - Day-21 freeze.
 - Original-4K regression, checkpoint/resume, and release-parity requirements.
 
-When throughput misses plan, cut scale contingency runs first, then nonmandatory scale points, then
-reduce the flagship from 400B to 320B tokens. Never save compute by dropping I1/I2, evaluation, or
-replication while retaining the associated claim.
+When throughput misses plan, cut nonmandatory low scale anchors only after preserving the 350M and
+750M transfer points, then reduce the flagship from 400B to 320B tokens. Never save compute by
+dropping I1/I2, S2, evaluation, or replication while retaining the associated claim.

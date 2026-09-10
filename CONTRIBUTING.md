@@ -18,7 +18,7 @@ Run commands from the repository root. Install the CPU environment and developme
 default test suite:
 
 ```bash
-uv sync --extra cpu --group dev
+uv sync --extra cpu --group dev --group dataset-build --group ruler --group transformers
 ```
 
 Use `--extra gpu` instead of `--extra cpu` when exercising CUDA-specific behavior. The GPU extra
@@ -29,10 +29,10 @@ targets the CUDA 12.8 PyTorch index.
 Run the complete local gate before submitting a change:
 
 ```bash
-uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
-uv run --extra cpu --group dev ruff check .
-uv run --extra cpu --group dev pytest -q
-uv run --extra cpu python -m scripts.research_catalog
+uv run --no-sync ruff format --check --config ruff-format.toml .
+uv run --no-sync ruff check .
+uv run --no-sync pytest -q
+uv run --no-sync python -m scripts.research_catalog
 ```
 
 `make quality` runs the same four checks, and `make setup` installs the locked CPU development
@@ -41,7 +41,7 @@ environment.
 Apply the formatter with:
 
 ```bash
-uv run --extra cpu --group dev ruff format .
+uv run --no-sync ruff format .
 ```
 
 During development, run the narrowest relevant test file first, then run the complete suite before

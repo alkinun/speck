@@ -1,8 +1,8 @@
 # Speck flagship: scope of the model, the paper, and the experiments
 
-Status: v5, 2026-09-09. This is the single operating document for the first flagship model and the
-paper that describes it. Everything else under `research/` is either tooling contract
-(`architecture-promotion-v1`) or archived evidence (`paper-1/*.json`).
+Status: v6, 2026-09-10. This is the single operating document for the first flagship model and the
+paper that describes it. [`../DIRECTION.md`](../DIRECTION.md) holds the multi-grant lab direction;
+the promotion protocol, notebook, and `paper-1` archive retain their separate evidence roles.
 
 The active operating surface is intentionally small:
 
@@ -22,13 +22,15 @@ The active operating surface is intentionally small:
 - [`data_calibration_2b_v1/`](data_calibration_2b_v1/) is the active time-bounded six-category
   production calibration. The paused [`data_rehearsal_20b_v1/`](data_rehearsal_20b_v1/) remains a
   resumable fallback; neither has data-selection or training authority.
-- [`plan.json`](plan.json) is the machine-checked GPU-hour, dependency, reserve, and fallback contract.
+- [`plan_v2.json`](plan_v2.json) is the active machine-checked GPU-hour, dependency, reserve, and
+  fallback contract; `plan.json` is its immutable predecessor.
 - [`data_plan_v2.json`](data_plan_v2.json) is the active machine-checked category, run, and selection
   contract; `data_plan.json` preserves the pre-integration predecessor.
-- [`architecture_plan.json`](architecture_plan.json) is the machine-checked architecture run,
-  promotion, scale, and systems contract.
-- [`integration_plan.json`](integration_plan.json) is the 100-GPU-hour crossed data-architecture and
-  assembled-recipe confirmation contract.
+- [`architecture_plan_v2.json`](architecture_plan_v2.json) is the active machine-checked architecture,
+  scale, mature-horizon, and systems contract; `architecture_plan.json` is its predecessor.
+- [`integration_plan_v2.json`](integration_plan_v2.json) is the active 122-GPU-hour crossed
+  data-architecture, assembled-recipe, and mechanism contract; `integration_plan.json` is its
+  predecessor.
 - [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) preserves the pre-approval tokenizer scope.
 - [`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) is the active tokenizer contract after human
   source-use approval; candidates, trainer, accounting, and pilot are unchanged from v4.
@@ -45,8 +47,9 @@ The active operating surface is intentionally small:
 
 ## 1. Mission
 
-Build small language models that are as efficient to train and serve as possible while giving up as
-little quality as possible, and prove it with a model people use and a paper people trust.
+Build small language models that maximize intelligence per unit of training compute, serving compute,
+and resident memory, and prove the allocation choices with a model people use and a paper people
+trust. The multi-grant direction is recorded in [`../DIRECTION.md`](../DIRECTION.md).
 
 The first flagship and its paper must do three things at once:
 
@@ -55,10 +58,10 @@ The first flagship and its paper must do three things at once:
    decision process of the model rather than a report written afterwards.
 3. Leave a ladder the next grant extends instead of restarts.
 
-The paper's central question is how data quality and the allocation of recurrent versus exact-attention
-memory determine quality, training cost, and long-context serving cost in a small language model. Every
-active experiment must select an input to the released model, test whether selected inputs transfer or
-compose, validate scale/length transfer, or price the released system. Unrelated exploration is excluded.
+The paper asks how a fixed compute and memory budget should be allocated across high-information data,
+recurrent processing, and periodic exact attention. Every active experiment must select an input to the
+released model, test transfer or composition, validate scale/token-horizon/length transfer, explain a
+declared mechanism, or price the released system. Unrelated exploration is excluded.
 
 Data and architecture are treated as equal first-class subjects. The public evidence says data is
 the larger lever at this scale: PuRo-2B ranks a within-source quality curriculum at 2.40x
@@ -83,17 +86,17 @@ model sees under 1T tokens and will not top 36T-token models on short benchmarks
 
 ### 2.2 Size and token budget
 
-At the same 2,425 GPU-hours we can train either shape:
+The public target is fixed before results because absolute quality is the first priority:
 
-| Shape | Parameters | Tokens | Tokens per parameter |
+| Role | Parameters | Tokens | Tokens per parameter |
 | --- | ---: | ---: | ---: |
-| A (default) | 1.2B | 400B | 333 |
-| B | 600M | 800B | 1,333 |
+| Target | 1.2B | 400B | 333 |
+| Throughput fallback | 1.2B | 320B | 267 |
 
-Shape A has better absolute loss. Shape B is less undertrained relative to its size class, competes
-directly with Qwen3-0.6B, SmolLM2-360M, and LFM2-700M, and serves better, which is our axis. This is
-decision **F1**, resolved by the scale ladder in section 4.5 no later than day 18, defaulting to A.
-If FP8 qualifies on the node, the extra throughput buys tokens, not saved hours.
+The retained 600M/800B geometry is not selectable in grant 1. The near-constant-token-ratio scale
+ladder cannot identify the separate model-size and token-horizon effects needed to choose between 333
+and 1,333 tokens per parameter. It now tests architecture transfer only. If optional FP8 qualifies on
+the node, extra throughput buys tokens rather than changing the fixed model size.
 
 The active R11 planning successor is [`targets/scale-targets-v2.json`](targets/scale-targets-v2.json),
 with exact accounting in [`targets/ACCOUNTING.md`](targets/ACCOUNTING.md). Under the explicit 32,003-row
@@ -131,43 +134,35 @@ and verify parameter counts with the repository's accounting before freezing.
 
 ### 3.1 Thesis
 
-A small model can match dense-attention quality at a fraction of the training FLOPs and a small
-fraction of the long-context state, and the data recipe that makes it good can be isolated with the
-same rigor as the architecture. Every part of both claims is replicated and priced.
+Under fixed training compute and serving memory, high-information data reduces tokens-to-quality while
+recurrent layers compress routine sequence processing and periodic exact-attention layers preserve
+global access. The data and memory-allocation gains count only if they transfer, compose, survive scale
+and token horizon, and materialize in one held-out 1.2B system.
 
 ### 3.2 Standard
 
-Coverage of the Kimi Linear, Kimi K3, and DeepSeek-V4 reports, plus the thing they omit: isolated
+Coverage of the Kimi Linear, Kimi K3, DeepSeek-V4, and DeepSeek-V4.1-Flash reports, plus the thing
+they omit: isolated
 component evidence before the combined model, for data as well as architecture. Each line of the
 flagship config maps to one figure with seeds, a paired bound, and a measured cost. A section that
 changes no number in the config is cut. A config line with no figure is labeled inherited.
 
 ### 3.3 Sections and required evidence
 
-1. Introduction: the efficiency problem, the two cost axes, claims and non-claims.
-2. Architecture: every operator in one notation, with state and FLOP accounting.
-3. Data: sourcing, filtering, deduplication, decontamination, and the mixture design.
-4. Data ablations: E1W/E1S and E2–E4 with per-domain held-out loss and small-scale benchmarks.
-5. Architecture ablations: C0, D2, D3, D4, D6, D7, and D8 with paired non-inferiority bounds.
-6. Integrated validation: the I1 data-by-architecture factorial and I2 assembled-recipe confirmation.
-7. Scale: the selected dense architecture at four scales, a fitted curve with uncertainty, one
-   held-out point, and the hyperparameter transfer rule from D6.
-8. Training systems: arm64 Hopper stack, kernels, FP8, MFU, throughput, failures and resumes.
-9. Long context: extension recipe, RULER v2 through 128K, internal protocols, trailing loss, and 4K retention.
-10. Post-training: anneal merge and SFT, with the delta each contributes.
-11. Results against comparators at matched size, each comparator's token budget printed beside it.
-12. Serving cost: TTFT, TPOT, throughput, resident state, peak memory at 4K, 32K, and 128K on
-     GH200, RTX 3090, and CPU through GGUF. Time and energy separately, no dollar figures.
-13. Mechanism: why a few global layers suffice, and what the recurrent state retains at 128K.
-14. Negative results: Reader Attention, attention output gating, late NoPE conversion, and every arm
-     that loses in section 4.
-15. Limitations, one paragraph of future work, and reproducibility.
+1. Resource-allocation problem and controlled experimental framework.
+2. Allocating training data through E1–E4 and the sealed audit.
+3. Allocating exact memory through dense/hybrid and component comparisons.
+4. Transfer and composition through five-seed I1, three-seed I2, scale, and mature horizon.
+5. Held-out fixed 1.2B flagship, context extension, and predicted-versus-observed quality.
+6. Hardware and release frontier: training, prefill, decode, runtime/persistent state, output-token
+   cost, comparators, negative results, limitations, and reproducibility.
 
 ### 3.4 Headline
 
-One sentence of the form "matches model X at 1/N the training compute and 1/M the resident state at
-128K, and runs on a laptop." X, N, and M come from sections 10 and 11. No draft headline is stable
-before those sections exist.
+One sentence of the form "the fixed 1.2B model matches model X at 1/N the training compute and 1/M
+the resident state at 128K under a named hardware envelope." X, N, and M come from checked quality,
+context, and systems results. “Runs on a laptop” is included only after a qualified recurrent GGUF or
+equivalent CPU runtime exists. No draft headline is stable before those results.
 
 ## 4. Experiments
 
@@ -280,15 +275,15 @@ D6 is what makes the next scale cheap and is a paper figure in its own right.
 
 ### 4.4 Integrated validation
 
-The active [`integration_plan.json`](integration_plan.json) spends the retired E5 envelope on two
-questions that directly threaten the paper and released model:
+The active [`integration_plan_v2.json`](integration_plan_v2.json) strengthens the retired E5 envelope
+with 22 newly mandatory hours for the paper's central interaction:
 
 | ID | Question | Design | New training runs | GPU-h |
 | --- | --- | --- | ---: | ---: |
-| I1 | Does the E2-selected data improvement transfer between architectures? | 150M/3B, dense versus C0 hybrid crossed with balanced-prior versus selected data, three seeds | 12 | 32 |
+| I1 | Does the E2-selected data improvement transfer between architectures? | 150M/3B, dense versus C0 hybrid crossed with balanced-prior versus selected data, five seeds | 20 | 54 |
 | I2 | Do individually promoted D2/D3/D7/D8 settings compose? | 350M/10B assembled recipe versus exact C0, three seeds | at most 3 | 63 |
-| I3 | Do the integrated capability and systems analyses agree with the component decisions? | Frozen held-out, 32K/128K, 4K retention, cost and energy reports | 0 | 5 |
-| | | | **at most 15** | **100** |
+| I3 | Do capability, systems, and mechanism interventions agree with the component decisions? | Frozen held-out, state/cache interventions, 32K/128K, 4K retention, cost and energy reports | 0 | 5 |
+| | | | **at most 23** | **122** |
 
 I1 reports data, architecture, and interaction effects but cannot reopen E2 selection. I2 applies every
 compatible individually promoted setting exactly once. If that assembly fails any aggregate, source,
@@ -297,22 +292,24 @@ search is allowed. If no alternative promotes, C0 already satisfies I2 and the u
 spent. This confirmation completes before the scale ladder so every scale point measures the same
 launchable architecture.
 
-### 4.5 Scale ladder and reversal check
+### 4.5 Scale ladder and token-horizon reversal checks
 
-The selected architecture against a dense control at four scales, plus cheap low anchors for the
-fit. Resolves F1 in section 2.2 and provides the scaling section. The flagship is excluded from the
-fit and becomes its held-out transfer test.
+The I2-confirmed architecture is compared with a dense control along a near-constant-token-ratio
+ladder. This tests architecture transfer; it does not select model size. The fixed flagship remains
+excluded from fitting and becomes a held-out realization point. S2 asks whether the hybrid effect
+reverses after a materially more mature token horizon.
 
 | Points | Scale and tokens | Runs | GPU-h |
 | --- | --- | ---: | ---: |
 | Low anchors | 60M/1.2B, 220M/5B | 4 | 14 |
 | Mid | 150M/3B, 350M/7B | 4 | 35 |
 | Reversal check S1 | 750M/15B, both arms | 2 | 134 |
-| Contingency and reruns | | 4 | 107 |
-| | | **14** | **290** |
+| Mature-horizon check S2 | 350M dense/hybrid continued from 7B toward approximately 23B; exact endpoint frozen from pre-output GH200 throughput | 2 | 85 |
+| | | **12** | **268** |
 
-A scaling-efficiency claim additionally requires uncertainty on the fit, residual diagnostics, and
-the flagship itself as a held-out confirmation point.
+A scaling-efficiency claim additionally requires uncertainty on the fit, residual diagnostics, the S2
+horizon result, and the flagship itself as a held-out realization point. S2 is a reversal sentinel,
+not population-level equivalence evidence.
 
 ### 4.6 Outside the active experiment matrix
 
@@ -391,23 +388,25 @@ promotion rules are in [`DATA.md`](DATA.md).
 
 ## 7. Compute and schedule
 
-Grant: 5,000 GH200 GPU-hours on one 4-GPU node. Estimates assume 6ND training FLOPs at 350 achieved
-TFLOPS per GPU with a 1.25x overhead factor for experiments and 1.06x for the flagship. The window
-must be at least two months; three is comfortable.
+Grant: 5,000 GH200 GPU-hours on one 4-GPU node. One full node hour consumes four GPU-hours. Existing
+estimates use 350 TFLOP/s per GPU plus separate planning overheads; P0 must replace that potentially
+ambiguous combination with measured exact-shape end-to-end tokens/s and checkpoint/evaluation cost.
+The 400B target remains only when it fits the authorized flagship envelope; otherwise use the frozen
+320B fallback. The window must be at least two months; three is comfortable.
 
 | Track | GPU-hours | Share |
 | --- | ---: | ---: |
 | Data experiments, E1W/E1S and E2 to E4 | 493 | 10% |
 | Dense architecture decisions, C0 and D2 to D8 | 353 | 7% |
-| Integrated validation, I1 to I3 | 100 | 2% |
-| Scale ladder and reversal | 290 | 6% |
+| Integrated validation, I1 to I3 | 122 | 2% |
+| Scale ladder and reversal | 268 | 5% |
 | Flagship pretraining | 2,425 | 49% |
 | Extension, anneal, SFT, evaluation, serving | 450 | 9% |
 | Reserve | 889 | 18% |
 | | **5,000** | |
 
 The reserve is sized for a first run on unfamiliar hardware with an untested stack, not as slack to
-fill with extra arms. [`plan.json`](plan.json) is authoritative for phase budgets, dependencies,
+fill with extra arms. [`plan_v2.json`](plan_v2.json) is authoritative for phase budgets, dependencies,
 throughput responses, and cuts; [`EXECUTION.md`](EXECUTION.md) is its readable operating view.
 
 Calendar ranges are advisory. Exit gates and the day-21 configuration freeze are binding. Independent

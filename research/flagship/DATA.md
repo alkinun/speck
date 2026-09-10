@@ -170,9 +170,9 @@ with repetition. E4 branches from the same E2c stable checkpoint family.
 E5 curriculum shape is retired before outputs. The stable-phase default is uniform sampling within
 each selected source treatment at the E2 mixture weights, followed by the E4-selected decay mixture
 under WSD. This is a declared operational default rather than a supported curriculum-shape claim. The
-former 100-hour envelope is governed by [`integration_plan.json`](integration_plan.json), where I1
-tests whether the selected mixture's effect transfers across dense and hybrid architectures without
-reopening E2 selection.
+former 100-hour envelope plus 22 hours transferred from generic scale contingency are governed by
+[`integration_plan_v2.json`](integration_plan_v2.json), where five-seed I1 tests whether the selected
+mixture's effect transfers across dense and hybrid architectures without reopening E2 selection.
 
 ## 5. Promotion and transfer
 

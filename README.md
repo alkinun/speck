@@ -117,8 +117,9 @@ prepared conversation dataset.
 | Guide | Contents |
 | --- | --- |
 | [Research compendium](research/README.md) | Authority map, lifecycle, notebook, artifact policy, and paper claim registry. |
+| [Lab direction](research/DIRECTION.md) | Allocation thesis, grant ladder, openness standard, and long-term efficiency frontiers. |
 | [Research workflow](research/WORKFLOW.md) | Question-to-release process for preregistration, execution, findings, claims, and archival. |
-| [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific implications for 47 architecture papers and source releases. |
+| [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific implications for 48 architecture papers and source releases. |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context tooling](docs/long_context.md) | Mixers, attention, global-layer roles, progressive context training, evaluation, and known boundaries. |
 | [Deferred MoE support](docs/moe.md) | Retained routed-expert reference, explicit non-support, and the future sparse-upcycling boundary. |
@@ -126,7 +127,7 @@ prepared conversation dataset.
 | [Flagship scope](research/flagship/README.md) | Model and paper scope, defaults, evidence standard, data, and evaluation. |
 | [Flagship paper contract](research/flagship/PAPER.md) | Central question, claim ladder, narrative spine, required figures, headline gate, and scope discipline. |
 | [Paper workspace](paper/README.md) | Claim registry and generated manuscript, figure, table, and bibliography boundaries. |
-| [Flagship execution](research/flagship/EXECUTION.md) | Flexible 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
+| [Flagship execution](research/flagship/EXECUTION.md) | Thesis-driven 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
 | [Pre-grant checklist](research/flagship/PREGRANT.md) | Concrete storage, data, GH200, model, evaluation, and administrative readiness work. |
 | [Slurm operations](docs/slurm.md) | Immutable wave validation, one/four-GPU rendering, preflight, bounded retry, accounting, and scheduler observation. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |
@@ -157,14 +158,14 @@ experiment or CLI take precedence.
 
 ## Development
 
-Install the development group and run the local quality gate:
+Install the locked CPU test environment and run the local quality gate:
 
 ```bash
-uv sync --extra cpu --group dev
-uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
-uv run --extra cpu --group dev ruff check .
-uv run --extra cpu --group dev pytest -q
-uv run --extra cpu python -m scripts.research_catalog
+uv sync --extra cpu --group dev --group dataset-build --group ruler --group transformers
+uv run --no-sync ruff format --check --config ruff-format.toml .
+uv run --no-sync ruff check .
+uv run --no-sync pytest -q
+uv run --no-sync python -m scripts.research_catalog
 ```
 
 The same complete gate is available as `make quality`; `make setup` installs the locked CPU

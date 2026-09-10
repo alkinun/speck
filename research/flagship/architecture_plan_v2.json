@@ -1,0 +1,219 @@
+{
+  "format": "speck_flagship_architecture_plan",
+  "format_version": 2,
+  "status": "planning_pre_results_fixed_1_2b_and_mature_horizon",
+  "default": {
+    "width_type": "dense",
+    "sequence_mixer": "kimi_delta_attention",
+    "output_gate_activation": "sigmoid",
+    "global_position_encoding": "none",
+    "recurrent_global_ratio": "3:1"
+  },
+  "shared_control": {
+    "id": "C0",
+    "depends_on": "E2c stable-mixture freeze",
+    "parameters": 350000000,
+    "tokens": 10000000000,
+    "seeds": 3,
+    "reuse_requires_exact_identity": [
+      "tokenizer",
+      "packed_data_and_order",
+      "model_parent",
+      "optimizer_and_learning_rate",
+      "global_batch",
+      "schedule",
+      "precision",
+      "token_horizon",
+      "evaluation_manifest",
+      "seed",
+      "analysis"
+    ]
+  },
+  "decisions": [
+    {
+      "id": "C0",
+      "name": "shared KDA sigmoid NoPE 3:1 control",
+      "new_runs": 3,
+      "gpu_hours": 63
+    },
+    {
+      "id": "D2",
+      "name": "global position treatment",
+      "alternative": "partial RoPE on 32 of 128 dimensions",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0"
+    },
+    {
+      "id": "D3",
+      "name": "recurrent to global ratio",
+      "alternative": "5:1",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0"
+    },
+    {
+      "id": "D4",
+      "name": "peak learning rate and global batch calibration",
+      "new_runs": 4,
+      "gpu_hours": 33
+    },
+    {
+      "id": "D6",
+      "name": "learning-rate width transfer anchors",
+      "new_runs": 2,
+      "gpu_hours": 5
+    },
+    {
+      "id": "D7",
+      "name": "KDA recurrence attribution",
+      "alternative": "FLA-initialized scalar-decay GDN sigmoid NoPE",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0",
+      "max_parameter_relative_delta_for_isolated_claim": 0.01,
+      "max_flops_relative_delta_for_isolated_claim": 0.01
+    },
+    {
+      "id": "D8",
+      "name": "KDA output gate activation",
+      "alternative": "SiLU",
+      "new_runs": 3,
+      "gpu_hours": 63,
+      "reuses_control": "C0",
+      "requires_pregrant_implementation": true
+    }
+  ],
+  "promotion": {
+    "aggregate_non_inferiority_margin_nats": 0.01,
+    "source_guardrail_nats": 0.02,
+    "confidence": 0.95,
+    "paired_seeds_for_launch_decisions": 3,
+    "capability_lengths": [
+      32768,
+      131072
+    ],
+    "original_context_regression_required": true,
+    "simple_component_cost_improvement_percent": 10,
+    "custom_runtime_cost_improvement_percent": 20,
+    "state_reduction_threshold_percent": 25,
+    "tie_rule": "keep_default"
+  },
+  "scale_program": [
+    {
+      "id": "low_anchors",
+      "scales": [
+        "60M/1.2B",
+        "220M/5B"
+      ],
+      "new_runs": 4,
+      "gpu_hours": 14,
+      "depends_on": "I2 assembled-recipe confirmation"
+    },
+    {
+      "id": "mid_points",
+      "scales": [
+        "150M/3B",
+        "350M/7B"
+      ],
+      "new_runs": 4,
+      "gpu_hours": 35,
+      "depends_on": "I2 assembled-recipe confirmation"
+    },
+    {
+      "id": "S1",
+      "scales": [
+        "750M/15B"
+      ],
+      "new_runs": 2,
+      "gpu_hours": 134,
+      "depends_on": "I2 assembled-recipe confirmation"
+    },
+    {
+      "id": "S2",
+      "name": "mature-token-horizon reversal sentinel",
+      "scales": [
+        "350M/7B toward approximately 23B continuation, hybrid and dense"
+      ],
+      "new_runs": 2,
+      "gpu_hours": 85,
+      "depends_on": "I2 assembled-recipe confirmation",
+      "endpoint_rule": "freeze the exact endpoint from measured GH200 throughput before either continuation output; approximately 23B planning target with a predeclared lower fallback if the 85-hour ceiling requires it",
+      "authority": "reversal and horizon-transfer check only; not population equivalence and not flagship-size selection",
+      "new_axes_forbidden": true
+    }
+  ],
+  "systems": {
+    "hardware": [
+      "GH200",
+      "RTX 3090",
+      "CPU GGUF"
+    ],
+    "context_lengths": [
+      4096,
+      32768,
+      131072
+    ],
+    "minimum_interleaved_blocks": 5,
+    "telemetry_hz": 1,
+    "separate_outcomes": [
+      "training_analytic_flops_and_state",
+      "prefill_flops_time_and_energy",
+      "decode_flops_time_and_energy",
+      "runtime_HBM_state",
+      "persistent_prefix_state_and_transfer",
+      "peak_memory_and_workspace",
+      "output_tokens_to_fixed_task_quality"
+    ],
+    "external_analytic_reference": {
+      "id": "deepseek-v4.1-flash",
+      "source": "papers/48_deepseek_v4_1_flash.md",
+      "reported_global_cache_bytes_per_token": 890,
+      "role": "analytic context only; not a locally measured comparator or grant-1 operator source"
+    }
+  },
+  "totals": {
+    "decision_new_runs": 21,
+    "decision_gpu_hours": 353,
+    "scale_new_runs": 12,
+    "scale_gpu_hours": 268,
+    "architecture_new_runs": 33,
+    "architecture_gpu_hours": 621
+  },
+  "binding": [
+    "dense-width grant scope",
+    "fixed 1.2B/400B flagship with 320B throughput fallback",
+    "exact shared-control identity",
+    "D7 and D8 causal comparisons",
+    "paired three-seed launch decisions",
+    "quality source and long-context guardrails",
+    "hybrid versus dense scale transfer plus the mature-horizon sentinel",
+    "randomized interleaved systems measurements with separate prefill decode runtime persistent and output-token outcomes",
+    "I1 transfer and I2 assembly complete before the scale ladder",
+    "621 GPU-hour architecture ceiling"
+  ],
+  "integrated_validation": {
+    "plan": "research/flagship/integration_plan_v2.json",
+    "gpu_hours_outside_architecture_ceiling": 122,
+    "I1": "five-seed crossed data-mixture by dense-versus-C0 architecture transfer",
+    "I2": "three-seed assembled compatible D2 D3 D7 D8 recipe versus exact C0",
+    "I2_failure": "launch complete C0 without post-hoc subset search",
+    "scale_ladder_requires_I2": true
+  },
+  "supersedes": {
+    "path": "research/flagship/architecture_plan.json",
+    "sha256": "b5ce68e9c58befc1925afbe9817fd7d3c9afa2c8f5f49ff25a6d503a1b18b656",
+    "repository_revision": "2a474e992b667b5907caaa79bf9d7ed220b185a2",
+    "reason": "freeze the 1.2B flagship independently of the near-constant-token-ratio scale ladder and replace generic reruns with a mature-token-horizon reversal sentinel"
+  },
+  "flagship_target": {
+    "selected": "flagship-1.2b",
+    "parameters": 1195884576,
+    "target_tokens": 400000000000,
+    "throughput_fallback_tokens": 320000000000,
+    "selection_status": "fixed_pre_results_by_absolute_quality_priority",
+    "flagship_excluded_from_scale_fit": true,
+    "retired_grant_endpoint": "flagship-600m",
+    "retired_endpoint_disposition": "planning geometry retained for provenance and future work; not selectable in grant 1"
+  }
+}

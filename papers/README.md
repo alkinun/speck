@@ -61,6 +61,10 @@ to these notes where available.
     inference-code limitations, and license boundary used by the sequence readiness successors. The
     [release-lineage audit](47_deepseek_v4_release_lineage.md) confirms architecture stability while
     superseding the initial in-place FP8 simulation with the current explicit FP8 cast.
+    [DeepSeek-V4.1-Flash](48_deepseek_v4_1_flash.md) then separates prefill and decode depth, shares
+    global representation and sparse-selection work across layers, uses FP4 global cache storage, and
+    trades persistent local state for bounded replay. It is an analytic reference for Speck's future
+    context program, not a grant-1 operator source.
 
 ### Scaling beyond the sequence mixer
 
@@ -130,10 +134,11 @@ path from the later inference-only expert-sharded V3 reference.
 | How should global attention encode position? | Kimi Linear, Gated Attention | D2 compares NoPE with partial RoPE |
 | How should training scale? | Kimi Linear, systematic hybrid studies | D4/D6 plus the 60M–750M dense scale ladder |
 | What is the release gate? | MiniMax-M2, Nemotron 3 Nano | RULER v2, internal retrieval/composition, 4K retention, and serving profiles |
+| How should serving cost be decomposed? | DeepSeek-V4.1-Flash | Report prefill, decode, runtime state, persistent state, and output tokens separately |
 | What moves to a later grant? | MLA, AttnRes, NSA, MoBA, DeepSeekMoE, Kimi K3 | Cache compression, depth routing, sparse attention, and MoE sparse upcycling |
 
 ## Source set
 
 The collection contains the 22 papers supplied in the original research brief, nineteen later direct
-overlap audits, one supporting eviction baseline, and five official-source or release-lineage notes:
-47 files total. They are literature evidence, not an active experiment backlog.
+overlap audits, one supporting eviction baseline, and six official-source or release-lineage notes:
+48 files total. They are literature evidence, not an active experiment backlog.

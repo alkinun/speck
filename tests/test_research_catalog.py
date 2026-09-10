@@ -26,14 +26,21 @@ def test_checked_research_catalog_resolves_collections_notebook_and_claims():
         "paper_workspace",
         "software",
     }
-    assert result["notebook_entries"] == 2
+    assert result["notebook_entries"] == 3
     assert result["lifecycle_stages"] == 9
-    assert result["paper"]["claims"] == 9
+    assert result["paper"]["claims"] == 4
     assert result["paper"]["claim_statuses"] == {
-        "planned": 5,
-        "prior_evidence_only": 4,
+        "planned": 2,
+        "prior_evidence_only": 2,
     }
     assert result["paper"]["headline_ready"] == []
+    claims = json.loads((ROOT / "paper/claims.json").read_text())["claims"]
+    assert [claim["id"] for claim in claims] == [
+        "C-DATA",
+        "C-MEMORY",
+        "C-TRANSFER",
+        "C-SYSTEM",
+    ]
 
 
 def test_research_catalog_cli_defaults_to_checked_catalog():

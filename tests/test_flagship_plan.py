@@ -14,23 +14,26 @@ SHAPE_A = FLAGSHIP / "targets" / "shape-a"
 
 
 def test_execution_plan_balances_the_grant_and_keeps_reserve_conditional():
-    plan = json.loads((FLAGSHIP / "plan.json").read_text())
+    plan = json.loads((FLAGSHIP / "plan_v2.json").read_text())
     phases = plan["phases"]
 
     assert plan["format"] == "speck_flagship_execution_plan"
-    assert plan["status"] == "pregrant"
+    assert plan["status"] == "pregrant_allocation_thesis"
     assert sum(phase["gpu_hours"] for phase in phases) == 5_000
     assert sum(phase["gpu_hours"] for phase in phases if not phase.get("conditional")) == 4_111
     reserve = next(phase for phase in phases if phase["id"] == "P7")
     assert reserve["gpu_hours"] == plan["budget"]["reserve_gpu_hours"] == 889
     assert reserve["conditional"] is True
     assert "mixture of experts" in plan["scope"]["excluded"]
-    assert "dense-width flagship" in plan["flexibility"]["binding"]
+    assert (
+        "fixed 1.2B dense-width flagship with 400B target and 320B throughput fallback"
+        in plan["flexibility"]["binding"]
+    )
 
 
 def test_data_plan_has_a_complete_english_mixture_and_matches_execution_budget():
     data_plan = json.loads((FLAGSHIP / "data_plan.json").read_text())
-    execution_plan = json.loads((FLAGSHIP / "plan.json").read_text())
+    execution_plan = json.loads((FLAGSHIP / "plan_v2.json").read_text())
     categories = data_plan["categories"]
     experiments = data_plan["experiments"]
 
@@ -85,8 +88,8 @@ def test_data_plan_preserves_selection_firewall_and_replication():
 
 
 def test_architecture_plan_closes_causal_gaps_and_matches_execution_budget():
-    architecture_plan = json.loads((FLAGSHIP / "architecture_plan.json").read_text())
-    execution_plan = json.loads((FLAGSHIP / "plan.json").read_text())
+    architecture_plan = json.loads((FLAGSHIP / "architecture_plan_v2.json").read_text())
+    execution_plan = json.loads((FLAGSHIP / "plan_v2.json").read_text())
     decisions = {decision["id"]: decision for decision in architecture_plan["decisions"]}
     scale_program = architecture_plan["scale_program"]
     totals = architecture_plan["totals"]
@@ -95,10 +98,10 @@ def test_architecture_plan_closes_causal_gaps_and_matches_execution_budget():
     assert set(decisions) == {"C0", "D2", "D3", "D4", "D6", "D7", "D8"}
     assert sum(decision["new_runs"] for decision in decisions.values()) == 21
     assert sum(decision["gpu_hours"] for decision in decisions.values()) == 353
-    assert sum(stage["new_runs"] for stage in scale_program) == 14
-    assert sum(stage["gpu_hours"] for stage in scale_program) == 290
-    assert totals["architecture_new_runs"] == 35
-    assert totals["architecture_gpu_hours"] == 643
+    assert sum(stage["new_runs"] for stage in scale_program) == 12
+    assert sum(stage["gpu_hours"] for stage in scale_program) == 268
+    assert totals["architecture_new_runs"] == 33
+    assert totals["architecture_gpu_hours"] == 621
     assert decisions["D7"]["reuses_control"] == "C0"
     assert decisions["D8"]["reuses_control"] == "C0"
     assert decisions["D8"]["requires_pregrant_implementation"] is True
@@ -108,12 +111,12 @@ def test_architecture_plan_closes_causal_gaps_and_matches_execution_budget():
     assert execution_plan["budget"]["mandatory_gpu_hours"] == 4_111
     assert execution_plan["budget"]["reserve_gpu_hours"] == 889
     assert sum(phases[phase] for phase in ("P1", "P2", "P3")) == (
-        593 + totals["architecture_gpu_hours"]
+        493 + 122 + totals["architecture_gpu_hours"]
     )
 
 
 def test_architecture_plan_inherits_promotion_margins_and_separates_systems_outcomes():
-    architecture_plan = json.loads((FLAGSHIP / "architecture_plan.json").read_text())
+    architecture_plan = json.loads((FLAGSHIP / "architecture_plan_v2.json").read_text())
     promotion_policy = json.loads(
         (ROOT / "research" / "architecture-promotion-v1" / "policy.json").read_text()
     )
@@ -143,10 +146,13 @@ def test_architecture_plan_inherits_promotion_margins_and_separates_systems_outc
     assert promotion["tie_rule"] == "keep_default"
     assert architecture_plan["systems"]["minimum_interleaved_blocks"] >= 5
     assert set(architecture_plan["systems"]["separate_outcomes"]) == {
-        "analytic_flops_and_state",
-        "wall_clock",
-        "energy",
-        "peak_memory",
+        "training_analytic_flops_and_state",
+        "prefill_flops_time_and_energy",
+        "decode_flops_time_and_energy",
+        "runtime_HBM_state",
+        "persistent_prefix_state_and_transfer",
+        "peak_memory_and_workspace",
+        "output_tokens_to_fixed_task_quality",
     }
 
 
@@ -248,7 +254,7 @@ def test_source_registry_is_pinned_and_tokenizer_allocations_cover_every_categor
 
 
 def test_execution_plan_dependencies_are_acyclic_and_days_fit_the_grant():
-    plan = json.loads((FLAGSHIP / "plan.json").read_text())
+    plan = json.loads((FLAGSHIP / "plan_v2.json").read_text())
     positions = {phase["id"]: index for index, phase in enumerate(plan["phases"])}
 
     assert len(positions) == len(plan["phases"])

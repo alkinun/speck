@@ -20,9 +20,10 @@ It also validates the research notebook and [`paper/claims.json`](../paper/claim
 | Need | Source |
 | --- | --- |
 | Current model, scope, and experiments | [`flagship/README.md`](flagship/README.md) |
+| Multi-grant lab direction | [`DIRECTION.md`](DIRECTION.md) |
 | Paper question and claim standard | [`flagship/PAPER.md`](flagship/PAPER.md) |
 | Readiness before allocated compute | [`flagship/PREGRANT.md`](flagship/PREGRANT.md) |
-| Exact phase and GPU-hour plan | [`flagship/plan.json`](flagship/plan.json) |
+| Exact phase and GPU-hour plan | [`flagship/plan_v2.json`](flagship/plan_v2.json) |
 | Paper claim status | [`paper/claims.json`](../paper/claims.json) |
 | Current Speck evidence | [`findings/README.md`](../findings/README.md) |
 | Complete historical narrative | [`findings/ARCHIVE.md`](../findings/ARCHIVE.md) |

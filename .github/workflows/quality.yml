@@ -14,18 +14,22 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
         with:
           enable-cache: true
           python-version: "3.10"
           version: "0.12.1"
-      - name: Install the locked CPU development environment
-        run: uv sync --extra cpu --group dev --locked
+      - name: Install the locked CPU test environment
+        run: >-
+          uv sync --extra cpu --group dev --group dataset-build --group ruler
+          --group transformers --locked
       - name: Check formatting
-        run: uv run --extra cpu --group dev ruff format --check --config ruff-format.toml .
+        run: uv run --no-sync ruff format --check --config ruff-format.toml .
       - name: Lint
-        run: uv run --extra cpu --group dev ruff check .
+        run: uv run --no-sync ruff check .
       - name: Test
-        run: uv run --extra cpu --group dev pytest -q
+        run: uv run --no-sync pytest -q
       - name: Validate the research compendium
-        run: uv run --extra cpu python -m scripts.research_catalog
+        run: uv run --no-sync python -m scripts.research_catalog
