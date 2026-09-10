@@ -100,9 +100,15 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "data_launch": "research/flagship/data_launch_plan_v2.json",
         "data_firewall": "research/flagship/firewall_plan_v2.json",
         "firewall_inputs": "research/flagship/firewall_v2/input_plan.json",
+        "precision": "research/flagship/precision_plan_v1.json",
         "lab_direction": "research/DIRECTION.md",
     }
     assert all((ROOT / path).is_file() for path in execution["active_contracts"].values())
+    precision = json.loads((ROOT / execution["active_contracts"]["precision"]).read_text())
+    assert precision["status"] == "bf16_fallback_frozen_fp8_deferred"
+    assert precision["decision"]["training_compute"] == "bfloat16"
+    assert precision["budget_change_gpu_hours"] == 0
+    assert precision["training_authority"] is False
     assert sum(phase["gpu_hours"] for phase in phases.values()) == 5_000
     assert (
         sum(phase["gpu_hours"] for phase in phases.values() if not phase.get("conditional"))

@@ -40,6 +40,8 @@ The active operating surface is intentionally small:
   guarded-use approval of all 30 selected sources without granting production or training authority.
 - [`firewall_plan_v2.json`](firewall_plan_v2.json) freezes real tokenizer, selection, and sealed-audit
   targets under the accepted calibration fallback; model training remains forbidden.
+- [`precision_plan_v1.json`](precision_plan_v1.json) freezes bf16 for grant 1 and defers optional FP8
+  unless a reviewed GH200-qualified successor passes without consuming protected reserve.
 - [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json) freezes one physically shared
   token embedding/LM-head parameter and its config, accounting, checkpoint, optimizer, and export rules.
 - [`source_registry_v2.json`](source_registry_v2.json) pins the human-approved source revisions and

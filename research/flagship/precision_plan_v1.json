@@ -1,0 +1,30 @@
+{
+  "format": "speck_flagship_precision_plan",
+  "format_version": 1,
+  "status": "bf16_fallback_frozen_fp8_deferred",
+  "recorded_on": "2026-09-10",
+  "scope": "grant_1_mandatory_training_and_validation",
+  "decision": {
+    "training_compute": "bfloat16",
+    "normalization_and_recurrent_sensitive_math": "existing explicit float32 paths",
+    "optimizer_state": "existing optimizer-specific mixed-precision contract",
+    "FP8": "deferred outside grant 1 unless a reviewed successor passes every qualification gate before launch"
+  },
+  "reason": "FP8 is optional and currently unqualified on GH200; freezing bf16 removes it from the pre-grant critical path without spending undeclared GPU hours or weakening mandatory evidence",
+  "required_bf16_qualification": [
+    "four-GH200 DDP and arm64 execution",
+    "finite forward backward and optimizer behavior",
+    "checkpoint and resume identity",
+    "exact-shape memory and achieved end-to-end throughput"
+  ],
+  "FP8_successor_requirements": [
+    "GH200 numerical parity and finite-value gates",
+    "matched-quality evidence",
+    "measured end-to-end throughput and memory benefit",
+    "checkpoint and resume equivalence",
+    "explicit project-owner adoption without consuming protected reserve"
+  ],
+  "budget_change_gpu_hours": 0,
+  "paper_claim_authority": false,
+  "training_authority": false
+}
