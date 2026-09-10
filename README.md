@@ -122,7 +122,7 @@ prepared conversation dataset.
 | [Paper library](papers/README.md) | Verified summaries, quantitative evidence, limitations, and Speck-specific implications for 48 architecture papers and source releases. |
 | [Data preparation](docs/data.md) | Corpus mixtures, paths, filtering, deduplication, disk planning, and resume behavior. |
 | [Long-context tooling](docs/long_context.md) | Mixers, attention, global-layer roles, progressive context training, evaluation, and known boundaries. |
-| [Deferred MoE support](docs/moe.md) | Retained routed-expert reference, explicit non-support, and the future sparse-upcycling boundary. |
+| [Deferred MoE support](docs/moe.md) | Retained routed-expert reference and explicit no-active-program boundary. |
 | [Architecture promotion research](research/README.md) | Versioned statistical policy, cost envelopes, evaluation manifest, and evidence matrix. |
 | [Flagship scope](research/flagship/README.md) | Model and paper scope, defaults, evidence standard, data, and evaluation. |
 | [Flagship paper contract](research/flagship/PAPER.md) | Central question, claim ladder, narrative spine, required figures, headline gate, and scope discipline. |

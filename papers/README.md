@@ -63,8 +63,8 @@ to these notes where available.
     superseding the initial in-place FP8 simulation with the current explicit FP8 cast.
     [DeepSeek-V4.1-Flash](48_deepseek_v4_1_flash.md) then separates prefill and decode depth, shares
     global representation and sparse-selection work across layers, uses FP4 global cache storage, and
-    trades persistent local state for bounded replay. It is an analytic reference for Speck's future
-    context program, not a grant-1 operator source.
+    trades persistent local state for bounded replay. It is analytic background, not a grant-1
+    operator source or an active follow-on program.
 
 ### Scaling beyond the sequence mixer
 

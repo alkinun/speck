@@ -16,7 +16,7 @@ Under fixed resources, model quality depends on where computation and memory are
 
 - **training data:** high-information tokens, repetition, mixture, and decay;
 - **sequence computation:** recurrent processing versus periodic exact access;
-- **model capacity:** parameters versus token horizon and, later, conditional width;
+- **model capacity:** parameters versus token horizon;
 - **serving state:** fixed state versus length-growing state, cache precision, and persistence;
 - **test-time computation:** prompt prefill, token decode, and generated reasoning tokens.
 
@@ -43,31 +43,15 @@ The four paper claims are:
 The model is the held-out consequence of the evidence program, not a configuration chosen after its
 results. Negative and unresolved outcomes narrow these claims without changing the paper question.
 
-## Grant 2: conditional width
+## Beyond Grant 1
 
-Begin from the public pre-decay dense-width checkpoint. Sparse-upcycle selected feed-forward layers,
-compare with continued dense training at matched data and wall clock, and qualify expert-parallel training,
-checkpointing, export, and serving. This is the path to more total knowledge capacity without charging
-every parameter on every token.
-
-## Grant 3: asymmetric context computation
-
-Study prompt/decode asymmetry and compressed global memory as one integrated program:
-
-- lower causal encoding of complete prompts;
-- periodically refreshed global representations;
-- more frequent depth-specific selection or reads;
-- an exact local or recurrent path;
-- quantization-aware global cache storage;
-- explicit runtime versus persistent-cache economics;
-- trained and measured recovery after cache misses.
-
-DeepSeek-V4.1-Flash is the current large-scale reference for this direction. Speck will not transplant
-its CED/CSA2/mHC/Engram/DSpark package into grant 1.
+No follow-on grant or experiment program is active. Preserve the checkpoint, evidence, and operational
+lessons, then choose the next question from Grant 1 results rather than planning around untested
+assumptions. MoE, asymmetric context computation, and compressed memory remain background ideas only.
 
 ## Long-term lab standard
 
-Each generation should improve at least one measured frontier without silently weakening another:
+Grant 1 should improve at least one measured frontier without silently weakening another:
 
 - quality per training FLOP and GPU-hour;
 - quality per total and active parameter;

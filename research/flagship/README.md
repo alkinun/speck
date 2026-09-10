@@ -317,17 +317,11 @@ Reader Attention, MQA/MLA cache alternatives, attention residuals, sparse/compre
 other archived axes receive no grant-1 runs. Existing completed evidence may appear as background or
 negative results, but spare capacity cannot reactivate them.
 
-### 4.7 Deferred conditional width
+### 4.7 Deferred features
 
-No MoE run belongs to this grant or gates the flagship. The repository retains a conventional
-single-device routed-SwiGLU reference, routing diagnostics, and expert-masking support so a follow-on
-program does not restart from zero. It deliberately retains no active MoE experiment, result-selection
-contract, expert-parallel claim, or release path.
-
-The next program begins from the released dense pre-decay checkpoint: sparse-upcycle selected MLPs,
-compare against continued dense training at matched wall-clock, and qualify expert-parallel training,
-checkpointing, export, and serving before scaling. That work requires its own 10K–50K+ allocation and
-paper rather than sharing the first flagship's critical path.
+No MoE, depth-routing, compressed-attention, or asymmetric-compute run belongs to this grant or gates
+the flagship. Retained reference code has no active experiment, result-selection, scaling, serving, or
+follow-on planning authority.
 
 ## 5. Data
 
@@ -425,11 +419,9 @@ new architecture axis.
 
 ## 9. After this grant
 
-- The pre-decay checkpoint is designed to be continued with more tokens under the same schedule.
-- The ladder extends upward with the same pipeline, evaluation, and statistics, one scale at a time.
-- D6's transfer rule is what keeps the next scale from needing its own sweep.
-- Depth routing and cache compression remain possible later sequence/depth work. MoE is a separate
-  sparse-upcycling paper and compute proposal rooted in the released dense pre-decay checkpoint.
+Preserve the pre-decay checkpoint, contracts, and complete evidence ladder. Do not choose or plan a
+follow-on program until Grant 1 results, release use, and the independent audit identify the next
+highest-value question.
 
 ## 10. Before day 1
 

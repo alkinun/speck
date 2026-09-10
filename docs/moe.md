@@ -1,8 +1,7 @@
 # Deferred mixture-of-experts support
 
 Mixture-of-experts is not part of the first flagship grant. Speck retains a compact conventional
-reference so a later sparse-upcycling program can start from tested model semantics rather than
-rebuilding routing from scratch.
+reference as tested model semantics, not as an active experiment or follow-on plan.
 
 ## Retained substrate
 
@@ -31,10 +30,7 @@ The archived September 2026 pilots, stopped screen checkpoint, logs, and packed 
 outside the repository under `/mnt/speck-data/speck/archive/moe-deferred-20260906/` on the originating
 research machine. Git history retains the removed screen tooling.
 
-## Follow-on program
+## Planning boundary
 
-Begin from the released dense pre-decay flagship checkpoint. Freeze which dense MLPs are copied into
-experts, then compare sparse upcycling with continued dense training under the same added data and a
-matched wall-clock budget. Expert-parallel training, checkpoint/resume, export, and serving must
-qualify before a scaled run. This is a separate 10K–50K+ compute proposal and paper, not a contingency
-inside the first 5K-hour grant.
+There is no active MoE proposal, compute allocation, or paper plan. Reconsider the retained substrate
+only after Grant 1 results and release evidence identify a concrete reason to do so.

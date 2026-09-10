@@ -101,7 +101,7 @@ Grant 1 should not add CED, CSA2, mHC, Engram, DSpark, multimodality, or MoE. It
 - state memory claims against matched dense GQA rather than all architectures;
 - report prefill, decode, runtime HBM state, persistent state, and output-token cost separately;
 - preserve the 1.2B dense-width KDA/global flagship;
-- treat asymmetric compute and periodically refreshed compressed memory as a follow-on program;
+- keep asymmetric compute and periodically refreshed compressed memory as unprioritized background;
 - optionally test FP4 global-KV storage on existing checkpoints without making it a launch gate.
 
 DeepSeek reports about 890 global bytes per token, while the planned 1.2B Speck geometry uses about
