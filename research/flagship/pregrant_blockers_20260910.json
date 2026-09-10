@@ -1,0 +1,81 @@
+{
+  "format": "speck_pregrant_blocker_snapshot",
+  "format_version": 1,
+  "status": "not_launch_ready_remaining_blocks_explicit",
+  "recorded_on": "2026-09-10",
+  "git_revision": "c91b3c7",
+  "completed_or_closed_by_fallback": {
+    "R1": "root and data-volume headroom",
+    "R2": "code-source technical qualification and human guarded-use approval",
+    "R3": "2B operations calibration accepted through the conditional 150B branch",
+    "R4": "production tokenizer, selection, and unopened audit firewall",
+    "R9": "bf16 frozen; optional FP8 deferred",
+    "R11": "seven non-launchable scale geometries and exact accounting",
+    "R18": "research compendium and claim governance"
+  },
+  "remaining": {
+    "R5": {
+      "blocker": "D5, E2/E3 selection, final firewall exclusion, and tokenizer-bound packing",
+      "next": "complete R10 before preparing pilot and final stable/decay corpora"
+    },
+    "R6": {
+      "blocker": "long-document derivation requires the selected tokenizer and final indexed packed corpus",
+      "next": "derive complete books, papers, and repository trees after R5's parent manifest exists"
+    },
+    "R7": {
+      "blocker": "no GH200 or arm64/DDP/Slurm environment is available locally",
+      "next": "run the frozen four-GH200 qualification before any paid training"
+    },
+    "R8": {
+      "blocker": "WSD is CPU-qualified but awaits R7's GH200 resume/integration run",
+      "next": "include warmup/stable/decay and resume checks in the R7 rehearsal"
+    },
+    "R10": {
+      "completed": "formal sample, three custom tokenizers, pinned baseline, static evaluation, and endpoint nomination",
+      "blocker": "no real 60M pilot run materializer or fixed document stream exists",
+      "next": "materialize exact model/optimizer/data identities, run seven matched RTX 3090 pilots within 30 hours, rank, then open D5 once"
+    },
+    "R12": {
+      "blocker": "per-arm materializers, result schemas, analyzers, and figure schemas remain absent",
+      "next": "implement and fixture-qualify contracts without creating any result-dependent run"
+    },
+    "R13": {
+      "blocker": "comparator backend access, revisions, real evaluations, and serving profiles are absent",
+      "next": "bind credentials and named revisions before model outputs"
+    },
+    "R14": {
+      "blocker": "RULER source/case matrices are qualified under the fallback tokenizer but final launch manifests depend on D5 and candidate exports",
+      "next": "regenerate or requalify exact active tokenized cases after D5"
+    },
+    "R15": {
+      "blocker": "representative native/Transformers/GGUF parity cannot pass until recurrent-mixer GGUF support exists",
+      "next": "implement one narrowly scoped export path and test a representative checkpoint"
+    },
+    "R16": {
+      "completed": "same-host independent-device 5.08 GB backup and complete restore rehearsal; GitHub push",
+      "blocker": "off-site copy, DOI archive, final model/artifact destinations, and credentials",
+      "next": "obtain human account/destination choices and verify credentials"
+    },
+    "R17": {
+      "completed": "default-compatible KDA gate, CPU/export checks",
+      "blocker": "full-layer FLA/CUDA cases await R7 hardware",
+      "next": "execute with the GH200 qualification"
+    }
+  },
+  "administrative_questions": [
+    "allocation start and end dates",
+    "job wall-time and filesystem quotas",
+    "network and checkpoint-retention policy",
+    "exclusive four-GPU node and concurrent single-GPU job policy",
+    "scheduler, storage, and node-failure support contacts",
+    "reserve-use human authority",
+    "off-site backup and DOI destination accounts"
+  ],
+  "overnight_evidence": {
+    "firewall_result": "results/data/production-data-firewall-20260910.json",
+    "tokenizer_static_result": "results/data/formal-tokenizer-static-20260910.json",
+    "backup_restore_result": "results/release/independent-r3-backup-restore-20260910.json"
+  },
+  "paid_compute_launch_authority": false,
+  "model_training_authority": false
+}

@@ -102,6 +102,7 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "firewall_inputs": "research/flagship/firewall_v2/input_plan.json",
         "precision": "research/flagship/precision_plan_v1.json",
         "backup_restore": "results/release/independent-r3-backup-restore-20260910.json",
+        "pregrant_blockers": "research/flagship/pregrant_blockers_20260910.json",
         "lab_direction": "research/DIRECTION.md",
     }
     assert all((ROOT / path).is_file() for path in execution["active_contracts"].values())
@@ -120,6 +121,23 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
     }
     assert backup["sealed_handling"]["payload_parsed"] is False
     assert backup["training_authority"] is False
+    blockers = json.loads((ROOT / execution["active_contracts"]["pregrant_blockers"]).read_text())
+    assert blockers["status"] == "not_launch_ready_remaining_blocks_explicit"
+    assert set(blockers["remaining"]) == {
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R10",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+    }
+    assert blockers["paid_compute_launch_authority"] is False
+    assert blockers["model_training_authority"] is False
     assert sum(phase["gpu_hours"] for phase in phases.values()) == 5_000
     assert (
         sum(phase["gpu_hours"] for phase in phases.values() if not phase.get("conditional"))
