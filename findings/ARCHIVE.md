@@ -222,6 +222,7 @@ history in order only when auditing provenance or a retired decision:
 207. [206 — Batched MinHash preserves exact dedup signatures](206_production_minhash_batch_successor.md)
 208. [207 — Resume equivalence is logical database identity](207_sqlite_logical_resume_equivalence.md)
 209. [208 — The 2B production-data path passes](208_production_data_calibration_2b.md)
+210. [209 — The 2B calibration closes P0 operations through 150B](209_production_calibration_fallback_decision.md)
 
 Conventions:
 

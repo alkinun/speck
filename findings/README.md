@@ -91,6 +91,7 @@ status is tracked in [`paper/claims.json`](../paper/claims.json).
 | [Production MinHash batch successor](206_production_minhash_batch_successor.md) | Exact signature equivalence and faster resume for the 2B global-dedup calibration |
 | [Logical SQLite resume equivalence](207_sqlite_logical_resume_equivalence.md) | Exact scientific-state equality despite noncanonical physical database pages |
 | [2B production-data calibration](208_production_data_calibration_2b.md) | All gates pass; 150B fits conditionally while the current 500B path does not |
+| [Production calibration fallback](209_production_calibration_fallback_decision.md) | R3 closes through 150B; 20B is not repeated and 500B remains blocked |
 | [Allocation-thesis program](205_allocation_thesis_program.md) | Four linked paper claims, fixed 1.2B target, five-seed I1, mature-horizon S2, and V4.1 systems taxonomy |
 
 ## Conventions

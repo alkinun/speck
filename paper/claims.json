@@ -20,6 +20,7 @@
       "evidence": [
         "findings/204_release_and_source_use_policy.md",
         "findings/208_production_data_calibration_2b.md",
+        "findings/209_production_calibration_fallback_decision.md",
         "results/data/production-data-calibration-2b-20260910.json"
       ],
       "planned_outputs": [

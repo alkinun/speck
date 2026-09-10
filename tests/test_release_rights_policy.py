@@ -191,3 +191,29 @@ def test_complete_calibration_successor_requires_explicit_fallback_decision():
     assert _sha256(ROOT / identity["path"]) == identity["sha256"]
     assert plan["real_manifest"]["remaining_stages"] == []
     assert plan["real_manifest"]["project_owner_fallback_decision"] == "pending"
+
+
+def test_project_owner_accepts_calibration_through_150b_but_not_500b():
+    fallback_path = FLAGSHIP / "production_data_calibration_fallback_v1.json"
+    fallback = json.loads(fallback_path.read_text())
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v9.json").read_text())
+
+    assert fallback["status"] == "project_owner_accepted_non_gpu_operations_fallback_through_150B"
+    assert fallback["authority"] == {
+        "authority_type": "human",
+        "name": "Alkin Unlu",
+        "organization": "SpeckLabs",
+        "role": "Project owner",
+    }
+    assert fallback["decision"]["20B_rehearsal"].startswith("do not resume")
+    assert fallback["decision"]["150B_branch"].startswith("conditionally operationally viable")
+    assert fallback["decision"]["500B_branch"].startswith("blocked")
+    assert fallback["training_authority"] is False
+    assert (
+        _sha256(ROOT / fallback["calibration_analysis"]["path"])
+        == fallback["calibration_analysis"]["sha256"]
+    )
+    assert plan["status"] == "2B_calibration_fallback_accepted_through_150B"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    decision = plan["real_manifest"]["project_owner_fallback_decision"]
+    assert _sha256(ROOT / decision["path"]) == decision["sha256"]
