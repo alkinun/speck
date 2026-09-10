@@ -1,0 +1,243 @@
+{
+  "acquisition": {
+    "elapsed_seconds": 6646.960854004001,
+    "gitleaks_findings": 3117,
+    "records_written_before_gitleaks": 2318261,
+    "rejections": {
+      "adult_host": 5,
+      "benchmark_contamination": 20357,
+      "duplicate_lines": 4647,
+      "gitleaks": 2167,
+      "raw_email_or_ipv4": 17641
+    },
+    "sources": {
+      "common_pile_pubmed": {
+        "files_completed": 1,
+        "holdout_tokens": 6488859,
+        "records": 11922,
+        "train_tokens": 120083009
+      },
+      "common_pile_stackv2_edu": {
+        "files_completed": 3,
+        "holdout_tokens": 19519814,
+        "records": 249284,
+        "train_tokens": 360064875
+      },
+      "cosmopedia_v2": {
+        "files_completed": 1,
+        "holdout_tokens": 12333035,
+        "records": 313598,
+        "train_tokens": 240014614
+      },
+      "finemath_4plus": {
+        "files_completed": 2,
+        "holdout_tokens": 12874459,
+        "records": 172328,
+        "train_tokens": 240040327
+      },
+      "finewiki_en": {
+        "files_completed": 1,
+        "holdout_tokens": 6426545,
+        "records": 125782,
+        "train_tokens": 120114527
+      },
+      "ultrafineweb_en_v1_4": {
+        "files_completed": 36,
+        "holdout_tokens": 69206638,
+        "records": 1445347,
+        "train_tokens": 1320195554
+      }
+    }
+  },
+  "authority": "technical assessment only; explicit project-owner fallback acceptance remains required; no production operations or training authority",
+  "batched_dedup_rate_basis": {
+    "advanced_records": 1780560,
+    "authority": "conservative observed successor segment; not isolated steady-state throughput",
+    "completed_records_seen": 2316094,
+    "records_per_second": 155.79884759756726,
+    "start_checkpoint_records_seen": 535534,
+    "wall_seconds_including_state_verification_and_finalization": 11428.582608
+  },
+  "deduplication": {
+    "counts": {
+      "records_removed_exact": 6077,
+      "records_removed_near": 2397,
+      "records_retained": 2307620,
+      "records_seen": 2316094
+    },
+    "index": {
+      "band_entries": 36860064,
+      "bytes": 2907049984,
+      "documents": 2307620,
+      "path": "near_duplicates.sqlite3",
+      "sha256": "96255e8be09232f93e7f307af621d364a32faaebf7d715c98d93ff590cb93a81"
+    },
+    "removal_rate": 0.0036587461476088622
+  },
+  "firewall": {
+    "exact_content_hash_overlap": 0,
+    "manifest_sha256": "c70d3ceb6cbe317f80f62a4023979b26988e13963cbd32af1ab2569e5e77fa32"
+  },
+  "format": "speck_production_data_calibration_analysis",
+  "format_version": 1,
+  "gates": {
+    "acquisition_cleanup": "pass",
+    "firewall_training_disjointness": "pass",
+    "global_exact_deduplication": "pass",
+    "global_near_deduplication": "pass",
+    "interruption_resume": "pass",
+    "packing_integrity": "pass",
+    "source_identity": "pass"
+  },
+  "implementation_lineage": [
+    "2a474e9",
+    "7ae870b",
+    "3e98d2a"
+  ],
+  "metrics": {
+    "download_bytes": 12287310046,
+    "download_bytes_per_second": 1848560.6152770347,
+    "filtered_bytes": 9784446236,
+    "packed_bytes": 4000016080,
+    "packed_tokens": 2000008040,
+    "packing_tokens_per_second": 6902497.179011496,
+    "peak_rss_bytes": 675074048,
+    "records_retained": 2307620,
+    "records_seen": 2316094,
+    "sqlite_index_bytes": 2907049984,
+    "unique_tokens": 2000008040
+  },
+  "plan": {
+    "fingerprint": "87e6e1d9d8352d36907da5fa7cd106f00149d7d0f418c2d75ef8de87afa14eca",
+    "path": "research/flagship/data_calibration_2b_v1/production_plan.json",
+    "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"
+  },
+  "recommended_decision": "accept the 2B calibration as the P0 non-GPU operations fallback through the 150B branch; do not resume the full 20B rehearsal now; keep 500B blocked unless E3 requires it and a successor operations/storage plan passes",
+  "recorded_on": "2026-09-10",
+  "resume": {
+    "acquired_records": 2318261,
+    "acquisition_manifest_sha256": "fb53f0f6651c7da987241b9a4b3f0f03ff318c4b66ccac93fdced00942da6e01",
+    "completed_source_boundaries": 6,
+    "probe_logical_sqlite_identity": {
+      "bands": {
+        "rows": 31968,
+        "sha256": "afa4a23c1cee63e744390d28efcfcf3a82ef988895f96b36b6a0802081f80711"
+      },
+      "checkpoints": {
+        "rows": 22,
+        "sha256": "fae9e49f4d8c1a3b5fc01c704c13aba53adaefb30b51c565a2fa86955ae18803"
+      },
+      "docs": {
+        "rows": 2000,
+        "sha256": "adf29de58a68974cff45b0cc39ff8aff7922eb95d041fa2619ff496ced7ddfbc"
+      }
+    },
+    "probe_output_sha256": "8152bd93ad3b1994be74e97a902c616899f3a1105a1db7ba87c0e9e126354ca2",
+    "probe_physical_sqlite_sha256": {
+      "authority": "diagnostic only; SQLite page layout is not the logical index identity",
+      "equal": false,
+      "resumed": "9cee19a5a568134394c809fb6d789891afb6e914eb4ba38e14f374993b7106ac",
+      "uninterrupted": "076ae69fa7ed2ebc18b3326602b4aea6572c8bd97ea2b66f7cfe84f17d0db318"
+    },
+    "probe_records_seen": 2000,
+    "resume_basis": "durable source-file acquisition checkpoints, a real-data injected record-level global-dedup interruption matching uninterrupted output, and verified source-level packing reopen"
+  },
+  "runtime_manifest": {
+    "path": "/mnt/speck-data/speck/data-calibration-2b-v1/calibration-manifest.json",
+    "sha256": "04930fbc32e57903478767326639a89eb3a37b400aa730d3f795b05009ef4106"
+  },
+  "scale_projections": {
+    "150000000000": {
+      "acquisition_hours_at_measured_rate": 138.47835112508335,
+      "current_pipeline_live_bytes_approx": 1985696890200.0,
+      "deduplicated_output_bytes_approx": 733833467700.0,
+      "download_bytes": 921548253450.0,
+      "filtered_acquisition_bytes": 733833467700.0,
+      "global_dedup_hours_at_conservative_batched_rate": 309.7067730434661,
+      "linear_scale_factor": 75.0,
+      "packed_bytes": 300001206000.0,
+      "packing_hours_at_measured_rate": 6.036462686774142,
+      "serial_total_hours_approx": 454.2215868553236,
+      "sqlite_index_bytes": 218028748800.0,
+      "target_tokens": 150000000000
+    },
+    "20000000000": {
+      "acquisition_hours_at_measured_rate": 18.46378015001111,
+      "current_pipeline_live_bytes_approx": 264759585360.0,
+      "deduplicated_output_bytes_approx": 97844462360.0,
+      "download_bytes": 122873100460.0,
+      "filtered_acquisition_bytes": 97844462360.0,
+      "global_dedup_hours_at_conservative_batched_rate": 41.29423640579549,
+      "linear_scale_factor": 10.0,
+      "packed_bytes": 40000160800.0,
+      "packing_hours_at_measured_rate": 0.8048616915698855,
+      "serial_total_hours_approx": 60.56287824737649,
+      "sqlite_index_bytes": 29070499840.0,
+      "target_tokens": 20000000000
+    },
+    "500000000000": {
+      "acquisition_hours_at_measured_rate": 461.59450375027785,
+      "current_pipeline_live_bytes_approx": 6618989634000.0,
+      "deduplicated_output_bytes_approx": 2446111559000.0,
+      "download_bytes": 3071827511500.0,
+      "filtered_acquisition_bytes": 2446111559000.0,
+      "global_dedup_hours_at_conservative_batched_rate": 1032.3559101448873,
+      "linear_scale_factor": 250.0,
+      "packed_bytes": 1000004020000.0,
+      "packing_hours_at_measured_rate": 20.121542289247138,
+      "serial_total_hours_approx": 1514.0719561844123,
+      "sqlite_index_bytes": 726762496000.0,
+      "target_tokens": 500000000000
+    }
+  },
+  "stage_results": [
+    {
+      "id": "source_identity",
+      "result": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/stage-results/source_identity.json",
+        "sha256": "c89c99c4261b7938eca0482c1d3adb1d7970a6128cc87afd1d2fab9cdaea0d26"
+      }
+    },
+    {
+      "id": "acquisition",
+      "result": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/stage-results/acquisition.json",
+        "sha256": "6d8a41c678da6072289f12a845af090ee50b1c99609f44d434e76e02f05239cf"
+      }
+    },
+    {
+      "id": "global_dedup",
+      "result": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/stage-results/global_dedup.json",
+        "sha256": "cf1d0651872c85cde0b84adad2fb9786b75266701048dcce5cdc5ab38b0390b4"
+      }
+    },
+    {
+      "id": "packing",
+      "result": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/stage-results/packing.json",
+        "sha256": "4926340ce0734802547372c25e66eca158eec63cacf07570afcd79272012f92b"
+      }
+    },
+    {
+      "id": "resume_cleanup",
+      "result": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/stage-results/resume_cleanup.json",
+        "sha256": "be408ba1bf00e0487dabfe0d720272e7b8971f397583dff5689a413c67c4383b"
+      }
+    },
+    {
+      "id": "firewall_disjointness",
+      "result": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/stage-results/firewall_disjointness.json",
+        "sha256": "2785a6f2c1bc1b288cf79d9eb760b7b9f125023c7bff154b72a300b15cab8b22"
+      }
+    }
+  ],
+  "status": "2B_all_gates_pass_scale_fallback_decision_pending",
+  "technical_assessment": {
+    "150B": "fits current storage at approximately 1.99 TB decimal live working set; approximately 18.9 serial days; viable only with E3 repetition decision, cleanup checkpoints, and ongoing capacity monitoring",
+    "20B": "fits current storage; approximately 2.5 serial days under conservative measured rates; full pre-D5 rerun is not recommended",
+    "500B": "current approximately 6.62 TB decimal live working set exceeds the 5.0 TiB available volume and approximately 63.1 serial days is operationally unacceptable; requires pipeline cleanup/parallelization and/or more storage"
+  }
+}

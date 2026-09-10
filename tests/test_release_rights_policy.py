@@ -180,3 +180,14 @@ def test_logical_resume_successor_binds_packed_state_and_sqlite_qualification():
         "firewall_disjointness",
         "scale_projection",
     ]
+
+
+def test_complete_calibration_successor_requires_explicit_fallback_decision():
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v8.json").read_text())
+
+    assert plan["status"] == "2B_calibration_complete_fallback_decision_pending"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    identity = plan["real_manifest"]["calibration_analysis"]
+    assert _sha256(ROOT / identity["path"]) == identity["sha256"]
+    assert plan["real_manifest"]["remaining_stages"] == []
+    assert plan["real_manifest"]["project_owner_fallback_decision"] == "pending"

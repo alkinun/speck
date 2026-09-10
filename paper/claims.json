@@ -18,7 +18,9 @@
         "research/flagship/source_rights_acceptance_v1.json"
       ],
       "evidence": [
-        "findings/204_release_and_source_use_policy.md"
+        "findings/204_release_and_source_use_policy.md",
+        "findings/208_production_data_calibration_2b.md",
+        "results/data/production-data-calibration-2b-20260910.json"
       ],
       "planned_outputs": [
         "six-category data funnel and response-surface figure",

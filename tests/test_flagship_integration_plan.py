@@ -95,7 +95,7 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "source_registry": "research/flagship/source_registry_v2.json",
         "source_rights": "research/flagship/source_rights_acceptance_v1.json",
         "data_calibration": "research/flagship/data_calibration_2b_v1/production_plan.json",
-        "data_rehearsal": "research/flagship/data_rehearsal_plan_v7.json",
+        "data_rehearsal": "research/flagship/data_rehearsal_plan_v8.json",
         "data_launch": "research/flagship/data_launch_plan_v2.json",
         "lab_direction": "research/DIRECTION.md",
     }

@@ -221,6 +221,7 @@ history in order only when auditing provenance or a retired decision:
 206. [205 — Grant 1 is organized around allocation, transfer, and held-out realization](205_allocation_thesis_program.md)
 207. [206 — Batched MinHash preserves exact dedup signatures](206_production_minhash_batch_successor.md)
 208. [207 — Resume equivalence is logical database identity](207_sqlite_logical_resume_equivalence.md)
+209. [208 — The 2B production-data path passes](208_production_data_calibration_2b.md)
 
 Conventions:
 
