@@ -1,0 +1,102 @@
+{
+  "format": "speck_flagship_firewall_plan",
+  "format_version": 2,
+  "status": "calibrated_production_input_plan_frozen_not_consumer_or_training_authority",
+  "supersedes": {
+    "path": "research/flagship/firewall_plan.json",
+    "sha256": "e0b787a2ca5b6e4123f8b01de4673d387b3efade5bf81d87f7e774c6ec0d15ed",
+    "repository_revision": "3d6a086",
+    "reason": "freeze real targets and permit the project-owner 2B calibration fallback without weakening partition consumer or sealed-audit boundaries"
+  },
+  "authority": {
+    "rights_record": {
+      "path": "research/flagship/source_rights_acceptance_v1.json",
+      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+    },
+    "operations_fallback": {
+      "path": "research/flagship/production_data_calibration_fallback_v1.json",
+      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407"
+    }
+  },
+  "input_preparation": {
+    "path": "research/flagship/firewall_v2/input_plan.json",
+    "sha256": "100f48ffc671d4962cc2f2e3cd249f4d7756795ef521818f2734ede8e798bac7",
+    "output_directory": "/mnt/speck-data/speck/firewall-inputs-v1",
+    "status": "pending"
+  },
+  "targets": {
+    "tokenizer_train_bytes_per_category": 100000000,
+    "tokenizer_eval_bytes_per_category": 10000000,
+    "selection_bytes_per_category": 20000000,
+    "minimum_unseen_selection_bytes_per_category": 10000000,
+    "D5_tokenizer_bytes_per_category": 10000000,
+    "E2_mixture_bytes_per_category": 20000000
+  },
+  "partition_seeds": {
+    "tokenizer_train": 4101,
+    "tokenizer_eval": 4201,
+    "selection_heldout": 4301,
+    "D5_tokenizer": 4401,
+    "E2_mixture": 4501
+  },
+  "source_roles": {
+    "per_category": [
+      "one calibration-primary source",
+      "one technically qualified unseen source"
+    ],
+    "group_field": "firewall_group",
+    "near_dedup_precedence": "unseen before primary",
+    "training_mixture_eligible": {
+      "primary": true,
+      "unseen": false
+    }
+  },
+  "implementation": {
+    "input_module": [
+      "speck/firewall_inputs.py",
+      "fce9faa9338c0f78096f4ce24a3a0b636821e048648864c174f71093af927739"
+    ],
+    "input_cli": [
+      "scripts/firewall_inputs_prepare.py",
+      "42985227989cc360b18b4d2aef06fdee8c4a43bfab14424a6b3e878df5aa4950"
+    ],
+    "config_freeze_cli": [
+      "scripts/firewall_config_freeze.py",
+      "4fa8e9c3ef2e040c6e5185e16dcc344f6be324a923530d7895a2c5306023a387"
+    ],
+    "firewall_module": [
+      "speck/data_firewall_calibrated.py",
+      "e4ed62a4f57a5cf3f98eed2dbaa5d6e975393831438ed411553f8d6238f8527d"
+    ],
+    "firewall_cli": [
+      "scripts/data_firewall_calibrated_build.py",
+      "467ed312dd2740dccd295a66045333ab0e2303763bbf79a7931b6ce6814ce0d3"
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/firewall-v2",
+  "sealed_audits": [
+    {
+      "id": "D5_tokenizer",
+      "required_finalists": 2,
+      "fallback": "mistral-32k"
+    },
+    {
+      "id": "E2_mixture",
+      "required_finalists": 3,
+      "fallback": "balanced_prior"
+    }
+  ],
+  "consumer_policy": {
+    "tokenizer_training": "tokenizer_train only",
+    "tokenizer_static_evaluation": "tokenizer_eval only",
+    "data_selection": "selection_heldout only",
+    "sealed_audits": "one-opening protocol only",
+    "model_training": "forbidden"
+  },
+  "remaining_before_construction": [
+    "prepare deterministic source-balanced views",
+    "globally exact and verified-near deduplicate primary plus unseen views",
+    "materialize final firewall config from prepared output hashes"
+  ],
+  "training_authority": false
+}

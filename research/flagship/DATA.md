@@ -107,20 +107,21 @@ Three disjoint data partitions are frozen before training:
 All benchmark prompts and reference answers are also decontaminated from training candidates before
 packing. Contamination checks and removals are recorded per source and per benchmark.
 
-The first executable firewall contract is
+The first executable firewall contract was
 [`web_contamination_v1.json`](web_contamination_v1.json). It freezes 20 short-context, math, and code
 payloads (63,652 tasks), independent normalized exact-field matching, task-unique 13-gram critical
 matching, and 10-gram sensitivity disclosure. Its bounded web successors are technical evidence, not
 training authority; source rights, production deduplication, and cleanup/resume still gate use.
 
-[`firewall_plan.json`](firewall_plan.json) freezes the executable partition and consumer contract
-without choosing previously unspecified real held-out/audit byte sizes. The fixture-qualified builder
-requires explicit equal-category targets, globally disjoint content hashes, unseen-source bytes,
-held-out domains, and distinct `D5_tokenizer`/`E2_mixture` seeds. Generic consumers cannot read sealed
-files; an opening claim is durably recorded before all required finalist payloads become readable, so
-a failed opening cannot be retried. Fixture outputs cannot authorize real consumers. Production
-construction additionally requires hash-bound human rights acceptance covering every source and a
-production-operations record passing global exact/near deduplication, cleanup, and resume gates.
+[`firewall_plan_v2.json`](firewall_plan_v2.json) is the active calibrated-production successor. It
+freezes real held-out/audit byte targets, primary/unseen source roles, the accepted 2B operations
+fallback, deterministic view preparation, global exact/verified-near deduplication, and unchanged
+consumer/sealed-audit boundaries. The fixture-qualified predecessor builder requires explicit
+equal-category targets, globally disjoint content hashes, unseen-source bytes, held-out groups, and
+distinct `D5_tokenizer`/`E2_mixture` seeds. Generic consumers cannot read sealed files; an opening claim
+is durably recorded before all required finalist payloads become readable, so a failed opening cannot
+be retried. Production construction binds the completed human rights record and project-owner
+calibration fallback; neither permits model training or audit opening.
 
 [`heldout_evaluation_plan_v1.json`](heldout_evaluation_plan_v1.json) is an additive pre-results
 successor for evaluation, not a replacement firewall. Following Magic's pretraining lesson that parser

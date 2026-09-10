@@ -1,0 +1,174 @@
+{
+  "format": "speck_firewall_input_preparation",
+  "format_version": 1,
+  "status": "preparation_authorized_not_consumer_or_training_authority",
+  "seed": 20260910,
+  "operations_fallback": {
+    "path": "../production_data_calibration_fallback_v1.json",
+    "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407"
+  },
+  "deny_ledger": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+    "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+  },
+  "deduplication": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "bands": 16,
+    "verified_jaccard_threshold": 0.8,
+    "domain_match": "exact_or_subdomain",
+    "checkpoint_records": 10000
+  },
+  "inputs": [
+    {
+      "id": "web_primary",
+      "source_id": "ultrafineweb_en_v1_4",
+      "category": "web",
+      "role": "primary",
+      "input": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__ultrafineweb_en_v1_4.jsonl",
+        "sha256": "e5aa30df4e97e4c67dd070d47052ce9880dc12db757595d25b3f930ee84e90e7"
+      },
+      "view_target_bytes": 200000000,
+      "firewall_group": "primary:ultrafineweb_en_v1_4"
+    },
+    {
+      "id": "web_unseen",
+      "source_id": "fineweb_edu",
+      "category": "web",
+      "role": "unseen",
+      "input": {
+        "path": "/mnt/speck-data/speck/source-qualification/web-contamination-v1/fineweb_edu.jsonl",
+        "sha256": "36ba868099eb2e999ea6c909fcb36ebba8167bb713391746e97c462fef413143"
+      },
+      "view_target_bytes": 25000000,
+      "firewall_group": "unseen:fineweb_edu"
+    },
+    {
+      "id": "code_primary",
+      "source_id": "common_pile_stackv2_edu",
+      "category": "code",
+      "role": "primary",
+      "input": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__common_pile_stackv2_edu.jsonl",
+        "sha256": "f6fc95b04478c034fe165055b4ba7f6fa47fc2318f6593297410676cce7a2d3c"
+      },
+      "view_target_bytes": 200000000,
+      "firewall_group": "primary:common_pile_stackv2_edu"
+    },
+    {
+      "id": "code_unseen",
+      "source_id": "stack_v3_train_permissive",
+      "category": "code",
+      "role": "unseen",
+      "input": {
+        "path": "/mnt/speck-data/speck/source-qualification/code-cross-source-dedup-v2/stack_v3.jsonl",
+        "sha256": "bed4caa5fc55bc0c6fba351b2bff40ec129364a209c0b4542c940cabbf029752"
+      },
+      "view_target_bytes": 25000000,
+      "firewall_group": "unseen:stack_v3_train_permissive"
+    },
+    {
+      "id": "math_primary",
+      "source_id": "finemath_4plus",
+      "category": "math",
+      "role": "primary",
+      "input": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__finemath_4plus.jsonl",
+        "sha256": "2a58d196670e90ab383d6c6badb2af10418ccf72152277b0234766fe5c51654f"
+      },
+      "view_target_bytes": 200000000,
+      "firewall_group": "primary:finemath_4plus"
+    },
+    {
+      "id": "math_unseen",
+      "source_id": "megamath_web_pro",
+      "category": "math",
+      "role": "unseen",
+      "input": {
+        "path": "/mnt/speck-data/speck/source-qualification/math-contamination-v1/megamath_web_pro.jsonl",
+        "sha256": "bd1683a40b48b52ba67f806588a6d38732b7122f8c3664a8e3c0fa1f22a0d1e1"
+      },
+      "view_target_bytes": 25000000,
+      "firewall_group": "unseen:megamath_web_pro"
+    },
+    {
+      "id": "synthetic_primary",
+      "source_id": "cosmopedia_v2",
+      "category": "synthetic",
+      "role": "primary",
+      "input": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__cosmopedia_v2.jsonl",
+        "sha256": "d1863956b12aaa2040f8c59485f9172191d7bf724e5b624898fdc626fcf99887"
+      },
+      "view_target_bytes": 200000000,
+      "firewall_group": "primary:cosmopedia_v2"
+    },
+    {
+      "id": "synthetic_unseen",
+      "source_id": "ultrafineweb_l3_multi_style",
+      "category": "synthetic",
+      "role": "unseen",
+      "input": {
+        "path": "/mnt/speck-data/speck/source-qualification/synthetic-contamination-v2/ultrafineweb_l3_multi_style.jsonl",
+        "sha256": "c64a26706a283153e5e5623b31b24dc5e5c10009eef48a11201bdc181393a1f1"
+      },
+      "view_target_bytes": 25000000,
+      "firewall_group": "unseen:ultrafineweb_l3_multi_style"
+    },
+    {
+      "id": "science_primary",
+      "source_id": "common_pile_pubmed",
+      "category": "science",
+      "role": "primary",
+      "input": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__common_pile_pubmed.jsonl",
+        "sha256": "d2230edc4de02ee6646f8d815010ea07fc1c90f90966127459e635678e8d6eaf"
+      },
+      "view_target_bytes": 200000000,
+      "firewall_group": "primary:common_pile_pubmed"
+    },
+    {
+      "id": "science_unseen",
+      "source_id": "pes2o_v3",
+      "category": "science",
+      "role": "unseen",
+      "input": {
+        "path": "/mnt/speck-data/speck/source-qualification/science-contamination-v2/pes2o_v3.jsonl",
+        "sha256": "c5d9b36e8f657ab79e19d3a1adf905d0d48bc15f185538fc6212ad0e6c1973b8"
+      },
+      "view_target_bytes": 25000000,
+      "firewall_group": "unseen:pes2o_v3"
+    },
+    {
+      "id": "reference_primary",
+      "source_id": "finewiki_en",
+      "category": "reference",
+      "role": "primary",
+      "input": {
+        "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__finewiki_en.jsonl",
+        "sha256": "1fa95a0265b96af857075bb765fd1c75c41816312d15008008efc5e5ddd7b9e1"
+      },
+      "view_target_bytes": 200000000,
+      "firewall_group": "primary:finewiki_en"
+    },
+    {
+      "id": "reference_unseen",
+      "source_id": "common_pile_stackexchange",
+      "category": "reference",
+      "role": "unseen",
+      "input": {
+        "path": "/mnt/speck-data/speck/source-qualification/reference-contamination-v1/common_pile_stackexchange.jsonl",
+        "sha256": "a2b9c4b1abf7421c18f710f9e2a85fa0dd543dfdc2373b4c7a142bf7a46e0457"
+      },
+      "view_target_bytes": 25000000,
+      "firewall_group": "unseen:common_pile_stackexchange"
+    }
+  ],
+  "output_directory": "/mnt/speck-data/speck/firewall-inputs-v1"
+}

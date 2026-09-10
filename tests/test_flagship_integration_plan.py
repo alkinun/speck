@@ -98,6 +98,8 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "data_rehearsal": "research/flagship/data_rehearsal_plan_v9.json",
         "data_operations_fallback": "research/flagship/production_data_calibration_fallback_v1.json",
         "data_launch": "research/flagship/data_launch_plan_v2.json",
+        "data_firewall": "research/flagship/firewall_plan_v2.json",
+        "firewall_inputs": "research/flagship/firewall_v2/input_plan.json",
         "lab_direction": "research/DIRECTION.md",
     }
     assert all((ROOT / path).is_file() for path in execution["active_contracts"].values())
