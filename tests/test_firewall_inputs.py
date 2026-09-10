@@ -26,10 +26,11 @@ def _record(source, index):
 
 
 def test_real_firewall_plan_is_hash_bound_and_keeps_model_training_blocked():
-    plan = json.loads((ROOT / "research/flagship/firewall_plan_v2.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/firewall_plan_v3.json").read_text())
 
-    assert plan["status"] == (
-        "calibrated_production_input_plan_frozen_not_consumer_or_training_authority"
+    assert (
+        plan["status"]
+        == "calibrated_inputs_prepared_construction_config_frozen_not_training_authority"
     )
     assert plan["training_authority"] is False
     assert plan["final_corpus_exclusion"]["status"] == "required_before_data_launch"
@@ -46,6 +47,9 @@ def test_real_firewall_plan_is_hash_bound_and_keeps_model_training_blocked():
         assert _sha256(ROOT / identity["path"]) == identity["sha256"]
     input_identity = plan["input_preparation"]
     assert _sha256(ROOT / input_identity["path"]) == input_identity["sha256"]
+    assert _sha256(ROOT / input_identity["result"]["path"]) == input_identity["result"]["sha256"]
+    construction = plan["construction"]["config"]
+    assert _sha256(ROOT / construction["path"]) == construction["sha256"]
     for path, digest in plan["implementation"].values():
         assert _sha256(ROOT / path) == digest
 

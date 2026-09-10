@@ -1,0 +1,294 @@
+{
+  "authority": {
+    "operations_fallback": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/production_data_calibration_fallback_v1.json",
+      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407"
+    },
+    "rights_record": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/source_rights_acceptance_v1.json",
+      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+    }
+  },
+  "categories": [
+    {
+      "id": "web",
+      "inputs": [
+        {
+          "allocations": {
+            "D5_tokenizer": 10000000,
+            "E2_mixture": 20000000,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 10000000,
+            "tokenizer_train": 100000000
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "web_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_primary.jsonl",
+          "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547",
+          "source_id": "ultrafineweb_en_v1_4",
+          "text_field": "text",
+          "training_mixture_eligible": true
+        },
+        {
+          "allocations": {
+            "D5_tokenizer": 0,
+            "E2_mixture": 0,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 0,
+            "tokenizer_train": 0
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "web_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_unseen.jsonl",
+          "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65",
+          "source_id": "fineweb_edu",
+          "text_field": "text",
+          "training_mixture_eligible": false
+        }
+      ]
+    },
+    {
+      "id": "code",
+      "inputs": [
+        {
+          "allocations": {
+            "D5_tokenizer": 10000000,
+            "E2_mixture": 20000000,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 10000000,
+            "tokenizer_train": 100000000
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "code_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_primary.jsonl",
+          "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a",
+          "source_id": "common_pile_stackv2_edu",
+          "text_field": "text",
+          "training_mixture_eligible": true
+        },
+        {
+          "allocations": {
+            "D5_tokenizer": 0,
+            "E2_mixture": 0,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 0,
+            "tokenizer_train": 0
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "code_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_unseen.jsonl",
+          "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01",
+          "source_id": "stack_v3_train_permissive",
+          "text_field": "text",
+          "training_mixture_eligible": false
+        }
+      ]
+    },
+    {
+      "id": "math",
+      "inputs": [
+        {
+          "allocations": {
+            "D5_tokenizer": 10000000,
+            "E2_mixture": 20000000,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 10000000,
+            "tokenizer_train": 100000000
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "math_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_primary.jsonl",
+          "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f",
+          "source_id": "finemath_4plus",
+          "text_field": "text",
+          "training_mixture_eligible": true
+        },
+        {
+          "allocations": {
+            "D5_tokenizer": 0,
+            "E2_mixture": 0,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 0,
+            "tokenizer_train": 0
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "math_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_unseen.jsonl",
+          "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba",
+          "source_id": "megamath_web_pro",
+          "text_field": "text",
+          "training_mixture_eligible": false
+        }
+      ]
+    },
+    {
+      "id": "synthetic",
+      "inputs": [
+        {
+          "allocations": {
+            "D5_tokenizer": 10000000,
+            "E2_mixture": 20000000,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 10000000,
+            "tokenizer_train": 100000000
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "synthetic_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_primary.jsonl",
+          "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb",
+          "source_id": "cosmopedia_v2",
+          "text_field": "text",
+          "training_mixture_eligible": true
+        },
+        {
+          "allocations": {
+            "D5_tokenizer": 0,
+            "E2_mixture": 0,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 0,
+            "tokenizer_train": 0
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "synthetic_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_unseen.jsonl",
+          "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c",
+          "source_id": "ultrafineweb_l3_multi_style",
+          "text_field": "text",
+          "training_mixture_eligible": false
+        }
+      ]
+    },
+    {
+      "id": "science",
+      "inputs": [
+        {
+          "allocations": {
+            "D5_tokenizer": 10000000,
+            "E2_mixture": 20000000,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 10000000,
+            "tokenizer_train": 100000000
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "science_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_primary.jsonl",
+          "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0",
+          "source_id": "common_pile_pubmed",
+          "text_field": "text",
+          "training_mixture_eligible": true
+        },
+        {
+          "allocations": {
+            "D5_tokenizer": 0,
+            "E2_mixture": 0,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 0,
+            "tokenizer_train": 0
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "science_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_unseen.jsonl",
+          "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8",
+          "source_id": "pes2o_v3",
+          "text_field": "text",
+          "training_mixture_eligible": false
+        }
+      ]
+    },
+    {
+      "id": "reference",
+      "inputs": [
+        {
+          "allocations": {
+            "D5_tokenizer": 10000000,
+            "E2_mixture": 20000000,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 10000000,
+            "tokenizer_train": 100000000
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "reference_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_primary.jsonl",
+          "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f",
+          "source_id": "finewiki_en",
+          "text_field": "text",
+          "training_mixture_eligible": true
+        },
+        {
+          "allocations": {
+            "D5_tokenizer": 0,
+            "E2_mixture": 0,
+            "selection_heldout": 10000000,
+            "tokenizer_eval": 0,
+            "tokenizer_train": 0
+          },
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "firewall_group",
+          "format": "jsonl",
+          "id": "reference_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_unseen.jsonl",
+          "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e",
+          "source_id": "common_pile_stackexchange",
+          "text_field": "text",
+          "training_mixture_eligible": false
+        }
+      ]
+    }
+  ],
+  "format": "speck_calibrated_data_firewall",
+  "format_version": 1,
+  "output_directory": "/mnt/speck-data/speck/firewall-v2",
+  "policy": {
+    "global_dedup_normalization": "NFKC+lower+whitespace",
+    "minimum_heldout_domains_per_category": 1,
+    "minimum_selection_domains_per_category": 2,
+    "minimum_unseen_selection_bytes_per_category": 10000000,
+    "partition_seeds": {
+      "D5_tokenizer": 4401,
+      "E2_mixture": 4501,
+      "selection_heldout": 4301,
+      "tokenizer_eval": 4201,
+      "tokenizer_train": 4101
+    },
+    "sealed_audits": [
+      {
+        "bytes_per_category": 10000000,
+        "fallback": "mistral-32k",
+        "id": "D5_tokenizer",
+        "required_finalists": 2
+      },
+      {
+        "bytes_per_category": 20000000,
+        "fallback": "balanced_prior",
+        "id": "E2_mixture",
+        "required_finalists": 3
+      }
+    ],
+    "selection_bytes_per_category": 20000000,
+    "tokenizer_eval_bytes_per_category": 10000000,
+    "tokenizer_train_bytes_per_category": 100000000
+  },
+  "status": "construction_authorized_not_training_authority"
+}

@@ -1,0 +1,120 @@
+{
+  "format": "speck_flagship_firewall_plan",
+  "format_version": 3,
+  "status": "calibrated_inputs_prepared_construction_config_frozen_not_training_authority",
+  "supersedes": {
+    "path": "research/flagship/firewall_plan_v2.json",
+    "sha256": "067fe840080cdb26b80c20a0ee566ee05da9796f97b8b36df2333e9cf7f802ba",
+    "repository_revision": "a180cd5",
+    "reason": "bind the completed twelve-view global near-dedup result and final six-category construction configuration"
+  },
+  "authority": {
+    "rights_record": {
+      "path": "research/flagship/source_rights_acceptance_v1.json",
+      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+    },
+    "operations_fallback": {
+      "path": "research/flagship/production_data_calibration_fallback_v1.json",
+      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407"
+    }
+  },
+  "input_preparation": {
+    "path": "research/flagship/firewall_v2/input_plan.json",
+    "sha256": "100f48ffc671d4962cc2f2e3cd249f4d7756795ef521818f2734ede8e798bac7",
+    "output_directory": "/mnt/speck-data/speck/firewall-inputs-v1",
+    "status": "complete",
+    "result": {
+      "path": "results/data/firewall-input-preparation-20260910.json",
+      "sha256": "f2be42bd48edc3c5bbb50a2375464e193217fd328b02078401441cba4e91f463"
+    },
+    "runtime_manifest": {
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/manifest.json",
+      "sha256": "a5d0c274b8da9ce3a50beec8b55a89a474d552d924f6f3ced69961e5694f75de"
+    }
+  },
+  "targets": {
+    "tokenizer_train_bytes_per_category": 100000000,
+    "tokenizer_eval_bytes_per_category": 10000000,
+    "selection_bytes_per_category": 20000000,
+    "minimum_unseen_selection_bytes_per_category": 10000000,
+    "D5_tokenizer_bytes_per_category": 10000000,
+    "E2_mixture_bytes_per_category": 20000000
+  },
+  "partition_seeds": {
+    "tokenizer_train": 4101,
+    "tokenizer_eval": 4201,
+    "selection_heldout": 4301,
+    "D5_tokenizer": 4401,
+    "E2_mixture": 4501
+  },
+  "source_roles": {
+    "per_category": [
+      "one calibration-primary source",
+      "one technically qualified unseen source"
+    ],
+    "group_field": "firewall_group",
+    "near_dedup_precedence": "unseen before primary",
+    "training_mixture_eligible": {
+      "primary": true,
+      "unseen": false
+    }
+  },
+  "implementation": {
+    "input_module": [
+      "speck/firewall_inputs.py",
+      "fce9faa9338c0f78096f4ce24a3a0b636821e048648864c174f71093af927739"
+    ],
+    "input_cli": [
+      "scripts/firewall_inputs_prepare.py",
+      "42985227989cc360b18b4d2aef06fdee8c4a43bfab14424a6b3e878df5aa4950"
+    ],
+    "config_freeze_cli": [
+      "scripts/firewall_config_freeze.py",
+      "4fa8e9c3ef2e040c6e5185e16dcc344f6be324a923530d7895a2c5306023a387"
+    ],
+    "firewall_module": [
+      "speck/data_firewall_calibrated.py",
+      "e4ed62a4f57a5cf3f98eed2dbaa5d6e975393831438ed411553f8d6238f8527d"
+    ],
+    "firewall_cli": [
+      "scripts/data_firewall_calibrated_build.py",
+      "467ed312dd2740dccd295a66045333ab0e2303763bbf79a7931b6ce6814ce0d3"
+    ]
+  },
+  "output_directory": "/mnt/speck-data/speck/firewall-v2",
+  "sealed_audits": [
+    {
+      "id": "D5_tokenizer",
+      "required_finalists": 2,
+      "fallback": "mistral-32k"
+    },
+    {
+      "id": "E2_mixture",
+      "required_finalists": 3,
+      "fallback": "balanced_prior"
+    }
+  ],
+  "consumer_policy": {
+    "tokenizer_training": "tokenizer_train only",
+    "tokenizer_static_evaluation": "tokenizer_eval only",
+    "data_selection": "selection_heldout only",
+    "sealed_audits": "one-opening protocol only",
+    "model_training": "forbidden"
+  },
+  "final_corpus_exclusion": {
+    "status": "required_before_data_launch",
+    "rule": "all tokenizer_train, tokenizer_eval, selection_heldout, D5_tokenizer, and E2_mixture exact content hashes plus verified-near matches must take precedence over and be removed from every final model-training candidate",
+    "evidence": "publish exact and verified-near removal counts, zero final content-hash overlap, and hash-bound firewall plus final-corpus manifests",
+    "authority": "this firewall construction does not authorize a model-training corpus"
+  },
+  "remaining_before_construction": [],
+  "training_authority": false,
+  "construction": {
+    "config": {
+      "path": "research/flagship/firewall_v2/construction_config.json",
+      "sha256": "59726b4bd9ace4030a0a233150f6c2a62065b3f1b03d50c3b2cfd8bfb25d25d6"
+    },
+    "status": "pending",
+    "output_directory": "/mnt/speck-data/speck/firewall-v2"
+  }
+}

@@ -113,7 +113,7 @@ payloads (63,652 tasks), independent normalized exact-field matching, task-uniqu
 matching, and 10-gram sensitivity disclosure. Its bounded web successors are technical evidence, not
 training authority; source rights, production deduplication, and cleanup/resume still gate use.
 
-[`firewall_plan_v2.json`](firewall_plan_v2.json) is the active calibrated-production successor. It
+[`firewall_plan_v3.json`](firewall_plan_v3.json) is the active calibrated-production successor. It
 freezes real held-out/audit byte targets, primary/unseen source roles, the accepted 2B operations
 fallback, deterministic view preparation, global exact/verified-near deduplication, and unchanged
 consumer/sealed-audit boundaries. The fixture-qualified predecessor builder requires explicit

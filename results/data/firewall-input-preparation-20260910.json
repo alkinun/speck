@@ -1,0 +1,154 @@
+{
+  "counts": {
+    "records_removed_near": 4,
+    "records_retained": 288872,
+    "records_seen": 288876
+  },
+  "deduplication": {
+    "index": {
+      "band_entries": 4592080,
+      "bytes": 352157696,
+      "documents": 288872,
+      "path": "near_duplicates.sqlite3",
+      "sha256": "ada8d007fe18d6b0d78cd29a904be5530304aed6b60d5c29d1b2f621547ea8fc"
+    },
+    "manifest_sha256": "f8dc8f205a2e2963103d242317e3f8b0a07469aab88e27f1160fe5d26d43d8ce",
+    "policy": {
+      "bands": 16,
+      "domain_match": "exact_or_subdomain",
+      "maximum_document_tokens": 100000,
+      "minhash_seed": 42,
+      "minimum_document_tokens": 50,
+      "normalization": "NFKC+lower+lexical-code-tokens",
+      "num_perm": 128,
+      "shingle_tokens": 10,
+      "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+      "verified_jaccard_threshold": 0.8
+    },
+    "removals": {
+      "bytes": 1438,
+      "path": "removals.jsonl",
+      "sha256": "9760a0bcb1e9a578a30e0a6f28294c178488bb187d84811c703e6e314a48cc9c"
+    },
+    "unseen_precedence": true
+  },
+  "format": "speck_firewall_input_preparation_result",
+  "format_version": 1,
+  "gates": {
+    "consumer_authority": "blocked",
+    "global_exact_deduplication": "pass",
+    "global_verified_near_deduplication": "pass",
+    "model_training_authority": "blocked",
+    "published_hash_reverification": "pass",
+    "six_equal_category_primary_targets": "pass",
+    "six_unseen_source_targets": "pass",
+    "twelve_input_identities": "pass"
+  },
+  "git_revision": "87e713f",
+  "limitations": [
+    "the four near-duplicate removals are recorded externally and contain no redistributed corpus text in Git",
+    "final firewall construction remains required",
+    "final model-training candidates must exclude all firewall exact and verified-near matches before launch"
+  ],
+  "peak_service_memory_bytes": 5600000000,
+  "plan": {
+    "fingerprint": "8a4affdeeb55150cdd748fed3eb043a7467ff07cfdb8953da92e552d0a317e44",
+    "path": "research/flagship/firewall_v2/input_plan.json",
+    "sha256": "100f48ffc671d4962cc2f2e3cd249f4d7756795ef521818f2734ede8e798bac7"
+  },
+  "publication_policy": "metadata, counts, revisions, filters, hashes, citations, and removal policy only; no corpus text or partitions are committed",
+  "recorded_on": "2026-09-10",
+  "runtime_manifest": {
+    "path": "/mnt/speck-data/speck/firewall-inputs-v1/manifest.json",
+    "sha256": "a5d0c274b8da9ce3a50beec8b55a89a474d552d924f6f3ced69961e5694f75de"
+  },
+  "runtime_seconds": 1384.528,
+  "status": "source_balanced_views_and_global_near_dedup_pass",
+  "training_authority": false,
+  "views": {
+    "code_primary": {
+      "path": "code_primary.jsonl",
+      "records": 39659,
+      "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a",
+      "target_text_bytes": 200000000,
+      "text_bytes": 200002765
+    },
+    "code_unseen": {
+      "path": "code_unseen.jsonl",
+      "records": 6351,
+      "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01",
+      "target_text_bytes": 25000000,
+      "text_bytes": 25026059
+    },
+    "math_primary": {
+      "path": "math_primary.jsonl",
+      "records": 44084,
+      "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f",
+      "target_text_bytes": 200000000,
+      "text_bytes": 200003757
+    },
+    "math_unseen": {
+      "path": "math_unseen.jsonl",
+      "records": 9470,
+      "sha256": "e408fe02c1e515386ae21a8171d25641d39b6dd151852960c2c0edbf76464507",
+      "target_text_bytes": 25000000,
+      "text_bytes": 25001534
+    },
+    "reference_primary": {
+      "path": "reference_primary.jsonl",
+      "records": 55005,
+      "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f",
+      "target_text_bytes": 200000000,
+      "text_bytes": 200001127
+    },
+    "reference_unseen": {
+      "path": "reference_unseen.jsonl",
+      "records": 8418,
+      "sha256": "ebb97f8129d1ffab861686aa6ea36d13d27762ea113e9a3abd9ec6f5a91b7a4a",
+      "target_text_bytes": 25000000,
+      "text_bytes": 25000857
+    },
+    "science_primary": {
+      "path": "science_primary.jsonl",
+      "records": 5544,
+      "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0",
+      "target_text_bytes": 200000000,
+      "text_bytes": 200041322
+    },
+    "science_unseen": {
+      "path": "science_unseen.jsonl",
+      "records": 873,
+      "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8",
+      "target_text_bytes": 25000000,
+      "text_bytes": 25019815
+    },
+    "synthetic_primary": {
+      "path": "synthetic_primary.jsonl",
+      "records": 53356,
+      "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb",
+      "target_text_bytes": 200000000,
+      "text_bytes": 200000593
+    },
+    "synthetic_unseen": {
+      "path": "synthetic_unseen.jsonl",
+      "records": 9658,
+      "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c",
+      "target_text_bytes": 25000000,
+      "text_bytes": 25001953
+    },
+    "web_primary": {
+      "path": "web_primary.jsonl",
+      "records": 51046,
+      "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547",
+      "target_text_bytes": 200000000,
+      "text_bytes": 200000974
+    },
+    "web_unseen": {
+      "path": "web_unseen.jsonl",
+      "records": 5412,
+      "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65",
+      "target_text_bytes": 25000000,
+      "text_bytes": 25001321
+    }
+  }
+}
