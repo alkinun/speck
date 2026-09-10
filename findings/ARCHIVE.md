@@ -219,6 +219,7 @@ history in order only when auditing provenance or a retired decision:
 204. [203 — The flagship now validates transfer and assembly before scale](203_flagship_integrated_evidence_plan.md)
 205. [204 — Model release and guarded source-use policy are frozen](204_release_and_source_use_policy.md)
 206. [205 — Grant 1 is organized around allocation, transfer, and held-out realization](205_allocation_thesis_program.md)
+207. [206 — Batched MinHash preserves exact dedup signatures](206_production_minhash_batch_successor.md)
 
 Conventions:
 

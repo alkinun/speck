@@ -46,7 +46,7 @@ data. The trainer revalidates those artifacts after shard verification and befor
 No real receipt exists while the P0 data gates remain open.
 
 The active pre-access calibration runs through
-[`data_rehearsal_plan_v5.json`](data_rehearsal_plan_v5.json) and the frozen
+[`data_rehearsal_plan_v6.json`](data_rehearsal_plan_v6.json) and the frozen
 [`data_calibration_2b_v1/`](data_calibration_2b_v1/) plan: source
 identity, acquisition, global deduplication, packing, resume/cleanup, then firewall disjointness. The
 runner durably verifies completed stages and captures required resource/yield telemetry at 2B, then

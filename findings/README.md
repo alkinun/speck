@@ -88,6 +88,7 @@ status is tracked in [`paper/claims.json`](../paper/claims.json).
 | [Pre-access training and Slurm hardening](202_preaccess_training_and_slurm_hardening.md) | Safe-point requeue, completion, finite-value, identity, and budget gates |
 | [Integrated flagship evidence plan](203_flagship_integrated_evidence_plan.md) | E5 retirement, I1 data transfer, I2 assembled-recipe confirmation, and the paper claim spine |
 | [Release and source-use policy](204_release_and_source_use_policy.md) | MIT code, Apache-2.0 weights, no corpus redistribution, guarded source approval, and remaining production gates |
+| [Production MinHash batch successor](206_production_minhash_batch_successor.md) | Exact signature equivalence and faster resume for the 2B global-dedup calibration |
 | [Allocation-thesis program](205_allocation_thesis_program.md) | Four linked paper claims, fixed 1.2B target, five-seed I1, mature-horizon S2, and V4.1 systems taxonomy |
 
 ## Conventions

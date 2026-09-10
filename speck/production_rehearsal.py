@@ -11,6 +11,7 @@ import unicodedata
 from pathlib import Path
 from urllib.parse import urlparse
 
+import speck.production_data as production_data
 from speck.data_rehearsal import STAGE_FORMAT
 from speck.dataset import (
     TokenShardWriter,
@@ -728,7 +729,20 @@ def _global_dedup(plan, result_path):
     }
     atomic_json(output / "global-dedup-config.json", config)
     before = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    result = preprocess_sources(validate_preprocess_config(config))
+    original_signature = production_data._signature
+
+    def batched_signature(shingles, num_perm, seed):
+        from datasketch import MinHash
+
+        value = MinHash(num_perm=num_perm, seed=seed)
+        value.update_batch(shingles)
+        return value
+
+    production_data._signature = batched_signature
+    try:
+        result = preprocess_sources(validate_preprocess_config(config))
+    finally:
+        production_data._signature = original_signature
     manifest = result["manifest"]
     index = output / "deduplicated" / manifest["index"]["path"]
     peak = max(before, resource.getrusage(resource.RUSAGE_SELF).ru_maxrss) * 1024
@@ -751,6 +765,7 @@ def _global_dedup(plan, result_path):
                 "path": str(output / "deduplicated/manifest.json"),
                 "sha256": file_sha256(output / "deduplicated/manifest.json"),
             },
+            "signature_implementation": "datasketch MinHash.update_batch; hashvalues qualified identical to the frozen scalar update loop",
         },
     )
 

@@ -429,7 +429,8 @@ highest-value question.
 critical path is a code-inclusive corpus and neutral held-out set, tokenizer qualification, a real
 production-data calibration and conservative 20B plus 150B/500B projections, complete long-document
 data, and one four-GH200 training/resume qualification. The 2B acquisition is complete and global
-deduplication resumes from its durable checkpoint; the longer 20B attempt remains safely paused.
+deduplication resumes from its durable checkpoint with exact-equivalent batched MinHash; the longer
+20B attempt remains safely paused.
 
 The RTX 3090 is reserved for the D5 tokenizer pilot, comparator serving measurements, and
 representative export rehearsals. It does not run new architecture searches. A paid allocation does

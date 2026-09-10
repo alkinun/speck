@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 import speck.production_rehearsal as production_rehearsal
+from speck.code_near_duplicates import _signature
 from speck.production_rehearsal import (
     run_production_rehearsal_stage,
     validate_production_rehearsal_plan,
@@ -188,3 +189,14 @@ def test_unknown_stage_is_rejected_before_execution(tmp_path):
     plan = validate_production_rehearsal_plan(_fixture(tmp_path))
     with pytest.raises(ValueError, match="unknown production rehearsal stage"):
         run_production_rehearsal_stage(plan, "unknown", tmp_path / "result.json")
+
+
+def test_batched_minhash_is_identical_to_frozen_scalar_update():
+    from datasketch import MinHash
+
+    shingles = {f"shingle-{index}".encode() for index in range(1_000)}
+    scalar = _signature(shingles, 128, 42)
+    batched = MinHash(num_perm=128, seed=42)
+    batched.update_batch(shingles)
+
+    assert (scalar.hashvalues == batched.hashvalues).all()

@@ -155,3 +155,13 @@ def test_active_calibration_successor_records_resume_and_all_scale_projections()
     checkpoint = plan["real_manifest"]["observed_checkpoint"]
     assert checkpoint["records_seen"] == 505_534
     assert checkpoint["checkpoint_id"] == 54
+
+
+def test_batched_minhash_rehearsal_successor_binds_exact_qualification():
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v6.json").read_text())
+
+    assert plan["status"] == "2B_global_dedup_batched_exact_resume_ready"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    identity = plan["real_manifest"]["minhash_batch_qualification"]
+    assert _sha256(ROOT / identity["path"]) == identity["sha256"]
+    assert plan["real_manifest"]["observed_checkpoint"]["checkpoint_id"] == 57
