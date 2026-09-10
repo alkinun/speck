@@ -1,5 +1,6 @@
 import hashlib
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -7,6 +8,7 @@ import pytest
 import speck.production_rehearsal as production_rehearsal
 from speck.code_near_duplicates import _signature
 from speck.production_rehearsal import (
+    _logical_sqlite_identity,
     run_production_rehearsal_stage,
     validate_production_rehearsal_plan,
 )
@@ -200,3 +202,27 @@ def test_batched_minhash_is_identical_to_frozen_scalar_update():
     batched.update_batch(shingles)
 
     assert (scalar.hashvalues == batched.hashvalues).all()
+
+
+def test_logical_sqlite_identity_ignores_physical_insertion_order(tmp_path):
+    paths = [tmp_path / "forward.sqlite3", tmp_path / "reverse.sqlite3"]
+    rows = [
+        (1, 0, 0, "source", 1, 0, "a" * 64, "b" * 64),
+        (2, 1, 0, "source", 2, 100, "c" * 64, "d" * 64),
+    ]
+    for path, order in zip(paths, (rows, list(reversed(rows))), strict=True):
+        connection = sqlite3.connect(path)
+        connection.execute(
+            "CREATE TABLE docs (doc_seq INTEGER PRIMARY KEY, processed_index INTEGER, source_index INTEGER, source_id TEXT, line_number INTEGER, byte_offset INTEGER, content_sha256 TEXT, dedup_sha256 TEXT)"
+        )
+        connection.execute("CREATE TABLE bands (band INTEGER, band_hash BLOB, doc_seq INTEGER)")
+        connection.execute(
+            "CREATE TABLE checkpoints (checkpoint_id INTEGER PRIMARY KEY, processed_records INTEGER, next_doc_seq INTEGER, index_chain TEXT)"
+        )
+        connection.executemany("INSERT INTO docs VALUES (?, ?, ?, ?, ?, ?, ?, ?)", order)
+        connection.executemany("INSERT INTO bands VALUES (?, ?, ?)", [(0, b"x", 1), (0, b"y", 2)])
+        connection.execute("INSERT INTO checkpoints VALUES (1, 2, 2, ?)", ("e" * 64,))
+        connection.commit()
+        connection.close()
+
+    assert _logical_sqlite_identity(paths[0]) == _logical_sqlite_identity(paths[1])

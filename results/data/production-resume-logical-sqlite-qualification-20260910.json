@@ -1,0 +1,83 @@
+{
+  "authority": "resume-cleanup gate successor only; calibration firewall projection operations and training authority remain pending",
+  "counts": {
+    "equal": true,
+    "resumed": {
+      "records_retained": 2000,
+      "records_seen": 2000
+    },
+    "uninterrupted": {
+      "records_retained": 2000,
+      "records_seen": 2000
+    }
+  },
+  "decision": "resume equivalence requires exact cleaned outputs removals and counts plus integrity-checked logical docs bands and checkpoints hashes; physical SQLite hash is retained as a diagnostic only",
+  "exact_outputs": {
+    "equal": true,
+    "resumed": "8152bd93ad3b1994be74e97a902c616899f3a1105a1db7ba87c0e9e126354ca2",
+    "uninterrupted": "8152bd93ad3b1994be74e97a902c616899f3a1105a1db7ba87c0e9e126354ca2"
+  },
+  "exact_removals": {
+    "equal": true,
+    "resumed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "uninterrupted": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "format": "speck_production_resume_logical_sqlite_qualification",
+  "format_version": 1,
+  "implementation": {
+    "module": [
+      "speck/production_rehearsal.py",
+      "52501aa8e0597ab542db96cddcc8870ec2ffe5e682cc22419cd31ee03cf15e62"
+    ],
+    "tests": [
+      "tests/test_production_rehearsal.py",
+      "fa411d51d0a08cf71c5650ac39bf570d9aa952f2816175f6a0318d5ed6100c8f"
+    ]
+  },
+  "logical_sqlite": {
+    "equal": true,
+    "integrity": "pass_both",
+    "resumed": {
+      "bands": {
+        "rows": 31968,
+        "sha256": "afa4a23c1cee63e744390d28efcfcf3a82ef988895f96b36b6a0802081f80711"
+      },
+      "checkpoints": {
+        "rows": 22,
+        "sha256": "fae9e49f4d8c1a3b5fc01c704c13aba53adaefb30b51c565a2fa86955ae18803"
+      },
+      "docs": {
+        "rows": 2000,
+        "sha256": "adf29de58a68974cff45b0cc39ff8aff7922eb95d041fa2619ff496ced7ddfbc"
+      }
+    },
+    "uninterrupted": {
+      "bands": {
+        "rows": 31968,
+        "sha256": "afa4a23c1cee63e744390d28efcfcf3a82ef988895f96b36b6a0802081f80711"
+      },
+      "checkpoints": {
+        "rows": 22,
+        "sha256": "fae9e49f4d8c1a3b5fc01c704c13aba53adaefb30b51c565a2fa86955ae18803"
+      },
+      "docs": {
+        "rows": 2000,
+        "sha256": "adf29de58a68974cff45b0cc39ff8aff7922eb95d041fa2619ff496ced7ddfbc"
+      }
+    }
+  },
+  "physical_sqlite": {
+    "equal": false,
+    "interpretation": "SQLite page-layout bytes are not a stable logical database identity after interrupted execution",
+    "resumed_bytes": 2351104,
+    "resumed_sha256": "9cee19a5a568134394c809fb6d789891afb6e914eb4ba38e14f374993b7106ac",
+    "uninterrupted_bytes": 2351104,
+    "uninterrupted_sha256": "076ae69fa7ed2ebc18b3326602b4aea6572c8bd97ea2b66f7cfe84f17d0db318"
+  },
+  "probe": {
+    "input_sha256": "8152bd93ad3b1994be74e97a902c616899f3a1105a1db7ba87c0e9e126354ca2",
+    "records_seen": 2000
+  },
+  "recorded_on": "2026-09-10",
+  "status": "logical_resume_equivalence_pass_physical_page_identity_non_authoritative"
+}

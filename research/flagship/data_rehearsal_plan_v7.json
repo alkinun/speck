@@ -1,0 +1,112 @@
+{
+  "format": "speck_flagship_data_rehearsal_orchestration_plan",
+  "format_version": 7,
+  "status": "2B_packed_logical_resume_successor_ready",
+  "stage_order": [
+    "source_identity",
+    "acquisition",
+    "global_dedup",
+    "packing",
+    "resume_cleanup",
+    "firewall_disjointness"
+  ],
+  "required_gates": [
+    "source_identity",
+    "global_exact_deduplication",
+    "global_near_deduplication",
+    "packing_integrity",
+    "acquisition_cleanup",
+    "interruption_resume",
+    "firewall_training_disjointness"
+  ],
+  "required_metrics": [
+    "download_bytes",
+    "download_bytes_per_second",
+    "filtered_bytes",
+    "records_seen",
+    "records_retained",
+    "sqlite_index_bytes",
+    "peak_rss_bytes",
+    "packing_tokens_per_second",
+    "packed_tokens",
+    "packed_bytes",
+    "unique_tokens"
+  ],
+  "orchestration": {
+    "stage_commands_and_inputs_hash_bound": true,
+    "stdout_stderr_and_result_hash_bound": true,
+    "elapsed_rss_disk_and_free_space_recorded": true,
+    "completed_stages_skipped_only_after_reverification": true,
+    "changed_completed_result_or_log": "fail",
+    "packed_tokens_must_reach_target": true
+  },
+  "production_mode": {
+    "target_tokens": 20000000000,
+    "requires_signed_human_rights_record": true,
+    "operations_record_format": "speck_production_data_operations_qualification",
+    "operations_record_status": "production_data_operations_qualified",
+    "fixture_may_issue_operations_record": false
+  },
+  "real_manifest": {
+    "status": "acquisition_dedup_packing_complete_resume_successor_ready",
+    "calibration_plan": {
+      "path": "research/flagship/data_calibration_2b_v1/production_plan.json",
+      "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"
+    },
+    "target_tokens": 2000000000,
+    "required_output_format": "speck_production_data_scale_calibration",
+    "operations_authority": false,
+    "training_authority": false,
+    "paused_20B_attempt": "/mnt/speck-data/speck/data-rehearsal-20b-v1",
+    "decision_after_calibration": "use measured throughput memory disk and linear 20B projection to accept the non-GPU fallback or require resuming the full 20B run",
+    "required_projection_targets": [
+      20000000000,
+      150000000000,
+      500000000000
+    ],
+    "observed_checkpoint": {
+      "records_seen": 535534,
+      "records_retained": 534637,
+      "records_removed_exact": 722,
+      "records_removed_near": 175,
+      "checkpoint_id": 57
+    },
+    "resume_rule": "resume the unchanged global-dedup state; do not reacquire completed sources",
+    "minhash_batch_qualification": {
+      "path": "results/data/production-minhash-batch-qualification-20260910.json",
+      "sha256": "a7588168ef0031ae78adaa88a9eb803877a0d0f5dfc9d3f002e033b5b1dcc7a3"
+    },
+    "execution": "persistent user service; preserve exact plan fingerprint and checkpoint state",
+    "completed_stages": [
+      "source_identity",
+      "acquisition",
+      "global_dedup",
+      "packing"
+    ],
+    "packed_tokens": 2000008040,
+    "resume_logical_sqlite_qualification": {
+      "path": "results/data/production-resume-logical-sqlite-qualification-20260910.json",
+      "sha256": "230b19e714a164431fc24fb457c3ce67206b3fdea0930389539adba43fed564c"
+    },
+    "remaining_stages": [
+      "resume_cleanup",
+      "firewall_disjointness",
+      "scale_projection"
+    ]
+  },
+  "training_authority": "blocked_pending_calibration_completion_projection_decision_firewall_tokenizer_and_packed_data",
+  "supersedes": {
+    "path": "research/flagship/data_rehearsal_plan_v6.json",
+    "sha256": "6372cfe465e541ce745e80e9a90db0524d9ad86a7f64dd90868fe53d38023b62",
+    "repository_revision": "7ae870b",
+    "reason": "replace invalid physical SQLite byte equality with integrity-checked logical docs bands and checkpoints identity after the real interruption probe"
+  },
+  "rights_record": {
+    "path": "research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "release_policy": {
+    "path": "research/flagship/release_and_data_use_policy_v1.json",
+    "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+  }
+}

@@ -165,3 +165,18 @@ def test_batched_minhash_rehearsal_successor_binds_exact_qualification():
     identity = plan["real_manifest"]["minhash_batch_qualification"]
     assert _sha256(ROOT / identity["path"]) == identity["sha256"]
     assert plan["real_manifest"]["observed_checkpoint"]["checkpoint_id"] == 57
+
+
+def test_logical_resume_successor_binds_packed_state_and_sqlite_qualification():
+    plan = json.loads((FLAGSHIP / "data_rehearsal_plan_v7.json").read_text())
+
+    assert plan["status"] == "2B_packed_logical_resume_successor_ready"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    assert plan["real_manifest"]["packed_tokens"] == 2_000_008_040
+    identity = plan["real_manifest"]["resume_logical_sqlite_qualification"]
+    assert _sha256(ROOT / identity["path"]) == identity["sha256"]
+    assert plan["real_manifest"]["remaining_stages"] == [
+        "resume_cleanup",
+        "firewall_disjointness",
+        "scale_projection",
+    ]

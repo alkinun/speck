@@ -5,6 +5,7 @@ import json
 import os
 import resource
 import shutil
+import sqlite3
 import subprocess
 import time
 import unicodedata
@@ -961,10 +962,12 @@ def _resume_cleanup(plan, result_path):
     clean = preprocess_sources(probe_config("clean"))["manifest"]
     resumed_output = resumed["outputs"]["production_probe"]
     clean_output = clean["outputs"]["production_probe"]
+    resumed_logical = _logical_sqlite_identity(probe / "interrupted" / resumed["index"]["path"])
+    clean_logical = _logical_sqlite_identity(probe / "clean" / clean["index"]["path"])
     if (
         resumed_output["sha256"] != clean_output["sha256"]
         or resumed["removals"]["sha256"] != clean["removals"]["sha256"]
-        or resumed["index"]["sha256"] != clean["index"]["sha256"]
+        or resumed_logical != clean_logical
         or resumed["counts"] != clean["counts"]
     ):
         raise RuntimeError("resumed production-data probe differs from uninterrupted output")
@@ -991,8 +994,48 @@ def _resume_cleanup(plan, result_path):
             "resume_basis": "durable source-file acquisition checkpoints, a real-data injected record-level global-dedup interruption matching uninterrupted output, and verified source-level packing reopen",
             "probe_records_seen": resumed["counts"]["records_seen"],
             "probe_output_sha256": resumed_output["sha256"],
+            "probe_logical_sqlite_identity": resumed_logical,
+            "probe_physical_sqlite_sha256": {
+                "resumed": resumed["index"]["sha256"],
+                "uninterrupted": clean["index"]["sha256"],
+                "equal": resumed["index"]["sha256"] == clean["index"]["sha256"],
+                "authority": "diagnostic only; SQLite page layout is not the logical index identity",
+            },
         },
     )
+
+
+def _logical_sqlite_identity(path):
+    path = Path(path)
+    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        if connection.execute("PRAGMA integrity_check").fetchone() != ("ok",):
+            raise ValueError("resume probe SQLite integrity check failed")
+        tables = {
+            "docs": (
+                "SELECT doc_seq, processed_index, source_index, source_id, line_number, "
+                "byte_offset, content_sha256, dedup_sha256 FROM docs ORDER BY doc_seq"
+            ),
+            "bands": "SELECT band, band_hash, doc_seq FROM bands ORDER BY band, band_hash, doc_seq",
+            "checkpoints": (
+                "SELECT checkpoint_id, processed_records, next_doc_seq, index_chain "
+                "FROM checkpoints ORDER BY checkpoint_id"
+            ),
+        }
+        result = {}
+        for table, query in tables.items():
+            digest = hashlib.sha256()
+            rows = 0
+            for row in connection.execute(query):
+                values = [value.hex() if isinstance(value, bytes) else value for value in row]
+                digest.update(
+                    (json.dumps(values, sort_keys=True, separators=(",", ":")) + "\n").encode()
+                )
+                rows += 1
+            result[table] = {"rows": rows, "sha256": digest.hexdigest()}
+        return result
+    finally:
+        connection.close()
 
 
 def _firewall_disjointness(plan, result_path):
