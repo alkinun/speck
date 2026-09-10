@@ -93,6 +93,12 @@
     "sealed_audits": "one-opening protocol only",
     "model_training": "forbidden"
   },
+  "final_corpus_exclusion": {
+    "status": "required_before_data_launch",
+    "rule": "all tokenizer_train, tokenizer_eval, selection_heldout, D5_tokenizer, and E2_mixture exact content hashes plus verified-near matches must take precedence over and be removed from every final model-training candidate",
+    "evidence": "publish exact and verified-near removal counts, zero final content-hash overlap, and hash-bound firewall plus final-corpus manifests",
+    "authority": "this firewall construction does not authorize a model-training corpus"
+  },
   "remaining_before_construction": [
     "prepare deterministic source-balanced views",
     "globally exact and verified-near deduplicate primary plus unseen views",

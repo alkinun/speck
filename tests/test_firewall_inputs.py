@@ -32,6 +32,8 @@ def test_real_firewall_plan_is_hash_bound_and_keeps_model_training_blocked():
         "calibrated_production_input_plan_frozen_not_consumer_or_training_authority"
     )
     assert plan["training_authority"] is False
+    assert plan["final_corpus_exclusion"]["status"] == "required_before_data_launch"
+    assert "verified-near" in plan["final_corpus_exclusion"]["rule"]
     assert plan["targets"] == {
         "tokenizer_train_bytes_per_category": 100_000_000,
         "tokenizer_eval_bytes_per_category": 10_000_000,

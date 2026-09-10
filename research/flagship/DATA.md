@@ -122,6 +122,9 @@ distinct `D5_tokenizer`/`E2_mixture` seeds. Generic consumers cannot read sealed
 is durably recorded before all required finalist payloads become readable, so a failed opening cannot
 be retried. Production construction binds the completed human rights record and project-owner
 calibration fallback; neither permits model training or audit opening.
+Because calibration-primary firewall records are sampled from otherwise eligible source files, final
+corpus preparation must give every firewall record precedence and remove exact plus verified-near
+matches before packing. Consumer-path denial alone is not evidence of model-training disjointness.
 
 [`heldout_evaluation_plan_v1.json`](heldout_evaluation_plan_v1.json) is an additive pre-results
 successor for evaluation, not a replacement firewall. Following Magic's pretraining lesson that parser
