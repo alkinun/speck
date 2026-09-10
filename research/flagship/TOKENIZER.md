@@ -1,15 +1,14 @@
 # Flagship tokenizer training and qualification
 
-Status: production operations and the real six-category firewall pass; its 600 MB training and 60 MB
-static-evaluation partitions are executable while both sealed audits remain unopened. A local 60 MB study
-found that explicit SentencePiece whitespace-only-piece support makes an exact-32K custom BPE
-statically superior to Mistral on the bounded held-out text, but every formal tokenizer run remains
-pending, 2026-09-09. The first flagship should use a Speck-trained tokenizer only if it clears this
+Status: production operations and the real six-category firewall pass; the 600 MB/60 MB formal sample,
+three custom models, pinned Mistral baseline, static evaluation, and endpoint nomination are complete
+while both sealed audits remain unopened. Formal static results advance 40,960 as the compression
+endpoint and exact-32K as the compact endpoint. The first flagship should use a Speck-trained tokenizer only if it clears this
 protocol. Mistral 32K remains the fallback until the formal production sample and LM pilot are complete.
 
-[`tokenizer_plan_v6.json`](tokenizer_plan_v6.json) is active and binds the completed production firewall,
-its exact tokenizer partitions, and the executable experiment without changing the tokenizer research
-decision. [`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) is its human-rights predecessor, and
+[`tokenizer_plan_v7.json`](tokenizer_plan_v7.json) is active and binds the formal sample, models, static
+evaluation, and nomination without granting final selection. [`tokenizer_plan_v6.json`](tokenizer_plan_v6.json)
+is its executable-input predecessor, [`tokenizer_plan_v5.json`](tokenizer_plan_v5.json) is its human-rights predecessor, and
 [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) is the immutable scope predecessor that
 preserves the complete v3 research decision and physically tied cost contract while replacing the
 retired E1–E5

@@ -93,6 +93,7 @@ status is tracked in [`paper/claims.json`](../paper/claims.json).
 | [2B production-data calibration](208_production_data_calibration_2b.md) | All gates pass; 150B fits conditionally while the current 500B path does not |
 | [Production calibration fallback](209_production_calibration_fallback_decision.md) | R3 closes through 150B; 20B is not repeated and 500B remains blocked |
 | [Production data firewall](210_production_data_firewall.md) | Equal-category partitions pass; audits stay sealed and model training stays blocked |
+| [Formal tokenizer static nomination](211_formal_tokenizer_static_nomination.md) | 40,960 and exact-32K advance to the matched LM pilot |
 | [Allocation-thesis program](205_allocation_thesis_program.md) | Four linked paper claims, fixed 1.2B target, five-seed I1, mature-horizon S2, and V4.1 systems taxonomy |
 
 ## Conventions

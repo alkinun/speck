@@ -1,0 +1,166 @@
+{
+  "diagnostics": [
+    "SentencePiece warned that newline-containing pieces cannot be represented unambiguously in the diagnostic TSV vocab files; binary model files are authoritative and pass exact roundtrip gates"
+  ],
+  "experiment": {
+    "fingerprint": "5345ba747a01ae01c5c90cc63dc5412ac222cefac51224f32a267e435b202710",
+    "path": "research/flagship/tokenizer_d5_v1/experiment.json",
+    "sha256": "49680e2a496c88875f60b6556ae617b05f7d1ffef287b737cadbd070d8fda5f5"
+  },
+  "final_tokenizer_decision_authority": false,
+  "format": "speck_formal_tokenizer_static_result",
+  "format_version": 1,
+  "gates": {
+    "D5_tokenizer_audit": "unopened",
+    "baseline_revision_and_sha256": "pass",
+    "candidate_exact_vocab_sizes": "pass",
+    "firewall_partition_identity": "pass",
+    "probe_roundtrip_exact": "pass_all",
+    "sample_byte_targets": "pass",
+    "static_nomination": "pass",
+    "uint16_with_chat_tokens": "pass_all",
+    "zero_unknown_tokens": "pass_all"
+  },
+  "git_revision": "a1bc2e7",
+  "model_training_authority": false,
+  "models": {
+    "mistral-32k": {
+      "kind": "baseline",
+      "manifest": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/baselines/mistral-32k/manifest.json",
+        "sha256": "c6853bbe6e425da598501438bddc3e19b4424e750edad0f3db4842f94db366cf"
+      },
+      "model": {
+        "bos_id": 1,
+        "eos_id": 2,
+        "path": "tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+        "unk_id": 0,
+        "vocab_size": 32000
+      }
+    },
+    "speck-bpe-32000-whitespace": {
+      "kind": "candidate",
+      "manifest": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-32000-whitespace/manifest.json",
+        "sha256": "fc1de479534a4f0395d06d1b65cd8d2dbf4f34c5d22bfc89dfc2cb4f7c74fba9"
+      },
+      "model": {
+        "bos_id": 1,
+        "eos_id": 2,
+        "path": "tokenizer.model",
+        "sha256": "173e42b64c27fdc0e343868233f8a809b67c6d6c2f2a32bf6cf4d5c20832e038",
+        "unk_id": 0,
+        "vocab_size": 32000
+      }
+    },
+    "speck-bpe-32768-whitespace": {
+      "kind": "candidate",
+      "manifest": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-32768-whitespace/manifest.json",
+        "sha256": "52d5c694fb847b1b978109155523fd3803ceae3765f876c3738363dfb355ea99"
+      },
+      "model": {
+        "bos_id": 1,
+        "eos_id": 2,
+        "path": "tokenizer.model",
+        "sha256": "ae44e7fcc6e9d72a553026a1a791250d27c6dc59dd9ab500b2c5d72a876cc1e9",
+        "unk_id": 0,
+        "vocab_size": 32768
+      }
+    },
+    "speck-bpe-40960-whitespace": {
+      "kind": "candidate",
+      "manifest": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-40960-whitespace/manifest.json",
+        "sha256": "66778129d319e2d03d32f1b32cf99dc7a6e7babbbf9b83b13d818cc0029134c1"
+      },
+      "model": {
+        "bos_id": 1,
+        "eos_id": 2,
+        "path": "tokenizer.model",
+        "sha256": "77d5abbdbebff82ed45ac7bce9522b9a8aff34ce8f27b9f6ff7fc9d037e8408c",
+        "unk_id": 0,
+        "vocab_size": 40960
+      }
+    }
+  },
+  "nomination": {
+    "advancement_authority": true,
+    "endpoints": [
+      {
+        "id": "speck-bpe-40960-whitespace",
+        "role": "compression_endpoint"
+      },
+      {
+        "id": "speck-bpe-32000-whitespace",
+        "role": "compact_endpoint"
+      }
+    ],
+    "final_decision_authority": false,
+    "pareto_frontier": [
+      "speck-bpe-32000-whitespace",
+      "speck-bpe-32768-whitespace",
+      "speck-bpe-40960-whitespace"
+    ],
+    "path": "/mnt/speck-data/speck/tokenizer-d5-v1/nomination.json",
+    "sha256": "643055c669740ca381c231bdf6a3752fd588d49cd78bfe0f821e8fd9964d0020"
+  },
+  "recorded_on": "2026-09-10",
+  "sample": {
+    "dedup_scope": "inherited_global_production_firewall",
+    "evaluation_utf8_bytes": 60035301,
+    "manifest": {
+      "path": "/mnt/speck-data/speck/tokenizer-d5-v1/sample/manifest.json",
+      "sha256": "f706a20b01ef3d1692bfc3c9d47b4ed090e2f83567e258c6b5bae8e75ea821e9"
+    },
+    "training_utf8_bytes": 600078199
+  },
+  "static_evaluation": {
+    "metrics": {
+      "mistral-32k": {
+        "bytes_per_token": 3.727624387091892,
+        "embedding_and_head_parameters": 65542144,
+        "hard_gates": {
+          "probe_roundtrip_exact": true,
+          "uint16_with_chat_tokens": true,
+          "zero_unknown_tokens": true
+        },
+        "macro_tokens_per_kib": 279.6369982694143
+      },
+      "speck-bpe-32000-whitespace": {
+        "bytes_per_token": 3.9584834489882454,
+        "embedding_and_head_parameters": 65542144,
+        "hard_gates": {
+          "probe_roundtrip_exact": true,
+          "uint16_with_chat_tokens": true,
+          "zero_unknown_tokens": true
+        },
+        "macro_tokens_per_kib": 262.7278926648306
+      },
+      "speck-bpe-32768-whitespace": {
+        "bytes_per_token": 3.971467932620343,
+        "embedding_and_head_parameters": 67115008,
+        "hard_gates": {
+          "probe_roundtrip_exact": true,
+          "uint16_with_chat_tokens": true,
+          "zero_unknown_tokens": true
+        },
+        "macro_tokens_per_kib": 261.8962068243366
+      },
+      "speck-bpe-40960-whitespace": {
+        "bytes_per_token": 4.077214444387759,
+        "embedding_and_head_parameters": 83892224,
+        "hard_gates": {
+          "probe_roundtrip_exact": true,
+          "uint16_with_chat_tokens": true,
+          "zero_unknown_tokens": true
+        },
+        "macro_tokens_per_kib": 255.30466581192493
+      }
+    },
+    "path": "/mnt/speck-data/speck/tokenizer-d5-v1/evaluation.json",
+    "sha256": "a78c908f31d49688e1b625b6925896037d5d7a2f14c764aa0af3d6dec39eb45c"
+  },
+  "status": "sample_training_and_static_nomination_complete_lm_pilot_pending_D5_unopened"
+}

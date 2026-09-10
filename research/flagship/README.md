@@ -32,8 +32,8 @@ The active operating surface is intentionally small:
   data-architecture, assembled-recipe, and mechanism contract; `integration_plan.json` is its
   predecessor.
 - [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) preserves the pre-approval tokenizer scope.
-- [`tokenizer_plan_v6.json`](tokenizer_plan_v6.json) is the active tokenizer contract after R3/R4;
-  formal inputs are executable while candidates, trainer, accounting, and pilot remain unchanged.
+- [`tokenizer_plan_v7.json`](tokenizer_plan_v7.json) is the active tokenizer contract; formal sample,
+  models, static evaluation, and endpoint nomination pass while the LM pilot and D5 audit remain.
 - [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json) freezes MIT code,
   Apache-2.0 model weights, metadata-only corpus disclosure, attribution, and removal controls.
 - [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) records the project owner's

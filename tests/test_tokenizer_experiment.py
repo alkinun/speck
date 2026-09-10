@@ -347,12 +347,14 @@ def test_flagship_tokenizer_plan_is_balanced_and_requires_an_lm_pilot():
 
 
 def test_formal_tokenizer_successor_binds_firewall_config_and_implementation():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_plan_v6.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_plan_v7.json").read_text())
 
-    assert plan["status"] == "formal_production_firewall_inputs_frozen_runs_pending_audit_unopened"
+    assert plan["status"] == "formal_static_nomination_complete_lm_pilot_pending_D5_unopened"
     assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
     config = plan["formal_execution"]["config"]
     assert _sha256(ROOT / config["path"]) == config["sha256"]
     for path, digest in plan["implementation"].values():
         assert _sha256(ROOT / path) == digest
-    assert plan["training_authority"] == "tokenizer_training_only_model_training_blocked"
+    result = plan["formal_execution"]["result"]
+    assert _sha256(ROOT / result["path"]) == result["sha256"]
+    assert plan["training_authority"] == "tokenizer_training_complete_model_training_blocked"
