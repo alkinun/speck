@@ -225,6 +225,7 @@ history in order only when auditing provenance or a retired decision:
 210. [209 — The 2B calibration closes P0 operations through 150B](209_production_calibration_fallback_decision.md)
 211. [210 — The production evaluation firewall is materialized](210_production_data_firewall.md)
 212. [211 — Formal tokenizer static evaluation advances two endpoints](211_formal_tokenizer_static_nomination.md)
+213. [212 — A representative R3 tree restores from a second device](212_independent_r3_backup_restore.md)
 
 Conventions:
 

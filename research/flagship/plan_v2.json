@@ -304,6 +304,7 @@
     "data_firewall": "research/flagship/firewall_plan_v4.json",
     "firewall_inputs": "research/flagship/firewall_v2/input_plan.json",
     "precision": "research/flagship/precision_plan_v1.json",
+    "backup_restore": "results/release/independent-r3-backup-restore-20260910.json",
     "lab_direction": "research/DIRECTION.md"
   },
   "supersedes": {
