@@ -1,3 +1,4 @@
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -8,6 +9,28 @@ from speck.tokenizer_pilot import analyze_tokenizer_pilot, validate_pilot_plan
 
 ROOT = Path(__file__).parents[1]
 PLAN = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan.json").read_text())
+
+
+def _sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_closed():
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v2.json").read_text())
+
+    assert plan["status"] == "firewall_superset_corpus_preprocess_frozen_real_runs_blocked"
+    assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
+    assert (
+        _sha256(ROOT / plan["static_prerequisite"]["path"]) == plan["static_prerequisite"]["sha256"]
+    )
+    assert (
+        _sha256(ROOT / plan["pilot_corpus"]["config"]["path"])
+        == plan["pilot_corpus"]["config"]["sha256"]
+    )
+    for path, digest in plan["implementation"].values():
+        assert _sha256(ROOT / path) == digest
+    assert plan["sealed_audit"]["status"] == "unopened"
+    assert plan["final_selection_authority"] is False
 
 
 def _nominations():

@@ -88,6 +88,10 @@ and near-duplicate requirements for the full flagship corpus.
 ## 3. Running the pipeline
 
 The exact executable config is frozen at `tokenizer_d5_v1/experiment.json`.
+The matched LM pilot is governed by
+[`tokenizer_pilot_plan_v2.json`](tokenizer_pilot_plan_v2.json). Its training corpus first reruns global
+exact/verified-near deduplication with all twelve prepared firewall candidate views taking precedence;
+this conservative superset keeps both audits unopened while excluding every possible firewall record.
 
 Build the balanced sample:
 

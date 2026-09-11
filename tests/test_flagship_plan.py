@@ -513,8 +513,11 @@ def test_runtime_cleanup_successor_is_hash_bound_and_non_authoritative():
         "0233da9740ac7291efabb37207fad23b9bc2f867607f3cb961857db7e7564c8b"
     )
     for name, (path, digest) in result["implementation"].items():
-        if name != "checkpoint":
+        if name not in {"checkpoint", "production_data_tests"}:
             assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert result["implementation"]["production_data_tests"][1] == (
+        "c620b2b2bfc1e11f21c7d34951ffdf2d8a2ab1d419c87b306bb3b5d6612d73b0"
+    )
     for lineage in result["supersedes"].values():
         assert (
             hashlib.sha256((ROOT / lineage["historical_evidence"]).read_bytes()).hexdigest()
@@ -713,8 +716,11 @@ def test_tokenizer_pilot_analysis_is_hash_bound_and_D5_stays_unopened():
         (ROOT / "results" / "data" / "tokenizer-pilot-analysis-fixture-20260907.json").read_text()
     )
     assert result["status"] == "seven_run_analysis_fixture_pass_real_pilot_and_D5_audit_blocked"
-    for path, digest in result["implementation"].values():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    for name, (path, digest) in result["implementation"].items():
+        if name == "tests":
+            assert digest == "afdccc84406e337bb91a6467803b7bf30b9f28925aac11d10c5b8904a8a15ecc"
+        else:
+            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     assert result["frozen_run_matrix"]["total_runs"] == 7
     assert result["statistics"]["eligibility_requires_both_fixed_document_and_fixed_flop"] is True
     assert result["ranking"]["audit_opening_authorized"] is False

@@ -1,0 +1,224 @@
+{
+  "format": "speck_production_text_preprocess",
+  "format_version": 1,
+  "status": "fixture_or_rehearsal_authorized_not_training_authority",
+  "sources": [
+    {
+      "id": "firewall_reference__web_unseen",
+      "precedence": 1,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_unseen.jsonl",
+      "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__code_unseen",
+      "precedence": 2,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_unseen.jsonl",
+      "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__math_unseen",
+      "precedence": 3,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_unseen.jsonl",
+      "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__synthetic_unseen",
+      "precedence": 4,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_unseen.jsonl",
+      "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__science_unseen",
+      "precedence": 5,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_unseen.jsonl",
+      "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__reference_unseen",
+      "precedence": 6,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_unseen.jsonl",
+      "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__web_primary",
+      "precedence": 7,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_primary.jsonl",
+      "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__code_primary",
+      "precedence": 8,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_primary.jsonl",
+      "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__math_primary",
+      "precedence": 9,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_primary.jsonl",
+      "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__synthetic_primary",
+      "precedence": 10,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_primary.jsonl",
+      "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__science_primary",
+      "precedence": 11,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_primary.jsonl",
+      "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "firewall_reference__reference_primary",
+      "precedence": 12,
+      "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_primary.jsonl",
+      "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "pilot_train__ultrafineweb_en_v1_4",
+      "precedence": 13,
+      "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__ultrafineweb_en_v1_4.jsonl",
+      "sha256": "e5aa30df4e97e4c67dd070d47052ce9880dc12db757595d25b3f930ee84e90e7",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "pilot_train__common_pile_stackv2_edu",
+      "precedence": 14,
+      "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__common_pile_stackv2_edu.jsonl",
+      "sha256": "f6fc95b04478c034fe165055b4ba7f6fa47fc2318f6593297410676cce7a2d3c",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "pilot_train__finemath_4plus",
+      "precedence": 15,
+      "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__finemath_4plus.jsonl",
+      "sha256": "2a58d196670e90ab383d6c6badb2af10418ccf72152277b0234766fe5c51654f",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "pilot_train__cosmopedia_v2",
+      "precedence": 16,
+      "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__cosmopedia_v2.jsonl",
+      "sha256": "d1863956b12aaa2040f8c59485f9172191d7bf724e5b624898fdc626fcf99887",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "pilot_train__common_pile_pubmed",
+      "precedence": 17,
+      "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__common_pile_pubmed.jsonl",
+      "sha256": "d2230edc4de02ee6646f8d815010ea07fc1c90f90966127459e635678e8d6eaf",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    },
+    {
+      "id": "pilot_train__finewiki_en",
+      "precedence": 18,
+      "path": "/mnt/speck-data/speck/data-calibration-2b-v1/work/deduplicated/train__finewiki_en.jsonl",
+      "sha256": "1fa95a0265b96af857075bb765fd1c75c41816312d15008008efc5e5ddd7b9e1",
+      "text_field": "text",
+      "content_sha256_field": "released_content_sha256",
+      "url_field": "url",
+      "domain_field": "host",
+      "blob_field": "content_id"
+    }
+  ],
+  "deny_ledger": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+    "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+  },
+  "policy": {
+    "normalization": "NFKC+lower+lexical-code-tokens",
+    "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+    "shingle_tokens": 10,
+    "minimum_document_tokens": 50,
+    "maximum_document_tokens": 100000,
+    "num_perm": 128,
+    "minhash_seed": 42,
+    "bands": 16,
+    "verified_jaccard_threshold": 0.8,
+    "domain_match": "exact_or_subdomain"
+  },
+  "checkpoint_records": 10000,
+  "cleanup_files": [],
+  "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated"
+}

@@ -6,9 +6,20 @@ from pathlib import Path
 import pytest
 
 import speck.production_data as production_data
+from scripts.production_data_preprocess_batched import _batched_signature
+from speck.code_near_duplicates import _signature
 from speck.production_data import _candidate_text, preprocess_sources, validate_preprocess_config
 
 ROOT = Path(__file__).parents[1]
+
+
+def test_batched_cli_signature_is_exactly_equivalent_to_scalar_updates():
+    shingles = {f"token-{index}".encode() for index in range(100)}
+
+    scalar = _signature(shingles, 128, 42)
+    batched = _batched_signature(shingles, 128, 42)
+
+    assert scalar.hashvalues.tolist() == batched.hashvalues.tolist()
 
 
 def _sha256(path):
@@ -297,9 +308,9 @@ def test_flagship_production_plan_keeps_rehearsal_and_authority_pending():
 
     assert plan["status"] == "fixture_tooling_ready_20B_rehearsal_pending_not_training_authority"
     assert plan["preprocessor"]["candidate_policy_for_rehearsal"]["num_perm"] == 128
-    assert plan["preprocessor"]["candidate_policy_for_rehearsal"][
-        "verified_jaccard_threshold"
-    ] == 0.8
+    assert (
+        plan["preprocessor"]["candidate_policy_for_rehearsal"]["verified_jaccard_threshold"] == 0.8
+    )
     assert plan["rehearsal_20B"]["status"] == "pending"
     assert plan["production_authority_record"]["status"] == (
         "must not be issued from fixture evidence"
