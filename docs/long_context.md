@@ -65,6 +65,10 @@ caches is the state axis that matters.
 
 ## Progressive context training
 
+The flagship's approximate source mixtures, coherent-window preparation, token targets, and 200-hour
+continuation envelope are in [the context-extension plan](../research/flagship/CONTEXT_EXTENSION.md).
+The plan is not evidence that long-document data or exact-shape GH200 training is already qualified.
+
 Prepare each length stage with `scripts.context_stage_prepare`. A stage binds an exact parent
 checkpoint and packed long-document dataset by hash; never edit a resume contract to force a new
 length or dataset through it. Re-run the original short-context evaluation at every stage so context

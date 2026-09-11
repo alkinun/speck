@@ -1,8 +1,9 @@
 # Flagship execution plan
 
-This is the human operating view of [`plan_v2.json`](plan_v2.json). The JSON freezes budgets,
-dependencies, exit gates, fallback rules, and scope. Calendar ranges are targets rather than reasons
-to bypass a gate.
+This is the human operating view of [`plan_v2.json`](plan_v2.json). The JSON freezes phase budgets,
+dependencies, exit gates, and fallback rules. P6 below records the 2026-09-11 approximate design
+successor; its revised work list needs an executable plan successor before launch. Calendar ranges
+are targets rather than reasons to bypass a gate.
 
 ## Budget and calendar
 
@@ -25,7 +26,7 @@ double-count overhead. Freeze 320B when 400B does not fit the authorized envelop
 | P3 — Decay, integration, and scale | 11–20 | 440 | Decay recipe, transfer/composition checks, scale and mature-horizon evidence |
 | P4 — Configuration freeze | 20–21 | 0 | One hash-bound launch manifest |
 | P5 — Flagship pretraining | 21–50 | 2,425 | Pre-decay and final base checkpoints |
-| P6 — Extension through release candidates | 51–65 | 450 | 128K, annealed, instruct, evaluated exports |
+| P6 — Extension through release candidates | 51–65 | 450 | Extended base, Instruct, evaluated exports |
 | P7 — Protected reserve | 1–80 | 889 | Triggered recovery or continuation only |
 | P8 — Paper and release buffer | 66–90 | 0 planned | Audited paper and public artifacts |
 
@@ -127,18 +128,26 @@ not buy extra tokens until it is secure.
 
 ### P6 — Context, post-training, evaluation, and release
 
-Working envelope, adjustable without changing the 450-hour phase ceiling:
+Current approximate design, adjustable without changing the 450-hour phase ceiling:
 
 | Work | Initial GPU-h envelope |
 | --- | ---: |
 | 32K and 128K context extension | 200 |
-| Three annealing branches and merge | 80 |
-| Supervised fine-tuning | 50 |
+| Broad SFT, mixed-length finishing SFT, preference tuning, and development | 130 |
 | Quality and long-context evaluation | 60 |
 | Serving and export qualification | 60 |
 
-Each context stage must retain original-4K quality before the next length begins. Preference tuning is
-optional and cannot displace evaluation, serving, or release parity.
+The [context plan](CONTEXT_EXTENSION.md) starts around 3B tokens at 32K and 1B at 128K, with exact
+endpoints dependent on measured yield and throughput. The [Instruct plan](POST_TRAINING.md) uses a
+fresh diverse mixture, a smaller high-quality grounded finish, and conservative preferences. It is
+guided development with milestone checks, not a new mandatory screen/RL comparison matrix.
+
+This reallocates the earlier 80-hour three-annealing-branch/merge line plus 50-hour SFT line into
+130 hours of Instruct development. `plan_v2.json` retains the predecessor work list; reconcile it
+through an executable successor before launches. The phase total and protected reserve stay fixed.
+Each context stage must retain original-4K quality before the next begins, and post-training must
+retain useful context. An unsuccessful continuation keeps the earlier qualified checkpoint;
+preference work cannot displace evaluation, serving, or release parity.
 
 ### P7/P8 — Recover, then publish
 

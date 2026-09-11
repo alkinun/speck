@@ -26,7 +26,9 @@ def test_checked_research_catalog_resolves_collections_notebook_and_claims():
         "paper_workspace",
         "software",
     }
-    assert result["notebook_entries"] == 3
+    notebook_entries = tuple((ROOT / "research/notebook").glob("????-??-??-*.md"))
+    assert notebook_entries
+    assert result["notebook_entries"] == len(notebook_entries)
     assert result["lifecycle_stages"] == 9
     assert result["paper"]["claims"] == 4
     assert result["paper"]["claim_statuses"] == {

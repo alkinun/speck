@@ -128,6 +128,8 @@ prepared conversation dataset.
 | [Flagship paper contract](research/flagship/PAPER.md) | Central question, claim ladder, narrative spine, required figures, headline gate, and scope discipline. |
 | [Paper workspace](paper/README.md) | Claim registry and generated manuscript, figure, table, and bibliography boundaries. |
 | [Flagship execution](research/flagship/EXECUTION.md) | Thesis-driven 90-day phase order, exact GPU-hour budget, dependencies, gates, reserve, and cuts. |
+| [Context-extension plan](research/flagship/CONTEXT_EXTENSION.md) | Approximate long-document sources, mixtures, 32K/128K stages, and preparation requirements. |
+| [Instruct post-training plan](research/flagship/POST_TRAINING.md) | Candidate datasets, broad SFT, mixed-length finishing SFT, preferences, and approximate budgets. |
 | [Pre-grant checklist](research/flagship/PREGRANT.md) | Concrete storage, data, GH200, model, evaluation, and administrative readiness work. |
 | [Slurm operations](docs/slurm.md) | Immutable wave validation, one/four-GPU rendering, preflight, bounded retry, accounting, and scheduler observation. |
 | [Training and inference](docs/training.md) | Base training, DDP, checkpoint resume, SFT, and local generation. |

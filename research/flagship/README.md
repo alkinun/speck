@@ -1,6 +1,6 @@
 # Speck flagship: scope of the model, the paper, and the experiments
 
-Status: v6, 2026-09-10. This is the single operating document for the first flagship model and the
+Status: v7, 2026-09-11. This is the single operating document for the first flagship model and the
 paper that describes it. [`../DIRECTION.md`](../DIRECTION.md) holds the multi-grant lab direction;
 the promotion protocol, notebook, and `paper-1` archive retain their separate evidence roles.
 
@@ -18,6 +18,10 @@ The active operating surface is intentionally small:
 - [`SOURCES.md`](SOURCES.md) records the broad dataset survey, source shortlist, Stack v3 decision,
   and qualification order.
 - [`EXECUTION.md`](EXECUTION.md) gives the dependency-based 90-day operating order.
+- [`CONTEXT_EXTENSION.md`](CONTEXT_EXTENSION.md) defines approximate long-document sources, mixtures,
+  32K/128K continuation sizes, preparation, and hardware-dependent settings.
+- [`POST_TRAINING.md`](POST_TRAINING.md) defines the Instruct data plan and three-stage development
+  recipe; [`POST_TRAINING_DATA_SURVEY.md`](POST_TRAINING_DATA_SURVEY.md) retains source-level research.
 - [`PREGRANT.md`](PREGRANT.md) is the readiness gate before allocated compute starts.
 - [`data_calibration_2b_v1/`](data_calibration_2b_v1/) is the active time-bounded six-category
   production calibration. The paused [`data_rehearsal_20b_v1/`](data_rehearsal_20b_v1/) remains a
@@ -62,8 +66,8 @@ trust. The multi-grant direction is recorded in [`../DIRECTION.md`](../DIRECTION
 The first flagship and its paper must do three things at once:
 
 1. Ship a model that is genuinely good at its size and clearly best on the axis we choose.
-2. Explain every design decision with a controlled experiment, so the paper is the documented
-   decision process of the model rather than a report written afterwards.
+2. Explain the central data and architecture decisions with controlled experiments, and document
+   inherited and development recipes honestly, so the paper records the model's decision process.
 3. Leave a ladder the next grant extends instead of restarts.
 
 The paper asks how a fixed compute and memory budget should be allocated across high-information data,
@@ -134,9 +138,13 @@ and verify parameter counts with the repository's accounting before freezing.
 
 - Stable phase on the E2 mixture, decay phase on the E4 mixture.
 - Publish the last stable-phase checkpoint. It is the resumable seed for the next grant.
-- Context extension in two stages, with original-4K regression evaluation at each stage.
-- Anneal from three seeds and weight-merge, then supervised fine-tuning on SpeckChat2-class data.
-  Preference tuning only if time remains.
+- Context extension at 32K then 128K on coherent documents with base-data replay and original-4K
+  retention checks; approximate sources and stage sizes are in [`CONTEXT_EXTENSION.md`](CONTEXT_EXTENSION.md).
+- One Instruct path: broad SFT, high-quality mixed-length finishing SFT, then preference tuning,
+  described in [`POST_TRAINING.md`](POST_TRAINING.md). Reuse good upstream SpeckChat components in a
+  fresh mixture. Think/dual-mode releases and mandatory RL or merge experiments are deferred.
+- The current approximate P6 split is 200 context / 130 post-training / 60 evaluation / 60 serving.
+  Reconcile the old annealing/SFT work list through a `plan_v2.json` successor before execution.
 
 ## 3. The paper
 
@@ -341,13 +349,18 @@ Two corpora are needed.
   against every evaluation set, and packed before day 1. About 1.0 TB packed at 2 bytes per token,
   plus 2 to 3 TB of raw parquet during preparation. E3 may cut the unique-token target to about
   150B, so run E3 before committing to the full download.
-- **Long-document extension corpus.** Complete books, papers, and repository trees, with source
-  token-length filters. Concatenated unrelated documents are a stress condition, not supervision.
+- **Long-document extension corpus.** Coherent books, papers/technical documents, repository trees,
+  and long web pages, with a 15% general-domain replay stream. Start from the sources and approximate
+  2-4B-unique-token preparation target in [`CONTEXT_EXTENSION.md`](CONTEXT_EXTENSION.md); actual
+  32K/128K yield is not yet measured. Arbitrary concatenation does not count as long supervision.
+
+Instruction and preference data are separate products: approximate capability/length allocations,
+source candidates, and exposure ranges are in [`POST_TRAINING.md`](POST_TRAINING.md).
 
 Set `speck_base_dir=/mnt/speck-data/speck` so packed shards, the raw download cache, and checkpoints
 land on the data volume. On 2026-09-09 root has about 125 GiB free and the data volume about 5.1 TiB
-available. Prune raw files as each source completes; the volume does not hold raw and packed
-simultaneously at full scale.
+available. Preserve the source text/index metadata needed for coherent long-unit reconstruction before
+pruning raw download copies; the volume does not hold raw and packed simultaneously at full scale.
 
 ### 5.2 Mixture
 
@@ -403,7 +416,7 @@ The 400B target remains only when it fits the authorized flagship envelope; othe
 | Integrated validation, I1 to I3 | 122 | 2% |
 | Scale ladder and reversal | 268 | 5% |
 | Flagship pretraining | 2,425 | 49% |
-| Extension, anneal, SFT, evaluation, serving | 450 | 9% |
+| Context extension, Instruct development, evaluation, serving | 450 | 9% |
 | Reserve | 889 | 18% |
 | | **5,000** | |
 

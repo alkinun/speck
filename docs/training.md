@@ -252,6 +252,10 @@ checkpoint-averaging experiment.
 
 ## Supervised Fine-Tuning
 
+For the flagship's fresh datasets and broad SFT → mixed-length finishing → preference recipe, see
+[the Instruct plan](../research/flagship/POST_TRAINING.md). The SpeckChat experiments below document
+the earlier pilot releases; they are not the flagship's selected mixture or training schedule.
+
 SFT configurations live in experiment directories containing `model.json`, `tokenizer.json`, and
 `sft.json`. Prepared conversations use the Speck chat template and an assistant-only loss mask.
 

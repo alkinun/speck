@@ -1,8 +1,8 @@
 # Pre-grant readiness checklist
 
 This list is the P0 gate for the 5,000-GH200-hour plan. “Before grant” means before starting the paid
-three-month allocation, not necessarily before an award notice. Status reflects the repository and
-research machine on 2026-09-10.
+three-month allocation, not necessarily before an award notice. Operational status reflects the
+repository and research machine on 2026-09-10; R6's approximate design was documented on 2026-09-11.
 
 ## Critical path
 
@@ -13,7 +13,7 @@ research machine on 2026-09-10.
 | R3 | Calibrate production data operations | Complete by explicit fallback: all six 2B stages pass; project owner accepts operations evidence through a conditional 150B branch, does not repeat 20B before D5/E3, and keeps 500B blocked | Accepted fallback and final-corpus conditions remain hash-bound; 500B requires a new operations/storage successor | SPE-174, SPE-173 |
 | R4 | Build the evaluation firewall | Complete: twelve real source-balanced views pass global exact/verified-near deduplication; equal-category tokenizer, selection/unseen, D5, and E2 partitions pass every gate; both audits remain unopened and model training is denied | Tokenizer sample, equal-byte selection set, unseen-source slices, and sealed audits are immutable and decontaminated before outputs | SPE-114 |
 | R5 | Prepare flagship corpora | All six bounded categories technically qualified and human source use approved; production/firewall/launch tooling fixture-qualified; real 20B rehearsal and corpus preparation pending | Six-category stable candidates are launch-ready; decay candidates can finish before E4; unique-token risk is explicit | SPE-114 |
-| R6 | Prepare long-document data | Not started | Complete books, papers, and repositories pass provenance, split, dedup, and length checks | SPE-52 |
+| R6 | Prepare long-document data | Approximate sources, mixtures, and stages documented in [CONTEXT_EXTENSION.md](CONTEXT_EXTENSION.md); corpus and length yield still unprepared | Coherent long units, indexed windows, tokenizer-bound views, and measured 32K/128K yield pass checks | SPE-52 |
 | R7 | Qualify the four-GH200 stack | Local checkpoint replacement and CPU launch-risk failure injection are qualified: tracked-tree binding, distributed tuple/manifest checks, optimizer-boundary requeue, non-final artifact separation, finite-value publication gates, and resume timing are implemented; GH200/DDP/Slurm qualification not started | arm64, DDP, KDA, checkpoints, resume, storage, and achieved TFLOP/s pass a recorded rehearsal | SPE-115, SPE-165 |
 
 The award can arrive while R2–R7 are running; the paid node must not start until their launch-critical

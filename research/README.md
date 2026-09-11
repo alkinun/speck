@@ -24,6 +24,8 @@ It also validates the research notebook and [`paper/claims.json`](../paper/claim
 | Paper question and claim standard | [`flagship/PAPER.md`](flagship/PAPER.md) |
 | Readiness before allocated compute | [`flagship/PREGRANT.md`](flagship/PREGRANT.md) |
 | Exact phase and GPU-hour plan | [`flagship/plan_v2.json`](flagship/plan_v2.json) |
+| Approximate long-context sources and continuation recipe | [`flagship/CONTEXT_EXTENSION.md`](flagship/CONTEXT_EXTENSION.md) |
+| Instruct datasets and three-stage development recipe | [`flagship/POST_TRAINING.md`](flagship/POST_TRAINING.md) |
 | Paper claim status | [`paper/claims.json`](../paper/claims.json) |
 | Current Speck evidence | [`findings/README.md`](../findings/README.md) |
 | Complete historical narrative | [`findings/ARCHIVE.md`](../findings/ARCHIVE.md) |
