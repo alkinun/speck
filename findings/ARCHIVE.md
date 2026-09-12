@@ -226,6 +226,7 @@ history in order only when auditing provenance or a retired decision:
 211. [210 — The production evaluation firewall is materialized](210_production_data_firewall.md)
 212. [211 — Formal tokenizer static evaluation advances two endpoints](211_formal_tokenizer_static_nomination.md)
 213. [212 — A representative R3 tree restores from a second device](212_independent_r3_backup_restore.md)
+214. [213 — The tokenizer-pilot corpus retains 2.056B reference tokens](213_tokenizer_pilot_corpus_capacity.md)
 
 Conventions:
 

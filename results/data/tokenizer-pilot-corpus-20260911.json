@@ -1,0 +1,84 @@
+{
+  "cleanup_receipt": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/cleanup_receipt.json",
+    "sha256": "eabf8f8db840fe33c631be0af279c325f39a87bf39cea6f34c5c0d147170b6c2"
+  },
+  "conservatism": "all twelve prepared firewall candidate views, a strict superset of materialized firewall records, take precedence; extra otherwise eligible documents may be excluded",
+  "deduplication": {
+    "records_removed_exact": 248718,
+    "records_removed_near": 11,
+    "records_retained": 2232542,
+    "records_seen": 2481271
+  },
+  "final_tokenizer_selection_authority": false,
+  "format": "speck_tokenizer_pilot_corpus_result",
+  "format_version": 1,
+  "gates": {
+    "D5_tokenizer_audit": "unopened",
+    "cleanup": "pass",
+    "global_exact_deduplication": "pass",
+    "global_verified_near_deduplication": "pass",
+    "minimum_1_2B_mistral_reference_tokens": "pass",
+    "source_and_ledger_identity": "pass"
+  },
+  "git_revision": "c67d9ff",
+  "model_training_authority": false,
+  "pilot_training_capacity": {
+    "headroom_tokens": 856192176,
+    "per_source": {
+      "pilot_train__common_pile_pubmed": {
+        "documents": 5794,
+        "mistral_tokens": 61785028
+      },
+      "pilot_train__common_pile_stackv2_edu": {
+        "documents": 194998,
+        "mistral_tokens": 294750097
+      },
+      "pilot_train__cosmopedia_v2": {
+        "documents": 244557,
+        "mistral_tokens": 196670235
+      },
+      "pilot_train__finemath_4plus": {
+        "documents": 118949,
+        "mistral_tokens": 174544300
+      },
+      "pilot_train__finewiki_en": {
+        "documents": 64423,
+        "mistral_tokens": 64662670
+      },
+      "pilot_train__ultrafineweb_en_v1_4": {
+        "documents": 1314949,
+        "mistral_tokens": 1263779846
+      }
+    },
+    "required_mistral_reference_tokens": 1200000000,
+    "tokenizer": {
+      "path": "/mnt/speck-data/speck/tokenizer-d5-v1/baselines/mistral-32k/tokenizer.model",
+      "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    },
+    "total_documents": 1943670,
+    "total_mistral_reference_tokens": 2056192176
+  },
+  "plan": {
+    "path": "research/flagship/tokenizer_pilot_plan_v2.json",
+    "sha256": "4e6063c364b82b5e239fa912ac1aac765b9475693d9499a12502e60acda2b8cc"
+  },
+  "preprocess_config": {
+    "fingerprint": "5a6dbb6b2ded81767972b106985ae37fd2432cf4420e42b4848b570ab15cdf8b",
+    "path": "research/flagship/tokenizer_pilot_corpus_v1/preprocess.json",
+    "sha256": "8ddc8be2cb1e56e9ab397e1956525f7b7ced1bb0825f33df91fbdd2e2e2dcf76"
+  },
+  "recorded_on": "2026-09-11",
+  "runtime": {
+    "cpu_seconds": 2462.007,
+    "invocation_id": "4a43572b5222495fbbf83fc379ebcb31",
+    "peak_service_memory_journal_display": "15G",
+    "swap_peak_journal_display": "58M",
+    "wall_seconds": 56615.749
+  },
+  "runtime_manifest": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/manifest.json",
+    "sha256": "40779cd8e31504df6b0f47be2f431f6fba01fab3f3190455e96a4eb21d3fc3a4"
+  },
+  "status": "firewall_superset_exact_near_exclusion_and_1_2B_capacity_pass"
+}

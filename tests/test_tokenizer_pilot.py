@@ -16,9 +16,9 @@ def _sha256(path):
 
 
 def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_closed():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v2.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v3.json").read_text())
 
-    assert plan["status"] == "firewall_superset_corpus_preprocess_frozen_real_runs_blocked"
+    assert plan["status"] == "pilot_corpus_exclusion_and_capacity_pass_fixed_stream_pending"
     assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
     assert (
         _sha256(ROOT / plan["static_prerequisite"]["path"]) == plan["static_prerequisite"]["sha256"]
@@ -28,6 +28,13 @@ def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_close
         == plan["pilot_corpus"]["config"]["sha256"]
     )
     for path, digest in plan["implementation"].values():
+        assert _sha256(ROOT / path) == digest
+    result = plan["pilot_corpus"]["result"]
+    assert _sha256(ROOT / result["path"]) == result["sha256"]
+    assert plan["pilot_corpus"]["retained_mistral_reference_tokens"] >= 1_200_000_000
+    stream = plan["fixed_stream"]
+    assert _sha256(ROOT / stream["plan"]["path"]) == stream["plan"]["sha256"]
+    for path, digest in stream["implementation"].values():
         assert _sha256(ROOT / path) == digest
     assert plan["sealed_audit"]["status"] == "unopened"
     assert plan["final_selection_authority"] is False

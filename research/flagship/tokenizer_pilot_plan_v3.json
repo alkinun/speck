@@ -1,0 +1,173 @@
+{
+  "format": "speck_tokenizer_pilot_plan",
+  "format_version": 3,
+  "status": "pilot_corpus_exclusion_and_capacity_pass_fixed_stream_pending",
+  "scale": "60M",
+  "categories": [
+    "web",
+    "code",
+    "math",
+    "synthetic",
+    "science",
+    "reference"
+  ],
+  "primary_baseline": "mistral-32k",
+  "screen": {
+    "seed": 42,
+    "runs": [
+      "mistral-32k",
+      "compression_endpoint",
+      "compact_endpoint"
+    ],
+    "custom_rule": "lowest fixed-document equal-category macro BPB; tie by lower active seconds, then smaller vocabulary, then ID"
+  },
+  "confirmation": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "runs": "baseline and selected custom at all three seeds; seed-42 screen runs are reused",
+    "total_runs": 7
+  },
+  "stopping": {
+    "fixed_document_mistral_tokens": 1200000000,
+    "fixed_flop_target": "analytic FLOPs consumed by Mistral seed 42 at the fixed-document endpoint",
+    "fixed_wall_clock": "secondary measured view only",
+    "quality_target": "Mistral seed-42 fixed-document final macro BPB, defined before custom curves are inspected"
+  },
+  "statistics": {
+    "unit": "bits_per_utf8_byte",
+    "category_score": "mean document BPB",
+    "macro_score": "unweighted mean of six category means",
+    "paired_delta": "candidate minus Mistral on identical document IDs and UTF-8 byte counts",
+    "seed_aggregation": "average each document delta over confirmation seeds before bootstrap",
+    "bootstrap_seed": 314159,
+    "bootstrap_replicates": 10000,
+    "upper_percentile": 0.95
+  },
+  "eligibility": {
+    "required_views": [
+      "fixed_document",
+      "fixed_flop"
+    ],
+    "aggregate_upper_95_bpb": 0.01,
+    "category_upper_95_bpb": 0.02,
+    "all_runs_finite": true
+  },
+  "ranking": {
+    "primary": "lower median analytic FLOPs to the frozen quality target",
+    "unreached_quality": "ineligible for custom selection",
+    "tie": "smaller vocabulary",
+    "fallback": "mistral-32k"
+  },
+  "sealed_audit": {
+    "identity": "D5_tokenizer",
+    "required_finalists": 2,
+    "opening": "after provisional ranking only",
+    "failure": "mistral-32k",
+    "additional_search_after_failure": false,
+    "status": "unopened",
+    "firewall_manifest_sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+  },
+  "real_execution": {
+    "status": "blocked_pending_fixed_stream_and_run_materializer",
+    "completed": [
+      "authorized 600MB/60MB sample",
+      "formal static nomination",
+      "exact 60M compact geometry and accounting",
+      "firewall-superset corpus exclusion and 2.056B retained Mistral-token capacity"
+    ],
+    "requires": [
+      "pilot corpus exclusion pass and fixed document-stream manifest",
+      "tokenizer-specific packing with matched document IDs",
+      "exact optimizer schedule and seven run manifests",
+      "document-level two-view NLL output required by the frozen analyzer"
+    ]
+  },
+  "gpu_hour_ceiling": 30,
+  "final_selection_authority": false,
+  "supersedes": {
+    "path": "research/flagship/tokenizer_pilot_plan_v2.json",
+    "sha256": "4e6063c364b82b5e239fa912ac1aac765b9475693d9499a12502e60acda2b8cc",
+    "repository_revision": "c67d9ff",
+    "reason": "bind the completed full-corpus firewall-superset exclusion and exact retained Mistral-token capacity count"
+  },
+  "static_prerequisite": {
+    "path": "results/data/formal-tokenizer-static-20260910.json",
+    "sha256": "c8dad3f5e561baa3b1be1c323158bd1890888781104c716a1de0f6953ce4cab7",
+    "status": "pass_two_endpoints_nominated"
+  },
+  "pilot_corpus": {
+    "strategy": "put all twelve globally deduplicated prepared firewall candidate views before all six full calibration training sources, then rerun exact and verified-near deduplication",
+    "conservatism": "the reference superset is larger than the final firewall and may remove extra eligible training documents; this is acceptable for a matched tokenizer pilot and prevents sealed-audit access",
+    "config": {
+      "path": "research/flagship/tokenizer_pilot_corpus_v1/preprocess.json",
+      "sha256": "8ddc8be2cb1e56e9ab397e1956525f7b7ced1bb0825f33df91fbdd2e2e2dcf76"
+    },
+    "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated",
+    "status": "complete",
+    "required_gate": "six pilot_train outputs retain at least 1.2B Mistral reference tokens after all firewall-reference exact/near exclusions",
+    "result": {
+      "path": "results/data/tokenizer-pilot-corpus-20260911.json",
+      "sha256": "35d3b24e6b87f330d394cabe80df7abc0ed2b9dd3ea8111f23efe5bb0461047b"
+    },
+    "runtime_manifest": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/manifest.json",
+      "sha256": "40779cd8e31504df6b0f47be2f431f6fba01fab3f3190455e96a4eb21d3fc3a4"
+    },
+    "retained_mistral_reference_tokens": 2056192176,
+    "required_mistral_reference_tokens": 1200000000
+  },
+  "implementation": {
+    "batched_preprocess_cli": [
+      "scripts/production_data_preprocess_batched.py",
+      "86de97f3ac76c1cc111e414ea6874248a04b210d21f491389f7d90ffcdb2f9fe"
+    ],
+    "batched_preprocess_test": [
+      "tests/test_production_data.py",
+      "274023026ec84a3669715ffa2dc2e546225ceca3520bc1d66878a9a1eb89cd07"
+    ],
+    "batch_qualification": [
+      "results/data/production-minhash-batch-qualification-20260910.json",
+      "a7588168ef0031ae78adaa88a9eb803877a0d0f5dfc9d3f002e033b5b1dcc7a3"
+    ]
+  },
+  "model_geometry": {
+    "source_spec": {
+      "path": "research/flagship/targets/scale-targets-v2.json",
+      "sha256": "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493"
+    },
+    "accounting": {
+      "path": "research/flagship/targets/accounting-v2.json",
+      "sha256": "8eef2d167b2b50c7425315162a69350cb0cae9a7bbbbbfad07920b2435cddfc4"
+    },
+    "target_id": "ladder-60m",
+    "fallback_vocab_active_parameters": 60561712,
+    "sequence_length": 4096
+  },
+  "fixed_stream": {
+    "status": "pending",
+    "plan": {
+      "path": "research/flagship/tokenizer_pilot_stream_v1/plan.json",
+      "sha256": "94749ebb6535eb595d4f11fe6f9e573bdd0658f1c81caa71b62d02d906489628"
+    },
+    "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-stream-v1",
+    "selection": "whole documents in frozen category and retained-source-row order until each 55/15/10/10/5/5 reference-token quota is met",
+    "endpoint": "freeze the small whole-document overshoot as the exact common endpoint before model outputs",
+    "implementation": {
+      "module": [
+        "speck/tokenizer_pilot_data.py",
+        "2ded0a3065c044b6504be0aa124277b30a31a01df43e2dae8cb2fb963e8eae4e"
+      ],
+      "cli": [
+        "scripts/tokenizer_pilot_stream_prepare.py",
+        "fddeb05f739067d671cfc36aae17b2c6304cfd3fed12152ae9e73642eede6f57"
+      ],
+      "tests": [
+        "tests/test_tokenizer_pilot_data.py",
+        "da62e45af20e79b08a6b9655eec0c43e98074a0a1b740c585c0499416bcd7669"
+      ]
+    }
+  }
+}
