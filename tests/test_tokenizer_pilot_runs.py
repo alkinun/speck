@@ -166,6 +166,10 @@ def fixture_plan(tmp_path):
         "final_selection_authority": False,
     }
     pilot_identity = write_json(flagship / "pilot.json", pilot)
+    implementation = {
+        name: write_file(repository / "implementation" / f"{name}.py", name)
+        for name in ("module", "cli", "tests")
+    }
     plan = {
         "format": "speck_tokenizer_pilot_run_materialization",
         "format_version": 1,
@@ -176,6 +180,7 @@ def fixture_plan(tmp_path):
         "fixed_stream": fixed_identity,
         "continuation": continuation_identity,
         "evaluation_sample": evaluation_identity,
+        "implementation": implementation,
         "tokenizers": [
             {
                 "role": role,
@@ -241,6 +246,7 @@ def test_builds_three_role_resolved_screen_manifests(tmp_path):
     ]
     assert {run["seed"] for run in runs} == {42}
     assert {run["repository_revision"] for run in runs} == {"fixture-revision"}
+    assert set(runs[0]["materializer_implementation"]) == {"module", "cli", "tests"}
     assert len({run["model"]["backbone_sha256"] for run in runs}) == 1
     assert runs[0]["stops"]["final_step"] == 2
     assert runs[1]["stops"]["final_step"] == 3

@@ -149,6 +149,7 @@ def validate_run_materialization_plan(value, *, config_dir=None):
         "fixed_stream",
         "continuation",
         "evaluation_sample",
+        "implementation",
         "tokenizers",
         "screen",
         "settings",
@@ -223,6 +224,13 @@ def validate_run_materialization_plan(value, *, config_dir=None):
     }:
         raise ValueError("tokenizer pilot authority must remain screen-only")
     settings = _validate_settings(value["settings"])
+    implementation = value["implementation"]
+    if not isinstance(implementation, dict) or set(implementation) != {"module", "cli", "tests"}:
+        raise ValueError("tokenizer pilot materializer implementation is incomplete")
+    normalized_implementation = {
+        name: _identity(identity, root, f"materializer {name}")
+        for name, identity in implementation.items()
+    }
     if not isinstance(value["tokenizers"], list) or not value["tokenizers"]:
         raise ValueError("tokenizer declarations must be a non-empty list")
     declarations = {
@@ -298,6 +306,7 @@ def validate_run_materialization_plan(value, *, config_dir=None):
         "fixed_stream": fixed_identity,
         "continuation": continuation_identity,
         "evaluation_sample": evaluation_identity,
+        "implementation": normalized_implementation,
         "tokenizers": normalized_declarations,
         "settings": settings,
         "output_directory": str(output),
@@ -365,6 +374,7 @@ def build_screen_run_manifests(plan, *, repository_revision=None):
             "seed": plan["screen"]["seed"],
             "repository_revision": repository_revision,
             "materialization_plan_fingerprint": plan["plan_fingerprint"],
+            "materializer_implementation": plan["implementation"],
             "model": {
                 "settings": model,
                 "sha256": _fingerprint(model),
