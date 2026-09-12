@@ -1,0 +1,68 @@
+{
+  "format": "speck_tokenizer_pilot_runtime_input_qualification_record",
+  "format_version": 1,
+  "status": "real_v2_streams_evaluation_and_resume_inputs_pass_model_execution_blocked",
+  "recorded_on": "2026-09-12",
+  "git_revision": "33c727c1b0b18161a37cdf17f801b81c2ed6eafc",
+  "implementation": {
+    "qualification_module": [
+      "speck/tokenizer_pilot_qualification.py",
+      "98ef471aeeeacc16e1ebf1b284d6c22fbf9f069d4ef2fc80796e699979065c3b"
+    ],
+    "qualification_cli": [
+      "scripts/tokenizer_pilot_runtime_qualify.py",
+      "e69726e8ba4014033105a919481414e113900b70fe6b0cafa58e7d6a52203767"
+    ],
+    "qualification_tests": [
+      "tests/test_tokenizer_pilot_qualification.py",
+      "1bf5864a5e85cec0b8bda25a1f861bd5ca3edc7350fe46cba9732a2a7d183cd7"
+    ],
+    "runtime_module": [
+      "speck/tokenizer_pilot_runtime.py",
+      "621896b433d4bda8f27ae699b7a5dd8c90e4bb40f023cfda056981fd5a56dcba"
+    ],
+    "evaluation_module": [
+      "speck/tokenizer_pilot_evaluation.py",
+      "9c41e434ae7041ed3fe44fbcf47a3aa31999ad88431d27f1302d70a15f0304c5"
+    ]
+  },
+  "runtime": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-runtime-qualification-v1.json",
+    "sha256": "2f76aa96506ee52c7ca09f113c18cee2af8ba19352ba85a0d9ef7a150b9f4516",
+    "bytes": 5569,
+    "materialization_sha256": "7068204d845991205dc52c241e49111a3a95eb21ca9a86bd71e4874ba5c2da5b",
+    "plan_fingerprint": "0dbc8ed7d5d73d7ed622e009df9af0376d0233aa064a371044181db0d644e131"
+  },
+  "coverage": {
+    "runs": 3,
+    "tokenizers": 3,
+    "packed_shards": 63,
+    "unique_files_verified": 76,
+    "evaluation_categories": 6,
+    "evaluation_documents": 12470,
+    "evaluation_utf8_bytes": 60035301,
+    "resume_probes_per_run": 3
+  },
+  "gates": {
+    "run_fingerprints": "pass_all",
+    "tokenizer_and_parent_manifests": "pass_all",
+    "packed_shard_sizes_and_sha256": "pass_all",
+    "fixed_and_continuation_boundaries": "pass_all",
+    "initial_resume_and_final_batch_cursors": "pass_all",
+    "evaluation_sha256_document_identity_and_totals": "pass_all",
+    "model_outputs_created": 0
+  },
+  "authority": {
+    "runtime_inputs_qualified": true,
+    "screen_execution": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "flagship_training": false
+  },
+  "remaining": [
+    "checkpointed trainer fixture and failure-injection qualification",
+    "CUDA KDA forward/backward and resume qualification on the exact 60M shape",
+    "real document-NLL model execution qualification",
+    "execution-authorized run records binding the final trainer commit"
+  ]
+}

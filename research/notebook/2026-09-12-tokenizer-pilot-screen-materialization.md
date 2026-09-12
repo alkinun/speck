@@ -55,6 +55,11 @@ materializer independently checks the scale equations against the bound prefligh
 three corrected records from clean commit `3d7a95b`. These records remain execution-blocked; they do not
 retroactively repair or overwrite v1.
 
+A subsequent real-input qualification hashed all 63 packed shards plus tokenizer, parent, correction,
+and evaluation inputs (76 unique files total), parsed all 12,470 evaluation documents and 60,035,301
+UTF-8 bytes, and exercised initial, resumed, and final-batch cursors for every tokenizer. All gates
+passed without constructing a model. CUDA execution and checkpointed training remain blocked.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
