@@ -1,0 +1,128 @@
+{
+  "D5_tokenizer_audit": "unopened",
+  "environment": {
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128"
+  },
+  "final_selection_authority": false,
+  "format": "speck_tokenizer_pilot_preflight_assessment",
+  "format_version": 2,
+  "gates": {
+    "device_batch_four_memory": "pass",
+    "finite_loss": "pass",
+    "four_x_stress_projection_under_30_hours": "pass",
+    "identical_32K_shape_reuse": "pass",
+    "worst_case_seven_run_steady_state_under_30_hours": "pass"
+  },
+  "git_revision": "5d07fc6",
+  "plan": {
+    "fingerprint": "36ddc4af26cf84e9211a2b45e5c9535d5fcfbf2700a4e4ac82fb1d29cfb50c62",
+    "path": "research/flagship/tokenizer_pilot_preflight_v2.json",
+    "sha256": "bab95560c5383a5f1fe73eb17b679af0b50f29eb47af23022ebb6bf3dee8669f"
+  },
+  "projection": {
+    "authority": "synthetic steady-state only; real data, checkpoint, and evaluation overhead must be measured after the three-run screen",
+    "ceiling_gpu_hours": 30,
+    "four_x_worst_case_gpu_hours": 29.938848294933234,
+    "screen_gpu_hours": 3.1904132773961718,
+    "worst_case_seven_run_gpu_hours": 7.484712073733308
+  },
+  "quality_run_authority": "three-run screen only; confirmation requires the post-screen operational projection",
+  "quality_runs_started": 0,
+  "recorded_on": "2026-09-12",
+  "runtime": {
+    "cpu_seconds": 26.0,
+    "invocation_id": "0924dff7eafa4f86bd34669bb8940972",
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-preflight-v2.json",
+    "peak_service_memory_journal_display": "2.9G",
+    "sha256": "61110ec6eb57e38771cf154a3af4d57ec9193ee0b990fda0a9dbd9450ca737d7",
+    "wall_seconds": 20.714
+  },
+  "screen_stop_rule": "after all three seed-42 runs, project the four confirmation runs from measured active time plus observed evaluation/checkpoint overhead; if the 30-hour total would be exceeded, retain Mistral and do not open D5",
+  "status": "corrected_unique_shape_batch4_projection_pass",
+  "tokenizers": [
+    {
+      "analytic_training_flops_per_token": 415543296,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_document_aligned_tokens": 1200029696,
+      "fixed_document_tokens": 1200007273,
+      "fixed_flop_aligned_tokens": 1200029696,
+      "fixed_flop_token_stop": 1200007273,
+      "id": "mistral-32k",
+      "losses": [
+        8.154352188110352,
+        7.949488639831543,
+        6.967723846435547,
+        6.601934432983398,
+        5.808347702026367
+      ],
+      "measured_seconds": 1.0553407560219057,
+      "measured_shape_id": "mistral-32k",
+      "measured_tokens": 327680,
+      "parameters": 60560176,
+      "peak_memory_bytes": 2244464640,
+      "projected_fixed_document_hours": 1.073574699084284,
+      "projected_run_hours": 1.073574699084284,
+      "run_stop_aligned_tokens": 1200029696,
+      "tokens_per_second": 310496.8685519034,
+      "vocab_size": 32000
+    },
+    {
+      "analytic_training_flops_per_token": 443068416,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_document_aligned_tokens": 1108082688,
+      "fixed_document_tokens": 1108037579,
+      "fixed_flop_aligned_tokens": 1125515264,
+      "fixed_flop_token_stop": 1125459741,
+      "id": "speck-bpe-40960-whitespace",
+      "losses": [
+        8.352824211120605,
+        8.09518814086914,
+        7.241007328033447,
+        6.75238037109375,
+        5.9778523445129395
+      ],
+      "measured_seconds": 1.0934406559972558,
+      "measured_shape_id": "speck-bpe-40960-whitespace",
+      "measured_tokens": 327680,
+      "parameters": 65147696,
+      "peak_memory_bytes": 2552909824,
+      "projected_fixed_document_hours": 1.0271052562000889,
+      "projected_run_hours": 1.0432638792276039,
+      "run_stop_aligned_tokens": 1125515264,
+      "tokens_per_second": 299677.9003988511,
+      "vocab_size": 40960
+    },
+    {
+      "analytic_training_flops_per_token": 415543296,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_document_aligned_tokens": 1142685696,
+      "fixed_document_tokens": 1142621116,
+      "fixed_flop_aligned_tokens": 1200029696,
+      "fixed_flop_token_stop": 1200007273,
+      "id": "speck-bpe-32000-whitespace",
+      "losses": [
+        8.154352188110352,
+        7.949488639831543,
+        6.967723846435547,
+        6.601934432983398,
+        5.808347702026367
+      ],
+      "measured_seconds": 1.0553407560219057,
+      "measured_shape_id": "mistral-32k",
+      "measured_tokens": 327680,
+      "measurement_reused_from_identical_vocab_shape": "mistral-32k",
+      "parameters": 60560176,
+      "peak_memory_bytes": 2244464640,
+      "projected_fixed_document_hours": 1.0222734123332191,
+      "projected_run_hours": 1.073574699084284,
+      "run_stop_aligned_tokens": 1200029696,
+      "tokens_per_second": 310496.8685519034,
+      "vocab_size": 32000
+    }
+  ]
+}

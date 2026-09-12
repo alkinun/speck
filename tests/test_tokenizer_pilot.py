@@ -16,9 +16,9 @@ def _sha256(path):
 
 
 def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_closed():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v9.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v10.json").read_text())
 
-    assert plan["status"] == "corrected_unique_shape_batch4_preflight_frozen_quality_runs_blocked"
+    assert plan["status"] == "throughput_preflight_pass_run_materializer_pending_D5_unopened"
     assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
     assert (
         _sha256(ROOT / plan["static_prerequisite"]["path"]) == plan["static_prerequisite"]["sha256"]
@@ -52,6 +52,9 @@ def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_close
     )
     failed = preflight["failed_predecessor"]
     assert _sha256(ROOT / failed["path"]) == failed["sha256"]
+    result = preflight["result"]
+    assert _sha256(ROOT / result["path"]) == result["sha256"]
+    assert preflight["four_x_stress_gpu_hours"] < plan["gpu_hour_ceiling"]
     for path, digest in continuation["implementation"].values():
         assert _sha256(ROOT / path) == digest
     assert plan["sealed_audit"]["status"] == "unopened"
