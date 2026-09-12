@@ -148,7 +148,7 @@ def main():
     mixed, datasets = build_dataset()
 
     print(f"Publishing {len(mixed):,} samples to {OUTPUT_REPO}")
-    for source, dataset in zip(SOURCES, datasets):
+    for source, dataset in zip(SOURCES, datasets, strict=False):
         print(f"  {source.repo}@{source.revision}: {len(dataset):,}")
     mixed.push_to_hub(OUTPUT_REPO, split="train")
 

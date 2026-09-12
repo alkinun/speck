@@ -69,7 +69,7 @@ def quotas(sources, total, weight_key="weight"):
     order = sorted(range(len(sources)), key=lambda i: (-(total * weights[i] % denominator), i))
     for index in order[: total - sum(counts)]:
         counts[index] += 1
-    return dict(zip((source["id"] for source in sources), counts))
+    return dict(zip((source["id"] for source in sources), counts, strict=False))
 
 
 def load_recipe(path, samples=None, validation_samples=None):

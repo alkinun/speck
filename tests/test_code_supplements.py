@@ -116,7 +116,7 @@ def test_python_edu_fetches_hash_bound_blobs_and_keeps_rights_blocked(tmp_path):
     ]
     source = tmp_path / "python.parquet"
     pq.write_table(pa.Table.from_pylist(rows), source)
-    blobs = {row["blob_id"]: raw for row, raw in zip(rows, raw_values)}
+    blobs = {row["blob_id"]: raw for row, raw in zip(rows, raw_values, strict=False)}
     config = validate_python_edu_config(
         {
             "format": "speck_python_edu_sample",

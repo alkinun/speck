@@ -18,7 +18,7 @@ def test_synthetic_batches_are_locally_deterministic(generator, kwargs):
     repeated = generator(**settings, seed=17)
     different = generator(**settings, seed=18)
 
-    assert all(torch.equal(left, right) for left, right in zip(first, repeated))
+    assert all(torch.equal(left, right) for left, right in zip(first, repeated, strict=False))
     assert not torch.equal(first[0], different[0])
     assert first[0].shape == first[1].shape == (3, 64)
 
@@ -37,8 +37,12 @@ def test_mqar_targets_match_unique_context_associations():
     inputs, targets = mqar_batch(4, 128, 512, num_pairs, 11)
     context = inputs[:, : 2 * num_pairs]
 
-    for example_inputs, example_targets, example_context in zip(inputs, targets, context):
-        mapping = dict(zip(example_context[0::2].tolist(), example_context[1::2].tolist()))
+    for example_inputs, example_targets, example_context in zip(
+        inputs, targets, context, strict=False
+    ):
+        mapping = dict(
+            zip(example_context[0::2].tolist(), example_context[1::2].tolist(), strict=False)
+        )
         supervised = (example_targets != IGNORE_INDEX).nonzero().flatten()
         assert supervised.numel() == num_pairs
         assert len(mapping) == num_pairs
@@ -49,7 +53,7 @@ def test_mqar_targets_match_unique_context_associations():
 def test_stack_targets_follow_last_in_first_out_state():
     inputs, targets = stack_batch(3, 192, 256, 23, num_stacks=8)
 
-    for example_inputs, example_targets in zip(inputs, targets):
+    for example_inputs, example_targets in zip(inputs, targets, strict=False):
         stacks = [[] for _ in range(8)]
         for start in range(0, 192, 3):
             operation, stack_token, value = example_inputs[start : start + 3].tolist()

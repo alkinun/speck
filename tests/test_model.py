@@ -149,7 +149,9 @@ def test_liger_loss_and_gradients_match_torch(reduction):
     fused_loss.backward()
 
     torch.testing.assert_close(fused_loss, reference_loss, rtol=2e-3, atol=2e-3)
-    for reference_parameter, fused_parameter in zip(reference.parameters(), fused.parameters()):
+    for reference_parameter, fused_parameter in zip(
+        reference.parameters(), fused.parameters(), strict=False
+    ):
         torch.testing.assert_close(
             fused_parameter.grad,
             reference_parameter.grad,
@@ -288,7 +290,9 @@ def test_flex_sliding_attention_matches_torch_reference(past_length):
 
     actual_gradients = torch.autograd.grad(actual.float().square().sum(), (query, key, value))
     expected_gradients = torch.autograd.grad(expected.float().square().sum(), (query, key, value))
-    for actual_gradient, expected_gradient in zip(actual_gradients, expected_gradients):
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=False
+    ):
         torch.testing.assert_close(actual_gradient, expected_gradient, atol=1e-5, rtol=1e-5)
 
 
@@ -486,7 +490,9 @@ def test_default_kimi_sigmoid_preserves_forward_backward_and_strict_checkpoint_l
     torch.testing.assert_close(explicit_loss, legacy_loss, rtol=0, atol=0)
     legacy_loss.backward()
     explicit_loss.backward()
-    for legacy_parameter, explicit_parameter in zip(legacy.parameters(), explicit.parameters()):
+    for legacy_parameter, explicit_parameter in zip(
+        legacy.parameters(), explicit.parameters(), strict=False
+    ):
         torch.testing.assert_close(explicit_parameter.grad, legacy_parameter.grad, rtol=0, atol=0)
 
 
@@ -582,7 +588,7 @@ def test_activation_checkpointing_preserves_loss_and_gradients():
     reference_loss.backward()
     checkpointed_loss.backward()
     torch.testing.assert_close(checkpointed_loss, reference_loss)
-    for expected, actual in zip(reference.parameters(), checkpointed.parameters()):
+    for expected, actual in zip(reference.parameters(), checkpointed.parameters(), strict=False):
         torch.testing.assert_close(actual.grad, expected.grad)
 
 
@@ -652,7 +658,9 @@ def test_batched_muon_matches_reference_and_keeps_compatible_state():
         torch.nn.Parameter(parameter.detach().clone()) for parameter in reference_parameters
     ]
     gradients = [torch.randn_like(parameter) for parameter in reference_parameters]
-    for reference, batched, gradient in zip(reference_parameters, batched_parameters, gradients):
+    for reference, batched, gradient in zip(
+        reference_parameters, batched_parameters, gradients, strict=False
+    ):
         reference.grad = gradient.clone()
         batched.grad = gradient.clone()
     settings = {
@@ -666,7 +674,7 @@ def test_batched_muon_matches_reference_and_keeps_compatible_state():
     reference.step()
     batched.step()
 
-    for expected, actual in zip(reference_parameters, batched_parameters):
+    for expected, actual in zip(reference_parameters, batched_parameters, strict=False):
         torch.testing.assert_close(actual, expected, rtol=0, atol=0)
     reference.load_state_dict(batched.state_dict())
     batched.load_state_dict(reference.state_dict())
@@ -928,7 +936,7 @@ def test_activation_checkpointing_preserves_reader_loss_and_gradients():
     checkpointed_loss.backward()
     torch.testing.assert_close(checkpointed_loss, reference_loss)
     gradients = 0
-    for expected, actual in zip(reference.parameters(), checkpointed.parameters()):
+    for expected, actual in zip(reference.parameters(), checkpointed.parameters(), strict=False):
         torch.testing.assert_close(actual.grad, expected.grad)
         gradients += int(actual.grad is not None and actual.grad.abs().sum() > 0)
     assert gradients
@@ -1086,7 +1094,7 @@ def test_muon_updates_expert_bank_slices_independently_with_bank_state():
     references = [torch.nn.Parameter(matrix.clone()) for matrix in bank.detach()]
     gradient = torch.randn_like(bank)
     bank.grad = gradient.clone()
-    for parameter, matrix_gradient in zip(references, gradient):
+    for parameter, matrix_gradient in zip(references, gradient, strict=False):
         parameter.grad = matrix_gradient.clone()
     settings = {
         "lr": 1e-3,
@@ -1188,7 +1196,7 @@ def test_grouped_cuda_expert_output_and_gradients_match_reference(num_experts, i
 
     torch.testing.assert_close(actual, expected, rtol=2e-2, atol=2e-2)
     torch.testing.assert_close(inputs.grad, reference_inputs.grad, rtol=3e-2, atol=3e-2)
-    for bank, reference in zip(banks, reference_banks):
+    for bank, reference in zip(banks, reference_banks, strict=False):
         torch.testing.assert_close(bank.grad, reference.grad, rtol=3e-2, atol=3e-2)
 
 

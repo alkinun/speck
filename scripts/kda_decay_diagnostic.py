@@ -90,7 +90,9 @@ class DecayAccumulator:
             "fractions_below": {
                 str(int(threshold)): self.below[threshold] / self.count for threshold in THRESHOLDS
             },
-            "quantiles": {str(quantile): value for quantile, value in zip(QUANTILES, quantiles)},
+            "quantiles": {
+                str(quantile): value for quantile, value in zip(QUANTILES, quantiles, strict=False)
+            },
             "sample_count": sample.numel(),
         }
 

@@ -47,14 +47,14 @@ def position_ranges(sequence_length, bins):
     if bins > sequence_length:
         raise ValueError("bins cannot exceed sequence length")
     boundaries = [index * sequence_length // bins for index in range(bins + 1)]
-    return tuple(zip(boundaries[:-1], boundaries[1:]))
+    return tuple(zip(boundaries[:-1], boundaries[1:], strict=False))
 
 
 def summarize_sums(sums, counts, ranges):
     """Convert position-bin accumulators into JSON-safe records."""
 
     records = []
-    for (start, end), total, count in zip(ranges, sums, counts):
+    for (start, end), total, count in zip(ranges, sums, counts, strict=False):
         count = int(count)
         if count:
             records.append(

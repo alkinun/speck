@@ -90,7 +90,7 @@ def shared_memory_architecture(source, caches, writer_key_value_heads=None, bind
     if not slots:
         raise ValueError("the source architecture has no global attention slots")
     writer_slots = {index * len(slots) // caches for index in range(caches)}
-    plan = dict(zip(slots, memory_plan(len(slots), caches, binding)))
+    plan = dict(zip(slots, memory_plan(len(slots), caches, binding), strict=False))
     reuses_source = caches == len(slots) and writer_key_value_heads is None
     groups = []
     reclaimed_total = 0

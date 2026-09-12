@@ -330,7 +330,7 @@ def main(argv=None):
         gc.collect()
         if device.type == "cuda":
             torch.cuda.empty_cache()
-    pairs = list(zip(results["released"]["answers"], results["starter"]["answers"]))
+    pairs = list(zip(results["released"]["answers"], results["starter"]["answers"], strict=False))
     report = {
         "format": "speck_sft_pilot_comparison",
         "version": 1,

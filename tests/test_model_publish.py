@@ -191,7 +191,7 @@ def assert_current_transformers_parity(tmp_path, values):
     expected_rotary = [buffer for buffer in native.rotary.buffers()]
     actual_rotary = [buffer for buffer in exported.native.rotary.buffers()]
     assert len(actual_rotary) == len(expected_rotary)
-    for actual, expected in zip(actual_rotary, expected_rotary):
+    for actual, expected in zip(actual_rotary, expected_rotary, strict=False):
         torch.testing.assert_close(actual, expected, rtol=0, atol=0)
     tokens = torch.randint(0, architecture.vocab_size, (1, 8))
     with torch.no_grad():

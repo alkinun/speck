@@ -144,7 +144,7 @@ def gradient_case(args, operation):
     names = ("query", "key", "value", "log_decay", "beta")
     return {
         name: maximum_error(actual.grad, expected.grad)
-        for name, actual, expected in zip(names, actual_values, reference_values)
+        for name, actual, expected in zip(names, actual_values, reference_values, strict=False)
     }
 
 

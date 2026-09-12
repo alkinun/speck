@@ -113,7 +113,9 @@ def _validate_route_vocabulary(path, expected_tokenizer, tokenizer=None):
         if tokenizer.fingerprint() != expected_tokenizer["fingerprint"]:
             raise ValueError("prepared tokenizer fingerprint does not match the route vocabulary")
         mismatches = [
-            text for text, token_id in zip(texts, token_ids) if tokenizer.encode(text) != [token_id]
+            text
+            for text, token_id in zip(texts, token_ids, strict=False)
+            if tokenizer.encode(text) != [token_id]
         ]
         if mismatches:
             raise ValueError(

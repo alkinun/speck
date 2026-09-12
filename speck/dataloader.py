@@ -94,7 +94,7 @@ def _smooth_cycle(weight_items):
         selected = max(range(len(source_ids)), key=current.__getitem__)
         current[selected] -= total_weight
         cycle.append(source_ids[selected])
-    if Counter(cycle) != Counter(dict(zip(source_ids, weights))):
+    if Counter(cycle) != Counter(dict(zip(source_ids, weights, strict=False))):
         raise ValueError("mixture weights did not produce an exact scheduling cycle")
     return tuple(cycle)
 

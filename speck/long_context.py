@@ -148,7 +148,7 @@ def _retrieval_text(
                 "prefix": "A long archive follows. Remember every exact record and answer the final question.\n",
                 "records": [
                     f"The access code for {label} is {answer}."
-                    for label, answer in zip(labels, answers)
+                    for label, answer in zip(labels, answers, strict=False)
                 ],
                 "question": (
                     f"\nQuestion: What is the access code for {labels[query_index]}?\n"
@@ -160,7 +160,8 @@ def _retrieval_text(
             return {
                 "prefix": "<REGISTRY>\nThe table below binds identifiers to payloads.\n",
                 "records": [
-                    f"ID[{label}] :: PAYLOAD[{answer}]" for label, answer in zip(labels, answers)
+                    f"ID[{label}] :: PAYLOAD[{answer}]"
+                    for label, answer in zip(labels, answers, strict=False)
                 ],
                 "question": f"\nLOOKUP ID[{labels[query_index]}]\n{cue('PAYLOAD')}: ",
                 "filler": "Status nominal. Queue empty. Routine telemetry recorded. ",
@@ -170,7 +171,7 @@ def _retrieval_text(
                 "prefix": "A parcel ledger follows. Each named parcel has one seal.\n",
                 "records": [
                     f"Parcel {label} bears the seal {answer}."
-                    for label, answer in zip(labels, answers)
+                    for label, answer in zip(labels, answers, strict=False)
                 ],
                 "question": (
                     f"\nWhich seal belongs to parcel {labels[query_index]}?\n{cue('Seal')}: "
@@ -182,7 +183,7 @@ def _retrieval_text(
                 "prefix": "A shipping manifest assigns one marker to each labeled shipment.\n",
                 "records": [
                     f"Shipment labeled {label} carries marker {answer}."
-                    for label, answer in zip(labels, answers)
+                    for label, answer in zip(labels, answers, strict=False)
                 ],
                 "question": (
                     f"\nReport the marker carried by shipment labeled {labels[query_index]}.\n"
@@ -194,7 +195,7 @@ def _retrieval_text(
             "prefix": "A station directory lists the signal assigned to every station.\n",
             "records": [
                 f"At station {label}, the assigned signal reads {answer}."
-                for label, answer in zip(labels, answers)
+                for label, answer in zip(labels, answers, strict=False)
             ],
             "question": (
                 f"\nState the signal assigned at station {labels[query_index]}.\n{cue('Signal')}: "
@@ -210,11 +211,11 @@ def _retrieval_text(
             ),
             "first": [
                 f"The route from {label} leads to {destination}."
-                for label, destination in zip(labels, destinations)
+                for label, destination in zip(labels, destinations, strict=False)
             ],
             "second": [
                 f"The access code inside {destination} is {answer}."
-                for destination, answer in zip(destinations, answers)
+                for destination, answer in zip(destinations, answers, strict=False)
             ],
             "question": (
                 f"\nQuestion: Follow the route from {labels[query_index]}. "
@@ -227,11 +228,11 @@ def _retrieval_text(
             "prefix": "<ROUTING_TABLE>\nResolve the directed bindings, then return the payload.\n",
             "first": [
                 f"EDGE[{label}] -> NODE[{destination}]"
-                for label, destination in zip(labels, destinations)
+                for label, destination in zip(labels, destinations, strict=False)
             ],
             "second": [
                 f"NODE[{destination}] -> PAYLOAD[{answer}]"
-                for destination, answer in zip(destinations, answers)
+                for destination, answer in zip(destinations, answers, strict=False)
             ],
             "question": f"\nRESOLVE EDGE[{labels[query_index]}]\n{cue('PAYLOAD')}: ",
             "filler": "Heartbeat stable. No pending route changes. Diagnostic entry complete. ",
@@ -241,11 +242,11 @@ def _retrieval_text(
             "prefix": "A dispatch ledger follows. Each dispatch names a depot holding one seal.\n",
             "first": [
                 f"Dispatch {label} names depot {destination}."
-                for label, destination in zip(labels, destinations)
+                for label, destination in zip(labels, destinations, strict=False)
             ],
             "second": [
                 f"Depot {destination} stores seal {answer}."
-                for destination, answer in zip(destinations, answers)
+                for destination, answer in zip(destinations, answers, strict=False)
             ],
             "question": (
                 f"\nWhich seal is stored at the depot named by dispatch {labels[query_index]}?\n"
@@ -258,11 +259,11 @@ def _retrieval_text(
             "prefix": "A transit manifest links each ticket to a warehouse and cargo marker.\n",
             "first": [
                 f"Ticket {label} sends cargo to warehouse {destination}."
-                for label, destination in zip(labels, destinations)
+                for label, destination in zip(labels, destinations, strict=False)
             ],
             "second": [
                 f"Warehouse {destination} labels its cargo {answer}."
-                for destination, answer in zip(destinations, answers)
+                for destination, answer in zip(destinations, answers, strict=False)
             ],
             "question": (
                 f"\nReport the cargo marker reached from ticket {labels[query_index]}.\n"
@@ -274,11 +275,11 @@ def _retrieval_text(
         "prefix": "A route directory links each card to a station displaying one signal.\n",
         "first": [
             f"Route card {label} points to station {destination}."
-            for label, destination in zip(labels, destinations)
+            for label, destination in zip(labels, destinations, strict=False)
         ],
         "second": [
             f"Station {destination} displays signal {answer}."
-            for destination, answer in zip(destinations, answers)
+            for destination, answer in zip(destinations, answers, strict=False)
         ],
         "question": (
             f"\nState the signal reached from route card {labels[query_index]}.\n{cue('Signal')}: "
@@ -298,7 +299,7 @@ def _exact_prompt(prefix, blocks, question, filler, filler_positions, prompt_len
     prompt = list(prefix)
     previous = 0
     block_positions = []
-    for position, block in zip(positions, blocks):
+    for position, block in zip(positions, blocks, strict=False):
         prompt.extend(filler_tokens[previous:position])
         block_positions.append(len(prompt))
         prompt.extend(block)
@@ -404,7 +405,7 @@ def build_multi_key_case(
         response_cue=response_cue,
     )
     prefix = tokenizer.encode(text["prefix"], bos=True)
-    record_lines = list(zip(labels, answers))
+    record_lines = list(zip(labels, answers, strict=False))
     generator.shuffle(record_lines)
     shuffled_text = _retrieval_text(
         template,
@@ -491,8 +492,8 @@ def build_two_hop_case(
     answers[mutation_index] = values[
         (values.index(answers[mutation_index]) + answer_offset) % len(values)
     ]
-    first_lines = list(zip(starts, destinations))
-    second_lines = list(zip(destinations, answers))
+    first_lines = list(zip(starts, destinations, strict=False))
+    second_lines = list(zip(destinations, answers, strict=False))
     generator.shuffle(first_lines)
     generator.shuffle(second_lines)
     text = _retrieval_text(
@@ -513,7 +514,7 @@ def build_two_hop_case(
         destinations=[destination for _, destination in first_lines],
         response_cue=response_cue,
     )
-    answer_by_destination = dict(zip(destinations, answers))
+    answer_by_destination = dict(zip(destinations, answers, strict=False))
     second_text = _retrieval_text(
         template,
         "two_hop",
@@ -623,8 +624,8 @@ def build_symbolic_two_hop_case(
         ]
         mutated_answer = answers[mutation_index]
 
-    first_lines = list(zip(starts, destinations))
-    second_lines = list(zip(destinations, answers))
+    first_lines = list(zip(starts, destinations, strict=False))
+    second_lines = list(zip(destinations, answers, strict=False))
     generator.shuffle(first_lines)
     generator.shuffle(second_lines)
     text = _retrieval_text(
@@ -645,7 +646,7 @@ def build_symbolic_two_hop_case(
         destinations=[destination for _, destination in first_lines],
         response_cue=response_cue,
     )
-    answer_by_destination = dict(zip(destinations, answers))
+    answer_by_destination = dict(zip(destinations, answers, strict=False))
     second_text = _retrieval_text(
         template,
         "two_hop",
@@ -769,7 +770,9 @@ def evaluate_case(model, case, device=None, state_dtype=None, kv_cache_dtype=Non
         logits = model(token, state=state, last_token_only=True)[:, -1]
     _synchronize(device)
     decode_seconds = time.perf_counter() - decode_started
-    matched = sum(expected == actual for expected, actual in zip(answers, predictions))
+    matched = sum(
+        expected == actual for expected, actual in zip(answers, predictions, strict=False)
+    )
     memory = state.memory_report()
     return {
         "task": case["task"],

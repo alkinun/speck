@@ -206,7 +206,9 @@ def transform_state(state, config):
     )
     transformed["model.embedding_norm.weight"] = _take(state, consumed, "norm.weight")
 
-    for index, (group, layer_type) in enumerate(zip(config["blocks"], layout["layer_types"])):
+    for index, (group, layer_type) in enumerate(
+        zip(config["blocks"], layout["layer_types"], strict=False)
+    ):
         source = f"cores.group_{index}_repeat_0"
         target = f"model.layers.{index}"
         operator = f"{source}.stages.0.branches.0"
@@ -434,7 +436,7 @@ def transformed_parameter_count(config, layout):
     total = expected
     total -= vocab_size * embedding_size + 2 * embedding_size * hidden_size
     total += 2 * vocab_size * hidden_size
-    for group, layer_type in zip(config["blocks"], layout["layer_types"]):
+    for group, layer_type in zip(config["blocks"], layout["layer_types"], strict=False):
         if layer_type != "conv":
             continue
         spec = group["block"]["stages"][0]["branches"][0]
@@ -604,7 +606,7 @@ def main():
 
     artifacts = [{"path": bf16, "quantization": "BF16"}]
     smoke_test(cli, completion, bf16, args.jobs, conversational)
-    for quantization, output in zip(quantizations, intended[1:]):
+    for quantization, output in zip(quantizations, intended[1:], strict=False):
         if not output.is_file():
             run([quantizer, bf16, output, quantization, str(args.jobs)])
         smoke_test(cli, completion, output, args.jobs, conversational)

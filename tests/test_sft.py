@@ -76,7 +76,7 @@ def test_prompt_completion_masks_all_history_and_keeps_final_eos(tmp_path):
     tokens, mask = encode_completion(row, tokenizer)
     prefix, _ = tokenizer.encode_messages(row["prompt"], add_generation_prompt=True)
     assert not any(mask[: len(prefix)])
-    supervised = [token for token, use in zip(tokens, mask) if use]
+    supervised = [token for token, use in zip(tokens, mask, strict=False) if use]
     assert supervised == tokenizer.base.encode("Final answer") + [tokenizer.eos_id]
 
 
