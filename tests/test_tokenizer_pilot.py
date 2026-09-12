@@ -16,9 +16,11 @@ def _sha256(path):
 
 
 def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_closed():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v2.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v7.json").read_text())
 
-    assert plan["status"] == "firewall_superset_corpus_preprocess_frozen_real_runs_blocked"
+    assert (
+        plan["status"] == "fixed_document_and_equal_flop_streams_complete_run_materializer_pending"
+    )
     assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
     assert (
         _sha256(ROOT / plan["static_prerequisite"]["path"]) == plan["static_prerequisite"]["sha256"]
@@ -28,6 +30,24 @@ def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_close
         == plan["pilot_corpus"]["config"]["sha256"]
     )
     for path, digest in plan["implementation"].values():
+        assert _sha256(ROOT / path) == digest
+    result = plan["pilot_corpus"]["result"]
+    assert _sha256(ROOT / result["path"]) == result["sha256"]
+    assert plan["pilot_corpus"]["retained_mistral_reference_tokens"] >= 1_200_000_000
+    stream = plan["fixed_stream"]
+    assert _sha256(ROOT / stream["plan"]["path"]) == stream["plan"]["sha256"]
+    for path, digest in stream["implementation"].values():
+        assert _sha256(ROOT / path) == digest
+    stream_result = stream["result"]
+    assert _sha256(ROOT / stream_result["path"]) == stream_result["sha256"]
+    assert plan["stopping"]["fixed_document_mistral_tokens"] == 1_200_007_273
+    continuation = plan["fixed_flop_materialization"]["continuation"]
+    assert _sha256(ROOT / continuation["plan"]["path"]) == continuation["plan"]["sha256"]
+    failure = continuation["failed_predecessor"]
+    assert _sha256(ROOT / failure["path"]) == failure["sha256"]
+    continuation_result = continuation["result"]
+    assert _sha256(ROOT / continuation_result["path"]) == continuation_result["sha256"]
+    for path, digest in continuation["implementation"].values():
         assert _sha256(ROOT / path) == digest
     assert plan["sealed_audit"]["status"] == "unopened"
     assert plan["final_selection_authority"] is False

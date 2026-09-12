@@ -125,6 +125,11 @@ path from the later inference-only expert-sharded V3 reference.
 39. [SnapKV](29_snapkv.md) — score an older prompt prefix from a trailing observation window, pool
     positions into local clusters, and retain a fixed prompt cache for generation.
 
+### Release-era system comparators
+
+40. [MiniCPM5-2B](49_minicpm5_2b_release.md) — separate its standard dense architecture from tiered
+    late-stage data, specialist RL/OPD, aggressive GQA, tokenizer cost, and unusually complete release.
+
 ## Decision map for the active flagship
 
 | Question | Best starting papers | Active local decision |
@@ -135,10 +140,12 @@ path from the later inference-only expert-sharded V3 reference.
 | How should training scale? | Kimi Linear, systematic hybrid studies | D4/D6 plus the 60M–750M dense scale ladder |
 | What is the release gate? | MiniMax-M2, Nemotron 3 Nano | RULER v2, internal retrieval/composition, 4K retention, and serving profiles |
 | How should serving cost be decomposed? | DeepSeek-V4.1-Flash | Report prefill, decode, runtime state, persistent state, and output tokens separately |
+| Which current small released system should be checked? | MiniCPM5-2B | Pin Base and final revisions; compare base quality and released-system cost without treating RL+OPD as architecture evidence |
 | What moves to a later grant? | MLA, AttnRes, NSA, MoBA, DeepSeekMoE, Kimi K3 | Cache compression, depth routing, sparse attention, and MoE sparse upcycling |
 
 ## Source set
 
 The collection contains the 22 papers supplied in the original research brief, nineteen later direct
-overlap audits, one supporting eviction baseline, and six official-source or release-lineage notes:
-48 files total. They are literature evidence, not an active experiment backlog.
+overlap audits, one supporting eviction baseline, one release-era system comparator, and six
+official-source or release-lineage notes: 49 files total. They are literature evidence, not an active
+experiment backlog.

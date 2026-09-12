@@ -293,7 +293,7 @@
     "architecture": "research/flagship/architecture_plan_v2.json",
     "integration": "research/flagship/integration_plan_v2.json",
     "tokenizer": "research/flagship/tokenizer_plan_v7.json",
-    "tokenizer_pilot": "research/flagship/tokenizer_pilot_plan_v2.json",
+    "tokenizer_pilot": "research/flagship/tokenizer_pilot_plan_v7.json",
     "paper_claims": "paper/claims.json",
     "release_policy": "research/flagship/release_and_data_use_policy_v1.json",
     "source_registry": "research/flagship/source_registry_v2.json",
@@ -307,6 +307,7 @@
     "precision": "research/flagship/precision_plan_v1.json",
     "backup_restore": "results/release/independent-r3-backup-restore-20260910.json",
     "pregrant_blockers": "research/flagship/pregrant_blockers_20260910.json",
+    "minicpm5_comparator": "research/flagship/minicpm5_comparator_v1.json",
     "lab_direction": "research/DIRECTION.md"
   },
   "supersedes": {

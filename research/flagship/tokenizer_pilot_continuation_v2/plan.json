@@ -1,0 +1,94 @@
+{
+  "format": "speck_tokenizer_pilot_continuation",
+  "format_version": 1,
+  "status": "materialization_authorized_not_model_training_authority",
+  "fixed_stream": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-stream-v1/manifest.json",
+    "sha256": "0d2633cf22754adf3ba28b82bce153daacb0d9d0aa9cb892b09c79f64bd6f4e5"
+  },
+  "reference_tokenizer_id": "mistral-32k",
+  "tokenizers": [
+    {
+      "id": "mistral-32k",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/baselines/mistral-32k/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "minimum_additional_tokens": 0
+    },
+    {
+      "id": "speck-bpe-40960-whitespace",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-40960-whitespace/tokenizer.model",
+        "sha256": "77d5abbdbebff82ed45ac7bce9522b9a8aff34ce8f27b9f6ff7fc9d037e8408c"
+      },
+      "minimum_additional_tokens": 17422162
+    },
+    {
+      "id": "speck-bpe-32000-whitespace",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-32000-whitespace/tokenizer.model",
+        "sha256": "173e42b64c27fdc0e343868233f8a809b67c6d6c2f2a32bf6cf4d5c20832e038"
+      },
+      "minimum_additional_tokens": 57386157
+    }
+  ],
+  "categories": [
+    {
+      "id": "web",
+      "source_id": "pilot_train__ultrafineweb_en_v1_4",
+      "input": {
+        "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/pilot_train__ultrafineweb_en_v1_4.jsonl",
+        "sha256": "fa4501d5ce7ff86d40fe8806b6845c5792616e771edc0ab81f9fcc68ee7123cd"
+      },
+      "reference_token_target": 41500000
+    },
+    {
+      "id": "code",
+      "source_id": "pilot_train__common_pile_stackv2_edu",
+      "input": {
+        "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/pilot_train__common_pile_stackv2_edu.jsonl",
+        "sha256": "da7799f761e4bed3f96ec301f80967a7c0891b365875a3338615b38c24a36812"
+      },
+      "reference_token_target": 10800000
+    },
+    {
+      "id": "math",
+      "source_id": "pilot_train__finemath_4plus",
+      "input": {
+        "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/pilot_train__finemath_4plus.jsonl",
+        "sha256": "663b281bb8fcd93cbe4d6801846ef0130933b45cb15775fe9fd580cdc821895e"
+      },
+      "reference_token_target": 7200000
+    },
+    {
+      "id": "synthetic",
+      "source_id": "pilot_train__cosmopedia_v2",
+      "input": {
+        "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/pilot_train__cosmopedia_v2.jsonl",
+        "sha256": "4105da79e46eae3d1b5fa72e9fdc39bde7cce521435868c49866a51d665a6274"
+      },
+      "reference_token_target": 7200000
+    },
+    {
+      "id": "science",
+      "source_id": "pilot_train__common_pile_pubmed",
+      "input": {
+        "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/pilot_train__common_pile_pubmed.jsonl",
+        "sha256": "cef05b02fa972108b456b8d8cddb5734a157eeb5362b58d2ecbb17a3b38c0512"
+      },
+      "reference_token_target": 1700000
+    },
+    {
+      "id": "reference",
+      "source_id": "pilot_train__finewiki_en",
+      "input": {
+        "path": "/mnt/speck-data/speck/tokenizer-pilot-corpus-v1/deduplicated/pilot_train__finewiki_en.jsonl",
+        "sha256": "4f5f246434b8b81d130993d34c89c396ccdeff8b835f60553594608e18e2f5ad"
+      },
+      "reference_token_target": 3600000
+    }
+  ],
+  "shard_tokens": 100000000,
+  "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-continuation-v2"
+}

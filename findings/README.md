@@ -95,6 +95,10 @@ status is tracked in [`paper/claims.json`](../paper/claims.json).
 | [Production data firewall](210_production_data_firewall.md) | Equal-category partitions pass; audits stay sealed and model training stays blocked |
 | [Formal tokenizer static nomination](211_formal_tokenizer_static_nomination.md) | 40,960 and exact-32K advance to the matched LM pilot |
 | [Independent R3 backup/restore](212_independent_r3_backup_restore.md) | A 5.08 GB representative tree restores exactly from a second physical device |
+| [Tokenizer-pilot corpus capacity](213_tokenizer_pilot_corpus_capacity.md) | Conservative firewall exclusion leaves 2.056B reference tokens |
+| [Tokenizer-pilot fixed stream](214_tokenizer_pilot_fixed_stream.md) | One document stream is packed under all three finalist tokenizers |
+| [Tokenizer-pilot equal-FLOP continuation](215_tokenizer_pilot_equal_flop_continuation.md) | Both custom packs clear their exact equal-compute stops |
+| [MiniCPM5-2B lessons](216_minicpm5_2b_lessons.md) | Tiered late data and complete release matter more than copying mechanisms |
 | [Allocation-thesis program](205_allocation_thesis_program.md) | Four linked paper claims, fixed 1.2B target, five-seed I1, mature-horizon S2, and V4.1 systems taxonomy |
 
 ## Conventions

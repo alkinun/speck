@@ -1,0 +1,139 @@
+{
+  "D5_tokenizer_audit": "unopened",
+  "authority": "stream and packing evidence only; exact model optimizer schedule evaluation and seven-run manifests remain required",
+  "document_stream": {
+    "actual_reference_tokens": 1200007273,
+    "categories": [
+      {
+        "documents": 689951,
+        "id": "web",
+        "reference_overshoot_tokens": 264,
+        "reference_token_target": 660000000,
+        "reference_tokens": 660000264,
+        "tokenizer_tokens": {
+          "mistral-32k": 660000264,
+          "speck-bpe-32000-whitespace": 640814921,
+          "speck-bpe-40960-whitespace": 620400426
+        },
+        "utf8_bytes": 2712104918
+      },
+      {
+        "documents": 118848,
+        "id": "code",
+        "reference_overshoot_tokens": 302,
+        "reference_token_target": 180000000,
+        "reference_tokens": 180000302,
+        "tokenizer_tokens": {
+          "mistral-32k": 180000302,
+          "speck-bpe-32000-whitespace": 165189589,
+          "speck-bpe-40960-whitespace": 160226599
+        },
+        "utf8_bytes": 594132631
+      },
+      {
+        "documents": 81774,
+        "id": "math",
+        "reference_overshoot_tokens": 720,
+        "reference_token_target": 120000000,
+        "reference_tokens": 120000720,
+        "tokenizer_tokens": {
+          "mistral-32k": 120000720,
+          "speck-bpe-32000-whitespace": 110727511,
+          "speck-bpe-40960-whitespace": 108609956
+        },
+        "utf8_bytes": 369576217
+      },
+      {
+        "documents": 149169,
+        "id": "synthetic",
+        "reference_overshoot_tokens": 498,
+        "reference_token_target": 120000000,
+        "reference_tokens": 120000498,
+        "tokenizer_tokens": {
+          "mistral-32k": 120000498,
+          "speck-bpe-32000-whitespace": 112711286,
+          "speck-bpe-40960-whitespace": 108890219
+        },
+        "utf8_bytes": 558320770
+      },
+      {
+        "documents": 5633,
+        "id": "science",
+        "reference_overshoot_tokens": 5262,
+        "reference_token_target": 60000000,
+        "reference_tokens": 60005262,
+        "tokenizer_tokens": {
+          "mistral-32k": 60005262,
+          "speck-bpe-32000-whitespace": 54711242,
+          "speck-bpe-40960-whitespace": 53260548
+        },
+        "utf8_bytes": 204521495
+      },
+      {
+        "documents": 60868,
+        "id": "reference",
+        "reference_overshoot_tokens": 227,
+        "reference_token_target": 60000000,
+        "reference_tokens": 60000227,
+        "tokenizer_tokens": {
+          "mistral-32k": 60000227,
+          "speck-bpe-32000-whitespace": 58466567,
+          "speck-bpe-40960-whitespace": 56649831
+        },
+        "utf8_bytes": 216892502
+      }
+    ],
+    "documents": 1106243,
+    "minimum_reference_tokens": 1200000000,
+    "sha256": "3f75518cf8761af9faee91ecd5ef01a62bda8253a8123c17aa63564d35d3f330",
+    "utf8_bytes": 4655548533,
+    "whole_document_overshoot_tokens": 7273
+  },
+  "final_tokenizer_selection_authority": false,
+  "format": "speck_tokenizer_pilot_stream_publication",
+  "format_version": 1,
+  "gates": {
+    "input_identity": "pass",
+    "model_training_authority": "blocked",
+    "packed_shard_integrity": "pass",
+    "shared_document_identity": "pass",
+    "six_category_reference_targets": "pass",
+    "whole_document_selection": "pass"
+  },
+  "git_revision": "f5a9f7e",
+  "model_training_authority": false,
+  "plan": {
+    "fingerprint": "610f600f792850b64f458b028559e75e9ab173c86d0565b53cd87d8865a21ad2",
+    "path": "research/flagship/tokenizer_pilot_stream_v1/plan.json",
+    "sha256": "94749ebb6535eb595d4f11fe6f9e573bdd0658f1c81caa71b62d02d906489628"
+  },
+  "recorded_on": "2026-09-11",
+  "runtime": {
+    "cpu_seconds": 2495.872,
+    "invocation_id": "22d053dac6824f83808c974ce496bd58",
+    "peak_service_memory_journal_display": "7.4G",
+    "wall_seconds": 520.578
+  },
+  "runtime_manifest": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-stream-v1/manifest.json",
+    "sha256": "0d2633cf22754adf3ba28b82bce153daacb0d9d0aa9cb892b09c79f64bd6f4e5"
+  },
+  "status": "fixed_whole_document_stream_and_three_tokenizer_packs_pass",
+  "tokenizer_totals": {
+    "mistral-32k": {
+      "delta_tokens_vs_mistral": 0,
+      "relative_token_change_vs_mistral": 0.0,
+      "tokens": 1200007273
+    },
+    "speck-bpe-32000-whitespace": {
+      "delta_tokens_vs_mistral": -57386157,
+      "relative_token_change_vs_mistral": -0.04782150766181237,
+      "tokens": 1142621116
+    },
+    "speck-bpe-40960-whitespace": {
+      "delta_tokens_vs_mistral": -91969694,
+      "relative_token_change_vs_mistral": -0.07664094715865943,
+      "tokens": 1108037579
+    }
+  }
+}

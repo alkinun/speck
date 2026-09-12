@@ -90,7 +90,7 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "architecture": "research/flagship/architecture_plan_v2.json",
         "integration": "research/flagship/integration_plan_v2.json",
         "tokenizer": "research/flagship/tokenizer_plan_v7.json",
-        "tokenizer_pilot": "research/flagship/tokenizer_pilot_plan_v2.json",
+        "tokenizer_pilot": "research/flagship/tokenizer_pilot_plan_v7.json",
         "paper_claims": "paper/claims.json",
         "release_policy": "research/flagship/release_and_data_use_policy_v1.json",
         "source_registry": "research/flagship/source_registry_v2.json",
@@ -104,6 +104,7 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "precision": "research/flagship/precision_plan_v1.json",
         "backup_restore": "results/release/independent-r3-backup-restore-20260910.json",
         "pregrant_blockers": "research/flagship/pregrant_blockers_20260910.json",
+        "minicpm5_comparator": "research/flagship/minicpm5_comparator_v1.json",
         "lab_direction": "research/DIRECTION.md",
     }
     assert all((ROOT / path).is_file() for path in execution["active_contracts"].values())
@@ -139,6 +140,17 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
     }
     assert blockers["paid_compute_launch_authority"] is False
     assert blockers["model_training_authority"] is False
+    minicpm = json.loads((ROOT / execution["active_contracts"]["minicpm5_comparator"]).read_text())
+    assert minicpm["status"] == "identity_frozen_evaluation_pending_not_training_or_claim_authority"
+    assert [item["role"] for item in minicpm["checkpoints"]] == [
+        "base_pretraining_comparator",
+        "midtraining_stage_context",
+        "SFT_stage_context",
+        "released_system_comparator",
+    ]
+    assert minicpm["verified_release_config"]["total_parameters"] == 2_516_756_480
+    assert minicpm["training_authority"] is False
+    assert minicpm["paper_claim_authority"] is False
     assert sum(phase["gpu_hours"] for phase in phases.values()) == 5_000
     assert (
         sum(phase["gpu_hours"] for phase in phases.values() if not phase.get("conditional"))

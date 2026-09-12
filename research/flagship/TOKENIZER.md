@@ -89,9 +89,18 @@ and near-duplicate requirements for the full flagship corpus.
 
 The exact executable config is frozen at `tokenizer_d5_v1/experiment.json`.
 The matched LM pilot is governed by
-[`tokenizer_pilot_plan_v2.json`](tokenizer_pilot_plan_v2.json). Its training corpus first reruns global
+[`tokenizer_pilot_plan_v7.json`](tokenizer_pilot_plan_v7.json). Its training corpus reruns global
 exact/verified-near deduplication with all twelve prepared firewall candidate views taking precedence;
 this conservative superset keeps both audits unopened while excluding every possible firewall record.
+The completed pass retains 2.056B Mistral-reference tokens for the 1.2B pilot.
+The fixed successor stream contains 1,106,243 whole documents and 1,200,007,273 reference tokens,
+packed under all three pilot tokenizers before any model output.
+The active successor also freezes a shared 72M-reference-token continuation after the endpoint, large
+enough for both custom models to reach the exact Mistral fixed-FLOP target without cycling documents.
+The first continuation stopped before publication when only 1.780M post-endpoint science tokens were
+available. The successor keeps 72M total, caps science at 1.7M, and moves 1.9M to web before model outputs.
+That successor passes with 72.025M reference tokens; both custom packs now exceed their exact
+equal-FLOP stops.
 
 Build the balanced sample:
 

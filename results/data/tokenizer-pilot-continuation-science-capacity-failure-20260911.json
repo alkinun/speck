@@ -1,0 +1,26 @@
+{
+  "D5_tokenizer_audit": "unopened",
+  "available_post_endpoint_reference_tokens": 1779766,
+  "disposition": "freeze a pre-results successor retaining 72M total continuation tokens, cap science at 1.7M, and move 1.9M to web; preserve all other targets",
+  "failed_category": "science",
+  "format": "speck_tokenizer_pilot_continuation_failure",
+  "format_version": 1,
+  "git_revision": "ecdf971",
+  "model_runs_started": 0,
+  "model_training_authority": false,
+  "plan": {
+    "path": "research/flagship/tokenizer_pilot_continuation_v1/plan.json",
+    "sha256": "cf47e22a5c8188a802dfac240237e39457ea7089be761f34b94126722ea4010e"
+  },
+  "published_output": false,
+  "recorded_on": "2026-09-11",
+  "requested_reference_tokens": 3600000,
+  "runtime": {
+    "cpu_seconds": 148.326,
+    "invocation_id": "2ebb6c8aa4ae4805a65217a427c24c3b",
+    "peak_service_memory_journal_display": "962.6M",
+    "wall_seconds": 37.348
+  },
+  "shortfall_reference_tokens": 1820234,
+  "status": "stopped_before_publication_science_continuation_capacity_below_frozen_target"
+}
