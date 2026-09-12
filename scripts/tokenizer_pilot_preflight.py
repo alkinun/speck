@@ -73,7 +73,26 @@ def run_preflight(plan):
     target = next(item for item in scale["targets"] if item["id"] == plan["target_id"])
     device = torch.device("cuda")
     results = []
+    shape_results = {}
     for declaration in plan["tokenizers"]:
+        shape_key = declaration["vocab_size"]
+        if shape_key in shape_results:
+            measured = shape_results[shape_key]
+            throughput = measured["tokens_per_second"]
+            results.append(
+                {
+                    **declaration,
+                    **measured,
+                    "measurement_reused_from_identical_vocab_shape": measured["measured_shape_id"],
+                    "projected_fixed_document_hours": declaration["fixed_document_aligned_tokens"]
+                    / throughput
+                    / 3600,
+                    "projected_run_hours": declaration["run_stop_aligned_tokens"]
+                    / throughput
+                    / 3600,
+                }
+            )
+            continue
         torch.manual_seed(settings["seed"])
         torch.cuda.manual_seed_all(settings["seed"])
         model = build_model(
@@ -150,16 +169,21 @@ def run_preflight(plan):
             settings["sequence_length"],
             contract_version=2,
         )["analytic_training_flops_per_token"]
+        measured = {
+            "parameters": sum(parameter.numel() for parameter in parameters),
+            "analytic_training_flops_per_token": analytic,
+            "measured_seconds": elapsed,
+            "measured_tokens": tokens,
+            "tokens_per_second": throughput,
+            "peak_memory_bytes": torch.cuda.max_memory_allocated(device),
+            "losses": losses,
+            "measured_shape_id": declaration["id"],
+        }
+        shape_results[shape_key] = measured
         results.append(
             {
                 **declaration,
-                "parameters": sum(parameter.numel() for parameter in parameters),
-                "analytic_training_flops_per_token": analytic,
-                "measured_seconds": elapsed,
-                "measured_tokens": tokens,
-                "tokens_per_second": throughput,
-                "peak_memory_bytes": torch.cuda.max_memory_allocated(device),
-                "losses": losses,
+                **measured,
                 "projected_fixed_document_hours": declaration["fixed_document_aligned_tokens"]
                 / throughput
                 / 3600,

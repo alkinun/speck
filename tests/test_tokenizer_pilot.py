@@ -16,9 +16,9 @@ def _sha256(path):
 
 
 def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_closed():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v8.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v9.json").read_text())
 
-    assert plan["status"] == "exact_batch_aligned_preflight_frozen_quality_runs_blocked"
+    assert plan["status"] == "corrected_unique_shape_batch4_preflight_frozen_quality_runs_blocked"
     assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
     assert (
         _sha256(ROOT / plan["static_prerequisite"]["path"]) == plan["static_prerequisite"]["sha256"]
@@ -50,6 +50,8 @@ def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_close
     assert (
         _sha256(ROOT / preflight["implementation"]["path"]) == preflight["implementation"]["sha256"]
     )
+    failed = preflight["failed_predecessor"]
+    assert _sha256(ROOT / failed["path"]) == failed["sha256"]
     for path, digest in continuation["implementation"].values():
         assert _sha256(ROOT / path) == digest
     assert plan["sealed_audit"]["status"] == "unopened"
@@ -57,12 +59,14 @@ def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_close
 
 
 def test_cuda_preflight_uses_executable_non_underrunning_optimizer_boundaries():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_preflight_v1.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_preflight_v2.json").read_text())
     batch_tokens = plan["settings"]["batch_tokens"]
 
     assert plan["quality_run_authority"] is False
     assert plan["final_selection_authority"] is False
     assert batch_tokens == 65_536
+    assert plan["settings"]["device_batch_size"] == 4
+    assert plan["settings"]["accumulation"] == 4
     for tokenizer in plan["tokenizers"]:
         assert tokenizer["fixed_document_aligned_tokens"] % batch_tokens == 0
         assert tokenizer["fixed_flop_aligned_tokens"] % batch_tokens == 0

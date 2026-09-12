@@ -89,7 +89,7 @@ and near-duplicate requirements for the full flagship corpus.
 
 The exact executable config is frozen at `tokenizer_d5_v1/experiment.json`.
 The matched LM pilot is governed by
-[`tokenizer_pilot_plan_v8.json`](tokenizer_pilot_plan_v8.json). Its training corpus reruns global
+[`tokenizer_pilot_plan_v9.json`](tokenizer_pilot_plan_v9.json). Its training corpus reruns global
 exact/verified-near deduplication with all twelve prepared firewall candidate views taking precedence;
 this conservative superset keeps both audits unopened while excluding every possible firewall record.
 The completed pass retains 2.056B Mistral-reference tokens for the 1.2B pilot.
@@ -103,6 +103,8 @@ That successor passes with 72.025M reference tokens; both custom packs now excee
 equal-FLOP stops.
 Before quality runs, v8 freezes 65,536-token optimizer boundaries and an exact-shape synthetic CUDA
 preflight; it cannot select a tokenizer and must project the worst seven-run matrix inside 30 hours.
+Preflight v1 was rejected because the first of two identical 32K shapes retained compile cost. V9
+measures each unique vocabulary shape once at device batch four before making any launch projection.
 
 Build the balanced sample:
 

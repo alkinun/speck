@@ -1,0 +1,30 @@
+{
+  "D5_tokenizer_audit": "unopened",
+  "disposition": "reuse one measurement per unique vocabulary shape; use device batch four, accumulation four, two warmup and five measured optimizer steps",
+  "format": "speck_tokenizer_pilot_preflight_assessment",
+  "format_version": 1,
+  "git_revision": "3810579",
+  "invalidity": "Mistral and exact-32K instantiate the same vocabulary and model shape but differed 3.59x because the first measured shape still paid compile/autotune work; device batch one also used only about 2.7 GB",
+  "observed": {
+    "identical_exact32_tokens_per_second": 27673.561756822262,
+    "maximum_peak_memory_bytes": 2688717312,
+    "mistral_tokens_per_second": 7710.900461305708,
+    "ratio": 0.27863780344085154
+  },
+  "plan": {
+    "path": "research/flagship/tokenizer_pilot_preflight_v1.json",
+    "sha256": "bc6b64ba759724c0550287180d44678f76562851e2cac05d9190dcec952a0b4b"
+  },
+  "quality_run_authority": false,
+  "quality_runs_started": 0,
+  "recorded_on": "2026-09-12",
+  "runtime": {
+    "cpu_seconds": 375.506,
+    "invocation_id": "70960a37e8ba4dc4bca19140c055ea23",
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-preflight-v1.json",
+    "peak_service_memory_journal_display": "7G",
+    "sha256": "565ac047b264327c790b350dae97d5bea440647822e4da6da0301fc434c6edd3",
+    "wall_seconds": 200.764
+  },
+  "status": "v1_projection_invalid_first_shape_compile_contamination_no_quality_authority"
+}
