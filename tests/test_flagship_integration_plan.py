@@ -90,7 +90,7 @@ def test_execution_budget_strengthens_interaction_and_preserves_total():
         "architecture": "research/flagship/architecture_plan_v2.json",
         "integration": "research/flagship/integration_plan_v2.json",
         "tokenizer": "research/flagship/tokenizer_plan_v7.json",
-        "tokenizer_pilot": "research/flagship/tokenizer_pilot_plan_v3.json",
+        "tokenizer_pilot": "research/flagship/tokenizer_pilot_plan_v4.json",
         "paper_claims": "paper/claims.json",
         "release_policy": "research/flagship/release_and_data_use_policy_v1.json",
         "source_registry": "research/flagship/source_registry_v2.json",
