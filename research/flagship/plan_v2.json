@@ -307,6 +307,7 @@
     "precision": "research/flagship/precision_plan_v1.json",
     "backup_restore": "results/release/independent-r3-backup-restore-20260910.json",
     "pregrant_blockers": "research/flagship/pregrant_blockers_20260910.json",
+    "minicpm5_comparator": "research/flagship/minicpm5_comparator_v1.json",
     "lab_direction": "research/DIRECTION.md"
   },
   "supersedes": {

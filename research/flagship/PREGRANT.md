@@ -52,7 +52,7 @@ introduce a new mechanism or reopen a completed selection after outputs.
 
 | ID | Work | Current state | Done when | Linear |
 | --- | --- | --- | --- | --- |
-| R13 | Comparator baseline table | Pre-access offline log-probability parity contract is fixture-qualified; backend access, revisions, evaluations, and baseline table are pending | Named comparator revisions, token budgets, quality results, and 3090/CPU serving profiles are recorded | SPE-116 |
+| R13 | Comparator baseline table | Pre-access parity is fixture-qualified; MiniCPM5-2B Base/Midtrain/SFT/final revisions are now pinned as a release-era comparator with strict base-versus-final boundaries; downloads, evaluations, other backends, and table remain | Named comparator revisions, token budgets, quality results, and 3090/CPU serving profiles are recorded | SPE-116 |
 | R14 | RULER v2 and internal protocols | Sources/cases are qualified | Launch manifests pin the exact active tasks, lengths, prompts, and scoring | SPE-63 |
 | R15 | Export rehearsal | KDA Transformers support exists; recurrent-mixer GGUF is missing | One representative KDA/NoPE checkpoint passes native/Transformers/GGUF identity and generation parity | SPE-76 |
 | R16 | Release destinations, backup, and credentials | Local independent-device gate passes: an 85-file, 5.08 GB representative R3 tree has a hash-verified NVMe copy and complete restore rehearsal; Git is pushed; same-host/off-site limitation, DOI archive, final destinations, and credentials remain | Model, code, artifact, and paper destinations plus credentials/licenses pass; a representative R3 tree restores from an independent verified copy | SPE-91, SPE-172 |

@@ -50,6 +50,8 @@ The active operating surface is intentionally small:
   unless a reviewed GH200-qualified successor passes without consuming protected reserve.
 - [`pregrant_blockers_20260910.json`](pregrant_blockers_20260910.json) is the current fail-closed map of
   what remains after the completed operations, firewall, tokenizer-static, and backup work.
+- [`minicpm5_comparator_v1.json`](minicpm5_comparator_v1.json) pins the new Base/Midtrain/SFT/final
+  release lineage as comparator evidence without adding a grant-1 mechanism or training source.
 - [`embedding_head_contract_v1.json`](embedding_head_contract_v1.json) freezes one physically shared
   token embedding/LM-head parameter and its config, accounting, checkpoint, optimizer, and export rules.
 - [`source_registry_v2.json`](source_registry_v2.json) pins the human-approved source revisions and

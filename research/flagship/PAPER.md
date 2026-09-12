@@ -103,6 +103,9 @@ Report these outcomes separately; absence of an implementation suppresses the co
 DeepSeek-V4.1-Flash's reported 890 global-cache bytes/token is analytic context only. It is not a
 locally measured comparator. Speck state claims are against named matched dense-GQA controls unless a
 broader checked comparison exists.
+MiniCPM5-2B is a pinned release-era comparator candidate. Its Base checkpoint may inform base-model
+quality and its final checkpoint may inform released-system cost, but RL+OPD scores cannot be used as
+architecture evidence. Local evaluation remains mandatory.
 
 ## Headline gate
 
