@@ -66,6 +66,11 @@ differed by a maximum `6.103515625e-05` (`2^-14`), so the preregistered exact-eq
 The checkpoint is retained only as failed qualification evidence. No tolerance is applied
 retroactively; a successor must freeze it before a fresh retry.
 
+A successor froze exact loss and cursor plus `2^-13` model/optimizer absolute-error limits before a
+fresh retry. The retry passed: model error remained `2^-14`, optimizer error was
+`7.62939453125e-05`, and both were below the frozen limit. This qualifies eager exact-shape checkpoint
+resume mechanics only; compiled training, document NLL, and screen execution remain blocked.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
