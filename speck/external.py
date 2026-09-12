@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 from speck.io import file_sha256 as _file_sha256
+from speck.validation import require_keys as _require
 
 COMMIT_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
@@ -19,12 +20,6 @@ def _load_json(path):
     if not isinstance(value, dict):
         raise ValueError(f"external suite config must contain an object: {path}")
     return value
-
-
-def _require(value, keys, context):
-    missing = sorted(set(keys) - set(value))
-    if missing:
-        raise ValueError(f"{context} is missing required fields: {', '.join(missing)}")
 
 
 def _validate_source(source, context):

@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 
 from speck.io import file_sha256 as _file_sha256
+from speck.validation import require_keys as _require_keys
 
 CONTRACT_FILES = (
     "policy.json",
@@ -40,12 +41,6 @@ def _load_json(path):
     if not isinstance(value, dict):
         raise ValueError(f"research contract file must contain an object: {path}")
     return value
-
-
-def _require_keys(value, keys, context):
-    missing = sorted(set(keys) - set(value))
-    if missing:
-        raise ValueError(f"{context} is missing required fields: {', '.join(missing)}")
 
 
 def _probability(value, context, *, allow_one=False):
