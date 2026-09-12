@@ -17,6 +17,7 @@ from speck.dataset import load_manifest, resolve_data_dir
 from speck.io import atomic_json
 from speck.model import KimiDeltaAttention
 from speck.tokenizer import get_tokenizer
+from speck.validation import positive_integer
 
 THRESHOLDS = (-5.0, -10.0, -20.0, -40.0, -80.0)
 QUANTILES = (0.0, 0.001, 0.01, 0.1, 0.5, 0.9, 0.99, 0.999, 1.0)
@@ -35,12 +36,6 @@ def arguments(argv=None):
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 class DecayAccumulator:

@@ -19,6 +19,7 @@ from speck.architecture import (
 )
 from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
+from speck.validation import positive_integer
 
 VARIANTS = ("ungated", "headwise", "elementwise")
 
@@ -29,12 +30,6 @@ def arguments(argv=None):
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--train-tokens", type=int, default=32_000_000)
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def gated_architecture(source, gate):

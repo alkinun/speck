@@ -11,12 +11,7 @@ import numpy as np
 from speck.dataloader import PackedTokenSource, manifest_fingerprint
 from speck.dataset import TokenShardWriter, derive_source_quotas, load_manifest, verify_shards
 from speck.io import file_sha256 as _sha256
-
-
-def _positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
+from speck.validation import positive_integer as _positive_integer
 
 
 def _source_weights(parent, weights):

@@ -22,6 +22,7 @@ from speck.architecture import (
 from speck.io import atomic_json
 from speck.model import SpeckForCausalLM
 from speck.synthetic import IGNORE_INDEX, mqar_batch, palindrome_batch, stack_batch
+from speck.validation import positive_integer
 
 VARIANTS = ("gdn-silu", "gdn-sigmoid", "kda-sigmoid")
 TASKS = ("mqar", "palindrome", "stack")
@@ -51,12 +52,6 @@ def arguments(argv=None):
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if not isinstance(value, int) or isinstance(value, bool) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def resolved_settings(args):

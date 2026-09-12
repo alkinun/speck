@@ -17,6 +17,7 @@ from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest, resolve_data_dir
 from speck.io import atomic_json
 from speck.tokenizer import get_tokenizer
+from speck.validation import positive_integer
 
 
 def arguments(argv=None):
@@ -36,12 +37,6 @@ def arguments(argv=None):
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def position_ranges(sequence_length, bins):

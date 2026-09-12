@@ -3,14 +3,10 @@
 import numpy as np
 import torch
 
+from speck.validation import positive_integer as _positive_integer
+
 IGNORE_INDEX = -100
 ZOOLOGY_MQAR_REVISION = "1ad20d193b6113cae1e8f3c655c300d7b4b3f4bb"
-
-
-def _positive_integer(value, name):
-    if not isinstance(value, int) or isinstance(value, bool) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def _base_settings(batch_size, sequence_length, vocab_size):

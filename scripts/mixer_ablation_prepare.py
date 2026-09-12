@@ -21,6 +21,7 @@ from speck.architecture import (
 from speck.config import load_experiment
 from speck.dataset import validate_data_settings
 from speck.model import SpeckForCausalLM
+from speck.validation import positive_integer
 
 VARIANTS = (
     "gdn-global",
@@ -56,12 +57,6 @@ def arguments(argv=None):
         help="reuse the packed-data contract from another experiment",
     )
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def scaled_integer(value, source_tokens, target_tokens, *, minimum=1):

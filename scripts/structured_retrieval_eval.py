@@ -26,6 +26,7 @@ from speck.long_context import (
 )
 from speck.research import load_promotion_protocol, resolve_evaluation_protocol
 from speck.tokenizer import get_tokenizer
+from speck.validation import positive_integer
 
 PRIMARY_TASKS = ("multi_key", "two_hop")
 SYMBOLIC_TASK_MODES = {
@@ -43,12 +44,6 @@ def parse_tasks(value):
     if not tasks or len(set(tasks)) != len(tasks) or any(task not in TASKS for task in tasks):
         raise ValueError(f"tasks must be unique values from {', '.join(TASKS)}")
     return tasks
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def arguments(argv=None):

@@ -24,6 +24,7 @@ from speck.architecture import (
 )
 from speck.config import load_experiment
 from speck.model import SpeckForCausalLM
+from speck.validation import positive_integer
 
 STATE_LENGTHS = (4_096, 32_768, 131_072)
 
@@ -38,12 +39,6 @@ def arguments(argv=None):
     parser.add_argument("--train-tokens", type=int, default=None)
     parser.add_argument("--seed", type=int, default=None)
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def attention_slots(config):

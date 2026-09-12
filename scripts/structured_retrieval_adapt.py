@@ -27,6 +27,7 @@ from speck.long_context import (
 from speck.research import load_promotion_protocol, resolve_adaptation_protocol
 from speck.tokenizer import get_tokenizer
 from speck.train import lr_scale, set_optimizer_lr
+from speck.validation import positive_integer
 
 TRAIN_SEED_OFFSET = 1_000_000
 VALIDATION_SEED_OFFSET = 2_000_000
@@ -114,12 +115,6 @@ def arguments(argv=None):
     parser.add_argument("--replay-fraction", type=float, default=0.0)
     parser.add_argument("--candidate-loss-weight", type=float, default=0.0)
     return parser.parse_args(argv)
-
-
-def positive_integer(value, name):
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise ValueError(f"{name} must be a positive integer")
-    return value
 
 
 def git_revision():
