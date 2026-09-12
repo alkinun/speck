@@ -26,11 +26,13 @@ ROLES = {
     "system": "system",
 }
 GREETINGS = {"hi", "hello", "hey", "hi there", "hello there"}
-FENCES = re.compile(r"```.*?```", re.S)
-THINKING = re.compile(r"</?(?:think|analysis|scratchpad|inner_monologue|reasoning)\b", re.I)
+FENCES = re.compile(r"```.*?```", re.DOTALL)
+THINKING = re.compile(
+    r"</?(?:think|analysis|scratchpad|inner_monologue|reasoning)\b", re.IGNORECASE
+)
 UNRESOLVED = re.compile(
     r"\[(?:keyword|relation|frequency|num_placeholders|ender|num_words|num_sentences|num_paragraphs)\]",
-    re.I,
+    re.IGNORECASE,
 )
 
 
@@ -246,9 +248,10 @@ def check_simple_constraints(prompt, response):
     if UNRESOLVED.search(prompt):
         raise ValueError("unresolved constraint template")
     lowered = prompt.casefold()
-    if "all lowercase" in lowered or "no capital letters" in lowered:
-        if any(char.isupper() for char in response):
-            raise ValueError("lowercase constraint")
+    if ("all lowercase" in lowered or "no capital letters" in lowered) and any(
+        char.isupper() for char in response
+    ):
+        raise ValueError("lowercase constraint")
     if "no commas" in lowered and "," in response:
         raise ValueError("comma constraint")
     count = len(response.split())
@@ -337,7 +340,7 @@ class EnglishFilter:
             if message["role"] == "system":
                 continue
             prose = FENCES.sub(" ", message["content"])
-            prose = re.sub(r"\$\$.*?\$\$|\$[^$\n]+\$|https?://\S+", " ", prose, flags=re.S)
+            prose = re.sub(r"\$\$.*?\$\$|\$[^$\n]+\$|https?://\S+", " ", prose, flags=re.DOTALL)
             # Labels, formulas and code-only answers inherit the conversation language.
             if sum(char.isalpha() for char in prose) < 40:
                 continue

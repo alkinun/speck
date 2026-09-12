@@ -135,7 +135,7 @@ def run(args):
     if step is None:
         raise FileNotFoundError(f"no checkpoint found in {checkpoint_dir}")
     device = torch.device(args.device)
-    model, metadata = load_checkpoint_model(checkpoint_dir, step, device)
+    model, _metadata = load_checkpoint_model(checkpoint_dir, step, device)
     tokenizer = get_tokenizer(**configs["tokenizer"])
     if max(settings["lengths"]) > model.config.max_position_embeddings:
         raise ValueError("evaluation length exceeds the model's allocated context")

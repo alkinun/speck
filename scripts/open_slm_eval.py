@@ -507,7 +507,7 @@ def _parse_args():
         help="parity-validated local Transformers export for every benchmark stage",
     )
     args = parser.parse_args()
-    if args.limit is not None and (args.limit <= 0 or args.stage not in ("lm-eval",)):
+    if args.limit is not None and (args.limit <= 0 or args.stage != "lm-eval"):
         parser.error("--limit must be positive and is only supported by the lm-eval stage")
     return args
 

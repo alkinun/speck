@@ -46,7 +46,7 @@ class DecayAccumulator:
         self.square_total = 0.0
         self.minimum = math.inf
         self.maximum = -math.inf
-        self.below = {threshold: 0 for threshold in THRESHOLDS}
+        self.below = dict.fromkeys(THRESHOLDS, 0)
         self.samples = []
 
     def update(self, values):

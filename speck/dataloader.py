@@ -139,7 +139,7 @@ def source_selection_counts(manifest, split, global_consumed_tokens, global_stri
     """Count source selections strictly before an aligned global position."""
 
     source_ids = tuple(source["id"] for source in manifest["sources"])
-    counts = {source_id: 0 for source_id in source_ids}
+    counts = dict.fromkeys(source_ids, 0)
     batches_before = global_consumed_tokens // global_stride
     if split == "val":
         full, remainder = divmod(batches_before, len(source_ids))
