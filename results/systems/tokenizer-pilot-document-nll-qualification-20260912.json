@@ -1,0 +1,68 @@
+{
+  "format": "speck_tokenizer_pilot_document_nll_qualification_record",
+  "format_version": 1,
+  "status": "six_category_cuda_chunk_parity_pass_execution_records_pending",
+  "recorded_on": "2026-09-12",
+  "git_revision": "50db117e2f4b1cdbb0a51c4e37e55a54d1ae811c",
+  "policy": {
+    "path": "research/flagship/tokenizer_pilot_document_nll_policy_v1.json",
+    "sha256": "706ca7ea9ced376f389de183d075efa5a1e70d7b429f645efadd7b41613cd0c3"
+  },
+  "implementation": {
+    "module": [
+      "speck/tokenizer_pilot_cuda_evaluation.py",
+      "a275a1daa7019c746f6558ecec2a0cc02887192d4ac0161267c42084916d0c91"
+    ],
+    "cli": [
+      "scripts/tokenizer_pilot_document_nll_qualify.py",
+      "2c755a62f2eaa7d5edfa6e8c92d55e63cfe9f8202b054360e871203ca6d384e3"
+    ],
+    "tests": [
+      "tests/test_tokenizer_pilot_cuda_evaluation.py",
+      "bba43d79ef4a9788371c3c438edab6e42336687cae8aab65c059aa3642680630"
+    ]
+  },
+  "runtime": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-document-nll-qualification-v1.json",
+    "sha256": "6a3dd3421b4e3cd17fae9afa7efa4c87469761954a95c25271067048d55c38bc",
+    "bytes": 3427,
+    "device": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128",
+    "peak_allocated_bytes": 5240948224
+  },
+  "coverage": {
+    "categories": 6,
+    "documents": 6,
+    "maximum_prediction_tokens": 19629,
+    "production_chunk_tokens": 4096,
+    "single_chunk_comparator": true
+  },
+  "parity": {
+    "maximum_allowed_mean_nll_delta_nats_per_token": 0.0001,
+    "maximum_observed_mean_nll_delta_nats_per_token": 0.000038805784808191963,
+    "zero_delta_categories": [
+      "web",
+      "code",
+      "math",
+      "synthetic",
+      "reference"
+    ],
+    "maximum_delta_category": "science",
+    "all_values_finite": true,
+    "all_categories_pass": true
+  },
+  "gates": {
+    "checkpoint_and_tokenizer_identity": "pass",
+    "six_category_preselected_sample": "pass",
+    "short_document_exact_parity": "pass_all_five",
+    "long_document_bounded_parity": "pass",
+    "scientific_model_outputs_created": 0,
+    "screen_execution_authority": false,
+    "D5_audit_opening_authority": false
+  },
+  "remaining": [
+    "full-run checkpoint evaluation and learning-curve orchestration",
+    "execution-authorized records binding final trainer and evaluator",
+    "three-run screen and measured overhead reconciliation"
+  ]
+}

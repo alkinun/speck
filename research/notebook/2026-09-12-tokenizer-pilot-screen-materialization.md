@@ -71,6 +71,11 @@ fresh retry. The retry passed: model error remained `2^-14`, optimizer error was
 `7.62939453125e-05`, and both were below the frozen limit. This qualifies eager exact-shape checkpoint
 resume mechanics only; compiled training, document NLL, and screen execution remain blocked.
 
+The separately frozen CUDA document-NLL policy then passed on the first immutable document from all
+six categories. Five shorter documents matched exactly between one chunk and production 4K chunks;
+the 19,629-token science document differed by `3.8806e-05` nats/token, below the frozen `1e-4` limit.
+Peak allocated memory was 5.24 GB. These are qualification outputs, not tokenizer-quality evidence.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
