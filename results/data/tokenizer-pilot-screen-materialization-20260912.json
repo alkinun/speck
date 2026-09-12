@@ -1,0 +1,80 @@
+{
+  "format": "speck_tokenizer_pilot_screen_materialization_qualification",
+  "format_version": 1,
+  "status": "three_screen_run_manifests_complete_trainer_and_evaluator_pending",
+  "recorded_on": "2026-09-12",
+  "git_revision": "29c80675628840bf315e665ba8eeb43df9c943d8",
+  "plan": {
+    "path": "research/flagship/tokenizer_pilot_runs_v1/plan.json",
+    "sha256": "491f959c6e3817501daea91fb2705539f02c1bf80434e9b24df2b579b06e0572",
+    "plan_fingerprint": "66d29586846ce06042a8dc454c879faaeaaeac6620d34a84e5c8ea004274a84f"
+  },
+  "implementation": {
+    "module": [
+      "speck/tokenizer_pilot_runs.py",
+      "bcda3cfab03fb774026cd00a611365b80d6175422026e79493e05e23a0d05173"
+    ],
+    "cli": [
+      "scripts/tokenizer_pilot_runs_prepare.py",
+      "2618b4afc47f3c01f5e2f1ead36b4b4066945106dc2ec673925d69bca919ad0d"
+    ],
+    "tests_at_plan_freeze": [
+      "tests/test_tokenizer_pilot_runs.py",
+      "51b56d103a91c8a50b21b13d7155f5341e4badeca2e68930a112fbcadcca2f8c"
+    ]
+  },
+  "runtime": {
+    "directory": "/mnt/speck-data/speck/tokenizer-pilot-runs-v1",
+    "manifest": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-runs-v1/manifest.json",
+      "sha256": "082b97b2fabb3cb7b2bfcb358e810b773d05dd390c14e6a8bb78924c33a9e5d3"
+    },
+    "bytes": 50460,
+    "runs": [
+      {
+        "id": "tokenizer-pilot-mistral-32k-seed-42",
+        "path": "mistral-32k/seed-42/run.json",
+        "sha256": "cde93873ef1e79438c6271b97db0b68d8ac2bdc1089f89161cb84498a96e7f9e",
+        "run_fingerprint": "09db7ac2e100a87c8fcdc47235ae3153e04bd0bfd8a02e3cb225d64637e6d76b"
+      },
+      {
+        "id": "tokenizer-pilot-speck-bpe-40960-whitespace-seed-42",
+        "path": "speck-bpe-40960-whitespace/seed-42/run.json",
+        "sha256": "bc06797f049dcfe88016bfa70ef47fc11b6edaebbeda7b639a408035d1b838a8",
+        "run_fingerprint": "126acd919568d2eb7e613926b94e8c42a2198679275b445e82ce601326e6605d"
+      },
+      {
+        "id": "tokenizer-pilot-speck-bpe-32000-whitespace-seed-42",
+        "path": "speck-bpe-32000-whitespace/seed-42/run.json",
+        "sha256": "6fd33a355461deaee953d5176a109b53862ee87a6d0d4f8563d2d4a1027f00e4",
+        "run_fingerprint": "93314fc132ba30ec3c8af0cda55f9c75c9edf3fbc8779ae3011bcfe9db1f3bee"
+      }
+    ]
+  },
+  "gates": {
+    "clean_tracked_tree": "pass",
+    "pilot_v10_screen_authority": "pass",
+    "fixed_stream_identity": "pass",
+    "continuation_identity_and_capacity": "pass",
+    "evaluation_sample_identity": "pass",
+    "tokenizer_model_identity": "pass_all",
+    "model_backbone_identity": "pass_all",
+    "optimizer_and_stop_geometry": "pass_all",
+    "exclusive_publication": "pass",
+    "model_outputs_created": 0,
+    "D5_audit_openings": 0
+  },
+  "authority": {
+    "screen_execution": true,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  },
+  "remaining": [
+    "implement and fixture-qualify the exact run-manifest trainer",
+    "implement document-level six-category NLL evaluation at fixed-document and fixed-FLOP boundaries",
+    "measure screen training evaluation and checkpoint overhead before confirmation authorization"
+  ],
+  "decision": "retain the three immutable seed-42 screen manifests; do not start model training until their exact consumer and evaluator pass fixture and local CUDA qualification"
+}

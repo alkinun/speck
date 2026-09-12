@@ -32,12 +32,15 @@ those intervals.
 ## Evidence and links
 
 - [Run materialization plan](../flagship/tokenizer_pilot_runs_v1/plan.json)
+- [Checked materialization result](../../results/data/tokenizer-pilot-screen-materialization-20260912.json)
 - [Authorizing pilot successor](../flagship/tokenizer_pilot_plan_v10.json)
 - [Tokenizer protocol](../flagship/TOKENIZER.md)
 
 ## Open questions
 
-A trainer and document-level evaluator must still consume these manifests exactly. Real training,
+The three seed-42 records were materialized from clean commit `29c8067` under
+`/mnt/speck-data/speck/tokenizer-pilot-runs-v1`; no model output was created. A trainer and
+document-level evaluator must still consume these manifests exactly. Real training,
 evaluation, and checkpoint overhead remain unmeasured, so confirmation execution cannot yet be
 authorized.
 
