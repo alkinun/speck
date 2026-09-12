@@ -1,0 +1,119 @@
+{
+  "format": "speck_tokenizer_pilot_run_materialization",
+  "format_version": 2,
+  "status": "corrected_screen_materialization_authorized_no_model_outputs",
+  "pilot_plan": {
+    "path": "../tokenizer_pilot_plan_v10.json",
+    "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d"
+  },
+  "scale_spec": {
+    "path": "../targets/scale-targets-v2.json",
+    "sha256": "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493"
+  },
+  "target_id": "ladder-60m",
+  "fixed_stream": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-stream-v1/manifest.json",
+    "sha256": "0d2633cf22754adf3ba28b82bce153daacb0d9d0aa9cb892b09c79f64bd6f4e5"
+  },
+  "continuation": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-continuation-v2/manifest.json",
+    "sha256": "7c049e4c04d9fba1ae0ad968b5ee3c2dca974dca1e5171cd1bd35137a77ca6e0"
+  },
+  "evaluation_sample": {
+    "path": "/mnt/speck-data/speck/tokenizer-d5-v1/sample/manifest.json",
+    "sha256": "f706a20b01ef3d1692bfc3c9d47b4ed090e2f83567e258c6b5bae8e75ea821e9"
+  },
+  "flop_correction": {
+    "path": "../tokenizer_pilot_flop_correction_v1.json",
+    "sha256": "cd6e9030dbe3493155401a43d0164e48de431bc00a71eae194fa6a2eb8824f2f"
+  },
+  "implementation": {
+    "module": {
+      "path": "../../../speck/tokenizer_pilot_runs_v2.py",
+      "sha256": "8f3c53e23e298180e25259a7600bb3c8d1c4bd6259c1afb54d46784a5c8ed695"
+    },
+    "cli": {
+      "path": "../../../scripts/tokenizer_pilot_runs_v2_prepare.py",
+      "sha256": "273f7407e0a03f18dcc3ae10fb12670a6beee26c1e1ce11bbcd570517ef4b277"
+    },
+    "tests": {
+      "path": "../../../tests/test_tokenizer_pilot_runs_v2.py",
+      "sha256": "19e7f0f858b0c0cf6a119e9fd46ffa9cd7069f6b26732ca39916cc3c911e1d88"
+    }
+  },
+  "tokenizers": [
+    {
+      "role": "mistral-32k",
+      "id": "mistral-32k",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/baselines/mistral-32k/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "vocab_size": 32000,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_flop_token_stop": 1200007273,
+      "run_stop_aligned_tokens": 1200029696
+    },
+    {
+      "role": "compression_endpoint",
+      "id": "speck-bpe-40960-whitespace",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-40960-whitespace/tokenizer.model",
+        "sha256": "77d5abbdbebff82ed45ac7bce9522b9a8aff34ce8f27b9f6ff7fc9d037e8408c"
+      },
+      "vocab_size": 40960,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_flop_token_stop": 1125458190,
+      "run_stop_aligned_tokens": 1125515264
+    },
+    {
+      "role": "compact_endpoint",
+      "id": "speck-bpe-32000-whitespace",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-32000-whitespace/tokenizer.model",
+        "sha256": "173e42b64c27fdc0e343868233f8a809b67c6d6c2f2a32bf6cf4d5c20832e038"
+      },
+      "vocab_size": 32000,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_flop_token_stop": 1200007273,
+      "run_stop_aligned_tokens": 1200029696
+    }
+  ],
+  "screen": {
+    "seed": 42,
+    "runs": [
+      "mistral-32k",
+      "compression_endpoint",
+      "compact_endpoint"
+    ]
+  },
+  "settings": {
+    "sequence_length": 4096,
+    "device_batch_size": 4,
+    "batch_tokens": 65536,
+    "accumulation": 4,
+    "optimizer": "muon",
+    "learning_rate": 0.0015,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "lr_schedule": "cosine",
+    "warmup_steps": 120,
+    "min_lr": 0.1,
+    "loss_backend": "torch",
+    "compile": true,
+    "checkpoint_every_steps": 1831,
+    "learning_curve_every_steps": 916
+  },
+  "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2",
+  "authority": {
+    "v2_run_materialization": true,
+    "screen_execution": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}
