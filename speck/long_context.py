@@ -7,6 +7,8 @@ from collections import defaultdict
 
 import torch
 
+from speck.diagnostics import synchronize as _synchronize
+
 ANSWER_SETS = {
     "letters": tuple("ABCDEFGHIJ"),
     "phrases": (
@@ -725,11 +727,6 @@ def build_symbolic_two_hop_case(
         "symbolic_mode": mode,
         "destination": destinations[query_index],
     }
-
-
-def _synchronize(device):
-    if device.type == "cuda":
-        torch.cuda.synchronize(device)
 
 
 @torch.inference_mode()

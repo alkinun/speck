@@ -17,6 +17,8 @@ from speck.architecture import ArchitectureConfig
 from speck.checkpoint import load_model
 from speck.common import base_dir
 from speck.config import load_experiment
+from speck.diagnostics import nearest_percentile as _percentile
+from speck.diagnostics import synchronize as _synchronize
 from speck.io import file_sha256 as _file_sha256
 from speck.model import SpeckForCausalLM
 
@@ -83,16 +85,6 @@ def _batch_sizes(value):
     if not batches or any(batch < 1 for batch in batches):
         raise argparse.ArgumentTypeError("batch sizes must be positive")
     return batches
-
-
-def _percentile(values, fraction):
-    ordered = sorted(values)
-    return ordered[round((len(ordered) - 1) * fraction)]
-
-
-def _synchronize(device):
-    if device.type == "cuda":
-        torch.cuda.synchronize(device)
 
 
 def _parameter_count(model):

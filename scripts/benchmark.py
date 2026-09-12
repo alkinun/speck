@@ -15,6 +15,8 @@ import torch
 from speck.config import load_experiment
 from speck.dataloader import manifest_fingerprint, packed_loader
 from speck.dataset import load_manifest
+from speck.diagnostics import nearest_percentile as percentile
+from speck.diagnostics import synchronize
 from speck.model import build_model
 from speck.tokenizer import get_tokenizer
 from speck.train import optimization_step
@@ -131,11 +133,6 @@ def arguments(argv=None):
     return parser.parse_args(argv)
 
 
-def percentile(values, fraction):
-    ordered = sorted(values)
-    return ordered[round((len(ordered) - 1) * fraction)]
-
-
 def resolve_activation_checkpointing(train, override):
     configured = train.get("activation_checkpointing", False)
     if not isinstance(configured, bool):
@@ -175,11 +172,6 @@ def synthetic_loader(batch_size, sequence_length, vocab_size, device):
     batch = (tokens[:, :-1].contiguous(), tokens[:, 1:].contiguous(), None)
     while True:
         yield batch
-
-
-def synchronize(device):
-    if device.type == "cuda":
-        torch.cuda.synchronize(device)
 
 
 def run(args):

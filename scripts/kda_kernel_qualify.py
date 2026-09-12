@@ -4,13 +4,13 @@ import argparse
 import importlib.metadata
 import inspect
 import statistics
-import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
 
+from speck.diagnostics import command_output, maximum_error
 from speck.io import atomic_json
 from speck.long_context import parse_lengths
 from speck.model import torch_kimi_delta_rule
@@ -34,15 +34,6 @@ def arguments(argv=None):
     parser.add_argument("--decode-atol", type=float, default=0.02)
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args(argv)
-
-
-def maximum_error(actual, expected):
-    return (actual.float() - expected.float()).abs().max().item()
-
-
-def command_output(command):
-    result = subprocess.run(command, capture_output=True, check=False, text=True)
-    return result.stdout.strip() or None
 
 
 def inputs(args, length, requires_grad=False):

@@ -19,6 +19,7 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
+from speck.diagnostics import command_output
 from speck.io import atomic_json
 from speck.model import SpeckForCausalLM
 from speck.synthetic import IGNORE_INDEX, mqar_batch, palindrome_batch, stack_batch
@@ -146,11 +147,6 @@ def task_batch(settings, batch_size, seed):
     if settings["task"] == "palindrome":
         return palindrome_batch(**common)
     return stack_batch(**common, num_stacks=settings["num_stacks"])
-
-
-def command_output(command):
-    result = subprocess.run(command, capture_output=True, check=False, text=True)
-    return result.stdout.strip() or None
 
 
 def command_failed(command):
