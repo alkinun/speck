@@ -60,6 +60,12 @@ and evaluation inputs (76 unique files total), parsed all 12,470 evaluation docu
 UTF-8 bytes, and exercised initial, resumed, and final-batch cursors for every tokenizer. All gates
 passed without constructing a model. CUDA execution and checkpointed training remain blocked.
 
+The first instrumented exact-shape CUDA checkpoint/replay qualification then passed checkpoint
+publication/load, second-step loss equality, and data-cursor equality. Model and optimizer states each
+differed by a maximum `6.103515625e-05` (`2^-14`), so the preregistered exact-equivalence gate failed.
+The checkpoint is retained only as failed qualification evidence. No tolerance is applied
+retroactively; a successor must freeze it before a fresh retry.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and

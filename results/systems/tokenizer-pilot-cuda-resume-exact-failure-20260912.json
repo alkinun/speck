@@ -1,0 +1,63 @@
+{
+  "format": "speck_tokenizer_pilot_cuda_resume_qualification_failure",
+  "format_version": 1,
+  "status": "exact_resume_equivalence_failed_tolerance_successor_required",
+  "recorded_on": "2026-09-12",
+  "git_revision": "a0c50bf73f598dcd298aa4da8532951a495eb439",
+  "run": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2/mistral-32k/seed-42/run.json",
+    "run_fingerprint": "6669bd1873716725ad306181e25a8d7dc03989edbeec78c988d5c4c81d94cd67",
+    "scientific_run": false
+  },
+  "implementation": {
+    "module": [
+      "speck/tokenizer_pilot_train.py",
+      "0ddfd644414e641646d403c07e2aa19db5e7809098ccffbb5e4d07b28722b7ec"
+    ],
+    "cli": [
+      "scripts/tokenizer_pilot_train_qualify.py",
+      "76992d85e314f73963b02dbb5020ce14a2f6399b35af8052039d2e55ee929f82"
+    ],
+    "tests": [
+      "tests/test_tokenizer_pilot_train.py",
+      "a7b9dc76a0df3e32b2ce316a94785bd0bce5235c09fab05a3eb7b4f6025b26da"
+    ]
+  },
+  "runtime": {
+    "directory": "/mnt/speck-data/speck/tokenizer-pilot-training-qualification-mistral-v3",
+    "failure": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-training-qualification-mistral-v3/failure.json",
+      "sha256": "17bb1d06ec1dc04e35a892f05fe219c8a49ce85a3a10ddbd0aea22b627a801c8"
+    },
+    "checkpoint_step": 1,
+    "checkpoint_bytes": 275327547,
+    "device": "NVIDIA GeForce RTX 3090",
+    "torch": "2.9.1+cu128",
+    "flash_linear_attention": "0.5.0",
+    "python": "3.10"
+  },
+  "equivalence": {
+    "second_step_loss_exact": true,
+    "loss_absolute_error": 0.0,
+    "data_cursor_exact": true,
+    "model_exact": false,
+    "model_max_absolute_error": 0.00006103515625,
+    "optimizer_exact": false,
+    "optimizer_max_absolute_error": 0.00006103515625
+  },
+  "gates": {
+    "checkpoint_publication": "pass",
+    "checkpoint_load": "pass",
+    "loss_replay": "pass_exact",
+    "data_cursor_replay": "pass_exact",
+    "model_replay": "fail_exact",
+    "optimizer_replay": "fail_exact",
+    "screen_execution_authority": false,
+    "D5_audit_opening_authority": false
+  },
+  "disposition": {
+    "checkpoint": "retain as failed qualification evidence; never use as a run parent",
+    "required_successor": "freeze a pre-retry numerical tolerance justified by BF16 CUDA kernel behavior, retain exact loss and cursor requirements, and rerun from initialization",
+    "scientific_interpretation": "none"
+  }
+}
