@@ -38,8 +38,8 @@ The active operating surface is intentionally small:
 - [`tokenizer_plan_v4.json`](tokenizer_plan_v4.json) preserves the pre-approval tokenizer scope.
 - [`tokenizer_plan_v7.json`](tokenizer_plan_v7.json) is the active tokenizer contract; formal sample,
   models, static evaluation, and endpoint nomination pass while the LM pilot and D5 audit remain.
-- [`tokenizer_pilot_plan_v4.json`](tokenizer_pilot_plan_v4.json) binds the passed corpus exclusion and
-  fixed three-tokenizer document stream; exact seven-run materialization remains blocked.
+- [`tokenizer_pilot_plan_v5.json`](tokenizer_pilot_plan_v5.json) binds the fixed document stream and
+  pre-results equal-FLOP continuation; exact seven-run materialization remains blocked.
 - [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json) freezes MIT code,
   Apache-2.0 model weights, metadata-only corpus disclosure, attribution, and removal controls.
 - [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) records the project owner's
