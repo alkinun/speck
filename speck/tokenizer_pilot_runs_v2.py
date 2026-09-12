@@ -183,7 +183,8 @@ def validate_corrected_materialization_plan(value, *, config_dir=None):
         != normalized_legacy["pilot_plan"]["sha256"]
         or correction["inputs"]["scale_spec"]["sha256"] != normalized_legacy["scale_spec"]["sha256"]
         or value["target_id"] != correction["target_id"]
-        or pilot["screen"] != value["screen"]
+        or pilot["screen"]["seed"] != value["screen"]["seed"]
+        or pilot["screen"]["runs"] != value["screen"]["runs"]
         or value["settings"]["sequence_length"] != correction["sequence_length"]
         or value["settings"]["batch_tokens"] != correction["batch_tokens"]
     ):
