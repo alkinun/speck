@@ -9,7 +9,7 @@ import torch
 
 from speck.io import atomic_json
 from speck.tokenizer_pilot_runtime import load_pilot_run_manifest
-from speck.tokenizer_pilot_train import qualify_checkpoint_resume
+from speck.tokenizer_pilot_train import load_resume_policy, qualify_checkpoint_resume
 
 
 def main():
@@ -17,12 +17,16 @@ def main():
     parser.add_argument("run")
     parser.add_argument("output_directory", type=Path)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--resume-policy", type=Path, default=None)
     args = parser.parse_args()
     try:
         result = qualify_checkpoint_resume(
             load_pilot_run_manifest(args.run),
             args.output_directory,
             device=args.device,
+            resume_policy=(
+                load_resume_policy(args.resume_policy) if args.resume_policy is not None else None
+            ),
         )
     except Exception as error:
         if args.output_directory.is_dir():

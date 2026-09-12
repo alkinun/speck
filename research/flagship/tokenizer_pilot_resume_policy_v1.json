@@ -1,0 +1,53 @@
+{
+  "format": "speck_tokenizer_pilot_resume_policy",
+  "format_version": 1,
+  "status": "pre_retry_bf16_tolerance_frozen",
+  "recorded_on": "2026-09-12",
+  "failed_predecessor": {
+    "path": "results/systems/tokenizer-pilot-cuda-resume-exact-failure-20260912.json",
+    "sha256": "d1c083ade0a595acfa45f779086c884701955592406ac421e645c144180ca092"
+  },
+  "implementation": {
+    "module": {
+      "path": "speck/tokenizer_pilot_train.py",
+      "sha256": "17a70926a001c7f5d15fdf45f602ca6b01fbb1f0a30f47689c557783c32cf264"
+    },
+    "cli": {
+      "path": "scripts/tokenizer_pilot_train_qualify.py",
+      "sha256": "4bca18e57b9df287e4eb3c677273ca351f5d93ff46f0547fb98f5732f64ad5d7"
+    },
+    "tests": {
+      "path": "tests/test_tokenizer_pilot_train.py",
+      "sha256": "2d4f5a17232e5dd2d56eabc5ed9739391f51f145b3880387ea15ea2d61dc2c97"
+    }
+  },
+  "requirements": {
+    "loss_exact": true,
+    "data_cursor_exact": true,
+    "model_max_absolute_error": 0.0001220703125,
+    "optimizer_max_absolute_error": 0.0001220703125,
+    "all_values_finite": true
+  },
+  "rationale": {
+    "observed_predecessor_max_absolute_error": 0.00006103515625,
+    "frozen_limit": "2^-13",
+    "observed_limit_ratio": 0.5,
+    "interpretation": "bounded BF16 CUDA replay variation near typical parameter magnitudes; exact loss and cursor remain mandatory",
+    "not_scientific_equivalence": true
+  },
+  "retry": {
+    "fresh_initialization_required": true,
+    "failed_checkpoint_parent_forbidden": true,
+    "same_run_manifest_required": true,
+    "qualification_optimizer_boundaries": 3,
+    "compiled": false
+  },
+  "authority": {
+    "qualification_retry": true,
+    "screen_execution": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}

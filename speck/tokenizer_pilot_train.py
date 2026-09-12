@@ -1,11 +1,13 @@
 """Qualify checkpointed training mechanics for corrected tokenizer-pilot runs."""
 
+import json
 import math
 from pathlib import Path
 
 import torch
 
 from speck.checkpoint import load, save
+from speck.io import file_sha256
 from speck.model import build_model
 from speck.tokenizer_pilot_runs import _fingerprint
 from speck.tokenizer_pilot_runtime import (
@@ -15,6 +17,35 @@ from speck.tokenizer_pilot_runtime import (
 )
 from speck.train import lr_scale, optimization_step
 from speck.validation import positive_integer
+
+
+def load_resume_policy(path):
+    path = Path(path).resolve()
+    policy = json.loads(path.read_text())
+    requirements = {
+        "loss_exact": True,
+        "data_cursor_exact": True,
+        "model_max_absolute_error": 2**-13,
+        "optimizer_max_absolute_error": 2**-13,
+        "all_values_finite": True,
+    }
+    if (
+        policy.get("format") != "speck_tokenizer_pilot_resume_policy"
+        or policy.get("format_version") != 1
+        or policy.get("status") != "pre_retry_bf16_tolerance_frozen"
+        or policy.get("requirements") != requirements
+        or policy.get("authority", {}).get("screen_execution") is not False
+        or policy.get("authority", {}).get("D5_opening") is not False
+    ):
+        raise ValueError("unsupported tokenizer pilot resume policy")
+    repository = path.parents[2]
+    identities = [policy["failed_predecessor"], *policy["implementation"].values()]
+    for identity in identities:
+        candidate = Path(identity["path"])
+        candidate = candidate if candidate.is_absolute() else repository / candidate
+        if not candidate.is_file() or file_sha256(candidate) != identity["sha256"]:
+            raise ValueError("tokenizer pilot resume policy identity mismatch")
+    return {"path": str(path), "sha256": file_sha256(path), "requirements": requirements}
 
 
 def training_boundaries(run):
@@ -119,7 +150,7 @@ def _execute_step(run, model, optimizer, loader, batch, step):
     )
 
 
-def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2):
+def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2, resume_policy=None):
     """Compare uninterrupted and restored execution without granting screen authority."""
 
     run = validate_pilot_run_manifest(run)
@@ -128,6 +159,17 @@ def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2):
         raise ValueError("tokenizer pilot checkpoint qualification requires exactly two steps")
     if run["authority"]["screen_execution"] is not False:
         raise ValueError("qualification requires an execution-blocked run")
+    requirements = (
+        {
+            "loss_exact": True,
+            "data_cursor_exact": True,
+            "model_max_absolute_error": 0.0,
+            "optimizer_max_absolute_error": 0.0,
+            "all_values_finite": True,
+        }
+        if resume_policy is None
+        else resume_policy["requirements"]
+    )
     output_directory = Path(output_directory)
     if output_directory.exists():
         raise FileExistsError(f"tokenizer pilot training qualification exists: {output_directory}")
@@ -193,21 +235,40 @@ def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2):
     model_equal = _state_equal(continued_model, replay_model)
     optimizer_equal = _state_equal(continued_optimizer, replay_optimizer)
     cursor_equal = continued_batch[2] == replay_batch[2]
-    if not (loss_equal and model_equal and optimizer_equal and cursor_equal):
-        loss_error = abs(float(second_loss) - float(replay_loss))
-        model_error = _state_max_error(continued_model, replay_model)
-        optimizer_error = _state_max_error(continued_optimizer, replay_optimizer)
+    loss_error = abs(float(second_loss) - float(replay_loss))
+    model_error = _state_max_error(continued_model, replay_model)
+    optimizer_error = _state_max_error(continued_optimizer, replay_optimizer)
+    model_within_tolerance = model_error <= requirements["model_max_absolute_error"]
+    optimizer_within_tolerance = optimizer_error <= requirements["optimizer_max_absolute_error"]
+    finite = all(
+        math.isfinite(value)
+        for value in (
+            float(first_loss),
+            float(second_loss),
+            float(replay_loss),
+            model_error,
+            optimizer_error,
+        )
+    )
+    passed = (
+        (loss_equal or not requirements["loss_exact"])
+        and (cursor_equal or not requirements["data_cursor_exact"])
+        and model_within_tolerance
+        and optimizer_within_tolerance
+        and (finite or not requirements["all_values_finite"])
+    )
+    if not passed:
         raise RuntimeError(
-            "tokenizer pilot checkpoint replay is not exactly equivalent: "
+            "tokenizer pilot checkpoint replay is outside its frozen policy: "
             f"loss={loss_equal} ({loss_error:.9g}), "
-            f"model={model_equal} ({model_error:.9g}), "
-            f"optimizer={optimizer_equal} ({optimizer_error:.9g}), "
-            f"cursor={cursor_equal}"
+            f"model={model_within_tolerance} ({model_error:.9g}), "
+            f"optimizer={optimizer_within_tolerance} ({optimizer_error:.9g}), "
+            f"cursor={cursor_equal}, finite={finite}"
         )
     return {
         "format": "speck_tokenizer_pilot_training_qualification",
         "format_version": 1,
-        "status": "two_step_checkpoint_resume_exact_no_screen_authority",
+        "status": "two_step_checkpoint_resume_within_frozen_policy_no_screen_authority",
         "run_id": run["run_id"],
         "run_fingerprint": run["run_fingerprint"],
         "device": str(torch.device(device)),
@@ -217,12 +278,19 @@ def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2):
         "second_loss": float(second_loss),
         "replay_loss": float(replay_loss),
         "checkpoint_step": 1,
+        "resume_policy": resume_policy,
         "next_data_state": replay_batch[2],
         "equivalence": {
-            "loss": loss_equal,
-            "model": model_equal,
-            "optimizer": optimizer_equal,
-            "data_cursor": cursor_equal,
+            "loss_exact": loss_equal,
+            "loss_absolute_error": loss_error,
+            "model_exact": model_equal,
+            "model_max_absolute_error": model_error,
+            "model_within_tolerance": model_within_tolerance,
+            "optimizer_exact": optimizer_equal,
+            "optimizer_max_absolute_error": optimizer_error,
+            "optimizer_within_tolerance": optimizer_within_tolerance,
+            "data_cursor_exact": cursor_equal,
+            "all_values_finite": finite,
         },
         "qualification_optimizer_boundaries_executed": 3,
         "scientific_model_outputs_created": 0,

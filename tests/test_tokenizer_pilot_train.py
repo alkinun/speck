@@ -150,13 +150,13 @@ def test_model_construction_checks_manifest_accounting(tmp_path):
 def test_two_step_checkpoint_resume_is_exact(tmp_path):
     result = qualify_checkpoint_resume(run_manifest(tmp_path), tmp_path / "qualification")
 
-    assert result["status"] == "two_step_checkpoint_resume_exact_no_screen_authority"
-    assert result["equivalence"] == {
-        "loss": True,
-        "model": True,
-        "optimizer": True,
-        "data_cursor": True,
-    }
+    assert result["status"] == (
+        "two_step_checkpoint_resume_within_frozen_policy_no_screen_authority"
+    )
+    assert result["equivalence"]["loss_exact"] is True
+    assert result["equivalence"]["model_exact"] is True
+    assert result["equivalence"]["optimizer_exact"] is True
+    assert result["equivalence"]["data_cursor_exact"] is True
     assert result["qualification_optimizer_boundaries_executed"] == 3
     assert result["scientific_model_outputs_created"] == 0
     assert result["screen_execution_authority"] is False
