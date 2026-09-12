@@ -1,4 +1,5 @@
 import hashlib
+import math
 
 import numpy as np
 import pytest
@@ -6,6 +7,7 @@ import pytest
 from speck.model import build_model
 from speck.tokenizer_pilot_runs import _fingerprint
 from speck.tokenizer_pilot_train import (
+    _state_max_error,
     build_pilot_model,
     learning_rate_for_step,
     qualify_checkpoint_resume,
@@ -158,3 +160,9 @@ def test_two_step_checkpoint_resume_is_exact(tmp_path):
     assert result["qualification_optimizer_boundaries_executed"] == 3
     assert result["scientific_model_outputs_created"] == 0
     assert result["screen_execution_authority"] is False
+
+
+def test_state_error_reports_nested_tensor_differences():
+    torch = pytest.importorskip("torch")
+    assert _state_max_error(torch.tensor([1.0, 2.0]), torch.tensor([1.0, 2.5])) == 0.5
+    assert math.isinf(_state_max_error({"a": 1}, {"b": 1}))

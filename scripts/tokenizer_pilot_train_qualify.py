@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import traceback
 from pathlib import Path
 
 import torch
@@ -17,11 +18,31 @@ def main():
     parser.add_argument("output_directory", type=Path)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
-    result = qualify_checkpoint_resume(
-        load_pilot_run_manifest(args.run),
-        args.output_directory,
-        device=args.device,
-    )
+    try:
+        result = qualify_checkpoint_resume(
+            load_pilot_run_manifest(args.run),
+            args.output_directory,
+            device=args.device,
+        )
+    except Exception as error:
+        if args.output_directory.is_dir():
+            atomic_json(
+                args.output_directory / "failure.json",
+                {
+                    "format": "speck_tokenizer_pilot_training_qualification_failure",
+                    "format_version": 1,
+                    "status": "failed_no_screen_authority",
+                    "run": str(Path(args.run).resolve()),
+                    "device": args.device,
+                    "error_type": type(error).__name__,
+                    "error": str(error),
+                    "traceback": traceback.format_exc(),
+                    "scientific_run": False,
+                    "screen_execution_authority": False,
+                    "D5_opening_authority": False,
+                },
+            )
+        raise
     atomic_json(args.output_directory / "qualification.json", result)
     print(json.dumps(result, indent=2, sort_keys=True))
 

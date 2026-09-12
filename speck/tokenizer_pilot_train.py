@@ -1,5 +1,6 @@
 """Qualify checkpointed training mechanics for corrected tokenizer-pilot runs."""
 
+import math
 from pathlib import Path
 
 import torch
@@ -84,6 +85,24 @@ def _state_equal(left, right):
             _state_equal(a, b) for a, b in zip(left, right, strict=True)
         )
     return left == right
+
+
+def _state_max_error(left, right):
+    if isinstance(left, torch.Tensor) and isinstance(right, torch.Tensor):
+        if left.shape != right.shape:
+            return math.inf
+        if left.numel() == 0:
+            return 0.0
+        return float((left.float() - right.float()).abs().max())
+    if isinstance(left, dict) and isinstance(right, dict) and left.keys() == right.keys():
+        return max((_state_max_error(left[key], right[key]) for key in left), default=0.0)
+    if (
+        isinstance(left, (list, tuple))
+        and isinstance(right, type(left))
+        and len(left) == len(right)
+    ):
+        return max((_state_max_error(a, b) for a, b in zip(left, right, strict=True)), default=0.0)
+    return 0.0 if left == right else math.inf
 
 
 def _execute_step(run, model, optimizer, loader, batch, step):
@@ -175,7 +194,16 @@ def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2):
     optimizer_equal = _state_equal(continued_optimizer, replay_optimizer)
     cursor_equal = continued_batch[2] == replay_batch[2]
     if not (loss_equal and model_equal and optimizer_equal and cursor_equal):
-        raise RuntimeError("tokenizer pilot checkpoint replay is not exactly equivalent")
+        loss_error = abs(float(second_loss) - float(replay_loss))
+        model_error = _state_max_error(continued_model, replay_model)
+        optimizer_error = _state_max_error(continued_optimizer, replay_optimizer)
+        raise RuntimeError(
+            "tokenizer pilot checkpoint replay is not exactly equivalent: "
+            f"loss={loss_equal} ({loss_error:.9g}), "
+            f"model={model_equal} ({model_error:.9g}), "
+            f"optimizer={optimizer_equal} ({optimizer_error:.9g}), "
+            f"cursor={cursor_equal}"
+        )
     return {
         "format": "speck_tokenizer_pilot_training_qualification",
         "format_version": 1,
