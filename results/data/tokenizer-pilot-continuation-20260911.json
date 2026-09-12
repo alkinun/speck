@@ -1,0 +1,134 @@
+{
+  "D5_tokenizer_audit": "unopened",
+  "continuation": {
+    "categories": [
+      {
+        "documents": 45166,
+        "id": "web",
+        "reference_overshoot_tokens": 3406,
+        "reference_token_target": 41500000,
+        "reference_tokens": 41503406,
+        "tokenizer_tokens": {
+          "mistral-32k": 41503406,
+          "speck-bpe-32000-whitespace": 40296112,
+          "speck-bpe-40960-whitespace": 39015694
+        }
+      },
+      {
+        "documents": 7177,
+        "id": "code",
+        "reference_overshoot_tokens": 2361,
+        "reference_token_target": 10800000,
+        "reference_tokens": 10802361,
+        "tokenizer_tokens": {
+          "mistral-32k": 10802361,
+          "speck-bpe-32000-whitespace": 9910260,
+          "speck-bpe-40960-whitespace": 9612610
+        }
+      },
+      {
+        "documents": 4910,
+        "id": "math",
+        "reference_overshoot_tokens": 306,
+        "reference_token_target": 7200000,
+        "reference_tokens": 7200306,
+        "tokenizer_tokens": {
+          "mistral-32k": 7200306,
+          "speck-bpe-32000-whitespace": 6642103,
+          "speck-bpe-40960-whitespace": 6515170
+        }
+      },
+      {
+        "documents": 8900,
+        "id": "synthetic",
+        "reference_overshoot_tokens": 745,
+        "reference_token_target": 7200000,
+        "reference_tokens": 7200745,
+        "tokenizer_tokens": {
+          "mistral-32k": 7200745,
+          "speck-bpe-32000-whitespace": 6765056,
+          "speck-bpe-40960-whitespace": 6534145
+        }
+      },
+      {
+        "documents": 156,
+        "id": "science",
+        "reference_overshoot_tokens": 12350,
+        "reference_token_target": 1700000,
+        "reference_tokens": 1712350,
+        "tokenizer_tokens": {
+          "mistral-32k": 1712350,
+          "speck-bpe-32000-whitespace": 1579361,
+          "speck-bpe-40960-whitespace": 1538350
+        }
+      },
+      {
+        "documents": 2661,
+        "id": "reference",
+        "reference_overshoot_tokens": 5448,
+        "reference_token_target": 3600000,
+        "reference_tokens": 3605448,
+        "tokenizer_tokens": {
+          "mistral-32k": 3605448,
+          "speck-bpe-32000-whitespace": 3500240,
+          "speck-bpe-40960-whitespace": 3395659
+        }
+      }
+    ],
+    "documents": 68970,
+    "reference_tokens": 72024616,
+    "sha256": "80c125fb0477a18b7fa4d1028bcd787fd71f3b5c6d9902e3e31a75cb54fcdec9"
+  },
+  "failed_predecessor": "results/data/tokenizer-pilot-continuation-science-capacity-failure-20260911.json",
+  "final_tokenizer_selection_authority": false,
+  "format": "speck_tokenizer_pilot_continuation_publication",
+  "format_version": 1,
+  "gates": {
+    "fixed_stream_identity": "pass",
+    "minimum_equal_flop_tokens": "pass",
+    "model_training_authority": "blocked",
+    "packed_shard_integrity": "pass",
+    "shared_document_identity": "pass",
+    "source_continuity": "pass",
+    "whole_document_selection": "pass"
+  },
+  "git_revision": "00933fb",
+  "model_training_authority": false,
+  "plan": {
+    "fingerprint": "bd2890578461e06cd2aa09f483bcf21d0b8a4d778f135c20ccf846dfe84c82cd",
+    "path": "research/flagship/tokenizer_pilot_continuation_v2/plan.json",
+    "sha256": "938fc578f2157eafeefdf7569a7aee4f7ee9ef70637b1cba4a85e6c49f508015"
+  },
+  "recorded_on": "2026-09-11",
+  "runtime": {
+    "cpu_seconds": 158.551,
+    "invocation_id": "c4120aa5f0054a079587aec01c32554e",
+    "peak_service_memory_journal_display": "1G",
+    "wall_seconds": 40.626
+  },
+  "runtime_manifest": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-continuation-v2/manifest.json",
+    "sha256": "7c049e4c04d9fba1ae0ad968b5ee3c2dca974dca1e5171cd1bd35137a77ca6e0"
+  },
+  "status": "shared_continuation_and_all_equal_flop_capacity_gates_pass",
+  "tokenizer_capacity": {
+    "mistral-32k": {
+      "available_tokens": 1272031889,
+      "continuation_tokens": 72024616,
+      "fixed_document_tokens": 1200007273,
+      "minimum_additional_tokens": 0
+    },
+    "speck-bpe-32000-whitespace": {
+      "available_tokens": 1211314248,
+      "continuation_tokens": 68693132,
+      "fixed_document_tokens": 1142621116,
+      "minimum_additional_tokens": 57386157
+    },
+    "speck-bpe-40960-whitespace": {
+      "available_tokens": 1174649207,
+      "continuation_tokens": 66611628,
+      "fixed_document_tokens": 1108037579,
+      "minimum_additional_tokens": 17422162
+    }
+  }
+}
