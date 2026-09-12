@@ -109,6 +109,7 @@ def load_execution_record(path):
     output = Path(value["output_directory"]).expanduser().resolve()
     return {
         **value,
+        "execution_record": {"path": str(path), "sha256": file_sha256(path)},
         "parent_run": parent_identity,
         "qualifications": normalized_qualifications,
         "implementation": normalized_implementation,
@@ -144,7 +145,7 @@ def macro_bpb(categories):
     """Return the unweighted mean of six category document-mean BPBs."""
 
     expected = ("web", "code", "math", "synthetic", "science", "reference")
-    if tuple(categories) != expected or any(not categories[name] for name in expected):
+    if set(categories) != set(expected) or any(not categories[name] for name in expected):
         raise ValueError("tokenizer pilot evaluation must contain six non-empty categories")
     means = [
         sum(_document_bpb(document) for document in categories[name]) / len(categories[name])

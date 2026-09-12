@@ -96,3 +96,9 @@ def test_completed_record_rejects_missing_evaluation_or_category(tmp_path):
     broken.pop("science")
     with pytest.raises(ValueError, match="six non-empty"):
         macro_bpb(broken)
+
+
+def test_macro_bpb_uses_canonical_categories_not_mapping_insertion_order():
+    values = categories(1.0)
+    reordered = {key: values[key] for key in reversed(values)}
+    assert macro_bpb(reordered) == pytest.approx(1.0)
