@@ -1,0 +1,62 @@
+{
+  "format": "speck_tokenizer_pilot_document_nll_qualification_policy",
+  "format_version": 1,
+  "status": "pre_output_cuda_chunk_parity_policy_frozen",
+  "recorded_on": "2026-09-12",
+  "inputs": {
+    "resume_qualification": {
+      "path": "results/systems/tokenizer-pilot-cuda-resume-successor-20260912.json",
+      "sha256": "b8b65aad7e313ef99a0a5f9671eec4d5acdd3ddea2c1e3d8226025187cc5abbc"
+    },
+    "run": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2/mistral-32k/seed-42/run.json",
+      "sha256": "3c4e0ec91786e85a7a8cb0068d883fc7782567e49c51fc5228822a8b9cbbe852"
+    },
+    "checkpoint": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-training-qualification-mistral-v4/checkpoints/model_000001.pt",
+      "sha256": "0b36bc6d3330a9a3461ed589e30753a937f793c185bee05738675b2d8642ada3"
+    }
+  },
+  "qualified_implementation_inputs": {
+    "document_evaluation": {
+      "path": "speck/tokenizer_pilot_evaluation.py",
+      "sha256": "9c41e434ae7041ed3fe44fbcf47a3aa31999ad88431d27f1302d70a15f0304c5"
+    },
+    "model_construction": {
+      "path": "speck/tokenizer_pilot_train.py",
+      "sha256": "17a70926a001c7f5d15fdf45f602ca6b01fbb1f0a30f47689c557783c32cf264"
+    }
+  },
+  "sample": {
+    "selection": "first immutable document in each of the six ordered evaluation categories",
+    "categories": [
+      "web",
+      "code",
+      "math",
+      "synthetic",
+      "science",
+      "reference"
+    ],
+    "documents": 6,
+    "selection_uses_model_output": false
+  },
+  "views": {
+    "single_chunk": "one stateful forward chunk containing every next-token prediction",
+    "production_chunked": "stateful forward chunks of at most 4096 next-token predictions"
+  },
+  "requirements": {
+    "identical_document_and_token_identity": true,
+    "all_nll_values_finite": true,
+    "maximum_mean_nll_delta_nats_per_token": 0.0001,
+    "maximum_context_tokens": 131072,
+    "categories_required": 6
+  },
+  "authority": {
+    "qualification_execution": true,
+    "screen_execution": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}
