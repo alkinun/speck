@@ -1,0 +1,132 @@
+{
+  "format": "speck_instruct_data_pilot_result",
+  "version": 1,
+  "date": "2026-09-12",
+  "status": "completed_mixed_result_no_release_promotion",
+  "scope": "Completed pre-compute 140M post-training data pilot",
+  "issues": ["SPE-177", "SPE-178", "SPE-179"],
+  "runtime_directory": "/mnt/speck-data/speck/evaluations/Speck2-Instruct-Starter500K",
+  "runtime_summary_sha256": "675b3a844e71ee19d559527577aaa5aa7a74ca5e8637116ebb0908493c0a6f93",
+  "open_slm_summary_sha256": "e5b0eaeedbbab715dc064274a4e2103ae7febd043864a22044810651a4186c58",
+  "reference_runs": {
+    "released": {
+      "repo": "specklabs/Speck2-140M-Instruct",
+      "revision": "2003d0ecac30f90982117500f64c071705b69143",
+      "weights_sha256": "ec981070ea7e54ae2880786abe2cc53b67c39db7f31f7a6a25cc9da4a0f8613d"
+    },
+    "100k_one_epoch": {
+      "experiment": "experiments/Speck2-140M-Instruct-Starter100K",
+      "runtime_directory": "/mnt/speck-data/speck/evaluations/Speck2-Instruct-Starter100K",
+      "runtime_summary_sha256": "952f1efee0cfa800ab83fefb17974fc076ffc388d0e9d526564fe0b2499a0e4e",
+      "step": 1554,
+      "checkpoint_model_sha256": "0751621349d69e5d4ad9f095de8fee95054c91c99f2c6e08cd32b9604484bdbd",
+      "supervised_tokens": 37621623
+    },
+    "100k_two_epochs": {
+      "experiment": "experiments/Speck2-140M-Instruct-Starter100K-2Epochs",
+      "runtime_directory": "/mnt/speck-data/speck/evaluations/Speck2-Instruct-Starter100K-2Epochs",
+      "runtime_summary_sha256": "5051ce7d8878c5398bf5e909359bbe43b77901b74cfecae43d596fd44104aeab",
+      "step": 3108,
+      "checkpoint_model_sha256": "bc3616f9b4e48c837e70c2f50bb2c8866826c6259074d038374d70082b59305d",
+      "supervised_tokens": 75243246
+    }
+  },
+  "dataset": {
+    "recipe": "experiments/Speck-Instruct-Starter500K/mixture.json",
+    "directory": "/mnt/speck-data/speck/data/instruct-starter-500k-v2",
+    "compiled_training_samples": 500000,
+    "compiled_validation_samples": 10000,
+    "native_training_samples": 496537,
+    "native_validation_samples": 9922,
+    "rejected_overlength_training": 3463,
+    "rejected_overlength_validation": 78,
+    "truncated_samples": 0,
+    "training_rows_shared_with_100k": 98929,
+    "new_training_row_identities": 401071,
+    "training_skill_percent": {
+      "general": 48.5, "instruction_following": 5, "writing": 20,
+      "math": 10, "code": 10, "grounded": 5.7, "clarification": 0.8
+    },
+    "source_pool_revisions_and_filters_preserved": true,
+    "capacity_rebalancing_approved_by_owner": true,
+    "exclusion_rows": 21506,
+    "all_user_turn_exact_exclusion_matches": 0
+  },
+  "training": {
+    "experiment": "experiments/Speck2-140M-Instruct-Starter500K",
+    "epochs": 1,
+    "steps": 8039,
+    "supervised_tokens": 205997024,
+    "scheduled_context_tokens": 526843904,
+    "final_new_mixture_validation_loss": 1.1541560888290405,
+    "reported_seconds_excluding_startup_validation_and_discarded_work": 8982.021217618341,
+    "resume_steps": [2500, 2500, 6500],
+    "checkpoint_model_sha256": "c8653238468f0cb819ff5a15b6593ec28fb3e97130ea7faf3cce55362ddf1f35",
+    "wandb_id": "2n5vsn6u",
+    "logging_mode": "offline"
+  },
+  "model_order": ["released", "100k_one_epoch", "100k_two_epochs", "500k_one_epoch"],
+  "instruction_diagnostic": {
+    "cases": 215,
+    "qualitative_prompts": 12,
+    "correct": [10, 20, 20, 35],
+    "exact_format": [7, 1, 5, 19],
+    "mean_output_tokens": [13.413953488372092, 43.4, 40.21860465116279, 22.609302325581396],
+    "output_limit_hits": [3, 16, 30, 22],
+    "common_validation_loss": [1.2670634984970093, 1.2487783432006836, 1.234829306602478, 1.1481226682662964],
+    "500k_category_correct": {
+      "arithmetic": 11, "code_trace": 0, "format": 12, "grounding": 5,
+      "instruction": 1, "knowledge": 3, "reasoning": 2, "sorting": 1
+    },
+    "paired_reference_only_500k_only": {
+      "released": [1, 26], "100k_one_epoch": [11, 26], "100k_two_epochs": [10, 25]
+    }
+  },
+  "bananamind": {
+    "cases": 350,
+    "correct": [157, 163, 167, 166],
+    "elo": [970, 984, 997, 993],
+    "code_completion_correct_out_of_50": [32, 32, 35, 40],
+    "known_100k_overlap_excluded": {
+      "excluded_ids": ["code_completion-003"],
+      "cases": 349,
+      "correct": [156, 162, 166, 165],
+      "paired_reference_only_500k_only": {
+        "released": [20, 29], "100k_one_epoch": [20, 23], "100k_two_epochs": [24, 23]
+      },
+      "exact_mcnemar_p_descriptive": {
+        "released": 0.2528697301676033,
+        "100k_one_epoch": 0.7607916425613439,
+        "100k_two_epochs": 1.0
+      }
+    }
+  },
+  "open_slm_scores_percent": {
+    "hellaswag": [38.94, 39.60, 40.51, 38.41],
+    "arc_easy": [47.73, 45.03, 45.54, 45.03],
+    "arc_challenge": [25.34, 25.26, 27.30, 25.85],
+    "piqa": [65.83, 66.10, 64.74, 64.42],
+    "arithmark_2": [37.92, 32.12, 34.52, 34.84],
+    "arithmark_3": [39.10, 38.30, 38.40, 37.80],
+    "combined_arc": [36.53, 35.15, 36.42, 35.44],
+    "average": [45.10, 44.79, 45.02, 44.02],
+    "intelligence_index": [21.33, 21.02, 21.10, 19.65]
+  },
+  "verification": {
+    "full_epoch_tokens_and_loader_cursor": true,
+    "launch_source_hashes": true,
+    "same_diagnostic_cases_and_common_validation": true,
+    "released_diagnostic_rerun_identical": true,
+    "native_transformers_export_parity": true,
+    "full_benchmark_counts_hashes_and_matching_pins": true
+  },
+  "interpretation": "The larger capacity-adjusted mixture improves diagnostic correctness, formatting and common held-out loss. BananaMind is inconclusive versus the smaller starter runs; Open SLM aggregates regress. Persistent qualitative failures and the benchmark trade-offs do not support a clear overall upgrade or release promotion.",
+  "limitations": [
+    "Capacity-driven source changes, added exclusions, greater token exposure and a longer one-epoch schedule confound a unique-sample-count-only interpretation.",
+    "The purpose-built diagnostic is small and uses automatic correctness rules; its gains do not establish broad instruction quality.",
+    "Common-validation loss is a distribution-fit measure, not an independent overall quality metric.",
+    "Exact and first-prompt near exclusions do not establish exhaustive semantic decontamination.",
+    "Open SLM release baseline uses verified published results; ArithMark 2.0 does not enter its aggregates. No paired significance analysis was performed for Open SLM.",
+    "Training was resumed after interruptions. Reported retained training time omits discarded work and is not total wall-clock cost."
+  ]
+}

@@ -18,6 +18,7 @@ from speck.chat import ChatTokenizer
 from speck.model import SpeckForCausalLM
 from speck.sft import (
     _truncate_conversation,
+    encode_completion,
     prepare_sft_dataset,
     resolve_sft_data_dir,
     sft_loader,
@@ -59,6 +60,91 @@ class ValidationModel(torch.nn.Module):
         if self.error is not None:
             raise self.error
         return self.parameter * 0 + self.loss
+
+
+def test_prompt_completion_masks_all_history_and_keeps_final_eos(tmp_path):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    row = {
+        "prompt": [
+            {"role": "system", "content": "Be concise."},
+            {"role": "user", "content": "First question"},
+            {"role": "assistant", "content": "Context-only answer"},
+            {"role": "user", "content": "Follow up"},
+        ],
+        "completion": [{"role": "assistant", "content": "Final answer"}],
+    }
+    tokens, mask = encode_completion(row, tokenizer)
+    prefix, _ = tokenizer.encode_messages(row["prompt"], add_generation_prompt=True)
+    assert not any(mask[: len(prefix)])
+    supervised = [token for token, use in zip(tokens, mask) if use]
+    assert supervised == tokenizer.base.encode("Final answer") + [tokenizer.eos_id]
+
+
+def test_local_sft_preserves_splits_rejects_long_rows_and_checks_hashes(tmp_path):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    short = {
+        "prompt": [{"role": "user", "content": "Q"}],
+        "completion": [{"role": "assistant", "content": "A"}],
+        "source": "fixture",
+    }
+    long = {**short, "prompt": [{"role": "user", "content": "Evidence " * 100}]}
+    train_path, val_path = tmp_path / "train.parquet", tmp_path / "validation.parquet"
+    pq.write_table(pa.Table.from_pylist([short, long]), train_path)
+    pq.write_table(pa.Table.from_pylist([short]), val_path)
+    config = {
+        "format": "prompt_completion_v1",
+        "name": "local-pilot",
+        "expected_samples": 3,
+        "validation_samples": 1,
+        "files": [
+            {
+                "filename": train_path.name,
+                "split": "train",
+                "sha256": hashlib.sha256(train_path.read_bytes()).hexdigest(),
+            },
+            {
+                "filename": val_path.name,
+                "split": "val",
+                "sha256": hashlib.sha256(val_path.read_bytes()).hexdigest(),
+            },
+        ],
+    }
+    output = tmp_path / "packed"
+    manifest = prepare_sft_dataset(config, tokenizer, [16, 64], output, source_dir=tmp_path)
+    assert manifest["splits"]["train"]["samples"] == 1
+    assert manifest["splits"]["val"]["samples"] == 1
+    assert manifest["splits"]["train"]["truncated_samples"] == 0
+    assert manifest["splits"]["train"]["rejection_reasons"] == {
+        "conversation exceeds sequence limit": 1
+    }
+    verify_sft_dataset(output, manifest)
+    train_path.write_bytes(b"changed")
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        prepare_sft_dataset(config, tokenizer, [16, 64], tmp_path / "other", source_dir=tmp_path)
+
+
+def test_local_dataset_rejects_unsafe_paths_and_invalid_completion(tmp_path):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    with pytest.raises(sft_module.ChatFormatError, match="assistant"):
+        encode_completion(
+            {
+                "prompt": [{"role": "user", "content": "Q"}],
+                "completion": [{"role": "user", "content": "A"}],
+            },
+            tokenizer,
+        )
+    config = {
+        "format": "prompt_completion_v1",
+        "name": "pilot",
+        "expected_samples": 2,
+        "validation_samples": 1,
+        "files": [
+            {"filename": "../train.parquet", "split": "train", "sha256": "a" * 64},
+            {"filename": "val.parquet", "split": "val", "sha256": "b" * 64},
+        ],
+    }
+    with pytest.raises(ValueError, match="plain Parquet"):
+        prepare_sft_dataset(config, tokenizer, [64], source_dir=tmp_path)
 
 
 def test_default_sft_data_dir_is_isolated_by_dataset(tmp_path, monkeypatch):

@@ -11,6 +11,14 @@ training, hardware, checkpoint, and analysis contracts are frozen.
 
 These are reproducible baselines, not the first-grant flagship architecture.
 
+## Completed Instruct data pilot
+
+The [pre-compute Speck2 pilot](../research/notebook/2026-09-12-instruct-data-pilot.md) exercised
+the [100K compiler recipe](Speck-Instruct-Starter/README.md), its
+[capacity-adjusted 500K variant](Speck-Instruct-Starter500K/README.md), and
+[native SFT/evaluation](Speck2-140M-Instruct-Starter100K/README.md). These are retained reproduction
+inputs; the pilot is complete and did not promote a new release.
+
 ## Active evidence inputs
 
 The Kimi transfer, replication, 32K continuation, noise-floor, global-count, Reader Attention, and

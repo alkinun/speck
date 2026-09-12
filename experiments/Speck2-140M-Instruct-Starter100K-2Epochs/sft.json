@@ -1,0 +1,5 @@
+{
+  "extends": "../Speck2-140M-Instruct-Starter100K/sft.json",
+  "run": "Speck2-140M-Instruct-Starter100K-2Epochs",
+  "epochs": 2
+}

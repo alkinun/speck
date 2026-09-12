@@ -333,6 +333,11 @@ class SFTTrainer:
 
     def _prepare_execution(self):
         args = self.args
+        # Each length bucket has distinct training and validation graphs.
+        if not args.no_compile:
+            torch._dynamo.config.recompile_limit = max(
+                torch._dynamo.config.recompile_limit, 2 * len(args.sequence_lengths) + 2
+            )
         self.train_data = sft_loader(
             self.tokenizer,
             self.device_tokens,

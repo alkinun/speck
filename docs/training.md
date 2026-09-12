@@ -252,6 +252,13 @@ checkpoint-averaging experiment.
 
 ## Supervised Fine-Tuning
 
+The [Instruct starter compiler](../experiments/Speck-Instruct-Starter/README.md) produces portable
+prompt/completion Parquet with final-assistant-only loss and explicit splits. Native preparation
+accepts this hash-bound `prompt_completion_v1` format with `--source-dir`, rejecting overlength rows.
+The completed [Speck2 data pilot](../research/notebook/2026-09-12-instruct-data-pilot.md) records the
+100K/500K trials; [reproduction commands](../experiments/Speck2-140M-Instruct-Starter100K/README.md)
+cover preparation, training, and comparison.
+
 For the flagship's fresh datasets and broad SFT → mixed-length finishing → preference recipe, see
 [the Instruct plan](../research/flagship/POST_TRAINING.md). The SpeckChat experiments below document
 the earlier pilot releases; they are not the flagship's selected mixture or training schedule.

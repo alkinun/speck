@@ -183,7 +183,9 @@ def assert_current_transformers_parity(tmp_path, values):
         tmp_path,
         trust_remote_code=True,
         dtype=torch.bfloat16,
+        use_cache=False,
     )
+    assert exported.config.use_cache is False
     assert exported.config.tie_word_embeddings is True
     assert exported.get_output_embeddings().weight is exported.get_input_embeddings().weight
     expected_rotary = [buffer for buffer in native.rotary.buffers()]
@@ -194,7 +196,9 @@ def assert_current_transformers_parity(tmp_path, values):
     tokens = torch.randint(0, architecture.vocab_size, (1, 8))
     with torch.no_grad():
         expected = native(tokens)
-        actual = exported(input_ids=tokens, use_cache=False).logits
+        output = exported(input_ids=tokens)
+        assert output.past_key_values is None
+        actual = output.logits
     torch.testing.assert_close(actual, expected, rtol=2e-2, atol=2e-2)
     generated = exported.generate(
         tokens[:, :2],

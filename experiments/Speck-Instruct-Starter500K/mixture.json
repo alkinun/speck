@@ -1,0 +1,34 @@
+{
+  "samples": 500000,
+  "validation_samples": 10000,
+  "seed": 42,
+  "max_tokens": 8192,
+  "shuffle_buffer": 10000,
+  "max_source_rows": 250000,
+  "english_probability": 0.8,
+  "near_duplicate_threshold": 0.9,
+  "tokenizer": {
+    "repo_id": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+    "filename": "tokenizer.model"
+  },
+  "sources": [
+    {"id": "lmsys", "repo": "OpenLeecher/lmsys_chat_1m_clean", "revision": "e9f2f6838a2dbba87c216bb6bc406e8d7ce0f389", "split": "train", "weight": 74000, "validation_weight": 1300, "kind": "lmsys", "skill": "general", "id_field": "id", "category_field": "category", "category_cap": 0.3, "include": {"flaw": ["normal"]}, "minimum": {"deepseek_response.reward": 0}},
+    {"id": "magpie_mt", "repo": "Magpie-Align/Magpie-Llama-3.1-Pro-MT-500K-v0.1", "revision": "266269affc19d473119d77a247050ab8a75db376", "split": "train", "weight": 74000, "validation_weight": 1300, "kind": "messages", "messages_field": "conversations", "skill": "general", "id_field": "uuid", "category_field": "task_category", "category_cap": 0.3, "include": {"language": ["EN"], "input_quality": ["good", "excellent"]}, "minimum": {"instruct_reward": 0}},
+    {"id": "nemotron", "repo": "nvidia/Nemotron-SFT-Instruction-Following-Chat-v2", "revision": "1a9454ed054b8544503ab8d8c0a519d141a44c5b", "split": "reasoning_off", "weight": 63000, "validation_weight": 1600, "kind": "messages", "skill": "general", "id_field": "uuid", "include": {"reasoning": ["off"]}},
+    {"id": "hermes", "repo": "NousResearch/Hermes-3-Dataset", "revision": "b1fddbdcae4e6714889365d1e6ce266a45289cc9", "split": "train", "weight": 29900, "validation_weight": 800, "kind": "messages", "messages_field": "conversations", "skill": "general"},
+    {"id": "everyday", "repo": "HuggingFaceTB/everyday-conversations-llama3.1-2k", "revision": "14f543216b9ba42b6b951dc5bd199460d193b162", "split": "train_sft", "weight": 1600, "validation_weight": 1, "kind": "messages", "skill": "general", "id_field": "full_topic", "category_field": "topic", "category_cap": 0.2},
+    {"id": "constraints", "repo": "HuggingFaceTB/smoltalk", "revision": "5feaf2fd3ffca7c237fc38d1861bc30365d48ffa", "config": "smol-constraints", "split": "train", "weight": 25000, "validation_weight": 300, "kind": "constraints", "skill": "instruction_following"},
+    {"id": "coedit", "repo": "grammarly/coedit", "revision": "e9a255c33ef910bc33a9d2b522653fa87521583e", "split": "train", "weight": 40000, "validation_weight": 700, "kind": "pair", "prompt_field": "src", "response_field": "tgt", "id_field": "_id", "category_field": "task", "category_cap": 0.4, "skill": "writing"},
+    {"id": "rewrite", "repo": "HuggingFaceTB/smoltalk", "revision": "5feaf2fd3ffca7c237fc38d1861bc30365d48ffa", "config": "smol-rewrite", "split": "train", "weight": 27750, "validation_weight": 450, "kind": "messages", "skill": "writing"},
+    {"id": "summarize", "repo": "HuggingFaceTB/smoltalk", "revision": "5feaf2fd3ffca7c237fc38d1861bc30365d48ffa", "config": "smol-summarize", "split": "train", "weight": 27750, "validation_weight": 750, "kind": "messages", "skill": "writing"},
+    {"id": "human_edits", "repo": "nvidia/HelpSteer3", "revision": "f6d145777bcbde96137596340fab89793acd1031", "config": "edit", "split": "train", "weight": 4500, "validation_weight": 5, "kind": "edit", "skill": "writing", "category_field": "domain", "verification": "upstream_human_edited"},
+    {"id": "orca_math", "repo": "microsoft/orca-math-word-problems-200k", "revision": "29255d1770cc4eac66e5e7fa378cba542c026350", "split": "train", "weight": 30000, "validation_weight": 766, "kind": "pair", "prompt_field": "question", "response_field": "answer", "skill": "math"},
+    {"id": "numina", "repo": "AI-MO/NuminaMath-CoT", "revision": "9d8d210c9f6a36c8f3cd84045668c9b7800ef517", "split": "train", "weight": 20000, "validation_weight": 550, "kind": "messages", "skill": "math", "category_field": "source", "category_cap": 0.7, "include": {"source": ["cn_k12", "aops_forum", "olympiads"]}},
+    {"id": "self_oss", "repo": "bigcode/self-oss-instruct-sc2-exec-filter-50k", "revision": "356bb069eee815daa6e23e9a282eeefe1490ad44", "split": "train", "weight": 30000, "validation_weight": 600, "kind": "pair", "prompt_field": "instruction", "response_field": "response", "family_field": "sha1", "skill": "code", "verification": "upstream_execution_validated"},
+    {"id": "packages", "repo": "OpenCoder-LLM/opc-sft-stage2", "revision": "7d28f40d579edd7c24402d17d0c7639f991e6f8d", "config": "package_instruct", "split": "train", "weight": 20000, "validation_weight": 500, "kind": "pair", "prompt_field": "instruction", "response_field": "output", "skill": "code"},
+    {"id": "science", "repo": "allenai/SciRIFF-train-mix", "revision": "9ed98bb611435bc2909eef39f264bac624dee8bd", "split": "train", "weight": 26000, "validation_weight": 350, "kind": "science", "skill": "grounded", "category_field": "dataset", "category_cap": 0.15, "verification": "upstream_reference"},
+    {"id": "tables", "repo": "LipengCS/Table-GPT", "revision": "25754c7a072dffca92e18c56f33832936f53495a", "config": "All", "split": "train", "weight": 2500, "validation_weight": 8, "kind": "table", "skill": "grounded", "category_field": "task", "category_cap": 0.3, "family_field": "metadata.table", "include": {"task": ["RowColumnFiltering", "RowColumnSorting", "RowColumnSwapping", "ListExtraction", "SchemaMatching", "EntityMatching", "HeaderValueMatching"]}},
+    {"id": "coconot", "repo": "allenai/coconot", "revision": "2cbe16aabf9069f17e48c8daad8aeabc29469eb7", "config": "original", "split": "train", "weight": 4000, "validation_weight": 20, "kind": "pair", "prompt_field": "prompt", "response_field": "response", "skill": "clarification", "category_field": "category", "category_cap": 0.4, "include": {"category": ["Incomplete requests", "Unsupported requests", "Indeterminate requests"]}}
+  ]
+}

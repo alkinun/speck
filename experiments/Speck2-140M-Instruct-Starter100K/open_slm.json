@@ -1,0 +1,8 @@
+{
+  "extends": "../Speck1-140M/open_slm.json",
+  "model": {
+    "repo": "specklabs/Speck2-140M-Instruct",
+    "revision": "2003d0ecac30f90982117500f64c071705b69143",
+    "parameters": 140654208
+  }
+}

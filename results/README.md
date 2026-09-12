@@ -8,6 +8,9 @@ Result JSON is append-only evidence, not a work queue.
   reusable evaluation-policy evidence it produced.
 - `data/` contains checked, hash-bound flagship source qualification summaries; runtime corpora stay
   on the data volume and remain non-authoritative until every listed gate passes.
+- [`Speck2-Instruct-Data-Pilot`](Speck2-Instruct-Data-Pilot/summary.json) consolidates the completed
+  pre-compute 100K/500K SFT comparison against the release: improved diagnostics, mixed benchmark
+  results, and no release promotion.
 - A file's presence does not activate its experiment or authorize its historical claim.
 
 Current decisions must be derived through [`research/flagship/`](../research/flagship/) and cite the

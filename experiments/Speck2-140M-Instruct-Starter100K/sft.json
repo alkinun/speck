@@ -1,0 +1,29 @@
+{
+  "extends": "../Speck2-140M-Instruct/sft.json",
+  "run": "Speck2-140M-Instruct-Starter100K",
+  "dataset": {
+    "format": "prompt_completion_v1",
+    "name": "Speck2-Instruct-Starter-4K",
+    "expected_samples": 102000,
+    "validation_samples": 2000,
+    "files": [
+      {
+        "filename": "train.parquet",
+        "split": "train",
+        "sha256": "0064e1cfc8516603606bfe9b93ff97733e881bb983dafcbe8918ef7f61a01c6e"
+      },
+      {
+        "filename": "validation.parquet",
+        "split": "val",
+        "sha256": "742ce771c82dc2f621cfaf9f7e5b629ab5fdbf2812b6a8c53a9d85467e3ec6fe"
+      }
+    ]
+  },
+  "device_batch_size": 2,
+  "sequence_length": 4096,
+  "sequence_lengths": [256, 512, 1024, 2048, 4096],
+  "eval_every": 500,
+  "save_every": 500,
+  "keep_checkpoints": 3,
+  "log_every": 10
+}

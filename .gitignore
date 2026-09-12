@@ -16,6 +16,7 @@ dist/
 
 # Experiment logs.
 wandb/
+.opencode/*.db*
 
 # Non-authoritative research and manuscript working state.
 research/scratch/

@@ -26,9 +26,10 @@ class SpeckConfig(PreTrainedConfig):
             is_decoder=True,
             is_encoder_decoder=False,
             tie_word_embeddings=True,
-            use_cache=use_cache,
             **values,
         )
+        # Transformers 5 drops generation kwargs in the base config constructor.
+        self.use_cache = use_cache
 
     def architecture_config(self):
         allowed = {field.name for field in fields(ArchitectureConfig)}

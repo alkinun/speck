@@ -29,11 +29,49 @@ def resolve_sft_data_dir(config, output_dir=None):
 
     if output_dir is not None:
         return Path(output_dir).expanduser()
-    dataset_name = config["repo"].rsplit("/", 1)[-1]
+    dataset_name = (
+        config["name"]
+        if config.get("format") == "prompt_completion_v1"
+        else config["repo"].rsplit("/", 1)[-1]
+    )
     return Path(base_dir()) / "data" / f"{dataset_name}-v{FORMAT_VERSION}"
 
 
 def _validate_dataset_config(config):
+    if config.get("format") == "prompt_completion_v1":
+        if set(config) != {"format", "name", "files", "expected_samples", "validation_samples"}:
+            raise ValueError("invalid local prompt/completion dataset settings")
+        name = config["name"]
+        if not isinstance(name, str) or not name or Path(name).name != name or name in {".", ".."}:
+            raise ValueError("local dataset name must be a plain directory name")
+        files = config["files"]
+        if not isinstance(files, list) or len(files) != 2:
+            raise ValueError("local dataset requires one train and one val Parquet file")
+        for item in files:
+            if not isinstance(item, dict) or set(item) != {"filename", "split", "sha256"}:
+                raise ValueError("local dataset files require filename, split and sha256")
+            if (
+                not isinstance(item["filename"], str)
+                or Path(item["filename"]).name != item["filename"]
+                or not item["filename"].endswith(".parquet")
+            ):
+                raise ValueError("local dataset filenames must be plain Parquet filenames")
+            if (
+                not isinstance(item["sha256"], str)
+                or len(item["sha256"]) != 64
+                or any(c not in "0123456789abcdef" for c in item["sha256"])
+            ):
+                raise ValueError("local dataset files require SHA-256 digests")
+        if {item["split"] for item in files} != {"train", "val"}:
+            raise ValueError("local dataset requires train and val splits")
+        expected, validation = config["expected_samples"], config["validation_samples"]
+        if (
+            type(expected) is not int
+            or type(validation) is not int
+            or not 0 < validation < expected
+        ):
+            raise ValueError("invalid local dataset sample counts")
+        return
     required = {"repo", "revision", "files", "expected_samples", "validation_samples"}
     if set(config) != required:
         missing = sorted(required - set(config))
@@ -104,10 +142,21 @@ def prepare_sft_dataset(
     sequence_lengths,
     output_dir=None,
     restart=False,
+    source_dir=None,
 ):
     """Download and atomically publish length-bucketed, assistant-masked rows."""
 
     _validate_dataset_config(config)
+    local = config.get("format") == "prompt_completion_v1"
+    if local and source_dir is None:
+        raise ValueError("local prompt/completion preparation requires source_dir")
+    if not local and source_dir is not None:
+        raise ValueError("source_dir is only supported for local prompt/completion data")
+    if local:
+        source_dir = Path(source_dir).expanduser().resolve()
+        for item in config["files"]:
+            if _file_hash(source_dir / item["filename"]) != item["sha256"]:
+                raise ValueError(f"local dataset checksum mismatch: {item['filename']}")
     sequence_lengths = tuple(sequence_lengths)
     if (
         not sequence_lengths
@@ -169,19 +218,32 @@ def prepare_sft_dataset(
     sample_index = 0
     try:
         for filename in config["files"]:
-            path = hf_hub_download(
-                config["repo"],
-                filename,
-                revision=config["revision"],
-                repo_type="dataset",
-            )
+            if local:
+                path = source_dir / filename["filename"]
+            else:
+                path = hf_hub_download(
+                    config["repo"],
+                    filename,
+                    revision=config["revision"],
+                    repo_type="dataset",
+                )
             parquet = pq.ParquetFile(path)
-            for batch in parquet.iter_batches(columns=["messages", "source"], batch_size=256):
+            columns = ["prompt", "completion", "source"] if local else ["messages", "source"]
+            for batch in parquet.iter_batches(columns=columns, batch_size=256):
                 for row in batch.to_pylist():
-                    split = "val" if sample_index < config["validation_samples"] else "train"
+                    split = (
+                        filename["split"]
+                        if local
+                        else ("val" if sample_index < config["validation_samples"] else "train")
+                    )
                     stats[split]["input_samples"] += 1
                     try:
-                        tokens, mask = tokenizer.encode_messages(row["messages"])
+                        if local:
+                            tokens, mask = encode_completion(row, tokenizer)
+                            if len(tokens) > sequence_lengths[-1] + 1:
+                                raise ChatFormatError("conversation exceeds sequence limit")
+                        else:
+                            tokens, mask = tokenizer.encode_messages(row["messages"])
                     except ChatFormatError as error:
                         stats[split]["rejected_samples"] += 1
                         stats[split]["rejection_reasons"][str(error)] += 1
@@ -194,12 +256,15 @@ def prepare_sft_dataset(
                         ] += 1
                         sample_index += 1
                         continue
-                    tokens, mask, truncated = _truncate_conversation(
-                        tokens,
-                        mask,
-                        tokenizer,
-                        sequence_lengths[-1] + 1,
-                    )
+                    if local:
+                        truncated = False
+                    else:
+                        tokens, mask, truncated = _truncate_conversation(
+                            tokens,
+                            mask,
+                            tokenizer,
+                            sequence_lengths[-1] + 1,
+                        )
                     sequence_length = next(
                         length for length in sequence_lengths if len(tokens) <= length + 1
                     )
@@ -231,6 +296,8 @@ def prepare_sft_dataset(
             raise ValueError(
                 f"expected {config['expected_samples']:,} samples, found {sample_index:,}"
             )
+        if local and stats["val"]["input_samples"] != config["validation_samples"]:
+            raise ValueError("local validation sample count does not match the configured split")
         for split, values in stats.items():
             if not values["samples"]:
                 raise ValueError(f"SFT {split} split has no accepted samples")
@@ -283,6 +350,21 @@ def prepare_sft_dataset(
     _write_json(building / "manifest.json", manifest)
     os.replace(building, output_dir)
     return manifest
+
+
+def encode_completion(row, tokenizer):
+    """Preserve conversation context while supervising only the final response and EOS."""
+    prompt, completion = row.get("prompt"), row.get("completion")
+    if not isinstance(prompt, list) or not isinstance(completion, list) or len(completion) != 1:
+        raise ChatFormatError("expected a conversational prompt and one completion")
+    if not isinstance(completion[0], dict) or completion[0].get("role") != "assistant":
+        raise ChatFormatError("completion must be an assistant message")
+    prefix, _ = tokenizer.encode_messages(prompt, add_generation_prompt=True)
+    tokens, mask = tokenizer.encode_messages(prompt + completion)
+    if tokens[: len(prefix)] != prefix:
+        raise ChatFormatError("completion tokenization changed the prompt prefix")
+    mask[: len(prefix)] = [False] * len(prefix)
+    return tokens, mask
 
 
 def load_sft_manifest(data_dir=None):

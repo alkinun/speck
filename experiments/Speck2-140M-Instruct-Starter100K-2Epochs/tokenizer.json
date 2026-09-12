@@ -1,0 +1,3 @@
+{
+  "extends": "../Speck2-140M-Instruct-Starter100K/tokenizer.json"
+}

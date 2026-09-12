@@ -1,0 +1,7 @@
+{
+  "baseline_repo": "specklabs/Speck2-140M-Instruct",
+  "baseline_revision": "2003d0ecac30f90982117500f64c071705b69143",
+  "seed": 20260911,
+  "cases_per_task": 40,
+  "max_tokens": 128
+}

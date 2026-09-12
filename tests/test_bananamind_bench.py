@@ -2,6 +2,7 @@ import hashlib
 import json
 from types import SimpleNamespace
 
+import pytest
 import torch
 
 from scripts import bananamind_bench
@@ -85,7 +86,8 @@ def test_resolve_speck_run_pins_checkpoint_and_tokenizer(tmp_path, monkeypatch):
     assert run["identity"]["tokenizer_sha256"] == "tokenizer-fingerprint"
 
 
-def test_resolve_sft_run_scores_with_the_base_tokenizer(tmp_path, monkeypatch):
+@pytest.mark.parametrize("recipe_name", ["train", "sft"])
+def test_resolve_sft_run_scores_with_the_base_tokenizer(tmp_path, monkeypatch, recipe_name):
     experiment = tmp_path / "experiment"
     experiment.mkdir()
     tokenizer_config = {
@@ -96,7 +98,7 @@ def test_resolve_sft_run_scores_with_the_base_tokenizer(tmp_path, monkeypatch):
     }
     (experiment / "model.json").write_text("{}")
     (experiment / "tokenizer.json").write_text(json.dumps(tokenizer_config))
-    (experiment / "train.json").write_text(json.dumps({"output_dir": None, "run": "base"}))
+    (experiment / f"{recipe_name}.json").write_text(json.dumps({"output_dir": None, "run": "base"}))
     checkpoint_dir = tmp_path / "instruct"
     checkpoint_dir.mkdir()
     (checkpoint_dir / "model_000042.pt").write_bytes(b"model checkpoint")

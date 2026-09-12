@@ -16,6 +16,9 @@ def parse_args(argv=None):
         help="experiment directory (default: %(default)s)",
     )
     parser.add_argument("--restart", action="store_true", help="replace an incomplete staged build")
+    parser.add_argument(
+        "--source-dir", help="directory containing pinned local prompt/completion Parquet files"
+    )
     return parser.parse_args(argv)
 
 
@@ -29,6 +32,7 @@ def main(argv=None):
         settings["sequence_lengths"],
         output_dir=settings.get("data_dir"),
         restart=args.restart,
+        source_dir=args.source_dir,
     )
     print(
         f"Prepared {manifest['splits']['train']['samples']:,} training conversations "

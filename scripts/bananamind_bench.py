@@ -45,7 +45,8 @@ def _official_runner():
 
 def _speck_experiment(value):
     path = Path(value).expanduser()
-    return path if (path / "model.json").is_file() and (path / "train.json").is_file() else None
+    recipe_exists = any((path / f"{name}.json").is_file() for name in ("train", "sft"))
+    return path if (path / "model.json").is_file() and recipe_exists else None
 
 
 def _parse_speck_options(argv):
@@ -75,13 +76,14 @@ def _resolve_speck_run(args, checkpoint_step, checkpoint_directory=None):
     if args.tokenizer is not None:
         raise ValueError("Speck evaluations use the checkpoint tokenizer; omit --tokenizer")
 
-    configs = load_experiment(experiment, "tokenizer", "train")
+    recipe_name = "sft" if (experiment / "sft.json").is_file() else "train"
+    configs = load_experiment(experiment, "tokenizer", recipe_name)
+    settings = configs[recipe_name]
     checkpoint_dir = (
         Path(checkpoint_directory).expanduser()
         if checkpoint_directory is not None
         else Path(
-            configs["train"].get("output_dir")
-            or Path(base_dir()) / "checkpoints" / configs["train"]["run"]
+            settings.get("output_dir") or Path(base_dir()) / "checkpoints" / settings["run"]
         ).expanduser()
     )
     step = latest(checkpoint_dir) if checkpoint_step is None else checkpoint_step
