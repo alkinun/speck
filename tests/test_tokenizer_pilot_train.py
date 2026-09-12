@@ -55,7 +55,6 @@ def run_manifest(tmp_path):
         "tie_word_embeddings": True,
     }
     model = build_model(model_settings, 16, 1, 2)
-    canonical = model.config.settings()
     fixed = shard(tmp_path, "fixed.bin", np.arange(16) % 16, "web")
     continuation = shard(tmp_path, "continuation.bin", np.arange(16, 65) % 16, "web")
     run = {
@@ -66,8 +65,8 @@ def run_manifest(tmp_path):
         "tokenizer_id": "fixture-tokenizer",
         "repository_revision": "fixture",
         "model": {
-            "settings": canonical,
-            "sha256": _fingerprint(canonical),
+            "settings": model_settings,
+            "sha256": _fingerprint(model_settings),
             "parameters": model.parameter_count(),
             "analytic_training_flops_per_token": model.flops_per_token(2),
         },

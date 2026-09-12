@@ -62,7 +62,7 @@ def build_pilot_model(run, device):
         loss_backend=run["settings"]["loss_backend"],
     )
     if (
-        _fingerprint(model.config.settings()) != run["model"]["sha256"]
+        _fingerprint(run["model"]["settings"]) != run["model"]["sha256"]
         or model.parameter_count() != run["model"]["parameters"]
         or model.flops_per_token(run["settings"]["sequence_length"])
         != run["model"]["analytic_training_flops_per_token"]
@@ -184,6 +184,7 @@ def qualify_checkpoint_resume(run, output_directory, *, device="cpu", steps=2):
         "run_fingerprint": run["run_fingerprint"],
         "device": str(torch.device(device)),
         "dtype": str(next(model.parameters()).dtype),
+        "compiled": False,
         "first_loss": float(first_loss),
         "second_loss": float(second_loss),
         "replay_loss": float(replay_loss),
