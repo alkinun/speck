@@ -1,4 +1,4 @@
-.PHONY: setup format format-check lint test research-check quality
+.PHONY: setup format format-check lint test research-check source-pin-check quality
 
 setup:
 	uv sync --extra cpu --group dev --group dataset-build --group ruler --group transformers --locked
@@ -17,5 +17,8 @@ test:
 
 research-check:
 	uv run --no-sync python -m scripts.research_catalog
+
+source-pin-check:
+	uv run --no-sync python -m scripts.source_pin_check
 
 quality: format-check lint test research-check

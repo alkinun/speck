@@ -1,8 +1,6 @@
 """Run deterministic long-context quality, latency, and memory curves."""
 
 import argparse
-import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -13,6 +11,7 @@ from speck.architecture import AttentionSpec
 from speck.checkpoint import checkpoint_identity, latest
 from speck.common import base_dir
 from speck.config import load_experiment
+from speck.io import atomic_json
 from speck.long_context import (
     add_counterfactual_metrics,
     aggregate_results,
@@ -59,13 +58,6 @@ def arguments(argv=None):
     )
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args(argv)
-
-
-def atomic_json(path, value):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def parse_depths(value):

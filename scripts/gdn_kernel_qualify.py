@@ -2,8 +2,6 @@
 
 import argparse
 import importlib.metadata
-import json
-import os
 import statistics
 import subprocess
 import time
@@ -12,6 +10,7 @@ from pathlib import Path
 
 import torch
 
+from speck.io import atomic_json
 from speck.long_context import parse_lengths
 from speck.model import torch_gated_delta_rule
 
@@ -121,13 +120,6 @@ def gradient_case(args):
         name: maximum_error(actual.grad, expected.grad)
         for name, actual, expected in zip(names, actual_values, reference_values)
     }
-
-
-def atomic_json(path, value):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def run(args):

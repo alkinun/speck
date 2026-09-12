@@ -12,6 +12,17 @@ The [2026-09-08 cleanup audit](docs/code_cleanup_2026-09-08.md) records source-p
 follow-ups. Source-pinned files that require evidence requalification are explicitly excluded from
 formatting, while remaining part of lint and test checks.
 
+Before changing Python used by checked evidence, inspect the current provenance boundary:
+
+```bash
+uv run --no-sync python -m scripts.source_pin_check --inventory
+uv run --no-sync python -m scripts.source_pin_check
+```
+
+The first command inventories current source pins. The second exits unsuccessfully when working-tree
+changes alter Python whose base-tree hash is referenced by a checked contract or result. Such changes
+require an explicit successor; do not update old evidence to make the warning disappear.
+
 ## Development Setup
 
 Run commands from the repository root. Install the CPU environment and development tools for the

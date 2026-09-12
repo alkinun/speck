@@ -3,8 +3,6 @@
 import argparse
 import importlib.metadata
 import inspect
-import json
-import os
 import statistics
 import subprocess
 import time
@@ -13,6 +11,7 @@ from pathlib import Path
 
 import torch
 
+from speck.io import atomic_json
 from speck.long_context import parse_lengths
 from speck.model import torch_kimi_delta_rule
 
@@ -174,13 +173,6 @@ def decode_case(args, chunk_operation, recurrent_operation):
         "output_max_abs_error": maximum_error(actual_output, expected_output),
         "state_max_abs_error": maximum_error(state, expected_state),
     }
-
-
-def atomic_json(path, value):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def run(args):

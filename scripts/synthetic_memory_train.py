@@ -1,9 +1,7 @@
 """Train a controlled Speck mixer on deterministic synthetic memory tasks."""
 
 import argparse
-import json
 import math
-import os
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -21,6 +19,7 @@ from speck.architecture import (
     StageConfig,
     SwiGLUSpec,
 )
+from speck.io import atomic_json
 from speck.model import SpeckForCausalLM
 from speck.synthetic import IGNORE_INDEX, mqar_batch, palindrome_batch, stack_batch
 
@@ -172,13 +171,6 @@ def source_provenance():
         or command_failed(["git", "diff", "--cached", "--quiet"]),
         "untracked_files": untracked.splitlines() if untracked else [],
     }
-
-
-def atomic_json(path, value):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
 
 
 def cosine_scale(completed_steps, max_steps):

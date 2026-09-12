@@ -139,3 +139,21 @@ Those require source-evidence requalification before formatting. They are listed
 `ruff-format.toml`, so the documented repository-wide format check passes without changing their
 bytes; Ruff lint and tests still include them. GPU-specific kernels and remote publication were not
 exercised by this CPU cleanup validation.
+
+## Pre-grant follow-up — 2026-09-12
+
+The pre-cleanup tree contained 273 tracked Python files and passed 984 CPU tests. A fresh base-tree
+scan found 117 Python blobs whose SHA-256 is referenced by checked contracts or results. This broader
+set is not a formatting exclusion list: many referenced files are already formatted, but any
+behavioral change to one requires an explicit successor qualification. The follow-up adds three Python
+files and four tests.
+
+`python -m scripts.source_pin_check --inventory` now reports the full boundary. The default
+changed-file mode compares the working tree with `HEAD`, resolves hashes and references from the base
+tree, and exits unsuccessfully when an evidence-bound source changed. Looking up references in the
+base tree prevents a simultaneous edit to an old result from hiding the provenance impact.
+`make source-pin-check` exposes the same local guard.
+
+Five unpinned evaluation and qualification scripts now use `speck.io.atomic_json` instead of retaining
+identical private implementations. Their report bytes remain sorted, two-space-indented JSON ending in
+a newline. Dataset and checkpoint writers retain their separate fsync and transaction semantics.
