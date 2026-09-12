@@ -16,9 +16,9 @@ def _sha256(path):
 
 
 def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_closed():
-    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v5.json").read_text())
+    plan = json.loads((ROOT / "research/flagship/tokenizer_pilot_plan_v6.json").read_text())
 
-    assert plan["status"] == "fixed_stream_complete_equal_flop_continuation_frozen_D5_unopened"
+    assert plan["status"] == "availability_adjusted_equal_flop_continuation_frozen_D5_unopened"
     assert _sha256(ROOT / plan["supersedes"]["path"]) == plan["supersedes"]["sha256"]
     assert (
         _sha256(ROOT / plan["static_prerequisite"]["path"]) == plan["static_prerequisite"]["sha256"]
@@ -41,6 +41,8 @@ def test_real_pilot_successor_binds_static_corpus_geometry_and_keeps_audit_close
     assert plan["stopping"]["fixed_document_mistral_tokens"] == 1_200_007_273
     continuation = plan["fixed_flop_materialization"]["continuation"]
     assert _sha256(ROOT / continuation["plan"]["path"]) == continuation["plan"]["sha256"]
+    failure = continuation["failed_predecessor"]
+    assert _sha256(ROOT / failure["path"]) == failure["sha256"]
     for path, digest in continuation["implementation"].values():
         assert _sha256(ROOT / path) == digest
     assert plan["sealed_audit"]["status"] == "unopened"
