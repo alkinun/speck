@@ -1,0 +1,70 @@
+{
+  "format": "speck_tokenizer_pilot_preflight",
+  "format_version": 1,
+  "status": "preflight_authorized_no_quality_or_selection_authority",
+  "pilot_plan": {
+    "path": "research/flagship/tokenizer_pilot_plan_v7.json",
+    "sha256": "3505cdee6e48fa19f2e93df13e602ca28bd13189bcb4b40c6545903bc1f717ab"
+  },
+  "scale_spec": {
+    "path": "research/flagship/targets/scale-targets-v2.json",
+    "sha256": "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493"
+  },
+  "target_id": "ladder-60m",
+  "baseline_id": "mistral-32k",
+  "tokenizers": [
+    {
+      "id": "mistral-32k",
+      "vocab_size": 32000,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_document_tokens": 1200007273,
+      "fixed_document_aligned_tokens": 1200029696,
+      "fixed_flop_token_stop": 1200007273,
+      "fixed_flop_aligned_tokens": 1200029696,
+      "run_stop_aligned_tokens": 1200029696
+    },
+    {
+      "id": "speck-bpe-40960-whitespace",
+      "vocab_size": 40960,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_document_tokens": 1108037579,
+      "fixed_document_aligned_tokens": 1108082688,
+      "fixed_flop_token_stop": 1125459741,
+      "fixed_flop_aligned_tokens": 1125515264,
+      "run_stop_aligned_tokens": 1125515264
+    },
+    {
+      "id": "speck-bpe-32000-whitespace",
+      "vocab_size": 32000,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_document_tokens": 1142621116,
+      "fixed_document_aligned_tokens": 1142685696,
+      "fixed_flop_token_stop": 1200007273,
+      "fixed_flop_aligned_tokens": 1200029696,
+      "run_stop_aligned_tokens": 1200029696
+    }
+  ],
+  "settings": {
+    "device": "cuda",
+    "seed": 42,
+    "sequence_length": 4096,
+    "device_batch_size": 1,
+    "batch_tokens": 65536,
+    "accumulation": 16,
+    "optimizer": "muon",
+    "learning_rate": 0.0015,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "loss_backend": "torch",
+    "compile": true,
+    "warmup_optimizer_steps": 1,
+    "measured_optimizer_steps": 2
+  },
+  "gpu_hour_ceiling": 30,
+  "output": "/mnt/speck-data/speck/tokenizer-pilot-preflight-v1.json",
+  "quality_run_authority": false,
+  "final_selection_authority": false
+}
