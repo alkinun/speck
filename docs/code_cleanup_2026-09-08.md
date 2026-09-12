@@ -154,6 +154,10 @@ tree, and exits unsuccessfully when an evidence-bound source changed. Looking up
 base tree prevents a simultaneous edit to an old result from hiding the provenance impact.
 `make source-pin-check` exposes the same local guard.
 
+The initial guard covered Python files. Full-suite validation then caught `pyproject.toml` as another
+historical hash input. Changed-file mode now checks every tracked blob by default, while inventory mode
+remains Python-only unless `--all-files` is requested.
+
 Five unpinned evaluation and qualification scripts now use `speck.io.atomic_json` instead of retaining
 identical private implementations. Their report bytes remain sorted, two-space-indented JSON ending in
 a newline. Dataset and checkpoint writers retain their separate fsync and transaction semantics.
