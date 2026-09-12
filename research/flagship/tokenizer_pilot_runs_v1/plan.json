@@ -1,0 +1,114 @@
+{
+  "format": "speck_tokenizer_pilot_run_materialization",
+  "format_version": 1,
+  "status": "screen_materialization_authorized_no_model_outputs",
+  "pilot_plan": {
+    "path": "../tokenizer_pilot_plan_v10.json",
+    "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d"
+  },
+  "scale_spec": {
+    "path": "../targets/scale-targets-v2.json",
+    "sha256": "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493"
+  },
+  "target_id": "ladder-60m",
+  "fixed_stream": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-stream-v1/manifest.json",
+    "sha256": "0d2633cf22754adf3ba28b82bce153daacb0d9d0aa9cb892b09c79f64bd6f4e5"
+  },
+  "continuation": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-continuation-v2/manifest.json",
+    "sha256": "7c049e4c04d9fba1ae0ad968b5ee3c2dca974dca1e5171cd1bd35137a77ca6e0"
+  },
+  "evaluation_sample": {
+    "path": "/mnt/speck-data/speck/tokenizer-d5-v1/sample/manifest.json",
+    "sha256": "f706a20b01ef3d1692bfc3c9d47b4ed090e2f83567e258c6b5bae8e75ea821e9"
+  },
+  "implementation": {
+    "module": {
+      "path": "../../../speck/tokenizer_pilot_runs.py",
+      "sha256": "bcda3cfab03fb774026cd00a611365b80d6175422026e79493e05e23a0d05173"
+    },
+    "cli": {
+      "path": "../../../scripts/tokenizer_pilot_runs_prepare.py",
+      "sha256": "2618b4afc47f3c01f5e2f1ead36b4b4066945106dc2ec673925d69bca919ad0d"
+    },
+    "tests": {
+      "path": "../../../tests/test_tokenizer_pilot_runs.py",
+      "sha256": "51b56d103a91c8a50b21b13d7155f5341e4badeca2e68930a112fbcadcca2f8c"
+    }
+  },
+  "tokenizers": [
+    {
+      "role": "mistral-32k",
+      "id": "mistral-32k",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/baselines/mistral-32k/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "vocab_size": 32000,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_flop_token_stop": 1200007273,
+      "run_stop_aligned_tokens": 1200029696
+    },
+    {
+      "role": "compression_endpoint",
+      "id": "speck-bpe-40960-whitespace",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-40960-whitespace/tokenizer.model",
+        "sha256": "77d5abbdbebff82ed45ac7bce9522b9a8aff34ce8f27b9f6ff7fc9d037e8408c"
+      },
+      "vocab_size": 40960,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_flop_token_stop": 1125459741,
+      "run_stop_aligned_tokens": 1125515264
+    },
+    {
+      "role": "compact_endpoint",
+      "id": "speck-bpe-32000-whitespace",
+      "model": {
+        "path": "/mnt/speck-data/speck/tokenizer-d5-v1/candidates/speck-bpe-32000-whitespace/tokenizer.model",
+        "sha256": "173e42b64c27fdc0e343868233f8a809b67c6d6c2f2a32bf6cf4d5c20832e038"
+      },
+      "vocab_size": 32000,
+      "bos_token_id": 1,
+      "eos_token_id": 2,
+      "fixed_flop_token_stop": 1200007273,
+      "run_stop_aligned_tokens": 1200029696
+    }
+  ],
+  "screen": {
+    "seed": 42,
+    "runs": [
+      "mistral-32k",
+      "compression_endpoint",
+      "compact_endpoint"
+    ]
+  },
+  "settings": {
+    "sequence_length": 4096,
+    "device_batch_size": 4,
+    "batch_tokens": 65536,
+    "accumulation": 4,
+    "optimizer": "muon",
+    "learning_rate": 0.0015,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "lr_schedule": "cosine",
+    "warmup_steps": 120,
+    "min_lr": 0.1,
+    "loss_backend": "torch",
+    "compile": true,
+    "checkpoint_every_steps": 1831,
+    "learning_curve_every_steps": 916
+  },
+  "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-runs-v1",
+  "authority": {
+    "screen_execution": true,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}

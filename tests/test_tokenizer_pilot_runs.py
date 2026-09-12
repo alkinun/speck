@@ -7,9 +7,13 @@ import pytest
 
 from speck.tokenizer_pilot_runs import (
     build_screen_run_manifests,
+    load_run_materialization_plan,
     materialize_screen_runs,
     validate_run_materialization_plan,
 )
+
+ROOT = Path(__file__).parents[1]
+REAL_PLAN = ROOT / "research/flagship/tokenizer_pilot_runs_v1/plan.json"
 
 
 def write_json(path, value):
@@ -292,3 +296,45 @@ def test_rejects_authority_expansion_or_batch_mismatch(tmp_path):
     plan["settings"]["batch_tokens"] = 32
     with pytest.raises(ValueError, match="batch geometry"):
         validate_run_materialization_plan(plan)
+
+
+def test_checked_plan_freezes_screen_only_schedule_and_local_implementation():
+    plan = json.loads(REAL_PLAN.read_text())
+
+    assert plan["status"] == "screen_materialization_authorized_no_model_outputs"
+    assert plan["screen"] == {
+        "seed": 42,
+        "runs": ["mistral-32k", "compression_endpoint", "compact_endpoint"],
+    }
+    assert plan["settings"]["batch_tokens"] == 65_536
+    assert plan["settings"]["warmup_steps"] == 120
+    assert plan["authority"] == {
+        "screen_execution": True,
+        "confirmation_execution": False,
+        "D5_opening": False,
+        "final_selection": False,
+        "flagship_training": False,
+    }
+    for identity in plan["implementation"].values():
+        path = (REAL_PLAN.parent / identity["path"]).resolve()
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == identity["sha256"]
+
+
+def test_checked_plan_resolves_real_runtime_inputs_when_available():
+    plan = json.loads(REAL_PLAN.read_text())
+    missing = [
+        identity["path"]
+        for key in ("fixed_stream", "continuation", "evaluation_sample")
+        for identity in (plan[key],)
+        if not Path(identity["path"]).is_file()
+    ]
+    if missing:
+        pytest.skip(f"requires maintainer-local tokenizer pilot input: {missing[0]}")
+
+    normalized = load_run_materialization_plan(REAL_PLAN)
+    runs = build_screen_run_manifests(normalized, repository_revision="pre-output-fixture")
+
+    assert len(runs) == 3
+    assert [run["stops"]["final_step"] for run in runs] == [18_311, 17_174, 18_311]
+    assert len({run["model"]["backbone_sha256"] for run in runs}) == 1
+    assert all(run["status"] == "materialized_not_started" for run in runs)
