@@ -1,5 +1,6 @@
 import json
 import math
+import subprocess
 
 import pytest
 
@@ -7,6 +8,7 @@ from speck.tokenizer_pilot_orchestration import (
     build_completed_run_record,
     macro_bpb,
     orchestration_boundaries,
+    verify_execution_revision,
 )
 
 
@@ -102,3 +104,34 @@ def test_macro_bpb_uses_canonical_categories_not_mapping_insertion_order():
     values = categories(1.0)
     reordered = {key: values[key] for key in reversed(values)}
     assert macro_bpb(reordered) == pytest.approx(1.0)
+
+
+def test_execution_revision_allows_records_but_rejects_runtime_drift(tmp_path):
+    subprocess.run(["git", "-C", str(tmp_path), "init", "-q"], check=True)
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "config", "user.email", "test@example.com"], check=True
+    )
+    subprocess.run(["git", "-C", str(tmp_path), "config", "user.name", "Test"], check=True)
+    source = tmp_path / "speck/model.py"
+    source.parent.mkdir()
+    source.write_text("VALUE = 1\n")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "commit", "-qm", "implementation"], check=True)
+    revision = subprocess.run(
+        ["git", "-C", str(tmp_path), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    record = tmp_path / "research/flagship/execution.json"
+    record.parent.mkdir(parents=True)
+    record.write_text("{}\n")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "commit", "-qm", "record"], check=True)
+    verify_execution_revision(tmp_path, revision)
+
+    source.write_text("VALUE = 2\n")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "commit", "-qm", "runtime drift"], check=True)
+    with pytest.raises(ValueError, match="runtime changed"):
+        verify_execution_revision(tmp_path, revision)

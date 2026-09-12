@@ -20,6 +20,35 @@ def _identity(value, root, context):
     return {"path": str(path), "sha256": value["sha256"]}
 
 
+def verify_execution_revision(root, revision):
+    """Allow checked records after a freeze commit but reject later runtime changes."""
+
+    ancestor = subprocess.run(
+        ["git", "-C", str(root), "merge-base", "--is-ancestor", revision, "HEAD"],
+        check=False,
+    )
+    if ancestor.returncode != 0:
+        raise ValueError("tokenizer pilot implementation revision is not an ancestor of HEAD")
+    changed = subprocess.run(
+        ["git", "-C", str(root), "diff", "--name-only", f"{revision}..HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    runtime_roots = ("speck/", "scripts/")
+    runtime_files = {"pyproject.toml", "uv.lock", "Makefile"}
+    forbidden = [
+        candidate
+        for candidate in changed
+        if candidate.startswith(runtime_roots) or candidate in runtime_files
+    ]
+    if forbidden:
+        raise ValueError(
+            "tokenizer pilot runtime changed after its implementation revision: "
+            + ", ".join(forbidden)
+        )
+
+
 def load_execution_record(path):
     """Load one screen authority that wraps an immutable execution-blocked v2 run."""
 
@@ -88,16 +117,7 @@ def load_execution_record(path):
         "flagship_training": False,
     }:
         raise ValueError("tokenizer pilot execution authority is invalid")
-    if (
-        value["repository_revision"]
-        != subprocess.run(
-            ["git", "-C", str(root), "rev-parse", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
-    ):
-        raise ValueError("tokenizer pilot execution Git revision is not checked out")
+    verify_execution_revision(root, value["repository_revision"])
     dirty = subprocess.run(
         ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=no"],
         check=True,
