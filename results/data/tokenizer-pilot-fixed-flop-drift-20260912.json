@@ -1,0 +1,61 @@
+{
+  "format": "speck_tokenizer_pilot_fixed_flop_contract_defect",
+  "format_version": 1,
+  "status": "fixed_flop_accounting_mismatch_screen_execution_blocked",
+  "recorded_on": "2026-09-12",
+  "detected_before_model_outputs": true,
+  "pilot_plan": {
+    "path": "research/flagship/tokenizer_pilot_plan_v10.json",
+    "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d"
+  },
+  "preflight_result": {
+    "path": "results/systems/tokenizer-pilot-preflight-v2-20260912.json",
+    "sha256": "641d12cb043a239037428509c4cbd3df6fe27781035bd64860bbc0658b9cdc56"
+  },
+  "rejected_materialization": {
+    "path": "results/data/tokenizer-pilot-screen-materialization-20260912.json",
+    "sha256": "48ba8f846edbf55bc53e65a894675aabb28053e482984e2a257b4c65d3373128",
+    "runtime_directory": "/mnt/speck-data/speck/tokenizer-pilot-runs-v1",
+    "model_outputs": 0,
+    "disposition": "preserve for provenance; do not execute"
+  },
+  "mismatch": {
+    "v10_reference_flops_per_token": 415552512,
+    "preflight_and_current_reference_flops_per_token": 415543296,
+    "v10_analytic_flop_target": 498666036713419776,
+    "corrected_analytic_flop_target": 498654977446391808,
+    "target_delta_flops": 11059267027968,
+    "speck_bpe_40960_whitespace": {
+      "flops_per_token": 443068416,
+      "v10_fixed_flop_token_stop": 1125459741,
+      "corrected_fixed_flop_token_stop": 1125458190,
+      "token_delta": 1551,
+      "v10_aligned_optimizer_stop": 1125515264,
+      "corrected_aligned_optimizer_stop": 1125515264,
+      "aligned_stop_unchanged": true
+    },
+    "mistral_32k": {
+      "fixed_flop_token_stop": 1200007273,
+      "aligned_optimizer_stop": 1200029696
+    },
+    "speck_bpe_32000_whitespace": {
+      "fixed_flop_token_stop": 1200007273,
+      "aligned_optimizer_stop": 1200029696
+    }
+  },
+  "gates": {
+    "v10_matches_bound_preflight_accounting": "fail",
+    "optimizer_boundary_changes_after_correction": false,
+    "screen_execution_authority": false,
+    "confirmation_execution_authority": false,
+    "D5_audit_opening_authority": false,
+    "flagship_training_authority": false
+  },
+  "required_successor": [
+    "freeze corrected analytic FLOP target and exact 40,960-token stop",
+    "make the materializer independently recompute and cross-check every declared stop",
+    "publish new immutable run manifests in a distinct v2 runtime directory",
+    "fixture-qualify the exact trainer and document-level evaluator before model outputs"
+  ],
+  "decision": "reject the v1 run materialization for execution despite unchanged optimizer boundaries; preserve it as pre-output defect evidence and require a corrected successor"
+}

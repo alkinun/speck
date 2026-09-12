@@ -44,10 +44,17 @@ document-level evaluator must still consume these manifests exactly. Real traini
 evaluation, and checkpoint overhead remain unmeasured, so confirmation execution cannot yet be
 authorized.
 
+Pre-trainer review then found that v10's fixed-FLOP section uses 415,552,512 reference FLOPs/token,
+while its bound batch-four preflight and current accounting use 415,543,296. The corrected 40,960
+exact token stop is 1,125,458,190 rather than 1,125,459,741. Both values map to the same 1,125,515,264
+optimizer boundary, but the exact scientific view must still be corrected. The v1 records are therefore
+preserved as a pre-output defect and denied execution.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
 grants no flagship training authority. Confirmation seeds remain blocked until all three screen runs
 complete and their measured training, evaluation, and checkpoint overhead is reconciled against the
-30-hour ceiling. Commit the frozen plan, materialize its three run records from a clean tree, then
-implement and fixture-qualify the exact manifest consumer before starting the screen.
+30-hour ceiling. Freeze a corrected accounting successor, make its materializer independently verify
+the FLOP equations, publish distinct v2 records, and fixture-qualify the exact manifest consumer before
+starting the screen.
