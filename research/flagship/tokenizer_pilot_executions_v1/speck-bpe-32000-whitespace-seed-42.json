@@ -1,0 +1,54 @@
+{
+  "format": "speck_tokenizer_pilot_screen_execution",
+  "format_version": 1,
+  "status": "screen_execution_authorized_not_started",
+  "repository_revision": "058ad3023a3bb1060d49eb92e2fb0ddfd69166e9",
+  "qualifications": {
+    "runtime_inputs": {
+      "path": "results/data/tokenizer-pilot-runtime-qualification-20260912.json",
+      "sha256": "14ebca90aec279f18cc213f7729789c1e749292b08ee6ceebcf8c5e5ca91a2d5"
+    },
+    "checkpoint_resume": {
+      "path": "results/systems/tokenizer-pilot-cuda-resume-successor-20260912.json",
+      "sha256": "b8b65aad7e313ef99a0a5f9671eec4d5acdd3ddea2c1e3d8226025187cc5abbc"
+    },
+    "document_nll": {
+      "path": "results/systems/tokenizer-pilot-document-nll-qualification-20260912.json",
+      "sha256": "bc45037bfe4363a7ea4dd399a68cdb273250087cbd98497708887d6ad8955d5d"
+    }
+  },
+  "implementation": {
+    "orchestration": {
+      "path": "speck/tokenizer_pilot_orchestration.py",
+      "sha256": "dd111cf6c370e024af3875e36d20c9c19e2f25bf2863dbd058667dd64de3704b"
+    },
+    "trainer": {
+      "path": "speck/tokenizer_pilot_full_train.py",
+      "sha256": "d5beb5290bc2bd309f222d008d09180c9d296aabf1051ff504f172502f9b19cd"
+    },
+    "evaluation": {
+      "path": "speck/tokenizer_pilot_evaluation.py",
+      "sha256": "9c41e434ae7041ed3fe44fbcf47a3aa31999ad88431d27f1302d70a15f0304c5"
+    },
+    "cli": {
+      "path": "scripts/tokenizer_pilot_full_train.py",
+      "sha256": "c8436e733a903544b0f8eb855c350a18b7535d26e2ace393fe51a7476daaae5c"
+    },
+    "tests": {
+      "path": "tests/test_tokenizer_pilot_full_train.py",
+      "sha256": "c346f22b527677a0605fda264efc4e6000645e05dc61629afbfcb3ccd0e918d2"
+    }
+  },
+  "authority": {
+    "screen_execution": true,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  },
+  "parent_run": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2/speck-bpe-32000-whitespace/seed-42/run.json",
+    "sha256": "a1f1ea0b1378a192cb261ec970d5743c9c9c871d3e1c0c342f7fdb0086881ab7"
+  },
+  "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-32000-whitespace/seed-42"
+}

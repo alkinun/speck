@@ -42,7 +42,9 @@ The active operating surface is intentionally small:
   and conditionally authorizes only the three-run screen. Its first immutable records exposed a
   fixed-FLOP accounting mismatch before model outputs and are preserved but rejected for execution.
   The corrected [`tokenizer_pilot_runs_v2/`](tokenizer_pilot_runs_v2/) records pass independent
-  accounting; screen execution remains blocked until their trainer and evaluator qualify.
+  accounting. Their trainer, resume, and evaluator now qualify, and
+  [`tokenizer_pilot_executions_v1/`](tokenizer_pilot_executions_v1/) authorizes exactly the three
+  seed-42 screen arms while confirmation and D5 remain blocked.
 - [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json) freezes MIT code,
   Apache-2.0 model weights, metadata-only corpus disclosure, attribution, and removal controls.
 - [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) records the project owner's

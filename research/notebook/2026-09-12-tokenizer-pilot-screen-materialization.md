@@ -76,6 +76,12 @@ six categories. Five shorter documents matched exactly between one chunk and pro
 the 19,629-token science document differed by `3.8806e-05` nats/token, below the frozen `1e-4` limit.
 Peak allocated memory was 5.24 GB. These are qualification outputs, not tokenizer-quality evidence.
 
+The final full-run loop now passes CPU fixture interruption, checkpoint resume, evaluation-boundary
+integrity, completed analyzer-record construction, and authority rejection. Together with the existing
+compiled exact-shape preflight and CUDA resume/NLL qualifications, this supports three checked
+execution records at implementation revision `058ad30`. They authorize only the seed-42 screen; no
+confirmation run, D5 opening, tokenizer selection, or flagship training is authorized.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
