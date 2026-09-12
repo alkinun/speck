@@ -1,0 +1,91 @@
+{
+  "format": "speck_tokenizer_pilot_fixed_flop_correction",
+  "format_version": 1,
+  "status": "corrected_pre_output_accounting_v2_materialization_required",
+  "recorded_on": "2026-09-12",
+  "supersedes_section": {
+    "plan": {
+      "path": "research/flagship/tokenizer_pilot_plan_v10.json",
+      "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d"
+    },
+    "section": "fixed_flop_materialization",
+    "reason": "v10 retained pre-tied-accounting FLOPs/token rather than the values emitted by its bound batch-four preflight"
+  },
+  "inputs": {
+    "scale_spec": {
+      "path": "research/flagship/targets/scale-targets-v2.json",
+      "sha256": "bbe1d2ff1914a45635ed5f41c557449a858d576589d6857aeab64be8a75c4493"
+    },
+    "accounting_implementation": {
+      "path": "speck/scale_targets.py",
+      "sha256": "02ca2f3e27457fc0438dc1918c9be795a2dfe2789ebf755214b0e764e5293ea6"
+    },
+    "preflight_result": {
+      "path": "results/systems/tokenizer-pilot-preflight-v2-20260912.json",
+      "sha256": "641d12cb043a239037428509c4cbd3df6fe27781035bd64860bbc0658b9cdc56"
+    },
+    "defect_record": {
+      "path": "results/data/tokenizer-pilot-fixed-flop-drift-20260912.json",
+      "sha256": "83f639dee689ad73314e13340b493c7a2c071fb41f48c9d901c4d206ef2d7b68"
+    }
+  },
+  "target_id": "ladder-60m",
+  "sequence_length": 4096,
+  "batch_tokens": 65536,
+  "reference": {
+    "id": "mistral-32k",
+    "vocab_size": 32000,
+    "fixed_document_tokens": 1200007273,
+    "analytic_training_flops_per_token": 415543296,
+    "analytic_flop_target": 498654977446391808,
+    "fixed_flop_token_stop": 1200007273,
+    "run_stop_aligned_tokens": 1200029696
+  },
+  "tokenizers": [
+    {
+      "id": "mistral-32k",
+      "vocab_size": 32000,
+      "fixed_document_tokens": 1200007273,
+      "analytic_training_flops_per_token": 415543296,
+      "fixed_flop_token_stop": 1200007273,
+      "run_stop_aligned_tokens": 1200029696
+    },
+    {
+      "id": "speck-bpe-40960-whitespace",
+      "vocab_size": 40960,
+      "fixed_document_tokens": 1108037579,
+      "analytic_training_flops_per_token": 443068416,
+      "fixed_flop_token_stop": 1125458190,
+      "run_stop_aligned_tokens": 1125515264
+    },
+    {
+      "id": "speck-bpe-32000-whitespace",
+      "vocab_size": 32000,
+      "fixed_document_tokens": 1142621116,
+      "analytic_training_flops_per_token": 415543296,
+      "fixed_flop_token_stop": 1200007273,
+      "run_stop_aligned_tokens": 1200029696
+    }
+  ],
+  "equations": {
+    "analytic_flop_target": "reference.fixed_document_tokens * reference.analytic_training_flops_per_token",
+    "fixed_flop_token_stop": "ceil(analytic_flop_target / tokenizer.analytic_training_flops_per_token)",
+    "run_stop_aligned_tokens": "ceil(max(fixed_document_tokens, fixed_flop_token_stop) / batch_tokens) * batch_tokens"
+  },
+  "invariants": {
+    "accounting_matches_bound_preflight": true,
+    "all_stops_independently_recomputed": true,
+    "all_run_stops_batch_aligned": true,
+    "optimizer_boundaries_changed_from_v10": false,
+    "model_outputs_before_correction": 0,
+    "D5_audit_openings": 0
+  },
+  "authority": {
+    "v2_run_materialization": true,
+    "screen_execution": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}
