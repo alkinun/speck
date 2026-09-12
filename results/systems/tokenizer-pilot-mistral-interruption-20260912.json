@@ -1,0 +1,56 @@
+{
+  "format": "speck_tokenizer_pilot_mechanical_interruption",
+  "format_version": 1,
+  "status": "recoverable_from_step_3662_orphan_evaluation_preserved",
+  "recorded_on": "2026-09-12",
+  "git_revision": "5f91c9be338e8a9a9bff60ed9f4331908181bc84",
+  "execution": {
+    "path": "research/flagship/tokenizer_pilot_executions_v1/mistral-32k-seed-42.json",
+    "sha256": "56ecb3e5c08f27794677562fd0040ec548353c1bd7ea17b59834e3cabc2be3a2"
+  },
+  "observation": {
+    "process_running": false,
+    "final_result_present": false,
+    "latest_completed_checkpoint_step": 3662,
+    "latest_evaluation_step": 3664,
+    "termination_diagnostic_available": false,
+    "classification": "mechanical interruption; cause unavailable"
+  },
+  "resume_checkpoint": {
+    "directory": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42/checkpoints",
+    "step": 3662,
+    "model_sha256": "875ebe33f31c801b4b90f408e00e47947ecbd72787d64d349596c6060e03214b",
+    "optimizer_sha256": "e7895c56c4726dabecf26445aaa74217507a4ecfa7860e0d003816e482b678ee",
+    "metadata_sha256": "780231da12a72f512ee48ab384bcc63f9bc1a8ab8f7deeff7910f4f3f2b30939",
+    "complete_sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1",
+    "next_token_offset": 239992832,
+    "active_seconds": 3249.1726853889995
+  },
+  "orphan_evaluation": {
+    "original_path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42/evaluations/step_003664.json",
+    "preserved_path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42/evaluations/interrupted/step_003664_attempt1.json",
+    "sha256": "6c9b0b01a7438edfdf6a59bd3f3619b04f30356261f4439ab52708e64b4cc4b7",
+    "bytes": 2152895,
+    "scientific_use": false,
+    "reason": "evaluation is newer than the latest completed checkpoint and cannot define resumed trajectory state"
+  },
+  "recovery": {
+    "command": ".venv-gpu/bin/python -m scripts.tokenizer_pilot_full_train research/flagship/tokenizer_pilot_executions_v1/mistral-32k-seed-42.json --device cuda",
+    "reuse_execution_manifest": true,
+    "resume_from_step": 3662,
+    "rerun_steps": [
+      3663,
+      3664
+    ],
+    "new_seed_or_arm": false,
+    "D5_opening": false
+  },
+  "authority": {
+    "mechanical_retry": true,
+    "scientific_success": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}

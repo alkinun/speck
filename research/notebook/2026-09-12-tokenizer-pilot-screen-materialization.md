@@ -82,6 +82,12 @@ compiled exact-shape preflight and CUDA resume/NLL qualifications, this supports
 execution records at implementation revision `058ad30`. They authorize only the seed-42 screen; no
 confirmation run, D5 opening, tokenizer selection, or flagship training is authorized.
 
+The Mistral arm was then launched and mechanically interrupted after publishing evaluation step 3,664.
+The latest complete checkpoint is step 3,662 with next-token offset 239,992,832. Because the newer
+evaluation is not in that checkpoint's lineage, it was preserved under `evaluations/interrupted/` and
+denied scientific use. The identical execution record is authorized to resume from step 3,662; no seed,
+arm, endpoint, or analysis setting changes.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
