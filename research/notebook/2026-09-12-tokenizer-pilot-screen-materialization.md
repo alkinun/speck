@@ -50,6 +50,11 @@ exact token stop is 1,125,458,190 rather than 1,125,459,741. Both values map to 
 optimizer boundary, but the exact scientific view must still be corrected. The v1 records are therefore
 preserved as a pre-output defect and denied execution.
 
+The corrected FLOP equation and all three exact stops are now frozen separately. A distinct v2
+materializer independently checks the scale equations against the bound preflight result and published
+three corrected records from clean commit `3d7a95b`. These records remain execution-blocked; they do not
+retroactively repair or overwrite v1.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and

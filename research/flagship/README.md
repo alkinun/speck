@@ -40,8 +40,9 @@ The active operating surface is intentionally small:
   models, static evaluation, and endpoint nomination pass while the LM pilot and D5 audit remain.
 - [`tokenizer_pilot_plan_v10.json`](tokenizer_pilot_plan_v10.json) binds the passed throughput preflight
   and conditionally authorizes only the three-run screen. Its first immutable records exposed a
-  fixed-FLOP accounting mismatch before model outputs and are preserved but rejected for execution;
-  corrected v2 records and their trainer/evaluator remain blocked.
+  fixed-FLOP accounting mismatch before model outputs and are preserved but rejected for execution.
+  The corrected [`tokenizer_pilot_runs_v2/`](tokenizer_pilot_runs_v2/) records pass independent
+  accounting; screen execution remains blocked until their trainer and evaluator qualify.
 - [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json) freezes MIT code,
   Apache-2.0 model weights, metadata-only corpus disclosure, attribution, and removal controls.
 - [`source_rights_acceptance_v1.json`](source_rights_acceptance_v1.json) records the project owner's

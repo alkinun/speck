@@ -1,0 +1,74 @@
+{
+  "format": "speck_tokenizer_pilot_corrected_screen_materialization_qualification",
+  "format_version": 2,
+  "status": "corrected_three_screen_run_manifests_complete_execution_blocked",
+  "recorded_on": "2026-09-12",
+  "git_revision": "3d7a95b3a67f228a11e8d07aec83e511fd075f1f",
+  "plan": {
+    "path": "research/flagship/tokenizer_pilot_runs_v2/plan.json",
+    "sha256": "53d30192a8c9bbb55817ebe47c1afda54a328cf76a5e25297d077f1a5e446db6",
+    "plan_fingerprint": "0dbc8ed7d5d73d7ed622e009df9af0376d0233aa064a371044181db0d644e131"
+  },
+  "correction": {
+    "path": "research/flagship/tokenizer_pilot_flop_correction_v1.json",
+    "sha256": "cd6e9030dbe3493155401a43d0164e48de431bc00a71eae194fa6a2eb8824f2f"
+  },
+  "rejected_predecessor": {
+    "path": "results/data/tokenizer-pilot-screen-materialization-20260912.json",
+    "sha256": "48ba8f846edbf55bc53e65a894675aabb28053e482984e2a257b4c65d3373128",
+    "runtime_directory": "/mnt/speck-data/speck/tokenizer-pilot-runs-v1",
+    "execution_authority": false
+  },
+  "runtime": {
+    "directory": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2",
+    "bytes": 51399,
+    "manifest": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2/manifest.json",
+      "sha256": "7068204d845991205dc52c241e49111a3a95eb21ca9a86bd71e4874ba5c2da5b"
+    },
+    "runs": [
+      {
+        "id": "tokenizer-pilot-mistral-32k-seed-42",
+        "path": "mistral-32k/seed-42/run.json",
+        "sha256": "3c4e0ec91786e85a7a8cb0068d883fc7782567e49c51fc5228822a8b9cbbe852",
+        "run_fingerprint": "6669bd1873716725ad306181e25a8d7dc03989edbeec78c988d5c4c81d94cd67"
+      },
+      {
+        "id": "tokenizer-pilot-speck-bpe-40960-whitespace-seed-42",
+        "path": "speck-bpe-40960-whitespace/seed-42/run.json",
+        "sha256": "aa3057eef5fbfedac93bd3dfabed1b00a1ba3eb89fcebde11f525d49224070ce",
+        "run_fingerprint": "a24ad0ba42fe92dc9176b5efc71c9c9932800afb30bbc780fb815ca56dac6588",
+        "corrected_fixed_flop_token_stop": 1125458190,
+        "aligned_optimizer_stop": 1125515264
+      },
+      {
+        "id": "tokenizer-pilot-speck-bpe-32000-whitespace-seed-42",
+        "path": "speck-bpe-32000-whitespace/seed-42/run.json",
+        "sha256": "a1f1ea0b1378a192cb261ec970d5743c9c9c871d3e1c0c342f7fdb0086881ab7",
+        "run_fingerprint": "0e83ff19c6977127eb0df8ce7a7fe62b1ef74ff276b763d1bb0cad45e7a8b88d"
+      }
+    ]
+  },
+  "gates": {
+    "corrected_flops_independently_recomputed": "pass_all",
+    "bound_preflight_accounting": "pass_all",
+    "fixed_and_continuation_capacity": "pass_all",
+    "optimizer_boundaries_unchanged": true,
+    "exclusive_v2_publication": "pass",
+    "model_outputs_created": 0,
+    "D5_audit_openings": 0
+  },
+  "authority": {
+    "v2_run_materialization": true,
+    "screen_execution": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  },
+  "remaining": [
+    "fixture-qualify exact v2 token-stream and checkpoint resume consumer",
+    "fixture-qualify document-level evaluation for both stopping views",
+    "issue an explicit screen execution successor only after those gates pass"
+  ]
+}
