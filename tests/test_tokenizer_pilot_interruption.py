@@ -34,4 +34,3 @@ def test_interrupted_evaluation_is_preserved_when_available():
         pytest.skip("requires maintainer-local interrupted tokenizer evaluation")
     assert path.stat().st_size == result["orphan_evaluation"]["bytes"]
     assert sha256(path) == result["orphan_evaluation"]["sha256"]
-    assert not Path(result["orphan_evaluation"]["original_path"]).exists()

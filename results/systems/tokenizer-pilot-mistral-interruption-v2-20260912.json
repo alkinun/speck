@@ -1,0 +1,56 @@
+{
+  "format": "speck_tokenizer_pilot_mechanical_interruption_successor",
+  "format_version": 2,
+  "status": "second_recoverable_interruption_same_step_3662_checkpoint",
+  "recorded_on": "2026-09-12",
+  "predecessor": {
+    "path": "results/systems/tokenizer-pilot-mistral-interruption-20260912.json",
+    "sha256": "66c9b6388076e3a245232f1287402fa2102f4c4fb0c8ddd3ec58feea52b956aa"
+  },
+  "system": {
+    "reboot_observed": true,
+    "current_boot_started": "2026-09-12T21:35:01+03:00",
+    "data_volume_initially_unmounted": true,
+    "data_volume_restored": true,
+    "filesystem": "/dev/sda2",
+    "mountpoint": "/mnt/speck-data"
+  },
+  "resume_checkpoint": {
+    "step": 3662,
+    "identities_unchanged_from_predecessor": true,
+    "next_token_offset": 239992832
+  },
+  "second_orphan_evaluation": {
+    "preserved_path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42/evaluations/interrupted/step_003664_attempt2.json",
+    "sha256": "91f5979459872c69b1431bcbb4a0bb88183d48ddb355d5f8d9623d1049e212e2",
+    "bytes": 2152866,
+    "active_seconds": 3480.8445928540023,
+    "scientific_use": false
+  },
+  "comparison": {
+    "attempt1_sha256": "6c9b0b01a7438edfdf6a59bd3f3619b04f30356261f4439ab52708e64b4cc4b7",
+    "attempt2_sha256": "91f5979459872c69b1431bcbb4a0bb88183d48ddb355d5f8d9623d1049e212e2",
+    "byte_identical": false,
+    "document_id_and_utf8_byte_pairs_identical": true,
+    "documents_compared": 12470,
+    "attempt1_macro_bpb": 1.4662847522231157,
+    "attempt2_macro_bpb": 1.466256875265091,
+    "absolute_macro_bpb_delta": 0.00002787695802464185,
+    "maximum_document_bpb_delta": 0.004941290377407665,
+    "scientific_selection_use": false
+  },
+  "recovery": {
+    "reuse_execution_manifest": true,
+    "resume_from_step": 3662,
+    "canonical_step_3664_path_cleared": true,
+    "D5_opening": false
+  },
+  "authority": {
+    "mechanical_retry": true,
+    "scientific_success": false,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}

@@ -88,6 +88,11 @@ evaluation is not in that checkpoint's lineage, it was preserved under `evaluati
 denied scientific use. The identical execution record is authorized to resume from step 3,662; no seed,
 arm, endpoint, or analysis setting changes.
 
+The first retry regenerated step 3,664, then the host rebooted with `/dev/sda2` initially unmounted.
+After remounting and verifying the step-3,662 checkpoint hashes, the second orphan evaluation was
+preserved separately as attempt 2. Its bytes differ from attempt 1 within the already qualified BF16
+resume boundary; neither orphan receives scientific use. Resume remains anchored to checkpoint 3,662.
+
 ## Next actions
 
 This change materializes no model output, runs no training, opens no audit, selects no tokenizer, and
