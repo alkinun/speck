@@ -52,3 +52,12 @@ the cleanup does not alter the decision design.
 Use the [measured screen handoff](TOKENIZER_SCREEN.md) to reconcile all-attempt GPU spending and
 project the four confirmation runs from the three completed screens. The maintained CPU analyzer
 records the budget disposition without issuing confirmation or audit-opening authority.
+
+## Legacy finalization input
+
+The frozen runs contain an absolute reference to `research/flagship/tokenizer_pilot_flop_correction_v1.json`.
+That path is retained as a compatibility symlink to the identical archived JSON. Keep it available while
+the frozen screen executes. The 40,960 seed-42 run reached its final checkpoint but failed report
+publication when this metadata path was absent; the failure is preserved in
+`results/systems/tokenizer-pilot-40960-finalization-interruption-20260913.json`.
+New screen executions still run from the frozen checkout, with original run fingerprints and inputs.

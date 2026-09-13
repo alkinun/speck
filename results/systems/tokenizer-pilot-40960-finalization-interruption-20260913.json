@@ -1,0 +1,148 @@
+{
+  "D5_opening": false,
+  "checkpoint_files": [
+    {
+      "bytes": 130401187,
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-40960-whitespace/seed-42/checkpoints/model_017174.pt",
+      "sha256": "8cf77fb725b3b65289225be6a4af6746150d82f92ac4833cc3f15fe39c11a05e"
+    },
+    {
+      "bytes": 172451321,
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-40960-whitespace/seed-42/checkpoints/optimizer_017174.pt",
+      "sha256": "ee8c69d3f4a8d137d1134ad751df0ee74637e2234f3e4adfda4d0303ca7c9bc1"
+    },
+    {
+      "bytes": 3741,
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-40960-whitespace/seed-42/checkpoints/metadata_017174.json",
+      "sha256": "cb547dfc6d89a47713288f0f52ae162c35df9a03d23a34a3228f666aa9f13444"
+    },
+    {
+      "bytes": 9,
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-40960-whitespace/seed-42/checkpoints/complete_017174",
+      "sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    }
+  ],
+  "data_token_offset": 1125515264,
+  "evaluation_boundaries": [
+    {
+      "path": "evaluations/step_000916.json",
+      "sha256": "a6544fb1c688a79c10de63910642bb2164d80863c07ea693d746ae4323c4c136",
+      "step": 916
+    },
+    {
+      "path": "evaluations/step_001832.json",
+      "sha256": "b5608934870f8db57ee3fb0fd14d39fcf9d79dbcb916ae15171b02f507e8c454",
+      "step": 1832
+    },
+    {
+      "path": "evaluations/step_002748.json",
+      "sha256": "90e1252f67e5926f556a6d458cd5c778f6283f08a5d3f9ac0ca9ea82e34ad248",
+      "step": 2748
+    },
+    {
+      "path": "evaluations/step_003664.json",
+      "sha256": "c7c2927665a241f47f6482254cd8da30e5bc82c2b820c806aa9f7059cc1cd9ae",
+      "step": 3664
+    },
+    {
+      "path": "evaluations/step_004580.json",
+      "sha256": "77202050a7c43aeb8c257e094c0d8df652bfcb3be9641f85cac644a79ac41341",
+      "step": 4580
+    },
+    {
+      "path": "evaluations/step_005496.json",
+      "sha256": "5c6f59136f7cf0a7b1c990ef8d61aeab40a6a0f8006f6c7e4670ef77ff561590",
+      "step": 5496
+    },
+    {
+      "path": "evaluations/step_006412.json",
+      "sha256": "41a44638d65af7b171126d5710c97174265d77215401a69dd6ccab75e88ffabe",
+      "step": 6412
+    },
+    {
+      "path": "evaluations/step_007328.json",
+      "sha256": "0403718e80d9d4bcbaac7cf1be46238aedb5cd40847db95560d80232bc8f1f97",
+      "step": 7328
+    },
+    {
+      "path": "evaluations/step_008244.json",
+      "sha256": "766e86061191c8ba5179ce48db721064812f3ee7e89b03408a59ee6fc9d519d0",
+      "step": 8244
+    },
+    {
+      "path": "evaluations/step_009160.json",
+      "sha256": "0af70b28a4cc1a3d26363793ba3ce2e95193313e71727f1d25a8d2bd0c4b6e9d",
+      "step": 9160
+    },
+    {
+      "path": "evaluations/step_010076.json",
+      "sha256": "46a2e2362294e9363b4b05168f4976ee32b94edada5d1219c9be0753ed6f72e7",
+      "step": 10076
+    },
+    {
+      "path": "evaluations/step_010992.json",
+      "sha256": "520e3caee6807842f441e86fc5f564090fd0e43d3434d863634b2c268ed1d97f",
+      "step": 10992
+    },
+    {
+      "path": "evaluations/step_011908.json",
+      "sha256": "755c2cddfad51860a93f9c6b8794807c05db97ede56c30cc5ca9f0903381d0d0",
+      "step": 11908
+    },
+    {
+      "path": "evaluations/step_012824.json",
+      "sha256": "06bca0a3b6fc693ae3f11adf2b2072cff0c320293dba1ad7a32da020bca9b77b",
+      "step": 12824
+    },
+    {
+      "path": "evaluations/step_013740.json",
+      "sha256": "30465631fa5963d3ac6416a67a2fc47727dac8fee2d3931ad80239c81e1f5e3a",
+      "step": 13740
+    },
+    {
+      "path": "evaluations/step_014656.json",
+      "sha256": "70adef7c6bd58cb6fe5c3a698172321be501575f10cab5c2cf4ae5552f9939e8",
+      "step": 14656
+    },
+    {
+      "path": "evaluations/step_015572.json",
+      "sha256": "8499e522d7740c41866de56cef0fe08d603409c57b4af9dccb6fcafdcb3ebc81",
+      "step": 15572
+    },
+    {
+      "path": "evaluations/step_016488.json",
+      "sha256": "c3fead8ff8515cb9893d9474b72faeaebef2163ace82e154c78db01fa238a9c8",
+      "step": 16488
+    },
+    {
+      "path": "evaluations/step_016908.json",
+      "sha256": "ed79ff2d9a11fff7a06c5c41e9defd2a0fb76865d938809d568483bf3cbe2a1c",
+      "step": 16908
+    },
+    {
+      "path": "evaluations/step_017174.json",
+      "sha256": "22e57b60f6502f518c88af0ba038a91e7bfcc40406b1ec2cfd5a903c6be9a7db",
+      "step": 17174
+    }
+  ],
+  "failure": {
+    "exception": "FileNotFoundError",
+    "exec_main_status": 1,
+    "exited": "2026-09-13T15:15:46+03:00",
+    "missing_path": "/home/alkin/Desktop/speck/research/flagship/tokenizer_pilot_flop_correction_v1.json",
+    "phase": "build_completed_run_record after final checkpoint saving",
+    "result": "exit-code",
+    "service": "speck-tokenizer-40960-seed42.service",
+    "started": "2026-09-13T10:40:11+03:00"
+  },
+  "final_selection": false,
+  "final_step": 17174,
+  "format": "speck_tokenizer_pilot_finalization_interruption",
+  "format_version": 1,
+  "measurement_gap": "CUDA peak allocated memory was computed in process memory but not persisted before finalization failed; do not substitute system RAM or zero.",
+  "recorded_active_seconds": 16521.793335868002,
+  "recorded_at": "2026-09-13T15:21:17.619368+00:00",
+  "recovery": "Verify the completed checkpoint and all bound evaluations, then publish a recovered report with the missing memory measurement explicit. No training or evaluation rerun is required.",
+  "run_fingerprint": "a24ad0ba42fe92dc9176b5efc71c9c9932800afb30bbc780fb815ca56dac6588",
+  "status": "terminal_checkpoint_present_report_recovery_required"
+}
