@@ -24,7 +24,7 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Follow research/flagship/DATA_PREPARATION.md: connect the checked raw-unit and source-bank mechanics through complete firewall reference exclusion, measure larger units at production checkpoint cadence and full E1/E3 treatment supply, then resolve day-21 readiness. The conditional 150B branch remains selected; 500B requires a new operations/storage decision after E3."
+      "next": "Use the qualified bounded integration in research/flagship/FIREWALL_INTEGRATION.md to establish full E1/E3 treatment supply, final-tokenizer yield, and steady preparation costs before resolving day-21 readiness. The conditional 150B branch remains selected; 500B requires a new operations/storage decision after E3."
     },
     {
       "id": "data_resume_memory",
@@ -36,13 +36,19 @@
       "id": "source_bank",
       "state": "bounded_retained_source_rehearsal_pass",
       "evidence": "results/systems/source-bank-rehearsal-20260913.json",
-      "next": "Use research/flagship/SOURCE_BANK.md as the downstream selection/packing reference once upstream outputs pass complete firewall exclusion; full E1/E3 source treatments and final-tokenizer supply remain pending."
+      "next": "Bank v2 now accepts the checked excluded acquisition groups; extend measured capacity to full E1/E3 source treatments and the final tokenizer. See research/flagship/SOURCE_BANK.md."
     },
     {
       "id": "acquisition_units",
       "state": "bounded_raw_acquisition_and_cohort_dedup_recovery_pass",
       "evidence": "results/systems/acquisition-unit-rehearsal-20260913.json",
-      "next": "Use research/flagship/ACQUISITION_UNITS.md to qualify larger units at production checkpoint cadence and complete firewall reference precedence. The measured cohort is not training data."
+      "next": "Larger windows and complete reference precedence pass in the separate integration result. Measure full source-treatment supply and separate steady preparation cost from reference setup, recovery, and verification."
+    },
+    {
+      "id": "firewall_integration",
+      "state": "complete_reference_exclusion_and_bank_handoff_pass",
+      "evidence": "results/systems/firewall-integration-20260913.json",
+      "next": "Use the qualified bounded path to measure training-scale supply and operating cost. Full E1/E3 treatment coverage, final D5 selection, and model-training authority remain pending."
     },
     {
       "id": "firewall",

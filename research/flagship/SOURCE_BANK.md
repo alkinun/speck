@@ -72,3 +72,12 @@ units, injected recovery, and published reopen. It contains 12,049,523 selected 
 3,303,264 reference tokens. The clean invocation takes 64.77 seconds, including 48.51 seconds of input
 hash verification, 13.57 seconds of selection/checkpointing, and 2.59 seconds of reference packing.
 See the [finding](../findings/2026-09-13-source-bank-rehearsal.md) for per-category results and boundaries.
+
+## Excluded acquisition handoff
+
+The [complete firewall integration](FIREWALL_INTEGRATION.md) adds bank **schema v2** for newly acquired
+category groups. Its plan includes a `firewall_plan` identity and accepts only the matching
+`acquired_train__<category>` outputs after checking complete reference identities, precedence, policy,
+and preservation in the parent result. The integrated handoff passes for all six categories.
+This schema version is separate from the earlier `source_bank_rehearsal_v2.json` destination successor,
+which retains schema v1 and the pilot-training input path.

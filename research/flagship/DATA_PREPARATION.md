@@ -149,19 +149,25 @@ Behavioral tests cover uninterrupted/resumed output parity, rejection of altered
 and a cursor that forbids `fetchall()`. This is a bounded engineering qualification of the resume
 change. Retain the old full-pass throughput projection until the successor is measured end to end.
 
-## 6. Bounded bank and upstream mechanics completed; production envelope open
+## 6. Bounded end-to-end integration completed; production capacity and rates open
 
 The [source-bank rehearsal](SOURCE_BANK.md) now qualifies the retained-source selection/packing portion:
 12.05 MB across all six categories, 3.30M reference tokens, and exact interrupted/uninterrupted payload
-parity. It inherits the existing firewall-excluded input corpus. The complete E1/E3 acquisition and
-global-dedup path, source-treatment coverage, and final-tokenizer capacity remain to be qualified.
+parity. It inherits the existing firewall-excluded input corpus. Full E1/E3 source-treatment coverage
+and final-tokenizer capacity remain to be qualified.
 
 The [upstream unit rehearsal](ACQUISITION_UNITS.md) now also executes raw acquisition/filtering,
 Parquet/gzip recovery, and ordered dedup over a 2,601-record cohort. It measures cold-file download
 cost and profiles a diagnostic 64-record checkpoint cadence. Complete firewall reference exclusion
-is not run on this cohort, so it cannot yet feed the firewall-excluded bank path or training.
+is not run on that original cohort, so those outputs remain engineering-only artifacts.
 
-Next, qualify the full production envelope connecting these mechanics:
+The follow-up [complete integration](FIREWALL_INTEGRATION.md) now connects larger raw units to the full
+twelve-view exclusion pass and bank v2. It preserves all 288,872 references, removes 5,635 candidate
+superset matches, and retains 15,135 candidates with zero exact reference overlap. Both exact/near
+controls and full-reference checkpoint recovery pass at the 10,000-record cadence. All six fixed
+engineering bank quotas pass. Production-scale supply and rate qualification remain separate.
+
+Next, qualify the production capacity and operating cost of the connected path:
 
 1. Bind source revisions, reader/filter variants, per-arm supply, firewall reference precedence, and
    output identities; reuse retained inputs where their identity and scope match.
@@ -169,10 +175,11 @@ Next, qualify the full production envelope connecting these mechanics:
    acquisition units. State whether quotas use final tokens, reference tokens, or bytes.
 3. Measure stage time, retained tokens/bytes, source exhaustion, SQLite growth, resume verification,
    and free-space high-water marks on bounded real inputs.
-4. Measure larger units at the intended checkpoint cadence before selecting parallelism. The bounded
-   profile spends 7.53 of 17.24 seconds inside checkpoints at a deliberately short 64-record interval;
-   that share does not describe the historical 10,000-record production cadence. Pure signature
-   computation can be investigated with bounded workers while retaining ordered decisions and a
-   single writer. Source acquisition and post-dedup packing have separate resource limits.
+4. Separate steady candidate processing from reference setup, resume verification, and finalization
+   before selecting parallelism or projecting production costs. The earlier profile spends 7.53 of
+   17.24 seconds inside checkpoints at a deliberately short 64-record interval; that share does not
+   describe the now-exercised 10,000-record cadence. Pure signature computation can be investigated
+   with bounded workers while retaining ordered decisions and a single writer. Source acquisition
+   and post-dedup packing have separate resource limits.
 5. Use those measurements to cost the 150B bank and a real ready date. Preserve the accepted fallback
    and the paused 20B artifacts while this successor is qualified.

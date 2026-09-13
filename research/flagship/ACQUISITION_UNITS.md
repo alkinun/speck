@@ -87,3 +87,8 @@ takes 13.47 seconds without profiling.
 The [finding](../findings/2026-09-13-acquisition-unit-rehearsal.md) records per-category yield, filters,
 resource boundaries, and profile interpretation. The short checkpoint interval materially affects
 the profile; no production speedup or full firewall-exclusion result is inferred from this rehearsal.
+
+The subsequent [complete integration](FIREWALL_INTEGRATION.md) uses the larger-window
+[`acquisition_unit_rehearsal_v2.json`](acquisition_unit_rehearsal_v2.json), retained raw cache, and
+10,000-record dedup checkpoints. It qualifies the full reference pass and source-bank handoff; its
+results and boundaries are recorded separately from this initial cohort-only measurement.

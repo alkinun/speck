@@ -72,3 +72,17 @@ bank identities. Stage durations separate acquisition, reference build through i
 continuation/recovery, and bank preparation. Reference setup, hash verification, cache state, six-source
 coverage, and the bounded token horizon must remain explicit when interpreting rates. A successful
 integration alone does not establish 150B throughput, full E1/E3 treatment capacity, or final D5 selection.
+
+## Completed v1 integration
+
+The [checked result](../../results/systems/firewall-integration-20260913.json) passes the complete
+reference exclusion and all six bank handoffs. All 288,872 references are preserved; 5,635 candidate
+matches to the superset are removed; 15,135 candidates remain with zero exact reference overlap. Both
+controls pass, including verified-near Jaccard 0.9986667. The full-reference checkpoint is recovered
+before candidate continuation.
+
+The resulting small bank contains 117,816 UTF-8 bytes and 33,577 reference tokens. The
+[finding](../findings/2026-09-13-firewall-integration.md) records per-category retention, timing boundaries,
+and remaining capacity/rate work. The reference build takes 1,173.88 seconds; recovery plus candidate
+processing and final verification takes 282.31 seconds. These are bounded integration costs, not a
+replacement for the historical 150B forecast.

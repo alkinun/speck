@@ -53,7 +53,12 @@ source-treatment, tokenizer, capacity, and launch requirements are met.
 The [upstream acquisition-unit rehearsal](../research/flagship/ACQUISITION_UNITS.md) adds fixed physical
 row windows, original-row metadata, independent acquisition recovery, and ordered cohort deduplication.
 Use `acquisition_units_prepare` for preparation and `acquisition_units_qualify` for the bounded
-clean-checkout qualification. Full firewall reference exclusion remains a separate integration step.
+clean-checkout qualification. Complete reference exclusion is qualified by the integration below.
+
+The [complete exclusion integration](../research/flagship/FIREWALL_INTEGRATION.md), run through
+`firewall_integrate`, connects larger units to all twelve reference views and bank schema v2. Its
+bounded real-data qualification passes reference preservation, exact/near controls, recovery, and
+all six bank handoffs. Training-scale capacity and the final tokenizer remain separate requirements.
 
 For source surveys, see the [literature library](../research/literature/README.md). Earlier curriculum
 details remain in the [original guide](../archive/pregrant-history/docs/data.md).
