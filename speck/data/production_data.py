@@ -477,6 +477,19 @@ def _verify_published(config, output, manifest):
         raise ValueError("published preprocess aggregate record counts are inconsistent")
 
 
+def accepted_document_chain(rows):
+    """Rebuild the ordered resume identity without retaining the index rows in RAM."""
+
+    chain = hashlib.sha256(b"").hexdigest()
+    count = 0
+    for dedup_sha256, content_sha256 in rows:
+        chain = hashlib.sha256(
+            bytes.fromhex(chain) + bytes.fromhex(dedup_sha256) + bytes.fromhex(content_sha256)
+        ).hexdigest()
+        count += 1
+    return count, chain
+
+
 def preprocess_sources(config, *, restart=False, crash_after_records=None):
     """Run or resume the disk-backed global exact/near deduplication pass."""
 
@@ -567,15 +580,9 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
     connection.execute("DELETE FROM docs WHERE processed_index>=?", (state["processed_records"],))
     connection.execute("DELETE FROM checkpoints WHERE checkpoint_id>?", (state["checkpoint_id"],))
     connection.commit()
-    indexed = connection.execute(
-        "SELECT dedup_sha256, content_sha256 FROM docs ORDER BY doc_seq"
-    ).fetchall()
-    chain = hashlib.sha256(b"").hexdigest()
-    for dedup_sha256, content_sha256 in indexed:
-        chain = hashlib.sha256(
-            bytes.fromhex(chain) + bytes.fromhex(dedup_sha256) + bytes.fromhex(content_sha256)
-        ).hexdigest()
-    if len(indexed) != state["next_doc_seq"] or chain != state["index_chain"]:
+    indexed = connection.execute("SELECT dedup_sha256, content_sha256 FROM docs ORDER BY doc_seq")
+    indexed_count, chain = accepted_document_chain(indexed)
+    if indexed_count != state["next_doc_seq"] or chain != state["index_chain"]:
         raise ValueError("SQLite accepted-document chain does not match durable state")
     counts = Counter(state["counts"])
     pattern = re.compile(config["policy"]["token_pattern"])

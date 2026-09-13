@@ -80,12 +80,17 @@ The accepted 2B operations calibration supports a conditional 150B preparation b
 20B rehearsal and blocked 500B branch remain historical alternatives; their exact conditions are in
 the selected operations-fallback contract.
 
+The [production-data critical path](DATA_PREPARATION.md) separates screen-corpus preparation from the
+final source bank, records per-category supply requirements, and makes the unresolved day-21 readiness
+gate explicit. Its bounded streaming-resume measurement does not replace full-pass throughput evidence.
+
 [`production_data_plan.json`](../../archive/pregrant-history/research/flagship/production_data_plan.json) freezes the pre-rehearsal operations order.
 The fixture-qualified disk-backed preprocessor applies human-reviewed deny entries, global exact and
 verified near deduplication, redacted removal records, record-level checkpoints, and post-publication
-cleanup receipts before the existing exact-dedup/tokenization packer. It does not replace the 20B
-rehearsal: production throughput, memory, storage, unique yield, interruption recovery, and cleanup
-must still be measured on the frozen real source path before an operations authority record exists.
+cleanup receipts before the existing exact-dedup/tokenization packer. The accepted 2B calibration
+supplies the conditional operations fallback; a final production successor must still establish
+source capacity, throughput, memory, storage, interruption recovery, cleanup, and firewall exclusion
+on its bound execution path.
 
 ## 3. Evaluation firewall
 

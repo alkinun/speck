@@ -9,6 +9,7 @@ import speck.data.production_data as production_data
 from scripts.production_data_preprocess_batched import _batched_signature
 from speck.data.production_data import (
     _candidate_text,
+    accepted_document_chain,
     preprocess_sources,
     validate_preprocess_config,
 )
@@ -177,6 +178,72 @@ def test_record_checkpoint_resume_matches_uninterrupted_outputs(tmp_path):
     left = Path(interrupted["output_directory"]) / "removals.jsonl"
     right = Path(clean["output_directory"]) / "removals.jsonl"
     assert _sha256(left) == _sha256(right)
+
+
+def test_resume_verifies_index_without_materializing_rows(tmp_path, monkeypatch):
+    config = validate_preprocess_config(_config(tmp_path, "streamed-resume"))
+    with pytest.raises(RuntimeError, match="injected production preprocess crash"):
+        preprocess_sources(config, crash_after_records=3)
+    original_database = production_data._database
+    verified = []
+
+    class StreamingOnlyCursor:
+        def __init__(self, cursor):
+            self.cursor = cursor
+
+        def __iter__(self):
+            return iter(self.cursor)
+
+        def fetchall(self):
+            raise AssertionError("resume must not materialize the accepted index")
+
+    class Connection:
+        def __init__(self, path):
+            self.connection = original_database(path)
+
+        def execute(self, sql, *args):
+            cursor = self.connection.execute(sql, *args)
+            if sql == "SELECT dedup_sha256, content_sha256 FROM docs ORDER BY doc_seq":
+                verified.append(True)
+                return StreamingOnlyCursor(cursor)
+            return cursor
+
+        def __getattr__(self, name):
+            return getattr(self.connection, name)
+
+    monkeypatch.setattr(production_data, "_database", Connection)
+    result = preprocess_sources(config)
+    assert verified == [True]
+    assert result["manifest"]["counts"]["records_retained"] == 3
+
+
+@pytest.mark.parametrize("corruption", ["hash", "count"])
+def test_streaming_resume_still_rejects_accepted_index_corruption(tmp_path, corruption):
+    config = validate_preprocess_config(_config(tmp_path, "bad-index-chain"))
+    with pytest.raises(RuntimeError, match="injected production preprocess crash"):
+        preprocess_sources(config, crash_after_records=3)
+    path = tmp_path / "bad-index-chain.building/near_duplicates.sqlite3"
+    with sqlite3.connect(path) as connection:
+        if corruption == "hash":
+            connection.execute("UPDATE docs SET content_sha256=? WHERE doc_seq=0", ("0" * 64,))
+        else:
+            connection.execute("DELETE FROM bands WHERE doc_seq=0")
+            connection.execute("DELETE FROM docs WHERE doc_seq=0")
+    with pytest.raises(ValueError, match="accepted-document chain"):
+        preprocess_sources(config)
+
+
+def test_streaming_chain_preserves_order_and_empty_identity():
+    first, second = hashlib.sha256(b"first").hexdigest(), hashlib.sha256(b"second").hexdigest()
+    assert accepted_document_chain(iter(())) == (0, hashlib.sha256(b"").hexdigest())
+    count, chain = accepted_document_chain(iter([(first, second), (second, first)]))
+    expected = hashlib.sha256(b"").hexdigest()
+    for left, right in [(first, second), (second, first)]:
+        expected = hashlib.sha256(
+            bytes.fromhex(expected) + bytes.fromhex(left) + bytes.fromhex(right)
+        ).hexdigest()
+    assert (count, chain) == (2, expected)
+    assert accepted_document_chain(iter([(second, first), (first, second)]))[1] != chain
 
 
 def test_tampered_deny_ledger_and_protected_cleanup_fail_closed(tmp_path):

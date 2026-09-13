@@ -1,7 +1,7 @@
 # Current conclusions
 
-These are entry points into the prior evidence that constrains the flagship. They do not add new
-measurements or broaden the historical claims.
+These are entry points into the current and archived evidence that constrains the flagship. Each
+finding states its measurement boundary; links to prior evidence do not broaden historical claims.
 
 | Topic | Prior evidence and boundary |
 | --- | --- |
@@ -11,6 +11,7 @@ measurements or broaden the historical claims.
 | Data preparation | [2B calibration](../../archive/pregrant-history/findings/208_production_data_calibration_2b.md), [150B fallback](../../archive/pregrant-history/findings/209_production_calibration_fallback_decision.md), and [firewall](../../archive/pregrant-history/findings/210_production_data_firewall.md) support preparation boundaries, not data-quality claims. |
 | Tokenizer | [Static nomination](../../archive/pregrant-history/findings/211_formal_tokenizer_static_nomination.md) and the [Mistral screen](../../archive/pregrant-history/results/data/tokenizer-pilot-mistral-seed42-20260913.json) leave the custom-tokenizer comparison and D5 decision open. |
 | Software correctness | [Checkpoint/data cleanup](../../archive/pregrant-history/findings/196_runtime_cleanup_successors.md) and [training/Slurm hardening](../../archive/pregrant-history/findings/202_preaccess_training_and_slurm_hardening.md) describe the original qualified revisions. Reorganized code is checked separately. |
+| Current data readiness | [Critical path and streaming resume](2026-09-13-data-preparation-readiness.md) identifies the unresolved day-21 data schedule and qualifies bounded-memory resume-chain verification; full production throughput remains unmeasured on the successor. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

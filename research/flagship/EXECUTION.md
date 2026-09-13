@@ -12,6 +12,10 @@ fully occupied node-days. Mandatory work consumes 4,111 GPU-hours, or 42.8 node-
 889 hours are protected reserve. Data, architecture, integrated validation, and scale/horizon transfer
 consume 1,236 GPU-hours, or 12.9 fully occupied node-days, before the day-21 freeze.
 
+The [data critical-path assessment](DATA_PREPARATION.md) currently leaves day-21 corpus readiness
+unqualified: the historical 150B serial path takes 18.93 days after its inputs are ready. Screen data,
+production source banks, final mixture manifests, and site delivery need separate completion dates.
+
 One GPU-hour means one allocated GPU for one hour; a fully occupied four-GPU node hour consumes four.
 The current 1.2B geometry requires about 2,385 ideal GPU-hours for 400B tokens at 350 analytic TFLOP/s
 per GPU, but 2,528 if a separate 1.06 overhead is also applied. P0 must replace this ambiguous planning

@@ -12,7 +12,7 @@
       "id": "tokenizer",
       "state": "in_progress",
       "evidence": "archive/pregrant-history/results/data/tokenizer-pilot-mistral-seed42-20260913.json",
-      "next": "Complete the two custom seed-42 arms in the frozen checkout, reproject measured overhead, then follow the confirmation and D5 rules."
+      "next": "Complete the two custom seed-42 arms in the frozen checkout, reconcile all-attempt timing with the measured screen handoff in research/flagship/TOKENIZER_SCREEN.md, then follow the confirmation and D5 rules."
     },
     {
       "id": "source_qualification",
@@ -24,7 +24,13 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Use the accepted conditional 150B preparation branch; 500B requires a new operations/storage decision after E3."
+      "next": "Follow research/flagship/DATA_PREPARATION.md: qualify bounded source-separated E1/E3 preparation, measure the production successor, and resolve the unqualified day-21 data schedule. The conditional 150B branch remains selected; 500B requires a new operations/storage decision after E3."
+    },
+    {
+      "id": "data_resume_memory",
+      "state": "bounded_engineering_qualification_pass",
+      "evidence": "results/systems/production-dedup-resume-streaming-20260913.json",
+      "next": "Carry streaming accepted-index verification into production qualification; the bounded read-only probe does not update full-pass throughput estimates."
     },
     {
       "id": "firewall",
