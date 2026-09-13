@@ -1,0 +1,382 @@
+{
+  "analysis": {
+    "candidate_removals": {
+      "acquired_train__code": {
+        "reference:exact_duplicate": 204
+      },
+      "acquired_train__math": {
+        "reference:exact_duplicate": 1010
+      },
+      "acquired_train__reference": {
+        "reference:exact_duplicate": 1700
+      },
+      "acquired_train__science": {
+        "reference:exact_duplicate": 1877
+      },
+      "acquired_train__synthetic": {
+        "reference:exact_duplicate": 717
+      },
+      "acquired_train__web": {
+        "reference:exact_duplicate": 127
+      }
+    },
+    "controls": {
+      "firewall_exact_control": {
+        "kept_source": "firewall_reference__web_unseen",
+        "reason": "exact_duplicate",
+        "verified_jaccard": null
+      },
+      "firewall_near_control": {
+        "kept_source": "firewall_reference__web_unseen",
+        "reason": "near_duplicate",
+        "verified_jaccard": 0.9986666666666667
+      }
+    },
+    "exact_reference_overlap": 0,
+    "parent_manifest": {
+      "path": "/mnt/speck-data/speck/dedup-timing-replay-v1/manifest.json",
+      "sha256": "0d3d710ee487a772828a96f76e6b8327affc064cf551f194d79ed8d5875cb92d"
+    },
+    "reference_outputs_preserved": true,
+    "references": {
+      "firewall_manifest": {
+        "path": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+        "sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+      },
+      "firewall_plan": {
+        "path": "/home/alkin/Desktop/speck/research/flagship/firewall_plan_v4.json",
+        "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648"
+      },
+      "policy": {
+        "bands": 16,
+        "domain_match": "exact_or_subdomain",
+        "maximum_document_tokens": 100000,
+        "minhash_seed": 42,
+        "minimum_document_tokens": 50,
+        "normalization": "NFKC+lower+lexical-code-tokens",
+        "num_perm": 128,
+        "shingle_tokens": 10,
+        "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+        "verified_jaccard_threshold": 0.8
+      },
+      "prepared_manifest": {
+        "path": "/mnt/speck-data/speck/firewall-inputs-v1/manifest.json",
+        "sha256": "a5d0c274b8da9ce3a50beec8b55a89a474d552d924f6f3ced69961e5694f75de"
+      },
+      "records": 288872,
+      "reference_dedup_manifest": {
+        "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/manifest.json",
+        "sha256": "f8dc8f205a2e2963103d242317e3f8b0a07469aab88e27f1160fe5d26d43d8ce"
+      },
+      "sources": [
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__web_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_unseen.jsonl",
+          "precedence": 1,
+          "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__code_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_unseen.jsonl",
+          "precedence": 2,
+          "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__math_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_unseen.jsonl",
+          "precedence": 3,
+          "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__synthetic_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_unseen.jsonl",
+          "precedence": 4,
+          "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__science_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_unseen.jsonl",
+          "precedence": 5,
+          "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__reference_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_unseen.jsonl",
+          "precedence": 6,
+          "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__web_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_primary.jsonl",
+          "precedence": 7,
+          "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__code_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_primary.jsonl",
+          "precedence": 8,
+          "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__math_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_primary.jsonl",
+          "precedence": 9,
+          "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__synthetic_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_primary.jsonl",
+          "precedence": 10,
+          "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__science_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_primary.jsonl",
+          "precedence": 11,
+          "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__reference_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_primary.jsonl",
+          "precedence": 12,
+          "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f",
+          "text_field": "text",
+          "url_field": "url"
+        }
+      ]
+    },
+    "retained": {
+      "code": {
+        "bytes": 6134255,
+        "path": "acquired_train__code.jsonl",
+        "records": 995,
+        "sha256": "635a07c5c022e175ed5fb2f5fcf7afe6fb18d617b66ea583b9657b85df022730",
+        "utf8_bytes": 5466599
+      },
+      "math": {
+        "bytes": 14818768,
+        "path": "acquired_train__math.jsonl",
+        "records": 2778,
+        "sha256": "3ee65f6258f939f66a97f06359e4292d5536e886d9cae1278efe0ac67567a5e2",
+        "utf8_bytes": 12620199
+      },
+      "reference": {
+        "bytes": 6929765,
+        "path": "acquired_train__reference.jsonl",
+        "records": 1976,
+        "sha256": "92e4340a005d30dbdf5af84d59c908a04d4c824ae350ef41786858ed747ba29c",
+        "utf8_bytes": 5735990
+      },
+      "science": {
+        "bytes": 65267259,
+        "path": "acquired_train__science.jsonl",
+        "records": 2106,
+        "sha256": "49d540e58181ce43a6aa9b97d18de49a54694e0322e73da8bf9311b9da20fc74",
+        "utf8_bytes": 63283435
+      },
+      "synthetic": {
+        "bytes": 13874759,
+        "path": "acquired_train__synthetic.jsonl",
+        "records": 3344,
+        "sha256": "ea15dd354418f24a49ce7ecddc42ede029e0bdea3c45dc4c08d3412c110dc3a8",
+        "utf8_bytes": 12390587
+      },
+      "web": {
+        "bytes": 17013767,
+        "path": "acquired_train__web.jsonl",
+        "records": 3936,
+        "sha256": "12d73b07fb187b9ece08313cb11bf88bad6c1f76d48269dc5f074d5f5ddcf84d",
+        "utf8_bytes": 14908851
+      }
+    },
+    "training_authority": false
+  },
+  "boundary": "Timing-only continuation of the same qualified candidates. Private prefix restoration cost is separate; the reference index is not rebuilt. Pruning restores committed state, not an uncommitted-rollback stress case. Copying warms caches and retains an allocated index layout; these measurements are not cold-start or production-scale throughput. No new corpus capacity is added.",
+  "candidate_summary": {
+    "checkpoint_seconds": 249.0008632789977,
+    "processed_utf8_bytes": 183374777,
+    "processing_seconds_excluding_checkpoints": 31.83625476200541,
+    "records_seen": 20770
+  },
+  "format": "speck_dedup_phase_timing_qualification",
+  "format_version": 1,
+  "main_process_peak_rss_bytes": 355069952,
+  "operations_authority": false,
+  "parent_result": {
+    "path": "/home/alkin/Desktop/speck/results/systems/firewall-integration-20260913.json",
+    "sha256": "07b9d890f36994ad47ec0d251d5c8d5c66c568475b3ec4248b0b58ebd112b061"
+  },
+  "plan": {
+    "path": "research/flagship/dedup_timing_replay_v1.json",
+    "sha256": "cd1307fff20c217ab60d21e456dfc12f5741442eafd83729dbd93d92999f8da5"
+  },
+  "recorded_at": "2026-09-13T12:16:49.168563+00:00",
+  "repository_revision": "a0feb69cf27c707e32301f48a7a8a1d0cad00d29",
+  "restoration": {
+    "changed_checkpoint_fields": [
+      "contract"
+    ],
+    "original_checkpoint": {
+      "path": "/mnt/speck-data/speck/firewall-integration-v1/reference-checkpoint-state.json",
+      "sha256": "dd79d8affc993d6a898c8489e681e6771e13fd9d37e59527ee63a50e109ac999"
+    },
+    "parent_manifest": {
+      "path": "/mnt/speck-data/speck/firewall-integration-v1/excluded/manifest.json",
+      "sha256": "0ae4c382338f6ecb8c7573db8652b7a232000e38e50023862669a079255af010"
+    },
+    "rebound_checkpoint_sha256": "a40ecbdd6d59e3ff5bdd096058013e932947b054e2929497db1fe129fd8f4003",
+    "rebound_index_sha256": "ee321122f0676c2059b6a9e2eeaafd7b2682a2ce55fb5fb0449c87a35cfda11d",
+    "reference_records": 288872,
+    "restore_seconds": 6.424226192997594
+  },
+  "status": "reference_checkpoint_replay_parity_and_phase_timing_pass",
+  "timing": {
+    "boundary": "Disjoint wall-time phases; source elapsed includes source checkpoints. All-phase checkpoint time overlaps phases and must not be added again. Processing excludes checkpoints but includes reads, parsing, hashing, candidate comparisons and index updates; it is not a kernel-only or production-scale steady-state benchmark.",
+    "checkpoint_seconds_all_phases": 249.98195258700434,
+    "format": "speck_preprocess_timing",
+    "format_version": 1,
+    "phases": {
+      "final_verification": 6.572490002006816,
+      "input_verification": 0.7912450820003869,
+      "processing": 281.4750227159966,
+      "publication": 1.558245073996659,
+      "resume_verification": 0.9441532630007714,
+      "setup": 0.0006458499992731959
+    },
+    "sources": [
+      {
+        "checkpoint_seconds": 60.176645954998094,
+        "elapsed_seconds": 64.03945338899939,
+        "id": "acquired_train__web",
+        "processed_utf8_bytes": 15356820,
+        "processing_seconds_excluding_checkpoints": 3.8628074340012972,
+        "records_retained": 3936,
+        "records_seen": 4063
+      },
+      {
+        "checkpoint_seconds": 23.863182560002315,
+        "elapsed_seconds": 25.238693812003476,
+        "id": "acquired_train__code",
+        "processed_utf8_bytes": 6406520,
+        "processing_seconds_excluding_checkpoints": 1.3755112520011608,
+        "records_retained": 995,
+        "records_seen": 1199
+      },
+      {
+        "checkpoint_seconds": 42.04294748800021,
+        "elapsed_seconds": 45.91694873599772,
+        "id": "acquired_train__math",
+        "processed_utf8_bytes": 17200600,
+        "processing_seconds_excluding_checkpoints": 3.874001247997512,
+        "records_retained": 2778,
+        "records_seen": 3788
+      },
+      {
+        "checkpoint_seconds": 45.748131019005086,
+        "elapsed_seconds": 48.732255770002666,
+        "id": "acquired_train__synthetic",
+        "processed_utf8_bytes": 15095614,
+        "processing_seconds_excluding_checkpoints": 2.98412475099758,
+        "records_retained": 3344,
+        "records_seen": 4061
+      },
+      {
+        "checkpoint_seconds": 40.51975215899438,
+        "elapsed_seconds": 58.32408041400049,
+        "id": "acquired_train__science",
+        "processed_utf8_bytes": 118789122,
+        "processing_seconds_excluding_checkpoints": 17.804328255006112,
+        "records_retained": 2106,
+        "records_seen": 3983
+      },
+      {
+        "checkpoint_seconds": 36.65020409799763,
+        "elapsed_seconds": 38.58568591999938,
+        "id": "acquired_train__reference",
+        "processed_utf8_bytes": 10526101,
+        "processing_seconds_excluding_checkpoints": 1.9354818220017478,
+        "records_retained": 1976,
+        "records_seen": 3676
+      },
+      {
+        "checkpoint_seconds": 0.3249029140060884,
+        "elapsed_seconds": 0.3254822620001505,
+        "id": "firewall_exact_control",
+        "processed_utf8_bytes": 3669,
+        "processing_seconds_excluding_checkpoints": 0.0005793479940621182,
+        "records_retained": 0,
+        "records_seen": 1
+      },
+      {
+        "checkpoint_seconds": 0.31075934399996186,
+        "elapsed_seconds": 0.31237805399723584,
+        "id": "firewall_near_control",
+        "processed_utf8_bytes": 3703,
+        "processing_seconds_excluding_checkpoints": 0.0016187099972739816,
+        "records_retained": 0,
+        "records_seen": 1
+      }
+    ],
+    "status": "complete",
+    "total_seconds": 291.3418019870005
+  },
+  "training_authority": false
+}
