@@ -1,0 +1,84 @@
+{
+  "format": "speck_tokenizer_pilot_screen_run_completion",
+  "format_version": 1,
+  "status": "mistral_seed42_screen_arm_complete",
+  "recorded_on": "2026-09-13",
+  "execution": {
+    "path": "research/flagship/tokenizer_pilot_executions_v1/mistral-32k-seed-42.json",
+    "sha256": "56ecb3e5c08f27794677562fd0040ec548353c1bd7ea17b59834e3cabc2be3a2",
+    "run_fingerprint": "6669bd1873716725ad306181e25a8d7dc03989edbeec78c988d5c4c81d94cd67"
+  },
+  "runtime": {
+    "directory": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42",
+    "result": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42/run-result.json",
+      "sha256": "15ad5a4688203c6fad183adf00dbcd49c3d9b73ff099941d98c5ace6b168950d",
+      "bytes": 4565943
+    },
+    "summary": {
+      "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/mistral-32k/seed-42/run-summary.json",
+      "sha256": "46018db3c17e79a047d31f71232024d24cba94d020d1ea5f114faa1cfef17c63",
+      "bytes": 4002
+    },
+    "final_checkpoint": {
+      "step": 18311,
+      "model_sha256": "fc9fdd9aa0ef461c22b7eaa559cbd3541ef3a305b12fe579aaeea012a4e0083f",
+      "optimizer_sha256": "6e7ad82c4b4f365495371a695e07bd99b27ad67d90f2e18bacd02b2e12f87e59",
+      "metadata_sha256": "db776ea177b9aca803ad5ad2baa7d7a30d5a1ab7095ee2df7f5e8ed1740d850c",
+      "complete_sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    },
+    "service": {
+      "unit": "speck-tokenizer-mistral-resume.service",
+      "result": "success",
+      "exec_main_status": 0
+    },
+    "disk_usage": "2.9G"
+  },
+  "metrics": {
+    "fixed_document_macro_bpb": 1.0954040025770306,
+    "fixed_flop_macro_bpb": 1.0954040025770306,
+    "active_seconds": 16957.72785910499,
+    "active_hours": 4.710479960862497,
+    "throughput_tokens_per_second": 70765.94847909868,
+    "peak_memory_bytes": 7543646720,
+    "learning_curve_points": 20,
+    "categories": {
+      "web": 1.2490117982432263,
+      "code": 1.1370351175963653,
+      "math": 1.1638056359985551,
+      "synthetic": 0.8720094052850879,
+      "science": 0.9428534332289918,
+      "reference": 1.207708625109957
+    }
+  },
+  "interruptions": {
+    "checked_records": [
+      {
+        "path": "results/systems/tokenizer-pilot-mistral-interruption-20260912.json",
+        "sha256": "66c9b6388076e3a245232f1287402fa2102f4c4fb0c8ddd3ec58feea52b956aa"
+      },
+      {
+        "path": "results/systems/tokenizer-pilot-mistral-interruption-v2-20260912.json",
+        "sha256": "32db0ccb70d3cb7c7beffe7d9873c568c48cb595e17fc7a485c9fee52281533f"
+      }
+    ],
+    "orphan_evaluations_preserved": 5,
+    "final_scientific_lineage_uses_only_checkpoint_bound_evaluations": true
+  },
+  "gates": {
+    "service_exit": "pass",
+    "final_checkpoint": "pass",
+    "analyzer_schema": "pass",
+    "twenty_learning_curve_points": "pass",
+    "all_values_finite": "pass",
+    "D5_audit_openings": 0
+  },
+  "authority": {
+    "baseline_screen_arm_complete": true,
+    "custom_screen_arms": true,
+    "confirmation_execution": false,
+    "D5_opening": false,
+    "final_selection": false,
+    "flagship_training": false
+  }
+}
