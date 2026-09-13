@@ -35,6 +35,12 @@ def test_timing_preserves_outputs_and_accounts_for_disjoint_phases(tmp_path):
     assert timing["checkpoint_seconds_all_phases"] >= sum(
         s["checkpoint_seconds"] for s in timing["sources"]
     )
+    assert (
+        sum(timing["checkpoint_components_all_phases"].values())
+        <= timing["checkpoint_seconds_all_phases"]
+    )
+    for source in timing["sources"]:
+        assert sum(source["checkpoint_components"].values()) <= source["checkpoint_seconds"]
 
 
 def test_reopen_and_interruption_cannot_masquerade_as_complete_processing(tmp_path):

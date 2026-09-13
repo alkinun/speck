@@ -1,6 +1,7 @@
 """Restore a retained reference checkpoint into a separate, identity-bound timing replay."""
 
 import json
+import os
 import shutil
 import sqlite3
 import time
@@ -29,6 +30,8 @@ def _copy_prefix(source, destination, size):
                 raise ValueError("timing replay source is shorter than its committed prefix")
             target.write(block)
             size -= len(block)
+        target.flush()
+        os.fsync(target.fileno())
 
 
 def restore_reference_checkpoint(parent, output):
@@ -101,6 +104,8 @@ def restore_reference_checkpoint(parent, output):
     shutil.copyfile(source_index, index_path)
     if file_sha256(index_path) != manifest["index"]["sha256"]:
         raise ValueError("timing replay index copy differs from the parent")
+    with index_path.open("rb") as handle:
+        os.fsync(handle.fileno())
     connection = sqlite3.connect(index_path)
     try:
         # Work only in the private copy. Bulk-prune child rows first, then validate
@@ -130,6 +135,8 @@ def restore_reference_checkpoint(parent, output):
         connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
     finally:
         connection.close()
+    with index_path.open("rb") as handle:
+        os.fsync(handle.fileno())
     rebound_state = {**state, "contract": normalized["plan_fingerprint"]}
     durable_json(staging / "state.json", rebound_state)
     return config, {
@@ -138,6 +145,7 @@ def restore_reference_checkpoint(parent, output):
         "rebound_checkpoint_sha256": file_sha256(staging / "state.json"),
         "rebound_index_sha256": file_sha256(index_path),
         "changed_checkpoint_fields": ["contract"],
+        "restoration_durability": "committed prefix files and index fsynced before timing",
         "reference_records": reference_records,
         "restore_seconds": time.perf_counter() - started,
     }

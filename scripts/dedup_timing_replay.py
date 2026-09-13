@@ -28,9 +28,13 @@ def main():
     plan = json.loads(path.read_text())
     if (
         plan.get("format") != "speck_dedup_timing_replay_plan"
-        or plan.get("format_version") != 1
+        or plan.get("format_version") != 2
         or plan.get("required_parity") != ["outputs", "removals", "counts"]
         or plan.get("training_authority") is not False
+        or plan.get("restoration_durability")
+        != "fsync copied committed prefixes and restored index before timing"
+        or plan.get("checkpoint_components")
+        != ["sqlite_commit", "output_flush_fsync", "slice_hash", "state_publication"]
     ):
         raise ValueError("unsupported dedup timing replay plan")
     parent_identity = _bound_identity(plan["parent_result"], path.parent)
@@ -54,7 +58,7 @@ def main():
     ]
     result = {
         "format": "speck_dedup_phase_timing_qualification",
-        "format_version": 1,
+        "format_version": 2,
         "status": "reference_checkpoint_replay_parity_and_phase_timing_pass",
         "recorded_at": datetime.now(timezone.utc).isoformat(),
         "repository_revision": subprocess.check_output(

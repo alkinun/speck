@@ -61,7 +61,7 @@ uv run --no-sync python -m scripts.data_screen_capacity \
 
 ## Phase-separated timing replay
 
-[`dedup_timing_replay_v1.json`](dedup_timing_replay_v1.json) binds the completed full-reference
+[`dedup_timing_replay_v2.json`](dedup_timing_replay_v2.json) binds the completed full-reference
 integration. The replay restores its exact committed reference prefix into a new private destination:
 
 1. Verify the parent result, manifest, retained checkpoint, and published SQLite identity.
@@ -69,6 +69,7 @@ integration. The replay restores its exact committed reference prefix into a new
    that copy; validate foreign keys, reference count, checkpoint row, and the ordered reference chain.
 3. Rebind only the checkpoint's destination contract. Inputs, precedence, policy, candidate stream,
    and 10,000-record checkpoint interval stay identical to the parent pass.
+   Flush and fsync copied committed prefixes and the restored index before the measured invocation.
 4. Run the same candidate continuation with optional timing instrumentation. Outputs, removal logs,
    and counts must match the original result exactly, and reference controls/exclusion must still pass.
 
@@ -86,8 +87,8 @@ complete fresh processing measurement.
 
 ```bash
 uv run --no-sync python -m scripts.dedup_timing_replay \
-  research/flagship/dedup_timing_replay_v1.json \
-  results/systems/dedup-phase-timing-20260913.json
+  research/flagship/dedup_timing_replay_v2.json \
+  results/systems/dedup-phase-timing-v2-20260913.json
 ```
 
 Each command binds its clean implementation commit and checked inputs. The timing replay uses a new
@@ -97,6 +98,14 @@ The optional timing hooks change the maintained preprocessor's file identity. Th
 resume memory probe remains bound to its original implementation hash; its record is not rewritten.
 The identical-output checkpoint replay is the explicit execution qualification for this instrumented
 successor. Its phase measurements do not replace the earlier Python-allocation measurement.
+
+The [v1 diagnostic](../../results/systems/dedup-phase-timing-20260913.json) is retained at its recorded
+implementation. It preserves candidate/output parity and reports 31.84 seconds of non-checkpoint
+candidate work versus 249.00 seconds inside candidate checkpoints. Its copied prefixes were not
+explicitly fsynced before measurement, so deferred restoration writes could enter checkpoint costs.
+V2 makes restoration durable first and splits checkpoint time into SQLite commit, output flush/fsync,
+slice hashing, and state publication before attributing the bottleneck. This measurement correction
+is not a change to the dedup policy or a claimed pipeline speedup.
 
 ## Completed capacity review
 

@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import sqlite3
+import time
 import unicodedata
 from collections import Counter
 from pathlib import Path
@@ -353,7 +354,7 @@ def _verify_slices(path, slices, expected_size, description):
         raise ValueError(f"{description} checkpoint slices do not reach committed size")
 
 
-def _checkpoint(connection, handles, removal, state_path, state):
+def _checkpoint(connection, handles, removal, state_path, state, *, timing=None):
     checkpoint_id = state["checkpoint_id"] + 1
     connection.execute(
         "INSERT INTO checkpoints VALUES (?, ?, ?, ?)",
@@ -364,12 +365,19 @@ def _checkpoint(connection, handles, removal, state_path, state):
             state["index_chain"],
         ),
     )
+    started = time.perf_counter() if timing is not None else 0.0
     connection.commit()
+    if timing is not None:
+        timing["sqlite_commit_seconds"] = time.perf_counter() - started
+        started = time.perf_counter()
     for handle in handles.values():
         handle.flush()
         os.fsync(handle.fileno())
     removal.flush()
     os.fsync(removal.fileno())
+    if timing is not None:
+        timing["output_flush_fsync_seconds"] = time.perf_counter() - started
+        started = time.perf_counter()
     for index, handle in handles.items():
         key = str(index)
         start = state["output_sizes"].get(key, 0)
@@ -391,7 +399,12 @@ def _checkpoint(connection, handles, removal, state_path, state):
         )
     state["removal_size"] = removal_end
     state["checkpoint_id"] = checkpoint_id
+    if timing is not None:
+        timing["slice_hash_seconds"] = time.perf_counter() - started
+        started = time.perf_counter()
     _write_json(state_path, state)
+    if timing is not None:
+        timing["state_publication_seconds"] = time.perf_counter() - started
 
 
 def _cleanup_published(config, output):
