@@ -1,0 +1,169 @@
+{
+  "command_timeout_seconds": 120,
+  "format": "speck_source_bank_qualification_interruption",
+  "format_version": 1,
+  "next": "Repeat the unchanged engineering method with a successor destination plan and no foreground timeout; retain this attempt.",
+  "observed_at": "2026-09-13T10:02:12.787214+00:00",
+  "operations_authority": false,
+  "partial_outputs": {
+    "clean": {
+      "completed_packing_sources": [
+        "web",
+        "code",
+        "math",
+        "synthetic",
+        "science",
+        "reference"
+      ],
+      "manifest_present": true,
+      "metadata": [
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/code/packed/manifest.json",
+          "sha256": "455296ede8e56e76cbe30509bae7b706cd1bcb8e766a0bce4fbb852c2177dd6a"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/code/selection-state.json",
+          "sha256": "f8dc0d029538c9038c0096f63c876a026d1ad5346399c7963b201abb6dbefb25"
+        },
+        {
+          "bytes": 5747,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/manifest.json",
+          "sha256": "53322b4c61293a60da8e99f9f2a1d9d46b15652c4d8e53a49fbccfbd07f7ab55"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/math/packed/manifest.json",
+          "sha256": "77095e831593a1b3f916d31310f8e7818b819d28716bdf9d273918bf522c2506"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/math/selection-state.json",
+          "sha256": "20006c048b0a49f0d5c37654dfa4a59d658accec38c9652fa46228dc3347fc6a"
+        },
+        {
+          "bytes": 3461,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/plan.json",
+          "sha256": "71c8f515b45b7be2000d4abcc3289b10d119c9be39c84067b3afa44efc3087dd"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/reference/packed/manifest.json",
+          "sha256": "066442db56d070d635aa77b3f1b77792cf06bc6086f0b90d9c708b6bb300f3dd"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/reference/selection-state.json",
+          "sha256": "8c315fc8be6421087c424a62c52be8e7df26ad1013904d8b16a454f0dcb8ad89"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/science/packed/manifest.json",
+          "sha256": "c79b7fdf9de96b4b1c9838cb7431c69cd00166d148723bb82d11eab7f5e635b6"
+        },
+        {
+          "bytes": 186,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/science/selection-state.json",
+          "sha256": "d5a18dde8d7197f3366fef46a8dd784ba6d94b80e3f955f02d31348059596ffc"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/synthetic/packed/manifest.json",
+          "sha256": "9b400dd58d195dcff7f9609fd241be86676b5388ae9145b56a1cba0900a83a58"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/synthetic/selection-state.json",
+          "sha256": "6ae98dc2f5a9dc603f841989eaad705cedd3e71d82b7758909d5534a9352c886"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/web/packed/manifest.json",
+          "sha256": "2efd955b5b0744d94abd3335044430b6d9318e1dcea085092dd7af77fd77cd9d"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/clean/web/selection-state.json",
+          "sha256": "0c41c381279f75443cf084f8e4a263d79f47efa210ee77e6a6ef8e5cf47216ee"
+        }
+      ]
+    },
+    "resumed": {
+      "completed_packing_sources": [
+        "web",
+        "code",
+        "math",
+        "synthetic",
+        "science"
+      ],
+      "manifest_present": false,
+      "metadata": [
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/code/packed/manifest.json",
+          "sha256": "455296ede8e56e76cbe30509bae7b706cd1bcb8e766a0bce4fbb852c2177dd6a"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/code/selection-state.json",
+          "sha256": "f8dc0d029538c9038c0096f63c876a026d1ad5346399c7963b201abb6dbefb25"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/math/packed/manifest.json",
+          "sha256": "77095e831593a1b3f916d31310f8e7818b819d28716bdf9d273918bf522c2506"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/math/selection-state.json",
+          "sha256": "20006c048b0a49f0d5c37654dfa4a59d658accec38c9652fa46228dc3347fc6a"
+        },
+        {
+          "bytes": 3463,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/plan.json",
+          "sha256": "a8d5cfef318827e842b74e4360ed72d12b1fa7afb0e4e964fddc913f1d53f0ab"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/science/packed/manifest.json",
+          "sha256": "c79b7fdf9de96b4b1c9838cb7431c69cd00166d148723bb82d11eab7f5e635b6"
+        },
+        {
+          "bytes": 186,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/science/selection-state.json",
+          "sha256": "d5a18dde8d7197f3366fef46a8dd784ba6d94b80e3f955f02d31348059596ffc"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/synthetic/packed/manifest.json",
+          "sha256": "9b400dd58d195dcff7f9609fd241be86676b5388ae9145b56a1cba0900a83a58"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/synthetic/selection-state.json",
+          "sha256": "6ae98dc2f5a9dc603f841989eaad705cedd3e71d82b7758909d5534a9352c886"
+        },
+        {
+          "bytes": 384,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/web/packed/manifest.json",
+          "sha256": "2efd955b5b0744d94abd3335044430b6d9318e1dcea085092dd7af77fd77cd9d"
+        },
+        {
+          "bytes": 187,
+          "path": "/mnt/speck-data/speck/source-bank-rehearsal-v1/resumed/web/selection-state.json",
+          "sha256": "0c41c381279f75443cf084f8e4a263d79f47efa210ee77e6a6ef8e5cf47216ee"
+        }
+      ]
+    }
+  },
+  "per_invocation_timings_recoverable": false,
+  "plan": {
+    "path": "research/flagship/source_bank_rehearsal_v1.json",
+    "sha256": "2236521655020aa088dffe5547d1f72ba01f58bd1e33ace7ec5ac883241f5a5c"
+  },
+  "qualification_result_published": false,
+  "repository_revision": "0d12bf0158cff3e8dc6070ec753ec6538624c548",
+  "status": "external_command_timeout_partial_outputs_preserved",
+  "training_authority": false
+}

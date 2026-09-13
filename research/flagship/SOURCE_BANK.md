@@ -6,7 +6,7 @@ the parent manifest and selected training files; it does not open evaluation or 
 
 ## Frozen rehearsal
 
-[`source_bank_rehearsal_v1.json`](source_bank_rehearsal_v1.json) binds the completed parent manifest,
+[`source_bank_rehearsal_v2.json`](source_bank_rehearsal_v2.json) binds the completed parent manifest,
 pinned Mistral reference tokenizer, six training outputs, 2 MB UTF-8 text quota per category, 16-record
 selection checkpoints, and a new runtime destination. Whole documents may overshoot each byte quota.
 All original JSONL fields are retained verbatim. No final tokenizer or E1/E3 treatment is selected.
@@ -16,6 +16,11 @@ The parent is the firewall-excluded corpus recorded by
 Its deduplication/filtering/exclusion evidence is inherited. This rehearsal measures the new bank
 selection, reference packing, integrity checks, and recovery; it does not rerun or retime acquisition
 and global deduplication. The six representative sources do not cover all E1 treatment alternatives.
+
+The [v1 attempt](../../results/systems/source-bank-rehearsal-interruption-20260913.json) hit an external
+120-second command timeout after completing the clean bank and five recovery-source units. Its partial
+outputs are retained, but per-invocation timings were not published. V2 changes only the runtime
+destination so the same method can be measured in a fresh execution with sufficient command time.
 
 ## Behavior
 
@@ -42,7 +47,7 @@ Prepare or reopen a bank, emitting a new per-invocation report:
 
 ```bash
 uv run --no-sync python -m scripts.source_bank_prepare \
-  research/flagship/source_bank_rehearsal_v1.json \
+  research/flagship/source_bank_rehearsal_v2.json \
   --report /path/to/new-invocation-report.json
 ```
 
@@ -52,7 +57,7 @@ resumes from record 16, compares all six selected and packed payloads, and check
 
 ```bash
 uv run --no-sync python -m scripts.source_bank_qualify \
-  research/flagship/source_bank_rehearsal_v1.json \
+  research/flagship/source_bank_rehearsal_v2.json \
   results/systems/source-bank-rehearsal-20260913.json
 ```
 
