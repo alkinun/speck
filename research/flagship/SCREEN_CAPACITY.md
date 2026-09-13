@@ -97,3 +97,11 @@ The optional timing hooks change the maintained preprocessor's file identity. Th
 resume memory probe remains bound to its original implementation hash; its record is not rewritten.
 The identical-output checkpoint replay is the explicit execution qualification for this instrumented
 successor. Its phase measurements do not replace the earlier Python-allocation measurement.
+
+## Completed capacity review
+
+The [checked review](../../results/data/screen-capacity-20260913.json) finds 2.056B reference tokens in
+the verified bank, but only a 1.236B balanced-prior pool ceiling. The smallest E3 unique pool needs
+1.5B; its remaining category deficits are 13.215M science and 10.337M reference tokens. Full 6B supply
+and the exact scientific source recipes remain open. See the [finding](../findings/2026-09-13-screen-capacity.md)
+for all category requirements and the distinction between measured supply and upstream availability.

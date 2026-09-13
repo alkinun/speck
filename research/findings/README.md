@@ -15,6 +15,7 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | Source-bank mechanics | [Six-category retained-source rehearsal](2026-09-13-source-bank-rehearsal.md) measures byte-quota selection and reference packing with identical interrupted/uninterrupted payloads; acquisition/global-dedup costs are inherited rather than remeasured. |
 | Upstream unit mechanics | [Raw acquisition and cohort dedup](2026-09-13-acquisition-unit-rehearsal.md) executes pinned source/security filters, independent Parquet/gzip recovery, and global dedup over a bounded cohort; complete exclusion is checked separately below. |
 | Complete exclusion integration | [Full reference pass and bank handoff](2026-09-13-firewall-integration.md) preserves all twelve reference views, removes superset matches, verifies full-reference checkpoint recovery, and prepares six excluded category banks; training-scale capacity and rates remain open. |
+| Screen data capacity | [Conditional E1/E3 supply review](2026-09-13-screen-capacity.md) verifies the existing reference-token bank and quantifies category deficits; exact treatment recipes, final-tokenizer counts, and other-source capacity remain open. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

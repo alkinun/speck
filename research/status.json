@@ -59,7 +59,13 @@
     {
       "id": "corpora",
       "state": "pending",
-      "next": "Prepare tokenizer-bound stable and decay corpora after the required tokenizer and selection decisions."
+      "next": "Freeze exact E1/E3 source recipes and the tokenizer, materialize per-category screen deficits with packing headroom, then prepare stable and decay corpora after selection."
+    },
+    {
+      "id": "screen_capacity",
+      "state": "conditional_reference_capacity_gaps_quantified",
+      "evidence": "results/data/screen-capacity-20260913.json",
+      "next": "Resolve the unfrozen E1 treatment/blend and E3 incumbent assignments. The checked bank supports only a 1.236B balanced-prior pool, below even E3's 1.5B four-epoch pool; remeasure supply under final D5."
     },
     {
       "id": "long_documents",
