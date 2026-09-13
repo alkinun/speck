@@ -1,0 +1,21 @@
+{
+  "format": "speck_acquisition_unit_rehearsal",
+  "format_version": 1,
+  "scope": "bounded_raw_acquisition_and_cohort_dedup_not_training_data",
+  "base_plan": {
+    "path": "../../archive/pregrant-history/research/flagship/data_calibration_2b_v1/production_plan.json",
+    "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"
+  },
+  "raw_files": [
+    {"source_id": "ultrafineweb_en_v1_4", "filename": "data/ultrafineweb_en_v1_4/CC-MAIN-2018-34/ultrafineweb-en-CC-MAIN-2018-34-part-0235-of-512.parquet", "bytes": 95046421, "sha256": "b75434ad3a5a0e05f6bd5fc0b72093ced2b9ebb986f240b11d1cf99bc000c381"},
+    {"source_id": "common_pile_stackv2_edu", "filename": "stack-edu-0017.json.gz", "bytes": 637945318, "sha256": "85e2eab35a99c3426ae0c3b72a2ae570c7dd666e14b1b1e4d73841ecc605428f"},
+    {"source_id": "finemath_4plus", "filename": "finemath-4plus/train-00030-of-00064.parquet", "bytes": 287047408, "sha256": "eebf8fa736b3d01a39ffdc527f237b97515508d1d0f891c37b4b7b66e881f8ad"},
+    {"source_id": "cosmopedia_v2", "filename": "cosmopedia-v2/train-00096-of-00104.parquet", "bytes": 1176422905, "sha256": "25cb36babeb39a95857b18cb723166ac73b4e6553c4ffe9acad54a87c2a048ca"},
+    {"source_id": "common_pile_pubmed", "filename": "licensed_pubmed-0012.json.gz", "bytes": 2597305751, "sha256": "193c9d778804e3e953e749ca36accefad00ec0d8569c09e83761e12168b3575e"},
+    {"source_id": "finewiki_en", "filename": "data/enwiki/000_00006.parquet", "bytes": 2491036654, "sha256": "dc10ef0d900f4b87148a1595fe9895866f960ac2affc94684a04e048813198a7"}
+  ],
+  "row_windows": [[0, 256], [256, 512]],
+  "checkpoint_rows": 16,
+  "dedup_checkpoint_records": 64,
+  "raw_directory": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw"
+}

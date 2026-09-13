@@ -239,6 +239,15 @@ def _validate_parquet_schema(parquet, source, filename):
     return columns
 
 
+def _row_window(start_row, stop_row):
+    if isinstance(start_row, bool) or not isinstance(start_row, int) or start_row < 0:
+        raise ValueError("start_row must be a nonnegative integer")
+    if stop_row is not None and (
+        isinstance(stop_row, bool) or not isinstance(stop_row, int) or stop_row <= start_row
+    ):
+        raise ValueError("stop_row must be an integer greater than start_row")
+
+
 def iter_parquet_documents(
     *,
     source,
@@ -248,9 +257,12 @@ def iter_parquet_documents(
     cache_dir=None,
     keep_raw=False,
     description=None,
+    start_row=0,
+    stop_row=None,
 ):
     """Yield filtered rows from one downloaded repository Parquet file."""
 
+    _row_window(start_row, stop_row)
     source = _validate_source(source)
     cache_dir = Path(cache_dir or default_data_dir / "raw")
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -275,6 +287,10 @@ def iter_parquet_documents(
             }
             for row_index, content in enumerate(values[source["content_column"]]):
                 absolute_row = row_number + row_index
+                if stop_row is not None and absolute_row >= stop_row:
+                    return
+                if absolute_row < start_row:
+                    continue
                 metadata = {
                     alias: _metadata_value(values[column][row_index])
                     for alias, column in source["metadata_columns"].items()
@@ -332,9 +348,12 @@ def iter_jsonl_gzip_documents(
     cache_dir=None,
     keep_raw=False,
     description=None,
+    start_row=0,
+    stop_row=None,
 ):
     """Yield filtered rows from one downloaded gzip-compressed JSONL file."""
 
+    _row_window(start_row, stop_row)
     source = _validate_source(source)
     cache_dir = Path(cache_dir or default_data_dir / "raw")
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -357,6 +376,10 @@ def iter_jsonl_gzip_documents(
     try:
         with gzip.open(local_path, "rt", encoding="utf-8") as handle:
             for row_number, line in enumerate(handle):
+                if stop_row is not None and row_number >= stop_row:
+                    return
+                if row_number < start_row:
+                    continue
                 if not line.strip():
                     continue
                 try:
