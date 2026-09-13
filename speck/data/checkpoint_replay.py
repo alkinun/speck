@@ -34,7 +34,7 @@ def _copy_prefix(source, destination, size):
         os.fsync(target.fileno())
 
 
-def restore_reference_checkpoint(parent, output):
+def restore_reference_checkpoint(parent, output, *, sqlite_settings=None):
     """Copy verified prefix state and prune a private index copy; never modify the parent.
 
     Only the destination contract is rebound. Reference state, inputs, order, policy,
@@ -76,6 +76,8 @@ def restore_reference_checkpoint(parent, output):
     if output.exists() or staging.exists():
         raise FileExistsError("timing replay requires a new destination")
     config = {**original, "output_directory": str(output)}
+    if sqlite_settings is not None:
+        config.update({"format_version": 2, "sqlite": sqlite_settings})
     normalized = validate_preprocess_config(config)
     staging.mkdir(parents=True)
     for index, source in enumerate(config["sources"]):
@@ -145,6 +147,7 @@ def restore_reference_checkpoint(parent, output):
         "rebound_checkpoint_sha256": file_sha256(staging / "state.json"),
         "rebound_index_sha256": file_sha256(index_path),
         "changed_checkpoint_fields": ["contract"],
+        **({"bound_sqlite": normalized["sqlite"]} if sqlite_settings is not None else {}),
         "restoration_durability": "committed prefix files and index fsynced before timing",
         "reference_records": reference_records,
         "restore_seconds": time.perf_counter() - started,

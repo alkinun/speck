@@ -62,9 +62,23 @@ def test_unfrozen_or_unbounded_policies_are_rejected(pages):
             pass
 
 
-def test_real_process_exit_recovers_committed_wal_and_discards_uncommitted_work(tmp_path):
+@pytest.mark.parametrize("bound", [False, True])
+def test_real_process_exit_recovers_committed_wal_and_discards_uncommitted_work(tmp_path, bound):
     parent = parent_fixture(tmp_path)
-    config, _ = restore_reference_checkpoint(parent, tmp_path / "crash")
+    declaration = (
+        {
+            "journal_mode": "WAL",
+            "synchronous": "FULL",
+            "wal_autocheckpoint_pages": 65536,
+            "page_size": 4096,
+            "cache_size_kib": 2000,
+        }
+        if bound
+        else None
+    )
+    config, _ = restore_reference_checkpoint(
+        parent, tmp_path / "crash", sqlite_settings=declaration
+    )
     receipt_path = tmp_path / "receipt.json"
     spec = tmp_path / "worker.json"
     spec.write_text(json.dumps({"config": config, "pages": 65536, "receipt": str(receipt_path)}))
@@ -83,6 +97,8 @@ def test_real_process_exit_recovers_committed_wal_and_discards_uncommitted_work(
     assert Path(tail["path"]).stat().st_size == tail["committed_bytes"] + tail["bytes"]
     with wal_policy(65536, {}):
         recovered = run_exclusion(config)
+    if bound:
+        assert recovered["result"]["manifest"]["sqlite"] == declaration
     for key in ("outputs", "removals", "counts"):
         assert (
             recovered["result"]["manifest"][key] == parent["exclusion"]["result"]["manifest"][key]

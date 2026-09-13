@@ -14,6 +14,12 @@ from urllib.parse import urlparse
 
 from speck.data.preprocess_timing import PreprocessTiming
 from speck.data.sources.code_near_duplicates import _jaccard, _shingles, _signature, _tokens
+from speck.data.sqlite_settings import (
+    configure_sqlite,
+    sqlite_runtime,
+    validate_sqlite_settings,
+    verify_sqlite_runtime,
+)
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -65,6 +71,7 @@ def validate_preprocess_config(config, *, config_dir=None):
     """Validate immutable ordered inputs and bounded disk-backed index settings."""
 
     config_dir = Path(config_dir or ".").resolve()
+    version = config.get("format_version") if isinstance(config, dict) else None
     _exact_keys(
         config,
         {
@@ -77,10 +84,11 @@ def validate_preprocess_config(config, *, config_dir=None):
             "checkpoint_records",
             "cleanup_files",
             "output_directory",
-        },
+        }
+        | ({"sqlite"} if version == 2 else set()),
         "production preprocess",
     )
-    if config["format"] != FORMAT or config["format_version"] != FORMAT_VERSION:
+    if config["format"] != FORMAT or type(version) is not int or version not in (1, 2):
         raise ValueError("unsupported production preprocess format")
     if config["status"] != "fixture_or_rehearsal_authorized_not_training_authority":
         raise ValueError("production preprocessing must remain non-authoritative")
@@ -207,7 +215,7 @@ def validate_preprocess_config(config, *, config_dir=None):
         raise ValueError("cleanup files cannot be inside output or staging directories")
     normalized = {
         "format": FORMAT,
-        "format_version": FORMAT_VERSION,
+        "format_version": version,
         "status": config["status"],
         "sources": normalized_sources,
         "deny_ledger": normalized_ledger,
@@ -216,6 +224,8 @@ def validate_preprocess_config(config, *, config_dir=None):
         "cleanup_files": normalized_cleanup,
         "output_directory": output_directory,
     }
+    if version == 2:
+        normalized["sqlite"] = validate_sqlite_settings(config["sqlite"])
     normalized["plan_fingerprint"] = _fingerprint(normalized)
     return normalized
 
@@ -255,10 +265,19 @@ def _load_ledger(config):
     return ledger, values
 
 
-def _database(path):
+def _database(path, *, sqlite_settings=None):
+    if sqlite_settings is not None:
+        sqlite_settings = validate_sqlite_settings(sqlite_settings)
     connection = sqlite3.connect(path)
-    connection.execute("PRAGMA foreign_keys=ON")
-    connection.execute("PRAGMA journal_mode=WAL")
+    try:
+        if sqlite_settings is None:
+            connection.execute("PRAGMA foreign_keys=ON")
+            connection.execute("PRAGMA journal_mode=WAL")
+        else:
+            configure_sqlite(connection, sqlite_settings)
+    except BaseException:
+        connection.close()
+        raise
     connection.execute(
         "CREATE TABLE IF NOT EXISTS docs (doc_seq INTEGER PRIMARY KEY, processed_index INTEGER NOT NULL, source_index INTEGER NOT NULL, source_id TEXT NOT NULL, line_number INTEGER NOT NULL, byte_offset INTEGER NOT NULL, content_sha256 TEXT NOT NULL, dedup_sha256 TEXT NOT NULL UNIQUE)"
     )
@@ -443,12 +462,16 @@ def _cleanup_published(config, output):
 def _verify_published(config, output, manifest):
     if (
         manifest.get("format") != MANIFEST_FORMAT
-        or manifest.get("format_version") != FORMAT_VERSION
+        or manifest.get("format_version") != config["format_version"]
         or manifest.get("plan_fingerprint") != config["plan_fingerprint"]
         or manifest.get("status")
         != "global_dedup_and_deny_complete_cleanup_receipt_required_not_training_authority"
     ):
         raise ValueError("published preprocess manifest identity is invalid")
+    if config["format_version"] == 2:
+        if manifest.get("sqlite") != config["sqlite"]:
+            raise ValueError("published SQLite declaration differs from the config")
+        verify_sqlite_runtime(config["sqlite"], manifest.get("sqlite_runtime"))
     if set(manifest.get("outputs", {})) != {source["id"] for source in config["sources"]}:
         raise ValueError("published preprocess outputs do not cover configured sources")
     for entry in manifest["outputs"].values():
@@ -584,7 +607,14 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None, timin
         state["removal_size"],
         "removal output",
     )
-    connection = _database(staging / "near_duplicates.sqlite3")
+    connection = (
+        _database(staging / "near_duplicates.sqlite3", sqlite_settings=config["sqlite"])
+        if config["format_version"] == 2
+        else _database(staging / "near_duplicates.sqlite3")
+    )
+    actual_sqlite = sqlite_runtime(connection) if config["format_version"] == 2 else None
+    if actual_sqlite is not None:
+        verify_sqlite_runtime(config["sqlite"], actual_sqlite)
     if state["checkpoint_id"]:
         row = connection.execute(
             "SELECT processed_records, next_doc_seq, index_chain FROM checkpoints WHERE checkpoint_id=?",
@@ -799,7 +829,7 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None, timin
     index_path = staging / "near_duplicates.sqlite3"
     manifest = {
         "format": MANIFEST_FORMAT,
-        "format_version": FORMAT_VERSION,
+        "format_version": config["format_version"],
         "status": "global_dedup_and_deny_complete_cleanup_receipt_required_not_training_authority",
         "plan_fingerprint": config["plan_fingerprint"],
         "sources": config["sources"],
@@ -829,6 +859,8 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None, timin
             "training_authority": "blocked",
         },
     }
+    if config["format_version"] == 2:
+        manifest.update({"sqlite": config["sqlite"], "sqlite_runtime": actual_sqlite})
     _write_json(staging / "manifest.json", manifest)
     state_path.unlink()
     output.parent.mkdir(parents=True, exist_ok=True)

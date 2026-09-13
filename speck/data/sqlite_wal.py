@@ -56,15 +56,25 @@ def wal_policy(autocheckpoint_pages, report, *, crash_receipt=None):
         )
         return size
 
-    def database(path):
+    def database(path, *, sqlite_settings=None):
         nonlocal database_path
         if database_path is not None:
             raise ValueError("WAL comparison expects one preprocessing connection per invocation")
         database_path = Path(path)
-        connection = original_database(path)
+        if (
+            sqlite_settings is not None
+            and sqlite_settings.get("wal_autocheckpoint_pages") != autocheckpoint_pages
+        ):
+            raise ValueError("WAL observer policy differs from the bound preprocessing declaration")
+        connection = (
+            original_database(path, sqlite_settings=sqlite_settings)
+            if sqlite_settings is not None
+            else original_database(path)
+        )
         try:
-            connection.execute("PRAGMA synchronous=FULL")
-            connection.execute(f"PRAGMA wal_autocheckpoint={autocheckpoint_pages}")
+            if sqlite_settings is None:
+                connection.execute("PRAGMA synchronous=FULL")
+                connection.execute(f"PRAGMA wal_autocheckpoint={autocheckpoint_pages}")
             settings = {
                 name: connection.execute(f"PRAGMA {name}").fetchone()[0]
                 for name in (
@@ -85,6 +95,9 @@ def wal_policy(autocheckpoint_pages, report, *, crash_receipt=None):
             ):
                 raise ValueError("SQLite did not accept the frozen durable WAL settings")
             report["settings"] = settings
+            report["policy_source"] = (
+                "bound_config" if sqlite_settings is not None else "comparison_override"
+            )
             report["nominal_trigger_bytes"] = autocheckpoint_pages * settings["page_size"]
             sample("opened")
             return connection
@@ -121,6 +134,7 @@ def wal_policy(autocheckpoint_pages, report, *, crash_receipt=None):
                         "format": "speck_committed_wal_crash_receipt",
                         "format_version": 1,
                         "settings": report["settings"],
+                        "policy_source": report["policy_source"],
                         "config_fingerprint": state["contract"],
                         "processed_records": state["processed_records"],
                         "committed_documents": state["next_doc_seq"],
