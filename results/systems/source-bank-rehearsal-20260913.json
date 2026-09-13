@@ -1,0 +1,609 @@
+{
+  "boundary": "Bounded reuse of six retained pilot training sources with inherited filtering and firewall exclusions; byte quotas do not select D5 or E1/E3 treatments. Measured times cover identity verification, selection, reference-token packing and recovery, not upstream acquisition/global dedup, full E1/E3 capacity, production throughput, or useful long-document reconstruction. Free-space endpoints are snapshots, not high-water telemetry.",
+  "clean": {
+    "elapsed_seconds": 64.77029403400229,
+    "manifest": {
+      "path": "/mnt/speck-data/speck/source-bank-rehearsal-v2/clean/manifest.json",
+      "sha256": "55a943d61c18a1171818e124d5b447545d9a30fcd62d2c36640e711ab04eed39"
+    },
+    "sources": [
+      {
+        "category": "web",
+        "packing": {
+          "reference_tokens": 491438,
+          "selection_sha256": "533fca45d35a7380b2bed1fa56cb91d6894b1297789811b7d634edb58866e5d7",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "d971d121c99f3ccda60b6064d012c4d9ab22c521b40793d32b42374101a9fa0d",
+              "tokens": 491438
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__ultrafineweb_en_v1_4",
+        "selection": {
+          "input_offset": 2108856,
+          "output_bytes": 2108856,
+          "output_sha256": "533fca45d35a7380b2bed1fa56cb91d6894b1297789811b7d634edb58866e5d7",
+          "records": 518,
+          "utf8_bytes": 2002270
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "code",
+        "packing": {
+          "reference_tokens": 609083,
+          "selection_sha256": "d9cb27eae751211163f9f38381cfc1cb0e03f5e489f4aa54f10a3764b2e3b88d",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "8a6f93b9b9889f4b2a424e6fa7c20ae0425e41475b3df8fcebfc39d87f18b93e",
+              "tokens": 609083
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__common_pile_stackv2_edu",
+        "selection": {
+          "input_offset": 2142441,
+          "output_bytes": 2142441,
+          "output_sha256": "d9cb27eae751211163f9f38381cfc1cb0e03f5e489f4aa54f10a3764b2e3b88d",
+          "records": 362,
+          "utf8_bytes": 2008343
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "math",
+        "packing": {
+          "reference_tokens": 645438,
+          "selection_sha256": "42c8f4a324104e4e671ada0abdba99822325cce88eac4d91354a34e5cfb10f06",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "33261fcca346f6e6f864e4d12197842f764b9b553e39108046d7baa518b2ca27",
+              "tokens": 645438
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__finemath_4plus",
+        "selection": {
+          "input_offset": 2210788,
+          "output_bytes": 2210788,
+          "output_sha256": "42c8f4a324104e4e671ada0abdba99822325cce88eac4d91354a34e5cfb10f06",
+          "records": 428,
+          "utf8_bytes": 2005461
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "synthetic",
+        "packing": {
+          "reference_tokens": 431066,
+          "selection_sha256": "b172010c3508c64bb023e6b784248973fb49315d237eb6d4fe71b367dd6ddbe5",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "518bc3473b396471a483dd1be33f6e8613a577c4e354dfbb8fa2aceb899cdfc3",
+              "tokens": 431066
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__cosmopedia_v2",
+        "selection": {
+          "input_offset": 2102462,
+          "output_bytes": 2102462,
+          "output_sha256": "b172010c3508c64bb023e6b784248973fb49315d237eb6d4fe71b367dd6ddbe5",
+          "records": 541,
+          "utf8_bytes": 2002997
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "science",
+        "packing": {
+          "reference_tokens": 564114,
+          "selection_sha256": "73668b0699f53bbfd395299dba5fe6841d4d208be51c16d93cb3979211eff72d",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "a45a73c0ad9568f575e222209b64fa7cf3fc93f6724521e79577f907940ec33e",
+              "tokens": 564114
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__common_pile_pubmed",
+        "selection": {
+          "input_offset": 2070096,
+          "output_bytes": 2070096,
+          "output_sha256": "73668b0699f53bbfd395299dba5fe6841d4d208be51c16d93cb3979211eff72d",
+          "records": 63,
+          "utf8_bytes": 2017939
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "reference",
+        "packing": {
+          "reference_tokens": 562125,
+          "selection_sha256": "52a917d5e7d84cdce8af30963d66ab51a614e350cc463f287eda1723087b45a3",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "a3912bc6562edac168d158b78fc07a0b92577e610620470b8072f9b74a319ba4",
+              "tokens": 562125
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__finewiki_en",
+        "selection": {
+          "input_offset": 2223583,
+          "output_bytes": 2223583,
+          "output_sha256": "52a917d5e7d84cdce8af30963d66ab51a614e350cc463f287eda1723087b45a3",
+          "records": 729,
+          "utf8_bytes": 2012513
+        },
+        "target_utf8_bytes": 2000000
+      }
+    ],
+    "timing_scope": "this invocation only; inherited acquisition/global dedup and prior interrupted work excluded",
+    "timings": [
+      {
+        "category": "web",
+        "input_verification_seconds": 27.770916006003972,
+        "packing_seconds": 0.16104929800349055,
+        "selection_seconds": 2.3396298489969922
+      },
+      {
+        "category": "code",
+        "input_verification_seconds": 7.417241060000379,
+        "packing_seconds": 0.15265926199936075,
+        "selection_seconds": 1.871107994003978
+      },
+      {
+        "category": "math",
+        "input_verification_seconds": 3.3808924609984388,
+        "packing_seconds": 0.1625156660011271,
+        "selection_seconds": 2.2650308840020443
+      },
+      {
+        "category": "synthetic",
+        "input_verification_seconds": 5.716377584998554,
+        "packing_seconds": 0.7272230829985347,
+        "selection_seconds": 2.7274974800020573
+      },
+      {
+        "category": "science",
+        "input_verification_seconds": 2.6170834400036256,
+        "packing_seconds": 0.9445925690015429,
+        "selection_seconds": 0.46005031999811763
+      },
+      {
+        "category": "reference",
+        "input_verification_seconds": 1.6099144499967224,
+        "packing_seconds": 0.44255018300464144,
+        "selection_seconds": 3.911553999998432
+      }
+    ],
+    "training_authority": false
+  },
+  "format": "speck_bounded_source_bank_qualification",
+  "format_version": 1,
+  "interruption": {
+    "attempt_elapsed_seconds": 39.73880518000078,
+    "injected_after_records": 17,
+    "recovered_from_records": 16,
+    "source": "code"
+  },
+  "operations_authority": false,
+  "plan": {
+    "path": "research/flagship/source_bank_rehearsal_v2.json",
+    "sha256": "152c49945d6bd621d36df6dd8c303073aef5dd9150da2fb712d83f8d5b13ac09"
+  },
+  "recorded_at": "2026-09-13T10:05:09.524256+00:00",
+  "recovery_plan": {
+    "path": "/mnt/speck-data/speck/source-bank-rehearsal-v2/resumed-plan.json",
+    "sha256": "ecf61c15367c4cb225238225614247890ad72ec27959fa66fc0b7e4a4267ddaa"
+  },
+  "reopened": {
+    "elapsed_seconds": 5.2059861090019695,
+    "manifest": {
+      "path": "/mnt/speck-data/speck/source-bank-rehearsal-v2/clean/manifest.json",
+      "sha256": "55a943d61c18a1171818e124d5b447545d9a30fcd62d2c36640e711ab04eed39"
+    },
+    "sources": [
+      {
+        "category": "web",
+        "packing": {
+          "reference_tokens": 491438,
+          "selection_sha256": "533fca45d35a7380b2bed1fa56cb91d6894b1297789811b7d634edb58866e5d7",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "d971d121c99f3ccda60b6064d012c4d9ab22c521b40793d32b42374101a9fa0d",
+              "tokens": 491438
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__ultrafineweb_en_v1_4",
+        "selection": {
+          "input_offset": 2108856,
+          "output_bytes": 2108856,
+          "output_sha256": "533fca45d35a7380b2bed1fa56cb91d6894b1297789811b7d634edb58866e5d7",
+          "records": 518,
+          "utf8_bytes": 2002270
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "code",
+        "packing": {
+          "reference_tokens": 609083,
+          "selection_sha256": "d9cb27eae751211163f9f38381cfc1cb0e03f5e489f4aa54f10a3764b2e3b88d",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "8a6f93b9b9889f4b2a424e6fa7c20ae0425e41475b3df8fcebfc39d87f18b93e",
+              "tokens": 609083
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__common_pile_stackv2_edu",
+        "selection": {
+          "input_offset": 2142441,
+          "output_bytes": 2142441,
+          "output_sha256": "d9cb27eae751211163f9f38381cfc1cb0e03f5e489f4aa54f10a3764b2e3b88d",
+          "records": 362,
+          "utf8_bytes": 2008343
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "math",
+        "packing": {
+          "reference_tokens": 645438,
+          "selection_sha256": "42c8f4a324104e4e671ada0abdba99822325cce88eac4d91354a34e5cfb10f06",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "33261fcca346f6e6f864e4d12197842f764b9b553e39108046d7baa518b2ca27",
+              "tokens": 645438
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__finemath_4plus",
+        "selection": {
+          "input_offset": 2210788,
+          "output_bytes": 2210788,
+          "output_sha256": "42c8f4a324104e4e671ada0abdba99822325cce88eac4d91354a34e5cfb10f06",
+          "records": 428,
+          "utf8_bytes": 2005461
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "synthetic",
+        "packing": {
+          "reference_tokens": 431066,
+          "selection_sha256": "b172010c3508c64bb023e6b784248973fb49315d237eb6d4fe71b367dd6ddbe5",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "518bc3473b396471a483dd1be33f6e8613a577c4e354dfbb8fa2aceb899cdfc3",
+              "tokens": 431066
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__cosmopedia_v2",
+        "selection": {
+          "input_offset": 2102462,
+          "output_bytes": 2102462,
+          "output_sha256": "b172010c3508c64bb023e6b784248973fb49315d237eb6d4fe71b367dd6ddbe5",
+          "records": 541,
+          "utf8_bytes": 2002997
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "science",
+        "packing": {
+          "reference_tokens": 564114,
+          "selection_sha256": "73668b0699f53bbfd395299dba5fe6841d4d208be51c16d93cb3979211eff72d",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "a45a73c0ad9568f575e222209b64fa7cf3fc93f6724521e79577f907940ec33e",
+              "tokens": 564114
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__common_pile_pubmed",
+        "selection": {
+          "input_offset": 2070096,
+          "output_bytes": 2070096,
+          "output_sha256": "73668b0699f53bbfd395299dba5fe6841d4d208be51c16d93cb3979211eff72d",
+          "records": 63,
+          "utf8_bytes": 2017939
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "reference",
+        "packing": {
+          "reference_tokens": 562125,
+          "selection_sha256": "52a917d5e7d84cdce8af30963d66ab51a614e350cc463f287eda1723087b45a3",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "a3912bc6562edac168d158b78fc07a0b92577e610620470b8072f9b74a319ba4",
+              "tokens": 562125
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__finewiki_en",
+        "selection": {
+          "input_offset": 2223583,
+          "output_bytes": 2223583,
+          "output_sha256": "52a917d5e7d84cdce8af30963d66ab51a614e350cc463f287eda1723087b45a3",
+          "records": 729,
+          "utf8_bytes": 2012513
+        },
+        "target_utf8_bytes": 2000000
+      }
+    ],
+    "timing_scope": "this invocation only; inherited acquisition/global dedup and prior interrupted work excluded",
+    "timings": [
+      {
+        "category": "web",
+        "input_verification_seconds": 2.537572476998321,
+        "packing_seconds": 0.03145681499881903,
+        "selection_seconds": 0.24862106700311415
+      },
+      {
+        "category": "code",
+        "input_verification_seconds": 0.47983138999552466,
+        "packing_seconds": 0.038193101005163044,
+        "selection_seconds": 0.15606035800010432
+      },
+      {
+        "category": "math",
+        "input_verification_seconds": 0.27147327700367896,
+        "packing_seconds": 0.03647278500284301,
+        "selection_seconds": 0.22441961299773538
+      },
+      {
+        "category": "synthetic",
+        "input_verification_seconds": 0.44825003799633123,
+        "packing_seconds": 0.028582316997926682,
+        "selection_seconds": 0.31629826000425965
+      },
+      {
+        "category": "science",
+        "input_verification_seconds": 0.10453807099838741,
+        "packing_seconds": 0.0008462469995720312,
+        "selection_seconds": 0.06767582199972821
+      },
+      {
+        "category": "reference",
+        "input_verification_seconds": 0.12020934100291925,
+        "packing_seconds": 0.0008457440053462051,
+        "selection_seconds": 0.07967878499766812
+      }
+    ],
+    "training_authority": false
+  },
+  "repository_revision": "e5635aae65bc91f627ac9778aedd8bc2f7288cec",
+  "resources": {
+    "free_bytes_after": 5424315830272,
+    "free_bytes_before": 5424357203968,
+    "process_peak_rss_bytes": 301322240,
+    "runtime_tree_bytes": 38956274
+  },
+  "resumed": {
+    "elapsed_seconds": 23.716703666003013,
+    "manifest": {
+      "path": "/mnt/speck-data/speck/source-bank-rehearsal-v2/resumed/manifest.json",
+      "sha256": "bffe689b269d5a975d8bfb30d6baca64e903a965adcc963e056274e9072415df"
+    },
+    "sources": [
+      {
+        "category": "web",
+        "packing": {
+          "reference_tokens": 491438,
+          "selection_sha256": "533fca45d35a7380b2bed1fa56cb91d6894b1297789811b7d634edb58866e5d7",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "d971d121c99f3ccda60b6064d012c4d9ab22c521b40793d32b42374101a9fa0d",
+              "tokens": 491438
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__ultrafineweb_en_v1_4",
+        "selection": {
+          "input_offset": 2108856,
+          "output_bytes": 2108856,
+          "output_sha256": "533fca45d35a7380b2bed1fa56cb91d6894b1297789811b7d634edb58866e5d7",
+          "records": 518,
+          "utf8_bytes": 2002270
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "code",
+        "packing": {
+          "reference_tokens": 609083,
+          "selection_sha256": "d9cb27eae751211163f9f38381cfc1cb0e03f5e489f4aa54f10a3764b2e3b88d",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "8a6f93b9b9889f4b2a424e6fa7c20ae0425e41475b3df8fcebfc39d87f18b93e",
+              "tokens": 609083
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__common_pile_stackv2_edu",
+        "selection": {
+          "input_offset": 2142441,
+          "output_bytes": 2142441,
+          "output_sha256": "d9cb27eae751211163f9f38381cfc1cb0e03f5e489f4aa54f10a3764b2e3b88d",
+          "records": 362,
+          "utf8_bytes": 2008343
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "math",
+        "packing": {
+          "reference_tokens": 645438,
+          "selection_sha256": "42c8f4a324104e4e671ada0abdba99822325cce88eac4d91354a34e5cfb10f06",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "33261fcca346f6e6f864e4d12197842f764b9b553e39108046d7baa518b2ca27",
+              "tokens": 645438
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__finemath_4plus",
+        "selection": {
+          "input_offset": 2210788,
+          "output_bytes": 2210788,
+          "output_sha256": "42c8f4a324104e4e671ada0abdba99822325cce88eac4d91354a34e5cfb10f06",
+          "records": 428,
+          "utf8_bytes": 2005461
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "synthetic",
+        "packing": {
+          "reference_tokens": 431066,
+          "selection_sha256": "b172010c3508c64bb023e6b784248973fb49315d237eb6d4fe71b367dd6ddbe5",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "518bc3473b396471a483dd1be33f6e8613a577c4e354dfbb8fa2aceb899cdfc3",
+              "tokens": 431066
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__cosmopedia_v2",
+        "selection": {
+          "input_offset": 2102462,
+          "output_bytes": 2102462,
+          "output_sha256": "b172010c3508c64bb023e6b784248973fb49315d237eb6d4fe71b367dd6ddbe5",
+          "records": 541,
+          "utf8_bytes": 2002997
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "science",
+        "packing": {
+          "reference_tokens": 564114,
+          "selection_sha256": "73668b0699f53bbfd395299dba5fe6841d4d208be51c16d93cb3979211eff72d",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "a45a73c0ad9568f575e222209b64fa7cf3fc93f6724521e79577f907940ec33e",
+              "tokens": 564114
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__common_pile_pubmed",
+        "selection": {
+          "input_offset": 2070096,
+          "output_bytes": 2070096,
+          "output_sha256": "73668b0699f53bbfd395299dba5fe6841d4d208be51c16d93cb3979211eff72d",
+          "records": 63,
+          "utf8_bytes": 2017939
+        },
+        "target_utf8_bytes": 2000000
+      },
+      {
+        "category": "reference",
+        "packing": {
+          "reference_tokens": 562125,
+          "selection_sha256": "52a917d5e7d84cdce8af30963d66ab51a614e350cc463f287eda1723087b45a3",
+          "shards": [
+            {
+              "path": "train_00000.bin",
+              "sha256": "a3912bc6562edac168d158b78fc07a0b92577e610620470b8072f9b74a319ba4",
+              "tokens": 562125
+            }
+          ],
+          "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+        },
+        "parent_source_id": "pilot_train__finewiki_en",
+        "selection": {
+          "input_offset": 2223583,
+          "output_bytes": 2223583,
+          "output_sha256": "52a917d5e7d84cdce8af30963d66ab51a614e350cc463f287eda1723087b45a3",
+          "records": 729,
+          "utf8_bytes": 2012513
+        },
+        "target_utf8_bytes": 2000000
+      }
+    ],
+    "timing_scope": "this invocation only; inherited acquisition/global dedup and prior interrupted work excluded",
+    "timings": [
+      {
+        "category": "web",
+        "input_verification_seconds": 2.4927686079972773,
+        "packing_seconds": 0.0008457450021523982,
+        "selection_seconds": 0.15941761100111762
+      },
+      {
+        "category": "code",
+        "input_verification_seconds": 0.4734138729982078,
+        "packing_seconds": 0.16213559900643304,
+        "selection_seconds": 1.6466641389997676
+      },
+      {
+        "category": "math",
+        "input_verification_seconds": 3.323684681003215,
+        "packing_seconds": 0.20094555700052297,
+        "selection_seconds": 1.9128122379988781
+      },
+      {
+        "category": "synthetic",
+        "input_verification_seconds": 5.739493383996887,
+        "packing_seconds": 0.17865829700167524,
+        "selection_seconds": 2.483519481997064
+      },
+      {
+        "category": "science",
+        "input_verification_seconds": 0.8176171440063627,
+        "packing_seconds": 0.17442626499541802,
+        "selection_seconds": 0.2964704879996134
+      },
+      {
+        "category": "reference",
+        "input_verification_seconds": 0.1343233270017663,
+        "packing_seconds": 0.1617980590017396,
+        "selection_seconds": 3.309207263002463
+      }
+    ],
+    "training_authority": false
+  },
+  "status": "six_category_byte_selection_reference_packing_and_resume_pass",
+  "training_authority": false
+}

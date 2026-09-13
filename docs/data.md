@@ -44,5 +44,11 @@ Key commands provide `--help`: `production_data_preprocess`, `production_calibra
 `tokenizer_pilot_full_train`. Frozen pre-grant contracts execute from their preserved checkout until
 a new implementation qualification exists.
 
+The [bounded source-bank rehearsal](../research/flagship/SOURCE_BANK.md) qualifies source-separated
+byte selection, metadata preservation, reference-tokenizer packing, and recovery on retained inputs.
+Use `source_bank_prepare` for per-invocation preparation reports and `source_bank_qualify` for a fresh
+clean-checkout recovery qualification. Its outputs remain engineering artifacts until the full
+source-treatment, tokenizer, capacity, and launch requirements are met.
+
 For source surveys, see the [literature library](../research/literature/README.md). Earlier curriculum
 details remain in the [original guide](../archive/pregrant-history/docs/data.md).

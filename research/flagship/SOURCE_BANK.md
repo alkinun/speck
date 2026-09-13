@@ -64,3 +64,11 @@ uv run --no-sync python -m scripts.source_bank_qualify \
 The qualification result binds its clean Git revision, original plan, recovery plan, runtime manifests,
 per-source output hashes and measurements. It does not issue model-training or production-operations
 authority. Use a successor plan and new destinations for a later qualification; retain the originals.
+
+## Completed v2 measurement
+
+The [checked result](../../results/systems/source-bank-rehearsal-20260913.json) passes all six source
+units, injected recovery, and published reopen. It contains 12,049,523 selected UTF-8 bytes and
+3,303,264 reference tokens. The clean invocation takes 64.77 seconds, including 48.51 seconds of input
+hash verification, 13.57 seconds of selection/checkpointing, and 2.59 seconds of reference packing.
+See the [finding](../findings/2026-09-13-source-bank-rehearsal.md) for per-category results and boundaries.

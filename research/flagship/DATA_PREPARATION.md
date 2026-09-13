@@ -149,9 +149,14 @@ Behavioral tests cover uninterrupted/resumed output parity, rejection of altered
 and a cursor that forbids `fetchall()`. This is a bounded engineering qualification of the resume
 change. Retain the old full-pass throughput projection until the successor is measured end to end.
 
-## 6. Next implementation step
+## 6. Bounded bank mechanics completed; upstream successor next
 
-Materialize and qualify a bounded, source-separated **E1/E3 preparation path**:
+The [source-bank rehearsal](SOURCE_BANK.md) now qualifies the retained-source selection/packing portion:
+12.05 MB across all six categories, 3.30M reference tokens, and exact interrupted/uninterrupted payload
+parity. It inherits the existing firewall-excluded input corpus. The complete E1/E3 acquisition and
+global-dedup path, source-treatment coverage, and final-tokenizer capacity remain to be qualified.
+
+Next, materialize a bounded upstream successor feeding those bank mechanics:
 
 1. Bind source revisions, reader/filter variants, per-arm supply, firewall reference precedence, and
    output identities; reuse retained inputs where their identity and scope match.
