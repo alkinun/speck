@@ -10,9 +10,9 @@
   "work": [
     {
       "id": "first_wave_plan",
-      "state": "recipe_freeze_pending_requested_minicpm4_ultradata_review",
-      "plan": "research/flagship/first_wave_preparation_v1.json",
-      "next": "Revisit code/math source and L2/L3 treatment choices using research/literature/50_minicpm4_ultradata.md, then revise within the existing first-wave/decay budget. The preserved v1 proposal and its 17.5B envelope are not frozen recipes."
+      "state": "candidate_revision_ready_source_admission_and_freeze_pending",
+      "plan": "research/flagship/first_wave_candidate_revision_v2.json",
+      "next": "Review the natural L2 specialist replacements and late L3 candidates. Admission, exact language/view policies and final recipes remain open; the revision preserves 29 slots / 192 GPU-hours and has an 18B conditional source-capacity envelope."
     },
     {
       "id": "tokenizer",
@@ -29,9 +29,9 @@
     },
     {
       "id": "ultradata_source_review",
-      "state": "paper_cards_and_bounded_schemas_reviewed_recipes_open",
-      "evidence": "research/literature/surveys/openbmb_source_review_20260913.json",
-      "next": "Consider UltraData-Code/Math L2 and L3 alongside the existing web candidates. Resolve subset, English yield, serialization, source rights and lineage, then revise the source-screen/decay proposal within its budget; this review grants no training authority."
+      "state": "revision_checked_content_intake_complete_admission_pending",
+      "evidence": "results/data/ultradata-intake-20260913.json",
+      "next": "Use ULTRADATA_INTAKE.md to resolve source-use/provenance decisions, particularly Code repository/license mapping. Prepare natural L2 challengers only after admission; reserve released Code L3 content and Math L3 QA for the existing decay-design review."
     },
     {
       "id": "data_operations",

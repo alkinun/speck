@@ -31,3 +31,11 @@ uv run --no-sync python -m scripts.ultradata_intake \
 
 The outcome should drive a concrete subset/serialization decision and a revised budgeted recipe
 proposal. It grants no training authority and executes no downloaded code.
+
+## Completed intake and proposed disposition
+
+The [checked intake](../../results/data/ultradata-intake-20260913.json) covers all seven views and
+672 complete rows. The [finding](../findings/2026-09-13-ultradata-intake.md) records language, schema,
+serialization and provenance observations. The [candidate revision](first_wave_candidate_revision_v2.json)
+places natural L2 challengers into existing specialist slots and keeps L3 refinement for the existing
+decay budget. Source admission and final recipe freeze remain open.

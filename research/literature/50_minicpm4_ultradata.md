@@ -120,3 +120,7 @@ by the footer inspection.
 
 This is a literature/candidate review. New source-use decisions, English/provenance qualification,
 serialization choices, budgeted recipe revisions, and local controlled evidence remain pending.
+
+Follow-up: the [revision-checked content intake](../findings/2026-09-13-ultradata-intake.md) inspects
+672 real records across seven views and turns these questions into a conditional preparation proposal.
+It is an intake observation, not a replication of the authors' model-quality results.

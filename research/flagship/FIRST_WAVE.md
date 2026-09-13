@@ -9,6 +9,12 @@ corpora before freezing recipes. The [source review](../literature/50_minicpm4_u
 Code/Math candidates. The v1 run list and 17.5B envelope describe the preserved proposal; recompute
 them after a budgeted source/tier revision is chosen. No new corpus is approved by this review.
 
+The subsequent [content intake](ULTRADATA_INTAKE.md) supports a concrete
+[candidate revision](first_wave_candidate_revision_v2.json): replace the code/math blend slots with
+natural UltraData L2 challengers, subject to admission, and consider L3 in the existing decay work.
+This retains the 192-GPU-hour first-wave ceiling and raises the conditional source-capacity target
+to 18B tokens. V1 remains the preserved proposal; the revision is not a source-use or launch approval.
+
 ## What we want to learn
 
 1. **Source quality:** which source treatments improve a complete, balanced training mixture?

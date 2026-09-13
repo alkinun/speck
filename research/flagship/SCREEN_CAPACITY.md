@@ -131,3 +131,8 @@ The subsequent [durable WAL comparison](SQLITE_WAL.md) now passes: the 65,536-pa
 complete continuation time by 43.9% and 53.2% in reversed-order pairs while retaining FULL sync,
 output/index parity, and hard-process-exit recovery. This is a local bounded operating recommendation;
 full source recipes, capacity, larger transactions/indexes, and site transfer remain to be qualified.
+
+The [UltraData intake](ULTRADATA_INTAKE.md) now supports a conditional candidate revision: new natural
+Code/Math L2 datasets replace existing blend slots, while L3 refinement is considered in E4. If admitted,
+the source-bank envelope becomes 18B tokens before headroom; the earlier 17.5B figure remains the
+preserved v1 proposal. This does not add measured supply or source-use approval.

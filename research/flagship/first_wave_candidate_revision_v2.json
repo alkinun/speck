@@ -1,0 +1,61 @@
+{
+  "format": "speck_first_wave_candidate_revision",
+  "format_version": 2,
+  "status": "recommended_replacements_pending_source_admission_and_recipe_freeze",
+  "parent_proposal": {"path": "first_wave_proposal_v1.json", "sha256": "f5506fd758af0a83ff1d595a0c76082cec452ee7f1f33c441c16613bb734d699"},
+  "intake_evidence": {"path": "../../results/data/ultradata-intake-20260913.json", "sha256": "513f4a5c3d6932732b482032e258ed3e4370d560a228fc64fb24e970805fb6b5"},
+  "comparison": "Keep the parent category-substitution design and incumbent proposal; replace existing specialist blend slots with natural L2 challengers",
+  "replacements": [
+    {
+      "family": "E1S",
+      "category": "code",
+      "replace_treatment": "equal_blend",
+      "candidate_id": "ultradata_code_l2",
+      "repo": "openbmb/UltraData-Code",
+      "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+      "config": "UltraData-Code-L2",
+      "serialization": "content",
+      "required_source_token_capacity": 300000000,
+      "admission": "pending",
+      "requirements": ["source-use decision and repository/file license mapping", "immutable source identity or documented lineage boundary", "vendor/fork/dedup policy", "matched programming-language allocation and English-prose filtering", "complete-shard acquisition, firewall exclusion and final-tokenizer yield"],
+      "fallback": "parent code equal_blend if qualification fails before any code-screen model output; record the failure and bind the fallback explicitly"
+    },
+    {
+      "family": "E1S",
+      "category": "math",
+      "replace_treatment": "equal_blend",
+      "candidate_id": "ultradata_math_l2_preview",
+      "repo": "openbmb/UltraData-Math",
+      "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+      "config": "UltraData-Math-L2-preview",
+      "serialization": "content",
+      "quality_labels": "preserve released labels as metadata; no additional label cutoff proposed",
+      "required_source_token_capacity": 200000000,
+      "admission": "pending",
+      "requirements": ["source-use decision with documented provenance limitations", "qualified math-aware English filtering", "complete-shard acquisition, firewall exclusion and final-tokenizer yield"],
+      "fallback": "parent math equal_blend if qualification fails before any math-screen model output; record the failure and bind the fallback explicitly"
+    }
+  ],
+  "refined_data_followup": {
+    "stage": "E4",
+    "status": "candidate_design_pending_admission_and_stable_winner",
+    "existing_mixtures": 4,
+    "seeds_per_mixture": 2,
+    "additional_tokens_per_run": 3000000000,
+    "gpu_hour_ceiling": 50,
+    "candidates": [
+      {"id": "ultradata_code_l3", "config": "UltraData-Code-L3", "initial_serialization": "released content (task and solution)", "note": "An analysis-preserving serialization is a separate treatment; full_content also includes generated tests and varying field order"},
+      {"id": "ultradata_math_l3_qa", "config": "UltraData-Math-L3-QA-Synthetic", "initial_serialization": "content", "note": "First math-refinement candidate; textbook-exercise remains an alternative for a later explicit design choice"}
+    ],
+    "budget_rule": "Use existing E4 slots; no extra mandatory runs. Exact mixture weights and source/parent lineage are frozen before E4 outputs."
+  },
+  "first_wave_budget": {
+    "logical_slots": 29,
+    "gpu_hours": 192,
+    "with_existing_D4_D6_gpu_hours": 230,
+    "parent_source_capacity_tokens": 17500000000,
+    "candidate_source_capacity_tokens": 18000000000,
+    "capacity_boundary": "The replaced blends require no source stock beyond their retained pure-source arms. Add 300M Code L2 and 200M Math L2 capacity to the parent envelope if admitted. This is not measured supply or a globally unique union; final-tokenizer and view/exclusion headroom remain necessary."
+  },
+  "training_authority": false
+}

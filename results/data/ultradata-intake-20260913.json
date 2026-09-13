@@ -1,0 +1,1600 @@
+{
+  "boundary": "First/middle/last dataset-viewer windows with matching x-revision headers and retained response hashes. Not uniform corpus sampling, complete-shard SHA verification, correctness testing, contamination qualification, or training/source-use approval. Zero ID overlap in these windows does not establish unrelated ancestry.",
+  "format": "speck_ultradata_bounded_intake",
+  "format_version": 1,
+  "plan": {
+    "path": "research/flagship/ultradata_intake_v1.json",
+    "sha256": "ca3a2666e233559744cad180802ebb982f9923047adf3c0bc04d5f73c31bf232"
+  },
+  "recorded_at": "2026-09-13T17:45:46.409797+00:00",
+  "repository_revision": "8ac56a40a7dd2f551ba5834f021a44857eea332d",
+  "sample_identifier_overlaps": [
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l2_python",
+      "right": "code_l3_python"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l2_python",
+      "right": "math_l2_preview"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l2_python",
+      "right": "math_l3_qa"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l2_python",
+      "right": "math_l3_conversation"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l2_python",
+      "right": "math_l3_multistyle"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l2_python",
+      "right": "math_l3_textbook"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l3_python",
+      "right": "math_l2_preview"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l3_python",
+      "right": "math_l3_qa"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l3_python",
+      "right": "math_l3_conversation"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l3_python",
+      "right": "math_l3_multistyle"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "code_l3_python",
+      "right": "math_l3_textbook"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l2_preview",
+      "right": "math_l3_qa"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l2_preview",
+      "right": "math_l3_conversation"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l2_preview",
+      "right": "math_l3_multistyle"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l2_preview",
+      "right": "math_l3_textbook"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l3_qa",
+      "right": "math_l3_conversation"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l3_qa",
+      "right": "math_l3_multistyle"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l3_qa",
+      "right": "math_l3_textbook"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l3_conversation",
+      "right": "math_l3_multistyle"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l3_conversation",
+      "right": "math_l3_textbook"
+    },
+    {
+      "equal_sample_ids": 0,
+      "left": "math_l3_multistyle",
+      "right": "math_l3_textbook"
+    }
+  ],
+  "status": "all_requested_views_inspected",
+  "training_authority": false,
+  "views": [
+    {
+      "reported_viewer_rows": 72844227,
+      "responses": [
+        {
+          "bytes": 207651,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/code_l2_python/first.json",
+          "query": {
+            "config": "UltraData-Code-L2",
+            "dataset": "openbmb/UltraData-Code",
+            "length": 32,
+            "offset": 0,
+            "split": "py"
+          },
+          "revision_header": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+          "sha256": "b8f4733abd390dca3473631ce1cb0260b74b821dba4e44391e26c864766a676c"
+        },
+        {
+          "bytes": 243535,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/code_l2_python/middle.json",
+          "query": {
+            "config": "UltraData-Code-L2",
+            "dataset": "openbmb/UltraData-Code",
+            "length": 32,
+            "offset": 36422097,
+            "split": "py"
+          },
+          "revision_header": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+          "sha256": "fb9249729cbfbbb157a5afaeb7325f5745c91dd84fb8d79bff30f79e0af617c0"
+        },
+        {
+          "bytes": 159424,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/code_l2_python/last.json",
+          "query": {
+            "config": "UltraData-Code-L2",
+            "dataset": "openbmb/UltraData-Code",
+            "length": 32,
+            "offset": 72844195,
+            "split": "py"
+          },
+          "revision_header": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+          "sha256": "253cbf0cf3995bae631628faa10c882727981451c0f0ee889068f4cc4aa92d62"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        36422097,
+        36422098,
+        36422099,
+        36422100,
+        36422101,
+        36422102,
+        36422103,
+        36422104,
+        36422105,
+        36422106,
+        36422107,
+        36422108,
+        36422109,
+        36422110,
+        36422111,
+        36422112,
+        36422113,
+        36422114,
+        36422115,
+        36422116,
+        36422117,
+        36422118,
+        36422119,
+        36422120,
+        36422121,
+        36422122,
+        36422123,
+        36422124,
+        36422125,
+        36422126,
+        36422127,
+        36422128,
+        72844195,
+        72844196,
+        72844197,
+        72844198,
+        72844199,
+        72844200,
+        72844201,
+        72844202,
+        72844203,
+        72844204,
+        72844205,
+        72844206,
+        72844207,
+        72844208,
+        72844209,
+        72844210,
+        72844211,
+        72844212,
+        72844213,
+        72844214,
+        72844215,
+        72844216,
+        72844217,
+        72844218,
+        72844219,
+        72844220,
+        72844221,
+        72844222,
+        72844223,
+        72844224,
+        72844225,
+        72844226
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {},
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_json_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "algo_rel_score",
+          "category",
+          "content",
+          "quality_score",
+          "relative_path",
+          "repo_name",
+          "uuid"
+        ],
+        "format_values": {},
+        "language_diagnostic": {
+          "confident_English": 45,
+          "insufficient_prose": 38,
+          "other_or_low_confidence:en": 2,
+          "other_or_low_confidence:es": 2,
+          "other_or_low_confidence:ko": 3,
+          "other_or_low_confidence:no": 1,
+          "other_or_low_confidence:pt": 2,
+          "other_or_low_confidence:ro": 1,
+          "other_or_low_confidence:ru": 1,
+          "other_or_low_confidence:zh": 1
+        },
+        "nonempty_field_counts": {
+          "algo_rel_score": 96,
+          "category": 96,
+          "content": 96,
+          "quality_score": 96,
+          "relative_path": 96,
+          "repo_name": 96,
+          "uuid": 96
+        },
+        "quality_label_values": {},
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "category": {
+            "max_bytes": 6,
+            "median_bytes": 4,
+            "min_bytes": 3,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 386
+          },
+          "content": {
+            "max_bytes": 63439,
+            "median_bytes": 1838,
+            "min_bytes": 160,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 558638
+          },
+          "relative_path": {
+            "max_bytes": 128,
+            "median_bytes": 39,
+            "min_bytes": 6,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 4294
+          },
+          "repo_name": {
+            "max_bytes": 74,
+            "median_bytes": 25,
+            "min_bytes": 8,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 2567
+          },
+          "uuid": {
+            "max_bytes": 36,
+            "median_bytes": 36,
+            "min_bytes": 36,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 3456
+          }
+        },
+        "unique_sample_identifiers": 96
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Code-L2",
+        "id": "code_l2_python",
+        "kind": "python_source",
+        "repo": "openbmb/UltraData-Code",
+        "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+        "split": "py"
+      }
+    },
+    {
+      "reported_viewer_rows": 20750202,
+      "responses": [
+        {
+          "bytes": 490340,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/code_l3_python/first.json",
+          "query": {
+            "config": "UltraData-Code-L3",
+            "dataset": "openbmb/UltraData-Code",
+            "length": 32,
+            "offset": 0,
+            "split": "py"
+          },
+          "revision_header": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+          "sha256": "579542de3547d59311070642b77210040091add6dca8760a4ff2b62cec529b63"
+        },
+        {
+          "bytes": 655833,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/code_l3_python/middle.json",
+          "query": {
+            "config": "UltraData-Code-L3",
+            "dataset": "openbmb/UltraData-Code",
+            "length": 32,
+            "offset": 10375085,
+            "split": "py"
+          },
+          "revision_header": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+          "sha256": "fcc27d718b429b45a58382b44a43641f3f9f53f410433fbc988db7df99da98cb"
+        },
+        {
+          "bytes": 592588,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/code_l3_python/last.json",
+          "query": {
+            "config": "UltraData-Code-L3",
+            "dataset": "openbmb/UltraData-Code",
+            "length": 32,
+            "offset": 20750170,
+            "split": "py"
+          },
+          "revision_header": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+          "sha256": "cce10ab7ae4d9011a7e7f23c2ba885c0b72a3f998586e7220345c3f0538573f1"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        10375085,
+        10375086,
+        10375087,
+        10375088,
+        10375089,
+        10375090,
+        10375091,
+        10375092,
+        10375093,
+        10375094,
+        10375095,
+        10375096,
+        10375097,
+        10375098,
+        10375099,
+        10375100,
+        10375101,
+        10375102,
+        10375103,
+        10375104,
+        10375105,
+        10375106,
+        10375107,
+        10375108,
+        10375109,
+        10375110,
+        10375111,
+        10375112,
+        10375113,
+        10375114,
+        10375115,
+        10375116,
+        20750170,
+        20750171,
+        20750172,
+        20750173,
+        20750174,
+        20750175,
+        20750176,
+        20750177,
+        20750178,
+        20750179,
+        20750180,
+        20750181,
+        20750182,
+        20750183,
+        20750184,
+        20750185,
+        20750186,
+        20750187,
+        20750188,
+        20750189,
+        20750190,
+        20750191,
+        20750192,
+        20750193,
+        20750194,
+        20750195,
+        20750196,
+        20750197,
+        20750198,
+        20750199,
+        20750200,
+        20750201
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {
+          "confident_English": 96
+        },
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_exactly_contains_solution": 96,
+          "content_exactly_contains_task": 96,
+          "content_json_type:not_json": 96,
+          "full_content_exactly_contains_analysis": 76,
+          "full_content_exactly_contains_solution": 96,
+          "full_content_exactly_contains_task": 91,
+          "full_content_exactly_contains_test": 96,
+          "raw_content_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "analysis",
+          "content",
+          "content_format",
+          "full_content",
+          "full_content_format",
+          "raw_content",
+          "solution",
+          "task",
+          "test",
+          "uuid"
+        ],
+        "format_values": {
+          "content_format:code comment": 37,
+          "content_format:markdown": 32,
+          "content_format:no fence": 27,
+          "full_content_format:commented standard order": 26,
+          "full_content_format:solution-first order": 20,
+          "full_content_format:standard order": 22,
+          "full_content_format:test-first order": 28
+        },
+        "language_diagnostic": {
+          "confident_English": 96
+        },
+        "nonempty_field_counts": {
+          "analysis": 96,
+          "content": 96,
+          "content_format": 96,
+          "full_content": 96,
+          "full_content_format": 96,
+          "raw_content": 96,
+          "solution": 96,
+          "task": 96,
+          "test": 96,
+          "uuid": 96
+        },
+        "quality_label_values": {},
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "analysis": {
+            "max_bytes": 6503,
+            "median_bytes": 1147,
+            "min_bytes": 557,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 130428
+          },
+          "content": {
+            "max_bytes": 13176,
+            "median_bytes": 1979,
+            "min_bytes": 948,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 257144
+          },
+          "content_format": {
+            "max_bytes": 12,
+            "median_bytes": 8,
+            "min_bytes": 8,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 916
+          },
+          "full_content": {
+            "max_bytes": 17616,
+            "median_bytes": 4316,
+            "min_bytes": 1892,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 503257
+          },
+          "full_content_format": {
+            "max_bytes": 24,
+            "median_bytes": 16,
+            "min_bytes": 14,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 1780
+          },
+          "raw_content": {
+            "max_bytes": 67379,
+            "median_bytes": 1143,
+            "min_bytes": 72,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 402759
+          },
+          "solution": {
+            "max_bytes": 12061,
+            "median_bytes": 1158,
+            "min_bytes": 421,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 173471
+          },
+          "task": {
+            "max_bytes": 2176,
+            "median_bytes": 780,
+            "min_bytes": 420,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 82781
+          },
+          "test": {
+            "max_bytes": 3669,
+            "median_bytes": 1111,
+            "min_bytes": 284,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 115316
+          },
+          "uuid": {
+            "max_bytes": 36,
+            "median_bytes": 36,
+            "min_bytes": 36,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 3456
+          }
+        },
+        "unique_sample_identifiers": 96
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Code-L3",
+        "id": "code_l3_python",
+        "kind": "code_exercise",
+        "repo": "openbmb/UltraData-Code",
+        "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+        "split": "py"
+      }
+    },
+    {
+      "reported_viewer_rows": 13707851,
+      "responses": [
+        {
+          "bytes": 160232,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l2_preview/first.json",
+          "query": {
+            "config": "UltraData-Math-L2-preview",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 0,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "ab856688ea92d1a2f2c2b8069ebac989f8cbea2b87bf3244cd3142f902a56c7c"
+        },
+        {
+          "bytes": 276470,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l2_preview/middle.json",
+          "query": {
+            "config": "UltraData-Math-L2-preview",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 6853909,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "82c8fd5adbf9028c2d556c1692f14008314d964e54a15dd1f4bc006192b62d8e"
+        },
+        {
+          "bytes": 356455,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l2_preview/last.json",
+          "query": {
+            "config": "UltraData-Math-L2-preview",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 13707819,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "3583ef4aa042830dabfc756ad0563f10b0a157d38c2de9bc9cf547c6b54cb970"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        6853909,
+        6853910,
+        6853911,
+        6853912,
+        6853913,
+        6853914,
+        6853915,
+        6853916,
+        6853917,
+        6853918,
+        6853919,
+        6853920,
+        6853921,
+        6853922,
+        6853923,
+        6853924,
+        6853925,
+        6853926,
+        6853927,
+        6853928,
+        6853929,
+        6853930,
+        6853931,
+        6853932,
+        6853933,
+        6853934,
+        6853935,
+        6853936,
+        6853937,
+        6853938,
+        6853939,
+        6853940,
+        13707819,
+        13707820,
+        13707821,
+        13707822,
+        13707823,
+        13707824,
+        13707825,
+        13707826,
+        13707827,
+        13707828,
+        13707829,
+        13707830,
+        13707831,
+        13707832,
+        13707833,
+        13707834,
+        13707835,
+        13707836,
+        13707837,
+        13707838,
+        13707839,
+        13707840,
+        13707841,
+        13707842,
+        13707843,
+        13707844,
+        13707845,
+        13707846,
+        13707847,
+        13707848,
+        13707849,
+        13707850
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {},
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_json_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "content",
+          "quality_label"
+        ],
+        "format_values": {},
+        "language_diagnostic": {
+          "confident_English": 93,
+          "other_or_low_confidence:km": 1,
+          "other_or_low_confidence:la": 2
+        },
+        "nonempty_field_counts": {
+          "content": 96,
+          "quality_label": 96
+        },
+        "quality_label_values": {
+          "4": 72,
+          "5": 24
+        },
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "content": {
+            "max_bytes": 51363,
+            "median_bytes": 3838,
+            "min_bytes": 680,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 765379
+          }
+        },
+        "unique_sample_identifiers": 0
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Math-L2-preview",
+        "id": "math_l2_preview",
+        "kind": "math_text",
+        "repo": "openbmb/UltraData-Math",
+        "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+        "split": "train"
+      }
+    },
+    {
+      "reported_viewer_rows": 27113894,
+      "responses": [
+        {
+          "bytes": 81791,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_qa/first.json",
+          "query": {
+            "config": "UltraData-Math-L3-QA-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 0,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "622717db4fee602609b5d7349d56845c82cbe7f45ab9b0dd5d9748a88965eeee"
+        },
+        {
+          "bytes": 74327,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_qa/middle.json",
+          "query": {
+            "config": "UltraData-Math-L3-QA-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 13556931,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "76c8a61ee945662d45c0d5dcb88d2e26b38f5a60609a256695d348fa3870f321"
+        },
+        {
+          "bytes": 70589,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_qa/last.json",
+          "query": {
+            "config": "UltraData-Math-L3-QA-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 27113862,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "128c344abff39a408dfe9ce9f30877cad6307761200fdaeb33d2a5cec3575254"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        13556931,
+        13556932,
+        13556933,
+        13556934,
+        13556935,
+        13556936,
+        13556937,
+        13556938,
+        13556939,
+        13556940,
+        13556941,
+        13556942,
+        13556943,
+        13556944,
+        13556945,
+        13556946,
+        13556947,
+        13556948,
+        13556949,
+        13556950,
+        13556951,
+        13556952,
+        13556953,
+        13556954,
+        13556955,
+        13556956,
+        13556957,
+        13556958,
+        13556959,
+        13556960,
+        13556961,
+        13556962,
+        27113862,
+        27113863,
+        27113864,
+        27113865,
+        27113866,
+        27113867,
+        27113868,
+        27113869,
+        27113870,
+        27113871,
+        27113872,
+        27113873,
+        27113874,
+        27113875,
+        27113876,
+        27113877,
+        27113878,
+        27113879,
+        27113880,
+        27113881,
+        27113882,
+        27113883,
+        27113884,
+        27113885,
+        27113886,
+        27113887,
+        27113888,
+        27113889,
+        27113890,
+        27113891,
+        27113892,
+        27113893
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {},
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_json_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "content",
+          "uid"
+        ],
+        "format_values": {},
+        "language_diagnostic": {
+          "confident_English": 96
+        },
+        "nonempty_field_counts": {
+          "content": 96,
+          "uid": 96
+        },
+        "quality_label_values": {},
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "content": {
+            "max_bytes": 7364,
+            "median_bytes": 1722,
+            "min_bytes": 576,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 205030
+          },
+          "uid": {
+            "max_bytes": 36,
+            "median_bytes": 36,
+            "min_bytes": 36,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 3456
+          }
+        },
+        "unique_sample_identifiers": 96
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Math-L3-QA-Synthetic",
+        "id": "math_l3_qa",
+        "kind": "math_text",
+        "repo": "openbmb/UltraData-Math",
+        "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+        "split": "train"
+      }
+    },
+    {
+      "reported_viewer_rows": 16881040,
+      "responses": [
+        {
+          "bytes": 154649,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_conversation/first.json",
+          "query": {
+            "config": "UltraData-Math-L3-Conversation-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 0,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "d5ca67e0169f44efb9724c1eae0f1b97c1da3028ae41b30a2dcfdc4b78caef18"
+        },
+        {
+          "bytes": 116709,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_conversation/middle.json",
+          "query": {
+            "config": "UltraData-Math-L3-Conversation-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 8440504,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "43eb8dee845c07550868ba03eb8b2a1d807567c8ee9a276dd11961c6e7cccc74"
+        },
+        {
+          "bytes": 150277,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_conversation/last.json",
+          "query": {
+            "config": "UltraData-Math-L3-Conversation-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 16881008,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "14560f01d9d55b62610fdc8aa0ade65897db226d9ee0dab1896932b2c483192e"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        8440504,
+        8440505,
+        8440506,
+        8440507,
+        8440508,
+        8440509,
+        8440510,
+        8440511,
+        8440512,
+        8440513,
+        8440514,
+        8440515,
+        8440516,
+        8440517,
+        8440518,
+        8440519,
+        8440520,
+        8440521,
+        8440522,
+        8440523,
+        8440524,
+        8440525,
+        8440526,
+        8440527,
+        8440528,
+        8440529,
+        8440530,
+        8440531,
+        8440532,
+        8440533,
+        8440534,
+        8440535,
+        16881008,
+        16881009,
+        16881010,
+        16881011,
+        16881012,
+        16881013,
+        16881014,
+        16881015,
+        16881016,
+        16881017,
+        16881018,
+        16881019,
+        16881020,
+        16881021,
+        16881022,
+        16881023,
+        16881024,
+        16881025,
+        16881026,
+        16881027,
+        16881028,
+        16881029,
+        16881030,
+        16881031,
+        16881032,
+        16881033,
+        16881034,
+        16881035,
+        16881036,
+        16881037,
+        16881038,
+        16881039
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {},
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_json_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "content",
+          "uid"
+        ],
+        "format_values": {},
+        "language_diagnostic": {
+          "confident_English": 96
+        },
+        "nonempty_field_counts": {
+          "content": 96,
+          "uid": 96
+        },
+        "quality_label_values": {},
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "content": {
+            "max_bytes": 27742,
+            "median_bytes": 3309,
+            "min_bytes": 936,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 397601
+          },
+          "uid": {
+            "max_bytes": 36,
+            "median_bytes": 36,
+            "min_bytes": 36,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 3456
+          }
+        },
+        "unique_sample_identifiers": 96
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Math-L3-Conversation-Synthetic",
+        "id": "math_l3_conversation",
+        "kind": "math_text",
+        "repo": "openbmb/UltraData-Math",
+        "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+        "split": "train"
+      }
+    },
+    {
+      "reported_viewer_rows": 11445446,
+      "responses": [
+        {
+          "bytes": 175922,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_multistyle/first.json",
+          "query": {
+            "config": "UltraData-Math-L3-Multi-Style-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 0,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "38f178007b78670796aa510d9702ae477571d1549616bbf01a1c1abb202dc9ba"
+        },
+        {
+          "bytes": 175424,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_multistyle/middle.json",
+          "query": {
+            "config": "UltraData-Math-L3-Multi-Style-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 5722707,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "caf84073ece79095499b18b65c7026f5708de6550a63d3eba2f439f89fbef993"
+        },
+        {
+          "bytes": 147049,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_multistyle/last.json",
+          "query": {
+            "config": "UltraData-Math-L3-Multi-Style-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 11445414,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "946486a673b06713b85d29d3487b43278f70569b416f8a404cd94ed9fa9537f1"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        5722707,
+        5722708,
+        5722709,
+        5722710,
+        5722711,
+        5722712,
+        5722713,
+        5722714,
+        5722715,
+        5722716,
+        5722717,
+        5722718,
+        5722719,
+        5722720,
+        5722721,
+        5722722,
+        5722723,
+        5722724,
+        5722725,
+        5722726,
+        5722727,
+        5722728,
+        5722729,
+        5722730,
+        5722731,
+        5722732,
+        5722733,
+        5722734,
+        5722735,
+        5722736,
+        5722737,
+        5722738,
+        11445414,
+        11445415,
+        11445416,
+        11445417,
+        11445418,
+        11445419,
+        11445420,
+        11445421,
+        11445422,
+        11445423,
+        11445424,
+        11445425,
+        11445426,
+        11445427,
+        11445428,
+        11445429,
+        11445430,
+        11445431,
+        11445432,
+        11445433,
+        11445434,
+        11445435,
+        11445436,
+        11445437,
+        11445438,
+        11445439,
+        11445440,
+        11445441,
+        11445442,
+        11445443,
+        11445444,
+        11445445
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {},
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_json_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "content",
+          "uid"
+        ],
+        "format_values": {},
+        "language_diagnostic": {
+          "confident_English": 96
+        },
+        "nonempty_field_counts": {
+          "content": 96,
+          "uid": 96
+        },
+        "quality_label_values": {},
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "content": {
+            "max_bytes": 24276,
+            "median_bytes": 4014,
+            "min_bytes": 1997,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 469030
+          },
+          "uid": {
+            "max_bytes": 36,
+            "median_bytes": 36,
+            "min_bytes": 36,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 3456
+          }
+        },
+        "unique_sample_identifiers": 96
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Math-L3-Multi-Style-Synthetic",
+        "id": "math_l3_multistyle",
+        "kind": "math_text",
+        "repo": "openbmb/UltraData-Math",
+        "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+        "split": "train"
+      }
+    },
+    {
+      "reported_viewer_rows": 26005670,
+      "responses": [
+        {
+          "bytes": 87319,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_textbook/first.json",
+          "query": {
+            "config": "UltraData-Math-L3-Textbook-Exercise-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 0,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "657be886ea58a1e8c8767f0349127a7248b95e1f3fadd0a2cdc022a4d378cceb"
+        },
+        {
+          "bytes": 91225,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_textbook/middle.json",
+          "query": {
+            "config": "UltraData-Math-L3-Textbook-Exercise-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 13002819,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "a80d25175a76b2f082f16cff6ad4e373a920149f5b0bd8b31480c62315822a65"
+        },
+        {
+          "bytes": 103632,
+          "path": "/mnt/speck-data/speck/ultradata-intake-v1/math_l3_textbook/last.json",
+          "query": {
+            "config": "UltraData-Math-L3-Textbook-Exercise-Synthetic",
+            "dataset": "openbmb/UltraData-Math",
+            "length": 32,
+            "offset": 26005638,
+            "split": "train"
+          },
+          "revision_header": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+          "sha256": "6c240f295745a92d5db5c9b6e06f3c288419c6308a7e7f1a87fa604b2da38a87"
+        }
+      ],
+      "sampled_row_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        13002819,
+        13002820,
+        13002821,
+        13002822,
+        13002823,
+        13002824,
+        13002825,
+        13002826,
+        13002827,
+        13002828,
+        13002829,
+        13002830,
+        13002831,
+        13002832,
+        13002833,
+        13002834,
+        13002835,
+        13002836,
+        13002837,
+        13002838,
+        13002839,
+        13002840,
+        13002841,
+        13002842,
+        13002843,
+        13002844,
+        13002845,
+        13002846,
+        13002847,
+        13002848,
+        13002849,
+        13002850,
+        26005638,
+        26005639,
+        26005640,
+        26005641,
+        26005642,
+        26005643,
+        26005644,
+        26005645,
+        26005646,
+        26005647,
+        26005648,
+        26005649,
+        26005650,
+        26005651,
+        26005652,
+        26005653,
+        26005654,
+        26005655,
+        26005656,
+        26005657,
+        26005658,
+        26005659,
+        26005660,
+        26005661,
+        26005662,
+        26005663,
+        26005664,
+        26005665,
+        26005666,
+        26005667,
+        26005668,
+        26005669
+      ],
+      "status": "bounded_revision_checked_intake_complete",
+      "summary": {
+        "analysis_language_diagnostic": {},
+        "boundary": "Complete sampled rows only; truncated cells excluded. Language is a diagnostic on capped prose, not a qualified retention filter or corpus-wide yield estimate. Exact substring checks do not prove semantic absence/presence. SPDX markers are observations, not source-use approval.",
+        "content_top_level_keys": {},
+        "counts": {
+          "complete_rows": 96,
+          "content_json_type:not_json": 96,
+          "sampled_rows": 96
+        },
+        "fields": [
+          "content",
+          "uid"
+        ],
+        "format_values": {},
+        "language_diagnostic": {
+          "confident_English": 96
+        },
+        "nonempty_field_counts": {
+          "content": 96,
+          "uid": 96
+        },
+        "quality_label_values": {},
+        "raw_content_top_level_keys": {},
+        "string_lengths": {
+          "content": {
+            "max_bytes": 6772,
+            "median_bytes": 2514,
+            "min_bytes": 898,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 256872
+          },
+          "uid": {
+            "max_bytes": 36,
+            "median_bytes": 36,
+            "min_bytes": 36,
+            "non_null_strings": 96,
+            "total_utf8_bytes": 3456
+          }
+        },
+        "unique_sample_identifiers": 96
+      },
+      "training_authority": false,
+      "view": {
+        "config": "UltraData-Math-L3-Textbook-Exercise-Synthetic",
+        "id": "math_l3_textbook",
+        "kind": "math_text",
+        "repo": "openbmb/UltraData-Math",
+        "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
+        "split": "train"
+      }
+    }
+  ]
+}
