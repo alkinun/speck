@@ -40,6 +40,8 @@ def load_bank_plan(path):
 
     path = Path(path).resolve()
     value = json.loads(path.read_text())
+    version = value.get("format_version")
+    additional = {"firewall_plan"} if version == 2 else set()
     if (
         set(value)
         != {
@@ -53,8 +55,9 @@ def load_bank_plan(path):
             "shard_tokens",
             "output_directory",
         }
+        | additional
         or value["format"] != "speck_bounded_source_bank_plan"
-        or value["format_version"] != 1
+        or version not in (1, 2)
         or value["purpose"] != "engineering_rehearsal_not_training_data"
     ):
         raise ValueError("unsupported bounded source bank plan")
@@ -80,6 +83,13 @@ def load_bank_plan(path):
         item["precedence"] for item in ordered
     ] != list(range(1, len(ordered) + 1)):
         raise ValueError("parent must give all twelve firewall reference views precedence")
+    firewall_identity = None
+    if version == 2:
+        from speck.data.firewall_integration import reference_sources, verify_excluded_parent
+
+        reference_binding = reference_sources(value["firewall_plan"], path.parent)
+        verify_excluded_parent(parent, reference_binding)
+        firewall_identity = reference_binding["firewall_plan"]
     source_map = {item["id"]: item for item in ordered[12:]}
     sources = value["sources"]
     if not isinstance(sources, list) or [item.get("category") for item in sources] != list(
@@ -91,8 +101,15 @@ def load_bank_plan(path):
         if set(item) != {"category", "parent_source_id", "target_utf8_bytes"}:
             raise ValueError("invalid source bank source declaration")
         key = item["parent_source_id"]
-        if not isinstance(key, str) or not key.startswith("pilot_train__") or key not in source_map:
-            raise ValueError("only retained pilot training outputs may enter a v1 bank")
+        prefix = "pilot_train__" if version == 1 else "acquired_train__"
+        if not isinstance(key, str) or not key.startswith(prefix) or key not in source_map:
+            raise ValueError(
+                "only retained pilot training outputs may enter a v1 bank"
+                if version == 1
+                else "only excluded acquisition outputs may enter a v2 bank"
+            )
+        if version == 2 and key != f"acquired_train__{item['category']}":
+            raise ValueError("v2 bank category differs from its acquired source group")
         _integer(item["target_utf8_bytes"], "byte target", 100_000_000)
         entry = parent["outputs"][key]
         input_path = (parent_path.parent / entry["path"]).resolve()
@@ -128,6 +145,8 @@ def load_bank_plan(path):
         "sources": normalized,
         "output_directory": str(output),
     }
+    if firewall_identity is not None:
+        plan["firewall_plan"] = firewall_identity
     plan["plan_fingerprint"] = _fingerprint(plan)
     return plan
 
