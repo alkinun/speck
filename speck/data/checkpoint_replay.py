@@ -37,8 +37,9 @@ def _copy_prefix(source, destination, size):
 def restore_reference_checkpoint(parent, output, *, sqlite_settings=None):
     """Copy verified prefix state and prune a private index copy; never modify the parent.
 
-    Only the destination contract is rebound. Reference state, inputs, order, policy,
-    checkpoint cadence and candidate stream must match the original qualified pass.
+    Only the checkpoint contract is rebound to the successor destination/config,
+    optionally including explicit SQLite settings. Reference state, input order,
+    dedup policy, checkpoint cadence and candidate stream match the qualified pass.
     """
 
     started = time.perf_counter()

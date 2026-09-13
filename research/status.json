@@ -24,7 +24,7 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Freeze E1/E3 recipes and fill category supply gaps. Bind the locally qualified 65536-page FULL-sync WAL policy explicitly, then qualify larger transactions/indexes and site storage before revising the 150B schedule or day-21 readiness. The conditional 150B branch remains selected."
+      "next": "Discuss E1/E3 recipe changes requested by the owner, then fill the resulting category supply gaps. The SQLite policy is now config-bound and normal-CLI qualified; larger transactions/indexes and site storage remain to qualify before revising the 150B schedule or day-21 readiness."
     },
     {
       "id": "data_resume_memory",
@@ -77,7 +77,13 @@
       "id": "sqlite_wal_policy",
       "state": "bounded_policy_and_committed_wal_hard_crash_recovery_pass",
       "evidence": "results/systems/sqlite-wal-comparison-20260913.json",
-      "next": "Bind the recommended 65536-page FULL-sync policy in explicit successor runs. Validate larger transactions/indexes and observed WAL space before production-default or 150B forecast changes."
+      "next": "Use the checked schema-v2 binding path for explicit successor runs. Validate larger transactions/indexes and observed WAL space before production-default or 150B forecast changes."
+    },
+    {
+      "id": "preparation_policy_binding",
+      "state": "config_bound_normal_cli_hard_crash_recovery_and_reopen_pass",
+      "evidence": "results/systems/bound-sqlite-policy-20260913.json",
+      "next": "Use research/flagship/PREPARATION_CONFIG.md to bind the selected local SQLite policy into new preparation configs. Resolve source recipes and larger operating-envelope qualification separately."
     },
     {
       "id": "long_documents",

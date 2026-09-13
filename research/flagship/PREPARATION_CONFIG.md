@@ -67,3 +67,10 @@ requires original output/removal/count/logical-index parity, a v2 manifest with 
 settings, and an identical ordinary-CLI reopen. This is interface/binding qualification; the earlier
 comparison supplies the local speed/space envelope. Larger transactions/indexes and site storage still
 need qualification before extrapolating the policy to production scale.
+
+## Completed binding qualification
+
+The [checked result](../../results/systems/bound-sqlite-policy-20260913.json) passes config-bound
+committed-WAL recovery, ordinary-CLI publication, complete output/logical-index parity, and ordinary-CLI
+reopen. Actual observations match the declaration, including FULL sync and 65,536 pages. See the
+[finding](../findings/2026-09-13-bound-sqlite-policy.md) for the interface and evidence boundary.

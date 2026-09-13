@@ -71,5 +71,10 @@ complete-invocation accounting, output/index parity, and recovery from committed
 Use its recommendation only through an explicitly bound successor execution policy; production
 defaults are not changed by the comparison tool.
 
+The [preparation-config guide](../research/flagship/PREPARATION_CONFIG.md) describes schema v2,
+`preprocess_bind_sqlite`, and the config/qualification receipt. Explicit settings are fingerprinted,
+applied on creation/resume, and recorded in the published runtime metadata. The normal preparation CLI
+has passed real-data committed-WAL recovery and reopen with this binding.
+
 For source surveys, see the [literature library](../research/literature/README.md). Earlier curriculum
 details remain in the [original guide](../archive/pregrant-history/docs/data.md).

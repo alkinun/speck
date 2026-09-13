@@ -18,6 +18,7 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | Screen data capacity | [Conditional E1/E3 supply review](2026-09-13-screen-capacity.md) verifies the existing reference-token bank and quantifies category deficits; exact treatment recipes, final-tokenizer counts, and other-source capacity remain open. |
 | Preparation cost | [Phase-separated checkpoint replay](2026-09-13-dedup-phase-timing.md) preserves the qualified outputs and attributes about 85% of measured continuation time to SQLite commit; the later WAL comparison below tests a bounded policy change. |
 | Bounded WAL policy | [Durable policy comparison and hard-crash recovery](2026-09-13-sqlite-wal-policy.md) measures 43.9–53.2% lower complete continuation time with the 65,536-page trigger, full parity, and committed-WAL recovery; production-scale transfer remains open. |
+| Explicit execution settings | [Config-bound SQLite qualification](2026-09-13-bound-sqlite-policy.md) carries the policy in config/checkpoint identities and actual runtime metadata; ordinary-CLI hard-crash recovery and reopen pass. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

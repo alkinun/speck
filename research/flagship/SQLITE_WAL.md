@@ -74,3 +74,7 @@ also discards an uncommitted SQL update/output tail. Output, removal, count, log
 reference-control parity pass. The [finding](../findings/2026-09-13-sqlite-wal-policy.md) records the
 recommendation and limits. Bind this policy explicitly in a successor execution; the comparison does
 not change production defaults or establish rates for larger within-source transactions/indexes.
+
+The subsequent [config-binding qualification](PREPARATION_CONFIG.md) now makes the selected setting
+explicit in schema-v2 preparation configs, checkpoint fingerprints, and published runtime metadata.
+It passes through the ordinary preparation CLI, including committed-WAL hard-exit recovery and reopen.
