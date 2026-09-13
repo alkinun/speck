@@ -48,3 +48,7 @@ After the three screen arms complete, reconcile actual overhead before the eligi
 runs. Open D5 only according to the frozen rule, then freeze the selected tokenizer artifact and
 update corpus, model-accounting, and evaluation manifests. A failure keeps the declared fallback;
 the cleanup does not alter the decision design.
+
+Use the [measured screen handoff](TOKENIZER_SCREEN.md) to reconcile all-attempt GPU spending and
+project the four confirmation runs from the three completed screens. The maintained CPU analyzer
+records the budget disposition without issuing confirmation or audit-opening authority.
