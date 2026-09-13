@@ -9,6 +9,12 @@
   },
   "work": [
     {
+      "id": "first_wave_plan",
+      "state": "concrete_recipe_and_preparation_proposal_ready_for_review",
+      "plan": "research/flagship/first_wave_preparation_v1.json",
+      "next": "Review research/flagship/FIRST_WAVE.md: 29 logical data-study slots, 192 GPU-hours, and a 17.5B source-capacity envelope before headroom. Freeze recipes and attach source/view, training, and decision-analysis manifests before launch."
+    },
+    {
       "id": "tokenizer",
       "state": "in_progress",
       "evidence": "archive/pregrant-history/results/data/tokenizer-pilot-mistral-seed42-20260913.json",
@@ -24,7 +30,7 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Discuss E1/E3 recipe changes requested by the owner, then fill the resulting category supply gaps. The SQLite policy is now config-bound and normal-CLI qualified; larger transactions/indexes and site storage remain to qualify before revising the 150B schedule or day-21 readiness."
+      "next": "Use the first-wave proposal to settle recipes and turn source-capacity targets into preparation manifests and measured yield. The SQLite policy is config-bound; larger operating-envelope/site qualification and the 150B schedule remain open."
     },
     {
       "id": "data_resume_memory",
@@ -59,13 +65,13 @@
     {
       "id": "corpora",
       "state": "pending",
-      "next": "Freeze exact E1/E3 source recipes and the tokenizer, materialize per-category screen deficits with packing headroom, then prepare stable and decay corpora after selection."
+      "next": "After review of FIRST_WAVE.md and D5, materialize the proposed per-source screen stock with arm-specific exclusion/membership checks and headroom. Stable and decay corpora follow the relevant selection decisions."
     },
     {
       "id": "screen_capacity",
       "state": "conditional_reference_capacity_gaps_quantified",
       "evidence": "results/data/screen-capacity-20260913.json",
-      "next": "The owner requested recipe discussion before a freeze; see research/notebook/2026-09-13-e1-e3-recipe-discussion.md. Resolve E1 treatment/blend and E3 incumbent assignments, then remeasure final-D5 supply. The checked reference bank supports only a 1.236B balanced-prior pool."
+      "next": "The first-wave proposal now supplies explicit recipes and source targets for review; approval/freeze remains open. Measure eligible supply under the final D5 tokenizer without adding overlapping banks. The older checked reference bank supports only a 1.236B balanced-prior pool."
     },
     {
       "id": "dedup_phase_timing",
@@ -113,6 +119,7 @@
     {
       "id": "post_training_plan",
       "state": "planning_budget_reconciled",
+      "direction_under_review": "Thinking-only release under consideration; post-training experiments are active in another codebase. Final response mode is not selected.",
       "next": "Materialize executable post-training runs under plan_v3\u2019s 200/130/60/60 P6 envelopes after the relevant data and hardware qualification."
     },
     {

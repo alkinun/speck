@@ -15,6 +15,7 @@ approximately 52.08 four-GPU node-days, within a three-month allocation.
 | Current state and next actions | [Status](status.json), or `python -m scripts.research_catalog --status` |
 | Selected contracts | [Catalog](catalog.json) |
 | Experiment order and budget | [Execution](flagship/EXECUTION.md) |
+| First-wave recipe and preparation proposal | [First wave](flagship/FIRST_WAVE.md) |
 | Paper question and evidence requirements | [Paper contract](flagship/PAPER.md) |
 | Supported prior conclusions | [Findings](findings/README.md) |
 | Literature and source surveys | [Library](literature/README.md) |

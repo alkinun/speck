@@ -6,6 +6,9 @@ Current state and next actions are maintained in [research/status.json](../statu
 python -m scripts.research_catalog --status
 ```
 
+The [first-wave proposal](FIRST_WAVE.md) now provides the reviewable E1/E3 recipes, logical run list,
+and per-source preparation targets. Resolve its review items before turning it into launch manifests.
+
 The remaining work covers tokenizer selection, final corpus preparation, per-arm materializers and
 analysis, long-document yield, GH200/DDP/Slurm qualification, comparators, and recurrent export.
 The reorganized implementation also requires execution qualification before new scientific runs.
