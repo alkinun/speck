@@ -194,6 +194,11 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
         directory.mkdir(parents=True)
         durable_json(owner, config)
     raw_identity = _raw_file(plan, unit)
+    if "expected_file_rows" in unit:
+        import pyarrow.parquet as pq
+
+        if pq.ParquetFile(raw_identity["path"]).metadata.num_rows != unit["expected_file_rows"]:
+            raise ValueError("complete acquisition shard row count differs from its plan")
     manifest_path = directory / "manifest.json"
     if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text())
