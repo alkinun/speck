@@ -61,3 +61,12 @@ Use a clean implementation revision and new destinations. `--resume` continues t
 revision/plan and completed stages. Raw inputs, acquisition reports, grouped text, restored checkpoint,
 bound preprocessing config, exclusion result, reference count and progress are retained. A shortfall
 or exceeded operating envelope is recorded rather than silently expanding the run.
+
+## Completed first stock
+
+The [checked result](../../results/data/ultradata-math-l2-preparation-20260913.json) retains 169,058
+documents and **384,788,210 Mistral-reference tokens**, covering the nominal 200M requirement.
+Reference preservation, exact/near controls and zero final exact overlap pass. Observed WAL peaks at
+455.00 MiB while processing larger within-source transactions. The
+[finding](../findings/2026-09-13-admitted-math-stock.md) records counts, timing boundaries and remaining
+final-tokenizer/experiment-view work.

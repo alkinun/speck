@@ -15,6 +15,11 @@ natural UltraData L2 challengers, subject to admission, and consider L3 in the e
 This retains the 192-GPU-hour first-wave ceiling and raises the conditional source-capacity target
 to 18B tokens. V1 remains the preserved proposal; the revision is not a source-use or launch approval.
 
+Natural Math L2-preview has since received its own [human source-use extension](ADMITTED_MATH.md),
+and its first prepared text stock measures 384.79M reference tokens. Code/L3 admission and the final
+recipe/tokenizer/launch decisions remain separate. The Math extension does not rewrite the earlier
+proposal or the frozen tokenizer sample.
+
 ## What we want to learn
 
 1. **Source quality:** which source treatments improve a complete, balanced training mixture?

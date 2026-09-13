@@ -39,3 +39,7 @@ The [checked intake](../../results/data/ultradata-intake-20260913.json) covers a
 serialization and provenance observations. The [candidate revision](first_wave_candidate_revision_v2.json)
 places natural L2 challengers into existing specialist slots and keeps L3 refinement for the existing
 decay budget. Source admission and final recipe freeze remain open.
+
+Follow-up: the owner approved natural Math L2-preview under the existing guarded-use scope, and the
+[first real stock preparation](ADMITTED_MATH.md) now covers its nominal reference-token requirement.
+Code and L3 remain outside that source-use extension.
