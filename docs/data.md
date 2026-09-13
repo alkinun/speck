@@ -60,5 +60,10 @@ The [complete exclusion integration](../research/flagship/FIREWALL_INTEGRATION.m
 bounded real-data qualification passes reference preservation, exact/near controls, recovery, and
 all six bank handoffs. Training-scale capacity and the final tokenizer remain separate requirements.
 
+The [screen-capacity and timing review](../research/flagship/SCREEN_CAPACITY.md) provides
+`data_screen_capacity` for conditional per-category E1/E3 supply accounting and `dedup_timing_replay`
+for a private, durable reference-checkpoint replay with phase/checkpoint-component timings. Use the
+v2 replay plan; the initial timing diagnostic is retained at its original revision.
+
 For source surveys, see the [literature library](../research/literature/README.md). Earlier curriculum
 details remain in the [original guide](../archive/pregrant-history/docs/data.md).

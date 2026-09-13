@@ -24,7 +24,7 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Use the qualified bounded integration in research/flagship/FIREWALL_INTEGRATION.md to establish full E1/E3 treatment supply, final-tokenizer yield, and steady preparation costs before resolving day-21 readiness. The conditional 150B branch remains selected; 500B requires a new operations/storage decision after E3."
+      "next": "Use research/flagship/SCREEN_CAPACITY.md to freeze E1/E3 recipes and fill category supply gaps. Test the measured SQLite commit bottleneck under durable, parity-checked policy changes before revising the 150B schedule or day-21 readiness. The conditional 150B branch remains selected."
     },
     {
       "id": "data_resume_memory",
@@ -66,6 +66,12 @@
       "state": "conditional_reference_capacity_gaps_quantified",
       "evidence": "results/data/screen-capacity-20260913.json",
       "next": "Resolve the unfrozen E1 treatment/blend and E3 incumbent assignments. The checked bank supports only a 1.236B balanced-prior pool, below even E3's 1.5B four-epoch pool; remeasure supply under final D5."
+    },
+    {
+      "id": "dedup_phase_timing",
+      "state": "durable_reference_replay_parity_and_commit_attribution_pass",
+      "evidence": "results/systems/dedup-phase-timing-v2-20260913.json",
+      "next": "Compare SQLite journal/checkpoint policy while preserving durable commits and exact output/recovery parity; 236.74 of 278.28 measured seconds are in commit. No production speedup is qualified yet."
     },
     {
       "id": "long_documents",

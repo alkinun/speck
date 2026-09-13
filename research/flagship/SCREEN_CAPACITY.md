@@ -114,3 +114,15 @@ the verified bank, but only a 1.236B balanced-prior pool ceiling. The smallest E
 1.5B; its remaining category deficits are 13.215M science and 10.337M reference tokens. Full 6B supply
 and the exact scientific source recipes remain open. See the [finding](../findings/2026-09-13-screen-capacity.md)
 for all category requirements and the distinction between measured supply and upstream availability.
+
+## Completed timing attribution
+
+The [durable v2 replay](../../results/systems/dedup-phase-timing-v2-20260913.json) preserves the original
+outputs, removal records, counts, and exclusion/control results. Restoration takes 68.58 seconds
+separately. The measured continuation takes 278.28 seconds, including **236.74 seconds in SQLite commit**.
+Non-checkpoint candidate work takes 30.99 seconds. Output flush/fsync and state publication are each
+under one second across the run. See the [finding](../findings/2026-09-13-dedup-phase-timing.md) for
+disjoint phase totals and checkpoint-overlap accounting.
+
+This identifies a concrete target for a bounded SQLite policy comparison. It does not establish a
+production speedup or resolve the independent E1/E3 source-recipe and capacity gaps.

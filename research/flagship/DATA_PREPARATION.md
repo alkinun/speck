@@ -169,17 +169,23 @@ engineering bank quotas pass. Production-scale supply and rate qualification rem
 
 Next, qualify the production capacity and operating cost of the connected path:
 
+The [screen capacity review](SCREEN_CAPACITY.md) now quantifies two concrete gaps. At the documented
+prior, the checked 2.056B reference-token bank supplies only a 1.236B balanced pool, below E3's smallest
+1.5B unique pool. Exact E1 treatment/blend and E3 incumbent-source recipes remain unfrozen. Separately,
+a durable same-input timing replay attributes 236.74 of 278.28 seconds to SQLite commit. These findings
+prioritize recipe/supply closure and a measured database-policy comparison; they do not change the
+150B forecast yet.
+
 1. Bind source revisions, reader/filter variants, per-arm supply, firewall reference precedence, and
    output identities; reuse retained inputs where their identity and scope match.
 2. Freeze a successor with explicit record-level metadata retention and independently resumable
    acquisition units. State whether quotas use final tokens, reference tokens, or bytes.
 3. Measure stage time, retained tokens/bytes, source exhaustion, SQLite growth, resume verification,
    and free-space high-water marks on bounded real inputs.
-4. Separate steady candidate processing from reference setup, resume verification, and finalization
-   before selecting parallelism or projecting production costs. The earlier profile spends 7.53 of
-   17.24 seconds inside checkpoints at a deliberately short 64-record interval; that share does not
-   describe the now-exercised 10,000-record cadence. Pure signature computation can be investigated
-   with bounded workers while retaining ordered decisions and a single writer. Source acquisition
-   and post-dedup packing have separate resource limits.
+4. Test SQLite commit/journal/checkpoint policy on the qualified workload, preserving durability and
+   output/recovery parity while measuring WAL/index space. The phase-separated 10,000-record-cadence
+   replay now identifies commit as the dominant cost. The earlier 64-record profile remains a separate
+   diagnostic. Reassess worker parallelism only with the measured operating envelope; source
+   acquisition and post-dedup packing have separate resource limits.
 5. Use those measurements to cost the 150B bank and a real ready date. Preserve the accepted fallback
    and the paused 20B artifacts while this successor is qualified.
