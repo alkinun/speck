@@ -165,13 +165,19 @@ def _raw_file(plan, unit):
 
 
 def _unit_config(plan, unit):
-    return {
+    if "math_english" in plan["base"] and unit["category"] != "math":
+        raise ValueError("math-prose language policy may only govern math units")
+    config = {
         "unit": unit,
         "filtering": plan["base"]["filtering"],
         "security": plan["base"]["security"],
         "contamination_plan": plan["base"]["contamination_plan"],
         "checkpoint_rows": plan["checkpoint_rows"],
     }
+    for key in ("math_english", "source_use_extension"):
+        if key in plan["base"]:
+            config[key] = plan["base"][key]
+    return config
 
 
 def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows=None):
@@ -264,6 +270,15 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
                     state["next_row"] = document["row"] + 1
                     state["yielded_rows"] += 1
                     reason = _document_rejection(document, plan["base"]["security"], contamination)
+                    english_probability = None
+                    if reason is None and "math_english" in plan["base"]:
+                        from speck.data.sources.math_sample import _language_result
+
+                        language, english_probability = _language_result(
+                            document["content"], None, plan["base"]["math_english"]
+                        )
+                        if language != "English":
+                            reason = f"math_prose_{language}"
                     if reason:
                         state["rejections"][reason] = state["rejections"].get(reason, 0) + 1
                     else:
@@ -276,6 +291,8 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
                             "source_file": document["file"],
                             "source_row": document["row"],
                         }
+                        if english_probability is not None:
+                            record["detected_English_probability"] = english_probability
                         raw = (
                             json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n"
                         ).encode()

@@ -34,12 +34,13 @@ def _copy_prefix(source, destination, size):
         os.fsync(target.fileno())
 
 
-def restore_reference_checkpoint(parent, output, *, sqlite_settings=None):
+def restore_reference_checkpoint(parent, output, *, sqlite_settings=None, candidate_inputs=None):
     """Copy verified prefix state and prune a private index copy; never modify the parent.
 
     Only the checkpoint contract is rebound to the successor destination/config,
     optionally including explicit SQLite settings. Reference state, input order,
-    dedup policy, checkpoint cadence and candidate stream match the qualified pass.
+    dedup policy and checkpoint cadence match the qualified pass. Default replay
+    preserves candidates; an explicit complete slot map can bind new candidate inputs.
     """
 
     started = time.perf_counter()
@@ -77,6 +78,24 @@ def restore_reference_checkpoint(parent, output, *, sqlite_settings=None):
     if output.exists() or staging.exists():
         raise FileExistsError("timing replay requires a new destination")
     config = {**original, "output_directory": str(output)}
+    if candidate_inputs is not None:
+        expected = {
+            source["id"]
+            for source in original["sources"][12:]
+            if source["id"].startswith("acquired_train__")
+        }
+        if len(expected) != 6 or set(candidate_inputs) != expected:
+            raise ValueError("candidate replacement must explicitly bind all six category slots")
+        if any(set(identity) != {"path", "sha256"} for identity in candidate_inputs.values()):
+            raise ValueError("candidate replacement identities require exactly path and sha256")
+        if any(
+            state["output_sizes"].get(str(index), 0)
+            for index in range(12, len(original["sources"]))
+        ):
+            raise ValueError("candidate inputs cannot change after committed candidate output")
+        config["sources"] = [
+            {**source, **candidate_inputs.get(source["id"], {})} for source in original["sources"]
+        ]
     if sqlite_settings is not None:
         config.update({"format_version": 2, "sqlite": sqlite_settings})
     normalized = validate_preprocess_config(config)
@@ -149,6 +168,7 @@ def restore_reference_checkpoint(parent, output, *, sqlite_settings=None):
         "rebound_index_sha256": file_sha256(index_path),
         "changed_checkpoint_fields": ["contract"],
         **({"bound_sqlite": normalized["sqlite"]} if sqlite_settings is not None else {}),
+        **({"candidate_input_rebinding": candidate_inputs} if candidate_inputs is not None else {}),
         "restoration_durability": "committed prefix files and index fsynced before timing",
         "reference_records": reference_records,
         "restore_seconds": time.perf_counter() - started,
