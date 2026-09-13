@@ -1,5 +1,10 @@
 # Flagship Instruct: data and training plan
 
+**Working update, 2026-09-13:** post-training experiments are underway in another codebase, and a
+thinking-only release is under consideration. Final response mode is open. The recipe below records
+the earlier working baseline; external results will inform a successor recipe and release evaluation.
+The current first-wave work concerns base-model pretraining and source/repetition experiments.
+
 Status: current approximate design, 2026-09-11. Coordination: [SPE-176](https://linear.app/openspecklabs/issue/SPE-176).
 This supersedes the experiment-heavy proposal summarized in the [design notebook](../../archive/pregrant-history/research/notebook/2026-09-11-post-training-design.md). The first release
 focuses on Instruct; dedicated Think and dual-mode behavior are deferred. This is guided model
