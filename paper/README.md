@@ -3,7 +3,22 @@
 [claims.json](claims.json) connects the paper's four claims to selected contracts and evidence.
 The [paper contract](../research/flagship/PAPER.md) defines the question and required outputs.
 
-Add assets as they are implemented:
+The [working manuscript](manuscript/main.md) now contains the methods, evidence boundaries, completed
+Math L2 preparation, and the planned results structure. Claim states remain pre-results.
+
+Regenerate and verify the checked preparation tables and SVG without optional plotting dependencies:
+
+```bash
+python paper/analysis/preparation.py
+python paper/analysis/preparation.py --check
+```
+
+The generator verifies [pinned inputs](analysis/preparation-inputs.json), reconciles preparation
+attrition, and records generator/input/output hashes in [the asset receipt](analysis/preparation-assets.json).
+Source-capacity comparisons match source IDs; unknown supply is explicit, and overlapping banks are
+not summed. Outputs currently describe preparation only.
+
+Asset layout:
 
 - `analysis/`: scripts reading checked results and generating tables/figures;
 - `figures/` and `tables/`: outputs with source identities and generating commands;

@@ -121,6 +121,12 @@
       "next": "Implement per-arm materializers, analyzers, and paper figure schemas for the selected data, architecture, and integration contracts."
     },
     {
+      "id": "manuscript",
+      "state": "methods_draft_and_reproducible_preparation_assets_ready",
+      "evidence": "paper/analysis/preparation-assets.json",
+      "next": "Use paper/manuscript/main.md as the paper spine; fill model-result sections from checked per-arm analyses. Current generated tables and figure describe preparation only, with no claim promotion."
+    },
+    {
       "id": "comparators",
       "state": "pending",
       "next": "Run pinned comparator quality and serving evaluations; fixture parity is only prior plumbing evidence."

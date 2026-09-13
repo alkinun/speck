@@ -1,0 +1,5 @@
+Stage,Records
+Physical rows,200000
+Reader yield,199998
+Filtered text,174090
+Reference-excluded text,169058
