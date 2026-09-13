@@ -10,21 +10,28 @@
   "work": [
     {
       "id": "first_wave_plan",
-      "state": "concrete_recipe_and_preparation_proposal_ready_for_review",
+      "state": "recipe_freeze_pending_requested_minicpm4_ultradata_review",
       "plan": "research/flagship/first_wave_preparation_v1.json",
-      "next": "Review research/flagship/FIRST_WAVE.md: 29 logical data-study slots, 192 GPU-hours, and a 17.5B source-capacity envelope before headroom. Freeze recipes and attach source/view, training, and decision-analysis manifests before launch."
+      "next": "Revisit code/math source and L2/L3 treatment choices using research/literature/50_minicpm4_ultradata.md, then revise within the existing first-wave/decay budget. The preserved v1 proposal and its 17.5B envelope are not frozen recipes."
     },
     {
       "id": "tokenizer",
-      "state": "in_progress",
-      "evidence": "archive/pregrant-history/results/data/tokenizer-pilot-mistral-seed42-20260913.json",
-      "next": "Complete the two custom seed-42 arms in the frozen checkout, reconcile all-attempt timing with the measured screen handoff in research/flagship/TOKENIZER_SCREEN.md, then follow the confirmation and D5 rules."
+      "state": "40960_terminal_report_recovered_compact_screen_launched",
+      "evidence": "results/data/tokenizer-pilot-40960-recovery-20260913.json",
+      "launch_record": "results/systems/tokenizer-pilot-32000-launch-20260913.json",
+      "next": "The Mistral and 40960 seed-42 reports are complete; 40960 peak GPU memory is explicitly unavailable. Complete the launched compact arm, reconcile all-attempt spending and confirmation cost, then follow the frozen D5 rules. No confirmation or audit opening is automatic."
     },
     {
       "id": "source_qualification",
       "state": "complete",
       "evidence": "archive/pregrant-history/findings/204_release_and_source_use_policy.md",
       "next": "Carry the approved source identities and release conditions into production manifests."
+    },
+    {
+      "id": "ultradata_source_review",
+      "state": "paper_cards_and_bounded_schemas_reviewed_recipes_open",
+      "evidence": "research/literature/surveys/openbmb_source_review_20260913.json",
+      "next": "Consider UltraData-Code/Math L2 and L3 alongside the existing web candidates. Resolve subset, English yield, serialization, source rights and lineage, then revise the source-screen/decay proposal within its budget; this review grants no training authority."
     },
     {
       "id": "data_operations",

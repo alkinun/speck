@@ -4,6 +4,11 @@
 discussion into a run list and a bounded preparation target. Thinking-only post-training is being
 explored separately; this proposal concerns the base model's training data.
 
+**Review update, 2026-09-13:** the owner requested consideration of MiniCPM4 and the current UltraData
+corpora before freezing recipes. The [source review](../literature/50_minicpm4_ultradata.md) adds serious
+Code/Math candidates. The v1 run list and 17.5B envelope describe the preserved proposal; recompute
+them after a budgeted source/tier revision is chosen. No new corpus is approved by this review.
+
 ## What we want to learn
 
 1. **Source quality:** which source treatments improve a complete, balanced training mixture?

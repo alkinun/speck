@@ -5,6 +5,11 @@
 The project owner chose **discuss recipe changes** when offered a concrete initial recipe set.
 No recipe freeze follows from that exchange. The independent SQLite-policy binding work can proceed.
 
+In the subsequent discussion, the owner requested review of MiniCPM4 and Ultra-FineWeb,
+UltraData-Code, UltraData-Math, and Ultra-FineWeb-L3 before a recipe freeze. The
+[paper and corpus review](../literature/50_minicpm4_ultradata.md) now records the evidence and concrete
+schema questions. New code/math tiers remain candidates for a budgeted revision, not approved inputs.
+
 ## Context
 
 The proposed set was category substitutions at the fixed 55/15/10/10/5/5 prior, with FineWeb-Edu,

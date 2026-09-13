@@ -29,6 +29,9 @@ The [pretraining source survey](surveys/sources.md) and
 [post-training data survey](surveys/post_training_data_survey.md) preserve the source-level research.
 Selected treatments and current state belong to the [flagship program](../flagship/README.md).
 
+The [MiniCPM4 and UltraData review](50_minicpm4_ultradata.md) examines the requested paper and the
+current UltraData-Code/Math and Ultra-FineWeb/L3 releases, with pinned cards and bounded schema checks.
+
 ## Suggested reading order
 
 ### Linear mixers and hybrid backbones
