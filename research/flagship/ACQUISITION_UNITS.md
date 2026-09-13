@@ -75,3 +75,15 @@ The driver records stage progress durably, including injected or unexpected fail
 Parquet/web and gzip/code acquisition recovery, all cohort dedup outputs, the exact-replay control,
 and logical index parity. Stage-boundary free-space observations and main-process peak RSS are recorded;
 these are not continuous disk high-water measurements or the memory peak of the Gitleaks subprocess.
+
+## Completed measurement
+
+The [checked result](../../results/systems/acquisition-unit-rehearsal-20260913.json) passes all twelve
+units, Parquet/gzip recovery, dedup recovery, and the exact-replay control. It retains 2,601 natural
+cohort records and 26,780,199 UTF-8 bytes. Cold acquisition takes 1,483.82 seconds, including 1,406.92
+seconds downloading the six raw files. Profiled cohort dedup takes 17.24 seconds; the recovered pass
+takes 13.47 seconds without profiling.
+
+The [finding](../findings/2026-09-13-acquisition-unit-rehearsal.md) records per-category yield, filters,
+resource boundaries, and profile interpretation. The short checkpoint interval materially affects
+the profile; no production speedup or full firewall-exclusion result is inferred from this rehearsal.

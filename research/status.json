@@ -24,7 +24,7 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Follow research/flagship/DATA_PREPARATION.md: qualify a bounded acquisition/global-dedup successor feeding the checked source-bank mechanics, measure full E1/E3 treatment supply, and resolve the unqualified day-21 data schedule. The conditional 150B branch remains selected; 500B requires a new operations/storage decision after E3."
+      "next": "Follow research/flagship/DATA_PREPARATION.md: connect the checked raw-unit and source-bank mechanics through complete firewall reference exclusion, measure larger units at production checkpoint cadence and full E1/E3 treatment supply, then resolve day-21 readiness. The conditional 150B branch remains selected; 500B requires a new operations/storage decision after E3."
     },
     {
       "id": "data_resume_memory",
@@ -36,7 +36,13 @@
       "id": "source_bank",
       "state": "bounded_retained_source_rehearsal_pass",
       "evidence": "results/systems/source-bank-rehearsal-20260913.json",
-      "next": "Use research/flagship/SOURCE_BANK.md as the selection/packing reference for the upstream acquisition/global-dedup successor; full E1/E3 source treatments and final-tokenizer supply remain pending."
+      "next": "Use research/flagship/SOURCE_BANK.md as the downstream selection/packing reference once upstream outputs pass complete firewall exclusion; full E1/E3 source treatments and final-tokenizer supply remain pending."
+    },
+    {
+      "id": "acquisition_units",
+      "state": "bounded_raw_acquisition_and_cohort_dedup_recovery_pass",
+      "evidence": "results/systems/acquisition-unit-rehearsal-20260913.json",
+      "next": "Use research/flagship/ACQUISITION_UNITS.md to qualify larger units at production checkpoint cadence and complete firewall reference precedence. The measured cohort is not training data."
     },
     {
       "id": "firewall",

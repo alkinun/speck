@@ -149,14 +149,19 @@ Behavioral tests cover uninterrupted/resumed output parity, rejection of altered
 and a cursor that forbids `fetchall()`. This is a bounded engineering qualification of the resume
 change. Retain the old full-pass throughput projection until the successor is measured end to end.
 
-## 6. Bounded bank mechanics completed; upstream successor next
+## 6. Bounded bank and upstream mechanics completed; production envelope open
 
 The [source-bank rehearsal](SOURCE_BANK.md) now qualifies the retained-source selection/packing portion:
 12.05 MB across all six categories, 3.30M reference tokens, and exact interrupted/uninterrupted payload
 parity. It inherits the existing firewall-excluded input corpus. The complete E1/E3 acquisition and
 global-dedup path, source-treatment coverage, and final-tokenizer capacity remain to be qualified.
 
-Next, materialize a bounded upstream successor feeding those bank mechanics:
+The [upstream unit rehearsal](ACQUISITION_UNITS.md) now also executes raw acquisition/filtering,
+Parquet/gzip recovery, and ordered dedup over a 2,601-record cohort. It measures cold-file download
+cost and profiles a diagnostic 64-record checkpoint cadence. Complete firewall reference exclusion
+is not run on this cohort, so it cannot yet feed the firewall-excluded bank path or training.
+
+Next, qualify the full production envelope connecting these mechanics:
 
 1. Bind source revisions, reader/filter variants, per-arm supply, firewall reference precedence, and
    output identities; reuse retained inputs where their identity and scope match.
@@ -164,8 +169,10 @@ Next, materialize a bounded upstream successor feeding those bank mechanics:
    acquisition units. State whether quotas use final tokens, reference tokens, or bytes.
 3. Measure stage time, retained tokens/bytes, source exhaustion, SQLite growth, resume verification,
    and free-space high-water marks on bounded real inputs.
-4. Profile the dominant dedup work before selecting parallelism. Pure signature computation can be
-   investigated with bounded workers while retaining ordered decisions and a single writer; source
-   acquisition and post-dedup packing have separate resource limits. No speedup is assumed yet.
+4. Measure larger units at the intended checkpoint cadence before selecting parallelism. The bounded
+   profile spends 7.53 of 17.24 seconds inside checkpoints at a deliberately short 64-record interval;
+   that share does not describe the historical 10,000-record production cadence. Pure signature
+   computation can be investigated with bounded workers while retaining ordered decisions and a
+   single writer. Source acquisition and post-dedup packing have separate resource limits.
 5. Use those measurements to cost the 150B bank and a real ready date. Preserve the accepted fallback
    and the paused 20B artifacts while this successor is qualified.

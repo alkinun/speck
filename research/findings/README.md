@@ -13,6 +13,7 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | Software correctness | [Checkpoint/data cleanup](../../archive/pregrant-history/findings/196_runtime_cleanup_successors.md) and [training/Slurm hardening](../../archive/pregrant-history/findings/202_preaccess_training_and_slurm_hardening.md) describe the original qualified revisions. Reorganized code is checked separately. |
 | Current data readiness | [Critical path and streaming resume](2026-09-13-data-preparation-readiness.md) identifies the unresolved day-21 data schedule and qualifies bounded-memory resume-chain verification; full production throughput remains unmeasured on the successor. |
 | Source-bank mechanics | [Six-category retained-source rehearsal](2026-09-13-source-bank-rehearsal.md) measures byte-quota selection and reference packing with identical interrupted/uninterrupted payloads; acquisition/global-dedup costs are inherited rather than remeasured. |
+| Upstream unit mechanics | [Raw acquisition and cohort dedup](2026-09-13-acquisition-unit-rehearsal.md) executes pinned source/security filters, independent Parquet/gzip recovery, and global dedup over a bounded cohort; full firewall reference exclusion and production-rate qualification remain open. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

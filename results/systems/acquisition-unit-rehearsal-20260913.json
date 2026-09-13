@@ -1,0 +1,1472 @@
+{
+  "acquisition": {
+    "elapsed_seconds": 1483.8154072300022,
+    "setup_seconds": 38.48991389800358,
+    "units": [
+      {
+        "elapsed_seconds": 37.26737129099638,
+        "manifest": {
+          "category": "web",
+          "config_sha256": "0ede08f6849c7fd501dd37753baafb4b2aeb9fbdf93410d4ef6a7b019ddefa1d",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1234539,
+            "path": "records.jsonl",
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a"
+          },
+          "rejections": {
+            "gitleaks": 0
+          },
+          "retained_records": 256,
+          "retained_utf8_bytes": 1096963,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/ultrafineweb_en_v1_4__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "ultrafineweb_en_v1_4__rows_0_256",
+          "yielded_rows": 256
+        },
+        "raw": {
+          "bytes": 95046421,
+          "download_seconds": 35.05738054999529,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/9d4f37ed53313a0fcd2f.parquet",
+          "sha256": "b75434ad3a5a0e05f6bd5fc0b72093ced2b9ebb986f240b11d1cf99bc000c381",
+          "verification_seconds": 0.0444745669956319
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2.0342297420065734,
+        "manifest": {
+          "category": "web",
+          "config_sha256": "01e3eaf16381ba7d2b4b1c3614a51dac61d327b4889767e4ff2232018a2583e1",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1104795,
+            "path": "records.jsonl",
+            "sha256": "30afc4ea4868c827e5f904ae59180758f70165542d69562aeebdbef8a6cff617"
+          },
+          "rejections": {
+            "benchmark_contamination": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 1
+          },
+          "retained_records": 254,
+          "retained_utf8_bytes": 967587,
+          "row_window": [
+            256,
+            512
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/ultrafineweb_en_v1_4__rows_256_512-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "ultrafineweb_en_v1_4__rows_256_512",
+          "yielded_rows": 256
+        },
+        "raw": {
+          "bytes": 95046421,
+          "download_seconds": 1.1699739843606949e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/9d4f37ed53313a0fcd2f.parquet",
+          "sha256": "b75434ad3a5a0e05f6bd5fc0b72093ced2b9ebb986f240b11d1cf99bc000c381",
+          "verification_seconds": 0.04343055900244508
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 134.69910014700145,
+        "manifest": {
+          "category": "code",
+          "config_sha256": "03aa51709ae49931f601fc6ebe81c431856dc83c146a2530e2acf91d251a7a29",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 575364,
+            "path": "records.jsonl",
+            "sha256": "74af9f9d5b6ac5ab946e68a599e592a58478b3b09661937c16307fae144ca18c"
+          },
+          "rejections": {
+            "benchmark_contamination": 1,
+            "duplicate_lines": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 6
+          },
+          "retained_records": 73,
+          "retained_utf8_bytes": 522655,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/common_pile_stackv2_edu__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "common_pile_stackv2_edu__rows_0_256",
+          "yielded_rows": 81
+        },
+        "raw": {
+          "bytes": 637945318,
+          "download_seconds": 133.255194379999,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/b664b55474b00922568e.json.gz",
+          "sha256": "85e2eab35a99c3426ae0c3b72a2ae570c7dd666e14b1b1e4d73841ecc605428f",
+          "verification_seconds": 0.30234840900084237
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 1.4226750769958016,
+        "manifest": {
+          "category": "code",
+          "config_sha256": "7288fba2575821617ca571e2cfa8fa51c845353756bf3db6c9872d48ae477fe0",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 405744,
+            "path": "records.jsonl",
+            "sha256": "f38e7f48825e86e77a9ba2ab84c6bb5ae045652586787c00a3309a307a71dd59"
+          },
+          "rejections": {
+            "benchmark_contamination": 1,
+            "duplicate_lines": 3,
+            "gitleaks": 1,
+            "raw_email_or_ipv4": 3
+          },
+          "retained_records": 75,
+          "retained_utf8_bytes": 355202,
+          "row_window": [
+            256,
+            512
+          ],
+          "security_report": {
+            "findings": 2,
+            "path": "security/common_pile_stackv2_edu__rows_256_512-records.json",
+            "sha256": "7e77aeed4b17ff0cd5bbe4ee2d7ee3cbc90dca7611c16e01bc689ca2380e9029"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "common_pile_stackv2_edu__rows_256_512",
+          "yielded_rows": 83
+        },
+        "raw": {
+          "bytes": 637945318,
+          "download_seconds": 1.1600059224292636e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/b664b55474b00922568e.json.gz",
+          "sha256": "85e2eab35a99c3426ae0c3b72a2ae570c7dd666e14b1b1e4d73841ecc605428f",
+          "verification_seconds": 0.29222681499959435
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 73.34619445100543,
+        "manifest": {
+          "category": "math",
+          "config_sha256": "430d126266bd9a56bb44912c9a22b0e9fba20843240f8e5ff4cc882bed2fdbc8",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1405965,
+            "path": "records.jsonl",
+            "sha256": "eb80215089a65ad43b6f1c773ffe8961cd3221e112eec2e1ed557ada5f8b4c51"
+          },
+          "rejections": {
+            "benchmark_contamination": 9,
+            "duplicate_lines": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 4
+          },
+          "retained_records": 241,
+          "retained_utf8_bytes": 1210339,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/finemath_4plus__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "finemath_4plus__rows_0_256",
+          "yielded_rows": 255
+        },
+        "raw": {
+          "bytes": 287047408,
+          "download_seconds": 71.10663534999912,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/7892bcdd8c1ddd65ad1e.parquet",
+          "sha256": "eebf8fa736b3d01a39ffdc527f237b97515508d1d0f891c37b4b7b66e881f8ad",
+          "verification_seconds": 0.13046290000056615
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2.3836363490045187,
+        "manifest": {
+          "category": "math",
+          "config_sha256": "89faecf5cca0b38253962cf3584a6d55397cf7e442196f64334d5cc10d23c412",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1083847,
+            "path": "records.jsonl",
+            "sha256": "056452270d7f47fd7331fff4db68290dd473b795d37035526bb61f457a8ef3f6"
+          },
+          "rejections": {
+            "benchmark_contamination": 8,
+            "duplicate_lines": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 5
+          },
+          "retained_records": 240,
+          "retained_utf8_bytes": 893889,
+          "row_window": [
+            256,
+            512
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/finemath_4plus__rows_256_512-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "finemath_4plus__rows_256_512",
+          "yielded_rows": 254
+        },
+        "raw": {
+          "bytes": 287047408,
+          "download_seconds": 1.1600059224292636e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/7892bcdd8c1ddd65ad1e.parquet",
+          "sha256": "eebf8fa736b3d01a39ffdc527f237b97515508d1d0f891c37b4b7b66e881f8ad",
+          "verification_seconds": 0.13118159300211119
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 235.60171605699725,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "6099a437c85b6c7c07920e549ded9502adc9f2fcbbe9757760433f0edd727141",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1054066,
+            "path": "records.jsonl",
+            "sha256": "e83f802ee77500f42677c6f989e0e05def6596a2df84c421bd7fb01f23de3b1c"
+          },
+          "rejections": {
+            "benchmark_contamination": 4,
+            "gitleaks": 0
+          },
+          "retained_records": 252,
+          "retained_utf8_bytes": 941410,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/cosmopedia_v2__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__rows_0_256",
+          "yielded_rows": 256
+        },
+        "raw": {
+          "bytes": 1176422905,
+          "download_seconds": 233.21227788199758,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/0b8d0015861fed5bf06f.parquet",
+          "sha256": "25cb36babeb39a95857b18cb723166ac73b4e6553c4ffe9acad54a87c2a048ca",
+          "verification_seconds": 0.535492285998771
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2.590116079998552,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "71ab2f1153681752f0a6ec9e0c39f7d44d568f37877c4d44b5d767dafb043573",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1062922,
+            "path": "records.jsonl",
+            "sha256": "eff7a8394aacd6da8bb96c5183404732e6df91d9069dbb452b0cc7419006faa3"
+          },
+          "rejections": {
+            "benchmark_contamination": 3,
+            "gitleaks": 0
+          },
+          "retained_records": 253,
+          "retained_utf8_bytes": 950422,
+          "row_window": [
+            256,
+            512
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/cosmopedia_v2__rows_256_512-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__rows_256_512",
+          "yielded_rows": 256
+        },
+        "raw": {
+          "bytes": 1176422905,
+          "download_seconds": 1.1100200936198235e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/0b8d0015861fed5bf06f.parquet",
+          "sha256": "25cb36babeb39a95857b18cb723166ac73b4e6553c4ffe9acad54a87c2a048ca",
+          "verification_seconds": 0.5336212500042166
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 485.25191729100334,
+        "manifest": {
+          "category": "science",
+          "config_sha256": "bbacfc4a2315cad72a9c653ca8fdcadcbadedc88ba3627cbfa159c384d90747d",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 8706809,
+            "path": "records.jsonl",
+            "sha256": "b8b3d20777b9d650d061fc5d9e16a87e894958fec2294d835d16182dc6c4d44b"
+          },
+          "rejections": {
+            "benchmark_contamination": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 3
+          },
+          "retained_records": 248,
+          "retained_utf8_bytes": 8455650,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/common_pile_pubmed__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "common_pile_pubmed__rows_0_256",
+          "yielded_rows": 252
+        },
+        "raw": {
+          "bytes": 2597305751,
+          "download_seconds": 477.45357672299724,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/badf850bb9f81f353cb0.json.gz",
+          "sha256": "193c9d778804e3e953e749ca36accefad00ec0d8569c09e83761e12168b3575e",
+          "verification_seconds": 1.6568944470054703
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 7.4376383909984725,
+        "manifest": {
+          "category": "science",
+          "config_sha256": "397b1d9007396f27e06ac6a5dfab8029e8f18f2a2501e33244604d0b29f6c23a",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 10400612,
+            "path": "records.jsonl",
+            "sha256": "aaed15ac1cd6022f6772f01f3d4fab5925685e41521fd52dd3408ecf16723825"
+          },
+          "rejections": {
+            "benchmark_contamination": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 1
+          },
+          "retained_records": 252,
+          "retained_utf8_bytes": 10163875,
+          "row_window": [
+            256,
+            512
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/common_pile_pubmed__rows_256_512-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "common_pile_pubmed__rows_256_512",
+          "yielded_rows": 254
+        },
+        "raw": {
+          "bytes": 2597305751,
+          "download_seconds": 1.2099917512387037e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/badf850bb9f81f353cb0.json.gz",
+          "sha256": "193c9d778804e3e953e749ca36accefad00ec0d8569c09e83761e12168b3575e",
+          "verification_seconds": 1.1857236939977156
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 459.7117349290056,
+        "manifest": {
+          "category": "reference",
+          "config_sha256": "1525c777f026aa380fcf16d891b6b035be5be17b5500857197dd8aa792308282",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 716706,
+            "path": "records.jsonl",
+            "sha256": "033a21f8dc843b89e1fe3b16fbdfd699b511c1c20d880c5c7fc3f44368ed3a18"
+          },
+          "rejections": {
+            "duplicate_lines": 2,
+            "gitleaks": 0
+          },
+          "retained_records": 226,
+          "retained_utf8_bytes": 584511,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/finewiki_en__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "finewiki_en__rows_0_256",
+          "yielded_rows": 228
+        },
+        "raw": {
+          "bytes": 2491036654,
+          "download_seconds": 456.83371651599737,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/f51cf48292f8bc164aba.parquet",
+          "sha256": "dc10ef0d900f4b87148a1595fe9895866f960ac2affc94684a04e048813198a7",
+          "verification_seconds": 1.1197813179969671
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 3.0392910679947818,
+        "manifest": {
+          "category": "reference",
+          "config_sha256": "d23f9403ef8c38cc8c6333db63f60d6e1f3e11d4debe3e89da5036c8cdfa9da5",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 775043,
+            "path": "records.jsonl",
+            "sha256": "4710852072b3f6b2e93a936dc2bee363a880a420a3d4b19f244fb7044c9676a2"
+          },
+          "rejections": {
+            "gitleaks": 1
+          },
+          "retained_records": 231,
+          "retained_utf8_bytes": 637696,
+          "row_window": [
+            256,
+            512
+          ],
+          "security_report": {
+            "findings": 1,
+            "path": "security/finewiki_en__rows_256_512-records.json",
+            "sha256": "8f08f35036fb77a26ddd754ac3d7fe526fb92762644d37c6a38677ad17f107c7"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "finewiki_en__rows_256_512",
+          "yielded_rows": 232
+        },
+        "raw": {
+          "bytes": 2491036654,
+          "download_seconds": 1.9199796952307224e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/f51cf48292f8bc164aba.parquet",
+          "sha256": "dc10ef0d900f4b87148a1595fe9895866f960ac2affc94684a04e048813198a7",
+          "verification_seconds": 1.1348761420013034
+        },
+        "reused": false
+      }
+    ]
+  },
+  "acquisition_recovery": [
+    {
+      "interrupted_seconds": 0.8516645229974529,
+      "resumed": {
+        "elapsed_seconds": 1.8659216179948999,
+        "manifest": {
+          "category": "web",
+          "config_sha256": "0ede08f6849c7fd501dd37753baafb4b2aeb9fbdf93410d4ef6a7b019ddefa1d",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1234539,
+            "path": "records.jsonl",
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a"
+          },
+          "rejections": {
+            "gitleaks": 0
+          },
+          "retained_records": 256,
+          "retained_utf8_bytes": 1096963,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/ultrafineweb_en_v1_4__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "ultrafineweb_en_v1_4__rows_0_256",
+          "yielded_rows": 256
+        },
+        "raw": {
+          "bytes": 95046421,
+          "download_seconds": 1.0700023267418146e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/9d4f37ed53313a0fcd2f.parquet",
+          "sha256": "b75434ad3a5a0e05f6bd5fc0b72093ced2b9ebb986f240b11d1cf99bc000c381",
+          "verification_seconds": 0.04346964100113837
+        },
+        "reused": false
+      },
+      "unit_id": "ultrafineweb_en_v1_4__rows_0_256"
+    },
+    {
+      "interrupted_seconds": 3.672506513001281,
+      "resumed": {
+        "elapsed_seconds": 1.2297348119973321,
+        "manifest": {
+          "category": "code",
+          "config_sha256": "03aa51709ae49931f601fc6ebe81c431856dc83c146a2530e2acf91d251a7a29",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 575364,
+            "path": "records.jsonl",
+            "sha256": "74af9f9d5b6ac5ab946e68a599e592a58478b3b09661937c16307fae144ca18c"
+          },
+          "rejections": {
+            "benchmark_contamination": 1,
+            "duplicate_lines": 1,
+            "gitleaks": 0,
+            "raw_email_or_ipv4": 6
+          },
+          "retained_records": 73,
+          "retained_utf8_bytes": 522655,
+          "row_window": [
+            0,
+            256
+          ],
+          "security_report": {
+            "findings": 0,
+            "path": "security/common_pile_stackv2_edu__rows_0_256-records.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "common_pile_stackv2_edu__rows_0_256",
+          "yielded_rows": 81
+        },
+        "raw": {
+          "bytes": 637945318,
+          "download_seconds": 9.599898476153612e-08,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/raw/b664b55474b00922568e.json.gz",
+          "sha256": "85e2eab35a99c3426ae0c3b72a2ae570c7dd666e14b1b1e4d73841ecc605428f",
+          "verification_seconds": 0.2915129999964847
+        },
+        "reused": false
+      },
+      "unit_id": "common_pile_stackv2_edu__rows_0_256"
+    }
+  ],
+  "boundary": "Twelve physical row windows from six pinned raw files; inherited reader settings and benchmark/security filters are executed, followed by global dedup across this bounded cohort and one declared exact-replay control. Full tokenizer/selection/audit firewall reference exclusion is not run, so outputs cannot enter training or the qualified firewall-excluded source-bank path. This is not a production throughput or E1/E3 supply qualification.",
+  "dedup_interrupted_seconds": 0.36238922900520265,
+  "deduplication": {
+    "elapsed_seconds": 17.235977545002243,
+    "firewall_reference_exclusion": "not_run_on_this_engineering_cohort",
+    "result": {
+      "cleanup": {
+        "format": "speck_production_cleanup_receipt",
+        "format_version": 1,
+        "manifest_sha256": "34244afd4fdf91831280c77eadddbacd73e60181f5f2c157b2bef4adaa63b1c9",
+        "removed": [],
+        "status": "declared_cleanup_files_absent_after_published_manifest"
+      },
+      "manifest": {
+        "cleanup_files": [],
+        "counts": {
+          "records_removed_exact": 256,
+          "records_retained": 2601,
+          "records_seen": 2857
+        },
+        "deny_ledger": {
+          "entries": 0,
+          "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        "format": "speck_production_text_preprocess_result",
+        "format_version": 1,
+        "gates": {
+          "cleanup": "pending_external_receipt",
+          "disk_backed_Minhash_candidates_and_verified_near_deduplication": "pass",
+          "global_exact_deduplication": "pass",
+          "record_checkpoint_resume": "pass_by_contract_pending_rehearsal",
+          "redacted_removal_records": "pass",
+          "source_and_ledger_identity": "pass",
+          "training_authority": "blocked"
+        },
+        "index": {
+          "band_entries": 41328,
+          "bytes": 3088384,
+          "documents": 2601,
+          "path": "near_duplicates.sqlite3",
+          "sha256": "53dcaf952919219a47d67d34b91bfb71d22403c80e684d1a3660423e69779dea"
+        },
+        "outputs": {
+          "common_pile_pubmed__rows_0_256": {
+            "bytes": 8706809,
+            "path": "common_pile_pubmed__rows_0_256.jsonl",
+            "sha256": "b8b3d20777b9d650d061fc5d9e16a87e894958fec2294d835d16182dc6c4d44b"
+          },
+          "common_pile_pubmed__rows_256_512": {
+            "bytes": 10400612,
+            "path": "common_pile_pubmed__rows_256_512.jsonl",
+            "sha256": "aaed15ac1cd6022f6772f01f3d4fab5925685e41521fd52dd3408ecf16723825"
+          },
+          "common_pile_stackv2_edu__rows_0_256": {
+            "bytes": 575364,
+            "path": "common_pile_stackv2_edu__rows_0_256.jsonl",
+            "sha256": "74af9f9d5b6ac5ab946e68a599e592a58478b3b09661937c16307fae144ca18c"
+          },
+          "common_pile_stackv2_edu__rows_256_512": {
+            "bytes": 405744,
+            "path": "common_pile_stackv2_edu__rows_256_512.jsonl",
+            "sha256": "f38e7f48825e86e77a9ba2ab84c6bb5ae045652586787c00a3309a307a71dd59"
+          },
+          "cosmopedia_v2__rows_0_256": {
+            "bytes": 1054066,
+            "path": "cosmopedia_v2__rows_0_256.jsonl",
+            "sha256": "e83f802ee77500f42677c6f989e0e05def6596a2df84c421bd7fb01f23de3b1c"
+          },
+          "cosmopedia_v2__rows_256_512": {
+            "bytes": 1062922,
+            "path": "cosmopedia_v2__rows_256_512.jsonl",
+            "sha256": "eff7a8394aacd6da8bb96c5183404732e6df91d9069dbb452b0cc7419006faa3"
+          },
+          "exact_replay_control": {
+            "bytes": 0,
+            "path": "exact_replay_control.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "finemath_4plus__rows_0_256": {
+            "bytes": 1405965,
+            "path": "finemath_4plus__rows_0_256.jsonl",
+            "sha256": "eb80215089a65ad43b6f1c773ffe8961cd3221e112eec2e1ed557ada5f8b4c51"
+          },
+          "finemath_4plus__rows_256_512": {
+            "bytes": 1083847,
+            "path": "finemath_4plus__rows_256_512.jsonl",
+            "sha256": "056452270d7f47fd7331fff4db68290dd473b795d37035526bb61f457a8ef3f6"
+          },
+          "finewiki_en__rows_0_256": {
+            "bytes": 716706,
+            "path": "finewiki_en__rows_0_256.jsonl",
+            "sha256": "033a21f8dc843b89e1fe3b16fbdfd699b511c1c20d880c5c7fc3f44368ed3a18"
+          },
+          "finewiki_en__rows_256_512": {
+            "bytes": 775043,
+            "path": "finewiki_en__rows_256_512.jsonl",
+            "sha256": "4710852072b3f6b2e93a936dc2bee363a880a420a3d4b19f244fb7044c9676a2"
+          },
+          "ultrafineweb_en_v1_4__rows_0_256": {
+            "bytes": 1234539,
+            "path": "ultrafineweb_en_v1_4__rows_0_256.jsonl",
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a"
+          },
+          "ultrafineweb_en_v1_4__rows_256_512": {
+            "bytes": 1104795,
+            "path": "ultrafineweb_en_v1_4__rows_256_512.jsonl",
+            "sha256": "30afc4ea4868c827e5f904ae59180758f70165542d69562aeebdbef8a6cff617"
+          }
+        },
+        "plan_fingerprint": "0a59147d59b46c35efda8436ffada177d2a1d36d6bc5cef8e0a8ac72e7b97257",
+        "policy": {
+          "bands": 16,
+          "domain_match": "exact_or_subdomain",
+          "maximum_document_tokens": 100000,
+          "minhash_seed": 42,
+          "minimum_document_tokens": 50,
+          "normalization": "NFKC+lower+lexical-code-tokens",
+          "num_perm": 128,
+          "shingle_tokens": 10,
+          "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+          "verified_jaccard_threshold": 0.8
+        },
+        "removals": {
+          "bytes": 93476,
+          "path": "removals.jsonl",
+          "sha256": "144c0621454494e245f1670d412263b6a9294f371dad0db2575b60dbe3f18627"
+        },
+        "sources": [
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "ultrafineweb_en_v1_4__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/ultrafineweb_en_v1_4__rows_0_256/records.jsonl",
+            "precedence": 1,
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "ultrafineweb_en_v1_4__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/ultrafineweb_en_v1_4__rows_256_512/records.jsonl",
+            "precedence": 2,
+            "sha256": "30afc4ea4868c827e5f904ae59180758f70165542d69562aeebdbef8a6cff617",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_stackv2_edu__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_stackv2_edu__rows_0_256/records.jsonl",
+            "precedence": 3,
+            "sha256": "74af9f9d5b6ac5ab946e68a599e592a58478b3b09661937c16307fae144ca18c",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_stackv2_edu__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_stackv2_edu__rows_256_512/records.jsonl",
+            "precedence": 4,
+            "sha256": "f38e7f48825e86e77a9ba2ab84c6bb5ae045652586787c00a3309a307a71dd59",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finemath_4plus__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finemath_4plus__rows_0_256/records.jsonl",
+            "precedence": 5,
+            "sha256": "eb80215089a65ad43b6f1c773ffe8961cd3221e112eec2e1ed557ada5f8b4c51",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finemath_4plus__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finemath_4plus__rows_256_512/records.jsonl",
+            "precedence": 6,
+            "sha256": "056452270d7f47fd7331fff4db68290dd473b795d37035526bb61f457a8ef3f6",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "cosmopedia_v2__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/cosmopedia_v2__rows_0_256/records.jsonl",
+            "precedence": 7,
+            "sha256": "e83f802ee77500f42677c6f989e0e05def6596a2df84c421bd7fb01f23de3b1c",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "cosmopedia_v2__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/cosmopedia_v2__rows_256_512/records.jsonl",
+            "precedence": 8,
+            "sha256": "eff7a8394aacd6da8bb96c5183404732e6df91d9069dbb452b0cc7419006faa3",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_pubmed__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_pubmed__rows_0_256/records.jsonl",
+            "precedence": 9,
+            "sha256": "b8b3d20777b9d650d061fc5d9e16a87e894958fec2294d835d16182dc6c4d44b",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_pubmed__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_pubmed__rows_256_512/records.jsonl",
+            "precedence": 10,
+            "sha256": "aaed15ac1cd6022f6772f01f3d4fab5925685e41521fd52dd3408ecf16723825",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finewiki_en__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finewiki_en__rows_0_256/records.jsonl",
+            "precedence": 11,
+            "sha256": "033a21f8dc843b89e1fe3b16fbdfd699b511c1c20d880c5c7fc3f44368ed3a18",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finewiki_en__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finewiki_en__rows_256_512/records.jsonl",
+            "precedence": 12,
+            "sha256": "4710852072b3f6b2e93a936dc2bee363a880a420a3d4b19f244fb7044c9676a2",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "exact_replay_control",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/ultrafineweb_en_v1_4__rows_0_256/records.jsonl",
+            "precedence": 13,
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a",
+            "text_field": "text",
+            "url_field": "url"
+          }
+        ],
+        "status": "global_dedup_and_deny_complete_cleanup_receipt_required_not_training_authority"
+      }
+    },
+    "training_authority": false
+  },
+  "deduplication_recovery": {
+    "elapsed_seconds": 13.468740106000041,
+    "firewall_reference_exclusion": "not_run_on_this_engineering_cohort",
+    "result": {
+      "cleanup": {
+        "format": "speck_production_cleanup_receipt",
+        "format_version": 1,
+        "manifest_sha256": "ef67a20a61ddebc695a8cabb3ff76cc220d0e237ea76ed1b12ace25925f20aec",
+        "removed": [],
+        "status": "declared_cleanup_files_absent_after_published_manifest"
+      },
+      "manifest": {
+        "cleanup_files": [],
+        "counts": {
+          "records_removed_exact": 256,
+          "records_retained": 2601,
+          "records_seen": 2857
+        },
+        "deny_ledger": {
+          "entries": 0,
+          "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        "format": "speck_production_text_preprocess_result",
+        "format_version": 1,
+        "gates": {
+          "cleanup": "pending_external_receipt",
+          "disk_backed_Minhash_candidates_and_verified_near_deduplication": "pass",
+          "global_exact_deduplication": "pass",
+          "record_checkpoint_resume": "pass_by_contract_pending_rehearsal",
+          "redacted_removal_records": "pass",
+          "source_and_ledger_identity": "pass",
+          "training_authority": "blocked"
+        },
+        "index": {
+          "band_entries": 41328,
+          "bytes": 3088384,
+          "documents": 2601,
+          "path": "near_duplicates.sqlite3",
+          "sha256": "ef959a0790541e2189c3b75fa8a9347bb0901266b0c1d7afbbeb218dbe0a1fdd"
+        },
+        "outputs": {
+          "common_pile_pubmed__rows_0_256": {
+            "bytes": 8706809,
+            "path": "common_pile_pubmed__rows_0_256.jsonl",
+            "sha256": "b8b3d20777b9d650d061fc5d9e16a87e894958fec2294d835d16182dc6c4d44b"
+          },
+          "common_pile_pubmed__rows_256_512": {
+            "bytes": 10400612,
+            "path": "common_pile_pubmed__rows_256_512.jsonl",
+            "sha256": "aaed15ac1cd6022f6772f01f3d4fab5925685e41521fd52dd3408ecf16723825"
+          },
+          "common_pile_stackv2_edu__rows_0_256": {
+            "bytes": 575364,
+            "path": "common_pile_stackv2_edu__rows_0_256.jsonl",
+            "sha256": "74af9f9d5b6ac5ab946e68a599e592a58478b3b09661937c16307fae144ca18c"
+          },
+          "common_pile_stackv2_edu__rows_256_512": {
+            "bytes": 405744,
+            "path": "common_pile_stackv2_edu__rows_256_512.jsonl",
+            "sha256": "f38e7f48825e86e77a9ba2ab84c6bb5ae045652586787c00a3309a307a71dd59"
+          },
+          "cosmopedia_v2__rows_0_256": {
+            "bytes": 1054066,
+            "path": "cosmopedia_v2__rows_0_256.jsonl",
+            "sha256": "e83f802ee77500f42677c6f989e0e05def6596a2df84c421bd7fb01f23de3b1c"
+          },
+          "cosmopedia_v2__rows_256_512": {
+            "bytes": 1062922,
+            "path": "cosmopedia_v2__rows_256_512.jsonl",
+            "sha256": "eff7a8394aacd6da8bb96c5183404732e6df91d9069dbb452b0cc7419006faa3"
+          },
+          "exact_replay_control": {
+            "bytes": 0,
+            "path": "exact_replay_control.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "finemath_4plus__rows_0_256": {
+            "bytes": 1405965,
+            "path": "finemath_4plus__rows_0_256.jsonl",
+            "sha256": "eb80215089a65ad43b6f1c773ffe8961cd3221e112eec2e1ed557ada5f8b4c51"
+          },
+          "finemath_4plus__rows_256_512": {
+            "bytes": 1083847,
+            "path": "finemath_4plus__rows_256_512.jsonl",
+            "sha256": "056452270d7f47fd7331fff4db68290dd473b795d37035526bb61f457a8ef3f6"
+          },
+          "finewiki_en__rows_0_256": {
+            "bytes": 716706,
+            "path": "finewiki_en__rows_0_256.jsonl",
+            "sha256": "033a21f8dc843b89e1fe3b16fbdfd699b511c1c20d880c5c7fc3f44368ed3a18"
+          },
+          "finewiki_en__rows_256_512": {
+            "bytes": 775043,
+            "path": "finewiki_en__rows_256_512.jsonl",
+            "sha256": "4710852072b3f6b2e93a936dc2bee363a880a420a3d4b19f244fb7044c9676a2"
+          },
+          "ultrafineweb_en_v1_4__rows_0_256": {
+            "bytes": 1234539,
+            "path": "ultrafineweb_en_v1_4__rows_0_256.jsonl",
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a"
+          },
+          "ultrafineweb_en_v1_4__rows_256_512": {
+            "bytes": 1104795,
+            "path": "ultrafineweb_en_v1_4__rows_256_512.jsonl",
+            "sha256": "30afc4ea4868c827e5f904ae59180758f70165542d69562aeebdbef8a6cff617"
+          }
+        },
+        "plan_fingerprint": "a41e3bd4ef261f4aa859f9ee7bdef4809d3ac65a43f420c2cd057ee70b88b41f",
+        "policy": {
+          "bands": 16,
+          "domain_match": "exact_or_subdomain",
+          "maximum_document_tokens": 100000,
+          "minhash_seed": 42,
+          "minimum_document_tokens": 50,
+          "normalization": "NFKC+lower+lexical-code-tokens",
+          "num_perm": 128,
+          "shingle_tokens": 10,
+          "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+          "verified_jaccard_threshold": 0.8
+        },
+        "removals": {
+          "bytes": 93476,
+          "path": "removals.jsonl",
+          "sha256": "144c0621454494e245f1670d412263b6a9294f371dad0db2575b60dbe3f18627"
+        },
+        "sources": [
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "ultrafineweb_en_v1_4__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/ultrafineweb_en_v1_4__rows_0_256/records.jsonl",
+            "precedence": 1,
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "ultrafineweb_en_v1_4__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/ultrafineweb_en_v1_4__rows_256_512/records.jsonl",
+            "precedence": 2,
+            "sha256": "30afc4ea4868c827e5f904ae59180758f70165542d69562aeebdbef8a6cff617",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_stackv2_edu__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_stackv2_edu__rows_0_256/records.jsonl",
+            "precedence": 3,
+            "sha256": "74af9f9d5b6ac5ab946e68a599e592a58478b3b09661937c16307fae144ca18c",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_stackv2_edu__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_stackv2_edu__rows_256_512/records.jsonl",
+            "precedence": 4,
+            "sha256": "f38e7f48825e86e77a9ba2ab84c6bb5ae045652586787c00a3309a307a71dd59",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finemath_4plus__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finemath_4plus__rows_0_256/records.jsonl",
+            "precedence": 5,
+            "sha256": "eb80215089a65ad43b6f1c773ffe8961cd3221e112eec2e1ed557ada5f8b4c51",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finemath_4plus__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finemath_4plus__rows_256_512/records.jsonl",
+            "precedence": 6,
+            "sha256": "056452270d7f47fd7331fff4db68290dd473b795d37035526bb61f457a8ef3f6",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "cosmopedia_v2__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/cosmopedia_v2__rows_0_256/records.jsonl",
+            "precedence": 7,
+            "sha256": "e83f802ee77500f42677c6f989e0e05def6596a2df84c421bd7fb01f23de3b1c",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "cosmopedia_v2__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/cosmopedia_v2__rows_256_512/records.jsonl",
+            "precedence": 8,
+            "sha256": "eff7a8394aacd6da8bb96c5183404732e6df91d9069dbb452b0cc7419006faa3",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_pubmed__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_pubmed__rows_0_256/records.jsonl",
+            "precedence": 9,
+            "sha256": "b8b3d20777b9d650d061fc5d9e16a87e894958fec2294d835d16182dc6c4d44b",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "common_pile_pubmed__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/common_pile_pubmed__rows_256_512/records.jsonl",
+            "precedence": 10,
+            "sha256": "aaed15ac1cd6022f6772f01f3d4fab5925685e41521fd52dd3408ecf16723825",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finewiki_en__rows_0_256",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finewiki_en__rows_0_256/records.jsonl",
+            "precedence": 11,
+            "sha256": "033a21f8dc843b89e1fe3b16fbdfd699b511c1c20d880c5c7fc3f44368ed3a18",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "finewiki_en__rows_256_512",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/finewiki_en__rows_256_512/records.jsonl",
+            "precedence": 12,
+            "sha256": "4710852072b3f6b2e93a936dc2bee363a880a420a3d4b19f244fb7044c9676a2",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "exact_replay_control",
+            "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/acquired/ultrafineweb_en_v1_4__rows_0_256/records.jsonl",
+            "precedence": 13,
+            "sha256": "c207ba580bebe222dbcdc4cd176394c3947c5e8704c82db536d4d4dbd69e1d6a",
+            "text_field": "text",
+            "url_field": "url"
+          }
+        ],
+        "status": "global_dedup_and_deny_complete_cleanup_receipt_required_not_training_authority"
+      }
+    },
+    "training_authority": false
+  },
+  "format": "speck_acquisition_unit_qualification",
+  "format_version": 1,
+  "logical_index": {
+    "bands": {
+      "rows": 41328,
+      "sha256": "fb71bd2a741aff8b3a692ae21634eb68de4873819d3728d92a71803a50c1bca2"
+    },
+    "checkpoints": {
+      "rows": 51,
+      "sha256": "9a9701f4d470b7fa2f3dcf86c969f81499d7515008790bc2f8c1169c997d8e90"
+    },
+    "docs": {
+      "rows": 2601,
+      "sha256": "ad4d2d879598b4df2e19505780779e8b983cbb1ea7e5812e0f9cb8d1fd563bab"
+    }
+  },
+  "operations_authority": false,
+  "plan": {
+    "path": "research/flagship/acquisition_unit_rehearsal_v1.json",
+    "sha256": "c891ddb8672d442743e6fa5db95be46a8ee9e82ae9885ef0de415a294a1de13a"
+  },
+  "profile": [
+    {
+      "calls": 1,
+      "cumulative_seconds": 17.293301192,
+      "file": "/home/alkin/Desktop/speck/speck/data/acquisition_units.py",
+      "function": "deduplicate_units",
+      "line": 354,
+      "own_seconds": 0.00019519800000000002,
+      "primitive_calls": 1
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 17.235908301000002,
+      "file": "/home/alkin/Desktop/speck/speck/data/production_data.py",
+      "function": "preprocess_sources",
+      "line": 493,
+      "own_seconds": 0.20835820100000002,
+      "primitive_calls": 1
+    },
+    {
+      "calls": 51,
+      "cumulative_seconds": 7.527454004000001,
+      "file": "/home/alkin/Desktop/speck/speck/data/production_data.py",
+      "function": "_checkpoint",
+      "line": 355,
+      "own_seconds": 0.002375903,
+      "primitive_calls": 51
+    },
+    {
+      "calls": 2583,
+      "cumulative_seconds": 4.719557518,
+      "file": "/home/alkin/Desktop/speck/speck/data/acquisition_units.py",
+      "function": "batched_signature",
+      "line": 397,
+      "own_seconds": 0.020949685000000003,
+      "primitive_calls": 2583
+    },
+    {
+      "calls": 2583,
+      "cumulative_seconds": 4.202937396,
+      "file": "/home/alkin/Desktop/speck/.venv/lib/python3.10/site-packages/datasketch/minhash.py",
+      "function": "update_batch",
+      "line": 456,
+      "own_seconds": 0.39830280900000004,
+      "primitive_calls": 2583
+    },
+    {
+      "calls": 821,
+      "cumulative_seconds": 3.9570619820000004,
+      "file": "~",
+      "function": "<built-in method posix.fsync>",
+      "line": 0,
+      "own_seconds": 3.9570619820000004,
+      "primitive_calls": 821
+    },
+    {
+      "calls": 52,
+      "cumulative_seconds": 3.625506714,
+      "file": "~",
+      "function": "<method 'commit' of 'sqlite3.Connection' objects>",
+      "line": 0,
+      "own_seconds": 3.625506714,
+      "primitive_calls": 52
+    },
+    {
+      "calls": 2583,
+      "cumulative_seconds": 3.5767950920000002,
+      "file": "/home/alkin/Desktop/speck/.venv/lib/python3.10/site-packages/datasketch/minhash.py",
+      "function": "<listcomp>",
+      "line": 493,
+      "own_seconds": 0.551302996,
+      "primitive_calls": 2583
+    },
+    {
+      "calls": 5244252,
+      "cumulative_seconds": 3.0254920960000002,
+      "file": "/home/alkin/Desktop/speck/.venv/lib/python3.10/site-packages/datasketch/hashfunc.py",
+      "function": "sha1_hash32",
+      "line": 5,
+      "own_seconds": 1.514656057,
+      "primitive_calls": 5244252
+    },
+    {
+      "calls": 53,
+      "cumulative_seconds": 2.5046839370000002,
+      "file": "/home/alkin/Desktop/speck/speck/provenance/io.py",
+      "function": "durable_json",
+      "line": 60,
+      "own_seconds": 0.00032327100000000003,
+      "primitive_calls": 53
+    },
+    {
+      "calls": 53,
+      "cumulative_seconds": 2.504328519,
+      "file": "/home/alkin/Desktop/speck/speck/provenance/io.py",
+      "function": "atomic_json",
+      "line": 23,
+      "own_seconds": 0.001237704,
+      "primitive_calls": 53
+    },
+    {
+      "calls": 2838,
+      "cumulative_seconds": 2.25962589,
+      "file": "/home/alkin/Desktop/speck/speck/data/sources/code_near_duplicates.py",
+      "function": "_shingles",
+      "line": 240,
+      "own_seconds": 0.003266941,
+      "primitive_calls": 2838
+    },
+    {
+      "calls": 2838,
+      "cumulative_seconds": 2.256219977,
+      "file": "/home/alkin/Desktop/speck/speck/data/sources/code_near_duplicates.py",
+      "function": "<setcomp>",
+      "line": 241,
+      "own_seconds": 1.3036281550000002,
+      "primitive_calls": 2838
+    },
+    {
+      "calls": 5843558,
+      "cumulative_seconds": 0.7940890650000001,
+      "file": "~",
+      "function": "<method 'join' of 'str' objects>",
+      "line": 0,
+      "own_seconds": 0.794021792,
+      "primitive_calls": 5843558
+    },
+    {
+      "calls": 2857,
+      "cumulative_seconds": 0.761644517,
+      "file": "/home/alkin/Desktop/speck/speck/data/sources/code_near_duplicates.py",
+      "function": "_tokens",
+      "line": 232,
+      "own_seconds": 0.0034859160000000004,
+      "primitive_calls": 2857
+    },
+    {
+      "calls": 5244252,
+      "cumulative_seconds": 0.7262797440000001,
+      "file": "~",
+      "function": "<method 'digest' of '_hashlib.HASH' objects>",
+      "line": 0,
+      "own_seconds": 0.7262797440000001,
+      "primitive_calls": 5244252
+    },
+    {
+      "calls": 88179,
+      "cumulative_seconds": 0.599927544,
+      "file": "~",
+      "function": "<method 'execute' of 'sqlite3.Connection' objects>",
+      "line": 0,
+      "own_seconds": 0.599927544,
+      "primitive_calls": 88179
+    },
+    {
+      "calls": 3006,
+      "cumulative_seconds": 0.563238279,
+      "file": "~",
+      "function": "<method 'findall' of 're.Pattern' objects>",
+      "line": 0,
+      "own_seconds": 0.563238279,
+      "primitive_calls": 3006
+    },
+    {
+      "calls": 5244252,
+      "cumulative_seconds": 0.539984668,
+      "file": "~",
+      "function": "<built-in method _hashlib.openssl_sha1>",
+      "line": 0,
+      "own_seconds": 0.539984668,
+      "primitive_calls": 5244252
+    },
+    {
+      "calls": 507,
+      "cumulative_seconds": 0.30766606500000004,
+      "file": "~",
+      "function": "<method 'read' of '_io.BufferedReader' objects>",
+      "line": 0,
+      "own_seconds": 0.30766606500000004,
+      "primitive_calls": 507
+    },
+    {
+      "calls": 2583,
+      "cumulative_seconds": 0.30065603100000005,
+      "file": "/home/alkin/Desktop/speck/.venv/lib/python3.10/site-packages/datasketch/minhash.py",
+      "function": "__init__",
+      "line": 248,
+      "own_seconds": 0.008968852000000001,
+      "primitive_calls": 2583
+    },
+    {
+      "calls": 45,
+      "cumulative_seconds": 0.29779710000000004,
+      "file": "/home/alkin/Desktop/speck/speck/provenance/io.py",
+      "function": "file_sha256",
+      "line": 10,
+      "own_seconds": 0.00017906200000000001,
+      "primitive_calls": 45
+    },
+    {
+      "calls": 5714,
+      "cumulative_seconds": 0.284181069,
+      "file": "~",
+      "function": "<built-in method unicodedata.normalize>",
+      "line": 0,
+      "own_seconds": 0.284181069,
+      "primitive_calls": 5714
+    },
+    {
+      "calls": 2583,
+      "cumulative_seconds": 0.275741795,
+      "file": "/home/alkin/Desktop/speck/.venv/lib/python3.10/site-packages/datasketch/minhash.py",
+      "function": "_init_permutations",
+      "line": 327,
+      "own_seconds": 0.133867739,
+      "primitive_calls": 2583
+    },
+    {
+      "calls": 94,
+      "cumulative_seconds": 0.25955558100000004,
+      "file": "/home/alkin/Desktop/speck/speck/provenance/io.py",
+      "function": "<lambda>",
+      "line": 13,
+      "own_seconds": 4.0858e-05,
+      "primitive_calls": 94
+    },
+    {
+      "calls": 5244252,
+      "cumulative_seconds": 0.244571627,
+      "file": "~",
+      "function": "<built-in method _struct.unpack>",
+      "line": 0,
+      "own_seconds": 0.244571627,
+      "primitive_calls": 5244252
+    },
+    {
+      "calls": 5841307,
+      "cumulative_seconds": 0.23496050200000002,
+      "file": "~",
+      "function": "<method 'encode' of 'str' objects>",
+      "line": 0,
+      "own_seconds": 0.23496050200000002,
+      "primitive_calls": 5841307
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.192326573,
+      "file": "/home/alkin/Desktop/speck/speck/data/production_data.py",
+      "function": "_database",
+      "line": 256,
+      "own_seconds": 0.07951261700000001,
+      "primitive_calls": 1
+    },
+    {
+      "calls": 961,
+      "cumulative_seconds": 0.191893731,
+      "file": "<frozen importlib._bootstrap>",
+      "function": "_find_and_load",
+      "line": 1022,
+      "own_seconds": 0.001540717,
+      "primitive_calls": 1
+    },
+    {
+      "calls": 474,
+      "cumulative_seconds": 0.19187137,
+      "file": "<frozen importlib._bootstrap>",
+      "function": "_find_and_load_unlocked",
+      "line": 987,
+      "own_seconds": 0.000792803,
+      "primitive_calls": 1
+    }
+  ],
+  "profile_boundary": "Clean dedup includes cProfile overhead; cumulative times overlap and must not be summed.",
+  "progress": {
+    "path": "/mnt/speck-data/speck/acquisition-unit-rehearsal-v1/qualification/progress.json",
+    "sha256": "fd8bb3cee935d593d8f71d01c42caed178f133b8326ba8284c4cac5c428f7840"
+  },
+  "recorded_at": "2026-09-13T10:50:29.097887+00:00",
+  "repository_revision": "3a717ce794d5a2b35c685c07f8daf37e7486bf12",
+  "status": "bounded_acquisition_and_ordered_cohort_dedup_recovery_pass",
+  "training_authority": false
+}
