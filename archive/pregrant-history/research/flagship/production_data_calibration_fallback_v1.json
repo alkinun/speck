@@ -1,0 +1,31 @@
+{
+  "accepted_at": "2026-09-10T19:08:37Z",
+  "authority": {
+    "authority_type": "human",
+    "name": "Alkin Unlu",
+    "organization": "SpeckLabs",
+    "role": "Project owner"
+  },
+  "calibration_analysis": {
+    "path": "results/data/production-data-calibration-2b-20260910.json",
+    "sha256": "39a68b0dcc0ddff0e660347c07de5a2c89bf6e16e6bf37bf86f9cc24e5ff57b2"
+  },
+  "conditions": [
+    "final corpus preparation must retain the same source identity, filtering, contamination, Gitleaks, exact/near dedup, resume, cleanup, and firewall gates",
+    "real tokenizer and final packed-corpus manifests must be generated and verified after D5",
+    "the data-launch verifier must bind this fallback plus final production outputs through a reviewed successor before training",
+    "source capacity and non-linear candidate/index growth must be observed and reported during final preparation",
+    "any branch above 150B remains unauthorized by this decision"
+  ],
+  "decision": {
+    "150B_branch": "conditionally operationally viable if E3 supports repetition, acquired intermediates are cleaned after dedup, and capacity/runtime are monitored at checkpoints",
+    "20B_rehearsal": "do not resume before D5/E3; retain the paused checkpoint only as a fallback",
+    "2B_calibration": "accepted as the P0 production-operations calibration and non-GPU fallback",
+    "500B_branch": "blocked on current storage and serial runtime; requires E3 necessity plus a versioned cleanup parallelization and/or storage successor"
+  },
+  "format": "speck_production_data_calibration_fallback",
+  "format_version": 1,
+  "operations_authority": "P0 non-GPU fallback through 150B only; not the full 20B production operations record",
+  "status": "project_owner_accepted_non_gpu_operations_fallback_through_150B",
+  "training_authority": false
+}

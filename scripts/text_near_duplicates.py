@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.text_near_duplicates import (
+from speck.data.sources.text_near_duplicates import (
     analyze_text_cross_source_duplicates,
     load_text_duplicate_config,
 )

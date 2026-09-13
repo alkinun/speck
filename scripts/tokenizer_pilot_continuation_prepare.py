@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.tokenizer_pilot_continuation import (
+from speck.tokenization.pilot_continuation import (
     load_continuation_plan,
     materialize_continuation,
 )

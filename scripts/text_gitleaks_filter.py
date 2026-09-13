@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.text_gitleaks_filter import (
+from speck.data.sources.text_gitleaks_filter import (
     apply_text_gitleaks_filter,
     load_text_gitleaks_config,
 )

@@ -4,8 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.io import atomic_json
-from speck.tokenizer_pilot_cuda_evaluation import (
+from speck.provenance.io import atomic_json
+from speck.tokenization.pilot_cuda_evaluation import (
     load_document_nll_policy,
     qualify_document_nll,
 )

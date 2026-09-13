@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.source_rights import assess_rights_template, finalize_human_acceptance
+from speck.data.rights import assess_rights_template, finalize_human_acceptance
 
 
 def main():

@@ -1,0 +1,64 @@
+{
+  "format": "speck_release_and_data_use_policy",
+  "format_version": 1,
+  "status": "human_project_policy_approved",
+  "approved_at": "2026-09-09T18:54:46Z",
+  "authority": {
+    "name": "Alkin Unlu",
+    "role": "Project owner",
+    "organization": "SpeckLabs"
+  },
+  "release_licenses": {
+    "source_code": "MIT",
+    "model_weights": "Apache-2.0",
+    "paper": "venue-compatible open-access license selected before submission"
+  },
+  "intended_scope": {
+    "research_training": true,
+    "paper_publication": true,
+    "public_model_weight_release": true,
+    "commercial_use": true,
+    "source_data_redistribution": false,
+    "derived_packed_shard_redistribution": false
+  },
+  "source_rule": {
+    "default": "permit established research datasets for internal training unless their binding terms explicitly prohibit commercial training or public model-weight release",
+    "guarded_web_use": "accept Common Crawl and underlying-page residual rights risk for training while preserving source metadata, attribution, removal, deny-ledger, and rebuild controls",
+    "generated_data": "accept released synthetic datasets while citing disclosed generator families and recording missing exact generator or seed lineage as a limitation",
+    "code": "retain conservative permissive-license filters and available repository/file attribution metadata",
+    "future_source": "a source with explicit non-commercial, no-training, no-commercial-model, or no-public-weight terms requires exclusion or a new human policy decision"
+  },
+  "publication": {
+    "corpus_bytes": "not published",
+    "packed_shards": "not published",
+    "metadata": [
+      "source and dataset names",
+      "immutable revisions and available hashes",
+      "licenses and terms relied upon",
+      "filters, deduplication, decontamination, and removal policy",
+      "mixture weights and aggregate statistics",
+      "citations and attribution notices"
+    ],
+    "locations": [
+      "paper data section and appendix",
+      "released model card",
+      "checked source and data manifests"
+    ]
+  },
+  "required_controls": [
+    "retain dataset revision and original URL repository or document identity where supplied",
+    "publish dataset-level citations and required attribution notices",
+    "preserve available per-file and per-document license metadata internally",
+    "maintain URL domain repository blob and content-hash deny ledgers",
+    "provide a public removal contact before model release",
+    "rebuild future packed shards after verified removal or rights corrections",
+    "record upstream takedowns and material term changes without rewriting frozen evidence",
+    "state known missing or unreliable rights metadata as a limitation"
+  ],
+  "non_conclusions": [
+    "the Apache-2.0 model license overrides source-dataset or underlying-content terms",
+    "non-redistribution of corpus bytes eliminates every training or model-output rights risk",
+    "public availability or dataset-level licensing proves ownership of every record",
+    "this project policy is legal advice or a warranty of non-infringement"
+  ]
+}

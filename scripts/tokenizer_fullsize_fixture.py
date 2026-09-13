@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.tokenizer_fixture import prepare_fullsize_fixture
+from speck.tokenization.fixture import prepare_fullsize_fixture
 
 
 def main():

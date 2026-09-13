@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.science_sample import load_science_sample_config, sample_science_source
+from speck.data.sources.science_sample import load_science_sample_config, sample_science_source
 
 
 def parse_args(argv=None):

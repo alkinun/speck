@@ -29,7 +29,7 @@ The following abbreviated one-job manifest shows every field:
     "reserve_gpu_hours": 889
   },
   "plan": {
-    "path": "/shared/speck/research/flagship/plan.json",
+    "path": "/shared/speck/research/flagship/plan_v3.json",
     "sha256": "<64 lowercase hex characters>"
   },
   "repository": {
@@ -53,14 +53,14 @@ The following abbreviated one-job manifest shows every field:
       },
       "array": {"indices": [0, 1, 2, 3], "max_parallel": 4},
       "command": [
-        "uv", "run", "--extra", "gpu", "torchrun", "--nproc-per-node=1",
-        "-m", "scripts.slurm_base_train", "/shared/experiments/e1w-{array_index}",
-        "--output-dir", "/shared/checkpoints/e1w-{array_index}",
+        "uv", "run", "--project", "/shared/speck", "--extra", "gpu",
+        "torchrun", "--nproc-per-node=1",
+        "-m", "scripts.slurm_base_train", "{array_index}",
         "--slurm-requeue-resume"
       ],
-      "working_directory": "/shared/speck",
+      "working_directory": "/shared/experiments/e1w",
       "identities": [
-        {"role": "config", "path": "/shared/experiments/e1w-0/train.json", "sha256": "<sha256>"},
+        {"role": "config", "path": "/shared/experiments/e1w/0/train.json", "sha256": "<sha256>"},
         {"role": "data", "path": "/shared/data/e1w/manifest.json", "sha256": "<sha256>"}
       ],
       "max_retries": 1,
@@ -71,7 +71,9 @@ The following abbreviated one-job manifest shows every field:
 ```
 
 `{array_index}` must be a complete command argument. In a real heterogeneous array, bind every
-arm's config files in `identities`, not just the first arm shown above. A four-GPU job sets `gpus` to
+arm's config files in `identities`, not just the first arm shown above. This example uses numbered
+experiment directories under the working directory; each train config must select its own output
+directory. A four-GPU job sets `gpus` to
 4, sets `array` to `null`, removes the placeholder, and normally puts
 `torchrun --nproc-per-node=4` in its immutable command. Every `train` job must use
 `torchrun -m scripts.slurm_base_train --slurm-requeue-resume`; the historical base trainer remains

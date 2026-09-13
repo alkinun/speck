@@ -1,0 +1,63 @@
+{
+  "format": "speck_external_comparator_plan",
+  "format_version": 1,
+  "status": "identity_frozen_evaluation_pending_not_training_or_claim_authority",
+  "recorded_on": "2026-09-11",
+  "family": "MiniCPM5-2B",
+  "license": "Apache-2.0",
+  "checkpoints": [
+    {
+      "role": "base_pretraining_comparator",
+      "repo": "openbmb/MiniCPM5-2B-Base",
+      "revision": "a85398542aea7c5cb424cd9b6a5b2bcb6d858b4e"
+    },
+    {
+      "role": "midtraining_stage_context",
+      "repo": "openbmb/MiniCPM5-2B-Midtrain",
+      "revision": "8dc5f6055b90fe4b9422340810b270b9569f37f3"
+    },
+    {
+      "role": "SFT_stage_context",
+      "repo": "openbmb/MiniCPM5-2B-SFT",
+      "revision": "54f7a31935a03431d5d7ad75ea8ce1a68c95877c"
+    },
+    {
+      "role": "released_system_comparator",
+      "repo": "openbmb/MiniCPM5-2B",
+      "revision": "62b9b3bd4308e72905c5bce38c1d6689549c525d"
+    }
+  ],
+  "verified_release_config": {
+    "architecture": "LlamaForCausalLM",
+    "total_parameters": 2516756480,
+    "non_embedding_parameters": 1981982720,
+    "layers": 42,
+    "hidden_size": 2048,
+    "intermediate_size": 6144,
+    "query_heads": 16,
+    "KV_heads": 2,
+    "head_dim": 128,
+    "vocab_size": 130560,
+    "tie_word_embeddings": false,
+    "max_position_embeddings": 131072,
+    "rope_theta": 5000000,
+    "dtype": "bfloat16"
+  },
+  "required_local_evaluation": [
+    "exact downloaded file and model hashes",
+    "production-formatted and parser-independent equal-category BPB for the base checkpoint",
+    "fixed decode parameters with thinking and no-thinking reported separately",
+    "4K, 32K, and 128K capability plus original-context retention",
+    "prefill, decode, KV-state, peak-memory, energy, and output-token measurements",
+    "repetition/runaway and abstention rates",
+    "native Transformers and GGUF parity where available"
+  ],
+  "comparison_boundaries": [
+    "final RL+OPD scores are released-system context, not architecture evidence against a base model",
+    "stage deltas are descriptive unless training data compute and evaluation identities match",
+    "vendor average is not a Speck headline baseline until locally reproduced",
+    "no MiniCPM data enters Speck training through this comparator record"
+  ],
+  "training_authority": false,
+  "paper_claim_authority": false
+}

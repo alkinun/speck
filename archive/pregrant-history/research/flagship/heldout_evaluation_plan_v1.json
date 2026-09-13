@@ -1,0 +1,75 @@
+{
+  "format": "speck_parser_independent_heldout_plan",
+  "format_version": 1,
+  "status": "fixture_tooling_ready_real_bundle_and_results_blocked",
+  "lesson": "Magic's pretraining lesson is that production formatting is part of the pretraining distribution and can materially change measured loss; therefore the production-formatted view is retained, but an independently implemented extraction is scored separately so one parser cannot define the conclusion.",
+  "categories": ["web", "code", "math", "synthetic", "science", "reference"],
+  "views": {
+    "production_formatted": "the exact selection-heldout JSONL emitted and authorized by the existing firewall",
+    "parser_independent": "a separate file produced by an alternate parser/extractor and paired only by immutable source/document identity",
+    "required_binding": ["view file SHA-256", "parser/extractor ID and revision", "parser/extractor artifact SHA-256", "source ID", "source-document SHA-256", "view-text SHA-256"],
+    "pooled_or_substitutable": false,
+    "decision": "parser-independent equal-category macro BPB is the primary ranking view; every category guardrail must pass independently in both views"
+  },
+  "identity": {
+    "required_partitions": ["training", "selection_heldout", "D5_tokenizer", "E2_mixture"],
+    "training_scope": "one aggregate ledger covering every tokenizer-training and model-training identity relevant to the evaluation",
+    "global_disjoint_keys": ["source-derived document identity", "source-document SHA-256", "normalized-content SHA-256"],
+    "selection_and_audit_binding": "ordered normalized-content hashes must reproduce each category/partition commitment in the immutable firewall manifest",
+    "sealed_payload_read_required": false
+  },
+  "bounds": {
+    "fixture_maximum_documents_per_category": 10,
+    "fixture_maximum_utf8_bytes_per_view_per_category": 10000,
+    "fixture_maximum_exhaustive_jaccard_pairs": 1000,
+    "real_values": "must be frozen in an executable successor before materialization; this plan does not invent held-out or audit sizes"
+  },
+  "leakage": {
+    "normalization": "NFKC+lower+whitespace",
+    "normalized_window_characters": 96,
+    "window_rule": "all sliding normalized character windows; any training/held-out match fails",
+    "jaccard": "exact token-shingle Jaccard over every pair inside the declared bound; candidate approximation cannot authorize a pass",
+    "candidate_verified_jaccard_threshold": 0.8,
+    "action": "either additional channel fails the bundle",
+    "relationship_to_existing_firewall": "additional_only_no_substitution_or_weakening"
+  },
+  "statistics": {
+    "unit": "bits_per_utf8_byte",
+    "document_score": "nll_nats / (ln(2) * exact view UTF-8 bytes)",
+    "category_score": "mean document BPB",
+    "primary_score": "unweighted macro mean of the six category paired deltas",
+    "category_guardrail_upper_95_ci_bpb": 0.01,
+    "bootstrap_seed": 314159,
+    "bootstrap_replicates": 10000,
+    "subdomains": "reported beneath their formal category with zero independent decision weight"
+  },
+  "cross_backend_parity": {
+    "status": "optional_fixture_implemented",
+    "scope": "identical external-model identity and complete two-view document set through two distinct hash-bound backends",
+    "comparison": "maximum absolute per-document NLL difference against a predeclared tolerance",
+    "selection_authority": false
+  },
+  "existing_guardrails": {
+    "required_firewall_gates": ["global_content_disjointness", "equal_category_targets", "sealed_audits_unopened"],
+    "selection_consumer_must_pass_existing_authorizer": true,
+    "audit_opening": "not performed by this tooling",
+    "failed_audit_search": "unchanged; no additional search",
+    "old_pinned_firewall_evidence_modified": false
+  },
+  "authority": {
+    "fixture_consumer_authority": false,
+    "fixture_selection_authority": false,
+    "fixture_training_authority": false,
+    "fixture_audit_opening_authority": false,
+    "analysis_selects_or_trains_automatically": false
+  },
+  "real_execution": {
+    "status": "blocked",
+    "requires": [
+      "production firewall with immutable real bounds and passing rights/operations records",
+      "aggregate training identity ledger and bound selection/audit commitment ledgers",
+      "production formatter and independent parser/extractor artifacts with immutable revisions and hashes",
+      "pre-results model, backend, bootstrap, and numerical-tolerance manifests"
+    ]
+  }
+}

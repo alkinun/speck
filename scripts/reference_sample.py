@@ -2,7 +2,10 @@
 
 import argparse
 
-from speck.reference_sample import load_reference_sample_config, sample_reference_source
+from speck.data.sources.reference_sample import (
+    load_reference_sample_config,
+    sample_reference_source,
+)
 
 
 def parse_args(argv=None):

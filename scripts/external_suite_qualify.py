@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.external import qualify_external_suite
+from speck.evaluation.external import qualify_external_suite
 
 
 def checkout(value):

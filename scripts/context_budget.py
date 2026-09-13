@@ -6,10 +6,10 @@ from pathlib import Path
 
 import torch
 
-from speck.budget import estimate_context_budget
 from speck.config import load_experiment
-from speck.long_context import parse_lengths
+from speck.evaluation.protocols import parse_lengths
 from speck.model import build_model
+from speck.model.budget import estimate_context_budget
 
 
 def arguments(argv=None):

@@ -7,9 +7,9 @@ from pathlib import Path
 
 import torch
 
-from speck.io import atomic_json
-from speck.tokenizer_pilot_runtime import load_pilot_run_manifest
-from speck.tokenizer_pilot_train import load_resume_policy, qualify_checkpoint_resume
+from speck.provenance.io import atomic_json
+from speck.tokenization.pilot_runtime import load_pilot_run_manifest
+from speck.tokenization.pilot_train import load_resume_policy, qualify_checkpoint_resume
 
 
 def main():

@@ -6,13 +6,13 @@ contract; `data_plan.json` preserves the pre-integration predecessor.
 Dataset revisions, licenses, filters, hashes, and exact arm weights become immutable experiment
 manifests before any result from that experiment is inspected.
 
-The broad source search and pinned candidate revisions are in [`SOURCES.md`](SOURCES.md) and
+The broad source search and pinned candidate revisions are in [`SOURCES.md`](../literature/surveys/sources.md) and
 [`source_registry_v2.json`](source_registry_v2.json). The v2 successor preserves the selected sources
 and allocations while binding the project owner's guarded-use decision. Source approval permits data
 preparation under [`release_and_data_use_policy_v1.json`](release_and_data_use_policy_v1.json); it does
 not replace production operations, firewall, tokenizer, packing, or launch authority.
 
-[`source_rights_acceptance_template.json`](source_rights_acceptance_template.json) consolidates the
+[`source_rights_acceptance_template.json`](../../archive/pregrant-history/research/flagship/source_rights_acceptance_template.json) consolidates the
 30 selected sources and six evidence packets for a named human authority. Validation checks source
 coverage, evidence hashes, intended scope, attribution, redistribution, removal policy, and signature
 completeness, but makes no decision. Pending or rejected sources cannot produce the all-approved
@@ -49,13 +49,10 @@ mixture, not the expected winner:
 | Reference | 5% | 3–10% | FineWiki English, qualified open books/technical discussion |
 
 Every generated E2 arm sums to 100% and stays inside those bounds. Science and reference use the
-already integrated incumbents after fresh qualification; their proportions still vary in E2. Code
-is the largest missing implementation dependency. The newly released Stack v3.1 is now the primary
-raw-code candidate because it includes contents, preserves repository structure, and fixes v3.0's
-reported duplicate leak. It is not approved merely because it is public: exclude no-license and
-vendored files, retain per-file provenance and attribution, rescan secrets/PII and contamination,
-and qualify a repository-aware adapter. The code-source decision remains a rights and provenance
-gate, not just a loss comparison.
+already integrated incumbents after qualification; their proportions still vary in E2. The bounded
+code sources and guarded source-use decision are complete. Production manifests must preserve the
+repository-aware filtering, provenance, attribution, exclusion, and contamination conditions.
+See [current status](../status.json) for the final corpus work.
 
 The 32K/128K extension corpus is separate from these weights. It uses complete books, papers, and
 repository trees rather than unrelated packed fragments. It cannot leak into the base-mixture
@@ -72,18 +69,18 @@ gate eliminates it without a training run.
    safety and PII handling, document-length distribution, and parsing failure rate.
 3. **Leakage:** train/evaluation separation, repository-level splitting for code, benchmark
    decontamination, exact deduplication, and a measured near-duplicate policy within and across
-   sources. The current pipeline implements global exact deduplication; near-duplicate support is a
-   pre-grant deliverable, not an assumed capability.
+   sources. The production pipeline includes global exact and verified near-duplicate processing;
+   its original calibration evidence and current execution qualification remain distinct.
 4. **Operations:** usable-token yield, download and packing throughput, transient and final storage,
    restart behavior, stable shuffle, shard checksum, and projected unique-token capacity.
 5. **Tokenizer:** fertility and byte fallback by category on a tokenizer-training-disjoint sample.
    All GPU arms use one frozen tokenizer so tokenization cannot confound the data comparison.
 
-The 20B-token rehearsal exercises the exact winning or fallback implementations, including cleanup
-of raw shards. No source can be launch-critical if its full-scale acquisition path or legal status is
-still conditional.
+The accepted 2B operations calibration supports a conditional 150B preparation branch. The paused
+20B rehearsal and blocked 500B branch remain historical alternatives; their exact conditions are in
+the selected operations-fallback contract.
 
-[`production_data_plan.json`](production_data_plan.json) freezes the pre-rehearsal operations order.
+[`production_data_plan.json`](../../archive/pregrant-history/research/flagship/production_data_plan.json) freezes the pre-rehearsal operations order.
 The fixture-qualified disk-backed preprocessor applies human-reviewed deny entries, global exact and
 verified near deduplication, redacted removal records, record-level checkpoints, and post-publication
 cleanup receipts before the existing exact-dedup/tokenization packer. It does not replace the 20B
@@ -108,7 +105,7 @@ All benchmark prompts and reference answers are also decontaminated from trainin
 packing. Contamination checks and removals are recorded per source and per benchmark.
 
 The first executable firewall contract was
-[`web_contamination_v1.json`](web_contamination_v1.json). It freezes 20 short-context, math, and code
+[`web_contamination_v1.json`](../../archive/pregrant-history/research/flagship/web_contamination_v1.json). It freezes 20 short-context, math, and code
 payloads (63,652 tasks), independent normalized exact-field matching, task-unique 13-gram critical
 matching, and 10-gram sensitivity disclosure. Its bounded web successors are technical evidence, not
 training authority; source rights, production deduplication, and cleanup/resume still gate use.

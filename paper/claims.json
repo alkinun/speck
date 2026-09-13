@@ -18,11 +18,11 @@
         "research/flagship/source_rights_acceptance_v1.json"
       ],
       "evidence": [
-        "findings/204_release_and_source_use_policy.md",
-        "findings/208_production_data_calibration_2b.md",
-        "findings/209_production_calibration_fallback_decision.md",
-        "findings/210_production_data_firewall.md",
-        "results/data/production-data-calibration-2b-20260910.json"
+        "archive/pregrant-history/findings/204_release_and_source_use_policy.md",
+        "archive/pregrant-history/findings/208_production_data_calibration_2b.md",
+        "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
+        "archive/pregrant-history/findings/210_production_data_firewall.md",
+        "archive/pregrant-history/results/data/production-data-calibration-2b-20260910.json"
       ],
       "planned_outputs": [
         "six-category data funnel and response-surface figure",
@@ -45,13 +45,13 @@
         "research/flagship/architecture_plan_v2.json"
       ],
       "evidence": [
-        "findings/08_global_attention_frontier.md",
-        "findings/16_kimi_transfer_131m.md",
-        "findings/17_kimi_frontier_replication.md",
-        "findings/18_kimi_context32k.md",
-        "findings/24_reader_attention.md",
-        "findings/105_paper_1_paired_proxy_analysis.md",
-        "results/Speck-Paper1/baseline-analysis.json"
+        "archive/pregrant-history/findings/08_global_attention_frontier.md",
+        "archive/pregrant-history/findings/16_kimi_transfer_131m.md",
+        "archive/pregrant-history/findings/17_kimi_frontier_replication.md",
+        "archive/pregrant-history/findings/18_kimi_context32k.md",
+        "archive/pregrant-history/findings/24_reader_attention.md",
+        "archive/pregrant-history/findings/105_paper_1_paired_proxy_analysis.md",
+        "archive/pregrant-history/results/Speck-Paper1/baseline-analysis.json"
       ],
       "planned_outputs": [
         "dense hybrid quality FLOP and state frontier",
@@ -72,7 +72,7 @@
       "contracts": [
         "research/flagship/integration_plan_v2.json",
         "research/flagship/architecture_plan_v2.json",
-        "research/flagship/plan_v2.json"
+        "research/flagship/plan_v3.json"
       ],
       "evidence": [],
       "planned_outputs": [
@@ -94,12 +94,12 @@
       "contracts": [
         "research/flagship/PAPER.md",
         "research/flagship/architecture_plan_v2.json",
-        "research/flagship/plan_v2.json"
+        "research/flagship/plan_v3.json"
       ],
       "evidence": [
-        "findings/04_existing_checkpoint_128k_systems.md",
-        "findings/24_reader_attention.md",
-        "findings/202_preaccess_training_and_slurm_hardening.md"
+        "archive/pregrant-history/findings/04_existing_checkpoint_128k_systems.md",
+        "archive/pregrant-history/findings/24_reader_attention.md",
+        "archive/pregrant-history/findings/202_preaccess_training_and_slurm_hardening.md"
       ],
       "planned_outputs": [
         "full flagship learning and extension trajectory",

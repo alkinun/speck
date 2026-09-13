@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.data_rehearsal import (
+from speck.data.data_rehearsal import (
     issue_operations_qualification,
     load_rehearsal_config,
     run_rehearsal,

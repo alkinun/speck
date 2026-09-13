@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.math_sample import load_math_sample_config, sample_math_source
+from speck.data.sources.math_sample import load_math_sample_config, sample_math_source
 
 
 def parse_args(argv=None):

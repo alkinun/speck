@@ -4,8 +4,8 @@ import argparse
 from pathlib import Path
 
 from speck.config import load_experiment
-from speck.dataset import resolve_data_dir
-from speck.long_data import derive_long_document_dataset
+from speck.data.dataset import resolve_data_dir
+from speck.data.long_documents import derive_long_document_dataset
 
 
 def arguments(argv=None):

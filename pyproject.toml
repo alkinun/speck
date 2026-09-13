@@ -3,7 +3,8 @@ name = "speck"
 version = "0.1.0"
 description = "A compact research harness for efficient language model pretraining"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26.0",
@@ -16,6 +17,17 @@ dependencies = [
     "torch==2.9.1",
     "wandb>=0.21.3",
 ]
+
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["speck*", "scripts*"]
+namespaces = false
+
+[project.scripts]
+speck = "speck.cli:main"
 
 [dependency-groups]
 dataset-build = [
@@ -49,6 +61,10 @@ transformers = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+markers = [
+    "evidence: verify frozen research records against their original checkout",
+    "integration: requires maintainer-local artifacts or accelerator hardware",
+]
 
 [tool.pyright]
 venvPath = "."
@@ -58,6 +74,7 @@ pythonVersion = "3.10"
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+extend-exclude = ["archive"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]

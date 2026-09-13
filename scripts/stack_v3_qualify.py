@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.stack_v3 import load_stack_v3_config, qualify_stack_v3
+from speck.data.sources.stack_v3 import load_stack_v3_config, qualify_stack_v3
 
 
 def parse_args(argv=None):

@@ -1,0 +1,199 @@
+{
+  "format": "speck_flagship_tokenizer_plan",
+  "format_version": 7,
+  "status": "formal_static_nomination_complete_lm_pilot_pending_D5_unopened",
+  "supersedes": {
+    "path": "research/flagship/tokenizer_plan_v6.json",
+    "sha256": "15cec14f34b7b645439c4c8ee9ae535f63e85c4546c752a75fb4f339b0da0006",
+    "repository_revision": "a1bc2e7",
+    "reason": "bind the adopted production sample, all three trained candidates, pinned baseline, formal static evaluation, and endpoint nomination without opening D5 or making the final choice"
+  },
+  "evidence": {
+    "path": "results/data/tokenizer-local-study-20260907.json",
+    "sha256": "6ffdaad34318383b4d08f4f6ecd8940b69366daebd3512e61be1308523b02bb1",
+    "authority": "local_exploratory_nomination_only"
+  },
+  "source_registry": "research/flagship/source_registry_v2.json",
+  "language_scope": "English natural language; programming syntax exempt; code prose English-filtered",
+  "categories": [
+    "web",
+    "code",
+    "math",
+    "synthetic",
+    "science",
+    "reference"
+  ],
+  "sample": {
+    "training_bytes_per_category": 100000000,
+    "evaluation_bytes_per_category": 10000000,
+    "evaluation_modulus": 10,
+    "evaluation_remainders": [
+      0
+    ],
+    "min_chars": 50,
+    "max_chars": 1000000,
+    "global_exact_dedup_normalization": "NFKC+lower+whitespace",
+    "input_identity": "production firewall manifest plus per-category tokenizer_train/tokenizer_eval file SHA-256",
+    "source_status": "human_rights_and_calibrated_operations_approved_firewall_complete",
+    "source_selection": "one production-calibration primary per category; candidate-source technical freeze remains historical evidence",
+    "firewall_manifest": {
+      "path": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+      "sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+    }
+  },
+  "trainer": {
+    "model_type": "bpe",
+    "character_coverage": 1.0,
+    "byte_fallback": true,
+    "normalization_rule_name": "identity",
+    "remove_extra_whitespaces": false,
+    "add_dummy_prefix": false,
+    "allow_whitespace_only_pieces": true,
+    "split_digits": true,
+    "split_by_unicode_script": true,
+    "split_by_whitespace": true,
+    "split_by_number": true,
+    "max_sentence_length": 1000000,
+    "num_threads": 1,
+    "hard_vocab_limit": true,
+    "special_ids": {
+      "unk": 0,
+      "bos": 1,
+      "eos": 2,
+      "pad": -1
+    }
+  },
+  "baseline": {
+    "id": "mistral-32k",
+    "repo": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+    "filename": "tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+    "expected_vocab_size": 32000,
+    "fallback": true
+  },
+  "candidates": [
+    {
+      "id": "speck-bpe-32000-whitespace",
+      "vocab_size": 32000
+    },
+    {
+      "id": "speck-bpe-32768-whitespace",
+      "vocab_size": 32768
+    },
+    {
+      "id": "speck-bpe-40960-whitespace",
+      "vocab_size": 40960
+    }
+  ],
+  "retired_v1_candidate": {
+    "id": "speck-bpe-49152",
+    "disposition": "preserved_in_v1_not_carried_into_formal_v2_v3_v4_or_v5",
+    "reason": "local corrected 40960 gained only 1.57 percent compression over 32768 while adding 16.78M tied Shape-A embedding/head parameters; 49152 has still higher cost"
+  },
+  "model_accounting": {
+    "embedding_width": 2048,
+    "tied_embeddings": true,
+    "architecture_config_tie_word_embeddings": true,
+    "physical_embedding_and_head_parameter_formula": "effective_vocab_size * embedding_width",
+    "chat_added_tokens": 3,
+    "packed_token_dtype": "uint16"
+  },
+  "static_evaluation": {
+    "selection_authority": false,
+    "advance_custom_candidates": 2,
+    "policy": "research/flagship/tokenizer_static_nomination_policy_v2.json",
+    "metrics": [
+      "macro_and_category_tokens_per_kib",
+      "bytes_per_token",
+      "tokens_per_word",
+      "document_ratio_p50_p90_p99",
+      "unknown_tokens",
+      "probe_roundtrip",
+      "whitespace_piece_usage",
+      "byte_fallback_usage",
+      "embedding_and_head_parameters"
+    ]
+  },
+  "language_model_pilot": {
+    "hardware": "local RTX 3090",
+    "scale": "60M",
+    "horizon": "same document prefix ending at 1.2B Mistral tokens plus per-tokenizer fixed-FLOP stops matched to that baseline",
+    "screen_runs": 3,
+    "confirmation_runs": 4,
+    "total_runs": 7,
+    "local_gpu_hour_ceiling": 30,
+    "primary_metric": "equal-category macro bits per UTF-8 byte",
+    "aggregate_guardrail_bpb": 0.01,
+    "category_guardrail_bpb": 0.02,
+    "confirmation_seeds": 3,
+    "tie_rule": "lower compute to fixed quality, then smaller vocabulary",
+    "fallback": "mistral-32k"
+  },
+  "formal_execution": {
+    "status": "static_complete_pilot_pending",
+    "config": {
+      "path": "research/flagship/tokenizer_d5_v1/experiment.json",
+      "sha256": "49680e2a496c88875f60b6556ae617b05f7d1ffef287b737cadbd070d8fda5f5"
+    },
+    "output_directory": "/mnt/speck-data/speck/tokenizer-d5-v1",
+    "result": {
+      "path": "results/data/formal-tokenizer-static-20260910.json",
+      "sha256": "c8dad3f5e561baa3b1be1c323158bd1890888781104c716a1de0f6953ce4cab7"
+    },
+    "sample_manifest": {
+      "path": "/mnt/speck-data/speck/tokenizer-d5-v1/sample/manifest.json",
+      "sha256": "f706a20b01ef3d1692bfc3c9d47b4ed090e2f83567e258c6b5bae8e75ea821e9"
+    },
+    "static_evaluation": {
+      "path": "/mnt/speck-data/speck/tokenizer-d5-v1/evaluation.json",
+      "sha256": "a78c908f31d49688e1b625b6925896037d5d7a2f14c764aa0af3d6dec39eb45c"
+    },
+    "nomination": {
+      "path": "/mnt/speck-data/speck/tokenizer-d5-v1/nomination.json",
+      "sha256": "643055c669740ca381c231bdf6a3752fd588d49cd78bfe0f821e8fd9964d0020"
+    }
+  },
+  "freeze_before": [
+    "data experiments E1W E1S and E2-E4",
+    "integrated validation I1 and I2",
+    "architecture shared control C0",
+    "full corpus packing"
+  ],
+  "selection_authority": false,
+  "training_authority": "tokenizer_training_complete_model_training_blocked",
+  "embedding_head_contract": {
+    "path": "research/flagship/embedding_head_contract_v1.json",
+    "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7"
+  },
+  "release_and_data_use_policy": {
+    "path": "research/flagship/release_and_data_use_policy_v1.json",
+    "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+  },
+  "source_rights_acceptance": {
+    "path": "research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "implementation": {
+    "module": [
+      "speck/tokenizer_experiment.py",
+      "68b76bef5a2e1811f3d5413eecc3f7e6ea911f46ec58540bc52b6ece1b17a5f4"
+    ],
+    "sample_cli": [
+      "scripts/tokenizer_sample_prepare.py",
+      "abfaf80d13e03c399acd979c82fe493a30859c78ba10de46e2eaed3f8ef9704b"
+    ],
+    "train_cli": [
+      "scripts/tokenizer_train.py",
+      "50cdb3c2f00335eb5e49b0d6c3195859ae6255c1bde63822bc6f42fa6584d8cf"
+    ],
+    "evaluate_cli": [
+      "scripts/tokenizer_evaluate.py",
+      "f3f3d9243db3ae136dd08de12062066db6fc91b2f6ffdfcc2bfbff836d36cf6a"
+    ],
+    "tests": [
+      "tests/test_tokenizer_experiment.py",
+      "72c3f23858fd751a8f9ccee5cfd1c5d387a5720648080600ffbeb665a695a1f4"
+    ]
+  }
+}

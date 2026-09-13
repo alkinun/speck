@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.common_pile_peps import load_peps_config, sample_common_pile_peps
+from speck.data.sources.common_pile_peps import load_peps_config, sample_common_pile_peps
 
 
 def parse_args(argv=None):

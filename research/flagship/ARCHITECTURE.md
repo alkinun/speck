@@ -17,8 +17,8 @@ energy advantages that this chain directly measures.
 Five evidence levels have different authority:
 
 1. **Completed discovery:** the 150M studies establish candidates and negative results. They include
-   the mixer screens, [Kimi-transfer staircase](../../findings/16_kimi_transfer_131m.md),
-   [three-seed frontier replication](../../findings/17_kimi_frontier_replication.md), long-context
+   the mixer screens, [Kimi-transfer staircase](../../archive/pregrant-history/findings/16_kimi_transfer_131m.md),
+   [three-seed frontier replication](../../archive/pregrant-history/findings/17_kimi_frontier_replication.md), long-context
    activation, attention-gate rejection, and Reader Attention frontier. They motivate the grant
    matrix but cannot by themselves select the 350M–1.2B release geometry.
 2. **Grant decisions:** D4/D6 calibrate on the qualified incumbent in P1. C0, D2, D3, D7, and D8
@@ -33,7 +33,7 @@ Five evidence levels have different authority:
 5. **Systems realization:** randomized, interleaved measurements on GH200, RTX 3090, and CPU verify
    whether analytic FLOP/state advantages produce actual training and serving gains.
 
-The completed [whole-architecture proxy evidence](../architecture-promotion-v1/evidence_matrix.json)
+The completed [whole-architecture proxy evidence](../../archive/pregrant-history/research/architecture-promotion-v1/evidence_matrix.json)
 already reports a three-pair quality pass for the five-cache KDA/GQA hybrid versus dense, with lower
 analytic FLOPs and faster training. Its own evidence record states that it does not isolate KDA,
 NoPE, GQA, or the 3:1 ratio. The new program preserves that result as prior evidence and closes the
@@ -63,9 +63,9 @@ both fixed-token and fixed-analytic-FLOP views; matched wall-clock is the primar
 If either residual exceeds 1%, the arm remains useful as an operator-package comparison but cannot be
 described as a pure decay-rule ablation.
 
-D8 requires a pre-grant code successor because KDA currently hardcodes sigmoid. A missing field must
-remain exactly equivalent to explicit sigmoid for old configs and checkpoints. SiLU and sigmoid must
-have identical parameters, analytic FLOPs, state geometry, and export behavior before training.
+D8 uses selectable KDA output gating. A missing field remains equivalent to explicit sigmoid for
+old configs and checkpoints. SiLU and sigmoid must retain identical parameters, analytic FLOPs, state
+geometry, and export behavior; hardware qualification is tracked in [current status](../status.json).
 
 ## 3. Statistical and promotion rules
 
@@ -200,6 +200,6 @@ Primary methodological references: [DeepSeek-V2](https://arxiv.org/abs/2405.0443
 of architecture ablation, cache accounting, and measured efficiency, and
 [DeepSeek-V3](https://arxiv.org/abs/2412.19437) for carrying previously validated mechanisms into a
 new scale while isolating new contributions, and the
-[DeepSeek-V4.1-Flash source audit](../../papers/48_deepseek_v4_1_flash.md) for separating prefill,
+[DeepSeek-V4.1-Flash source audit](../literature/48_deepseek_v4_1_flash.md) for separating prefill,
 decode, layer-cache reuse, runtime state, persistent state, and output-token cost without importing its
 operator package into grant 1.

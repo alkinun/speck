@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.data_firewall import construct_firewall, load_firewall_config
+from speck.data.data_firewall import construct_firewall, load_firewall_config
 
 
 def main():

@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.heldout_evaluation import build_heldout_manifest, load_heldout_config
+from speck.evaluation.heldout import build_heldout_manifest, load_heldout_config
 
 
 def main():

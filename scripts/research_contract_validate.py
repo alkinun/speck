@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 
 from speck.config import load_experiment
-from speck.research import validate_research_contract
-from speck.tokenizer import get_tokenizer
+from speck.provenance.contracts import validate_research_contract
+from speck.tokenization.tokenizer import get_tokenizer
 
 
 def arguments(argv=None):

@@ -1,7 +1,7 @@
 # Flagship Instruct: data and training plan
 
 Status: current approximate design, 2026-09-11. Coordination: [SPE-176](https://linear.app/openspecklabs/issue/SPE-176).
-This supersedes the experiment-heavy proposal summarized in the [design notebook](../notebook/2026-09-11-post-training-design.md). The first release
+This supersedes the experiment-heavy proposal summarized in the [design notebook](../../archive/pregrant-history/research/notebook/2026-09-11-post-training-design.md). The first release
 focuses on Instruct; dedicated Think and dual-mode behavior are deferred. This is guided model
 development with milestone evaluations, not another mandatory ablation matrix. Exact source weights,
 training settings, and launch manifests follow prepared data and measured throughput.
@@ -83,8 +83,8 @@ share the same train/development/audit family partition as all other data.
 
 ## 3. Sources and provenance
 
-Use the [dataset survey](POST_TRAINING_DATA_SURVEY.md) for component-level reasoning and the
-[snapshot receipt](post_training_dataset_survey_v0.json) for inspected revisions. Those snapshots
+Use the [dataset survey](../literature/surveys/post_training_data_survey.md) for component-level reasoning and the
+[snapshot receipt](../../archive/pregrant-history/research/flagship/post_training_dataset_survey_v0.json) for inspected revisions. Those snapshots
 are discovery evidence, not a prepared training corpus.
 
 Revisit the good upstream SpeckChat components without inheriting the old row quotas or 2K restriction:
@@ -172,7 +172,7 @@ RL comparison with direct model development:
 
 This uses the proposed P6 redistribution: 200 context + 130 post-training + 60 quality evaluation +
 60 serving/export = 450 GPU-hours. It replaces the old 80-hour annealing/merge commitment plus 50-hour
-SFT line; an executable successor to `plan_v2.json` must reconcile that work list before launch.
+SFT line; [plan_v3.json](plan_v3.json) reconciles that work list and its initial sub-budgets.
 The 5,000-hour ceiling and 889-hour protected reserve do not change. These are spending ceilings,
 not promises that every token range above fits.
 

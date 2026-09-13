@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.tokenizer_nomination import nominate_from_files
+from speck.tokenization.nomination import nominate_from_files
 
 
 def main():

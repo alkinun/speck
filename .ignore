@@ -1,0 +1,2 @@
+# Keep default ripgrep searches focused. Use rg --no-ignore archive/ for history.
+archive/

@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.heldout_evaluation import analyze_heldout_scores
+from speck.evaluation.heldout import analyze_heldout_scores
 
 
 def main():

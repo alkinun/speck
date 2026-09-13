@@ -1,9 +1,9 @@
 # Flagship execution plan
 
-This is the human operating view of [`plan_v2.json`](plan_v2.json). The JSON freezes phase budgets,
-dependencies, exit gates, and fallback rules. P6 below records the 2026-09-11 approximate design
-successor; its revised work list needs an executable plan successor before launch. Calendar ranges
-are targets rather than reasons to bypass a gate.
+This is the human operating view of [`plan_v3.json`](plan_v3.json). The JSON freezes phase budgets,
+dependencies, exit gates, and fallback rules. V3 reconciles the previously documented P6 design with
+the machine-readable work list. Per-run launch manifests still require qualified data, hardware,
+and analysis. Calendar ranges are targets rather than reasons to bypass a gate.
 
 ## Budget and calendar
 
@@ -48,7 +48,7 @@ No real receipt exists while the P0 data gates remain open.
 
 The active pre-access calibration runs through
 [`data_rehearsal_plan_v9.json`](data_rehearsal_plan_v9.json) and the frozen
-[`data_calibration_2b_v1/`](data_calibration_2b_v1/) plan: source
+[`data_calibration_2b_v1/`](../../archive/pregrant-history/research/flagship/data_calibration_2b_v1) plan: source
 identity, acquisition, global deduplication, packing, resume/cleanup, then firewall disjointness. The
 runner durably verifies completed stages and captures required resource/yield telemetry at 2B, then
 projects the 20B byte envelope. It cannot issue 20B operations or training authority. The paused full
@@ -143,8 +143,8 @@ fresh diverse mixture, a smaller high-quality grounded finish, and conservative 
 guided development with milestone checks, not a new mandatory screen/RL comparison matrix.
 
 This reallocates the earlier 80-hour three-annealing-branch/merge line plus 50-hour SFT line into
-130 hours of Instruct development. `plan_v2.json` retains the predecessor work list; reconcile it
-through an executable successor before launches. The phase total and protected reserve stay fixed.
+130 hours of Instruct development. `plan_v3.json` records that work list and the four initial
+sub-budgets. The phase total and protected reserve stay fixed.
 Each context stage must retain original-4K quality before the next begins, and post-training must
 retain useful context. An unsuccessful continuation keeps the earlier qualified checkpoint;
 preference work cannot displace evaluation, serving, or release parity.

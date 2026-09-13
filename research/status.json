@@ -1,0 +1,77 @@
+{
+  "as_of": "2026-09-13",
+  "program": "flagship",
+  "phase": "pregrant",
+  "runtime": {
+    "state": "reorganized_execution_qualification_pending",
+    "frozen_pilot_revision": "e3ed10c0a2e584b38384dc2c6714bea44bfd909d",
+    "note": "The archived tokenizer screen belongs to its frozen checkout. New scientific runs require qualification of the reorganized implementation."
+  },
+  "work": [
+    {
+      "id": "tokenizer",
+      "state": "in_progress",
+      "evidence": "archive/pregrant-history/results/data/tokenizer-pilot-mistral-seed42-20260913.json",
+      "next": "Complete the two custom seed-42 arms in the frozen checkout, reproject measured overhead, then follow the confirmation and D5 rules."
+    },
+    {
+      "id": "source_qualification",
+      "state": "complete",
+      "evidence": "archive/pregrant-history/findings/204_release_and_source_use_policy.md",
+      "next": "Carry the approved source identities and release conditions into production manifests."
+    },
+    {
+      "id": "data_operations",
+      "state": "conditional_fallback",
+      "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
+      "next": "Use the accepted conditional 150B preparation branch; 500B requires a new operations/storage decision after E3."
+    },
+    {
+      "id": "firewall",
+      "state": "complete",
+      "evidence": "archive/pregrant-history/findings/210_production_data_firewall.md",
+      "next": "Preserve unopened audits and bind final tokenizer/corpus identities."
+    },
+    {
+      "id": "corpora",
+      "state": "pending",
+      "next": "Prepare tokenizer-bound stable and decay corpora after the required tokenizer and selection decisions."
+    },
+    {
+      "id": "long_documents",
+      "state": "pending",
+      "next": "Materialize coherent units and measure 32K/128K usable yield."
+    },
+    {
+      "id": "hardware",
+      "state": "pending",
+      "next": "Qualify arm64, Torch/FLA KDA, four-GPU DDP, WSD/resume, storage, Slurm, and exact-shape throughput on GH200."
+    },
+    {
+      "id": "analysis",
+      "state": "pending",
+      "next": "Implement per-arm materializers, analyzers, and paper figure schemas for the selected data, architecture, and integration contracts."
+    },
+    {
+      "id": "comparators",
+      "state": "pending",
+      "next": "Run pinned comparator quality and serving evaluations; fixture parity is only prior plumbing evidence."
+    },
+    {
+      "id": "export",
+      "state": "partial",
+      "next": "Qualify the reorganized native/Transformers packaging and implement the missing recurrent GGUF path."
+    },
+    {
+      "id": "post_training_plan",
+      "state": "planning_budget_reconciled",
+      "next": "Materialize executable post-training runs under plan_v3\u2019s 200/130/60/60 P6 envelopes after the relevant data and hardware qualification."
+    },
+    {
+      "id": "release_backup",
+      "state": "partial",
+      "evidence": "archive/pregrant-history/findings/212_independent_r3_backup_restore.md",
+      "next": "Preserve the independently verified local backup; finalize off-site storage, DOI archive, and release destinations."
+    }
+  ]
+}

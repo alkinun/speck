@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.tokenizer_study import evaluate_study, train_study_model
+from speck.tokenization.study import evaluate_study, train_study_model
 
 
 def main():

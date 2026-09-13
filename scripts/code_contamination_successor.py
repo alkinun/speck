@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.code_contamination_successor import (
+from speck.data.sources.code_contamination_successor import (
     load_successor_config,
     scan_code_contamination_successor,
 )

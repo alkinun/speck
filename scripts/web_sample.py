@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.web_sample import load_web_sample_config, sample_web_source
+from speck.data.sources.web_sample import load_web_sample_config, sample_web_source
 
 
 def parse_args(argv=None):

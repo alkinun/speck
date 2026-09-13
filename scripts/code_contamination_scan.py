@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.code_contamination import load_contamination_config, scan_code_contamination
+from speck.data.sources.code_contamination import load_contamination_config, scan_code_contamination
 
 
 def parse_args(argv=None):

@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.production_rehearsal import (
+from speck.data.production_rehearsal import (
     load_production_rehearsal_plan,
     run_production_rehearsal_stage,
 )

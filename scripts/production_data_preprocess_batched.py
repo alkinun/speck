@@ -2,8 +2,8 @@
 
 import argparse
 
-import speck.production_data as production_data
-from speck.production_data import load_preprocess_config, preprocess_sources
+import speck.data.production_data as production_data
+from speck.data.production_data import load_preprocess_config, preprocess_sources
 
 
 def _batched_signature(shingles, num_perm, seed):

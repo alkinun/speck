@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.tokenizer_inputs import load_tokenizer_inputs_freeze
+from speck.tokenization.inputs import load_tokenizer_inputs_freeze
 
 
 def main():

@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.stack_edu import load_stack_edu_config, sample_stack_edu
+from speck.data.sources.stack_edu import load_stack_edu_config, sample_stack_edu
 
 
 def parse_args(argv=None):

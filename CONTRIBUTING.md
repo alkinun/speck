@@ -1,90 +1,55 @@
 # Contributing
 
-Speck is a research codebase with reproducibility-sensitive data, training, and evaluation paths.
-Keep changes focused, preserve artifact contracts deliberately, and include tests for behavioral
-changes.
-
-Consequential research follows the [research workflow](research/WORKFLOW.md). The central
-[research catalog](research/catalog.json) defines collection roles and authority; validate it with
-`uv run --extra cpu python -m scripts.research_catalog`.
-
-The [2026-09-08 cleanup audit](docs/code_cleanup_2026-09-08.md) records source-pinned cleanup
-follow-ups. Source-pinned files that require evidence requalification are explicitly excluded from
-formatting, while remaining part of lint and test checks.
-
-Before changing code used by checked evidence, inspect the current provenance boundary:
+## Development
 
 ```bash
-uv run --no-sync python -m scripts.source_pin_check --inventory
-uv run --no-sync python -m scripts.source_pin_check --inventory --all-files
-uv run --no-sync python -m scripts.source_pin_check
+make setup                 # Locked CPU development environment
+make quality               # Format, lint, portable tests, catalog, archive integrity
+make evidence-test         # Frozen research record checks
+make integration-test      # Checks requiring local artifacts or hardware
 ```
 
-The first command inventories Python source pins; `--all-files` expands that report to every tracked
-blob and can take longer. The default changed-file check always covers all tracked files and exits
-unsuccessfully when a base-tree hash is referenced by a checked contract or result. Such changes
-require an explicit successor; do not update old evidence to make the warning disappear.
+Run focused tests while developing, followed by the complete appropriate gate. GPU kernel,
+distributed resume, and scheduler behavior require explicit hardware qualification.
 
-## Development Setup
+## Code organization
 
-Run commands from the repository root. Install the CPU environment and development tools for the
-default test suite:
+The `speck` package owns reusable behavior. `scripts` provides command entry points. The package's
+main areas are `model`, `training`, `data`, `tokenization`, `evaluation`, `export`, `operations`, and
+`provenance`. New library code should not import command scripts.
+
+Keep checkpoint parameter names, optimizer state, data order, and report serialization stable during
+refactors. Changes to those contracts need targeted behavioral tests and explicit new run identities.
+Use `speck.provenance.repository.repository_root` when a checkout root is needed; avoid directory-depth
+assumptions. File hashes and report publication belong in `speck.provenance.io`.
+
+## Current code and historical evidence
+
+The [archive manifest](archive/manifest.json) binds the pre-cleanup tree and every preserved artifact.
+Historical verification checks those original bytes and source revisions. It does not require the
+maintained implementation to remain byte-identical to a completed experiment.
 
 ```bash
-uv sync --extra cpu --group dev --group dataset-build --group ruler --group transformers
+python -m scripts.archive check
+python -m scripts.source_pin_check --base HEAD
 ```
 
-Use `--extra gpu` instead of `--extra cpu` when exercising CUDA-specific behavior. The GPU extra
-targets the CUDA 12.8 PyTorch index.
+The source-pin check reports the effect of changes on active and archived evidence separately.
+Never change an old result's hash to claim it was produced by new code. Current execution must bind
+and qualify the implementation it actually uses. Existing tokenizer-pilot authorization belongs to
+the frozen pre-cleanup checkout; use the archive restore command to continue that execution.
 
-## Quality Checks
+## Research records
 
-Run the complete local gate before submitting a change:
+- Edit draft plans normally in Git. Freeze exact inputs before consequential experiment outputs.
+- Preserve protocol amendments and failed attempts with their original identities.
+- Keep one coherent result/history per experiment and one finding per durable conclusion.
+- Record current state in `research/status.json`; keep the catalog's selected contracts explicit.
+- Put literature in `research/literature`, current conclusions in `research/findings`, and paper
+  claims in `paper/claims.json`.
+- Move completed collections into the archive with an identity manifest.
+- Keep datasets, checkpoints, full predictions, and logs in the runtime store.
 
-```bash
-uv run --no-sync ruff format --check --config ruff-format.toml .
-uv run --no-sync ruff check .
-uv run --no-sync pytest -q
-uv run --no-sync python -m scripts.research_catalog
-```
-
-`make quality` runs the same four checks, and `make setup` installs the locked CPU development
-environment.
-
-Apply the formatter with:
-
-```bash
-uv run --no-sync ruff format .
-```
-
-During development, run the narrowest relevant test file first, then run the complete suite before
-finishing. Tests must not depend on network access, maintainer-local cache contents, or a GPU unless
-they are explicitly isolated as integration tests.
-
-## Change Guidelines
-
-- Keep bug fixes, refactors, generated artifacts, and documentation reorganizations in separate
-  commits when they can be reviewed independently.
-- Add or update focused tests before changing reproducibility-sensitive behavior.
-- Treat experiment JSON, packed-data manifests, checkpoint metadata, and evaluation results as
-  versioned contracts. Document intentional schema changes.
-- Keep generated datasets, checkpoints, model exports, logs, and benchmark working directories
-  outside the repository. Runtime artifacts belong under `~/.cache/speck` by default.
-- Pin remote revisions and checksums when a workflow claims to be reproducible.
-- Write commands in documentation so they run from a clean checkout at the repository root.
-- Update nearby documentation when changing a CLI, configuration key, artifact path, or runtime
-  prerequisite.
-- Record consequential work context in a dated `research/notebook/` entry, then promote stable
-  conclusions into `findings/` only when checked evidence exists.
-- Keep external-paper claims in `papers/`, Speck conclusions in `findings/`, and manuscript claims in
-  `paper/claims.json`; do not collapse these evidence levels.
-- Treat Linear as the work queue and W&B as a monitoring mirror. Neither may be the only record of a
-  scientific result, failed gate, or artifact identity.
-- Assign retention and backup requirements before producing expensive or irreplaceable artifacts;
-  follow [the data and artifact management plan](research/DATA_MANAGEMENT.md).
-
-## Documentation
-
-The README is the task-oriented entry point. Put detailed operational guidance in `docs/` and link
-to it from the relevant README section. Use repository-relative links for local files and verify
-that every documented command matches the corresponding CLI help.
+See the [research workflow](research/WORKFLOW.md) and [artifact policy](research/DATA_MANAGEMENT.md).
+Operational documentation describes maintained commands; historical commands remain revision-bound
+inside the archive.

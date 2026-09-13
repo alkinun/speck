@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.firewall_inputs import load_firewall_input_plan, prepare_firewall_inputs
+from speck.data.firewall_inputs import load_firewall_input_plan, prepare_firewall_inputs
 
 
 def main():

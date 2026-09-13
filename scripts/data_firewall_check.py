@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.data_firewall import authorize_consumer
+from speck.data.data_firewall import authorize_consumer
 
 
 def main():

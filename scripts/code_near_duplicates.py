@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.code_near_duplicates import (
+from speck.data.sources.code_near_duplicates import (
     analyze_cross_source_duplicates,
     load_duplicate_config,
 )

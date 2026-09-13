@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.production_calibration import (
+from speck.data.production_calibration import (
     load_production_calibration_plan,
     run_production_calibration,
 )

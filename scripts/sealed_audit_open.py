@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.data_firewall import open_sealed_audit
+from speck.data.data_firewall import open_sealed_audit
 
 
 def main():

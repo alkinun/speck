@@ -2,7 +2,10 @@
 
 import argparse
 
-from speck.synthetic_sample import load_synthetic_sample_config, sample_synthetic_source
+from speck.data.sources.synthetic_sample import (
+    load_synthetic_sample_config,
+    sample_synthetic_source,
+)
 
 
 def parse_args(argv=None):

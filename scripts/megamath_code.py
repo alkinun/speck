@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.megamath_code import load_megamath_code_config, sample_megamath_code
+from speck.data.sources.megamath_code import load_megamath_code_config, sample_megamath_code
 
 
 def parse_args(argv=None):

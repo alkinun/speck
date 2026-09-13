@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.tokenizer_pilot_data import load_pilot_stream_plan, materialize_pilot_stream
+from speck.tokenization.pilot_data import load_pilot_stream_plan, materialize_pilot_stream
 
 
 def main():

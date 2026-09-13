@@ -2,7 +2,10 @@
 
 import argparse
 
-from speck.text_contamination import load_text_contamination_config, scan_text_contamination
+from speck.data.sources.text_contamination import (
+    load_text_contamination_config,
+    scan_text_contamination,
+)
 
 
 def parse_args(argv=None):

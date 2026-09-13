@@ -2,9 +2,9 @@
 
 import argparse
 
-from speck.chat import get_chat_tokenizer
 from speck.config import load_experiment
-from speck.sft import prepare_sft_dataset
+from speck.tokenization.chat import get_chat_tokenizer
+from speck.training.sft_data import prepare_sft_dataset
 
 
 def parse_args(argv=None):

@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.tokenizer_experiment import (
+from speck.tokenization.experiment import (
     load_experiment_config,
     prepare_baseline,
     train_candidate,

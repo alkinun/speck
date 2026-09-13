@@ -21,6 +21,11 @@ operations such as Gated DeltaNet, partial RoPE, NoPE, lazy positions, and fixed
 covered by native/Transformers logit parity before release. The exported Safetensors names are
 prefixed with `native.` to make that wrapper boundary explicit.
 
+The maintained implementation is split across model state/layers/assembly and training optimizers.
+Export bundles those explicit source files in dependency order, rejects unbundled Speck imports,
+and records their hashes in `native_sources.json`. This preserves a self-contained Transformers
+artifact without requiring the training repository at inference time.
+
 Export and validate the canonical one-epoch instruction checkpoint as a BF16 Transformers
 repository without uploading:
 

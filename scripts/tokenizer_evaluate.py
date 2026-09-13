@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.tokenizer_experiment import evaluate_tokenizers, load_experiment_config
+from speck.tokenization.experiment import evaluate_tokenizers, load_experiment_config
 
 
 def parse_args(argv=None):

@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.tokenizer_pilot_runs import load_run_materialization_plan, materialize_screen_runs
+from speck.tokenization.pilot_manifest import load_run_materialization_plan, materialize_screen_runs
 
 
 def main():

@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.data_launch import issue_launch_receipt
+from speck.data.data_launch import issue_launch_receipt
 
 
 def main():

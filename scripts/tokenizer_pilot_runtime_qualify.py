@@ -4,8 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.io import atomic_json
-from speck.tokenizer_pilot_qualification import qualify_corrected_runtime
+from speck.provenance.io import atomic_json
+from speck.tokenization.pilot_qualification import qualify_corrected_runtime
 
 
 def main():

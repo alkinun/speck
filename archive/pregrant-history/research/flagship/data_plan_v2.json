@@ -1,0 +1,174 @@
+{
+  "format": "speck_flagship_data_plan",
+  "format_version": 2,
+  "status": "planning",
+  "supersedes": {
+    "path": "research/flagship/data_plan.json",
+    "sha256": "9adda80ed0c53f2eef376191223c8df8e444f448cf05c6326432a5b283fa4363",
+    "repository_revision": "34293eeea823d3f483657dbb5491221b5a38dedf",
+    "reason": "retire E5 before outputs and reassign its 100 GPU-hour envelope to integrated data-architecture and assembled-recipe validation"
+  },
+  "language_scope": {
+    "natural_language": [
+      "en"
+    ],
+    "code_syntax_exempt_from_language_id": true,
+    "code_comments_docs_notebooks": "English-filtered"
+  },
+  "categories": [
+    {
+      "id": "web",
+      "prior_percent": 55,
+      "min_percent": 45,
+      "max_percent": 65,
+      "source_screen": "E1W"
+    },
+    {
+      "id": "code",
+      "prior_percent": 15,
+      "min_percent": 10,
+      "max_percent": 22,
+      "source_screen": "E1S"
+    },
+    {
+      "id": "math",
+      "prior_percent": 10,
+      "min_percent": 8,
+      "max_percent": 18,
+      "source_screen": "E1S"
+    },
+    {
+      "id": "synthetic",
+      "prior_percent": 10,
+      "min_percent": 8,
+      "max_percent": 18,
+      "source_screen": "E1S"
+    },
+    {
+      "id": "science",
+      "prior_percent": 5,
+      "min_percent": 3,
+      "max_percent": 10,
+      "source_screen": "qualification"
+    },
+    {
+      "id": "reference",
+      "prior_percent": 5,
+      "min_percent": 3,
+      "max_percent": 10,
+      "source_screen": "qualification"
+    }
+  ],
+  "partitions": [
+    "tokenizer_sample",
+    "selection_heldout",
+    "sealed_audit"
+  ],
+  "firewall_contract": {
+    "plan": "research/flagship/firewall_plan.json",
+    "status": "fixture_tooling_ready_real_targets_and_authority_pending",
+    "real_materialization": "blocked"
+  },
+  "selection": {
+    "primary_unit": "bits_per_utf8_byte",
+    "primary_score": "unweighted_macro_mean_of_six_category_paired_deltas",
+    "category_guardrail_upper_95_ci_bpb": 0.01,
+    "tie_break_order": [
+      "rights_and_supply_security",
+      "distance_from_prior"
+    ],
+    "e2a_design": "deterministic constrained-simplex maximin space-filling",
+    "e2a_advance": 6,
+    "e2b_advance": 3,
+    "final_confirmation_seeds": 3,
+    "sealed_audit_rule": "after ranking, evaluate all three finalists once; select the highest-ranked passing all category guardrails; otherwise use the balanced prior"
+  },
+  "experiments": [
+    {
+      "id": "E1W",
+      "name": "web source and filter screen",
+      "parameters": 350000000,
+      "tokens": 8000000000,
+      "new_runs": 8,
+      "gpu_hours": 133
+    },
+    {
+      "id": "E1S",
+      "name": "code math and synthetic source screens",
+      "parameters": 150000000,
+      "tokens": 2000000000,
+      "new_runs": 15,
+      "gpu_hours": 27
+    },
+    {
+      "id": "E2a",
+      "name": "space-filling stable-mixture screen",
+      "parameters": 60000000,
+      "tokens": 1200000000,
+      "new_runs": 24,
+      "gpu_hours": 10
+    },
+    {
+      "id": "E2b",
+      "name": "stable-mixture narrowing",
+      "parameters": 150000000,
+      "tokens": 3000000000,
+      "new_runs": 6,
+      "gpu_hours": 16
+    },
+    {
+      "id": "E2c",
+      "name": "stable-mixture confirmation",
+      "parameters": 350000000,
+      "tokens": 12000000000,
+      "new_runs": 9,
+      "gpu_hours": 225,
+      "seeds_per_finalist": 3
+    },
+    {
+      "id": "E3",
+      "name": "matched-token repetition policy",
+      "parameters": 150000000,
+      "tokens": 6000000000,
+      "new_runs": 6,
+      "gpu_hours": 32
+    },
+    {
+      "id": "E4",
+      "name": "decay-phase mixture",
+      "parameters": 350000000,
+      "additional_tokens": 3000000000,
+      "new_runs": 8,
+      "gpu_hours": 50
+    }
+  ],
+  "retired_experiments": [
+    {
+      "id": "E5",
+      "name": "curriculum shape",
+      "disposition": "retired_before_outputs",
+      "former_gpu_hours": 100,
+      "replacement": "research/flagship/integration_plan.json",
+      "reason": "crossed data-architecture transfer and assembled-recipe confirmation more directly support the released model and central paper claim"
+    }
+  ],
+  "default_curriculum": {
+    "stable_phase": "uniform sampling within each E2c-selected source treatment at the selected mixture weights",
+    "decay_phase": "use the E4-selected decay mixture under the frozen WSD tail",
+    "claim_status": "declared operational default; no within-source ordering or curriculum-shape claim"
+  },
+  "totals": {
+    "new_runs": 76,
+    "gpu_hours": 493
+  },
+  "binding": [
+    "six reporting categories",
+    "English-only natural language",
+    "mixture bounds and 100-percent sum",
+    "selection and sealed-audit firewall",
+    "BPB macro objective and per-category guardrail",
+    "advancement counts and seed confirmations",
+    "E5 retired before outputs",
+    "493 GPU-hour ceiling"
+  ]
+}

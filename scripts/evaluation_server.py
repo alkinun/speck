@@ -4,7 +4,7 @@ import argparse
 
 import torch
 
-from speck.evaluation_server import TransformersEvaluationEngine, serve
+from speck.evaluation.server import TransformersEvaluationEngine, serve
 
 
 def arguments(argv=None):

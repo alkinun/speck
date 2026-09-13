@@ -3,8 +3,8 @@
 import argparse
 
 from speck.config import load_experiment
-from speck.dataset import prepare_dataset
-from speck.tokenizer import get_tokenizer
+from speck.data.dataset import prepare_dataset
+from speck.tokenization.tokenizer import get_tokenizer
 
 
 def parse_args(argv=None):

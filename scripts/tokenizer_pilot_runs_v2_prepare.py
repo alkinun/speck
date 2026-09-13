@@ -3,7 +3,7 @@
 import argparse
 import json
 
-from speck.tokenizer_pilot_runs_v2 import (
+from speck.tokenization.pilot_materialization import (
     load_corrected_materialization_plan,
     materialize_corrected_screen_runs,
 )

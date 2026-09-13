@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.logprob_parity import compare_artifacts
+from speck.evaluation.logprob_parity import compare_artifacts
 
 
 def arguments(argv=None):

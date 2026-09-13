@@ -3,8 +3,8 @@
 import argparse
 import json
 
-from speck.tokenizer_pilot_full_train import run_authorized_training
-from speck.tokenizer_pilot_orchestration import load_execution_record
+from speck.tokenization.pilot_full_train import run_authorized_training
+from speck.tokenization.pilot_orchestration import load_execution_record
 
 
 def main():

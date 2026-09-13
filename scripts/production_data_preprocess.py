@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.production_data import load_preprocess_config, preprocess_sources
+from speck.data.production_data import load_preprocess_config, preprocess_sources
 
 
 def main():

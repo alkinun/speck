@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.common_pile_code import (
+from speck.data.sources.common_pile_code import (
     load_common_pile_code_config,
     sample_common_pile_code,
 )

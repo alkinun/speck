@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.firewall_inputs import freeze_calibrated_firewall_config
+from speck.data.firewall_inputs import freeze_calibrated_firewall_config
 
 
 def main():

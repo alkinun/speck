@@ -2,7 +2,7 @@
 
 import argparse
 
-from speck.data_firewall_calibrated import (
+from speck.data.data_firewall_calibrated import (
     construct_calibrated_firewall,
     load_calibrated_firewall_config,
 )
