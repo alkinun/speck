@@ -19,6 +19,7 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | Preparation cost | [Phase-separated checkpoint replay](2026-09-13-dedup-phase-timing.md) preserves the qualified outputs and attributes about 85% of measured continuation time to SQLite commit; the later WAL comparison below tests a bounded policy change. |
 | Bounded WAL policy | [Durable policy comparison and hard-crash recovery](2026-09-13-sqlite-wal-policy.md) measures 43.9–53.2% lower complete continuation time with the 65,536-page trigger, full parity, and committed-WAL recovery; production-scale transfer remains open. |
 | Explicit execution settings | [Config-bound SQLite qualification](2026-09-13-bound-sqlite-policy.md) carries the policy in config/checkpoint identities and actual runtime metadata; ordinary-CLI hard-crash recovery and reopen pass. |
+| Tokenizer progress | [Terminal report recovery](2026-09-13-tokenizer-report-recovery.md) preserves the completed 40,960 screen and its missing-memory disclosure; the last compact screen is separately launched before budget/ranking review. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

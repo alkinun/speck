@@ -1,0 +1,37 @@
+{
+  "D5_opening": false,
+  "analysis_revision": "644abfbf7e030b46319110967ffe2da706fde7d1",
+  "evaluation_replayed": false,
+  "execution": {
+    "path": "/tmp/opencode/speck-precleanup/research/flagship/tokenizer_pilot_executions_v1/speck-bpe-40960-whitespace-seed-42.json",
+    "sha256": "6a4b44367e8cd488618f23c92120fd60573c07e01de30c655cd3b223f03e124d"
+  },
+  "final_selection": false,
+  "format": "speck_tokenizer_pilot_report_recovery",
+  "format_version": 1,
+  "interruption": {
+    "path": "results/systems/tokenizer-pilot-40960-finalization-interruption-20260913.json",
+    "sha256": "d1bd2d1a561aaff6384a938b7f46b942ccdb0206af03b9af0fa4e1532eaa9b9a"
+  },
+  "metrics": {
+    "active_seconds": 16521.759046473002,
+    "fixed_document_macro_bpb": 1.10914094398333,
+    "fixed_flop_macro_bpb": 1.1071217222692578,
+    "peak_memory_bytes": null
+  },
+  "missing_measurements": {
+    "peak_memory_bytes": "not_persisted_before_finalization_failure"
+  },
+  "recorded_at": "2026-09-13T15:42:41.244016+00:00",
+  "result": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-40960-whitespace/seed-42/run-result.json",
+    "sha256": "21b539ab8c187b33f3a4fdbff404bad5605efafcb610f47026fd9b61aa134c7a"
+  },
+  "run_fingerprint": "a24ad0ba42fe92dc9176b5efc71c9c9932800afb30bbc780fb815ca56dac6588",
+  "status": "terminal_results_recovered_missing_memory_disclosed",
+  "summary": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-40960-whitespace/seed-42/run-summary.json",
+    "sha256": "94a227e91c17090735c02db948d0e868850339ba1a3151eef4a5b8ae98d6e4ac"
+  },
+  "training_replayed": false
+}
