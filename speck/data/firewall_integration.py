@@ -256,12 +256,14 @@ def exclusion_config(plan, references, grouped_directory, controls, output):
     }
 
 
-def run_exclusion(config, *, crash_after_records=None):
+def run_exclusion(config, *, crash_after_records=None, timing=None):
     original = production_data._signature
     started = time.perf_counter()
     production_data._signature = _batched_signature
     try:
-        result = production_data.preprocess_sources(config, crash_after_records=crash_after_records)
+        result = production_data.preprocess_sources(
+            config, crash_after_records=crash_after_records, timing=timing
+        )
     finally:
         production_data._signature = original
     return {"result": result, "elapsed_seconds": time.perf_counter() - started}

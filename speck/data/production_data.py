@@ -11,6 +11,7 @@ from collections import Counter
 from pathlib import Path
 from urllib.parse import urlparse
 
+from speck.data.preprocess_timing import PreprocessTiming
 from speck.data.sources.code_near_duplicates import _jaccard, _shingles, _signature, _tokens
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
@@ -490,9 +491,10 @@ def accepted_document_chain(rows):
     return count, chain
 
 
-def preprocess_sources(config, *, restart=False, crash_after_records=None):
+def preprocess_sources(config, *, restart=False, crash_after_records=None, timing=None):
     """Run or resume the disk-backed global exact/near deduplication pass."""
 
+    clock = PreprocessTiming(timing)
     if "plan_fingerprint" not in config:
         config = validate_preprocess_config(config)
     else:
@@ -501,14 +503,17 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
             raise ValueError("normalized production preprocess fingerprint mismatch")
     output = Path(config["output_directory"])
     if output.exists():
+        clock.phase("reopen_verification")
         manifest = json.loads((output / "manifest.json").read_text())
         _verify_published(config, output, manifest)
         result = {"manifest": manifest, "cleanup": _cleanup_published(config, output)}
+        clock.finish("reopened")
         return result
     staging = output.with_name(output.name + ".building")
     if staging.exists() and restart:
         shutil.rmtree(staging)
     staging.mkdir(parents=True, exist_ok=True)
+    clock.phase("input_verification")
     for item in config["cleanup_files"]:
         cleanup_path = Path(item["path"])
         if not cleanup_path.is_file() or _sha256(cleanup_path) != item["sha256"]:
@@ -518,6 +523,7 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
         if not path.is_file() or _sha256(path) != source["sha256"]:
             raise ValueError(f"source identity mismatch: {source['id']}")
     ledger, denied = _load_ledger(config)
+    clock.phase("resume_verification")
     state_path = staging / "state.json"
     state = (
         json.loads(state_path.read_text())
@@ -588,9 +594,12 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
     pattern = re.compile(config["policy"]["token_pattern"])
     candidate_handles = {}
     since_checkpoint = 0
+    clock.phase("processing")
     try:
         for source_index in range(state["source_index"], len(config["sources"])):
             source = config["sources"][source_index]
+            clock.start_source(source["id"], counts)
+            source_utf8_bytes = 0
             start_line = state["line_number"] if source_index == state["source_index"] else 0
             start_offset = state["byte_offset"] if source_index == state["source_index"] else 0
             with Path(source["path"]).open("rb") as handle:
@@ -601,12 +610,14 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
                     record = json.loads(raw.decode("utf-8"))
                     text = record.get(source["text_field"])
                     content_sha256 = record.get(source["content_sha256_field"])
+                    text_bytes = text.encode() if isinstance(text, str) else None
                     if (
                         not isinstance(text, str)
                         or not isinstance(content_sha256, str)
-                        or hashlib.sha256(text.encode()).hexdigest() != content_sha256
+                        or hashlib.sha256(text_bytes).hexdigest() != content_sha256
                     ):
                         raise ValueError(f"invalid source record: {source['id']}:{line_number}")
+                    source_utf8_bytes += len(text_bytes)
                     processed_index = state["processed_records"]
                     state["processed_records"] += 1
                     state["line_number"] = line_number + 1
@@ -740,14 +751,18 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
                     ):
                         raise RuntimeError("injected production preprocess crash")
                     if since_checkpoint >= config["checkpoint_records"]:
-                        _checkpoint(connection, output_handles, removal, state_path, state)
+                        clock.checkpoint(
+                            _checkpoint, connection, output_handles, removal, state_path, state
+                        )
                         since_checkpoint = 0
             state["source_index"] = source_index + 1
             state["line_number"] = 0
             state["byte_offset"] = 0
-            _checkpoint(connection, output_handles, removal, state_path, state)
+            clock.checkpoint(_checkpoint, connection, output_handles, removal, state_path, state)
             since_checkpoint = 0
-        _checkpoint(connection, output_handles, removal, state_path, state)
+            clock.end_source(counts, source_utf8_bytes)
+        clock.phase("publication")
+        clock.checkpoint(_checkpoint, connection, output_handles, removal, state_path, state)
         connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
         index_counts = {
             "documents": connection.execute("SELECT COUNT(*) FROM docs").fetchone()[0],
@@ -811,5 +826,7 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None):
     finally:
         os.close(descriptor)
     result = {"manifest": manifest, "cleanup": _cleanup_published(config, output)}
+    clock.phase("final_verification")
     _verify_published(config, output, manifest)
+    clock.finish("complete")
     return result
