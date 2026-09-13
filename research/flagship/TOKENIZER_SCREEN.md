@@ -96,3 +96,17 @@ review with no budget projection. A passing projection does not open the audit o
 
 Record the completed review under `results/` and update `research/status.json` only when real inputs
 exist. The scientific runs continue in their frozen checkout as described in [TOKENIZER.md](TOKENIZER.md).
+
+## Terminal-report recovery
+
+A completed checkpoint and all checkpoint-bound evaluation boundaries can recover a report whose
+publication failed. `tokenizer_pilot_recover` verifies the frozen execution record, terminal state,
+model/optimizer hashes, finite model tensors, evaluation identities, and accounting input. It performs
+no training or evaluation replay. The recovered run/summary use schema v2: the unpersisted peak GPU
+allocation is `null`, with an explicit missing-measurement marker. Quality, compute, timing, and
+selection rules retain their original values. A missing measurement is never replaced by zero,
+process RAM, a later GPU observation, or a preflight estimate.
+
+The screen reader accepts this explicit recovery schema. The original analyzer fixture remains
+evidence for its original revision; tests and the checked recovery qualify the additive metadata
+successor. Schema-v1 runs still require a finite memory measurement.

@@ -9,6 +9,7 @@ RUN_FORMAT = "speck_tokenizer_pilot_run"
 RESULT_FORMAT = "speck_tokenizer_pilot_analysis"
 CATEGORIES = ("web", "code", "math", "synthetic", "science", "reference")
 VIEWS = ("fixed_document", "fixed_flop")
+RECOVERED_MEMORY_GAP = {"peak_memory_bytes": "not_persisted_before_finalization_failure"}
 
 
 def validate_pilot_plan(plan):
@@ -60,9 +61,10 @@ def _bpb(document):
 
 
 def _validate_run(run, plan):
+    recovered = run.get("format_version") == 2
     if (
         run.get("format") != RUN_FORMAT
-        or run.get("format_version") != FORMAT_VERSION
+        or run.get("format_version") not in (FORMAT_VERSION, 2)
         or run.get("status") != "complete"
         or not isinstance(run.get("tokenizer_id"), str)
         or run.get("seed") not in plan["confirmation"]["seeds"]
@@ -77,6 +79,8 @@ def _validate_run(run, plan):
         or run["total_parameters"] < 1
     ):
         raise ValueError("invalid tokenizer pilot run identity")
+    if recovered and run.get("missing_measurements") != RECOVERED_MEMORY_GAP:
+        raise ValueError("recovered pilot run must declare its exact missing-memory measurement")
     for view in VIEWS:
         value = run.get(view)
         if not isinstance(value, dict) or set(value) != {
@@ -100,6 +104,10 @@ def _validate_run(run, plan):
             "throughput_tokens_per_second",
         ):
             number = value[key]
+            if key == "peak_memory_bytes" and recovered:
+                if number is not None:
+                    raise ValueError("recovered peak memory must be null, never an imputed value")
+                continue
             if (
                 isinstance(number, bool)
                 or not isinstance(number, (int, float))

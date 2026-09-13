@@ -219,12 +219,16 @@ def load_screen_report(manifest_path):
         summary = json.loads(path.read_text())
         if (
             summary.get("format") != "speck_tokenizer_pilot_run_summary"
-            or summary.get("format_version") != 1
+            or summary.get("format_version") not in (1, 2)
             or summary.get("status") != "complete"
             or summary.get("D5_opening") is not False
         ):
             raise ValueError("screen summary must be complete with D5 unopened")
         run = json.loads(load_identity(summary["result"], path.parent).read_text())
+        if summary["format_version"] != run["format_version"] or summary.get(
+            "missing_measurements"
+        ) != run.get("missing_measurements"):
+            raise ValueError("screen summary and result measurement schemas disagree")
         if (
             summary.get("run_id") != f"tokenizer-pilot-{run['tokenizer_id']}-seed-{run['seed']}"
             or summary.get("active_seconds") != run["fixed_flop"]["active_seconds"]

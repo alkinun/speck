@@ -1,0 +1,39 @@
+{
+  "D5_opening": false,
+  "confirmation_execution": false,
+  "console_log": "/mnt/speck-data/speck/tokenizer-pilot-32000-seed42-console.log",
+  "execution": {
+    "path": "/tmp/opencode/speck-precleanup/research/flagship/tokenizer_pilot_executions_v1/speck-bpe-32000-whitespace-seed-42.json",
+    "sha256": "fcf3abe9555fd0a1eec84cd716832e26a0fec3f41727bf62eb1dc6ce77ecde38"
+  },
+  "final_selection": false,
+  "final_step": 18311,
+  "format": "speck_tokenizer_pilot_screen_launch",
+  "format_version": 1,
+  "frozen_revision": "e3ed10c0a2e584b38384dc2c6714bea44bfd909d",
+  "next": "Complete the frozen endpoint, then review measured all-attempt budget for confirmation; no automatic confirmation or audit opening.",
+  "output_directory": "/mnt/speck-data/speck/tokenizer-pilot-screen-v1/speck-bpe-32000-whitespace/seed-42",
+  "parent_run": {
+    "path": "/mnt/speck-data/speck/tokenizer-pilot-runs-v2/speck-bpe-32000-whitespace/seed-42/run.json",
+    "sha256": "a1f1ea0b1378a192cb261ec970d5743c9c9c871d3e1c0c342f7fdb0086881ab7"
+  },
+  "preflight": {
+    "all_packed_shards": "hash_verified",
+    "fresh_output_at_launch": true,
+    "reference_accounting_tokenizer_and_evaluation_inputs": "hash_verified",
+    "run_and_execution_identity": "pass"
+  },
+  "recorded_at": "2026-09-13T15:29:15.483792+00:00",
+  "run_fingerprint": "0e83ff19c6977127eb0df8ce7a7fe62b1ef74ff276b763d1bb0cad45e7a8b88d",
+  "service": {
+    "ActiveState": "active",
+    "ExecMainStartTimestamp": "Sun 2026-09-13 18:22:30 +03",
+    "ExecMainStartTimestampMonotonic": "74852521252",
+    "InvocationID": "1af9745ed00449cc875e6164a31820e7",
+    "MainPID": "273982",
+    "SubState": "running",
+    "WorkingDirectory": "/tmp/opencode/speck-precleanup",
+    "unit": "speck-tokenizer-32000-seed42.service"
+  },
+  "status": "frozen_compact_seed42_screen_launched"
+}
