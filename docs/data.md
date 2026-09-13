@@ -65,5 +65,11 @@ The [screen-capacity and timing review](../research/flagship/SCREEN_CAPACITY.md)
 for a private, durable reference-checkpoint replay with phase/checkpoint-component timings. Use the
 v2 replay plan; the initial timing diagnostic is retained at its original revision.
 
+The [durable WAL comparison](../research/flagship/SQLITE_WAL.md), run with `dedup_wal_compare`, qualifies
+a larger autocheckpoint trigger on the bounded reference-index workload. It preserves FULL sync,
+complete-invocation accounting, output/index parity, and recovery from committed WAL after hard exit.
+Use its recommendation only through an explicitly bound successor execution policy; production
+defaults are not changed by the comparison tool.
+
 For source surveys, see the [literature library](../research/literature/README.md). Earlier curriculum
 details remain in the [original guide](../archive/pregrant-history/docs/data.md).

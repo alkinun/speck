@@ -61,3 +61,16 @@ The driver retains each restoration, run result, actual SQLite settings, checkpo
 sizes, phase timings, parent logical identities, hard-crash receipt/checkpoint, recovery result, and
 progress. SQLite version and implementation revision accompany the report. The result applies to
 this local, cache-warmed, bounded continuation and requires separate production-size/site qualification.
+
+## Completed comparison
+
+The [checked result](../../results/systems/sqlite-wal-comparison-20260913.json) passes every gate.
+Complete runtime falls from 279.89 to 156.96 seconds in the first pair and from 326.11 to 152.55 seconds
+in the reversed pair: **43.9% and 53.2% reductions**. The candidate/recovery observed WAL peak is
+301.24 MiB, below the 512 MiB limit. Actual synchronization remains FULL in every run.
+
+The hard-exit probe requires WAL to recover 3,936 committed documents beyond the main-file count, and
+also discards an uncommitted SQL update/output tail. Output, removal, count, logical-index, and
+reference-control parity pass. The [finding](../findings/2026-09-13-sqlite-wal-policy.md) records the
+recommendation and limits. Bind this policy explicitly in a successor execution; the comparison does
+not change production defaults or establish rates for larger within-source transactions/indexes.

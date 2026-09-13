@@ -24,7 +24,7 @@
       "id": "data_operations",
       "state": "conditional_fallback",
       "evidence": "archive/pregrant-history/findings/209_production_calibration_fallback_decision.md",
-      "next": "Use research/flagship/SCREEN_CAPACITY.md to freeze E1/E3 recipes and fill category supply gaps. Test the measured SQLite commit bottleneck under durable, parity-checked policy changes before revising the 150B schedule or day-21 readiness. The conditional 150B branch remains selected."
+      "next": "Freeze E1/E3 recipes and fill category supply gaps. Bind the locally qualified 65536-page FULL-sync WAL policy explicitly, then qualify larger transactions/indexes and site storage before revising the 150B schedule or day-21 readiness. The conditional 150B branch remains selected."
     },
     {
       "id": "data_resume_memory",
@@ -71,7 +71,13 @@
       "id": "dedup_phase_timing",
       "state": "durable_reference_replay_parity_and_commit_attribution_pass",
       "evidence": "results/systems/dedup-phase-timing-v2-20260913.json",
-      "next": "Compare SQLite journal/checkpoint policy while preserving durable commits and exact output/recovery parity; 236.74 of 278.28 measured seconds are in commit. No production speedup is qualified yet."
+      "next": "The separate WAL comparison passes on the bounded workload. Extend operating-policy qualification to larger within-source transactions/indexes and site storage; the phase timing is not a production-rate forecast."
+    },
+    {
+      "id": "sqlite_wal_policy",
+      "state": "bounded_policy_and_committed_wal_hard_crash_recovery_pass",
+      "evidence": "results/systems/sqlite-wal-comparison-20260913.json",
+      "next": "Bind the recommended 65536-page FULL-sync policy in explicit successor runs. Validate larger transactions/indexes and observed WAL space before production-default or 150B forecast changes."
     },
     {
       "id": "long_documents",

@@ -176,16 +176,23 @@ a durable same-input timing replay attributes 236.74 of 278.28 seconds to SQLite
 prioritize recipe/supply closure and a measured database-policy comparison; they do not change the
 150B forecast yet.
 
+The [WAL policy comparison](SQLITE_WAL.md) now qualifies a 65,536-page FULL-synchronous autocheckpoint
+trigger on this bounded workload: 43.9–53.2% lower complete invocation time, a 301.24 MiB observed WAL
+peak, and identical outputs/logical tables after hard process exit. Its source groups are smaller than
+the 10,000-record interval, so source-end checkpoints dominate the transaction boundaries. Explicit
+run-policy binding and larger within-source/index/site qualification are still needed before applying
+the gain to production scheduling.
+
 1. Bind source revisions, reader/filter variants, per-arm supply, firewall reference precedence, and
    output identities; reuse retained inputs where their identity and scope match.
 2. Freeze a successor with explicit record-level metadata retention and independently resumable
    acquisition units. State whether quotas use final tokens, reference tokens, or bytes.
 3. Measure stage time, retained tokens/bytes, source exhaustion, SQLite growth, resume verification,
    and free-space high-water marks on bounded real inputs.
-4. Test SQLite commit/journal/checkpoint policy on the qualified workload, preserving durability and
-   output/recovery parity while measuring WAL/index space. The phase-separated 10,000-record-cadence
-   replay now identifies commit as the dominant cost. The earlier 64-record profile remains a separate
-   diagnostic. Reassess worker parallelism only with the measured operating envelope; source
-   acquisition and post-dedup packing have separate resource limits.
+4. Bind the qualified WAL policy explicitly, then test larger within-source transactions and indexes
+   with the same durability, output/recovery parity, and observed-space accounting. The local policy
+   comparison closes the initial commit-bottleneck experiment but not production transfer. Reassess
+   worker parallelism only with that operating envelope; acquisition and post-dedup packing have
+   separate resource limits.
 5. Use those measurements to cost the 150B bank and a real ready date. Preserve the accepted fallback
    and the paused 20B artifacts while this successor is qualified.

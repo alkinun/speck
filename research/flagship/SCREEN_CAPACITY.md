@@ -126,3 +126,8 @@ disjoint phase totals and checkpoint-overlap accounting.
 
 This identifies a concrete target for a bounded SQLite policy comparison. It does not establish a
 production speedup or resolve the independent E1/E3 source-recipe and capacity gaps.
+
+The subsequent [durable WAL comparison](SQLITE_WAL.md) now passes: the 65,536-page trigger reduces
+complete continuation time by 43.9% and 53.2% in reversed-order pairs while retaining FULL sync,
+output/index parity, and hard-process-exit recovery. This is a local bounded operating recommendation;
+full source recipes, capacity, larger transactions/indexes, and site transfer remain to be qualified.
