@@ -1,0 +1,29 @@
+{
+  "format": "speck_human_source_use_extension",
+  "format_version": 1,
+  "status": "human_approved_source_extension",
+  "parent_acceptance": {"path": "source_rights_acceptance_v1.json", "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"},
+  "authority": {"authority_type": "human", "name": "Alkin Unlu", "role": "Project owner", "organization": "SpeckLabs"},
+  "signed_at": "2026-09-13T18:21:58Z",
+  "approval_basis": {"channel": "conversation", "session_id": "ses_f65f4682dffeuStjfDpRNNzMKG", "user_response": "Approve Math L2 (Recommended)", "scope": "Pinned natural Math L2-preview only; Code and L3 remain under review"},
+  "source": {"id": "ultradata_math_l2_preview", "category": "math", "repo": "openbmb/UltraData-Math", "revision": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87", "config": "UltraData-Math-L2-preview", "content_field": "content", "dataset_license_declared": "Apache-2.0"},
+  "scope_details": {"research_training": true, "paper_publication": true, "public_model_weight_release": true, "commercial_use": true, "source_data_redistribution": false, "derived_packed_shard_redistribution": false},
+  "decision": "approve",
+  "rationale": "The owner explicitly accepts the declared dataset terms and missing original URL/parent identifiers as disclosed limitations under the existing guarded-use policy.",
+  "attribution_plan": "Cite UltraData-Math and its tiered-data paper; retain dataset revision, shard/row, content hashes and available quality labels; disclose missing original-document URLs and ancestry.",
+  "redistribution_policy": "Publish metadata, statistics, citations and required notices; do not redistribute source text or packed shards. Public model weights follow the existing Apache-2.0 release policy.",
+  "removal_policy": "Retain dataset/revision/shard/row and content-hash identities for exclusion and rebuilds. Original URL/domain-only ancestry is unavailable without upstream mapping; disclose that limitation rather than claiming complete URL-based removal coverage.",
+  "conditions": [
+    "Apply qualified English filtering and benchmark contamination checks before training-view preparation.",
+    "Apply complete firewall-reference precedence plus global exact and verified-near exclusion before training.",
+    "Preserve original content and quality_label metadata; any additional quality cutoff is a separate recipe decision.",
+    "Re-review material source-term changes or an explicit training/public-weight prohibition.",
+    "This source-use decision does not select D5, approve Code or L3, or authorize a model-training launch."
+  ],
+  "evidence": [
+    {"path": "../../results/data/ultradata-intake-20260913.json", "sha256": "513f4a5c3d6932732b482032e258ed3e4370d560a228fc64fb24e970805fb6b5"},
+    {"path": "/mnt/speck-data/speck/literature-reviews/minicpm4-ultradata-20260913/UltraData-Math-README.md", "sha256": "651768fc42238d1a32daf9c1affdf895e59e17d781d5bd0b28b0715d1a2c8371"}
+  ],
+  "automated_approval_made": false,
+  "training_authority": false
+}
