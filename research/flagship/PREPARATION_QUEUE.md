@@ -129,3 +129,8 @@ The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
 It waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
 processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.
+
+The [expanded Stack-Edu metadata census](../findings/2026-09-14-expanded-code-metadata.md)
+is complete: all 26 files and 101,229,394 physical rows reverified. All released C++/Java
+shards are included. No metadata download remains active. Per-language content/token supply
+still requires the bounded added-file probe and subsequent full exclusion.

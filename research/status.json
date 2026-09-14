@@ -72,9 +72,9 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "full_stock_paused_ordered_fetch_probe_pass_metadata_supply_expansion_running",
+      "state": "paused_expanded_metadata_and_complete_census_verified",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "Ordered NVMe fetch/index probe passed: 1,408 sampled blobs in 68.18s including interruption/resume; exact warm replay/reopen and archival verification passed. Content/security checks retained 1,039 documents / 788,811 tokens before full exclusion. Stratified first-file estimates still flag code-language shortages, including single-shard TypeScript versus its 36M E1S headroom target. Finish the 15-extra-file metadata acquisition and census before an explicit production/recipe successor; no full-stock restart or scientific recipe change. Preserve paused checkpoint/cache and all original policies.",
+      "next": "All 26 metadata files are complete and verified (101,229,394 rows), including every released C++/Java shard. Measure a bounded content/token sample of the fifteen additions; combine file strata correctly with earlier evidence, then resolve matched-language/background feasibility. TypeScript has no further released shard. Preserve paused original code stock and source/policy identities; no production fetch or recipe change yet.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
@@ -86,7 +86,9 @@
       "feasibility": "results/data/code-metadata-feasibility-20260914.json",
       "fetch_qualification": "results/systems/ordered-code-fetch-qualification-20260914.json",
       "metadata_successor_plan": "research/flagship/stack_edu_metadata_acquisition_v2.json",
-      "metadata_successor_launch": "results/systems/stack-edu-metadata-v2-launch-20260914.json"
+      "metadata_successor_launch": "results/systems/stack-edu-metadata-v2-launch-20260914.json",
+      "expanded_metadata_result": "results/data/stack-edu-metadata-acquisition-v2-20260914.json",
+      "expanded_metadata_census": "results/data/code-metadata-feasibility-v2-20260914.json"
     },
     {
       "id": "fineweb_edu_stock",
