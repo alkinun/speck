@@ -94,6 +94,18 @@ and training stream, matching FLOP targets, and complete seed-42 coverage. It re
 implementation hashes and refuses an existing output path. Incomplete accounting produces a blocked
 review with no budget projection. A passing projection does not open the audit or launch training.
 
+### Decisive lower-bound stop
+
+The maintained analyzer also records the **lower bound** implied by completed active durations:
+sum all three screen arms, then add two baseline and two selected-custom active durations. If that
+alone exceeds 30 hours, missing nonnegative overhead or failed-attempt costs cannot restore eligibility.
+The report then records `projection_lower_bound_exceeded_retain_mistral_D5_unopened`, while leaving
+`budget: null` and `all_attempt_spending_complete: false` when expenditure reconciliation is incomplete.
+This implements the same v10 stop rule; it does not raise the ceiling or substitute a cheaper loser.
+A lower bound within the ceiling is never a budget pass. The projection is based on the measured
+screen workload, not a guaranteed runtime for unexecuted seeds. All supplied timing evidence is
+hash-verified even when the accounting remains incomplete.
+
 Record the completed review under `results/` and update `research/status.json` only when real inputs
 exist. The scientific runs continue in their frozen checkout as described in [TOKENIZER.md](TOKENIZER.md).
 

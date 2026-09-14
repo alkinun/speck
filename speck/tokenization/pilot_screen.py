@@ -120,6 +120,25 @@ def analyze_tokenizer_screen(plan, nominations, runs, accounting):
         raise ValueError("invalid screen accounting record")
     budget = None
     status = "accounting_incomplete_confirmation_blocked"
+    # This is a lower bound on the frozen projection, never an all-attempt total.
+    # Missing setup, replay, final publication, and preflight costs are nonnegative:
+    # they can rule out confirmation but cannot authorize it.
+    active_hours = {
+        key: max(run[view]["active_seconds"] for view in VIEWS) / 3600 for key, run in by_id.items()
+    }
+    minimum_spent = sum(active_hours.values())
+    minimum_remaining = 2 * (active_hours[baseline_id] + active_hours[selected])
+    lower_bound = {
+        "completed_screen_active_gpu_hours": minimum_spent,
+        "four_confirmation_active_gpu_hours": minimum_remaining,
+        "projected_total_gpu_hours": minimum_spent + minimum_remaining,
+        "ceiling_gpu_hours": plan["gpu_hour_ceiling"],
+        "exceeds_ceiling": minimum_spent + minimum_remaining > plan["gpu_hour_ceiling"],
+        "all_attempt_spending_complete": accounting["complete"],
+        "boundary": "Lower bound on the contract's measured-cost projection, not a complete expenditure ledger or a guaranteed future runtime. Missing costs are not zero. Only an excess can determine the budget stop; a lower bound within budget never authorizes confirmation.",
+    }
+    if not accounting["complete"] and lower_bound["exceeds_ceiling"]:
+        status = "projection_lower_bound_exceeded_retain_mistral_D5_unopened"
     if accounting["complete"]:
         costs = accounting.get("runs", [])
         by_cost = {entry["tokenizer_id"]: entry for entry in costs}
@@ -171,6 +190,7 @@ def analyze_tokenizer_screen(plan, nominations, runs, accounting):
             },
         },
         "budget": budget,
+        "projection_lower_bound": lower_bound,
         "fallback": baseline_id,
         "authority": {
             "confirmation_execution": False,
@@ -208,11 +228,10 @@ def load_screen_report(manifest_path):
     nominations = json.loads(load_identity(manifest["nominations"]).read_text())
     accounting_path = load_identity(manifest["accounting"])
     accounting = json.loads(accounting_path.read_text())
-    if accounting.get("complete") is True:
-        if not accounting.get("evidence"):
-            raise ValueError("complete accounting requires measured timing evidence")
-        for identity in accounting["evidence"]:
-            load_identity(identity, accounting_path.parent)
+    if accounting.get("complete") is True and not accounting.get("evidence"):
+        raise ValueError("complete accounting requires measured timing evidence")
+    for identity in accounting.get("evidence", []):
+        load_identity(identity, accounting_path.parent)
     runs = []
     for identity in manifest["summaries"]:
         path = load_identity(identity)

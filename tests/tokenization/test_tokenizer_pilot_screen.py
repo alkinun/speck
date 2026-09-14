@@ -92,6 +92,22 @@ def test_missing_accounting_blocks_projection_instead_of_using_active_time_as_to
 
     assert result["status"] == "accounting_incomplete_confirmation_blocked"
     assert result["budget"] is None
+    assert result["projection_lower_bound"]["projected_total_gpu_hours"] == 7
+    assert result["projection_lower_bound"]["exceeds_ceiling"] is False
+
+
+def test_incomplete_spending_can_prove_excess_but_cannot_prove_a_pass():
+    plan, nominations, runs, accounting = inputs()
+    accounting.update(complete=False, runs=[], other_spent_gpu_hours=None)
+    for run in runs:
+        for view in ("fixed_document", "fixed_flop"):
+            run[view]["active_seconds"] = 5 * 3600
+    result = analyze_tokenizer_screen(plan, nominations, runs, accounting)
+    assert result["status"] == "projection_lower_bound_exceeded_retain_mistral_D5_unopened"
+    assert result["projection_lower_bound"]["projected_total_gpu_hours"] == 35
+    assert result["projection_lower_bound"]["all_attempt_spending_complete"] is False
+    assert result["budget"] is None
+    assert not any(result["authority"].values())
 
 
 @pytest.mark.parametrize("value", [-1, float("nan"), float("inf"), True, None, 0.5])
