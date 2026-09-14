@@ -175,6 +175,8 @@ def _unit_config(plan, unit):
         raise ValueError("Cosmopedia lineage policy may only govern synthetic units")
     if "stack_edu_policy" in plan["base"] and unit["category"] != "code":
         raise ValueError("Stack-Edu policy may only govern code units")
+    if "fineweb_edu_filters" in plan["base"] and unit["category"] != "web":
+        raise ValueError("FineWeb-Edu policy may only govern web units")
     config = {
         "unit": unit,
         "filtering": plan["base"]["filtering"],
@@ -187,6 +189,7 @@ def _unit_config(plan, unit):
         "source_use_extension",
         "science_filters",
         "finemath_filters",
+        "fineweb_edu_filters",
         "cosmopedia_policy",
         "stack_edu_policy",
     ):
@@ -309,6 +312,12 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
 
                         reason, synthetic_metadata = cosmopedia_document(
                             document, plan["base"]["cosmopedia_policy"]
+                        )
+                    if reason is None and "fineweb_edu_filters" in plan["base"]:
+                        from speck.data.fineweb_edu_stock import fineweb_edu_rejection
+
+                        reason, english_probability = fineweb_edu_rejection(
+                            document, plan["base"]["fineweb_edu_filters"]
                         )
                     if reason is None and "finemath_filters" in plan["base"]:
                         from speck.data.finemath_stock import finemath_rejection

@@ -56,6 +56,7 @@ def load_stock_token_plan(path):
         "speck_reference_stock_preparation_result",
         "speck_science_stock_preparation_result",
         "speck_finemath_stock_preparation_result",
+        "speck_fineweb_edu_stock_preparation_result",
         "speck_cosmopedia_stock_preparation_result",
         "speck_stack_edu_stock_preparation_result",
     ):

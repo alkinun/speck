@@ -1,0 +1,44 @@
+{
+  "format": "speck_fineweb_edu_stock_preparation",
+  "format_version": 1,
+  "source_id": "fineweb_edu",
+  "base_plan": {
+    "path": "../../archive/pregrant-history/research/flagship/data_calibration_2b_v1/production_plan.json",
+    "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"
+  },
+  "source_qualification": {
+    "path": "../../archive/pregrant-history/research/flagship/web_fineweb_edu_v1.json",
+    "sha256": "524c507838dfd3a09b71a0cac49a55afb6598fef72cda54886cdf046e6e900e3"
+  },
+  "shard_manifest": {
+    "path": "../../results/data/fineweb-edu-shard-manifest-20260914.json",
+    "sha256": "dc05a097687f0e52ba0f4558dc4ba9d9fc4a93b701f70358b7983e7a227b5f96"
+  },
+  "reference_parent": {
+    "path": "../../results/systems/firewall-integration-20260913.json",
+    "sha256": "07b9d890f36994ad47ec0d251d5c8d5c66c568475b3ec4248b0b58ebd112b061"
+  },
+  "sqlite_policy": {
+    "path": "sqlite_preparation_policy_v1.json",
+    "sha256": "6f24a1cb670296d2b889b91425a7c670224b7a96219ec666819adc0957409134"
+  },
+  "tokenizer_decision": {
+    "path": "tokenizer_decision_v1.json",
+    "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+  },
+  "checkpoint_rows": 256,
+  "target_reference_tokens": 5280000000,
+  "reference_tokenizer": {
+    "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "maximum_observed_wal_bytes": 2147483648,
+  "raw_directory": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1",
+  "output_directory": "/mnt/speck-data/speck/fineweb-edu-stock-preparation-v1/work",
+  "domain_policy": "natural_postfilter_distribution_no_tokenizer_sample_host_cap",
+  "report_domain_concentration": true,
+  "selection_policy_basis": "Agent pre-results preparation decision under autonomous delegation. The original 2MB-per-host limit belongs to tokenizer sampling and is explicitly omitted for full stock. Retain qualified document-level web rules and natural postfilter host proportions; report concentration. Carry this corpus-level host policy consistently into the remaining web-source comparison contracts before their outputs.",
+  "scope": "All fourteen complete files of the released sample/10BT view at the approved revision. Includes the original qualified file 013 as overlapping supply, not an additional bank. Target 4.4B nominal plus 20% measured Mistral headroom after full exclusion. Preserve qualified per-document web policies with explicit validity guards on released ID, grade 3..5 and language confidence 0.8..1. Natural postfilter host proportions replace the tokenizer-sampler 2MB-per-host cap; report concentration. The upstream 10BT label is not usable token capacity. Agent-selected preparation under existing source-use approval; no recipe signature or training-launch authority. Raw acquisition is separately checkpointed and does not start exclusion or token caching.",
+  "training_authority": false,
+  "raw_acquisition_directory": "/mnt/speck-data/speck/fineweb-edu-stock-preparation-v1/raw-work"
+}
