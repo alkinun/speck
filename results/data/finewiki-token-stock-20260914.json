@@ -1,0 +1,18 @@
+{
+  "documents": 387313,
+  "elapsed_seconds": 94.52037596299488,
+  "format": "speck_stock_tokenization_result",
+  "format_version": 1,
+  "manifest": {
+    "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
+    "sha256": "483277cfc8f2ab043169539b19e341e4dfbeac8b8d2c6094dc6245dbeddafaf0"
+  },
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/finewiki_token_stock_v1.json",
+    "sha256": "7051875f20a60f249cf2e38674a9275f1a28c881b146f085cf517f55d7b83184"
+  },
+  "repository_revision": "504f03e0982dcd3da7437a2a28e0a96a7ba3d89d",
+  "reused": false,
+  "tokens": 582070378,
+  "training_authority": false
+}

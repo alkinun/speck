@@ -27,3 +27,10 @@ renames the staging directory only after validation. An interrupted unpublished 
 `.building` directory and is never deleted or reused implicitly; use an explicit new plan/destination
 after investigating it. This stage does not claim power-loss qualification beyond the underlying
 writer's existing behavior.
+
+## Completed first caches
+
+The [Math L2 result](../../results/data/math-l2-token-stock-20260914.json) and
+[FineWiki result](../../results/data/finewiki-token-stock-20260914.json) reproduce 384,788,210 and
+582,070,378 tokens respectively. Both passed complete published reopen verification and document-span
+readback. The [finding](../findings/2026-09-14-document-token-stock.md) records counts and scope.
