@@ -117,7 +117,12 @@ funnel is not a six-category quality result. Machine-generated counts and costs 
 [`math-preparation-funnel.md`](../tables/math-preparation-funnel.md) and
 [`preparation-cost.md`](../tables/preparation-cost.md).
 
-The [source-capacity table](../tables/selected-stock-v1/first-wave-source-capacity.md) compares proposed requirements
+The combined two-shard peS2o stock retains 113,232 documents and 820,097,493 tokens after the declared
+paper-license, English, OCR, security, and full reference-exclusion processing. This clears its 480M
+preparation-headroom target. The earlier 403.56M-token stock is a verified included prefix, so the
+combined count replaces it. These source-specific stocks still require joint experiment-view checks.
+
+The [source-capacity table](../tables/source-capacity-v2/source-capacity.md) compares preparation requirements
 only with source-identical measured stock. It does not replace Stack-Edu with Common Pile's
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.
