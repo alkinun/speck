@@ -25,13 +25,14 @@ the completed FineWiki stock and byte identity between the counting and frozen b
 Its [separate receipt](tables/selected-stock-v1/assets.json) preserves the earlier assets and updates
 the measurement without summing overlapping banks.
 
-The [current capacity table](tables/source-capacity-v2/source-capacity.md) incorporates the combined
-science stock and v2 preparation assignments. Its renderer accepts a hash-bound input manifest and
+The [current capacity table](tables/source-capacity-v3/source-capacity.md) incorporates the combined
+science stock, completed eight-shard FineMath stock, and v2 preparation assignments. FineMath
+passes its 800M nominal requirement but remains 145,896,828 tokens below its 960M headroom target. Its renderer accepts a hash-bound input manifest and
 requires a new output directory, preserving every earlier table:
 
 ```bash
-python paper/analysis/source_capacity.py paper/analysis/source-capacity-v2.json paper/tables/source-capacity-v2
-python paper/analysis/source_capacity.py paper/analysis/source-capacity-v2.json paper/tables/source-capacity-v2 --check
+python paper/analysis/source_capacity.py paper/analysis/source-capacity-v3.json paper/tables/source-capacity-v3
+python paper/analysis/source_capacity.py paper/analysis/source-capacity-v3.json paper/tables/source-capacity-v3 --check
 ```
 
 Asset layout:

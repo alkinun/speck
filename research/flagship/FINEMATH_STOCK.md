@@ -38,3 +38,11 @@ uv run --no-sync python -m scripts.prepare_finemath_stock \
 Run from a clean revision. Acquisition is checkpointed per file; `--resume` requires the same revision
 and plan. Joint experiment-background eligibility, document-span assembly, token order, exact quotas,
 and launch manifests follow completed stock verification.
+
+## Completed first stock
+
+The [checked result](../../results/data/finemath-stock-preparation-20260914.json) retains 545,996
+documents and 814,103,172 tokens. The 800M nominal requirement passes, while the 960M preparation
+target is short by 145,896,828 tokens. Recovery and storage checks passed; token caching remains
+pending. The command above identifies the completed run and must not be restarted into its existing
+output. Additional supply requires a bound successor. See the [finding](../findings/2026-09-14-finemath-stock.md).

@@ -122,7 +122,15 @@ paper-license, English, OCR, security, and full reference-exclusion processing. 
 preparation-headroom target. The earlier 403.56M-token stock is a verified included prefix, so the
 combined count replaces it. These source-specific stocks still require joint experiment-view checks.
 
-The [source-capacity table](../tables/source-capacity-v2/source-capacity.md) compares preparation requirements
+The eight-shard FineMath stock retains 545,996 documents and 814,103,172 selected-tokenizer tokens.
+It passes the 800M nominal requirement by 1.76%, but falls 145,896,828 tokens short of the 960M
+preparation target. Output verification and exclusion controls passed after outage recovery and an
+explicit physical-index migration. The final resumed exclusion took 2,858.52 seconds with a 369.24 MiB
+observed WAL peak; original interrupted cost and peak remain incomplete. Natural postfilter domain
+proportions were retained (49,300 known hosts; byte HHI 0.006335). These are preparation diagnostics.
+FineMath token caching and additional headroom preparation remain pending.
+
+The [source-capacity table](../tables/source-capacity-v3/source-capacity.md) compares preparation requirements
 only with source-identical measured stock. It does not replace Stack-Edu with Common Pile's
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.

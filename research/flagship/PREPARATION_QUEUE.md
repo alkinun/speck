@@ -71,3 +71,12 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 - The [FineMath preparation](FINEMATH_STOCK.md) binds eight complete shards and a 960M-token target.
   Its natural-domain corpus-selection rule is explicit; small tokenizer-sample diversity caps are
   not silently treated as full-corpus limits.
+
+## Latest completion and immediate work
+
+FineMath v1 completed successfully: **814,103,172 tokens** pass the 800M nominal requirement but
+miss the 960M preparation target by **145,896,828**. No preparation service remains running.
+First pin additional complete shards in an explicit successor, retaining filters/domain policy and
+reusing only verified configuration-identical acquisition units. Rerun combined exclusion, measure
+headroom, then build and verify the FineMath document-token cache. The combined stock replaces the
+eight-shard count. Continue Cosmopedia v2, Stack-Edu and FineWeb-Edu afterward.

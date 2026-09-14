@@ -43,3 +43,10 @@ Follow-up: the initial resume exposed an [unindexed cascade-cleanup bottleneck](
 An explicitly recorded physical-index migration removed that scan, and the new indexed service has
 advanced beyond checkpoint 72. Its migration is part of the recovery lineage; final publication is
 still required before reporting complete recovery success.
+
+## Completion follow-up
+
+The indexed service subsequently exited successfully. The [completed result](../../results/data/finemath-stock-preparation-20260914.json)
+passed final artifact and exclusion checks, retaining 814,103,172 tokens. Recovery succeeded; the
+960M headroom target remains short by 145,896,828 tokens. See the [completion finding](2026-09-14-finemath-stock.md).
+The progress/pending statements above describe the earlier observation, not the current service state.
