@@ -84,3 +84,8 @@ eight-shard count. Continue Cosmopedia v2, Stack-Edu and FineWeb-Edu afterward.
 The [eleven-shard FineMath successor](finemath_stock_preparation_v2.json) now pins files 0–10,
 reuses the original eight acquisition units under identical configurations, and preserves the 960M
 target. Its combined exclusion and capacity measurement are the immediate execution step.
+
+The successor is now [launched](../../results/systems/finemath-headroom-launch-20260914.json)
+from frozen revision `e36bb4d51e937281d44ff0c23f4b39eaebb3be2d` in a retained detached checkout.
+Use maintained status and the service log for progress; the earlier no-running-job statement above
+belongs to v1 completion. Combined headroom and token caching remain pending.
