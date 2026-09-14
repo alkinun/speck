@@ -55,9 +55,9 @@
     },
     {
       "id": "finemath_stock",
-      "state": "eight_shard_manifest_and_explicit_preparation_policy_ready",
+      "state": "eight_shard_preparation_launched",
       "plan": "research/flagship/finemath_stock_preparation_v1.json",
-      "next": "Prepare eight complete shards against the 960M-token target (800M plus 20% headroom). Retain grade/language metadata filters and common confident-English math prose. The tokenizer-sample host cap is explicitly replaced by natural postfilter distribution with a concentration report."
+      "next": "Verify completed preparation against the 960M-token target (800M plus 20% headroom), inspect domain concentration and bind document-indexed token stock. The launched plan retains grade/language metadata and common confident-English math prose; its natural postfilter domain policy is explicit."
     },
     {
       "id": "document_token_stocks",
