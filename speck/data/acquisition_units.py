@@ -169,6 +169,8 @@ def _unit_config(plan, unit):
         raise ValueError("math-prose language policy may only govern math units")
     if "science_filters" in plan["base"] and unit["category"] != "science":
         raise ValueError("science language/license policy may only govern science units")
+    if "finemath_filters" in plan["base"] and unit["category"] != "math":
+        raise ValueError("FineMath metadata policy may only govern math units")
     config = {
         "unit": unit,
         "filtering": plan["base"]["filtering"],
@@ -176,7 +178,7 @@ def _unit_config(plan, unit):
         "contamination_plan": plan["base"]["contamination_plan"],
         "checkpoint_rows": plan["checkpoint_rows"],
     }
-    for key in ("math_english", "source_use_extension", "science_filters"):
+    for key in ("math_english", "source_use_extension", "science_filters", "finemath_filters"):
         if key in plan["base"]:
             config[key] = plan["base"][key]
     return config
@@ -290,6 +292,10 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
                     state["yielded_rows"] += 1
                     reason = _document_rejection(document, plan["base"]["security"], contamination)
                     english_probability = None
+                    if reason is None and "finemath_filters" in plan["base"]:
+                        from speck.data.finemath_stock import finemath_rejection
+
+                        reason = finemath_rejection(document, plan["base"]["finemath_filters"])
                     if reason is None and "science_filters" in plan["base"]:
                         from speck.data.science_stock import science_rejection
 

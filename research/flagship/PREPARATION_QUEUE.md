@@ -61,3 +61,13 @@ loader default is introduced by the current preparation choice.
 The queue continues through local preparation while hardware-dependent work awaits grant access.
 Tokenizer historical spending reconciliation remains a disclosure task. The already-determined
 budget fallback is fixed. Post-training choices remain with the later-stage work.
+
+## Executable stock handoffs
+
+- Science's first stock and token cache pass at 403.56M tokens; the
+  [two-shard successor](pes2o_stock_preparation_v2.json) measures additional headroom with exact first-
+  unit acquisition reuse and combined exclusion.
+- Math L2 and FineWiki [document-indexed token caches](TOKEN_STOCK.md) are complete and verified.
+- The [FineMath preparation](FINEMATH_STOCK.md) binds eight complete shards and a 960M-token target.
+  Its natural-domain corpus-selection rule is explicit; small tokenizer-sample diversity caps are
+  not silently treated as full-corpus limits.

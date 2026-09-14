@@ -5,6 +5,7 @@ import resource
 import shutil
 import subprocess
 import time
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,6 +21,37 @@ from speck.data.preparation_policy import load_preparation_policy
 from speck.data.sqlite_wal import wal_policy
 from speck.provenance.io import durable_json, file_sha256
 from speck.provenance.repository import repository_root
+
+
+def domain_concentration(path):
+    hosts = Counter()
+    known_documents = unknown_documents = unknown_bytes = 0
+    with Path(path).open() as handle:
+        for raw in handle:
+            row = json.loads(raw)
+            size = len(row["text"].encode())
+            if row.get("host"):
+                hosts[row["host"]] += size
+                known_documents += 1
+            else:
+                unknown_documents += 1
+                unknown_bytes += size
+    known_bytes = sum(hosts.values())
+    return {
+        "known_hosts": len(hosts),
+        "known_host_documents": known_documents,
+        "unknown_host_documents": unknown_documents,
+        "known_host_utf8_bytes": known_bytes,
+        "unknown_host_utf8_bytes": unknown_bytes,
+        "known_host_byte_hhi": sum((size / known_bytes) ** 2 for size in hosts.values())
+        if known_bytes
+        else None,
+        "largest_hosts": [
+            {"host": host, "utf8_bytes": size, "share_of_known_host_bytes": size / known_bytes}
+            for host, size in sorted(hosts.items(), key=lambda row: (-row[1], row[0]))[:20]
+        ],
+        "boundary": "Post-exclusion host concentration diagnostic only; no domain reweighting or corpus cap is imposed.",
+    }
 
 
 def reuse_completed_units(plan, acquired, plan_directory):
@@ -236,6 +268,10 @@ def prepare_source_stock(
             "boundary": boundary,
             "training_authority": False,
         }
+        if plan.get("report_domain_concentration") is True:
+            result["domain_concentration"] = domain_concentration(
+                output / "excluded" / stock["path"]
+            )
         report_path.parent.mkdir(parents=True, exist_ok=True)
         durable_json(report_path, result)
         return result

@@ -55,6 +55,7 @@ def load_stock_token_plan(path):
         "speck_admitted_math_preparation_result",
         "speck_reference_stock_preparation_result",
         "speck_science_stock_preparation_result",
+        "speck_finemath_stock_preparation_result",
     ):
         raise ValueError("tokenization requires a supported single-source preparation result")
     prepared_plan_id = _identity(stock["plan"], stock_path.parent)

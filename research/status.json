@@ -48,10 +48,16 @@
     },
     {
       "id": "science_stock",
-      "state": "first_shard_and_token_cache_verified_headroom_successor_ready",
+      "state": "first_shard_and_token_cache_verified_headroom_successor_launched",
       "evidence": "results/data/pes2o-stock-preparation-20260914.json",
       "headroom_plan": "research/flagship/pes2o_stock_preparation_v2.json",
       "next": "Run the two-shard successor targeting 480M tokens. The first 403.56M-token cache is verified; shard 41 has been fully acquired and counted. Reuse exact first-unit acquisition, preserve all filters and jointly exclude the combined source stream."
+    },
+    {
+      "id": "finemath_stock",
+      "state": "eight_shard_manifest_and_explicit_preparation_policy_ready",
+      "plan": "research/flagship/finemath_stock_preparation_v1.json",
+      "next": "Prepare eight complete shards against the 960M-token target (800M plus 20% headroom). Retain grade/language metadata filters and common confident-English math prose. The tokenizer-sample host cap is explicitly replaced by natural postfilter distribution with a concentration report."
     },
     {
       "id": "document_token_stocks",
