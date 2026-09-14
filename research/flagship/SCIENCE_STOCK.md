@@ -36,3 +36,10 @@ streamed, with physical rows preserved across filtering and resume. The stock co
 the frozen Mistral base tokenizer, including BOS/EOS. Record a shortfall without silently expanding
 this shard window. Joint background/treatment eligibility, packing headroom and launch manifests
 remain separate requirements even when nominal capacity passes.
+
+## First measured stock
+
+The [result](../../results/data/pes2o-stock-preparation-20260914.json) retains 55,787 papers and
+403,558,463 selected-tokenizer tokens. Nominal capacity passes, but only 0.89% headroom remains.
+Prepare additional pinned science supply before claiming joint-view/packing readiness. The
+[finding](../findings/2026-09-14-pes2o-stock.md) records all counts and operating boundaries.
