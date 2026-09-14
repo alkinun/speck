@@ -41,9 +41,11 @@ def finemath_rejection(document, filters):
 def load_finemath_preparation(path):
     path = Path(path).resolve()
     value = json.loads(path.read_text())
+    version = value.get("format_version")
     if (
         value.get("format") != "speck_finemath_stock_preparation"
-        or value.get("format_version") != 1
+        or type(version) is not int
+        or version not in (1, 2)
         or value.get("source_id") != "finemath_4plus"
         or value.get("training_authority") is not False
         or value.get("checkpoint_rows") != 256
@@ -112,14 +114,52 @@ def load_finemath_preparation(path):
     )
     shard_id = _bound_identity(value["shard_manifest"], path.parent)
     shards = json.loads(Path(shard_id["path"]).read_text())
+    file_count = 8 if version == 1 else 11
     if (
         shards.get("format") != "speck_finemath_shard_manifest"
         or shards.get("format_version") != 1
         or any(shards[key] != source[key] for key in ("repo", "revision"))
         or [row["filename"] for row in shards["files"]]
-        != [f"finemath-4plus/train-{i:05d}-of-00064.parquet" for i in range(8)]
+        != [f"finemath-4plus/train-{i:05d}-of-00064.parquet" for i in range(file_count)]
     ):
-        raise ValueError("FineMath stock must use the eight pinned complete shards")
+        raise ValueError("FineMath stock must use its version's pinned complete shards")
+    if version == 2:
+        previous_id = _bound_identity(value["predecessor_plan"], path.parent)
+        previous_path = Path(previous_id["path"])
+        previous = json.loads(previous_path.read_text())
+        if previous.get("format_version") != 1:
+            raise ValueError("FineMath v2 requires the eight-shard v1 predecessor")
+        changed_fields = {"format_version", "shard_manifest", "output_directory", "scope"}
+        for key, original in previous.items():
+            if key in changed_fields:
+                continue
+            current = value.get(key)
+            if isinstance(original, dict) and set(original) == {"path", "sha256"}:
+                original = _bound_identity(original, previous_path.parent)
+                current = _bound_identity(current, path.parent)
+            if current != original:
+                raise ValueError(f"FineMath successor changes predecessor policy: {key}")
+        previous_shard_id = _bound_identity(previous["shard_manifest"], previous_path.parent)
+        previous_shards = json.loads(Path(previous_shard_id["path"]).read_text())
+        if shards["files"][:8] != previous_shards["files"]:
+            raise ValueError("FineMath successor changes the original shard prefix")
+        old_output = (previous_path.parent / previous["output_directory"]).resolve()
+        new_output = (path.parent / value["output_directory"]).resolve()
+        if old_output.is_relative_to(new_output) or new_output.is_relative_to(old_output):
+            raise ValueError("FineMath successor must use a separate output directory")
+        result_id = _bound_identity(value["predecessor_result"], path.parent)
+        result = json.loads(Path(result_id["path"]).read_text())
+        if (
+            result.get("format") != "speck_finemath_stock_preparation_result"
+            or result["plan"]["sha256"] != previous_id["sha256"]
+            or result.get("training_authority") is not False
+            or result.get("capacity_target_pass") is not False
+            or result.get("storage_gate_pass") is not True
+        ):
+            raise ValueError("FineMath successor requires the completed shortfall result")
+        expected_units = {f"finemath_4plus__file_{i}" for i in range(8)}
+        if set(value.get("reuse_acquisition_units", {})) != expected_units:
+            raise ValueError("FineMath successor must bind all eight completed acquisition units")
     units = []
     for i, row in enumerate(shards["files"]):
         if (

@@ -20,7 +20,7 @@ def main():
         category="math",
         result_format="speck_finemath_stock_preparation_result",
         resume=args.resume,
-        boundary="Eight complete pinned FineMath-4+ shards. Qualified metadata/per-document criteria plus common math-prose English and acquisition filters; tokenizer-sample host diversity cap deliberately not used for corpus selection. Post-exclusion domain concentration reported. Target 800M plus 20% headroom; joint background eligibility and experiment manifests remain pending. Timings and WAL peaks cover observed invocations only.",
+        boundary="Complete FineMath-4+ shards enumerated by the bound versioned plan. Qualified metadata/per-document criteria plus common math-prose English and acquisition filters; tokenizer-sample host diversity cap deliberately not used for corpus selection. Post-exclusion domain concentration reported. Combined stock replaces overlapping predecessors. Target 800M plus 20% headroom; joint background eligibility and experiment manifests remain pending. Timings and WAL peaks cover observed invocations only.",
     )
 
 

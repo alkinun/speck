@@ -46,3 +46,32 @@ documents and 814,103,172 tokens. The 800M nominal requirement passes, while the
 target is short by 145,896,828 tokens. Recovery and storage checks passed; token caching remains
 pending. The command above identifies the completed run and must not be restarted into its existing
 output. Additional supply requires a bound successor. See the [finding](../findings/2026-09-14-finemath-stock.md).
+
+## Eleven-shard headroom successor
+
+The [v2 plan](finemath_stock_preparation_v2.json) binds the completed result and the original plan,
+keeps their policy identities, and adds complete files 8–10 at the same approved revision. Its
+[shard manifest](../../results/data/finemath-shard-manifest-v2-20260914.json) contains 1,151,480
+physical rows and 3,152,243,198 compressed bytes. The first eight entries are unchanged. The three
+new files have revision-pinned LFS identities and remote footer checks; full local SHA/row checks
+occur before their acquisition is accepted.
+
+The 145.90M-token gap suggests roughly two additional shards at the observed mean yield. Three
+were selected under preparation delegation to allow yield uncertainty, before any model outputs.
+This does not predict a capacity pass or change the 960M target. Existing human source-use approval
+continues to govern; preparation delegation is not model-launch authority.
+
+The successor reuses all eight completed acquisition units only after configuration and payload
+verification. It reruns full reference exclusion on the combined stream in a separate output tree,
+including the maintained recovery index. No retained-token totals are added across the two banks.
+The loader rejects changed original shard entries, policy drift, missing reuse declarations and
+output nesting/overwrites. Acquisition configurations for all eight reused units match exactly.
+
+```bash
+uv run --no-sync python -m scripts.prepare_finemath_stock \
+  research/flagship/finemath_stock_preparation_v2.json \
+  results/data/finemath-stock-headroom-20260914.json
+```
+
+After successful publication, verify headroom and bind a separate token-cache plan to the actual
+result hash. No speculative result identity or automatic training launch is allowed.

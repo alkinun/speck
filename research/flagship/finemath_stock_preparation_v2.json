@@ -1,0 +1,85 @@
+{
+  "format": "speck_finemath_stock_preparation",
+  "format_version": 2,
+  "source_id": "finemath_4plus",
+  "base_plan": {
+    "path": "../../archive/pregrant-history/research/flagship/data_calibration_2b_v1/production_plan.json",
+    "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"
+  },
+  "source_qualification": {
+    "path": "../../archive/pregrant-history/research/flagship/math_finemath_4plus_v1.json",
+    "sha256": "eb8b99c78196299452ce8e8301a978576a9dce2415b76dac9dfc14899e90b4c7"
+  },
+  "shard_manifest": {
+    "path": "../../results/data/finemath-shard-manifest-v2-20260914.json",
+    "sha256": "94185d5d18fc89866fd09fcf31b604764e742763c6e353c6f76ec4fd40110fd8"
+  },
+  "reference_parent": {
+    "path": "../../results/systems/firewall-integration-20260913.json",
+    "sha256": "07b9d890f36994ad47ec0d251d5c8d5c66c568475b3ec4248b0b58ebd112b061"
+  },
+  "sqlite_policy": {
+    "path": "sqlite_preparation_policy_v1.json",
+    "sha256": "6f24a1cb670296d2b889b91425a7c670224b7a96219ec666819adc0957409134"
+  },
+  "tokenizer_decision": {
+    "path": "tokenizer_decision_v1.json",
+    "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+  },
+  "checkpoint_rows": 256,
+  "target_reference_tokens": 960000000,
+  "reference_tokenizer": {
+    "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "maximum_observed_wal_bytes": 2147483648,
+  "raw_directory": "/mnt/speck-data/speck/source-qualification/math-raw-v1",
+  "output_directory": "/mnt/speck-data/speck/finemath-stock-preparation-v2/work",
+  "domain_policy": "natural_postfilter_distribution_no_tokenizer_sample_host_cap",
+  "report_domain_concentration": true,
+  "selection_policy_basis": "Agent pre-results preparation decision under autonomous delegation. The 2MB-per-host cap belongs to the small tokenizer-sampling design; it is not silently scaled into a production source quota. Preserve natural postfilter domain distribution and report concentration. Both natural math stocks use the same confident-English math-prose rule; FineMath also retains its released grade/language metadata criteria.",
+  "scope": "Eleven complete pinned FineMath-4+ shards (0 through 10). Preserve the first eight shard entries and reuse their verified configuration-identical acquisition units; acquire three additional complete shards, then rerun combined full reference exclusion. The first result is short of 960M by 145,896,828 tokens. Three additional shards are selected before model outputs to allow yield uncertainty beyond the roughly two-shard estimate; their actual yield is unmeasured. Keep the 800M nominal / 960M headroom distinction, all filters and natural-domain policy. This combined result replaces the eight-shard stock, never adds to it.",
+  "training_authority": false,
+  "predecessor_plan": {
+    "path": "finemath_stock_preparation_v1.json",
+    "sha256": "6be5c1627870fc36fc57957d169213d49e973be10ef48362f39d3b062f03568d"
+  },
+  "predecessor_result": {
+    "path": "../../results/data/finemath-stock-preparation-20260914.json",
+    "sha256": "5aee0d7a544d00df3e6bab4dd84e7c4e2b4d42b3743bd3deb3939c34ca5c3013"
+  },
+  "reuse_acquisition_units": {
+    "finemath_4plus__file_0": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_0/manifest.json",
+      "sha256": "3208ae137c9defc6bd21a14bf1a753b57ffad1b37ee4d57c8d23bebf9f58f3c9"
+    },
+    "finemath_4plus__file_1": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_1/manifest.json",
+      "sha256": "e883768a826352270fae04176fb42ab6f9f595054c7b41598d178eace16e9c2f"
+    },
+    "finemath_4plus__file_2": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_2/manifest.json",
+      "sha256": "d230d31a7b0f89942918a2bb4d37844aff07bf0bc3c128734682d527c2b589f1"
+    },
+    "finemath_4plus__file_3": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_3/manifest.json",
+      "sha256": "fae885d5e6dbee7ca159376cb3ed95689374931dd042d499d0085de194290f5e"
+    },
+    "finemath_4plus__file_4": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_4/manifest.json",
+      "sha256": "dcb0b139d29f4e72e5476d3eeeb0eeda844141570ca97b6fbe37575a4bb329d9"
+    },
+    "finemath_4plus__file_5": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_5/manifest.json",
+      "sha256": "dbe53576143176c889ca82eb333c1283c1690696908023dbd98490df638dd3b6"
+    },
+    "finemath_4plus__file_6": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_6/manifest.json",
+      "sha256": "c7b115cddcc6ba8e37d2856aa25b9aacfd410a2e456f3e5de1e8838f1aa0d760"
+    },
+    "finemath_4plus__file_7": {
+      "path": "/mnt/speck-data/speck/finemath-stock-preparation-v1/work/acquired/finemath_4plus__file_7/manifest.json",
+      "sha256": "fdc3746011a93e5ffdb4649887b48822405b2210f2c73fbb44d098627e9f9afc"
+    }
+  }
+}
