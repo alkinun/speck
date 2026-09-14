@@ -94,3 +94,8 @@ Cosmopedia v2 now has a [five-shard stock plan](cosmopedia_stock_preparation_v1.
 [explicit prompt-lineage/selection policy](COSMOPEDIA_STOCK.md). Its 960M target remains unmeasured.
 The preparation path preserves qualified document filters and reports natural template/style/seed-label
 concentration without carrying tokenizer-sampler byte quotas into the full stock.
+
+Cosmopedia is [launched](../../results/systems/cosmopedia-stock-launch-20260914.json) at frozen
+revision `28092262aaa0e68640611b522e55dfd0b65588b3`, concurrently with FineMath preparation.
+The original first raw shard is preserved and [verified in the new cache](../../results/data/cosmopedia-raw-cache-intake-20260914.json).
+Both results and downstream token caches remain pending; local timings include contention.
