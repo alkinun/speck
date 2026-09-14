@@ -1,0 +1,20 @@
+{
+  "cache": {
+    "bytes": 1174424341,
+    "path": "/mnt/speck-data/speck/source-qualification/cosmopedia-stock-raw-v1/db26bd6f011983c6ed57.parquet",
+    "sha256": "5a25721146377d6e7f288c244e991df93e672b8cc3e535fd4aac5da4cdb1491d"
+  },
+  "elapsed_seconds": 18.486067905998425,
+  "first_shard_upstream_token_length_sum": 302310865,
+  "format": "speck_cosmopedia_raw_cache_intake",
+  "format_version": 1,
+  "physical_rows": 376289,
+  "recorded_at": "2026-09-14T15:44:00.912150+00:00",
+  "scope": "Verified byte-identical raw-file copy from the preserved earlier source intake, avoiding duplicate network acquisition. token_length is upstream sizing metadata before current filters, not selected-Mistral usable capacity. No prior prepared stock is reused or added; the five-shard acquisition will apply the explicit new full-stock configuration. FineMath preparation overlapped this operation.",
+  "source": {
+    "bytes": 1174424341,
+    "path": "/mnt/speck-data/speck/source-qualification/synthetic-raw-v1/HuggingFaceTB--smollm-corpus/cosmopedia-v2/train-00000-of-00104.parquet",
+    "sha256": "5a25721146377d6e7f288c244e991df93e672b8cc3e535fd4aac5da4cdb1491d"
+  },
+  "training_authority": false
+}

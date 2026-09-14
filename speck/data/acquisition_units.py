@@ -171,6 +171,8 @@ def _unit_config(plan, unit):
         raise ValueError("science language/license policy may only govern science units")
     if "finemath_filters" in plan["base"] and unit["category"] != "math":
         raise ValueError("FineMath metadata policy may only govern math units")
+    if "cosmopedia_policy" in plan["base"] and unit["category"] != "synthetic":
+        raise ValueError("Cosmopedia lineage policy may only govern synthetic units")
     config = {
         "unit": unit,
         "filtering": plan["base"]["filtering"],
@@ -178,7 +180,13 @@ def _unit_config(plan, unit):
         "contamination_plan": plan["base"]["contamination_plan"],
         "checkpoint_rows": plan["checkpoint_rows"],
     }
-    for key in ("math_english", "source_use_extension", "science_filters", "finemath_filters"):
+    for key in (
+        "math_english",
+        "source_use_extension",
+        "science_filters",
+        "finemath_filters",
+        "cosmopedia_policy",
+    ):
         if key in plan["base"]:
             config[key] = plan["base"][key]
     return config
@@ -292,6 +300,13 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
                     state["yielded_rows"] += 1
                     reason = _document_rejection(document, plan["base"]["security"], contamination)
                     english_probability = None
+                    synthetic_metadata = None
+                    if reason is None and "cosmopedia_policy" in plan["base"]:
+                        from speck.data.cosmopedia_stock import cosmopedia_document
+
+                        reason, synthetic_metadata = cosmopedia_document(
+                            document, plan["base"]["cosmopedia_policy"]
+                        )
                     if reason is None and "finemath_filters" in plan["base"]:
                         from speck.data.finemath_stock import finemath_rejection
 
@@ -313,15 +328,26 @@ def acquire_unit(plan, unit, output_root, contamination, *, interrupt_after_rows
                     if reason:
                         state["rejections"][reason] = state["rejections"].get(reason, 0) + 1
                     else:
+                        metadata = (
+                            synthetic_metadata
+                            if synthetic_metadata is not None
+                            else document.get("metadata") or {}
+                        )
                         record = {
-                            **_record(document["content"], document.get("metadata") or {}),
-                            "metadata": document.get("metadata") or {},
+                            **_record(document["content"], metadata),
+                            "metadata": metadata,
                             "score": document.get("score"),
                             "source_repo": unit["reader"]["repo"],
                             "source_revision": unit["reader"]["revision"],
                             "source_file": document["file"],
                             "source_row": document["row"],
                         }
+                        if synthetic_metadata is not None:
+                            # This release has no document ID. Preserve a stable raw-file/row
+                            # locator without treating the prompt or seed label as an ID.
+                            record["content_id"] = (
+                                f"{unit['reader']['id']}:{unit['raw']['sha256']}:{document['row']}"
+                            )
                         if english_probability is not None:
                             record["detected_English_probability"] = english_probability
                         raw = (

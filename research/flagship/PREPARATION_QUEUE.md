@@ -89,3 +89,8 @@ The successor is now [launched](../../results/systems/finemath-headroom-launch-2
 from frozen revision `e36bb4d51e937281d44ff0c23f4b39eaebb3be2d` in a retained detached checkout.
 Use maintained status and the service log for progress; the earlier no-running-job statement above
 belongs to v1 completion. Combined headroom and token caching remain pending.
+
+Cosmopedia v2 now has a [five-shard stock plan](cosmopedia_stock_preparation_v1.json) and
+[explicit prompt-lineage/selection policy](COSMOPEDIA_STOCK.md). Its 960M target remains unmeasured.
+The preparation path preserves qualified document filters and reports natural template/style/seed-label
+concentration without carrying tokenizer-sampler byte quotas into the full stock.

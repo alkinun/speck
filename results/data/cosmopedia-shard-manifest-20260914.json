@@ -1,0 +1,84 @@
+{
+  "compressed_bytes": 5879393188,
+  "files": [
+    {
+      "bytes": 1174424341,
+      "columns": [
+        "prompt",
+        "text",
+        "token_length",
+        "audience",
+        "format",
+        "seed_data"
+      ],
+      "filename": "cosmopedia-v2/train-00000-of-00104.parquet",
+      "rows": 376289,
+      "sha256": "5a25721146377d6e7f288c244e991df93e672b8cc3e535fd4aac5da4cdb1491d"
+    },
+    {
+      "bytes": 1175620980,
+      "columns": [
+        "prompt",
+        "text",
+        "token_length",
+        "audience",
+        "format",
+        "seed_data"
+      ],
+      "filename": "cosmopedia-v2/train-00001-of-00104.parquet",
+      "rows": 376289,
+      "sha256": "6d7662f05a7652ce0075e5986bd69161943baf640c15b6ef720cfaef11c4ae60"
+    },
+    {
+      "bytes": 1177666049,
+      "columns": [
+        "prompt",
+        "text",
+        "token_length",
+        "audience",
+        "format",
+        "seed_data"
+      ],
+      "filename": "cosmopedia-v2/train-00002-of-00104.parquet",
+      "rows": 376289,
+      "sha256": "2c3ec2f6507548a1cea06b5d9da049ba885ff2610a39c5e63b9d3eda091eb5de"
+    },
+    {
+      "bytes": 1174956442,
+      "columns": [
+        "prompt",
+        "text",
+        "token_length",
+        "audience",
+        "format",
+        "seed_data"
+      ],
+      "filename": "cosmopedia-v2/train-00003-of-00104.parquet",
+      "rows": 376289,
+      "sha256": "60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599"
+    },
+    {
+      "bytes": 1176725376,
+      "columns": [
+        "prompt",
+        "text",
+        "token_length",
+        "audience",
+        "format",
+        "seed_data"
+      ],
+      "filename": "cosmopedia-v2/train-00004-of-00104.parquet",
+      "rows": 376289,
+      "sha256": "f9c962f2182049bdc28b4616527a4683f3d54d58404d37a5e240c30240da8efd"
+    }
+  ],
+  "format": "speck_cosmopedia_shard_manifest",
+  "format_version": 1,
+  "method": "Immutable-revision HfApi LFS identities and revision-pinned HfFileSystem/PyArrow remote footer reads. Complete local raw-file SHA and row counts must pass before acquisition.",
+  "physical_rows": 1881445,
+  "recorded_at": "2026-09-14T15:41:20.323920+00:00",
+  "repo": "HuggingFaceTB/smollm-corpus",
+  "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+  "status": "revision_pinned_file_identities_and_remote_footers_complete_local_full_SHA_verification_pending",
+  "training_authority": false
+}

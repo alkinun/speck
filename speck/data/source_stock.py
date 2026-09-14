@@ -278,6 +278,12 @@ def prepare_source_stock(
             result["domain_concentration"] = domain_concentration(
                 output / "excluded" / stock["path"]
             )
+        if plan.get("report_synthetic_concentration") is True:
+            from speck.data.cosmopedia_stock import cosmopedia_diagnostics
+
+            result["synthetic_concentration"] = cosmopedia_diagnostics(
+                output / "excluded" / stock["path"]
+            )
         report_path.parent.mkdir(parents=True, exist_ok=True)
         durable_json(report_path, result)
         return result
