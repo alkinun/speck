@@ -1,0 +1,36 @@
+{
+  "format": "speck_code_language_preparation",
+  "format_version": 1,
+  "status": "selected_for_preparation_not_launchable",
+  "first_wave": {
+    "path": "first_wave_preparation_v2.json",
+    "sha256": "9b7d239b852faf7612038ab14030a9cb1f41a643774f7303883eb058d2fb3edb"
+  },
+  "tokenizer_decision": {
+    "path": "tokenizer_decision_v1.json",
+    "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+  },
+  "source_ids": [
+    "stack_edu",
+    "stack_v3_train_permissive"
+  ],
+  "language_weights_percent": {
+    "Python": 25,
+    "C++": 15,
+    "C": 5,
+    "Java": 15,
+    "JavaScript": 15,
+    "TypeScript": 10,
+    "Rust": 5,
+    "Go": 5,
+    "Shell": 1,
+    "SQL": 1,
+    "Markdown": 3
+  },
+  "headroom_percent": 20,
+  "decision_basis": "Agent pre-results preparation allocation under delegated authority, not a claim of separate human recipe approval or empirical optimality. Keep all eleven languages from the qualified restricted-code scope; allocate most tokens to common application and systems languages while retaining smaller scripting/query/documentation components. Both pinned sources expose those languages. These token weights are a new explicit preparation prior, not a silent conversion of old tokenizer sample byte quotas. No code model outputs have been observed.",
+  "application": "Apply identical weights independently to each source inside each code arm and code background; the equal blend is 50/50 within every language, not only in aggregate. Require per-language headroom. Surplus in another language cannot hide a deficit.",
+  "policy_boundary": "Existing source-use approvals and source-specific file/repository license, attribution, English prose, security and exclusion obligations remain in force. Source-specific vendor/fork metadata availability differs and must remain disclosed in stock plans; common language weights alone do not imply identical source filters or independent ancestry.",
+  "change_rule": "Record a successor before affected-category outputs; no post-result redistribution or dropping a language to pass capacity. Final whole-document quotas, alignment/lookahead, train/validation partition, order/seed and launch contracts remain pending.",
+  "training_authority": false
+}

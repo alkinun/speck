@@ -1,0 +1,655 @@
+{
+  "boundary": "The same selected-tokenizer language proportions apply independently to each code source in every arm, including both halves of the equal blend and shared code background. Quotas are nominal reusable-pool requirements, not measured eligible stock or repeated E3 exposure. Unselected confirmations retain null recipes/quotas until registered finalist selection. Whole-document assembly, alignment/lookahead, joint exclusion and launch authority remain pending. A short language pool is not replaced by surplus in another language; headroom is required per language.",
+  "format": "speck_code_language_preparation_result",
+  "format_version": 1,
+  "implementation": [
+    {
+      "path": "speck/experiments/code_languages.py",
+      "sha256": "31fa7d2f3bf38161b4e60972118214e59f99b3ad47b988d2905523ff8e3c7a24"
+    },
+    {
+      "path": "scripts/code_language_preparation.py",
+      "sha256": "cb9526481adf105b7d50c51ff7d911e5443ac9debbd4aab9336c0142655f8eed"
+    }
+  ],
+  "inputs": {
+    "first_wave": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/first_wave_preparation_v2.json",
+      "sha256": "9b7d239b852faf7612038ab14030a9cb1f41a643774f7303883eb058d2fb3edb"
+    },
+    "plan": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/code_language_preparation_v1.json",
+      "sha256": "23bde4db406fd58c069eb9b21f24f8660ec99701ea0ac4fef27c2b142801cb04"
+    },
+    "tokenizer_decision": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/tokenizer_decision_v1.json",
+      "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+    }
+  },
+  "language_weights_percent": {
+    "C": 5,
+    "C++": 15,
+    "Go": 5,
+    "Java": 15,
+    "JavaScript": 15,
+    "Markdown": 3,
+    "Python": 25,
+    "Rust": 5,
+    "SQL": 1,
+    "Shell": 1,
+    "TypeScript": 10
+  },
+  "logical_slot_code_quotas": [
+    {
+      "id": "E1W-web-ufw-seed42",
+      "recipe": "web:ufw",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 60000000,
+          "C++": 180000000,
+          "Go": 60000000,
+          "Java": 180000000,
+          "JavaScript": 180000000,
+          "Markdown": 36000000,
+          "Python": 300000000,
+          "Rust": 60000000,
+          "SQL": 12000000,
+          "Shell": 12000000,
+          "TypeScript": 120000000
+        }
+      }
+    },
+    {
+      "id": "E1W-web-fineweb_edu-seed42",
+      "recipe": "web:fineweb_edu",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 60000000,
+          "C++": 180000000,
+          "Go": 60000000,
+          "Java": 180000000,
+          "JavaScript": 180000000,
+          "Markdown": 36000000,
+          "Python": 300000000,
+          "Rust": 60000000,
+          "SQL": 12000000,
+          "Shell": 12000000,
+          "TypeScript": 120000000
+        }
+      }
+    },
+    {
+      "id": "E1W-web-dclm-seed42",
+      "recipe": "web:dclm",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 60000000,
+          "C++": 180000000,
+          "Go": 60000000,
+          "Java": 180000000,
+          "JavaScript": 180000000,
+          "Markdown": 36000000,
+          "Python": 300000000,
+          "Rust": 60000000,
+          "SQL": 12000000,
+          "Shell": 12000000,
+          "TypeScript": 120000000
+        }
+      }
+    },
+    {
+      "id": "E1W-web-equal_three_way-seed42",
+      "recipe": "web:equal_three_way",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 60000000,
+          "C++": 180000000,
+          "Go": 60000000,
+          "Java": 180000000,
+          "JavaScript": 180000000,
+          "Markdown": 36000000,
+          "Python": 300000000,
+          "Rust": 60000000,
+          "SQL": 12000000,
+          "Shell": 12000000,
+          "TypeScript": 120000000
+        }
+      }
+    },
+    {
+      "id": "E1W-web-finalist1-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "web",
+        "finalist_rank": 1
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1W-web-finalist1-seed44",
+      "recipe": null,
+      "selection_ref": {
+        "category": "web",
+        "finalist_rank": 1
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1W-web-finalist2-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "web",
+        "finalist_rank": 2
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1W-web-finalist2-seed44",
+      "recipe": null,
+      "selection_ref": {
+        "category": "web",
+        "finalist_rank": 2
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1S-code-stack_v3-seed42",
+      "recipe": "code:stack_v3",
+      "source_language_tokens": {
+        "stack_v3_train_permissive": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-code-stack_edu-seed42",
+      "recipe": "code:stack_edu",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-code-equal_blend-seed42",
+      "recipe": "code:equal_blend",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 7500000,
+          "C++": 22500000,
+          "Go": 7500000,
+          "Java": 22500000,
+          "JavaScript": 22500000,
+          "Markdown": 4500000,
+          "Python": 37500000,
+          "Rust": 7500000,
+          "SQL": 1500000,
+          "Shell": 1500000,
+          "TypeScript": 15000000
+        },
+        "stack_v3_train_permissive": {
+          "C": 7500000,
+          "C++": 22500000,
+          "Go": 7500000,
+          "Java": 22500000,
+          "JavaScript": 22500000,
+          "Markdown": 4500000,
+          "Python": 37500000,
+          "Rust": 7500000,
+          "SQL": 1500000,
+          "Shell": 1500000,
+          "TypeScript": 15000000
+        }
+      }
+    },
+    {
+      "id": "E1S-code-finalist1-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "code",
+        "finalist_rank": 1
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1S-code-finalist2-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "code",
+        "finalist_rank": 2
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1S-math-finemath-seed42",
+      "recipe": "math:finemath",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-math-megamath-seed42",
+      "recipe": "math:megamath",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-math-ultradata_l2-seed42",
+      "recipe": "math:ultradata_l2",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-math-finalist1-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "math",
+        "finalist_rank": 1
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1S-math-finalist2-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "math",
+        "finalist_rank": 2
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1S-synthetic-cosmopedia-seed42",
+      "recipe": "synthetic:cosmopedia",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-synthetic-ufw_l3-seed42",
+      "recipe": "synthetic:ufw_l3",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-synthetic-equal_blend-seed42",
+      "recipe": "synthetic:equal_blend",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 15000000,
+          "C++": 45000000,
+          "Go": 15000000,
+          "Java": 45000000,
+          "JavaScript": 45000000,
+          "Markdown": 9000000,
+          "Python": 75000000,
+          "Rust": 15000000,
+          "SQL": 3000000,
+          "Shell": 3000000,
+          "TypeScript": 30000000
+        }
+      }
+    },
+    {
+      "id": "E1S-synthetic-finalist1-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "synthetic",
+        "finalist_rank": 1
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E1S-synthetic-finalist2-seed43",
+      "recipe": null,
+      "selection_ref": {
+        "category": "synthetic",
+        "finalist_rank": 2
+      },
+      "source_language_tokens": null,
+      "status": "apply_common_language_weights_after_registered_finalist_selection"
+    },
+    {
+      "id": "E3-epochs1-seed42",
+      "recipe": "incumbent",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 45000000,
+          "C++": 135000000,
+          "Go": 45000000,
+          "Java": 135000000,
+          "JavaScript": 135000000,
+          "Markdown": 27000000,
+          "Python": 225000000,
+          "Rust": 45000000,
+          "SQL": 9000000,
+          "Shell": 9000000,
+          "TypeScript": 90000000
+        }
+      }
+    },
+    {
+      "id": "E3-epochs1-seed43",
+      "recipe": "incumbent",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 45000000,
+          "C++": 135000000,
+          "Go": 45000000,
+          "Java": 135000000,
+          "JavaScript": 135000000,
+          "Markdown": 27000000,
+          "Python": 225000000,
+          "Rust": 45000000,
+          "SQL": 9000000,
+          "Shell": 9000000,
+          "TypeScript": 90000000
+        }
+      }
+    },
+    {
+      "id": "E3-epochs2-seed42",
+      "recipe": "incumbent",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 22500000,
+          "C++": 67500000,
+          "Go": 22500000,
+          "Java": 67500000,
+          "JavaScript": 67500000,
+          "Markdown": 13500000,
+          "Python": 112500000,
+          "Rust": 22500000,
+          "SQL": 4500000,
+          "Shell": 4500000,
+          "TypeScript": 45000000
+        }
+      }
+    },
+    {
+      "id": "E3-epochs2-seed43",
+      "recipe": "incumbent",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 22500000,
+          "C++": 67500000,
+          "Go": 22500000,
+          "Java": 67500000,
+          "JavaScript": 67500000,
+          "Markdown": 13500000,
+          "Python": 112500000,
+          "Rust": 22500000,
+          "SQL": 4500000,
+          "Shell": 4500000,
+          "TypeScript": 45000000
+        }
+      }
+    },
+    {
+      "id": "E3-epochs4-seed42",
+      "recipe": "incumbent",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 11250000,
+          "C++": 33750000,
+          "Go": 11250000,
+          "Java": 33750000,
+          "JavaScript": 33750000,
+          "Markdown": 6750000,
+          "Python": 56250000,
+          "Rust": 11250000,
+          "SQL": 2250000,
+          "Shell": 2250000,
+          "TypeScript": 22500000
+        }
+      }
+    },
+    {
+      "id": "E3-epochs4-seed43",
+      "recipe": "incumbent",
+      "source_language_tokens": {
+        "stack_edu": {
+          "C": 11250000,
+          "C++": 33750000,
+          "Go": 11250000,
+          "Java": 33750000,
+          "JavaScript": 33750000,
+          "Markdown": 6750000,
+          "Python": 56250000,
+          "Rust": 11250000,
+          "SQL": 2250000,
+          "Shell": 2250000,
+          "TypeScript": 22500000
+        }
+      }
+    }
+  ],
+  "source_language_capacity_envelope": [
+    {
+      "language": "Python",
+      "nominal_tokens": 300000000,
+      "preparation_target_tokens": 360000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "C++",
+      "nominal_tokens": 180000000,
+      "preparation_target_tokens": 216000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "C",
+      "nominal_tokens": 60000000,
+      "preparation_target_tokens": 72000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "Java",
+      "nominal_tokens": 180000000,
+      "preparation_target_tokens": 216000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "JavaScript",
+      "nominal_tokens": 180000000,
+      "preparation_target_tokens": 216000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "TypeScript",
+      "nominal_tokens": 120000000,
+      "preparation_target_tokens": 144000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "Rust",
+      "nominal_tokens": 60000000,
+      "preparation_target_tokens": 72000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "Go",
+      "nominal_tokens": 60000000,
+      "preparation_target_tokens": 72000000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "Shell",
+      "nominal_tokens": 12000000,
+      "preparation_target_tokens": 14400000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "SQL",
+      "nominal_tokens": 12000000,
+      "preparation_target_tokens": 14400000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "Markdown",
+      "nominal_tokens": 36000000,
+      "preparation_target_tokens": 43200000,
+      "source_id": "stack_edu"
+    },
+    {
+      "language": "Python",
+      "nominal_tokens": 75000000,
+      "preparation_target_tokens": 90000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "C++",
+      "nominal_tokens": 45000000,
+      "preparation_target_tokens": 54000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "C",
+      "nominal_tokens": 15000000,
+      "preparation_target_tokens": 18000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "Java",
+      "nominal_tokens": 45000000,
+      "preparation_target_tokens": 54000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "JavaScript",
+      "nominal_tokens": 45000000,
+      "preparation_target_tokens": 54000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "TypeScript",
+      "nominal_tokens": 30000000,
+      "preparation_target_tokens": 36000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "Rust",
+      "nominal_tokens": 15000000,
+      "preparation_target_tokens": 18000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "Go",
+      "nominal_tokens": 15000000,
+      "preparation_target_tokens": 18000000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "Shell",
+      "nominal_tokens": 3000000,
+      "preparation_target_tokens": 3600000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "SQL",
+      "nominal_tokens": 3000000,
+      "preparation_target_tokens": 3600000,
+      "source_id": "stack_v3_train_permissive"
+    },
+    {
+      "language": "Markdown",
+      "nominal_tokens": 9000000,
+      "preparation_target_tokens": 10800000,
+      "source_id": "stack_v3_train_permissive"
+    }
+  ],
+  "status": "matched_requirements_compiled_not_measured_supply",
+  "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+  "training_authority": false
+}

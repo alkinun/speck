@@ -1,0 +1,38 @@
+{
+  "format": "speck_stack_edu_metadata_acquisition",
+  "format_version": 1,
+  "metadata_manifest": {
+    "path": "../../results/data/stack-edu-metadata-manifest-20260914.json",
+    "sha256": "287c4487698a2e63bec86b43081f3ef1d6ef472608eaa51b3ac8443a63ee027a"
+  },
+  "code_languages": {
+    "path": "code_language_preparation_v1.json",
+    "sha256": "23bde4db406fd58c069eb9b21f24f8660ec99701ea0ac4fef27c2b142801cb04"
+  },
+  "source_qualification": {
+    "path": "../../archive/pregrant-history/research/flagship/stack_edu_sample_v1.json",
+    "sha256": "f4ae2b133683981b06328dc9218b6cfd216d9e2a02b4445e3168e0e0d1a39980"
+  },
+  "source_use": {
+    "path": "source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "reuse_local_files": {
+    "Rust": {
+      "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-rust.parquet",
+      "sha256": "38c9c6e658c273cbde075a51312fa53aec4a4f26c0bffcefe73da5c70e7061f6"
+    },
+    "Go": {
+      "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-go.parquet",
+      "sha256": "f6111b5521738255206d446c7aad91822735013183267c00cc2a221b12cd8c3c"
+    },
+    "SQL": {
+      "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-sql.parquet",
+      "sha256": "2f08a57e42620bdf6302fe083d48fe9954bff5c949ca3fe4fe3c2729087c141f"
+    }
+  },
+  "raw_directory": "/mnt/speck-data/speck/stack-edu-metadata-v1/raw",
+  "output_directory": "/mnt/speck-data/speck/stack-edu-metadata-v1/work",
+  "scope": "One complete metadata file per matched language. Preserve the three existing raw metadata files and copy only verified identical bytes; download the eight remaining pinned files. Verify full hashes, physical row counts, required top-level schema and every row language. This is metadata acquisition, not source text or usable token capacity. Per-document source-use/license/security checks and resumable blob acquisition remain separate.",
+  "training_authority": false
+}

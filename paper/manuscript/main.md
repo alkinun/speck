@@ -135,6 +135,12 @@ only with source-identical measured stock. It does not replace Stack-Edu with Co
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.
 
+The code comparison has a [pre-results language allocation](../../research/flagship/CODE_LANGUAGES.md)
+covering eleven shared languages. The same selected-tokenizer proportions apply independently to
+each source and to both halves of the equal blend; preparation headroom is required per language.
+The allocation is a declared preparation prior, not an empirically optimal mix. Finalist identities
+remain unselected, and matched language shares do not erase source-specific license/vendor differences.
+
 ### 3.2 Model results to be reported
 
 Report every source arm, finalist replication, equal-category effect, and per-category guardrail in

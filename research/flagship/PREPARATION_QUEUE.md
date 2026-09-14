@@ -68,40 +68,28 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   verified token stock. The earlier 403.56M bank is an exact included prefix. Joint experiment-view
   eligibility follows this source-specific preparation and headroom pass.
 - Math L2 and FineWiki [document-indexed token caches](TOKEN_STOCK.md) are complete and verified.
-- The [FineMath preparation](FINEMATH_STOCK.md) binds eight complete shards and a 960M-token target.
+- The [FineMath preparation](FINEMATH_STOCK.md) records the completed eight-shard stock and an eleven-shard successor targeting 960M.
   Its natural-domain corpus-selection rule is explicit; small tokenizer-sample diversity caps are
   not silently treated as full-corpus limits.
 
-## Latest completion and immediate work
+## Current execution and next work
 
-FineMath v1 completed successfully: **814,103,172 tokens** pass the 800M nominal requirement but
-miss the 960M preparation target by **145,896,828**. No preparation service remains running.
-First pin additional complete shards in an explicit successor, retaining filters/domain policy and
-reusing only verified configuration-identical acquisition units. Rerun combined exclusion, measure
-headroom, then build and verify the FineMath document-token cache. The combined stock replaces the
-eight-shard count. Continue Cosmopedia v2, Stack-Edu and FineWeb-Edu afterward.
-
-The [eleven-shard FineMath successor](finemath_stock_preparation_v2.json) now pins files 0–10,
-reuses the original eight acquisition units under identical configurations, and preserves the 960M
-target. Its combined exclusion and capacity measurement are the immediate execution step.
-
-The successor is now [launched](../../results/systems/finemath-headroom-launch-20260914.json)
-from frozen revision `e36bb4d51e937281d44ff0c23f4b39eaebb3be2d` in a retained detached checkout.
-Use maintained status and the service log for progress; the earlier no-running-job statement above
-belongs to v1 completion. Combined headroom and token caching remain pending.
-
-Cosmopedia v2 now has a [five-shard stock plan](cosmopedia_stock_preparation_v1.json) and
-[explicit prompt-lineage/selection policy](COSMOPEDIA_STOCK.md). Its 960M target remains unmeasured.
-The preparation path preserves qualified document filters and reports natural template/style/seed-label
-concentration without carrying tokenizer-sampler byte quotas into the full stock.
-
-Cosmopedia is [launched](../../results/systems/cosmopedia-stock-launch-20260914.json) at frozen
-revision `28092262aaa0e68640611b522e55dfd0b65588b3`, concurrently with FineMath preparation.
-The original first raw shard is preserved and [verified in the new cache](../../results/data/cosmopedia-raw-cache-intake-20260914.json).
-Both results and downstream token caches remain pending; local timings include contention.
-
-Stack-Edu [bounded access review](../../results/data/stack-edu-access-review-20260914.json)
-verified complete prior Rust/Go/SQL metadata identities and one eligible SWH blob per language
-(HTTP 200, SHA-1, length and encoding). This clears those three probes only. The next code-source
-step is a matched language contract against restricted Stack v3 and a resumable metadata/blob
-stock builder; the old three-language sampler is not a full-code comparison recipe.
+- FineMath v1 completed at **814,103,172 tokens**: 800M nominal passes; 960M headroom is short
+  by 145,896,828. The [eleven-shard successor](finemath_stock_preparation_v2.json) is
+  [running in a frozen checkout](../../results/systems/finemath-headroom-launch-20260914.json),
+  reusing the original eight acquisition units under identical configurations. Verify combined
+  exclusion and headroom, then bind and verify its token cache. Do not add overlapping stocks.
+- Cosmopedia's [five-shard plan](cosmopedia_stock_preparation_v1.json) is
+  [running concurrently](../../results/systems/cosmopedia-stock-launch-20260914.json).
+  Its [prompt-lineage and corpus-selection policy](COSMOPEDIA_STOCK.md) preserves generated text,
+  qualified document filters and natural template/style/seed-label diagnostics. Actual 960M-target
+  capacity and token caching remain pending. Local costs include concurrent preparation.
+- Code's [matched eleven-language requirements](CODE_LANGUAGES.md) now bind identical token shares
+  for each source, the equal blend and shared background. Stack-Edu's three earlier
+  [SWH access probes](../../results/data/stack-edu-access-review-20260914.json) pass, and its
+  [complete metadata intake](stack_edu_metadata_acquisition_v1.json) is pinned. Verify those files,
+  then implement resumable metadata/blob stock preparation and per-language headroom. Preserve
+  source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
+- Continue FineWeb-Edu and remaining alternative-source stock, followed by joint per-arm assembly
+  and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
+  confirmations, D5 opening, model training, or deeper post-training work is launched here.
