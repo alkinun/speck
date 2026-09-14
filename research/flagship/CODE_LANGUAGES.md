@@ -54,7 +54,7 @@ physical row counts and required top-level fields. First-row-group checks are bo
 the acquisition verifies full file hashes, schema, counts and every row's language.
 
 The original Rust/Go/SQL metadata files are preserved and copied only after identity verification.
-The other eight files must be acquired in full. Each completed file receives a durable receipt;
+The other eight files were acquired in full. Each completed file receives a durable receipt;
 resume verifies those bytes and requires the original execution revision/plan. This stage does not
 fetch code blobs, qualify individual licenses, or establish usable token capacity. The verified
 metadata supplies concrete inputs to the next resumable blob builder.
@@ -95,3 +95,13 @@ choice is fixed before model outputs and does not assert an optimal code distrib
 repository/path/license attribution and blob identities remain attached to each accepted document;
 missing commits and upstream ancestry remain disclosed. Source-use approval, these agent-selected
 preparation rules, and final training-launch authority remain distinct.
+
+## Current supply evidence
+
+The [26-file successor census](../findings/2026-09-14-expanded-code-metadata.md) and
+[added-file content probe](../findings/2026-09-14-code-supply-probe.md) are complete. The
+combined estimates remain short against E1S headroom in Java, TypeScript, JavaScript and Python
+before full exclusion. Java/TypeScript already cover their complete released files. The larger
+Stack-Edu incumbent-background requirement is a separate unresolved constraint. The original
+stock run remains intentionally paused; no automatic language/background revision has been
+adopted. Samples and metadata bytes are not measured source capacity.

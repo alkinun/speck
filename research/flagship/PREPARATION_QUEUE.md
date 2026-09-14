@@ -93,14 +93,14 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   [real-prefix replay qualification](../../results/systems/stack-edu-stock-prefix-20260914.json)
   passed; [full code stock preparation](stack_edu_stock_preparation_v1.json) is
   [intentionally paused](../../results/systems/stack-edu-intentional-pause-20260914.json).
-  The complete metadata census found language-supply deficits; qualify a more efficient fetch
-  successor and feasible per-language capacity before continuing the long run. Preserve
+  The ordered fetcher is qualified and the expanded metadata/content probes are complete.
+  Resolve remaining per-language supply constraints before continuing the long run. Preserve
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
 - FineWeb-Edu's [complete fourteen-file stock view](FINEWEB_EDU_STOCK.md) is pinned.
   The original qualified final shard is preserved and verified in the new cache; its real reader/web
   policy passed a bounded prefix check. [Raw-only acquisition](../../results/data/fineweb-edu-raw-acquisition-20260914.json)
-  completed with all fourteen files verified. Separately schedule text
-  processing and exclusion against 5.28B selected-Mistral tokens. Raw files are not eligible supply.
+  completed with all fourteen files verified. The three-file E1S tranche is conditionally queued
+  at 1.32B selected-Mistral tokens; retain the eventual full-stock 5.28B target. Raw files are not eligible supply.
 - Continue remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
   confirmations, D5 opening, model training, or deeper post-training work is launched here.
@@ -113,24 +113,18 @@ E1S-sized dataset before maximal stocks. Existing recipes and source-use approva
 force until an explicit successor is adopted. FineMath/Cosmopedia continue; FineWeb-Edu raw
 acquisition is complete; Stack-Edu is intentionally paused with its evidence intact.
 
-The [ordered code-fetch probe](../findings/2026-09-14-ordered-code-fetch.md) now passes bounded
-real fetching, content/security, interruption/replay and archival checks. The
-[metadata supply successor](stack_edu_metadata_acquisition_v2.json) is running separately.
-Code-stock production remains paused: the sample estimates still flag language-capacity
-deficits, particularly TypeScript, before full exclusion. No recipe changes are adopted.
+The [ordered code-fetch qualification](../findings/2026-09-14-ordered-code-fetch.md) and
+[expanded metadata census](../findings/2026-09-14-expanded-code-metadata.md) are complete. All
+26 files / 101,229,394 physical rows passed verification; no metadata download remains active.
+The [added-file content probe](../findings/2026-09-14-code-supply-probe.md) also completed.
+Combined estimates still flag Java, TypeScript, JavaScript and Python against E1S headroom,
+before full exclusion. Java/TypeScript have no further released shards. Code-stock production
+remains paused pending a recorded supply/recipe decision; no language changes are adopted.
 
-The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) is now bound for
-three complete downloaded files, targeting 1.32B tokens with unchanged filters. Processing is
-not launched; schedule it after current large exclusion passes. Preserve the fourteen-file
-5.28B full-stock requirement and reuse identical acquisitions on later expansion.
-
-The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
-[running in a frozen checkout](../../results/systems/local-preparation-followups-launch-20260914.json).
-It waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
+The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) binds three complete
+downloaded files and 1.32B tokens with unchanged filters. The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md)
+is [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json):
+it waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
 processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
-unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.
-
-The [expanded Stack-Edu metadata census](../findings/2026-09-14-expanded-code-metadata.md)
-is complete: all 26 files and 101,229,394 physical rows reverified. All released C++/Java
-shards are included. No metadata download remains active. Per-language content/token supply
-still requires the bounded added-file probe and subsequent full exclusion.
+unmeasured until publication; failures/shortfalls stop dependent work. Preserve the fourteen-file
+5.28B full-stock requirement and reuse identical acquisitions on later expansion.

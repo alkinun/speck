@@ -9,6 +9,10 @@
     {
       "path": "/mnt/speck-data/speck/local-preparation-followups-20260914/execution.json",
       "sha256": "f0418ff7c1ad91097764d2fc4bed799460b73e7c2f84a80539f610b4c7e8dadc"
+    },
+    {
+      "path": "/mnt/speck-data/speck/local-preparation-followups-20260914/failure.json",
+      "sha256": "7b686abd290fd8a2c98cb661effc9cdc5c2f4aa70552d21fea0440a164c84a02"
     }
   ],
   "source_services_not_stopped": [
@@ -16,5 +20,7 @@
     "speck-cosmopedia-stock-20260914.service"
   ],
   "source_service_states": "Id=speck-finemath-headroom-20260914.service\nActiveState=active\nMainPID=64857\n\nId=speck-cosmopedia-stock-20260914.service\nActiveState=active\nMainPID=68334\n",
-  "training_authority": false
+  "training_authority": false,
+  "final_old_service_state": "LoadState=not-found\nActiveState=inactive\nMainPID=0\n",
+  "service_exit_status_available": false
 }

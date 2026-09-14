@@ -28,11 +28,10 @@ first Java shard contains only 12,206 eligible rows / 26.16MB declared content; 
 These byte counts are not token capacity; security/exclusion can only reduce usable content.
 The original one-file-per-language choice did not establish a feasible supply envelope.
 
-Next, inspect and pin additional complete metadata only for deficient languages; distinguish
-languages with more released shards from languages already represented by their complete
-release. Estimate selected-tokenizer yield from deterministic bounded samples across file
-positions, including metadata rejection, fetch failure, content validation and downstream
-exclusion loss. Confirm capacity for every language before committing to a large transfer.
+Expanded metadata verification and a deterministic added-file content/token probe are now
+complete; see the [combined finding](../findings/2026-09-14-code-supply-probe.md). Java and
+TypeScript remain below E1S headroom in the estimates despite complete released metadata.
+JavaScript and Python have additional released files. Full exclusion loss remains unmeasured. Confirm capacity for every language before committing to a large transfer.
 Do not infer all-language token/byte ratios from the observed C prefix.
 
 If the approved source cannot support the full matched-language background, record a pre-results
@@ -111,11 +110,12 @@ now provides real evidence for the index/queue and NVMe working path: 1,408 samp
 68.18s including deliberate interruption/resume, identical warm replay, completed reopen and
 verified archival copy. Content/security checks retained 788,811 tokens. These are sample
 observations, not full exclusion or source capacity. See the [finding](../findings/2026-09-14-ordered-code-fetch.md)
-for stratified estimates and limits. Finish expanded metadata verification/census and resolve
-per-language feasibility before production integration or an explicit recipe successor.
+for stratified estimates and limits. The [expanded metadata and content probe](../findings/2026-09-14-code-supply-probe.md)
+is now complete too. Resolve the remaining per-language/background supply constraint before
+production integration or a recorded recipe successor.
 
 The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
-[running in a frozen checkout](../../results/systems/local-preparation-followups-launch-20260914.json).
+[running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json).
 It waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
 processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.

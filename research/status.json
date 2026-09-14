@@ -226,10 +226,11 @@
     },
     {
       "id": "local_preparation_followups",
-      "state": "frozen_sequence_running_waiting_for_finemath",
-      "plan": "research/flagship/local_preparation_followups_v1.json",
-      "launch": "results/systems/local-preparation-followups-launch-20260914.json",
-      "next": "The user service automatically validates successful FineMath/Cosmopedia text results and builds/reopens token caches, then prepares and tokenizes the bound E1S FineWeb tranche. Stops with preserved failure evidence on any shortfall or error. Review and commit published results; do not launch duplicate cache/text jobs or model training."
+      "state": "replacement_frozen_sequence_running_waiting_for_finemath",
+      "plan": "research/flagship/local_preparation_followups_v2.json",
+      "launch": "results/systems/local-preparation-followups-v2-launch-20260914.json",
+      "next": "The user service automatically validates successful FineMath/Cosmopedia text results and builds/reopens token caches, then prepares and tokenizes the bound E1S FineWeb tranche. Stops with preserved failure evidence on any shortfall or error. Review and commit published results; do not launch duplicate cache/text jobs or model training.",
+      "replacement": "results/systems/local-followup-replacement-20260914.json"
     }
   ]
 }

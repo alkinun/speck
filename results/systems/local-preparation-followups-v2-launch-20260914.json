@@ -1,0 +1,36 @@
+{
+  "format": "speck_local_preparation_followups_launch",
+  "format_version": 1,
+  "recorded_at": "2026-09-14T19:08:54.904941+00:00",
+  "repository_revision": "31dc671e4d94fcf236c69b5f82ef8af1eca487dd",
+  "checkout": "/tmp/opencode/speck-local-followups-v2-20260914",
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/local_preparation_followups_v2.json",
+    "sha256": "19191e431ebe450b4ee595a4ebb0845087e4a99f7fe622369528727201bca7ab"
+  },
+  "service": "speck-local-followups-v2-20260914.service",
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--unit=speck-local-followups-v2-20260914",
+    "--description=Checked source caches and E1S web preparation with durable completion checks",
+    "--property=WorkingDirectory=/tmp/opencode/speck-local-followups-v2-20260914",
+    "--property=Nice=10",
+    "--property=StandardOutput=append:/mnt/speck-data/speck/local-preparation-followups-v2-20260914.log",
+    "--property=StandardError=append:/mnt/speck-data/speck/local-preparation-followups-v2-20260914.log",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONUNBUFFERED=1",
+    "/home/alkin/Desktop/speck/.venv/bin/python",
+    "-m",
+    "scripts.run_preparation_followups",
+    "/home/alkin/Desktop/speck/research/flagship/local_preparation_followups_v2.json"
+  ],
+  "log": "/mnt/speck-data/speck/local-preparation-followups-v2-20260914.log",
+  "launch_stdout": "",
+  "launch_stderr": "Running as unit: speck-local-followups-v2-20260914.service; invocation ID: 9a39ec8f87cc453aad6efc0576d4ba1a\n",
+  "status": "launched_waiting_for_finemath_completion",
+  "training_authority": false,
+  "boundary": "Replaces the preserved waiting-only v1 sequence. An unloaded transient service requires a fully validated completed result; unavailable exit status is explicit. Source services were not stopped. Checked FineMath/Cosmopedia caches then E1S FineWeb text/cache; no model launch."
+}
