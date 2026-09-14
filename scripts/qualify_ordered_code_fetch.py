@@ -19,11 +19,35 @@ from speck.data.production_rehearsal import (
     _document_rejection,
     _gitleaks_filter,
 )
+from speck.data.stack_edu_metadata import load_metadata_plan
 from speck.data.stack_edu_stock import decode_code, load_stack_edu_preparation
 from speck.data.swh_cache import read_cached_blob
 from speck.provenance.io import durable_json, file_sha256
 from speck.provenance.repository import repository_root
 from speck.tokenization.tokenizer import Tokenizer
+
+
+def estimate_language(targets, token_counts, language):
+    observations = defaultdict(list)
+    populations, sizes = {}, {}
+    for ordinal, target in enumerate(targets):
+        if target["language"] != language:
+            continue
+        group = (target["metadata_sha256"], target["stratum"])
+        population, size = target["population"], target["sample_size"]
+        if group in populations and (populations[group], sizes[group]) != (population, size):
+            raise ValueError("code sample stratum population/size changed")
+        populations[group], sizes[group] = population, size
+        observations[group].append(token_counts.get(ordinal, 0))
+    estimate = variance = 0
+    for group, values in observations.items():
+        n, population = len(values), populations[group]
+        if n != sizes[group] or not 1 <= n <= population:
+            raise ValueError("code sample does not cover its declared stratum")
+        estimate += population * statistics.mean(values)
+        if n > 1:
+            variance += population**2 * (1 - n / population) * statistics.variance(values) / n
+    return estimate, math.sqrt(variance), observations
 
 
 def main():
@@ -38,9 +62,11 @@ def main():
     ):
         raise ValueError("qualification requires a new report and clean frozen implementation")
     spec = json.loads(args.plan.read_text())
+    expanded = spec.get("format_version") == 2
     if (
         spec.get("format") != "speck_ordered_code_fetch_qualification"
-        or spec.get("format_version") != 1
+        or type(spec.get("format_version")) is not int
+        or spec.get("format_version") not in (1, 2)
         or spec.get("training_authority") is not False
         or spec.get("strata") != 4
         or spec.get("samples_per_stratum") != 32
@@ -54,6 +80,35 @@ def main():
         raise ValueError("unsupported ordered code qualification contract")
     parent_id = _bound_identity(spec["stock_plan"], args.plan.parent)
     plan = load_stack_edu_preparation(parent_id["path"])
+    metadata_id = None
+    if expanded:
+        metadata_id = _bound_identity(spec["metadata_result"], args.plan.parent)
+        metadata = json.loads(Path(metadata_id["path"]).read_text())
+        metadata_plan_id = _bound_identity(metadata["plan"], Path(metadata_id["path"]).parent)
+        intake = load_metadata_plan(metadata_plan_id["path"])
+        if (
+            intake["format_version"] != 2
+            or metadata.get("status") != "complete_metadata_verified_not_code_stock"
+            or metadata.get("training_authority") is not False
+            or metadata.get("inputs") != intake["inputs"]
+            or [entry["unit"] for entry in metadata["files"]] != intake["units"]
+            or spec.get("selected_unit_ids") != [unit["id"] for unit in intake["units"][11:]]
+            or intake["inputs"]["code_languages"]["sha256"] != plan["code_languages"]["sha256"]
+            or intake["inputs"]["source_qualification"]["sha256"]
+            != plan["source_qualification"]["sha256"]
+        ):
+            raise ValueError(
+                "expanded code probe requires the exact fifteen additional metadata files"
+            )
+        plan["units"] = [
+            {
+                **entry["unit"],
+                "metadata_path": entry["raw"]["path"],
+                "start_row": 0,
+                "stop_row": entry["unit"]["expected_file_rows"],
+            }
+            for entry in metadata["files"][11:]
+        ]
     policy = plan["base"]["stack_edu_policy"]
     working = Path(spec["working_directory"]).resolve()
     archive = Path(spec["archive_directory"]).resolve()
@@ -71,6 +126,8 @@ def main():
         "plan": {"path": str(args.plan.resolve()), "sha256": file_sha256(args.plan)},
         "stock_plan": parent_id,
     }
+    if metadata_id is not None:
+        execution["metadata_result"] = metadata_id
     durable_json(working / "execution.json", execution)
     indices = []
     targets = []
@@ -112,24 +169,30 @@ def main():
         minimum_free_bytes=spec["minimum_free_bytes"],
     )
     started = time.perf_counter()
-    try:
-        fetch_targets(targets, working / "resumed", **fetch_args, interrupt_after=64)
-    except RuntimeError as error:
-        if str(error) != "injected ordered fetch interruption":
-            raise
-        durable_json(working / "interruption.json", {"expected": True, "error": str(error)})
+    if expanded:
+        # Replay was qualified by v1. This execution measures newly pinned source supply.
+        resumed = fetch_targets(targets, working / "resumed", **fetch_args)
+        interrupted_and_resumed_seconds = time.perf_counter() - started
+        warm_replay_seconds = None
     else:
-        raise RuntimeError("expected ordered fetch interruption did not occur")
-    resumed = fetch_targets(targets, working / "resumed", **fetch_args, resume=True)
-    interrupted_and_resumed_seconds = time.perf_counter() - started
-    started = time.perf_counter()
-    clean = fetch_targets(targets, working / "clean", **fetch_args)
-    warm_replay_seconds = time.perf_counter() - started
-    if resumed["journal"]["sha256"] != clean["journal"]["sha256"]:
-        raise RuntimeError("ordered fetch clean/resume journal parity failed")
+        try:
+            fetch_targets(targets, working / "resumed", **fetch_args, interrupt_after=64)
+        except RuntimeError as error:
+            if str(error) != "injected ordered fetch interruption":
+                raise
+            durable_json(working / "interruption.json", {"expected": True, "error": str(error)})
+        else:
+            raise RuntimeError("expected ordered fetch interruption did not occur")
+        resumed = fetch_targets(targets, working / "resumed", **fetch_args, resume=True)
+        interrupted_and_resumed_seconds = time.perf_counter() - started
+        started = time.perf_counter()
+        clean = fetch_targets(targets, working / "clean", **fetch_args)
+        warm_replay_seconds = time.perf_counter() - started
+        if resumed["journal"]["sha256"] != clean["journal"]["sha256"]:
+            raise RuntimeError("ordered fetch clean/resume journal parity failed")
     if fetch_targets(targets, working / "resumed", **fetch_args, resume=True) != resumed:
         raise RuntimeError("completed ordered fetch changed on reopen")
-    print("fetch journal parity and complete reopen passed", flush=True)
+    print("complete fetch reopen passed", flush=True)
     contamination = _contamination_indexes(plan["base"])
     tokenizer = Tokenizer(plan["reference_tokenizer"]["path"])
     rejections = defaultdict(Counter)
@@ -193,18 +256,9 @@ def main():
         rejections[targets[ordinal]["language"]]["gitleaks"] += 1
     yields = []
     for language in plan["source_language_targets"]:
-        observations = defaultdict(list)
-        populations = {}
-        for ordinal, target in enumerate(targets):
-            if target["language"] == language:
-                observations[target["stratum"]].append(token_counts.get(ordinal, 0))
-                populations[target["stratum"]] = target["population"]
-        estimate = variance = 0
-        for group, values in observations.items():
-            n, N = len(values), populations[group]
-            estimate += N * statistics.mean(values)
-            if n > 1:
-                variance += N * N * (1 - n / N) * statistics.variance(values) / n
+        estimate, standard_error, observations = estimate_language(targets, token_counts, language)
+        if not observations:
+            continue
         yields.append(
             {
                 "language": language,
@@ -213,8 +267,12 @@ def main():
                 "verified_retained_utf8_bytes": verified_bytes[language],
                 "observed_mistral_tokens": sum(sum(v) for v in observations.values()),
                 "rejections": dict(rejections[language]),
-                "estimated_tokens_in_current_file_before_full_exclusion": estimate,
-                "sampling_standard_error_tokens": math.sqrt(variance),
+                (
+                    "estimated_tokens_in_additional_files_before_full_exclusion"
+                    if expanded
+                    else "estimated_tokens_in_current_file_before_full_exclusion"
+                ): estimate,
+                "sampling_standard_error_tokens": standard_error,
                 "e1s_language_headroom_target_tokens": plan["source_language_targets"][language]
                 // 4,
             }
@@ -225,7 +283,7 @@ def main():
         os.fsync(handle.fileno())
     preliminary = {
         "format": "speck_ordered_code_fetch_qualification_result",
-        "format_version": 1,
+        "format_version": 2 if expanded else 1,
         "status": "bounded_fetch_replay_and_content_checks_pass_full_exclusion_pending",
         **execution,
         "working_directory": str(working),
@@ -235,9 +293,11 @@ def main():
             "sha256": file_sha256(working / "targets.json"),
         },
         "indexing_seconds": indexing_seconds,
-        "fetch_including_interruption_resume_seconds": interrupted_and_resumed_seconds,
+        (
+            "fetch_seconds" if expanded else "fetch_including_interruption_resume_seconds"
+        ): interrupted_and_resumed_seconds,
         "warm_replay_seconds": warm_replay_seconds,
-        "journal_parity_pass": True,
+        "journal_parity_pass": None if expanded else True,
         "complete_reopen_pass": True,
         "fetch": resumed,
         "security": security,
@@ -247,6 +307,17 @@ def main():
         "training_authority": False,
         "boundary": "128 metadata-eligible rows per language, sampled with fixed seed in four eligible-order strata from the currently pinned first file. Actual code/content/security/Gitleaks and Mistral checks; no full reference or candidate deduplication. Stratified estimates and sampling SE describe these files before full exclusion; they are not qualified capacity, cross-language independence or guaranteed targets. Fetch timing includes cache reuse, interruption, replay and persistence. Warm replay is not an independent network speed benchmark. Original cache and checkpoint remain preserved; no full-stock resume or recipe change.",
     }
+    if expanded:
+        preliminary["status"] = "additional_file_supply_probe_complete_full_exclusion_pending"
+        preliminary["boundary"] = (
+            "128 metadata-eligible rows per additional complete file in four equal eligible-order strata. "
+            "Fixed seed 42 and unchanged source/content/security/Gitleaks/Mistral policy. Estimates sum "
+            "independent file-position strata with their own population sizes; no original file is sampled "
+            "again or included in the additional-file estimate. No full reference/candidate deduplication "
+            "or guaranteed capacity. V1 qualified interruption/replay; this run only fetches new supply "
+            "samples and verifies completed reopen. New and preserved caches/attempts remain intact. "
+            "No full-stock resume, language/recipe change, source approval or training authority."
+        )
     durable_json(working / "qualification.json", preliminary)
     files = [p for p in sorted(working.rglob("*")) if p.is_file()]
     inventory = [

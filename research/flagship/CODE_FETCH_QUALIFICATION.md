@@ -39,3 +39,18 @@ a warm replay is not a separate network benchmark or a controlled storage speedu
 Passing this probe qualifies its bounded components. Integrating the index/queue into a full
 source-stock successor, full exclusion, joint eligibility and training manifests remain separate
 work. The paused frozen stock is not silently converted into this execution.
+
+## Additional-file supply probe
+
+The [v2 supply probe](code_supply_probe_v2.json) uses the verified fifteen added metadata files:
+three C++, ten Java, one JavaScript and one Python. It takes 32 eligible rows in each of four
+file-position strata, 1,920 samples total. Content/security/Gitleaks and frozen-Mistral checks
+are unchanged. Estimate each file's strata using that file's own population sizes before summing
+within a language; do not merge equal-numbered strata from different files.
+
+The result reports added-file estimates separately. Original first-file observations can later
+be combined with those disjoint file estimates, with sampling variances added. No original files
+are resampled. This is a source-supply measurement, so it does not repeat the interruption/warm
+benchmark already completed in v1. Completed cache reopen and full archival-copy checks remain.
+Neither result qualifies full reference/candidate exclusion or changes the language/background
+recipe. Deficient languages still require a recorded decision before bulk preparation.
