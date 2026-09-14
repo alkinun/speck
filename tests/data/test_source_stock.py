@@ -18,6 +18,25 @@ def test_complete_shard_contract_rejects_wrong_physical_row_count(tmp_path, monk
     assert not (tmp_path / "units" / unit["id"] / "manifest.json").exists()
 
 
+def test_reused_units_preserve_payload_and_reject_changed_policy(tmp_path, monkeypatch):
+    plan, unit = fixture(tmp_path, monkeypatch)
+    acquire_unit(plan, unit, tmp_path / "original", {})
+    manifest = tmp_path / "original" / unit["id"] / "manifest.json"
+    plan["reuse_acquisition_units"] = {
+        unit["id"]: {"path": str(manifest), "sha256": file_sha256(manifest)}
+    }
+    receipt = stock.reuse_completed_units(plan, tmp_path / "new", tmp_path)
+    reused = acquire_unit(plan, unit, tmp_path / "new", {})
+    assert reused["reused"] is True
+    assert receipt[0]["unit_id"] == unit["id"]
+    assert (tmp_path / "new" / unit["id"] / "records.jsonl").read_bytes() == (
+        manifest.parent / "records.jsonl"
+    ).read_bytes()
+    plan["base"]["filtering"]["min_chars"] += 1
+    with pytest.raises(ValueError, match="configuration"):
+        stock.reuse_completed_units(plan, tmp_path / "bad", tmp_path)
+
+
 @pytest.mark.parametrize("category", ["math", "reference"])
 def test_stock_runner_excludes_deduplicates_and_preserves_shortfall(
     tmp_path, monkeypatch, category

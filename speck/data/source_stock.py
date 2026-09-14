@@ -4,10 +4,11 @@ import json
 import resource
 import shutil
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from speck.data.acquisition_units import _bound_identity, prepare_units
+from speck.data.acquisition_units import _bound_identity, _digest, _unit_config, prepare_units
 from speck.data.admitted_math import count_reference_tokens
 from speck.data.checkpoint_replay import restore_reference_checkpoint
 from speck.data.firewall_integration import (
@@ -19,6 +20,57 @@ from speck.data.preparation_policy import load_preparation_policy
 from speck.data.sqlite_wal import wal_policy
 from speck.provenance.io import durable_json, file_sha256
 from speck.provenance.repository import repository_root
+
+
+def reuse_completed_units(plan, acquired, plan_directory):
+    """Copy only verified completed unit payloads into a new stock execution."""
+    units = {unit["id"]: unit for unit in plan["units"]}
+    receipts = []
+    for unit_id, identity in plan.get("reuse_acquisition_units", {}).items():
+        started = time.perf_counter()
+        if unit_id not in units:
+            raise ValueError("reused acquisition unit is outside the new plan")
+        identity = _bound_identity(identity, plan_directory)
+        manifest_path = Path(identity["path"])
+        directory = manifest_path.parent
+        manifest = json.loads(manifest_path.read_text())
+        if manifest.get("status") != "complete_not_training_data" or manifest.get(
+            "config_sha256"
+        ) != _digest(_unit_config(plan, units[unit_id])):
+            raise ValueError("reused unit differs from the new acquisition configuration")
+        files = [(directory / "config.json", None), (manifest_path, identity["sha256"])]
+        for entry in (manifest["output"], manifest["security_report"]):
+            source = (directory / entry["path"]).resolve()
+            if (
+                not source.is_relative_to(directory.resolve())
+                or file_sha256(source) != entry["sha256"]
+            ):
+                raise ValueError("reused acquisition payload identity mismatch")
+            files.append((source, entry["sha256"]))
+        if json.loads((directory / "config.json").read_text()) != _unit_config(
+            plan, units[unit_id]
+        ):
+            raise ValueError("reused acquisition owner differs from its manifest")
+        target = Path(acquired) / unit_id
+        if not target.exists():
+            staging = target.with_name(target.name + ".reuse-building")
+            staging.mkdir(parents=True, exist_ok=False)
+            for source, expected_hash in files:
+                dest = staging / source.relative_to(directory)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, dest)
+                if expected_hash is not None and file_sha256(dest) != expected_hash:
+                    raise ValueError("reused unit copy identity mismatch")
+            staging.replace(target)
+        receipts.append(
+            {
+                "unit_id": unit_id,
+                "source_manifest": identity,
+                "elapsed_seconds": time.perf_counter() - started,
+                "timing_scope": "This invocation's source/copy verification; previous acquisition is excluded.",
+            }
+        )
+    return receipts
 
 
 def prepare_source_stock(
@@ -77,7 +129,10 @@ def prepare_source_stock(
         if acquired_path.exists():
             acquired = json.loads(acquired_path.read_text())
         else:
+            reused_units = reuse_completed_units(plan, output / "acquired", plan_path.parent)
             acquired = prepare_units(plan, output / "acquired")
+            if reused_units:
+                acquired["reused_unit_inputs"] = reused_units
             durable_json(acquired_path, acquired)
         event(
             "acquired",

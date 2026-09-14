@@ -51,13 +51,14 @@ def science_rejection(document, filters):
 def load_science_preparation(path):
     path = Path(path).resolve()
     value = json.loads(path.read_text())
+    version = value.get("format_version")
     if (
         value.get("format") != "speck_science_stock_preparation"
-        or value.get("format_version") != 1
+        or version not in (1, 2)
         or value.get("source_id") != "pes2o_v3"
         or value.get("training_authority") is not False
         or value.get("checkpoint_rows") != 256
-        or value.get("target_reference_tokens") != 400_000_000
+        or value.get("target_reference_tokens") != (480_000_000 if version == 2 else 400_000_000)
         or value.get("maximum_observed_wal_bytes") != 2_147_483_648
     ):
         raise ValueError("unsupported science stock plan")
@@ -139,6 +140,39 @@ def load_science_preparation(path):
         "stop_row": source["rows"],
         "expected_file_rows": source["rows"],
     }
+    units = [unit]
+    if version == 2:
+        intake_id = _bound_identity(value["additional_shard_intake"], path.parent)
+        intake = json.loads(Path(intake_id["path"]).read_text())
+        if (
+            intake.get("format") != "speck_science_complete_shard_intake"
+            or intake.get("format_version") != 1
+            or intake.get("training_authority") is not False
+            or any(intake.get(key) != source[key] for key in ("repo", "revision"))
+            or intake.get("filename") != "data/v3/train-0041-of-0136.zst"
+            or intake["raw"]["sha256"]
+            != "c20829cbe5e28f8dab337537080cec1fdd82a8eabbeeaf85c6fa927cb1d959d6"
+            or intake["raw"]["bytes"] != 998912463
+            or type(intake["physical_rows"]) is not int
+            or not 1 <= intake["physical_rows"] <= 200000
+        ):
+            raise ValueError("additional science shard differs from its pinned intake")
+        units.append(
+            {
+                "id": "pes2o_v3__file_41",
+                "category": "science",
+                "reader": reader,
+                "raw": {
+                    "source_id": source["id"],
+                    "filename": intake["filename"],
+                    "bytes": intake["raw"]["bytes"],
+                    "sha256": intake["raw"]["sha256"],
+                },
+                "start_row": 0,
+                "stop_row": intake["physical_rows"],
+                "expected_file_rows": intake["physical_rows"],
+            }
+        )
     decision_id = _bound_identity(value["tokenizer_decision"], path.parent)
     decision = json.loads(Path(decision_id["path"]).read_text())
     if (
@@ -149,7 +183,7 @@ def load_science_preparation(path):
     return {
         **value,
         "base": base,
-        "units": [unit],
+        "units": units,
         "source_use": {**rights, "identity": base["rights_record"]},
         "raw_directory": str((path.parent / value["raw_directory"]).resolve()),
         "output_directory": str((path.parent / value["output_directory"]).resolve()),

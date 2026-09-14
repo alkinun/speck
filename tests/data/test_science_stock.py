@@ -8,7 +8,7 @@ from speck.data.acquisition import iter_source_file_documents
 from speck.data.acquisition_units import acquire_unit
 from speck.data.configuration import _validate_source
 from speck.data.production_rehearsal import _raw_local_path
-from speck.data.science_stock import science_rejection
+from speck.data.science_stock import load_science_preparation, science_rejection
 from speck.provenance.io import file_sha256
 from tests.data.test_acquisition_units import fixture
 
@@ -95,12 +95,61 @@ def test_science_filter_requires_document_license_and_english(monkeypatch):
     document = {"content": text, "metadata": {"license": "CCBY"}}
 
     class Detector:
-        def classify(self, text):
-            return "en", 0.99
+        language = "en"
 
-    monkeypatch.setattr("speck.data.science_stock._language_identifier", lambda: Detector())
+        def classify(self, text):
+            return self.language, 0.99
+
+    detector = Detector()
+    monkeypatch.setattr("speck.data.science_stock._language_identifier", lambda: detector)
     assert science_rejection(document, filters) == (None, 0.99)
     document["metadata"]["license"] = "CCBYNC"
     assert science_rejection(document, filters)[0] == "science_document_license"
     document["metadata"] = {}
     assert science_rejection(document, filters)[0] == "science_document_license"
+    document["metadata"]["license"] = "CCBY"
+    detector.language = "fr"
+    assert science_rejection(document, filters)[0] == "science_non_English"
+
+
+def test_headroom_successor_preserves_first_unit_and_binds_only_next_shard(tmp_path):
+    root = Path(__file__).resolve().parents[2]
+    original = root / "research/flagship/pes2o_stock_preparation_v1.json"
+    value = json.loads(original.read_text())
+    for key in (
+        "base_plan",
+        "source_qualification",
+        "reference_parent",
+        "sqlite_policy",
+        "tokenizer_decision",
+    ):
+        value[key]["path"] = str((original.parent / value[key]["path"]).resolve())
+    intake = {
+        "format": "speck_science_complete_shard_intake",
+        "format_version": 1,
+        "training_authority": False,
+        "repo": "allenai/peS2o",
+        "revision": "636a503e44a3ca1b58e01fb61eab0825cd574de0",
+        "filename": "data/v3/train-0041-of-0136.zst",
+        "physical_rows": 110183,
+        "raw": {
+            "bytes": 998912463,
+            "sha256": "c20829cbe5e28f8dab337537080cec1fdd82a8eabbeeaf85c6fa927cb1d959d6",
+        },
+    }
+    intake_path = tmp_path / "intake.json"
+    intake_path.write_text(json.dumps(intake))
+    value.update(
+        format_version=2,
+        target_reference_tokens=480000000,
+        additional_shard_intake={"path": str(intake_path), "sha256": file_sha256(intake_path)},
+    )
+    path = tmp_path / "plan.json"
+    path.write_text(json.dumps(value))
+    plan = load_science_preparation(path)
+    assert plan["units"][0] == load_science_preparation(original)["units"][0]
+    assert plan["units"][1]["raw"]["filename"] == intake["filename"]
+    assert (
+        plan["base"]["science_filters"]
+        == load_science_preparation(original)["base"]["science_filters"]
+    )

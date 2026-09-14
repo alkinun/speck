@@ -1,0 +1,25 @@
+{
+  "format": "speck_science_stock_preparation",
+  "format_version": 2,
+  "source_id": "pes2o_v3",
+  "base_plan": {"path": "../../archive/pregrant-history/research/flagship/data_calibration_2b_v1/production_plan.json", "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"},
+  "source_qualification": {"path": "../../archive/pregrant-history/research/flagship/science_pes2o_v3_v1.json", "sha256": "91daba1648dddec4521321cf73c49a8fab2760f59501eda5e830a2fae8c7cb6a"},
+  "reference_parent": {"path": "../../results/systems/firewall-integration-20260913.json", "sha256": "07b9d890f36994ad47ec0d251d5c8d5c66c568475b3ec4248b0b58ebd112b061"},
+  "sqlite_policy": {"path": "sqlite_preparation_policy_v1.json", "sha256": "6f24a1cb670296d2b889b91425a7c670224b7a96219ec666819adc0957409134"},
+  "tokenizer_decision": {"path": "tokenizer_decision_v1.json", "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"},
+  "raw_files": [
+    {"filename": "data/v3/train-0040-of-0136.zst", "bytes": 983683365, "sha256": "57cd1a8e4de1c1daa8e28a2721dbd7ff68e42c55e46f2345be8dfa4aec745af2", "rows": 110183}
+  ],
+  "additional_shard_intake": {"path": "../../results/data/pes2o-next-shard-intake-20260914.json", "sha256": "c863c1f9ffbbd5ec5912492573f0fd25c6944cd611efbd6f1999adb24da852bd"},
+  "reuse_acquisition_units": {
+    "pes2o_v3__file_40": {"path": "/mnt/speck-data/speck/pes2o-stock-preparation-v1/work/acquired/pes2o_v3__file_40/manifest.json", "sha256": "370eedaa4bc997da36b2824b9941e386971c85310cb003078e754fb08978993e"}
+  },
+  "checkpoint_rows": 256,
+  "target_reference_tokens": 480000000,
+  "reference_tokenizer": {"path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model", "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"},
+  "maximum_observed_wal_bytes": 2147483648,
+  "raw_directory": "/mnt/speck-data/speck/source-qualification/science-raw-v1",
+  "output_directory": "/mnt/speck-data/speck/pes2o-stock-preparation-v2/work",
+  "scope": "Two complete pinned shards (40 then 41). Reuse only the verified completed acquisition of shard 40; filter shard 41 under identical criteria, then exclude/deduplicate the combined stream. Target 400M plus 20% preparation headroom. This combined result replaces, rather than adds to, the first bank.",
+  "training_authority": false
+}
