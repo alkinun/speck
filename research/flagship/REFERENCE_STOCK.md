@@ -31,3 +31,11 @@ is a recorded result, not an automatic enlargement of the source window. Mistral
 include BOS/EOS. This bank is not added to the older bank as distinct supply; overlap is expected.
 Final-tokenizer counts, packing headroom, joint background deduplication, exact data orders, and model
 launch manifests remain necessary before E1/E3 execution.
+
+## Completed stock
+
+The [result](../../results/data/finewiki-stock-preparation-20260914.json) retains **387,313 documents**
+and **582,070,378 tokens**, covering the nominal 400M requirement. The counting tokenizer is byte-
+identical to the [frozen Mistral base tokenizer](tokenizer_decision_v1.json). The run resumed after
+acquisition; exclusion timing and WAL observations cover the resumed invocation only. Full details
+and remaining eligibility/packing requirements are in the [finding](../findings/2026-09-14-finewiki-stock.md).

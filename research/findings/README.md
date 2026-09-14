@@ -22,6 +22,8 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | Tokenizer progress | [Terminal report recovery](2026-09-13-tokenizer-report-recovery.md) preserves the completed 40,960 screen and its missing-memory disclosure; the last compact screen is separately launched before budget/ranking review. |
 | UltraData intake | [Revision-checked content windows](2026-09-13-ultradata-intake.md) inspect seven code/math views and identify language, serialization, and provenance requirements; the Math L2 admission/preparation follow-up is below. |
 | Admitted Math L2 stock | [Two-shard preparation](2026-09-13-admitted-math-stock.md) records the owner-approved source extension and 384.79M reference tokens after filtering and full reference exclusion; final D5 packing and experiment integration remain open. |
+| Tokenizer budget fallback | [Completed three-arm screen](2026-09-14-tokenizer-budget-fallback.md) gives a 32.8763-hour confirmation-projection lower bound, exceeding 30 hours; the pinned Mistral artifact is frozen and D5 remains unopened. |
+| FineWiki stock | [Complete first-shard preparation](2026-09-14-finewiki-stock.md) retains 582.07M selected-tokenizer tokens and covers the proposed 400M reference background; joint-view eligibility and packing remain open. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

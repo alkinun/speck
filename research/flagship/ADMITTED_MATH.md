@@ -70,3 +70,7 @@ Reference preservation, exact/near controls and zero final exact overlap pass. O
 455.00 MiB while processing larger within-source transactions. The
 [finding](../findings/2026-09-13-admitted-math-stock.md) records counts, timing boundaries and remaining
 final-tokenizer/experiment-view work.
+
+The [Mistral budget-fallback decision](tokenizer_decision_v1.json) now freezes the same tokenizer
+bytes used for this stock's count. The 384,788,210 tokens therefore also hold under the selected base
+tokenizer. Joint experiment-view eligibility and packed-shard manifests remain to be materialized.

@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-13",
+  "as_of": "2026-09-14",
   "program": "flagship",
   "phase": "pregrant",
   "runtime": {
@@ -16,10 +16,10 @@
     },
     {
       "id": "tokenizer",
-      "state": "40960_terminal_report_recovered_compact_screen_launched",
-      "evidence": "results/data/tokenizer-pilot-40960-recovery-20260913.json",
-      "launch_record": "results/systems/tokenizer-pilot-32000-launch-20260913.json",
-      "next": "The Mistral and 40960 seed-42 reports are complete; 40960 peak GPU memory is explicitly unavailable. Complete the launched compact arm, reconcile all-attempt spending and confirmation cost, then follow the frozen D5 rules. No confirmation or audit opening is automatic."
+      "state": "mistral_artifact_frozen_by_confirmation_budget_stop_D5_unopened",
+      "evidence": "results/data/tokenizer-screen-20260914.json",
+      "decision": "research/flagship/tokenizer_decision_v1.json",
+      "next": "Bind the frozen Mistral tokenizer to per-arm source views and packing. The completed-screen confirmation-projection lower bound is 32.8763 GPU-hours, exceeding 30. Historical all-attempt expenditure remains incomplete and needs disclosure reconciliation; no confirmation or D5 opening was launched."
     },
     {
       "id": "source_qualification",
@@ -38,7 +38,13 @@
       "state": "admitted_text_prepared_reference_capacity_target_met",
       "evidence": "results/data/ultradata-math-l2-preparation-20260913.json",
       "source_use": "research/flagship/ultradata_math_l2_source_use_v1.json",
-      "next": "Bind the final D5 tokenizer and experiment-specific corpus view, then pack the 200M-token challenger requirement from the measured 384.79M-reference-token stock with headroom. This does not supply the other E1/E3 source requirements."
+      "next": "The frozen Mistral artifact equals the counting tokenizer byte-for-byte, so 384.79M is also the selected-base-tokenizer count. Bind the experiment-specific corpus view, then pack the proposed 200M-token challenger requirement with headroom."
+    },
+    {
+      "id": "reference_stock",
+      "state": "complete_first_finewiki_shard_covers_nominal_reference_background",
+      "evidence": "results/data/finewiki-stock-preparation-20260914.json",
+      "next": "Bind joint experiment-background eligibility and pack the proposed 400M-token reference requirement from the 582.07M selected-tokenizer stock. Do not add it to overlapping older banks; exclusion timing/WAL observations cover the resumed invocation only."
     },
     {
       "id": "data_operations",

@@ -3,6 +3,13 @@
 D5 compares the pinned Mistral 32K tokenizer with custom SentencePiece BPE candidates. Final selection
 requires measured language-model quality and cost; static compression alone cannot select a tokenizer.
 
+**2026-09-14 disposition:** all three screens completed. The lower bound on the registered confirmation
+projection is 32.8763 GPU-hours, above the 30-hour ceiling. The
+[decision](tokenizer_decision_v1.json) freezes the declared **Mistral 32K fallback** and leaves D5
+unopened. [The finding](../findings/2026-09-14-tokenizer-budget-fallback.md) preserves both endpoint
+results and the remaining all-attempt accounting gap. This is a budget fallback, not a replicated
+quality conclusion about custom tokenizers.
+
 ## Selected contracts
 
 - [Tokenizer plan](tokenizer_plan_v7.json): candidate geometry, balanced sample, static evaluation,
