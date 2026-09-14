@@ -72,9 +72,9 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "intentionally_paused_metadata_feasibility_and_fetch_successor_required",
+      "state": "full_stock_paused_ordered_fetch_probe_pass_metadata_supply_expansion_running",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "Follow LOCAL_PREPARATION_SCHEDULE.md. The full metadata census found severe language-capacity deficits in the chosen first shards; the fixed physical-row fetch batches submit a median four requests despite 32 workers. SIGINT intentionally stopped the old run with state/cache/log preserved. Census additional deficient-language metadata and qualify a bounded eligible-queue/NVMe successor before long fetching. No source, filters, language weights or targets changed; current job is not complete. Prioritize a complete E1S-sized dataset before maximum stocks.",
+      "next": "Ordered NVMe fetch/index probe passed: 1,408 sampled blobs in 68.18s including interruption/resume; exact warm replay/reopen and archival verification passed. Content/security checks retained 1,039 documents / 788,811 tokens before full exclusion. Stratified first-file estimates still flag code-language shortages, including single-shard TypeScript versus its 36M E1S headroom target. Finish the 15-extra-file metadata acquisition and census before an explicit production/recipe successor; no full-stock restart or scientific recipe change. Preserve paused checkpoint/cache and all original policies.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
@@ -83,7 +83,10 @@
       "launch": "results/systems/stack-edu-stock-launch-20260914.json",
       "qualification": "results/systems/stack-edu-stock-prefix-20260914.json",
       "pause": "results/systems/stack-edu-intentional-pause-20260914.json",
-      "feasibility": "results/data/code-metadata-feasibility-20260914.json"
+      "feasibility": "results/data/code-metadata-feasibility-20260914.json",
+      "fetch_qualification": "results/systems/ordered-code-fetch-qualification-20260914.json",
+      "metadata_successor_plan": "research/flagship/stack_edu_metadata_acquisition_v2.json",
+      "metadata_successor_launch": "results/systems/stack-edu-metadata-v2-launch-20260914.json"
     },
     {
       "id": "fineweb_edu_stock",

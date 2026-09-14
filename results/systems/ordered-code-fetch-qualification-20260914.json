@@ -1,0 +1,497 @@
+{
+  "accepted_records": {
+    "path": "/home/alkin/speck-working/code-fetch-qualification-v1/accepted-before-exclusion.jsonl",
+    "sha256": "7a59e8b8a24bdc5734b9210736e11afbb776b95a0fc995addb09e779ebce9aa9"
+  },
+  "archive": {
+    "all_archived_payloads_reopened_and_verified": true,
+    "bytes": 355368960,
+    "inventory": {
+      "path": "/home/alkin/speck-working/code-fetch-qualification-v1/archive-inventory.json",
+      "sha256": "a8cf6367a5dc8708256e66ac301a676deff30e302b9b60558be87ee324466fd1"
+    },
+    "path": "/mnt/speck-data/speck/ordered-code-fetch-qualification-20260914/qualification.tar",
+    "sha256": "7015ef6e87a8db832fbed08301c86429316f670aaf4dc0a801ed787dc8cb2cbe"
+  },
+  "boundary": "128 metadata-eligible rows per language, sampled with fixed seed in four eligible-order strata from the currently pinned first file. Actual code/content/security/Gitleaks and Mistral checks; no full reference or candidate deduplication. Stratified estimates and sampling SE describe these files before full exclusion; they are not qualified capacity, cross-language independence or guaranteed targets. Fetch timing includes cache reuse, interruption, replay and persistence. Warm replay is not an independent network speed benchmark. Original cache and checkpoint remain preserved; no full-stock resume or recipe change.",
+  "complete_reopen_pass": true,
+  "fetch": {
+    "cache_reservation_bytes": 8183316480,
+    "config_sha256": "7d6c622bf7129a782630c7bd26ab8d913ffbc4a1d39c9162267e0f5b8ca971ef",
+    "format": "speck_ordered_blob_fetch_result",
+    "format_version": 1,
+    "invocation_elapsed_seconds": 44.41241307100063,
+    "journal": {
+      "path": "/home/alkin/speck-working/code-fetch-qualification-v1/resumed/fetches.jsonl",
+      "sha256": "f80949b76d091a6389d6a15d56238b4fcccdae781b1bbf50035582875709491d"
+    },
+    "status": "complete_verified_fetches_not_text_stock",
+    "targets": 1408,
+    "training_authority": false
+  },
+  "fetch_including_interruption_resume_seconds": 68.17763210600242,
+  "format": "speck_ordered_code_fetch_qualification_result",
+  "format_version": 1,
+  "indexing_seconds": 21.498197488999722,
+  "indices": [
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "6702018ead41fb368b2533c54ad4626699491b0fd5fddb58010836f6418a72a8",
+        "eligible_rows": 52059,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 2864521,
+          "declared_vendor_path": 5,
+          "metadata_encoding": 3518,
+          "metadata_license": 4084,
+          "metadata_size": 1
+        },
+        "output": {
+          "bytes": 17553906,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__C/rows.jsonl",
+          "sha256": "96cf07e24399c6958ccd6a1c3c72de5a235f866608d4a70d46e05392f19e96e5"
+        },
+        "physical_rows": 2924188
+      },
+      "language": "C",
+      "unit_id": "stack_edu__C"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "2bbde6788cd9241d581e724e4d8115666867e305d5458e34d2c2d63738a89991",
+        "eligible_rows": 38480,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 4018346,
+          "declared_vendor_path": 13,
+          "metadata_encoding": 2108,
+          "metadata_license": 2740
+        },
+        "output": {
+          "bytes": 13363043,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Cpp/rows.jsonl",
+          "sha256": "45a391708ee1f145a32dc8a486a0ee767301b6b726a6f07c525791fbfce24cf7"
+        },
+        "physical_rows": 4061687
+      },
+      "language": "C++",
+      "unit_id": "stack_edu__Cpp"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "f9d0f9c77dc29d7f3adb0309c9feacd63d990ca2ac6ec4f04f9f9789b68fe41d",
+        "eligible_rows": 42092,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 1872224,
+          "declared_vendor_path": 25,
+          "metadata_encoding": 1,
+          "metadata_license": 2821
+        },
+        "output": {
+          "bytes": 14016274,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Go/rows.jsonl",
+          "sha256": "b0e79e1b13553af5d7c8d1b4ba2e80e417b5ab2802caf3b10e3b52476839e56f"
+        },
+        "physical_rows": 1917163
+      },
+      "language": "Go",
+      "unit_id": "stack_edu__Go"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "5ec479cab84c656bdb49016f8cb9b250e9b651eb25a1c242b8a10dfe4b0b5e87",
+        "eligible_rows": 12206,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 4076828,
+          "metadata_encoding": 469,
+          "metadata_license": 512
+        },
+        "output": {
+          "bytes": 4440927,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Java/rows.jsonl",
+          "sha256": "da6bf58957be69123dbeb67fbab4c5f6c19ea4944f828fe7be4f1af40e7bf6f2"
+        },
+        "physical_rows": 4090015
+      },
+      "language": "Java",
+      "unit_id": "stack_edu__Java"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "c48ae88a77c18ec9539d8df1310478bf002563c416250ca0b02f8828008af4b1",
+        "eligible_rows": 54795,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 4355642,
+          "declared_vendor_path": 15,
+          "metadata_encoding": 110,
+          "metadata_license": 7244,
+          "metadata_size": 5
+        },
+        "output": {
+          "bytes": 19226764,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__JavaScript/rows.jsonl",
+          "sha256": "a6e162be8a7fb3a247526fdab90c43235aa37f0ca555f75510c10b80c2d2d011"
+        },
+        "physical_rows": 4417811
+      },
+      "language": "JavaScript",
+      "unit_id": "stack_edu__JavaScript"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "80db6e78ee7499c0869b34bc1ada6528bb2a9cdbe06571a5b4ccd0adf0577277",
+        "eligible_rows": 85799,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 4039931,
+          "declared_vendor_path": 49,
+          "metadata_encoding": 87,
+          "metadata_license": 11528,
+          "metadata_size": 22
+        },
+        "output": {
+          "bytes": 30541290,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Markdown/rows.jsonl",
+          "sha256": "7b406712288be22fbc305d1df98ed4365173448411b2235577b0fac9482c23dc"
+        },
+        "physical_rows": 4137416
+      },
+      "language": "Markdown",
+      "unit_id": "stack_edu__Markdown"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "1bdc7c8dbee44e20900d5a1c8572ac741fc2193b9c80bfd7a3b872c4d2f3052c",
+        "eligible_rows": 101914,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 4948539,
+          "declared_vendor_path": 14,
+          "metadata_encoding": 151,
+          "metadata_license": 6266,
+          "metadata_size": 320
+        },
+        "output": {
+          "bytes": 35382238,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Python/rows.jsonl",
+          "sha256": "62308b51b68facef20989663ec03014807a59980e72350da4d3e60d9552ae5db"
+        },
+        "physical_rows": 5057204
+      },
+      "language": "Python",
+      "unit_id": "stack_edu__Python"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "65246be729f766b5153fb9bef9a97281630422e1aedadec00177ca4c5a422413",
+        "eligible_rows": 37875,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 1090193,
+          "declared_vendor_path": 315,
+          "metadata_license": 6995,
+          "metadata_size": 1
+        },
+        "output": {
+          "bytes": 12625268,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Rust/rows.jsonl",
+          "sha256": "87b59456eb153f7c1a3cf331c4d99658a5c191c3af37066bc6a1b785a0862b92"
+        },
+        "physical_rows": 1135379
+      },
+      "language": "Rust",
+      "unit_id": "stack_edu__Rust"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "6692db946db845fb02d865dc014a5e8cffbdd0bcd1239d2a6d5bde8a05843b7e",
+        "eligible_rows": 96247,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 2392219,
+          "declared_vendor_path": 42,
+          "metadata_encoding": 1587,
+          "metadata_license": 14306,
+          "metadata_size": 11
+        },
+        "output": {
+          "bytes": 34044373,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__SQL/rows.jsonl",
+          "sha256": "c3e0e9d10c26b739338f8b5b54ca342113eaac758ddaac8a2056e14b638f7a69"
+        },
+        "physical_rows": 2504412
+      },
+      "language": "SQL",
+      "unit_id": "stack_edu__SQL"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "b8269337aa576a7ff80e1d411c0564750c90f11d2b1ee2282bbee3f2bca6dc34",
+        "eligible_rows": 412291,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 3640058,
+          "declared_vendor_path": 544,
+          "metadata_encoding": 303,
+          "metadata_license": 80344,
+          "metadata_size": 7
+        },
+        "output": {
+          "bytes": 139500562,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Shell/rows.jsonl",
+          "sha256": "c7582beeca3ff9781066e294859634329b3d03a9bbfa28fc86bb28dcf16be25a"
+        },
+        "physical_rows": 4133547
+      },
+      "language": "Shell",
+      "unit_id": "stack_edu__Shell"
+    },
+    {
+      "index": {
+        "boundary": "Original-order metadata eligibility only; coarse rejection counts combine score/license-type failures and do not reproduce legacy rejection precedence. No code-content, security, token capacity or training qualification.",
+        "config_sha256": "44d27fb44bdf7dbfc2958a3c76f321324a7073e3f88b47aa8a9d0d867dd0ff4c",
+        "eligible_rows": 53336,
+        "format": "speck_code_eligible_index",
+        "format_version": 1,
+        "metadata_rejections": {
+          "coarse_score_or_license_type": 4233296,
+          "declared_vendor_path": 25,
+          "metadata_encoding": 9,
+          "metadata_license": 3689,
+          "metadata_size": 1
+        },
+        "output": {
+          "bytes": 18422349,
+          "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__TypeScript/rows.jsonl",
+          "sha256": "673912a28546f0d535e7fd6734a67a8cb621601ff8b47725415829d3784917a1"
+        },
+        "physical_rows": 4290356
+      },
+      "language": "TypeScript",
+      "unit_id": "stack_edu__TypeScript"
+    }
+  ],
+  "journal_parity_pass": true,
+  "language_yield": [
+    {
+      "e1s_language_headroom_target_tokens": 90000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 41608794.375,
+      "language": "Python",
+      "observed_mistral_tokens": 52259,
+      "rejections": {
+        "benchmark_contamination": 8,
+        "code_character_envelope": 7,
+        "code_non_English_prose": 11,
+        "content_length_metadata_mismatch": 11
+      },
+      "retained_after_content_and_security": 91,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 7469628.305534637,
+      "verified_retained_utf8_bytes": 153863
+    },
+    {
+      "e1s_language_headroom_target_tokens": 54000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 18649271.875,
+      "language": "C++",
+      "observed_mistral_tokens": 62035,
+      "rejections": {
+        "benchmark_contamination": 5,
+        "code_non_English_prose": 16,
+        "content_length_metadata_mismatch": 13,
+        "duplicate_lines": 3
+      },
+      "retained_after_content_and_security": 91,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 2134369.3149783206,
+      "verified_retained_utf8_bytes": 174913
+    },
+    {
+      "e1s_language_headroom_target_tokens": 18000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 23374168.78125,
+      "language": "C",
+      "observed_mistral_tokens": 57471,
+      "rejections": {
+        "benchmark_contamination": 1,
+        "code_non_English_prose": 16,
+        "content_length_metadata_mismatch": 15,
+        "duplicate_lines": 1
+      },
+      "retained_after_content_and_security": 95,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 2120940.9208284314,
+      "verified_retained_utf8_bytes": 148946
+    },
+    {
+      "e1s_language_headroom_target_tokens": 54000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 4164154.9375,
+      "language": "Java",
+      "observed_mistral_tokens": 43669,
+      "rejections": {
+        "benchmark_contamination": 2,
+        "code_non_English_prose": 33,
+        "content_length_metadata_mismatch": 14
+      },
+      "retained_after_content_and_security": 79,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 382239.90654055396,
+      "verified_retained_utf8_bytes": 133826
+    },
+    {
+      "e1s_language_headroom_target_tokens": 54000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 25623071.5,
+      "language": "JavaScript",
+      "observed_mistral_tokens": 59855,
+      "rejections": {
+        "code_character_envelope": 1,
+        "code_non_English_prose": 25,
+        "content_length_metadata_mismatch": 10,
+        "duplicate_lines": 1
+      },
+      "retained_after_content_and_security": 91,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 3769452.2886462496,
+      "verified_retained_utf8_bytes": 178309
+    },
+    {
+      "e1s_language_headroom_target_tokens": 36000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 31683250.75,
+      "language": "TypeScript",
+      "observed_mistral_tokens": 76036,
+      "rejections": {
+        "benchmark_contamination": 1,
+        "code_non_English_prose": 11,
+        "content_length_metadata_mismatch": 5,
+        "duplicate_lines": 2
+      },
+      "retained_after_content_and_security": 109,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 3524583.5070019616,
+      "verified_retained_utf8_bytes": 233255
+    },
+    {
+      "e1s_language_headroom_target_tokens": 18000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 36392580.375,
+      "language": "Rust",
+      "observed_mistral_tokens": 122990,
+      "rejections": {
+        "benchmark_contamination": 1,
+        "code_non_English_prose": 11,
+        "content_length_metadata_mismatch": 5,
+        "duplicate_lines": 3
+      },
+      "retained_after_content_and_security": 108,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 3638107.4764252454,
+      "verified_retained_utf8_bytes": 359010
+    },
+    {
+      "e1s_language_headroom_target_tokens": 18000000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 23996057.28125,
+      "language": "Go",
+      "observed_mistral_tokens": 72971,
+      "rejections": {
+        "code_non_English_prose": 10,
+        "content_length_metadata_mismatch": 2,
+        "duplicate_lines": 1
+      },
+      "retained_after_content_and_security": 115,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 2529192.762512681,
+      "verified_retained_utf8_bytes": 182197
+    },
+    {
+      "e1s_language_headroom_target_tokens": 3600000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 294446535.5625,
+      "language": "Shell",
+      "observed_mistral_tokens": 91414,
+      "rejections": {
+        "code_non_English_prose": 7,
+        "content_length_metadata_mismatch": 17,
+        "raw_email_or_ipv4": 3
+      },
+      "retained_after_content_and_security": 101,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 37549143.866103604,
+      "verified_retained_utf8_bytes": 254513
+    },
+    {
+      "e1s_language_headroom_target_tokens": 3600000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 55936269.75,
+      "language": "SQL",
+      "observed_mistral_tokens": 74390,
+      "rejections": {
+        "benchmark_contamination": 1,
+        "code_character_envelope": 2,
+        "code_non_English_prose": 12,
+        "content_length_metadata_mismatch": 16,
+        "duplicate_lines": 2
+      },
+      "retained_after_content_and_security": 95,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 7033944.799380037,
+      "verified_retained_utf8_bytes": 199724
+    },
+    {
+      "e1s_language_headroom_target_tokens": 10800000,
+      "estimated_tokens_in_current_file_before_full_exclusion": 50756078.40625,
+      "language": "Markdown",
+      "observed_mistral_tokens": 75721,
+      "rejections": {
+        "benchmark_contamination": 1,
+        "code_non_English_prose": 42,
+        "content_length_metadata_mismatch": 18,
+        "duplicate_lines": 3
+      },
+      "retained_after_content_and_security": 64,
+      "sampled_eligible_rows": 128,
+      "sampling_standard_error_tokens": 10461581.525303524,
+      "verified_retained_utf8_bytes": 243653
+    }
+  ],
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/ordered_code_fetch_qualification_v1.json",
+    "sha256": "636cdf133dc193b6962164d71414c64694f553a3a249da371d5a961b06db4168"
+  },
+  "repository_revision": "66d5fe75a66533e0c2f6fe1e64ded2c8459d8cfd",
+  "security": {
+    "findings": 0,
+    "path": "/home/alkin/speck-working/code-fetch-qualification-v1/security/code-fetch-qualification-v1-accepted-before-exclusion.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  "security_removed": 0,
+  "status": "bounded_fetch_replay_and_content_checks_pass_full_exclusion_pending",
+  "stock_plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_edu_stock_preparation_v1.json",
+    "sha256": "4c0411dcde10733a24251680dca0e38ea268f5884c7751af47fa069eebfcf77c"
+  },
+  "targets": {
+    "path": "/home/alkin/speck-working/code-fetch-qualification-v1/targets.json",
+    "sha256": "7b21fb658e600b0f297ac53b5d536c9b647439cce501a9006122dea2dd197a06"
+  },
+  "training_authority": false,
+  "warm_replay_seconds": 0.7111607659971924,
+  "working_directory": "/home/alkin/speck-working/code-fetch-qualification-v1"
+}

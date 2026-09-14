@@ -98,3 +98,13 @@ Then grow to the 350M / 8B E1W stocks and the complete existing first-wave capac
 The program's 29 logical slots, 192-GPU-hour data budget and fixed 1.2B flagship are unchanged.
 Defer deeper post-training. The next estimate should name a concrete qualified input milestone;
 there is not yet an evidence-backed all-datasets completion date.
+
+## Bounded qualification completed
+
+The [ordered-fetch result](../../results/systems/ordered-code-fetch-qualification-20260914.json)
+now provides real evidence for the index/queue and NVMe working path: 1,408 samples fetched in
+68.18s including deliberate interruption/resume, identical warm replay, completed reopen and
+verified archival copy. Content/security checks retained 788,811 tokens. These are sample
+observations, not full exclusion or source capacity. See the [finding](../findings/2026-09-14-ordered-code-fetch.md)
+for stratified estimates and limits. Finish expanded metadata verification/census and resolve
+per-language feasibility before production integration or an explicit recipe successor.

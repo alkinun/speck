@@ -112,3 +112,9 @@ feasibility first, qualify a bounded eligible-request/NVMe fetch path, and assem
 E1S-sized dataset before maximal stocks. Existing recipes and source-use approvals remain in
 force until an explicit successor is adopted. FineMath/Cosmopedia continue; FineWeb-Edu raw
 acquisition is complete; Stack-Edu is intentionally paused with its evidence intact.
+
+The [ordered code-fetch probe](../findings/2026-09-14-ordered-code-fetch.md) now passes bounded
+real fetching, content/security, interruption/replay and archival checks. The
+[metadata supply successor](stack_edu_metadata_acquisition_v2.json) is running separately.
+Code-stock production remains paused: the sample estimates still flag language-capacity
+deficits, particularly TypeScript, before full exclusion. No recipe changes are adopted.
