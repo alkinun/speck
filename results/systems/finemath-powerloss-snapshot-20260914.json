@@ -1,0 +1,179 @@
+{
+  "boundary": "Unplanned real outage recovery evidence; not a controlled power-loss test or proof that every storage failure is recoverable.",
+  "checkpoint_candidate_line": 360000,
+  "checkpoint_counts": {
+    "records_removed_exact": 1375,
+    "records_removed_near": 3132,
+    "records_retained": 644365,
+    "records_seen": 648872
+  },
+  "checkpoint_id": 72,
+  "completed_acquisition_units_verified": 8,
+  "execution": {
+    "plan": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/finemath_stock_preparation_v1.json",
+      "sha256": "6be5c1627870fc36fc57957d169213d49e973be10ef48362f39d3b062f03568d"
+    },
+    "repository_revision": "8e9ae3b89ead03d2cf1e479284606dc2797830ce"
+  },
+  "files": [
+    {
+      "bytes": 15001,
+      "path": "acquisition-report.json",
+      "sha256": "8d86d1e2f7a022b808a732f7f381c5fbbf5a116ff98f561f796db9608dd6a8eb"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/acquired_train__code.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2251947709,
+      "path": "excluded.building/acquired_train__math.jsonl",
+      "sha256": "7abe6c52a1d43d790a01284d79cd2b6b206d4bd61a103ce7af9e844864b79743"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/acquired_train__reference.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/acquired_train__science.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/acquired_train__synthetic.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/acquired_train__web.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/firewall_exact_control.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "excluded.building/firewall_near_control.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 218230863,
+      "path": "excluded.building/firewall_reference__code_primary.jsonl",
+      "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a"
+    },
+    {
+      "bytes": 29517047,
+      "path": "excluded.building/firewall_reference__code_unseen.jsonl",
+      "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01"
+    },
+    {
+      "bytes": 225142640,
+      "path": "excluded.building/firewall_reference__math_primary.jsonl",
+      "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f"
+    },
+    {
+      "bytes": 33398604,
+      "path": "excluded.building/firewall_reference__math_unseen.jsonl",
+      "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba"
+    },
+    {
+      "bytes": 221970753,
+      "path": "excluded.building/firewall_reference__reference_primary.jsonl",
+      "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f"
+    },
+    {
+      "bytes": 33146250,
+      "path": "excluded.building/firewall_reference__reference_unseen.jsonl",
+      "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e"
+    },
+    {
+      "bytes": 204713010,
+      "path": "excluded.building/firewall_reference__science_primary.jsonl",
+      "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0"
+    },
+    {
+      "bytes": 25888876,
+      "path": "excluded.building/firewall_reference__science_unseen.jsonl",
+      "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8"
+    },
+    {
+      "bytes": 214302842,
+      "path": "excluded.building/firewall_reference__synthetic_primary.jsonl",
+      "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb"
+    },
+    {
+      "bytes": 37840880,
+      "path": "excluded.building/firewall_reference__synthetic_unseen.jsonl",
+      "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c"
+    },
+    {
+      "bytes": 215482764,
+      "path": "excluded.building/firewall_reference__web_primary.jsonl",
+      "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547"
+    },
+    {
+      "bytes": 29391370,
+      "path": "excluded.building/firewall_reference__web_unseen.jsonl",
+      "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65"
+    },
+    {
+      "bytes": 809209856,
+      "path": "excluded.building/near_duplicates.sqlite3",
+      "sha256": "b49b7f83bbc4b57afb5fed14f8a86ed1f0192525764d4652fefc60cbcd5d7422"
+    },
+    {
+      "bytes": 1048576,
+      "path": "excluded.building/near_duplicates.sqlite3-shm",
+      "sha256": "0c73a197639ef24eea72f371f23c0b2e62c90226ef8568937d60c225a5824dc4"
+    },
+    {
+      "bytes": 535410512,
+      "path": "excluded.building/near_duplicates.sqlite3-wal",
+      "sha256": "1f51991b4868c3ebf3cce1760ee8e843e6b7d255fac8dcf74e1de8d822aab54f"
+    },
+    {
+      "bytes": 2674192,
+      "path": "excluded.building/removals.jsonl",
+      "sha256": "00670bec6b0cdec441a12b7a7f079f95c328653fc9e1dd499b29f162df7bee0d"
+    },
+    {
+      "bytes": 17080,
+      "path": "excluded.building/state.json",
+      "sha256": "711fc994d793e24e8c600532d92bebbae6c42a4eaeacf36f247a3ad9bcc2c659"
+    },
+    {
+      "bytes": 264,
+      "path": "execution.json",
+      "sha256": "f2702ccbc4afb1a7ec22b54be0015c2168c8098eec9060e305d43d3e2bf8d427"
+    },
+    {
+      "bytes": 9743,
+      "path": "preprocess.json",
+      "sha256": "aea11cb3dfe4a9792a02c284651e15d8a5d399102f85b172c9ab5b0d41046ee9"
+    },
+    {
+      "bytes": 1046,
+      "path": "progress.json",
+      "sha256": "1998e9969572a00e5255a23e1d023198f117b3e0e1301cc2402d90cb175072c1"
+    },
+    {
+      "bytes": 2305,
+      "path": "restoration.json",
+      "sha256": "9531bf13ffc798f7c455aaddd7d5261e51d8457b76ffd6f5701f86b87fee2dd3"
+    }
+  ],
+  "format": "speck_finemath_power_loss_recovery_snapshot",
+  "format_version": 1,
+  "recorded_at": "2026-09-14T13:21:05.580888+00:00",
+  "reported_cause": "Owner reported electricity outage and computer restart; harness reported background command cancellation after server restart.",
+  "resume_status": "pending",
+  "retained_acquisition_records": 567002,
+  "snapshot_directory": "/mnt/speck-data/speck/recovery/finemath-powerloss-20260914",
+  "snapshot_method": "Exact files copied before opening SQLite, including WAL/SHM, state, output/removal tails. Source and snapshot hashes compared."
+}
