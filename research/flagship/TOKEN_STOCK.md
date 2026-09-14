@@ -34,3 +34,7 @@ The [Math L2 result](../../results/data/math-l2-token-stock-20260914.json) and
 [FineWiki result](../../results/data/finewiki-token-stock-20260914.json) reproduce 384,788,210 and
 582,070,378 tokens respectively. Both passed complete published reopen verification and document-span
 readback. The [finding](../findings/2026-09-14-document-token-stock.md) records counts and scope.
+
+The [first peS2o cache](../../results/data/pes2o-token-stock-20260914.json) also passed document-span
+readback and complete reopen at 403,558,463 tokens. Science headroom remains under expansion; this
+cache is a retained subset, not extra unique supply to add to the forthcoming combined bank.
