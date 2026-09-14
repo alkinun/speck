@@ -149,3 +149,43 @@ def test_real_metadata_plan_binds_all_eleven_matched_languages():
             "language_weights_percent"
         ]
     )
+
+
+def test_metadata_successor_keeps_original_units_and_only_adds_short_languages():
+    root = Path(__file__).resolve().parents[2] / "research/flagship"
+    original = metadata.load_metadata_plan(root / "stack_edu_metadata_acquisition_v1.json")
+    successor = metadata.load_metadata_plan(root / "stack_edu_metadata_acquisition_v2.json")
+    assert successor["units"][:11] == original["units"]
+    assert len(successor["units"]) == 26
+    assert len({unit["id"] for unit in successor["units"]}) == 26
+    assert {unit["language"] for unit in successor["units"][11:]} == {
+        "C++",
+        "Java",
+        "JavaScript",
+        "Python",
+    }
+    assert successor["raw_directory"] == original["raw_directory"]
+    assert successor["output_directory"] != original["output_directory"]
+
+
+def test_metadata_successor_rejects_overlapping_output_and_changed_prefix(tmp_path):
+    root = Path(__file__).resolve().parents[2] / "research/flagship"
+    value = json.loads((root / "stack_edu_metadata_acquisition_v2.json").read_text())
+    for entry in value.values():
+        if isinstance(entry, dict) and set(entry) == {"path", "sha256"}:
+            entry["path"] = str((root / entry["path"]).resolve())
+    path = tmp_path / "plan.json"
+    original_output = value["output_directory"]
+    value["output_directory"] = "/mnt/speck-data/speck/stack-edu-metadata-v1/work/nested"
+    path.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match="separate output"):
+        metadata.load_metadata_plan(path)
+    value["output_directory"] = original_output
+    manifest = json.loads(Path(value["metadata_manifest"]["path"]).read_text())
+    manifest["files"][0]["rows"] -= 1
+    changed = tmp_path / "manifest.json"
+    changed.write_text(json.dumps(manifest))
+    value["metadata_manifest"] = {"path": str(changed), "sha256": file_sha256(changed)}
+    path.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match="original prefix"):
+        metadata.load_metadata_plan(path)

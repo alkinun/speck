@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import shutil
 import time
 from pathlib import Path
@@ -32,9 +33,11 @@ REQUIRED_COLUMNS = {
 def load_metadata_plan(path):
     path = Path(path).resolve()
     value = json.loads(path.read_text())
+    version = value.get("format_version")
     if (
         value.get("format") != "speck_stack_edu_metadata_acquisition"
-        or value.get("format_version") != 1
+        or type(version) is not int
+        or version not in (1, 2)
         or value.get("training_authority") is not False
     ):
         raise ValueError("unsupported Stack-Edu metadata plan")
@@ -56,17 +59,61 @@ def load_metadata_plan(path):
         or any(manifest[key] != qualification["source"][key] for key in ("repo", "revision"))
     ):
         raise ValueError("Stack-Edu metadata requires its qualified approved source identity")
+    if version == 2:
+        predecessor_id = _bound_identity(value["predecessor_plan"], path.parent)
+        predecessor_path = Path(predecessor_id["path"])
+        predecessor = load_metadata_plan(predecessor_path)
+        if predecessor["format_version"] != 1:
+            raise ValueError("metadata v2 requires the original v1 plan")
+        for key in ("code_languages", "source_qualification", "source_use"):
+            if inputs[key] != predecessor["inputs"][key]:
+                raise ValueError("metadata successor changes a frozen source/policy identity")
+        original_manifest = json.loads(
+            Path(predecessor["inputs"]["metadata_manifest"]["path"]).read_text()
+        )
+        extra_files = (
+            [f"Cpp/train-{i:05d}-of-00004.parquet" for i in range(1, 4)]
+            + [f"Java/train-{i:05d}-of-00011.parquet" for i in range(1, 11)]
+            + ["JavaScript/train-00001-of-00003.parquet", "Python/train-00001-of-00005.parquet"]
+        )
+        if (
+            manifest["files"][:11] != original_manifest["files"]
+            or [row["filename"] for row in manifest["files"][11:]] != extra_files
+        ):
+            raise ValueError(
+                "metadata successor must preserve the original prefix and declared extra files"
+            )
+        previous_result_id = _bound_identity(value["predecessor_result"], path.parent)
+        previous_result = json.loads(Path(previous_result_id["path"]).read_text())
+        if (
+            previous_result.get("status") != "complete_metadata_verified_not_code_stock"
+            or previous_result["plan"] != predecessor["plan"]
+        ):
+            raise ValueError("metadata successor requires the completed original intake")
+        old_output = Path(predecessor["output_directory"])
+        new_output = (path.parent / value["output_directory"]).resolve()
+        if new_output.is_relative_to(old_output) or old_output.is_relative_to(new_output):
+            raise ValueError("metadata successor must use a separate output directory")
+        if (path.parent / value["raw_directory"]).resolve() != Path(predecessor["raw_directory"]):
+            raise ValueError("metadata successor must retain the verified original raw cache")
     units = []
     languages = set()
+    filenames = set()
     for row in manifest["files"]:
         directory = row["language_directory"]
         language = "C++" if directory == "Cpp" else directory
+        filename_match = re.fullmatch(
+            r"train-(\d{5})-of-(\d{5})\.parquet", Path(row["filename"]).name
+        )
         if (
-            language in languages
+            (version == 1 and language in languages)
+            or row["filename"] in filenames
+            or not filename_match
+            or int(filename_match[1]) >= int(filename_match[2])
             or language not in code["language_weights_percent"]
             or Path(row["filename"]).parts[0] != directory
             or len(Path(row["filename"]).parts) != 2
-            or not Path(row["filename"]).name.startswith("train-00000-of-")
+            or (version == 1 and not Path(row["filename"]).name.startswith("train-00000-of-"))
             or not row["filename"].endswith(".parquet")
             or type(row["rows"]) is not int
             or not 0 < row["rows"] <= 10000000
@@ -76,6 +123,7 @@ def load_metadata_plan(path):
         ):
             raise ValueError("metadata shard differs from the matched complete-file scope")
         languages.add(language)
+        filenames.add(row["filename"])
         reader = _validate_source(
             {
                 "id": "stack_edu",
@@ -90,7 +138,8 @@ def load_metadata_plan(path):
         )
         units.append(
             {
-                "id": f"stack_edu_metadata__{directory}",
+                "id": f"stack_edu_metadata__{directory}"
+                + (f"__file_{int(filename_match[1])}" if int(filename_match[1]) else ""),
                 "language": language,
                 "reader": reader,
                 "raw": {
@@ -162,7 +211,11 @@ def acquire_metadata(plan, *, revision, resume=False):
             reports.append(previous)
             print(f"verified completed metadata: {unit['language']}", flush=True)
             continue
-        local = plan.get("reuse_local_files", {}).get(unit["language"])
+        local = (
+            plan.get("reuse_local_files", {}).get(unit["language"])
+            if Path(unit["raw"]["filename"]).name.startswith("train-00000-of-")
+            else None
+        )
         target = _raw_local_path(
             Path(plan["raw_directory"]),
             unit["reader"],
