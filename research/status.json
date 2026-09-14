@@ -72,9 +72,9 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "paused_expanded_metadata_and_complete_census_verified",
+      "state": "paused_added_file_supply_probe_complete_feasibility_decision_pending",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "All 26 metadata files are complete and verified (101,229,394 rows), including every released C++/Java shard. Measure a bounded content/token sample of the fifteen additions; combine file strata correctly with earlier evidence, then resolve matched-language/background feasibility. TypeScript has no further released shard. Preserve paused original code stock and source/policy identities; no production fetch or recipe change yet.",
+      "next": "Combined pre-exclusion sample estimates remain short for Java, TypeScript, JavaScript and Python at unchanged E1S language headroom. Java and TypeScript already cover their complete released views. Resolve the language/background supply constraint and any explicit pre-results successor before bulk stock fetching; further JS/Python files can expand those sources. Preserve all attempts and distinguish sample estimates from actual usable capacity.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
@@ -88,7 +88,9 @@
       "metadata_successor_plan": "research/flagship/stack_edu_metadata_acquisition_v2.json",
       "metadata_successor_launch": "results/systems/stack-edu-metadata-v2-launch-20260914.json",
       "expanded_metadata_result": "results/data/stack-edu-metadata-acquisition-v2-20260914.json",
-      "expanded_metadata_census": "results/data/code-metadata-feasibility-v2-20260914.json"
+      "expanded_metadata_census": "results/data/code-metadata-feasibility-v2-20260914.json",
+      "supply_probe": "results/data/code-supply-probe-v2-20260914.json",
+      "supply_comparison": "results/data/code-supply-comparison-20260914.json"
     },
     {
       "id": "fineweb_edu_stock",

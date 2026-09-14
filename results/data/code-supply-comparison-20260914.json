@@ -1,0 +1,112 @@
+{
+  "additional_file_probe": {
+    "path": "/home/alkin/Desktop/speck/results/data/code-supply-probe-v2-20260914.json",
+    "sha256": "838ced1b05e7d30f1dce378228b52f5aa1c4d868aefba650bea6935728ad3d16"
+  },
+  "boundary": "Sum disjoint first-file and additional-file stratified estimates; combine their sampling variances. Neither constituent performs full reference/candidate exclusion. Estimates/SE are not measured whole-source capacity or simultaneous confidence bounds. Existing source/recipe/language contracts remain unchanged; no model outputs or launch.",
+  "first_file_probe": {
+    "path": "/home/alkin/Desktop/speck/results/systems/ordered-code-fetch-qualification-20260914.json",
+    "sha256": "1270c966839ba00d50d21a07c801ccb1c82caeb5d98f4a763806674a00f8d96a"
+  },
+  "format": "speck_code_supply_comparison",
+  "format_version": 1,
+  "languages": [
+    {
+      "complete_metadata_files": 2,
+      "e1s_headroom_target_tokens": 90000000,
+      "estimated_shortfall_tokens": 9684687.8125,
+      "estimated_tokens_before_full_exclusion": 80315312.1875,
+      "language": "Python",
+      "sampling_standard_error_tokens": 8565452.379816249
+    },
+    {
+      "complete_metadata_files": 4,
+      "e1s_headroom_target_tokens": 54000000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 69959987.40625,
+      "language": "C++",
+      "sampling_standard_error_tokens": 3545020.9365311037
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 18000000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 23374168.78125,
+      "language": "C",
+      "sampling_standard_error_tokens": 2120940.9208284314
+    },
+    {
+      "complete_metadata_files": 11,
+      "e1s_headroom_target_tokens": 54000000,
+      "estimated_shortfall_tokens": 8174240.28125,
+      "estimated_tokens_before_full_exclusion": 45825759.71875,
+      "language": "Java",
+      "sampling_standard_error_tokens": 1566270.5649245197
+    },
+    {
+      "complete_metadata_files": 2,
+      "e1s_headroom_target_tokens": 54000000,
+      "estimated_shortfall_tokens": 5492969.71875,
+      "estimated_tokens_before_full_exclusion": 48507030.28125,
+      "language": "JavaScript",
+      "sampling_standard_error_tokens": 4886623.372276671
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 36000000,
+      "estimated_shortfall_tokens": 4316749.25,
+      "estimated_tokens_before_full_exclusion": 31683250.75,
+      "language": "TypeScript",
+      "sampling_standard_error_tokens": 3524583.5070019616
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 18000000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 36392580.375,
+      "language": "Rust",
+      "sampling_standard_error_tokens": 3638107.4764252454
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 18000000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 23996057.28125,
+      "language": "Go",
+      "sampling_standard_error_tokens": 2529192.762512681
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 3600000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 294446535.5625,
+      "language": "Shell",
+      "sampling_standard_error_tokens": 37549143.866103604
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 3600000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 55936269.75,
+      "language": "SQL",
+      "sampling_standard_error_tokens": 7033944.799380037
+    },
+    {
+      "complete_metadata_files": 1,
+      "e1s_headroom_target_tokens": 10800000,
+      "estimated_shortfall_tokens": 0,
+      "estimated_tokens_before_full_exclusion": 50756078.40625,
+      "language": "Markdown",
+      "sampling_standard_error_tokens": 10461581.525303524
+    }
+  ],
+  "metadata_census": {
+    "path": "/home/alkin/Desktop/speck/results/data/code-metadata-feasibility-v2-20260914.json",
+    "sha256": "77087df33fc9e1413f03a550988e9a7fa95b3f116df3a078e14f1b27aabf5435"
+  },
+  "script": {
+    "path": "/mnt/speck-data/speck/code-supply-comparison-20260914/combine.py",
+    "sha256": "e8d40854f0052b23328629b2878a86b876a5934dfa4c3ddd011ca64bc1bdb855"
+  },
+  "training_authority": false
+}
