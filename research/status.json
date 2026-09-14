@@ -212,6 +212,13 @@
       "state": "partial",
       "evidence": "archive/pregrant-history/findings/212_independent_r3_backup_restore.md",
       "next": "Preserve the independently verified local backup; finalize off-site storage, DOI archive, and release destinations."
+    },
+    {
+      "id": "stack_v3_supply_census",
+      "state": "twelve_cached_files_metadata_checked_content_capacity_unqualified",
+      "plan": "research/flagship/stack_v3_metadata_census_v1.json",
+      "evidence": "results/data/stack-v3-metadata-feasibility-20260914.json",
+      "next": "Existing cached files do not establish E1S per-language token supply. Inspect efficient pinned acquisition of eligible code before larger transfers; preserve restricted-source file/repository license, vendor/fork/path and English-prose rules. No recipe change or usable-capacity claim."
     }
   ]
 }

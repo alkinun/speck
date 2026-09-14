@@ -1,0 +1,1151 @@
+{
+  "boundary": "Metadata supply census of the twelve original complete pinned files already downloaded. Preserve released fork/vendor exclusions, permissive detected-license allowlist and size/language rules. Apply the common explicit excluded path components. The historical 1MB-per-language-per-repository sampler cap is not a full-stock cap; no byte sampling quotas apply. Count eligible released content IDs and declared bytes per language across all twelve files before content/prose/security and reference/candidate exclusion. Released content IDs are not assumed plain SHA-1 of released text. This is an agent pre-results preparation policy, not a recipe change, source-use approval, usable token capacity, ancestry independence or model launch. Metadata projection intentionally omits source text; no text decode/hash, English prose, secret/Gitleaks, tokenizer or full exclusion pass is claimed. Metadata duplicates are within-language released IDs, not a cross-language independent unique union. Costs include concurrent local preparation.",
+  "files": [
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 1006342,
+          "metadata_eligible_files": 226,
+          "unique_declared_bytes_first_eligible_row": 1006342,
+          "unique_released_content_ids": 226
+        },
+        "C++": {
+          "eligible_declared_bytes": 1680566,
+          "metadata_eligible_files": 301,
+          "unique_declared_bytes_first_eligible_row": 1680566,
+          "unique_released_content_ids": 301
+        },
+        "Go": {
+          "eligible_declared_bytes": 232697,
+          "metadata_eligible_files": 90,
+          "unique_declared_bytes_first_eligible_row": 232697,
+          "unique_released_content_ids": 90
+        },
+        "Java": {
+          "eligible_declared_bytes": 3715727,
+          "metadata_eligible_files": 954,
+          "unique_declared_bytes_first_eligible_row": 3715727,
+          "unique_released_content_ids": 954
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 1559179,
+          "metadata_eligible_files": 356,
+          "unique_declared_bytes_first_eligible_row": 1559179,
+          "unique_released_content_ids": 356
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 2032948,
+          "metadata_eligible_files": 441,
+          "unique_declared_bytes_first_eligible_row": 2032948,
+          "unique_released_content_ids": 441
+        },
+        "Python": {
+          "eligible_declared_bytes": 3105632,
+          "metadata_eligible_files": 428,
+          "unique_declared_bytes_first_eligible_row": 3105632,
+          "unique_released_content_ids": 428
+        },
+        "Rust": {
+          "eligible_declared_bytes": 197432,
+          "metadata_eligible_files": 43,
+          "unique_declared_bytes_first_eligible_row": 197432,
+          "unique_released_content_ids": 43
+        },
+        "SQL": {
+          "eligible_declared_bytes": 351382,
+          "metadata_eligible_files": 164,
+          "unique_declared_bytes_first_eligible_row": 351382,
+          "unique_released_content_ids": 164
+        },
+        "Shell": {
+          "eligible_declared_bytes": 365059,
+          "metadata_eligible_files": 66,
+          "unique_declared_bytes_first_eligible_row": 365059,
+          "unique_released_content_ids": 66
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 80281,
+          "metadata_eligible_files": 33,
+          "unique_declared_bytes_first_eligible_row": 80281,
+          "unique_released_content_ids": 33
+        }
+      },
+      "physical_files_seen": 231664,
+      "raw": {
+        "bytes": 272393747,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-01304-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "bdaf28edcb5bffffe105956eb3702f3cd6687eceaf11d80a0828907886e545c9"
+      },
+      "rejections": {
+        "declared_size": 238,
+        "detected_license_allowlist": 496,
+        "license_type": 220330,
+        "released_vendor": 3294,
+        "repository_fork": 892,
+        "unselected_language": 3312
+      },
+      "repositories_seen": 21014,
+      "verification_and_scan_seconds": 3.362229644000763
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 1481176,
+          "metadata_eligible_files": 115,
+          "unique_declared_bytes_first_eligible_row": 1481176,
+          "unique_released_content_ids": 115
+        },
+        "C++": {
+          "eligible_declared_bytes": 1165410,
+          "metadata_eligible_files": 73,
+          "unique_declared_bytes_first_eligible_row": 1165410,
+          "unique_released_content_ids": 73
+        },
+        "Go": {
+          "eligible_declared_bytes": 856025,
+          "metadata_eligible_files": 138,
+          "unique_declared_bytes_first_eligible_row": 856025,
+          "unique_released_content_ids": 138
+        },
+        "Java": {
+          "eligible_declared_bytes": 1877366,
+          "metadata_eligible_files": 688,
+          "unique_declared_bytes_first_eligible_row": 1877366,
+          "unique_released_content_ids": 688
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 725461,
+          "metadata_eligible_files": 234,
+          "unique_declared_bytes_first_eligible_row": 725461,
+          "unique_released_content_ids": 234
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 754142,
+          "metadata_eligible_files": 232,
+          "unique_declared_bytes_first_eligible_row": 754142,
+          "unique_released_content_ids": 232
+        },
+        "Python": {
+          "eligible_declared_bytes": 1377109,
+          "metadata_eligible_files": 313,
+          "unique_declared_bytes_first_eligible_row": 1377109,
+          "unique_released_content_ids": 313
+        },
+        "Rust": {
+          "eligible_declared_bytes": 853468,
+          "metadata_eligible_files": 193,
+          "unique_declared_bytes_first_eligible_row": 853468,
+          "unique_released_content_ids": 193
+        },
+        "SQL": {
+          "eligible_declared_bytes": 17918,
+          "metadata_eligible_files": 16,
+          "unique_declared_bytes_first_eligible_row": 17918,
+          "unique_released_content_ids": 16
+        },
+        "Shell": {
+          "eligible_declared_bytes": 124837,
+          "metadata_eligible_files": 89,
+          "unique_declared_bytes_first_eligible_row": 124837,
+          "unique_released_content_ids": 89
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 112305,
+          "metadata_eligible_files": 84,
+          "unique_declared_bytes_first_eligible_row": 112305,
+          "unique_released_content_ids": 84
+        }
+      },
+      "physical_files_seen": 241995,
+      "raw": {
+        "bytes": 275237679,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-00284-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "f5fe7b8cf8bc2f90ef402f15170ad3e45a5f9d77d399c1156d28a0d222cab9eb"
+      },
+      "rejections": {
+        "declared_size": 150,
+        "detected_license_allowlist": 181,
+        "license_type": 233427,
+        "released_vendor": 3267,
+        "repository_fork": 996,
+        "unselected_language": 1799
+      },
+      "repositories_seen": 21094,
+      "verification_and_scan_seconds": 3.5739118269993924
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 134345,
+          "metadata_eligible_files": 50,
+          "unique_declared_bytes_first_eligible_row": 134345,
+          "unique_released_content_ids": 50
+        },
+        "C++": {
+          "eligible_declared_bytes": 2928650,
+          "metadata_eligible_files": 562,
+          "unique_declared_bytes_first_eligible_row": 2928650,
+          "unique_released_content_ids": 562
+        },
+        "Go": {
+          "eligible_declared_bytes": 405709,
+          "metadata_eligible_files": 242,
+          "unique_declared_bytes_first_eligible_row": 405709,
+          "unique_released_content_ids": 242
+        },
+        "Java": {
+          "eligible_declared_bytes": 2862427,
+          "metadata_eligible_files": 911,
+          "unique_declared_bytes_first_eligible_row": 2862427,
+          "unique_released_content_ids": 911
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 949693,
+          "metadata_eligible_files": 230,
+          "unique_declared_bytes_first_eligible_row": 949693,
+          "unique_released_content_ids": 230
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 1335741,
+          "metadata_eligible_files": 260,
+          "unique_declared_bytes_first_eligible_row": 1335741,
+          "unique_released_content_ids": 260
+        },
+        "Python": {
+          "eligible_declared_bytes": 1716903,
+          "metadata_eligible_files": 332,
+          "unique_declared_bytes_first_eligible_row": 1716903,
+          "unique_released_content_ids": 332
+        },
+        "Rust": {
+          "eligible_declared_bytes": 81075,
+          "metadata_eligible_files": 28,
+          "unique_declared_bytes_first_eligible_row": 81075,
+          "unique_released_content_ids": 28
+        },
+        "SQL": {
+          "eligible_declared_bytes": 324597,
+          "metadata_eligible_files": 59,
+          "unique_declared_bytes_first_eligible_row": 324597,
+          "unique_released_content_ids": 59
+        },
+        "Shell": {
+          "eligible_declared_bytes": 88863,
+          "metadata_eligible_files": 72,
+          "unique_declared_bytes_first_eligible_row": 88863,
+          "unique_released_content_ids": 72
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 749653,
+          "metadata_eligible_files": 234,
+          "unique_declared_bytes_first_eligible_row": 749653,
+          "unique_released_content_ids": 234
+        }
+      },
+      "physical_files_seen": 223676,
+      "raw": {
+        "bytes": 276389838,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-03094-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "5b7e7e2c2feaca322d4a5b3ad39df7ca47690730d95bb020316486c26bec52a4"
+      },
+      "rejections": {
+        "declared_size": 143,
+        "detected_license_allowlist": 292,
+        "license_type": 214442,
+        "released_vendor": 3363,
+        "repository_fork": 402,
+        "unselected_language": 2054
+      },
+      "repositories_seen": 20834,
+      "verification_and_scan_seconds": 3.831524487999559
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 37912,
+          "metadata_eligible_files": 12,
+          "unique_declared_bytes_first_eligible_row": 37912,
+          "unique_released_content_ids": 12
+        },
+        "C++": {
+          "eligible_declared_bytes": 135325,
+          "metadata_eligible_files": 32,
+          "unique_declared_bytes_first_eligible_row": 135325,
+          "unique_released_content_ids": 32
+        },
+        "Go": {
+          "eligible_declared_bytes": 482042,
+          "metadata_eligible_files": 158,
+          "unique_declared_bytes_first_eligible_row": 482042,
+          "unique_released_content_ids": 158
+        },
+        "Java": {
+          "eligible_declared_bytes": 2242453,
+          "metadata_eligible_files": 1080,
+          "unique_declared_bytes_first_eligible_row": 2242453,
+          "unique_released_content_ids": 1080
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 1643385,
+          "metadata_eligible_files": 171,
+          "unique_declared_bytes_first_eligible_row": 1643385,
+          "unique_released_content_ids": 171
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 3281608,
+          "metadata_eligible_files": 447,
+          "unique_declared_bytes_first_eligible_row": 3281608,
+          "unique_released_content_ids": 447
+        },
+        "Python": {
+          "eligible_declared_bytes": 6834406,
+          "metadata_eligible_files": 782,
+          "unique_declared_bytes_first_eligible_row": 6834406,
+          "unique_released_content_ids": 782
+        },
+        "Rust": {
+          "eligible_declared_bytes": 281193,
+          "metadata_eligible_files": 50,
+          "unique_declared_bytes_first_eligible_row": 281193,
+          "unique_released_content_ids": 50
+        },
+        "SQL": {
+          "eligible_declared_bytes": 70969,
+          "metadata_eligible_files": 11,
+          "unique_declared_bytes_first_eligible_row": 70969,
+          "unique_released_content_ids": 11
+        },
+        "Shell": {
+          "eligible_declared_bytes": 121514,
+          "metadata_eligible_files": 89,
+          "unique_declared_bytes_first_eligible_row": 121514,
+          "unique_released_content_ids": 89
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 353872,
+          "metadata_eligible_files": 106,
+          "unique_declared_bytes_first_eligible_row": 353872,
+          "unique_released_content_ids": 106
+        }
+      },
+      "physical_files_seen": 238661,
+      "raw": {
+        "bytes": 278183069,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-03631-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "c238d3ffc873802b75ef03a28363da7863d20931d42c0006b6b4f69017c6e15d"
+      },
+      "rejections": {
+        "declared_size": 173,
+        "detected_license_allowlist": 854,
+        "license_type": 229439,
+        "released_vendor": 3213,
+        "repository_fork": 193,
+        "unselected_language": 1851
+      },
+      "repositories_seen": 21021,
+      "verification_and_scan_seconds": 5.718765124998754
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 90617,
+          "metadata_eligible_files": 24,
+          "unique_declared_bytes_first_eligible_row": 90617,
+          "unique_released_content_ids": 24
+        },
+        "C++": {
+          "eligible_declared_bytes": 291713,
+          "metadata_eligible_files": 146,
+          "unique_declared_bytes_first_eligible_row": 291713,
+          "unique_released_content_ids": 146
+        },
+        "Go": {
+          "eligible_declared_bytes": 475819,
+          "metadata_eligible_files": 175,
+          "unique_declared_bytes_first_eligible_row": 475819,
+          "unique_released_content_ids": 175
+        },
+        "Java": {
+          "eligible_declared_bytes": 3238646,
+          "metadata_eligible_files": 1294,
+          "unique_declared_bytes_first_eligible_row": 3238646,
+          "unique_released_content_ids": 1294
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 884617,
+          "metadata_eligible_files": 234,
+          "unique_declared_bytes_first_eligible_row": 884617,
+          "unique_released_content_ids": 234
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 2514174,
+          "metadata_eligible_files": 4676,
+          "unique_declared_bytes_first_eligible_row": 2514174,
+          "unique_released_content_ids": 4676
+        },
+        "Python": {
+          "eligible_declared_bytes": 2416480,
+          "metadata_eligible_files": 408,
+          "unique_declared_bytes_first_eligible_row": 2416480,
+          "unique_released_content_ids": 408
+        },
+        "Rust": {
+          "eligible_declared_bytes": 446627,
+          "metadata_eligible_files": 55,
+          "unique_declared_bytes_first_eligible_row": 446627,
+          "unique_released_content_ids": 55
+        },
+        "SQL": {
+          "eligible_declared_bytes": 8258,
+          "metadata_eligible_files": 5,
+          "unique_declared_bytes_first_eligible_row": 8258,
+          "unique_released_content_ids": 5
+        },
+        "Shell": {
+          "eligible_declared_bytes": 85616,
+          "metadata_eligible_files": 48,
+          "unique_declared_bytes_first_eligible_row": 85616,
+          "unique_released_content_ids": 48
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 2204826,
+          "metadata_eligible_files": 216,
+          "unique_declared_bytes_first_eligible_row": 2204826,
+          "unique_released_content_ids": 216
+        }
+      },
+      "physical_files_seen": 240842,
+      "raw": {
+        "bytes": 278490630,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-01670-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "084329e6968d408aa0268e0e6ed5fbe73827790e4d2a427be379eec5b2c88a7d"
+      },
+      "rejections": {
+        "declared_size": 171,
+        "detected_license_allowlist": 688,
+        "license_type": 227319,
+        "released_vendor": 3384,
+        "repository_fork": 248,
+        "unselected_language": 1751
+      },
+      "repositories_seen": 21174,
+      "verification_and_scan_seconds": 4.121892428000137
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 155090,
+          "metadata_eligible_files": 35,
+          "unique_declared_bytes_first_eligible_row": 155090,
+          "unique_released_content_ids": 35
+        },
+        "C++": {
+          "eligible_declared_bytes": 747128,
+          "metadata_eligible_files": 119,
+          "unique_declared_bytes_first_eligible_row": 747128,
+          "unique_released_content_ids": 119
+        },
+        "Go": {
+          "eligible_declared_bytes": 448775,
+          "metadata_eligible_files": 129,
+          "unique_declared_bytes_first_eligible_row": 448775,
+          "unique_released_content_ids": 129
+        },
+        "Java": {
+          "eligible_declared_bytes": 6493198,
+          "metadata_eligible_files": 1362,
+          "unique_declared_bytes_first_eligible_row": 6493198,
+          "unique_released_content_ids": 1362
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 763268,
+          "metadata_eligible_files": 270,
+          "unique_declared_bytes_first_eligible_row": 763268,
+          "unique_released_content_ids": 270
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 1465685,
+          "metadata_eligible_files": 343,
+          "unique_declared_bytes_first_eligible_row": 1465685,
+          "unique_released_content_ids": 343
+        },
+        "Python": {
+          "eligible_declared_bytes": 2192954,
+          "metadata_eligible_files": 369,
+          "unique_declared_bytes_first_eligible_row": 2192954,
+          "unique_released_content_ids": 369
+        },
+        "Rust": {
+          "eligible_declared_bytes": 139887,
+          "metadata_eligible_files": 37,
+          "unique_declared_bytes_first_eligible_row": 139887,
+          "unique_released_content_ids": 37
+        },
+        "SQL": {
+          "eligible_declared_bytes": 27911,
+          "metadata_eligible_files": 20,
+          "unique_declared_bytes_first_eligible_row": 27911,
+          "unique_released_content_ids": 20
+        },
+        "Shell": {
+          "eligible_declared_bytes": 119581,
+          "metadata_eligible_files": 88,
+          "unique_declared_bytes_first_eligible_row": 119581,
+          "unique_released_content_ids": 88
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 958247,
+          "metadata_eligible_files": 828,
+          "unique_declared_bytes_first_eligible_row": 958247,
+          "unique_released_content_ids": 828
+        }
+      },
+      "physical_files_seen": 227949,
+      "raw": {
+        "bytes": 281034939,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-07833-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "83b05e6de90172483c191cb330c57590cfde0556dfb9c9436c5ca288c681a27b"
+      },
+      "rejections": {
+        "declared_size": 496,
+        "detected_license_allowlist": 205,
+        "license_type": 217815,
+        "released_vendor": 2840,
+        "repository_fork": 315,
+        "unselected_language": 2678
+      },
+      "repositories_seen": 21084,
+      "verification_and_scan_seconds": 6.716116817999136
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 1615165,
+          "metadata_eligible_files": 50,
+          "unique_declared_bytes_first_eligible_row": 1615165,
+          "unique_released_content_ids": 50
+        },
+        "C++": {
+          "eligible_declared_bytes": 795133,
+          "metadata_eligible_files": 125,
+          "unique_declared_bytes_first_eligible_row": 795133,
+          "unique_released_content_ids": 125
+        },
+        "Go": {
+          "eligible_declared_bytes": 1744455,
+          "metadata_eligible_files": 381,
+          "unique_declared_bytes_first_eligible_row": 1744455,
+          "unique_released_content_ids": 381
+        },
+        "Java": {
+          "eligible_declared_bytes": 2323267,
+          "metadata_eligible_files": 1140,
+          "unique_declared_bytes_first_eligible_row": 2323267,
+          "unique_released_content_ids": 1140
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 523629,
+          "metadata_eligible_files": 147,
+          "unique_declared_bytes_first_eligible_row": 523629,
+          "unique_released_content_ids": 147
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 868851,
+          "metadata_eligible_files": 269,
+          "unique_declared_bytes_first_eligible_row": 868851,
+          "unique_released_content_ids": 269
+        },
+        "Python": {
+          "eligible_declared_bytes": 3372697,
+          "metadata_eligible_files": 796,
+          "unique_declared_bytes_first_eligible_row": 3372697,
+          "unique_released_content_ids": 796
+        },
+        "Rust": {
+          "eligible_declared_bytes": 94594,
+          "metadata_eligible_files": 9,
+          "unique_declared_bytes_first_eligible_row": 94594,
+          "unique_released_content_ids": 9
+        },
+        "SQL": {
+          "eligible_declared_bytes": 91375,
+          "metadata_eligible_files": 8,
+          "unique_declared_bytes_first_eligible_row": 91375,
+          "unique_released_content_ids": 8
+        },
+        "Shell": {
+          "eligible_declared_bytes": 60484,
+          "metadata_eligible_files": 64,
+          "unique_declared_bytes_first_eligible_row": 60484,
+          "unique_released_content_ids": 64
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 274020,
+          "metadata_eligible_files": 175,
+          "unique_declared_bytes_first_eligible_row": 274020,
+          "unique_released_content_ids": 175
+        }
+      },
+      "physical_files_seen": 230051,
+      "raw": {
+        "bytes": 281133691,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-03606-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "7fa1c822b7dc30833305b5355a057ae778a79b968518c96439d9f62edd4d914b"
+      },
+      "rejections": {
+        "declared_size": 187,
+        "detected_license_allowlist": 315,
+        "license_type": 221360,
+        "released_vendor": 2779,
+        "repository_fork": 149,
+        "unselected_language": 2097
+      },
+      "repositories_seen": 21159,
+      "verification_and_scan_seconds": 5.166992369002401
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 380418,
+          "metadata_eligible_files": 22,
+          "unique_declared_bytes_first_eligible_row": 380418,
+          "unique_released_content_ids": 22
+        },
+        "C++": {
+          "eligible_declared_bytes": 2783988,
+          "metadata_eligible_files": 109,
+          "unique_declared_bytes_first_eligible_row": 2783988,
+          "unique_released_content_ids": 109
+        },
+        "Go": {
+          "eligible_declared_bytes": 174587,
+          "metadata_eligible_files": 92,
+          "unique_declared_bytes_first_eligible_row": 174587,
+          "unique_released_content_ids": 92
+        },
+        "Java": {
+          "eligible_declared_bytes": 2515114,
+          "metadata_eligible_files": 899,
+          "unique_declared_bytes_first_eligible_row": 2515114,
+          "unique_released_content_ids": 899
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 1977803,
+          "metadata_eligible_files": 365,
+          "unique_declared_bytes_first_eligible_row": 1977803,
+          "unique_released_content_ids": 365
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 1210955,
+          "metadata_eligible_files": 360,
+          "unique_declared_bytes_first_eligible_row": 1210955,
+          "unique_released_content_ids": 360
+        },
+        "Python": {
+          "eligible_declared_bytes": 2586238,
+          "metadata_eligible_files": 478,
+          "unique_declared_bytes_first_eligible_row": 2586238,
+          "unique_released_content_ids": 478
+        },
+        "Rust": {
+          "eligible_declared_bytes": 154962,
+          "metadata_eligible_files": 49,
+          "unique_declared_bytes_first_eligible_row": 154962,
+          "unique_released_content_ids": 49
+        },
+        "SQL": {
+          "eligible_declared_bytes": 6579,
+          "metadata_eligible_files": 6,
+          "unique_declared_bytes_first_eligible_row": 6579,
+          "unique_released_content_ids": 6
+        },
+        "Shell": {
+          "eligible_declared_bytes": 213337,
+          "metadata_eligible_files": 87,
+          "unique_declared_bytes_first_eligible_row": 213337,
+          "unique_released_content_ids": 87
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 353783,
+          "metadata_eligible_files": 264,
+          "unique_declared_bytes_first_eligible_row": 353783,
+          "unique_released_content_ids": 264
+        }
+      },
+      "physical_files_seen": 255022,
+      "raw": {
+        "bytes": 281372892,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-02053-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "ac4fe1ed48b088458a768ecbe678fa637c1fd85103006e71ad8cb8c2c796d918"
+      },
+      "rejections": {
+        "declared_size": 167,
+        "detected_license_allowlist": 539,
+        "license_type": 245619,
+        "released_vendor": 2993,
+        "repository_fork": 612,
+        "unselected_language": 2361
+      },
+      "repositories_seen": 21357,
+      "verification_and_scan_seconds": 4.804484856998897
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 348931,
+          "metadata_eligible_files": 71,
+          "unique_declared_bytes_first_eligible_row": 348931,
+          "unique_released_content_ids": 71
+        },
+        "C++": {
+          "eligible_declared_bytes": 168794,
+          "metadata_eligible_files": 95,
+          "unique_declared_bytes_first_eligible_row": 168794,
+          "unique_released_content_ids": 95
+        },
+        "Go": {
+          "eligible_declared_bytes": 408339,
+          "metadata_eligible_files": 137,
+          "unique_declared_bytes_first_eligible_row": 408339,
+          "unique_released_content_ids": 137
+        },
+        "Java": {
+          "eligible_declared_bytes": 2368390,
+          "metadata_eligible_files": 723,
+          "unique_declared_bytes_first_eligible_row": 2368390,
+          "unique_released_content_ids": 723
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 1811389,
+          "metadata_eligible_files": 502,
+          "unique_declared_bytes_first_eligible_row": 1811389,
+          "unique_released_content_ids": 502
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 836734,
+          "metadata_eligible_files": 256,
+          "unique_declared_bytes_first_eligible_row": 836734,
+          "unique_released_content_ids": 256
+        },
+        "Python": {
+          "eligible_declared_bytes": 2216906,
+          "metadata_eligible_files": 333,
+          "unique_declared_bytes_first_eligible_row": 2216906,
+          "unique_released_content_ids": 333
+        },
+        "Rust": {
+          "eligible_declared_bytes": 85671,
+          "metadata_eligible_files": 7,
+          "unique_declared_bytes_first_eligible_row": 85671,
+          "unique_released_content_ids": 7
+        },
+        "SQL": {
+          "eligible_declared_bytes": 72131,
+          "metadata_eligible_files": 19,
+          "unique_declared_bytes_first_eligible_row": 72131,
+          "unique_released_content_ids": 19
+        },
+        "Shell": {
+          "eligible_declared_bytes": 150773,
+          "metadata_eligible_files": 100,
+          "unique_declared_bytes_first_eligible_row": 150773,
+          "unique_released_content_ids": 100
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 113092,
+          "metadata_eligible_files": 58,
+          "unique_declared_bytes_first_eligible_row": 113092,
+          "unique_released_content_ids": 58
+        }
+      },
+      "physical_files_seen": 233310,
+      "raw": {
+        "bytes": 281822213,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-00989-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "0dc1ed901429f9775ca8af54a352347a441012bfa17b38e616803cc90b349be2"
+      },
+      "rejections": {
+        "declared_size": 122,
+        "detected_license_allowlist": 428,
+        "license_type": 224845,
+        "released_vendor": 3158,
+        "repository_fork": 385,
+        "unselected_language": 2071
+      },
+      "repositories_seen": 21198,
+      "verification_and_scan_seconds": 4.884468902000663
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 124467,
+          "metadata_eligible_files": 49,
+          "unique_declared_bytes_first_eligible_row": 124467,
+          "unique_released_content_ids": 49
+        },
+        "C++": {
+          "eligible_declared_bytes": 5448287,
+          "metadata_eligible_files": 1341,
+          "unique_declared_bytes_first_eligible_row": 5448287,
+          "unique_released_content_ids": 1341
+        },
+        "Go": {
+          "eligible_declared_bytes": 422257,
+          "metadata_eligible_files": 129,
+          "unique_declared_bytes_first_eligible_row": 422257,
+          "unique_released_content_ids": 129
+        },
+        "Java": {
+          "eligible_declared_bytes": 5311103,
+          "metadata_eligible_files": 1950,
+          "unique_declared_bytes_first_eligible_row": 5311103,
+          "unique_released_content_ids": 1950
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 476054,
+          "metadata_eligible_files": 213,
+          "unique_declared_bytes_first_eligible_row": 476054,
+          "unique_released_content_ids": 213
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 663148,
+          "metadata_eligible_files": 326,
+          "unique_declared_bytes_first_eligible_row": 663148,
+          "unique_released_content_ids": 326
+        },
+        "Python": {
+          "eligible_declared_bytes": 1227888,
+          "metadata_eligible_files": 346,
+          "unique_declared_bytes_first_eligible_row": 1227888,
+          "unique_released_content_ids": 346
+        },
+        "Rust": {
+          "eligible_declared_bytes": 1011086,
+          "metadata_eligible_files": 359,
+          "unique_declared_bytes_first_eligible_row": 1011086,
+          "unique_released_content_ids": 359
+        },
+        "SQL": {
+          "eligible_declared_bytes": 35403,
+          "metadata_eligible_files": 18,
+          "unique_declared_bytes_first_eligible_row": 35403,
+          "unique_released_content_ids": 18
+        },
+        "Shell": {
+          "eligible_declared_bytes": 138804,
+          "metadata_eligible_files": 128,
+          "unique_declared_bytes_first_eligible_row": 138804,
+          "unique_released_content_ids": 128
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 558649,
+          "metadata_eligible_files": 171,
+          "unique_declared_bytes_first_eligible_row": 558649,
+          "unique_released_content_ids": 171
+        }
+      },
+      "physical_files_seen": 253538,
+      "raw": {
+        "bytes": 282211851,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-05323-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "cb8175c4d3ccd6e15519dcc4d7673b2946ff1578e65c632b87a3e17ec2b4d3a4"
+      },
+      "rejections": {
+        "declared_size": 194,
+        "detected_license_allowlist": 1640,
+        "license_type": 240573,
+        "released_vendor": 3659,
+        "repository_fork": 588,
+        "unselected_language": 1854
+      },
+      "repositories_seen": 21004,
+      "verification_and_scan_seconds": 4.864142771999468
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 3666474,
+          "metadata_eligible_files": 230,
+          "unique_declared_bytes_first_eligible_row": 3666474,
+          "unique_released_content_ids": 230
+        },
+        "C++": {
+          "eligible_declared_bytes": 4231170,
+          "metadata_eligible_files": 555,
+          "unique_declared_bytes_first_eligible_row": 4231170,
+          "unique_released_content_ids": 555
+        },
+        "Go": {
+          "eligible_declared_bytes": 1424805,
+          "metadata_eligible_files": 284,
+          "unique_declared_bytes_first_eligible_row": 1424805,
+          "unique_released_content_ids": 284
+        },
+        "Java": {
+          "eligible_declared_bytes": 12518515,
+          "metadata_eligible_files": 2298,
+          "unique_declared_bytes_first_eligible_row": 12518515,
+          "unique_released_content_ids": 2298
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 1642819,
+          "metadata_eligible_files": 435,
+          "unique_declared_bytes_first_eligible_row": 1642819,
+          "unique_released_content_ids": 435
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 1589994,
+          "metadata_eligible_files": 379,
+          "unique_declared_bytes_first_eligible_row": 1589994,
+          "unique_released_content_ids": 379
+        },
+        "Python": {
+          "eligible_declared_bytes": 1755347,
+          "metadata_eligible_files": 429,
+          "unique_declared_bytes_first_eligible_row": 1755347,
+          "unique_released_content_ids": 429
+        },
+        "Rust": {
+          "eligible_declared_bytes": 80366,
+          "metadata_eligible_files": 16,
+          "unique_declared_bytes_first_eligible_row": 80366,
+          "unique_released_content_ids": 16
+        },
+        "SQL": {
+          "eligible_declared_bytes": 226081,
+          "metadata_eligible_files": 55,
+          "unique_declared_bytes_first_eligible_row": 226081,
+          "unique_released_content_ids": 55
+        },
+        "Shell": {
+          "eligible_declared_bytes": 523187,
+          "metadata_eligible_files": 158,
+          "unique_declared_bytes_first_eligible_row": 523187,
+          "unique_released_content_ids": 158
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 206315,
+          "metadata_eligible_files": 182,
+          "unique_declared_bytes_first_eligible_row": 206315,
+          "unique_released_content_ids": 182
+        }
+      },
+      "physical_files_seen": 235692,
+      "raw": {
+        "bytes": 282657682,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-03730-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "ed6240b3dac96e038772cfe1dfa423418c5d7282aaac1b4c05f36224d03561b6"
+      },
+      "rejections": {
+        "declared_size": 210,
+        "detected_license_allowlist": 199,
+        "license_type": 222156,
+        "released_vendor": 3172,
+        "repository_fork": 730,
+        "unselected_language": 4204
+      },
+      "repositories_seen": 20906,
+      "verification_and_scan_seconds": 3.8676828700008627
+    },
+    {
+      "languages": {
+        "C": {
+          "eligible_declared_bytes": 397768,
+          "metadata_eligible_files": 92,
+          "unique_declared_bytes_first_eligible_row": 397768,
+          "unique_released_content_ids": 92
+        },
+        "C++": {
+          "eligible_declared_bytes": 3455582,
+          "metadata_eligible_files": 2777,
+          "unique_declared_bytes_first_eligible_row": 3455582,
+          "unique_released_content_ids": 2777
+        },
+        "Go": {
+          "eligible_declared_bytes": 1257827,
+          "metadata_eligible_files": 276,
+          "unique_declared_bytes_first_eligible_row": 1257827,
+          "unique_released_content_ids": 276
+        },
+        "Java": {
+          "eligible_declared_bytes": 4069366,
+          "metadata_eligible_files": 1029,
+          "unique_declared_bytes_first_eligible_row": 4069366,
+          "unique_released_content_ids": 1029
+        },
+        "JavaScript": {
+          "eligible_declared_bytes": 632347,
+          "metadata_eligible_files": 139,
+          "unique_declared_bytes_first_eligible_row": 632347,
+          "unique_released_content_ids": 139
+        },
+        "Markdown": {
+          "eligible_declared_bytes": 1587288,
+          "metadata_eligible_files": 386,
+          "unique_declared_bytes_first_eligible_row": 1587288,
+          "unique_released_content_ids": 386
+        },
+        "Python": {
+          "eligible_declared_bytes": 2092314,
+          "metadata_eligible_files": 406,
+          "unique_declared_bytes_first_eligible_row": 2092314,
+          "unique_released_content_ids": 406
+        },
+        "Rust": {
+          "eligible_declared_bytes": 1620077,
+          "metadata_eligible_files": 98,
+          "unique_declared_bytes_first_eligible_row": 1620077,
+          "unique_released_content_ids": 98
+        },
+        "SQL": {
+          "eligible_declared_bytes": 45620,
+          "metadata_eligible_files": 12,
+          "unique_declared_bytes_first_eligible_row": 45620,
+          "unique_released_content_ids": 12
+        },
+        "Shell": {
+          "eligible_declared_bytes": 367563,
+          "metadata_eligible_files": 107,
+          "unique_declared_bytes_first_eligible_row": 367563,
+          "unique_released_content_ids": 107
+        },
+        "TypeScript": {
+          "eligible_declared_bytes": 170338,
+          "metadata_eligible_files": 101,
+          "unique_declared_bytes_first_eligible_row": 170338,
+          "unique_released_content_ids": 101
+        }
+      },
+      "physical_files_seen": 229526,
+      "raw": {
+        "bytes": 284266241,
+        "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-07627-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "e28f3c5be3e0921e1c71343d0a5fd391bac024c64e95747d6a943117efe7b11d"
+      },
+      "rejections": {
+        "declared_size": 161,
+        "detected_license_allowlist": 241,
+        "license_type": 218165,
+        "released_vendor": 3236,
+        "repository_fork": 267,
+        "unselected_language": 2033
+      },
+      "repositories_seen": 21015,
+      "verification_and_scan_seconds": 4.699560409000696
+    }
+  ],
+  "format": "speck_stack_v3_metadata_feasibility",
+  "format_version": 1,
+  "languages": [
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 90000000,
+      "eligible_declared_bytes": 30894874,
+      "language": "Python",
+      "metadata_eligible_files": 5420,
+      "unique_declared_bytes_first_eligible_row": 30894874,
+      "unique_released_content_ids": 5420
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 54000000,
+      "eligible_declared_bytes": 23831746,
+      "language": "C++",
+      "metadata_eligible_files": 6235,
+      "unique_declared_bytes_first_eligible_row": 23831746,
+      "unique_released_content_ids": 6235
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 18000000,
+      "eligible_declared_bytes": 9438705,
+      "language": "C",
+      "metadata_eligible_files": 976,
+      "unique_declared_bytes_first_eligible_row": 9438705,
+      "unique_released_content_ids": 976
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 54000000,
+      "eligible_declared_bytes": 49535572,
+      "language": "Java",
+      "metadata_eligible_files": 14328,
+      "unique_declared_bytes_first_eligible_row": 49535572,
+      "unique_released_content_ids": 14328
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 54000000,
+      "eligible_declared_bytes": 13589644,
+      "language": "JavaScript",
+      "metadata_eligible_files": 3296,
+      "unique_declared_bytes_first_eligible_row": 13589644,
+      "unique_released_content_ids": 3296
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 36000000,
+      "eligible_declared_bytes": 6135381,
+      "language": "TypeScript",
+      "metadata_eligible_files": 2452,
+      "unique_declared_bytes_first_eligible_row": 6135381,
+      "unique_released_content_ids": 2452
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 18000000,
+      "eligible_declared_bytes": 5046438,
+      "language": "Rust",
+      "metadata_eligible_files": 944,
+      "unique_declared_bytes_first_eligible_row": 5046438,
+      "unique_released_content_ids": 944
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 18000000,
+      "eligible_declared_bytes": 8333337,
+      "language": "Go",
+      "metadata_eligible_files": 2231,
+      "unique_declared_bytes_first_eligible_row": 8333337,
+      "unique_released_content_ids": 2231
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 3600000,
+      "eligible_declared_bytes": 2359618,
+      "language": "Shell",
+      "metadata_eligible_files": 1096,
+      "unique_declared_bytes_first_eligible_row": 2359618,
+      "unique_released_content_ids": 1096
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 3600000,
+      "eligible_declared_bytes": 1278224,
+      "language": "SQL",
+      "metadata_eligible_files": 393,
+      "unique_declared_bytes_first_eligible_row": 1278224,
+      "unique_released_content_ids": 393
+    },
+    {
+      "duplicate_eligible_file_rows": 0,
+      "e1s_headroom_target_tokens": 10800000,
+      "eligible_declared_bytes": 18141268,
+      "language": "Markdown",
+      "metadata_eligible_files": 8375,
+      "unique_declared_bytes_first_eligible_row": 18141268,
+      "unique_released_content_ids": 8375
+    }
+  ],
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_v3_metadata_census_v1.json",
+    "sha256": "c37782856411ead0598f4e1552cf48dfcdc24d816d0388c351d58992145e62a3"
+  },
+  "repository_revision": "f8dcfee749568b37925425756b681f81bf557eb5",
+  "script": {
+    "path": "/mnt/speck-data/speck/stack-v3-census-review-20260914/scan_metadata.py",
+    "sha256": "a7a676b46d4a125c64fe814d66c158dbe365fed30798966d86c06baa7a1173cb"
+  },
+  "training_authority": false,
+  "verification_and_scan_seconds": 55.613795352001034
+}
