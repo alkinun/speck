@@ -42,3 +42,22 @@ After raw-file completion, launch the same stock plan without `--raw-only` into 
 output directory and a new text-result path. It uses the common verified acquisition/exclusion
 machinery with the explicit web policy. Actual text processing and token-cache launch remain
 separate operational steps; raw receipts must not populate paper token-capacity tables.
+
+## First E1S tranche
+
+The [E1S successor](fineweb_edu_e1s_stock_preparation_v2.json) selects complete files 0–2
+from the same already-verified fourteen-file intake. It targets **1.32B selected-Mistral tokens**
+(1.1B nominal web background for a 2B run plus 20% headroom). This is a smaller operational
+milestone; the original 5.28B full-stock requirement remains in force for subsequent preparation.
+The three-file yield has not yet been measured. If it falls short, pin additional complete files
+in another successor before execution; do not lower the target or relax filters.
+
+The loader requires the completed raw result, preserves every original policy/input and exact
+acquisition-unit configuration, and rejects reordered/partial file selections or overlapping
+output directories. Both views share the verified raw cache. Their text stocks overlap and must
+never be added. Further full-stock preparation can reuse configuration-identical completed
+acquisition units, then rerun combined exclusion.
+
+This plan is prepared but not launched. Schedule processing after the current FineMath/Cosmopedia
+exclusion passes to avoid adding another large concurrent HDD workload. No recipe, source-use
+approval or model-launch authority changes.

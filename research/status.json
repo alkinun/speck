@@ -90,13 +90,14 @@
     },
     {
       "id": "fineweb_edu_stock",
-      "state": "all_fourteen_raw_files_complete_verified_text_processing_not_launched",
+      "state": "raw_complete_e1s_three_file_successor_bound_not_launched",
       "plan": "research/flagship/fineweb_edu_stock_preparation_v1.json",
       "evidence": "results/data/fineweb-edu-shard-manifest-20260914.json",
       "intake": "results/data/fineweb-edu-raw-cache-intake-20260914.json",
       "launch": "results/systems/fineweb-edu-raw-launch-20260914.json",
-      "next": "All fourteen raw files passed full SHA-256, bytes, schema and physical row checks: 9,672,101 rows / 28,518,193,415 bytes. Completed result agrees with all durable unit receipts. Follow LOCAL_PREPARATION_SCHEDULE.md: stage source-text processing behind existing exclusion workloads and prioritize a complete E1S-sized view. Full web target remains 5.28B selected-Mistral tokens. Raw files are not eligible capacity; text filtering, exclusion, counting and token cache remain pending.",
-      "raw_result": "results/data/fineweb-edu-raw-acquisition-20260914.json"
+      "next": "Schedule the bound three-complete-file E1S tranche after current large exclusion passes. Verify unchanged full exclusion and 1.32B selected-Mistral headroom, then tokenize; actual yield is pending. Preserve the fourteen-file 5.28B full-stock requirement for later expansion and never add overlapping views. All raw inputs are already verified; no more download is needed for this tranche.",
+      "raw_result": "results/data/fineweb-edu-raw-acquisition-20260914.json",
+      "e1s_plan": "research/flagship/fineweb_edu_e1s_stock_preparation_v2.json"
     },
     {
       "id": "document_token_stocks",

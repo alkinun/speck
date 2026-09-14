@@ -83,3 +83,40 @@ def test_registered_web_stock_binds_complete_view_and_unit_policy():
     assert _unit_config(changed, plan["units"][0]) != first
     with pytest.raises(ValueError, match="only govern web"):
         _unit_config(plan, {**plan["units"][0], "category": "code"})
+
+
+def test_e1s_successor_preserves_complete_acquisition_units_and_full_stock():
+    original = web.load_fineweb_edu_preparation(
+        ROOT / "research/flagship/fineweb_edu_stock_preparation_v1.json"
+    )
+    successor = web.load_fineweb_edu_preparation(
+        ROOT / "research/flagship/fineweb_edu_e1s_stock_preparation_v2.json"
+    )
+    assert successor["target_reference_tokens"] == 1320000000
+    assert original["target_reference_tokens"] == 5280000000
+    assert successor["units"] == original["units"][:3]
+    for unit in successor["units"]:
+        assert _unit_config(successor, unit) == _unit_config(original, unit)
+
+
+@pytest.mark.parametrize(
+    "key,value,reason",
+    [
+        ("target_reference_tokens", 1100000000, "1.32B"),
+        ("selected_file_indices", [0, 2, 1], "three complete"),
+        ("selected_file_indices", [False, 1, 2], "three complete"),
+        ("domain_policy", "lowered_filter", "frozen policy"),
+        ("training_authority", True, "frozen policy"),
+        (
+            "output_directory",
+            "/mnt/speck-data/speck/fineweb-edu-stock-preparation-v1",
+            "separate outputs",
+        ),
+    ],
+)
+def test_e1s_successor_rejects_changed_scope_and_output_aliases(key, value, reason):
+    path = ROOT / "research/flagship/fineweb_edu_e1s_stock_preparation_v2.json"
+    plan = json.loads(path.read_text())
+    plan[key] = value
+    with pytest.raises(ValueError, match=reason):
+        web._load_e1s_successor(path, plan)

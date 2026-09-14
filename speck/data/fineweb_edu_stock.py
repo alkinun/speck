@@ -62,6 +62,8 @@ def load_fineweb_edu_preparation(path):
     path = Path(path).resolve()
     value = json.loads(path.read_text())
     version = value.get("format_version")
+    if type(version) is int and version == 2:
+        return _load_e1s_successor(path, value)
     if (
         value.get("format") != "speck_fineweb_edu_stock_preparation"
         or type(version) is not int
@@ -192,4 +194,68 @@ def load_fineweb_edu_preparation(path):
         "source_use": {**rights, "identity": base["rights_record"]},
         "raw_directory": str((path.parent / value["raw_directory"]).resolve()),
         "output_directory": str((path.parent / value["output_directory"]).resolve()),
+    }
+
+
+def _load_e1s_successor(path, value):
+    predecessor_id = _bound_identity(value["predecessor_plan"], path.parent)
+    predecessor_path = Path(predecessor_id["path"])
+    original = json.loads(predecessor_path.read_text())
+    if original.get("format_version") != 1:
+        raise ValueError("FineWeb-Edu E1S successor requires the original full-stock plan")
+    predecessor = load_fineweb_edu_preparation(predecessor_path)
+    changed = {
+        "format_version",
+        "target_reference_tokens",
+        "output_directory",
+        "raw_acquisition_directory",
+        "scope",
+    }
+    added = {"predecessor_plan", "predecessor_raw_result", "selected_file_indices", "milestone"}
+    if set(value) != set(original) | added or any(
+        value[key] != original[key] for key in set(original) - changed
+    ):
+        raise ValueError("FineWeb-Edu E1S successor changes a frozen policy or input")
+    indices = value["selected_file_indices"]
+    if (
+        value["milestone"] != "E1S_2B_web_background"
+        or type(value["target_reference_tokens"]) is not int
+        or value["target_reference_tokens"] != 1320000000
+        or indices != [0, 1, 2]
+        or any(type(index) is not int for index in indices)
+    ):
+        raise ValueError(
+            "FineWeb-Edu E1S successor must bind three complete files and 1.32B target"
+        )
+    outputs = {
+        key: (path.parent / value[key]).resolve()
+        for key in ("output_directory", "raw_acquisition_directory")
+    }
+    protected = [
+        Path(predecessor[key]).resolve()
+        for key in ("output_directory", "raw_acquisition_directory", "raw_directory")
+    ]
+    for destination in outputs.values():
+        if any(
+            destination.is_relative_to(old) or old.is_relative_to(destination) for old in protected
+        ):
+            raise ValueError("FineWeb-Edu E1S successor requires separate outputs")
+    a, b = outputs.values()
+    if a.is_relative_to(b) or b.is_relative_to(a):
+        raise ValueError("FineWeb-Edu E1S raw and text outputs must be separate")
+    receipt_id = _bound_identity(value["predecessor_raw_result"], path.parent)
+    receipt = json.loads(Path(receipt_id["path"]).read_text())
+    if (
+        receipt.get("format") != "speck_stock_raw_acquisition_result"
+        or receipt.get("status") != "complete_raw_verified_not_text_stock"
+        or receipt.get("training_authority") is not False
+        or receipt["plan"]["sha256"] != predecessor_id["sha256"]
+        or [row["unit"] for row in receipt["files"]] != predecessor["units"]
+    ):
+        raise ValueError("FineWeb-Edu E1S successor requires the completed original raw intake")
+    return {
+        **predecessor,
+        **value,
+        "units": [predecessor["units"][index] for index in indices],
+        **{key: str(destination) for key, destination in outputs.items()},
     }

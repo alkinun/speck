@@ -118,3 +118,8 @@ real fetching, content/security, interruption/replay and archival checks. The
 [metadata supply successor](stack_edu_metadata_acquisition_v2.json) is running separately.
 Code-stock production remains paused: the sample estimates still flag language-capacity
 deficits, particularly TypeScript, before full exclusion. No recipe changes are adopted.
+
+The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) is now bound for
+three complete downloaded files, targeting 1.32B tokens with unchanged filters. Processing is
+not launched; schedule it after current large exclusion passes. Preserve the fourteen-file
+5.28B full-stock requirement and reuse identical acquisitions on later expansion.

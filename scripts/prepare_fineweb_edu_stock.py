@@ -42,7 +42,7 @@ def main():
         category="web",
         result_format="speck_fineweb_edu_stock_preparation_result",
         resume=args.resume,
-        boundary="All fourteen complete sample/10BT files at the approved FineWeb-Edu revision, including the original qualified final shard. Frozen score>=3, valid released language confidence, independent English classification, size/prose/host/PII/security checks and full reference/candidate exclusion. Natural postfilter host distribution without the tokenizer-sampler 2MB host cap. Target 4.4B nominal plus 20% headroom measured with frozen Mistral, not the upstream 10BT label. Overlaps prior supply; no joint training-view or launch authority. Invocation timings include contention.",
+        boundary="Complete sample/10BT files and capacity target selected by the hash-bound FineWeb-Edu plan at the approved revision. Frozen score>=3, valid released language confidence, independent English classification, size/prose/host/PII/security checks and full reference/candidate exclusion. Natural postfilter host distribution without the tokenizer-sampler 2MB host cap. Capacity is measured with frozen Mistral, not the upstream 10BT label. Overlapping successor stocks are not additive; no joint training-view or launch authority. Invocation timings include contention.",
     )
 
 

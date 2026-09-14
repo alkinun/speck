@@ -94,6 +94,11 @@ loader's alignment/lookahead and interruption/resume on that dataset. Additional
 must preserve matched alternatives and blend proportions. This milestone does not authorize
 model training, open sealed evaluations or bypass GH200 qualification.
 
+The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) now binds three
+complete already-downloaded files and the 1.32B target, with identical per-document policy and
+unit configurations. Its actual yield is pending. Schedule this tranche after the current large
+exclusion passes; retain the original fourteen-file / 5.28B plan for later expansion.
+
 Then grow to the 350M / 8B E1W stocks and the complete existing first-wave capacity envelope.
 The program's 29 logical slots, 192-GPU-hour data budget and fixed 1.2B flagship are unchanged.
 Defer deeper post-training. The next estimate should name a concrete qualified input milestone;
