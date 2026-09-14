@@ -84,6 +84,15 @@
       "qualification": "results/systems/stack-edu-stock-prefix-20260914.json"
     },
     {
+      "id": "fineweb_edu_stock",
+      "state": "complete_view_pinned_original_shard_verified_raw_only_acquisition_launched",
+      "plan": "research/flagship/fineweb_edu_stock_preparation_v1.json",
+      "evidence": "results/data/fineweb-edu-shard-manifest-20260914.json",
+      "intake": "results/data/fineweb-edu-raw-cache-intake-20260914.json",
+      "launch": "results/systems/fineweb-edu-raw-launch-20260914.json",
+      "next": "Monitor raw-only acquisition at frozen 67b913c: fourteen complete sample/10BT files, 9,672,101 physical rows / 28,518,193,415 compressed bytes. Original final shard copied and verified; bounded real reader/web-policy prefix passed. Nice 19/idle I/O leaves existing source processing ahead. Verify all raw payload hashes/schema/rows before separately launching text preparation and full exclusion against 5.28B selected-Mistral headroom. Upstream 10BT label, raw bytes and prefix pass counts are not eligible stock capacity. Preserve natural postfilter host policy and qualified document filters; no new source-use or model-launch authority."
+    },
+    {
       "id": "document_token_stocks",
       "state": "math_l2_finewiki_and_expanded_pes2o_complete_verified_reopen",
       "evidence": "research/findings/2026-09-14-document-token-stock.md",

@@ -95,6 +95,11 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   [launched](../../results/systems/stack-edu-stock-launch-20260914.json). Verify actual eligible
   capacity with independent per-language headroom gates. Preserve
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
-- Continue FineWeb-Edu and remaining alternative-source stock, followed by joint per-arm assembly
+- FineWeb-Edu's [complete fourteen-file stock view](FINEWEB_EDU_STOCK.md) is pinned.
+  The original qualified final shard is preserved and verified in the new cache; its real reader/web
+  policy passed a bounded prefix check. [Raw-only acquisition](../../results/systems/fineweb-edu-raw-launch-20260914.json)
+  is running at low I/O priority. Verify full file hashes/schema/rows, then separately launch text
+  processing and exclusion against 5.28B selected-Mistral tokens. Raw files are not eligible supply.
+- Continue remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
   confirmations, D5 opening, model training, or deeper post-training work is launched here.
