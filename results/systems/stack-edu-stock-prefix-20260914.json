@@ -1,0 +1,235 @@
+{
+  "boundary": "First 512 C metadata rows only, with real SWH payloads, original filters, Gitleaks, selected tokenizer, checkpoint interruption/replay, and complete-unit reopen. No full reference/candidate exclusion; these counts are diagnostics, not source capacity. Clean/replay fetches share verified cached inputs, so no independent network throughput comparison.",
+  "clean": {
+    "elapsed_seconds": 2.6106234090002545,
+    "manifest": {
+      "candidate_target_pass": false,
+      "candidate_target_tokens": 120000000,
+      "category": "code",
+      "config_sha256": "73fca338bd1c99faa7839801417868fdb35f9ed54b8ebcd40c4c7b815af0e0df",
+      "declared_stop_row": 512,
+      "fetch_batches": [
+        {
+          "path": "fetch-batches/rows-0000000000-0000000256.json",
+          "sha256": "dc94f5f8b9261663db2255742b802ba97efe7b6720f0e2779d95eabb96786481"
+        },
+        {
+          "path": "fetch-batches/rows-0000000256-0000000512.json",
+          "sha256": "9a72ab21b2a0a503fc5c0f03d527e095335fc62de614b184696fe955466b371b"
+        }
+      ],
+      "format": "speck_acquisition_unit",
+      "format_version": 1,
+      "language": "C",
+      "output": {
+        "bytes": 40736,
+        "path": "records.jsonl",
+        "sha256": "6e99ce867acc3a990433649fbc109e753d32886d2549f98eb8a8b1e96f0bb0c3"
+      },
+      "pre_gitleaks_candidate_tokens": 8994,
+      "rejections": {
+        "code_non_English_prose": 1,
+        "content_length_metadata_mismatch": 2,
+        "gitleaks": 0,
+        "metadata_license": 124,
+        "metadata_score": 373
+      },
+      "retained_records": 12,
+      "retained_utf8_bytes": 26546,
+      "row_window": [
+        0,
+        512
+      ],
+      "security_report": {
+        "findings": 0,
+        "path": "security-1789402673286612110/stack_edu__C-records.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "status": "complete_not_training_data",
+      "training_authority": false,
+      "unit_id": "stack_edu__C",
+      "yielded_rows": 512
+    },
+    "raw": {
+      "bytes": 285895794,
+      "path": "/mnt/speck-data/speck/stack-edu-metadata-v1/raw/b2de90746e92d41af94c.parquet",
+      "sha256": "202e212704307ef2c91cb3c82638e52d0590d4ca78b6a8768a598d18f79f28fd"
+    },
+    "reused": false
+  },
+  "counter": {
+    "by_language": {
+      "C": {
+        "documents": 12,
+        "tokens": 8994
+      }
+    },
+    "documents": 12,
+    "largest_repositories": [
+      {
+        "byte_share": 0.18880433963685678,
+        "repository": "tobybell/c-vector",
+        "utf8_bytes": 5012
+      },
+      {
+        "byte_share": 0.18356814586001657,
+        "repository": "mark-huynh/Data-Structures",
+        "utf8_bytes": 4873
+      },
+      {
+        "byte_share": 0.14209297069238302,
+        "repository": "abphilip-vit/College1",
+        "utf8_bytes": 3772
+      },
+      {
+        "byte_share": 0.1251789346794244,
+        "repository": "arup-baral/DSA_LAB-SEM---4-",
+        "utf8_bytes": 3323
+      },
+      {
+        "byte_share": 0.10178557974836133,
+        "repository": "kirakirakira/tiny",
+        "utf8_bytes": 2702
+      },
+      {
+        "byte_share": 0.052211255933097264,
+        "repository": "MA806P/ComputerScienceNotes",
+        "utf8_bytes": 1386
+      },
+      {
+        "byte_share": 0.05164619905070444,
+        "repository": "arkrwn/Praktikum",
+        "utf8_bytes": 1371
+      },
+      {
+        "byte_share": 0.050892789874180666,
+        "repository": "ruanpienaar/exercism",
+        "utf8_bytes": 1351
+      },
+      {
+        "byte_share": 0.04188955021472161,
+        "repository": "MJ-McMillen/ExercisesInC",
+        "utf8_bytes": 1112
+      },
+      {
+        "byte_share": 0.023242673095758306,
+        "repository": "qeedquan/challenges",
+        "utf8_bytes": 617
+      },
+      {
+        "byte_share": 0.019663979507270397,
+        "repository": "woodrush/lambda-8cc",
+        "utf8_bytes": 522
+      },
+      {
+        "byte_share": 0.019023581707225193,
+        "repository": "wabilin/OJSols",
+        "utf8_bytes": 505
+      }
+    ],
+    "repositories": 12,
+    "repository_byte_hhi": 0.1265917712971016,
+    "scope": "Frozen-Mistral whole-document tokens including BOS/EOS, grouped by declared language after full exclusion. Repository diagnostics do not reweight the source. No final training view or independence claim.",
+    "tokenizer": {
+      "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+      "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    },
+    "tokens": 8994
+  },
+  "format": "speck_stack_edu_stock_prefix_qualification",
+  "format_version": 1,
+  "output_directory": "/mnt/speck-data/speck/stack-edu-stock-prefix-20260914",
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_edu_stock_preparation_v1.json",
+    "sha256": "4c0411dcde10733a24251680dca0e38ea268f5884c7751af47fa069eebfcf77c"
+  },
+  "repository_revision": "a01fa0243122de84386cc8e6f2d86ebbbee48900",
+  "resumed": {
+    "elapsed_seconds": 2.6165599070009193,
+    "manifest": {
+      "candidate_target_pass": false,
+      "candidate_target_tokens": 120000000,
+      "category": "code",
+      "config_sha256": "73fca338bd1c99faa7839801417868fdb35f9ed54b8ebcd40c4c7b815af0e0df",
+      "declared_stop_row": 512,
+      "fetch_batches": [
+        {
+          "path": "fetch-batches/rows-0000000000-0000000256.json",
+          "sha256": "dc94f5f8b9261663db2255742b802ba97efe7b6720f0e2779d95eabb96786481"
+        },
+        {
+          "path": "fetch-batches/rows-0000000256-0000000512.json",
+          "sha256": "9a72ab21b2a0a503fc5c0f03d527e095335fc62de614b184696fe955466b371b"
+        }
+      ],
+      "format": "speck_acquisition_unit",
+      "format_version": 1,
+      "language": "C",
+      "output": {
+        "bytes": 40736,
+        "path": "records.jsonl",
+        "sha256": "6e99ce867acc3a990433649fbc109e753d32886d2549f98eb8a8b1e96f0bb0c3"
+      },
+      "pre_gitleaks_candidate_tokens": 8994,
+      "rejections": {
+        "code_non_English_prose": 1,
+        "content_length_metadata_mismatch": 2,
+        "gitleaks": 0,
+        "metadata_license": 124,
+        "metadata_score": 373
+      },
+      "retained_records": 12,
+      "retained_utf8_bytes": 26546,
+      "row_window": [
+        0,
+        512
+      ],
+      "security_report": {
+        "findings": 0,
+        "path": "security-1789402670857699213/stack_edu__C-records.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "status": "complete_not_training_data",
+      "training_authority": false,
+      "unit_id": "stack_edu__C",
+      "yielded_rows": 512
+    },
+    "raw": {
+      "bytes": 285895794,
+      "path": "/mnt/speck-data/speck/stack-edu-metadata-v1/raw/b2de90746e92d41af94c.parquet",
+      "sha256": "202e212704307ef2c91cb3c82638e52d0590d4ca78b6a8768a598d18f79f28fd"
+    },
+    "reused": false
+  },
+  "status": "bounded_real_prefix_replay_pass",
+  "training_authority": false,
+  "unit": {
+    "candidate_target_tokens": 120000000,
+    "category": "code",
+    "expected_file_rows": 2924188,
+    "id": "stack_edu__C",
+    "language": "C",
+    "metadata_path": "/mnt/speck-data/speck/stack-edu-metadata-v1/raw/b2de90746e92d41af94c.parquet",
+    "raw": {
+      "bytes": 285895794,
+      "filename": "C/train-00000-of-00002.parquet",
+      "sha256": "202e212704307ef2c91cb3c82638e52d0590d4ca78b6a8768a598d18f79f28fd",
+      "source_id": "stack_edu"
+    },
+    "reader": {
+      "content_column": "blob_id",
+      "file_format": "parquet",
+      "files": null,
+      "filters": {},
+      "id": "stack_edu",
+      "language_column": null,
+      "metadata_columns": {},
+      "repo": "HuggingFaceTB/stack-edu",
+      "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+      "score_column": null,
+      "tree_path": "C"
+    },
+    "start_row": 0,
+    "stop_row": 512
+  }
+}
