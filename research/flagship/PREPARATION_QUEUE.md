@@ -92,8 +92,9 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   38,669,178 rows in eleven pinned files. The
   [real-prefix replay qualification](../../results/systems/stack-edu-stock-prefix-20260914.json)
   passed; [full code stock preparation](stack_edu_stock_preparation_v1.json) is
-  [launched](../../results/systems/stack-edu-stock-launch-20260914.json). Verify actual eligible
-  capacity with independent per-language headroom gates. Preserve
+  [intentionally paused](../../results/systems/stack-edu-intentional-pause-20260914.json).
+  The complete metadata census found language-supply deficits; qualify a more efficient fetch
+  successor and feasible per-language capacity before continuing the long run. Preserve
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
 - FineWeb-Edu's [complete fourteen-file stock view](FINEWEB_EDU_STOCK.md) is pinned.
   The original qualified final shard is preserved and verified in the new cache; its real reader/web
@@ -103,3 +104,11 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 - Continue remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
   confirmations, D5 opening, model training, or deeper post-training work is launched here.
+
+## Revised operational priority
+
+Follow [LOCAL_PREPARATION_SCHEDULE.md](LOCAL_PREPARATION_SCHEDULE.md): establish code-supply
+feasibility first, qualify a bounded eligible-request/NVMe fetch path, and assemble a complete
+E1S-sized dataset before maximal stocks. Existing recipes and source-use approvals remain in
+force until an explicit successor is adopted. FineMath/Cosmopedia/FineWeb-Edu continue; Stack-Edu
+is intentionally paused with its evidence intact.
