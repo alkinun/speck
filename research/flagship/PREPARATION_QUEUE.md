@@ -89,8 +89,11 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   [SWH access probes](../../results/data/stack-edu-access-review-20260914.json) pass, and its
   [complete metadata intake](stack_edu_metadata_acquisition_v1.json) is
   [complete and verified](../../results/data/stack-edu-metadata-acquisition-20260914.json):
-  38,669,178 rows in eleven pinned files. Qualify resumable SWH blob preparation, then acquire
-  and verify eligible capacity with independent per-language headroom gates. Preserve
+  38,669,178 rows in eleven pinned files. The
+  [real-prefix replay qualification](../../results/systems/stack-edu-stock-prefix-20260914.json)
+  passed; [full code stock preparation](stack_edu_stock_preparation_v1.json) is
+  [launched](../../results/systems/stack-edu-stock-launch-20260914.json). Verify actual eligible
+  capacity with independent per-language headroom gates. Preserve
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
 - Continue FineWeb-Edu and remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer

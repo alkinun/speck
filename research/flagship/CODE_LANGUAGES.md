@@ -67,7 +67,8 @@ uv run --no-sync python -m scripts.prepare_stack_edu_metadata \
 
 ## Stack-Edu code stock policy
 
-The stock builder retains SHA-1-verified, bounded gzip SWH payloads and checksummed request
+The [stock plan](stack_edu_stock_preparation_v1.json) binds the completed metadata result.
+Its builder retains SHA-1-verified, bounded gzip SWH payloads and checksummed request
 receipts. Verified 404 responses are explicit missing inputs; exhausted transient retries stop the
 unit without advancing its durable row cursor. Successful fetches remain reusable. One collector
 owns the cache; each batch dispatches each blob ID once. Metadata order, whole-document token
