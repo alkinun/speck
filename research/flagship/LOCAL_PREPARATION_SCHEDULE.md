@@ -7,8 +7,10 @@ Implementation/data-view changes below require explicit bound successors before 
 
 ## 1. Finish useful running work; pause the unqualified long code path
 
-FineWeb-Edu raw downloads, FineMath exclusion and Cosmopedia preparation continue. Verify each
-completed result and build its token cache only from hash-bound qualified text. Raw downloads
+FineWeb-Edu raw downloads are now complete: all fourteen file receipts passed and agree with
+the [published result](../../results/data/fineweb-edu-raw-acquisition-20260914.json). FineMath
+exclusion and Cosmopedia preparation continue. Verify each completed text result and build its
+token cache only from hash-bound qualified text. Raw downloads
 must not become eligible-capacity claims. Avoid starting another large exclusion pass on the
 shared HDD while current passes are active.
 

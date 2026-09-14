@@ -87,12 +87,13 @@
     },
     {
       "id": "fineweb_edu_stock",
-      "state": "complete_view_pinned_original_shard_verified_raw_only_acquisition_launched",
+      "state": "all_fourteen_raw_files_complete_verified_text_processing_not_launched",
       "plan": "research/flagship/fineweb_edu_stock_preparation_v1.json",
       "evidence": "results/data/fineweb-edu-shard-manifest-20260914.json",
       "intake": "results/data/fineweb-edu-raw-cache-intake-20260914.json",
       "launch": "results/systems/fineweb-edu-raw-launch-20260914.json",
-      "next": "Monitor raw-only acquisition at frozen 67b913c: fourteen complete sample/10BT files, 9,672,101 physical rows / 28,518,193,415 compressed bytes. Original final shard copied and verified; bounded real reader/web-policy prefix passed. Nice 19/idle I/O leaves existing source processing ahead. Verify all raw payload hashes/schema/rows before separately launching text preparation and full exclusion against 5.28B selected-Mistral headroom. Upstream 10BT label, raw bytes and prefix pass counts are not eligible stock capacity. Preserve natural postfilter host policy and qualified document filters; no new source-use or model-launch authority."
+      "next": "All fourteen raw files passed full SHA-256, bytes, schema and physical row checks: 9,672,101 rows / 28,518,193,415 bytes. Completed result agrees with all durable unit receipts. Follow LOCAL_PREPARATION_SCHEDULE.md: stage source-text processing behind existing exclusion workloads and prioritize a complete E1S-sized view. Full web target remains 5.28B selected-Mistral tokens. Raw files are not eligible capacity; text filtering, exclusion, counting and token cache remain pending.",
+      "raw_result": "results/data/fineweb-edu-raw-acquisition-20260914.json"
     },
     {
       "id": "document_token_stocks",

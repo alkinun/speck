@@ -98,8 +98,8 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
 - FineWeb-Edu's [complete fourteen-file stock view](FINEWEB_EDU_STOCK.md) is pinned.
   The original qualified final shard is preserved and verified in the new cache; its real reader/web
-  policy passed a bounded prefix check. [Raw-only acquisition](../../results/systems/fineweb-edu-raw-launch-20260914.json)
-  is running at low I/O priority. Verify full file hashes/schema/rows, then separately launch text
+  policy passed a bounded prefix check. [Raw-only acquisition](../../results/data/fineweb-edu-raw-acquisition-20260914.json)
+  completed with all fourteen files verified. Separately schedule text
   processing and exclusion against 5.28B selected-Mistral tokens. Raw files are not eligible supply.
 - Continue remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
@@ -110,5 +110,5 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 Follow [LOCAL_PREPARATION_SCHEDULE.md](LOCAL_PREPARATION_SCHEDULE.md): establish code-supply
 feasibility first, qualify a bounded eligible-request/NVMe fetch path, and assemble a complete
 E1S-sized dataset before maximal stocks. Existing recipes and source-use approvals remain in
-force until an explicit successor is adopted. FineMath/Cosmopedia/FineWeb-Edu continue; Stack-Edu
-is intentionally paused with its evidence intact.
+force until an explicit successor is adopted. FineMath/Cosmopedia continue; FineWeb-Edu raw
+acquisition is complete; Stack-Edu is intentionally paused with its evidence intact.

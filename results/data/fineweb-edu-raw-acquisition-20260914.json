@@ -1,0 +1,744 @@
+{
+  "boundary": "Complete pinned Parquet input hashes, schema and physical rows only. No per-document eligibility, reference exclusion, selected-tokenizer capacity or training authority. Invocation timings include concurrent local preparation.",
+  "bytes": 28518193415,
+  "files": [
+    {
+      "elapsed_seconds": 420.5517096140011,
+      "raw": {
+        "bytes": 2152819114,
+        "download_seconds": 418.656486124999,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/3c43aaafd287f392fcd3.parquet",
+        "sha256": "b1ba7b2ce4cb5ea6ef42dca40263eabb85f37700d01693a68e9b30a31d78e871",
+        "verification_seconds": 0.9472537980000197
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 726000,
+        "id": "fineweb_edu__file_0",
+        "raw": {
+          "bytes": 2152819114,
+          "filename": "sample/10BT/000_00000.parquet",
+          "sha256": "b1ba7b2ce4cb5ea6ef42dca40263eabb85f37700d01693a68e9b30a31d78e871",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 726000
+      },
+      "verification": {
+        "physical_rows": 726000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 451.4827147670003,
+      "raw": {
+        "bytes": 2152222432,
+        "download_seconds": 449.5619608569996,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/e885f768f8f73840c6de.parquet",
+        "sha256": "3fcf2dc69cd52503986276d3d2d26a8c356d0f2ea28a0de4fdbda8cf87755693",
+        "verification_seconds": 0.9638201439993281
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 729000,
+        "id": "fineweb_edu__file_1",
+        "raw": {
+          "bytes": 2152222432,
+          "filename": "sample/10BT/001_00000.parquet",
+          "sha256": "3fcf2dc69cd52503986276d3d2d26a8c356d0f2ea28a0de4fdbda8cf87755693",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 729000
+      },
+      "verification": {
+        "physical_rows": 729000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 452.4826159160002,
+      "raw": {
+        "bytes": 2151796315,
+        "download_seconds": 450.5608255170009,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/751ca19357789f075f3a.parquet",
+        "sha256": "547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7",
+        "verification_seconds": 0.9593389990004653
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 727000,
+        "id": "fineweb_edu__file_2",
+        "raw": {
+          "bytes": 2151796315,
+          "filename": "sample/10BT/002_00000.parquet",
+          "sha256": "547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 727000
+      },
+      "verification": {
+        "physical_rows": 727000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 700.4809445419996,
+      "raw": {
+        "bytes": 2152437524,
+        "download_seconds": 698.5501847100004,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/e23f503f06e765eb3245.parquet",
+        "sha256": "22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb",
+        "verification_seconds": 0.9644557659994462
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 734000,
+        "id": "fineweb_edu__file_3",
+        "raw": {
+          "bytes": 2152437524,
+          "filename": "sample/10BT/003_00000.parquet",
+          "sha256": "22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 734000
+      },
+      "verification": {
+        "physical_rows": 734000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 442.99701371300034,
+      "raw": {
+        "bytes": 2152338550,
+        "download_seconds": 441.0854122789988,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/8a243846e4ec50751954.parquet",
+        "sha256": "33557ddd87a07a4ae6fcaf7a4789c7b484e5cc0c273ca12a65b74200e6d8748b",
+        "verification_seconds": 0.9598982879997493
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 745000,
+        "id": "fineweb_edu__file_4",
+        "raw": {
+          "bytes": 2152338550,
+          "filename": "sample/10BT/004_00000.parquet",
+          "sha256": "33557ddd87a07a4ae6fcaf7a4789c7b484e5cc0c273ca12a65b74200e6d8748b",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 745000
+      },
+      "verification": {
+        "physical_rows": 745000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 465.61744401299984,
+      "raw": {
+        "bytes": 2152189947,
+        "download_seconds": 463.68043197299994,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/52a3b9f42fa951264a77.parquet",
+        "sha256": "e08d79927ecb377786572cd854817c748ceb8880878b1a0eb91abf8c85d505ea",
+        "verification_seconds": 0.9715641210004833
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 738000,
+        "id": "fineweb_edu__file_5",
+        "raw": {
+          "bytes": 2152189947,
+          "filename": "sample/10BT/005_00000.parquet",
+          "sha256": "e08d79927ecb377786572cd854817c748ceb8880878b1a0eb91abf8c85d505ea",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 738000
+      },
+      "verification": {
+        "physical_rows": 738000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 427.82610646399917,
+      "raw": {
+        "bytes": 2152689867,
+        "download_seconds": 425.89028746199983,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/9afb6bbdef0e65fdf249.parquet",
+        "sha256": "554fa2613c9261d6c9c396caab881de3160175794c6c3e1856bf28a0e9cb9b76",
+        "verification_seconds": 0.9694489020002948
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 732000,
+        "id": "fineweb_edu__file_6",
+        "raw": {
+          "bytes": 2152689867,
+          "filename": "sample/10BT/006_00000.parquet",
+          "sha256": "554fa2613c9261d6c9c396caab881de3160175794c6c3e1856bf28a0e9cb9b76",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 732000
+      },
+      "verification": {
+        "physical_rows": 732000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 488.08898361699903,
+      "raw": {
+        "bytes": 2150686637,
+        "download_seconds": 486.15118824599995,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/2de0dd8c6bce6cddd628.parquet",
+        "sha256": "4b7d1f697d4afff7f5f65cb7aa4d83acc6db716da4d46ea23399d0c50608c6e3",
+        "verification_seconds": 0.9638281589996041
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 725000,
+        "id": "fineweb_edu__file_7",
+        "raw": {
+          "bytes": 2150686637,
+          "filename": "sample/10BT/007_00000.parquet",
+          "sha256": "4b7d1f697d4afff7f5f65cb7aa4d83acc6db716da4d46ea23399d0c50608c6e3",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 725000
+      },
+      "verification": {
+        "physical_rows": 725000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 435.25945643999876,
+      "raw": {
+        "bytes": 2151274846,
+        "download_seconds": 433.29759932900015,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/77263cf6ff262b8cca7f.parquet",
+        "sha256": "a6d9dcc0c72ecd7c7f0173c2d06b3a4249a2ccaa94961469d1a522ca689bbf1a",
+        "verification_seconds": 0.9799703539993061
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 724000,
+        "id": "fineweb_edu__file_8",
+        "raw": {
+          "bytes": 2151274846,
+          "filename": "sample/10BT/008_00000.parquet",
+          "sha256": "a6d9dcc0c72ecd7c7f0173c2d06b3a4249a2ccaa94961469d1a522ca689bbf1a",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 724000
+      },
+      "verification": {
+        "physical_rows": 724000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 661.9241084920013,
+      "raw": {
+        "bytes": 2151913277,
+        "download_seconds": 659.9823013740006,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/a71368c344e3529ddd39.parquet",
+        "sha256": "f836cd3c70b95776699eb6c356b2dbf702816e25dcf39992f5c80a29029d23c3",
+        "verification_seconds": 0.969973385999765
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 713000,
+        "id": "fineweb_edu__file_9",
+        "raw": {
+          "bytes": 2151913277,
+          "filename": "sample/10BT/009_00000.parquet",
+          "sha256": "f836cd3c70b95776699eb6c356b2dbf702816e25dcf39992f5c80a29029d23c3",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 713000
+      },
+      "verification": {
+        "physical_rows": 713000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 435.12944522399994,
+      "raw": {
+        "bytes": 2152798864,
+        "download_seconds": 433.20190189799905,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/ba13961f5adb820e2c86.parquet",
+        "sha256": "e5a2eae25f057f0856a10bfae314c6ca8ea8bb08456d2131e9e89b2b8305e2f6",
+        "verification_seconds": 0.959508851999999
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 730000,
+        "id": "fineweb_edu__file_10",
+        "raw": {
+          "bytes": 2152798864,
+          "filename": "sample/10BT/010_00000.parquet",
+          "sha256": "e5a2eae25f057f0856a10bfae314c6ca8ea8bb08456d2131e9e89b2b8305e2f6",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 730000
+      },
+      "verification": {
+        "physical_rows": 730000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 450.60398085900306,
+      "raw": {
+        "bytes": 2152323681,
+        "download_seconds": 448.6500243190021,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/f57a6b99867ddae2857f.parquet",
+        "sha256": "db71cf0425bb3d1813a09f12ff1acd6dabdfb91a2e4f141960254ee5a7f036e7",
+        "verification_seconds": 0.9768696690007346
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 735000,
+        "id": "fineweb_edu__file_11",
+        "raw": {
+          "bytes": 2152323681,
+          "filename": "sample/10BT/011_00000.parquet",
+          "sha256": "db71cf0425bb3d1813a09f12ff1acd6dabdfb91a2e4f141960254ee5a7f036e7",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 735000
+      },
+      "verification": {
+        "physical_rows": 735000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 425.79928954999923,
+      "raw": {
+        "bytes": 2152069689,
+        "download_seconds": 423.82468496,
+        "downloaded_this_invocation": true,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/3fe847e0ae4f0f4110b5.parquet",
+        "sha256": "08b47a3e1c25161f796d2f8dbf99ccf60affdebdcea4910833d0d5783315551f",
+        "verification_seconds": 0.9768008300015936
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 732000,
+        "id": "fineweb_edu__file_12",
+        "raw": {
+          "bytes": 2152069689,
+          "filename": "sample/10BT/012_00000.parquet",
+          "sha256": "08b47a3e1c25161f796d2f8dbf99ccf60affdebdcea4910833d0d5783315551f",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 732000
+      },
+      "verification": {
+        "physical_rows": 732000,
+        "schema_pass": true
+      }
+    },
+    {
+      "elapsed_seconds": 12.998123366000073,
+      "raw": {
+        "bytes": 540632672,
+        "download_seconds": 1.3699900591745973e-07,
+        "downloaded_this_invocation": false,
+        "path": "/mnt/speck-data/speck/source-qualification/fineweb-edu-stock-raw-v1/1afcf4c110d0f3a66a71.parquet",
+        "sha256": "b393f51fefab26cd6f4c8f65707c1924f6666c4961a0ebebe04bb57f7ec832de",
+        "verification_seconds": 12.744402150001406
+      },
+      "unit": {
+        "category": "web",
+        "expected_file_rows": 182101,
+        "id": "fineweb_edu__file_13",
+        "raw": {
+          "bytes": 540632672,
+          "filename": "sample/10BT/013_00000.parquet",
+          "sha256": "b393f51fefab26cd6f4c8f65707c1924f6666c4961a0ebebe04bb57f7ec832de",
+          "source_id": "fineweb_edu"
+        },
+        "reader": {
+          "content_column": "text",
+          "file_format": "parquet",
+          "files": null,
+          "filters": {
+            "language": "en",
+            "min_score": 3
+          },
+          "id": "fineweb_edu",
+          "language_column": "language",
+          "metadata_columns": {
+            "crawl": "dump",
+            "file_path": "file_path",
+            "id": "id",
+            "language": "language",
+            "language_score": "language_score",
+            "quality_score": "int_score",
+            "url": "url"
+          },
+          "repo": "HuggingFaceFW/fineweb-edu",
+          "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+          "score_column": "int_score",
+          "tree_path": "sample/10BT"
+        },
+        "start_row": 0,
+        "stop_row": 182101
+      },
+      "verification": {
+        "physical_rows": 182101,
+        "schema_pass": true
+      }
+    }
+  ],
+  "format": "speck_stock_raw_acquisition_result",
+  "format_version": 1,
+  "physical_rows": 9672101,
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/fineweb_edu_stock_preparation_v1.json",
+    "sha256": "b70787ab25f1741cafbaafc7ade12b59dc69c4ab480a7371358b390776ea3dd9"
+  },
+  "repository_revision": "67b913cd8019ab4da6ef9237ad60377b63160118",
+  "status": "complete_raw_verified_not_text_stock",
+  "training_authority": false
+}
