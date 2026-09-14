@@ -324,7 +324,9 @@ def _source_identity(plan, result_path):
 
 
 def _raw_local_path(cache_dir, source, revision, filename):
-    suffix = ".parquet" if source["file_format"] == "parquet" else ".json.gz"
+    suffix = {"parquet": ".parquet", "jsonl_gzip": ".json.gz", "jsonl_zstd": ".zst"}[
+        source["file_format"]
+    ]
     key = hashlib.sha256(f"{source['repo']}\0{revision}\0{filename}".encode()).hexdigest()[:20]
     return Path(cache_dir) / f"{key}{suffix}"
 

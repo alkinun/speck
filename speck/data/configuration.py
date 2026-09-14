@@ -61,6 +61,7 @@ _LANGUAGE_DETECTORS = {"py3langid"}
 
 _SOURCE_FILE_SUFFIXES = {
     "jsonl_gzip": ".json.gz",
+    "jsonl_zstd": ".zst",
     "parquet": ".parquet",
 }
 

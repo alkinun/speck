@@ -2,6 +2,7 @@
 
 import gzip
 import hashlib
+import io
 import json
 import math
 import os
@@ -351,7 +352,7 @@ def iter_jsonl_gzip_documents(
     start_row=0,
     stop_row=None,
 ):
-    """Yield filtered rows from one downloaded gzip-compressed JSONL file."""
+    """Yield filtered rows from gzip or Zstandard JSONL, preserving physical row positions."""
 
     _row_window(start_row, stop_row)
     source = _validate_source(source)
@@ -360,7 +361,8 @@ def iter_jsonl_gzip_documents(
     cache_key = hashlib.sha256(f"{source['repo']}\0{revision}\0{filename}".encode()).hexdigest()[
         :20
     ]
-    local_path = cache_dir / f"{cache_key}.json.gz"
+    zstd = source["file_format"] == "jsonl_zstd"
+    local_path = cache_dir / (f"{cache_key}.zst" if zstd else f"{cache_key}.json.gz")
     if not local_path.exists():
         _download_file(
             _dataset_url(source["repo"], revision, filename),
@@ -374,7 +376,12 @@ def iter_jsonl_gzip_documents(
     if "min_score" in source["filters"]:
         required.add(source["score_column"])
     try:
-        with gzip.open(local_path, "rt", encoding="utf-8") as handle:
+        stream = (
+            io.TextIOWrapper(pa.input_stream(str(local_path), compression="zstd"), encoding="utf-8")
+            if zstd
+            else gzip.open(local_path, "rt", encoding="utf-8")
+        )
+        with stream as handle:
             for row_number, line in enumerate(handle):
                 if stop_row is not None and row_number >= stop_row:
                     return
@@ -425,11 +432,15 @@ def iter_jsonl_gzip_documents(
                 detector = source.get("language_detector")
                 if language and detector and _detect_language(content, detector) != language:
                     continue
-                metadata = {
-                    alias: _metadata_value(values[column])
-                    for alias, column in source["metadata_columns"].items()
-                    if column in values and values[column] is not None
-                }
+                metadata = {}
+                for alias, column in source["metadata_columns"].items():
+                    value = values.get(column)
+                    if zstd and column not in values:
+                        value = values
+                        for part in column.split("."):
+                            value = value.get(part) if isinstance(value, dict) else None
+                    if value is not None:
+                        metadata[alias] = _metadata_value(value)
                 yield {
                     "content": content,
                     "score": score,
@@ -449,6 +460,6 @@ def iter_source_file_documents(**kwargs):
     kwargs["source"] = source
     if source["file_format"] == "parquet":
         return iter_parquet_documents(**kwargs)
-    if source["file_format"] == "jsonl_gzip":
+    if source["file_format"] in ("jsonl_gzip", "jsonl_zstd"):
         return iter_jsonl_gzip_documents(**kwargs)
     raise ValueError(f"unsupported source file format: {source['file_format']}")
