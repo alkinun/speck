@@ -1,0 +1,36 @@
+{
+  "format": "speck_local_preparation_followups_launch",
+  "format_version": 1,
+  "recorded_at": "2026-09-14T18:51:24.981648+00:00",
+  "repository_revision": "e6f3814fe17c80f70eb816a00039695fad226713",
+  "checkout": "/tmp/opencode/speck-local-followups-20260914",
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/local_preparation_followups_v1.json",
+    "sha256": "3e5ece72099d0fb0d497b2b3f3042de061f374d99d63d294545063d9d4c6b383"
+  },
+  "service": "speck-local-followups-20260914.service",
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--unit=speck-local-followups-20260914",
+    "--description=Checked source token caches and E1S FineWeb followups",
+    "--property=WorkingDirectory=/tmp/opencode/speck-local-followups-20260914",
+    "--property=Nice=10",
+    "--property=StandardOutput=append:/mnt/speck-data/speck/local-preparation-followups-20260914.log",
+    "--property=StandardError=append:/mnt/speck-data/speck/local-preparation-followups-20260914.log",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONUNBUFFERED=1",
+    "/home/alkin/Desktop/speck/.venv/bin/python",
+    "-m",
+    "scripts.run_preparation_followups",
+    "/home/alkin/Desktop/speck/research/flagship/local_preparation_followups_v1.json"
+  ],
+  "log": "/mnt/speck-data/speck/local-preparation-followups-20260914.log",
+  "launch_stdout": "",
+  "launch_stderr": "Running as unit: speck-local-followups-20260914.service; invocation ID: 36d5307821d84295a2d2740188cae1e4\n",
+  "status": "launched_waiting_for_finemath_completion",
+  "training_authority": false,
+  "boundary": "Finite conditional local sequence: checked FineMath cache, checked Cosmopedia cache, then E1S FineWeb preparation/cache. Future hashes captured after completed execution; fails closed on errors/shortfalls. No source/recipe changes or model launch."
+}

@@ -90,12 +90,12 @@
     },
     {
       "id": "fineweb_edu_stock",
-      "state": "raw_complete_e1s_three_file_successor_bound_not_launched",
+      "state": "raw_complete_e1s_text_and_cache_conditionally_queued",
       "plan": "research/flagship/fineweb_edu_stock_preparation_v1.json",
       "evidence": "results/data/fineweb-edu-shard-manifest-20260914.json",
       "intake": "results/data/fineweb-edu-raw-cache-intake-20260914.json",
       "launch": "results/systems/fineweb-edu-raw-launch-20260914.json",
-      "next": "Schedule the bound three-complete-file E1S tranche after current large exclusion passes. Verify unchanged full exclusion and 1.32B selected-Mistral headroom, then tokenize; actual yield is pending. Preserve the fourteen-file 5.28B full-stock requirement for later expansion and never add overlapping views. All raw inputs are already verified; no more download is needed for this tranche.",
+      "next": "The bound local followup service will start the three-file E1S tranche after successful FineMath/Cosmopedia completion and checked caches. Actual 1.32B selected-Mistral headroom remains unmeasured. Preserve the full fourteen-file 5.28B requirement and overlapping-view accounting; do not launch a duplicate text/cache job.",
       "raw_result": "results/data/fineweb-edu-raw-acquisition-20260914.json",
       "e1s_plan": "research/flagship/fineweb_edu_e1s_stock_preparation_v2.json"
     },
@@ -219,6 +219,13 @@
       "plan": "research/flagship/stack_v3_metadata_census_v1.json",
       "evidence": "results/data/stack-v3-metadata-feasibility-20260914.json",
       "next": "Existing cached files do not establish E1S per-language token supply. Inspect efficient pinned acquisition of eligible code before larger transfers; preserve restricted-source file/repository license, vendor/fork/path and English-prose rules. No recipe change or usable-capacity claim."
+    },
+    {
+      "id": "local_preparation_followups",
+      "state": "frozen_sequence_running_waiting_for_finemath",
+      "plan": "research/flagship/local_preparation_followups_v1.json",
+      "launch": "results/systems/local-preparation-followups-launch-20260914.json",
+      "next": "The user service automatically validates successful FineMath/Cosmopedia text results and builds/reopens token caches, then prepares and tokenizes the bound E1S FineWeb tranche. Stops with preserved failure evidence on any shortfall or error. Review and commit published results; do not launch duplicate cache/text jobs or model training."
     }
   ]
 }

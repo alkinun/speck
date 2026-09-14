@@ -123,3 +123,9 @@ The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) is now 
 three complete downloaded files, targeting 1.32B tokens with unchanged filters. Processing is
 not launched; schedule it after current large exclusion passes. Preserve the fourteen-file
 5.28B full-stock requirement and reuse identical acquisitions on later expansion.
+
+The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
+[running in a frozen checkout](../../results/systems/local-preparation-followups-launch-20260914.json).
+It waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
+processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
+unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.

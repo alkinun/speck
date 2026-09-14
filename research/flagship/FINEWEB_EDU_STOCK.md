@@ -58,6 +58,7 @@ output directories. Both views share the verified raw cache. Their text stocks o
 never be added. Further full-stock preparation can reuse configuration-identical completed
 acquisition units, then rerun combined exclusion.
 
-This plan is prepared but not launched. Schedule processing after the current FineMath/Cosmopedia
-exclusion passes to avoid adding another large concurrent HDD workload. No recipe, source-use
+This text plan is conditionally queued in the [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md).
+It starts after successful FineMath/Cosmopedia completion and checked caches, avoiding another
+large concurrent HDD exclusion workload. No recipe, source-use
 approval or model-launch authority changes.

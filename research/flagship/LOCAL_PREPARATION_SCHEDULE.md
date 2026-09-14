@@ -113,3 +113,9 @@ verified archival copy. Content/security checks retained 788,811 tokens. These a
 observations, not full exclusion or source capacity. See the [finding](../findings/2026-09-14-ordered-code-fetch.md)
 for stratified estimates and limits. Finish expanded metadata verification/census and resolve
 per-language feasibility before production integration or an explicit recipe successor.
+
+The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
+[running in a frozen checkout](../../results/systems/local-preparation-followups-launch-20260914.json).
+It waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
+processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
+unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.
