@@ -1,0 +1,30 @@
+{
+  "format": "speck_stack_v3_metadata_census",
+  "format_version": 1,
+  "source_qualification": {
+    "path": "archive/pregrant-history/research/flagship/stack_v3_qualification.json",
+    "sha256": "8736031480e859ba6c469c7dd1bb8e74b5795603aac6589a329595bf265282ff"
+  },
+  "source_refinement": {
+    "path": "archive/pregrant-history/research/flagship/stack_v3_refinement_v2b.json",
+    "sha256": "48de866326eb06805e8733de342be7561dd72e88b00f601774ee05f2afe1b834"
+  },
+  "source_use": {
+    "path": "research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "code_languages": {
+    "path": "research/flagship/code_language_preparation_v1.json",
+    "sha256": "23bde4db406fd58c069eb9b21f24f8660ec99701ea0ac4fef27c2b142801cb04"
+  },
+  "raw_directory": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1",
+  "excluded_path_components": [
+    "node_modules",
+    "third-party",
+    "third_party",
+    "vendor"
+  ],
+  "repository_policy": "natural_postfilter_no_tokenizer_sample_repository_cap",
+  "scope": "Metadata supply census of the twelve original complete pinned files already downloaded. Preserve released fork/vendor exclusions, permissive detected-license allowlist and size/language rules. Apply the common explicit excluded path components. The historical 1MB-per-language-per-repository sampler cap is not a full-stock cap; no byte sampling quotas apply. Count eligible released content IDs and declared bytes per language across all twelve files before content/prose/security and reference/candidate exclusion. Released content IDs are not assumed plain SHA-1 of released text. This is an agent pre-results preparation policy, not a recipe change, source-use approval, usable token capacity, ancestry independence or model launch.",
+  "training_authority": false
+}
