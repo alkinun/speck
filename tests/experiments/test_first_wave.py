@@ -3,6 +3,7 @@ import json
 import pytest
 
 from speck.experiments.first_wave import compile_first_wave, load_first_wave
+from speck.experiments.first_wave_preparation import compile_preparation, load_preparation
 from speck.provenance.repository import repository_root
 
 ROOT = repository_root(__file__)
@@ -76,3 +77,26 @@ def test_ineligible_source_cannot_silently_enter_the_proposal(bad):
         proposal["incumbent"]["code"] = {"common_pile_python_peps": 1}
     with pytest.raises(ValueError, match="invalid/unapproved"):
         compile_first_wave(proposal, plan, registry, rights)
+
+
+def test_preparation_revision_adds_only_approved_math_and_preserves_run_budget():
+    result = load_preparation(PROPOSAL.with_name("first_wave_proposal_v2.json"))
+    assert result["recipes"]["math:ultradata_l2"]["math"] == {"ultradata_math_l2_preview": 1}
+    assert result["recipes"]["code:equal_blend"]["code"] == {
+        "stack_v3_train_permissive": 1,
+        "stack_edu": 1,
+    }
+    assert len(result["logical_slots"]) == 29
+    assert sum(result["budget_gpu_hours"].values()) == 192
+    assert result["source_capacity_total_tokens"] == 17_700_000_000
+    assert result["training_authority"] is False
+    assert all(
+        "ultradata_code_l2" not in row["source_id"] for row in result["source_capacity_envelope"]
+    )
+
+
+def test_math_replacement_without_additive_approval_is_rejected():
+    _, plan, registry, rights = inputs()
+    proposal = json.loads(PROPOSAL.with_name("first_wave_proposal_v2.json").read_text())
+    with pytest.raises(ValueError, match="invalid/unapproved"):
+        compile_preparation(proposal, plan, registry, rights)
