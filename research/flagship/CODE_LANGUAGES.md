@@ -64,3 +64,33 @@ uv run --no-sync python -m scripts.prepare_stack_edu_metadata \
   research/flagship/stack_edu_metadata_acquisition_v1.json \
   results/data/stack-edu-metadata-acquisition-20260914.json
 ```
+
+## Stack-Edu code stock policy
+
+The stock builder retains SHA-1-verified, bounded gzip SWH payloads and checksummed request
+receipts. Verified 404 responses are explicit missing inputs; exhausted transient retries stop the
+unit without advancing its durable row cursor. Successful fetches remain reusable. One collector
+owns the cache; each batch dispatches each blob ID once. Metadata order, whole-document token
+counts, and checkpoints determine the candidate prefix independently of network completion order.
+Interrupted output tails and scanner attempts remain preserved.
+
+Each language's candidate prefix targets twice its nominal requirement before Gitleaks and full
+reference/candidate exclusion. This fixed acquisition allowance is not measured eligible capacity.
+Final frozen-Mistral counts must satisfy every language's 20% headroom target as well as the total.
+Exhausting a complete metadata file or losing too much supply requires an explicit successor;
+no target, language weight, or filter changes automatically.
+
+The original score >=4, permissive detected-license allowlist, ASCII/UTF-8, size, secret and English
+prose rules remain. Insufficient prose retains the original syntax exemption. Declared blob length
+must equal verified content length; text must preserve the decoded UTF-8 bytes. Common document
+security, benchmark and Gitleaks checks also apply. Paths containing `node_modules`, `third-party`,
+`third_party`, or `vendor` as components are excluded. This is an explicit preparation path rule;
+it does not establish complete vendor/fork removal where upstream metadata is absent. Restricted
+Stack v3 preparation must also apply this common path rule alongside its released vendor/fork flags.
+
+The old 500KB per-language/repository tokenizer-sampler cap is not imposed on full stock. Natural
+postfilter repository proportions are retained and their byte concentration is reported. The
+choice is fixed before model outputs and does not assert an optimal code distribution. Released
+repository/path/license attribution and blob identities remain attached to each accepted document;
+missing commits and upstream ancestry remain disclosed. Source-use approval, these agent-selected
+preparation rules, and final training-launch authority remain distinct.

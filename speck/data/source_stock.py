@@ -106,8 +106,34 @@ def reuse_completed_units(plan, acquired, plan_directory):
     return receipts
 
 
+def capacity_gates(plan, capacity):
+    aggregate = capacity["tokens"] >= plan["target_reference_tokens"]
+    targets = plan.get("source_language_targets")
+    if targets is None:
+        return aggregate, None
+    counts = capacity["by_language"]
+    if set(counts) - set(targets) or any(
+        sum(row[key] for row in counts.values()) != capacity[key] for key in ("tokens", "documents")
+    ):
+        raise ValueError("language capacity counts do not conserve the source totals")
+    gates = {
+        language: counts.get(language, {}).get("tokens", 0) >= target
+        for language, target in targets.items()
+    }
+    return aggregate and all(gates.values()), gates
+
+
 def prepare_source_stock(
-    plan_path, report_path, *, loader, category, result_format, boundary, resume=False
+    plan_path,
+    report_path,
+    *,
+    loader,
+    category,
+    result_format,
+    boundary,
+    resume=False,
+    acquire=None,
+    counter=None,
 ):
     plan_path, report_path = Path(plan_path).resolve(), Path(report_path).resolve()
     root = repository_root(__file__)
@@ -163,7 +189,7 @@ def prepare_source_stock(
             acquired = json.loads(acquired_path.read_text())
         else:
             reused_units = reuse_completed_units(plan, output / "acquired", plan_path.parent)
-            acquired = prepare_units(plan, output / "acquired")
+            acquired = (acquire or prepare_units)(plan, output / "acquired")
             if reused_units:
                 acquired["reused_unit_inputs"] = reused_units
             durable_json(acquired_path, acquired)
@@ -232,12 +258,12 @@ def prepare_source_stock(
         if count_path.exists():
             capacity = json.loads(count_path.read_text())
         else:
-            capacity = count_reference_tokens(
+            capacity = (counter or count_reference_tokens)(
                 output / "excluded" / stock["path"], plan["reference_tokenizer"]
             )
             durable_json(count_path, capacity)
         peak = excluded["storage"]["observed_peak_wal_bytes"]
-        capacity_pass = capacity["tokens"] >= plan["target_reference_tokens"]
+        capacity_pass, language_gates = capacity_gates(plan, capacity)
         storage_pass = peak <= plan["maximum_observed_wal_bytes"]
         event(
             "capacity",
@@ -274,6 +300,9 @@ def prepare_source_stock(
             "boundary": boundary,
             "training_authority": False,
         }
+        if language_gates is not None:
+            result["language_capacity_target_pass"] = language_gates
+            result["source_language_targets"] = plan["source_language_targets"]
         if plan.get("report_domain_concentration") is True:
             result["domain_concentration"] = domain_concentration(
                 output / "excluded" / stock["path"]

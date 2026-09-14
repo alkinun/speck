@@ -173,6 +173,8 @@ def _unit_config(plan, unit):
         raise ValueError("FineMath metadata policy may only govern math units")
     if "cosmopedia_policy" in plan["base"] and unit["category"] != "synthetic":
         raise ValueError("Cosmopedia lineage policy may only govern synthetic units")
+    if "stack_edu_policy" in plan["base"] and unit["category"] != "code":
+        raise ValueError("Stack-Edu policy may only govern code units")
     config = {
         "unit": unit,
         "filtering": plan["base"]["filtering"],
@@ -186,6 +188,7 @@ def _unit_config(plan, unit):
         "science_filters",
         "finemath_filters",
         "cosmopedia_policy",
+        "stack_edu_policy",
     ):
         if key in plan["base"]:
             config[key] = plan["base"][key]

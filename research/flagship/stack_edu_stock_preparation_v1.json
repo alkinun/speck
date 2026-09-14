@@ -1,0 +1,52 @@
+{
+  "format": "speck_stack_edu_stock_preparation",
+  "format_version": 1,
+  "source_id": "stack_edu",
+  "base_plan": {
+    "path": "../../archive/pregrant-history/research/flagship/data_calibration_2b_v1/production_plan.json",
+    "sha256": "ed6678fd81758d2ffd3d990eff3f54e47eb5fe99187076e19e4ae6e9829ff1b4"
+  },
+  "source_qualification": {
+    "path": "../../archive/pregrant-history/research/flagship/stack_edu_sample_v1.json",
+    "sha256": "f4ae2b133683981b06328dc9218b6cfd216d9e2a02b4445e3168e0e0d1a39980"
+  },
+  "reference_parent": {
+    "path": "../../results/systems/firewall-integration-20260913.json",
+    "sha256": "07b9d890f36994ad47ec0d251d5c8d5c66c568475b3ec4248b0b58ebd112b061"
+  },
+  "sqlite_policy": {
+    "path": "sqlite_preparation_policy_v1.json",
+    "sha256": "6f24a1cb670296d2b889b91425a7c670224b7a96219ec666819adc0957409134"
+  },
+  "tokenizer_decision": {
+    "path": "tokenizer_decision_v1.json",
+    "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+  },
+  "checkpoint_rows": 256,
+  "target_reference_tokens": 1440000000,
+  "reference_tokenizer": {
+    "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "maximum_observed_wal_bytes": 2147483648,
+  "output_directory": "/mnt/speck-data/speck/stack-edu-stock-preparation-v1/work",
+  "scope": "Agent-selected preparation before model outputs under existing source-use approval. Eleven matched language pools from the first complete pinned metadata file per language. Physical-order whole-document candidate prefixes target twice nominal before security scan and full reference/candidate exclusion; final 20% headroom gates apply independently per language. Preserve qualified permissive file-license, encoding, score, size, English-prose and secret rules; reject declared length mismatch. Common vendor path guard is explicit but cannot replace absent vendor/fork ancestry. Do not apply the old tokenizer-sampler 500KB per-language/repository cap; retain and report natural postfilter repository concentration. Preserve raw blobs, missing/failed fetches, attribution, original row indices, checkpoints and interrupted tails. No target relaxation, language substitution, joint-view qualification or model-launch authority. Full metadata exhaustion with deficient capacity requires a pinned successor.",
+  "training_authority": false,
+  "candidate_nominal_multiplier": 2,
+  "repository_policy": "natural_postfilter_no_tokenizer_sample_repository_cap",
+  "excluded_path_components": [
+    "node_modules",
+    "third-party",
+    "third_party",
+    "vendor"
+  ],
+  "blob_cache": "/mnt/speck-data/speck/stack-edu-blobs-v1",
+  "metadata_result": {
+    "path": "../../results/data/stack-edu-metadata-acquisition-20260914.json",
+    "sha256": "921ae19f77a11cf8d8b451421f7d3c0b717c01bf48dc1bda8a975d822d1c4ad1"
+  },
+  "code_languages": {
+    "path": "code_language_preparation_v1.json",
+    "sha256": "23bde4db406fd58c069eb9b21f24f8660ec99701ea0ac4fef27c2b142801cb04"
+  }
+}
