@@ -1,0 +1,43 @@
+{
+  "format": "speck_source_metadata_launch",
+  "format_version": 1,
+  "recorded_at": "2026-09-14T15:58:32.325209+00:00",
+  "source_id": "stack_edu",
+  "repository_revision": "fa5303ed2151dffda08078ee210654c4d6b1d96d",
+  "checkout": "/tmp/opencode/speck-stack-edu-metadata-20260914",
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_edu_metadata_acquisition_v1.json",
+    "sha256": "e334c0be0dd76cabbedd23ffac81c48eb90729645f2a797d35c7645c3f6d995c"
+  },
+  "service": "speck-stack-edu-metadata-20260914.service",
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--unit=speck-stack-edu-metadata-20260914",
+    "--description=Stack-Edu eleven-language metadata acquisition",
+    "--property=WorkingDirectory=/tmp/opencode/speck-stack-edu-metadata-20260914",
+    "--property=Nice=10",
+    "--property=StandardOutput=append:/mnt/speck-data/speck/stack-edu-metadata-20260914.log",
+    "--property=StandardError=append:/mnt/speck-data/speck/stack-edu-metadata-20260914.log",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONUNBUFFERED=1",
+    "/home/alkin/Desktop/speck/.venv/bin/python",
+    "-m",
+    "scripts.prepare_stack_edu_metadata",
+    "/home/alkin/Desktop/speck/research/flagship/stack_edu_metadata_acquisition_v1.json",
+    "/home/alkin/Desktop/speck/results/data/stack-edu-metadata-acquisition-20260914.json"
+  ],
+  "log": "/mnt/speck-data/speck/stack-edu-metadata-20260914.log",
+  "result_path": "/home/alkin/Desktop/speck/results/data/stack-edu-metadata-acquisition-20260914.json",
+  "launch_stdout": "",
+  "launch_stderr": "Running as unit: speck-stack-edu-metadata-20260914.service; invocation ID: 4ff1235b6f6c4521b898fca6faa4cb95\n",
+  "status": "launched_complete_metadata_verification_pending",
+  "training_authority": false,
+  "concurrent_preparation": [
+    "speck-finemath-headroom-20260914.service",
+    "speck-cosmopedia-stock-20260914.service"
+  ],
+  "boundary": "Eleven complete pinned metadata shards, matched language identities, reuse of three verified local inputs. Each full file must pass SHA, row/schema and all-row language checks. This stage does not acquire code blobs, establish token supply, create token caches or authorize training. Costs include local contention. Frozen checkout retained for exact-revision recovery."
+}

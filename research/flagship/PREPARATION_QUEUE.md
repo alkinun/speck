@@ -87,7 +87,8 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 - Code's [matched eleven-language requirements](CODE_LANGUAGES.md) now bind identical token shares
   for each source, the equal blend and shared background. Stack-Edu's three earlier
   [SWH access probes](../../results/data/stack-edu-access-review-20260914.json) pass, and its
-  [complete metadata intake](stack_edu_metadata_acquisition_v1.json) is pinned. Verify those files,
+  [complete metadata intake](stack_edu_metadata_acquisition_v1.json) is
+  [running from a frozen checkout](../../results/systems/stack-edu-metadata-launch-20260914.json). Verify those files,
   then implement resumable metadata/blob stock preparation and per-language headroom. Preserve
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
 - Continue FineWeb-Edu and remaining alternative-source stock, followed by joint per-arm assembly

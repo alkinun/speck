@@ -72,11 +72,12 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "matched_language_targets_compiled_complete_metadata_intake_ready",
+      "state": "matched_language_targets_compiled_metadata_acquisition_launched",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "The explicit eleven-language prior applies to each code source, its blend share and shared background. Compiled nominal/headroom requirements preserve all 29 slots and unselected finalist recipes. Acquire and verify the eleven complete pinned Stack-Edu metadata files (three existing copies), then build resumable SWH blob acquisition with explicit source-specific policy and per-language eligibility/headroom checks. Metadata rows and the three earlier access probes are not code-token capacity.",
+      "next": "The eleven-language contract binds matched token shares per source/blend/background and 1.44B / 360M headroom targets for Stack-Edu / restricted Stack v3. Metadata acquisition runs from frozen fa5303ed2151dffda08078ee210654c4d6b1d96d: verify eleven complete files and all-row languages, then implement resumable SWH blob acquisition with explicit source-specific policy and per-language eligible capacity. Metadata is not code-token supply; finalist recipes remain unselected.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
-      "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json"
+      "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
+      "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json"
     },
     {
       "id": "document_token_stocks",
