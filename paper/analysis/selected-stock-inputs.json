@@ -1,0 +1,10 @@
+{
+  "format": "speck_paper_selected_stock_inputs",
+  "format_version": 1,
+  "inputs": {
+    "previous_assets": {"path": "paper/analysis/preparation-assets.json", "sha256": "584f9054a5c4fe866097c0bf57020dcd65ebf9f0a73990fc00cb78c0272e6503"},
+    "finewiki": {"path": "results/data/finewiki-stock-preparation-20260914.json", "sha256": "eaf6f07ecf7af306ff39eaa82b4b4fdf6f12000057b3997b6cd930aca698a97c"},
+    "decision": {"path": "research/flagship/tokenizer_decision_v1.json", "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"},
+    "math": {"path": "results/data/ultradata-math-l2-preparation-20260913.json", "sha256": "a5eee0380e9b3dee9e6f8e3baea3c73f39ecca1273d0312e627b374be9090c54"}
+  }
+}

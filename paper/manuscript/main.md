@@ -63,8 +63,14 @@ under one backbone and whole-document stream. It measures both fixed-document an
 endpoints. The custom screen winner is nominated by fixed-document equal-category macro BPB with
 predeclared tie rules. Full confirmation must fit the 30-local-GPU-hour ceiling after all-attempt
 accounting; exceeding that budget retains the declared Mistral fallback without opening D5.
-The final screen and accounting disposition must be inserted from the checked result before reporting
-a tokenizer selection.
+The completed three-arm screen nominates custom 32K among the custom endpoints. Fixed-document
+macro BPB is 1.095404 for Mistral, 1.103594 for custom 32K, and 1.109141 for custom 40,960;
+fixed-FLOP macro BPB is respectively 1.095404, 1.066491, and 1.107122. The active-duration lower
+bound on completed screens plus required confirmations is 32.8763 GPU-hours, above the 30-hour ceiling.
+The [checked decision](../../research/flagship/tokenizer_decision_v1.json) therefore freezes the
+declared Mistral fallback without opening D5. Historical all-attempt expenditure remains incomplete;
+missing costs cannot reverse this budget stop. The fallback does not establish replicated custom
+inferiority.
 
 ### 2.4 Evaluation and statistical reporting
 
@@ -95,7 +101,14 @@ The first two pinned natural Math L2-preview shards provide 200,000 physical row
 benchmark, security, repetition, and math-prose English checks retain 174,090 records. Full reference
 exclusion and candidate deduplication retain 169,058 documents containing 384,788,210 Mistral-reference
 tokens, including BOS/EOS. This exceeds the nominal 200M-token math-challenger component requirement.
-Reference counts are capacity evidence; final-tokenizer packing and per-arm membership remain open.
+The counting tokenizer is byte-identical to the selected Mistral base tokenizer, so these counts carry
+forward without retokenization. Packing and per-arm membership remain open.
+
+The complete first English FineWiki shard additionally retains 387,313 documents containing
+582,070,378 selected-tokenizer tokens, covering the proposed 400M-token reference background.
+Acquisition finished before interruption; the resumed exclusion passed artifact, reference-preservation,
+and positive-control checks. Its 283.77-second exclusion timing and 508.01 MiB observed WAL peak cover
+only the resumed invocation. Complete original-invocation timing and peak are unavailable.
 
 ![Measured natural Math L2 preparation funnel](../figures/math-preparation-funnel.svg)
 
@@ -104,7 +117,7 @@ funnel is not a six-category quality result. Machine-generated counts and costs 
 [`math-preparation-funnel.md`](../tables/math-preparation-funnel.md) and
 [`preparation-cost.md`](../tables/preparation-cost.md).
 
-The [source-capacity table](../tables/first-wave-source-capacity.md) compares proposed requirements
+The [source-capacity table](../tables/selected-stock-v1/first-wave-source-capacity.md) compares proposed requirements
 only with source-identical measured stock. It does not replace Stack-Edu with Common Pile's
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.

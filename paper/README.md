@@ -11,12 +11,19 @@ Regenerate and verify the checked preparation tables and SVG without optional pl
 ```bash
 python paper/analysis/preparation.py
 python paper/analysis/preparation.py --check
+python paper/analysis/selected_stock.py
+python paper/analysis/selected_stock.py --check
 ```
 
 The generator verifies [pinned inputs](analysis/preparation-inputs.json), reconciles preparation
 attrition, and records generator/input/output hashes in [the asset receipt](analysis/preparation-assets.json).
 Source-capacity comparisons match source IDs; unknown supply is explicit, and overlapping banks are
 not summed. Outputs currently describe preparation only.
+
+The additive [selected-stock table](tables/selected-stock-v1/first-wave-source-capacity.md) records
+the completed FineWiki stock and byte identity between the counting and frozen base tokenizers.
+Its [separate receipt](tables/selected-stock-v1/assets.json) preserves the earlier assets and updates
+the measurement without summing overlapping banks.
 
 Asset layout:
 
