@@ -72,12 +72,13 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "matched_language_targets_compiled_metadata_acquisition_launched",
+      "state": "eleven_language_metadata_complete_code_blob_builder_qualification_pending",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "The eleven-language contract binds matched token shares per source/blend/background and 1.44B / 360M headroom targets for Stack-Edu / restricted Stack v3. Metadata acquisition runs from frozen fa5303ed2151dffda08078ee210654c4d6b1d96d: verify eleven complete files and all-row languages, then implement resumable SWH blob acquisition with explicit source-specific policy and per-language eligible capacity. Metadata is not code-token supply; finalist recipes remain unselected.",
+      "next": "All eleven complete metadata files passed hashes, schema, row counts and every-row language checks: 38,669,178 rows / 3,880,693,478 bytes. Bind this completed receipt to resumable SWH stock preparation and qualify a real prefix before full acquisition. Matched targets remain 1.44B / 360M for Stack-Edu / restricted Stack v3; metadata is not eligible code-token supply.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
-      "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json"
+      "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
+      "metadata_evidence": "results/data/stack-edu-metadata-acquisition-20260914.json"
     },
     {
       "id": "document_token_stocks",

@@ -88,8 +88,9 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   for each source, the equal blend and shared background. Stack-Edu's three earlier
   [SWH access probes](../../results/data/stack-edu-access-review-20260914.json) pass, and its
   [complete metadata intake](stack_edu_metadata_acquisition_v1.json) is
-  [running from a frozen checkout](../../results/systems/stack-edu-metadata-launch-20260914.json). Verify those files,
-  then implement resumable metadata/blob stock preparation and per-language headroom. Preserve
+  [complete and verified](../../results/data/stack-edu-metadata-acquisition-20260914.json):
+  38,669,178 rows in eleven pinned files. Qualify resumable SWH blob preparation, then acquire
+  and verify eligible capacity with independent per-language headroom gates. Preserve
   source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
 - Continue FineWeb-Edu and remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
