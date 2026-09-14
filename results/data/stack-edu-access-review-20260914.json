@@ -1,0 +1,140 @@
+{
+  "boundary": "Three deliberately bounded access/identity probes, not statistical availability, full technical qualification, source capacity or training eligibility. Existing Stack-Edu sampler covers Rust/Go/SQL only. Full-stock preparation requires matched language allocations against restricted Stack v3, a resumable metadata/blob path, and source-specific security/prose/vendor policy plus joint exclusion; no language mix or replacement source is selected by this probe. Concurrent local preparation costs include contention.",
+  "elapsed_seconds": 10.108495458000107,
+  "format": "speck_stack_edu_access_review",
+  "format_version": 1,
+  "method": "Verify each of three complete local metadata files by SHA and row count; choose its first metadata row passing existing score/permissive-license/encoding/size gates; fetch one released SWH blob per language and verify SHA-1, declared length and strict encoding. No original source code is executed.",
+  "probes": [
+    {
+      "blob_id": "ea6f2d2b290899bebb21159217cfdf59f8c8008c",
+      "declared_bytes": 3121,
+      "declared_encoding_pass": true,
+      "decompressed_bytes": 3121,
+      "detected_licenses": [
+        "MIT"
+      ],
+      "elapsed_seconds": 5.716664122001021,
+      "file_path": "/linked_list/linked_list.rs",
+      "http_status": 200,
+      "int_score": 4,
+      "language": "Rust",
+      "length_matches": true,
+      "license_type": "permissive",
+      "metadata": {
+        "language": "Rust",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-rust.parquet",
+        "rows": 1135379,
+        "sha256": "38c9c6e658c273cbde075a51312fa53aec4a4f26c0bffcefe73da5c70e7061f6"
+      },
+      "payload": {
+        "bytes": 899,
+        "path": "/mnt/speck-data/speck/stack-edu-access-review-20260914/ea6f2d2b290899bebb21159217cfdf59f8c8008c.gz",
+        "sha256": "00e162af53f086cd99958a6d5c414b836895b41d9be79216f89bcad2bfb751a6"
+      },
+      "physical_row": 10,
+      "repository": "fnune/exercises",
+      "sha1_matches": true,
+      "sha256": "65f6235fe3f4ed1f6522770d2a7de67f673b9d2fafdc784b2636f38852e48752",
+      "status": "verified_blob_access",
+      "url": "https://softwareheritage.s3.amazonaws.com/content/ea6f2d2b290899bebb21159217cfdf59f8c8008c"
+    },
+    {
+      "blob_id": "0f31b332e257a9dcc8be0fde965a4fd41b723394",
+      "declared_bytes": 2588,
+      "declared_encoding_pass": true,
+      "decompressed_bytes": 2588,
+      "detected_licenses": [
+        "MIT"
+      ],
+      "elapsed_seconds": 5.614223132000916,
+      "file_path": "/errors/learn-error.go",
+      "http_status": 200,
+      "int_score": 4,
+      "language": "Go",
+      "length_matches": true,
+      "license_type": "permissive",
+      "metadata": {
+        "language": "Go",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-go.parquet",
+        "rows": 1917163,
+        "sha256": "f6111b5521738255206d446c7aad91822735013183267c00cc2a221b12cd8c3c"
+      },
+      "payload": {
+        "bytes": 864,
+        "path": "/mnt/speck-data/speck/stack-edu-access-review-20260914/0f31b332e257a9dcc8be0fde965a4fd41b723394.gz",
+        "sha256": "dcbf3d1b4d0354234ad2d66989d13ebb246a99edd12665a104a27326c212113b"
+      },
+      "physical_row": 24,
+      "repository": "adewoleadenigbagbe/Learning-go",
+      "sha1_matches": true,
+      "sha256": "a70be613191f1354b8410f0a04a3e03606462285351e5e039c2cb4e1ecab98cf",
+      "status": "verified_blob_access",
+      "url": "https://softwareheritage.s3.amazonaws.com/content/0f31b332e257a9dcc8be0fde965a4fd41b723394"
+    },
+    {
+      "blob_id": "990cd9595c458592f98272274bc6dc9fba6a2558",
+      "declared_bytes": 4248,
+      "declared_encoding_pass": true,
+      "decompressed_bytes": 4248,
+      "detected_licenses": [
+        "MIT"
+      ],
+      "elapsed_seconds": 5.7425372670004435,
+      "file_path": "/Mysql/MySQL\u57fa\u7840+\u9ad8\u7ea7\u7bc7-\u5c1a\u7845\u8c37\u5b66\u4e60\u7b14\u8bb0/\u968f\u5802\u8d44\u6599/code/day4/\u5b50\u67e5\u8be2\u7ecf\u5178\u6848\u4f8b.sql",
+      "http_status": 200,
+      "int_score": 4,
+      "language": "SQL",
+      "length_matches": true,
+      "license_type": "permissive",
+      "metadata": {
+        "language": "SQL",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-sql.parquet",
+        "rows": 2504412,
+        "sha256": "2f08a57e42620bdf6302fe083d48fe9954bff5c949ca3fe4fe3c2729087c141f"
+      },
+      "payload": {
+        "bytes": 1028,
+        "path": "/mnt/speck-data/speck/stack-edu-access-review-20260914/990cd9595c458592f98272274bc6dc9fba6a2558.gz",
+        "sha256": "1d456da058a1c6f987814efe4a1a6064bed86da749b1c20321fe3308d9d8d88e"
+      },
+      "physical_row": 25,
+      "repository": "jeremyke/PHPBlog",
+      "sha1_matches": true,
+      "sha256": "545dfe68fad0c5343473439d7c3465cd4a80159cd75f09fdabc8c9c0f58cf0cc",
+      "status": "verified_blob_access",
+      "url": "https://softwareheritage.s3.amazonaws.com/content/990cd9595c458592f98272274bc6dc9fba6a2558"
+    }
+  ],
+  "qualification": {
+    "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/stack_edu_sample_v1.json",
+    "sha256": "f4ae2b133683981b06328dc9218b6cfd216d9e2a02b4445e3168e0e0d1a39980"
+  },
+  "recorded_at": "2026-09-14T15:46:03.586134+00:00",
+  "source": {
+    "metadata_files": [
+      {
+        "language": "Rust",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-rust.parquet",
+        "rows": 1135379,
+        "sha256": "38c9c6e658c273cbde075a51312fa53aec4a4f26c0bffcefe73da5c70e7061f6"
+      },
+      {
+        "language": "Go",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-go.parquet",
+        "rows": 1917163,
+        "sha256": "f6111b5521738255206d446c7aad91822735013183267c00cc2a221b12cd8c3c"
+      },
+      {
+        "language": "SQL",
+        "path": "/mnt/speck-data/speck/source-downloads/code-overlap-v1/stack-edu-sql.parquet",
+        "rows": 2504412,
+        "sha256": "2f08a57e42620bdf6302fe083d48fe9954bff5c949ca3fe4fe3c2729087c141f"
+      }
+    ],
+    "official_url": "https://huggingface.co/datasets/HuggingFaceTB/stack-edu",
+    "repo": "HuggingFaceTB/stack-edu",
+    "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c"
+  },
+  "status": "bounded_blob_access_pass",
+  "training_authority": false
+}

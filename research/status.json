@@ -71,6 +71,12 @@
       "launch": "results/systems/cosmopedia-stock-launch-20260914.json"
     },
     {
+      "id": "stack_edu_stock",
+      "state": "bounded_three_language_metadata_and_swh_access_pass_full_stock_path_pending",
+      "evidence": "results/data/stack-edu-access-review-20260914.json",
+      "next": "Three complete prior metadata files passed their hashes/row counts; one eligible Rust/Go/SQL blob each passed HTTP retrieval, SHA-1, declared length and encoding. These are bounded access probes, not capacity or training qualification. Bind matched language allocations with restricted Stack v3, then implement resumable metadata/blob acquisition with file/repository license attribution and explicit code prose/vendor policy, followed by security and joint exclusion. The old three-language sampler cannot silently define the full comparison."
+    },
+    {
       "id": "document_token_stocks",
       "state": "math_l2_finewiki_and_expanded_pes2o_complete_verified_reopen",
       "evidence": "research/findings/2026-09-14-document-token-stock.md",

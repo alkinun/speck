@@ -99,3 +99,9 @@ Cosmopedia is [launched](../../results/systems/cosmopedia-stock-launch-20260914.
 revision `28092262aaa0e68640611b522e55dfd0b65588b3`, concurrently with FineMath preparation.
 The original first raw shard is preserved and [verified in the new cache](../../results/data/cosmopedia-raw-cache-intake-20260914.json).
 Both results and downstream token caches remain pending; local timings include contention.
+
+Stack-Edu [bounded access review](../../results/data/stack-edu-access-review-20260914.json)
+verified complete prior Rust/Go/SQL metadata identities and one eligible SWH blob per language
+(HTTP 200, SHA-1, length and encoding). This clears those three probes only. The next code-source
+step is a matched language contract against restricted Stack v3 and a resumable metadata/blob
+stock builder; the old three-language sampler is not a full-code comparison recipe.
