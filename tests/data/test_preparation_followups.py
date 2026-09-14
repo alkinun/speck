@@ -83,3 +83,23 @@ def test_failed_or_absent_jobs_never_advance(monkeypatch, state):
     )
     with pytest.raises(ValueError):
         wait_for_source("fixture", deadline=float("inf"))
+
+
+def test_collected_transient_service_uses_publication_without_invented_exit_status(
+    monkeypatch, tmp_path
+):
+    state = "LoadState=not-found\nActiveState=inactive\nResult=success\nExecMainStatus=0"
+    monkeypatch.setattr(
+        "scripts.run_preparation_followups.subprocess.check_output", lambda *a, **k: state
+    )
+    result_path = tmp_path / "result.json"
+    with pytest.raises(ValueError):
+        wait_for_source("fixture", deadline=float("inf"), result_path=result_path)
+    result_path.write_text("{}")
+    completion = wait_for_source("fixture", deadline=float("inf"), result_path=result_path)
+    assert completion["service_exit_status_available"] is False
+    assert "ExecMainStatus" not in completion
+    # File existence is only a handoff: the bound-result gate still rejects it.
+    step, _ = valid()
+    with pytest.raises(ValueError):
+        completed_stock(step, {})

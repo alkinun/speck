@@ -1,6 +1,6 @@
 # Finite local preparation followups
 
-The [bound sequence](local_preparation_followups_v1.json) implements the owner's request to keep
+The [bound sequence](local_preparation_followups_v2.json) implements the owner's request to keep
 preparation moving without another message. It is a local job sequence, not a model-launch receipt.
 
 1. Wait for the existing frozen FineMath successor to finish successfully. Require its exact plan
@@ -19,13 +19,20 @@ until the current FineMath and Cosmopedia services have completed.
 
 Each token plan binds the future result's actual SHA-256 after successful completion. Plans,
 progress, failures and the final sequence receipt are preserved under
-`/mnt/speck-data/speck/local-preparation-followups-20260914`. Result receipts are published under
+`/mnt/speck-data/speck/local-preparation-followups-v2-20260914`. Result receipts are published under
 `results/data/`. The script performs no Git mutation; completed evidence and maintained status
 are reviewed and committed separately. Token caches remain source-specific, not jointly eligible
 experimental datasets or final training manifests.
 
-A source failure, capacity/storage shortfall, missing service, changed identity, missing control,
+A source failure, capacity/storage shortfall, missing service without a completed publication, changed identity, missing control,
 unmounted data disk or 24-hour dependency-wait deadline stops dependent work with a failure record.
 There is no automatic retry into unfinished output or changed scientific contract. The deliberate
 Stack-Edu pause is unaffected; its supply/recipe review remains separate. No new source-use approval,
 model training, sealed-evaluation opening or post-training work is authorized by this sequence.
+
+The original waiting-only sequence was intentionally interrupted and preserved before any cache
+or dependent text job began. Its [replacement receipt](../../results/systems/local-followup-replacement-20260914.json)
+records the reason: systemd garbage-collects successful transient services. An unloaded service
+now hands its existing publication to the same strict execution/capacity/exclusion checks, and
+records that the service exit status is unavailable. A missing result or invalid publication
+still stops dependent work. The FineMath/Cosmopedia source services were not stopped.

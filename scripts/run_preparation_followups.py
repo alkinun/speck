@@ -35,7 +35,7 @@ def completed_stock(step, result):
         raise ValueError("completed stock lacks its exact/near positive controls")
 
 
-def wait_for_source(service, *, deadline):
+def wait_for_source(service, *, deadline, result_path=None):
     while True:
         values = subprocess.check_output(
             [
@@ -57,11 +57,27 @@ def wait_for_source(service, *, deadline):
             text=True,
         )
         state = dict(line.split("=", 1) for line in values.splitlines() if "=" in line)
+        if (
+            state.get("LoadState") == "not-found"
+            and state.get("ActiveState") == "inactive"
+            and result_path is not None
+            and Path(result_path).is_file()
+        ):
+            # systemd garbage-collects successful transient services. Their default
+            # exit fields no longer prove anything; the caller must validate the
+            # complete hash-bound publication before doing dependent work.
+            return {
+                "LoadState": "not-found",
+                "ActiveState": "inactive",
+                "completion_basis": "published_result_requires_bound_validation",
+                "service_exit_status_available": False,
+            }
         if state.get("LoadState") != "loaded":
             raise ValueError(f"required preparation service is not loaded: {service}")
         if state["ActiveState"] == "inactive":
             if state.get("Result") != "success" or state.get("ExecMainStatus") != "0":
                 raise ValueError(f"preparation service did not finish successfully: {service}")
+            state["service_exit_status_available"] = True
             return state
         if state["ActiveState"] not in ("active", "activating", "deactivating"):
             raise ValueError(f"preparation service failed: {service}")
@@ -152,7 +168,9 @@ def main():
     try:
         for step in spec["token_stocks"]:
             print(f"waiting for completed source: {step['source_id']}", flush=True)
-            service_state = wait_for_source(step["service"], deadline=deadline)
+            service_state = wait_for_source(
+                step["service"], deadline=deadline, result_path=step["result_path"]
+            )
             build_tokens(step, working, tokenizer_id, revision)
             done.append(
                 {
