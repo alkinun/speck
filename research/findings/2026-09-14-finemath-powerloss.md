@@ -38,3 +38,8 @@ Final publication, exclusion controls, output/index hashes and usable-token capa
 after resume. The lost original exclusion timing/WAL peak must remain explicit; resumed timings are
 not complete original-run timings. This is evidence from one unplanned outage, not a controlled
 power-loss experiment or a general guarantee about future storage failures.
+
+Follow-up: the initial resume exposed an [unindexed cascade-cleanup bottleneck](2026-09-14-indexed-recovery.md).
+An explicitly recorded physical-index migration removed that scan, and the new indexed service has
+advanced beyond checkpoint 72. Its migration is part of the recovery lineage; final publication is
+still required before reporting complete recovery success.

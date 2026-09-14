@@ -18,6 +18,7 @@ from speck.data.firewall_integration import (
     run_exclusion,
 )
 from speck.data.preparation_policy import load_preparation_policy
+from speck.data.recovery_index import recovery_index_policy
 from speck.data.sqlite_wal import wal_policy
 from speck.provenance.io import durable_json, file_sha256
 from speck.provenance.repository import repository_root
@@ -206,10 +207,15 @@ def prepare_source_stock(
         if excluded_path.exists():
             excluded = json.loads(excluded_path.read_text())
         else:
-            timing, storage = {}, {}
-            with wal_policy(policy["sqlite"]["wal_autocheckpoint_pages"], storage):
+            timing, storage, recovery_indexes = {}, {}, []
+            with (
+                wal_policy(policy["sqlite"]["wal_autocheckpoint_pages"], storage),
+                recovery_index_policy(recovery_indexes),
+            ):
                 excluded = run_exclusion(config, timing=timing)
-            excluded.update({"timing": timing, "storage": storage})
+            excluded.update(
+                {"timing": timing, "storage": storage, "recovery_indexes": recovery_indexes}
+            )
             durable_json(excluded_path, excluded)
         event(
             "excluded",

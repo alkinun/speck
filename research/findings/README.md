@@ -28,6 +28,7 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | First peS2o stock | [Complete qualified science shard](2026-09-14-pes2o-stock.md) retains 403.56M selected-tokenizer tokens; nominal 400M capacity passes with only 0.89% headroom, requiring additional supply before joint-view readiness. |
 | peS2o headroom | [Combined two-shard stock](2026-09-14-pes2o-headroom.md) reaches 820.10M selected-tokenizer tokens and passes the 480M preparation target; the first bank is a verified included prefix, not extra supply. |
 | FineMath outage recovery | [Post-outage snapshot and frozen resume](2026-09-14-finemath-powerloss.md) verify all eight acquisition units and preserve checkpoint 72 before resuming exclusion; final capacity and recovery outcome remain pending. |
+| Indexed checkpoint recovery | [Cascade lookup repair](2026-09-14-indexed-recovery.md) replaces repeated full band-table scans with a doc-sequence index, preserves logical rows, and restores checkpoint progress after the outage. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication
