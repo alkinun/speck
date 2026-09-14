@@ -1,0 +1,18 @@
+{
+  "documents": 113232,
+  "elapsed_seconds": 135.79367161200207,
+  "format": "speck_stock_tokenization_result",
+  "format_version": 1,
+  "manifest": {
+    "path": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/manifest.json",
+    "sha256": "bd5fae28d15014a67624d583785ec92e09f88a0a13a84de306b069e4869e77df"
+  },
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/pes2o_token_stock_v2.json",
+    "sha256": "400122df6859c7e95d903c12d378cfc4c83db4c7b603f39e72286cdd4c3f0d29"
+  },
+  "repository_revision": "255a12741cb28ac8529cac27565b0178649555c7",
+  "reused": false,
+  "tokens": 820097493,
+  "training_authority": false
+}

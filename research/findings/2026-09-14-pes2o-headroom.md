@@ -33,3 +33,9 @@ and unchanged source license/English/OCR criteria remain bound.
 The [expanded token-cache plan](../flagship/pes2o_token_stock_v2.json) prepares a new immutable
 document-indexed cache. Joint experiment-background eligibility and exact loader/launch manifests
 remain pending, even though source-specific preparation headroom now passes.
+
+The [expanded token cache](../../results/data/pes2o-token-stock-v2-20260914.json) is complete at the
+same 820,097,493 tokens and 113,232 documents. Document probes, all shard/index hashes and a separate
+complete reopen pass. Every earlier token shard, including the partial last shard, reproduces the
+corresponding prefix of the expanded token stream. Cache construction/verification took 135.79 seconds
+inside the packing function, excluding plan loading; this is not an isolated hardware benchmark.

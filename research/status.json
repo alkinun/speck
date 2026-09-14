@@ -48,10 +48,10 @@
     },
     {
       "id": "science_stock",
-      "state": "combined_two_shard_stock_verified_headroom_target_met",
+      "state": "combined_stock_and_token_cache_verified_headroom_target_met",
       "evidence": "results/data/pes2o-stock-headroom-20260914.json",
       "headroom_plan": "research/flagship/pes2o_stock_preparation_v2.json",
-      "next": "Build the expanded document-indexed token cache, then bind joint background eligibility. The combined 820.10M-token bank passes the 480M target and includes the earlier 403.56M bank as a verified prefix; do not sum them."
+      "next": "Bind joint background eligibility using the verified expanded token cache. The combined 820.10M-token bank passes the 480M target; both text and token streams include the earlier 403.56M bank as verified prefixes."
     },
     {
       "id": "finemath_stock",
@@ -61,9 +61,9 @@
     },
     {
       "id": "document_token_stocks",
-      "state": "math_l2_finewiki_and_first_pes2o_complete_verified_reopen",
+      "state": "math_l2_finewiki_and_expanded_pes2o_complete_verified_reopen",
       "evidence": "research/findings/2026-09-14-document-token-stock.md",
-      "next": "Use immutable whole-document token spans during joint experiment-view assembly. Math L2, FineWiki and the first peS2o stock are cached; account for the latter as a subset of expanded science supply, not an additional bank."
+      "next": "Use immutable whole-document token spans during joint experiment-view assembly. Math L2, FineWiki and expanded peS2o stock are cached and verified. Keep the first peS2o cache as a subset, not additional supply."
     },
     {
       "id": "data_operations",

@@ -36,5 +36,9 @@ The [Math L2 result](../../results/data/math-l2-token-stock-20260914.json) and
 readback. The [finding](../findings/2026-09-14-document-token-stock.md) records counts and scope.
 
 The [first peS2o cache](../../results/data/pes2o-token-stock-20260914.json) also passed document-span
-readback and complete reopen at 403,558,463 tokens. Science headroom remains under expansion; this
-cache is a retained subset, not extra unique supply to add to the forthcoming combined bank.
+readback and complete reopen at 403,558,463 tokens. This cache is retained as a subset of the expanded
+bank below, not additional unique supply.
+
+The [expanded peS2o cache](../../results/data/pes2o-token-stock-v2-20260914.json) now covers the entire
+verified 820.10M-token combined bank. Reopen and exact old-cache-prefix checks pass. Use this expanded
+stock for future science membership selection; preserve the first cache as its recorded subset.
