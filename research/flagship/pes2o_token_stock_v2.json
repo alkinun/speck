@@ -1,0 +1,11 @@
+{
+  "format": "speck_stock_tokenization_plan",
+  "format_version": 1,
+  "source_id": "pes2o_v3",
+  "category": "science",
+  "stock_result": {"path": "../../results/data/pes2o-stock-headroom-20260914.json", "sha256": "39af8beeba5c1ae058046e2ae4dcefd6fee39469bbfb81760d3719ac745fdd5c"},
+  "tokenizer_decision": {"path": "tokenizer_decision_v1.json", "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"},
+  "shard_tokens": 100000000,
+  "output_directory": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3",
+  "training_authority": false
+}

@@ -26,6 +26,7 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | FineWiki stock | [Complete first-shard preparation](2026-09-14-finewiki-stock.md) retains 582.07M selected-tokenizer tokens and covers the proposed 400M reference background; joint-view eligibility and packing remain open. |
 | Document token stocks | [Math L2 and FineWiki caches](2026-09-14-document-token-stock.md) preserve whole-document span indices, original selected-tokenizer counts, and verified shard/index hashes for subsequent experiment-view assembly. |
 | First peS2o stock | [Complete qualified science shard](2026-09-14-pes2o-stock.md) retains 403.56M selected-tokenizer tokens; nominal 400M capacity passes with only 0.89% headroom, requiring additional supply before joint-view readiness. |
+| peS2o headroom | [Combined two-shard stock](2026-09-14-pes2o-headroom.md) reaches 820.10M selected-tokenizer tokens and passes the 480M preparation target; the first bank is a verified included prefix, not extra supply. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

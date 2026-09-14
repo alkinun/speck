@@ -65,3 +65,8 @@ uv run --no-sync python -m scripts.prepare_science_stock \
 Reuse verification/copy time is reported separately from the acquisition loop; the original first-
 shard filtering cost is not charged again as new work. Exact policies, source approval, and tokenizer
 remain bound. Completed first-shard token stock is retained while larger joint eligibility is measured.
+
+The [completed headroom result](../../results/data/pes2o-stock-headroom-20260914.json) retains
+820,097,493 tokens and passes the 480M target. The original retained bank is a verified exact prefix
+of this combined bank. See the [finding](../findings/2026-09-14-pes2o-headroom.md) for verification and
+measurement boundaries.
