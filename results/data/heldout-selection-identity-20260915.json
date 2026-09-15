@@ -1,0 +1,111 @@
+{
+  "all_ordered_category_commitments_reproduced": true,
+  "all_selection_text_and_normalized_hashes_checked": true,
+  "audit_payloads_read": false,
+  "authorization": {
+    "authorized": true,
+    "destinations": [
+      "selection_heldout"
+    ],
+    "manifest_sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4",
+    "role": "data_selection",
+    "training_authority": false
+  },
+  "boundary": "Materialize only the real selection-heldout identity ledger and source-input row locators from all six existing firewall selection outputs after data_selection authorization. Reproduce document counts, exact UTF-8 bytes, text/normalized hashes and ordered commitment hashes without selecting or dropping documents. Preserve original source/document identity and production row order. No audit payloads are read or opened. This reusable ledger is one component of the two-view bundle; independent extraction, aggregate training identity, sealed commitment ledgers, leakage checks and model/backend/analysis bindings remain pending. No model ranking, launch, new source use or evaluation authority is granted.",
+  "categories": [
+    {
+      "category": "web",
+      "content_commitment_sha256": "6930139714bc05018a2972f3b5d877f4449f3de2a7d6699b0b798cb04b3d3ab8",
+      "documents": 4860,
+      "documents_by_source": {
+        "fineweb_edu": 2164,
+        "ultrafineweb_en_v1_4": 2696
+      },
+      "utf8_bytes": 20019875
+    },
+    {
+      "category": "code",
+      "content_commitment_sha256": "f57d05abd9d46b71ef64cfc76280b3bf2218e9adca41eae780bf7357bb1a52ef",
+      "documents": 4452,
+      "documents_by_source": {
+        "common_pile_stackv2_edu": 1944,
+        "stack_v3_train_permissive": 2508
+      },
+      "utf8_bytes": 20019818
+    },
+    {
+      "category": "math",
+      "content_commitment_sha256": "2f4c25857ffd552eb41ca2fa627ace46e83ffca7045ebd6e7e491176fe118594",
+      "documents": 5878,
+      "documents_by_source": {
+        "finemath_4plus": 2108,
+        "megamath_web_pro": 3770
+      },
+      "utf8_bytes": 20017185
+    },
+    {
+      "category": "synthetic",
+      "content_commitment_sha256": "92a484ad920369990aa7e734b40b885d222b487bee47c882176ac37469f62bb6",
+      "documents": 6554,
+      "documents_by_source": {
+        "cosmopedia_v2": 2660,
+        "ultrafineweb_l3_multi_style": 3894
+      },
+      "utf8_bytes": 20002559
+    },
+    {
+      "category": "science",
+      "content_commitment_sha256": "5106802dcc109dfaae6a1c2426473f79d4fa9c8b536fd05d8fcb637ec3c376b3",
+      "documents": 613,
+      "documents_by_source": {
+        "common_pile_pubmed": 273,
+        "pes2o_v3": 340
+      },
+      "utf8_bytes": 20056841
+    },
+    {
+      "category": "reference",
+      "content_commitment_sha256": "d1c6e0a1cda1756ffec8d0aea07a1427eaf7797730f6e7350f31cc85b2c512cc",
+      "documents": 6247,
+      "documents_by_source": {
+        "common_pile_stackexchange": 3416,
+        "finewiki_en": 2831
+      },
+      "utf8_bytes": 20009490
+    }
+  ],
+  "documents": 28604,
+  "format": "speck_selection_identity_preparation_result",
+  "format_version": 1,
+  "inputs": {
+    "firewall_manifest": {
+      "path": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+      "sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+    },
+    "firewall_plan": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/firewall_plan_v4.json",
+      "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648"
+    },
+    "heldout_plan": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/heldout_evaluation_plan_v1.json",
+      "sha256": "7d91244932661084e09a29546357526116ce0933ac20ad5592c5dae9a54090e9"
+    }
+  },
+  "ledger": {
+    "bytes": 10668453,
+    "path": "/mnt/speck-data/speck/heldout-selection-identity-v1/selection_heldout.jsonl",
+    "sha256": "e2a704a51eb1829d4d5e1467a294b6f7e0e794c1ee1a2a23666e72ef29595824"
+  },
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/heldout_selection_identity_v1.json",
+    "sha256": "f68a05790ceacd19f8f706a7cef898515615e753f74a2370f920b48d89c85f9c"
+  },
+  "repository_revision": "f67629c4bfa811c555c9292e89c13dbdd5547b5f",
+  "source_locators": {
+    "bytes": 17233903,
+    "path": "/mnt/speck-data/speck/heldout-selection-identity-v1/source-locators.jsonl",
+    "sha256": "8fefae7a1ec85701aba85b58d9a0ea4e0efba6a96a5ef2692da532fea075433a"
+  },
+  "status": "real_selection_ledger_materialized_two_view_bundle_incomplete",
+  "training_authority": false
+}

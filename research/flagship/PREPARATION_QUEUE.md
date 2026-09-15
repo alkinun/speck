@@ -149,3 +149,9 @@ bytes: the best inspected TypeScript and JavaScript metadata-byte ratios. The
 complete-file SHA, prior metadata parity and independent range/raw reopen all passed. This is delegated acquisition
 scheduling, not a source-use, language or background change. Next measure content/security and
 exclusion yield on complete source inputs. Do not sum old/new banks as globally unique supply.
+
+The [real selection identity ledger](../findings/2026-09-15-selection-identity-ledger.md) is
+complete for all 28,604 production selection documents, with verified reconstruction locators
+and unchanged category commitments. Independent extraction, aggregate training identities,
+audit commitment ledgers, additional leakage checks and score/analysis bindings remain pending.
+No sealed audit payload was opened.

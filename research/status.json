@@ -101,12 +101,12 @@
     },
     {
       "id": "fineweb_edu_stock",
-      "state": "raw_complete_e1s_text_running",
+      "state": "all_three_e1s_acquisition_units_complete_full_exclusion_running",
       "plan": "research/flagship/fineweb_edu_stock_preparation_v1.json",
       "evidence": "results/data/fineweb-edu-shard-manifest-20260914.json",
       "intake": "results/data/fineweb-edu-raw-cache-intake-20260914.json",
       "launch": "results/systems/fineweb-edu-raw-launch-20260914.json",
-      "next": "The frozen local followup service started the three-file E1S text tranche after FineMath/Cosmopedia caches passed. Actual 1.32B selected-Mistral headroom remains unmeasured. The same service will build/reopen its cache only on success. Preserve the fourteen-file 5.28B requirement and overlapping-view accounting; do not launch a duplicate job.",
+      "next": "All three E1S acquisition units completed with 2123023 retained candidate documents. The original reference prefix was restored and full exclusion is running. Actual 1.32B Mistral headroom remains unmeasured; the finite queue will tokenize/reopen only on success. Preserve the fourteen-file 5.28B requirement and overlapping-view accounting; do not launch a duplicate job.",
       "raw_result": "results/data/fineweb-edu-raw-acquisition-20260914.json",
       "e1s_plan": "research/flagship/fineweb_edu_e1s_stock_preparation_v2.json"
     },
@@ -250,6 +250,15 @@
       "launch": "results/systems/local-preparation-followups-v2-launch-20260914.json",
       "next": "FineMath and Cosmopedia text/cache results completed and passed verification. The same frozen service is processing the E1S FineWeb tranche and will cache it after successful capacity/storage/exclusion checks. Do not launch duplicates. No model training is authorized.",
       "replacement": "results/systems/local-followup-replacement-20260914.json"
+    },
+    {
+      "id": "heldout_evaluation_bundle",
+      "state": "real_selection_identity_ledger_verified_independent_view_and_global_ledgers_pending",
+      "plan": "research/flagship/heldout_evaluation_plan_v1.json",
+      "selection_identity_plan": "research/flagship/heldout_selection_identity_v1.json",
+      "selection_identity_result": "results/data/heldout-selection-identity-20260915.json",
+      "verification": "results/systems/heldout-selection-identity-verification-20260915.json",
+      "next": "All 28604 real production selection documents have verified source-derived identity and reconstruction-locator ledgers; ordered category commitments and independent reopen pass. Resolve preserved source artifacts and bind independent extraction, aggregate training identities, audit commitment ledgers without opening payloads, leakage checks and model/backend/analysis settings. This is not a complete two-view bundle or training/selection authority."
     }
   ]
 }
