@@ -43,6 +43,12 @@ lint, catalog, archive and source-pin checks. After adding implementation hashes
 25 focused tests and format/lint checks passed again. These results do not include site-only GH200
 or sealed evidence tests.
 
+A post-publication whole-report equality probe failed because publishing the audit itself increased
+the catalog result-file inventory from 95 to 96. Follow-up comparison isolated that one inventory
+change: every conclusion, input hash, implementation hash and other catalog field matched. The
+original report is preserved with its pre-publication inventory; inventory counts are point-in-time
+observations, not stable input identities. No failed comparison was treated as an exact reopen pass.
+
 ```bash
 uv run --no-sync python -m scripts.readiness_audit
 uv run --no-sync python -m scripts.readiness_audit --output /absolute/path/to/new-audit.json
