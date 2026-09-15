@@ -138,6 +138,14 @@ Resolve the matched-language/shared-background supply contract next; no recipe c
 The [restricted Stack v3 metadata inspection](../findings/2026-09-15-stack-v3-metadata-discovery.md)
 is complete for sixteen new pinned file identities: 290.8MB range payloads instead of fetching
 6.70GB of complete files merely for their metadata. Complete-file hash/content qualification
-remains pending; these are provisional declared bytes, not tokens. Qualify content yield on
-already-complete cached files before binding a larger complete-file tranche. Do not sum old/new
-banks as globally unique supply or automatically change language/background assignments.
+remains pending for those partial views; these are provisional declared bytes, not tokens.
+The [cached content probe](../findings/2026-09-15-stack-v3-cached-supply.md) is now complete:
+1,088 of 1,408 samples retained, yielding 1,170,568 Mistral tokens. Every language point estimate
+in the twelve cached files falls below its current headroom target before full exclusion.
+
+The [two-file raw successor](stack_v3_targeted_raw_intake_v1.json) binds 752,034,905 declared
+bytes: the best inspected TypeScript and JavaScript metadata-byte ratios. The
+[finite intake](../../results/systems/stack-v3-targeted-raw-launch-20260915.json) is running;
+complete-file SHA and prior metadata-projection equality are required. This is delegated acquisition
+scheduling, not a source-use, language or background change. Next measure content/security and
+exclusion yield on complete source inputs. Do not sum old/new banks as globally unique supply.

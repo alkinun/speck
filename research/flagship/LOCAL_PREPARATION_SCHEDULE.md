@@ -49,8 +49,13 @@ The [Stack v3 metadata-range path](../findings/2026-09-15-stack-v3-metadata-rang
 passes real complete-file byte/projection parity. A [sixteen-file discovery](../findings/2026-09-15-stack-v3-metadata-discovery.md)
 completed in 219.03 seconds with 290.8MB of range payloads for 6.70GB of declared complete
 files. Preserve the distinction between inspected metadata and fully hash-verified source files.
-Next qualify content yield on existing complete cached files, then select and bind complete-file
-acquisition. Do not convert metadata counts to usable token capacity or launch all inspected files.
+The [cached-content probe](../findings/2026-09-15-stack-v3-cached-supply.md) now retained
+1,088/1,408 samples and counted 1,170,568 Mistral tokens in 97.49 seconds before archival work.
+All language point estimates in that cached view remain below their targets before full exclusion.
+The [two-file raw intake](stack_v3_targeted_raw_intake_v1.json) is running with a 752,034,905-byte
+complete-file declaration, selected for TypeScript/JavaScript metadata yield. Complete SHA and
+metadata parity precede content qualification. Preserve all range/assembly attempts and stop on
+failure; do not convert samples or raw bytes into usable capacity or fetch all sixteen files.
 
 ## 3. Qualify a more efficient fetch path on real eligible inputs
 

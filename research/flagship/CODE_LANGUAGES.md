@@ -114,3 +114,11 @@ with 290.8MB range payloads for 6.70GB declared complete files. It records provi
 per-language metadata supply before committing to larger text transfers. Partial ranges
 are not complete source files; source stock still requires full-file hashes and all content,
 security and exclusion checks. No quality/license rule, source approval or language share changes.
+
+The [cached-content probe](../findings/2026-09-15-stack-v3-cached-supply.md) now gives bounded
+pre-exclusion token estimates for all eleven languages in the twelve complete cached files.
+Every point estimate is below its E1S headroom target; 77/128 Markdown samples failed the
+original English-prose requirement. These observations support bounded acquisition planning,
+not a language-share revision or full-source extrapolation. The
+[two-file successor](stack_v3_targeted_raw_intake_v1.json) selects complete files by inspected
+TypeScript/JavaScript metadata bytes per compressed byte; the existing matching contract remains.
