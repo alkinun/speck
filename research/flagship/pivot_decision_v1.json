@@ -1,0 +1,65 @@
+{
+  "format": "speck_flagship_scope_transition",
+  "format_version": 1,
+  "status": "selected_design_execution_manifests_pending",
+  "training_authority": false,
+  "date": "2026-09-15",
+  "authorization": "Owner explicitly directed a substantial pivot of allocation, paper and model to efficient long-context intelligence in this task.",
+  "previous_scope_snapshot": "research/history/2026-09-15-allocation-thesis/manifest.json",
+  "previous_contracts": [
+    {
+      "path": "research/flagship/plan_v3.json",
+      "sha256": "74f6575f2925750c7049db0324e06c8ad8362baacab644ac8e263803b30769be"
+    },
+    {
+      "path": "research/flagship/data_plan_v2.json",
+      "sha256": "36b55b0227346e1f8060fd5e058341e812f4aa11611a254cbf3998f9663ab8be"
+    },
+    {
+      "path": "research/flagship/architecture_plan_v2.json",
+      "sha256": "121de50dc2fb018440cfedd10fce4b209e792af8b310fa2576c1101da9d57825"
+    },
+    {
+      "path": "research/flagship/integration_plan_v2.json",
+      "sha256": "e528b008fbce63fbe3f2906ea5f21bea5b96ff95055ad311153f7037088d967f"
+    },
+    {
+      "path": "research/flagship/first_wave_proposal_v3.json",
+      "sha256": "b249686ac9ed38c146595bbc3c60ad385dff35065294d07a6f4d787ecb817cbd"
+    }
+  ],
+  "retired_work": [
+    "E1W/E1S 29-slot source wave",
+    "E2 broad mixture funnel",
+    "E3 old repeated-source experiment matrix",
+    "E4 decay-mixture search",
+    "C0/D2/D3/D7/D8 component funnel",
+    "D4/D6 old schedule (bounded optimization qualification moves to R0/R1)",
+    "I1/I2/I3 old allocation-thesis matrix",
+    "generic scale ladder and S2 old horizon contract"
+  ],
+  "retained": [
+    "published releases and all checked results",
+    "frozen Mistral tokenizer and unopened audits",
+    "verified source banks and token caches",
+    "rights/exclusions and bounded operations evidence",
+    "reference/accelerated KDA and dense implementations",
+    "checkpoint and optimizer lineage",
+    "existing retrieval/composition diagnostics",
+    "existing finite source-preparation jobs and recovery evidence"
+  ],
+  "migration_rules": [
+    "No historical result or source identity is rewritten.",
+    "Old source quotas and pending experiment counts are not new launch requirements.",
+    "No model training, downloads, remote messages, publication or running-job interruption is performed by this planning transition.",
+    "Rebind new experiment, data, evaluation and launch manifests before execution.",
+    "Legacy tooling remains available for reproducibility and finite preparation; selected catalog governs new allocation scope.",
+    "New datasets or teacher outputs require applicable source-use review, not blanket inherited permission."
+  ],
+  "claim_migration": {
+    "C-DATA": "retired broad-mixture optimization claim",
+    "C-MEMORY": "retired prior headline; architecture evidence remains motivation",
+    "C-TRANSFER": "retired generic scale/composition claim",
+    "C-SYSTEM": "retired old full-system forecast; replaced by specific long-context claims"
+  }
+}

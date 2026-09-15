@@ -1,3 +1,5 @@
+> **Scope update, 2026-09-15:** the [long-context pivot](PIVOT.md) supersedes old experiment budgets, quotas and selection dependencies in this note. Retained mechanics and measurements remain evidence at their recorded identities. Use [LONG_CONTEXT_DATA.md](LONG_CONTEXT_DATA.md) and [FIRST_WAVE.md](FIRST_WAVE.md) for new preparation; do not automatically expand the retired wave.
+
 # Preparing the peS2o science background
 
 The first-wave proposal requires 400M source-identical peS2o v3 tokens. PubMed counts are not peS2o

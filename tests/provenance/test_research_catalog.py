@@ -27,22 +27,19 @@ def test_checked_research_catalog_resolves_collections_notebook_and_claims():
         "paper_workspace",
         "software",
         "archive",
+        "program_history",
     }
     notebook_entries = tuple((ROOT / "research/notebook").glob("????-??-??-*.md"))
     assert result["notebook_entries"] == len(notebook_entries)
     assert result["lifecycle_stages"] == 4
-    assert result["paper"]["claims"] == 4
-    assert result["paper"]["claim_statuses"] == {
-        "planned": 2,
-        "prior_evidence_only": 2,
-    }
+    assert result["paper"]["claims"] == 3
+    assert result["paper"]["claim_statuses"] == {"planned": 3}
     assert result["paper"]["headline_ready"] == []
     claims = json.loads((ROOT / "paper/claims.json").read_text())["claims"]
     assert [claim["id"] for claim in claims] == [
-        "C-DATA",
-        "C-MEMORY",
-        "C-TRANSFER",
-        "C-SYSTEM",
+        "C-USE",
+        "C-INTERACTION",
+        "C-FRONTIER",
     ]
 
 

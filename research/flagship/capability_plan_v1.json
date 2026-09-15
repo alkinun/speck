@@ -1,0 +1,67 @@
+{
+  "format": "speck_long_context_capability_plan",
+  "format_version": 1,
+  "status": "selected_design_execution_manifests_pending",
+  "training_authority": false,
+  "gpu_hours_ceiling": 700,
+  "stages": [
+    {
+      "id": "L1",
+      "gpu_hours": 140,
+      "name": "32K coherent-document continuation",
+      "depends_on": [
+        "B0"
+      ],
+      "processed_tokens_target": 3000000000
+    },
+    {
+      "id": "L2",
+      "gpu_hours": 180,
+      "name": "128K continuation with 64K evaluation checkpoint",
+      "depends_on": [
+        "L1"
+      ],
+      "processed_tokens_target": 1000000000
+    },
+    {
+      "id": "L3",
+      "gpu_hours": 120,
+      "name": "broad general instruction SFT",
+      "depends_on": [
+        "L2_or_retained_L1"
+      ]
+    },
+    {
+      "id": "L4",
+      "gpu_hours": 160,
+      "name": "selected mixed-length evidence/history instruction training",
+      "depends_on": [
+        "L3"
+      ]
+    },
+    {
+      "id": "L5",
+      "gpu_hours": 60,
+      "name": "bounded preference or verified-distillation development if needed",
+      "depends_on": [
+        "L4"
+      ],
+      "optional": true
+    },
+    {
+      "id": "L6",
+      "gpu_hours": 40,
+      "name": "stage integration, recovery qualification and checkpoint diagnostics",
+      "depends_on": [
+        "B0"
+      ]
+    }
+  ],
+  "targets_are_forecasts": false,
+  "continuation": "Common natural-document next-token training retains coherent structure and general replay. Low LR with inherited optimizer, warmup and smooth decay; freeze measured endpoints before each stage.",
+  "supervision": "Broad SFT then mixed-length finishing using the R2-supported recipe; if targeted training fails the selection rule, use standard supervision at L4. Maintain general assistance and short tasks in both branches. Freeze input and assistant token budgets, loss masks, chat format and source exposures.",
+  "external_work": "Reconcile post-training experiments in the separate codebase into one manifest of revision, teacher/data identities, costs, outcomes and export compatibility before importing a recipe. No claim that those experiments were reviewed or executed here.",
+  "optional_work": "L5 selects at most one justified method from existing evidence before its run; a new RL engine, multi-teacher fleet or multi-branch search is outside scope. Unused hours remain unspent unless a costed phase-local transfer is frozen before affected outputs.",
+  "length_fallback": "L2 requires full-shape 128K fit and a passing 32K capability gate. If fit, budget or usefulness fails, retain L1; use the existing L2 envelope only for one documented 32K repair or a costed 64K stage frozen before its outputs. Report 128K failure. No context-parallel build is implicitly required.",
+  "release_rule": "Retain base, each context stage, SFT and final identities. Any later stage or export losing useful context keeps the preceding qualified checkpoint; no inherited 128K label without re-evaluation."
+}

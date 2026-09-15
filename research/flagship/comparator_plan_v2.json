@@ -1,0 +1,36 @@
+{
+  "format": "speck_long_context_comparator_plan",
+  "format_version": 1,
+  "status": "selected_design_execution_manifests_pending",
+  "training_authority": false,
+  "supersedes": {
+    "path": "research/flagship/minicpm5_comparator_v1.json",
+    "sha256": "b27e82b2f2e3ffa507bb672b29beb062f2a172f86303f376fe78c9184198c6b0"
+  },
+  "tiers": {
+    "causal": [
+      "R2 matched dense GQA under both training recipes"
+    ],
+    "public_candidates": [
+      "openbmb/MiniCPM5-1B",
+      "LiquidAI/LFM2.5-1.2B-Instruct",
+      "openbmb/MiniCPM5-2B",
+      "HuggingFaceTB/SmolLM3-3B"
+    ],
+    "practical": [
+      "BM25 retrieval plus the same answer model as full-context",
+      "BM25 retrieval plus one larger public short-context answer model"
+    ]
+  },
+  "freeze": "Pin at least two working public comparators, including one near total footprint and one stronger/larger reference; freeze before final model selection. Reuse pinned MiniCPM5-2B identities where compatible. No current-best claim without release-era recheck.",
+  "rag": "Use deterministic chunking, BM25 top-k and a fixed prompt; tune one bounded k/chunk grid on development only. Count indexing (one-time and amortized), retrieval, input/output tokens, generation, total memory and task latency. Give full-context and RAG the same source text and task/output budgets. No learned reranker needed for the first baseline.",
+  "matched_settings": "Separate base versus instruct, total versus active/non-embedding parameters, trained tokens and teacher resources. Compare matched precision/backend where supported and label separately the best qualified deployment of each model. Do not handicap a comparator with an unoptimized reference path and claim universal speedup.",
+  "systems": "Randomized interleaved warmed trials, at least five blocks, batch one plus a declared throughput workload, cold/warm cache and startup reported separately. Record hardware, software, memory ceiling, energy telemetry availability and quality at each operating point.",
+  "no_claims": [
+    "API price as architecture efficiency",
+    "GPU-hours across hardware as interchangeable FLOPs",
+    "state reduction as peak-memory reduction",
+    "full-context supremacy over retrieval on every task",
+    "unmeasured production or CPU performance"
+  ]
+}

@@ -4,9 +4,10 @@ Speck is a research and training toolkit for small, efficient language models wi
 processing and periodic global attention. It includes deterministic data preparation, native and
 distributed training, checkpoint recovery, long-context evaluation, and model export.
 
-The current research program targets a **1.2B dense-width KDA/GQA hybrid** within **5,000 GH200
-GPU-hours**. Start with the [research overview](research/README.md) for the model, evidence, and
-execution state.
+The current research program targets **efficient long-context intelligence**: a general-purpose
+**1.2B KDA/GQA hybrid** within **5,000 GH200 GPU-hours**, with document/history reasoning, retained
+general capability, and measured quality-cost comparisons. Start with the [research overview](research/README.md)
+for the selected model, paper, budget and execution state.
 
 ## Setup
 

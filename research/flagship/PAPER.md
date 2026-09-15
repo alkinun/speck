@@ -1,131 +1,76 @@
-# Flagship paper contract
+# Paper contract: Learning to Use Long Context Efficiently
 
-Status: pre-results allocation-thesis and evidence contract, 2026-09-10. This document defines the
-one paper supported by grant 1. It is not a promise that every hoped-for result passes. Failed gates
-narrow the relevant claim; they do not trigger a new mechanism, favorable subset, or replacement
-paper question.
+**Selected scope, pre-results, 2026-09-15.** Subtitle: *Data and Memory Trade-offs in a 1.2B Hybrid
+Language Model*. The owner-directed [pivot](PIVOT.md) replaces the four allocation-thesis claims with
+three new planned claims in [paper/claims.json](../../paper/claims.json). No new result is supported yet.
 
-[`paper/claims.json`](../../paper/claims.json) is the machine-readable status and evidence registry.
-Manuscript prose, figures, W&B, and Linear cannot promote a claim independently of checked results and
-findings.
+## Central question
 
-## Central thesis
+How do memory architecture and dependency-requiring supervision interact to produce useful
+long-context reasoning at fixed resource budgets? The contribution must be a controlled new finding,
+a useful measured frontier, or an informative failure boundary. Use of KDA, a 3:1 hybrid, long documents,
+synthetic data or post-training alone is not novelty.
 
-> Under fixed training compute and serving memory, efficient small language models improve through
-> allocation: high-information data reduces tokens-to-quality, recurrent layers compress routine
-> sequence processing, and a small number of periodically placed exact-attention layers preserve
-> global access. These gains count only when they transfer, compose, survive scale and token horizon,
-> and materialize on hardware.
+## Three claims
 
-The paper follows one causal chain: qualify and select data; isolate recurrent versus exact-memory
-allocation; test data-by-architecture interaction and assembled settings; test scale and mature-horizon
-transfer; train one fixed 1.2B held-out flagship; extend only to measured useful context; and price the
-released system. The model is the held-out consequence of the evidence program, not a configuration
-chosen after its results.
+| ID | Question | Evidence required | Failure consequence |
+| --- | --- | --- | --- |
+| C-USE | Does targeted supervision improve useful long-context capability? | R2 three-seed paired training effect, every primary/general guardrail, frozen scoring and multiplicity handling | Keep standard supervision; report trade-off/null |
+| C-INTERACTION | Does that effect depend on architecture? | Complete R2 factorial and uncertainty; R3 only at its measured scope | An interval spanning zero is unresolved; no independence/additivity claim |
+| C-FRONTIER | Does the released 1.2B system earn a useful quality-cost advantage? | Useful-length floors, broad retention, public and RAG comparisons, named-hardware measurements, sealed audit and export parity | Remove unsupported efficiency/length headline; release qualified earlier model if needed |
 
-## Four primary claims
+Inherited short proxy and Reader Attention results motivate the design; they are not new claim evidence.
+The new claim registry starts with no promoted outcomes. The prior claims and manuscript remain in the
+[scope snapshot](../history/2026-09-15-allocation-thesis/manifest.json).
 
-| Claim | Required evidence | If the gate fails |
-| --- | --- | --- |
-| C-DATA — data allocation | E1W/E1S, E2–E4, two parser views, six category guardrails, one-opening sealed audit | Publish the trade-off and use the frozen balanced fallback |
-| C-MEMORY — exact-memory allocation | Prior paired proxy, C0/D2/D3/D7/D8, dense/hybrid comparisons, 32K/128K and 4K-retention gates, analytic and measured cost | Keep the complete default, report the boundary, and remove unsupported equivalence or component language |
-| C-TRANSFER — transfer and composition | Five-seed I1, three-seed I2, scale ladder, 350M mature-horizon S2, flagship held out from fitting | Report interaction/reversal, use complete C0 when required, and restrict the claim to measured scales/horizons |
-| C-SYSTEM — held-out realized system | Fixed 1.2B trajectory, pre-decay/final/extended checkpoints, comparator table, quality and useful-context evaluation, prefill/decode/state/energy measurements, release parity | Release honestly without the failed best-at-size, useful-length, or deployment headline |
+## Main paper spine
 
-Inherited components are labeled inherited. The contribution is controlled knowledge about resource
-allocation, interaction, transfer, mechanism, and realized cost—not use of an existing operator.
+1. Problem: the cost of using supplied information across long inputs; task quality and several costs.
+2. Controlled design: architectures, shared parents, standard/targeted supervision, partitions and costs.
+3. R2 results: all cells/seeds, training/architecture effects and interaction with uncertainty.
+4. Transfer and boundaries: one preselected larger-scale or longer-horizon check; evidence interventions.
+5. Flagship development: broad base, context/SFT stages, general retention and measured useful length.
+6. Practical frontier: public and retrieval alternatives, quality/state/latency/output cost.
+7. Limitations and reproducibility: all failed gates, unmeasured extrapolation and all-in resources.
 
-## Paper spine
+## Required main figures
 
-1. **Resource-allocation problem.** Fixed compute and total deployment footprint; training, prefill,
-   decode, runtime state, persistent state, and output-token axes; claims and non-claims.
-2. **Controlled framework.** Shared controls, paired seeds and data orders, neutral held-out data, BPB,
-   non-inferiority, fixed-token/FLOP/time views, immutable execution, and failure handling.
-3. **Allocating training data.** Source funnel, mixture response surface, repetition, decay, category
-   guardrails, and sealed confirmation.
-4. **Allocating exact memory.** Dense versus KDA/global, component attribution, exact-attention ratio,
-   state frontier, middle-integration/final-readout roles, and cache-sharing negative evidence.
-5. **Transfer and composition.** I1 interaction, I2 complete assembly, scale transfer, S2 mature-token
-   horizon, and every reversal.
-6. **Held-out flagship.** Fixed 1.2B training trajectory, predicted versus observed quality, pre-decay
-   and final checkpoints, 32K/128K progression, and original-4K retention.
-7. **Hardware and release frontier.** Training time/energy, prefill, decode, runtime HBM state,
-   persistent-prefix boundary, weights plus state, maximum resident batch, output tokens to fixed task
-   quality, comparators, and export parity.
-8. **Boundaries.** Negative results, limitations, openness boundary, reproducibility, and one concise
-   future direction.
+1. Four-cell capability/cost table with all seed outcomes and family breakdowns.
+2. Paired effects and interaction with training and evaluation uncertainty separated.
+3. Quality-versus-context curves including 4K retention, oracle controls and failures.
+4. Transfer result and flagship stage trajectory with scope boundaries.
+5. Task-quality versus resident state and end-to-end latency against public/RAG alternatives.
 
-Tokenizer construction, complete source-rights records, every screening arm, post-training operations,
-and full artifact tables belong in the supplement unless they change one of the four claims.
+Preparation funnels, tokenizer fallback, complete source rights/identities, all run logs and extra
+systems plots belong in the supplement. Existing generated preparation assets remain labeled as
+historical source preparation; they establish no long-context or quality result.
 
-## Required figures and tables
+## Claims that this design cannot make
 
-1. Resource map decomposing dense and hybrid training compute plus fixed and length-growing state.
-2. Six-category data funnel, response surface, Pareto frontier, and category guardrails.
-3. E2/E3/E4 paired effects with uncertainty and every domain.
-4. Quality–FLOP–state frontier over dense, 3:1, and eligible 5:1 memory allocation.
-5. D2/D3/D7/D8 forest plot with every pair and capability gate.
-6. I1 factorial interaction and I2 complete-assembly confirmation.
-7. Scale curve, S2 mature-horizon sentinel, and held-out flagship residual.
-8. Position/trailing loss, RULER/internal capability, and original-4K retention through the highest
-   supported length.
-9. Training, prefill, decode, energy, runtime-state, peak-memory, and output-token frontiers.
-10. Comparator and negative-result tables with exact model, token, hardware, and evidence identities.
+- A full-horizon dense 1.2B counterfactual: only one flagship is funded.
+- A population transfer claim from the single-seed R3 check or a general scaling law.
+- Linear overall prefill or constant complete-model context state with periodic global GQA.
+- Broad frontier capability parity, universally optimal data, or universal superiority to retrieval.
+- Usable 128K from allocation size, a needle test, or an earlier checkpoint's label.
+- A novel operator, isolated KDA/NoPE causality or a causal effect of targeted dependencies if matching fails.
 
-Every public value resolves to an append-only result, immutable config/data/model identities, and the
-exact analysis revision. Main figures retain per-seed, per-source, and per-task supplements.
+## Novelty and independent review
 
-## Mechanism contract
+Review [the focused literature map](../literature/51_long_context_pivot.md) before R2. Olmo Hybrid
+already provides controlled hybrid scaling; ProLong and LongPO address context training; task-directed
+long-context training has substantial prior art. Write the closest-work comparison and the exact
+remaining empirical question before confirming the study. If the question is already answered, adjust
+within the bounded design before outputs; do not manufacture novelty afterward.
 
-I3 preregisters evaluation-only interventions rather than adding training arms:
+Numerical quality floors/margins, primary tests, costs and failure rules freeze before R2. Final model,
+inference settings and headline-to-test freeze before the sealed audit. Independent review should
+challenge baseline tuning, matching, low power, data leakage, selective task reporting and total cost.
+No claim promotes until checked result and finding records support it.
 
-- reset KDA recurrent state at declared sequence boundaries;
-- suppress declared middle versus final global-cache contributions;
-- measure effects on language loss, trailing loss, retrieval, composition, and state cost;
-- interpret interventions together with prior global-layer and Reader Attention distance evidence.
+## Model, paper and opportunity package
 
-These interventions test the proposed integration/readout roles. Distribution-shift limitations remain
-explicit, and a diagnostic cannot promote an architecture independently of the trained comparisons.
-
-## Systems taxonomy
-
-Report these outcomes separately; absence of an implementation suppresses the corresponding claim:
-
-- training analytic FLOPs, achieved FLOP/s, time, and energy to fixed quality;
-- prompt-prefill FLOPs, TTFT, throughput, time, and energy;
-- token-decode FLOPs, TPOT, throughput, time, and energy;
-- fixed recurrent state and length-growing exact state, both total and bytes per token;
-- runtime HBM state, workspace, fragmentation, and peak allocation;
-- persistent prefix state, transfer bytes, restore time, and cache-miss recomputation where supported;
-- weights plus state at batch one and maximum resident batch;
-- generated output tokens and wall-clock time to fixed task quality.
-
-DeepSeek-V4.1-Flash's reported 890 global-cache bytes/token is analytic context only. It is not a
-locally measured comparator. Speck state claims are against named matched dense-GQA controls unless a
-broader checked comparison exists.
-MiniCPM5-2B is a pinned release-era comparator candidate. Its Base checkpoint may inform base-model
-quality and its final checkpoint may inform released-system cost, but RL+OPD scores cannot be used as
-architecture evidence. Local evaluation remains mandatory.
-
-## Headline gate
-
-No headline is written before the comparator, held-out flagship, useful-context, and systems results
-exist. The preferred form is: the fixed 1.2B model matches a named comparator or dense control at a
-measured fraction of training compute and 128K state under named quality and hardware envelopes.
-Every variable must resolve to checked evidence. Allocation length is never described as effective or
-usable context.
-
-## Scope discipline
-
-- The public target is fixed at 1.2B/400B; 1.2B/320B is the throughput fallback. The retained 600M
-  geometry is not selectable in grant 1.
-- CED, CSA2, Reader Attention, FP4 cache QAT, mHC, Engram, DSpark, multimodality, MoE, depth routing,
-  and other sparse/compressed-attention work remain outside grant 1.
-- The five-seed I1 interaction, three-seed I2 assembly, and S2 mature-horizon sentinel are mandatory
-  for their corresponding claims, not general exploration budget.
-- I1 cannot reopen E2. I2 applies every compatible promoted setting once; failure launches complete
-  C0 without subset search.
-- Protected reserve repairs or continues declared work under frozen triggers. It never creates a new
-  axis.
-- Before release, SPE-171 performs independent clean-room regeneration and claim audit. Unresolved
-  reviewer findings remain limitations.
+Ship usable checkpoints, one accelerated inference path, reproducible public/RAG measurements and two
+held-out demos: a document packet and an updated conversation history. Prepare a short technical brief
+showing measured advantage, limits, independent replication/trial status and a costed next allocation
+question. Interest/funding is an intended consequence, not a scientific success metric or guarantee.
+Preparation of this package does not send messages or publish artifacts externally.

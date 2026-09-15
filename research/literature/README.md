@@ -1,5 +1,9 @@
 # Papers on efficient, long-context language models
 
+For the selected long-context flagship, start with the
+[focused related-work map](51_long_context_pivot.md). The earlier mechanism notes remain background;
+the new map includes Olmo Hybrid and long-context training/evaluation work relevant to the paper pivot.
+
 This directory is the literature layer for Speck's architecture research. It is deliberately separate
 from [`findings/`](../findings/README.md): papers record what other teams report; findings record what
 Speck has actually reproduced. A result in this directory is not a Speck result unless a finding links

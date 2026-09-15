@@ -10,6 +10,16 @@ root = repository_root()
 
 
 def test_local_markdown_links_exist():
+    # Partial snapshots preserve original relative links, not a relocated full tree.
+    snapshot_origins = {}
+    for manifest_path in (root / "research/history").glob("*/manifest.json"):
+        manifest = json.loads(manifest_path.read_text())
+        snapshot_origins.update(
+            {
+                root / entry["preserved_path"]: root / entry["original_path"]
+                for entry in manifest["files"]
+            }
+        )
     documents = (
         sorted(root.glob("*.md"))
         + sorted((root / "docs").rglob("*.md"))
@@ -21,12 +31,13 @@ def test_local_markdown_links_exist():
     )
     missing = []
     for document in documents:
+        link_parent = snapshot_origins.get(document, document).parent
         text = document.read_text(encoding="utf-8")
         for target in re.findall(r"\[[^]]+\]\(([^)]+)\)", text):
             path = target.split("#", 1)[0]
             if not path or re.match(r"^[a-z]+://", path) or path.startswith("mailto:"):
                 continue
-            if not (document.parent / path).exists():
+            if not (link_parent / path).exists():
                 missing.append(f"{document.relative_to(root)} -> {target}")
     assert not missing, "missing local documentation links:\n" + "\n".join(missing)
 

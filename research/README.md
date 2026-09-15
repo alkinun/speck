@@ -1,30 +1,31 @@
 # Current research
 
-Speck's first flagship studies how a fixed compute and memory budget should be divided across
-high-information training data, recurrent processing, and periodic exact attention.
+Speck's first serious allocation targets **efficient long-context intelligence**: a general-purpose
+1.2B hybrid with strong document/history understanding and retained broad capability.
 
-**Target:** a 1.2B dense-width KDA/GQA model, 400B training tokens with a 320B throughput fallback,
-followed by context extension and an Instruct release. The budget is 5,000 GH200 GPU-hours,
-approximately 52.08 four-GPU node-days, within a three-month allocation.
-
-## Working entry points
+The central experiment crosses dense versus KDA/global memory with standard versus dependency-requiring
+supervision. The flagship uses a 320B-token base target (400B conditional on measured fit), followed by
+substantial context and instruction development. Useful 32K capability is the first milestone; 128K is
+the target, with 64K evaluated in between. The allocation is 5,000 GPU-hours on four GH200s over about
+90 calendar days. All new claims are pre-results.
 
 | Need | Source |
 | --- | --- |
-| Model and scope | [Flagship charter](flagship/README.md) |
-| Current state and next actions | [Status](status.json), or `python -m scripts.research_catalog --status` |
-| Selected contracts | [Catalog](catalog.json) |
-| Experiment order and budget | [Execution](flagship/EXECUTION.md) |
-| First-wave recipe and preparation proposal | [First wave](flagship/FIRST_WAVE.md) |
-| Paper question and evidence requirements | [Paper contract](flagship/PAPER.md) |
-| Supported prior conclusions | [Findings](findings/README.md) |
-| Literature and source surveys | [Library](literature/README.md) |
-| Manuscript claims | [Claim registry](../paper/claims.json) |
-| Completed work and earlier plans | [Archive](../archive/README.md) |
+| Direction and model | [Lab direction](DIRECTION.md), [charter](flagship/README.md) |
+| Scope change and retired work | [Pivot decision](flagship/PIVOT.md) |
+| Budget, dependencies and fallbacks | [Execution](flagship/EXECUTION.md) |
+| First allocation work | [First wave](flagship/FIRST_WAVE.md) |
+| Controlled study | [Study](flagship/STUDY.md) |
+| Data and coherent-context preparation | [Data](flagship/LONG_CONTEXT_DATA.md) |
+| Capability development | [Context](flagship/CONTEXT_EXTENSION.md), [post-training](flagship/POST_TRAINING.md) |
+| Quality, public models and retrieval baseline | [Evaluation](flagship/EVALUATION.md) |
+| Paper and planned claims | [Paper](flagship/PAPER.md), [registry](../paper/claims.json) |
+| Readiness and selected versions | [Status](status.json), [catalog](catalog.json) |
+| Previous scope and completed evidence | [Transition snapshot](history/README.md), [archive](../archive/README.md) |
 
-The catalog explicitly selects contract versions. Their original JSON bytes and referenced historical
-inputs are preserved in the archive. These planning contracts are not runnable launch manifests.
-The reorganized runtime needs a new execution qualification before it produces scientific outputs.
+The catalog selects versioned designs, not launch manifests. Exact costs, datasets, thresholds and
+hardware are qualification work; missing values are explicit launch blockers. Checked historical
+source stock remains useful but old E1/E3 quotas are not new preparation requirements.
 
 ```bash
 python -m scripts.research_catalog
@@ -32,11 +33,5 @@ python -m scripts.research_catalog --status
 python -m scripts.archive check
 ```
 
-## Record ownership
-
-`research/status.json` is the maintained status source. Protocols define methods and decisions;
-`results/` stores current outcomes; findings interpret evidence; `paper/claims.json` defines manuscript
-claim status. Linear and W&B remain operational mirrors.
-
-Use the short [workflow](WORKFLOW.md) and [artifact policy](DATA_MANAGEMENT.md). The
-[lab direction](DIRECTION.md) records the longer-term research aim.
+Status owns current work; contracts own decisions; results/findings own evidence. Linear and W&B are
+mirrors. Use the [workflow](WORKFLOW.md) and [artifact policy](DATA_MANAGEMENT.md).

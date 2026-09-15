@@ -1,0 +1,14 @@
+# Program transition history
+
+[2026-09-15 allocation-thesis snapshot](2026-09-15-allocation-thesis/manifest.json) preserves mutable
+charters, protocols, status/catalog, claims and manuscript immediately before the owner's long-context
+pivot. Each entry records its original path, preserved path and SHA-256 plus the checkout revision.
+Do not modify preserved bytes. Earlier versioned JSON plans remain in research/flagship at their old
+paths, with predecessor hashes in the successor contracts.
+
+Snapshot links retain their original repository-relative meaning. Browse the full checkout at the
+recorded revision to follow them in their historical context. Checks verify preserved bytes against
+that Git revision and resolve documentation links from each entry's original location.
+
+The separate [pre-grant archive](../../archive/README.md) remains unchanged. Active scope is selected
+only by [the current catalog](../catalog.json); historical references describe their original programs.

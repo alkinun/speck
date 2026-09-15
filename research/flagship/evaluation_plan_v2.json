@@ -1,0 +1,60 @@
+{
+  "format": "speck_long_context_evaluation_plan",
+  "format_version": 1,
+  "status": "selected_design_execution_manifests_pending",
+  "training_authority": false,
+  "lengths": [
+    4096,
+    32768,
+    65536,
+    131072
+  ],
+  "primary_families": [
+    "document and multi-document evidence reasoning",
+    "history understanding and explicit updates"
+  ],
+  "supporting_families": [
+    "technical/code comprehension",
+    "general instruction following and assistance",
+    "math and code",
+    "short-context six-category BPB"
+  ],
+  "benchmark_candidates": [
+    {
+      "name": "HELMET",
+      "url": "https://arxiv.org/abs/2410.02694",
+      "role": "application-centered development subset and declared final categories"
+    },
+    {
+      "name": "LongBench Pro",
+      "url": "https://arxiv.org/abs/2601.02872",
+      "role": "natural long-context tasks in declared language/length scope"
+    },
+    {
+      "name": "LongMemEval",
+      "url": "https://github.com/xiaowu0162/LongMemEval",
+      "role": "history and update evaluation; version/payload pinned before use"
+    },
+    {
+      "name": "RULER",
+      "url": "https://github.com/NVIDIA/RULER",
+      "role": "retrieval diagnostic, never sole useful-context evidence"
+    }
+  ],
+  "identity_gate": "Pin exact dataset/model/scorer versions, exclusions, language, length accounting, chat templates, judging settings and accepted subsets before outputs. Candidates are not downloaded or locally qualified by this plan.",
+  "scoring": {
+    "primary": "Average normalized task scores within each primary family, then give the two families equal weight; retain each family and task. Freeze mappings and weights before R2.",
+    "generation": "Fixed answer budgets and decoding settings; report accuracy, grounded correctness, answerability/abstention, output tokens, truncation and latency. Separate judge inference, manual review and any external API spend.",
+    "general_retention": "Freeze numerical short-task, language-loss and per-family margins using disjoint pilot inputs before confirmation; no headline while margins or useful-quality threshold are missing.",
+    "length": "Same documents/questions where controllable, with explicit evidence-preserving views; natural benchmark length bins remain their own populations. Never silently truncate required evidence or rename a subset score as the official full benchmark.",
+    "difficulty": "Include accessible and challenging items; oracle-evidence and short-context versions distinguish basic task inability from context failure. Record task exclusions before confirmation, not from final scores."
+  },
+  "useful_context_gate": "At a length, both primary families must clear their frozen absolute useful-quality floors and retention criteria at a fixed output budget; retrieval alone or allocated length cannot pass. Re-evaluate after post-training and export. Report failures and the highest passing tested length.",
+  "budget_ownership": {
+    "pilot_and_study": "R0/R1 diagnostics plus R4 formal core/transfer evaluation",
+    "release": "V1 final model and external comparisons",
+    "systems": "V2",
+    "parity_and_demos": "V3"
+  },
+  "unopened_audits": "Preserve legacy D5/E2 exclusions and independent new final tests; no new right to open a historical audit."
+}

@@ -1,70 +1,13 @@
-# Tokenizer protocol
+# Selected tokenizer
 
-D5 compares the pinned Mistral 32K tokenizer with custom SentencePiece BPE candidates. Final selection
-requires measured language-model quality and cost; static compression alone cannot select a tokenizer.
+The [checked tokenizer decision](tokenizer_decision_v1.json) retains the frozen Mistral 32K artifact.
+The custom-screen confirmation forecast exceeded the existing local budget. D5 remains unopened;
+this is a budget fallback, not a replicated finding that the custom tokenizer is inferior.
 
-**2026-09-14 disposition:** all three screens completed. The lower bound on the registered confirmation
-projection is 32.8763 GPU-hours, above the 30-hour ceiling. The
-[decision](tokenizer_decision_v1.json) freezes the declared **Mistral 32K fallback** and leaves D5
-unopened. [The finding](../findings/2026-09-14-tokenizer-budget-fallback.md) preserves both endpoint
-results and the remaining all-attempt accounting gap. This is a budget fallback, not a replicated
-quality conclusion about custom tokenizers.
+The long-context pivot does not reopen tokenizer research. Bind exact artifact hashes to source token
+caches, every study arm, packing, model vocabulary and post-training chat format. The existing three
+reserved role IDs are capacity accounting, not permission to change token semantics silently. Validate
+actual instantiated parameter count and export parity after binding.
 
-## Selected contracts
-
-- [Tokenizer plan](tokenizer_plan_v7.json): candidate geometry, balanced sample, static evaluation,
-  and nomination.
-- [Pilot plan](tokenizer_pilot_plan_v10.json): paired document/compute views, screening, confirmation,
-  and the sealed D5 decision.
-- [Embedding/head contract](embedding_head_contract_v1.json): physically tied parameter accounting.
-- [Source registry](source_registry_v2.json) and [firewall](firewall_plan_v4.json): source identities,
-  quotas, and disjoint selection/audit inputs.
-
-The catalog selects these versions explicitly. Their predecessor chains, executable input records,
-and qualification outputs are retained in the [archive](../../archive/README.md).
-
-## Design
-
-Sample the six categories—web, code, math, synthetic, science, and reference—under the frozen quotas
-and source identities. Keep tokenizer training, static evaluation, LM selection, and sealed audits
-disjoint. Train candidates deterministically and report category-level compression and byte fallback.
-
-The corrected candidate set is 32,000, 32,768, and 40,960 pieces. Static Pareto nomination advances
-the compression endpoint and a distinct compact endpoint to the paired LM pilot. Mistral remains
-the baseline and fallback. The uint16 packing and reserved chat-token budget constrain vocabulary size.
-
-The LM pilot uses one whole-document stream tokenized under each candidate and an unchanged backbone
-with physically tied embedding/head accounting. It reports both a fixed-document endpoint and a
-fixed-analytic-FLOP endpoint, category-level bits per UTF-8 byte, uncertainty, learning curves,
-throughput, and memory. The exact stops, guardrails, seed matrix, and selection rule are frozen in
-the selected pilot contract.
-
-## Execution and decision
-
-Use [current status](../status.json) for completed arms and next actions. The existing three-arm
-screen is bound to its original execution checkout. Restore it with:
-
-```bash
-python -m scripts.archive restore /path/to/tokenizer-screen-checkout
-```
-
-Run its preserved execution records with the original runtime inputs. The detailed commands and
-qualification lineage are in the [original tokenizer guide](../../archive/pregrant-history/research/flagship/TOKENIZER.md).
-
-After the three screen arms complete, reconcile actual overhead before the eligible confirmation
-runs. Open D5 only according to the frozen rule, then freeze the selected tokenizer artifact and
-update corpus, model-accounting, and evaluation manifests. A failure keeps the declared fallback;
-the cleanup does not alter the decision design.
-
-Use the [measured screen handoff](TOKENIZER_SCREEN.md) to reconcile all-attempt GPU spending and
-project the four confirmation runs from the three completed screens. The maintained CPU analyzer
-records the budget disposition without issuing confirmation or audit-opening authority.
-
-## Legacy finalization input
-
-The frozen runs contain an absolute reference to `research/flagship/tokenizer_pilot_flop_correction_v1.json`.
-That path is retained as a compatibility symlink to the identical archived JSON. Keep it available while
-the frozen screen executes. The 40,960 seed-42 run reached its final checkpoint but failed report
-publication when this metadata path was absent; the failure is preserved in
-`results/systems/tokenizer-pilot-40960-finalization-interruption-20260913.json`.
-New screen executions still run from the frozen checkout, with original run fingerprints and inputs.
+Preserve the unfinished historical all-attempt cost reconciliation for disclosure. Prior tokenizer
+protocols remain reproducibility inputs in the catalog; the completed decision governs new work.

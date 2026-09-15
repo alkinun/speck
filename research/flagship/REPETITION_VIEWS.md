@@ -1,3 +1,5 @@
+> **Scope update, 2026-09-15:** the [long-context pivot](PIVOT.md) supersedes old experiment budgets, quotas and selection dependencies in this note. Retained mechanics and measurements remain evidence at their recorded identities. Use [LONG_CONTEXT_DATA.md](LONG_CONTEXT_DATA.md) and [FIRST_WAVE.md](FIRST_WAVE.md) for new preparation; do not automatically expand the retired wave.
+
 # Explicit repeated source streams for E3
 
 The registered E3 comparison remains 1, 2 and 4 effective epochs at a nominal 6B-token

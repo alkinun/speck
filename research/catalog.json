@@ -1,8 +1,8 @@
 {
   "format": "speck_research_catalog",
   "format_version": 2,
-  "project": "Speck flagship model and paper",
-  "status": "active_pregrant",
+  "project": "Speck: efficient long-context intelligence",
+  "status": "active_pregrant_long_context_pivot",
   "active_program": {
     "id": "flagship",
     "path": "research/flagship",
@@ -109,6 +109,15 @@
       "role": "Byte-preserved historical evidence and original implementation identities",
       "authority": "historical_only",
       "mutability": "immutable_history"
+    },
+    {
+      "id": "program_history",
+      "name": "Program transition snapshots",
+      "path": "research/history",
+      "index": "research/history/README.md",
+      "role": "Byte-preserved predecessor documents and registries with original revisions and hashes",
+      "authority": "historical_only",
+      "mutability": "immutable_history"
     }
   ],
   "systems": [
@@ -185,90 +194,110 @@
   },
   "status_record": "research/status.json",
   "active_contracts": {
-    "architecture": {
-      "path": "research/flagship/architecture_plan_v2.json",
-      "sha256": "121de50dc2fb018440cfedd10fce4b209e792af8b310fa2576c1101da9d57825",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "data_launch": {
-      "path": "research/flagship/data_launch_plan_v2.json",
-      "sha256": "4851daaa40eb71c0aa4f1006ec66787e310112ab907289eb62d2e5cf259b3812",
-      "execution": "original_revision_only_until_successor_qualification"
+    "model": {
+      "path": "research/flagship/model_plan_v1.json",
+      "sha256": "6fb9ca842fad55c5a93ef06bb28e10704db9e3a0892fb9a142afccc16c228e63",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
     "data": {
-      "path": "research/flagship/data_plan_v2.json",
-      "sha256": "36b55b0227346e1f8060fd5e058341e812f4aa11611a254cbf3998f9663ab8be",
-      "execution": "original_revision_only_until_successor_qualification"
+      "path": "research/flagship/data_plan_v3.json",
+      "sha256": "fabc404ce0ec7bbc3b7eeb7b381d9b311b94562bdd81c60ca95748e4c334006a",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
-    "data_rehearsal": {
-      "path": "research/flagship/data_rehearsal_plan_v9.json",
-      "sha256": "ecea03d393b29d6c76c2d0282946570c5a57ffd5236f37cabe0e5ec7e91301f2",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "embedding_head": {
-      "path": "research/flagship/embedding_head_contract_v1.json",
-      "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "firewall": {
-      "path": "research/flagship/firewall_plan_v4.json",
-      "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "heldout_evaluation": {
-      "path": "research/flagship/heldout_evaluation_plan_v1.json",
-      "sha256": "7d91244932661084e09a29546357526116ce0933ac20ad5592c5dae9a54090e9",
-      "execution": "original_revision_only_until_successor_qualification"
+    "architecture": {
+      "path": "research/flagship/architecture_plan_v3.json",
+      "sha256": "24879f33422a3b06ea0ad89d2fd1ab880a31d763042eaafc5caba39d6ba4c94e",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
     "integration": {
-      "path": "research/flagship/integration_plan_v2.json",
-      "sha256": "e528b008fbce63fbe3f2906ea5f21bea5b96ff95055ad311153f7037088d967f",
-      "execution": "original_revision_only_until_successor_qualification"
+      "path": "research/flagship/long_context_study_v1.json",
+      "sha256": "25588bc446c1c3640488fecabe2b14d4b913f3f786786bc08d25db14fcc7431c",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
+    },
+    "heldout_evaluation": {
+      "path": "research/flagship/evaluation_plan_v2.json",
+      "sha256": "94e6c4166e5fe7eea06387926b558d550814e92c749a93b196839aa1f97433f0",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
     "comparator": {
-      "path": "research/flagship/minicpm5_comparator_v1.json",
-      "sha256": "b27e82b2f2e3ffa507bb672b29beb062f2a172f86303f376fe78c9184198c6b0",
-      "execution": "original_revision_only_until_successor_qualification"
+      "path": "research/flagship/comparator_plan_v2.json",
+      "sha256": "1214657800b88d69e2c0a05482bb0abbb5733a1239fbfdf39035988198f1aa6c",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
-    "precision": {
-      "path": "research/flagship/precision_plan_v1.json",
-      "sha256": "0256e0cbe581f37ffe18aa47270fee33354bcec998d94e13701eebdc0e946f73",
-      "execution": "original_revision_only_until_successor_qualification"
+    "capability": {
+      "path": "research/flagship/capability_plan_v1.json",
+      "sha256": "0575bfb5b2a8179d46ca5960bfe78c86cf5faaad8f693de05397b0f5b607bec8",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
-    "data_operations": {
-      "path": "research/flagship/production_data_calibration_fallback_v1.json",
-      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407",
-      "execution": "original_revision_only_until_successor_qualification"
+    "transition": {
+      "path": "research/flagship/pivot_decision_v1.json",
+      "sha256": "86d30d4c403b4da3c1b282f600418b3c12b045d9e0a6739f13afb408c906124e",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
-    "release_policy": {
-      "path": "research/flagship/release_and_data_use_policy_v1.json",
-      "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "source_registry": {
-      "path": "research/flagship/source_registry_v2.json",
-      "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "source_rights": {
-      "path": "research/flagship/source_rights_acceptance_v1.json",
-      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d",
-      "execution": "original_revision_only_until_successor_qualification"
-    },
-    "tokenizer_pilot": {
-      "path": "research/flagship/tokenizer_pilot_plan_v10.json",
-      "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d",
-      "execution": "original_revision_only_until_successor_qualification"
+    "tokenizer_decision": {
+      "path": "research/flagship/tokenizer_decision_v1.json",
+      "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
     "tokenizer": {
       "path": "research/flagship/tokenizer_plan_v7.json",
       "sha256": "3a2d9b147c0a7c30297905267cc90abd611af617a430040db371fdb6a1631a93",
-      "execution": "original_revision_only_until_successor_qualification"
+      "execution": "retained decision provenance; frozen tokenizer_decision governs the successor; no tokenizer search reopens"
+    },
+    "tokenizer_pilot": {
+      "path": "research/flagship/tokenizer_pilot_plan_v10.json",
+      "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d",
+      "execution": "retained decision provenance; frozen tokenizer_decision governs the successor; no tokenizer search reopens"
+    },
+    "embedding_head": {
+      "path": "research/flagship/embedding_head_contract_v1.json",
+      "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
+    },
+    "precision": {
+      "path": "research/flagship/precision_plan_v1.json",
+      "sha256": "0256e0cbe581f37ffe18aa47270fee33354bcec998d94e13701eebdc0e946f73",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
+    },
+    "data_operations": {
+      "path": "research/flagship/production_data_calibration_fallback_v1.json",
+      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407",
+      "execution": "retained operational requirements and tooling; old experiment names and partitions are historical; qualification for successor study/evaluation inputs remains pending; no launch authority"
+    },
+    "data_rehearsal": {
+      "path": "research/flagship/data_rehearsal_plan_v9.json",
+      "sha256": "ecea03d393b29d6c76c2d0282946570c5a57ffd5236f37cabe0e5ec7e91301f2",
+      "execution": "retained operational requirements and tooling; old experiment names and partitions are historical; qualification for successor study/evaluation inputs remains pending; no launch authority"
+    },
+    "data_launch": {
+      "path": "research/flagship/data_launch_plan_v2.json",
+      "sha256": "4851daaa40eb71c0aa4f1006ec66787e310112ab907289eb62d2e5cf259b3812",
+      "execution": "retained operational requirements and tooling; old experiment names and partitions are historical; qualification for successor study/evaluation inputs remains pending; no launch authority"
+    },
+    "firewall": {
+      "path": "research/flagship/firewall_plan_v4.json",
+      "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648",
+      "execution": "retained operational requirements and tooling; old experiment names and partitions are historical; qualification for successor study/evaluation inputs remains pending; no launch authority"
+    },
+    "source_rights": {
+      "path": "research/flagship/source_rights_acceptance_v1.json",
+      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
+    },
+    "source_registry": {
+      "path": "research/flagship/source_registry_v2.json",
+      "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
+    },
+    "release_policy": {
+      "path": "research/flagship/release_and_data_use_policy_v1.json",
+      "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     },
     "execution": {
-      "path": "research/flagship/plan_v3.json",
-      "sha256": "74f6575f2925750c7049db0324e06c8ad8362baacab644ac8e263803b30769be",
-      "execution": "planning_only; each run requires a qualified launch manifest"
+      "path": "research/flagship/plan_v4.json",
+      "sha256": "eba30d7a99973afa182fdcc76b4466bc4363d1e89402dd17d8e9197c9ee0e246",
+      "execution": "selected design; per-run materialization and hardware/data/analysis qualification required; no launch authority"
     }
   }
 }

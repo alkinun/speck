@@ -1,0 +1,75 @@
+{
+  "format": "speck_long_context_model_plan",
+  "format_version": 1,
+  "status": "selected_design_execution_manifests_pending",
+  "training_authority": false,
+  "mission": "General-purpose language model distinguished by efficient understanding and reasoning across supplied long context; no permanent lab model-size ceiling.",
+  "flagship": {
+    "class": "1.2B dense-width",
+    "reference_parameters": 1195884576,
+    "depth": 24,
+    "hidden_size": 2048,
+    "recurrent_global_ratio": "3:1",
+    "recurrent_operator": "KDA",
+    "global_operator": "GQA",
+    "global_position": "NoPE",
+    "output_gate": "sigmoid",
+    "feed_forward": "SwiGLU",
+    "physically_tied_embeddings": true,
+    "precision": "bf16",
+    "optimizer": "Muon matrices plus AdamW elsewhere",
+    "schedule": "WSD",
+    "tokenizer_decision": "research/flagship/tokenizer_decision_v1.json",
+    "base_tokens": 320000000000,
+    "stretch_tokens": 400000000000,
+    "pretraining_gpu_hours_ceiling": 2425,
+    "shape_binding": "Expand retained flagship geometry using the frozen tokenizer and validate instantiated parameters before launch; reference count is inherited analytic accounting, not a new measurement."
+  },
+  "lengths": {
+    "base_training": 4096,
+    "mandatory_capability_milestone": 32768,
+    "intermediate_evaluation": 65536,
+    "target": 131072,
+    "reporting": "Report allocated, trained, effective and hardware-usable lengths separately for every released checkpoint."
+  },
+  "product": {
+    "primary_workloads": [
+      "document and multi-document understanding",
+      "conversation-history understanding and updates"
+    ],
+    "supporting_workloads": [
+      "technical manuals",
+      "code and log comprehension"
+    ],
+    "general_guardrails": [
+      "instruction following",
+      "ordinary assistance and writing",
+      "math and code",
+      "short-context language quality"
+    ],
+    "response_policy": "Useful concise answers by default; effort/response mode selected in bounded post-training development, with answer quality and output cost measured. No thinking-only commitment."
+  },
+  "architecture_change_rule": "Keep the inherited hybrid fixed. Matched dense is a scientific control. Critical correctness or hardware failure may require a separately costed successor before training; no automatic operator search or silent switch to dense.",
+  "release_artifacts": [
+    "pre-decay continuation checkpoint",
+    "base checkpoint",
+    "each retained context checkpoint",
+    "final general-purpose instruction model",
+    "native and qualified Transformers inference",
+    "one measured accelerated serving path",
+    "two held-out demonstrations and reproducible evaluation"
+  ],
+  "optional_artifacts": [
+    "GGUF/CPU after recurrent backend parity and budget qualification"
+  ],
+  "out_of_scope": [
+    "MoE",
+    "new memory operators",
+    "depth routing",
+    "multimodality",
+    "million-token headline",
+    "autonomous coding-agent stack",
+    "persistent-memory product",
+    "mandatory new context-parallel trainer"
+  ]
+}

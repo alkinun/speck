@@ -1,0 +1,274 @@
+{
+  "format": "speck_research_catalog",
+  "format_version": 2,
+  "project": "Speck flagship model and paper",
+  "status": "active_pregrant",
+  "active_program": {
+    "id": "flagship",
+    "path": "research/flagship",
+    "charter": "research/flagship/README.md",
+    "execution": "research/flagship/EXECUTION.md",
+    "paper_contract": "research/flagship/PAPER.md"
+  },
+  "collections": [
+    {
+      "id": "flagship",
+      "name": "Active flagship program",
+      "path": "research/flagship",
+      "index": "research/flagship/README.md",
+      "role": "Current hypotheses, preregistrations, budgets, data contracts, and launch gates",
+      "authority": "active_scope",
+      "mutability": "versioned_successors"
+    },
+    {
+      "id": "promotion_protocol",
+      "name": "Reusable architecture-promotion protocol",
+      "path": "archive/pregrant-history/research/architecture-promotion-v1",
+      "index": "archive/README.md",
+      "role": "Reusable statistical, evaluation, and cost-governance contracts",
+      "authority": "reproducibility_input",
+      "mutability": "immutable_history"
+    },
+    {
+      "id": "paper1_archive",
+      "name": "Retired Paper 1 program",
+      "path": "archive/pregrant-history/research/paper-1",
+      "index": "archive/README.md",
+      "role": "Retired preregistrations and source audits retained for provenance",
+      "authority": "historical_only",
+      "mutability": "immutable_history"
+    },
+    {
+      "id": "notebook",
+      "name": "Research notebook",
+      "path": "research/notebook",
+      "index": "research/notebook/README.md",
+      "role": "Chronological context, attempts, discussions, open questions, and handoffs",
+      "authority": "process_record",
+      "mutability": "append_only"
+    },
+    {
+      "id": "literature",
+      "name": "External literature notes",
+      "path": "research/literature",
+      "index": "research/literature/README.md",
+      "role": "Versioned summaries of claims made by other researchers",
+      "authority": "external_evidence",
+      "mutability": "append_only"
+    },
+    {
+      "id": "findings",
+      "name": "Speck findings",
+      "path": "research/findings",
+      "index": "research/findings/README.md",
+      "role": "Distilled Speck conclusions, limitations, and decisions linked to evidence",
+      "authority": "scientific_evidence",
+      "mutability": "normal_version_control"
+    },
+    {
+      "id": "experiments",
+      "name": "Experiment configurations",
+      "path": "experiments",
+      "index": "experiments/README.md",
+      "role": "Immutable runnable or historical model, data, training, and evaluation inputs",
+      "authority": "reproducibility_input",
+      "mutability": "versioned_successors"
+    },
+    {
+      "id": "results",
+      "name": "Checked result records",
+      "path": "results",
+      "index": "results/README.md",
+      "role": "Append-only machine-readable summaries and bounded audit evidence",
+      "authority": "scientific_evidence",
+      "mutability": "append_only"
+    },
+    {
+      "id": "paper_workspace",
+      "name": "Flagship manuscript workspace",
+      "path": "paper",
+      "index": "paper/README.md",
+      "role": "Claim registry, manuscript source, generated figures, tables, and references",
+      "authority": "publication_output",
+      "mutability": "generated_from_evidence"
+    },
+    {
+      "id": "software",
+      "name": "Research software",
+      "path": "speck",
+      "index": "README.md",
+      "role": "Model, data, training, evaluation, analysis, and provenance implementation",
+      "authority": "method_implementation",
+      "mutability": "normal_version_control"
+    },
+    {
+      "id": "archive",
+      "name": "Pre-grant research archive",
+      "path": "archive",
+      "index": "archive/README.md",
+      "role": "Byte-preserved historical evidence and original implementation identities",
+      "authority": "historical_only",
+      "mutability": "immutable_history"
+    }
+  ],
+  "systems": [
+    {
+      "id": "git",
+      "name": "Git repository",
+      "location": "repository checkout and remote Git host",
+      "role": "Code, contracts, small results, findings, notebook, claims, and paper source",
+      "authority": "Canonical text and small machine-readable record"
+    },
+    {
+      "id": "runtime_store",
+      "name": "Speck runtime artifact store",
+      "location": "speck_base_dir, normally /mnt/speck-data/speck for flagship work",
+      "role": "Datasets, checkpoints, full logs, predictions, traces, exports, and temporary files",
+      "authority": "Artifact bytes only when identified by a checked manifest and digest"
+    },
+    {
+      "id": "wandb",
+      "name": "Weights & Biases",
+      "location": "remote service plus ignored local wandb directory",
+      "role": "Live metrics, charts, and operational monitoring",
+      "authority": "Convenience mirror; never the sole scientific record"
+    },
+    {
+      "id": "linear",
+      "name": "Linear",
+      "location": "SpeckLabs workspace",
+      "role": "Work queue, ownership, dependencies, and status communication",
+      "authority": "Operational state; never the sole scientific record"
+    },
+    {
+      "id": "publication_archive",
+      "name": "Publication archive",
+      "location": "Hugging Face and a DOI-minting repository selected before release",
+      "role": "Public models, data metadata, code snapshot, paper, and research compendium",
+      "authority": "Immutable release snapshot after publication audit"
+    }
+  ],
+  "lifecycle": [
+    {
+      "id": "design",
+      "order": 1,
+      "name": "Design and freeze",
+      "record": "Draft plan in Git, followed by immutable experiment inputs",
+      "exit_gate": "Question, controls, metrics, stopping, budget, analysis, and input identities are explicit"
+    },
+    {
+      "id": "execution",
+      "order": 2,
+      "name": "Execute and retain",
+      "record": "Run manifest, outcomes, attempt history, and artifact identities",
+      "exit_gate": "Declared runs and failures are accounted for"
+    },
+    {
+      "id": "analysis",
+      "order": 3,
+      "name": "Analyze and communicate",
+      "record": "Checked results, durable findings, current status, and paper claims",
+      "exit_gate": "Conclusions are traceable to the declared evidence and uncertainty"
+    },
+    {
+      "id": "archive",
+      "order": 4,
+      "name": "Close and archive",
+      "record": "Original paths, hashes, reproduction revisions, and release identities",
+      "exit_gate": "Completed work is findable and verified outside the active tree"
+    }
+  ],
+  "paper": {
+    "workspace": "paper",
+    "contract": "research/flagship/PAPER.md",
+    "claims": "paper/claims.json"
+  },
+  "status_record": "research/status.json",
+  "active_contracts": {
+    "architecture": {
+      "path": "research/flagship/architecture_plan_v2.json",
+      "sha256": "121de50dc2fb018440cfedd10fce4b209e792af8b310fa2576c1101da9d57825",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "data_launch": {
+      "path": "research/flagship/data_launch_plan_v2.json",
+      "sha256": "4851daaa40eb71c0aa4f1006ec66787e310112ab907289eb62d2e5cf259b3812",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "data": {
+      "path": "research/flagship/data_plan_v2.json",
+      "sha256": "36b55b0227346e1f8060fd5e058341e812f4aa11611a254cbf3998f9663ab8be",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "data_rehearsal": {
+      "path": "research/flagship/data_rehearsal_plan_v9.json",
+      "sha256": "ecea03d393b29d6c76c2d0282946570c5a57ffd5236f37cabe0e5ec7e91301f2",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "embedding_head": {
+      "path": "research/flagship/embedding_head_contract_v1.json",
+      "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "firewall": {
+      "path": "research/flagship/firewall_plan_v4.json",
+      "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "heldout_evaluation": {
+      "path": "research/flagship/heldout_evaluation_plan_v1.json",
+      "sha256": "7d91244932661084e09a29546357526116ce0933ac20ad5592c5dae9a54090e9",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "integration": {
+      "path": "research/flagship/integration_plan_v2.json",
+      "sha256": "e528b008fbce63fbe3f2906ea5f21bea5b96ff95055ad311153f7037088d967f",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "comparator": {
+      "path": "research/flagship/minicpm5_comparator_v1.json",
+      "sha256": "b27e82b2f2e3ffa507bb672b29beb062f2a172f86303f376fe78c9184198c6b0",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "precision": {
+      "path": "research/flagship/precision_plan_v1.json",
+      "sha256": "0256e0cbe581f37ffe18aa47270fee33354bcec998d94e13701eebdc0e946f73",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "data_operations": {
+      "path": "research/flagship/production_data_calibration_fallback_v1.json",
+      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "release_policy": {
+      "path": "research/flagship/release_and_data_use_policy_v1.json",
+      "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "source_registry": {
+      "path": "research/flagship/source_registry_v2.json",
+      "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "source_rights": {
+      "path": "research/flagship/source_rights_acceptance_v1.json",
+      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "tokenizer_pilot": {
+      "path": "research/flagship/tokenizer_pilot_plan_v10.json",
+      "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "tokenizer": {
+      "path": "research/flagship/tokenizer_plan_v7.json",
+      "sha256": "3a2d9b147c0a7c30297905267cc90abd611af617a430040db371fdb6a1631a93",
+      "execution": "original_revision_only_until_successor_qualification"
+    },
+    "execution": {
+      "path": "research/flagship/plan_v3.json",
+      "sha256": "74f6575f2925750c7049db0324e06c8ad8362baacab644ac8e263803b30769be",
+      "execution": "planning_only; each run requires a qualified launch manifest"
+    }
+  }
+}
