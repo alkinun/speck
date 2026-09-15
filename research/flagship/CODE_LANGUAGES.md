@@ -98,17 +98,17 @@ preparation rules, and final training-launch authority remain distinct.
 
 ## Current supply evidence
 
-The [26-file successor census](../findings/2026-09-14-expanded-code-metadata.md) and
-[added-file content probe](../findings/2026-09-14-code-supply-probe.md) are complete. The
-combined estimates remain short against E1S headroom in Java, TypeScript, JavaScript and Python
-before full exclusion. Java/TypeScript already cover their complete released files. The larger
-Stack-Edu incumbent-background requirement is a separate unresolved constraint. The original
-stock run remains intentionally paused; no automatic language/background revision has been
-adopted. Samples and metadata bytes are not measured source capacity.
+The [28-file census and targeted content probe](../findings/2026-09-15-targeted-code-supply.md)
+are complete. Combined estimates now exceed E1S headroom in Python (123.387M against 90M)
+and JavaScript (71.800M against 54M), before full exclusion. Java remains at 45.826M against
+54M, and TypeScript at 31.683M against 36M; both already cover all released shards. The larger
+Stack-Edu incumbent-background requirement remains a separate unresolved constraint. Original
+stock preparation remains paused; no language/background revision has been adopted. Samples
+and metadata bytes are not measured source capacity.
 
-The [v3 metadata successor](stack_edu_metadata_acquisition_v3.json) now pins the final JavaScript
-file and third Python file: 9,475,014 additional physical rows / 929,134,037 compressed bytes.
-These two complete files address deficits observed in the content probes without changing the
-language prior, filters or headroom. The earlier 26 files remain an identical included prefix;
-new receipts use a separate output directory. The full 28-file view requires intake verification
-before its metadata census. It does not resolve Java/TypeScript or prove usable code capacity.
+Restricted Stack v3's twelve cached files also do not establish the required matched supply.
+The [bounded metadata-range qualification](stack_v3_metadata_range_qualification_v1.json)
+will compare one pinned remote metadata projection against its complete verified local file.
+Its purpose is to inspect eligibility before committing to larger text transfers. Partial ranges
+are not complete source files; source stock still requires full-file hashes and all content,
+security and exclusion checks. No quality/license rule, source approval or language share changes.
