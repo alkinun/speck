@@ -1,0 +1,217 @@
+{
+  "allocated_node_days_if_awarded": 52.083333333333336,
+  "audit_implementation": [
+    {
+      "path": "speck/provenance/readiness.py",
+      "sha256": "c3eb707c370c53b162bded72d7be010e7ba6abf90d8b74499b071398a0df3195"
+    },
+    {
+      "path": "scripts/readiness_audit.py",
+      "sha256": "16d354aae2df7c49661ee11e954125826e7504ef8268046082460a89618c6659"
+    }
+  ],
+  "boundary": "Static cross-contract coherence under the current pending-review phase, not exhaustive software correctness, scientific novelty, source availability, GPU readiness or model-launch permission. An award or qualified execution requires a successor readiness audit rather than editing this historical result.",
+  "catalog_validation": {
+    "active_program": "flagship",
+    "catalog": {
+      "path": "research/catalog.json",
+      "sha256": "a76b74499018256f5b25348546eef05c9193521f4200d823fdb8f87642d7236f"
+    },
+    "collections": {
+      "archive": {
+        "files": 1417,
+        "path": "archive"
+      },
+      "experiments": {
+        "files": 11,
+        "path": "experiments"
+      },
+      "findings": {
+        "files": 39,
+        "path": "research/findings"
+      },
+      "flagship": {
+        "files": 122,
+        "path": "research/flagship"
+      },
+      "literature": {
+        "files": 55,
+        "path": "research/literature"
+      },
+      "notebook": {
+        "files": 4,
+        "path": "research/notebook"
+      },
+      "paper1_archive": {
+        "files": 84,
+        "path": "archive/pregrant-history/research/paper-1"
+      },
+      "paper_workspace": {
+        "files": 39,
+        "path": "paper"
+      },
+      "program_history": {
+        "files": 46,
+        "path": "research/history"
+      },
+      "promotion_protocol": {
+        "files": 23,
+        "path": "archive/pregrant-history/research/architecture-promotion-v1"
+      },
+      "results": {
+        "files": 95,
+        "path": "results"
+      },
+      "software": {
+        "files": 184,
+        "path": "speck"
+      }
+    },
+    "format": "speck_research_catalog_validation",
+    "format_version": 1,
+    "lifecycle_stages": 4,
+    "notebook_entries": 3,
+    "paper": {
+      "claim_ids": [
+        "C-USE",
+        "C-INTERACTION",
+        "C-FRONTIER"
+      ],
+      "claim_statuses": {
+        "planned": 3
+      },
+      "claims": 3,
+      "headline_ready": [],
+      "paper_id": "speck-long-context-1",
+      "path": "paper/claims.json",
+      "sha256": "a40272946dedb375c5661701aed10c59e16c8cb892e5860f4d8fa03d53b03b85",
+      "status": "pre_results"
+    },
+    "project": "Speck: efficient long-context intelligence",
+    "selected_contracts": 21,
+    "status": "active_pregrant_long_context_pivot",
+    "status_record": "research/status.json",
+    "systems": 5
+  },
+  "core_branch_runs": 12,
+  "core_parent_runs": 6,
+  "format": "speck_pre_access_coherence_audit",
+  "format_version": 1,
+  "inputs": [
+    {
+      "path": "research/catalog.json",
+      "sha256": "a76b74499018256f5b25348546eef05c9193521f4200d823fdb8f87642d7236f"
+    },
+    {
+      "path": "research/status.json",
+      "sha256": "6a9570b3ca6b0b065c31258d1c8d1663fec194892d3d8e1c6209825514b035fd"
+    },
+    {
+      "path": "paper/claims.json",
+      "sha256": "a40272946dedb375c5661701aed10c59e16c8cb892e5860f4d8fa03d53b03b85"
+    },
+    {
+      "path": "research/flagship/r0_shape_preparation_v1.json",
+      "sha256": "5b84ebeeab1635449ed6d61a7a442c31734adf8fc15053292807121612df32c4"
+    },
+    {
+      "path": "results/systems/r0-shape-preparation-20260915.json",
+      "sha256": "676e824122a62ad22bfdf945238a5e2f25f4ee7896207b629e13f5a232106c84"
+    },
+    {
+      "path": "research/flagship/model_plan_v1.json",
+      "sha256": "6fb9ca842fad55c5a93ef06bb28e10704db9e3a0892fb9a142afccc16c228e63"
+    },
+    {
+      "path": "research/flagship/data_plan_v3.json",
+      "sha256": "fabc404ce0ec7bbc3b7eeb7b381d9b311b94562bdd81c60ca95748e4c334006a"
+    },
+    {
+      "path": "research/flagship/architecture_plan_v3.json",
+      "sha256": "24879f33422a3b06ea0ad89d2fd1ab880a31d763042eaafc5caba39d6ba4c94e"
+    },
+    {
+      "path": "research/flagship/long_context_study_v1.json",
+      "sha256": "25588bc446c1c3640488fecabe2b14d4b913f3f786786bc08d25db14fcc7431c"
+    },
+    {
+      "path": "research/flagship/evaluation_plan_v2.json",
+      "sha256": "94e6c4166e5fe7eea06387926b558d550814e92c749a93b196839aa1f97433f0"
+    },
+    {
+      "path": "research/flagship/comparator_plan_v2.json",
+      "sha256": "1214657800b88d69e2c0a05482bb0abbb5733a1239fbfdf39035988198f1aa6c"
+    },
+    {
+      "path": "research/flagship/capability_plan_v1.json",
+      "sha256": "0575bfb5b2a8179d46ca5960bfe78c86cf5faaad8f693de05397b0f5b607bec8"
+    },
+    {
+      "path": "research/flagship/pivot_decision_v1.json",
+      "sha256": "86d30d4c403b4da3c1b282f600418b3c12b045d9e0a6739f13afb408c906124e"
+    },
+    {
+      "path": "research/flagship/tokenizer_decision_v1.json",
+      "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+    },
+    {
+      "path": "research/flagship/tokenizer_plan_v7.json",
+      "sha256": "3a2d9b147c0a7c30297905267cc90abd611af617a430040db371fdb6a1631a93"
+    },
+    {
+      "path": "research/flagship/tokenizer_pilot_plan_v10.json",
+      "sha256": "4735b9f7e0ad332b7626f2c637a666f8459fe1651585bd7381f67ce352b3743d"
+    },
+    {
+      "path": "research/flagship/embedding_head_contract_v1.json",
+      "sha256": "e7f92090465241381b7932672ce145a5d9a5c6ec34b230818e664e26c4d5d6c7"
+    },
+    {
+      "path": "research/flagship/precision_plan_v1.json",
+      "sha256": "0256e0cbe581f37ffe18aa47270fee33354bcec998d94e13701eebdc0e946f73"
+    },
+    {
+      "path": "research/flagship/production_data_calibration_fallback_v1.json",
+      "sha256": "2c76681190af1bdd958dad7daeb4c11d7a5c198090f743647d667dd089256407"
+    },
+    {
+      "path": "research/flagship/data_rehearsal_plan_v9.json",
+      "sha256": "ecea03d393b29d6c76c2d0282946570c5a57ffd5236f37cabe0e5ec7e91301f2"
+    },
+    {
+      "path": "research/flagship/data_launch_plan_v2.json",
+      "sha256": "4851daaa40eb71c0aa4f1006ec66787e310112ab907289eb62d2e5cf259b3812"
+    },
+    {
+      "path": "research/flagship/firewall_plan_v4.json",
+      "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648"
+    },
+    {
+      "path": "research/flagship/source_rights_acceptance_v1.json",
+      "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+    },
+    {
+      "path": "research/flagship/source_registry_v2.json",
+      "sha256": "ed6a32b9c8d17d421358e4c4191cd5b0e6960e8400fd7d92118ead053021b18e"
+    },
+    {
+      "path": "research/flagship/release_and_data_use_policy_v1.json",
+      "sha256": "01f0c2fd3bae78169b699bc878dd14813bf9c13bd98476c36bef1e21806f8454"
+    },
+    {
+      "path": "research/flagship/plan_v4.json",
+      "sha256": "eba30d7a99973afa182fdcc76b4466bc4363d1e89402dd17d8e9197c9ee0e246"
+    }
+  ],
+  "pending": [
+    "allocation decision, site access and scheduler details",
+    "bounded R0 executor and actual GH200 kernel/fit/backward/DDP/resume/throughput checks",
+    "successor source capacity, exposure limits, delivery and jointly eligible coherent units",
+    "family-separated pilot/development/final tasks and pinned benchmark/scorer identities",
+    "numerical study floors/margins, endpoints, optimizer settings, cost forecast and transfer route",
+    "independent novelty/design review and new-partition launch compatibility"
+  ],
+  "shape_cases": 6,
+  "status": "pre_access_contracts_consistent_execution_pending",
+  "training_authority": false
+}
