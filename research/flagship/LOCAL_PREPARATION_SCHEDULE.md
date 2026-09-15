@@ -45,6 +45,13 @@ code background while retaining Stack-Edu as a matched specialist treatment, or 
 common-language allocation revision. These are proposals, not adopted recipe changes. No lowering
 quality/license filters, silent source substitution, or counting surplus in another language.
 
+The [Stack v3 metadata-range path](../findings/2026-09-15-stack-v3-metadata-ranges.md) now
+passes real complete-file byte/projection parity. A [sixteen-file discovery](../findings/2026-09-15-stack-v3-metadata-discovery.md)
+completed in 219.03 seconds with 290.8MB of range payloads for 6.70GB of declared complete
+files. Preserve the distinction between inspected metadata and fully hash-verified source files.
+Next qualify content yield on existing complete cached files, then select and bind complete-file
+acquisition. Do not convert metadata counts to usable token capacity or launch all inspected files.
+
 ## 3. Qualify a more efficient fetch path on real eligible inputs
 
 The [operating observation](../../results/systems/code-acquisition-operating-observation-20260914.json)

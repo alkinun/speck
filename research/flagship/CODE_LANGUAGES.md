@@ -108,7 +108,9 @@ and metadata bytes are not measured source capacity.
 
 Restricted Stack v3's twelve cached files also do not establish the required matched supply.
 The [bounded metadata-range qualification](stack_v3_metadata_range_qualification_v1.json)
-will compare one pinned remote metadata projection against its complete verified local file.
-Its purpose is to inspect eligibility before committing to larger text transfers. Partial ranges
+passed: one pinned remote metadata projection exactly matches its complete verified local file.
+The [sixteen-file discovery](../findings/2026-09-15-stack-v3-metadata-discovery.md) then completed
+with 290.8MB range payloads for 6.70GB declared complete files. It records provisional
+per-language metadata supply before committing to larger text transfers. Partial ranges
 are not complete source files; source stock still requires full-file hashes and all content,
 security and exclusion checks. No quality/license rule, source approval or language share changes.

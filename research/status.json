@@ -226,10 +226,15 @@
     },
     {
       "id": "stack_v3_supply_census",
-      "state": "twelve_cached_files_metadata_checked_content_capacity_unqualified",
+      "state": "cached_census_and_sixteen_file_partial_metadata_discovery_complete",
       "plan": "research/flagship/stack_v3_metadata_census_v1.json",
       "evidence": "results/data/stack-v3-metadata-feasibility-20260914.json",
-      "next": "Existing cached files do not establish E1S per-language token supply. Inspect efficient pinned acquisition of eligible code before larger transfers; preserve restricted-source file/repository license, vendor/fork/path and English-prose rules. No recipe change or usable-capacity claim."
+      "next": "Sixteen new metadata projections completed in 219.03s using 290.8MB range payloads for 6.70GB declared complete files. Per-language provisional eligibility is recorded; full source hashes/content remain unverified. Qualify content/prose/security/Mistral yield on already-complete cached files before selecting a larger complete-file tranche or matched-language/background successor. Keep all source filters, original attempts and current language/recipe contracts; no model launch.",
+      "metadata_discovery_plan": "research/flagship/stack_v3_metadata_discovery_v1.json",
+      "metadata_discovery_result": "results/data/stack-v3-metadata-discovery-20260915.json",
+      "metadata_discovery_verification": "results/systems/stack-v3-metadata-discovery-verification-20260915.json",
+      "metadata_discovery_launch": "results/systems/stack-v3-metadata-discovery-launch-20260915.json",
+      "range_qualification": "results/systems/stack-v3-metadata-range-qualification-20260915.json"
     },
     {
       "id": "local_preparation_followups",

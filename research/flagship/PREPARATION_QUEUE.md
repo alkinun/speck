@@ -134,3 +134,10 @@ are complete: 256 eligible samples, 183 retained documents / 109,170 tokens. Com
 are 123.387M Python and 71.800M JavaScript tokens; both exceed their E1S targets before full
 exclusion. Java/TypeScript constraints and the production code-stock pause remain in force.
 Resolve the matched-language/shared-background supply contract next; no recipe change is adopted.
+
+The [restricted Stack v3 metadata inspection](../findings/2026-09-15-stack-v3-metadata-discovery.md)
+is complete for sixteen new pinned file identities: 290.8MB range payloads instead of fetching
+6.70GB of complete files merely for their metadata. Complete-file hash/content qualification
+remains pending; these are provisional declared bytes, not tokens. Qualify content yield on
+already-complete cached files before binding a larger complete-file tranche. Do not sum old/new
+banks as globally unique supply or automatically change language/background assignments.

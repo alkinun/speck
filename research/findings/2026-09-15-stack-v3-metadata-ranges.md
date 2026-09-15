@@ -7,6 +7,8 @@ The remote path fetched **16,149,873 payload bytes in eleven range attempts**, c
 not a measured download-speed ratio. Range acquisition took 17.02 seconds and the subsequent
 projection/parity/reopen checks brought this invocation to 18.49 seconds. Initial complete-file
 hashing and HTTP/TLS/redirect overhead are outside these respective timing/byte boundaries.
+The [verified archive](../../results/systems/stack-v3-metadata-range-archive-20260915.json)
+preserves all 37 working payloads on the data drive while retaining their NVMe originals.
 
 Every retrieved byte range matches the complete verified local file. Decoded metadata agrees
 exactly over **21,014 repositories / 231,664 physical files**, and reopening the saved ranges

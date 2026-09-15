@@ -1,0 +1,24 @@
+{
+  "all_archived_payloads_reopened_and_verified": true,
+  "all_range_and_projection_hashes_pass": true,
+  "archive": {
+    "path": "/mnt/speck-data/speck/stack-v3-metadata-discovery-20260915/metadata.tar",
+    "sha256": "7ec39cb2b7f3d0438ebd37cadbe03c34b3648a33d02fcf04533c33b3cec95aaa"
+  },
+  "archive_bytes": 1292544000,
+  "boundary": "Completed metadata projection, per-file receipt and every acquired range payload checked against their recorded hashes, then archival copy fully reopened. This does not verify complete source-file hashes or source content; those remain unacquired. No model-quality or usable-capacity claim.",
+  "format": "speck_metadata_discovery_verification",
+  "format_version": 1,
+  "inventory": {
+    "path": "/mnt/speck-data/speck/stack-v3-metadata-discovery-20260915/inventory.json",
+    "sha256": "6537b3167195df9f4fa6254fb4d3f0a30f39a8aea692bc89c843e0d6a1bdb0d3"
+  },
+  "original_working_state_preserved": true,
+  "payloads": 698,
+  "result": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-metadata-discovery-20260915.json",
+    "sha256": "4ccfa30a5f35f057ccdfd0a76ba9517c24ef327f1c40a143aca6e059adfef177"
+  },
+  "training_authority": false,
+  "verification_seconds": 11.156866965000518
+}

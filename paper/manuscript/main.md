@@ -160,6 +160,13 @@ each source and to both halves of the equal blend; preparation headroom is requi
 The allocation is a declared preparation prior, not an empirically optimal mix. Finalist identities
 remain unselected, and matched language shares do not erase source-specific license/vendor differences.
 
+A bounded [Stack v3 metadata-range check](../../research/findings/2026-09-15-stack-v3-metadata-ranges.md)
+reproduced all metadata for one complete verified shard using 16,149,873 remote payload bytes,
+5.93% of its 272,393,747-byte file. Every range matched the local reference and the decoded
+projection covered 21,014 repositories / 231,664 files. This supports inspecting eligibility
+before larger transfers; partial reads of new shards do not establish whole-file hash identity,
+usable code-token capacity, model quality, or GH200 throughput.
+
 ### 3.2 Model results to be reported
 
 Report every source arm, finalist replication, equal-category effect, and per-category guardrail in
