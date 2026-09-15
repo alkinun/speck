@@ -269,6 +269,12 @@
       "selection_identity_result": "results/data/heldout-selection-identity-20260915.json",
       "verification": "results/systems/heldout-selection-identity-verification-20260915.json",
       "next": "All 28604 real production selection documents have verified source-derived identity and reconstruction-locator ledgers; ordered category commitments and independent reopen pass. Resolve preserved source artifacts and bind independent extraction, aggregate training identities, audit commitment ledgers without opening payloads, leakage checks and model/backend/analysis settings. This is not a complete two-view bundle or training/selection authority."
+    },
+    {
+      "id": "e3_repetition_materializer",
+      "state": "explicit_source_stream_implementation_cpu_fixture_qualification_real_pools_pending",
+      "contract": "research/flagship/REPETITION_VIEWS.md",
+      "next": "Freeze jointly eligible nested whole-document pools/order for seeds 42/43 and aligned exact source exposures from execution geometry; then export production packed manifests with repeated occurrence provenance and qualify launch. Source-stream materializer and unchanged two-rank loader algorithm pass CPU fixtures. No real E3 materialization or training has launched, and nominal 6B is not silently rounded."
     }
   ]
 }

@@ -51,12 +51,16 @@ approvals, category assignment and eligibility.
 
 ## Concrete E3 integration issue
 
-The current packed loader deliberately prohibits training-source wraparound before the requested
-training horizon. E3's 2×/4× exposures therefore need an explicit repeated-view materializer or a
-qualified declared repetition contract; simply giving the loader a smaller pool would fail rather
-than produce the registered experiment. Bind nested pool membership, boundary alignment, +1-token
-lookahead, exact exposure and resume identities before E3 execution. No implicit repetition or new
-loader default is introduced by the current preparation choice.
+The packed loader prohibits training-source wraparound before the requested horizon. The
+[explicit repetition materializer](REPETITION_VIEWS.md) now writes declared 1×/2×/4× source streams
+with nested whole-document prefixes, exact input exposure and +1-token lookahead. It preserves
+interrupted shard attempts and verifies original periodic bytes on resume; the loader default
+remains unchanged. CPU fixtures cover distributed reads and resumed-versus-uninterrupted parity.
+
+Real E3 readiness still requires jointly eligible pool membership and order for both seeds,
+aligned execution geometry and actual scheduled source quotas, plus production packed-manifest
+export with repeated occurrence provenance and launch qualification. The nominal 6B horizon is
+not divisible by a 2,048-token sequence; no implicit rounding or repetition is introduced.
 
 The queue continues through local preparation while hardware-dependent work awaits grant access.
 Tokenizer historical spending reconciliation remains a disclosure task. The already-determined
