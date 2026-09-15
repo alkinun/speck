@@ -1,0 +1,19 @@
+{
+  "completed_reopen_pass": true,
+  "documents": 1851034,
+  "elapsed_seconds": 264.42180903699773,
+  "format": "speck_stock_tokenization_result",
+  "format_version": 1,
+  "manifest": {
+    "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
+    "sha256": "2a09fc9ee92924815de5c833b94276af2e3bf5f50e059603ada844c372c371d6"
+  },
+  "plan": {
+    "path": "/mnt/speck-data/speck/local-preparation-followups-v2-20260914/cosmopedia_v2-token-plan.json",
+    "sha256": "0a97d91af2e5e67d0189ecc591a7cd95ba2ae3a7121f0afebfd4a8295be25c7c"
+  },
+  "repository_revision": "31dc671e4d94fcf236c69b5f82ef8af1eca487dd",
+  "reused": false,
+  "tokens": 1489288743,
+  "training_authority": false
+}

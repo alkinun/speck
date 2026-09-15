@@ -139,7 +139,17 @@ Its observed WAL peak was 514.85 MiB, above the earlier 512 MiB observation but 
 The [completion finding](../../research/findings/2026-09-15-finemath-headroom.md) preserves these
 boundaries; they do not establish a controlled speedup or GH200 throughput.
 
-The [source-capacity table](../tables/source-capacity-v4/source-capacity.md) compares preparation requirements
+The five-shard Cosmopedia stock retains **1,851,034 documents and 1,489,288,743 tokens**,
+exceeding its 960M headroom target by 529,288,743 tokens. Its document cache reproduces these
+counts; completion review checks raw/acquisition/publication identities, reference preservation,
+exclusion controls and cache reopen. Repeated full-prompt hashes occur in 33,190 documents beyond
+their first occurrence; prompt hashes do not establish original seed ancestry. The exclusion
+invocation measured 59,059.41 seconds, including 48,855.77 seconds (82.72%) in SQLite commit,
+during concurrent local preparation. Cache construction measured 264.42 seconds. The
+[completion finding](../../research/findings/2026-09-15-cosmopedia-stock.md) preserves lineage
+limitations and timing boundaries; these are preparation results, not correctness or learning gains.
+
+The [source-capacity table](../tables/source-capacity-v5/source-capacity.md) compares preparation requirements
 only with source-identical measured stock. It does not replace Stack-Edu with Common Pile's
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.

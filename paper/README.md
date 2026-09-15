@@ -25,15 +25,16 @@ the completed FineWiki stock and byte identity between the counting and frozen b
 Its [separate receipt](tables/selected-stock-v1/assets.json) preserves the earlier assets and updates
 the measurement without summing overlapping banks.
 
-The [current capacity table](tables/source-capacity-v4/source-capacity.md) incorporates the combined
-science stock, completed eleven-shard FineMath stock, and v2 preparation assignments. FineMath
+The [current capacity table](tables/source-capacity-v5/source-capacity.md) incorporates the combined
+science stock, completed eleven-shard FineMath and five-shard Cosmopedia stocks, and v2 preparation assignments.
+Cosmopedia has 1,489,288,743 tokens and a verified cache, exceeding 960M headroom by 529,288,743. FineMath
 now has 1,124,167,472 tokens and a verified cache, exceeding its 960M headroom target by 164,167,472.
 The original eight-shard text is an exact included prefix. Its renderer accepts a hash-bound input manifest and
 requires a new output directory, preserving every earlier table:
 
 ```bash
-python paper/analysis/source_capacity.py paper/analysis/source-capacity-v4.json paper/tables/source-capacity-v4
-python paper/analysis/source_capacity.py paper/analysis/source-capacity-v4.json paper/tables/source-capacity-v4 --check
+python paper/analysis/source_capacity.py paper/analysis/source-capacity-v5.json paper/tables/source-capacity-v5
+python paper/analysis/source_capacity.py paper/analysis/source-capacity-v5.json paper/tables/source-capacity-v5 --check
 ```
 
 Asset layout:

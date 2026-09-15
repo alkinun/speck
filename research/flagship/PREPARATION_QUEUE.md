@@ -78,11 +78,10 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   **1,124,167,472 tokens** and a verified document cache. The 960M target passes by 164,167,472.
   Its earlier eight-shard retained text is a verified exact prefix, not additional supply. Bind
   joint experiment-view eligibility next; do not restart the completed source/cache jobs.
-- Cosmopedia's [five-shard plan](cosmopedia_stock_preparation_v1.json) is
-  [running concurrently](../../results/systems/cosmopedia-stock-launch-20260914.json).
-  Its [prompt-lineage and corpus-selection policy](COSMOPEDIA_STOCK.md) preserves generated text,
-  qualified document filters and natural template/style/seed-label diagnostics. Actual 960M-target
-  capacity and token caching remain pending. Local costs include concurrent preparation.
+- Cosmopedia's [completed five-shard stock](../findings/2026-09-15-cosmopedia-stock.md) has
+  **1,489,288,743 tokens** and a verified document cache, passing 960M headroom by 529,288,743.
+  Its [prompt-lineage and corpus-selection policy](COSMOPEDIA_STOCK.md) and natural diagnostics
+  remain explicit. Joint eligibility follows; do not restart completed source/cache jobs.
 - Code's [matched eleven-language requirements](CODE_LANGUAGES.md) now bind identical token shares
   for each source, the equal blend and shared background. Stack-Edu's three earlier
   [SWH access probes](../../results/data/stack-edu-access-review-20260914.json) pass, and its
@@ -98,7 +97,7 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 - FineWeb-Edu's [complete fourteen-file stock view](FINEWEB_EDU_STOCK.md) is pinned.
   The original qualified final shard is preserved and verified in the new cache; its real reader/web
   policy passed a bounded prefix check. [Raw-only acquisition](../../results/data/fineweb-edu-raw-acquisition-20260914.json)
-  completed with all fourteen files verified. The three-file E1S tranche is conditionally queued
+  completed with all fourteen files verified. The three-file E1S text tranche is now running
   at 1.32B selected-Mistral tokens; retain the eventual full-stock 5.28B target. Raw files are not eligible supply.
 - Continue remaining alternative-source stock, followed by joint per-arm assembly
   and execution contracts. Tokenizer historical expenditure remains a disclosure task; no tokenizer
@@ -109,7 +108,7 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 Follow [LOCAL_PREPARATION_SCHEDULE.md](LOCAL_PREPARATION_SCHEDULE.md): establish code-supply
 feasibility first, qualify a bounded eligible-request/NVMe fetch path, and assemble a complete
 E1S-sized dataset before maximal stocks. Existing recipes and source-use approvals remain in
-force until an explicit successor is adopted. FineMath and its cache are complete; Cosmopedia continues; FineWeb-Edu raw
+force until an explicit successor is adopted. FineMath and Cosmopedia caches are complete; FineWeb-Edu E1S text is running and raw
 acquisition is complete; Stack-Edu is intentionally paused with its evidence intact.
 
 The [ordered code-fetch qualification](../findings/2026-09-14-ordered-code-fetch.md) and
@@ -123,8 +122,7 @@ remains paused pending a recorded supply/recipe decision; no language changes ar
 The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) binds three complete
 downloaded files and 1.32B tokens with unchanged filters. The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md)
 is [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json):
-FineMath is complete; it now waits for Cosmopedia, builds and verifies its cache, then
-processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
+FineMath and Cosmopedia caches are complete; it now processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until publication; failures/shortfalls stop dependent work. Preserve the fourteen-file
 5.28B full-stock requirement and reuse identical acquisitions on later expansion.
 

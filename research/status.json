@@ -67,10 +67,13 @@
     },
     {
       "id": "cosmopedia_stock",
-      "state": "five_shard_acquisition_complete_combined_exclusion_running",
+      "state": "five_shard_text_and_token_cache_verified_headroom_pass",
       "plan": "research/flagship/cosmopedia_stock_preparation_v1.json",
-      "next": "Cosmopedia remains in the frozen combined exclusion pass. At 2026-09-15 03:51 UTC, its durable candidate cursor was 1,230,000. The followup service will validate the completed 960M capacity/storage/controls and build/reopen its cache, then start the E1S FineWeb tranche. Do not launch duplicates or infer final capacity from the live cursor.",
-      "launch": "results/systems/cosmopedia-stock-launch-20260914.json"
+      "next": "Completed 1,851,034 documents / 1,489,288,743 selected-Mistral tokens, passing 960M headroom by 529,288,743. Full completion review and cache reopen pass. Bind joint experimental eligibility next; preserve prompt-lineage limitations and concurrent preparation cost. Do not restart completed source/cache jobs.",
+      "launch": "results/systems/cosmopedia-stock-launch-20260914.json",
+      "evidence": "results/data/cosmopedia-stock-preparation-20260914.json",
+      "token_cache": "results/data/cosmopedia-token-stock-20260914.json",
+      "verification": "results/systems/cosmopedia-completion-verification-20260915.json"
     },
     {
       "id": "stack_edu_stock",
@@ -96,12 +99,12 @@
     },
     {
       "id": "fineweb_edu_stock",
-      "state": "raw_complete_e1s_text_and_cache_conditionally_queued",
+      "state": "raw_complete_e1s_text_running",
       "plan": "research/flagship/fineweb_edu_stock_preparation_v1.json",
       "evidence": "results/data/fineweb-edu-shard-manifest-20260914.json",
       "intake": "results/data/fineweb-edu-raw-cache-intake-20260914.json",
       "launch": "results/systems/fineweb-edu-raw-launch-20260914.json",
-      "next": "The bound local followup service will start the three-file E1S tranche after successful FineMath/Cosmopedia completion and checked caches. Actual 1.32B selected-Mistral headroom remains unmeasured. Preserve the full fourteen-file 5.28B requirement and overlapping-view accounting; do not launch a duplicate text/cache job.",
+      "next": "The frozen local followup service started the three-file E1S text tranche after FineMath/Cosmopedia caches passed. Actual 1.32B selected-Mistral headroom remains unmeasured. The same service will build/reopen its cache only on success. Preserve the fourteen-file 5.28B requirement and overlapping-view accounting; do not launch a duplicate job.",
       "raw_result": "results/data/fineweb-edu-raw-acquisition-20260914.json",
       "e1s_plan": "research/flagship/fineweb_edu_e1s_stock_preparation_v2.json"
     },
@@ -228,10 +231,10 @@
     },
     {
       "id": "local_preparation_followups",
-      "state": "finemath_cache_complete_waiting_for_cosmopedia",
+      "state": "finemath_cosmopedia_caches_complete_fineweb_e1s_text_running",
       "plan": "research/flagship/local_preparation_followups_v2.json",
       "launch": "results/systems/local-preparation-followups-v2-launch-20260914.json",
-      "next": "FineMath text and token cache completed and passed verification. The same frozen service now waits for Cosmopedia, then validates/tokenizes it and prepares/tokenizes the E1S FineWeb tranche. Do not launch duplicate jobs. Published results require separate evidence/status commits; no model training is authorized.",
+      "next": "FineMath and Cosmopedia text/cache results completed and passed verification. The same frozen service is processing the E1S FineWeb tranche and will cache it after successful capacity/storage/exclusion checks. Do not launch duplicates. No model training is authorized.",
       "replacement": "results/systems/local-followup-replacement-20260914.json"
     }
   ]

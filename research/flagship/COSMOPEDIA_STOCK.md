@@ -5,7 +5,8 @@ at the already-approved SmolLM-Corpus revision. The [shard manifest](../../resul
 pins 1,881,445 physical rows / 5,879,393,188 compressed bytes. Remote footers establish schema/row
 expectations; acquisition verifies complete local hashes and physical counts before accepting units.
 The fixed target is **960M selected-Mistral tokens**, covering 800M nominal plus 20% headroom.
-Five files are a preparation allocation, not evidence that the target passes.
+The [completed result](../findings/2026-09-15-cosmopedia-stock.md) now passes at
+1,489,288,743 tokens with a verified document cache.
 
 ## Generated text and lineage
 
@@ -42,8 +43,8 @@ human source-use approval or confer model-launch authority.
 
 The older conditional Cosmopedia bank is overlapping evidence, not additional supply. Source-specific
 capacity still needs joint background/treatment exclusion, whole-document allocation, order/seed,
-exact quotas, splits and launch contracts. Qualified text can later be cached with a separate plan
-binding the actual result hash and frozen tokenizer; no speculative cache result is declared here.
+exact quotas, splits and launch contracts. The completed cache binds the actual result hash and frozen tokenizer. Do not restart the
+completed text or cache jobs; preserve their execution identities and results.
 
 ```bash
 uv run --no-sync python -m scripts.prepare_cosmopedia_stock \

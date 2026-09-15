@@ -1,0 +1,3811 @@
+{
+  "acquisition": {
+    "elapsed_seconds": 12265.877613023,
+    "setup_seconds": 37.85737470999993,
+    "units": [
+      {
+        "elapsed_seconds": 1359.8298338900004,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "af55329701a358a2b3e4a1c528afa74520e20553640aa45baf3a42949e5a0628",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1962749017,
+            "path": "records.jsonl",
+            "sha256": "824529f2664828f5710707b10288a47a200e15d0491ebc362b29f4b248a3c4cc"
+          },
+          "rejections": {
+            "benchmark_contamination": 2405,
+            "duplicate_lines": 24,
+            "gitleaks": 6,
+            "raw_email_or_ipv4": 198,
+            "synthetic_document_bytes": 19,
+            "synthetic_model_identity_phrase": 21,
+            "synthetic_non_English": 144,
+            "synthetic_qualified_PII": 2,
+            "synthetic_repeated_ngrams": 28
+          },
+          "retained_records": 373186,
+          "retained_utf8_bytes": 1397909565,
+          "row_window": [
+            0,
+            376289
+          ],
+          "security_report": {
+            "findings": 7,
+            "path": "security/cosmopedia_v2__file_0-records.json",
+            "sha256": "aafb737704e70c5fd4546c98dd121b722f99bb7fb2957f7e3c31100bb928ea69"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__file_0",
+          "yielded_rows": 376033
+        },
+        "raw": {
+          "bytes": 1174424341,
+          "download_seconds": 1.2400050763972104e-07,
+          "downloaded_this_invocation": false,
+          "path": "/mnt/speck-data/speck/source-qualification/cosmopedia-stock-raw-v1/db26bd6f011983c6ed57.parquet",
+          "sha256": "5a25721146377d6e7f288c244e991df93e672b8cc3e535fd4aac5da4cdb1491d",
+          "verification_seconds": 0.5280103330005659
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2440.6375478160007,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "d49fc2873c75d3ef890c9f4d0e9032df14dd73c01771f8d6480a98a169131ced",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1962218488,
+            "path": "records.jsonl",
+            "sha256": "82530353dff07c37070491fb704de6a243b673af41a31d33ddd390c1c2fbf9ef"
+          },
+          "rejections": {
+            "benchmark_contamination": 2384,
+            "duplicate_lines": 10,
+            "gitleaks": 9,
+            "raw_email_or_ipv4": 190,
+            "synthetic_document_bytes": 27,
+            "synthetic_model_identity_phrase": 20,
+            "synthetic_non_English": 170,
+            "synthetic_qualified_PII": 2,
+            "synthetic_repeated_ngrams": 19
+          },
+          "retained_records": 373215,
+          "retained_utf8_bytes": 1397338845,
+          "row_window": [
+            0,
+            376289
+          ],
+          "security_report": {
+            "findings": 9,
+            "path": "security/cosmopedia_v2__file_1-records.json",
+            "sha256": "dc5f98fd33332600744c2a60ae455f585e029278289b291c08b5e4f7c2a765ab"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__file_1",
+          "yielded_rows": 376046
+        },
+        "raw": {
+          "bytes": 1175620980,
+          "download_seconds": 321.25797269299983,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/source-qualification/cosmopedia-stock-raw-v1/a0343fc95b27011f82c5.parquet",
+          "sha256": "6d7662f05a7652ce0075e5986bd69161943baf640c15b6ef720cfaef11c4ae60",
+          "verification_seconds": 0.5510107569989486
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2955.4146862809994,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "d4a9e86799bbba335f25e100e847f422274abfb1ca256f705fee5cbb3da34f70",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1964041577,
+            "path": "records.jsonl",
+            "sha256": "12f88f5bd82d21a8c8b862f31a38702f40211c0abe1569c18f5d9b088ba0257d"
+          },
+          "rejections": {
+            "benchmark_contamination": 2364,
+            "duplicate_lines": 22,
+            "gitleaks": 2,
+            "raw_email_or_ipv4": 193,
+            "synthetic_document_bytes": 31,
+            "synthetic_model_identity_phrase": 16,
+            "synthetic_non_English": 154,
+            "synthetic_qualified_PII": 9,
+            "synthetic_repeated_ngrams": 33
+          },
+          "retained_records": 373212,
+          "retained_utf8_bytes": 1399171857,
+          "row_window": [
+            0,
+            376289
+          ],
+          "security_report": {
+            "findings": 2,
+            "path": "security/cosmopedia_v2__file_2-records.json",
+            "sha256": "f7d86c3dddb14e4abf679e8e4c08eb059857458a32c3d57c53a455376ef2e1a9"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__file_2",
+          "yielded_rows": 376036
+        },
+        "raw": {
+          "bytes": 1177666049,
+          "download_seconds": 521.1261551150001,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/source-qualification/cosmopedia-stock-raw-v1/b3b48f96d24dffceed45.parquet",
+          "sha256": "2c3ec2f6507548a1cea06b5d9da049ba885ff2610a39c5e63b9d3eda091eb5de",
+          "verification_seconds": 0.5282318009994924
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2998.377839157998,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "d09df425db36fe033622f9e1d7a625eb48f3cdfa31903050440419d271c13d40",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1963173009,
+            "path": "records.jsonl",
+            "sha256": "09dab133ff1b922dafe11835b03aa3aa9045bf10eafc7765b6006974a27cd9d9"
+          },
+          "rejections": {
+            "benchmark_contamination": 2412,
+            "duplicate_lines": 11,
+            "gitleaks": 8,
+            "raw_email_or_ipv4": 191,
+            "synthetic_document_bytes": 35,
+            "synthetic_model_identity_phrase": 21,
+            "synthetic_non_English": 142,
+            "synthetic_qualified_PII": 3,
+            "synthetic_repeated_ngrams": 35
+          },
+          "retained_records": 373173,
+          "retained_utf8_bytes": 1398360107,
+          "row_window": [
+            0,
+            376289
+          ],
+          "security_report": {
+            "findings": 9,
+            "path": "security/cosmopedia_v2__file_3-records.json",
+            "sha256": "dbfe78017929043f5dfd35d2e7ffe7434e90591ef9e80fdadcb3b47ca56d91e4"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__file_3",
+          "yielded_rows": 376031
+        },
+        "raw": {
+          "bytes": 1174956442,
+          "download_seconds": 717.0038212359977,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/source-qualification/cosmopedia-stock-raw-v1/f51cf470c9c1bada7571.parquet",
+          "sha256": "60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599",
+          "verification_seconds": 0.530186315998435
+        },
+        "reused": false
+      },
+      {
+        "elapsed_seconds": 2472.0042510649982,
+        "manifest": {
+          "category": "synthetic",
+          "config_sha256": "f2d2673c5ed4a7b22d761dd17f0f55eaa5ab565119dbf972d0d80af20cfc207c",
+          "format": "speck_acquisition_unit",
+          "format_version": 1,
+          "output": {
+            "bytes": 1962822358,
+            "path": "records.jsonl",
+            "sha256": "48e875d092983ab0477e865855047da7012c0ea332285bc23257eecc466fcec0"
+          },
+          "rejections": {
+            "benchmark_contamination": 2349,
+            "duplicate_lines": 30,
+            "gitleaks": 2,
+            "raw_email_or_ipv4": 225,
+            "synthetic_document_bytes": 23,
+            "synthetic_model_identity_phrase": 23,
+            "synthetic_non_English": 143,
+            "synthetic_qualified_PII": 6,
+            "synthetic_repeated_ngrams": 24
+          },
+          "retained_records": 373215,
+          "retained_utf8_bytes": 1397962461,
+          "row_window": [
+            0,
+            376289
+          ],
+          "security_report": {
+            "findings": 2,
+            "path": "security/cosmopedia_v2__file_4-records.json",
+            "sha256": "49825cde80fd472788c597dcbb1d29a505451261f68f18fda495e51939e3eda6"
+          },
+          "status": "complete_not_training_data",
+          "training_authority": false,
+          "unit_id": "cosmopedia_v2__file_4",
+          "yielded_rows": 376040
+        },
+        "raw": {
+          "bytes": 1176725376,
+          "download_seconds": 393.227544004003,
+          "downloaded_this_invocation": true,
+          "path": "/mnt/speck-data/speck/source-qualification/cosmopedia-stock-raw-v1/fef26b68fba8dec2c1f5.parquet",
+          "sha256": "f9c962f2182049bdc28b4616527a4683f3d54d58404d37a5e240c30240da8efd",
+          "verification_seconds": 0.516989765001199
+        },
+        "reused": false
+      }
+    ]
+  },
+  "analysis": {
+    "candidate_removals": {
+      "acquired_train__synthetic": {
+        "other:exact_duplicate": 12923,
+        "other:near_duplicate": 1186,
+        "reference:exact_duplicate": 762,
+        "reference:near_duplicate": 96
+      }
+    },
+    "controls": {
+      "firewall_exact_control": {
+        "kept_source": "firewall_reference__web_unseen",
+        "reason": "exact_duplicate",
+        "verified_jaccard": null
+      },
+      "firewall_near_control": {
+        "kept_source": "firewall_reference__web_unseen",
+        "reason": "near_duplicate",
+        "verified_jaccard": 0.9986666666666667
+      }
+    },
+    "exact_reference_overlap": 0,
+    "parent_manifest": {
+      "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/excluded/manifest.json",
+      "sha256": "2c0edbbdadd1384cea453018135231a85ef1a65a65fb17de9ef1ffc77676c17c"
+    },
+    "reference_outputs_preserved": true,
+    "references": {
+      "firewall_manifest": {
+        "path": "/mnt/speck-data/speck/firewall-v2/manifest.json",
+        "sha256": "cd2005fb7aa593440bf0242cb2e8587f44fd7dc0db5fb79225a4ec514e0c66e4"
+      },
+      "firewall_plan": {
+        "path": "/home/alkin/Desktop/speck/research/flagship/firewall_plan_v4.json",
+        "sha256": "a63eb46970acb177fe2e63717364504f475b95b86aa23264635b602d0b60f648"
+      },
+      "policy": {
+        "bands": 16,
+        "domain_match": "exact_or_subdomain",
+        "maximum_document_tokens": 100000,
+        "minhash_seed": 42,
+        "minimum_document_tokens": 50,
+        "normalization": "NFKC+lower+lexical-code-tokens",
+        "num_perm": 128,
+        "shingle_tokens": 10,
+        "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+        "verified_jaccard_threshold": 0.8
+      },
+      "prepared_manifest": {
+        "path": "/mnt/speck-data/speck/firewall-inputs-v1/manifest.json",
+        "sha256": "a5d0c274b8da9ce3a50beec8b55a89a474d552d924f6f3ced69961e5694f75de"
+      },
+      "records": 288872,
+      "reference_dedup_manifest": {
+        "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/manifest.json",
+        "sha256": "f8dc8f205a2e2963103d242317e3f8b0a07469aab88e27f1160fe5d26d43d8ce"
+      },
+      "sources": [
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__web_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_unseen.jsonl",
+          "precedence": 1,
+          "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__code_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_unseen.jsonl",
+          "precedence": 2,
+          "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__math_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_unseen.jsonl",
+          "precedence": 3,
+          "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__synthetic_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_unseen.jsonl",
+          "precedence": 4,
+          "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__science_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_unseen.jsonl",
+          "precedence": 5,
+          "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__reference_unseen",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_unseen.jsonl",
+          "precedence": 6,
+          "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__web_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_primary.jsonl",
+          "precedence": 7,
+          "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__code_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_primary.jsonl",
+          "precedence": 8,
+          "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__math_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_primary.jsonl",
+          "precedence": 9,
+          "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__synthetic_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_primary.jsonl",
+          "precedence": 10,
+          "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__science_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_primary.jsonl",
+          "precedence": 11,
+          "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0",
+          "text_field": "text",
+          "url_field": "url"
+        },
+        {
+          "blob_field": "content_id",
+          "content_sha256_field": "released_content_sha256",
+          "domain_field": "host",
+          "id": "firewall_reference__reference_primary",
+          "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_primary.jsonl",
+          "precedence": 12,
+          "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f",
+          "text_field": "text",
+          "url_field": "url"
+        }
+      ]
+    },
+    "retained": {
+      "code": {
+        "bytes": 0,
+        "path": "acquired_train__code.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "math": {
+        "bytes": 0,
+        "path": "acquired_train__math.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "reference": {
+        "bytes": 0,
+        "path": "acquired_train__reference.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "science": {
+        "bytes": 0,
+        "path": "acquired_train__science.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "synthetic": {
+        "bytes": 9729115269,
+        "path": "acquired_train__synthetic.jsonl",
+        "records": 1851034,
+        "sha256": "7e5693c5761ce8ebe33349522cc3f15b559317c3a9dde1dfb06a74904c7d548e",
+        "utf8_bytes": 6927573615
+      },
+      "web": {
+        "bytes": 0,
+        "path": "acquired_train__web.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      }
+    },
+    "training_authority": false
+  },
+  "boundary": "Five complete pinned Cosmopedia v2 shards. Qualified generated-text filters, corrected full-prompt overlap and hash lineage, and full reference exclusion. Natural postfilter proportions without tokenizer-sampler template/domain byte quotas; concentration and repeated prompt hashes reported. Generator/seed revisions and original seed ancestry remain undisclosed. Target 800M plus 20% headroom; no model-quality, answer-correctness, final-view or training-authority claim. Invocation timings are not isolated hardware benchmarks.",
+  "capacity_target_pass": true,
+  "config": {
+    "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/preprocess.json",
+    "sha256": "b4628e98a57e0f431ce3db7eb3071859c5cc78cb4482484f2739d2bac7bbc823"
+  },
+  "exclusion": {
+    "elapsed_seconds": 59059.411319823004,
+    "recovery_indexes": [
+      {
+        "columns": [
+          "doc_seq"
+        ],
+        "created": true,
+        "elapsed_seconds": 1.9773583899986988,
+        "name": "bands_doc_seq",
+        "purpose": "Avoid a full bands-table scan for every post-checkpoint document deleted by ON DELETE CASCADE."
+      }
+    ],
+    "result": {
+      "cleanup": {
+        "format": "speck_production_cleanup_receipt",
+        "format_version": 1,
+        "manifest_sha256": "2c0edbbdadd1384cea453018135231a85ef1a65a65fb17de9ef1ffc77676c17c",
+        "removed": [],
+        "status": "declared_cleanup_files_absent_after_published_manifest"
+      },
+      "manifest": {
+        "cleanup_files": [],
+        "counts": {
+          "records_removed_exact": 13686,
+          "records_removed_near": 1283,
+          "records_retained": 2139906,
+          "records_seen": 2154875
+        },
+        "deny_ledger": {
+          "entries": 0,
+          "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+          "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+        },
+        "format": "speck_production_text_preprocess_result",
+        "format_version": 2,
+        "gates": {
+          "cleanup": "pending_external_receipt",
+          "disk_backed_Minhash_candidates_and_verified_near_deduplication": "pass",
+          "global_exact_deduplication": "pass",
+          "record_checkpoint_resume": "pass_by_contract_pending_rehearsal",
+          "redacted_removal_records": "pass",
+          "source_and_ledger_identity": "pass",
+          "training_authority": "blocked"
+        },
+        "index": {
+          "band_entries": 34207408,
+          "bytes": 3184689152,
+          "documents": 2139906,
+          "path": "near_duplicates.sqlite3",
+          "sha256": "13bdfdd08aa77bd94608d1b8d6e8d6890b386c4c342ff9927861647601ed5126"
+        },
+        "outputs": {
+          "acquired_train__code": {
+            "bytes": 0,
+            "path": "acquired_train__code.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "acquired_train__math": {
+            "bytes": 0,
+            "path": "acquired_train__math.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "acquired_train__reference": {
+            "bytes": 0,
+            "path": "acquired_train__reference.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "acquired_train__science": {
+            "bytes": 0,
+            "path": "acquired_train__science.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "acquired_train__synthetic": {
+            "bytes": 9729115269,
+            "path": "acquired_train__synthetic.jsonl",
+            "sha256": "7e5693c5761ce8ebe33349522cc3f15b559317c3a9dde1dfb06a74904c7d548e"
+          },
+          "acquired_train__web": {
+            "bytes": 0,
+            "path": "acquired_train__web.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "firewall_exact_control": {
+            "bytes": 0,
+            "path": "firewall_exact_control.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "firewall_near_control": {
+            "bytes": 0,
+            "path": "firewall_near_control.jsonl",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "firewall_reference__code_primary": {
+            "bytes": 218230863,
+            "path": "firewall_reference__code_primary.jsonl",
+            "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a"
+          },
+          "firewall_reference__code_unseen": {
+            "bytes": 29517047,
+            "path": "firewall_reference__code_unseen.jsonl",
+            "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01"
+          },
+          "firewall_reference__math_primary": {
+            "bytes": 225142640,
+            "path": "firewall_reference__math_primary.jsonl",
+            "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f"
+          },
+          "firewall_reference__math_unseen": {
+            "bytes": 33398604,
+            "path": "firewall_reference__math_unseen.jsonl",
+            "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba"
+          },
+          "firewall_reference__reference_primary": {
+            "bytes": 221970753,
+            "path": "firewall_reference__reference_primary.jsonl",
+            "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f"
+          },
+          "firewall_reference__reference_unseen": {
+            "bytes": 33146250,
+            "path": "firewall_reference__reference_unseen.jsonl",
+            "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e"
+          },
+          "firewall_reference__science_primary": {
+            "bytes": 204713010,
+            "path": "firewall_reference__science_primary.jsonl",
+            "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0"
+          },
+          "firewall_reference__science_unseen": {
+            "bytes": 25888876,
+            "path": "firewall_reference__science_unseen.jsonl",
+            "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8"
+          },
+          "firewall_reference__synthetic_primary": {
+            "bytes": 214302842,
+            "path": "firewall_reference__synthetic_primary.jsonl",
+            "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb"
+          },
+          "firewall_reference__synthetic_unseen": {
+            "bytes": 37840880,
+            "path": "firewall_reference__synthetic_unseen.jsonl",
+            "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c"
+          },
+          "firewall_reference__web_primary": {
+            "bytes": 215482764,
+            "path": "firewall_reference__web_primary.jsonl",
+            "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547"
+          },
+          "firewall_reference__web_unseen": {
+            "bytes": 29391370,
+            "path": "firewall_reference__web_unseen.jsonl",
+            "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65"
+          }
+        },
+        "plan_fingerprint": "a073b73e17aad4baacb9b815c0e5c0baad3c45bbadf0dade72355a866e1c20e1",
+        "policy": {
+          "bands": 16,
+          "domain_match": "exact_or_subdomain",
+          "maximum_document_tokens": 100000,
+          "minhash_seed": 42,
+          "minimum_document_tokens": 50,
+          "normalization": "NFKC+lower+lexical-code-tokens",
+          "num_perm": 128,
+          "shingle_tokens": 10,
+          "token_pattern": "[A-Za-z_][A-Za-z_0-9]*|[0-9]+(?:\\.[0-9]+)?|[^\\s]",
+          "verified_jaccard_threshold": 0.8
+        },
+        "removals": {
+          "bytes": 5580051,
+          "path": "removals.jsonl",
+          "sha256": "92344b79028a1c5cd05510e5250fb73ef7c72a4efa781e4ba12840abf5f05b14"
+        },
+        "sources": [
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__web_unseen",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_unseen.jsonl",
+            "precedence": 1,
+            "sha256": "8b4f02e1326be5d3fe9123c89618100b19b29218c6e4428916e89cfc78e65a65",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__code_unseen",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_unseen.jsonl",
+            "precedence": 2,
+            "sha256": "bf9d73029878b741ce287ca037b561a18ca763deac37080cb92f6b613cc5ea01",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__math_unseen",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_unseen.jsonl",
+            "precedence": 3,
+            "sha256": "3f3e0cdc3fa1875702fea6f162f6685e2f9e554d18f2cb1de854d81dfaddc3ba",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__synthetic_unseen",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_unseen.jsonl",
+            "precedence": 4,
+            "sha256": "4bff66a7431bdc8a7ba3b49ff852500be203644e665873578b7640556f346c6c",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__science_unseen",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_unseen.jsonl",
+            "precedence": 5,
+            "sha256": "36c5df6c4d7fdeb052868a41342b1d9fb99c96bc237ac2dde3460dce367b58f8",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__reference_unseen",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_unseen.jsonl",
+            "precedence": 6,
+            "sha256": "f959071a90080821dd9b6c918a0c37b74edf5cb5ffc3f5eb77dbe0814bf10e3e",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__web_primary",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/web_primary.jsonl",
+            "precedence": 7,
+            "sha256": "35c1596a0cbaa811015e2cd3f2732302bac795de1e8b67cef24d619227889547",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__code_primary",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/code_primary.jsonl",
+            "precedence": 8,
+            "sha256": "d2f162c6d5238bc840b0a963adebf59effeba8b33419c8ee042ff98884c5d17a",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__math_primary",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/math_primary.jsonl",
+            "precedence": 9,
+            "sha256": "9eaeb06c4998ffd07ae2469404419da2d18bafef872550cfec6d5ad59650b16f",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__synthetic_primary",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/synthetic_primary.jsonl",
+            "precedence": 10,
+            "sha256": "27064dc2b3e442d385f8b6b32357a55eeb85bff329bff3ee5ef4d5957aa2a2cb",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__science_primary",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/science_primary.jsonl",
+            "precedence": 11,
+            "sha256": "cbe50a0bc889ed27de4ca715804320b91b30340dccba104fb3218ea4d38febf0",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_reference__reference_primary",
+            "path": "/mnt/speck-data/speck/firewall-inputs-v1/deduplicated/reference_primary.jsonl",
+            "precedence": 12,
+            "sha256": "10d636a786c9d055c8ed53ad7b837c228782651d0f0c528a88fb9264e275780f",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "acquired_train__web",
+            "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/web.jsonl",
+            "precedence": 13,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "acquired_train__code",
+            "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/code.jsonl",
+            "precedence": 14,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "acquired_train__math",
+            "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/math.jsonl",
+            "precedence": 15,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "acquired_train__synthetic",
+            "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/synthetic.jsonl",
+            "precedence": 16,
+            "sha256": "a18900533696568d92ea1a2d907a7dcf65253caa35c3d05593a20e3dade79198",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "acquired_train__science",
+            "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/science.jsonl",
+            "precedence": 17,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "acquired_train__reference",
+            "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/reference.jsonl",
+            "precedence": 18,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_exact_control",
+            "path": "/mnt/speck-data/speck/firewall-integration-v1/controls/firewall_exact_control.jsonl",
+            "precedence": 19,
+            "sha256": "fcc6e4f1e624c1445719d919e3375eaf77369bd69a8f72028531877f349f13bb",
+            "text_field": "text",
+            "url_field": "url"
+          },
+          {
+            "blob_field": "content_id",
+            "content_sha256_field": "released_content_sha256",
+            "domain_field": "host",
+            "id": "firewall_near_control",
+            "path": "/mnt/speck-data/speck/firewall-integration-v1/controls/firewall_near_control.jsonl",
+            "precedence": 20,
+            "sha256": "2e0b6a0a7a5d8122dd50d087e60d673ad89af82cfaa1a36a1cc78c1c00a6b14f",
+            "text_field": "text",
+            "url_field": "url"
+          }
+        ],
+        "sqlite": {
+          "cache_size_kib": 2000,
+          "journal_mode": "WAL",
+          "page_size": 4096,
+          "synchronous": "FULL",
+          "wal_autocheckpoint_pages": 65536
+        },
+        "sqlite_runtime": {
+          "cache_size": -2000,
+          "foreign_keys": 1,
+          "journal_mode": "wal",
+          "page_size": 4096,
+          "sqlite_version": "3.53.1",
+          "synchronous": 2,
+          "wal_autocheckpoint": 65536
+        },
+        "status": "global_dedup_and_deny_complete_cleanup_receipt_required_not_training_authority"
+      }
+    },
+    "storage": {
+      "autocheckpoint_pages": 65536,
+      "nominal_trigger_bytes": 268435456,
+      "observed_peak_wal_bytes": 603308112,
+      "policy_source": "bound_config",
+      "samples": [
+        {
+          "database_bytes": 376786944,
+          "processed_records": null,
+          "stage": "opened",
+          "wal_bytes": 0
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 288872,
+          "stage": "before_commit",
+          "wal_bytes": 55150352
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 288872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 55154472
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 288872,
+          "stage": "before_commit",
+          "wal_bytes": 55154472
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 288872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 55158592
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 288872,
+          "stage": "before_commit",
+          "wal_bytes": 55158592
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 288872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 55162712
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 298872,
+          "stage": "before_commit",
+          "wal_bytes": 228598232
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 298872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 228709472
+        },
+        {
+          "database_bytes": 376786944,
+          "processed_records": 308872,
+          "stage": "before_commit",
+          "wal_bytes": 405741752
+        },
+        {
+          "database_bytes": 441794560,
+          "processed_records": 308872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 441794560,
+          "processed_records": 318872,
+          "stage": "before_commit",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 441794560,
+          "processed_records": 318872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 441794560,
+          "processed_records": 328872,
+          "stage": "before_commit",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 471330816,
+          "processed_records": 328872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 471330816,
+          "processed_records": 338872,
+          "stage": "before_commit",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 471330816,
+          "processed_records": 338872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 471330816,
+          "processed_records": 348872,
+          "stage": "before_commit",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 500887552,
+          "processed_records": 348872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 500887552,
+          "processed_records": 358872,
+          "stage": "before_commit",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 500887552,
+          "processed_records": 358872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 405881832
+        },
+        {
+          "database_bytes": 500887552,
+          "processed_records": 368872,
+          "stage": "before_commit",
+          "wal_bytes": 411995912
+        },
+        {
+          "database_bytes": 530112512,
+          "processed_records": 368872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 412107152
+        },
+        {
+          "database_bytes": 530112512,
+          "processed_records": 378872,
+          "stage": "before_commit",
+          "wal_bytes": 412107152
+        },
+        {
+          "database_bytes": 530112512,
+          "processed_records": 378872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 412107152
+        },
+        {
+          "database_bytes": 530112512,
+          "processed_records": 388872,
+          "stage": "before_commit",
+          "wal_bytes": 431854312
+        },
+        {
+          "database_bytes": 559280128,
+          "processed_records": 388872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 431969672
+        },
+        {
+          "database_bytes": 559280128,
+          "processed_records": 398872,
+          "stage": "before_commit",
+          "wal_bytes": 431969672
+        },
+        {
+          "database_bytes": 559280128,
+          "processed_records": 398872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 431969672
+        },
+        {
+          "database_bytes": 559280128,
+          "processed_records": 408872,
+          "stage": "before_commit",
+          "wal_bytes": 450637392
+        },
+        {
+          "database_bytes": 588476416,
+          "processed_records": 408872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 450777472
+        },
+        {
+          "database_bytes": 588476416,
+          "processed_records": 418872,
+          "stage": "before_commit",
+          "wal_bytes": 450777472
+        },
+        {
+          "database_bytes": 588476416,
+          "processed_records": 418872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 450777472
+        },
+        {
+          "database_bytes": 588476416,
+          "processed_records": 428872,
+          "stage": "before_commit",
+          "wal_bytes": 469321592
+        },
+        {
+          "database_bytes": 617771008,
+          "processed_records": 428872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 469502872
+        },
+        {
+          "database_bytes": 617771008,
+          "processed_records": 438872,
+          "stage": "before_commit",
+          "wal_bytes": 469502872
+        },
+        {
+          "database_bytes": 617771008,
+          "processed_records": 438872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 469502872
+        },
+        {
+          "database_bytes": 617771008,
+          "processed_records": 448872,
+          "stage": "before_commit",
+          "wal_bytes": 487231232
+        },
+        {
+          "database_bytes": 647266304,
+          "processed_records": 448872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 487396032
+        },
+        {
+          "database_bytes": 647266304,
+          "processed_records": 458872,
+          "stage": "before_commit",
+          "wal_bytes": 487396032
+        },
+        {
+          "database_bytes": 647266304,
+          "processed_records": 458872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 487396032
+        },
+        {
+          "database_bytes": 647266304,
+          "processed_records": 468872,
+          "stage": "before_commit",
+          "wal_bytes": 505940152
+        },
+        {
+          "database_bytes": 676466688,
+          "processed_records": 468872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 506129672
+        },
+        {
+          "database_bytes": 676466688,
+          "processed_records": 478872,
+          "stage": "before_commit",
+          "wal_bytes": 506129672
+        },
+        {
+          "database_bytes": 676466688,
+          "processed_records": 478872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 506129672
+        },
+        {
+          "database_bytes": 676466688,
+          "processed_records": 488872,
+          "stage": "before_commit",
+          "wal_bytes": 523079352
+        },
+        {
+          "database_bytes": 705908736,
+          "processed_records": 488872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 523256512
+        },
+        {
+          "database_bytes": 705908736,
+          "processed_records": 498872,
+          "stage": "before_commit",
+          "wal_bytes": 523256512
+        },
+        {
+          "database_bytes": 705908736,
+          "processed_records": 498872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 523256512
+        },
+        {
+          "database_bytes": 705908736,
+          "processed_records": 508872,
+          "stage": "before_commit",
+          "wal_bytes": 540692352
+        },
+        {
+          "database_bytes": 735031296,
+          "processed_records": 508872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 735031296,
+          "processed_records": 518872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 749686784,
+          "processed_records": 518872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 749686784,
+          "processed_records": 528872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 764121088,
+          "processed_records": 528872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 764121088,
+          "processed_records": 538872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 778813440,
+          "processed_records": 538872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 778813440,
+          "processed_records": 548872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 793784320,
+          "processed_records": 548872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 793784320,
+          "processed_records": 558872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 808845312,
+          "processed_records": 558872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 808845312,
+          "processed_records": 568872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 824524800,
+          "processed_records": 568872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 824524800,
+          "processed_records": 578872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 839987200,
+          "processed_records": 578872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 839987200,
+          "processed_records": 588872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 855212032,
+          "processed_records": 588872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 855212032,
+          "processed_records": 598872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 869957632,
+          "processed_records": 598872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 869957632,
+          "processed_records": 608872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 884568064,
+          "processed_records": 608872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 884568064,
+          "processed_records": 618872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 899227648,
+          "processed_records": 618872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 899227648,
+          "processed_records": 628872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 913940480,
+          "processed_records": 628872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 913940480,
+          "processed_records": 638872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 928870400,
+          "processed_records": 638872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 928870400,
+          "processed_records": 648872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 943808512,
+          "processed_records": 648872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 943808512,
+          "processed_records": 658872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 958656512,
+          "processed_records": 658872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 958656512,
+          "processed_records": 668872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 973893632,
+          "processed_records": 668872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 973893632,
+          "processed_records": 678872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 988950528,
+          "processed_records": 678872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 988950528,
+          "processed_records": 688872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1003966464,
+          "processed_records": 688872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1003966464,
+          "processed_records": 698872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1019097088,
+          "processed_records": 698872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1019097088,
+          "processed_records": 708872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1034227712,
+          "processed_records": 708872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1034227712,
+          "processed_records": 718872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1049489408,
+          "processed_records": 718872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1049489408,
+          "processed_records": 728872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1064468480,
+          "processed_records": 728872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1064468480,
+          "processed_records": 738872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1079214080,
+          "processed_records": 738872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1079214080,
+          "processed_records": 748872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1094082560,
+          "processed_records": 748872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1094082560,
+          "processed_records": 758872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1109069824,
+          "processed_records": 758872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1109069824,
+          "processed_records": 768872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1124003840,
+          "processed_records": 768872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1124003840,
+          "processed_records": 778872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1138954240,
+          "processed_records": 778872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1138954240,
+          "processed_records": 788872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1153646592,
+          "processed_records": 788872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1153646592,
+          "processed_records": 798872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1168625664,
+          "processed_records": 798872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1168625664,
+          "processed_records": 808872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1183305728,
+          "processed_records": 808872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1183305728,
+          "processed_records": 818872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1198026752,
+          "processed_records": 818872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1198026752,
+          "processed_records": 828872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1213136896,
+          "processed_records": 828872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1213136896,
+          "processed_records": 838872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1228206080,
+          "processed_records": 838872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1228206080,
+          "processed_records": 848872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1242955776,
+          "processed_records": 848872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1242955776,
+          "processed_records": 858872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1257820160,
+          "processed_records": 858872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1257820160,
+          "processed_records": 868872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1272868864,
+          "processed_records": 868872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1272868864,
+          "processed_records": 878872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1287819264,
+          "processed_records": 878872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1287819264,
+          "processed_records": 888872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1302700032,
+          "processed_records": 888872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1302700032,
+          "processed_records": 898872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1317744640,
+          "processed_records": 898872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1317744640,
+          "processed_records": 908872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1332813824,
+          "processed_records": 908872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1332813824,
+          "processed_records": 918872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1347477504,
+          "processed_records": 918872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1347477504,
+          "processed_records": 928872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1362296832,
+          "processed_records": 928872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1362296832,
+          "processed_records": 938872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1377476608,
+          "processed_records": 938872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1377476608,
+          "processed_records": 948872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1392431104,
+          "processed_records": 948872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1392431104,
+          "processed_records": 958872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1407627264,
+          "processed_records": 958872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1407627264,
+          "processed_records": 968872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1422635008,
+          "processed_records": 968872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1422635008,
+          "processed_records": 978872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1437663232,
+          "processed_records": 978872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1437663232,
+          "processed_records": 988872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1452605440,
+          "processed_records": 988872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1452605440,
+          "processed_records": 998872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1467412480,
+          "processed_records": 998872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1467412480,
+          "processed_records": 1008872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1482272768,
+          "processed_records": 1008872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1482272768,
+          "processed_records": 1018872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1497374720,
+          "processed_records": 1018872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1497374720,
+          "processed_records": 1028872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1512157184,
+          "processed_records": 1028872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1512157184,
+          "processed_records": 1038872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1526947840,
+          "processed_records": 1038872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1526947840,
+          "processed_records": 1048872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1541959680,
+          "processed_records": 1048872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1541959680,
+          "processed_records": 1058872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1557045248,
+          "processed_records": 1058872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1557045248,
+          "processed_records": 1068872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1571983360,
+          "processed_records": 1068872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1571983360,
+          "processed_records": 1078872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1586864128,
+          "processed_records": 1078872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1586864128,
+          "processed_records": 1088872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1601916928,
+          "processed_records": 1088872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1601916928,
+          "processed_records": 1098872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1616855040,
+          "processed_records": 1098872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1616855040,
+          "processed_records": 1108872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1631866880,
+          "processed_records": 1108872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1631866880,
+          "processed_records": 1118872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1646649344,
+          "processed_records": 1118872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1646649344,
+          "processed_records": 1128872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1661317120,
+          "processed_records": 1128872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1661317120,
+          "processed_records": 1138872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1675866112,
+          "processed_records": 1138872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1675866112,
+          "processed_records": 1148872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1690804224,
+          "processed_records": 1148872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1690804224,
+          "processed_records": 1158872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1705848832,
+          "processed_records": 1158872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1705848832,
+          "processed_records": 1168872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1720614912,
+          "processed_records": 1168872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1720614912,
+          "processed_records": 1178872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1735487488,
+          "processed_records": 1178872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1735487488,
+          "processed_records": 1188872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1750487040,
+          "processed_records": 1188872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1750487040,
+          "processed_records": 1198872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1765634048,
+          "processed_records": 1198872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1765634048,
+          "processed_records": 1208872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1780625408,
+          "processed_records": 1208872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1780625408,
+          "processed_records": 1218872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1795555328,
+          "processed_records": 1218872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1795555328,
+          "processed_records": 1228872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1810477056,
+          "processed_records": 1228872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1810477056,
+          "processed_records": 1238872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1825193984,
+          "processed_records": 1238872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1825193984,
+          "processed_records": 1248872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1839902720,
+          "processed_records": 1248872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1839902720,
+          "processed_records": 1258872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1854517248,
+          "processed_records": 1258872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1854517248,
+          "processed_records": 1268872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1869668352,
+          "processed_records": 1268872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1869668352,
+          "processed_records": 1278872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1884413952,
+          "processed_records": 1278872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1884413952,
+          "processed_records": 1288872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1899225088,
+          "processed_records": 1288872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1899225088,
+          "processed_records": 1298872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1913761792,
+          "processed_records": 1298872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1913761792,
+          "processed_records": 1308872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1929129984,
+          "processed_records": 1308872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1929129984,
+          "processed_records": 1318872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1944084480,
+          "processed_records": 1318872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1944084480,
+          "processed_records": 1328872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1958821888,
+          "processed_records": 1328872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1958821888,
+          "processed_records": 1338872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1973727232,
+          "processed_records": 1338872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1973727232,
+          "processed_records": 1348872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1988681728,
+          "processed_records": 1348872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 1988681728,
+          "processed_records": 1358872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2003771392,
+          "processed_records": 1358872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2003771392,
+          "processed_records": 1368872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2018684928,
+          "processed_records": 1368872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2018684928,
+          "processed_records": 1378872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2033483776,
+          "processed_records": 1378872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2033483776,
+          "processed_records": 1388872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2048290816,
+          "processed_records": 1388872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2048290816,
+          "processed_records": 1398872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2063253504,
+          "processed_records": 1398872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2063253504,
+          "processed_records": 1408872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2078339072,
+          "processed_records": 1408872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2078339072,
+          "processed_records": 1418872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2093412352,
+          "processed_records": 1418872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2093412352,
+          "processed_records": 1428872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2108186624,
+          "processed_records": 1428872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2108186624,
+          "processed_records": 1438872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2123235328,
+          "processed_records": 1438872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2123235328,
+          "processed_records": 1448872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2138275840,
+          "processed_records": 1448872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2138275840,
+          "processed_records": 1458872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2153164800,
+          "processed_records": 1458872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2153164800,
+          "processed_records": 1468872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2168004608,
+          "processed_records": 1468872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2168004608,
+          "processed_records": 1478872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2182807552,
+          "processed_records": 1478872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2182807552,
+          "processed_records": 1488872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2197753856,
+          "processed_records": 1488872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2197753856,
+          "processed_records": 1498872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2212474880,
+          "processed_records": 1498872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2212474880,
+          "processed_records": 1508872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2227314688,
+          "processed_records": 1508872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2227314688,
+          "processed_records": 1518872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2241888256,
+          "processed_records": 1518872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2241888256,
+          "processed_records": 1528872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2256728064,
+          "processed_records": 1528872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2256728064,
+          "processed_records": 1538872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2271924224,
+          "processed_records": 1538872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2271924224,
+          "processed_records": 1548872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2286895104,
+          "processed_records": 1548872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2286895104,
+          "processed_records": 1558872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2301796352,
+          "processed_records": 1558872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2301796352,
+          "processed_records": 1568872,
+          "stage": "before_commit",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2316533760,
+          "processed_records": 1568872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 540890112
+        },
+        {
+          "database_bytes": 2316533760,
+          "processed_records": 1578872,
+          "stage": "before_commit",
+          "wal_bytes": 540898352
+        },
+        {
+          "database_bytes": 2331389952,
+          "processed_records": 1578872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 541697632
+        },
+        {
+          "database_bytes": 2331389952,
+          "processed_records": 1588872,
+          "stage": "before_commit",
+          "wal_bytes": 542130232
+        },
+        {
+          "database_bytes": 2346463232,
+          "processed_records": 1588872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 542913032
+        },
+        {
+          "database_bytes": 2346463232,
+          "processed_records": 1598872,
+          "stage": "before_commit",
+          "wal_bytes": 543119032
+        },
+        {
+          "database_bytes": 2361262080,
+          "processed_records": 1598872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 543807072
+        },
+        {
+          "database_bytes": 2361262080,
+          "processed_records": 1608872,
+          "stage": "before_commit",
+          "wal_bytes": 545949472
+        },
+        {
+          "database_bytes": 2376077312,
+          "processed_records": 1608872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 546674592
+        },
+        {
+          "database_bytes": 2376077312,
+          "processed_records": 1618872,
+          "stage": "before_commit",
+          "wal_bytes": 546674592
+        },
+        {
+          "database_bytes": 2390872064,
+          "processed_records": 1618872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 546674592
+        },
+        {
+          "database_bytes": 2390872064,
+          "processed_records": 1628872,
+          "stage": "before_commit",
+          "wal_bytes": 546674592
+        },
+        {
+          "database_bytes": 2405580800,
+          "processed_records": 1628872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 546818792
+        },
+        {
+          "database_bytes": 2405580800,
+          "processed_records": 1638872,
+          "stage": "before_commit",
+          "wal_bytes": 550382592
+        },
+        {
+          "database_bytes": 2420379648,
+          "processed_records": 1638872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 551161272
+        },
+        {
+          "database_bytes": 2420379648,
+          "processed_records": 1648872,
+          "stage": "before_commit",
+          "wal_bytes": 551161272
+        },
+        {
+          "database_bytes": 2435268608,
+          "processed_records": 1648872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 551243672
+        },
+        {
+          "database_bytes": 2435268608,
+          "processed_records": 1658872,
+          "stage": "before_commit",
+          "wal_bytes": 552541472
+        },
+        {
+          "database_bytes": 2450268160,
+          "processed_records": 1658872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 553295432
+        },
+        {
+          "database_bytes": 2450268160,
+          "processed_records": 1668872,
+          "stage": "before_commit",
+          "wal_bytes": 553295432
+        },
+        {
+          "database_bytes": 2465222656,
+          "processed_records": 1668872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 553295432
+        },
+        {
+          "database_bytes": 2465222656,
+          "processed_records": 1678872,
+          "stage": "before_commit",
+          "wal_bytes": 553773352
+        },
+        {
+          "database_bytes": 2480156672,
+          "processed_records": 1678872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 554601472
+        },
+        {
+          "database_bytes": 2480156672,
+          "processed_records": 1688872,
+          "stage": "before_commit",
+          "wal_bytes": 554741552
+        },
+        {
+          "database_bytes": 2494869504,
+          "processed_records": 1688872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 555561432
+        },
+        {
+          "database_bytes": 2494869504,
+          "processed_records": 1698872,
+          "stage": "before_commit",
+          "wal_bytes": 555561432
+        },
+        {
+          "database_bytes": 2509660160,
+          "processed_records": 1698872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 556356592
+        },
+        {
+          "database_bytes": 2509660160,
+          "processed_records": 1708872,
+          "stage": "before_commit",
+          "wal_bytes": 557159992
+        },
+        {
+          "database_bytes": 2524487680,
+          "processed_records": 1708872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 557934552
+        },
+        {
+          "database_bytes": 2524487680,
+          "processed_records": 1718872,
+          "stage": "before_commit",
+          "wal_bytes": 558511352
+        },
+        {
+          "database_bytes": 2539585536,
+          "processed_records": 1718872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 559322992
+        },
+        {
+          "database_bytes": 2539585536,
+          "processed_records": 1728872,
+          "stage": "before_commit",
+          "wal_bytes": 559322992
+        },
+        {
+          "database_bytes": 2554335232,
+          "processed_records": 1728872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 559475432
+        },
+        {
+          "database_bytes": 2554335232,
+          "processed_records": 1738872,
+          "stage": "before_commit",
+          "wal_bytes": 559706152
+        },
+        {
+          "database_bytes": 2569302016,
+          "processed_records": 1738872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 560542512
+        },
+        {
+          "database_bytes": 2569302016,
+          "processed_records": 1748872,
+          "stage": "before_commit",
+          "wal_bytes": 562017472
+        },
+        {
+          "database_bytes": 2584178688,
+          "processed_records": 1748872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 562804392
+        },
+        {
+          "database_bytes": 2584178688,
+          "processed_records": 1758872,
+          "stage": "before_commit",
+          "wal_bytes": 562804392
+        },
+        {
+          "database_bytes": 2598727680,
+          "processed_records": 1758872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 563224632
+        },
+        {
+          "database_bytes": 2598727680,
+          "processed_records": 1768872,
+          "stage": "before_commit",
+          "wal_bytes": 563883832
+        },
+        {
+          "database_bytes": 2613751808,
+          "processed_records": 1768872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 564728432
+        },
+        {
+          "database_bytes": 2613751808,
+          "processed_records": 1778872,
+          "stage": "before_commit",
+          "wal_bytes": 564728432
+        },
+        {
+          "database_bytes": 2628534272,
+          "processed_records": 1778872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 565461792
+        },
+        {
+          "database_bytes": 2628534272,
+          "processed_records": 1788872,
+          "stage": "before_commit",
+          "wal_bytes": 565515352
+        },
+        {
+          "database_bytes": 2643333120,
+          "processed_records": 1788872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 566355832
+        },
+        {
+          "database_bytes": 2643333120,
+          "processed_records": 1798872,
+          "stage": "before_commit",
+          "wal_bytes": 566355832
+        },
+        {
+          "database_bytes": 2657927168,
+          "processed_records": 1798872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 567019152
+        },
+        {
+          "database_bytes": 2657927168,
+          "processed_records": 1808872,
+          "stage": "before_commit",
+          "wal_bytes": 568086232
+        },
+        {
+          "database_bytes": 2672775168,
+          "processed_records": 1808872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 568963792
+        },
+        {
+          "database_bytes": 2672775168,
+          "processed_records": 1818872,
+          "stage": "before_commit",
+          "wal_bytes": 570685952
+        },
+        {
+          "database_bytes": 2687655936,
+          "processed_records": 1818872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 571600592
+        },
+        {
+          "database_bytes": 2687655936,
+          "processed_records": 1828872,
+          "stage": "before_commit",
+          "wal_bytes": 571600592
+        },
+        {
+          "database_bytes": 2702536704,
+          "processed_records": 1828872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 571600592
+        },
+        {
+          "database_bytes": 2702536704,
+          "processed_records": 1838872,
+          "stage": "before_commit",
+          "wal_bytes": 571600592
+        },
+        {
+          "database_bytes": 2717282304,
+          "processed_records": 1838872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 571600592
+        },
+        {
+          "database_bytes": 2717282304,
+          "processed_records": 1848872,
+          "stage": "before_commit",
+          "wal_bytes": 573512272
+        },
+        {
+          "database_bytes": 2732142592,
+          "processed_records": 1848872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 574369232
+        },
+        {
+          "database_bytes": 2732142592,
+          "processed_records": 1858872,
+          "stage": "before_commit",
+          "wal_bytes": 574369232
+        },
+        {
+          "database_bytes": 2747125760,
+          "processed_records": 1858872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 574925432
+        },
+        {
+          "database_bytes": 2747125760,
+          "processed_records": 1868872,
+          "stage": "before_commit",
+          "wal_bytes": 574925432
+        },
+        {
+          "database_bytes": 2761617408,
+          "processed_records": 1868872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 575238552
+        },
+        {
+          "database_bytes": 2761617408,
+          "processed_records": 1878872,
+          "stage": "before_commit",
+          "wal_bytes": 575238552
+        },
+        {
+          "database_bytes": 2776358912,
+          "processed_records": 1878872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 575419832
+        },
+        {
+          "database_bytes": 2776358912,
+          "processed_records": 1888872,
+          "stage": "before_commit",
+          "wal_bytes": 576812392
+        },
+        {
+          "database_bytes": 2791170048,
+          "processed_records": 1888872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 577644632
+        },
+        {
+          "database_bytes": 2791170048,
+          "processed_records": 1898872,
+          "stage": "before_commit",
+          "wal_bytes": 577644632
+        },
+        {
+          "database_bytes": 2805932032,
+          "processed_records": 1898872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 578485112
+        },
+        {
+          "database_bytes": 2805932032,
+          "processed_records": 1908872,
+          "stage": "before_commit",
+          "wal_bytes": 578485112
+        },
+        {
+          "database_bytes": 2820739072,
+          "processed_records": 1908872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 578485112
+        },
+        {
+          "database_bytes": 2820739072,
+          "processed_records": 1918872,
+          "stage": "before_commit",
+          "wal_bytes": 578958912
+        },
+        {
+          "database_bytes": 2835443712,
+          "processed_records": 1918872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 579873552
+        },
+        {
+          "database_bytes": 2835443712,
+          "processed_records": 1928872,
+          "stage": "before_commit",
+          "wal_bytes": 581978872
+        },
+        {
+          "database_bytes": 2850070528,
+          "processed_records": 1928872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 582872912
+        },
+        {
+          "database_bytes": 2850070528,
+          "processed_records": 1938872,
+          "stage": "before_commit",
+          "wal_bytes": 582872912
+        },
+        {
+          "database_bytes": 2864771072,
+          "processed_records": 1938872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 582872912
+        },
+        {
+          "database_bytes": 2864771072,
+          "processed_records": 1948872,
+          "stage": "before_commit",
+          "wal_bytes": 583210752
+        },
+        {
+          "database_bytes": 2879725568,
+          "processed_records": 1948872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 584047112
+        },
+        {
+          "database_bytes": 2879725568,
+          "processed_records": 1958872,
+          "stage": "before_commit",
+          "wal_bytes": 584047112
+        },
+        {
+          "database_bytes": 2894589952,
+          "processed_records": 1958872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 584623912
+        },
+        {
+          "database_bytes": 2894589952,
+          "processed_records": 1968872,
+          "stage": "before_commit",
+          "wal_bytes": 584623912
+        },
+        {
+          "database_bytes": 2909454336,
+          "processed_records": 1968872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 584623912
+        },
+        {
+          "database_bytes": 2909454336,
+          "processed_records": 1978872,
+          "stage": "before_commit",
+          "wal_bytes": 585773392
+        },
+        {
+          "database_bytes": 2924322816,
+          "processed_records": 1978872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 586704512
+        },
+        {
+          "database_bytes": 2924322816,
+          "processed_records": 1988872,
+          "stage": "before_commit",
+          "wal_bytes": 586704512
+        },
+        {
+          "database_bytes": 2939158528,
+          "processed_records": 1988872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 586943472
+        },
+        {
+          "database_bytes": 2939158528,
+          "processed_records": 1998872,
+          "stage": "before_commit",
+          "wal_bytes": 587178312
+        },
+        {
+          "database_bytes": 2954027008,
+          "processed_records": 1998872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 588051752
+        },
+        {
+          "database_bytes": 2954027008,
+          "processed_records": 2008872,
+          "stage": "before_commit",
+          "wal_bytes": 588274232
+        },
+        {
+          "database_bytes": 2968686592,
+          "processed_records": 2008872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 589114712
+        },
+        {
+          "database_bytes": 2968686592,
+          "processed_records": 2018872,
+          "stage": "before_commit",
+          "wal_bytes": 589114712
+        },
+        {
+          "database_bytes": 2983428096,
+          "processed_records": 2018872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 589345432
+        },
+        {
+          "database_bytes": 2983428096,
+          "processed_records": 2028872,
+          "stage": "before_commit",
+          "wal_bytes": 590379552
+        },
+        {
+          "database_bytes": 2998312960,
+          "processed_records": 2028872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 591269472
+        },
+        {
+          "database_bytes": 2998312960,
+          "processed_records": 2038872,
+          "stage": "before_commit",
+          "wal_bytes": 592241792
+        },
+        {
+          "database_bytes": 3013025792,
+          "processed_records": 2038872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 593189392
+        },
+        {
+          "database_bytes": 3013025792,
+          "processed_records": 2048872,
+          "stage": "before_commit",
+          "wal_bytes": 593189392
+        },
+        {
+          "database_bytes": 3027738624,
+          "processed_records": 2048872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 593453072
+        },
+        {
+          "database_bytes": 3027738624,
+          "processed_records": 2058872,
+          "stage": "before_commit",
+          "wal_bytes": 593453072
+        },
+        {
+          "database_bytes": 3042467840,
+          "processed_records": 2058872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 594380072
+        },
+        {
+          "database_bytes": 3042467840,
+          "processed_records": 2068872,
+          "stage": "before_commit",
+          "wal_bytes": 594380072
+        },
+        {
+          "database_bytes": 3057217536,
+          "processed_records": 2068872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 594820912
+        },
+        {
+          "database_bytes": 3057217536,
+          "processed_records": 2078872,
+          "stage": "before_commit",
+          "wal_bytes": 594981592
+        },
+        {
+          "database_bytes": 3071832064,
+          "processed_records": 2078872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 595871512
+        },
+        {
+          "database_bytes": 3071832064,
+          "processed_records": 2088872,
+          "stage": "before_commit",
+          "wal_bytes": 596118712
+        },
+        {
+          "database_bytes": 3086864384,
+          "processed_records": 2088872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 597004512
+        },
+        {
+          "database_bytes": 3086864384,
+          "processed_records": 2098872,
+          "stage": "before_commit",
+          "wal_bytes": 597004512
+        },
+        {
+          "database_bytes": 3101700096,
+          "processed_records": 2098872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 597877952
+        },
+        {
+          "database_bytes": 3101700096,
+          "processed_records": 2108872,
+          "stage": "before_commit",
+          "wal_bytes": 597877952
+        },
+        {
+          "database_bytes": 3116367872,
+          "processed_records": 2108872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 597877952
+        },
+        {
+          "database_bytes": 3116367872,
+          "processed_records": 2118872,
+          "stage": "before_commit",
+          "wal_bytes": 598211672
+        },
+        {
+          "database_bytes": 3131117568,
+          "processed_records": 2118872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 599035672
+        },
+        {
+          "database_bytes": 3131117568,
+          "processed_records": 2128872,
+          "stage": "before_commit",
+          "wal_bytes": 601342872
+        },
+        {
+          "database_bytes": 3146010624,
+          "processed_records": 2128872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 602249272
+        },
+        {
+          "database_bytes": 3146010624,
+          "processed_records": 2138872,
+          "stage": "before_commit",
+          "wal_bytes": 602249272
+        },
+        {
+          "database_bytes": 3160834048,
+          "processed_records": 2138872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 602249272
+        },
+        {
+          "database_bytes": 3160834048,
+          "processed_records": 2148872,
+          "stage": "before_commit",
+          "wal_bytes": 602401712
+        },
+        {
+          "database_bytes": 3175821312,
+          "processed_records": 2148872,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3175821312,
+          "processed_records": 2154873,
+          "stage": "before_commit",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154873,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154873,
+          "stage": "before_commit",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154873,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154873,
+          "stage": "before_commit",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154873,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154874,
+          "stage": "before_commit",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154874,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154875,
+          "stage": "before_commit",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154875,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154875,
+          "stage": "before_commit",
+          "wal_bytes": 603308112
+        },
+        {
+          "database_bytes": 3184689152,
+          "processed_records": 2154875,
+          "stage": "after_durable_checkpoint",
+          "wal_bytes": 603308112
+        }
+      ],
+      "settings": {
+        "cache_size": -2000,
+        "foreign_keys": 1,
+        "journal_mode": "wal",
+        "page_size": 4096,
+        "synchronous": 2,
+        "wal_autocheckpoint": 65536
+      }
+    },
+    "timing": {
+      "boundary": "Disjoint wall-time phases; source elapsed includes source checkpoints. All-phase checkpoint time overlaps phases and must not be added again. Processing excludes checkpoints but includes reads, parsing, hashing, candidate comparisons and index updates; it is not a kernel-only or production-scale steady-state benchmark.",
+      "checkpoint_components_all_phases": {
+        "output_flush_fsync_seconds": 139.95093764700505,
+        "slice_hash_seconds": 6.112066209039767,
+        "sqlite_commit_seconds": 48855.76861835394,
+        "state_publication_seconds": 36.6920206699906
+      },
+      "checkpoint_seconds_all_phases": 49038.53653614299,
+      "format": "speck_preprocess_timing",
+      "format_version": 2,
+      "phases": {
+        "final_verification": 2768.0539758609957,
+        "input_verification": 27.125319486996887,
+        "processing": 52249.467606024,
+        "publication": 4011.899487118004,
+        "resume_verification": 2.864165713002876,
+        "setup": 0.0006172590001369826
+      },
+      "sources": [
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 1.1976827260004939,
+            "slice_hash_seconds": 1.9417999283177778e-05,
+            "sqlite_commit_seconds": 0.36055361599937896,
+            "state_publication_seconds": 0.28022029400017345
+          },
+          "checkpoint_seconds": 1.8385343970003305,
+          "elapsed_seconds": 1.8386040359982871,
+          "id": "acquired_train__web",
+          "processed_utf8_bytes": 0,
+          "processing_seconds_excluding_checkpoints": 6.963899795664474e-05,
+          "records_retained": 0,
+          "records_seen": 0
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 0.27829038499839953,
+            "slice_hash_seconds": 1.3478002074407414e-05,
+            "sqlite_commit_seconds": 0.09994726899822126,
+            "state_publication_seconds": 0.2770922280033119
+          },
+          "checkpoint_seconds": 0.6553891360017587,
+          "elapsed_seconds": 0.6554153260003659,
+          "id": "acquired_train__code",
+          "processed_utf8_bytes": 0,
+          "processing_seconds_excluding_checkpoints": 2.618999860715121e-05,
+          "records_retained": 0,
+          "records_seen": 0
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 0.78346721699927,
+            "slice_hash_seconds": 1.454299854231067e-05,
+            "sqlite_commit_seconds": 0.288853885998833,
+            "state_publication_seconds": 0.21657389299798524
+          },
+          "checkpoint_seconds": 1.2889526660001138,
+          "elapsed_seconds": 1.2889761970000109,
+          "id": "acquired_train__math",
+          "processed_utf8_bytes": 0,
+          "processing_seconds_excluding_checkpoints": 2.3530999897047877e-05,
+          "records_retained": 0,
+          "records_seen": 0
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 136.5783824490136,
+            "slice_hash_seconds": 6.111882405017241,
+            "sqlite_commit_seconds": 48854.731782862975,
+            "state_publication_seconds": 35.42605818198717
+          },
+          "checkpoint_seconds": 49032.86063727798,
+          "elapsed_seconds": 52244.067799001,
+          "id": "acquired_train__synthetic",
+          "processed_utf8_bytes": 6990742835,
+          "processing_seconds_excluding_checkpoints": 3211.2071617230176,
+          "records_retained": 1851034,
+          "records_seen": 1866001
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 0.21811549599806312,
+            "slice_hash_seconds": 1.388000964652747e-05,
+            "sqlite_commit_seconds": 0.12275438899814617,
+            "state_publication_seconds": 0.07180011199670844
+          },
+          "checkpoint_seconds": 0.41273407700646203,
+          "elapsed_seconds": 0.4127593940065708,
+          "id": "acquired_train__science",
+          "processed_utf8_bytes": 0,
+          "processing_seconds_excluding_checkpoints": 2.5317000108771026e-05,
+          "records_retained": 0,
+          "records_seen": 0
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 0.23504209899692796,
+            "slice_hash_seconds": 1.197701203636825e-05,
+            "sqlite_commit_seconds": 0.044632911987719126,
+            "state_publication_seconds": 0.08811350099858828
+          },
+          "checkpoint_seconds": 0.36784115400223527,
+          "elapsed_seconds": 0.36786389599728864,
+          "id": "acquired_train__reference",
+          "processed_utf8_bytes": 0,
+          "processing_seconds_excluding_checkpoints": 2.2741995053365827e-05,
+          "records_retained": 0,
+          "records_seen": 0
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 0.17794370000774506,
+            "slice_hash_seconds": 4.7878987970761955e-05,
+            "sqlite_commit_seconds": 0.06045742599235382,
+            "state_publication_seconds": 0.11192908699740656
+          },
+          "checkpoint_seconds": 0.3504239320027409,
+          "elapsed_seconds": 0.3790992499998538,
+          "id": "firewall_exact_control",
+          "processed_utf8_bytes": 3669,
+          "processing_seconds_excluding_checkpoints": 0.02867531799711287,
+          "records_retained": 0,
+          "records_seen": 1
+        },
+        {
+          "checkpoint_components": {
+            "output_flush_fsync_seconds": 0.289186747992062,
+            "slice_hash_seconds": 4.939200880471617e-05,
+            "sqlite_commit_seconds": 0.02618366599199362,
+            "state_publication_seconds": 0.12311402900377288
+          },
+          "checkpoint_seconds": 0.43857232099981047,
+          "elapsed_seconds": 0.4570514240040211,
+          "id": "firewall_near_control",
+          "processed_utf8_bytes": 3703,
+          "processing_seconds_excluding_checkpoints": 0.01847910300421063,
+          "records_retained": 0,
+          "records_seen": 1
+        }
+      ],
+      "status": "complete",
+      "total_seconds": 59059.411171462
+    }
+  },
+  "format": "speck_cosmopedia_stock_preparation_result",
+  "format_version": 1,
+  "groups": {
+    "format": "speck_acquisition_category_groups",
+    "inputs": [
+      {
+        "category": "synthetic",
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/acquired/cosmopedia_v2__file_0/records.jsonl",
+        "sha256": "824529f2664828f5710707b10288a47a200e15d0491ebc362b29f4b248a3c4cc",
+        "unit_id": "cosmopedia_v2__file_0"
+      },
+      {
+        "category": "synthetic",
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/acquired/cosmopedia_v2__file_1/records.jsonl",
+        "sha256": "82530353dff07c37070491fb704de6a243b673af41a31d33ddd390c1c2fbf9ef",
+        "unit_id": "cosmopedia_v2__file_1"
+      },
+      {
+        "category": "synthetic",
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/acquired/cosmopedia_v2__file_2/records.jsonl",
+        "sha256": "12f88f5bd82d21a8c8b862f31a38702f40211c0abe1569c18f5d9b088ba0257d",
+        "unit_id": "cosmopedia_v2__file_2"
+      },
+      {
+        "category": "synthetic",
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/acquired/cosmopedia_v2__file_3/records.jsonl",
+        "sha256": "09dab133ff1b922dafe11835b03aa3aa9045bf10eafc7765b6006974a27cd9d9",
+        "unit_id": "cosmopedia_v2__file_3"
+      },
+      {
+        "category": "synthetic",
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/acquired/cosmopedia_v2__file_4/records.jsonl",
+        "sha256": "48e875d092983ab0477e865855047da7012c0ea332285bc23257eecc466fcec0",
+        "unit_id": "cosmopedia_v2__file_4"
+      }
+    ],
+    "outputs": {
+      "code": {
+        "path": "code.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "math": {
+        "path": "math.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "reference": {
+        "path": "reference.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "science": {
+        "path": "science.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      },
+      "synthetic": {
+        "path": "synthetic.jsonl",
+        "records": 1866001,
+        "sha256": "a18900533696568d92ea1a2d907a7dcf65253caa35c3d05593a20e3dade79198",
+        "utf8_bytes": 6990742835
+      },
+      "web": {
+        "path": "web.jsonl",
+        "records": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8_bytes": 0
+      }
+    }
+  },
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/cosmopedia_stock_preparation_v1.json",
+    "sha256": "dd531832f103af419b27f52099a45f52c1f70bc6b546cf430fe09267164384d5"
+  },
+  "progress": {
+    "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/progress.json",
+    "sha256": "8d9e6ce48c4427fcda64881316aeb2f2eeaea3b474defff881880e97fd39d7f1"
+  },
+  "recorded_at": "2026-09-15T11:44:13.441253+00:00",
+  "reference_capacity": {
+    "documents": 1851034,
+    "scope": "Reference-token capacity only; no training shards or final D5 selection",
+    "tokenizer": {
+      "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+      "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    },
+    "tokens": 1489288743
+  },
+  "reference_parent": {
+    "path": "/home/alkin/Desktop/speck/results/systems/firewall-integration-20260913.json",
+    "sha256": "07b9d890f36994ad47ec0d251d5c8d5c66c568475b3ec4248b0b58ebd112b061"
+  },
+  "repository_revision": "28092262aaa0e68640611b522e55dfd0b65588b3",
+  "restoration": {
+    "bound_sqlite": {
+      "cache_size_kib": 2000,
+      "journal_mode": "WAL",
+      "page_size": 4096,
+      "synchronous": "FULL",
+      "wal_autocheckpoint_pages": 65536
+    },
+    "candidate_input_rebinding": {
+      "acquired_train__code": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/code.jsonl",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "acquired_train__math": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/math.jsonl",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "acquired_train__reference": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/reference.jsonl",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "acquired_train__science": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/science.jsonl",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "acquired_train__synthetic": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/synthetic.jsonl",
+        "sha256": "a18900533696568d92ea1a2d907a7dcf65253caa35c3d05593a20e3dade79198"
+      },
+      "acquired_train__web": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/groups/web.jsonl",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "changed_checkpoint_fields": [
+      "contract"
+    ],
+    "original_checkpoint": {
+      "path": "/mnt/speck-data/speck/firewall-integration-v1/reference-checkpoint-state.json",
+      "sha256": "dd79d8affc993d6a898c8489e681e6771e13fd9d37e59527ee63a50e109ac999"
+    },
+    "parent_manifest": {
+      "path": "/mnt/speck-data/speck/firewall-integration-v1/excluded/manifest.json",
+      "sha256": "0ae4c382338f6ecb8c7573db8652b7a232000e38e50023862669a079255af010"
+    },
+    "rebound_checkpoint_sha256": "3fe8939bf188ce860a56674102cb1706f38aadac2a67e62b5f17691bd14046da",
+    "rebound_index_sha256": "ee321122f0676c2059b6a9e2eeaafd7b2682a2ce55fb5fb0449c87a35cfda11d",
+    "reference_records": 288872,
+    "restoration_durability": "committed prefix files and index fsynced before timing",
+    "restore_seconds": 227.34009318500102
+  },
+  "source_use": {
+    "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "status": "reference_capacity_target_met",
+  "storage_gate_pass": true,
+  "synthetic_concentration": {
+    "boundary": "Natural postfilter distribution diagnostics, without sampler byte quotas or reweighting. Prompt hashes are not original seed IDs or proof of independent ancestry; seed_data is a source label. Generator and seed revisions remain undisclosed. No correctness or model-quality claim.",
+    "distinct_prompt_hashes": 1817844,
+    "documents": 1851034,
+    "documents_beyond_first_identical_prompt": 33190,
+    "largest_template_prefixes": [
+      {
+        "byte_share": 0.001777848303673349,
+        "label": "57afd5e7d23392abefb939514214ef59880488950a7e293ca85cc969f224e286",
+        "utf8_bytes": 12316175
+      },
+      {
+        "byte_share": 0.0015531168050965563,
+        "label": "8c9c64a87636e4a166683baae57fcd99542b861165944860bb112f4c89c616b2",
+        "utf8_bytes": 10759331
+      },
+      {
+        "byte_share": 0.0007992335134500046,
+        "label": "0ea56d598425bb99c4e33f5c11102e35b69c26a23dede7fb0501f8d254a7dec3",
+        "utf8_bytes": 5536749
+      },
+      {
+        "byte_share": 0.0007727044557721384,
+        "label": "40efcd48de131ff976cac8e8867aed2a887282cb0eb7b5d1d84a27f51302c7d4",
+        "utf8_bytes": 5352967
+      },
+      {
+        "byte_share": 0.000655880002510807,
+        "label": "abd785ef314a1d51177201a8a954d88932bfb56efdf0ea48b33e2a714c9560ff",
+        "utf8_bytes": 4543657
+      },
+      {
+        "byte_share": 0.0005353899079425373,
+        "label": "a240be9513bbe29294c8dff6ddb5fc901dc56754b4d3e62a05c2e6f8fab30e8b",
+        "utf8_bytes": 3708953
+      },
+      {
+        "byte_share": 0.0004808663444278679,
+        "label": "487e3c4906d9f2515bfad282f4a86fdb7cc6be060527b57cdd24746c221a6e51",
+        "utf8_bytes": 3331237
+      },
+      {
+        "byte_share": 0.00046539657016694147,
+        "label": "f23e4fb810f991730feb7a3860ce62467287287f71cfb0e5435d87bf559e7ef5",
+        "utf8_bytes": 3224069
+      },
+      {
+        "byte_share": 0.0004578115190480008,
+        "label": "5b98ab50f28504335387987e4b23ef2a8622072382d233e15b99160d10720ed2",
+        "utf8_bytes": 3171523
+      },
+      {
+        "byte_share": 0.00038160518341889897,
+        "label": "4e70cb6e6464ea0fb76e026f9f3f09391ded6ea3892ce6be751e84e210659995",
+        "utf8_bytes": 2643598
+      },
+      {
+        "byte_share": 0.00036979441033337904,
+        "label": "1061375cf46da30deecec29226e82ad0b8ce8783716d32c50a19f7b8bf2ae6f3",
+        "utf8_bytes": 2561778
+      },
+      {
+        "byte_share": 0.0003611990487668026,
+        "label": "ba0c9844125480fc6a97e8989d55e85b217cb1514553892620a02aa4237d93af",
+        "utf8_bytes": 2502233
+      },
+      {
+        "byte_share": 0.00034614774714306664,
+        "label": "77992eaeb30696231c74ab6327ab4ad7c371c2ec6d7b5173a18787a1174fc2bf",
+        "utf8_bytes": 2397964
+      },
+      {
+        "byte_share": 0.00033090157209394013,
+        "label": "10a217f03c632c7d05a76f99b2a60331eebc064a212edadf608ffdd79b9fa624",
+        "utf8_bytes": 2292345
+      },
+      {
+        "byte_share": 0.0002909418379381595,
+        "label": "17e5f264291af90c0945a42db61710b655e0524ac240364e6886bd6639ddc824",
+        "utf8_bytes": 2015521
+      },
+      {
+        "byte_share": 0.0002874543253770967,
+        "label": "0be4fe2d6f9bba5234872988deec54cf1782ef48f208df62528bc846615f6649",
+        "utf8_bytes": 1991361
+      },
+      {
+        "byte_share": 0.0002858566519902654,
+        "label": "0b202bb5d5504f62cf7506dbd6fee41eeea9c246e7b243c13f48505e8b0d0882",
+        "utf8_bytes": 1980293
+      },
+      {
+        "byte_share": 0.0002441456553183087,
+        "label": "36bb28aba4ec6a59213aaf7f3b5ade1fc28875ab5c896bf5fb4825b64c913dc6",
+        "utf8_bytes": 1691337
+      },
+      {
+        "byte_share": 0.00023359621852246459,
+        "label": "2f879c2066a1b818a4d3367ad4f2ddf79e3ebd100cd70b92bdf693f5f4e97143",
+        "utf8_bytes": 1618255
+      },
+      {
+        "byte_share": 0.0002266353397675154,
+        "label": "c2d0c040365fade9111409b25ac1b975c490fed8c7c5d6ab316aa23d551f7284",
+        "utf8_bytes": 1570033
+      }
+    ],
+    "maximum_generated_text_prompt_jaccard": 0.33436532507739936,
+    "seed_domain_coverage": "unavailable_in_released_schema",
+    "seed_source_labels": [
+      {
+        "byte_share": 0.7920880569379558,
+        "label": "fineweb",
+        "utf8_bytes": 5487248324
+      },
+      {
+        "byte_share": 0.056441880336481995,
+        "label": "ultrachat",
+        "utf8_bytes": 391005281
+      },
+      {
+        "byte_share": 0.037402664973340743,
+        "label": "openhermes2.5",
+        "utf8_bytes": 259109715
+      },
+      {
+        "byte_share": 0.03687589785359502,
+        "label": "wikihow",
+        "utf8_bytes": 255460497
+      },
+      {
+        "byte_share": 0.03449415787983655,
+        "label": "stanford",
+        "utf8_bytes": 238960818
+      },
+      {
+        "byte_share": 0.03326601589638972,
+        "label": "auto_math_text",
+        "utf8_bytes": 230452774
+      },
+      {
+        "byte_share": 0.005624108261460892,
+        "label": "wikihow_original",
+        "utf8_bytes": 38961424
+      },
+      {
+        "byte_share": 0.003241397384991917,
+        "label": "openstax",
+        "utf8_bytes": 22455019
+      },
+      {
+        "byte_share": 0.0005658204759474072,
+        "label": "khanacademy",
+        "utf8_bytes": 3919763
+      }
+    ],
+    "styles": [
+      {
+        "byte_share": 0.6770799581030508,
+        "label": "textbook",
+        "utf8_bytes": 4690521253
+      },
+      {
+        "byte_share": 0.0900921975983939,
+        "label": "textbook_unconditionned_topic",
+        "utf8_bytes": 624120331
+      },
+      {
+        "byte_share": 0.06178229864974159,
+        "label": "wikihow",
+        "utf8_bytes": 428001422
+      },
+      {
+        "byte_share": 0.03449415787983655,
+        "label": "textbook_narrative",
+        "utf8_bytes": 238960818
+      },
+      {
+        "byte_share": 0.02820914029363223,
+        "label": "story_life_lessons",
+        "utf8_bytes": 195420896
+      },
+      {
+        "byte_share": 0.026018290099397233,
+        "label": "story",
+        "utf8_bytes": 180243620
+      },
+      {
+        "byte_share": 0.025329268911709717,
+        "label": "story_reddit",
+        "utf8_bytes": 175470375
+      },
+      {
+        "byte_share": 0.018106014164672286,
+        "label": "story_children",
+        "utf8_bytes": 125430746
+      },
+      {
+        "byte_share": 0.01288133449881788,
+        "label": "dialogue",
+        "utf8_bytes": 89236393
+      },
+      {
+        "byte_share": 0.011326723664126664,
+        "label": "story_forums",
+        "utf8_bytes": 78466712
+      },
+      {
+        "byte_share": 0.010873398275681838,
+        "label": "story_morality",
+        "utf8_bytes": 75326267
+      },
+      {
+        "byte_share": 0.0011892807580075062,
+        "label": "e-learning_module",
+        "utf8_bytes": 8238830
+      },
+      {
+        "byte_share": 0.0011188764538303648,
+        "label": "textbook_academic",
+        "utf8_bytes": 7751099
+      },
+      {
+        "byte_share": 0.0009332401731540459,
+        "label": "scientific_article",
+        "utf8_bytes": 6465090
+      },
+      {
+        "byte_share": 0.0005658204759474072,
+        "label": "textbook_narrative_tone",
+        "utf8_bytes": 3919763
+      }
+    ],
+    "template_byte_hhi": 1.2295549041548345e-05,
+    "template_prefixes": 1514581,
+    "utf8_bytes": 6927573615
+  },
+  "training_authority": false,
+  "within_prior_512MiB_wal_observation": false
+}

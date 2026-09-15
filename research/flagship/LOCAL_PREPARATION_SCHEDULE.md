@@ -10,7 +10,8 @@ Implementation/data-view changes below require explicit bound successors before 
 FineWeb-Edu raw downloads are now complete: all fourteen file receipts passed and agree with
 the [published result](../../results/data/fineweb-edu-raw-acquisition-20260914.json). FineMath
 and its token cache are complete at 1,124,167,472 tokens, passing 960M headroom; see the
-[completion finding](../findings/2026-09-15-finemath-headroom.md). Cosmopedia exclusion continues.
+[completion finding](../findings/2026-09-15-finemath-headroom.md). [Cosmopedia text and cache](../findings/2026-09-15-cosmopedia-stock.md) are also complete at
+1,489,288,743 tokens, passing 960M headroom. The FineWeb-Edu E1S text tranche is now running.
 Verify each completed text result and build its token cache only from hash-bound qualified text. Raw downloads
 must not become eligible-capacity claims. Avoid starting another large exclusion pass on the
 shared HDD while current passes are active.
@@ -85,7 +86,7 @@ subject to code-supply and evaluation contracts. Its 55/15/10/10/5/5 category al
 These are category envelopes, not a final recipe or proof that alternatives are ready. Only the
 tested category changes; source and language quotas must be derived for each actual arm. The
 existing science, reference and math stocks already exceed these individual category envelopes,
-but joint eligibility remains unqualified. Code and synthetic supply still require verification.
+but joint eligibility remains unqualified. Code supply still requires qualification; Cosmopedia now exceeds the synthetic envelope.
 A deterministic subset/successor can use completed compatible acquisitions; do not declare a
 partially finished original run complete or sum overlapping stocks.
 
@@ -97,8 +98,8 @@ model training, open sealed evaluations or bypass GH200 qualification.
 
 The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) now binds three
 complete already-downloaded files and the 1.32B target, with identical per-document policy and
-unit configurations. Its actual yield is pending. Schedule this tranche after the current large
-exclusion passes; retain the original fourteen-file / 5.28B plan for later expansion.
+unit configurations. Its actual yield is pending. It is now running after the completed FineMath/Cosmopedia
+passes; retain the original fourteen-file / 5.28B plan for later expansion.
 
 Then grow to the 350M / 8B E1W stocks and the complete existing first-wave capacity envelope.
 The program's 29 logical slots, 192-GPU-hour data budget and fixed 1.2B flagship are unchanged.
@@ -118,6 +119,5 @@ production integration or a recorded recipe successor.
 
 The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
 [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json).
-FineMath and its cache are complete. It now waits for Cosmopedia, builds and verifies its cache, then
-processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
+FineMath and Cosmopedia caches are complete. It now processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.

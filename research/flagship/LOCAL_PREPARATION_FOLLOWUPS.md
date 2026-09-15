@@ -7,7 +7,7 @@ preparation moving without another message. It is a local job sequence, not a mo
    and implementation identities, 960M capacity and storage gates, preserved references, zero exact
    reference overlap, and exact/near positive controls. Bind the completed result into a runtime
    token plan, verify the text/reference inputs, build the token cache and verify complete reopen.
-2. Apply the same process to the running Cosmopedia stock, also targeting 960M.
+2. Apply the same process to the Cosmopedia stock, also targeting 960M.
 3. After both source jobs have finished, execute the already-bound three-file FineWeb E1S tranche.
    Require its 1.32B target and the same relevant checks, then build and verify its token cache.
 
@@ -36,3 +36,7 @@ records the reason: systemd garbage-collects successful transient services. An u
 now hands its existing publication to the same strict execution/capacity/exclusion checks, and
 records that the service exit status is unavailable. A missing result or invalid publication
 still stops dependent work. The FineMath/Cosmopedia source services were not stopped.
+
+As of 2026-09-15, FineMath and Cosmopedia text/cache stages are complete and reviewed. The
+same frozen sequence is processing the FineWeb-Edu E1S text tranche; its capacity and cache
+remain pending. Do not launch duplicate source/cache jobs.
