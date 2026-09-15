@@ -175,6 +175,8 @@ def _unit_config(plan, unit):
         raise ValueError("Cosmopedia lineage policy may only govern synthetic units")
     if "stack_edu_policy" in plan["base"] and unit["category"] != "code":
         raise ValueError("Stack-Edu policy may only govern code units")
+    if "stack_v3_policy" in plan["base"] and unit["category"] != "code":
+        raise ValueError("Stack v3 policy may only govern code units")
     if "fineweb_edu_filters" in plan["base"] and unit["category"] != "web":
         raise ValueError("FineWeb-Edu policy may only govern web units")
     config = {
@@ -192,6 +194,7 @@ def _unit_config(plan, unit):
         "fineweb_edu_filters",
         "cosmopedia_policy",
         "stack_edu_policy",
+        "stack_v3_policy",
     ):
         if key in plan["base"]:
             config[key] = plan["base"][key]
