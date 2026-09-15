@@ -16,9 +16,11 @@
     },
     {
       "id": "lc_hardware",
-      "state": "pending",
-      "next": "R0: qualify exact 1.2B 4K/32K/128K forward/backward/resume and four-GPU throughput before costly training.",
-      "plan": "research/flagship/architecture_plan_v3.json"
+      "state": "exact_meta_shapes_verified_gpu_execution_and_site_access_pending",
+      "next": "Prepare the bounded R0 executor with effective vocabulary 32003, synthetic input IDs below 32000, loss/kernel/optimizer settings, failures/timeouts and allocated-hour accounting. Six hybrid/dense 4K/32K/128K meta shapes pass; actual GH200 forward/backward/resume, cached-generation parity and four-GPU throughput remain unmeasured. Review is pending and access date is unknown.",
+      "plan": "research/flagship/architecture_plan_v3.json",
+      "shape_plan": "research/flagship/r0_shape_preparation_v1.json",
+      "shape_evidence": "results/systems/r0-shape-preparation-20260915.json"
     },
     {
       "id": "lc_data",
@@ -358,5 +360,15 @@
       "next": "Preserve prior evidence and artifacts. Follow the new long-context work items and plan_v4; old E1-E4/I1-I3 quotas and launch dependencies are retired.",
       "previous_state": "explicit_source_stream_implementation_cpu_fixture_qualification_real_pools_pending"
     }
-  ]
+  ],
+  "allocation_status": {
+    "state": "proposal_under_evaluation",
+    "source": "Owner-supplied peer-review team response in this task",
+    "reported_on": "2026-09-15",
+    "reviewer_message": "The proposal is still under evaluation. No other action is needed on your side.",
+    "email_sent_at": null,
+    "compute_access_date": null,
+    "access_confirmed": false,
+    "next": "Continue local preparation under the selected long-context pivot; no assumed award/access date or new reviewer outreach."
+  }
 }

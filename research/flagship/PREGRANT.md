@@ -3,6 +3,11 @@
 The owner approved the scope pivot. [plan_v4.json](plan_v4.json) is the selected design, with per-run
 launch manifests still pending. Do not request the same strategic approval again.
 
+The review team reports that the application is still under evaluation and no further applicant
+action is needed, as supplied by the owner on 2026-09-15. Access is not confirmed and has no
+reported date. [R0 readiness](R0_READINESS.md) separates completed local shape checks from
+pending hardware execution.
+
 ## P0 -> R0
 
 Prepare bounded qualified inputs, retained 1.2B shapes, storage/recovery commands, Slurm/site accounting
