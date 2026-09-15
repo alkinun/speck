@@ -1,0 +1,362 @@
+{
+  "format": "speck_stack_edu_ordered_acquisition",
+  "format_version": 1,
+  "source_id": "stack_edu",
+  "old_stock_plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_edu_stock_preparation_v1.json",
+    "sha256": "4c0411dcde10733a24251680dca0e38ea268f5884c7751af47fa069eebfcf77c"
+  },
+  "metadata_result": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-edu-metadata-acquisition-v3-20260915.json",
+    "sha256": "9bc5a447904c919b236e13a0ac4e5bad31546ba72f9a4c4f3904b2a614643ecf"
+  },
+  "code_languages": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/code_language_preparation_v2.json",
+    "sha256": "d8a0410c117f5fe5c049ad4372996a2cf3e361138deaabb38553a9ea0948b9f1"
+  },
+  "fetch_qualification": {
+    "path": "/home/alkin/Desktop/speck/results/systems/ordered-code-fetch-qualification-20260914.json",
+    "sha256": "1270c966839ba00d50d21a07c801ccb1c82caeb5d98f4a763806674a00f8d96a"
+  },
+  "files": [
+    {
+      "metadata_sha256": "202e212704307ef2c91cb3c82638e52d0590d4ca78b6a8768a598d18f79f28fd",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__C/manifest.json",
+        "sha256": "9d2f0538de453315e5221ce96726343ee0a6f32bdbfd7e2aa68075988c3183c6"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__C/config.json",
+        "sha256": "5fc4401f75d8f6354ce8b547b29e8334a939ec265dc62bb57385885c9eae525e"
+      }
+    },
+    {
+      "metadata_sha256": "232acd36bdabcbff9eb61c34f31aac933f1317ba7b3ae4022b38fe36e71be5f0",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Cpp/manifest.json",
+        "sha256": "eae2fe2e28772c5f836145038378d16492b7da653edecc366b9fe2219d2ecdcb"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Cpp/config.json",
+        "sha256": "d9d052e7cb584945279379f794804324b4a35e2ce68bbc7e0de0175879e790a6"
+      }
+    },
+    {
+      "metadata_sha256": "f6111b5521738255206d446c7aad91822735013183267c00cc2a221b12cd8c3c",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Go/manifest.json",
+        "sha256": "fef85748b8647c52ae1e63a766c8e5b206c5692a7cf3b0f20d0e29fe0e53918a"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Go/config.json",
+        "sha256": "f31b1862fa831e0cfd3126cace67b55d80320e9fb2443f4bf0e1606ff6be1d90"
+      }
+    },
+    {
+      "metadata_sha256": "dcb6a63f9d1f9086179914aa806e65542c8a24a7c54a80fff3b999bc4ada71de",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Java/manifest.json",
+        "sha256": "d741bc5d96b3c5602db688b7be502a4b7e5897dba3919a3f1539d3b79dab2ff2"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Java/config.json",
+        "sha256": "e3f527c001eb988c3e2a63e6b98942955ea0320bd7647ec56bd582e1fa9b82bf"
+      }
+    },
+    {
+      "metadata_sha256": "486657e11ed4b3c67db5fc9655be01181897c7ab8226338cca17ea1de8fcdef2",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__JavaScript/manifest.json",
+        "sha256": "20c979c5de68eb84950c84b54d2c1e95a923bdda3d07e02f72d5cc4410160937"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__JavaScript/config.json",
+        "sha256": "2b40c5499907c26e4c4760617c36685fda2898fc44f43394cc20f57aabb056ca"
+      }
+    },
+    {
+      "metadata_sha256": "52d49ef4b73901e86ec1dd7fedd312506bfe4deb03624309bde51616410d4738",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Markdown/manifest.json",
+        "sha256": "48faa0551d359369b69a2b75bf2baa8d80d8cc01ebf5edae72b86002d7cb72b7"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Markdown/config.json",
+        "sha256": "8dd2c0024324899110f44b552a1103d132ca95edc47ea3efc36efc1dc3bb0e44"
+      }
+    },
+    {
+      "metadata_sha256": "f0e25975bff184163a7ff1aca53678617c6eace1328b1b2c51a39ff79a6262bd",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Python/manifest.json",
+        "sha256": "b01207b36a5ca1dab1ba4b6f9628535aa98640c7aded56b4102cd13411ebb1cf"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Python/config.json",
+        "sha256": "fa3ed88a0ec4ea02eb56d552454374052face6d6c295347041e50f9b9fbd6767"
+      }
+    },
+    {
+      "metadata_sha256": "38c9c6e658c273cbde075a51312fa53aec4a4f26c0bffcefe73da5c70e7061f6",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Rust/manifest.json",
+        "sha256": "1447ec951a7a9a2edf6d2a03fad34783629b2acaa2ca2f9c82609f556c027d93"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Rust/config.json",
+        "sha256": "7f12bad13a4e8a7a881c755fd3e2c360ead8174174f9d108baecc6a77a17e976"
+      }
+    },
+    {
+      "metadata_sha256": "2f08a57e42620bdf6302fe083d48fe9954bff5c949ca3fe4fe3c2729087c141f",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__SQL/manifest.json",
+        "sha256": "fcd2b93fd43879028316ba2600260e74b6c7abd01d19b2f6523c383c34f363d0"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__SQL/config.json",
+        "sha256": "daca8c5751fa41bc1ab04cb32a290448279ece5f8a175e8bf2e3f8979a5a9368"
+      }
+    },
+    {
+      "metadata_sha256": "d64ad0da3bd626868954ae36523290fa24cb977790f261d427a4a71dc31e5bf7",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Shell/manifest.json",
+        "sha256": "22ee31d0bb0121d67a20687dd6ad2de665ba9af74037fb44daf8a831265a28fa"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__Shell/config.json",
+        "sha256": "dbd440a9a538880e0c596dbabec4e6d1cf975db2b179452d85fa3c299ddbcb22"
+      }
+    },
+    {
+      "metadata_sha256": "2efb24b6e8b365e95e5ade67d51dd7a5e2a1c365affdc232fdf57fa11e8aad97",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__TypeScript/manifest.json",
+        "sha256": "e118735a0ba2a694e49e2790b13867d2d74dca509002996db460a731b6568544"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-fetch-qualification-v1/indices/stack_edu__TypeScript/config.json",
+        "sha256": "c243efda212785c77cfcd899c19e3a91f8d06bec1270c70c0d246da3e8449f5c"
+      }
+    },
+    {
+      "metadata_sha256": "7c73d327ec0340cddc1547460e82f174f615881c0c847f674cb0e55a481ce6fd",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Cpp__file_1/manifest.json",
+        "sha256": "132c1280d5c945ae6d24e85238663a8e9ad0974f6e0c1435f40b610d0f74353d"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Cpp__file_1/config.json",
+        "sha256": "9308e5ac125066ae9144e6c4b9e1880b1d8707e22524234687ca403aa455f3fd"
+      }
+    },
+    {
+      "metadata_sha256": "3ecf1df57314e2c0279d3689079128b0d30a4f9639b94f203daf860a4d2e1e30",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Cpp__file_2/manifest.json",
+        "sha256": "3f8a81df39ebd8a818def45b61af0aba6eba3490732fd3cf8ee68246b5488efb"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Cpp__file_2/config.json",
+        "sha256": "ffba922ea22f13a44c67e3cb07966cbff946674e9fbef2038d752aefc2d142d6"
+      }
+    },
+    {
+      "metadata_sha256": "377dd962d1168b4471c1714041f042bf9034ad2aefe3833149a76b494fda69d3",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Cpp__file_3/manifest.json",
+        "sha256": "8e5fffd0e510dfb8505b366c67bfa8a49c079d935fdd3dca5e57674d12473411"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Cpp__file_3/config.json",
+        "sha256": "8c1f17457eb40126075943165a8332f6883795078c5f232120f05b58163eb277"
+      }
+    },
+    {
+      "metadata_sha256": "23878fc155bcde5e172f045bdbc5a075126e04c1f3260566683e157bccadd83f",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_1/manifest.json",
+        "sha256": "8943de6bb717b2b4967cd1db3e12fada2843f6e2745e98b9d72d33d592a1b005"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_1/config.json",
+        "sha256": "542784446facd24329fdccca2852eae7f55d57c13d25f4a5a61f446989453ae6"
+      }
+    },
+    {
+      "metadata_sha256": "6cadbb9c859758eee037633cb5f46a849ee5542a7ea4560a41b2e8861ebfab04",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_2/manifest.json",
+        "sha256": "adbb05e88bbb86a672c805742245daa3241c8ac59812f851dde93c9baf8c34da"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_2/config.json",
+        "sha256": "76d5010593047ee484e1e8ccef2cb1b73084a9c700761e18726388c793016acb"
+      }
+    },
+    {
+      "metadata_sha256": "584859deed5e0b0d95dbee43223383252bc4299c7229b2333f3569d13ec8a766",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_3/manifest.json",
+        "sha256": "dd1ba3e351464c6d97af6b6c59db20067be2485f9d1e90be0054b2fecdbdb21a"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_3/config.json",
+        "sha256": "3d5c55c811d6106ea332aa4f46d9b81ad8cf63872ee97dfafec740bd48806ee1"
+      }
+    },
+    {
+      "metadata_sha256": "4ecdef50f7bd9a64ecc3c1782ecfcb60fa5b9da5cea7cccd99bbef60829d6fbe",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_4/manifest.json",
+        "sha256": "72bd7db8672ed86a5d0dab40ec5598f0431bd643591172fc26abd4cf4d7c1aa5"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_4/config.json",
+        "sha256": "11162d7909fd79b915795fdac6311d8a6c995c5710cdcfa8b49fd337931d73f6"
+      }
+    },
+    {
+      "metadata_sha256": "5198334fa8a1a64b7b908ea2860242e005106ee2694dbfab3dbd9c583694a81b",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_5/manifest.json",
+        "sha256": "9d19b062536b87ab136384551f0edef184fb5ce5cb5a4e2074034d7419a21733"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_5/config.json",
+        "sha256": "9d87e8ab6927a36a8150d6b974d62385cff58b405e49f50d7c8b5bc585ab5536"
+      }
+    },
+    {
+      "metadata_sha256": "873b63ff679316fcc986b95006c3db6be1a1c6cc3cd469c20b7a295e8ac14b01",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_6/manifest.json",
+        "sha256": "7a406b19bf25f3449c4a902667fc0436186189399b15ec93dd9f0aea64043409"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_6/config.json",
+        "sha256": "7e51392fe275dc1dc9bc31515cfcba0c84aea625d61dac49581c69504168fd54"
+      }
+    },
+    {
+      "metadata_sha256": "bb3cd0d8ea0c5364be2f695ebd493a00bc3eefe45087f877dff4e163702beff9",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_7/manifest.json",
+        "sha256": "26cf3d7c27fd4c613dd12ffcd83ce0be7e7fbb40e5859f68726fe4226cc6f80d"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_7/config.json",
+        "sha256": "974334c8902b8924eee29b49e5a7e87280d61c126ce7415233f6f0b0da6d929d"
+      }
+    },
+    {
+      "metadata_sha256": "f821586c20a5a06e9fddbc0ffcd4c0438a1b473424b9d4cb2377f53b29c52ed5",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_8/manifest.json",
+        "sha256": "e2f8e3dcbf687816601504ef53dbdac63f91ca6eb59d0b9ecc090be05ba74930"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_8/config.json",
+        "sha256": "5503ae3dc5134e18265a442da2ecc647e460cb8b0cb2f9e8fc32c9f826203b2f"
+      }
+    },
+    {
+      "metadata_sha256": "c4be29e89f55f789f1d136fa440d5ba10230107c72a810941cb4eb2001bc388e",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_9/manifest.json",
+        "sha256": "573fdb159876fc9937ad0d1dfc95d1f296d9c12a391c71f6d0998d1ee19f9041"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_9/config.json",
+        "sha256": "7ffbe699e137ba13764b9234ad773efa5afd1be4c4899ec998dfdebbc86cfd85"
+      }
+    },
+    {
+      "metadata_sha256": "4d370853a8c8353c9f1e43ceebdc870aff626e9bb9b94b9a3b9b8aefda39841f",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_10/manifest.json",
+        "sha256": "ec32f8c7c48c6d58803079619597f333294545ae86cdf7c4057d4bffac313118"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Java__file_10/config.json",
+        "sha256": "790d74fc1c54d54db5fd629b03530ea8e5ecb9c16a73704bdccc200c727c5c06"
+      }
+    },
+    {
+      "metadata_sha256": "4902a95238f83bf40ecc942a62728acab8f3e1b7859a8377a41b1512da76cf82",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__JavaScript__file_1/manifest.json",
+        "sha256": "97307ba888c9377f6b62bc8f12dfc4db7b4809e9a66ca7ce447176661f2433fd"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__JavaScript__file_1/config.json",
+        "sha256": "c352eed35c225d0c317cd1cbb7b0c4b0426781df9e9510a6f52df9597e0cfa68"
+      }
+    },
+    {
+      "metadata_sha256": "59e042dc6d5448b935f908c0d41afaad73ba8f2dc33ecde4b5ef395e5689d9e1",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Python__file_1/manifest.json",
+        "sha256": "4dd102a46d614177014a9e88f0b05f08bfc084fe72dae0c3318cfbc792daacd6"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v2/indices/stack_edu_metadata__Python__file_1/config.json",
+        "sha256": "a974539451ab5ed7c48b778a291160900cf17d1b13e38e2995e6b3e7fab1b915"
+      }
+    },
+    {
+      "metadata_sha256": "52a3d8851b47f9debd315957240927118d54976b875572961c7c054285d3425e",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v3/indices/stack_edu_metadata__JavaScript__file_2/manifest.json",
+        "sha256": "1bcb98c2d1958c9b44dd0995d76f95c17adf2da97fbd4e1c2e6df966e6d68348"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v3/indices/stack_edu_metadata__JavaScript__file_2/config.json",
+        "sha256": "d85a0544e5cbdacc0a4b9e54ef1ba97347525c2ce39f427a5c4e77317b867de1"
+      }
+    },
+    {
+      "metadata_sha256": "976e623d0a8d2b8fb1c3fec0fbd1d7f237a80a19b32e91f399259cb33e9208f7",
+      "manifest": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v3/indices/stack_edu_metadata__Python__file_2/manifest.json",
+        "sha256": "f60154089cb06f8dd0a13eb23268053618505e2e18bd70c5512fbb79ddb6e63c"
+      },
+      "config": {
+        "path": "/home/alkin/speck-working/code-supply-probe-v3/indices/stack_edu_metadata__Python__file_2/config.json",
+        "sha256": "a1245c4b0efe58c76dfc345c77b7fc281d471f4a5b065d2e0e801a3f8def1fb5"
+      }
+    }
+  ],
+  "language_order": [
+    "Java",
+    "TypeScript",
+    "Python",
+    "C++",
+    "JavaScript",
+    "C",
+    "Go",
+    "Rust",
+    "Markdown",
+    "SQL",
+    "Shell"
+  ],
+  "eligible_rows_per_unit": 512,
+  "workers": 32,
+  "window": 64,
+  "candidate_nominal_multiplier": 2,
+  "stop_on_pre_exclusion_language_shortfall": true,
+  "maximum_cache_bytes": 12884901888,
+  "maximum_working_bytes": 25769803776,
+  "minimum_free_bytes": 68719476736,
+  "working_directory": "/home/alkin/speck-working/stack-edu-e1s-ordered-v1",
+  "archive_directory": "/mnt/speck-data/speck/stack-edu-e1s-ordered-v1",
+  "fallback_caches": [
+    "/mnt/speck-data/speck/stack-edu-blobs-v1",
+    "/home/alkin/speck-working/code-fetch-qualification-v1/cache",
+    "/home/alkin/speck-working/code-supply-probe-v2/cache",
+    "/home/alkin/speck-working/code-supply-probe-v3/cache"
+  ],
+  "training_authority": false,
+  "scope": "Acquire actual Stack-Edu E1S content units under the selected v2 language allocation from all 28 complete verified metadata files, reusing their checked original-order eligible indices. Process scarce Java and TypeScript first, then the declared fixed language order, preserving metadata-file and row order within each language. Candidate whole-document prefixes target twice each nominal 300M-source language quota before Gitleaks/full exclusion; exhaust available metadata if short. Stop dependent languages if a completed language remains below its 20% headroom even before full exclusion. Use qualified 32-worker/64-window ordered SWH fetch with a single owner for a separate bounded NVMe cache and immutable read-only fallback caches. Preserve all verified/missing/failed/retried/prefetched blobs, original attribution, interrupted unit attempts and positions. Archive each completed 512-eligible-row unit and its referenced new cache artifacts as a checked tar before advancing; content-only reuse or warm-cache measurements do not claim speedup. No new metadata download, changed filters, source-use approval, repeated training exposure, full exclusion, joint eligibility or model launch. Final excluded language headroom remains a separate gate."
+}
