@@ -1,16 +1,19 @@
 # Bounded R0 executor
 
-The [execution preparation plan](r0_execution_preparation_v1.json) binds the six
+The [execution preparation plan](r0_execution_preparation_v2.json) binds the six
 [checked shapes](../../results/systems/r0-shape-preparation-20260915.json). It prepares a finite
 synthetic optimization/checkpoint diagnostic. It does not grant scientific model-launch authority
 or certify full R0 readiness. Actual allocation/site access remains pending.
 
-The [local qualification](../../results/systems/r0-executor-local-qualification-20260915.json)
-at `f59bc70` passes 23 focused tests and 12 request bindings: hybrid/dense at 4K/32K/128K, each with
-one/four workers. Tiny CPU dense and KDA models pass optimization and same-process checkpoint
-next-step replay; two Gloo ranks pass accumulation, replay and final-weight agreement. CPU fixtures
-leave GPU fit and four-GPU pass fields null. Full quality: 1,267 passed, 10 skipped, 125 deselected,
-plus format, lint, catalog, archive and source-pin checks.
+The [fresh-process local qualification](../../results/systems/r0-fresh-process-local-qualification-20260915.json)
+at `2bd1676` passes 30 focused tests and binds 12 requests: hybrid/dense at 4K/32K/128K, each with
+one/four workers. Tiny CPU dense and KDA models pass persisted checkpoint/RNG recovery in fresh
+processes; two Gloo ranks also pass restart and final-weight agreement. CPU fixtures leave GPU fit
+and four-GPU pass fields null. Full quality: 1,274 passed, 10 skipped, 125 deselected, plus format,
+lint, catalog and archive checks. The evidence-bound v1 implementation is preserved in the
+[successor snapshot](../history/2026-09-15-r0-fresh-process/manifest.json); its
+[original qualification](../../results/systems/r0-executor-local-qualification-20260915.json) remains
+valid at its recorded revision. Neither local receipt qualifies actual GPU execution.
 
 ## Prepare and inspect
 
@@ -18,7 +21,7 @@ This command validates identities and settings and prints a request fingerprint 
 
 ```bash
 uv run --no-sync python -m scripts.r0_execute \
-  research/flagship/r0_execution_preparation_v1.json \
+  research/flagship/r0_execution_preparation_v2.json \
   --case hybrid-4096 --workers 1 --allocated-gpus 4
 ```
 
@@ -30,8 +33,8 @@ repetition does not select a production exposure policy or open any sealed data.
 
 Default settings are batch one, accumulation one, two warmup steps, five measured steps, constant
 diagnostic LR 1e-4, Muon plus AdamW, clipping 1.0, decay 0.1, activation checkpointing and Liger loss.
-There is one additional uninterrupted step and its restored replay. These are engineering settings,
-not chosen R1/flagship optimizer settings. The outer model and Muon are eager by default; KDA still
+There is one additional uninterrupted step, followed by its replay in newly started workers. These
+are engineering settings, not chosen R1/flagship optimizer settings. The outer model and Muon are eager by default; KDA still
 uses FLA/Triton on CUDA. Global attention uses recorded SDPA automatic dispatch, not a claim that a
 particular attention kernel was observed. The plan permits no automatic backend or shape fallback.
 Changed settings require a preserved bound successor before comparing results.
@@ -50,7 +53,7 @@ and the external-prior cost have been established, is:
 
 ```bash
 uv run --no-sync python -m scripts.r0_execute \
-  research/flagship/r0_execution_preparation_v1.json \
+  research/flagship/r0_execution_preparation_v2.json \
   --case hybrid-4096 --workers 1 --allocated-gpus 4 --run \
   --ledger /site/shared/speck/r0-ledger --prior-r0-gpu-hours ACCOUNTED_HOURS
 ```
@@ -61,9 +64,10 @@ starts each rank in its own tracked process group, with a unique file rendezvous
 identity and source/request hashes are rechecked at startup. Site scheduler/cgroup integration is
 still needed; this launcher is not a qualified Slurm/requeue wrapper.
 
-A default attempt has a 900-second wall deadline and ten-second termination grace, conservatively
-reserving 1.0111 GPU-hours when four GPUs are allocated. The ledger serializes attempts and retains
-reservations for successful and unsuccessful work; it never silently refunds the difference between
+A v2 attempt has two worker generations, each with a 900-second wall deadline and ten-second
+termination grace. It reserves both phases before launching: 2.0222 GPU-hours with four GPUs allocated.
+An unsuccessful initial phase prevents the restart phase and retains the complete reservation.
+The ledger serializes attempts and retains reservations for successful and unsuccessful work; it never silently refunds the difference between
 a reservation and observed time. It refuses a reservation beyond the 70-hour envelope, changed prior
 accounting, changed result receipts and unresolved prior attempts. The default free-disk floor is
 128 GiB for per-rank model/optimizer checkpoints; it is a guard, not proof that a shared filesystem
@@ -72,8 +76,10 @@ will remain available. Keep checkpoints and logs outside the repository.
 ## Results, failure and recovery
 
 Every attempt gets a new directory with its request, process IDs, shared log, durable rank progress,
-rank results, per-rank checkpoint payloads and supervisor result. OOM, unsupported backend, numerical/
-parity failures and other execution errors are recorded separately. Missing ranks or a nonzero exit
+rank results, per-rank checkpoint payloads and supervisor result. V2 stores these under separate
+`initial/` and `restart/` directories; nested rank paths resolve within their named phase. The initial
+workers must finish successfully and exit before the next generation starts. OOM, unsupported backend,
+numerical/parity failures and other execution errors are recorded separately. Missing ranks or a nonzero exit
 cannot produce a successful aggregate result. Timeouts/interrupts stop every tracked rank group;
 partial rank reports remain available. A hard-killed supervisor leaves its reservation unresolved.
 Check actual processes, scheduler state and process start identities before recovery; PIDs can be
@@ -92,13 +98,19 @@ other R0 work are not measured here: scheduler-total hours remain null until rec
 another ledger or a smaller declared allocation to bypass those costs.
 
 Checkpoint checks compare next-step loss, model tensors and optimizer state against uninterrupted
-execution at rtol 1e-5 / atol 1e-6. They reload into the same process and restore in-memory RNG. They do
-not qualify a fresh-process RNG/checkpoint restart, crash replay or scheduler requeue. Preserve failures
-rather than loosen tolerances after seeing results.
+execution at rtol 1e-5 / atol 1e-6. V2 persists a hash-bound baseline, data cursor, RNG payload and
+uninterrupted reference, then loads them in new worker processes. It checks continuation of Torch CPU,
+Torch CUDA when applicable, Python and NumPy RNG streams. A dedicated probe exercises those streams
+even when the model has no stochastic layers. CPU qualification does not exercise CUDA RNG.
+
+The original v1 protocol records same-process parity; v2 records process-restart parity and leaves
+the same-process field null. A completed producer checkpoint and clean process exit are prerequisites
+here. This is not a hard-crash, production-loader restart or scheduler-requeue qualification. Preserve
+failures rather than loosen tolerances after seeing results.
 
 ## Remaining R0 qualification
 
 Actual GH200/arm64 dependencies, NCCL and exact-shape execution; independent numerical-reference and
-cached-generation parity; fresh-process checkpoint/RNG restart and scheduler/requeue; production-loader
+cached-generation parity; CUDA checkpoint/RNG restart, hard interruption and scheduler/requeue; production-loader
 and sustained end-to-end throughput; and complete scheduler/all-attempt cost reconciliation remain
 open. A bounded synthetic pass establishes none of the paper's quality or useful-context claims.

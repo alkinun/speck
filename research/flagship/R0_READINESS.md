@@ -54,10 +54,10 @@ reserved vocabulary, contract drift and refusal to publish changed input identit
 
 The [bounded synthetic executor](R0_EXECUTOR.md) now binds the exact shapes, deterministic per-rank
 inputs, precision/backend/optimizer settings, warmup/measured steps, deadlines and conservative
-budget reservations. Its [CPU qualification](../../results/systems/r0-executor-local-qualification-20260915.json)
-checks dense/KDA optimization and same-process checkpoint replay, two-rank Gloo, failures and rank
-cleanup. It has not executed the actual GPU cases. Fresh-process restart, cached-generation/reference
-parity, scheduler integration and production-data throughput still require qualification.
+budget reservations. Its [fresh-process CPU qualification](../../results/systems/r0-fresh-process-local-qualification-20260915.json)
+checks dense/KDA persisted checkpoint/RNG replay in new workers, two-rank Gloo, failures and rank
+cleanup. It has not executed the actual GPU cases. CUDA restart, cached-generation/reference parity,
+hard interruption, scheduler integration and production-data throughput still require qualification.
 
 At the allocated site, qualify arm64 dependencies and KDA kernels, forward/backward and the
 optimizer, cached-generation parity, checkpoint/resume and four-GPU behavior. Record startup,

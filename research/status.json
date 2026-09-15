@@ -16,13 +16,13 @@
     },
     {
       "id": "lc_hardware",
-      "state": "bounded_executor_cpu_qualified_exact_shapes_bound_site_execution_pending",
-      "next": "Bounded synthetic R0 executor and 12 one/four-worker requests are locally qualified; 23 focused tests include dense/KDA replay, two-rank Gloo, timeout/interrupt rank cleanup and accounting. Complete fresh-process checkpoint/RNG recovery, numerical/cache parity, scheduler integration and production-loader checks. Actual GH200/arm64/NCCL execution and all GPU fit/throughput remain unmeasured; review and access date remain pending.",
+      "state": "fresh_process_executor_cpu_qualified_site_execution_pending",
+      "next": "R0 v2 passes local persisted checkpoint/RNG replay in fresh dense/KDA workers and two-rank Gloo; 30 focused tests and 12 one/four-worker shape requests are checked. Complete independent numerical/cache parity, hard interruption, scheduler integration and production-loader checks. Actual GH200/arm64/CUDA RNG/NCCL, GPU fit and sustained throughput remain unmeasured; review and access date remain pending.",
       "plan": "research/flagship/architecture_plan_v3.json",
       "shape_plan": "research/flagship/r0_shape_preparation_v1.json",
       "shape_evidence": "results/systems/r0-shape-preparation-20260915.json",
-      "executor_plan": "research/flagship/r0_execution_preparation_v1.json",
-      "executor_evidence": "results/systems/r0-executor-local-qualification-20260915.json"
+      "executor_plan": "research/flagship/r0_execution_preparation_v2.json",
+      "executor_evidence": "results/systems/r0-fresh-process-local-qualification-20260915.json"
     },
     {
       "id": "lc_data",

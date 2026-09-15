@@ -8,6 +8,7 @@ and [active queue](../flagship/PREPARATION_QUEUE.md) for current boundaries and 
 
 | Topic | Prior evidence and boundary |
 | --- | --- |
+| Fresh-process R0 recovery | [Persisted checkpoint/RNG qualification](2026-09-15-r0-fresh-process.md) checks new dense/KDA worker processes and two-rank Gloo; CUDA, crash/requeue and production-loader recovery remain pending. |
 | Bounded R0 executor | [CPU qualification and supervised rank cleanup](2026-09-15-bounded-r0-executor.md) checks request identities, tiny dense/KDA replay, two-rank Gloo and failure/cost handling; actual GH200 execution and complete R0 remain pending. |
 | Recurrent/global backbone | [Kimi transfer](../../archive/pregrant-history/findings/16_kimi_transfer_131m.md), [replication](../../archive/pregrant-history/findings/17_kimi_frontier_replication.md), and [paired dense/KDA proxy](../../archive/pregrant-history/findings/105_paper_1_paired_proxy_analysis.md) motivate the default; flagship-scale transfer remains unmeasured. |
 | Context and resident state | [128K systems](../../archive/pregrant-history/findings/04_existing_checkpoint_128k_systems.md) and [32K continuation](../../archive/pregrant-history/findings/18_kimi_context32k.md) distinguish allocation from useful context. |

@@ -8,7 +8,7 @@ is preserved with its original source-acquisition decisions and measurements.
 | Priority | Local work | Completion evidence |
 | --- | --- | --- |
 | 1 | Reconcile already running finite source workers; avoid competing HDD exclusion | Published text/cache receipts, complete reopen checks, preserved failures and non-overlapping capacity accounting |
-| 2 | Extend the [CPU-qualified bounded R0 executor](R0_EXECUTOR.md) with fresh-process recovery and numerical/cache checks | Reproducible input/configuration receipts, attempt recovery, timeout and GPU-hour accounting; local verification with GPU checks explicitly pending |
+| 2 | Extend the [CPU-qualified bounded R0 executor](R0_EXECUTOR.md) with numerical/cache checks and production-loader recovery | Reproducible input/configuration receipts, persisted checkpoint/RNG restart already CPU-qualified; numerical/cache and production-loader checks still pending |
 | 3 | Measure successor supply, scarce-source exposure and delivery/storage | New source-specific sheet for the selected broad base and study; actual eligible tokens distinguished from targets and estimates |
 | 4 | Prepare coherent units and disjoint task pilots | Family/revision/window identities, qualified ordering/isolation, supported answers and counterfactual checks |
 | 5 | Pin evaluation and complete the study freeze | Benchmark/scorer identities, family partitions, numerical guards, matched exposure, endpoints and complete costed run list |

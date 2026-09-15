@@ -1,0 +1,314 @@
+{
+  "artifact_manifest": {
+    "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/artifact-manifest.json",
+    "sha256": "1d4bd5f28e750c11b44c81f3c836d6d70038d6e18efbe7949b41179ef94fb74b"
+  },
+  "attempt_history": [
+    {
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/development.log",
+      "status": "29_passed_before_adding_fresh_process_KDA_case"
+    },
+    {
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/pytest.log",
+      "status": "30_passed"
+    },
+    {
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality.log",
+      "status": "1274_passed_final_implementation"
+    }
+  ],
+  "boundary": "Tiny dense/KDA CPU and two-rank Gloo engineering fixtures, including deliberate failure cases. Two complete worker generations compare persisted model/optimizer/cursor and Torch/Python/NumPy RNG continuation. This does not qualify CUDA RNG, exact-shape GPU fit, NCCL, crash/requeue, production loader resume, useful context or model quality. All runtime artifacts were reopened by SHA-256; original inputs/results remain preserved.",
+  "cpu_fixture_results": [
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_optimizer_c0/initial/rank-0-result.json",
+      "parameters": 760,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_optimizer_c0/initial/rank-0-result.json",
+      "phase": "initial",
+      "pid": 993576,
+      "process_restart_parity_pass": null,
+      "rank": 0,
+      "reference_producer_pid": null,
+      "rng_continuation_pass": null,
+      "sha256": "e5c62a0bbb41b72a69b7bcfaccfffc3d4ee1af45de969b70f45e09abc7a88e0d",
+      "status": "restart_reference_ready",
+      "world_size": 1
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_optimizer_c0/restart/rank-0-result.json",
+      "parameters": 760,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_optimizer_c0/restart/rank-0-result.json",
+      "phase": "restart",
+      "pid": 993590,
+      "process_restart_parity_pass": true,
+      "rank": 0,
+      "reference_producer_pid": 993576,
+      "rng_continuation_pass": true,
+      "sha256": "844330c1655a00ffae17c4155fdcc1660b904927971bc1334b81f6194c32d17a",
+      "status": "bounded_synthetic_checks_pass",
+      "world_size": 1
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_optimizer_c1/initial/rank-0-result.json",
+      "parameters": 760,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_optimizer_c1/initial/rank-0-result.json",
+      "phase": "initial",
+      "pid": 993595,
+      "process_restart_parity_pass": null,
+      "rank": 0,
+      "reference_producer_pid": null,
+      "rng_continuation_pass": null,
+      "sha256": "d1f7b51250e4a6e846f07cee1a22adae6d8fe08776d7e4ad48c18350778ca568",
+      "status": "restart_reference_ready",
+      "world_size": 2
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_optimizer_c1/initial/rank-1-result.json",
+      "parameters": 760,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_optimizer_c1/initial/rank-1-result.json",
+      "phase": "initial",
+      "pid": 993596,
+      "process_restart_parity_pass": null,
+      "rank": 1,
+      "reference_producer_pid": null,
+      "rng_continuation_pass": null,
+      "sha256": "a1970b0e7eb41ef5595da32f4452a3476c84be60084e39a58225d61a0ae348e4",
+      "status": "restart_reference_ready",
+      "world_size": 2
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_optimizer_c1/restart/rank-0-result.json",
+      "parameters": 760,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_optimizer_c1/restart/rank-0-result.json",
+      "phase": "restart",
+      "pid": 993607,
+      "process_restart_parity_pass": true,
+      "rank": 0,
+      "reference_producer_pid": 993595,
+      "rng_continuation_pass": true,
+      "sha256": "cf89e6a8f362b04c475bcc0ffe57c16e557d8adf69e70d0ddb449038af51b6af",
+      "status": "bounded_synthetic_checks_pass",
+      "world_size": 2
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_optimizer_c1/restart/rank-1-result.json",
+      "parameters": 760,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_optimizer_c1/restart/rank-1-result.json",
+      "phase": "restart",
+      "pid": 993608,
+      "process_restart_parity_pass": true,
+      "rank": 1,
+      "reference_producer_pid": 993596,
+      "rng_continuation_pass": true,
+      "sha256": "fbc72ccd39ce837256e0ffe2ca0013a18d86f287924aef1715561e6e1bf7ba7f",
+      "status": "bounded_synthetic_checks_pass",
+      "world_size": 2
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_kda_model_a0/initial/rank-0-result.json",
+      "parameters": 974,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_kda_model_a0/initial/rank-0-result.json",
+      "phase": "initial",
+      "pid": 993746,
+      "process_restart_parity_pass": null,
+      "rank": 0,
+      "reference_producer_pid": null,
+      "rng_continuation_pass": null,
+      "sha256": "08788e614b0fb464c75f6adfa2690fe1eb2affae963f7724215be4ee9b3456d6",
+      "status": "restart_reference_ready",
+      "world_size": 1
+    },
+    {
+      "four_gpu_ddp_pass": null,
+      "gpu_fit_pass": null,
+      "original_path": "/tmp/pytest-of-alkin/pytest-70/test_fresh_process_kda_model_a0/restart/rank-0-result.json",
+      "parameters": 974,
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/full-quality-fixtures/test_fresh_process_kda_model_a0/restart/rank-0-result.json",
+      "phase": "restart",
+      "pid": 993750,
+      "process_restart_parity_pass": true,
+      "rank": 0,
+      "reference_producer_pid": 993746,
+      "rng_continuation_pass": true,
+      "sha256": "644eab3c1a479a6dc1e634ff9789b8f93feffd6d11f14e0513746cfe8cfda906",
+      "status": "bounded_synthetic_checks_pass",
+      "world_size": 1
+    }
+  ],
+  "format": "speck_r0_fresh_process_local_qualification",
+  "format_version": 1,
+  "gpu_qualification_launched": false,
+  "implementation": [
+    {
+      "path": "speck/operations/r0_executor.py",
+      "sha256": "d9dd30c78251d781c10d4f5d87548321e9a0c5cf2091d238f567865d03d72059"
+    },
+    {
+      "path": "speck/operations/r0_worker.py",
+      "sha256": "05222a461e8da6e6cea54a5e5551297e4d3941b12da83309c45f2f6dbbdb6187"
+    },
+    {
+      "path": "speck/operations/r0_replay.py",
+      "sha256": "0104f094dc5d33e5e1b5ef9e69022a930ecdafccc6822de4f329424032f87b8d"
+    },
+    {
+      "path": "scripts/r0_execute.py",
+      "sha256": "08b3d8deb5d41a758650c065ee5b35735b2a88bb51ef8fdb452ffa15a29d6f24"
+    },
+    {
+      "path": "tests/operations/test_r0_executor.py",
+      "sha256": "01b8fafbeb94bbb3f053144e4cf51d944662cbeb76e5af7a5b3e942e5a185e10"
+    },
+    {
+      "path": "tests/operations/test_r0_restart.py",
+      "sha256": "222d4deea17ad2ae71933523a866319c404d4d7da78bbb940b9e5ad021d799b7"
+    }
+  ],
+  "plan": {
+    "path": "research/flagship/r0_execution_preparation_v2.json",
+    "sha256": "ee6c3b24fb25a90b756226475e9190dea9380d5cc7e97edd4b8864bc1a444759"
+  },
+  "preparation_gpu_hours": 0,
+  "preservation_snapshot": {
+    "path": "research/history/2026-09-15-r0-fresh-process/manifest.json",
+    "sha256": "20f2be795ffca53de706a6eaf8c3019c0889ca330cf028f07d4ebc610232f46a"
+  },
+  "preserved_bytes_match_predecessor_revision": true,
+  "prior_qualification": {
+    "path": "results/systems/r0-executor-local-qualification-20260915.json",
+    "sha256": "1b1ca9dd91c7b052c335ee8f47f641d759af28c46efe71fdbbdfcd7d30c53dfa"
+  },
+  "receipt_assembly_note": "An initial broad fixture-copy attempt encountered deliberately unreadable sealed test-fixture files and stopped. It is preserved; no permissions changed. The successful successor copies only R0 fixtures. No real heldout or sealed audit was opened.",
+  "remaining": [
+    "actual GH200/arm64 dependencies, CUDA RNG and four-GPU NCCL",
+    "independent numerical reference and cached-generation parity",
+    "hard interruption and scheduler/requeue integration",
+    "production-loader resume and sustained end-to-end throughput",
+    "scheduler-total and all-attempt cost reconciliation"
+  ],
+  "repository_revision": "2bd1676d1aa34406ae1c56c96debbb4e187f26f2",
+  "request_checks": [
+    {
+      "allocated_gpus": 4,
+      "case": "dense-4096",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/dense-4096-1-workers.json",
+      "request_sha256": "1c72307e35a1f6fdd33509ca98e6c0a77266268d3f733abf06f076d5d44c8a38",
+      "sha256": "659cf523aa4c965a47c7e21263e4b8ba5734329277fd85e5a3e6b34b0845808a",
+      "workers": 1
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "dense-4096",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/dense-4096-4-workers.json",
+      "request_sha256": "ddaa4fb37928b6713a8e1b32dc0d9ae198f45f5a1d197fee7a9b6ed3319d9b2e",
+      "sha256": "0c764cc7d43397b48d1af3e43122bc1e64a92ed7510ace60c2f64fbd55cc0b84",
+      "workers": 4
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "dense-32768",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/dense-32768-1-workers.json",
+      "request_sha256": "e544d2305dcc4392dcc180a8d70aca2ec652d386b235c95a23b385bfcf3a9e25",
+      "sha256": "c455a1ecb45336a1724b3979cf005929642c8c14e7e5370ab95eb025cd38eff7",
+      "workers": 1
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "dense-32768",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/dense-32768-4-workers.json",
+      "request_sha256": "f831f40bd7a614e77ff526025953334aeb13567b480317f922be545288091d29",
+      "sha256": "d105f2ad273f759ccd6ec8385e30f493bab86ec2732df9b5cd0674cb98cb1e98",
+      "workers": 4
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "dense-131072",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/dense-131072-1-workers.json",
+      "request_sha256": "043b6ff9bbb2575252eee22957557610b2430f771b9f2a490db0c2df19d33a4e",
+      "sha256": "89197f3372391c7616951ecf010a246e0a5d33038e0bf25e2ae02d3a7a8cfc1b",
+      "workers": 1
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "dense-131072",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/dense-131072-4-workers.json",
+      "request_sha256": "82dff1ac00eb4abe495002c1663631a16421b3ae3094e8e28dc7de4c4f66b789",
+      "sha256": "6db71f1218b49ddf5e9c9becfb55e2756f8bb5950280cc43caa1b96cb3b68682",
+      "workers": 4
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "hybrid-4096",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/hybrid-4096-1-workers.json",
+      "request_sha256": "96cb3f780ced4af1bdeb1101b2aa52995538d8f10a2a61b9479a36e602d2efbe",
+      "sha256": "8ae39c3753a4104ab22c1b32ca92898185b54dcf6489668f076ea987c2764efd",
+      "workers": 1
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "hybrid-4096",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/hybrid-4096-4-workers.json",
+      "request_sha256": "0023ecfbe9d9e3c4783cb37528896f6bf9f0181690069fe201fc34742cc64775",
+      "sha256": "631dcf1c9e6b9d59b95197fe6719b266a0a1af94822a873d5ed1e3180af2bb8b",
+      "workers": 4
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "hybrid-32768",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/hybrid-32768-1-workers.json",
+      "request_sha256": "3da7aa6b8b99807c11596635aa6844e907ac2e05c768dd99c086b8d5aac46f37",
+      "sha256": "0806020d444c72e14d1d63adf6911db8d09e67c456af0ae0d3591f61dac685f3",
+      "workers": 1
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "hybrid-32768",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/hybrid-32768-4-workers.json",
+      "request_sha256": "1996e3da4e6dd4f91563963b5dbd9b53015f49591d1827781373e52db60a9f65",
+      "sha256": "f61f82d867f97e3e039736abdbe5a1fc917187f0f86a17c0150d09d4ed694908",
+      "workers": 4
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "hybrid-131072",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/hybrid-131072-1-workers.json",
+      "request_sha256": "ff85c56a44410886f1125ed0b98a29672eba27b45362db564dab2222ccd1921d",
+      "sha256": "4d5bae33249dfe16105f8caf09cbc6aa1653480d9a44d09b4a1b51569ea5938e",
+      "workers": 1
+    },
+    {
+      "allocated_gpus": 4,
+      "case": "hybrid-131072",
+      "path": "/home/alkin/speck-working/r0-fresh-process-qualification-v1/requests/hybrid-131072-4-workers.json",
+      "request_sha256": "ab63272fe8e49d3611f422585759b1067d9ee6671c5bacd171e8b621ad5f2316",
+      "sha256": "0ecdc540fe3cb0c9543f366ef32c36bf92c437a289b1bd1d91533f65f216d141",
+      "workers": 4
+    }
+  ],
+  "scientific_training_authority": false,
+  "status": "cpu_fresh_process_and_request_binding_checks_pass_site_execution_pending",
+  "validation": {
+    "focused_boundary": "Retained focused run preceded the final predecessor-plan validation addition; final full suite below includes that addition and all 30 focused tests. Fresh-process worker/replay bytes were unchanged.",
+    "focused_passed": 30,
+    "focused_seconds": 22.93,
+    "format_lint_catalog_archive": "pass",
+    "full_deselected": 125,
+    "full_passed": 1274,
+    "full_seconds": 34.38,
+    "full_skipped": 10,
+    "source_pin_diff": "Four previously qualified implementation/test files intentionally replaced by this preserved successor; original receipt remains unchanged."
+  }
+}
