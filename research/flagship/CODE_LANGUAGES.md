@@ -1,5 +1,18 @@
 # Matched code-language preparation
 
+**Current:** [language prior v2](code_language_preparation_v2.json) and
+[requirements v2](code_language_requirements_v2.json) implement the
+[recorded code preparation successor](CODE_PREPARATION_SUCCESSOR.md). Restricted Stack v3 is
+now the shared code background; Stack-Edu remains a specialist treatment. The linked decision
+contains current shares, per-language targets, evidence and unresolved capacity risks.
+
+## Preserved v1 policy and execution history
+
+The following v1 allocation and existing acquisition plans describe their original executions.
+Their recorded outputs and hashes remain intact. Future allocation uses the v2 successor;
+content/security and source-use requirements are unchanged.
+
+
 The [selected preparation prior](code_language_preparation_v1.json) binds the existing first-wave
 assignments and frozen Mistral tokenizer. It keeps the eleven languages in the restricted Stack v3
 qualification and applies the same token proportions independently to Stack-Edu and Stack v3.

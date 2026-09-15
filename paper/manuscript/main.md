@@ -149,7 +149,7 @@ during concurrent local preparation. Cache construction measured 264.42 seconds.
 [completion finding](../../research/findings/2026-09-15-cosmopedia-stock.md) preserves lineage
 limitations and timing boundaries; these are preparation results, not correctness or learning gains.
 
-The [source-capacity table](../tables/source-capacity-v5/source-capacity.md) compares preparation requirements
+The [source-capacity table](../tables/source-capacity-v6/source-capacity.md) compares preparation requirements
 only with source-identical measured stock. It does not replace Stack-Edu with Common Pile's
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.
@@ -157,8 +157,15 @@ not summed as a unique union. Missing measurements remain explicit.
 The code comparison has a [pre-results language allocation](../../research/flagship/CODE_LANGUAGES.md)
 covering eleven shared languages. The same selected-tokenizer proportions apply independently to
 each source and to both halves of the equal blend; preparation headroom is required per language.
-The allocation is a declared preparation prior, not an empirically optimal mix. Finalist identities
-remain unselected, and matched language shares do not erase source-specific license/vendor differences.
+The [supply-informed successor](../../research/flagship/CODE_PREPARATION_SUCCESSOR.md) selects
+restricted Stack v3 as shared background and retains Stack-Edu and the equal blend as treatments.
+It reduces Java/TypeScript shares before model outputs, applies identical revised shares in all code
+components, and retains every language, category weight and run budget. This reduces Stack-Edu's
+nominal capacity requirement from 1.2B to 300M while raising restricted Stack v3 from 300M to 1.2B.
+The allocation is a declared preparation prior, not an empirically optimal mix. Sample estimates
+and the 41.38M-token restricted-code acquisition precede full exclusion and do not establish the
+new capacity envelope. Finalists remain unselected; language matching does not erase source-specific
+license/vendor differences or the need to disclose supply-driven design choices.
 
 A bounded [Stack v3 metadata-range check](../../research/findings/2026-09-15-stack-v3-metadata-ranges.md)
 reproduced all metadata for one complete verified shard using 16,149,873 remote payload bytes,

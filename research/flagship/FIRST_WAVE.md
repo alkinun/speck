@@ -1,11 +1,12 @@
 # First-wave pretraining proposal
 
-**2026-09-14 preparation update:** under the owner's autonomous-work instruction, the agent selected
-[v2 preparation assignments](first_wave_proposal_v2.json): retain the incumbent, use admitted Math L2
-for its challenger slot, and use the approved code-blend fallback while UltraData-Code's required
-mapping remains unavailable. The [execution queue](PREPARATION_QUEUE.md) gives the next source targets
-and exit criteria. This compiles to 29 slots / 192 GPU-hours / 17.7B source tokens before headroom;
-exact language/filter/view and launch contracts remain pending. The original v1 proposal follows.
+**Current preparation, 2026-09-15:** [v3 assignments](first_wave_proposal_v3.json) and
+[v2 code-language shares](code_language_preparation_v2.json) select restricted Stack v3 as the
+shared code background while retaining Stack-Edu and the equal blend as specialist treatments.
+See [the decision and capacity risks](CODE_PREPARATION_SUCCESSOR.md). Other category assignments,
+29 slots / 192 GPU-hours / 17.7B nominal source tokens remain unchanged. Actual capacity, joint
+views, execution and analysis remain pending. The v2 assignments and original v1 proposal below
+are preserved history, not the current source requirement table.
 
 **Status: concrete proposal for review, not a frozen launch manifest.** This turns the open recipe
 discussion into a run list and a bounded preparation target. Thinking-only post-training is being

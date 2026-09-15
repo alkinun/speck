@@ -1,8 +1,8 @@
 # Revised local preparation priorities — 2026-09-14
 
 The owner requested a more practical plan after the serial Stack-Edu path projected days of
-work. This schedule selects operational priorities under existing delegation. Frozen scientific
-plans, source-use approvals, tokenizer, language weights and headroom targets remain unchanged.
+work. This schedule selects operational priorities under existing delegation. Scientific run budgets, source-use approvals, tokenizer and headroom percentage remain unchanged.
+The [2026-09-15 successor](CODE_PREPARATION_SUCCESSOR.md) now sets the current code background and language shares.
 Implementation/data-view changes below require explicit bound successors before execution.
 
 ## 1. Finish useful running work; pause the unqualified long code path
@@ -42,7 +42,7 @@ Do not infer all-language token/byte ratios from the observed C prefix.
 If the approved source cannot support the full matched-language background, record a pre-results
 recipe/source-capacity successor. Options to assess include a different already-approved shared
 code background while retaining Stack-Edu as a matched specialist treatment, or a justified
-common-language allocation revision. These are proposals, not adopted recipe changes. No lowering
+common-language allocation revision. The subsequent [recorded successor](CODE_PREPARATION_SUCCESSOR.md) selects restricted Stack v3 background and revised common shares. No lowering
 quality/license filters, silent source substitution, or counting surplus in another language.
 
 The [Stack v3 metadata-range path](../findings/2026-09-15-stack-v3-metadata-ranges.md) now
@@ -128,8 +128,8 @@ now provides real evidence for the index/queue and NVMe working path: 1,408 samp
 verified archival copy. Content/security checks retained 788,811 tokens. These are sample
 observations, not full exclusion or source capacity. See the [finding](../findings/2026-09-14-ordered-code-fetch.md)
 for stratified estimates and limits. The [expanded metadata and content probe](../findings/2026-09-14-code-supply-probe.md)
-is now complete too. Resolve the remaining per-language/background supply constraint before
-production integration or a recorded recipe successor.
+is now complete too. Use the recorded successor for new acquisition contracts; actual per-language capacity remains
+a required gate before production integration.
 
 The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
 [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json).
@@ -141,7 +141,7 @@ unmeasured until the sequence publishes them; failures/shortfalls stop dependent
 The [fourteen-file code acquisition](../findings/2026-09-15-stack-v3-content-acquisition.md)
 completed 130 reusable units with 41.38M pre-exclusion Mistral tokens. Independent raw/output hash,
 count, census and attribution checks pass. All language targets still have deficits; additional
-supply and a recorded matched-language/background decision remain on the critical path. Do not
+supply remains on the critical path under the now-selected matched-language/background decision. Do not
 restart this completed acquisition or run exclusion merely to rediscover its known shortfall.
 
 FineWeb-Edu has finished all three acquisition units (2,123,023 retained candidates) and is now

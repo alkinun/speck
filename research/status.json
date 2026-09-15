@@ -10,9 +10,12 @@
   "work": [
     {
       "id": "first_wave_plan",
-      "state": "v2_source_assignments_selected_for_autonomous_preparation",
-      "plan": "research/flagship/first_wave_proposal_v2.json",
-      "next": "Follow PREPARATION_QUEUE.md: admitted Math L2 replacement and approved code-blend fallback, preserving 29 slots / 192 GPU-hours with 17.7B source capacity before headroom. Final reader/language/view, training and analysis contracts remain pending before launch."
+      "state": "v3_sources_v2_languages_selected_for_preparation_capacity_pending",
+      "plan": "research/flagship/first_wave_proposal_v3.json",
+      "next": "Prepare one complete E1S dataset under the recorded successor: restricted Stack v3 shared code background, Stack-Edu retained as treatment, identical v2 language shares in every source/blend/background. Preserve 29 slots / 192 GPU-hours / 17.7B nominal supply. First code targets are 300M nominal / 360M headroom per source; full-wave restricted background is 1.2B / 1.44B. Actual excluded supply, joint views, evaluation and launch manifests remain pending.",
+      "compiled": "research/flagship/first_wave_preparation_v3.json",
+      "code_decision": "research/flagship/code_preparation_decision_v2.json",
+      "successor_qualification": "results/systems/code-preparation-successor-qualification-20260915.json"
     },
     {
       "id": "tokenizer",
@@ -77,10 +80,10 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "production_paused_targeted_supply_probe_complete_java_typescript_constraints",
+      "state": "original_production_paused_v2_language_targets_selected_new_acquisition_pending",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "All 28 metadata files and 110,704,408 rows passed census verification. The two-new-file probe retained 183 documents / 109,170 tokens; archive/reopen pass. Combined pre-exclusion estimates now cover Python 123.387M/90M and JavaScript 71.800M/54M headroom targets, but Java 45.826M/54M and TypeScript 31.683M/36M remain short with all released files included. Resolve a bound matched-language/shared-background supply successor before full production; do not relax filters or treat estimates as usable stock.",
-      "language_plan": "research/flagship/code_language_preparation_v1.json",
+      "next": "Bind all 28 complete metadata files and the qualified ordered fetch path into an explicit acquisition successor for the selected 300M nominal / 360M headroom specialist requirement. All per-language point estimates exceed revised targets, but full excluded capacity remains unmeasured. Preserve all original attempts/cache and filters; do not resume the old 1.44B worker blindly.",
+      "language_plan": "research/flagship/code_language_preparation_v2.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
       "metadata_evidence": "results/data/stack-edu-metadata-acquisition-20260914.json",
@@ -161,7 +164,7 @@
       "id": "screen_capacity",
       "state": "conditional_reference_capacity_gaps_quantified",
       "evidence": "results/data/screen-capacity-20260913.json",
-      "next": "The bound v2 preparation assignments supply source targets under delegation. New checked stocks replace older overlapping measurements in paper capacity v5. Joint experiment-view eligibility remains open; use the frozen Mistral tokenizer and do not reopen D5. The older balanced-prior pool estimate is historical evidence, not current complete-dataset capacity."
+      "next": "The bound v3 preparation assignments supply source targets under delegation. New checked stocks replace older overlapping measurements in paper capacity v6. Joint experiment-view eligibility remains open; use the frozen Mistral tokenizer and do not reopen D5. The older balanced-prior pool estimate is historical evidence, not current complete-dataset capacity."
     },
     {
       "id": "dedup_phase_timing",
@@ -229,7 +232,7 @@
       "state": "fourteen_file_content_acquisition_verified_all_languages_below_headroom",
       "plan": "research/flagship/stack_v3_metadata_census_v1.json",
       "evidence": "results/data/stack-v3-metadata-feasibility-20260914.json",
-      "next": "All 130 row-group units completed from fourteen complete files: 41571 retained files / 41383315 Mistral tokens before full exclusion, in 418.4177s. Independent full hash/count/census and 260 original-position probes passed. Every language remains below current headroom. Resolve the matched-language/shared-background supply successor and expand eligible inputs, reusing these units. No language/background change or full exclusion was launched; raw/probe/acquisition counts remain outside usable-stock totals.",
+      "next": "Apply the selected restricted-code background and v2 language shares. Existing 130 units contain 41383315 pre-exclusion tokens and are independently verified, below required supply. Expand metadata-directed complete-file tranches toward 300M nominal / 360M headroom for E1S first; full-wave requirement is 1.2B / 1.44B. Reuse units under exact config parity; no automatic larger transfer, target relaxation, source-use change or model launch.",
       "metadata_discovery_plan": "research/flagship/stack_v3_metadata_discovery_v1.json",
       "metadata_discovery_result": "results/data/stack-v3-metadata-discovery-20260915.json",
       "metadata_discovery_verification": "results/systems/stack-v3-metadata-discovery-verification-20260915.json",
