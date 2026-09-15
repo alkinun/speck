@@ -1,0 +1,19 @@
+{
+  "completed_reopen_pass": true,
+  "documents": 753071,
+  "elapsed_seconds": 195.76168288900226,
+  "format": "speck_stock_tokenization_result",
+  "format_version": 1,
+  "manifest": {
+    "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
+    "sha256": "fd528ccdb15626eae55d110ca064852d4938a5f733b9e0255c220cd2369adf65"
+  },
+  "plan": {
+    "path": "/mnt/speck-data/speck/local-preparation-followups-v2-20260914/finemath_4plus-token-plan.json",
+    "sha256": "556402ba62a3a35c42cc828d5d8f4295ff698010524e1ff5d342a71162c89db2"
+  },
+  "repository_revision": "31dc671e4d94fcf236c69b5f82ef8af1eca487dd",
+  "reused": false,
+  "tokens": 1124167472,
+  "training_authority": false
+}

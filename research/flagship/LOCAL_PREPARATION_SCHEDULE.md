@@ -9,8 +9,9 @@ Implementation/data-view changes below require explicit bound successors before 
 
 FineWeb-Edu raw downloads are now complete: all fourteen file receipts passed and agree with
 the [published result](../../results/data/fineweb-edu-raw-acquisition-20260914.json). FineMath
-exclusion and Cosmopedia preparation continue. Verify each completed text result and build its
-token cache only from hash-bound qualified text. Raw downloads
+and its token cache are complete at 1,124,167,472 tokens, passing 960M headroom; see the
+[completion finding](../findings/2026-09-15-finemath-headroom.md). Cosmopedia exclusion continues.
+Verify each completed text result and build its token cache only from hash-bound qualified text. Raw downloads
 must not become eligible-capacity claims. Avoid starting another large exclusion pass on the
 shared HDD while current passes are active.
 
@@ -116,6 +117,6 @@ production integration or a recorded recipe successor.
 
 The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
 [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json).
-It waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
+FineMath and its cache are complete. It now waits for Cosmopedia, builds and verifies its cache, then
 processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.

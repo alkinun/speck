@@ -30,7 +30,9 @@ finding states its measurement boundary; links to prior evidence do not broaden 
 | FineMath outage recovery | [Post-outage snapshot and frozen resume](2026-09-14-finemath-powerloss.md) verify all eight acquisition units and preserve checkpoint 72 before resuming exclusion; the completion finding below records successful recovery and the remaining headroom gap. |
 | Indexed checkpoint recovery | [Cascade lookup repair](2026-09-14-indexed-recovery.md) replaces repeated full band-table scans with a doc-sequence index, preserves logical rows, and restores checkpoint progress after the outage. |
 
-| FineMath completed stock | [Eight-shard capacity and recovery](2026-09-14-finemath-stock.md) retains 814.10M tokens, passing 800M nominal but missing 960M headroom by 145.90M; token caching remains pending. |
+| FineMath completed stock | [Eight-shard capacity and recovery](2026-09-14-finemath-stock.md) retains 814.10M tokens, passing 800M nominal but missing 960M headroom by 145.90M; the completed successor below closes the headroom/cache gap. |
+
+| FineMath headroom and cache | [Eleven-shard completion](2026-09-15-finemath-headroom.md) verifies 1,124.17M tokens and their document cache, passing 960M headroom; the older retained text is an exact included prefix. |
 
 Use the [complete ledger](../../archive/pregrant-history/findings/ARCHIVE.md) for the full history,
 [current status](../status.json) for actions, and [paper claims](../../paper/claims.json) for publication

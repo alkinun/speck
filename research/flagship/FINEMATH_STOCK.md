@@ -43,8 +43,8 @@ and launch manifests follow completed stock verification.
 
 The [checked result](../../results/data/finemath-stock-preparation-20260914.json) retains 545,996
 documents and 814,103,172 tokens. The 800M nominal requirement passes, while the 960M preparation
-target is short by 145,896,828 tokens. Recovery and storage checks passed; token caching remains
-pending. The command above identifies the completed run and must not be restarted into its existing
+target is short by 145,896,828 tokens. Recovery and storage checks passed. This result is superseded by the completed eleven-shard
+stock and token cache below. The command above identifies the completed run and must not be restarted into its existing
 output. Additional supply requires a bound successor. See the [finding](../findings/2026-09-14-finemath-stock.md).
 
 ## Eleven-shard headroom successor
@@ -75,3 +75,14 @@ uv run --no-sync python -m scripts.prepare_finemath_stock \
 
 After successful publication, verify headroom and bind a separate token-cache plan to the actual
 result hash. No speculative result identity or automatic training launch is allowed.
+
+## Completed successor and token cache
+
+The [v2 completion finding](../findings/2026-09-15-finemath-headroom.md) records **753,071 documents
+and 1,124,167,472 tokens**. The 960M preparation target passes by 164,167,472 tokens. The earlier
+eight-shard retained text is a verified exact prefix and is not additional supply. Full raw,
+acquisition, exclusion/index/removal, reference and token-cache checks pass. The cache is available
+at `/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus`; its
+[receipt](../../results/data/finemath-token-stock-v2-20260914.json) binds the actual runtime plan.
+Both listed preparation commands now identify completed runs and must not be restarted into their
+existing outputs. Joint experiment-view assembly remains the next scientific data qualification.

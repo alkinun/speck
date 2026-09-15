@@ -42,3 +42,9 @@ bank below, not additional unique supply.
 The [expanded peS2o cache](../../results/data/pes2o-token-stock-v2-20260914.json) now covers the entire
 verified 820.10M-token combined bank. Reopen and exact old-cache-prefix checks pass. Use this expanded
 stock for future science membership selection; preserve the first cache as its recorded subset.
+
+The [FineMath successor cache](../../results/data/finemath-token-stock-v2-20260914.json) covers
+753,071 documents / 1,124,167,472 tokens. The [completion review](../findings/2026-09-15-finemath-headroom.md)
+verifies all payloads, contiguous index coverage and actual document encodings across shard
+boundaries. Its runtime plan was generated only after the completed source result passed the
+960M headroom and exclusion gates; source-specific caching does not freeze a training mixture.

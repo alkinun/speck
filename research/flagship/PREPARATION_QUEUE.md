@@ -74,11 +74,10 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 
 ## Current execution and next work
 
-- FineMath v1 completed at **814,103,172 tokens**: 800M nominal passes; 960M headroom is short
-  by 145,896,828. The [eleven-shard successor](finemath_stock_preparation_v2.json) is
-  [running in a frozen checkout](../../results/systems/finemath-headroom-launch-20260914.json),
-  reusing the original eight acquisition units under identical configurations. Verify combined
-  exclusion and headroom, then bind and verify its token cache. Do not add overlapping stocks.
+- FineMath's [completed eleven-shard stock](../findings/2026-09-15-finemath-headroom.md) has
+  **1,124,167,472 tokens** and a verified document cache. The 960M target passes by 164,167,472.
+  Its earlier eight-shard retained text is a verified exact prefix, not additional supply. Bind
+  joint experiment-view eligibility next; do not restart the completed source/cache jobs.
 - Cosmopedia's [five-shard plan](cosmopedia_stock_preparation_v1.json) is
   [running concurrently](../../results/systems/cosmopedia-stock-launch-20260914.json).
   Its [prompt-lineage and corpus-selection policy](COSMOPEDIA_STOCK.md) preserves generated text,
@@ -110,7 +109,7 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
 Follow [LOCAL_PREPARATION_SCHEDULE.md](LOCAL_PREPARATION_SCHEDULE.md): establish code-supply
 feasibility first, qualify a bounded eligible-request/NVMe fetch path, and assemble a complete
 E1S-sized dataset before maximal stocks. Existing recipes and source-use approvals remain in
-force until an explicit successor is adopted. FineMath/Cosmopedia continue; FineWeb-Edu raw
+force until an explicit successor is adopted. FineMath and its cache are complete; Cosmopedia continues; FineWeb-Edu raw
 acquisition is complete; Stack-Edu is intentionally paused with its evidence intact.
 
 The [ordered code-fetch qualification](../findings/2026-09-14-ordered-code-fetch.md) and
@@ -124,7 +123,7 @@ remains paused pending a recorded supply/recipe decision; no language changes ar
 The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) binds three complete
 downloaded files and 1.32B tokens with unchanged filters. The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md)
 is [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json):
-it waits for checked FineMath/Cosmopedia completion, builds and verifies their caches, then
+FineMath is complete; it now waits for Cosmopedia, builds and verifies its cache, then
 processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until publication; failures/shortfalls stop dependent work. Preserve the fourteen-file
 5.28B full-stock requirement and reuse identical acquisitions on later expansion.
