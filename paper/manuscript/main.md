@@ -122,15 +122,24 @@ paper-license, English, OCR, security, and full reference-exclusion processing. 
 preparation-headroom target. The earlier 403.56M-token stock is a verified included prefix, so the
 combined count replaces it. These source-specific stocks still require joint experiment-view checks.
 
-The eight-shard FineMath stock retains 545,996 documents and 814,103,172 selected-tokenizer tokens.
-It passes the 800M nominal requirement by 1.76%, but falls 145,896,828 tokens short of the 960M
-preparation target. Output verification and exclusion controls passed after outage recovery and an
-explicit physical-index migration. The final resumed exclusion took 2,858.52 seconds with a 369.24 MiB
-observed WAL peak; original interrupted cost and peak remain incomplete. Natural postfilter domain
-proportions were retained (49,300 known hosts; byte HHI 0.006335). These are preparation diagnostics.
-FineMath token caching and additional headroom preparation remain pending.
+The original eight-shard FineMath stock retained 545,996 documents and 814,103,172 selected-tokenizer
+tokens, short of the 960M preparation target. Its outage recovery and physical-index migration
+remain preserved, including incomplete original timing/WAL observations. An eleven-shard successor
+under unchanged filters now retains **753,071 documents and 1,124,167,472 tokens**, exceeding the
+800M nominal requirement and the 960M headroom target (by 164,167,472 tokens). The original retained
+text is a verified exact prefix; the successor replaces that measurement. Full exclusion controls
+and output/index/removal checks pass, and its document-indexed token cache reproduces the count.
+Natural postfilter domain proportions are retained (56,661 known hosts; byte HHI 0.006351). These
+are preparation diagnostics and reusable inputs, not model-quality or joint-view results.
 
-The [source-capacity table](../tables/source-capacity-v3/source-capacity.md) compares preparation requirements
+The successor exclusion invocation took 29,160.84 seconds during concurrent local preparation;
+15,665.03 seconds (53.72%) were attributed to SQLite commit and are already included in that total.
+Its observed WAL peak was 514.85 MiB, above the earlier 512 MiB observation but within the declared
+2 GiB gate. Cache construction measured 195.76 seconds, with surrounding verification additional.
+The [completion finding](../../research/findings/2026-09-15-finemath-headroom.md) preserves these
+boundaries; they do not establish a controlled speedup or GH200 throughput.
+
+The [source-capacity table](../tables/source-capacity-v4/source-capacity.md) compares preparation requirements
 only with source-identical measured stock. It does not replace Stack-Edu with Common Pile's
 Stack-v2-derived view or peS2o with PubMed merely because they share a category. Independent banks are
 not summed as a unique union. Missing measurements remain explicit.
