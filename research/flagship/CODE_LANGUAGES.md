@@ -122,3 +122,9 @@ original English-prose requirement. These observations support bounded acquisiti
 not a language-share revision or full-source extrapolation. The
 [two-file successor](stack_v3_targeted_raw_intake_v1.json) selects complete files by inspected
 TypeScript/JavaScript metadata bytes per compressed byte; the existing matching contract remains.
+
+The [complete fourteen-file acquisition](../findings/2026-09-15-stack-v3-content-acquisition.md)
+now measures 41,383,315 tokens after content/security checks, before full exclusion. All eleven
+language counts remain below their current targets. The 130 completed units are reusable and
+independently verified; this result resolves acquisition yield, not the outstanding source-supply
+or shared-background decision. The prior twelve-file probe is overlapping evidence, not added supply.

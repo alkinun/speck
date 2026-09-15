@@ -1,0 +1,73 @@
+{
+  "all_raw_hashes_rechecked": true,
+  "all_retained_text_hashes_and_token_counts_recomputed": true,
+  "all_unit_output_and_security_hashes_rechecked": true,
+  "boundary": "Full content/security acquisition from fourteen pinned complete files, verified and reusable. Counts precede full reference/candidate exclusion and joint background/treatment eligibility. No capacity target pass or model launch.",
+  "by_language_before_full_exclusion": {
+    "C": {
+      "documents": 912,
+      "tokens": 1776473
+    },
+    "C++": {
+      "documents": 6032,
+      "tokens": 6464289
+    },
+    "Go": {
+      "documents": 2115,
+      "tokens": 2226087
+    },
+    "Java": {
+      "documents": 14138,
+      "tokens": 11733691
+    },
+    "JavaScript": {
+      "documents": 3897,
+      "tokens": 4331824
+    },
+    "Markdown": {
+      "documents": 3266,
+      "tokens": 3281090
+    },
+    "Python": {
+      "documents": 5510,
+      "tokens": 7013547
+    },
+    "Rust": {
+      "documents": 958,
+      "tokens": 1314178
+    },
+    "SQL": {
+      "documents": 286,
+      "tokens": 251088
+    },
+    "Shell": {
+      "documents": 1067,
+      "tokens": 605691
+    },
+    "TypeScript": {
+      "documents": 3390,
+      "tokens": 2385357
+    }
+  },
+  "elapsed_seconds": 19.16377633200318,
+  "every_file_metadata_matches_prior_census_or_discovery": true,
+  "format": "speck_stack_v3_acquisition_verification",
+  "format_version": 1,
+  "original_position_content_attribution_probes": 260,
+  "physical_files_seen": 3364698,
+  "physical_outcome_accounting_pass": true,
+  "raw_files": 14,
+  "result": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-stock-acquisition-20260915.json",
+    "sha256": "c9d3fd52b587c69ae6d3b12f733e3d8a9a44d84548b29e8fb2cced82effe20a9"
+  },
+  "retained_records": 41571,
+  "review_script": {
+    "path": "/mnt/speck-data/speck/stack-v3-stock-acquisition-review-20260915/verify.py",
+    "sha256": "2af16722105de74e342297afd106ac5a6c3676686d2fe8e2a23458558898e8ca"
+  },
+  "status": "complete_content_units_reopened_full_exclusion_pending",
+  "tokens_before_full_exclusion": 41383315,
+  "training_authority": false,
+  "units": 130
+}

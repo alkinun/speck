@@ -226,10 +226,10 @@
     },
     {
       "id": "stack_v3_supply_census",
-      "state": "cached_content_probe_and_targeted_complete_raw_intake_verified",
+      "state": "fourteen_file_content_acquisition_verified_all_languages_below_headroom",
       "plan": "research/flagship/stack_v3_metadata_census_v1.json",
       "evidence": "results/data/stack-v3-metadata-feasibility-20260914.json",
-      "next": "Cached twelve-file probe retained 1088/1408 samples and counted 1170568 Mistral tokens; all language point estimates remain below headroom before full exclusion. The targeted two-file intake completed 752034905 raw bytes in 160.6453s; complete hashes, prior metadata parity and independent range/raw reopen passed. Materialize reusable source-specific acquisition units and measure content/security/exclusion yield before a larger tranche or matched-language/background successor. Preserve source-use, filters, shares and recipes; raw files and probe estimates are not usable stock.",
+      "next": "All 130 row-group units completed from fourteen complete files: 41571 retained files / 41383315 Mistral tokens before full exclusion, in 418.4177s. Independent full hash/count/census and 260 original-position probes passed. Every language remains below current headroom. Resolve the matched-language/shared-background supply successor and expand eligible inputs, reusing these units. No language/background change or full exclusion was launched; raw/probe/acquisition counts remain outside usable-stock totals.",
       "metadata_discovery_plan": "research/flagship/stack_v3_metadata_discovery_v1.json",
       "metadata_discovery_result": "results/data/stack-v3-metadata-discovery-20260915.json",
       "metadata_discovery_verification": "results/systems/stack-v3-metadata-discovery-verification-20260915.json",
@@ -241,7 +241,11 @@
       "targeted_raw_plan": "research/flagship/stack_v3_targeted_raw_intake_v1.json",
       "targeted_raw_launch": "results/systems/stack-v3-targeted-raw-launch-20260915.json",
       "targeted_raw_result": "results/data/stack-v3-targeted-raw-intake-20260915.json",
-      "targeted_raw_verification": "results/systems/stack-v3-targeted-raw-verification-20260915.json"
+      "targeted_raw_verification": "results/systems/stack-v3-targeted-raw-verification-20260915.json",
+      "content_acquisition_plan": "research/flagship/stack_v3_stock_acquisition_v1.json",
+      "content_acquisition_result": "results/data/stack-v3-stock-acquisition-20260915.json",
+      "content_acquisition_verification": "results/systems/stack-v3-stock-acquisition-verification-20260915.json",
+      "content_acquisition_launch": "results/systems/stack-v3-stock-acquisition-launch-20260915.json"
     },
     {
       "id": "local_preparation_followups",

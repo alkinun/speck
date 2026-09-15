@@ -54,7 +54,7 @@ The [cached-content probe](../findings/2026-09-15-stack-v3-cached-supply.md) now
 All language point estimates in that cached view remain below their targets before full exclusion.
 The [two-file raw intake](../findings/2026-09-15-stack-v3-targeted-raw.md) completed
 752,034,905 bytes in 160.6453 seconds, selected for TypeScript/JavaScript metadata yield.
-Complete SHA, metadata parity and independent range/raw reopen passed; content qualification is next. Preserve all range/assembly attempts and stop on
+Complete SHA, metadata parity and independent range/raw reopen passed; the content acquisition below is complete. Preserve all range/assembly attempts and stop on
 failure; do not convert samples or raw bytes into usable capacity or fetch all sixteen files.
 
 ## 3. Qualify a more efficient fetch path on real eligible inputs
@@ -135,3 +135,18 @@ The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md) is now
 [running in a frozen checkout](../../results/systems/local-preparation-followups-v2-launch-20260914.json).
 FineMath and Cosmopedia caches are complete. It now processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until the sequence publishes them; failures/shortfalls stop dependent work.
+
+## Complete restricted-code acquisition and real selection identities
+
+The [fourteen-file code acquisition](../findings/2026-09-15-stack-v3-content-acquisition.md)
+completed 130 reusable units with 41.38M pre-exclusion Mistral tokens. Independent raw/output hash,
+count, census and attribution checks pass. All language targets still have deficits; additional
+supply and a recorded matched-language/background decision remain on the critical path. Do not
+restart this completed acquisition or run exclusion merely to rediscover its known shortfall.
+
+FineWeb-Edu has finished all three acquisition units (2,123,023 retained candidates) and is now
+in full reference/candidate exclusion. Its token capacity remains unmeasured.
+
+The [selection-heldout identity ledger](../findings/2026-09-15-selection-identity-ledger.md)
+is independently verified for all 28,604 real selection documents. Independent extraction and
+the remaining global identity/leakage/execution requirements still precede experiment launch.

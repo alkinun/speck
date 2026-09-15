@@ -147,11 +147,18 @@ The [two-file raw successor](stack_v3_targeted_raw_intake_v1.json) binds 752,034
 bytes: the best inspected TypeScript and JavaScript metadata-byte ratios. The
 [finite intake](../findings/2026-09-15-stack-v3-targeted-raw.md) completed in 160.6453 seconds;
 complete-file SHA, prior metadata parity and independent range/raw reopen all passed. This is delegated acquisition
-scheduling, not a source-use, language or background change. Next measure content/security and
-exclusion yield on complete source inputs. Do not sum old/new banks as globally unique supply.
+scheduling, not a source-use, language or background change. The subsequent content acquisition below is now complete;
+full exclusion remains pending. Do not sum old/new banks as globally unique supply.
 
 The [real selection identity ledger](../findings/2026-09-15-selection-identity-ledger.md) is
 complete for all 28,604 production selection documents, with verified reconstruction locators
 and unchanged category commitments. Independent extraction, aggregate training identities,
 audit commitment ledgers, additional leakage checks and score/analysis bindings remain pending.
 No sealed audit payload was opened.
+
+The [fourteen-file content acquisition](../findings/2026-09-15-stack-v3-content-acquisition.md)
+completed all 130 reusable units in 418.42 seconds: 41,571 files / 41,383,315 Mistral tokens after
+content/security checks, before full exclusion. Independent review passes. Every language remains
+below current headroom; these completed inputs alone cannot fill the code envelope. Resolve a
+recorded supply/background successor and expand eligible input, reusing completed units. No full
+exclusion job is running for this source and no language or recipe change has been adopted.
