@@ -1,0 +1,13 @@
+{
+  "files": [
+    {
+      "original_path": "research/status.json",
+      "preserved_path": "research/history/2026-09-15-r0-executor-status/research/status.json",
+      "sha256": "6a9570b3ca6b0b065c31258d1c8d1663fec194892d3d8e1c6209825514b035fd"
+    }
+  ],
+  "format": "speck_status_successor_snapshot",
+  "format_version": 1,
+  "reason": "Preserve audit-bound status before recording bounded executor CPU qualification; scientific/GPU readiness remains pending.",
+  "revision": "f59bc70ef879324bfbb7e0be942b07cdb6a87fc7"
+}

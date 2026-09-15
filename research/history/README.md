@@ -16,3 +16,8 @@ only by [the current catalog](../catalog.json); historical references describe t
 [2026-09-15 preparation entry-point cleanup](2026-09-15-readiness-cleanup/manifest.json) preserves
 the queue and local schedule immediately before their retired-wave instructions were replaced.
 The same original-path and byte-preservation rules apply.
+
+[2026-09-15 R0 executor status successor](2026-09-15-r0-executor-status/manifest.json) preserves the
+status bytes used by the pre-access coherence audit before recording bounded executor CPU qualification.
+The [successor check](../../results/systems/r0-executor-status-successor-20260915.json) isolates the
+hardware work-row update; it does not promote GPU or scientific readiness.

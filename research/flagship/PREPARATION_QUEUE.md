@@ -28,9 +28,10 @@ retains the earlier source requirements and operating history.
 
 [R0 readiness](R0_READINESS.md) records six exact hybrid/dense shapes at 4K, 32K and 128K. Meta-device
 construction, parameter counts, physical weight tying and optimizer coverage passed; GPU fit and
-performance remain unmeasured. Build the bounded executor and input receipts, preserve the 32,003-row
-model versus 32,000-token input distinction, and bind backend, precision, optimizer, warmup, measured
-steps, timeout, recovery and allocated-GPU-hour accounting. Prepare the site-specific portion when
+performance remain unmeasured. The [bounded executor](R0_EXECUTOR.md) and deterministic input receipts now have CPU fixture
+qualification, including replay, two-rank Gloo and supervised rank cleanup. Complete fresh-process
+restart, cached-generation/reference parity and production-loader qualification next; preserve the
+32,003-row model versus 32,000-token input distinction. Prepare the site-specific portion when
 scheduler and node details are supplied. The R0 ceiling is 70 GPU-hours.
 
 Full production-corpus completion is not a prerequisite for bounded R0 implementation checks using

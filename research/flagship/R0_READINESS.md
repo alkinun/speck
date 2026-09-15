@@ -26,9 +26,9 @@ Exact optimizer membership covers every parameter once, with the shared embeddin
 without weight decay. The optimizer state totals are estimates under explicit dtype assumptions.
 
 The model reserves 32,003 vocabulary rows while the frozen Mistral tokenizer emits 32,000 IDs.
-The three reserved rows remain unused as synthetic inputs. A future R0 runner must preserve
-this distinction rather than rebuilding the model with the base vocabulary and changing its
-parameter count. The generic benchmark's tokenizer-derived model construction is not, by itself,
+The three reserved rows remain unused as synthetic inputs. The [bounded executor](R0_EXECUTOR.md)
+preserves this distinction rather than rebuilding the model with the base vocabulary and changing
+its parameter count. The generic benchmark's tokenizer-derived model construction is not, by itself,
 a qualified executor for these effective-vocabulary shapes.
 
 The result includes analytic training FLOPs and batch-one inference state geometry. Recurrent
@@ -52,11 +52,12 @@ reserved vocabulary, contract drift and refusal to publish changed input identit
 
 ## Remaining work before R0 execution
 
-Prepare a bounded executor using these exact shapes and a reproducible synthetic/retained input
-receipt. Bind numerical precision, kernels and loss backend, optimizer settings, warmup/measured
-steps, timeout and allocated-GPU-hour accounting. It must preserve unsuccessful attempts and
-partial reports, and distinguish OOM, unsupported backend, numerical failure and interruption.
-The existing single-process benchmark cannot substitute for four-GPU DDP qualification.
+The [bounded synthetic executor](R0_EXECUTOR.md) now binds the exact shapes, deterministic per-rank
+inputs, precision/backend/optimizer settings, warmup/measured steps, deadlines and conservative
+budget reservations. Its [CPU qualification](../../results/systems/r0-executor-local-qualification-20260915.json)
+checks dense/KDA optimization and same-process checkpoint replay, two-rank Gloo, failures and rank
+cleanup. It has not executed the actual GPU cases. Fresh-process restart, cached-generation/reference
+parity, scheduler integration and production-data throughput still require qualification.
 
 At the allocated site, qualify arm64 dependencies and KDA kernels, forward/backward and the
 optimizer, cached-generation parity, checkpoint/resume and four-GPU behavior. Record startup,

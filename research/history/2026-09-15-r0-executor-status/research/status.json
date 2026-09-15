@@ -16,13 +16,11 @@
     },
     {
       "id": "lc_hardware",
-      "state": "bounded_executor_cpu_qualified_exact_shapes_bound_site_execution_pending",
-      "next": "Bounded synthetic R0 executor and 12 one/four-worker requests are locally qualified; 23 focused tests include dense/KDA replay, two-rank Gloo, timeout/interrupt rank cleanup and accounting. Complete fresh-process checkpoint/RNG recovery, numerical/cache parity, scheduler integration and production-loader checks. Actual GH200/arm64/NCCL execution and all GPU fit/throughput remain unmeasured; review and access date remain pending.",
+      "state": "exact_meta_shapes_verified_gpu_execution_and_site_access_pending",
+      "next": "Prepare the bounded R0 executor with effective vocabulary 32003, synthetic input IDs below 32000, loss/kernel/optimizer settings, failures/timeouts and allocated-hour accounting. Six hybrid/dense 4K/32K/128K meta shapes pass; actual GH200 forward/backward/resume, cached-generation parity and four-GPU throughput remain unmeasured. Review is pending and access date is unknown.",
       "plan": "research/flagship/architecture_plan_v3.json",
       "shape_plan": "research/flagship/r0_shape_preparation_v1.json",
-      "shape_evidence": "results/systems/r0-shape-preparation-20260915.json",
-      "executor_plan": "research/flagship/r0_execution_preparation_v1.json",
-      "executor_evidence": "results/systems/r0-executor-local-qualification-20260915.json"
+      "shape_evidence": "results/systems/r0-shape-preparation-20260915.json"
     },
     {
       "id": "lc_data",
