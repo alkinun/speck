@@ -1,0 +1,64 @@
+{
+  "format": "speck_stack_v3_complete_file_intake",
+  "format_version": 1,
+  "source": {
+    "repo": "HuggingFaceCode/stack-v3-train",
+    "revision": "8f3f25d86e44fd691428131efd17af75d4716499"
+  },
+  "metadata_discovery": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-metadata-discovery-20260915.json",
+    "sha256": "4ccfa30a5f35f057ccdfd0a76ba9517c24ef327f1c40a143aca6e059adfef177"
+  },
+  "metadata_manifest": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-metadata-discovery-manifest-20260915.json",
+    "sha256": "5d3879f5199352659d6b80818eb26b0615f4d9458e0fb67bd821f1d869fcf956"
+  },
+  "cached_content_probe": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-cached-supply-probe-20260915.json",
+    "sha256": "78b75ebfd4a62870f33420458d5b639e520703b9b6ef2a197b97437e5993bdb3"
+  },
+  "source_qualification": {
+    "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/stack_v3_qualification.json",
+    "sha256": "8736031480e859ba6c469c7dd1bb8e74b5795603aac6589a329595bf265282ff"
+  },
+  "source_use": {
+    "path": "/home/alkin/Desktop/speck/archive/pregrant-history/research/flagship/source_rights_acceptance_v1.json",
+    "sha256": "84d417de5d7b162817349a67e053913783c630336a4bad025cf00acdc342843d"
+  },
+  "files": [
+    {
+      "selection_language": "TypeScript",
+      "file": {
+        "bytes": 398734410,
+        "path": "data/part-00000-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "eea02df5c889a0be784b6b6b0fec3cb2282ea1a15639f98140e8882e6adc82ec"
+      },
+      "metadata": {
+        "repositories": 21027,
+        "physical_files": 268974,
+        "sha256": "b097982e282209f1e527b01fe094d52d39f97586aee14d75bc2442f40b73d647"
+      }
+    },
+    {
+      "selection_language": "JavaScript",
+      "file": {
+        "bytes": 353300495,
+        "path": "data/part-00004-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "a6c4be3ec09c30a46f23e8bd667e5b022c7f198ef00fcda12079fa9740809410"
+      },
+      "metadata": {
+        "repositories": 21219,
+        "physical_files": 253798,
+        "sha256": "0efb2fe8c06ff919142ecc44639cc48bc4a2ecb3ae18c784e0fdce6206faef9a"
+      }
+    }
+  ],
+  "working_directory": "/mnt/speck-data/speck/stack-v3-targeted-raw-v1",
+  "minimum_free_bytes": 68719476736,
+  "maximum_transfer_bytes_per_file": 536870912,
+  "maximum_requests_per_file": 64,
+  "maximum_range_bytes": 16777216,
+  "workers": 4,
+  "training_authority": false,
+  "scope": "Two complete-file intake selected under preparation delegation before model outputs: highest metadata-eligible declared TypeScript bytes per compressed byte and highest JavaScript ratio among the sixteen inspected files. Cached-content probe established language shortfalls; it is not used to extrapolate new-file token yield. Download 752034905 declared bytes, at most 1GiB reserved response payload across both files including failed attempts; HTTP/TLS overhead is excluded. Preserve all partial range and assembly attempts. Verify complete file length/SHA256 and equality with each previously observed metadata projection. No new source-use approval, language/background recipe change, content/security/reference exclusion qualification, usable-stock count, or model launch. Deterministic metadata-directed acquisition is not representative sampling or a model-quality result."
+}
