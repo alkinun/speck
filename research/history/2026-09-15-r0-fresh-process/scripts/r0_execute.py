@@ -14,17 +14,11 @@ def main():
     parser.add_argument("--ledger")
     parser.add_argument("--prior-r0-gpu-hours", type=float)
     parser.add_argument("--worker-request", help=argparse.SUPPRESS)
-    parser.add_argument(
-        "--worker-phase",
-        choices=("single", "initial", "restart"),
-        default="single",
-        help=argparse.SUPPRESS,
-    )
     args = parser.parse_args()
     if args.worker_request:
         from speck.operations.r0_worker import main as worker_main
 
-        worker_main(args.worker_request, args.worker_phase)
+        worker_main(args.worker_request)
         return
     if not args.plan or not args.case or args.allocated_gpus is None:
         parser.error("plan, --case and --allocated-gpus are required")
@@ -36,10 +30,7 @@ def main():
             parser.error("--run requires the shared R0 --ledger and explicit --prior-r0-gpu-hours")
         result = run_attempt(request, args.ledger, args.prior_r0_gpu_hours)
         print(json.dumps(result, indent=2))
-        if result["status"] not in {
-            "bounded_synthetic_checks_pass",
-            "bounded_fresh_process_checks_pass",
-        }:
+        if result["status"] != "bounded_synthetic_checks_pass":
             raise SystemExit(1)
     else:
         print(

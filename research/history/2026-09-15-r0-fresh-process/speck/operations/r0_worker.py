@@ -16,14 +16,7 @@ import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel
 
 from speck.model import build_model
-from speck.operations.r0_replay import (
-    publish_reference,
-    restore_rng,
-    rng_probe,
-    save_rng,
-    verified_reference,
-)
-from speck.provenance.io import durable_json, file_sha256
+from speck.provenance.io import durable_json
 from speck.training import checkpoint
 from speck.training.step import assert_finite_parameters, optimization_step
 
@@ -105,7 +98,7 @@ def package_versions():
     return versions
 
 
-def execute_case(request, directory, device, rank=0, world_size=1, restart_from=None):
+def execute_case(request, directory, device, rank=0, world_size=1):
     """Low-level path also exercised with tiny CPU fixtures; public launch requires exact CUDA shapes."""
     directory, device = Path(directory), torch.device(device)
     case, settings = request["case"], request["settings"]
@@ -114,7 +107,6 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
         "status": "started",
         "case_id": case["id"],
         "rank": rank,
-        "pid": os.getpid(),
         "world_size": world_size,
         "request_sha256": request["request_sha256"],
         "environment": {
@@ -235,71 +227,6 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
             return row
 
         count = settings["warmup_steps"] + settings["measured_steps"]
-        if restart_from is not None:
-            publish("fresh_process_load")
-            reference = verified_reference(restart_from, request, rank, world_size)
-            baseline = reference["baseline"]
-            restored_model, restored_optimizer, metadata = checkpoint.load(
-                baseline["directory"], count, "cpu"
-            )
-            if metadata != {
-                "step": count,
-                "next_microbatch_ordinal": count * settings["accumulation"],
-                "request_sha256": request["request_sha256"],
-                "rank": rank,
-                "world_size": world_size,
-            }:
-                raise ValueError("fresh-process checkpoint cursor or identity differs")
-            model.load_state_dict(restored_model)
-            optimizer.load_state_dict(restored_optimizer)
-            del restored_model, restored_optimizer
-            restore_rng(
-                torch.load(
-                    Path(restart_from) / reference["rng"]["path"],
-                    map_location="cpu",
-                    weights_only=True,
-                ),
-                device,
-            )
-            actual_step = step(count, "fresh_process_probe")
-            actual_probe = rng_probe(device)
-            expected = reference["expected"]
-            expected_model, expected_optimizer, _ = checkpoint.load(
-                expected["directory"], count + 1, "cpu"
-            )
-            tolerance = settings["resume_tolerance"]
-            if not math.isclose(
-                actual_step["loss"],
-                reference["next_step_loss"],
-                rel_tol=tolerance["rtol"],
-                abs_tol=tolerance["atol"],
-            ):
-                raise AssertionError("fresh-process next-step loss differs")
-            assert_tree_close(model.state_dict(), expected_model, **tolerance)
-            assert_tree_close(optimizer.state_dict(), expected_optimizer, **tolerance)
-            if actual_probe != reference["rng_probe_sha256"]:
-                raise AssertionError("fresh-process RNG continuation differs")
-            assert_finite_parameters(parameters, distributed)
-            report["process_restart_parity_pass"] = True
-            report["rng_continuation_pass"] = True
-            report["reference_producer_pid"] = reference["producer_pid"]
-            report["restart_reference_sha256"] = file_sha256(
-                Path(restart_from) / "restart-reference.json"
-            )
-            report["gpu_fit_pass"] = True if device.type == "cuda" else None
-            report["backward_optimizer_pass"] = True
-            report["final_model_sha256"] = model_digest(model)
-            if distributed:
-                hashes = [None] * world_size
-                dist.all_gather_object(hashes, report["final_model_sha256"])
-                if len(set(hashes)) != 1:
-                    raise AssertionError("restarted DDP ranks finished with different weights")
-                report["ddp_rank_weight_parity_pass"] = True
-                report["four_gpu_ddp_pass"] = (
-                    True if world_size == 4 and device.type == "cuda" else None
-                )
-            report["status"] = "bounded_synthetic_checks_pass"
-            return report
         loop_started = time.perf_counter()
         for index in range(count):
             step(index, "warmup" if index < settings["warmup_steps"] else "measured")
@@ -345,24 +272,6 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
         )
         report["checkpoint_identity"] = checkpoint.checkpoint_identity(checkpoint_dir, count)
         report["checkpoint_save_and_hash_seconds"] = time.perf_counter() - checkpoint_started
-        if request.get("restart_protocol") == "fresh_process_next_step_v1":
-            rng_identity = save_rng(checkpoint_dir / "rng.pt", device)
-            expected_step = step(count, "uninterrupted_probe")
-            metadata = checkpoint.load_metadata(checkpoint_dir, count)
-            reference = publish_reference(
-                checkpoint_dir,
-                count,
-                model,
-                optimizer,
-                metadata,
-                report["checkpoint_identity"],
-                rng_identity,
-                expected_step["loss"],
-                device,
-            )
-            report["restart_reference"] = reference
-            report["status"] = "restart_reference_ready"
-            return report
         expected_step = step(count, "uninterrupted_probe")
         expected_model = tensor_tree_cpu(model.state_dict())
         expected_optimizer = tensor_tree_cpu(optimizer.state_dict())
@@ -424,15 +333,13 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
             "CUDA allocator peak from construction through replay; includes checkpoint load/replay, excludes driver/non-PyTorch allocations and host memory."
         )
         report["boundary"] = (
-            "Synthetic optimization and declared checkpoint replay only; see same-process versus process-restart pass fields. No production loader throughput, independent numerical reference, cached-generation parity, scheduler requeue, useful-context or scientific result qualification."
+            "Synthetic optimization and same-process checkpoint next-step parity only. No production loader throughput, independent numerical reference, cached-generation parity, process restart/requeue, useful-context or scientific result qualification."
         )
         durable_json(report_path, report)
     return report
 
 
-def main(request_path, phase="single"):
-    if phase not in {"single", "initial", "restart"}:
-        raise ValueError("unknown worker phase")
+def main(request_path):
     from speck.operations.r0_executor import fingerprint
     from speck.provenance.io import file_sha256
     from speck.provenance.repository import repository_root
@@ -442,10 +349,7 @@ def main(request_path, phase="single"):
     world_size = int(os.environ.get("WORLD_SIZE", "1"))
     rank = int(os.environ.get("RANK", "0"))
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
-    output_directory = request_path.parent if phase == "single" else request_path.parent / phase
     try:
-        if (phase == "single") == (request.get("restart_protocol") == "fresh_process_next_step_v1"):
-            raise ValueError("worker phase differs from request restart protocol")
         identity = {k: v for k, v in request.items() if k != "request_sha256"}
         if fingerprint(identity) != request["request_sha256"]:
             raise ValueError("supervised request changed before worker startup")
@@ -462,23 +366,14 @@ def main(request_path, phase="single"):
         if world_size > 1:
             dist.init_process_group(
                 "nccl",
-                init_method=(output_directory / "rendezvous").resolve().as_uri(),
+                init_method=(request_path.parent / "rendezvous").resolve().as_uri(),
                 rank=rank,
                 world_size=world_size,
                 timeout=timedelta(seconds=request["settings"]["collective_timeout_seconds"]),
             )
-        result = execute_case(
-            request,
-            output_directory,
-            f"cuda:{local_rank}",
-            rank,
-            world_size,
-            restart_from=(request_path.parent / "initial" / f"rank-{rank}-checkpoint")
-            if phase == "restart"
-            else None,
-        )
+        result = execute_case(request, request_path.parent, f"cuda:{local_rank}", rank, world_size)
     except Exception as error:
-        path = output_directory / f"rank-{rank}-result.json"
+        path = request_path.parent / f"rank-{rank}-result.json"
         # Preserve any already published worker result if failure occurred after publication.
         if not path.exists():
             durable_json(
@@ -499,7 +394,5 @@ def main(request_path, phase="single"):
         raise
     if dist.is_initialized():
         dist.destroy_process_group()
-    if result["status"] != (
-        "restart_reference_ready" if phase == "initial" else "bounded_synthetic_checks_pass"
-    ):
+    if result["status"] != "bounded_synthetic_checks_pass":
         raise SystemExit(1)

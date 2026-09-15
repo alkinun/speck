@@ -36,7 +36,8 @@ ROOT = repository_root()
 PLAN = ROOT / "research/flagship/r0_execution_preparation_v1.json"
 
 
-def make_tiny_request():
+@pytest.fixture
+def tiny_request():
     settings = json.loads(PLAN.read_text())["settings"]
     settings.update(
         loss_backend="torch",
@@ -80,11 +81,6 @@ def make_tiny_request():
     }
     value["request_sha256"] = fingerprint(value)
     return value
-
-
-@pytest.fixture
-def tiny_request():
-    return make_tiny_request()
 
 
 def test_all_exact_cases_bind_without_execution():

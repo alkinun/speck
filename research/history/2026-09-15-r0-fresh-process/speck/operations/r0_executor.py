@@ -80,22 +80,12 @@ def prepare_request(plan_path, case_id, workers, allocated_gpus, root=None):
     root = Path(root or repository_root()).resolve()
     plan_path = Path(plan_path).resolve()
     plan = json.loads(plan_path.read_text())
-    if (
-        plan.get("format") != "speck_r0_execution_preparation"
-        or type(plan.get("format_version")) is not int
-        or plan.get("format_version") not in (1, 2)
-        or plan.get("training_authority") is not False
+    if (plan.get("format"), plan.get("format_version"), plan.get("training_authority")) != (
+        "speck_r0_execution_preparation",
+        1,
+        False,
     ):
         raise ValueError("unsupported R0 execution preparation plan")
-    if plan["format_version"] == 2 and plan.get("restart_protocol") != "fresh_process_next_step_v1":
-        raise ValueError("unknown fresh-process protocol")
-    if plan["format_version"] == 2:
-        predecessor = read_bound(root, plan["supersedes"])
-        if predecessor.get("format_version") != 1 or any(
-            predecessor[key] != plan[key]
-            for key in ("shape_plan", "shape_result", "r0_gpu_hour_ceiling")
-        ):
-            raise ValueError("fresh-process successor changes its predecessor shape or allocation")
     validate_settings(plan["settings"])
     if (
         type(workers) is not int
@@ -135,7 +125,6 @@ def prepare_request(plan_path, case_id, workers, allocated_gpus, root=None):
         {
             "speck/operations/r0_executor.py",
             "speck/operations/r0_worker.py",
-            "speck/operations/r0_replay.py",
             "scripts/r0_execute.py",
             "speck/training/step.py",
             "speck/training/checkpoint.py",
@@ -170,8 +159,6 @@ def prepare_request(plan_path, case_id, workers, allocated_gpus, root=None):
         "precision_policy": "FP32 parameter/optimizer storage with the existing model's BF16 CUDA activations; no blanket BF16 conversion of optimizer/recurrent state.",
         "scientific_training_authority": False,
     }
-    if plan["format_version"] == 2:
-        request["restart_protocol"] = plan["restart_protocol"]
     request["request_sha256"] = fingerprint(request)
     return request
 
@@ -182,7 +169,6 @@ def supervise(command, directory, timeout_seconds, grace_seconds, worker_count=1
     processes = []
     reason, error = "exited", None
     previous_term = signal.getsignal(signal.SIGTERM)
-    previous_int = signal.getsignal(signal.SIGINT)
 
     def interrupted(signum, frame):
         raise KeyboardInterrupt
@@ -241,9 +227,6 @@ def supervise(command, directory, timeout_seconds, grace_seconds, worker_count=1
     except Exception as exception:
         reason, error = "launch_failure", repr(exception)
     finally:
-        # Repeated cancellation must not interrupt the cleanup that stops the rank groups.
-        signal.signal(signal.SIGTERM, signal.SIG_IGN)
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
         # Terminate every known rank group, including descendants whose rank leader already exited.
         send_all(signal.SIGTERM)
         deadline = time.monotonic() + grace_seconds
@@ -256,7 +239,6 @@ def supervise(command, directory, timeout_seconds, grace_seconds, worker_count=1
         for process in processes:
             process.wait()
         signal.signal(signal.SIGTERM, previous_term)
-        signal.signal(signal.SIGINT, previous_int)
     codes = [p.returncode for p in processes]
     return {
         "termination": reason,
@@ -267,9 +249,7 @@ def supervise(command, directory, timeout_seconds, grace_seconds, worker_count=1
     }
 
 
-def summarize_attempt(
-    request, directory, execution, accepted_status="bounded_synthetic_checks_pass"
-):
+def summarize_attempt(request, directory, execution):
     ranks = []
     for rank in range(request["world_size"]):
         path = directory / f"rank-{rank}-result.json"
@@ -293,12 +273,12 @@ def summarize_attempt(
         execution["termination"] == "exited"
         and execution["returncode"] == 0
         and len(ranks) == request["world_size"]
-        and all(r["status"] == accepted_status for r in ranks)
+        and all(r["status"] == "bounded_synthetic_checks_pass" for r in ranks)
     )
     return {
         "format": "speck_r0_supervised_attempt",
         "format_version": 1,
-        "status": accepted_status if passed else "attempt_failed_or_incomplete",
+        "status": "bounded_synthetic_checks_pass" if passed else "attempt_failed_or_incomplete",
         "request_sha256": request["request_sha256"],
         "execution": execution,
         "ranks": ranks,
@@ -358,14 +338,8 @@ def run_attempt(request, ledger_directory, prior_gpu_hours):
             if file_sha256(result_path) != previous["result_sha256"]:
                 raise ValueError("previous R0 result changed; reconcile before further execution")
         settings = request["settings"]
-        phase_names = (
-            ("initial", "restart")
-            if request.get("restart_protocol") == "fresh_process_next_step_v1"
-            else ("single",)
-        )
         reservation = (
-            len(phase_names)
-            * (settings["timeout_seconds"] + settings["kill_grace_seconds"])
+            (settings["timeout_seconds"] + settings["kill_grace_seconds"])
             * request["allocated_gpus"]
             / 3600
         )
@@ -388,49 +362,21 @@ def run_attempt(request, ledger_directory, prior_gpu_hours):
         }
         ledger["attempts"].append(row)
         durable_json(ledger_path, ledger)
-        phase_results = []
-        attempt_started = time.monotonic()
-        for phase in phase_names:
-            output = attempt_dir if phase == "single" else attempt_dir / phase
-            output.mkdir(exist_ok=True)
-            command = [
-                sys.executable,
-                "-m",
-                "scripts.r0_execute",
-                "--worker-request",
-                str(attempt_dir / "request.json"),
-                "--worker-phase",
-                phase,
-            ]
-            execution = supervise(
-                command,
-                output,
-                settings["timeout_seconds"],
-                settings["kill_grace_seconds"],
-                request["world_size"],
-            )
-            accepted_status = (
-                "restart_reference_ready" if phase == "initial" else "bounded_synthetic_checks_pass"
-            )
-            phase_result = summarize_attempt(request, output, execution, accepted_status)
-            if phase != "single":
-                durable_json(output / "result.json", phase_result)
-            phase_results.append({"phase": phase, **phase_result})
-            if phase_result["status"] != accepted_status:
-                break
-        result = dict(phase_results[-1])
-        if len(phase_names) > 1:
-            result["phases"] = phase_results
-            result["status"] = (
-                "bounded_fresh_process_checks_pass"
-                if len(phase_results) == 2
-                and phase_results[-1]["status"] == "bounded_synthetic_checks_pass"
-                else "attempt_failed_or_incomplete"
-            )
-            result["observed_allocated_gpu_hours"] = (
-                (time.monotonic() - attempt_started) * request["allocated_gpus"] / 3600
-            )
-            result["process_restart_protocol"] = request["restart_protocol"]
+        command = [
+            sys.executable,
+            "-m",
+            "scripts.r0_execute",
+            "--worker-request",
+            str(attempt_dir / "request.json"),
+        ]
+        execution = supervise(
+            command,
+            attempt_dir,
+            settings["timeout_seconds"],
+            settings["kill_grace_seconds"],
+            request["world_size"],
+        )
+        result = summarize_attempt(request, attempt_dir, execution)
         durable_json(attempt_dir / "result.json", result)
         row.update(
             state=result["status"],
