@@ -145,7 +145,7 @@ in the twelve cached files falls below its current headroom target before full e
 
 The [two-file raw successor](stack_v3_targeted_raw_intake_v1.json) binds 752,034,905 declared
 bytes: the best inspected TypeScript and JavaScript metadata-byte ratios. The
-[finite intake](../../results/systems/stack-v3-targeted-raw-launch-20260915.json) is running;
-complete-file SHA and prior metadata-projection equality are required. This is delegated acquisition
+[finite intake](../findings/2026-09-15-stack-v3-targeted-raw.md) completed in 160.6453 seconds;
+complete-file SHA, prior metadata parity and independent range/raw reopen all passed. This is delegated acquisition
 scheduling, not a source-use, language or background change. Next measure content/security and
 exclusion yield on complete source inputs. Do not sum old/new banks as globally unique supply.

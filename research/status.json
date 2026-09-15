@@ -226,10 +226,10 @@
     },
     {
       "id": "stack_v3_supply_census",
-      "state": "cached_content_probe_verified_two_file_raw_intake_running",
+      "state": "cached_content_probe_and_targeted_complete_raw_intake_verified",
       "plan": "research/flagship/stack_v3_metadata_census_v1.json",
       "evidence": "results/data/stack-v3-metadata-feasibility-20260914.json",
-      "next": "Cached twelve-file content probe completed: 1088/1408 samples retained, 1170568 Mistral tokens; all language point estimates remain below current headroom before full exclusion. A bound two-file raw intake now acquires 752034905 declared bytes chosen for TypeScript/JavaScript metadata yield, with full SHA and prior-projection parity checks. Measure source-specific content and exclusion yield before any larger acquisition or matched-language/background successor. Preserve current source-use, filters, language shares and recipes; these samples/raw files are not usable stock.",
+      "next": "Cached twelve-file probe retained 1088/1408 samples and counted 1170568 Mistral tokens; all language point estimates remain below headroom before full exclusion. The targeted two-file intake completed 752034905 raw bytes in 160.6453s; complete hashes, prior metadata parity and independent range/raw reopen passed. Materialize reusable source-specific acquisition units and measure content/security/exclusion yield before a larger tranche or matched-language/background successor. Preserve source-use, filters, shares and recipes; raw files and probe estimates are not usable stock.",
       "metadata_discovery_plan": "research/flagship/stack_v3_metadata_discovery_v1.json",
       "metadata_discovery_result": "results/data/stack-v3-metadata-discovery-20260915.json",
       "metadata_discovery_verification": "results/systems/stack-v3-metadata-discovery-verification-20260915.json",
@@ -239,7 +239,9 @@
       "cached_content_probe_result": "results/data/stack-v3-cached-supply-probe-20260915.json",
       "cached_content_probe_verification": "results/systems/stack-v3-cached-supply-verification-20260915.json",
       "targeted_raw_plan": "research/flagship/stack_v3_targeted_raw_intake_v1.json",
-      "targeted_raw_launch": "results/systems/stack-v3-targeted-raw-launch-20260915.json"
+      "targeted_raw_launch": "results/systems/stack-v3-targeted-raw-launch-20260915.json",
+      "targeted_raw_result": "results/data/stack-v3-targeted-raw-intake-20260915.json",
+      "targeted_raw_verification": "results/systems/stack-v3-targeted-raw-verification-20260915.json"
     },
     {
       "id": "local_preparation_followups",

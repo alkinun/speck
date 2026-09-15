@@ -52,9 +52,9 @@ files. Preserve the distinction between inspected metadata and fully hash-verifi
 The [cached-content probe](../findings/2026-09-15-stack-v3-cached-supply.md) now retained
 1,088/1,408 samples and counted 1,170,568 Mistral tokens in 97.49 seconds before archival work.
 All language point estimates in that cached view remain below their targets before full exclusion.
-The [two-file raw intake](stack_v3_targeted_raw_intake_v1.json) is running with a 752,034,905-byte
-complete-file declaration, selected for TypeScript/JavaScript metadata yield. Complete SHA and
-metadata parity precede content qualification. Preserve all range/assembly attempts and stop on
+The [two-file raw intake](../findings/2026-09-15-stack-v3-targeted-raw.md) completed
+752,034,905 bytes in 160.6453 seconds, selected for TypeScript/JavaScript metadata yield.
+Complete SHA, metadata parity and independent range/raw reopen passed; content qualification is next. Preserve all range/assembly attempts and stop on
 failure; do not convert samples or raw bytes into usable capacity or fetch all sixteen files.
 
 ## 3. Qualify a more efficient fetch path on real eligible inputs

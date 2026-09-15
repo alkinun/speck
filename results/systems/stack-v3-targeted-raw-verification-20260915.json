@@ -1,0 +1,36 @@
+{
+  "boundary": "Rehashed both complete raw files, compared decoded full metadata with the bound prior partial projections, and verified every retained range hash and byte against complete contiguous raw coverage. These checks establish source identity and metadata parity, not source-specific content filtering, joint eligibility or usable training-token capacity.",
+  "elapsed_seconds": 3.117058021001867,
+  "files": [
+    {
+      "bytes": 398734410,
+      "complete_contiguous_range_coverage_pass": true,
+      "every_range_matches_full_raw_pass": true,
+      "independent_full_hash_and_metadata_reopen_pass": true,
+      "range_count": 24,
+      "raw_path": "/mnt/speck-data/speck/stack-v3-targeted-raw-v1/file-000/complete.parquet",
+      "sha256": "eea02df5c889a0be784b6b6b0fec3cb2282ea1a15639f98140e8882e6adc82ec"
+    },
+    {
+      "bytes": 353300495,
+      "complete_contiguous_range_coverage_pass": true,
+      "every_range_matches_full_raw_pass": true,
+      "independent_full_hash_and_metadata_reopen_pass": true,
+      "range_count": 22,
+      "raw_path": "/mnt/speck-data/speck/stack-v3-targeted-raw-v1/file-001/complete.parquet",
+      "sha256": "a6c4be3ec09c30a46f23e8bd667e5b022c7f198ef00fcda12079fa9740809410"
+    }
+  ],
+  "format": "speck_targeted_code_raw_verification",
+  "format_version": 1,
+  "result": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-targeted-raw-intake-20260915.json",
+    "sha256": "ce60fbf9ceab8c5c65cb11c19451e5c76538067010d0b6a0a478c11b2cba0ee7"
+  },
+  "review_script": {
+    "path": "/mnt/speck-data/speck/stack-v3-targeted-raw-review-20260915/verify.py",
+    "sha256": "22f5c4ffa12bf69515e820d68447af7166bed55bb27356d98badddd8e63df19f"
+  },
+  "status": "independent_complete_raw_and_metadata_parity_verified_not_stock",
+  "training_authority": false
+}

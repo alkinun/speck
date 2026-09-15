@@ -1,0 +1,51 @@
+{
+  "boundary": "Two complete-file intake selected under preparation delegation before model outputs: highest metadata-eligible declared TypeScript bytes per compressed byte and highest JavaScript ratio among the sixteen inspected files. Cached-content probe established language shortfalls; it is not used to extrapolate new-file token yield. Download 752034905 declared bytes, at most 1GiB reserved response payload across both files including failed attempts; HTTP/TLS overhead is excluded. Preserve all partial range and assembly attempts. Verify complete file length/SHA256 and equality with each previously observed metadata projection. No new source-use approval, language/background recipe change, content/security/reference exclusion qualification, usable-stock count, or model launch. Deterministic metadata-directed acquisition is not representative sampling or a model-quality result.",
+  "elapsed_seconds_this_invocation": 160.64529147699068,
+  "files": [
+    {
+      "completed_range_payload_bytes": 398734410,
+      "full_file_hash_verified": true,
+      "metadata_matches_prior_partial_projection": true,
+      "metadata_projection": {
+        "physical_files": 268974,
+        "repositories": 21027,
+        "sha256": "b097982e282209f1e527b01fe094d52d39f97586aee14d75bc2442f40b73d647"
+      },
+      "range_attempts_all_invocations": 24,
+      "raw_path": "/mnt/speck-data/speck/stack-v3-targeted-raw-v1/file-000/complete.parquet",
+      "reserved_transfer_bytes_all_attempts": 398734434,
+      "source_file": {
+        "bytes": 398734410,
+        "path": "data/part-00000-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "eea02df5c889a0be784b6b6b0fec3cb2282ea1a15639f98140e8882e6adc82ec"
+      }
+    },
+    {
+      "completed_range_payload_bytes": 353300495,
+      "full_file_hash_verified": true,
+      "metadata_matches_prior_partial_projection": true,
+      "metadata_projection": {
+        "physical_files": 253798,
+        "repositories": 21219,
+        "sha256": "0efb2fe8c06ff919142ecc44639cc48bc4a2ecb3ae18c784e0fdce6206faef9a"
+      },
+      "range_attempts_all_invocations": 22,
+      "raw_path": "/mnt/speck-data/speck/stack-v3-targeted-raw-v1/file-001/complete.parquet",
+      "reserved_transfer_bytes_all_attempts": 353300517,
+      "source_file": {
+        "bytes": 353300495,
+        "path": "data/part-00004-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+        "sha256": "a6c4be3ec09c30a46f23e8bd667e5b022c7f198ef00fcda12079fa9740809410"
+      }
+    }
+  ],
+  "format": "speck_stack_v3_complete_file_intake_result",
+  "format_version": 1,
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_v3_targeted_raw_intake_v1.json",
+    "sha256": "203ef7e79c362f0881b006aebfcb69db4011e3dac236ce5c7ec44c708080bf89"
+  },
+  "repository_revision": "9984ea66e8547ea30d16ce44c340b8152434a9d9",
+  "status": "complete_raw_files_verified_not_content_qualified_stock",
+  "training_authority": false
+}
