@@ -1,0 +1,147 @@
+{
+  "boundary": "Explicit preparation successor under existing delegation, before first-wave model outputs. Four previously evidence-bound compiler files intentionally change; their exact original bytes and replayed outputs are preserved, and new compiler identities and outputs are bound. The source-pin diff remains a report of intentional changes, not a model/data capacity pass. Full excluded supply, joint views, evaluation and GH200 qualification remain open. No source-use approval or model launch is granted.",
+  "capacity_qualified": false,
+  "checks": {
+    "all_language_quotas_match_decision": true,
+    "all_non_code_assignments_and_code_treatment_sources_preserved": true,
+    "all_original_compiled_outputs_byte_identical": true,
+    "all_run_ids_shapes_horizons_seeds_confirmation_slots_preserved": true,
+    "all_successor_compiled_outputs_byte_identical": true,
+    "data_gpu_hour_ceiling": 192,
+    "logical_runs": 29,
+    "logical_training_tokens": 130000000000,
+    "source_capacity_total_tokens": 17700000000,
+    "within_language_blend_equality": true
+  },
+  "compiled_replays": [
+    {
+      "byte_identical": true,
+      "registered": {
+        "path": "/home/alkin/Desktop/speck/research/flagship/first_wave_preparation_v2.json",
+        "sha256": "9b7d239b852faf7612038ab14030a9cb1f41a643774f7303883eb058d2fb3edb"
+      },
+      "replay": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/replayed-first-wave-v2.json",
+        "sha256": "9b7d239b852faf7612038ab14030a9cb1f41a643774f7303883eb058d2fb3edb"
+      }
+    },
+    {
+      "byte_identical": true,
+      "registered": {
+        "path": "/home/alkin/Desktop/speck/research/flagship/code_language_requirements_v1.json",
+        "sha256": "c5a54f116bce6e1ffa3db114cae7f46528f72ce1ca7922211f89a8a215e85f14"
+      },
+      "replay": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/replayed-code-languages-v1.json",
+        "sha256": "c5a54f116bce6e1ffa3db114cae7f46528f72ce1ca7922211f89a8a215e85f14"
+      }
+    },
+    {
+      "byte_identical": true,
+      "registered": {
+        "path": "/home/alkin/Desktop/speck/research/flagship/first_wave_preparation_v3.json",
+        "sha256": "9c77c84e7d09222dc65bb10cff62d960f69432e1840adcf5e7a3ad51b4337056"
+      },
+      "replay": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/replayed-first-wave-v3.json",
+        "sha256": "9c77c84e7d09222dc65bb10cff62d960f69432e1840adcf5e7a3ad51b4337056"
+      }
+    },
+    {
+      "byte_identical": true,
+      "registered": {
+        "path": "/home/alkin/Desktop/speck/research/flagship/code_language_requirements_v2.json",
+        "sha256": "944787207ce5b768d5e3f28a2e11a33ca59e9de68d8e9d4873da0484e119ac62"
+      },
+      "replay": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/replayed-code-languages-v2.json",
+        "sha256": "944787207ce5b768d5e3f28a2e11a33ca59e9de68d8e9d4873da0484e119ac62"
+      }
+    }
+  ],
+  "decision": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/code_preparation_decision_v2.json",
+    "sha256": "872cebe55959d24401d5e15d5cede5fd486ad0fbc7e1acc5ce2be32fe254557c"
+  },
+  "format": "speck_code_preparation_successor_qualification",
+  "format_version": 1,
+  "historical_checkout": "/tmp/opencode/speck-code-preparation-v2-2b5023d",
+  "historical_revision": "2b5023d",
+  "preserved_implementations": [
+    {
+      "original": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/original-implementation/scripts/code_language_preparation.py",
+        "sha256": "cb9526481adf105b7d50c51ff7d911e5443ac9debbd4aab9336c0142655f8eed"
+      },
+      "original_path": "scripts/code_language_preparation.py",
+      "references": [
+        "research/flagship/code_language_requirements_v1.json"
+      ],
+      "successor": {
+        "path": "/home/alkin/Desktop/speck/scripts/code_language_preparation.py",
+        "sha256": "41472efee8e150394385a1d8ba17315312230ae79d7c4593444292e0416bb679"
+      }
+    },
+    {
+      "original": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/original-implementation/scripts/first_wave_preparation.py",
+        "sha256": "e6abd27203cc505a86cdc6fd18bdb8a6237cc0d9b6840a13002741f037774098"
+      },
+      "original_path": "scripts/first_wave_preparation.py",
+      "references": [
+        "research/flagship/first_wave_preparation_v2.json"
+      ],
+      "successor": {
+        "path": "/home/alkin/Desktop/speck/scripts/first_wave_preparation.py",
+        "sha256": "cea77ee9f4e1724f7e841afe9e9146fbe808e9fa122ded31a47922e91141cf12"
+      }
+    },
+    {
+      "original": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/original-implementation/speck/experiments/code_languages.py",
+        "sha256": "31fa7d2f3bf38161b4e60972118214e59f99b3ad47b988d2905523ff8e3c7a24"
+      },
+      "original_path": "speck/experiments/code_languages.py",
+      "references": [
+        "research/flagship/code_language_requirements_v1.json"
+      ],
+      "successor": {
+        "path": "/home/alkin/Desktop/speck/speck/experiments/code_languages.py",
+        "sha256": "dab053361f9f074afc800e3cb4a1fb9c67a12d104f42cb9416e1fe3b693dca9c"
+      }
+    },
+    {
+      "original": {
+        "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/original-implementation/speck/experiments/first_wave_preparation.py",
+        "sha256": "a8a9c60514192dd6757128c5b33d1986f628af97c6920372529644aacfe617a3"
+      },
+      "original_path": "speck/experiments/first_wave_preparation.py",
+      "references": [
+        "research/flagship/first_wave_preparation_v2.json"
+      ],
+      "successor": {
+        "path": "/home/alkin/Desktop/speck/speck/experiments/first_wave_preparation.py",
+        "sha256": "d0b9a82fcb65afb01fb0cbbb53443ccf2c1317dd2fb3b28a2a7612252933ec99"
+      }
+    }
+  ],
+  "review_script": {
+    "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/verify.py",
+    "sha256": "20221f380ea1eae8f68f9b26d7e1462212bfa6964d59e5a7b69cb5dc85767552"
+  },
+  "source_pin_review": {
+    "path": "/mnt/speck-data/speck/code-preparation-successor-review-20260915/source-pin-changes.json",
+    "sha256": "7547f6e59fda0fd31d1fe736814f955fe29f194c78777b89dbc92d8aba5c79df"
+  },
+  "status": "pre_results_recipe_and_compiler_successor_qualified_not_measured_capacity",
+  "training_authority": false,
+  "validation": {
+    "quality_log": {
+      "path": "/tmp/speck-code-successor-final-quality-20260915.log",
+      "sha256": "604a0041388e0f1788c1c64068942fcd6b78be639fe7e140dbd96de43f8cf558"
+    },
+    "tests_deselected": 125,
+    "tests_passed": 1189,
+    "tests_skipped": 10
+  }
+}

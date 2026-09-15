@@ -4,6 +4,11 @@ import json
 from pathlib import Path
 
 from speck.data.rights import load_source_use_extension
+from speck.experiments.code_preparation_decision import (
+    bound_json,
+    load_decision,
+    validate_source_successor,
+)
 from speck.experiments.first_wave import compile_first_wave
 from speck.provenance.io import file_sha256
 
@@ -50,6 +55,12 @@ def load_preparation(path):
     path = Path(path).resolve()
     proposal = json.loads(path.read_text())
     inputs, values = {}, {}
+    if "code_preparation_decision" in proposal:
+        decision = load_decision(proposal["code_preparation_decision"], path.parent)
+        previous = bound_json(proposal["supersedes"], path.parent)
+        validate_source_successor(proposal, previous, decision)
+        inputs["code_preparation_decision"] = proposal["code_preparation_decision"]
+        inputs["supersedes"] = proposal["supersedes"]
     for name in ("data_plan", "source_registry", "source_use"):
         identity = proposal[name]
         target = (path.parent / identity["path"]).resolve()
@@ -75,4 +86,14 @@ def load_preparation(path):
         extensions=extensions,
     )
     result["inputs"] = {"proposal": {"path": str(path), "sha256": file_sha256(path)}, **inputs}
+    if "code_preparation_decision" in proposal:
+        # Preserve the historical compiler outputs; current preparation already has a
+        # frozen tokenizer through the registered budget fallback with D5 unopened.
+        result["capacity_boundary"] = result["capacity_boundary"].replace(
+            "D5-token requirements", "Selected-tokenizer requirements"
+        )
+        result["remaining_before_launch"] = [
+            "bind the frozen tokenizer decision" if item == "D5 selection" else item
+            for item in result["remaining_before_launch"]
+        ]
     return result

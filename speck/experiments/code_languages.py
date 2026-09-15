@@ -3,6 +3,11 @@
 import json
 from pathlib import Path
 
+from speck.experiments.code_preparation_decision import (
+    bound_json,
+    load_decision,
+    validate_language_successor,
+)
 from speck.provenance.io import file_sha256
 
 CODE_SOURCES = {"stack_edu", "stack_v3_train_permissive"}
@@ -115,6 +120,12 @@ def load_code_languages(path):
         values[key] = json.loads(target.read_text())
     if values["tokenizer_decision"]["status"] != "tokenizer_selected_and_frozen":
         raise ValueError("code language requirements need the selected tokenizer")
+    if "code_preparation_decision" in spec:
+        decision = load_decision(spec["code_preparation_decision"], path.parent)
+        previous = bound_json(spec["supersedes"], path.parent)
+        validate_language_successor(spec, previous, values["first_wave"], decision)
+        inputs["code_preparation_decision"] = spec["code_preparation_decision"]
+        inputs["supersedes"] = spec["supersedes"]
     result = compile_code_languages(spec, values["first_wave"])
     result["inputs"] = {"plan": {"path": str(path), "sha256": file_sha256(path)}, **inputs}
     result["tokenizer_sha256"] = values["tokenizer_decision"]["tokenizer_fingerprint"]

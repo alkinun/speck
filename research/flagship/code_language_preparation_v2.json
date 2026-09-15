@@ -1,0 +1,44 @@
+{
+  "format": "speck_code_language_preparation",
+  "format_version": 1,
+  "status": "selected_for_preparation_not_launchable",
+  "first_wave": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/first_wave_preparation_v3.json",
+    "sha256": "9c77c84e7d09222dc65bb10cff62d960f69432e1840adcf5e7a3ad51b4337056"
+  },
+  "tokenizer_decision": {
+    "path": "tokenizer_decision_v1.json",
+    "sha256": "40db57692f4082c9fc5f7677b9124503d583097c9f63fbf86fac6a3f060b91f9"
+  },
+  "source_ids": [
+    "stack_edu",
+    "stack_v3_train_permissive"
+  ],
+  "language_weights_percent": {
+    "Python": 28,
+    "C++": 16,
+    "C": 5,
+    "Java": 10,
+    "JavaScript": 15,
+    "TypeScript": 6,
+    "Rust": 8,
+    "Go": 5,
+    "Shell": 2,
+    "SQL": 2,
+    "Markdown": 3
+  },
+  "headroom_percent": 20,
+  "decision_basis": "Agent preparation choice under the owner's repeated instruction to choose and proceed autonomously, before first-wave model outputs. Not a separately signed human recipe approval, new source-use approval, or training launch. Reduce Java 15% to 10% and TypeScript 10% to 6%, whose complete released Stack-Edu views fall short of the original E1S headroom estimates. Reassign nine percentage points across Python (+3), C++ (+1), Rust (+3), Shell (+1) and SQL (+1), retaining the application/systems emphasis and all eleven languages. The same fixed allocation applies to every code source, both halves of the equal blend, all shared code backgrounds and repetition pools. These supply-informed weights are not claimed optimal or selected from LM outcomes.",
+  "application": "Apply identical weights independently to each source inside each code arm and code background; the equal blend is 50/50 within every language, not only in aggregate. Require per-language headroom. Surplus in another language cannot hide a deficit.",
+  "policy_boundary": "Existing source-use approvals and source-specific file/repository license, attribution, English prose, security and exclusion obligations remain in force. Source-specific vendor/fork metadata availability differs and must remain disclosed in stock plans; common language weights alone do not imply identical source filters or independent ancestry.",
+  "change_rule": "Record a successor before affected-category outputs; no post-result redistribution or dropping a language to pass capacity. Final whole-document quotas, alignment/lookahead, train/validation partition, order/seed and launch contracts remain pending.",
+  "training_authority": false,
+  "supersedes": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/code_language_preparation_v1.json",
+    "sha256": "23bde4db406fd58c069eb9b21f24f8660ec99701ea0ac4fef27c2b142801cb04"
+  },
+  "code_preparation_decision": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/code_preparation_decision_v2.json",
+    "sha256": "872cebe55959d24401d5e15d5cede5fd486ad0fbc7e1acc5ce2be32fe254557c"
+  }
+}

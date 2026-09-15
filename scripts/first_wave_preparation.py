@@ -26,6 +26,9 @@ def main():
             "scripts/first_wave_preparation.py",
         )
     ]
+    if "code_preparation_decision" in result["inputs"]:
+        name = "speck/experiments/code_preparation_decision.py"
+        result["implementation"].append({"path": name, "sha256": file_sha256(root / name)})
     durable_json(args.output, result)
     print(
         {

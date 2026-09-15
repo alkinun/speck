@@ -21,6 +21,9 @@ def main():
         {"path": name, "sha256": file_sha256(root / name)}
         for name in ("speck/experiments/code_languages.py", "scripts/code_language_preparation.py")
     ]
+    if "code_preparation_decision" in result["inputs"]:
+        name = "speck/experiments/code_preparation_decision.py"
+        result["implementation"].append({"path": name, "sha256": file_sha256(root / name)})
     durable_json(args.output, result)
     print(
         f"Compiled {len(result['logical_slot_code_quotas'])} logical slots and 22 source-language targets."

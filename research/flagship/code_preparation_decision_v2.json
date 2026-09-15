@@ -1,0 +1,174 @@
+{
+  "format": "speck_code_preparation_decision",
+  "format_version": 1,
+  "status": "selected_for_preparation_not_launchable",
+  "authority": "Agent preparation choice under the owner's repeated instruction to choose and proceed autonomously, before first-wave model outputs. Not a separately signed human recipe approval, new source-use approval, or training launch.",
+  "evidence": {
+    "previous_first_wave": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/first_wave_proposal_v2.json",
+      "sha256": "79e9798fd95fd631b47bb03fb11e6e923b603de8803912e775e7ded32cf736b5"
+    },
+    "previous_language_plan": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/code_language_preparation_v1.json",
+      "sha256": "23bde4db406fd58c069eb9b21f24f8660ec99701ea0ac4fef27c2b142801cb04"
+    },
+    "stack_edu_supply": {
+      "path": "/home/alkin/Desktop/speck/results/data/code-supply-comparison-v2-20260915.json",
+      "sha256": "c0eb9d7635ad0377763b70ea5fe5b9dbfa1582c36d36eb62528f78cd512c1eff"
+    },
+    "stack_v3_acquisition": {
+      "path": "/home/alkin/Desktop/speck/results/data/stack-v3-stock-acquisition-20260915.json",
+      "sha256": "c9d3fd52b587c69ae6d3b12f733e3d8a9a44d84548b29e8fb2cced82effe20a9"
+    },
+    "stack_v3_verification": {
+      "path": "/home/alkin/Desktop/speck/results/systems/stack-v3-stock-acquisition-verification-20260915.json",
+      "sha256": "e6c54aef04cf156ed1524045e0ea1b43c9dd962d3cefdb04854946c037d71497"
+    }
+  },
+  "shared_code_background": {
+    "stack_v3_train_permissive": 1
+  },
+  "language_weights_percent": {
+    "Python": 28,
+    "C++": 16,
+    "C": 5,
+    "Java": 10,
+    "JavaScript": 15,
+    "TypeScript": 6,
+    "Rust": 8,
+    "Go": 5,
+    "Shell": 2,
+    "SQL": 2,
+    "Markdown": 3
+  },
+  "headroom_percent": 20,
+  "decision_basis": {
+    "background": "Move the common code background to already-approved restricted Stack v3. Keep Stack-Edu as its existing E1S treatment and one half of the matched blend. Stack-Edu's present evidence does not support its former 1.2B nominal background capacity, particularly Java/TypeScript with all their released shards inspected. Restricted Stack v3 has a qualified complete-file acquisition path and additional pinned-source discovery path; its required supply still needs materialization and measurement. This is a source-capacity planning choice, not a quality nomination.",
+    "languages": "Reduce Java 15% to 10% and TypeScript 10% to 6%, whose complete released Stack-Edu views fall short of the original E1S headroom estimates. Reassign nine percentage points across Python (+3), C++ (+1), Rust (+3), Shell (+1) and SQL (+1), retaining the application/systems emphasis and all eleven languages. The same fixed allocation applies to every code source, both halves of the equal blend, all shared code backgrounds and repetition pools. These supply-informed weights are not claimed optimal or selected from LM outcomes.",
+    "headroom": "Keep 300M nominal / 360M headroom for the Stack-Edu treatment, and 1.2B nominal / 1.44B headroom for the new restricted Stack v3 background envelope. No quota is filled by another language's surplus. Point estimates above targets are not exclusion-qualified capacity or simultaneous confidence bounds.",
+    "selection": "All three existing code treatments remain; no source wins the code comparison by becoming the preparation background. E2 and later architecture/integration controls are frozen through their existing registered stages. No tokenizer confirmation or D5 opening is required; Mistral stays frozen."
+  },
+  "alternatives_considered": [
+    {
+      "choice": "retain former Stack-Edu background and language shares",
+      "disposition": "not selected",
+      "reason": "Current sampled yield does not support the larger background, and Java/TypeScript already fall short even for E1S headroom under the former shares."
+    },
+    {
+      "choice": "change language shares but retain Stack-Edu background",
+      "disposition": "not selected",
+      "reason": "The smaller E1S allocation still does not support four times as much Stack-Edu capacity under those shares; the shared-background constraint would remain."
+    },
+    {
+      "choice": "implicit background repetition, reduced code category, lower filtering, or new unapproved source",
+      "disposition": "not selected",
+      "reason": "Would change registered exposure/category or source-use/quality conditions; no such change is authorized by this preparation successor."
+    }
+  ],
+  "invariants": {
+    "category_weights_percent": {
+      "web": 55,
+      "code": 15,
+      "math": 10,
+      "synthetic": 10,
+      "science": 5,
+      "reference": 5
+    },
+    "logical_runs": 29,
+    "logical_training_tokens": 130000000000,
+    "source_capacity_total_tokens": 17700000000,
+    "data_gpu_hour_ceiling": 192,
+    "p1_gpu_hour_ceiling": 230,
+    "code_treatments": [
+      "stack_v3",
+      "stack_edu",
+      "equal_blend"
+    ],
+    "same_source_specific_filters": true,
+    "same_existing_source_use": true,
+    "tokenizer_unchanged": true,
+    "all_eleven_languages_retained": true,
+    "model_outputs_observed": false
+  },
+  "stack_edu_planning_comparison": [
+    {
+      "language": "Python",
+      "estimated_tokens_before_full_exclusion": 123387003.84375,
+      "sampling_standard_error_tokens": 9851605.070223177,
+      "old_e1s_headroom_tokens": 90000000,
+      "selected_e1s_headroom_tokens": 100800000
+    },
+    {
+      "language": "C++",
+      "estimated_tokens_before_full_exclusion": 69959987.40625,
+      "sampling_standard_error_tokens": 3545020.9365311037,
+      "old_e1s_headroom_tokens": 54000000,
+      "selected_e1s_headroom_tokens": 57600000
+    },
+    {
+      "language": "C",
+      "estimated_tokens_before_full_exclusion": 23374168.78125,
+      "sampling_standard_error_tokens": 2120940.9208284314,
+      "old_e1s_headroom_tokens": 18000000,
+      "selected_e1s_headroom_tokens": 18000000
+    },
+    {
+      "language": "Java",
+      "estimated_tokens_before_full_exclusion": 45825759.71875,
+      "sampling_standard_error_tokens": 1566270.5649245197,
+      "old_e1s_headroom_tokens": 54000000,
+      "selected_e1s_headroom_tokens": 36000000
+    },
+    {
+      "language": "JavaScript",
+      "estimated_tokens_before_full_exclusion": 71799720.625,
+      "sampling_standard_error_tokens": 5563854.200533336,
+      "old_e1s_headroom_tokens": 54000000,
+      "selected_e1s_headroom_tokens": 54000000
+    },
+    {
+      "language": "TypeScript",
+      "estimated_tokens_before_full_exclusion": 31683250.75,
+      "sampling_standard_error_tokens": 3524583.5070019616,
+      "old_e1s_headroom_tokens": 36000000,
+      "selected_e1s_headroom_tokens": 21600000
+    },
+    {
+      "language": "Rust",
+      "estimated_tokens_before_full_exclusion": 36392580.375,
+      "sampling_standard_error_tokens": 3638107.4764252454,
+      "old_e1s_headroom_tokens": 18000000,
+      "selected_e1s_headroom_tokens": 28800000
+    },
+    {
+      "language": "Go",
+      "estimated_tokens_before_full_exclusion": 23996057.28125,
+      "sampling_standard_error_tokens": 2529192.762512681,
+      "old_e1s_headroom_tokens": 18000000,
+      "selected_e1s_headroom_tokens": 18000000
+    },
+    {
+      "language": "Shell",
+      "estimated_tokens_before_full_exclusion": 294446535.5625,
+      "sampling_standard_error_tokens": 37549143.866103604,
+      "old_e1s_headroom_tokens": 3600000,
+      "selected_e1s_headroom_tokens": 7200000
+    },
+    {
+      "language": "SQL",
+      "estimated_tokens_before_full_exclusion": 55936269.75,
+      "sampling_standard_error_tokens": 7033944.799380037,
+      "old_e1s_headroom_tokens": 3600000,
+      "selected_e1s_headroom_tokens": 7200000
+    },
+    {
+      "language": "Markdown",
+      "estimated_tokens_before_full_exclusion": 50756078.40625,
+      "sampling_standard_error_tokens": 10461581.525303524,
+      "old_e1s_headroom_tokens": 10800000,
+      "selected_e1s_headroom_tokens": 10800000
+    }
+  ],
+  "remaining_capacity_risk": "Restricted Stack v3 currently has only 41,383,315 content/security-passing tokens before full exclusion in fourteen files. The new 1.44B background headroom is unfulfilled, not implied by this decision. Stack-Edu estimates likewise remain unqualified after full exclusion. A failing capacity gate stops materialization; any further allocation change requires another explicit pre-results successor. No automatic target relaxation, source swap, repetition, model launch or additional downloads.",
+  "training_authority": false
+}
