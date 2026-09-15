@@ -50,6 +50,36 @@ def estimate_language(targets, token_counts, language):
     return estimate, math.sqrt(variance), observations
 
 
+def additional_metadata_units(spec, metadata, intake, plan):
+    """Bind a probe to exactly the new files of its declared metadata generation."""
+    version = spec["format_version"]
+    start, count = {2: (11, 26), 3: (26, 28)}[version]
+    if (
+        intake["format_version"] != version
+        or len(intake["units"]) != count
+        or metadata.get("status") != "complete_metadata_verified_not_code_stock"
+        or metadata.get("training_authority") is not False
+        or metadata.get("inputs") != intake["inputs"]
+        or [entry["unit"] for entry in metadata["files"]] != intake["units"]
+        or spec.get("selected_unit_ids") != [unit["id"] for unit in intake["units"][start:]]
+        or intake["inputs"]["code_languages"]["sha256"] != plan["code_languages"]["sha256"]
+        or intake["inputs"]["source_qualification"]["sha256"]
+        != plan["source_qualification"]["sha256"]
+    ):
+        raise ValueError(
+            "expanded code probe requires the exact additional metadata files and policy"
+        )
+    return [
+        {
+            **entry["unit"],
+            "metadata_path": entry["raw"]["path"],
+            "start_row": 0,
+            "stop_row": entry["unit"]["expected_file_rows"],
+        }
+        for entry in metadata["files"][start:]
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("plan", type=Path)
@@ -62,11 +92,11 @@ def main():
     ):
         raise ValueError("qualification requires a new report and clean frozen implementation")
     spec = json.loads(args.plan.read_text())
-    expanded = spec.get("format_version") == 2
+    expanded = spec.get("format_version") in (2, 3)
     if (
         spec.get("format") != "speck_ordered_code_fetch_qualification"
         or type(spec.get("format_version")) is not int
-        or spec.get("format_version") not in (1, 2)
+        or spec.get("format_version") not in (1, 2, 3)
         or spec.get("training_authority") is not False
         or spec.get("strata") != 4
         or spec.get("samples_per_stratum") != 32
@@ -86,29 +116,7 @@ def main():
         metadata = json.loads(Path(metadata_id["path"]).read_text())
         metadata_plan_id = _bound_identity(metadata["plan"], Path(metadata_id["path"]).parent)
         intake = load_metadata_plan(metadata_plan_id["path"])
-        if (
-            intake["format_version"] != 2
-            or metadata.get("status") != "complete_metadata_verified_not_code_stock"
-            or metadata.get("training_authority") is not False
-            or metadata.get("inputs") != intake["inputs"]
-            or [entry["unit"] for entry in metadata["files"]] != intake["units"]
-            or spec.get("selected_unit_ids") != [unit["id"] for unit in intake["units"][11:]]
-            or intake["inputs"]["code_languages"]["sha256"] != plan["code_languages"]["sha256"]
-            or intake["inputs"]["source_qualification"]["sha256"]
-            != plan["source_qualification"]["sha256"]
-        ):
-            raise ValueError(
-                "expanded code probe requires the exact fifteen additional metadata files"
-            )
-        plan["units"] = [
-            {
-                **entry["unit"],
-                "metadata_path": entry["raw"]["path"],
-                "start_row": 0,
-                "stop_row": entry["unit"]["expected_file_rows"],
-            }
-            for entry in metadata["files"][11:]
-        ]
+        plan["units"] = additional_metadata_units(spec, metadata, intake, plan)
     policy = plan["base"]["stack_edu_policy"]
     working = Path(spec["working_directory"]).resolve()
     archive = Path(spec["archive_directory"]).resolve()
@@ -283,7 +291,7 @@ def main():
         os.fsync(handle.fileno())
     preliminary = {
         "format": "speck_ordered_code_fetch_qualification_result",
-        "format_version": 2 if expanded else 1,
+        "format_version": spec["format_version"],
         "status": "bounded_fetch_replay_and_content_checks_pass_full_exclusion_pending",
         **execution,
         "working_directory": str(working),

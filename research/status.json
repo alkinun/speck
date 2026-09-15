@@ -77,9 +77,9 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "production_paused_targeted_js_python_metadata_successor_running",
+      "state": "production_paused_targeted_metadata_complete_supply_probe_prepared",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "The v3 metadata service is rechecking the existing 26-file cache and acquiring one additional complete JavaScript and Python file (929,134,037 bytes total) under unchanged source/language/filter rules. Verify the combined 28-file result and update per-language eligibility after completion. This expansion does not resolve complete-release Java/TypeScript shortfalls or the larger background constraint. Production code fetching and recipe changes remain pending; sample estimates are not usable capacity.",
+      "next": "The v3 intake completed: 28 files / 110,704,408 rows / 11,774,288,820 compressed bytes, with unchanged policy. Full updated metadata census is in progress; a bound v3 supply probe samples only the two new JavaScript/Python files. Java/TypeScript have no additional released shards. Keep production code stock paused pending per-language/background capacity resolution; metadata and samples are not qualified token stock.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
@@ -92,10 +92,11 @@
       "fetch_qualification": "results/systems/ordered-code-fetch-qualification-20260914.json",
       "metadata_successor_plan": "research/flagship/stack_edu_metadata_acquisition_v3.json",
       "metadata_successor_launch": "results/systems/stack-edu-metadata-v3-launch-20260915.json",
-      "expanded_metadata_result": "results/data/stack-edu-metadata-acquisition-v2-20260914.json",
+      "expanded_metadata_result": "results/data/stack-edu-metadata-acquisition-v3-20260915.json",
       "expanded_metadata_census": "results/data/code-metadata-feasibility-v2-20260914.json",
       "supply_probe": "results/data/code-supply-probe-v2-20260914.json",
-      "supply_comparison": "results/data/code-supply-comparison-20260914.json"
+      "supply_comparison": "results/data/code-supply-comparison-20260914.json",
+      "supply_probe_plan": "research/flagship/code_supply_probe_v3.json"
     },
     {
       "id": "fineweb_edu_stock",

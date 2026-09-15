@@ -34,7 +34,8 @@ Expanded metadata verification and a deterministic added-file content/token prob
 complete; see the [combined finding](../findings/2026-09-14-code-supply-probe.md). Java and
 TypeScript remain below E1S headroom in the estimates despite complete released metadata.
 The [targeted metadata successor](stack_edu_metadata_acquisition_v3.json) now adds the next
-complete JavaScript/Python files; its intake is running. Full exclusion loss remains unmeasured. Confirm capacity for every language before committing to a large transfer.
+complete JavaScript/Python files; its 28-file intake is complete. The updated census and
+[added-file supply probe](code_supply_probe_v3.json) precede a production supply decision. Full exclusion loss remains unmeasured. Confirm capacity for every language before committing to a large transfer.
 Do not infer all-language token/byte ratios from the observed C prefix.
 
 If the approved source cannot support the full matched-language background, record a pre-results
