@@ -1,0 +1,41 @@
+{
+  "boundary": "One real pinned shard, already fully cached, to qualify metadata-only remote Parquet projection against complete-file bytes and decoded metadata. Preserve every request attempt and payload; require HTTP 206 and exact Content-Range/identity encoding/length. Never fall back to whole-file download or treat partial ranges as full-SHA verified source stock. Record byte costs separately from content/token capacity. No source/recipe/language/filter changes or full code acquisition. A later bound successor is required for new-file discovery. Range payload bytes exclude HTTP/TLS overhead and redirect headers. The Parquet footer read and merged small gaps can include adjacent unselected bytes; no content column is decoded. Failed/interrupted attempts retain conservative byte reservations; these are not measured wire bytes. This invocation's timings include local verification after initial complete-file hashing. Partial metadata from new files will still require full-file verification before stock qualification.",
+  "complete_file_bytes": 272393747,
+  "completed_reopen_without_network_pass": true,
+  "decoded_projection_matches_complete_file": true,
+  "every_range_matches_verified_complete_file": true,
+  "format": "speck_stack_v3_metadata_range_qualification_result",
+  "format_version": 1,
+  "local_complete_file": {
+    "path": "/mnt/speck-data/speck/source-downloads/stack-v3.1-v1/data/part-01304-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+    "sha256": "bdaf28edcb5bffffe105956eb3702f3cd6687eceaf11d80a0828907886e545c9"
+  },
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_v3_metadata_range_qualification_v1.json",
+    "sha256": "04e86607a8882832ae8d1d93b6dd8db8a1fe4c7ab8820e82ab0099454b16679a"
+  },
+  "projection": {
+    "path": "/home/alkin/speck-working/stack-v3-metadata-range-qualification-v1/projection-attempt-00000/metadata.jsonl",
+    "physical_files": 231664,
+    "repositories": 21014,
+    "sha256": "81c440b8cc96f5ef6b53ebc2b149c9ac7a34fb6709ad7be8073503f47439fb38"
+  },
+  "qualification_seconds_this_invocation": 18.490050312000676,
+  "range_acquisition_seconds_this_invocation": 17.01534977600386,
+  "range_attempts": 11,
+  "reference_census": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-metadata-feasibility-20260914.json",
+    "sha256": "7cc0f2947aa4e09ea2e313518a2e40d8ef68d4e952afb85a6464b8d46b9c7290"
+  },
+  "remote_payload_bytes": 16149873,
+  "remote_payload_fraction_of_complete_file": 0.05928870679986645,
+  "repository_revision": "6ee664d2eecbe7df02495bbc03735ab3abddc825",
+  "reserved_transfer_bytes_all_attempts": 16149884,
+  "source_qualification": {
+    "path": "/tmp/opencode/speck-stack-v3-metadata-ranges-20260915/archive/pregrant-history/research/flagship/stack_v3_qualification.json",
+    "sha256": "8736031480e859ba6c469c7dd1bb8e74b5795603aac6589a329595bf265282ff"
+  },
+  "status": "one_file_range_and_projection_parity_pass_not_stock",
+  "training_authority": false,
+  "working_directory": "/home/alkin/speck-working/stack-v3-metadata-range-qualification-v1"
+}

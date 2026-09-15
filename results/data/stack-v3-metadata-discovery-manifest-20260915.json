@@ -1,0 +1,97 @@
+{
+  "format": "speck_stack_v3_metadata_discovery_manifest",
+  "format_version": 1,
+  "repo": "HuggingFaceCode/stack-v3-train",
+  "revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+  "tree_page": {
+    "path": "/mnt/speck-data/speck/stack-v3-metadata-discovery-review-20260915/first-tree-page.json",
+    "sha256": "f2abfbd460fd187f2214f8d85b5eae9bedf9166f0c6c8f8c8e6ef33d277d4b0b"
+  },
+  "tree_receipt": {
+    "path": "/mnt/speck-data/speck/stack-v3-metadata-discovery-review-20260915/tree-receipt.json",
+    "sha256": "0706db41900853fcb093946a2e04bf2809381b3bb4301e9fa2a08d5a467ae20e"
+  },
+  "selection": "First sixteen complete Parquet paths in the preserved first pinned tree page, before content/model outputs. Bounded file-order discovery, not a random or representative full-source sample. No overlap with the twelve previously cached files.",
+  "files": [
+    {
+      "path": "data/part-00000-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 398734410,
+      "sha256": "eea02df5c889a0be784b6b6b0fec3cb2282ea1a15639f98140e8882e6adc82ec"
+    },
+    {
+      "path": "data/part-00001-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 379395891,
+      "sha256": "b0d8de739f26bc038b8999064e2ca796d930dc968bf47a5120acf4599e9fe3ac"
+    },
+    {
+      "path": "data/part-00002-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 344387164,
+      "sha256": "ef71d89bfba8c8b0454b0b29f18111b3722dd23a72a0be5991cde7d7dd6e369e"
+    },
+    {
+      "path": "data/part-00003-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 458334027,
+      "sha256": "b96839c350fee6ed4ca823ac2d1b71ef94c8b1c2160134237e2d54e8ba1cb014"
+    },
+    {
+      "path": "data/part-00004-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 353300495,
+      "sha256": "a6c4be3ec09c30a46f23e8bd667e5b022c7f198ef00fcda12079fa9740809410"
+    },
+    {
+      "path": "data/part-00005-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 494374316,
+      "sha256": "d9039dce8a0d8db6b7d6608f1932951e0ea13f3a7895b9e3ff5c29b0348a01b0"
+    },
+    {
+      "path": "data/part-00006-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 325895726,
+      "sha256": "7834bd7baf7496e5e369f747fcc8d73e1621026bd51cab6635ff9ff3b6d52952"
+    },
+    {
+      "path": "data/part-00007-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 409254686,
+      "sha256": "ebc4012041a52816dccbbe7bc1e04bec1e275802241de43475ccca350f2806c3"
+    },
+    {
+      "path": "data/part-00008-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 556113900,
+      "sha256": "bc0a5463756a5fb28d952f8140264f54bf2432d3c377853f47a1be2d1de7dc2a"
+    },
+    {
+      "path": "data/part-00009-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 393798979,
+      "sha256": "3e7d1ac6b60773eb83418c9a1e93be2935176cc9f00678f87051bc3505323af3"
+    },
+    {
+      "path": "data/part-00010-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 335671153,
+      "sha256": "5e1eb5cb8e7fa422b07b46bf7bbbe2cad8a6e3bdac792fbe08e63d1388aed2ad"
+    },
+    {
+      "path": "data/part-00011-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 520687553,
+      "sha256": "04698a83790915b194829e11f2baee778a21456a08cbec7966e8d3ca8d4fcd6f"
+    },
+    {
+      "path": "data/part-00012-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 387993755,
+      "sha256": "a377b6112cf888a59913c69dbc8c8c2282f9ae11f2639a31c269bc01bc9697e0"
+    },
+    {
+      "path": "data/part-00013-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 548609087,
+      "sha256": "5a2076a47f628567ecb899674c6537c90013911290ac462bbd18ca603e4ba682"
+    },
+    {
+      "path": "data/part-00014-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 390152927,
+      "sha256": "e838a1a8d67605639e1d7b1799a49c8006a0f911b8e823420b231caf68c894c2"
+    },
+    {
+      "path": "data/part-00015-7d88aa48-1310-480e-a9e5-fbbe6a9201cc-c000.snappy.parquet",
+      "bytes": 400816510,
+      "sha256": "4899b4007730e9e8360edc0401ea0e47f6fbf8f863c5197fa7e0726a0399b762"
+    }
+  ]
+}
