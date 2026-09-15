@@ -1,0 +1,22 @@
+{
+  "all_language_estimates_and_sampling_errors_recomputed_equal": true,
+  "all_retained_samples_reencoded": true,
+  "all_selected_positions_reproduced": true,
+  "archive_and_inventory_hashes_pass": true,
+  "boundary": "Read-only completion review reconstructs all deterministic sample positions, re-encodes every retained document and recomputes each stratum estimate/SE and outcome totals. Full raw/census checks and every archived-payload reopen are inherited from the completed worker; archive identity is rechecked here. No full reference/candidate exclusion or whole-source capacity claim.",
+  "format": "speck_cached_code_supply_verification",
+  "format_version": 1,
+  "result": {
+    "path": "/home/alkin/Desktop/speck/results/data/stack-v3-cached-supply-probe-20260915.json",
+    "sha256": "78b75ebfd4a62870f33420458d5b639e520703b9b6ef2a197b97437e5993bdb3"
+  },
+  "retained_documents": 1088,
+  "samples": 1408,
+  "script": {
+    "path": "/mnt/speck-data/speck/stack-v3-cached-supply-review-20260915/verify.py",
+    "sha256": "349a743e64d290b1bdbbfb4152e59147c20623d2d9299c9dc7d546e0fc233eb2"
+  },
+  "tokens": 1170568,
+  "training_authority": false,
+  "verification_seconds": 0.712420359996031
+}
