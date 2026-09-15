@@ -42,3 +42,8 @@ before confirmation if it is already answered. No novelty finding is claimed by 
 token and post-training investments differ; deployed-system comparisons do not isolate architecture.
 Retrieval plus a short-context answerer is a practical baseline. An advantage for full-context
 processing on dispersed evidence is a hypothesis, not an assumed result.
+
+The [first-release focus review](52_first_release_focus_review.md) extends this map with closer training,
+discourse-state, long-dependency data and distillation comparisons. It records the owner's permission to
+change domains while retaining general-model quality as the primary objective. It is not independent
+novelty clearance.

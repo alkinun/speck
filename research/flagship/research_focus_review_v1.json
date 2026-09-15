@@ -1,0 +1,24 @@
+{
+  "format": "speck_first_release_focus_review",
+  "format_version": 1,
+  "status": "general_model_priority_long_context_candidate_requires_pre_results_gates",
+  "training_authority": false,
+  "owner_direction": {
+    "reported_on": "2026-09-15",
+    "source": "Owner message in this task",
+    "priority": "A good overall model and a high-quality paper; changing domain is permitted if the current focus is not the best first step."
+  },
+  "review": "research/literature/52_first_release_focus_review.md",
+  "decision": "Continue reusable general-model and execution preparation. Retain the current document/history research design as a conditional candidate under its existing novelty, pilot, matching, numerical and cost gates. No immediate domain pivot is justified by this review alone.",
+  "contract_effect": "Advisory pre-results review; no replacement of catalog-selected contracts, budgets, source-use restrictions, model size, tokenizer or launch authority. A failed gate triggers an explicit coherent successor before confirmatory outputs.",
+  "independent_review_complete": false,
+  "scientific_claims_supported": false,
+  "primary_risks": [
+    "Young 350M parents may not support the proposed natural-task difficulty.",
+    "Targeted long-context training, hybrid scaling and discourse-state diagnostics have substantial prior art.",
+    "Three paired seed contrasts can leave interaction uncertainty unresolved.",
+    "Production source capacity and coherent task/partition inputs remain incomplete.",
+    "A 320B-token from-scratch release has not demonstrated competitiveness with more heavily trained public models."
+  ],
+  "scope_change_rule": "If review/pilots show inadequate novelty, learnability, matching or affordability, preserve the negative evidence and replace affected data/study/evaluation/budget/paper contracts together. Do not silently revive retired experiments or narrow general capability to manufacture a headline."
+}

@@ -4,6 +4,12 @@
 Language Model*. The owner-directed [pivot](PIVOT.md) replaces the four allocation-thesis claims with
 three new planned claims in [paper/claims.json](../../paper/claims.json). No new result is supported yet.
 
+The owner prioritizes a strong general model and a high-quality paper and permits a change of domain.
+The [first-release focus review](../literature/52_first_release_focus_review.md) retains this study as a
+conditional candidate under its existing novelty, learnability, matching and cost gates. It is an
+agent-authored review, not independent clearance. If those gates fail, record a coherent successor
+before confirmatory outputs; the current title and domain are not ends in themselves.
+
 ## Central question
 
 How do memory architecture and dependency-requiring supervision interact to produce useful

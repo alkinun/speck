@@ -1,8 +1,9 @@
 # Papers on efficient, long-context language models
 
-For the selected long-context flagship, start with the
-[focused related-work map](51_long_context_pivot.md). The earlier mechanism notes remain background;
-the new map includes Olmo Hybrid and long-context training/evaluation work relevant to the paper pivot.
+Start with the [first-release focus review](52_first_release_focus_review.md) and the
+[focused related-work map](51_long_context_pivot.md). A strong general model and a high-quality paper
+are the owner's priorities; the current document/history study must pass its pre-results gates. The
+earlier mechanism notes remain background, including retired experiments; they are not a launch queue.
 
 This directory is the literature layer for Speck's architecture research. It is deliberately separate
 from [`findings/`](../findings/README.md): papers record what other teams report; findings record what
@@ -15,7 +16,8 @@ to these notes where available.
 
 ## Reading conventions
 
-- Every note was checked against the linked paper version, not only its abstract.
+- Consult each note for the paper version, reviewed sections and evidence boundary. Bounded reviews
+  do not establish exhaustive novelty clearance or independent replication.
 - Numbers are the authors' reported results unless a paragraph is explicitly labeled **Speck
   interpretation**.
 - “Context” is split into trained, evaluated, and advertised/inference lengths whenever the paper
@@ -148,17 +150,17 @@ path from the later inference-only expert-sharded V3 reference.
 | Question | Best starting papers | Active local decision |
 | --- | --- | --- |
 | Which finite-state mixer? | GDN, Kimi Linear, Mamba-2 | KDA is the default; qualify Torch/FLA parity on GH200 |
-| How many global layers? | Kimi Linear, Nemotron-H, Mamba-2 | D3 compares 3:1 with 5:1 at matched wall-clock |
-| How should global attention encode position? | Kimi Linear, Gated Attention | D2 compares NoPE with partial RoPE |
-| How should training scale? | Kimi Linear, systematic hybrid studies | D4/D6 plus the 60M–750M dense scale ladder |
-| What is the release gate? | MiniMax-M2, Nemotron 3 Nano | RULER v2, internal retrieval/composition, 4K retention, and serving profiles |
+| Which architecture comparison? | Kimi Linear, Olmo Hybrid, systematic hybrid studies | Retain the 3:1 KDA/global default; R2 crosses dense/hybrid with standard/targeted supervision |
+| How should global attention encode position? | Kimi Linear, Gated Attention | Global NoPE retained; the old D2 position sweep is retired |
+| What can transfer evidence show? | Olmo Hybrid, systematic hybrid studies | R2 uses three paired seeds; one preselected R3 scale/horizon check supports only its measured scope |
+| What is the release gate? | Long-context evaluation and training work in the focused map | Numerical useful-quality floors, broad retention, public/RAG comparisons, sealed audit and export parity |
 | How should serving cost be decomposed? | DeepSeek-V4.1-Flash | Report prefill, decode, runtime state, persistent state, and output tokens separately |
 | Which current small released system should be checked? | MiniCPM5-2B | Pin Base and final revisions; compare base quality and released-system cost without treating RL+OPD as architecture evidence |
-| What moves to a later grant? | MLA, AttnRes, NSA, MoBA, DeepSeekMoE, Kimi K3 | Cache compression, depth routing, sparse attention, and MoE sparse upcycling |
+| What stays outside this grant? | MLA, AttnRes, NSA, MoBA, DeepSeekMoE, Kimi K3 | Cache compression, depth routing, new sparse-attention operators and MoE; no automatic follow-on commitment |
 
 ## Source set
 
-The collection contains the 22 papers supplied in the original research brief, nineteen later direct
-overlap audits, one supporting eviction baseline, one release-era system comparator, and six
-official-source or release-lineage notes: 49 files total. They are literature evidence, not an active
-experiment backlog.
+The collection includes the original mechanism papers, later overlap and release audits, dataset
+surveys and the current positioning reviews. They are literature evidence, not an active experiment
+backlog. The [catalog](../catalog.json) selects current contracts; dated notes retain their original
+context and should not be read as current execution instructions.

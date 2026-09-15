@@ -22,7 +22,11 @@ Affordable context requires both low processing/state cost and an ability to use
 We focus on document evidence reasoning and ordered histories with updates, while retaining ordinary
 assistance, instruction following, math and code. KDA, GQA, hybrid ratios, continuation and synthetic
 supervision are inherited. The exact new empirical question is fixed after comparison with the closest
-prior work and before confirmation outputs. See [related work](../../research/literature/51_long_context_pivot.md).
+prior work and before confirmation outputs. See [related work](../../research/literature/51_long_context_pivot.md) and the
+[closest-work/focus review](../../research/literature/52_first_release_focus_review.md). The general-model
+release is the primary product objective; the paper focus remains conditional on pre-results novelty,
+small-parent task learnability, matching and cost qualification. A domain change would require a
+coherent contract successor before confirmation.
 
 The three hypotheses are registered in [claims.json](../claims.json): training improves useful context;
 its effect interacts with architecture; and the flagship realizes a useful quality-cost operating point.
