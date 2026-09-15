@@ -114,7 +114,7 @@ acquisition is complete; Stack-Edu is intentionally paused with its evidence int
 
 The [ordered code-fetch qualification](../findings/2026-09-14-ordered-code-fetch.md) and
 [expanded metadata census](../findings/2026-09-14-expanded-code-metadata.md) are complete. All
-26 files / 101,229,394 physical rows passed verification; no metadata download remains active.
+26 files / 101,229,394 physical rows passed verification. The targeted v3 successor below is now active.
 The [added-file content probe](../findings/2026-09-14-code-supply-probe.md) also completed.
 Combined estimates still flag Java, TypeScript, JavaScript and Python against E1S headroom,
 before full exclusion. Java/TypeScript have no further released shards. Code-stock production
@@ -127,3 +127,9 @@ FineMath is complete; it now waits for Cosmopedia, builds and verifies its cache
 processes the E1S FineWeb tranche and cache. Do not launch duplicates. Future results remain
 unmeasured until publication; failures/shortfalls stop dependent work. Preserve the fourteen-file
 5.28B full-stock requirement and reuse identical acquisitions on later expansion.
+
+The [targeted JS/Python metadata successor](stack_edu_metadata_acquisition_v3.json) is
+[running in a frozen checkout](../../results/systems/stack-edu-metadata-v3-launch-20260915.json).
+It preserves and rechecks all 26 existing files and adds two complete shards (929,134,037 bytes).
+The resulting 28-file view needs final intake verification and updated eligibility counts;
+Java/TypeScript constraints and the production code-stock pause remain in force.
