@@ -77,9 +77,9 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "production_paused_targeted_metadata_complete_supply_probe_prepared",
+      "state": "production_paused_targeted_supply_probe_complete_java_typescript_constraints",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "The v3 intake completed: 28 files / 110,704,408 rows / 11,774,288,820 compressed bytes, with unchanged policy. Full updated metadata census is in progress; a bound v3 supply probe samples only the two new JavaScript/Python files. Java/TypeScript have no additional released shards. Keep production code stock paused pending per-language/background capacity resolution; metadata and samples are not qualified token stock.",
+      "next": "All 28 metadata files and 110,704,408 rows passed census verification. The two-new-file probe retained 183 documents / 109,170 tokens; archive/reopen pass. Combined pre-exclusion estimates now cover Python 123.387M/90M and JavaScript 71.800M/54M headroom targets, but Java 45.826M/54M and TypeScript 31.683M/36M remain short with all released files included. Resolve a bound matched-language/shared-background supply successor before full production; do not relax filters or treat estimates as usable stock.",
       "language_plan": "research/flagship/code_language_preparation_v1.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
@@ -93,10 +93,11 @@
       "metadata_successor_plan": "research/flagship/stack_edu_metadata_acquisition_v3.json",
       "metadata_successor_launch": "results/systems/stack-edu-metadata-v3-launch-20260915.json",
       "expanded_metadata_result": "results/data/stack-edu-metadata-acquisition-v3-20260915.json",
-      "expanded_metadata_census": "results/data/code-metadata-feasibility-v2-20260914.json",
-      "supply_probe": "results/data/code-supply-probe-v2-20260914.json",
-      "supply_comparison": "results/data/code-supply-comparison-20260914.json",
-      "supply_probe_plan": "research/flagship/code_supply_probe_v3.json"
+      "expanded_metadata_census": "results/data/code-metadata-feasibility-v3-20260915.json",
+      "supply_probe": "results/data/code-supply-probe-v3-20260915.json",
+      "supply_comparison": "results/data/code-supply-comparison-v2-20260915.json",
+      "supply_probe_plan": "research/flagship/code_supply_probe_v3.json",
+      "supply_probe_launch": "results/systems/code-supply-probe-v3-launch-20260915.json"
     },
     {
       "id": "fineweb_edu_stock",
@@ -143,7 +144,7 @@
       "id": "firewall_integration",
       "state": "complete_reference_exclusion_and_bank_handoff_pass",
       "evidence": "results/systems/firewall-integration-20260913.json",
-      "next": "Use the qualified bounded path to measure training-scale supply and operating cost. Full E1/E3 treatment coverage, final D5 selection, and model-training authority remain pending."
+      "next": "Use the qualified bounded path with the frozen Mistral tokenizer to measure training-scale supply and operating cost. Full E1/E3 treatment coverage, joint eligibility and model-training authority remain pending; D5 remains unopened under the registered tokenizer budget fallback."
     },
     {
       "id": "firewall",
@@ -154,13 +155,13 @@
     {
       "id": "corpora",
       "state": "pending",
-      "next": "After review of FIRST_WAVE.md and D5, materialize the proposed per-source screen stock with arm-specific exclusion/membership checks and headroom. Stable and decay corpora follow the relevant selection decisions."
+      "next": "Materialize the bound first-wave source stocks with arm-specific exclusion/membership checks, the frozen Mistral tokenizer and headroom. Stable and decay corpora follow their registered selection decisions; D5 remains unopened."
     },
     {
       "id": "screen_capacity",
       "state": "conditional_reference_capacity_gaps_quantified",
       "evidence": "results/data/screen-capacity-20260913.json",
-      "next": "The first-wave proposal now supplies explicit recipes and source targets for review; approval/freeze remains open. Measure eligible supply under the final D5 tokenizer without adding overlapping banks. The older checked reference bank supports only a 1.236B balanced-prior pool."
+      "next": "The bound v2 preparation assignments supply source targets under delegation. New checked stocks replace older overlapping measurements in paper capacity v5. Joint experiment-view eligibility remains open; use the frozen Mistral tokenizer and do not reopen D5. The older balanced-prior pool estimate is historical evidence, not current complete-dataset capacity."
     },
     {
       "id": "dedup_phase_timing",

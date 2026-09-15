@@ -1,0 +1,38 @@
+{
+  "format": "speck_code_supply_probe_launch",
+  "format_version": 1,
+  "recorded_at": "2026-09-15T12:46:13.812639+00:00",
+  "repository_revision": "c240a58b7cb6374ded775f86a52323538152022e",
+  "checkout": "/tmp/opencode/speck-code-supply-probe-v3-20260915",
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/code_supply_probe_v3.json",
+    "sha256": "7946e437ee226824bdba5a5d8246bd3297313e0ddd50ac4dbecfd0f6141ad805"
+  },
+  "service": "speck-code-supply-probe-v3-20260915.service",
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--unit=speck-code-supply-probe-v3-20260915",
+    "--description=Two-file code supply probe",
+    "--property=WorkingDirectory=/tmp/opencode/speck-code-supply-probe-v3-20260915",
+    "--property=Nice=10",
+    "--property=StandardOutput=append:/mnt/speck-data/speck/code-supply-probe-v3-20260915.log",
+    "--property=StandardError=append:/mnt/speck-data/speck/code-supply-probe-v3-20260915.log",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONUNBUFFERED=1",
+    "/home/alkin/Desktop/speck/.venv/bin/python",
+    "-m",
+    "scripts.qualify_ordered_code_fetch",
+    "/home/alkin/Desktop/speck/research/flagship/code_supply_probe_v3.json",
+    "/home/alkin/Desktop/speck/results/data/code-supply-probe-v3-20260915.json"
+  ],
+  "log": "/mnt/speck-data/speck/code-supply-probe-v3-20260915.log",
+  "result_path": "/home/alkin/Desktop/speck/results/data/code-supply-probe-v3-20260915.json",
+  "launch_stdout": "",
+  "launch_stderr": "Running as unit: speck-code-supply-probe-v3-20260915.service; invocation ID: 8583462c01dd47099d69b5b96f8e3859\n",
+  "status": "additional_file_supply_probe_launched",
+  "training_authority": false,
+  "boundary": "Two new complete files, 256 eligible samples total; no repeat benchmark or full production code fetch. Source/language/quality policy unchanged. Pre-exclusion estimates only; complete cache and archival verification required."
+}

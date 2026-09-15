@@ -114,9 +114,9 @@ acquisition is complete; Stack-Edu is intentionally paused with its evidence int
 The [ordered code-fetch qualification](../findings/2026-09-14-ordered-code-fetch.md) and
 [expanded metadata census](../findings/2026-09-14-expanded-code-metadata.md) are complete. All
 26 files / 101,229,394 physical rows passed verification. The targeted v3 metadata successor below is now complete.
-The [added-file content probe](../findings/2026-09-14-code-supply-probe.md) also completed.
-Combined estimates still flag Java, TypeScript, JavaScript and Python against E1S headroom,
-before full exclusion. Java/TypeScript have no further released shards. Code-stock production
+The [latest added-file probe](../findings/2026-09-15-targeted-code-supply.md) also completed.
+Combined estimates now exceed Python/JavaScript E1S headroom targets; Java and TypeScript remain
+short before full exclusion. Java/TypeScript have no further released shards. Code-stock production
 remains paused pending a recorded supply/recipe decision; no language changes are adopted.
 
 The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) binds three complete
@@ -129,7 +129,8 @@ unmeasured until publication; failures/shortfalls stop dependent work. Preserve 
 The [targeted JS/Python metadata successor](stack_edu_metadata_acquisition_v3.json) is
 [complete](../../results/data/stack-edu-metadata-acquisition-v3-20260915.json): 28 complete files,
 110,704,408 physical rows and 11,774,288,820 compressed bytes. It preserves the original 26-file
-prefix and adds two complete shards. The updated census is in progress. The
-[bound v3 supply probe](code_supply_probe_v3.json) samples only the two new files (256 eligible
-rows total), preserving previous observations and avoiding a repeated fetch benchmark.
-Java/TypeScript constraints and the production code-stock pause remain in force.
+prefix and adds two complete shards. The [updated census and v3 probe](../findings/2026-09-15-targeted-code-supply.md)
+are complete: 256 eligible samples, 183 retained documents / 109,170 tokens. Combined estimates
+are 123.387M Python and 71.800M JavaScript tokens; both exceed their E1S targets before full
+exclusion. Java/TypeScript constraints and the production code-stock pause remain in force.
+Resolve the matched-language/shared-background supply contract next; no recipe change is adopted.
