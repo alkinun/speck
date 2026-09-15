@@ -12,3 +12,7 @@ that Git revision and resolve documentation links from each entry's original loc
 
 The separate [pre-grant archive](../../archive/README.md) remains unchanged. Active scope is selected
 only by [the current catalog](../catalog.json); historical references describe their original programs.
+
+[2026-09-15 preparation entry-point cleanup](2026-09-15-readiness-cleanup/manifest.json) preserves
+the queue and local schedule immediately before their retired-wave instructions were replaced.
+The same original-path and byte-preservation rules apply.
