@@ -92,8 +92,10 @@ budget fallback is fixed. Post-training choices remain with the later-stage work
   passed; [full code stock preparation](stack_edu_stock_preparation_v1.json) is
   [intentionally paused](../../results/systems/stack-edu-intentional-pause-20260914.json).
   The ordered fetcher is qualified and the expanded metadata/content probes are complete.
-  Bind a new acquisition plan to the selected 300M/360M specialist envelope and the qualified ordered fetcher. Preserve
-  source-specific license/prose/vendor rules and their differences; metadata is not code-token supply.
+  The [ordered E1S successor](stack_edu_e1s_ordered_acquisition_v1.json) is now
+  [launched after real-unit qualification](../findings/2026-09-15-stack-edu-ordered-acquisition.md)
+  for the selected 300M/360M specialist envelope. It preserves source-specific license/prose/vendor
+  rules and their differences; metadata and pre-exclusion content are not qualified token stock.
 - FineWeb-Edu's [complete fourteen-file stock view](FINEWEB_EDU_STOCK.md) is pinned.
   The original qualified final shard is preserved and verified in the new cache; its real reader/web
   policy passed a bounded prefix check. [Raw-only acquisition](../../results/data/fineweb-edu-raw-acquisition-20260914.json)
@@ -109,15 +111,16 @@ Follow [LOCAL_PREPARATION_SCHEDULE.md](LOCAL_PREPARATION_SCHEDULE.md): establish
 feasibility first, qualify a bounded eligible-request/NVMe fetch path, and assemble a complete
 E1S-sized dataset before maximal stocks. Existing recipes and source-use approvals remain in
 force until an explicit successor is adopted. FineMath and Cosmopedia caches are complete; FineWeb-Edu E1S text is running and raw
-acquisition is complete; Stack-Edu is intentionally paused with its evidence intact.
+acquisition is complete; the original Stack-Edu worker is paused with its evidence intact and its explicit ordered E1S successor is launched.
 
 The [ordered code-fetch qualification](../findings/2026-09-14-ordered-code-fetch.md) and
 [expanded metadata census](../findings/2026-09-14-expanded-code-metadata.md) are complete. All
 26 files / 101,229,394 physical rows passed verification. The targeted v3 metadata successor below is now complete.
 The [latest added-file probe](../findings/2026-09-15-targeted-code-supply.md) also completed.
-Combined estimates now exceed Python/JavaScript E1S headroom targets; Java and TypeScript remain
-short before full exclusion. Java/TypeScript have no further released shards. Code-stock production
-remains paused; the [recorded successor](CODE_PREPARATION_SUCCESSOR.md) now fixes background and language shares for new preparation.
+Under the earlier language allocation, combined estimates exceeded Python/JavaScript E1S headroom
+but Java and TypeScript remained short before full exclusion. Java/TypeScript have no further
+released shards. The [recorded successor](CODE_PREPARATION_SUCCESSOR.md) selects revised background
+and language shares, whose point estimates pass; actual per-language excluded capacity remains unmeasured.
 
 The [FineWeb-Edu E1S tranche](fineweb_edu_e1s_stock_preparation_v2.json) binds three complete
 downloaded files and 1.32B tokens with unchanged filters. The [finite followup sequence](LOCAL_PREPARATION_FOLLOWUPS.md)
@@ -132,8 +135,10 @@ The [targeted JS/Python metadata successor](stack_edu_metadata_acquisition_v3.js
 prefix and adds two complete shards. The [updated census and v3 probe](../findings/2026-09-15-targeted-code-supply.md)
 are complete: 256 eligible samples, 183 retained documents / 109,170 tokens. Combined estimates
 are 123.387M Python and 71.800M JavaScript tokens; both exceed their E1S targets before full
-exclusion. Java/TypeScript constraints and the production code-stock pause remain in force.
-The [selected successor](CODE_PREPARATION_SUCCESSOR.md) now sets the background and language allocation; full capacity remains unqualified.
+exclusion. The original production worker remains paused. The
+[selected successor](CODE_PREPARATION_SUCCESSOR.md) sets the current background and language
+allocation, and its [explicit acquisition](stack_edu_e1s_ordered_acquisition_v1.json) is launched;
+full capacity remains unqualified.
 
 The [restricted Stack v3 metadata inspection](../findings/2026-09-15-stack-v3-metadata-discovery.md)
 is complete for sixteen new pinned file identities: 290.8MB range payloads instead of fetching
@@ -170,3 +175,11 @@ first-wave recipe is v3 and language allocation v2: Stack-Edu 300M nominal / 360
 restricted Stack v3 1.2B / 1.44B for the full wave. First prepare 300M / 360M of each for the E1S
 milestone. Acquisition successors must reuse verified inputs and preserve the original attempts.
 Neither point-estimate coverage nor this recipe decision qualifies a final training dataset.
+
+The [ordered Stack-Edu E1S acquisition](../findings/2026-09-15-stack-edu-ordered-acquisition.md)
+has independently verified its first actual unit: 512 eligible Java rows, 300 retained documents
+and 171,342 Mistral tokens before full exclusion. All 28 complete metadata files and their
+original-order eligible indices passed input verification. The finite background service resumes
+that same unit, processes scarce Java/TypeScript first, and archives every completed unit before
+advancing. A language shortfall stops dependent work; no target or filter is relaxed automatically.
+The existing FineWeb queue continues its separate full-exclusion pass.

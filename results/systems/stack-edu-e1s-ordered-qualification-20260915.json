@@ -1,0 +1,81 @@
+{
+  "all_28_complete_metadata_and_eligible_index_inputs_verified_by_driver": true,
+  "archive": {
+    "all_archival_payload_hashes_reopened": true,
+    "format": "speck_ordered_code_unit_archive",
+    "format_version": 1,
+    "inventory": {
+      "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-v1/units/stack_edu_metadata__Java__eligible_000000000/attempt-00000/inventory.json",
+      "sha256": "3d567d868a66881e1b556048562fb56ea6e45f90d8d58f69653abaccc6defee0"
+    },
+    "tar": {
+      "bytes": 5693440,
+      "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-v1/units/stack_edu_metadata__Java__eligible_000000000/attempt-00000/unit.tar",
+      "sha256": "39349d1812f1a68cc49070caa233ffbeca67b39e2b81c7de4b1e4a5084837e41"
+    },
+    "unit_manifest_sha256": "5d560b23b05188b68d295acd3c9f9b40ae38bf8363e52a4dbd86348094d96076"
+  },
+  "archive_all_payloads_independently_reopened": true,
+  "completed_unit_reopen_without_fetch_pass": true,
+  "counts_recomputed_from_original_blobs": {
+    "output": {
+      "documents": 300,
+      "tokens": 171342,
+      "utf8_bytes": 516715
+    },
+    "unscanned_output": {
+      "documents": 300,
+      "tokens": 171342,
+      "utf8_bytes": 516715
+    }
+  },
+  "execution": {
+    "plan": {
+      "path": "/home/alkin/Desktop/speck/research/flagship/stack_edu_e1s_ordered_acquisition_v1.json",
+      "sha256": "8762f54c1b222018c9136400e6cce0ba49059ff45865ed5b3c60a77bd2d46a3a"
+    },
+    "repository_revision": "3b35907db9fa6db509ac2dbb9bd6af7d800eaa2d"
+  },
+  "format": "speck_stack_edu_ordered_first_unit_qualification",
+  "format_version": 1,
+  "invocation": {
+    "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-review-20260915/invocation-00000.json",
+    "sha256": "bbd76a3791fd3a58ef23705e4c1853c161806d90d384676884ba5feca12c1b57"
+  },
+  "ordered_fetch_journal_all_receipts_reopened": true,
+  "plan": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/stack_edu_e1s_ordered_acquisition_v1.json",
+    "sha256": "8762f54c1b222018c9136400e6cce0ba49059ff45865ed5b3c60a77bd2d46a3a"
+  },
+  "progress_snapshot": {
+    "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-review-20260915/progress.json",
+    "sha256": "195d3c6c9de5654dcfa66d47503143360b51d07cf5abcfe4377064605d81595f"
+  },
+  "qualification_log": {
+    "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-review-20260915/qualification.log",
+    "sha256": "baa71957359edd87787ef14e8d9494be90cc4eb0bcfdbc0163a5614eccd37a8f"
+  },
+  "requested_eligible_rows": 512,
+  "scope": "One actual first-prefix acquisition unit, reused by the resumed finite job. No random sample, new recipe nomination, performance comparison, full exclusion, usable capacity or model quality claim.",
+  "source_attribution_and_original_index_positions_pass": true,
+  "status": "first_production_unit_reopened_and_reconstructed_full_acquisition_pending",
+  "training_authority": false,
+  "unit_manifest": {
+    "path": "/home/alkin/speck-working/stack-edu-e1s-ordered-v1/acquired/stack_edu_metadata__Java__eligible_000000000/manifest.json",
+    "sha256": "5d560b23b05188b68d295acd3c9f9b40ae38bf8363e52a4dbd86348094d96076"
+  },
+  "validation": {
+    "deselected": 125,
+    "format_lint_research_archive_checks_pass": true,
+    "passed": 1196,
+    "skipped": 10
+  },
+  "validation_log": {
+    "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-review-20260915/quality.log",
+    "sha256": "f70492fba80d14476fa926e04f84505b265c43d2aa82b8e00e83b16bf054553b"
+  },
+  "verification_script": {
+    "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-review-20260915/verify.py",
+    "sha256": "a3f64955ba502f4427f2281ccc46867bdf609aa4f089db4ef131e031e969b617"
+  }
+}

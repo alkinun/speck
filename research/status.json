@@ -80,9 +80,9 @@
     },
     {
       "id": "stack_edu_stock",
-      "state": "original_production_paused_v2_language_targets_selected_new_acquisition_pending",
+      "state": "ordered_e1s_acquisition_launched_first_real_unit_independently_verified",
       "evidence": "results/data/stack-edu-access-review-20260914.json",
-      "next": "Bind all 28 complete metadata files and the qualified ordered fetch path into an explicit acquisition successor for the selected 300M nominal / 360M headroom specialist requirement. All per-language point estimates exceed revised targets, but full excluded capacity remains unmeasured. Preserve all original attempts/cache and filters; do not resume the old 1.44B worker blindly.",
+      "next": "Finite ordered acquisition now runs from frozen revision 3b35907, reusing its verified first 512-eligible-row Java unit (300 documents / 171342 Mistral tokens before full exclusion). All 28 metadata files and original eligible indices were verified. Process scarce Java/TypeScript first, archive each completed unit and stop dependent languages on pre-exclusion headroom shortfall or storage/input failure. Original stock worker remains paused; completed source capacity, full exclusion and joint eligibility remain pending.",
       "language_plan": "research/flagship/code_language_preparation_v2.json",
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_launch": "results/systems/stack-edu-metadata-launch-20260914.json",
@@ -100,7 +100,10 @@
       "supply_probe": "results/data/code-supply-probe-v3-20260915.json",
       "supply_comparison": "results/data/code-supply-comparison-v2-20260915.json",
       "supply_probe_plan": "research/flagship/code_supply_probe_v3.json",
-      "supply_probe_launch": "results/systems/code-supply-probe-v3-launch-20260915.json"
+      "supply_probe_launch": "results/systems/code-supply-probe-v3-launch-20260915.json",
+      "ordered_acquisition_plan": "research/flagship/stack_edu_e1s_ordered_acquisition_v1.json",
+      "ordered_acquisition_qualification": "results/systems/stack-edu-e1s-ordered-qualification-20260915.json",
+      "ordered_acquisition_launch": "results/systems/stack-edu-e1s-ordered-launch-20260915.json"
     },
     {
       "id": "fineweb_edu_stock",
