@@ -105,3 +105,10 @@ before full exclusion. Java/TypeScript already cover their complete released fil
 Stack-Edu incumbent-background requirement is a separate unresolved constraint. The original
 stock run remains intentionally paused; no automatic language/background revision has been
 adopted. Samples and metadata bytes are not measured source capacity.
+
+The [v3 metadata successor](stack_edu_metadata_acquisition_v3.json) now pins the final JavaScript
+file and third Python file: 9,475,014 additional physical rows / 929,134,037 compressed bytes.
+These two complete files address deficits observed in the content probes without changing the
+language prior, filters or headroom. The earlier 26 files remain an identical included prefix;
+new receipts use a separate output directory. The full 28-file view requires intake verification
+before its metadata census. It does not resolve Java/TypeScript or prove usable code capacity.

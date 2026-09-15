@@ -168,9 +168,10 @@ def test_metadata_successor_keeps_original_units_and_only_adds_short_languages()
     assert successor["output_directory"] != original["output_directory"]
 
 
-def test_metadata_successor_rejects_overlapping_output_and_changed_prefix(tmp_path):
+@pytest.mark.parametrize("version", [2, 3])
+def test_metadata_successor_rejects_overlapping_output_and_changed_prefix(tmp_path, version):
     root = Path(__file__).resolve().parents[2] / "research/flagship"
-    value = json.loads((root / "stack_edu_metadata_acquisition_v2.json").read_text())
+    value = json.loads((root / f"stack_edu_metadata_acquisition_v{version}.json").read_text())
     for entry in value.values():
         if isinstance(entry, dict) and set(entry) == {"path", "sha256"}:
             entry["path"] = str((root / entry["path"]).resolve())
@@ -189,3 +190,18 @@ def test_metadata_successor_rejects_overlapping_output_and_changed_prefix(tmp_pa
     path.write_text(json.dumps(value))
     with pytest.raises(ValueError, match="original prefix"):
         metadata.load_metadata_plan(path)
+
+
+def test_third_metadata_view_preserves_all_verified_units_and_ancestor_outputs():
+    root = Path(__file__).resolve().parents[2] / "research/flagship"
+    previous = metadata.load_metadata_plan(root / "stack_edu_metadata_acquisition_v2.json")
+    expanded = metadata.load_metadata_plan(root / "stack_edu_metadata_acquisition_v3.json")
+    assert expanded["units"][:26] == previous["units"]
+    assert [unit["raw"]["filename"] for unit in expanded["units"][26:]] == [
+        "JavaScript/train-00002-of-00003.parquet",
+        "Python/train-00002-of-00005.parquet",
+    ]
+    assert sum(unit["raw"]["bytes"] for unit in expanded["units"][26:]) == 929134037
+    assert sum(unit["expected_file_rows"] for unit in expanded["units"]) == 110704408
+    assert expanded["output_lineage"][:-1] == previous["output_lineage"]
+    assert len(expanded["output_lineage"]) == 3

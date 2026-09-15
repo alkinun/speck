@@ -37,7 +37,7 @@ def load_metadata_plan(path):
     if (
         value.get("format") != "speck_stack_edu_metadata_acquisition"
         or type(version) is not int
-        or version not in (1, 2)
+        or version not in (1, 2, 3)
         or value.get("training_authority") is not False
     ):
         raise ValueError("unsupported Stack-Edu metadata plan")
@@ -59,12 +59,13 @@ def load_metadata_plan(path):
         or any(manifest[key] != qualification["source"][key] for key in ("repo", "revision"))
     ):
         raise ValueError("Stack-Edu metadata requires its qualified approved source identity")
-    if version == 2:
+    output_lineage = []
+    if version in (2, 3):
         predecessor_id = _bound_identity(value["predecessor_plan"], path.parent)
         predecessor_path = Path(predecessor_id["path"])
         predecessor = load_metadata_plan(predecessor_path)
-        if predecessor["format_version"] != 1:
-            raise ValueError("metadata v2 requires the original v1 plan")
+        if predecessor["format_version"] != version - 1:
+            raise ValueError("metadata successor requires its immediately preceding plan")
         for key in ("code_languages", "source_qualification", "source_use"):
             if inputs[key] != predecessor["inputs"][key]:
                 raise ValueError("metadata successor changes a frozen source/policy identity")
@@ -76,9 +77,15 @@ def load_metadata_plan(path):
             + [f"Java/train-{i:05d}-of-00011.parquet" for i in range(1, 11)]
             + ["JavaScript/train-00001-of-00003.parquet", "Python/train-00001-of-00005.parquet"]
         )
+        if version == 3:
+            extra_files = [
+                "JavaScript/train-00002-of-00003.parquet",
+                "Python/train-00002-of-00005.parquet",
+            ]
+        prefix_length = len(original_manifest["files"])
         if (
-            manifest["files"][:11] != original_manifest["files"]
-            or [row["filename"] for row in manifest["files"][11:]] != extra_files
+            manifest["files"][:prefix_length] != original_manifest["files"]
+            or [row["filename"] for row in manifest["files"][prefix_length:]] != extra_files
         ):
             raise ValueError(
                 "metadata successor must preserve the original prefix and declared extra files"
@@ -90,9 +97,14 @@ def load_metadata_plan(path):
             or previous_result["plan"] != predecessor["plan"]
         ):
             raise ValueError("metadata successor requires the completed original intake")
-        old_output = Path(predecessor["output_directory"])
+        output_lineage = predecessor["output_lineage"]
         new_output = (path.parent / value["output_directory"]).resolve()
-        if new_output.is_relative_to(old_output) or old_output.is_relative_to(new_output):
+        protected = [Path(previous) for previous in output_lineage]
+        protected.append(Path(predecessor["raw_directory"]))
+        if any(
+            new_output.is_relative_to(previous) or previous.is_relative_to(new_output)
+            for previous in protected
+        ):
             raise ValueError("metadata successor must use a separate output directory")
         if (path.parent / value["raw_directory"]).resolve() != Path(predecessor["raw_directory"]):
             raise ValueError("metadata successor must retain the verified original raw cache")
@@ -160,6 +172,10 @@ def load_metadata_plan(path):
         "plan": {"path": str(path), "sha256": file_sha256(path)},
         "raw_directory": str((path.parent / value["raw_directory"]).resolve()),
         "output_directory": str((path.parent / value["output_directory"]).resolve()),
+        "output_lineage": [
+            *output_lineage,
+            str((path.parent / value["output_directory"]).resolve()),
+        ],
     }
 
 
