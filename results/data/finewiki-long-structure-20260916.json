@@ -1,0 +1,499 @@
+{
+  "boundary": "Diagnostic sensitivity to collapsing horizontal whitespace while preserving newlines and non-whitespace. This is not a selected normalization, parser-independent extraction, post-filter yield, quality score or family-separated training supply. The original biased sample and raw text remain unchanged. No source text is published.",
+  "format": "speck_finewiki_long_candidate_structure_review",
+  "format_version": 1,
+  "implementation": [
+    {
+      "path": "/home/alkin/Desktop/speck/speck/data/long_document_structure.py",
+      "sha256": "3b0e852c03f18311b81e57d42b6bbc63439f358d5cabad89b4ac5ef35dea3fbf"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/scripts/review_finewiki_long_candidates.py",
+      "sha256": "3823f8cb8ba87e79f3a4b26ee626de1edc2c2962e3c867df87455f8896cad33b"
+    }
+  ],
+  "probe": {
+    "path": "/home/alkin/Desktop/speck/results/data/finewiki-long-probe-20260916.json",
+    "sha256": "bff2db82634e29186217a7ac4442726aad8818e89070802474de8f0400778b01"
+  },
+  "production_filters_changed": false,
+  "qualified_stock_tokens": null,
+  "raw": {
+    "bytes": 2510037970,
+    "filename": "data/enwiki/000_00000.parquet",
+    "path": "/mnt/speck-data/speck/source-qualification/reference-raw-v1/80c43074ed578508671d.parquet",
+    "sha256": "8770000c2b1fd62743601ea24cdebd784f943cf3fa7bbe33161521a6f5ca7c74",
+    "source_id": "finewiki_en"
+  },
+  "sample": [
+    {
+      "characters": 1362417,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 13067,
+      "structure": {
+        "characters": 1362417,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": true
+        },
+        "horizontal_whitespace_collapsed_characters": 183582,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 65752,
+        "lines": 1142,
+        "longest_horizontal_whitespace_run": 1960,
+        "pipe_characters": 5814,
+        "whitespace_characters": 1214189,
+        "whitespace_fraction": 0.8912021796557148
+      },
+      "text_sha256": "085afd4891536ff445b73fd6a15900dfad2949fe891d4fd4f8bb1f6fedb6794e",
+      "title": "List of acts of the 4th session of the 18th Parliament of Great Britain",
+      "tokens_including_bos_eos": 142442,
+      "upstream_id": "enwiki/75421372",
+      "utf8_bytes": 1362708
+    },
+    {
+      "characters": 1159962,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 112784,
+      "structure": {
+        "characters": 1159962,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": false,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 27643,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 11192,
+        "lines": 199,
+        "longest_horizontal_whitespace_run": 11446,
+        "pipe_characters": 1805,
+        "whitespace_characters": 1137666,
+        "whitespace_fraction": 0.9807786806809189
+      },
+      "text_sha256": "a00def7ba5e59208c532499fd069b799462ed9ef9ea9bfa179d8c8577c5eff74",
+      "title": "FC Kiffen 08",
+      "tokens_including_bos_eos": 82413,
+      "upstream_id": "enwiki/27751670",
+      "utf8_bytes": 1160060
+    },
+    {
+      "characters": 1909669,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 136452,
+      "structure": {
+        "characters": 1909669,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 101649,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 41411,
+        "lines": 70,
+        "longest_horizontal_whitespace_run": 50258,
+        "pipe_characters": 5830,
+        "whitespace_characters": 1826768,
+        "whitespace_fraction": 0.9565888119878366
+      },
+      "text_sha256": "49b3fafbdcaf085548bede354a4caf33f9bd9f91d1f535791af015e497ffbe36",
+      "title": "Nafi Mawla Ibn Umar",
+      "tokens_including_bos_eos": 156307,
+      "upstream_id": "enwiki/69187345",
+      "utf8_bytes": 1911940
+    },
+    {
+      "characters": 1567593,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 191308,
+      "structure": {
+        "characters": 1567593,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 88994,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 38215,
+        "lines": 101,
+        "longest_horizontal_whitespace_run": 38775,
+        "pipe_characters": 7268,
+        "whitespace_characters": 1497253,
+        "whitespace_fraction": 0.9551286590333078
+      },
+      "text_sha256": "976ba8b798cef73d5e19d0748695512194a7752e6d19112df34faf8695b747dd",
+      "title": "Duke of Normandy",
+      "tokens_including_bos_eos": 132785,
+      "upstream_id": "enwiki/442503",
+      "utf8_bytes": 1570240
+    },
+    {
+      "characters": 1704989,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 203984,
+      "structure": {
+        "characters": 1704989,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": false,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 69448,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 28874,
+        "lines": 98,
+        "longest_horizontal_whitespace_run": 31174,
+        "pipe_characters": 5529,
+        "whitespace_characters": 1649480,
+        "whitespace_fraction": 0.9674431917156063
+      },
+      "text_sha256": "fce7ce961f8988cd408cbb63af88f4ea2a941d89e6f2b06d8f1b4bda843ec3f0",
+      "title": "Thomas Thynne, 1st Viscount Weymouth",
+      "tokens_including_bos_eos": 132715,
+      "upstream_id": "enwiki/7149474",
+      "utf8_bytes": 1706210
+    },
+    {
+      "characters": 1433246,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 221664,
+      "structure": {
+        "characters": 1433246,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": false,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 45550,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 18417,
+        "lines": 381,
+        "longest_horizontal_whitespace_run": 10853,
+        "pipe_characters": 2987,
+        "whitespace_characters": 1396752,
+        "whitespace_fraction": 0.9745375183325123
+      },
+      "text_sha256": "917e4cfe39b0f39bb4db3dbb69f298afaf77ad5127bfd7ac7fbca045de326be0",
+      "title": "Texas A&M Aggies baseball",
+      "tokens_including_bos_eos": 106309,
+      "upstream_id": "enwiki/18455992",
+      "utf8_bytes": 1434686
+    },
+    {
+      "characters": 1287095,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 227955,
+      "structure": {
+        "characters": 1287095,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 81035,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 33222,
+        "lines": 232,
+        "longest_horizontal_whitespace_run": 26290,
+        "pipe_characters": 7047,
+        "whitespace_characters": 1224037,
+        "whitespace_fraction": 0.9510075013887864
+      },
+      "text_sha256": "60a5428288151570288dab8d4a2c1d6e9f4fcaa9644c006e493fde57831c5e8b",
+      "title": "King's Own Calgary Regiment",
+      "tokens_including_bos_eos": 110776,
+      "upstream_id": "enwiki/1445959",
+      "utf8_bytes": 1287225
+    },
+    {
+      "characters": 1298720,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 230985,
+      "structure": {
+        "characters": 1298720,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": true
+        },
+        "horizontal_whitespace_collapsed_characters": 205230,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 73992,
+        "lines": 1821,
+        "longest_horizontal_whitespace_run": 882,
+        "pipe_characters": 9306,
+        "whitespace_characters": 1134878,
+        "whitespace_fraction": 0.8738434766539361
+      },
+      "text_sha256": "c30b18930079b6e1284fc0e485ad0619cedf12f463a09fe50a9be6a510dcb890",
+      "title": "List of acts of the Parliament of Ireland, 1781\u20131790",
+      "tokens_including_bos_eos": 145830,
+      "upstream_id": "enwiki/78178045",
+      "utf8_bytes": 1298991
+    },
+    {
+      "characters": 1623184,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 299822,
+      "structure": {
+        "characters": 1623184,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": false,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 33401,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 10656,
+        "lines": 468,
+        "longest_horizontal_whitespace_run": 3331,
+        "pipe_characters": 1392,
+        "whitespace_characters": 1595360,
+        "whitespace_fraction": 0.9828583820441799
+      },
+      "text_sha256": "b9077fca5dc39580611449eef77c802a1c4987021926f17851fb40bcb0b9b134",
+      "title": "List of sovereign states in the 1880s",
+      "tokens_including_bos_eos": 110696,
+      "upstream_id": "enwiki/53376169",
+      "utf8_bytes": 1623771
+    },
+    {
+      "characters": 1345172,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 299902,
+      "structure": {
+        "characters": 1345172,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": false,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 35436,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 11142,
+        "lines": 340,
+        "longest_horizontal_whitespace_run": 3586,
+        "pipe_characters": 1340,
+        "whitespace_characters": 1315499,
+        "whitespace_fraction": 0.9779411108765274
+      },
+      "text_sha256": "60b25039c7386b1cf894d3a22600a043b0ebf7ab9b6bdb7c4d78f190754043c7",
+      "title": "List of sovereign states in the 1910s",
+      "tokens_including_bos_eos": 93782,
+      "upstream_id": "enwiki/53520690",
+      "utf8_bytes": 1345703
+    },
+    {
+      "characters": 1470249,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 301322,
+      "structure": {
+        "characters": 1470249,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 110841,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 34156,
+        "lines": 538,
+        "longest_horizontal_whitespace_run": 6824,
+        "pipe_characters": 4430,
+        "whitespace_characters": 1377239,
+        "whitespace_fraction": 0.9367386068618309
+      },
+      "text_sha256": "bbcaee5a43d29116458a2f22ba1a005460754cbf78c7660d9e39dda1341a93c5",
+      "title": "List of Sigma Chi members",
+      "tokens_including_bos_eos": 119924,
+      "upstream_id": "enwiki/8446292",
+      "utf8_bytes": 1470933
+    },
+    {
+      "characters": 1350426,
+      "fits_intact_context_plus_lookahead": {
+        "131072": false,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 307914,
+      "structure": {
+        "characters": 1350426,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": false,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 40453,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 16761,
+        "lines": 293,
+        "longest_horizontal_whitespace_run": 11771,
+        "pipe_characters": 2466,
+        "whitespace_characters": 1318036,
+        "whitespace_fraction": 0.976014976014976
+      },
+      "text_sha256": "75801178948f02239c79e13f896ba422da58c3b92fece5b15a63dbbf81003218",
+      "title": "Haruto Yasumoto",
+      "tokens_including_bos_eos": 99408,
+      "upstream_id": "enwiki/62380402",
+      "utf8_bytes": 1350581
+    },
+    {
+      "characters": 1552237,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 310790,
+      "structure": {
+        "characters": 1552237,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 174973,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 52242,
+        "lines": 1087,
+        "longest_horizontal_whitespace_run": 892,
+        "pipe_characters": 7553,
+        "whitespace_characters": 1410909,
+        "whitespace_fraction": 0.9089520479153634
+      },
+      "text_sha256": "a87113c5555d44d4bccc4baa0e5ff9e6355f1fff5beebc8928bb5b62f73a45dc",
+      "title": "List of apocalyptic and post-apocalyptic fiction",
+      "tokens_including_bos_eos": 141399,
+      "upstream_id": "enwiki/8269659",
+      "utf8_bytes": 1552660
+    },
+    {
+      "characters": 1474053,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 310898,
+      "structure": {
+        "characters": 1474053,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": true
+        },
+        "horizontal_whitespace_collapsed_characters": 193702,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 74769,
+        "lines": 299,
+        "longest_horizontal_whitespace_run": 24226,
+        "pipe_characters": 12919,
+        "whitespace_characters": 1318971,
+        "whitespace_fraction": 0.8947921139877603
+      },
+      "text_sha256": "d459f5ad7986bce0c4d877ea7ea9e980c0d4e54dcc41733baa7c35f44ad0fb55",
+      "title": "Eleanor of Aquitaine",
+      "tokens_including_bos_eos": 158926,
+      "upstream_id": "enwiki/9962",
+      "utf8_bytes": 1479090
+    },
+    {
+      "characters": 1474144,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 312387,
+      "structure": {
+        "characters": 1474144,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": true
+        },
+        "horizontal_whitespace_collapsed_characters": 193795,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 74796,
+        "lines": 300,
+        "longest_horizontal_whitespace_run": 24226,
+        "pipe_characters": 12919,
+        "whitespace_characters": 1318983,
+        "whitespace_fraction": 0.8947450181257733
+      },
+      "text_sha256": "88700cd89828603342e376b724445b29a9b55aeffe10bac11d837def2d299a24",
+      "title": "Eleanor of Aquitaine",
+      "tokens_including_bos_eos": 158951,
+      "upstream_id": "enwiki/9962",
+      "utf8_bytes": 1479183
+    },
+    {
+      "characters": 1910829,
+      "fits_intact_context_plus_lookahead": {
+        "131072": true,
+        "32768": true,
+        "65536": true
+      },
+      "physical_row": 364716,
+      "structure": {
+        "characters": 1910829,
+        "collapsed_length_plus_lookahead": {
+          "131072": false,
+          "32768": true,
+          "65536": false
+        },
+        "horizontal_whitespace_collapsed_characters": 102809,
+        "horizontal_whitespace_collapsed_tokens_including_bos_eos": 41517,
+        "lines": 69,
+        "longest_horizontal_whitespace_run": 50258,
+        "pipe_characters": 5829,
+        "whitespace_characters": 1826972,
+        "whitespace_fraction": 0.9561148590480886
+      },
+      "text_sha256": "b034ab551f704d5880329a583562517d56cbb3af7d85a53caeb7b6021d2c3365",
+      "title": "Ibn Furak",
+      "tokens_including_bos_eos": 156413,
+      "upstream_id": "enwiki/43683029",
+      "utf8_bytes": 1913085
+    }
+  ],
+  "tokenizer": {
+    "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "training_authority": false
+}

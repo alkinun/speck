@@ -82,6 +82,10 @@ carry distribution-shift limitations.
 
 A [source-specific preparation report](../tables/base-supply-v1/table.md) reconciles the current stocks
 with base demand. It does not establish a global unique corpus or a validated repetition schedule.
+An [index census](../../research/findings/2026-09-16-document-length-capacity.md) also finds no intact
+128K+1 document in the five completed caches. A [bounded raw FineWiki review](../../research/findings/2026-09-16-finewiki-long-candidates.md)
+shows substantial padding sensitivity in the largest records; these preparation diagnostics do not
+establish coherent long-unit supply or model capability.
 
 320B base tokens are the default; 400B requires measured fit within 2,425 hours without taking capability
 or evaluation budget. Preserve pre-decay/base, context and instruction checkpoints. The capability
