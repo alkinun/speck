@@ -1,0 +1,577 @@
+{
+  "format": "speck_document_length_census",
+  "format_version": 1,
+  "globally_unique_long_tokens": null,
+  "implementation": [
+    {
+      "path": "/home/alkin/Desktop/speck/speck/data/document_lengths.py",
+      "sha256": "5b20907eb9dee434f9d919cfc59f5fecff8eedb23a40e733e66a18a9f1988f74"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/scripts/document_length_census.py",
+      "sha256": "fd2e729467577ed4f0a7a41bb626775ce55c79fd27691764a66fc2b5157ef5a9"
+    }
+  ],
+  "inputs": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/document_length_census_inputs_v1.json",
+    "sha256": "0ac0587cb69bc7cd00bf992b584f7925c5609f809c9731b407e1c0f1efcd0d3d"
+  },
+  "sources": [
+    {
+      "boundary": "Index-only, whole-document length capacity, including existing BOS/EOS. Every candidate window needs context+1 tokens within one source document; input spans are disjoint and one lookahead token can be shared. No concatenation, family/edition deduplication, window materialization, recurrent reset or useful-long-dependency claim. Token-shard contents are not reopened by this index census. Longest indices are candidates for provenance review, not selected training examples.",
+      "category": "reference",
+      "context_capacity": {
+        "131072": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "32768": {
+          "documents_at_least_context_plus_one": 41,
+          "nonoverlapping_input_windows_with_lookahead": 41,
+          "tokens_in_those_documents": 1592651
+        },
+        "4096": {
+          "documents_at_least_context_plus_one": 32547,
+          "nonoverlapping_input_windows_with_lookahead": 52048,
+          "tokens_in_those_documents": 266319093
+        },
+        "65536": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        }
+      },
+      "document_index": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/documents.jsonl",
+        "sha256": "959d980606db54c6aa68e436cb7388f29fb5be83c9620d922d24599fcf066224"
+      },
+      "documents": 387313,
+      "documents_missing_upstream_content_id": 0,
+      "longest_document_indices": [
+        {
+          "content_id": "enwiki/5115297",
+          "ordinal": 185527,
+          "released_content_sha256": "3e8b7d96d4cec10e747736a00c643593019e2bf55c8b1004c89ec5adc34f5d59",
+          "tokens": 61037
+        },
+        {
+          "content_id": "enwiki/50915387",
+          "ordinal": 232585,
+          "released_content_sha256": "9b6c14fbb82bc4fea04f99b20636d8644fd8ce77846581c3867740fb8962991a",
+          "tokens": 58071
+        },
+        {
+          "content_id": "enwiki/7044013",
+          "ordinal": 292832,
+          "released_content_sha256": "23a3c07b67f114b9aa2edef85e62f09a90bb70138491d44ce8dfbfeee3a49abe",
+          "tokens": 54097
+        },
+        {
+          "content_id": "enwiki/48547979",
+          "ordinal": 222801,
+          "released_content_sha256": "4aff706b7256f5941ec7a41f7768ca5e3e5373616ec48e7f14fc579e85161d99",
+          "tokens": 45753
+        },
+        {
+          "content_id": "enwiki/2902581",
+          "ordinal": 45474,
+          "released_content_sha256": "92c528de64ee572f7dfe48576d930dd6591858de14bfc066fa5d8faa835abdf5",
+          "tokens": 44305
+        },
+        {
+          "content_id": "enwiki/56439896",
+          "ordinal": 246269,
+          "released_content_sha256": "595309a24947ea391c3e627e56168e7f0a0d211d02402f040761c995e6d26a6b",
+          "tokens": 44069
+        },
+        {
+          "content_id": "enwiki/37820603",
+          "ordinal": 239442,
+          "released_content_sha256": "0ab0ab8bd54197cebf0d1b95197bfcbbe34b57fe060a3d48542dac3046fe7d80",
+          "tokens": 43180
+        },
+        {
+          "content_id": "enwiki/317158",
+          "ordinal": 265590,
+          "released_content_sha256": "2e31a1e50cdcca0945d5099e8d6b2abfc829f9c71efebe5658309b5835b76500",
+          "tokens": 42736
+        },
+        {
+          "content_id": "enwiki/71482627",
+          "ordinal": 64168,
+          "released_content_sha256": "fa280e34ee23b59e898b44300be457bf477f535ba36951470868263d8ca8b748",
+          "tokens": 42117
+        },
+        {
+          "content_id": "enwiki/11749",
+          "ordinal": 232984,
+          "released_content_sha256": "0ee7aaa8c572dda50a3d9b10e454e0929dfb0ef186372c1b2c9856cf32bd4701",
+          "tokens": 42106
+        }
+      ],
+      "manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
+        "sha256": "483277cfc8f2ab043169539b19e341e4dfbeac8b8d2c6094dc6245dbeddafaf0"
+      },
+      "maximum_document_tokens": 61037,
+      "qualified_coherent_family_tokens": null,
+      "source_id": "finewiki_en",
+      "token_result": {
+        "path": "/home/alkin/Desktop/speck/results/data/finewiki-token-stock-20260914.json",
+        "sha256": "72683b977237f727b00770610814425f61cbd0d91b39bcafb72e2b373c741307"
+      },
+      "tokenizer": {
+        "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokens": 582070378,
+      "utf8_bytes": 2137398513
+    },
+    {
+      "boundary": "Index-only, whole-document length capacity, including existing BOS/EOS. Every candidate window needs context+1 tokens within one source document; input spans are disjoint and one lookahead token can be shared. No concatenation, family/edition deduplication, window materialization, recurrent reset or useful-long-dependency claim. Token-shard contents are not reopened by this index census. Longest indices are candidates for provenance review, not selected training examples.",
+      "category": "science",
+      "context_capacity": {
+        "131072": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "32768": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "4096": {
+          "documents_at_least_context_plus_one": 89530,
+          "nonoverlapping_input_windows_with_lookahead": 143091,
+          "tokens_in_those_documents": 751811132
+        },
+        "65536": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        }
+      },
+      "document_index": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/documents.jsonl",
+        "sha256": "30b4bec4b5e1afcb1ba0bc4d522cc7b8c9b7dbd97c77f6018504028a467a7a03"
+      },
+      "documents": 113232,
+      "documents_missing_upstream_content_id": 0,
+      "longest_document_indices": [
+        {
+          "content_id": "118467695",
+          "ordinal": 2191,
+          "released_content_sha256": "bcd788ed55e80006d76b484eab60cfb6350decab0bf0bc3691c482aa89da75e6",
+          "tokens": 31302
+        },
+        {
+          "content_id": "245621851",
+          "ordinal": 34616,
+          "released_content_sha256": "aecb25922e0c8d43f13583138c961b8d037ca8783ec306bfdf51aec7597486fd",
+          "tokens": 30260
+        },
+        {
+          "content_id": "235435986",
+          "ordinal": 104932,
+          "released_content_sha256": "f70a79f5584e7c74f268921acb81d6d92246cb26b02a5488aab4052568bf1b1b",
+          "tokens": 29344
+        },
+        {
+          "content_id": "257638173",
+          "ordinal": 102048,
+          "released_content_sha256": "8fb9d388e7b50de2d490e56475fd6c6e80754e35234206968912e73daa31669e",
+          "tokens": 28993
+        },
+        {
+          "content_id": "237218509",
+          "ordinal": 74668,
+          "released_content_sha256": "421664a5f3b9e4d1dbb8c3cb803c65325a2f051609ecd3520aac874661d8aba5",
+          "tokens": 28905
+        },
+        {
+          "content_id": "235385461",
+          "ordinal": 81960,
+          "released_content_sha256": "c9a454aa6b9a8d442b55995ff336331c07e2254564b3e568cdb503d534fdaecc",
+          "tokens": 28659
+        },
+        {
+          "content_id": "249314712",
+          "ordinal": 45994,
+          "released_content_sha256": "1e9a0b4024c18b34370847498fd81d494084617f87e70010a49ce43092f295a7",
+          "tokens": 28507
+        },
+        {
+          "content_id": "233587997",
+          "ordinal": 646,
+          "released_content_sha256": "5a5b70b5e0ac4302ce3b571e5ea511748bdc6b93c78ea4e74ad8c2b0c9ae9c69",
+          "tokens": 28197
+        },
+        {
+          "content_id": "54631178",
+          "ordinal": 99064,
+          "released_content_sha256": "1191c34adaf0ae2a1726607db2f9bcffc3af0633c330df48e87a914c86a4132b",
+          "tokens": 28194
+        },
+        {
+          "content_id": "253983437",
+          "ordinal": 15440,
+          "released_content_sha256": "324694931abcdbc3a6a5ac67bd93fa651a7bbf5128cc9b4f3b99b9604b7ed972",
+          "tokens": 28040
+        }
+      ],
+      "manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/manifest.json",
+        "sha256": "bd5fae28d15014a67624d583785ec92e09f88a0a13a84de306b069e4869e77df"
+      },
+      "maximum_document_tokens": 31302,
+      "qualified_coherent_family_tokens": null,
+      "source_id": "pes2o_v3",
+      "token_result": {
+        "path": "/home/alkin/Desktop/speck/results/data/pes2o-token-stock-v2-20260914.json",
+        "sha256": "88f18f4eb301ca322a263b012cfe06a698033c3cf7fc2686d901aa48c2407c5e"
+      },
+      "tokenizer": {
+        "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokens": 820097493,
+      "utf8_bytes": 3290876773
+    },
+    {
+      "boundary": "Index-only, whole-document length capacity, including existing BOS/EOS. Every candidate window needs context+1 tokens within one source document; input spans are disjoint and one lookahead token can be shared. No concatenation, family/edition deduplication, window materialization, recurrent reset or useful-long-dependency claim. Token-shard contents are not reopened by this index census. Longest indices are candidates for provenance review, not selected training examples.",
+      "category": "math",
+      "context_capacity": {
+        "131072": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "32768": {
+          "documents_at_least_context_plus_one": 112,
+          "nonoverlapping_input_windows_with_lookahead": 114,
+          "tokens_in_those_documents": 4516414
+        },
+        "4096": {
+          "documents_at_least_context_plus_one": 42177,
+          "nonoverlapping_input_windows_with_lookahead": 59696,
+          "tokens_in_those_documents": 307024383
+        },
+        "65536": {
+          "documents_at_least_context_plus_one": 2,
+          "nonoverlapping_input_windows_with_lookahead": 2,
+          "tokens_in_those_documents": 137347
+        }
+      },
+      "document_index": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/documents.jsonl",
+        "sha256": "1c64aa1b9e022f454913b00d3703bd77efd48ceb3c4c67245aad612b7a3b5b77"
+      },
+      "documents": 753071,
+      "documents_missing_upstream_content_id": 753071,
+      "longest_document_indices": [
+        {
+          "content_id": null,
+          "ordinal": 141781,
+          "released_content_sha256": "63f5d0af1a21c61c5a34e909920816cbfb22ecb5bafceda60946113f9924134e",
+          "tokens": 71218
+        },
+        {
+          "content_id": null,
+          "ordinal": 264565,
+          "released_content_sha256": "dabae13f34bc227f7632f03fe157916e6342a8ab00030a0d658a3b81fda1a800",
+          "tokens": 66129
+        },
+        {
+          "content_id": null,
+          "ordinal": 256445,
+          "released_content_sha256": "abe2c0c0bab110032149a34c2784f54012ed076d603ff79fbb53eee03b749e4c",
+          "tokens": 65138
+        },
+        {
+          "content_id": null,
+          "ordinal": 701228,
+          "released_content_sha256": "53636225756ceb39327aadc1e4578ff06527e41954057e54c6b2b43fee1b66b8",
+          "tokens": 63495
+        },
+        {
+          "content_id": null,
+          "ordinal": 544018,
+          "released_content_sha256": "b8ddd843fdf3ef5bff56f047b91b623146bcf423453f7aec8fbe7ed403497d85",
+          "tokens": 59638
+        },
+        {
+          "content_id": null,
+          "ordinal": 116522,
+          "released_content_sha256": "ac398ca53d43ad242be39ec32fbd0877283acff5653e7875737097c92ab99785",
+          "tokens": 58340
+        },
+        {
+          "content_id": null,
+          "ordinal": 222634,
+          "released_content_sha256": "675e755c7b6fc7e98d3ebfaa6a26cae57f81b3fe187591a99afacf290be3f5af",
+          "tokens": 57103
+        },
+        {
+          "content_id": null,
+          "ordinal": 385747,
+          "released_content_sha256": "959bb676c829946f1ddb12ba4a70b572df696e017162b8d09c8f801dfbd41d5e",
+          "tokens": 56773
+        },
+        {
+          "content_id": null,
+          "ordinal": 684298,
+          "released_content_sha256": "0c7080474be4209f070be3aac28184171ea5d8544ab2b13b4577cbd0c8f8133a",
+          "tokens": 51440
+        },
+        {
+          "content_id": null,
+          "ordinal": 222810,
+          "released_content_sha256": "467a7dcf329476f57d793f8217e108b0561f8957f9910d255026958bf0a8d047",
+          "tokens": 51265
+        }
+      ],
+      "manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
+        "sha256": "fd528ccdb15626eae55d110ca064852d4938a5f733b9e0255c220cd2369adf65"
+      },
+      "maximum_document_tokens": 71218,
+      "qualified_coherent_family_tokens": null,
+      "source_id": "finemath_4plus",
+      "token_result": {
+        "path": "/home/alkin/Desktop/speck/results/data/finemath-token-stock-v2-20260914.json",
+        "sha256": "cc486eb487dfc90589a09545d1e602dc2a08e9d4dd7f90686a4cdf0866b1a497"
+      },
+      "tokenizer": {
+        "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokens": 1124167472,
+      "utf8_bytes": 3674756372
+    },
+    {
+      "boundary": "Index-only, whole-document length capacity, including existing BOS/EOS. Every candidate window needs context+1 tokens within one source document; input spans are disjoint and one lookahead token can be shared. No concatenation, family/edition deduplication, window materialization, recurrent reset or useful-long-dependency claim. Token-shard contents are not reopened by this index census. Longest indices are candidates for provenance review, not selected training examples.",
+      "category": "synthetic",
+      "context_capacity": {
+        "131072": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "32768": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "4096": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "65536": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        }
+      },
+      "document_index": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/documents.jsonl",
+        "sha256": "3783a2f0b8bf89cb78eab98c375287f9fcfa56c951e647196e978308cf87c505"
+      },
+      "documents": 1851034,
+      "documents_missing_upstream_content_id": 0,
+      "longest_document_indices": [
+        {
+          "content_id": "cosmopedia_v2:2c3ec2f6507548a1cea06b5d9da049ba885ff2610a39c5e63b9d3eda091eb5de:189862",
+          "ordinal": 930575,
+          "released_content_sha256": "0ce253373363a49d7f53e4dc3ecdb63eee359710bc7210d02ed5218223481792",
+          "tokens": 2508
+        },
+        {
+          "content_id": "cosmopedia_v2:5a25721146377d6e7f288c244e991df93e672b8cc3e535fd4aac5da4cdb1491d:364258",
+          "ordinal": 360543,
+          "released_content_sha256": "12972df8c83b16065821a44801e408275dc67ef53d3abfd66ea4eb21fc679141",
+          "tokens": 2504
+        },
+        {
+          "content_id": "cosmopedia_v2:f9c962f2182049bdc28b4616527a4683f3d54d58404d37a5e240c30240da8efd:227082",
+          "ordinal": 1705109,
+          "released_content_sha256": "9fd500f2378107a459ae935a54fc61706e63570229d2a3f4fae3b34b6b6c2e1c",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:f9c962f2182049bdc28b4616527a4683f3d54d58404d37a5e240c30240da8efd:178784",
+          "ordinal": 1657881,
+          "released_content_sha256": "e3da308bafde9ae5741fb5da1ee05d0b9de61eafa2b75f68a734457401725374",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:f9c962f2182049bdc28b4616527a4683f3d54d58404d37a5e240c30240da8efd:115217",
+          "ordinal": 1595674,
+          "released_content_sha256": "671a40f8827a139c2d2f0aa4498492b3e9158e21c332760e491c3372ddfc7045",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599:357801",
+          "ordinal": 1464755,
+          "released_content_sha256": "50867ca5697052e85af039734a8900f3d6971c977736a224f5b271b7e393551c",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599:356184",
+          "ordinal": 1463167,
+          "released_content_sha256": "2b69814e3a49900d34c0caf1227ef18881bd8ab7bb5bfef2175cf2417da837da",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599:345653",
+          "ordinal": 1452856,
+          "released_content_sha256": "3cc43c1f73a41f00909b1bba8ea911ef165ac868082557b8cbd1a881b9887aa5",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599:318657",
+          "ordinal": 1426361,
+          "released_content_sha256": "bfe2279d1a93e7e4465c4fd7e466554c3eb0c740f576fb2dd2d08979e8d67b75",
+          "tokens": 2503
+        },
+        {
+          "content_id": "cosmopedia_v2:60cae193f3c0ca186d162ef237eb57dccbe5d8da26e8f7c8b93f374910963599:234802",
+          "ordinal": 1344140,
+          "released_content_sha256": "333981454852ad3a0cb9bf4265b431f8d994b3e41676f0f9f4564de288000d93",
+          "tokens": 2503
+        }
+      ],
+      "manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
+        "sha256": "2a09fc9ee92924815de5c833b94276af2e3bf5f50e059603ada844c372c371d6"
+      },
+      "maximum_document_tokens": 2508,
+      "qualified_coherent_family_tokens": null,
+      "source_id": "cosmopedia_v2",
+      "token_result": {
+        "path": "/home/alkin/Desktop/speck/results/data/cosmopedia-token-stock-20260914.json",
+        "sha256": "eebb8acbde03054518b511b5d206066f2dfd1afa47c4f812d30b780746ef0aca"
+      },
+      "tokenizer": {
+        "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokens": 1489288743,
+      "utf8_bytes": 6927573615
+    },
+    {
+      "boundary": "Index-only, whole-document length capacity, including existing BOS/EOS. Every candidate window needs context+1 tokens within one source document; input spans are disjoint and one lookahead token can be shared. No concatenation, family/edition deduplication, window materialization, recurrent reset or useful-long-dependency claim. Token-shard contents are not reopened by this index census. Longest indices are candidates for provenance review, not selected training examples.",
+      "category": "math",
+      "context_capacity": {
+        "131072": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "32768": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        },
+        "4096": {
+          "documents_at_least_context_plus_one": 27297,
+          "nonoverlapping_input_windows_with_lookahead": 38467,
+          "tokens_in_those_documents": 204587587
+        },
+        "65536": {
+          "documents_at_least_context_plus_one": 0,
+          "nonoverlapping_input_windows_with_lookahead": 0,
+          "tokens_in_those_documents": 0
+        }
+      },
+      "document_index": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/ultradata_math_l2_preview/documents.jsonl",
+        "sha256": "b9ba45e9444649008d2ed72117ce950007c38747b1ca674ac5e8d5ec237945d5"
+      },
+      "documents": 169058,
+      "documents_missing_upstream_content_id": 169058,
+      "longest_document_indices": [
+        {
+          "content_id": null,
+          "ordinal": 61558,
+          "released_content_sha256": "7fc7ce4ab7079e02b1e1fc1b95c44d74b6d325d9fd1c40dfb9bb25add418f55a",
+          "tokens": 24591
+        },
+        {
+          "content_id": null,
+          "ordinal": 116545,
+          "released_content_sha256": "e25f4b324488d7dd83158fe31f4dd7486da75c1992553851a071fe10a16e7d91",
+          "tokens": 23971
+        },
+        {
+          "content_id": null,
+          "ordinal": 168693,
+          "released_content_sha256": "107acf69aa72ef06436cfa13727f57b7f882a14d63302921b86d405f1ee603d5",
+          "tokens": 23445
+        },
+        {
+          "content_id": null,
+          "ordinal": 139973,
+          "released_content_sha256": "bbe858dc5f2f181fc8792d94350505037c30b378c0bf73fd10829a45d7a3c963",
+          "tokens": 23263
+        },
+        {
+          "content_id": null,
+          "ordinal": 162788,
+          "released_content_sha256": "5670ed43787c52882f145347732be56ad872b404a95b37db7e9ab505e8c0a260",
+          "tokens": 23224
+        },
+        {
+          "content_id": null,
+          "ordinal": 137869,
+          "released_content_sha256": "230fc83dc3a0d4128884993c0c781818a08933687b3cc5efb58918129e08a357",
+          "tokens": 22486
+        },
+        {
+          "content_id": null,
+          "ordinal": 75694,
+          "released_content_sha256": "fb7a03950a23698e244d0f94f4205046977c3fc376b133c4f4e5d6e6eb8c5fef",
+          "tokens": 22106
+        },
+        {
+          "content_id": null,
+          "ordinal": 96403,
+          "released_content_sha256": "17204482929c5e72b79218fab5156dda92083b990bc0cf854ff860ee0c96e53f",
+          "tokens": 21344
+        },
+        {
+          "content_id": null,
+          "ordinal": 72355,
+          "released_content_sha256": "3465939a9800444f63ed5ac11a0b8e568d7780bf3cdb43e2f08776496696eed4",
+          "tokens": 21137
+        },
+        {
+          "content_id": null,
+          "ordinal": 141620,
+          "released_content_sha256": "0c565ff5f1d1c17ffb1f42da0f9882011e7316eff94ef5c80c221223feaf4993",
+          "tokens": 20843
+        }
+      ],
+      "manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/ultradata_math_l2_preview/manifest.json",
+        "sha256": "20fc679b90f2f23e71dfb64b99ad8cc5385f80fd3f72c6abc90270f2e57b65b9"
+      },
+      "maximum_document_tokens": 24591,
+      "qualified_coherent_family_tokens": null,
+      "source_id": "ultradata_math_l2_preview",
+      "token_result": {
+        "path": "/home/alkin/Desktop/speck/results/data/math-l2-token-stock-20260914.json",
+        "sha256": "e6b9f199ddbd6110d708b5b483420d426e7f8f3d220b4a8a48316715ecff7025"
+      },
+      "tokenizer": {
+        "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokens": 384788210,
+      "utf8_bytes": 1285393547
+    }
+  ],
+  "training_authority": false
+}

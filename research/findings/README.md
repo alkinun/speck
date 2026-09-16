@@ -8,6 +8,7 @@ and [active queue](../flagship/PREPARATION_QUEUE.md) for current boundaries and 
 
 | Topic | Prior evidence and boundary |
 | --- | --- |
+| Intact long-document capacity | [Document-index census](2026-09-16-document-length-capacity.md) finds sparse 32K and no 128K+1 documents in the five checked caches; coherent-unit preparation remains necessary. |
 | Base source supply | [Selected-mixture demand and stock exposure](2026-09-16-base-supply.md) shows why the completed small source banks do not establish production capacity. |
 | Fresh-process R0 recovery | [Persisted checkpoint/RNG qualification](2026-09-15-r0-fresh-process.md) checks new dense/KDA worker processes and two-rank Gloo; CUDA, crash/requeue and production-loader recovery remain pending. |
 | Bounded R0 executor | [CPU qualification and supervised rank cleanup](2026-09-15-bounded-r0-executor.md) checks request identities, tiny dense/KDA replay, two-rank Gloo and failure/cost handling; actual GH200 execution and complete R0 remain pending. |

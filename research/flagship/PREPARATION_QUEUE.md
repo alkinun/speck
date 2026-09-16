@@ -57,7 +57,10 @@ conditions attached to all descendants. Old 17.7B first-wave requirements are hi
 Prepare coherent document, repository and ordered-history units with family, revision and position
 identities. Qualify window construction and isolation semantics for both architectures. A flat token
 stream or BOS/EOS markers alone cannot establish these properties. The 2–4B long-unit envelope is a
-planning target, not a measured stock. See [LONG_CONTEXT_DATA.md](LONG_CONTEXT_DATA.md).
+planning target, not a measured stock. The [checked document-index census](../findings/2026-09-16-document-length-capacity.md)
+finds no intact 128K+1 document in the five completed caches and only sparse 32K candidates. Inspect
+existing raw supply and prepare an explicit long-unit successor; do not silently relax the short-bank
+filters or concatenate unrelated records to fill the target. See [LONG_CONTEXT_DATA.md](LONG_CONTEXT_DATA.md).
 
 Pin evaluation identities and source-family exclusions before generating tasks. Separate engineering
 pilots, development selection and sealed final evaluation by family, including editions, forks and
