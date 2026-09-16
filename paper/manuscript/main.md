@@ -80,6 +80,9 @@ carry distribution-shift limitations.
 
 ## 5. Flagship development — pending
 
+A [source-specific preparation report](../tables/base-supply-v1/table.md) reconciles the current stocks
+with base demand. It does not establish a global unique corpus or a validated repetition schedule.
+
 320B base tokens are the default; 400B requires measured fit within 2,425 hours without taking capability
 or evaluation budget. Preserve pre-decay/base, context and instruction checkpoints. The capability
 program receives 700 hours. Useful 32K is the first milestone, 64K an evaluation point and 128K a target.

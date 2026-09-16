@@ -47,7 +47,10 @@ four-GPU DDP, checkpoint/resume and end-to-end throughput remain execution gates
 ## 3. Qualify supply and coherent task inputs
 
 Build the successor source-capacity/exposure and delivery sheet against [data_plan_v3.json](data_plan_v3.json).
-The broad 55/15/10/10/5/5 prior is a starting recipe, not an optimized result. Measure scarce-category
+The broad 55/15/10/10/5/5 prior is a starting recipe, not an optimized result. The
+[2026-09-16 supply check](../findings/2026-09-16-base-supply.md) quantifies base-only demand: current
+specialist stocks alone imply roughly 19–28 average exposures at 320B before further losses. These
+are diagnostic ratios, not approved repeat schedules. Measure scarce-category
 repetition across base, decay, continuation and supervision. Keep source approvals and license/provenance
 conditions attached to all descendants. Old 17.7B first-wave requirements are historical.
 
