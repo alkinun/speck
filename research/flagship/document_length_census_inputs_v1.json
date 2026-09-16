@@ -1,0 +1,28 @@
+{
+  "format": "speck_document_length_census_inputs",
+  "format_version": 1,
+  "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+  "token_results": [
+    {
+      "path": "/home/alkin/Desktop/speck/results/data/finewiki-token-stock-20260914.json",
+      "sha256": "72683b977237f727b00770610814425f61cbd0d91b39bcafb72e2b373c741307"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/data/pes2o-token-stock-v2-20260914.json",
+      "sha256": "88f18f4eb301ca322a263b012cfe06a698033c3cf7fc2686d901aa48c2407c5e"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/data/finemath-token-stock-v2-20260914.json",
+      "sha256": "cc486eb487dfc90589a09545d1e602dc2a08e9d4dd7f90686a4cdf0866b1a497"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/data/cosmopedia-token-stock-20260914.json",
+      "sha256": "eebb8acbde03054518b511b5d206066f2dfd1afa47c4f812d30b780746ef0aca"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/results/data/math-l2-token-stock-20260914.json",
+      "sha256": "e6b9f199ddbd6110d708b5b483420d426e7f8f3d220b4a8a48316715ecff7025"
+    }
+  ],
+  "scope": "Index-only length census of existing source-specific caches, including unselected Math L2 as a separately labeled source. No new data acquisition, source substitution, family assignment, packing or task generation."
+}
