@@ -25,6 +25,9 @@ pre-exclusion tokens; see the [failure observation](../../results/systems/stack-
 All 1,856 completed units and archives subsequently passed the [recovery audit](../findings/2026-09-16-stack-edu-recovery.md).
 The bound v2 recovery now rechecks the preserved prefix and acquires only the finite remainder in a
 new workspace. Completion and full exclusion remain pending. FineWeb remains active at this check.
+The [ordered-code exclusion adapter](ORDERED_CODE_EXCLUSION.md) now has
+[fixture qualification](../../results/systems/ordered-stock-exclusion-qualification-20260916.json);
+bind the actual complete acquisition receipt and storage preflight before executing it.
 The earlier [readiness assessment](READINESS.md) records launch gaps; [maintained status](../status.json)
 and the [preparation successor](../../results/systems/local-preparation-readiness-20260916.json) record this follow-up.
 
