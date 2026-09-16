@@ -8,6 +8,7 @@ and [active queue](../flagship/PREPARATION_QUEUE.md) for current boundaries and 
 
 | Topic | Prior evidence and boundary |
 | --- | --- |
+| Finite document inputs | [Eight real FineWiki windows](2026-09-16-document-window-reader.md) pass boundary-preserving reads, finite exhaustion and new-reader cursor replay; model isolation and scientific partitions remain unqualified. |
 | Raw long-document candidates | [FineWiki padding sensitivity](2026-09-16-finewiki-long-candidates.md) shows why raw token length is insufficient: none of 16 biased candidates remains 128K after diagnostic horizontal-whitespace collapse; no new stock is qualified. |
 | Intact long-document capacity | [Document-index census](2026-09-16-document-length-capacity.md) finds sparse 32K and no 128K+1 documents in the five checked caches; coherent-unit preparation remains necessary. |
 | Base source supply | [Selected-mixture demand and stock exposure](2026-09-16-base-supply.md) shows why the completed small source banks do not establish production capacity. |
