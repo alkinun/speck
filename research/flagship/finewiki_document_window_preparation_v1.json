@@ -1,0 +1,15 @@
+{
+  "format": "speck_document_window_preparation",
+  "format_version": 1,
+  "stock_manifest": {
+    "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
+    "sha256": "483277cfc8f2ab043169539b19e341e4dfbeac8b8d2c6094dc6245dbeddafaf0"
+  },
+  "windows": {
+    "path": "/home/alkin/Desktop/speck/research/flagship/finewiki_document_windows_v1.jsonl",
+    "sha256": "edf69eebaf1a43c1366a0332cf036a4f6cf07897a8e6ffc5b15cc14688674582"
+  },
+  "sequence_length": 32768,
+  "output_directory": "/mnt/speck-data/speck/finewiki-engineering-document-windows-v1",
+  "training_authority": false
+}
