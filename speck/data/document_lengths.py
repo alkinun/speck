@@ -3,6 +3,7 @@
 import hashlib
 import heapq
 import json
+import re
 from pathlib import Path
 
 from speck.provenance.io import file_sha256
@@ -34,6 +35,7 @@ def census(manifest_identity):
     }
     digest = hashlib.sha256()
     position = documents = utf8 = 0
+    missing_ids = 0
     largest = []
     with index.open("rb") as handle:
         for line in handle:
@@ -48,8 +50,9 @@ def census(manifest_identity):
                 or row["token_count"] <= 0
                 or type(row["utf8_bytes"]) is not int
                 or row["utf8_bytes"] < 0
-                or not isinstance(row["content_id"], str)
-                or not row["content_id"]
+                or (row["content_id"] is not None and type(row["content_id"]) not in (str, int))
+                or not isinstance(row["released_content_sha256"], str)
+                or not re.fullmatch(r"[0-9a-f]{64}", row["released_content_sha256"])
             ):
                 raise ValueError("document index order, spans or counts differ")
             size = row["token_count"]
@@ -64,6 +67,7 @@ def census(manifest_identity):
                 heapq.heappop(largest)
             position += size
             documents += 1
+            missing_ids += row["content_id"] is None or row["content_id"] == ""
             utf8 += row["utf8_bytes"]
     if digest.hexdigest() != manifest["documents"]["sha256"]:
         raise ValueError("document index payload hash differs")
@@ -78,6 +82,7 @@ def census(manifest_identity):
         "documents": documents,
         "tokens": position,
         "utf8_bytes": utf8,
+        "documents_missing_upstream_content_id": missing_ids,
         "maximum_document_tokens": max((r[0] for r in largest), default=0),
         "context_capacity": {str(k): v for k, v in counts.items()},
         "longest_document_indices": [

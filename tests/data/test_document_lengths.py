@@ -68,3 +68,19 @@ def test_changed_or_inconsistent_index_rejected(stock, change):
     binding["sha256"] = file_sha256(path)
     with pytest.raises(ValueError):
         census(binding)
+
+
+def test_missing_upstream_id_is_preserved_not_invented_as_family_identity(stock):
+    binding, manifest, rows = stock
+    path = Path(binding["path"])
+    index = path.parent / "documents.jsonl"
+    rows[-1]["content_id"] = None
+    index.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    manifest["documents"]["sha256"] = file_sha256(index)
+    durable_json(path, manifest)
+    binding["sha256"] = file_sha256(path)
+    result = census(binding)
+    assert result["documents_missing_upstream_content_id"] == 1
+    assert result["longest_document_indices"][0]["content_id"] is None
+    assert result["longest_document_indices"][0]["released_content_sha256"] == "a" * 64
+    assert result["qualified_coherent_family_tokens"] is None
