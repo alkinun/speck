@@ -35,10 +35,14 @@
       "state": "fresh_process_executor_cpu_qualified_site_execution_pending"
     },
     {
+      "document_length_evidence": "results/data/document-length-census-v2-20260916.json",
+      "engineering_window_evidence": "results/data/finewiki-document-windows-20260916.json",
       "id": "lc_data",
-      "next": "R1: bind broad-source capacity/repetition and coherent long units; materialize verified evidence/history tasks with family-level separation.",
+      "next": "Current specialist stocks imply roughly 19\u201328 average base-only exposures at 320B, not an approved repetition schedule. Five completed caches have sparse intact 32K and no 128K+1 documents; a biased raw FineWiki sample shows major padding sensitivity. Eight retained 32K engineering windows pass finite reads/new-reader cursor replay, without model/family qualification. Finish costed production supply, coherent-unit intake, family partitions and task materialization.",
       "plan": "research/flagship/data_plan_v3.json",
-      "state": "pending"
+      "raw_long_candidate_review": "results/data/finewiki-long-structure-20260916.json",
+      "state": "source_exposure_and_length_gaps_measured_engineering_windows_checked",
+      "supply_evidence": "paper/tables/base-supply-v1/report.json"
     },
     {
       "id": "lc_study",
@@ -164,7 +168,7 @@
       "metadata_plan": "research/flagship/stack_edu_metadata_acquisition_v1.json",
       "metadata_successor_launch": "results/systems/stack-edu-metadata-v3-launch-20260915.json",
       "metadata_successor_plan": "research/flagship/stack_edu_metadata_acquisition_v3.json",
-      "next": "Worker stopped after 1856 completed units and 436048483 candidate tokens before full exclusion. Preserve the failed attempt and archives; reconcile working-space bounds and unit integrity before a bound recovery successor. No complete source stock, full exclusion or joint eligibility is established.",
+      "next": "The preserved storage-stop prefix passed all 1856 unit/archive checks: 668366 documents and 436048483 tokens before full exclusion. Frozen v2 recovery rechecks/reuses that prefix read-only and acquires only remaining original finite units in a new workspace with unchanged guards, filters, metadata and quotas. Completion, full exclusion and source stock remain pending; Stack-Edu does not replace selected restricted Stack v3.",
       "ordered_acquisition_launch": "results/systems/stack-edu-e1s-ordered-launch-20260915.json",
       "ordered_acquisition_plan": "research/flagship/stack_edu_e1s_ordered_acquisition_v1.json",
       "ordered_acquisition_qualification": "results/systems/stack-edu-e1s-ordered-qualification-20260915.json",
@@ -172,7 +176,9 @@
       "plan": "research/flagship/stack_edu_stock_preparation_v1.json",
       "previous_next": "Finite ordered acquisition now runs from frozen revision 3b35907, reusing its verified first 512-eligible-row Java unit (300 documents / 171342 Mistral tokens before full exclusion). All 28 metadata files and original eligible indices were verified. Process scarce Java/TypeScript first, archive each completed unit and stop dependent languages on pre-exclusion headroom shortfall or storage/input failure. Original stock worker remains paused; completed source capacity, full exclusion and joint eligibility remain pending.",
       "qualification": "results/systems/stack-edu-stock-prefix-20260914.json",
-      "state": "ordered_acquisition_stopped_at_storage_guard_before_completion",
+      "recovery_launch": "results/systems/stack-edu-ordered-recovery-launch-20260916.json",
+      "recovery_plan": "research/flagship/stack_edu_e1s_ordered_acquisition_v2.json",
+      "state": "verified_prefix_recovery_successor_running_completion_pending",
       "supply_comparison": "results/data/code-supply-comparison-v2-20260915.json",
       "supply_probe": "results/data/code-supply-probe-v3-20260915.json",
       "supply_probe_launch": "results/systems/code-supply-probe-v3-launch-20260915.json",
