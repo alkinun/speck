@@ -7,12 +7,10 @@ import os
 import shutil
 import subprocess
 import time
-from contextlib import ExitStack
 from datetime import datetime, timezone
 from pathlib import Path
 
-from speck.data.acquisition_units import _digest, _unit_config
-from speck.data.ordered_stock_recovery import reopen_reused_unit
+from speck.data.acquisition_units import _digest
 from speck.data.production_rehearsal import _contamination_indexes
 from speck.data.stack_edu_ordered_stock import index_batches, load_ordered_stock, verify_index_file
 from speck.data.stack_edu_ordered_units import acquire_batch, archive_batch
@@ -29,8 +27,6 @@ def run_units(plan, output, archive, store, contamination, tokenizer, *, pause_a
     # Scan the owned working tree once. Charge each new attempt's actual size thereafter.
     non_cache_bytes = directory_bytes(output) - store.used
     newly_completed = 0
-    reused = plan.get("reuse_units", {})
-    seen_reused = set()
     progress = {"complete_units": 0, "by_language_before_full_exclusion": languages}
     for language in plan["language_order"]:
         target = plan["targets"][language]
@@ -58,43 +54,26 @@ def run_units(plan, output, archive, store, contamination, tokenizer, *, pause_a
                     "start_row": batch[0]["source_row"],
                     "stop_row": batch[-1]["source_row"] + 1,
                 }
-                reuse = reused.get(unit["id"])
-                directory = Path(reuse["directory"]) if reuse else output / "acquired" / unit["id"]
-                if not reuse and seen_reused != set(reused):
-                    raise ValueError("recovery units are not a complete ordered prefix")
+                directory = output / "acquired" / unit["id"]
                 completed = (directory / "manifest.json").exists()
-                before = 0 if reuse else directory_bytes(directory)
+                before = directory_bytes(directory)
                 # JSON escaping and two retained text copies fit within this conservative
                 # per-record reservation. Cache retries have an independent live reservation.
                 content_bound = len(batch) * (
                     16 * plan["base"]["stack_edu_policy"]["fetch"]["maximum_blob_bytes"] + 65536
                 )
                 working_bound = non_cache_bytes + plan["maximum_cache_bytes"] + content_bound
-                if (
-                    not reuse
-                    and not completed
-                    and (
-                        working_bound > plan["maximum_working_bytes"]
-                        or shutil.disk_usage(output).free
-                        < plan["minimum_free_bytes"] + content_bound
-                    )
+                if not completed and (
+                    working_bound > plan["maximum_working_bytes"]
+                    or shutil.disk_usage(output).free < plan["minimum_free_bytes"] + content_bound
                 ):
                     raise ValueError("ordered acquisition working/free-space bound reached")
-                if reuse:
-                    manifest = reopen_reused_unit(reuse, _unit_config(plan, unit))
-                    seen_reused.add(unit["id"])
-                else:
-                    manifest = acquire_batch(
-                        plan, unit, batch, output / "acquired", store, contamination, tokenizer
-                    )
-                # A verified sequential archive is durable before the next network batch.
-                archived = archive_batch(
-                    directory,
-                    manifest,
-                    Path(reuse["archive_directory"]) if reuse else archive / "units" / unit["id"],
+                manifest = acquire_batch(
+                    plan, unit, batch, output / "acquired", store, contamination, tokenizer
                 )
-                if not reuse:
-                    non_cache_bytes += directory_bytes(directory) - before
+                # A verified sequential archive is durable before the next network batch.
+                archived = archive_batch(directory, manifest, archive / "units" / unit["id"])
+                non_cache_bytes += directory_bytes(directory) - before
                 totals["documents"] += manifest["retained_records"]
                 totals["tokens"] += manifest["tokens_before_full_exclusion"]
                 totals["pre_gitleaks_candidate_tokens"] += manifest["pre_gitleaks_candidate_tokens"]
@@ -109,7 +88,7 @@ def run_units(plan, output, archive, store, contamination, tokenizer, *, pause_a
                         "archive": archived,
                     }
                 )
-                newly_completed += not reuse and not completed
+                newly_completed += not completed
                 progress = {
                     "state": "acquiring",
                     "complete_units": len(reports),
@@ -122,7 +101,6 @@ def run_units(plan, output, archive, store, contamination, tokenizer, *, pause_a
                     "cache_bytes": store.used,
                     "elapsed_seconds_this_invocation": time.perf_counter() - started,
                     "full_exclusion_performed": False,
-                    "reused_completed_units": len(seen_reused),
                 }
                 durable_json(output / "progress.json", progress)
                 print(
@@ -158,8 +136,6 @@ def run_units(plan, output, archive, store, contamination, tokenizer, *, pause_a
         )
         if not totals["pre_exclusion_headroom_pass"]:
             break
-    if seen_reused != set(reused):
-        raise ValueError("not all bound recovery units were consumed")
     short = [name for name, row in languages.items() if not row["pre_exclusion_headroom_pass"]]
     progress.update(
         {
@@ -203,16 +179,8 @@ def main():
         ).strip(),
         "plan": {"path": str(args.plan.resolve()), "sha256": file_sha256(args.plan)},
     }
-    with ExitStack() as locks:
-        if plan.get("reuse_owner_directory"):
-            previous_lock = locks.enter_context(
-                (Path(plan["reuse_owner_directory"]) / "owner.lock").open("r")
-            )
-            fcntl.flock(previous_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            if load_ordered_stock(args.plan) != plan:
-                raise ValueError("recovery inputs changed before ownership lock")
-        output.mkdir(parents=True, exist_ok=True)
-        lock = locks.enter_context((output / "owner.lock").open("a"))
+    output.mkdir(parents=True, exist_ok=True)
+    with (output / "owner.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         owner = output / "execution.json"
         if owner.exists():
@@ -267,25 +235,14 @@ def main():
                     args.result,
                     {
                         "format": "speck_stack_edu_ordered_acquisition_result",
-                        "format_version": 2 if plan.get("reuse_units") else 1,
+                        "format_version": 1,
                         "status": result["progress"]["state"],
                         **execution,
                         **result,
                         "source_use": plan["source_use"]["identity"],
                         "reference_tokenizer": plan["reference_tokenizer"],
                         "inputs": plan["inputs"],
-                        "acquired_directory": None
-                        if plan.get("reuse_units")
-                        else str(output / "acquired"),
-                        "acquired_directories": [
-                            *(
-                                [str(Path(plan["reuse_owner_directory"]) / "acquired")]
-                                if plan.get("reuse_units")
-                                else []
-                            ),
-                            str(output / "acquired"),
-                        ],
-                        "reuse_inventory": plan.get("reuse_inventory"),
+                        "acquired_directory": str(output / "acquired"),
                         "training_authority": False,
                         "full_exclusion_performed": False,
                         "boundary": plan["scope"],

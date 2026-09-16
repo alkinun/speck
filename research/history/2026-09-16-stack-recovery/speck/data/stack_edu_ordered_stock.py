@@ -13,13 +13,6 @@ from speck.provenance.io import file_sha256
 def load_ordered_stock(path):
     path = Path(path).resolve()
     spec = json.loads(path.read_text())
-    if spec.get("format_version") == 2:
-        from speck.data.ordered_stock_recovery import bound_json, load_recovery_successor
-
-        previous = _bound_identity(spec["supersedes"], path.parent)
-        if bound_json(previous).get("format_version") != 1:
-            raise ValueError("recovery successor requires the original v1 plan")
-        return load_recovery_successor(spec, load_ordered_stock(previous["path"]), previous)
     if (
         spec.get("format") != "speck_stack_edu_ordered_acquisition"
         or spec.get("format_version") != 1

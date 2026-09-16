@@ -1,0 +1,23 @@
+{
+  "format": "speck_ordered_stock_recovery_snapshot",
+  "format_version": 1,
+  "revision": "2d5cfd7dd86d90a9cc9b78aa7fdb8adc5131e7c8",
+  "reason": "Preserve predecessor implementation/status before read-only completed-unit recovery successor.",
+  "files": [
+    {
+      "original_path": "scripts/acquire_stack_edu_e1s.py",
+      "preserved_path": "research/history/2026-09-16-stack-recovery/scripts/acquire_stack_edu_e1s.py",
+      "sha256": "48ad4e3d4750632b0a9d3d2d2c72116d60b168d6ce7dcf89d3362db10f2a5222"
+    },
+    {
+      "original_path": "speck/data/stack_edu_ordered_stock.py",
+      "preserved_path": "research/history/2026-09-16-stack-recovery/speck/data/stack_edu_ordered_stock.py",
+      "sha256": "98f0374398d3a874bf19128e627e4479845be84c926ae1784116169a09199714"
+    },
+    {
+      "original_path": "research/status.json",
+      "preserved_path": "research/history/2026-09-16-stack-recovery/research/status.json",
+      "sha256": "a0f4faead481750e0a689d0235d46e7662250b129268c7bf0349a649164238ec"
+    }
+  ]
+}
