@@ -4,9 +4,6 @@
 supplied documents and histories efficiently. This replaces the allocation-thesis experiment program;
 see [PIVOT.md](PIVOT.md) for preserved evidence, retired work and migration.
 
-Current [readiness assessment](READINESS.md): design and budget selected; datasets, experiment
-freeze, site execution and post-training recipe remain incomplete.
-
 ## Model
 
 - 1.2B-class dense-width, 24 blocks, hidden width 2048, inherited 3:1 KDA/global GQA.
@@ -15,10 +12,8 @@ freeze, site execution and post-training recipe remain incomplete.
 - BF16, Muon matrices plus AdamW elsewhere, WSD. Freeze LR/batch after hardware calibration.
 - 320B broad-base token target; 400B only when the 2,425-hour base envelope and calendar support it.
 - 4K base training, useful 32K milestone, 64K evaluation and 128K target.
-- Broad general assistance remains a release requirement. The owner-selected final assistant reasons
-  inside `<think>...</think>` and answers afterward; the post-training recipe remains open. See the
-  [response decision](release_behavior_decision_v1.json), which supersedes the earlier undecided
-  `product.response_policy` in the retained model plan.
+- Broad general assistance remains a release requirement. Response mode is a measured development
+  choice; thinking-only is not selected.
 
 [model_plan_v1.json](model_plan_v1.json) records model scope. Exact parameter count and tensors are
 revalidated from the retained geometry and frozen tokenizer before launch.
@@ -41,7 +36,6 @@ paper. CPU/GGUF is optional until the recurrent path is implemented and qualifie
 | Controlled experiment | [STUDY.md](STUDY.md), [long_context_study_v1.json](long_context_study_v1.json) |
 | Architecture and systems | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Data | [LONG_CONTEXT_DATA.md](LONG_CONTEXT_DATA.md), [data_plan_v3.json](data_plan_v3.json) |
-| Final assistant response | [Owner decision](release_behavior_decision_v1.json); recipe and implementation pending |
 | Context/instruction stages | [CONTEXT_EXTENSION.md](CONTEXT_EXTENSION.md), [POST_TRAINING.md](POST_TRAINING.md) |
 | Evaluation and comparators | [EVALUATION.md](EVALUATION.md) |
 | Paper claims | [PAPER.md](PAPER.md) |

@@ -86,6 +86,11 @@ program receives 700 hours. Useful 32K is the first milestone, 64K an evaluation
 Each stage must retain general quality and re-establish useful context; advertise the highest passing
 length. There is no full-horizon dense 1.2B counterfactual in this allocation.
 
+The final assistant is required to emit reasoning inside `<think>...</think>` followed by its answer
+([owner decision](../../research/flagship/release_behavior_decision_v1.json)). The post-training recipe
+and exact template/parser remain pending. Evaluation must retain full generations, score the parsed
+answer under frozen rules, and account for both reasoning and answer tokens in total cost.
+
 ## 6. Practical quality-cost frontier — pending
 
 Compare pinned public near-footprint/larger models and BM25-based retrieval with the same source inputs

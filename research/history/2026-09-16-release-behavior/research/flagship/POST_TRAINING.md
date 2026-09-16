@@ -9,10 +9,7 @@ These are within the 700-hour capability ceiling, not additional to context cont
 Post-training experiments are underway in another codebase. This pivot does not claim to have audited
 them. Before importing a recipe, reconcile code revision, tokenizer/chat format, loss masks, weights,
 optimizer lineage, teacher/data identities, all attempted costs, evaluations and export compatibility.
-Use that evidence to avoid duplicating experiments. The [2026-09-16 owner decision](release_behavior_decision_v1.json)
-now fixes final-assistant behavior: reasoning inside `<think>...</think>`, followed by the answer.
-The method for learning this behavior remains under discussion; no recipe is imported here.
-The decision overrides only the earlier undecided response policy in the retained model plan.
+Use that evidence to avoid duplicating experiments. No thinking-only response mode is frozen.
 
 ## Broad SFT
 
@@ -41,17 +38,8 @@ retroactively described as the confirmatory intervention.
 
 Choose at most one method based on observed errors and existing evidence. Record teacher inference,
 verification/rejection, student training and external costs. RL infrastructure, a multi-teacher fleet,
-and branch-merging search are outside this budget. Reasoning response behavior is now required;
-that does not establish that an unchosen recipe fits the envelope. Reconcile its costs before training. Unused L5 stays headroom
+branch-merging search and a compulsory Think model are outside this budget. Unused L5 stays headroom
 unless a costed phase-local change is frozen before affected outputs.
-
-## Response-format qualification
-
-Before affected outputs, freeze the chat template, delimiter tokenization, loss masks, reasoning/answer
-limits, parser and malformed/truncated-output rules. The textual tags do not allocate new vocabulary
-IDs. Count both reasoning and answer tokens in total cost and latency, with separate breakdowns;
-retain full generations while scoring the parsed answer under fixed rules. Verify format and
-termination through native and exported serving. Tag compliance alone is not reasoning-quality evidence.
 
 ## Release gate
 

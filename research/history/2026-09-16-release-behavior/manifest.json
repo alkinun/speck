@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "original_path": "research/catalog.json",
+      "preserved_path": "research/history/2026-09-16-release-behavior/research/catalog.json",
+      "sha256": "a76b74499018256f5b25348546eef05c9193521f4200d823fdb8f87642d7236f"
+    },
+    {
+      "original_path": "research/status.json",
+      "preserved_path": "research/history/2026-09-16-release-behavior/research/status.json",
+      "sha256": "59dd6a0b8b4d7132cd297ab0d5379847c16158a71f3f18f56575c7174ada764f"
+    },
+    {
+      "original_path": "research/flagship/README.md",
+      "preserved_path": "research/history/2026-09-16-release-behavior/research/flagship/README.md",
+      "sha256": "bb7d4ca2f337288de52446b9e63c6dd83ec49e91b4e30e2bb8484a820ddcebad"
+    },
+    {
+      "original_path": "research/flagship/POST_TRAINING.md",
+      "preserved_path": "research/history/2026-09-16-release-behavior/research/flagship/POST_TRAINING.md",
+      "sha256": "fdb87b324c607aa18be700ea754340a1d2925eb2bd5ca3998ca39db4d3c514e7"
+    }
+  ],
+  "format": "speck_release_behavior_decision_snapshot",
+  "format_version": 1,
+  "reason": "Preserve prior owner-response-policy guidance and maintained catalog/status before additive reasoning-response decision and observed source-worker failure.",
+  "revision": "25e49e5b61ae1de5dcf1576680b6ea02e83c82fe"
+}

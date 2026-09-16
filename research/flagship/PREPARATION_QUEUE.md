@@ -20,6 +20,11 @@ preserve unsuccessful attempts, and record actual post-filter/exclusion yield. C
 raw downloads are not qualified token supply. The FineWeb follow-up queue already includes cache
 publication/verification after successful text qualification; do not launch a duplicate worker.
 
+Update 2026-09-16: Stack-Edu has stopped at its storage guard after 1,856 units and 436.05M
+pre-exclusion tokens; see the [failure observation](../../results/systems/stack-edu-storage-stop-20260916.json).
+Reconcile its preserved units and storage before a bound recovery successor. FineWeb remains active
+at this check. See the [readiness assessment](READINESS.md) for the remaining launch gaps.
+
 Do not automatically extend these jobs or run competing large exclusion passes on the shared drive.
 Use explicit bound successors for further acquisition. The [preserved queue](../history/2026-09-15-readiness-cleanup/manifest.json)
 retains the earlier source requirements and operating history.
