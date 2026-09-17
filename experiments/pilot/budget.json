@@ -1,0 +1,20 @@
+{
+  "maximum_gpu_hours": 50,
+  "allocated_gpus": 4,
+  "maximum_job_wall_seconds": 43200,
+  "includes": [
+    "training",
+    "validation",
+    "checkpointing",
+    "failed_attempts",
+    "allocated_idle_gpus"
+  ],
+  "launch_requires": [
+    "completed_pilot_data_reopen",
+    "one_worker_then_four_worker_hardware_qualification",
+    "kernel_and_cached_generation_parity",
+    "production_loader_and_scheduler_recovery",
+    "measured_cost_projection_within_remaining_pilot_budget"
+  ],
+  "status": "prepared_configuration_no_gpu_execution"
+}

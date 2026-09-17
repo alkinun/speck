@@ -1,0 +1,32 @@
+{
+  "batch_tokens": 131072,
+  "device_batch_size": 1,
+  "sequence_length": 4096,
+  "train_tokens": 104857600,
+  "eval_tokens": 786432,
+  "final_eval_tokens": 786432,
+  "eval_every": 100,
+  "save_every": 100,
+  "log_every": 10,
+  "grad_clip": 1.0,
+  "lr": 0.0003,
+  "lr_schedule": "cosine",
+  "min_lr": 0.1,
+  "optimizer": "muon",
+  "run": "flagship-pilot-105m",
+  "output_dir": null,
+  "wandb_project": "speck",
+  "warmup_steps": 40,
+  "weight_decay": 0.1,
+  "checkpoint_tokens": [
+    13107200,
+    26214400,
+    52428800,
+    78643200,
+    104857600
+  ],
+  "seed": 42,
+  "activation_checkpointing": true,
+  "loss_backend": "liger",
+  "diagnostics_every": 100
+}

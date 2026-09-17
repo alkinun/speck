@@ -1,0 +1,85 @@
+{
+  "sources": [
+    {
+      "id": "fineweb_edu",
+      "repo": "local/retained-fineweb_edu",
+      "revision": null,
+      "tree_path": "",
+      "content_column": "text",
+      "filters": {}
+    },
+    {
+      "id": "stack_edu",
+      "repo": "local/retained-stack_edu",
+      "revision": null,
+      "tree_path": "",
+      "content_column": "text",
+      "filters": {}
+    },
+    {
+      "id": "finemath_4plus",
+      "repo": "local/retained-finemath_4plus",
+      "revision": null,
+      "tree_path": "",
+      "content_column": "text",
+      "filters": {}
+    },
+    {
+      "id": "cosmopedia_v2",
+      "repo": "local/retained-cosmopedia_v2",
+      "revision": null,
+      "tree_path": "",
+      "content_column": "text",
+      "filters": {}
+    },
+    {
+      "id": "pes2o_v3",
+      "repo": "local/retained-pes2o_v3",
+      "revision": null,
+      "tree_path": "",
+      "content_column": "text",
+      "filters": {}
+    },
+    {
+      "id": "finewiki_en",
+      "repo": "local/retained-finewiki_en",
+      "revision": null,
+      "tree_path": "",
+      "content_column": "text",
+      "filters": {}
+    }
+  ],
+  "mixture": {
+    "phases": [
+      {
+        "end_tokens": 104857600,
+        "weights": {
+          "fineweb_edu": 50,
+          "stack_edu": 15,
+          "finemath_4plus": 15,
+          "cosmopedia_v2": 10,
+          "pes2o_v3": 5,
+          "finewiki_en": 5
+        }
+      }
+    ]
+  },
+  "requested_train_tokens": 104857600,
+  "validation_tokens_per_source": 131072,
+  "validation_fraction": 0.05,
+  "filtering": {
+    "min_chars": 0,
+    "max_chars": 16000000
+  },
+  "dedup": {
+    "normalization": "NFKC+lower+whitespace",
+    "hash": "blake2b-128",
+    "scope": "global"
+  },
+  "shards": {
+    "tokens": 10485760,
+    "maximum_loader_microbatch_tokens": 65536
+  },
+  "seed": 42,
+  "output_name": "flagship-pilot-105m"
+}

@@ -1,0 +1,66 @@
+{
+  "format": "speck_retained_pilot_inputs",
+  "format_version": 1,
+  "sources": [
+    {
+      "id": "fineweb_edu",
+      "weight": 50,
+      "stock_manifest": "document-token-stock-e1s-v1/fineweb_edu/manifest.json",
+      "sha256": "109241b301b182678a09f01edca91c1bb67ea1cee6aafe93d0a5ac9b6a5e0a2b"
+    },
+    {
+      "id": "stack_edu",
+      "weight": 15
+    },
+    {
+      "id": "finemath_4plus",
+      "weight": 15,
+      "stock_manifest": "document-token-stock-v2/finemath_4plus/manifest.json",
+      "sha256": "fd528ccdb15626eae55d110ca064852d4938a5f733b9e0255c220cd2369adf65"
+    },
+    {
+      "id": "cosmopedia_v2",
+      "weight": 10,
+      "stock_manifest": "document-token-stock-v1/cosmopedia_v2/manifest.json",
+      "sha256": "2a09fc9ee92924815de5c833b94276af2e3bf5f50e059603ada844c372c371d6"
+    },
+    {
+      "id": "pes2o_v3",
+      "weight": 5,
+      "stock_manifest": "document-token-stock-v2/pes2o_v3/manifest.json",
+      "sha256": "bd5fae28d15014a67624d583785ec92e09f88a0a13a84de306b069e4869e77df"
+    },
+    {
+      "id": "finewiki_en",
+      "weight": 5,
+      "stock_manifest": "document-token-stock-v1/finewiki_en/manifest.json",
+      "sha256": "483277cfc8f2ab043169539b19e341e4dfbeac8b8d2c6094dc6245dbeddafaf0"
+    }
+  ],
+  "archived": {
+    "code_receipt": {
+      "revision": "f5f4c915e744275f2a6677c722255c23525783bf",
+      "path": "results/data/stack-edu-e1s-ordered-acquisition-v2-20260916.json",
+      "sha256": "7226f676529217047028e7ae4983f8739866054e4ad7cda19123eb89a551addf"
+    },
+    "deny_ledger": {
+      "revision": "f5f4c915e744275f2a6677c722255c23525783bf",
+      "path": "archive/pregrant-history/research/flagship/data_rehearsal_20b_v1/deny_ledger_v1.json",
+      "sha256": "9f93dc1a8045bd5b569657b0c994a76c53ae19e2d1b95a026dfdb400858fa101"
+    }
+  },
+  "candidate_multiplier": 2,
+  "code_languages_percent": {
+    "Python": 28,
+    "C++": 16,
+    "C": 5,
+    "Java": 10,
+    "JavaScript": 15,
+    "TypeScript": 6,
+    "Rust": 8,
+    "Go": 5,
+    "Shell": 2,
+    "SQL": 2,
+    "Markdown": 3
+  }
+}
