@@ -50,8 +50,9 @@ uv run --no-sync python -m scripts.pilot_prepare experiments/pilot --stage pack 
 
 Selection excludes both development and final public benchmark material using exact fields and
 informative n-grams. The exclusion stage gives the twelve retained reference partitions precedence,
-then applies global exact/near deduplication across all pilot candidates. Packing assigns validation
-by a seeded content hash and rechecks exact duplicates globally. Supply shortfalls fail explicitly;
+then applies global exact/near deduplication across all pilot candidates. Packing shuffles each selected source by a seeded content hash, then assigns validation
+by an independent seeded content hash and rechecks exact duplicates globally. The shuffle prevents
+acquisition language groups from determining which code examples reach the finite token endpoint. Supply shortfalls fail explicitly;
 they do not trigger repetition or source reweighting. Completed source selections can be reused;
 a partial source selection is preserved for inspection and requires a new work directory.
 The existing joint-exclusion stage supports checkpointed resume with the same configuration.

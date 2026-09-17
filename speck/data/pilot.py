@@ -279,6 +279,29 @@ def exclude_candidates(work):
     )
 
 
+def ordered_documents(path, seed):
+    """Shuffle a finite source by content hash, storing only offsets in memory."""
+
+    positions = []
+    with Path(path).open("rb") as handle:
+        while True:
+            offset = handle.tell()
+            raw = handle.readline()
+            if not raw:
+                break
+            row = json.loads(raw)
+            priority = hashlib.sha256(f"{seed}:{row['released_content_sha256']}".encode()).digest()
+            positions.append((priority, offset))
+        for ordinal, (_, offset) in enumerate(sorted(positions)):
+            handle.seek(offset)
+            row = json.loads(handle.readline())
+            yield {
+                "content": row["text"],
+                "row": ordinal,
+                "metadata": {"content_id": row["content_id"], "language": row.get("language")},
+            }
+
+
 def pack_candidates(experiment, work):
     """Pack only the jointly excluded sources with deterministic global split/dedup."""
 
@@ -288,20 +311,10 @@ def pack_candidates(experiment, work):
     manifest = result["manifest"]
     iterators = {}
 
-    def documents(path):
-        with path.open() as handle:
-            for ordinal, raw in enumerate(handle):
-                row = json.loads(raw)
-                yield {
-                    "content": row["text"],
-                    "row": ordinal,
-                    "metadata": {"content_id": row["content_id"], "language": row.get("language")},
-                }
-
     for source in configs["data"]["sources"]:
         entry = manifest["outputs"][source["id"]]
         path = work / "excluded" / entry["path"]
-        iterators[source["id"]] = documents(path)
+        iterators[source["id"]] = ordered_documents(path, configs["data"]["seed"])
     try:
         packed = prepare_dataset(
             **configs["data"],
@@ -322,6 +335,7 @@ def pack_candidates(experiment, work):
             },
             "selection_sha256": file_sha256(work / "selection.json"),
             "exclusion_sha256": file_sha256(work / "excluded/manifest.json"),
+            "data_order": "per-source SHA-256(seed:released_content_sha256) ascending",
             "status": "packed_and_reopened_hardware_qualification_pending",
         },
     )

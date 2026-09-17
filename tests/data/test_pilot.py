@@ -82,3 +82,24 @@ def test_code_reader_binds_manifest_and_payload_before_using_text(tmp_path):
     source.write_text("changed")
     with pytest.raises(ValueError, match="payload changed"):
         list(code_documents(receipt, Tokenizer(), "Python", []))
+
+
+def test_packing_order_is_independent_of_acquisition_language_grouping(tmp_path):
+    from speck.data.pilot import ordered_documents
+
+    rows = [
+        {
+            "text": str(i),
+            "content_id": str(i),
+            "language": language,
+            "released_content_sha256": hashlib.sha256(str(i).encode()).hexdigest(),
+        }
+        for i, language in enumerate(["Python"] * 10 + ["Rust"] * 10)
+    ]
+    a, b = tmp_path / "a.jsonl", tmp_path / "b.jsonl"
+    a.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    b.write_text("".join(json.dumps(row) + "\n" for row in reversed(rows)))
+    left, right = list(ordered_documents(a, 42)), list(ordered_documents(b, 42))
+    assert left == right
+    assert {row["content"] for row in left} == {str(i) for i in range(20)}
+    assert len({row["metadata"]["language"] for row in left[:10]}) == 2
