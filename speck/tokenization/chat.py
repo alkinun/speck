@@ -268,11 +268,15 @@ class ChatTokenizer:
         return self.metadata()["fingerprint"]
 
     def save_pretrained(self, directory, model_max_length=4096):
-        """Write a standard LlamaTokenizer artifact with the Speck chat template."""
+        """Write the exact Speck SentencePiece backend with its checked chat template."""
 
         directory = Path(directory)
         directory.mkdir(parents=True, exist_ok=True)
         shutil.copy2(self.model_path, directory / "tokenizer.model")
+        shutil.copy2(
+            Path(__file__).resolve().parents[1] / "transformers_tokenization.py",
+            directory / "tokenization_speck.py",
+        )
         added_tokens = {
             str(self.role_ids[role]): {
                 "content": token,
@@ -297,7 +301,8 @@ class ChatTokenizer:
             "model_max_length": model_max_length,
             "pad_token": None,
             "split_special_tokens": False,
-            "tokenizer_class": "LlamaTokenizer",
+            "tokenizer_class": "SpeckTokenizer",
+            "auto_map": {"AutoTokenizer": ["tokenization_speck.SpeckTokenizer", None]},
             "unk_token": "<unk>",
         }
         special_tokens = {

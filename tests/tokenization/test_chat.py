@@ -104,6 +104,8 @@ def test_save_chat_tokenizer_artifact(tmp_path):
     config = json.loads((output / "tokenizer_config.json").read_text())
     assert config["chat_template"] == CHAT_TEMPLATE
     assert config["split_special_tokens"] is False
+    assert config["tokenizer_class"] == "SpeckTokenizer"
+    assert (output / "tokenization_speck.py").is_file()
     assert set(config["added_tokens_decoder"]) == {"300", "301", "302"}
     assert (output / "chat_template.jinja").read_text() == CHAT_TEMPLATE
     assert (output / "tokenizer.model").read_bytes() == b"sentencepiece"
