@@ -8,8 +8,9 @@ No GPU training has run. It is not a model-quality result or an architecture com
 The endpoint is **104,857,600 training tokens**, 800 optimizer steps of 131,072 tokens.
 The initial four-worker geometry is one 4K sequence per worker and eight accumulation steps.
 Use the frozen tokenizer, FP32 parameter/optimizer storage, BF16 CUDA activations, activation
-checkpointing, Liger loss, and Muon/AdamW. The peak learning rate is 3e-4, with 40 warmup steps
-and cosine decay to 10%. These are conservative starting settings, not optimized hyperparameters.
+checkpointing, Liger loss, and Muon/AdamW. Deterministic PyTorch kernels support strict checkpoint
+replay. The peak learning rate is 3e-4, with 40 warmup steps and cosine decay to 10%.
+These are conservative starting settings, not optimized hyperparameters.
 The model inherits the qualification geometry, including its three reserved embedding rows.
 
 | Source | Training weight |

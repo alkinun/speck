@@ -45,7 +45,7 @@ def validate_settings(settings):
         "loss_backend",
         "resume_tolerance",
     }
-    if set(settings) != required:
+    if set(settings) - {"deterministic"} != required:
         raise ValueError("R0 execution settings are missing or unknown")
     for key, (low, high) in limits.items():
         value = settings[key]
@@ -58,6 +58,8 @@ def validate_settings(settings):
     for key in ("compile", "activation_checkpointing"):
         if type(settings[key]) is not bool:
             raise ValueError(f"invalid boolean R0 setting: {key}")
+    if type(settings.get("deterministic", False)) is not bool:
+        raise ValueError("invalid boolean R0 setting: deterministic")
     if settings["loss_backend"] not in ("torch", "liger"):
         raise ValueError("unsupported R0 loss backend")
     tolerance = settings["resume_tolerance"]

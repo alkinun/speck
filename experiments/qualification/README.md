@@ -3,6 +3,10 @@
 This checks the existing 1.2B KDA/GQA model at 4K. [model.json](model.json) holds its exact geometry;
 [plan.json](plan.json) holds finite execution settings. There is no catalog or predecessor-plan chain.
 The model has 32,003 embedding rows; synthetic inputs use the original 32,000-token vocabulary.
+The checked plan enables deterministic PyTorch algorithms, including deterministic attention
+backward, and a reproducible cuBLAS workspace. A local CUDA diagnostic found that default attention
+backward can vary across otherwise identical runs. Preserve this setting across the initial and
+restarted workers; the strict restart tolerance has not been relaxed. Record its throughput cost.
 
 Bind the configuration and current source hashes without allocating weights or launching workers:
 

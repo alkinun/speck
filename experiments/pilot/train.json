@@ -27,6 +27,7 @@
   ],
   "seed": 42,
   "activation_checkpointing": true,
+  "deterministic": true,
   "loss_backend": "liger",
   "diagnostics_every": 100
 }

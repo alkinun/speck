@@ -1,7 +1,26 @@
+import os
+
 import pytest
 import torch
 
 from speck.operations import runtime as common
+
+
+def test_deterministic_runtime_sets_workspace_and_rejects_conflicting_configuration(monkeypatch):
+    monkeypatch.delenv("CUBLAS_WORKSPACE_CONFIG", raising=False)
+    previous = torch.are_deterministic_algorithms_enabled()
+    try:
+        common.configure_determinism(True)
+        assert torch.are_deterministic_algorithms_enabled()
+        assert os.environ["CUBLAS_WORKSPACE_CONFIG"] == ":4096:8"
+        monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", "invalid")
+        with pytest.raises(ValueError, match="CUBLAS_WORKSPACE_CONFIG"):
+            common.configure_determinism(True)
+        common.configure_determinism(False)
+        assert not torch.are_deterministic_algorithms_enabled()
+    finally:
+        monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+        common.configure_determinism(previous)
 
 
 @pytest.mark.parametrize(

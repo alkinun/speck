@@ -120,6 +120,7 @@ def test_changed_model_binds_new_identity_and_rejects_invalid_count(tmp_path):
         ("timeout_seconds", 3601),
         ("lr", float("nan")),
         ("compile", 1),
+        ("deterministic", 1),
         ("resume_tolerance", {"rtol": 0.5, "atol": 0.5}),
     ],
 )

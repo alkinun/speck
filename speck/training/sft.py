@@ -19,7 +19,14 @@ from speck.data.loader import manifest_fingerprint
 from speck.export.pretrained import load_pretrained, pretrained_source_matches
 from speck.model import SpeckForCausalLM, build_model
 from speck.model.architecture import ArchitectureConfig
-from speck.operations.runtime import NullRun, base_dir, cleanup, init_runtime, print0
+from speck.operations.runtime import (
+    NullRun,
+    base_dir,
+    cleanup,
+    configure_determinism,
+    init_runtime,
+    print0,
+)
 from speck.tokenization.chat import get_chat_tokenizer
 from speck.training.checkpoint import latest, load, prune, save
 from speck.training.sft_data import (
@@ -51,7 +58,9 @@ def arguments():
 
 
 def _settings(value):
+    value = {"deterministic": False, **value}
     required = {
+        "deterministic",
         "batch_tokens",
         "data_dir",
         "dataset",
@@ -79,6 +88,8 @@ def _settings(value):
         unknown = sorted(set(value) - required)
         raise ValueError(f"invalid SFT settings; missing={missing}, unknown={unknown}")
     args = SimpleNamespace(**value)
+    if type(args.deterministic) is not bool:
+        raise ValueError("SFT deterministic must be boolean")
     integer_positive = (
         "batch_tokens",
         "device_batch_size",
@@ -147,6 +158,7 @@ class SFTTrainer:
         self.args = args
 
     def _initialize_runtime(self):
+        configure_determinism(self.args.deterministic)
         self.rank, self.local_rank, self.world_size, self.device = init_runtime(self.args.device)
         self.distributed = self.world_size > 1
         self.master = self.rank == 0
@@ -290,6 +302,7 @@ class SFTTrainer:
         }
         if self.metadata:
             immutable = (
+                "deterministic",
                 "sequence_length",
                 "device_batch_size",
                 "batch_tokens",
@@ -307,7 +320,8 @@ class SFTTrainer:
             changed = [
                 key
                 for key in immutable
-                if self.metadata["resolved"].get(key) != self.resolved.get(key)
+                if self.metadata["resolved"].get(key, False if key == "deterministic" else None)
+                != self.resolved.get(key)
             ]
             if changed:
                 raise ValueError(f"SFT resume settings changed: {', '.join(changed)}")

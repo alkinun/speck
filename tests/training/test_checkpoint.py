@@ -18,7 +18,8 @@ from speck.training.checkpoint import (
 )
 
 
-def test_checkpoint_is_visible_only_after_completion(tmp_path):
+@pytest.mark.parametrize("mmap", [False, True])
+def test_checkpoint_is_visible_only_after_completion(tmp_path, mmap):
     save(
         tmp_path,
         3,
@@ -27,7 +28,7 @@ def test_checkpoint_is_visible_only_after_completion(tmp_path):
         {"step": 3},
     )
     assert latest(tmp_path) == 3
-    model, optimizer, metadata = load(tmp_path, 3, "cpu")
+    model, optimizer, metadata = load(tmp_path, 3, "cpu", mmap=mmap)
     assert model["weight"].item() == 1.0
     assert optimizer == {"state": "optimizer"}
     assert metadata == {"step": 3}

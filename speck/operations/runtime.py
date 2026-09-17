@@ -6,6 +6,20 @@ import torch
 import torch.distributed as dist
 
 
+def configure_determinism(enabled):
+    """Select reproducible PyTorch kernels before CUDA matrix multiplication starts."""
+
+    if type(enabled) is not bool:
+        raise ValueError("deterministic must be boolean")
+    if enabled:
+        workspace = os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+        if workspace not in {":4096:8", ":16:8"}:
+            raise ValueError("deterministic CUDA requires a reproducible CUBLAS_WORKSPACE_CONFIG")
+        torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = enabled
+    torch.use_deterministic_algorithms(enabled)
+
+
 def base_dir():
     path = os.environ.get("speck_base_dir", os.path.expanduser("~/.cache/speck"))
     os.makedirs(path, exist_ok=True)

@@ -19,6 +19,7 @@ from tests.reference import historical_repository
         ("weight_decay", float("inf")),
         ("grad_clip", "1"),
         ("min_lr", True),
+        ("deterministic", "true"),
     ),
 )
 def test_invalid_sft_settings_fail_before_runtime_initialization(field, value):

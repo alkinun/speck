@@ -1,5 +1,12 @@
 # Training and inference
 
+Set `deterministic: true` in base or SFT settings when qualifying reproducible CUDA restart.
+This enables deterministic PyTorch algorithms and a reproducible cuBLAS workspace before training.
+The pilot and hardware probe enable it after a local attention-backward diagnostic showed gradient
+variation without it. The setting is immutable on resume. Older recipes default to `false` for
+compatibility; deterministic execution and its throughput cost still require checks on the target
+hardware, distributed geometry, and compiled path.
+
 `make setup` installs the CPU environment. CUDA uses `uv sync --extra gpu --extra linear`;
 the allocation's arm64/CUDA environment must be checked on site.
 

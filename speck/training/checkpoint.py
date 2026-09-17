@@ -227,13 +227,17 @@ def prune(directory, keep):
                 os.remove(path)
 
 
-def load(directory, step, device):
+def load(directory, step, device, *, mmap=False):
     step = _validate_step(step)
     _recover_transactions(directory)
     if not os.path.exists(os.path.join(directory, f"complete_{step:06d}")):
         raise FileNotFoundError(f"checkpoint {step} is incomplete")
-    model = torch.load(os.path.join(directory, f"model_{step:06d}.pt"), map_location=device)
-    optimizer = torch.load(os.path.join(directory, f"optimizer_{step:06d}.pt"), map_location=device)
+    model = torch.load(
+        os.path.join(directory, f"model_{step:06d}.pt"), map_location=device, mmap=mmap
+    )
+    optimizer = torch.load(
+        os.path.join(directory, f"optimizer_{step:06d}.pt"), map_location=device, mmap=mmap
+    )
     metadata = load_metadata(directory, step)
     return model, optimizer, metadata
 

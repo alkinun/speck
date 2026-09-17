@@ -24,6 +24,7 @@ from speck.operations.runtime import (
     NullRun,
     base_dir,
     cleanup,
+    configure_determinism,
     init_runtime,
     print0,
     verify_distributed_identity,
@@ -51,6 +52,7 @@ from speck.training.step import (
 )
 
 _BRANCH_FIXED_SETTINGS = (
+    "deterministic",
     "sequence_length",
     "activation_checkpointing",
     "loss_backend",
@@ -67,8 +69,9 @@ _BRANCH_FIXED_SETTINGS = (
     "requires_data_launch_authority",
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_fraction")
-_CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed")
+_CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed", "deterministic")
 _IMMUTABLE_RESUME_SETTINGS = (
+    "deterministic",
     "sequence_length",
     "activation_checkpointing",
     "loss_backend",
@@ -97,6 +100,7 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "requires_data_launch_authority",
 )
 _LEGACY_RESUME_DEFAULTS = {
+    "deterministic": False,
     "lr_schedule": "cosine",
     "decay_fraction": None,
     "global_token_offset": 0,
@@ -315,6 +319,9 @@ class BaseTrainer:
         args.training_phase = getattr(args, "training_phase", "base")
         args.activation_checkpointing = getattr(args, "activation_checkpointing", False)
         args.loss_backend = getattr(args, "loss_backend", "torch")
+        args.deterministic = getattr(args, "deterministic", False)
+        if type(args.deterministic) is not bool:
+            raise ValueError("deterministic must be boolean")
         args.allow_attention_scope_change = getattr(args, "allow_attention_scope_change", False)
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
@@ -410,6 +417,7 @@ class BaseTrainer:
             self.data_token_offset = 0
 
     def _initialize_runtime(self):
+        configure_determinism(self.args.deterministic)
         self.rank, self.local_rank, self.world_size, self.device = init_runtime(self.args.device)
         self.distributed = self.world_size > 1
         self.master = self.rank == 0

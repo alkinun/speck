@@ -23,6 +23,7 @@ from speck.operations.r0_replay import (
     save_rng,
     verified_reference,
 )
+from speck.operations.runtime import configure_determinism
 from speck.provenance.io import durable_json, file_sha256
 from speck.training import checkpoint
 from speck.training.step import assert_finite_parameters, optimization_step
@@ -148,6 +149,7 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
     started = time.perf_counter()
     publish("construction")
     try:
+        configure_determinism(settings.get("deterministic", False))
         torch.manual_seed(settings["seed"])
         if device.type == "cuda":
             torch.cuda.set_device(device)
@@ -187,6 +189,8 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
             "recurrent": "FLA_KDA_on_CUDA_Torch_reference_on_CPU",
             "loss": settings["loss_backend"],
             "compiled_model_and_muon": settings["compile"],
+            "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
         }
         parameters = tuple(model.parameters())
 
@@ -240,7 +244,7 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
             reference = verified_reference(restart_from, request, rank, world_size)
             baseline = reference["baseline"]
             restored_model, restored_optimizer, metadata = checkpoint.load(
-                baseline["directory"], count, "cpu"
+                baseline["directory"], count, "cpu", mmap=True
             )
             if metadata != {
                 "step": count,
@@ -265,7 +269,7 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
             actual_probe = rng_probe(device)
             expected = reference["expected"]
             expected_model, expected_optimizer, _ = checkpoint.load(
-                expected["directory"], count + 1, "cpu"
+                expected["directory"], count + 1, "cpu", mmap=True
             )
             tolerance = settings["resume_tolerance"]
             if not math.isclose(
