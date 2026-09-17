@@ -16,8 +16,9 @@ make smoke
 make quality
 ```
 
-The smoke workflow builds tiny local data, trains a hybrid model, verifies exact checkpoint resume,
-and evaluates held-out loss. It uses CPU only and downloads no corpus.
+The smoke workflow builds tiny local data, trains a hybrid base model, initializes an assistant from
+its native checkpoint, and verifies exact resume for both stages. It also evaluates held-out base
+loss. It uses CPU only and downloads no corpus.
 
 The companion [technical report outline](docs/report.md) defines the evidence to collect for release.
 The first GPU configuration is [experiments/qualification](experiments/qualification/README.md).

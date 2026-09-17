@@ -1,6 +1,6 @@
 # Speck: first useful baseline
 
-Updated 2026-09-17. This is the single current plan. Change it in place as evidence arrives;
+Updated 2026-09-18. This is the single current plan. Change it in place as evidence arrives;
 Git retains earlier decisions. Concrete run settings belong beside their experiment.
 
 ## Goal
@@ -39,10 +39,10 @@ Change one only when a measured failure or capability comparison justifies the w
    materialize a small source-separated corpus with separate validation. Use broad text plus math
    and code. Freeze actual source weights, repetition, data order, learning rate, batch, token
    endpoint, evaluation schedule, and maximum cost in that experiment before launching it.
-3. **Train and inspect.** Start with one bounded pilot, proposed ceiling 50 GPU-hours and at most
-   1B tokens. Use measured throughput to choose an attainable endpoint within both bounds. Inspect
-   losses by source, gradient health, samples, checkpoint recovery, and cost. This is an engineering
-   baseline, not a causal comparison or claim about architecture quality.
+3. **Train and inspect.** Run the frozen 104,857,600-token pilot within its 50 GPU-hour ceiling.
+   If measured runtime cannot fit, freeze a smaller experiment before launching. Inspect losses by
+   source, gradient health, samples, checkpoint recovery, and cost. This is an engineering baseline,
+   not a causal comparison or claim about architecture quality.
 4. **Develop useful behavior.** Once the base learns reliably, prepare a costed SFT baseline with
    verified math/code solutions, ordinary assistance, and structured tool interactions. Reuse the
    separate post-training work where compatible. Add distillation or RL only after a clear baseline,
@@ -57,7 +57,7 @@ The application is recorded as under evaluation; access and site details are unc
 The requested envelope is four GH200s, 5,000 GPU-hours, roughly 90 calendar days.
 Retain 889 hours as protected recovery/evaluation reserve. Four allocated GPUs cost four GPU-hours
 per wall hour even when some are idle. Qualification is capped at 70 hours; the initial pilot is
-proposed at no more than 50. Allocate the remaining work after those measurements, rather than
+capped at 50. Allocate the remaining work after those measurements, rather than
 maintaining speculative budgets for multiple research programs. No GH200 jobs have been launched.
 
 ## What success means
@@ -87,17 +87,23 @@ not evidence of successful tool use. Match decoding budgets when comparing model
 - Other retained sources include FineMath, Cosmopedia, peS2o, FineWiki, and approved natural
   UltraData-Math. Existing counts are not a globally deduplicated training union.
 - The [105M-token pilot](experiments/pilot/README.md) fixes initial source weights, optimization,
-  checkpoint milestones, and a 50-hour cost ceiling. Retained candidate selection has completed;
-  joint exclusion and packing are in progress. This is not yet a GPU launch qualification.
+  checkpoint milestones, and a 50-hour cost ceiling. Selection, joint exclusion, packing, and reopen
+  checks are complete. Full one- and four-rank CPU loader scans consumed the planned tokens without
+  repetition and passed fresh-process replay. The [preparation receipt](experiments/pilot/preparation.json)
+  records actual source/language exposures and artifact hashes. GPU launch qualification remains open.
 - Five public evaluation inputs and scorer revisions are pinned; development/final task identities
   are materialized. Grader execution, tools, public comparators, and site settings remain open.
 - A full 500,000-row post-training census and 256-row-per-subset length sample are complete.
   The text-only 4K fit estimate is approximately 249,000 rows; 110,000 tool-bearing rows require
   a tool-aware format. New SFT masks preserve context-only assistant turns; local parent loading
   and complete-conversation packing exist. The actual assistant recipe is still to be evaluated.
+- The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 668
+  tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
 
-**Next:** finish joint pilot exclusion/packing and verify production-loader replay. Qualify grader
-execution and integrate the assistant/tool protocol. Hardware qualification can proceed on synthetic
-inputs once access arrives.
+**Next:** qualify grader execution and integrate the assistant/tool protocol. Once access arrives,
+repeat hardware qualification on one and four GH200 workers, check the production CUDA training
+loop and scheduler recovery, then run the bounded pilot. Main training scale and model-quality
+claims require its measurements.
 Preparation procedures and artifact locations are in [data](docs/data.md); supporting evidence is in
 [research notes](docs/research.md). Historical result bytes remain in [Git](archive/README.md).

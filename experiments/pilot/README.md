@@ -3,6 +3,13 @@
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
 No real-data pilot training has run. It is not a model-quality result or an architecture comparison.
 
+The [local preparation receipt](preparation.json) records a completed corpus and full one- and
+four-rank CPU loader scans, with exact fresh-process replay of eight saved microbatches per rank.
+The packed corpus contains 105,652,323 training tokens including reserve and whole-document
+overshoot, plus 799,536 validation tokens. Both loader geometries consume exactly 104,857,600
+training tokens in the declared mixture without repetition. CUDA transfers, collectives, optimizer
+restart in the production training loop, and scheduler recovery remain hardware checks.
+
 ## Recipe
 
 The endpoint is **104,857,600 training tokens**, 800 optimizer steps of 131,072 tokens.
@@ -36,6 +43,8 @@ post-filter and packed language shares are measured, not assumed equal to candid
 read from their recorded local acquisition paths; stock text/index identities are reopened. Large
 artifacts stay outside Git. Set `speck_base_dir` before starting Python so packing and training
 resolve the same volume. The tokenizer directory in `tokenizer.json` is the current machine's path.
+Prefer SSD scratch for the preparation work directory: joint exclusion performs random SQLite
+index access. Preserve the completed outputs and hashes when moving them to durable storage.
 
 ```bash
 export speck_base_dir=/mnt/speck-data/speck

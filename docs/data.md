@@ -39,8 +39,20 @@ The frozen tokenizer is under `tokenizer-final-mistral-v1` on that volume. Its m
 FineWeb's cache manifest is under `document-token-stock-e1s-v1/fineweb_edu`; its receipt reports
 2.307B tokens and a passing reopen. The 476.775M-token Stack-Edu acquisition still needs full
 exclusion. Neither those receipts nor the completed specialist stocks establish a joint eligible
-pilot corpus. Reopen manifests, preserve source rights, count overlapping banks once, and verify
-cross-source/validation separation before reuse. The complete receipts are in the Git snapshot.
+pilot corpus on their own. Reopen manifests, preserve source rights, count overlapping banks once,
+and verify cross-source/validation separation before reuse. The complete receipts are in the Git snapshot.
+
+The finite [first pilot](../experiments/pilot/README.md) has now been selected, jointly excluded,
+packed, and reopened from those retained inputs. It stores 105,652,323 training tokens including
+loader reserve and whole-document overshoot, plus 799,536 validation tokens. The scheduled training
+exposure is 104,857,600 tokens. Its packed manifest is at
+`/mnt/speck-data/speck/data/flagship-pilot-105m/manifest.json`; selection, exclusion, and packing
+records are under `/mnt/speck-data/speck/flagship-preparation-20260917/pilot`.
+The [compact preparation receipt](../experiments/pilot/preparation.json) binds those manifests and
+records complete one- and four-rank CPU loader scans, exact fresh-process replay, and source/language
+exposure. Benchmark matching removed 3,838 candidate documents before joint exclusion; those are
+conservative matches, not proven leakage. Joint exclusion subsequently removed 19 code documents.
+These finite pilot counts do not establish eligible supply for the main training horizon.
 
 ## Artifact discipline
 

@@ -1,0 +1,491 @@
+{
+  "artifacts": {
+    "aggregation_script": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/build-preparation-receipt.py",
+      "sha256": "8e498d36d0fb0d776c2ae668f1e7483233d619697dadd53449ac2f74086ab330"
+    },
+    "evaluation_partitions": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/evaluation.json",
+      "sha256": "05a75ffdb936dc8df6f6d92fe2b576fddf5c4bd0b2e51da8042875003fb419f0"
+    },
+    "exclusion": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/pilot/excluded/manifest.json",
+      "sha256": "d1d487da1ac937e877f63526338d54b8e3f70737a3b3a18b01b1a8580e07cf3a"
+    },
+    "index_storage_transition": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/pilot/index-ssd-transition/receipt.json",
+      "sha256": "0746aafe00b42842b697722dec285ede74a040255bd37d3bb62f0b76d8892bd6"
+    },
+    "packed_manifest": {
+      "path": "/mnt/speck-data/speck/data/flagship-pilot-105m/manifest.json",
+      "sha256": "b1b5e567bce38e6b8cce454fd5d990270ce9c67aa8373b77b29d3df82a01edaa"
+    },
+    "packing": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/pilot/packing.json",
+      "sha256": "1d9414d6695059e930e54acf245514ad71578614dfc7c257da9d6fa95b2744d9"
+    },
+    "quality_log": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/quality-final.log",
+      "sha256": "7b39c2c679fd0d8e7f8138df4fb506eaa77f607cf0f2ace16c060af5976685dd"
+    },
+    "selection": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/pilot/selection.json",
+      "sha256": "1d22fa21c954322eacfbe50adc19bd9cbeab90a396fd07c467672f6e0b3eb5ea"
+    },
+    "sft_audit": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/sft-audit.json",
+      "sha256": "dee88a3a4433fc399cb45a52f720f55f3210b1ae75423bc8f884c03a82a93ffe"
+    },
+    "smoke_log": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/smoke-release.log",
+      "sha256": "2f01f7d720b95d4313205d7b269d824bc0fc74b8d92383986e10af1311be3fb9"
+    }
+  },
+  "boundary": "No real-data pilot training or model capability evaluation. CPU loader and tiny smoke results do not qualify GH200, NCCL, scheduler recovery, or the production CUDA training loop.",
+  "collected_at_utc": "2026-09-17T21:24:08.532353+00:00",
+  "configs": {
+    "budget.json": "fd893e06ea29e0b6296da57efc0978d8d2968a0e889362896a99cebfbb59c946",
+    "data.json": "7ff844c903932fd13f40322bfef4d63fd249bff945f314acebb18043291262bb",
+    "evaluation.json": "ebec8286caa8ebf732422312f34c0887b6a4da146810c99e4b83e54628ea2bf4",
+    "inputs.json": "ddfeeaba97b52126672b9304201ef3f7b1a8bd0bddebee667b3282efb19e3bd3",
+    "model.json": "2df766ea8af8338c2cdf9a714a04b1b9b9d8e722f912fb407d2a18fd32f1f211",
+    "tokenizer.json": "9cd86b21ceaf58c4ffb58fba2ce75403c2adbc02c12a8c60f16ac02b68a72dd8",
+    "train.json": "9f07a393db39531fa2ed189cd1ee9f979f33a80f0dca86b85393618c814515a5"
+  },
+  "evaluation": {
+    "boundary": "Custom development/final partitions; scores are not directly comparable with full-benchmark published results.",
+    "status": "inputs_and_partitions_only_graders_pending",
+    "tasks": {
+      "arc_challenge": {
+        "development": 222,
+        "final": 950
+      },
+      "gsm8k": {
+        "development": 253,
+        "final": 1066
+      },
+      "hellaswag": {
+        "development": 2010,
+        "final": 8032
+      },
+      "humanevalplus": {
+        "development": 33,
+        "final": 131
+      },
+      "ifeval": {
+        "development": 101,
+        "final": 440
+      }
+    }
+  },
+  "evidence_collected_at_revision": "52de0818f9ef83809a6d3d31f4807c428ec1b209",
+  "format": "speck_flagship_preparation",
+  "format_version": 1,
+  "local_cuda": {
+    "boundary": "RTX 3090 only; hardware and protocol limits are recorded in the separate qualification receipt.",
+    "status": "full_size_one_worker_synthetic_restart_passed",
+    "summary": "experiments/qualification/local-result.json"
+  },
+  "pilot": {
+    "benchmark_matching_boundary": "Conservative exact/fragment matches, including possible false positives; not proven benchmark leakage.",
+    "benchmark_matching_rejections": 3838,
+    "joint_exclusion_counts_including_retained_references": {
+      "records_removed_exact": 15,
+      "records_removed_near": 4,
+      "records_retained": 492640,
+      "records_seen": 492659
+    },
+    "loader_boundary": "Complete finite one- and four-rank CPU scans, no source repetition, eight saved microbatches replayed per rank in fresh processes. Rank slices distinct in saved windows.",
+    "loader_reports": [
+      {
+        "rank": 0,
+        "rank_training_tokens": 104857600,
+        "replay": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-one/rank-0.replay.json",
+          "sha256": "8f022df57bd355b2a2333f0c619eb5e4c335e6e6e2b94665d0c30f601ec53b76"
+        },
+        "replayed_batches": 8,
+        "scan": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-one/rank-0.scan.json",
+          "sha256": "22b0618820347f1eee7918eb2c3844e1d15fb69ec481ffa0f8b3209eb17a3d96"
+        },
+        "workers": 1
+      },
+      {
+        "rank": 0,
+        "rank_training_tokens": 26214400,
+        "replay": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-0.replay.json",
+          "sha256": "33b95eebb2ed398078f56e091dcfd4789954bd4fc02b37ef11e45c91942e2d90"
+        },
+        "replayed_batches": 8,
+        "scan": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-0.scan.json",
+          "sha256": "320043d7cd408d790624838189fd6ea20bb367a062dae68a0070829478a04f8c"
+        },
+        "workers": 4
+      },
+      {
+        "rank": 1,
+        "rank_training_tokens": 26214400,
+        "replay": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-1.replay.json",
+          "sha256": "4fc9a60b71748622ad93f9d85d352a13b4e58f91cf725dc8fc22f789d47898f9"
+        },
+        "replayed_batches": 8,
+        "scan": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-1.scan.json",
+          "sha256": "32ebfbf437ad4460ab1a69e3029609fe9b53eb9a15d5cb6a591d1541f4b3bb41"
+        },
+        "workers": 4
+      },
+      {
+        "rank": 2,
+        "rank_training_tokens": 26214400,
+        "replay": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-2.replay.json",
+          "sha256": "6b5de9cf57814282f070ffc6b7eb29a60098c0f2ef73d68c68e2b53ec674e71e"
+        },
+        "replayed_batches": 8,
+        "scan": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-2.scan.json",
+          "sha256": "8cc5022d2fa2ee2a022b6e1d97059fe7f77a63ff2bbf41b64a9303946a784ecc"
+        },
+        "workers": 4
+      },
+      {
+        "rank": 3,
+        "rank_training_tokens": 26214400,
+        "replay": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-3.replay.json",
+          "sha256": "af8c5b12adaa7b070251b4799238137fc30b48be881fd793339994a8e2a4d759"
+        },
+        "replayed_batches": 8,
+        "scan": {
+          "path": "/mnt/speck-data/speck/flagship-preparation-20260917/loader-four/rank-3.scan.json",
+          "sha256": "c82ad220a0b318c38dadd3986ead397fcac08e297f993c50938fdc37b4a43010"
+        },
+        "workers": 4
+      }
+    ],
+    "loader_source_exposures": {
+      "1": {
+        "cosmopedia_v2": 10485760,
+        "finemath_4plus": 15728640,
+        "fineweb_edu": 52428800,
+        "finewiki_en": 5242880,
+        "pes2o_v3": 5242880,
+        "stack_edu": 15728640
+      },
+      "4": {
+        "cosmopedia_v2": 10485760,
+        "finemath_4plus": 15728640,
+        "fineweb_edu": 52428800,
+        "finewiki_en": 5242880,
+        "pes2o_v3": 5242880,
+        "stack_edu": 15728640
+      }
+    },
+    "optimizer_steps": 800,
+    "packed_splits": {
+      "train": {
+        "documents": 101054,
+        "requested_tokens": 104857600,
+        "tokens": 105652323
+      },
+      "val": {
+        "documents": 742,
+        "requested_tokens": 786432,
+        "tokens": 799536
+      }
+    },
+    "sources": [
+      {
+        "id": "fineweb_edu",
+        "packed": {
+          "train": {
+            "documents": 47451,
+            "overshoot_tokens": 657,
+            "preparation_target_tokens": 52559872,
+            "requested_tokens": 52428800,
+            "reserve_tokens": 131072,
+            "tokens": 52560529
+          },
+          "val": {
+            "documents": 135,
+            "overshoot_tokens": 1657,
+            "preparation_target_tokens": 131072,
+            "requested_tokens": 131072,
+            "reserve_tokens": 0,
+            "tokens": 132729
+          }
+        },
+        "retained_after_joint_exclusion": 95465,
+        "scheduled_training_tokens": 52428800,
+        "selection": {
+          "benchmark_rejected_documents": 915,
+          "documents": 95465,
+          "seen_documents": 96380,
+          "tokens": 105383143
+        }
+      },
+      {
+        "id": "stack_edu",
+        "packed": {
+          "train": {
+            "documents": 24660,
+            "overshoot_tokens": 147,
+            "preparation_target_tokens": 15859712,
+            "requested_tokens": 15728640,
+            "reserve_tokens": 131072,
+            "tokens": 15859859
+          },
+          "val": {
+            "documents": 239,
+            "overshoot_tokens": 133,
+            "preparation_target_tokens": 131072,
+            "requested_tokens": 131072,
+            "reserve_tokens": 0,
+            "tokens": 131205
+          }
+        },
+        "retained_after_joint_exclusion": 49667,
+        "scheduled_training_tokens": 15728640,
+        "scheduled_training_tokens_by_language": {
+          "C": 775439,
+          "C++": 2458519,
+          "Go": 810388,
+          "Java": 1563882,
+          "JavaScript": 2322831,
+          "Markdown": 454370,
+          "Python": 4446122,
+          "Rust": 1323402,
+          "SQL": 305522,
+          "Shell": 304952,
+          "TypeScript": 963213
+        },
+        "selection": {
+          "benchmark_rejected_documents": 2115,
+          "documents": 49686,
+          "seen_documents": 51801,
+          "tokens": 31986477
+        }
+      },
+      {
+        "id": "finemath_4plus",
+        "packed": {
+          "train": {
+            "documents": 10774,
+            "overshoot_tokens": 39,
+            "preparation_target_tokens": 15859712,
+            "requested_tokens": 15728640,
+            "reserve_tokens": 131072,
+            "tokens": 15859751
+          },
+          "val": {
+            "documents": 89,
+            "overshoot_tokens": 4685,
+            "preparation_target_tokens": 131072,
+            "requested_tokens": 131072,
+            "reserve_tokens": 0,
+            "tokens": 135757
+          }
+        },
+        "retained_after_joint_exclusion": 21650,
+        "scheduled_training_tokens": 15728640,
+        "selection": {
+          "benchmark_rejected_documents": 447,
+          "documents": 21650,
+          "seen_documents": 22097,
+          "tokens": 31981922
+        }
+      },
+      {
+        "id": "cosmopedia_v2",
+        "packed": {
+          "train": {
+            "documents": 13234,
+            "overshoot_tokens": 226,
+            "preparation_target_tokens": 10616832,
+            "requested_tokens": 10485760,
+            "reserve_tokens": 131072,
+            "tokens": 10617058
+          },
+          "val": {
+            "documents": 168,
+            "overshoot_tokens": 305,
+            "preparation_target_tokens": 131072,
+            "requested_tokens": 131072,
+            "reserve_tokens": 0,
+            "tokens": 131377
+          }
+        },
+        "retained_after_joint_exclusion": 26824,
+        "scheduled_training_tokens": 10485760,
+        "selection": {
+          "benchmark_rejected_documents": 332,
+          "documents": 26824,
+          "seen_documents": 27156,
+          "tokens": 21496662
+        }
+      },
+      {
+        "id": "pes2o_v3",
+        "packed": {
+          "train": {
+            "documents": 741,
+            "overshoot_tokens": 57,
+            "preparation_target_tokens": 5373952,
+            "requested_tokens": 5242880,
+            "reserve_tokens": 131072,
+            "tokens": 5374009
+          },
+          "val": {
+            "documents": 21,
+            "overshoot_tokens": 6253,
+            "preparation_target_tokens": 131072,
+            "requested_tokens": 131072,
+            "reserve_tokens": 0,
+            "tokens": 137325
+          }
+        },
+        "retained_after_joint_exclusion": 1537,
+        "scheduled_training_tokens": 5242880,
+        "selection": {
+          "benchmark_rejected_documents": 21,
+          "documents": 1537,
+          "seen_documents": 1558,
+          "tokens": 11011381
+        }
+      },
+      {
+        "id": "finewiki_en",
+        "packed": {
+          "train": {
+            "documents": 4194,
+            "overshoot_tokens": 7165,
+            "preparation_target_tokens": 5373952,
+            "requested_tokens": 5242880,
+            "reserve_tokens": 131072,
+            "tokens": 5381117
+          },
+          "val": {
+            "documents": 90,
+            "overshoot_tokens": 71,
+            "preparation_target_tokens": 131072,
+            "requested_tokens": 131072,
+            "reserve_tokens": 0,
+            "tokens": 131143
+          }
+        },
+        "retained_after_joint_exclusion": 8625,
+        "scheduled_training_tokens": 5242880,
+        "selection": {
+          "benchmark_rejected_documents": 8,
+          "documents": 8625,
+          "seen_documents": 8633,
+          "tokens": 11011759
+        }
+      }
+    ],
+    "tokens_per_step": 131072,
+    "training_tokens": 104857600
+  },
+  "sft_audit": {
+    "boundary": "Length coverage is estimated from deterministic per-subset samples. No prepared assistant recipe or teacher-answer correctness claim.",
+    "estimated_complete_text_only_rows_at_4096_tokens": 249492.1875,
+    "rows": 500000,
+    "samples_per_subset": 256,
+    "text_only_rows": 390000,
+    "tool_protocol_required_rows": 110000
+  },
+  "software_validation": {
+    "evidence_tests_deselected": 10,
+    "portable_tests_passed": 668,
+    "portable_tests_skipped": 10,
+    "smoke": {
+      "evaluated_tokens": 64,
+      "loss": 4.1812849044799805,
+      "resume": "exact_parameter_parity",
+      "sft": {
+        "chat_format_version": 2,
+        "parent": "native_checkpoint",
+        "resume": "exact_parameter_parity",
+        "steps": 2
+      },
+      "status": "pass",
+      "steps": 4
+    },
+    "tiny_model_exports": {
+      "assistant": {
+        "speck_parity.json": {
+          "artifact": {
+            "path": "/mnt/speck-data/speck/flagship-preparation-20260917/smoke-release/assistant-export/speck_parity.json",
+            "sha256": "bfdbbf1aba93129516d801eea0aa44aab9a5b4401c51db1d306b816de8411b9d"
+          },
+          "result": {
+            "compute_dtype": "bfloat16",
+            "format": "speck_export_parity",
+            "format_version": 1,
+            "generation_smoke_new_tokens": 2,
+            "incremental_logits_max_absolute_error": 0.0,
+            "logits_max_absolute_error": 0.0,
+            "parameters": 6474,
+            "passed": true,
+            "tokens_sha256": "d604d0bafafcee4dabd66b551cd2351f453bb17e0af8e4ed833debcf60e0c261"
+          }
+        },
+        "tokenizer_parity.json": {
+          "artifact": {
+            "path": "/mnt/speck-data/speck/flagship-preparation-20260917/smoke-release/assistant-export/tokenizer_parity.json",
+            "sha256": "68ad8a4db5c2b087833f0b95bd2526993f0dbec0fdc0748246485beccdde76bc"
+          },
+          "result": {
+            "base_fingerprint": "3be18c34c880c7e03b3311e944e562b9eda5540af9761aaaea610a58ce9cf124",
+            "chat_cases": 2,
+            "chat_format_version": 2,
+            "format": "speck_tokenizer_export_parity",
+            "format_version": 1,
+            "passed": true,
+            "text_cases": 4
+          }
+        }
+      },
+      "base": {
+        "speck_parity.json": {
+          "artifact": {
+            "path": "/mnt/speck-data/speck/flagship-preparation-20260917/smoke-release/base-export/speck_parity.json",
+            "sha256": "bfdbbf1aba93129516d801eea0aa44aab9a5b4401c51db1d306b816de8411b9d"
+          },
+          "result": {
+            "compute_dtype": "bfloat16",
+            "format": "speck_export_parity",
+            "format_version": 1,
+            "generation_smoke_new_tokens": 2,
+            "incremental_logits_max_absolute_error": 0.0,
+            "logits_max_absolute_error": 0.0,
+            "parameters": 6474,
+            "passed": true,
+            "tokens_sha256": "d604d0bafafcee4dabd66b551cd2351f453bb17e0af8e4ed833debcf60e0c261"
+          }
+        },
+        "tokenizer_parity.json": {
+          "artifact": {
+            "path": "/mnt/speck-data/speck/flagship-preparation-20260917/smoke-release/base-export/tokenizer_parity.json",
+            "sha256": "24e97af6414084633f75f22909708115fe2fb435d008fedaa1fe03f73d65f9c8"
+          },
+          "result": {
+            "base_fingerprint": "3be18c34c880c7e03b3311e944e562b9eda5540af9761aaaea610a58ce9cf124",
+            "chat_cases": 0,
+            "chat_format_version": null,
+            "format": "speck_tokenizer_export_parity",
+            "format_version": 1,
+            "passed": true,
+            "text_cases": 4
+          }
+        }
+      }
+    }
+  },
+  "status": "finite_corpus_and_cpu_loader_verified_cluster_execution_pending"
+}

@@ -3,6 +3,10 @@
 **Status: pre-results.** Release the report alongside the identified base and assistant checkpoints.
 This document is an outline and evidence checklist, not a completed paper or a claim of model quality.
 
+Preparation evidence is retained in the [corpus/software receipt](../experiments/pilot/preparation.json)
+and the [local full-size CUDA result](../experiments/qualification/local-result.json). They establish
+bounded engineering behavior; real-data learning curves and capability results are still pending.
+
 Working title: **Speck: Developing a 1.2B Hybrid Assistant Under a Fixed Compute Budget**.
 
 ## Abstract

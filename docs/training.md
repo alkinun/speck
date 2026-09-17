@@ -30,8 +30,10 @@ Actual corpus training has separate data and sustained-throughput requirements.
 ## Corpus training
 
 A complete experiment supplies `model.json`, `tokenizer.json`, `data.json`, and `train.json`.
-The pilot's data, token endpoint, learning rate, and batch are still to be frozen; the qualification
-directory is not a pretraining recipe.
+The [pilot](../experiments/pilot/README.md) freezes those settings for 104,857,600 tokens and has a
+verified local packed corpus. Launch it with `--no-compile` after the target hardware and scheduler
+checks. Its 50 GPU-hour ceiling must be enforced through the Slurm accounting workflow; these raw
+training commands do not enforce that cumulative budget.
 
 ```bash
 uv run --no-sync python -m scripts.base_train PATH_TO_EXPERIMENT
