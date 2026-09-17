@@ -9,8 +9,10 @@ def test_benchmark_activation_checkpointing_uses_config_by_default():
 
 
 def test_benchmark_activation_checkpointing_has_explicit_runtime_override():
-    assert arguments(["--activation-checkpointing"]).activation_checkpointing is True
-    assert arguments(["--no-activation-checkpointing"]).activation_checkpointing is False
+    assert arguments(["experiment", "--activation-checkpointing"]).activation_checkpointing is True
+    assert (
+        arguments(["experiment", "--no-activation-checkpointing"]).activation_checkpointing is False
+    )
     assert resolve_activation_checkpointing({"activation_checkpointing": False}, True) is True
     assert resolve_activation_checkpointing({"activation_checkpointing": True}, False) is False
 

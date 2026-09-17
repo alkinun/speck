@@ -10,7 +10,9 @@ from tests.reference import historical_repository
 
 
 def load_config():
-    return open_slm_eval._load_config(open_slm_eval.DEFAULT_CONFIG)
+    return open_slm_eval._load_config(
+        historical_repository() / "experiments/Speck1-140M/open_slm.json"
+    )
 
 
 def test_lm_eval_command_pins_model_and_numerical_settings(tmp_path):

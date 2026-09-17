@@ -7,7 +7,7 @@ import json
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("plan", nargs="?")
-    parser.add_argument("--case")
+    parser.add_argument("--case", default="baseline-4096")
     parser.add_argument("--workers", type=int, choices=(1, 4), default=1)
     parser.add_argument("--allocated-gpus", type=int)
     parser.add_argument("--run", action="store_true")

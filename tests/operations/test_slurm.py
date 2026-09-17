@@ -522,3 +522,21 @@ def test_slurm_main_uses_dedicated_requeue_exit_code(monkeypatch):
     with pytest.raises(SystemExit) as raised:
         slurm_base_train.main()
     assert raised.value.code == 99
+
+
+def test_reserve_phase_name_is_defined_by_the_bound_plan(wave):
+    path, value, _, _ = wave
+    plan_path = Path(value["plan"]["path"])
+    plan = json.loads(plan_path.read_text())
+    for phase in plan["phases"]:
+        if phase["id"] == "P7":
+            phase["id"] = "RESERVE"
+    plan_path.write_text(json.dumps(plan))
+    value["plan"]["sha256"] = _sha256(plan_path)
+    job = value["jobs"][0]
+    value["jobs"] = [job]
+    job.update(phase="RESERVE", allocation="reserve", max_retries=0)
+    path.write_text(json.dumps(value))
+    normalized, _, _, planned = load_wave(path)
+    assert normalized["jobs"][0]["phase"] == "RESERVE"
+    assert planned["reserve"] > 0

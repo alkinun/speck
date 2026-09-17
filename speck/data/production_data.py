@@ -31,6 +31,14 @@ STATE_FORMAT = "speck_production_text_preprocess_state"
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 
 
+def _batched_signature(shingles, num_perm, seed):
+    from datasketch import MinHash
+
+    value = MinHash(num_perm=num_perm, seed=seed)
+    value.update_batch(shingles)
+    return value
+
+
 def _fingerprint(value):
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
@@ -527,9 +535,12 @@ def accepted_document_chain(rows):
     return count, chain
 
 
-def preprocess_sources(config, *, restart=False, crash_after_records=None, timing=None):
+def preprocess_sources(
+    config, *, restart=False, crash_after_records=None, timing=None, batched_minhash=False
+):
     """Run or resume the disk-backed global exact/near deduplication pass."""
 
+    signature_fn = _batched_signature if batched_minhash else _signature
     clock = PreprocessTiming(timing)
     if "plan_fingerprint" not in config:
         config = validate_preprocess_config(config)
@@ -699,7 +710,7 @@ def preprocess_sources(config, *, restart=False, crash_after_records=None, timin
                     signature = None
                     bands = []
                     if reason is None and shingles:
-                        signature = _signature(
+                        signature = signature_fn(
                             shingles,
                             config["policy"]["num_perm"],
                             config["policy"]["minhash_seed"],

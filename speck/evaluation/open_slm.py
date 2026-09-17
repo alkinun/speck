@@ -11,11 +11,8 @@ from pathlib import Path
 from huggingface_hub import HfApi, hf_hub_download
 
 from speck.provenance.io import file_sha256 as _sha256
-from speck.provenance.repository import repository_root as find_repository_root
 from speck.training.checkpoint import directory_identity
 
-REPOSITORY_ROOT = find_repository_root()
-DEFAULT_CONFIG = REPOSITORY_ROOT / "experiments" / "Speck1-140M" / "open_slm.json"
 DEFAULT_OUTPUT_ROOT = (
     Path(os.environ.get("speck_base_dir", Path.home() / ".cache" / "speck"))
     / "evaluations"
@@ -498,7 +495,7 @@ def _parse_args():
         "stage",
         choices=("lm-eval", "arithmark-2", "arithmark-3", "summary", "all"),
     )
-    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     parser.add_argument("--limit", type=float, help="lm-eval smoke-test sample limit")

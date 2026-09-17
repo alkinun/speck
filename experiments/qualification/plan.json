@@ -1,0 +1,28 @@
+{
+  "format": "speck_hardware_qualification",
+  "format_version": 1,
+  "model": "model.json",
+  "input_vocab_size": 32000,
+  "gpu_hour_ceiling": 70,
+  "settings": {
+    "device_batch_size": 1,
+    "accumulation": 1,
+    "warmup_steps": 2,
+    "measured_steps": 5,
+    "timeout_seconds": 900,
+    "kill_grace_seconds": 10,
+    "collective_timeout_seconds": 120,
+    "seed": 42,
+    "minimum_free_disk_bytes": 137438953472,
+    "lr": 0.0001,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "compile": false,
+    "activation_checkpointing": true,
+    "loss_backend": "liger",
+    "resume_tolerance": {
+      "rtol": 1e-05,
+      "atol": 1e-06
+    }
+  }
+}

@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 
 import speck.data.production_data as production_data
-from scripts.production_data_preprocess_batched import _batched_signature
 from speck.data.production_data import (
+    _batched_signature,
     _candidate_text,
     accepted_document_chain,
     preprocess_sources,
@@ -156,11 +156,12 @@ def test_global_exact_near_deny_and_cleanup_are_recorded(tmp_path):
     assert manifest["gates"]["training_authority"] == "blocked"
 
 
-def test_record_checkpoint_resume_matches_uninterrupted_outputs(tmp_path):
+@pytest.mark.parametrize("batched_minhash", [False, True])
+def test_record_checkpoint_resume_matches_uninterrupted_outputs(tmp_path, batched_minhash):
     interrupted = validate_preprocess_config(_config(tmp_path, "interrupted"))
     with pytest.raises(RuntimeError, match="injected production preprocess crash"):
         preprocess_sources(interrupted, crash_after_records=3)
-    resumed = preprocess_sources(interrupted)
+    resumed = preprocess_sources(interrupted, batched_minhash=batched_minhash)
     clean = validate_preprocess_config(_config(tmp_path, "clean"))
     uninterrupted = preprocess_sources(clean)
 

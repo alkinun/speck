@@ -14,7 +14,7 @@ def repository_root(path=None):
 
 
 def repository_artifact(value, root=None):
-    """Resolve a data/protocol input at its current or preserved original path.
+    """Resolve an explicitly named input in the current checkout.
 
     Callers retain their normal digest checks. Original Python source is recovered
     through Git, rather than silently substituted into current execution.
@@ -23,8 +23,4 @@ def repository_artifact(value, root=None):
     if path.is_absolute():
         return path
     root = Path(root) if root is not None else repository_root()
-    current = root / path
-    if current.exists():
-        return current
-    archived = root / "archive/pregrant-history" / path
-    return archived if archived.exists() else current
+    return root / path

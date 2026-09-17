@@ -1,55 +1,38 @@
 # Contributing
 
+Read [PLAN.md](PLAN.md) for scope. Keep one current plan and one configuration per runnable experiment.
+A new idea belongs in a short discussion or Git issue until it becomes the next measured experiment.
+
 ## Development
 
 ```bash
-make setup                 # Locked CPU development environment
-make quality               # Format, lint, portable tests, catalog, archive integrity
-make evidence-test         # Frozen research record checks
-make integration-test      # Checks requiring local artifacts or hardware
+make setup
+make quality
+make smoke
 ```
 
-Run focused tests while developing, followed by the complete appropriate gate. GPU kernel,
-distributed resume, and scheduler behavior require explicit hardware qualification.
+`make quality` checks formatting, lint, portable behavior tests, and historical snapshot integrity.
+`make evidence-test` additionally verifies frozen historical inputs. Accelerator-specific tests skip
+when their dependencies are unavailable. CPU success does not qualify CUDA kernels, GH200
+throughput, NCCL, or the scheduler.
 
-## Code organization
+The `speck` package owns behavior; `scripts` provides command entry points. Package code must not
+import command scripts. Keep data order, checkpoint tensor names, optimizer state, and resume
+semantics stable unless a behavioral change is explicit and tested. Model variants retained in the
+runtime support checkpoint compatibility; they do not imply active architecture searches.
 
-The `speck` package owns reusable behavior. `scripts` provides command entry points. The package's
-main areas are `model`, `training`, `data`, `tokenization`, `evaluation`, `export`, `operations`, and
-`provenance`. New library code should not import command scripts.
+## Records and history
 
-Keep checkpoint parameter names, optimizer state, data order, and report serialization stable during
-refactors. Changes to those contracts need targeted behavioral tests and explicit new run identities.
-Use `speck.provenance.repository.repository_root` when a checkout root is needed; avoid directory-depth
-assumptions. File hashes and report publication belong in `speck.provenance.io`.
+Update the status/next step in PLAN.md after a meaningful transition. Store exact runnable model,
+data, tokenizer, and training settings with the experiment. Keep a small result summary containing
+Git revision, input identities, metrics, costs, failures, and external output locations. Do not create
+another catalog, claim registry, or chain of successor documents for routine engineering changes.
 
-## Current code and historical evidence
+Large corpora, checkpoints, caches, and logs stay outside Git. Preserve historical result bytes and
+expensive artifacts. The [archive guide](archive/README.md) restores old workflows at their original
+revision. Some behavioral tests use their frozen configurations as fixtures while importing the
+current implementation; they do not execute the retired experiment suite.
 
-The [archive manifest](archive/manifest.json) binds the pre-cleanup tree and every preserved artifact.
-Historical verification checks those original bytes and source revisions. It does not require the
-maintained implementation to remain byte-identical to a completed experiment.
-
-```bash
-python -m scripts.archive check
-python -m scripts.source_pin_check --base HEAD
-```
-
-The source-pin check reports the effect of changes on active and archived evidence separately.
-Never change an old result's hash to claim it was produced by new code. Current execution must bind
-and qualify the implementation it actually uses. Existing tokenizer-pilot authorization belongs to
-the frozen pre-cleanup checkout; use the archive restore command to continue that execution.
-
-## Research records
-
-- Edit draft plans normally in Git. Freeze exact inputs before consequential experiment outputs.
-- Preserve protocol amendments and failed attempts with their original identities.
-- Keep one coherent result/history per experiment and one finding per durable conclusion.
-- Record current state in `research/status.json`; keep the catalog's selected contracts explicit.
-- Put literature in `research/literature`, current conclusions in `research/findings`, and paper
-  claims in `paper/claims.json`.
-- Move completed collections into the archive with an identity manifest.
-- Keep datasets, checkpoints, full predictions, and logs in the runtime store.
-
-See the [research workflow](research/WORKFLOW.md) and [artifact policy](research/DATA_MANAGEMENT.md).
-Operational documentation describes maintained commands; historical commands remain revision-bound
-inside the archive.
+Before committing, inspect `git diff --check` and `git status`. Keep changes on a `codex/` or feature
+branch, and retain the pre-simplification snapshot when publishing history. Do not force-push or
+rewrite recorded experiment commits.

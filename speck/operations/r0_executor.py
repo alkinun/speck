@@ -15,7 +15,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from speck.provenance.io import durable_json, file_sha256
-from speck.provenance.readiness import relocated_source_path
 from speck.provenance.repository import repository_root
 
 
@@ -23,13 +22,6 @@ def fingerprint(value):
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
     ).hexdigest()
-
-
-def read_bound(root, binding):
-    path = root / binding["path"]
-    if file_sha256(path) != binding["sha256"]:
-        raise ValueError(f"R0 input hash differs: {binding['path']}")
-    return json.loads(path.read_text())
 
 
 def validate_settings(settings):
@@ -77,25 +69,22 @@ def validate_settings(settings):
 
 
 def prepare_request(plan_path, case_id, workers, allocated_gpus, root=None):
+    """Bind a direct model/config pair and the current implementation without a plan registry."""
+    import torch
+
+    from speck.model import build_model
+
     root = Path(root or repository_root()).resolve()
     plan_path = Path(plan_path).resolve()
     plan = json.loads(plan_path.read_text())
     if (
-        plan.get("format") != "speck_r0_execution_preparation"
-        or type(plan.get("format_version")) is not int
-        or plan.get("format_version") not in (1, 2)
-        or plan.get("training_authority") is not False
+        set(plan)
+        != {"format", "format_version", "model", "input_vocab_size", "gpu_hour_ceiling", "settings"}
+        or plan["format"] != "speck_hardware_qualification"
+        or type(plan["format_version"]) is not int
+        or plan["format_version"] != 1
     ):
-        raise ValueError("unsupported R0 execution preparation plan")
-    if plan["format_version"] == 2 and plan.get("restart_protocol") != "fresh_process_next_step_v1":
-        raise ValueError("unknown fresh-process protocol")
-    if plan["format_version"] == 2:
-        predecessor = read_bound(root, plan["supersedes"])
-        if predecessor.get("format_version") != 1 or any(
-            predecessor[key] != plan[key]
-            for key in ("shape_plan", "shape_result", "r0_gpu_hour_ceiling")
-        ):
-            raise ValueError("fresh-process successor changes its predecessor shape or allocation")
+        raise ValueError("unsupported hardware qualification plan")
     validate_settings(plan["settings"])
     if (
         type(workers) is not int
@@ -103,75 +92,57 @@ def prepare_request(plan_path, case_id, workers, allocated_gpus, root=None):
         or type(allocated_gpus) is not int
         or not workers <= allocated_gpus <= 4
     ):
-        raise ValueError("R0 workers must be one/four and cannot exceed allocated GPUs")
-    shapes = read_bound(root, plan["shape_result"])
-    shape_plan = read_bound(root, plan["shape_plan"])
-    if shapes["plan"]["sha256"] != plan["shape_plan"]["sha256"]:
-        raise ValueError("shape result and plan identities differ")
-    catalog = json.loads((root / "research/catalog.json").read_text())
-    values = {}
-    for role, binding in shape_plan["inputs"].items():
-        values[role] = read_bound(root, binding)
-        if role != "retained_geometry" and catalog["active_contracts"][role] != binding:
-            # Catalog entries can carry additional metadata; identity is path and SHA only.
-            selected = catalog["active_contracts"][role]
-            if any(selected[k] != binding[k] for k in ("path", "sha256")):
-                raise ValueError("R0 input no longer selected by catalog")
-        if shapes["inputs"][role]["sha256"] != binding["sha256"]:
-            raise ValueError("shape evidence differs from selected input")
-    for row in shapes["implementation"]:
-        path = relocated_source_path(
-            row["path"], shapes["plan"]["path"], plan["shape_plan"]["path"]
-        )
-        if file_sha256(root / path) != row["sha256"]:
-            raise ValueError("shape implementation changed; successor qualification required")
-    r0 = next(p for p in values["execution"]["phases"] if p["id"] == "R0")
-    if plan["r0_gpu_hour_ceiling"] != r0["gpu_hours"] or r0["gpu_hours"] != 70:
-        raise ValueError("R0 allocation differs")
-    case = next((c for c in shapes["cases"] if c["id"] == case_id), None)
-    if case is None:
-        raise ValueError("unknown checked R0 case")
-    implementation_paths = sorted(
-        {
-            "speck/operations/r0_executor.py",
-            "speck/operations/r0_worker.py",
-            "speck/operations/r0_replay.py",
-            "scripts/r0_execute.py",
-            "speck/training/step.py",
-            "speck/training/checkpoint.py",
-            "speck/provenance/io.py",
-            "speck/provenance/readiness.py",
-            "speck/provenance/repository.py",
-            "uv.lock",
-            *[
-                str(
-                    relocated_source_path(
-                        r["path"], shapes["plan"]["path"], plan["shape_plan"]["path"]
-                    )
-                )
-                for r in shapes["implementation"]
-            ],
-        }
-    )
+        raise ValueError("workers must be one/four and cannot exceed allocated GPUs")
+    if type(plan["gpu_hour_ceiling"]) not in (int, float) or not 0 < plan["gpu_hour_ceiling"] <= 70:
+        raise ValueError("qualification ceiling must be positive and at most 70 GPU-hours")
+    if case_id != "baseline-4096":
+        raise ValueError("unknown checked case; the first qualification is baseline-4096")
+    model_path = (plan_path.parent / plan["model"]).resolve()
+    settings = json.loads(model_path.read_text())
+    vocab = settings["vocab_size"]
+    if type(plan["input_vocab_size"]) is not int or not 1 <= plan["input_vocab_size"] <= vocab:
+        raise ValueError("synthetic vocabulary must fit the model vocabulary")
+    if settings["max_position_embeddings"] != 4096:
+        raise ValueError("first qualification requires the 4096-token model")
+    with torch.device("meta"):
+        model = build_model(settings, vocab)
+    case = {
+        "id": case_id,
+        "model": settings,
+        "model_vocab_size": vocab,
+        "synthetic_input_vocab_size": plan["input_vocab_size"],
+        "sequence_length": 4096,
+        "instantiated_parameters": model.parameter_count(),
+    }
+    paths = [
+        *sorted((root / "speck/model").glob("*.py")),
+        *sorted((root / "speck/operations").glob("r0_*.py")),
+        root / "speck/training/optimizers.py",
+        root / "speck/training/step.py",
+        root / "speck/training/checkpoint.py",
+        root / "speck/provenance/io.py",
+        root / "speck/provenance/repository.py",
+        root / "scripts/r0_execute.py",
+        root / "uv.lock",
+    ]
     request = {
         "format": "speck_r0_bounded_attempt_request",
         "format_version": 1,
         "plan": {"path": str(plan_path), "sha256": file_sha256(plan_path)},
-        "shape_result": plan["shape_result"],
+        "model_input": {"path": str(model_path), "sha256": file_sha256(model_path)},
         "case": case,
         "settings": plan["settings"],
         "world_size": workers,
         "allocated_gpus": allocated_gpus,
-        "r0_gpu_hour_ceiling": plan["r0_gpu_hour_ceiling"],
+        "r0_gpu_hour_ceiling": plan["gpu_hour_ceiling"],
         "implementation": [
-            {"path": p, "sha256": file_sha256(root / p)} for p in implementation_paths
+            {"path": str(p.relative_to(root)), "sha256": file_sha256(p)} for p in paths
         ],
-        "input_policy": "CPU torch.Generator(seed + microbatch_ordinal * world_size + rank); int64 uniform [0,32000), length+1; payload hashes recorded per step. No source text, tokenizer sampling or role IDs. Synthetic repetition is not a corpus exposure policy.",
-        "precision_policy": "FP32 parameter/optimizer storage with the existing model's BF16 CUDA activations; no blanket BF16 conversion of optimizer/recurrent state.",
+        "input_policy": "Deterministic rank/cursor synthetic shifted tokens; no corpus consumption.",
+        "precision_policy": "FP32 parameter/optimizer storage; BF16 CUDA activations.",
         "scientific_training_authority": False,
+        "restart_protocol": "fresh_process_next_step_v1",
     }
-    if plan["format_version"] == 2:
-        request["restart_protocol"] = plan["restart_protocol"]
     request["request_sha256"] = fingerprint(request)
     return request
 

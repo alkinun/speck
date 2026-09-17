@@ -22,8 +22,6 @@ from speck.model.architecture import (
 from speck.operations.runtime import base_dir
 from speck.training.checkpoint import checkpoint_identity, latest, load_model
 
-DEFAULT_CHECKPOINT = Path(base_dir()) / "checkpoints" / "Speck1.1-140M-Instruct"
-DEFAULT_REPO = "specklabs/Speck1.1-140M-Instruct"
 CODE_REPO = "specklabs/Speck1-140M-Instruct"
 CODE_REVISION = "16ad80599d499490b70317770a84a18466719bba"
 CODE_FILES = (
@@ -169,8 +167,8 @@ def arguments():
     parser.add_argument(
         "--checkpoint-dir",
         type=Path,
-        default=DEFAULT_CHECKPOINT,
-        help="completed SFT checkpoint directory (default: %(default)s)",
+        required=True,
+        help="completed SFT checkpoint directory",
     )
     parser.add_argument(
         "--step",
@@ -178,9 +176,7 @@ def arguments():
         default=None,
         help="checkpoint step; defaults to the latest completed step",
     )
-    parser.add_argument(
-        "--repo", default=DEFAULT_REPO, help="destination Hugging Face model repository"
-    )
+    parser.add_argument("--repo", required=True, help="destination Hugging Face model repository")
     parser.add_argument(
         "--output-dir",
         type=Path,

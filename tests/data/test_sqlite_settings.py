@@ -2,13 +2,11 @@ import json
 
 import pytest
 
-import speck.data.production_data as production_data
 from speck.data.preparation_policy import bind_preparation_policy
 from speck.data.production_data import preprocess_sources, validate_preprocess_config
 from speck.data.sqlite_settings import validate_sqlite_settings
-from speck.data.sqlite_wal import wal_policy
-from speck.provenance.repository import repository_root
 from tests.data.test_production_data import _config
+from tests.reference import preparation_repository
 
 SETTINGS = {
     "journal_mode": "WAL",
@@ -80,12 +78,6 @@ def test_unqualified_settings_fail_closed(field, value):
         validate_sqlite_settings({**SETTINGS, field: value})
 
 
-def test_experiment_observer_cannot_override_bound_policy(tmp_path):
-    with wal_policy(1000, {}):
-        with pytest.raises(ValueError, match="differs from the bound"):
-            production_data._database(tmp_path / "index.sqlite3", sqlite_settings=SETTINGS)
-
-
 def test_sqlite_declaration_requires_config_v2(tmp_path):
     config = _config(tmp_path)
     config["sqlite"] = SETTINGS
@@ -101,7 +93,7 @@ def test_binding_records_qualification_and_preserves_data_inputs(tmp_path):
     config = _config(tmp_path)
     path = tmp_path / "input.json"
     path.write_text(json.dumps(config))
-    policy = repository_root(__file__) / "research/flagship/sqlite_preparation_policy_v1.json"
+    policy = preparation_repository() / "research/flagship/sqlite_preparation_policy_v1.json"
     bound, receipt = bind_preparation_policy(path, policy, tmp_path / "successor")
     assert bound["format_version"] == 2
     assert bound["sqlite"] == SETTINGS

@@ -99,7 +99,7 @@ def _check_plan(plan):
         raise ValueError("execution plan phase accounting does not preserve mandatory and reserve")
 
 
-def _validate_job(raw, base, phase_ids):
+def _validate_job(raw, base, phases):
     _exact_keys(
         raw,
         {
@@ -119,14 +119,14 @@ def _validate_job(raw, base, phase_ids):
     )
     if not isinstance(raw["id"], str) or not _ID.fullmatch(raw["id"]):
         raise ValueError("job id must use lowercase letters, digits, and hyphens")
-    if raw["phase"] not in phase_ids or raw["phase"] in {"P0", "P8"}:
+    if raw["phase"] not in phases or phases[raw["phase"]]["gpu_hours"] <= 0:
         raise ValueError(f"job {raw['id']} has a non-compute phase")
     if raw["kind"] not in {"train", "collect", "eval"}:
         raise ValueError(f"job {raw['id']} has an unsupported kind")
     if raw["allocation"] not in {"mandatory", "reserve"}:
         raise ValueError(f"job {raw['id']} has an unsupported allocation")
-    if (raw["allocation"] == "reserve") != (raw["phase"] == "P7"):
-        raise ValueError(f"job {raw['id']} must keep mandatory and P7 reserve phases separate")
+    if (raw["allocation"] == "reserve") != bool(phases[raw["phase"]].get("conditional")):
+        raise ValueError(f"job {raw['id']} must keep mandatory and reserve phases separate")
     resources = raw["resources"]
     _exact_keys(
         resources,
@@ -264,8 +264,8 @@ def load_wave(path):
     jobs = raw["jobs"]
     if not isinstance(jobs, list) or not jobs:
         raise ValueError("wave must contain at least one job")
-    phase_ids = {phase["id"] for phase in plan["phases"]}
-    normalized_jobs = [_validate_job(job, source.parent, phase_ids) for job in jobs]
+    phases = {phase["id"]: phase for phase in plan["phases"]}
+    normalized_jobs = [_validate_job(job, source.parent, phases) for job in jobs]
     ids = [job["id"] for job in normalized_jobs]
     if len(ids) != len(set(ids)):
         raise ValueError("job ids must be unique")

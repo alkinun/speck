@@ -104,9 +104,7 @@ def test_two_phase_plan_binding_and_budget_reserves_both_generations(
 ):
     from speck.operations import r0_executor
 
-    request = prepare_request(
-        ROOT / "research/flagship/r0_execution_preparation_v2.json", "hybrid-4096", 4, 4
-    )
+    request = prepare_request(ROOT / "experiments/qualification/plan.json", "baseline-4096", 4, 4)
     assert request["restart_protocol"] == "fresh_process_next_step_v1"
     tiny_request["restart_protocol"] = request["restart_protocol"]
     calls = []

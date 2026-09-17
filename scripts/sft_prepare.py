@@ -11,9 +11,7 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "experiment",
-        nargs="?",
-        default="experiments/Speck1-140M-Instruct",
-        help="experiment directory (default: %(default)s)",
+        help="experiment directory",
     )
     parser.add_argument("--restart", action="store_true", help="replace an incomplete staged build")
     parser.add_argument(

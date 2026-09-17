@@ -10,9 +10,7 @@ from speck.provenance.archive import locate_original, restore_checkout, verify_a
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser(
-        "check", help="verify inventory, original Git identities, and archived bytes"
-    )
+    commands.add_parser("check", help="verify historical Git commit, tree, and reachable objects")
     restore = commands.add_parser("restore", help="create a detached pre-cleanup checkout")
     restore.add_argument("destination", type=Path)
     locate = commands.add_parser(

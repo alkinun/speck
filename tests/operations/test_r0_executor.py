@@ -33,7 +33,7 @@ from speck.provenance.io import durable_json
 from speck.provenance.repository import repository_root
 
 ROOT = repository_root()
-PLAN = ROOT / "research/flagship/r0_execution_preparation_v1.json"
+PLAN = ROOT / "experiments/qualification/plan.json"
 
 
 def make_tiny_request():
@@ -87,27 +87,30 @@ def tiny_request():
     return make_tiny_request()
 
 
-def test_all_exact_cases_bind_without_execution():
-    for architecture in ("hybrid", "dense"):
-        for length in (4096, 32768, 131072):
-            value = prepare_request(PLAN, f"{architecture}-{length}", 4, 4)
-            assert value["case"]["model_vocab_size"] == 32003
-            assert value["case"]["synthetic_input_vocab_size"] == 32000
-            digest = value.pop("request_sha256")
-            assert fingerprint(value) == digest
+def test_first_case_binds_actual_model_and_sources_without_execution():
+    value = prepare_request(PLAN, "baseline-4096", 4, 4)
+    assert value["case"]["model_vocab_size"] == 32003
+    assert value["case"]["synthetic_input_vocab_size"] == 32000
+    assert value["case"]["instantiated_parameters"] == value["case"]["model"]["expected_parameters"]
+    assert value["restart_protocol"] == "fresh_process_next_step_v1"
+    assert any(row["path"] == "speck/training/optimizers.py" for row in value["implementation"])
+    digest = value.pop("request_sha256")
+    assert fingerprint(value) == digest
     with pytest.raises(ValueError, match="unknown checked"):
-        prepare_request(PLAN, "tiny-local", 1, 4)
+        prepare_request(PLAN, "hybrid-131072", 1, 4)
     with pytest.raises(ValueError, match="allocated GPUs"):
-        prepare_request(PLAN, "hybrid-4096", 4, 1)
+        prepare_request(PLAN, "baseline-4096", 4, 1)
 
 
-def test_changed_shape_result_cannot_be_used(tmp_path):
+def test_changed_model_binds_new_identity_and_rejects_invalid_count(tmp_path):
     plan = json.loads(PLAN.read_text())
-    plan["shape_result"]["sha256"] = "0" * 64
-    path = tmp_path / "changed.json"
+    model = json.loads((PLAN.parent / plan["model"]).read_text())
+    model["expected_parameters"] += 1
+    (tmp_path / "model.json").write_text(json.dumps(model))
+    path = tmp_path / "plan.json"
     durable_json(path, plan)
-    with pytest.raises(ValueError, match="input hash differs"):
-        prepare_request(path, "hybrid-4096", 1, 4)
+    with pytest.raises(ValueError, match="parameter"):
+        prepare_request(path, "baseline-4096", 1, 4)
 
 
 @pytest.mark.parametrize(

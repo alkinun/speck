@@ -55,7 +55,7 @@ def test_inference_loader_does_not_read_optimizer_state(tmp_path):
 
 
 def test_inference_argument_parser_is_import_safe():
-    args = arguments(["hello", "--device", "cpu", "--step", "3"])
+    args = arguments(["hello", "--experiment", "experiment", "--device", "cpu", "--step", "3"])
 
     assert args.prompt == "hello"
     assert args.device == "cpu"
@@ -76,5 +76,5 @@ def test_inference_argument_parser_is_import_safe():
 )
 def test_invalid_sampling_arguments_fail_during_parsing(option, value):
     with pytest.raises(SystemExit) as error:
-        arguments(["hello", option, value])
+        arguments(["hello", "--experiment", "experiment", option, value])
     assert error.value.code == 2

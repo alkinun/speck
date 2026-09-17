@@ -20,8 +20,8 @@ def arguments(argv=None):
     parser.add_argument("prompt", help="text prompt to continue")
     parser.add_argument(
         "--experiment",
-        default="experiments/Speck1-140M",
-        help="experiment directory (default: %(default)s)",
+        required=True,
+        help="experiment directory",
     )
     parser.add_argument(
         "--checkpoint-dir",

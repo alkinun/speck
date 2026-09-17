@@ -1,14 +1,11 @@
-# Runnable experiments
+# Experiments
 
-This directory contains maintained examples and future complete launch manifests.
+[qualification](qualification/README.md) is the first hardware check: the existing 1.2B hybrid at 4K,
+synthetic inputs, finite steps, and fresh-process checkpoint/RNG replay.
 
-- `Speck1-140M` and `Speck1-140M-Instruct` are retained base/SFT examples from the earlier release.
-- `python -m scripts.smoke` exercises the maintained CPU pipeline on generated fixture data.
-- No first-grant flagship experiment is launchable here yet. See [current status](../research/status.json).
+`make smoke` creates a tiny offline end-to-end experiment in a temporary directory. Use its
+`--output-dir` option to inspect the generated configs, shards, checkpoints, and report.
 
-Completed screens, pilots, and additional release recipes are in the
-[experiment archive](../archive/pregrant-history/experiments/README.md). Reproduce them from their
-recorded implementation revision using `python -m scripts.archive restore DESTINATION`.
-
-New launch directories bind the model, tokenizer, data, training, analysis, and implementation
-identities. Draft research plans belong under `research/flagship`.
+The real-data pilot is not materialized yet. Add one directory when its data, optimization settings,
+token endpoint, evaluation, and cost are fixed under [PLAN.md](../PLAN.md).
+Earlier 140M releases and research matrices remain in [history](../archive/README.md).

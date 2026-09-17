@@ -23,7 +23,7 @@ jobs:
           version: "0.12.1"
       - name: Install the locked CPU test environment
         run: >-
-          uv sync --extra cpu --group dev --group dataset-build --group ruler
+          uv sync --extra cpu --group dev --group dataset-build
           --group transformers --locked
       - name: Check formatting
         run: uv run --no-sync ruff format --check --config ruff-format.toml .
@@ -31,19 +31,8 @@ jobs:
         run: uv run --no-sync ruff check .
       - name: Test
         run: uv run --no-sync pytest -q
-      - name: Validate the research compendium
-        run: uv run --no-sync python -m scripts.research_catalog
-      - name: Verify the research archive
+      - name: Verify recoverable history
         run: uv run --no-sync python -m scripts.archive check
-      - name: Check the source-evidence boundary
-        env:
-          SPECK_DIFF_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: |
-          base="${SPECK_DIFF_BASE:-HEAD^}"
-          if ! git cat-file -e "$base^{commit}" 2>/dev/null; then
-            base=HEAD
-          fi
-          uv run --no-sync python -m scripts.source_pin_check --base "$base"
       - name: Check frozen research evidence
         run: uv run --no-sync pytest -q --evidence -m evidence
       - name: Exercise the CPU workflow

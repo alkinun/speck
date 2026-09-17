@@ -1,80 +1,51 @@
-# Data preparation
+# Data
 
-Data preparation produces source-separated packed shards with tokenizer, source, mixture, and checksum
-metadata. Runtime artifacts belong under `speck_base_dir`, normally `~/.cache/speck`.
+The goal and next corpus are defined in [PLAN.md](../PLAN.md). Prepare one pilot with broad text,
+math, and code; choose weights from actual eligible supply. Old source quotas are historical.
 
-## Prepare a maintained example
+## Pipeline
+
+Pin source revisions and permitted use → acquire/filter → deduplicate and exclude evaluation
+material → partition → tokenize/pack → verify → train. Source-separated shards allow later mixture
+changes without retokenizing. Recheck tokenizer fingerprints and hashes whenever reusing stock.
+
+| Responsibility | Code / command |
+| --- | --- |
+| Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
+| Global disk-backed deduplication | `scripts.production_data_preprocess` (`--batched-minhash` is optional) |
+| Secret filtering, near duplicates, contamination | `scripts.text_gitleaks_filter`, `text_near_duplicates`, `text_contamination` |
+| Source-use review | `scripts.source_rights_review` |
+| Checked retained-stock tokenization | `scripts.tokenize_stock` |
+| Distributed loading | `speck/data/loader.py` |
+
+For a complete experiment directory containing `tokenizer.json` and `data.json`:
 
 ```bash
-uv run --no-sync python -m scripts.tokenizer_prepare experiments/Speck1-140M
-uv run --no-sync python -m scripts.data_prepare experiments/Speck1-140M
+uv run --no-sync python -m scripts.tokenizer_prepare PATH_TO_EXPERIMENT
+uv run --no-sync python -m scripts.data_prepare PATH_TO_EXPERIMENT
 ```
 
-This is the retained 5B-token release recipe and requires substantial network and disk capacity.
-Use `python -m scripts.smoke` for a tiny offline example.
+These can download substantial data. Use `make smoke` for the offline fixture. Each preparation
+command accepts `--help`; the old finite source-acquisition jobs run only from the
+[historical checkout](../archive/README.md), where their original plans and code are preserved.
 
-## Configuration and implementation
+## Retained material
 
-An experiment's `tokenizer.json` binds a prepared tokenizer. Its `data.json` specifies source revisions,
-readers, filters, mixture phases, validation partitions, deduplication, and shard geometry.
-`output_dir` selects an explicit destination; `output_name` selects a named dataset under the cache.
+The runtime store is `/mnt/speck-data/speck` on the maintainer's machine; portable code defaults to
+`~/.cache/speck`, overridden by `speck_base_dir`. Existing corpora and caches were not moved or deleted.
+The frozen tokenizer is under `tokenizer-final-mistral-v1` on that volume. Its model SHA-256 is
+`dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055`.
 
-| Responsibility | Implementation |
-| --- | --- |
-| Configuration, quotas, and disk estimates | [configuration.py](../speck/data/configuration.py) |
-| Acquisition and document readers | [acquisition.py](../speck/data/acquisition.py) |
-| Bounded uint16 token shards | [packing.py](../speck/data/packing.py) |
-| Preparation, recovery, and manifest verification | [dataset.py](../speck/data/dataset.py) |
-| Deterministic distributed loading | [loader.py](../speck/data/loader.py) |
-| Source-specific adapters | [sources/](../speck/data/sources/) |
+FineWeb's cache manifest is under `document-token-stock-e1s-v1/fineweb_edu`; its receipt reports
+2.307B tokens and a passing reopen. The 476.775M-token Stack-Edu acquisition still needs full
+exclusion. Neither those receipts nor the completed specialist stocks establish a joint eligible
+pilot corpus. Reopen manifests, preserve source rights, count overlapping banks once, and verify
+cross-source/validation separation before reuse. The complete receipts are in the Git snapshot.
 
-Source manifests retain revisions, file order, filtering statistics, document indexes, and shard
-identities. Resume validates committed source state before continuing. Training checks the prepared
-tokenizer and shard identities; changing a corpus requires a new dataset/launch identity.
+## Artifact discipline
 
-## Flagship pipeline
-
-The flagship pipeline additionally has global deduplication, deny-ledger processing, benchmark
-decontamination, evaluation partitions, operational calibration, and a data-launch receipt.
-The selected [data protocol](../research/flagship/DATA.md) defines these requirements;
-[current status](../research/status.json) records which stages remain.
-
-Key commands provide `--help`: `production_data_preprocess`, `production_calibration`,
-`firewall_inputs_prepare`, `data_firewall_calibrated_build`, `data_launch_preflight`, and
-`tokenizer_pilot_full_train`. Frozen pre-grant contracts execute from their preserved checkout until
-a new implementation qualification exists.
-
-The [bounded source-bank rehearsal](../research/flagship/SOURCE_BANK.md) qualifies source-separated
-byte selection, metadata preservation, reference-tokenizer packing, and recovery on retained inputs.
-Use `source_bank_prepare` for per-invocation preparation reports and `source_bank_qualify` for a fresh
-clean-checkout recovery qualification. Its outputs remain engineering artifacts until the full
-source-treatment, tokenizer, capacity, and launch requirements are met.
-
-The [upstream acquisition-unit rehearsal](../research/flagship/ACQUISITION_UNITS.md) adds fixed physical
-row windows, original-row metadata, independent acquisition recovery, and ordered cohort deduplication.
-Use `acquisition_units_prepare` for preparation and `acquisition_units_qualify` for the bounded
-clean-checkout qualification. Complete reference exclusion is qualified by the integration below.
-
-The [complete exclusion integration](../research/flagship/FIREWALL_INTEGRATION.md), run through
-`firewall_integrate`, connects larger units to all twelve reference views and bank schema v2. Its
-bounded real-data qualification passes reference preservation, exact/near controls, recovery, and
-all six bank handoffs. Training-scale capacity and the final tokenizer remain separate requirements.
-
-The [screen-capacity and timing review](../research/flagship/SCREEN_CAPACITY.md) provides
-`data_screen_capacity` for conditional per-category E1/E3 supply accounting and `dedup_timing_replay`
-for a private, durable reference-checkpoint replay with phase/checkpoint-component timings. Use the
-v2 replay plan; the initial timing diagnostic is retained at its original revision.
-
-The [durable WAL comparison](../research/flagship/SQLITE_WAL.md), run with `dedup_wal_compare`, qualifies
-a larger autocheckpoint trigger on the bounded reference-index workload. It preserves FULL sync,
-complete-invocation accounting, output/index parity, and recovery from committed WAL after hard exit.
-Use its recommendation only through an explicitly bound successor execution policy; production
-defaults are not changed by the comparison tool.
-
-The [preparation-config guide](../research/flagship/PREPARATION_CONFIG.md) describes schema v2,
-`preprocess_bind_sqlite`, and the config/qualification receipt. Explicit settings are fingerprinted,
-applied on creation/resume, and recorded in the published runtime metadata. The normal preparation CLI
-has passed real-data committed-WAL recovery and reopen with this binding.
-
-For source surveys, see the [literature library](../research/literature/README.md). Earlier curriculum
-details remain in the [original guide](../archive/pregrant-history/docs/data.md).
+Keep source revisions, filters, counts, hashes, tokenizer identity, data order, and output locations
+in each run's manifests. Keep runtime data/checkpoints/logs outside Git, and back up irreplaceable
+checkpoints before dependent work. Preserve failed attempts. Corpus text and packed shards are not
+redistributed as model-release artifacts. Exact/near-duplicate and benchmark exclusion remain
+requirements even though their old administrative workflow has been retired.

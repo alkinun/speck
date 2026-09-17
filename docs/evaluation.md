@@ -1,44 +1,35 @@
-# Evaluation and benchmarking
+# Evaluation
 
-Evaluation implementations live under `speck.evaluation`. Each report should identify the checkpoint,
-data, scoring contract, producing revision, and hardware. Current outputs live in `results/` or the
-runtime store; completed measurements remain in the [archive](../archive/pregrant-history/results/README.md).
+Use the capability table in [PLAN.md](../PLAN.md) as the reporting outline. Measure math, coding,
+tools, reliability, and broad usefulness separately; keep cost alongside quality.
 
-## Held-out checkpoint loss
+## Available checks
 
 ```bash
 uv run --no-sync python -m scripts.checkpoint_loss_eval PATH_TO_EXPERIMENT \
   --checkpoint-dir CHECKPOINT_DIRECTORY --eval-tokens 65536 --no-compile
 ```
 
-Use `--data-experiment` for a separately configured corpus with the same tokenizer. The installed
-`speck evaluate` command is equivalent. Parser-independent held-out construction and analysis use
-`scripts.heldout_evaluation_build` and `scripts.heldout_evaluation_analyze` with their selected contracts.
+This reports held-out loss, with per-source diagnostics. `speck evaluate` is equivalent.
+`instruct_eval` supplies small local assistant diagnostics; these are not a complete benchmark suite.
+`open_slm_eval` integrates pinned external benchmark tooling in a separate `open-slm` environment.
+Every script accepts `--help`.
 
-## Context and capability
+Use `benchmark` for optimization cost, `inference_benchmark` for prefill/decode measurements,
+`evaluation_server` for a local export endpoint, and `logprob_parity` for backend comparison.
+Report hardware, precision, batch, sequence/output lengths, startup, steady throughput, and memory.
 
-| Command | Purpose |
-| --- | --- |
-| `scripts.long_context_eval` | Exact-length passkey and systems diagnostics |
-| `scripts.position_loss_eval` | Position-binned and trailing-token loss |
-| `scripts.structured_retrieval_eval` | Controlled retrieval and composition |
-| `scripts.ruler_source_prepare`, `scripts.ruler_case_prepare` | Pinned offline RULER sources and cases |
-| `scripts.evaluation_server` | Local OpenAI-compatible evaluation endpoint |
-| `scripts.logprob_parity` | Offline per-token cross-backend parity |
+## Before the pilot
 
-Each command exposes `--help`. An experiment used by `long_context_eval` must supply its
-`long_context.json`. [Long-context tooling](long_context.md) describes the capability boundaries.
-HELMET/NoLiMa preparation belongs to the historical program and is indexed in the archive.
+Pin a compact evaluation set and graders before training. Keep development and final-test data
+separate from training and from each other. Verify final math answers, execute code in an isolated
+resource-limited runner, and evaluate tools in a deterministic environment. Include missing
+information, malformed calls, tool failures, corrections, and cases where no tool should be called.
 
-## Quality and serving
+Report correctness and failures with denominators, output budgets, latency, and cost. Compare base
+with base and assistant with assistant. Re-run public baselines under the same declared protocol;
+published leaderboard numbers are context, not directly comparable measurements.
 
-`scripts.open_slm_eval` uses pinned benchmark tooling; install the `open-slm` dependency group in its
-own environment when needed. `scripts.instruct_eval` and `scripts.sft_compare` provide local Instruct
-diagnostics. These small diagnostic sets do not replace a full held-out benchmark suite.
-
-Use `scripts.benchmark` for optimization-step cost and `scripts.inference_benchmark` for prefill/decode
-measurements. Report hardware, precision, batch, sequence length, startup/compile overhead, and steady
-timing separately. Compare native and exported logits before interpreting backend speed differences.
-
-Historical score tables and detailed release-specific commands are in the
-[original evaluation guide](../archive/pregrant-history/docs/evaluation.md).
+The full math/code/tool/reliability dashboard remains work to do. Candidate references and the reasons
+for them are in [research notes](research.md). Historical retrieval/long-context experiments are in
+[Git](../archive/README.md), outside the current experiment path.

@@ -1,9 +1,4 @@
-"""Original research inputs, isolated from the maintained implementation.
-
-Record tests read a detached original checkout. Software imports still resolve to the
-maintained package, so behavior tests exercise the new code with retained fixtures.
-The temporary worktree is removed when the test process exits.
-"""
+"""Use frozen inputs with the maintained implementation; never execute archived tests/code."""
 
 import atexit
 import functools
@@ -14,11 +9,12 @@ from pathlib import Path
 from speck.provenance.archive import load_archive, restore_checkout
 
 
-@functools.lru_cache(maxsize=1)
-def historical_repository():
-    root, _ = load_archive()
-    parent = tempfile.TemporaryDirectory(prefix="speck-reference-")
-    checkout = restore_checkout(Path(parent.name) / "repository", root)
+@functools.lru_cache(maxsize=2)
+def _checkout(legacy):
+    root, manifest = load_archive()
+    parent = tempfile.TemporaryDirectory(prefix="speck-fixtures-")
+    revision = manifest["legacy_revision"] if legacy else manifest["revision"]
+    checkout = restore_checkout(Path(parent.name) / "repository", root, revision=revision)
 
     def cleanup():
         subprocess.run(
@@ -30,3 +26,11 @@ def historical_repository():
 
     atexit.register(cleanup)
     return checkout
+
+
+def historical_repository():
+    return _checkout(True)
+
+
+def preparation_repository():
+    return _checkout(False)

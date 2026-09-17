@@ -71,10 +71,15 @@ def arguments():
         action="store_true",
         help="compile model forward with max-autotune-no-cudagraphs",
     )
-    parser.add_argument("--speck-experiment", default="experiments/Speck1-140M")
-    parser.add_argument("--speck-checkpoint-step", type=int, default=76294)
+    parser.add_argument("--speck-experiment")
+    parser.add_argument("--speck-checkpoint-step", type=int)
     parser.add_argument("--output", type=Path, default=None)
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.model == "speck" and (
+        args.speck_experiment is None or args.speck_checkpoint_step is None
+    ):
+        parser.error("--model speck requires --speck-experiment and --speck-checkpoint-step")
+    return args
 
 
 def _batch_sizes(value):

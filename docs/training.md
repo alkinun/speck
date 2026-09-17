@@ -1,76 +1,54 @@
 # Training and inference
 
-The reusable trainer lives in `speck.training.base`; command scripts remain thin entry points.
-Install the CPU environment with `make setup`, or the CUDA/FLA environment with
-`uv sync --extra gpu --extra linear`.
+`make setup` installs the CPU environment. CUDA uses `uv sync --extra gpu --extra linear`;
+the allocation's arm64/CUDA environment must be checked on site.
 
-## CPU smoke workflow
+## Offline baseline
 
 ```bash
-uv run --no-sync python -m scripts.smoke
+make smoke
+# Retain configs, data, checkpoints, and report in a new directory:
+uv run --no-sync python -m scripts.smoke --output-dir /tmp/speck-smoke-run
 ```
 
-This generates a local tokenizer and tiny corpus, trains a small recurrent/attention model,
-interrupts and resumes a second run, checks exact final-parameter equality, and evaluates held-out
-loss. It needs no downloaded data, W&B login, or GPU. Use `--output-dir NEW_DIRECTORY` to retain
-configs, shards, checkpoints, logs, and the evaluation report.
+This exercises local tokenization, packing, training, exact interrupted/resumed parameter equality,
+and held-out loss. It requires no corpus downloads or W&B account. It is a software check.
 
-## Base training
+## First GPU check
 
-Prepare the [data and tokenizer](data.md), then train a complete experiment:
+Follow [qualification](../experiments/qualification/README.md). It uses the starting 1.2B model and
+synthetic 4K inputs, checks optimization and fresh-process restart, and records resource use.
+Actual corpus training has separate data and sustained-throughput requirements.
 
-```bash
-uv run --no-sync python -m scripts.base_train experiments/Speck1-140M
-```
+## Corpus training
 
-The installed `speck train` command is equivalent. Use `--device cpu --no-compile` for appropriate
-small CPU experiments. Training normally logs to W&B; the `dummy` run name uses the local null logger.
-The flagship's actual launch experiments are tracked separately from this older release example.
-
-For a four-GPU job outside Slurm:
+A complete experiment supplies `model.json`, `tokenizer.json`, `data.json`, and `train.json`.
+The pilot's data, token endpoint, learning rate, and batch are still to be frozen; the qualification
+directory is not a pretraining recipe.
 
 ```bash
+uv run --no-sync python -m scripts.base_train PATH_TO_EXPERIMENT
 uv run --no-sync torchrun --standalone --nproc-per-node=4 \
   -m scripts.base_train PATH_TO_EXPERIMENT
 ```
 
-Allocated Slurm runs use the [Slurm wrapper and wave manifest](slurm.md).
+Use `--device cpu --no-compile` for small CPU experiments. Run name `dummy` disables W&B.
+Resume explicitly with `--resume STEP`; use `--branch-from DIRECTORY --branch-step STEP` for a
+new branch. Resume checks the original model, data cursor, optimizer, tokenizer, and schedule.
+A changed recipe is a new run, not an edited resume. See `--help` for branch options and
+[Slurm](slurm.md) for scheduler interruption/requeue.
 
-## Resume and continuation
+## Assistant training and generation
 
-```bash
-uv run --no-sync python -m scripts.base_train PATH_TO_EXPERIMENT --resume STEP
-```
-
-Resume is explicit. Completed checkpoints bind model configuration, optimizer state, data position,
-tokenizer, schedules, and timing. Partial/requeue checkpoints remain distinct from completed release
-artifacts. Publication recovery preserves a previous complete checkpoint if replacement fails.
-
-Branching uses `--branch-from DIRECTORY --branch-step STEP`. A changed context/data stage uses an
-explicit context branch and new schedule, prepared through `scripts.context_stage_prepare`.
-Inspect `--help` for the full boundary; do not change a resume configuration to disguise a new run.
-The [context guide](long_context.md) explains length and retention checks.
-
-## Supervised fine-tuning
+SFT requires its own `sft.json`, prepared assistant-masked data, and an explicit parent checkpoint:
 
 ```bash
-uv run --no-sync python -m scripts.sft_prepare experiments/Speck1-140M-Instruct
-uv run --no-sync python -m scripts.sft_train experiments/Speck1-140M-Instruct
+uv run --no-sync python -m scripts.sft_prepare PATH_TO_SFT_EXPERIMENT
+uv run --no-sync python -m scripts.sft_train PATH_TO_SFT_EXPERIMENT
+uv run --no-sync python -m scripts.infer "Explain this result:" \
+  --experiment PATH_TO_EXPERIMENT --checkpoint-dir CHECKPOINT_DIRECTORY --max-tokens 128
 ```
 
-SFT uses assistant-masked data and a pinned parent checkpoint. `speck sft` is the installed entry
-point. The flagship's proposed data and stages are in the [post-training protocol](../research/flagship/POST_TRAINING.md).
-
-## Inference
-
-```bash
-uv run --no-sync python -m scripts.infer "The meaning of life is" \
-  --experiment experiments/Speck1-140M --max-tokens 64
-```
-
-Use `--checkpoint-dir`, `--step`, `--device`, `--temperature`, and `--top-k` to select the checkpoint
-and generation settings. `speck infer` is equivalent. Shared cached generation is implemented in
-`speck.model.generation`.
-
-The [archived guide](../archive/pregrant-history/docs/training.md) retains detailed older release,
-SpeckChat, and continuation recipes at their original revision.
+The current chat implementation is not yet a qualified tool-calling or reasoning protocol. Reconcile
+the separate post-training work, parser/template, loss masks, and output limits before making those
+claims. Keep base and assistant checkpoints separately identifiable.

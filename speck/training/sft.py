@@ -38,9 +38,7 @@ def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "experiment",
-        nargs="?",
-        default="experiments/Speck1-140M-Instruct",
-        help="experiment directory (default: %(default)s)",
+        help="experiment directory",
     )
     parser.add_argument(
         "--device", default=None, help="training device; defaults to automatic runtime selection"

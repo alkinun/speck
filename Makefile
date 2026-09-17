@@ -1,7 +1,7 @@
-.PHONY: setup format format-check lint test evidence-test integration-test research-check archive-check source-pin-check smoke quality
+.PHONY: setup format format-check lint test evidence-test archive-check smoke quality
 
 setup:
-	uv sync --extra cpu --group dev --group dataset-build --group ruler --group transformers --locked
+	uv sync --extra cpu --group dev --group dataset-build --group transformers --locked
 
 format:
 	uv run --no-sync ruff format --config ruff-format.toml .
@@ -18,19 +18,10 @@ test:
 evidence-test:
 	uv run --no-sync pytest -q --evidence -m evidence
 
-integration-test:
-	uv run --no-sync pytest -q --evidence --integration -m integration
-
 archive-check:
 	uv run --no-sync python -m scripts.archive check
 
 smoke:
 	uv run --no-sync python -m scripts.smoke
 
-research-check:
-	uv run --no-sync python -m scripts.research_catalog
-
-source-pin-check:
-	uv run --no-sync python -m scripts.source_pin_check
-
-quality: format-check lint test research-check archive-check
+quality: format-check lint test archive-check

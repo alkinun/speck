@@ -1,89 +1,26 @@
-# Releasing Models
+# Export and release
 
-These workflows are for maintainers publishing Speck artifacts. They default to repositories in the
-`specklabs` Hugging Face organization and can create remote commits. Authenticate with a token that
-has write access and review every source revision, destination, and generated artifact before
-uploading.
-
-Repository source code remains MIT. The first flagship model weights are released under Apache-2.0
-according to `research/flagship/release_and_data_use_policy_v1.json`; every generated model repository
-must include the full Apache-2.0 text and model-card license metadata. Source corpus text and derived
-packed shards are not release artifacts. Publish source/revision/filter/mixture metadata, aggregate
-statistics, citations, attribution, and removal policy instead.
-
-Run local validation with `--no-upload` first.
-
-## Transformers Export
-
-Exports vendor the current checked-in architecture and native model implementation behind a thin
-Transformers wrapper. They no longer depend on an older published Speck modeling file, so new
-operations such as Gated DeltaNet, partial RoPE, NoPE, lazy positions, and fixed recurrent state are
-covered by native/Transformers logit parity before release. The exported Safetensors names are
-prefixed with `native.` to make that wrapper boundary explicit.
-
-The maintained implementation is split across model state/layers/assembly and training optimizers.
-Export bundles those explicit source files in dependency order, rejects unbundled Speck imports,
-and records their hashes in `native_sources.json`. This preserves a self-contained Transformers
-artifact without requiring the training repository at inference time.
-
-Export and validate the canonical one-epoch instruction checkpoint as a BF16 Transformers
-repository without uploading:
+Export only a completed, identified checkpoint. Keep the base and assistant artifacts distinct.
+The maintained path bundles native model code behind a Transformers wrapper and checks logit parity.
+An export is not evidence of tool-use capability or accelerated serving support.
 
 ```bash
-uv run --extra cpu --group transformers python -m scripts.model_publish \
-  --expected-epochs 1 \
-  --no-upload
+uv run --no-sync python -m scripts.model_publish \
+  --checkpoint-dir CHECKPOINT_DIRECTORY --repo OWNER/MODEL --no-upload
 ```
 
-The command defaults to the latest completed checkpoint under
-`~/.cache/speck/checkpoints/Speck1.1-140M-Instruct` and writes a generated release under
-`~/.cache/speck/releases`. Use `--checkpoint-dir`, `--step`, `--repo`, and `--output-dir` to make
-the source and destination explicit. Omit `--no-upload` only after reviewing the local export.
+Use `scripts.base_checkpoint_export --help` for base checkpoints. Supply the intended source,
+destination, and output directory explicitly. Review the generated files and parity results before
+uploading. The pinned compatibility-code provenance refers to an older published Speck checkpoint; the
+new artifact must identify its own source checkpoint and producing revision.
 
-Published likelihood evaluation supports binary right-padded batches when `use_cache=False`. Left
-padding, mask gaps, and cached padded inference remain unsupported.
+The export vendors architecture, model layers/state, and optimizer definitions and records their
+hashes. Check native/exported logits, generation, padding support, tokenizer, and chat template.
+Right-padded likelihood batches are supported without caching; cached padded inference is not.
+A production tool parser and accelerated KDA backend still require their own qualification.
 
-## Code-Only Compatibility Update
-
-Apply and validate the tracked padding compatibility code against an immutable base-model source
-without changing weights:
-
-```bash
-uv run --extra cpu --group transformers python -m scripts.model_code_publish --no-upload
-```
-
-The publisher verifies the source revision, model-weight LFS checksum, Auto class loading,
-parameter count, padded-batch logit parity, generated code hashes, and unchanged weights. Omit
-`--no-upload` only after local validation succeeds and the configured source revision still matches
-the intended remote parent.
-
-## GGUF Variants
-
-The existing GGUF converter is an exact mapping from the original attention/convolution Speck
-family to llama.cpp's LFM2 layout. It deliberately rejects Gated DeltaNet checkpoints. Do not use a
-successful Transformers export as evidence of GGUF compatibility: a GDN release needs a dedicated
-llama.cpp architecture mapping plus per-backend state and logit parity before publication.
-
-GGUF publication requires Git, CMake, a working C/C++ toolchain, network access, and enough local
-space for BF16 plus every requested quantization. Build and smoke-test locally first:
-
-```bash
-uv run --extra cpu python -m scripts.gguf_publish --no-upload
-```
-
-The default workflow creates BF16, Q4_K_M, Q5_K_M, and Q8_0 variants from the public instruction
-model, builds a pinned llama.cpp revision, and smoke-tests every artifact with llama.cpp. Generated
-weights and the checkout stay under `~/.cache/speck`.
-
-Repeat `--quantization <type>` to select variants, use `--llama-cpp <path>` for an existing checkout,
-and set `--jobs` to control build and inference concurrency. `--resume` validates and reuses existing
-artifacts after an interruption. Omit `--no-upload` only when all requested files pass.
-
-## Release Safety
-
-- Prefer explicit immutable source revisions over `main`.
-- Preserve generated manifests and command output with the release record.
-- Never use `--force` until the target path has been checked manually.
-- Confirm destination repositories before removing `--no-upload`.
-- Treat model-card-only migration scripts as one-shot operations tied to their pinned parent
-  commits; verify current Hub heads before attempting them.
+Source remains MIT; intended new weights use Apache-2.0 with a complete license and accurate model
+card. Release model/tokenizer metadata and permitted artifacts; do not upload source corpus text or
+packed training shards. Preserve checkpoints, producing revisions, data provenance, evaluation,
+limitations, and costs. Old GGUF and one-shot release migrations are recoverable in
+[history](../archive/README.md); they are not the current KDA export path.

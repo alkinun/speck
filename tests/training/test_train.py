@@ -191,7 +191,7 @@ def test_legacy_resume_defaults_to_cosine_schedule():
 
 
 def test_runtime_cadence_arguments_are_optional():
-    defaults = arguments([])
+    defaults = arguments(["experiment"])
     overridden = arguments(["experiment", "--save-every", "1526", "--eval-every", "0"])
 
     assert defaults.save_every is defaults.eval_every is None
@@ -274,10 +274,10 @@ def test_cli_checkpoint_directory_overrides_config_without_moving_data(tmp_path)
 
 
 def test_branch_schedule_argument_defaults_to_inherit():
-    assert arguments([]).branch_schedule == "inherit"
-    assert arguments(["--branch-schedule", "new"]).branch_schedule == "new"
-    assert arguments([]).branch_kind == "same"
-    assert arguments(["--branch-kind", "context"]).branch_kind == "context"
+    assert arguments(["experiment"]).branch_schedule == "inherit"
+    assert arguments(["experiment", "--branch-schedule", "new"]).branch_schedule == "new"
+    assert arguments(["experiment"]).branch_kind == "same"
+    assert arguments(["experiment", "--branch-kind", "context"]).branch_kind == "context"
 
 
 def test_branch_only_allows_same_training_recipe():

@@ -9,8 +9,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("config")
     parser.add_argument("--restart", action="store_true")
+    parser.add_argument(
+        "--batched-minhash",
+        action="store_true",
+        help="use exact-equivalent batched MinHash updates",
+    )
     args = parser.parse_args()
-    result = preprocess_sources(load_preprocess_config(args.config), restart=args.restart)
+    result = preprocess_sources(
+        load_preprocess_config(args.config),
+        restart=args.restart,
+        batched_minhash=args.batched_minhash,
+    )
     counts = result["manifest"]["counts"]
     print(
         f"Retained {counts.get('records_retained', 0):,} records; "

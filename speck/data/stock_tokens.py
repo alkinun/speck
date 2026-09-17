@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from speck.data.firewall_integration import verify_excluded_parent
+from speck.data.exclusion import verify_excluded_parent
 from speck.data.packing import TokenShardWriter
 from speck.provenance.io import durable_json, file_sha256
 from speck.tokenization.tokenizer import Tokenizer
