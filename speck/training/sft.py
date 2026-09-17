@@ -228,13 +228,18 @@ class SFTTrainer:
             raise ValueError("SFT checkpoint uses a different pretrained model")
         config = ArchitectureConfig.from_dict(metadata["config"])
         expected_model = dict(self.configs["model"])
-        expected_model.pop("expected_parameters", None)
         expected_model.update(
             vocab_size=self.tokenizer.vocab_size,
             bos_token_id=self.tokenizer.bos_id,
             eos_token_id=self.tokenizer.eos_id,
         )
-        if config.settings() != ArchitectureConfig.from_dict(expected_model).settings():
+        actual_settings = config.settings()
+        expected_settings = ArchitectureConfig.from_dict(expected_model).settings()
+        # Resizing clears derived count assertions; a base with reserved rows need not resize.
+        for values in (actual_settings, expected_settings):
+            values.pop("expected_parameters", None)
+            values.pop("expected_active_parameters", None)
+        if actual_settings != expected_settings:
             raise ValueError("SFT checkpoint architecture does not match the experiment")
         return SpeckForCausalLM(config), config, pretrained
 

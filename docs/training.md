@@ -84,3 +84,7 @@ assistant weights, and rejects unsupported tools and overlength conversations. N
 truncated. For a Hub dataset, set `long_sequences: "reject"` explicitly for the same length policy;
 the absent-field default remains the historical truncation behavior. Rejected counts stay in the
 manifest, and an empty accepted split is an error.
+
+The offline smoke now also prepares weighted local SFT examples, initializes from its native base
+checkpoint, trains two assistant steps, and verifies exact parameter equality after SFT resume.
+This exercises the reserved-vocabulary path used by the flagship. It remains a tiny CPU fixture.
