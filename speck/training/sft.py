@@ -16,7 +16,7 @@ from torch.nn.parallel import DistributedDataParallel
 
 from speck.config import load_experiment
 from speck.data.loader import manifest_fingerprint
-from speck.export.pretrained import load_pretrained
+from speck.export.pretrained import load_pretrained, pretrained_source_matches
 from speck.model import SpeckForCausalLM, build_model
 from speck.model.architecture import ArchitectureConfig
 from speck.operations.runtime import NullRun, base_dir, cleanup, init_runtime, print0
@@ -224,8 +224,7 @@ class SFTTrainer:
         if metadata.get("training_phase") != "sft" or metadata["manifest"] != self.manifest_hash:
             raise ValueError("SFT checkpoint does not match the model or dataset")
         pretrained = metadata["resolved"]["pretrained"]
-        source = {key: pretrained[key] for key in ("repo", "revision", "filename")}
-        if source != self.args.pretrained:
+        if not pretrained_source_matches(pretrained, self.args.pretrained):
             raise ValueError("SFT checkpoint uses a different pretrained model")
         config = ArchitectureConfig.from_dict(metadata["config"])
         expected_model = dict(self.configs["model"])

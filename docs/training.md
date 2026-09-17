@@ -71,3 +71,9 @@ The audit counts every row and tokenizes a deterministic sample per source/subse
 hashes, tokenizer identity, rejection reasons, and complete-conversation fit without truncation.
 Pass conversation shards only: Hugging Face `cache-*.arrow` files can contain shuffle indices.
 A sample's fit percentage is an estimate, not a prepared training count or quality score.
+
+SFT can initialize directly from a completed native base checkpoint. Bind its model and metadata
+hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` and use the returned
+object as `sft.json`'s `pretrained` setting. This reads local weights without exporting or uploading
+an unfinished model. Changed parent bytes fail before loading; SFT resume retains the original
+parent identity and does not require the base checkpoint to remain locally available.
