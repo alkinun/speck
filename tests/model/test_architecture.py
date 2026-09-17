@@ -349,3 +349,25 @@ def test_model_integer_fields_reject_boolean_values(field):
     config = ArchitectureConfig.from_dict(json.loads((experiment / "model.json").read_text()))
     with pytest.raises(ValueError, match=field):
         replace(config, **{field: True})
+
+
+def test_model_builder_preserves_explicit_reserved_vocabulary_rows():
+    from speck.model import build_model
+
+    settings = {
+        "blocks": [
+            {
+                "block": {
+                    "hidden_size": 8,
+                    "stages": [{"branches": [{"kind": "swiglu", "intermediate_size": 16}]}],
+                }
+            }
+        ],
+        "embedding_size": 8,
+        "vocab_size": 19,
+    }
+    model = build_model(settings, vocab_size=16)
+    assert model.config.vocab_size == 19
+    assert model.embed_tokens.weight.shape == (19, 8)
+    with pytest.raises(ValueError, match="cover the tokenizer"):
+        build_model({**settings, "vocab_size": 15}, vocab_size=16)

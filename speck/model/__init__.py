@@ -721,8 +721,11 @@ class SpeckForCausalLM(nn.Module):
 
 def build_model(settings, vocab_size, bos_token_id=1, eos_token_id=2, loss_backend="torch"):
     values = dict(settings)
+    model_vocab_size = values.get("vocab_size", vocab_size)
+    if type(model_vocab_size) is not int or model_vocab_size < vocab_size:
+        raise ValueError("model vocabulary must cover the tokenizer vocabulary")
     values.update(
-        vocab_size=vocab_size,
+        vocab_size=model_vocab_size,
         bos_token_id=bos_token_id,
         eos_token_id=eos_token_id,
     )
