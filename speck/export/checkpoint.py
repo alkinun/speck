@@ -9,7 +9,7 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
-from speck.data.loader import manifest_fingerprint
+from speck.export.pretrained import checkpoint_tokenizer_fingerprint
 from speck.export.transformers import (
     prepare_current_release_code,
     release_config,
@@ -83,14 +83,7 @@ def checkpoint_tokenizer(metadata, directory=None):
     if directory is not None:
         config["directory"] = str(directory)
     tokenizer = get_tokenizer(**config)
-    expected = resolved.get("tokenizer_fingerprint")
-    if expected is None:
-        # Older checkpoints bind the tokenizer through their complete packed manifest.
-        manifest_path = Path(resolved["data_dir"]) / "manifest.json"
-        manifest = json.loads(manifest_path.read_text())
-        if manifest_fingerprint(manifest) != metadata["manifest"]:
-            raise ValueError("original packed manifest differs from the checkpoint")
-        expected = manifest["tokenizer"]["fingerprint"]
+    expected = checkpoint_tokenizer_fingerprint(metadata)
     if tokenizer.fingerprint() != expected:
         raise ValueError("export tokenizer differs from the checkpoint")
     return tokenizer

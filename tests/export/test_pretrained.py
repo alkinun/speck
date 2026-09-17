@@ -14,7 +14,17 @@ from tests.evaluation.test_infer import tiny_config
 def test_native_sft_parent_loads_without_hub_or_optimizer(tmp_path, monkeypatch):
     source = SpeckForCausalLM(tiny_config())
     source.init_weights()
-    save(tmp_path, 2, source.state_dict(), {}, {"step": 2, "config": source.config.settings()})
+    save(
+        tmp_path,
+        2,
+        source.state_dict(),
+        {},
+        {
+            "step": 2,
+            "config": source.config.settings(),
+            "resolved": {"tokenizer_fingerprint": "original"},
+        },
+    )
     parent = native_pretrained_source(tmp_path, 2)
     (tmp_path / "optimizer_000002.pt").write_bytes(
         b"optimizer is unnecessary for SFT initialization"
@@ -24,7 +34,9 @@ def test_native_sft_parent_loads_without_hub_or_optimizer(tmp_path, monkeypatch)
         "speck.export.pretrained.hf_hub_download",
         lambda *a, **k: pytest.fail("unexpected Hub access"),
     )
-    provenance = load_pretrained(target, **parent)
+    with pytest.raises(ValueError, match="tokenizer does not match"):
+        load_pretrained(target, **parent, tokenizer_fingerprint="different-same-vocab-size")
+    provenance = load_pretrained(target, **parent, tokenizer_fingerprint="original")
     assert pretrained_source_matches(provenance, parent)
     assert all(
         torch.equal(value, target.state_dict()[key]) for key, value in source.state_dict().items()

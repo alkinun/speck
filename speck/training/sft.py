@@ -208,7 +208,11 @@ class SFTTrainer:
                 self.tokenizer.bos_id,
                 self.tokenizer.eos_id,
             )
-            self.pretrained = load_pretrained(self.model, **args.pretrained)
+            self.pretrained = load_pretrained(
+                self.model,
+                **args.pretrained,
+                tokenizer_fingerprint=self.tokenizer.base.fingerprint(),
+            )
             self.model.resize_token_embeddings(self.tokenizer.vocab_size)
             self.config = self.model.config
         self.model = self.model.to(self.device)

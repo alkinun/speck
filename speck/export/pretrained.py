@@ -7,9 +7,26 @@ from pathlib import Path
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
 
+from speck.data.loader import manifest_fingerprint
 from speck.model.architecture import ArchitectureConfig
 from speck.provenance.io import file_sha256 as _sha256
 from speck.training.checkpoint import load_metadata, load_model
+
+
+def checkpoint_tokenizer_fingerprint(metadata):
+    """Recover a native checkpoint's tokenizer identity without trusting its current path."""
+
+    resolved = metadata["resolved"]
+    if metadata.get("training_phase") == "sft":
+        return resolved["tokenizer"]["base_fingerprint"]
+    expected = resolved.get("tokenizer_fingerprint")
+    if expected is not None:
+        return expected
+    manifest_path = Path(resolved["data_dir"]) / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    if manifest_fingerprint(manifest) != metadata["manifest"]:
+        raise ValueError("original packed manifest differs from the checkpoint")
+    return manifest["tokenizer"]["fingerprint"]
 
 
 def native_pretrained_source(checkpoint_dir, step):
@@ -30,7 +47,7 @@ def pretrained_source_matches(provenance, settings):
 
     if "checkpoint_dir" in settings:
         required = {"checkpoint_dir", "step", "model_sha256", "metadata_sha256"}
-        if set(settings) != required:
+        if set(settings) != required or type(settings["step"]) is not int or settings["step"] < 0:
             return False
         normalized = {
             **settings,
@@ -53,6 +70,7 @@ def load_pretrained(
     step=None,
     model_sha256=None,
     metadata_sha256=None,
+    tokenizer_fingerprint=None,
 ):
     """Load pinned Hub weights or an explicitly identified completed native checkpoint."""
 
@@ -69,6 +87,11 @@ def load_pretrained(
         if identity != settings:
             raise ValueError("native pretrained checkpoint identity mismatch")
         metadata = load_metadata(checkpoint_dir, step)
+        if (
+            tokenizer_fingerprint is not None
+            and checkpoint_tokenizer_fingerprint(metadata) != tokenizer_fingerprint
+        ):
+            raise ValueError("pretrained tokenizer does not match the SFT tokenizer")
         if ArchitectureConfig.from_dict(metadata["config"]).settings() != model.config.settings():
             raise ValueError("pretrained model architecture does not match the experiment")
         model.load_state_dict(load_model(checkpoint_dir, step, "cpu"), strict=True)
@@ -79,6 +102,10 @@ def load_pretrained(
     if not isinstance(revision, str) or len(revision) != 40:
         raise ValueError("pretrained revision must be a full commit hash")
     config_path = hf_hub_download(repo, "config.json", revision=revision)
+    if tokenizer_fingerprint is not None:
+        tokenizer_path = hf_hub_download(repo, "tokenizer.model", revision=revision)
+        if _sha256(tokenizer_path) != tokenizer_fingerprint:
+            raise ValueError("pretrained tokenizer does not match the SFT tokenizer")
     weights_path = hf_hub_download(repo, filename, revision=revision)
     remote = json.loads(Path(config_path).read_text(encoding="utf-8"))
     allowed = {field.name for field in fields(ArchitectureConfig)}

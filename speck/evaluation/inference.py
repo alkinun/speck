@@ -98,6 +98,11 @@ def load_checkpoint_tokenizer(config, metadata):
             raise ValueError("configured chat format differs from the checkpoint")
     elif "chat_format_version" in config:
         raise ValueError("chat format settings require an SFT checkpoint")
+    elif metadata.get("resolved", {}).get("tokenizer_fingerprint") not in (
+        None,
+        tokenizer.fingerprint(),
+    ):
+        raise ValueError("checkpoint and tokenizer do not match")
     return tokenizer
 
 
