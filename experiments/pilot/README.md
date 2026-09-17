@@ -73,3 +73,17 @@ Inspect source-wise loss, gradient health, checkpoint replay, samples, actual mi
 and end-to-end throughput. Retain intermediate checkpoints. Public capability results at this short
 endpoint are diagnostic; do not use this run to claim release quality or architectural superiority.
 Choose any larger horizon only after inspecting these measurements.
+
+After packing, scan and replay the real loader in separate processes:
+
+```bash
+uv run --no-sync torchrun --standalone --nproc-per-node=4 -m scripts.loader_check \
+  experiments/pilot --batches 6400 --mode scan --output-dir /external/pilot/loader-four
+uv run --no-sync torchrun --standalone --nproc-per-node=4 -m scripts.loader_check \
+  experiments/pilot --batches 6400 --mode replay --output-dir /external/pilot/loader-four
+```
+
+The four ranks collectively read the complete 105M-token schedule on CPU. Reports record source
+exposures and exact replay of eight saved microbatches per rank. This validates rank slicing and
+fresh-process cursor replay; CUDA transfers, NCCL, optimizer restart, and scheduler behavior remain
+separate hardware checks. Use 25,600 batches for a complete one-worker scan into another directory.
