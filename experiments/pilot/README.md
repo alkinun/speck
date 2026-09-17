@@ -1,7 +1,7 @@
 # First real-data pilot
 
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
-No GPU training has run. It is not a model-quality result or an architecture comparison.
+No real-data pilot training has run. It is not a model-quality result or an architecture comparison.
 
 ## Recipe
 
@@ -12,6 +12,8 @@ checkpointing, Liger loss, and Muon/AdamW. Deterministic PyTorch kernels support
 replay. The peak learning rate is 3e-4, with 40 warmup steps and cosine decay to 10%.
 These are conservative starting settings, not optimized hyperparameters.
 The model inherits the qualification geometry, including its three reserved embedding rows.
+Launch the initial pilot with `--no-compile` to match qualification. Bind that flag in the Slurm wave;
+the compiled path requires its own check before use.
 
 | Source | Training weight |
 | --- | ---: |

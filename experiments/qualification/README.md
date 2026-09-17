@@ -37,3 +37,13 @@ input hashes, memory, step timings, checkpoint costs, and failures remain in the
 The learning rate and batch are diagnostic settings. The probe does not establish model quality,
 sustained corpus throughput, hard-crash recovery, cached-generation parity, or Slurm/requeue behavior.
 Those need separate checks before the real pilot. No 32K/128K sweep is part of this first step.
+
+## Local preparation result
+
+The [retained RTX 3090 result](local-result.json) records a successful full-size, one-worker
+optimization and fresh-process model/optimizer/RNG comparison at the original tolerance. It used
+`PYTORCH_ALLOC_CONF=expandable_segments:True`, deterministic algorithms, and no compilation.
+The earlier OOM, nondeterministic-gradient failure, and cold-backend RNG failure are preserved.
+Synthetic step throughput is about 1,937 tokens/s on that machine; it is not corpus throughput or
+a GH200 projection. The four supervised attempts consumed 0.585 local allocated GPU-hours;
+standalone kernel/tests are outside that ledger. Repeat qualification on the actual allocation.

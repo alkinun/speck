@@ -31,7 +31,8 @@ not a promise to reproduce another lab's scores or compute budget. The decisions
 [EvalPlus](https://github.com/evalplus/evalplus) supplies stronger execution tests for generated code.
 [IFEval](https://arxiv.org/abs/2311.07911) measures verifiable instruction constraints. Use these as
 starting references alongside checked math answers and a small deterministic tool environment.
-Dataset versions, exclusions, scoring, and output limits still need to be pinned before runs.
+The [pilot protocol](../experiments/pilot/evaluation.json) pins five dataset inputs, exclusions,
+scorer revisions, and output limits. Executable grader qualification and tool tasks remain open.
 The current toolkit has loss, generation, serving, and export checks; the complete math/code/tool/
 reliability dashboard is not implemented or claimed to have run.
 

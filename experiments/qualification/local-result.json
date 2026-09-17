@@ -1,0 +1,100 @@
+{
+  "additional_diagnostics": {
+    "cold_rng_attention": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/cuda-rng-attention.json",
+      "sha256": "dde656e1326023640648634d45c698497bea89c3fd28c97eb4d7cb1158a71779"
+    },
+    "cold_rng_kda": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/cuda-rng-kda.json",
+      "sha256": "0a92767c1c2ef178eed49c6df65a21cb1db2efc9073c5bbe742834b4e449de0f"
+    },
+    "cuda_tests": {
+      "passed": 4,
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-cuda-tests.xml",
+      "sha256": "0693797fbddd5d3c9edaa31de885135a1b6528af06856d87222a45dcbfda887a"
+    },
+    "gradient_repeat": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/cuda-repeat-diagnostic.json",
+      "sha256": "897a62aac33815708e8cb6251cfc77124a69fb49d14efff25a4663c9131bc3df"
+    },
+    "kda_kernel": {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-kda-rtx3090.json",
+      "sha256": "2d399342f344ab6345d7fce291ed12825da2d131a2908fbdcb1d2a63f6203562"
+    }
+  },
+  "attempts": [
+    {
+      "allocated_gpu_hours": 0.0038368680441797347,
+      "failure": "CUDA out of memory. Tried to allocate 1.41 GiB. GPU 0 has a total capacity of 23.56 GiB of which 682.38 MiB is free. Including non-PyTorch memory, this process has 22.88 GiB memory in use. Of the allocated memory 19.20 GiB is allocated by PyTorch, and 3.36 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-r0-ledger/20260917T200253Z-03914ae1b51e/result.json",
+      "sha256": "3f2922adf8bb86f18880ce9dca7afdeed5fbf4c64f50c31ae82d898f2159f6a4",
+      "status": "attempt_failed_or_incomplete"
+    },
+    {
+      "allocated_gpu_hours": 0.1854885333436121,
+      "failure": "Tensor-likes are not close!",
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-r0-ledger/20260917T200807Z-c45904dd4c5e/result.json",
+      "sha256": "c85be785d4beee11a3a4cc4f5ee9ef0b51ffe7fa712dccdf420d1fa6664778dd",
+      "status": "attempt_failed_or_incomplete"
+    },
+    {
+      "allocated_gpu_hours": 0.22989101256027222,
+      "failure": "fresh-process RNG continuation differs",
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-r0-ledger/20260917T202651Z-64cd96552a71/result.json",
+      "sha256": "7378a236361b54e6ceefe0aca599b4d47e27bde8d10d22f9af8b89c011fd2d38",
+      "status": "attempt_failed_or_incomplete"
+    },
+    {
+      "allocated_gpu_hours": 0.16550060468334576,
+      "failure": null,
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-r0-ledger/20260917T204542Z-a8c77e1d9349/result.json",
+      "sha256": "9f16d0b0bb9c29205bbfed2c84d431d7594bc48a8c63dc33664bbc22570b8247",
+      "status": "bounded_fresh_process_checks_pass"
+    }
+  ],
+  "boundary": "Local RTX 3090 synthetic execution only. No GH200, NCCL, production-loader CUDA, scheduler recovery, compiled-path or model-quality qualification. Supervised GPU-hours exclude standalone diagnostics; checkpoint timing reflects local disk contention, not an isolated storage benchmark.",
+  "checks": {
+    "fresh_process_weights_optimizer": true,
+    "rng_continuation": true
+  },
+  "date": "2026-09-17",
+  "environment": {
+    "device": "cuda:0",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "machine": "x86_64",
+    "versions": {
+      "cuda": "12.8",
+      "flash-linear-attention": "0.5.0",
+      "liger-kernel": "0.8.2",
+      "torch": "2.9.1+cu128",
+      "triton": "3.5.1"
+    }
+  },
+  "format": "speck_local_hardware_preparation",
+  "format_version": 1,
+  "initial_checkpoint_save_and_hash_seconds": 140.35201381903607,
+  "parameters": 1195884576,
+  "peak_allocated_bytes": 22181223424,
+  "peak_reserved_bytes": 24784142336,
+  "producing_revision": "0c09a3f22cde8310ba5754a88d3f3ab96c8846d4",
+  "request": {
+    "path": "/mnt/speck-data/speck/flagship-preparation-20260917/local-r0-ledger/20260917T204542Z-a8c77e1d9349/request.json",
+    "sha256": "7586a6e4e4f3ae01ccc153a3acd4fe6a230a61cd198498ec492579b5bb36b1a0"
+  },
+  "resume_tolerance": {
+    "atol": 1e-06,
+    "rtol": 1e-05
+  },
+  "sequence_length": 4096,
+  "settings": {
+    "accumulation": 1,
+    "allocator": "expandable_segments:True",
+    "compile": false,
+    "deterministic": true,
+    "device_batch_size": 1,
+    "restart_backend_warmup_steps": 2
+  },
+  "status": "one_worker_synthetic_restart_passed",
+  "supervised_attempt_gpu_hours": 0.5847170186314098,
+  "synthetic_measured_tokens_per_second": 1936.8356725802114
+}

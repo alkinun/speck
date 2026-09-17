@@ -58,7 +58,7 @@ The requested envelope is four GH200s, 5,000 GPU-hours, roughly 90 calendar days
 Retain 889 hours as protected recovery/evaluation reserve. Four allocated GPUs cost four GPU-hours
 per wall hour even when some are idle. Qualification is capped at 70 hours; the initial pilot is
 proposed at no more than 50. Allocate the remaining work after those measurements, rather than
-maintaining speculative budgets for multiple research programs. No jobs are launched by this cleanup.
+maintaining speculative budgets for multiple research programs. No GH200 jobs have been launched.
 
 ## What success means
 
@@ -77,7 +77,9 @@ not evidence of successful tool use. Match decoding budgets when comparing model
 
 ## Current state and immediate work
 
-- Model/training/data/recovery implementations and CPU tests exist. GH200 feasibility is unmeasured.
+- Model/training/data/recovery implementations and CPU tests exist. The full 1.2B model passed
+  [one-worker synthetic optimization and fresh-process restart on an RTX 3090](experiments/qualification/local-result.json),
+  with deterministic kernels and no compilation. GH200 feasibility and four-worker execution are unmeasured.
 - The first hardware configuration is [ready for dry-run binding](experiments/qualification/README.md).
 - FineWeb's completed receipt reports 2,306,703,052 cached tokens with a passing reopen check.
   Stack-Edu reports 476,774,847 tokens before full exclusion; it is not final training stock and is
