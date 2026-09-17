@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from pathlib import Path
 
 import torch
 
@@ -108,12 +109,20 @@ def load_checkpoint_tokenizer(config, metadata):
 
 def main(argv=None):
     args = arguments(argv)
-    configs = load_experiment(args.experiment, "tokenizer", "train")
-    checkpoint_dir = (
-        args.checkpoint_dir
-        or configs["train"].get("output_dir")
-        or os.path.join(base_dir(), "checkpoints", configs["train"]["run"])
-    )
+    configs = load_experiment(args.experiment, "tokenizer")
+    checkpoint_dir = args.checkpoint_dir
+    if checkpoint_dir is None:
+        phases = [
+            name for name in ("train", "sft") if (Path(args.experiment) / f"{name}.json").is_file()
+        ]
+        if len(phases) != 1:
+            raise ValueError(
+                "provide --checkpoint-dir when the experiment has no unique train/SFT phase"
+            )
+        settings = load_experiment(args.experiment, phases[0])[phases[0]]
+        checkpoint_dir = settings.get("output_dir") or os.path.join(
+            base_dir(), "checkpoints", settings.get("run") or Path(args.experiment).name
+        )
     step = args.step if args.step is not None else latest(checkpoint_dir)
     if step is None:
         raise FileNotFoundError(f"no checkpoint found in {checkpoint_dir}")

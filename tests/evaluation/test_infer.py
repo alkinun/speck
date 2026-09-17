@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from speck.evaluation.inference import arguments, load_checkpoint_model, load_checkpoint_tokenizer
@@ -64,7 +66,7 @@ def test_inference_argument_parser_is_import_safe():
 
 @pytest.mark.parametrize("version", [1, 2])
 def test_inference_restores_explicit_chat_version_without_passing_it_to_base_loader(
-    monkeypatch, version
+    tmp_path, monkeypatch, capsys, version
 ):
     from speck.tokenization.chat import ChatTokenizer
 
@@ -74,6 +76,10 @@ def test_inference_restores_explicit_chat_version_without_passing_it_to_base_loa
 
         def encode(self, text):
             return [3]
+
+        def decode(self, tokens):
+            assert tokens == []
+            return ""
 
         def fingerprint(self):
             return "base-tokenizer"
@@ -97,6 +103,28 @@ def test_inference_restores_explicit_chat_version_without_passing_it_to_base_loa
         load_checkpoint_tokenizer({**config, "chat_format_version": 3 - version}, metadata)
     with pytest.raises(ValueError, match="require an SFT"):
         load_checkpoint_tokenizer(config, {"training_phase": "base"})
+
+    from speck.evaluation import inference
+
+    (tmp_path / "tokenizer.json").write_text(json.dumps(config))
+    (tmp_path / "sft.json").write_text(json.dumps({"output_dir": "assistant-checkpoints"}))
+
+    def load_model(directory, step, device):
+        assert directory == "assistant-checkpoints" and step == 2
+        return object(), metadata
+
+    expected, _ = ChatTokenizer(base, version).encode_messages(
+        [{"role": "user", "content": "Hello"}], add_generation_prompt=True
+    )
+
+    def generate(model, tokens, **kwargs):
+        assert tokens == expected
+        return []
+
+    monkeypatch.setattr(inference, "load_checkpoint_model", load_model)
+    monkeypatch.setattr(inference, "generate_tokens", generate)
+    inference.main(["Hello", "--experiment", str(tmp_path), "--step", "2", "--device", "cpu"])
+    assert capsys.readouterr().out == "\n"
 
 
 @pytest.mark.parametrize(
