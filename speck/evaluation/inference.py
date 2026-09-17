@@ -82,6 +82,25 @@ def load_checkpoint_model(checkpoint_dir, step, device, loss_backend="torch"):
     return model.to(device).eval(), metadata
 
 
+def load_checkpoint_tokenizer(config, metadata):
+    """Keep chat-version settings out of the base tokenizer and honor checkpoint identity."""
+
+    base_config = dict(config)
+    version = base_config.pop("chat_format_version", None)
+    tokenizer = get_tokenizer(**base_config)
+    if metadata.get("training_phase") == "sft":
+        tokenizer = ChatTokenizer.from_metadata(
+            tokenizer, metadata.get("resolved", {}).get("tokenizer")
+        )
+        if "chat_format_version" in config and (
+            type(version) is not int or version != tokenizer.format_version
+        ):
+            raise ValueError("configured chat format differs from the checkpoint")
+    elif "chat_format_version" in config:
+        raise ValueError("chat format settings require an SFT checkpoint")
+    return tokenizer
+
+
 def main(argv=None):
     args = arguments(argv)
     configs = load_experiment(args.experiment, "tokenizer", "train")
@@ -95,11 +114,8 @@ def main(argv=None):
         raise FileNotFoundError(f"no checkpoint found in {checkpoint_dir}")
     device = torch.device(args.device)
     model, metadata = load_checkpoint_model(checkpoint_dir, step, device)
-    tokenizer = get_tokenizer(**configs["tokenizer"])
+    tokenizer = load_checkpoint_tokenizer(configs["tokenizer"], metadata)
     if metadata.get("training_phase") == "sft":
-        tokenizer = ChatTokenizer.from_metadata(
-            tokenizer, metadata.get("resolved", {}).get("tokenizer")
-        )
         messages = []
         if args.system:
             messages.append({"role": "system", "content": args.system})

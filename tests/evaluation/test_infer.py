@@ -1,6 +1,6 @@
 import pytest
 
-from speck.evaluation.inference import arguments, load_checkpoint_model
+from speck.evaluation.inference import arguments, load_checkpoint_model, load_checkpoint_tokenizer
 from speck.model import SpeckForCausalLM
 from speck.model.architecture import (
     ArchitectureConfig,
@@ -60,6 +60,43 @@ def test_inference_argument_parser_is_import_safe():
     assert args.prompt == "hello"
     assert args.device == "cpu"
     assert args.step == 3
+
+
+@pytest.mark.parametrize("version", [1, 2])
+def test_inference_restores_explicit_chat_version_without_passing_it_to_base_loader(
+    monkeypatch, version
+):
+    from speck.tokenization.chat import ChatTokenizer
+
+    class Base:
+        vocab_size = 16
+        bos_id, eos_id = 1, 2
+
+        def encode(self, text):
+            return [3]
+
+        def fingerprint(self):
+            return "base-tokenizer"
+
+    base = Base()
+
+    def load_base(*, directory):
+        assert directory == "prepared"
+        return base
+
+    monkeypatch.setattr("speck.evaluation.inference.get_tokenizer", load_base)
+    metadata = {
+        "training_phase": "sft",
+        "resolved": {"tokenizer": ChatTokenizer(base, version).metadata()},
+    }
+    config = {"directory": "prepared", "chat_format_version": version}
+    assert load_checkpoint_tokenizer(config, metadata).format_version == version
+    assert config["chat_format_version"] == version
+    assert load_checkpoint_tokenizer({"directory": "prepared"}, metadata).format_version == version
+    with pytest.raises(ValueError, match="differs from the checkpoint"):
+        load_checkpoint_tokenizer({**config, "chat_format_version": 3 - version}, metadata)
+    with pytest.raises(ValueError, match="require an SFT"):
+        load_checkpoint_tokenizer(config, {"training_phase": "base"})
 
 
 @pytest.mark.parametrize(

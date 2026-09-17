@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from speck.data.pilot import cached_documents, code_documents
+from speck.data.pilot import cached_documents, code_documents, pack_candidates
 from speck.provenance.io import atomic_json, file_sha256
 
 
@@ -103,3 +103,18 @@ def test_packing_order_is_independent_of_acquisition_language_grouping(tmp_path)
     assert left == right
     assert {row["content"] for row in left} == {str(i) for i in range(20)}
     assert len({row["metadata"]["language"] for row in left[:10]}) == 2
+
+
+@pytest.mark.parametrize("changed", ["data", "tokenizer", "inputs"])
+def test_packing_rejects_configuration_drift_after_selection(tmp_path, changed):
+    experiment, work = tmp_path / "experiment", tmp_path / "work"
+    identities = {}
+    for name in ("data", "tokenizer", "inputs"):
+        path = experiment / f"{name}.json"
+        atomic_json(path, {"original": True})
+        identities[name] = file_sha256(path)
+    atomic_json(work / "selection.json", {"contract": {"configs": identities}})
+    atomic_json(experiment / f"{changed}.json", {"original": False})
+
+    with pytest.raises(ValueError, match="contract changed before packing"):
+        pack_candidates(experiment, work)

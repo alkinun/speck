@@ -305,7 +305,13 @@ def ordered_documents(path, seed):
 def pack_candidates(experiment, work):
     """Pack only the jointly excluded sources with deterministic global split/dedup."""
 
-    work = Path(work)
+    experiment, work = Path(experiment), Path(work)
+    selection = json.loads((work / "selection.json").read_text())
+    current = {
+        name: file_sha256(experiment / f"{name}.json") for name in ("data", "tokenizer", "inputs")
+    }
+    if selection["contract"]["configs"] != current:
+        raise ValueError("pilot selection contract changed before packing")
     configs = load_experiment(experiment, "data", "tokenizer")
     result = exclude_candidates(work)  # Reopens and verifies the completed exclusion.
     manifest = result["manifest"]
