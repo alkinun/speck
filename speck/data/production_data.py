@@ -293,6 +293,9 @@ def _database(path, *, sqlite_settings=None):
         "CREATE TABLE IF NOT EXISTS bands (band INTEGER NOT NULL, band_hash BLOB NOT NULL, doc_seq INTEGER NOT NULL REFERENCES docs(doc_seq) ON DELETE CASCADE)"
     )
     connection.execute("CREATE INDEX IF NOT EXISTS band_lookup ON bands(band, band_hash)")
+    # Recovery removes documents beyond the durable checkpoint. Without this child-key
+    # index, each cascading deletion scans every band's row in a corpus-sized table.
+    connection.execute("CREATE INDEX IF NOT EXISTS band_document ON bands(doc_seq)")
     connection.execute(
         "CREATE TABLE IF NOT EXISTS checkpoints (checkpoint_id INTEGER PRIMARY KEY, processed_records INTEGER NOT NULL, next_doc_seq INTEGER NOT NULL, index_chain TEXT NOT NULL)"
     )

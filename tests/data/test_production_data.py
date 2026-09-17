@@ -218,6 +218,40 @@ def test_resume_verifies_index_without_materializing_rows(tmp_path, monkeypatch)
     assert result["manifest"]["counts"]["records_retained"] == 3
 
 
+@pytest.mark.parametrize("legacy_index", [False, True])
+def test_checkpoint_rollback_uses_indexed_cascade_and_preserves_committed_bands(
+    tmp_path, legacy_index
+):
+    path = tmp_path / "index.sqlite3"
+    connection = production_data._database(path)
+    if legacy_index:
+        connection.execute("DROP INDEX band_document")
+        connection.close()
+        connection = production_data._database(path)
+    try:
+        for seq in range(2):
+            connection.execute(
+                "INSERT INTO docs VALUES (?, ?, 0, 'source', ?, 0, ?, ?)",
+                (seq, seq, seq + 1, str(seq), str(seq)),
+            )
+            connection.executemany(
+                "INSERT INTO bands VALUES (?, ?, ?)",
+                [(band, bytes([band]), seq) for band in range(16)],
+            )
+        plan = connection.execute(
+            "EXPLAIN QUERY PLAN DELETE FROM docs WHERE processed_index>=?", (1,)
+        ).fetchall()
+        band_access = [row[3] for row in plan if "bands" in row[3]]
+        assert band_access and all("SEARCH bands USING" in row for row in band_access)
+        connection.execute("DELETE FROM docs WHERE processed_index>=?", (1,))
+        assert connection.execute("SELECT doc_seq FROM docs").fetchall() == [(0,)]
+        assert connection.execute(
+            "SELECT doc_seq, COUNT(*) FROM bands GROUP BY doc_seq"
+        ).fetchall() == [(0, 16)]
+    finally:
+        connection.close()
+
+
 @pytest.mark.parametrize("corruption", ["hash", "count"])
 def test_streaming_resume_still_rejects_accepted_index_corruption(tmp_path, corruption):
     config = validate_preprocess_config(_config(tmp_path, "bad-index-chain"))
