@@ -52,3 +52,9 @@ uv run --no-sync python -m scripts.infer "Explain this result:" \
 The current chat implementation is not yet a qualified tool-calling or reasoning protocol. Reconcile
 the separate post-training work, parser/template, loss masks, and output limits before making those
 claims. Keep base and assistant checkpoints separately identifiable.
+
+Chat format v2 preserves `weight: 0` assistant turns as context and supervises only `weight: 1`
+(default) turns, including their EOS. Its fingerprint differs from v1, so old prepared masks must
+not be reused. Set `chat_format_version: 1` in an SFT tokenizer configuration only to reproduce
+a historical unweighted run. Inference restores the version recorded in checkpoint metadata.
+The current format rejects tool fields and separate `reasoning_content` instead of dropping them.

@@ -13,7 +13,7 @@ ROLE_TOKENS = {
 }
 RESERVED_TOKENS = ("<s>", "</s>", "<unk>", *ROLE_TOKENS.values())
 
-CHAT_TEMPLATE = """{%- if messages|length == 0 %}
+LEGACY_CHAT_TEMPLATE = """{%- if messages|length == 0 %}
     {{- raise_exception('messages must not be empty') }}
 {%- endif %}
 {{- bos_token }}
@@ -51,6 +51,28 @@ CHAT_TEMPLATE = """{%- if messages|length == 0 %}
     {{- '<|assistant|>\n' }}
 {%- endif %}"""
 
+# Version two changes loss masking, but preserves the rendered text and vocabulary.
+CHAT_TEMPLATE = (
+    "{%- if tools %}{{- raise_exception('tool definitions require a tool-aware chat format') }}{%- endif %}"
+    + LEGACY_CHAT_TEMPLATE.replace(
+        "{%- if message['role'] == 'assistant' %}",
+        "{%- if message['role'] == 'assistant' and message.get('weight', 1) == 1 %}",
+    ).replace(
+        "{%- for message in messages %}",
+        """{%- for message in messages %}
+    {%- if message.get('tool_calls') or message.get('tool_call_id') or message.get('reasoning_content') %}
+        {{- raise_exception('unserialized tool or reasoning fields') }}
+    {%- endif %}
+    {%- set weight = message.get('weight', 1) %}
+    {%- if weight is not number or weight is boolean or weight not in [0, 1] %}
+        {{- raise_exception('message weight must be zero or one') }}
+    {%- endif %}
+    {%- if message['role'] != 'assistant' and 'weight' in message %}
+        {{- raise_exception('only assistant messages may specify weight') }}
+    {%- endif %}""",
+    )
+)
+
 
 class ChatFormatError(ValueError):
     """Indicate that a conversation cannot satisfy the chat template."""
@@ -67,7 +89,18 @@ def validate_messages(messages, add_generation_prompt=False):
     for index, message in enumerate(messages):
         if not isinstance(message, dict):
             raise ChatFormatError("each message must be an object")
+        if message.get("tool_calls") or message.get("tool_call_id"):
+            raise ChatFormatError("tool messages require a tool-aware chat format")
+        if message.get("reasoning_content"):
+            raise ChatFormatError(
+                "reasoning_content must be serialized into content before training"
+            )
+        weight = message.get("weight", 1)
+        if type(weight) not in (int, float) or weight not in (0, 1):
+            raise ChatFormatError("message weight must be zero or one")
         role = message.get("role")
+        if role != "assistant" and "weight" in message:
+            raise ChatFormatError("only assistant messages may specify weight")
         content = message.get("content")
         if not isinstance(role, str) or role not in ROLE_TOKENS:
             raise ChatFormatError(f"unsupported message role: {role!r}")
@@ -89,10 +122,25 @@ def validate_messages(messages, add_generation_prompt=False):
 class ChatTokenizer:
     """Extend the base SentencePiece tokenizer with three fixed role tokens."""
 
-    def __init__(self, base):
+    def __init__(self, base, format_version=2):
+        if type(format_version) is not int or format_version not in (1, 2):
+            raise ValueError("unsupported chat format version")
+        self.format_version = format_version
+        self.chat_template = LEGACY_CHAT_TEMPLATE if format_version == 1 else CHAT_TEMPLATE
         self.base = base
         self.role_ids = {role: base.vocab_size + index for index, role in enumerate(ROLE_TOKENS)}
         self._newline = base.encode("\n")
+
+    @classmethod
+    def from_metadata(cls, base, metadata):
+        """Restore either historical or current serialization without rebinding checkpoints."""
+
+        if not isinstance(metadata, dict):
+            raise ValueError("checkpoint is missing chat tokenizer metadata")
+        tokenizer = cls(base, format_version=metadata.get("format_version"))
+        if tokenizer.metadata() != metadata:
+            raise ValueError("checkpoint and tokenizer do not match")
+        return tokenizer
 
     @property
     def model_path(self):
@@ -123,7 +171,9 @@ class ChatTokenizer:
         for message in messages:
             role = message["role"]
             content = self.base.encode("\n" + message["content"])
-            supervised = role == "assistant"
+            if self.format_version == 1 and message.get("weight", 1) != 1:
+                raise ChatFormatError("legacy chat format cannot mask weighted assistant turns")
+            supervised = role == "assistant" and message.get("weight", 1) == 1
             if content[: len(self._newline)] != self._newline:
                 raise ChatFormatError("tokenizer does not preserve the chat newline delimiter")
             tokens.append(self.role_ids[role])
@@ -172,7 +222,7 @@ class ChatTokenizer:
 
     def metadata(self):
         values = {
-            "format_version": 1,
+            "format_version": self.format_version,
             "base_fingerprint": self.base.fingerprint(),
             "vocab_size": self.vocab_size,
             "bos_token_id": self.bos_id,
@@ -181,7 +231,7 @@ class ChatTokenizer:
                 role: {"content": token, "id": self.role_ids[role]}
                 for role, token in ROLE_TOKENS.items()
             },
-            "chat_template": CHAT_TEMPLATE,
+            "chat_template": self.chat_template,
         }
         payload = json.dumps(values, sort_keys=True, separators=(",", ":")).encode()
         values["fingerprint"] = hashlib.sha256(payload).hexdigest()
@@ -213,7 +263,7 @@ class ChatTokenizer:
             "added_tokens_decoder": added_tokens,
             "additional_special_tokens": list(ROLE_TOKENS.values()),
             "bos_token": "<s>",
-            "chat_template": CHAT_TEMPLATE,
+            "chat_template": self.chat_template,
             "clean_up_tokenization_spaces": False,
             "eos_token": "</s>",
             "legacy": True,
@@ -230,7 +280,7 @@ class ChatTokenizer:
             "unk_token": "<unk>",
         }
         files = {
-            "chat_template.jinja": CHAT_TEMPLATE,
+            "chat_template.jinja": self.chat_template,
             "special_tokens_map.json": json.dumps(special_tokens, indent=2, sort_keys=True) + "\n",
             "tokenizer_config.json": json.dumps(tokenizer_config, indent=2, sort_keys=True) + "\n",
             "tokenizer_metadata.json": json.dumps(self.metadata(), indent=2, sort_keys=True) + "\n",
@@ -242,7 +292,7 @@ class ChatTokenizer:
             os.replace(temporary, path)
 
 
-def get_chat_tokenizer(**config):
+def get_chat_tokenizer(chat_format_version=2, **config):
     from speck.tokenization.tokenizer import get_tokenizer
 
-    return ChatTokenizer(get_tokenizer(**config))
+    return ChatTokenizer(get_tokenizer(**config), format_version=chat_format_version)

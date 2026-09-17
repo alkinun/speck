@@ -50,10 +50,10 @@ def test_chat_template_tokens_and_assistant_mask(tmp_path):
     )
 
 
-def test_chat_tokenizer_fingerprint_is_stable_for_prepared_data(tmp_path):
+def test_legacy_chat_tokenizer_fingerprint_is_stable_for_prepared_data(tmp_path):
     model_path = tmp_path / "tokenizer.model"
     model_path.write_bytes(b"sentencepiece")
-    tokenizer = ChatTokenizer(BaseTokenizer(model_path))
+    tokenizer = ChatTokenizer(BaseTokenizer(model_path), format_version=1)
 
     assert (
         tokenizer.fingerprint()
@@ -107,3 +107,73 @@ def test_save_chat_tokenizer_artifact(tmp_path):
     assert set(config["added_tokens_decoder"]) == {"300", "301", "302"}
     assert (output / "chat_template.jinja").read_text() == CHAT_TEMPLATE
     assert (output / "tokenizer.model").read_bytes() == b"sentencepiece"
+
+
+def test_context_only_assistant_turn_is_never_supervised(tmp_path):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    messages = [
+        {"role": "user", "content": "First"},
+        {"role": "assistant", "content": "Context only", "weight": 0},
+        {"role": "user", "content": "Next"},
+        {"role": "assistant", "content": "Target", "weight": 1},
+    ]
+    tokens, mask = tokenizer.encode_messages(messages)
+    supervised = [token for token, use in zip(tokens, mask, strict=True) if use]
+    assert supervised == tokenizer.base.encode("Target") + [tokenizer.eos_id]
+    assert "Context only" in tokenizer.render(messages)
+    restored = ChatTokenizer.from_metadata(tokenizer.base, tokenizer.metadata())
+    assert restored.encode_messages(messages) == (tokens, mask)
+    legacy = ChatTokenizer(tokenizer.base, format_version=1)
+    assert legacy.fingerprint() != tokenizer.fingerprint()
+    with pytest.raises(ValueError, match="legacy"):
+        legacy.encode_messages(messages)
+
+
+@pytest.mark.parametrize("weight", [None, True, -1, 0.5, "0", float("nan")])
+def test_invalid_message_weights_are_rejected(tmp_path, weight):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    with pytest.raises(ValueError, match="weight"):
+        tokenizer.encode_messages(
+            [
+                {"role": "user", "content": "Q"},
+                {"role": "assistant", "content": "A", "weight": weight},
+            ]
+        )
+
+
+@pytest.mark.parametrize(
+    "field,value", [("tool_calls", [{"id": "call"}]), ("reasoning_content", "hidden")]
+)
+def test_unserialized_fields_are_not_silently_dropped(tmp_path, field, value):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    with pytest.raises(ValueError):
+        tokenizer.encode_messages(
+            [
+                {"role": "user", "content": "Q"},
+                {"role": "assistant", "content": "A", field: value},
+            ]
+        )
+
+
+def test_exported_template_preserves_text_and_weighted_generation_spans(tmp_path):
+    pytest.importorskip("transformers")
+    from transformers.utils.chat_template_utils import (
+        _compile_jinja_template,
+        _render_with_assistant_indices,
+    )
+
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    messages = [
+        {"role": "user", "content": "First"},
+        {"role": "assistant", "content": "Context", "weight": 0},
+        {"role": "user", "content": "Next"},
+        {"role": "assistant", "content": "Target", "weight": 1},
+    ]
+    compiled = _compile_jinja_template(tokenizer.chat_template)
+    rendered, spans = _render_with_assistant_indices(
+        compiled, messages, None, None, False, bos_token="<s>", eos_token="</s>"
+    )
+    assert rendered == tokenizer.render(messages)
+    assert [rendered[start:end] for start, end in spans] == ["Target</s>"]
+    with pytest.raises(Exception, match="tool definitions"):
+        compiled.render(messages=messages, tools=[{"name": "lookup"}])

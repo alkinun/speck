@@ -200,9 +200,10 @@ def evaluate(name, checkpoint_dir, step, max_tokens, device):
         raise FileNotFoundError(f"checkpoint {step} is incomplete in {checkpoint_dir}")
     metadata_path = checkpoint_dir / f"metadata_{step:06d}.json"
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-    tokenizer = ChatTokenizer(Tokenizer(checkpoint_dir / "tokenizer/tokenizer.model"))
-    if metadata.get("resolved", {}).get("tokenizer") != tokenizer.metadata():
-        raise ValueError(f"checkpoint and tokenizer do not match for {name}")
+    tokenizer = ChatTokenizer.from_metadata(
+        Tokenizer(checkpoint_dir / "tokenizer/tokenizer.model"),
+        metadata.get("resolved", {}).get("tokenizer"),
+    )
 
     model = SpeckForCausalLM(ArchitectureConfig.from_dict(metadata["config"]))
     model.load_state_dict(load_model(checkpoint_dir, step, "cpu"))

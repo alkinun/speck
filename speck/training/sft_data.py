@@ -229,6 +229,8 @@ def prepare_sft_dataset(
                 )
             parquet = pq.ParquetFile(path)
             columns = ["prompt", "completion", "source"] if local else ["messages", "source"]
+            if not local and "tools" in parquet.schema_arrow.names:
+                columns.append("tools")
             for batch in parquet.iter_batches(columns=columns, batch_size=256):
                 for row in batch.to_pylist():
                     split = (
@@ -238,6 +240,10 @@ def prepare_sft_dataset(
                     )
                     stats[split]["input_samples"] += 1
                     try:
+                        if row.get("tools"):
+                            raise ChatFormatError(
+                                "tool definitions require a tool-aware chat format"
+                            )
                         if local:
                             tokens, mask = encode_completion(row, tokenizer)
                             if len(tokens) > sequence_lengths[-1] + 1:

@@ -97,9 +97,9 @@ def main(argv=None):
     model, metadata = load_checkpoint_model(checkpoint_dir, step, device)
     tokenizer = get_tokenizer(**configs["tokenizer"])
     if metadata.get("training_phase") == "sft":
-        tokenizer = ChatTokenizer(tokenizer)
-        if metadata.get("resolved", {}).get("tokenizer") != tokenizer.metadata():
-            raise ValueError("SFT checkpoint and tokenizer do not match")
+        tokenizer = ChatTokenizer.from_metadata(
+            tokenizer, metadata.get("resolved", {}).get("tokenizer")
+        )
         messages = []
         if args.system:
             messages.append({"role": "system", "content": args.system})
