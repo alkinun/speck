@@ -512,3 +512,56 @@ def test_validate_sft_restores_model_mode_after_failure():
         validate_sft(model, iter([(targets, targets, {})]), steps=1)
 
     assert not model.training
+
+
+def test_local_json_messages_preserve_weights_and_reject_long_or_tool_rows(tmp_path):
+    import json
+
+    import numpy as np
+
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    messages = [
+        {"role": "user", "content": "Q"},
+        {"role": "assistant", "content": "Context", "weight": 0},
+        {"role": "user", "content": "Next"},
+        {"role": "assistant", "content": "Target", "weight": 1},
+    ]
+    row = {"messages": [json.dumps(m) for m in messages], "tools": [], "source": "fixture"}
+    long = {
+        **row,
+        "messages": [
+            json.dumps(m) for m in [messages[0], {"role": "assistant", "content": "A" * 200}]
+        ],
+    }
+    tool = {**row, "tools": [json.dumps({"type": "function", "function": {"name": "lookup"}})]}
+    paths = [tmp_path / "train.parquet", tmp_path / "val.parquet"]
+    pq.write_table(pa.Table.from_pylist([row, long, tool]), paths[0])
+    pq.write_table(pa.Table.from_pylist([row]), paths[1])
+    config = {
+        "format": "messages_v1",
+        "name": "local-weighted",
+        "expected_samples": 4,
+        "validation_samples": 1,
+        "files": [
+            {
+                "filename": p.name,
+                "split": split,
+                "sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
+            }
+            for p, split in zip(paths, ("train", "val"), strict=True)
+        ],
+    }
+    output = tmp_path / "packed"
+    manifest = prepare_sft_dataset(config, tokenizer, [128], output, source_dir=tmp_path)
+    assert manifest["splits"]["train"]["samples"] == 1
+    assert manifest["splits"]["train"]["truncated_samples"] == 0
+    assert manifest["splits"]["train"]["rejection_reasons"] == {
+        "conversation exceeds sequence limit": 1,
+        "tool definitions require a tool-aware chat format": 1,
+    }
+    tokens = np.fromfile(output / "train.128.tokens.bin", dtype="<u2")
+    mask = np.fromfile(output / "train.128.mask.bin", dtype="u1")
+    assert tokens[mask.astype(bool)].tolist() == tokenizer.base.encode("Target") + [
+        tokenizer.eos_id
+    ]
+    verify_sft_dataset(output, manifest)

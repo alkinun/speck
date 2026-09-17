@@ -77,3 +77,10 @@ hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` 
 object as `sft.json`'s `pretrained` setting. This reads local weights without exporting or uploading
 an unfinished model. Changed parent bytes fail before loading; SFT resume retains the original
 parent identity and does not require the base checkpoint to remain locally available.
+
+Local SFT preparation also accepts `dataset.format: "messages_v1"` with the same pinned train/val
+Parquet file declarations as `prompt_completion_v1`. It decodes `List(Json())` messages, retains
+assistant weights, and rejects unsupported tools and overlength conversations. No local record is
+truncated. For a Hub dataset, set `long_sequences: "reject"` explicitly for the same length policy;
+the absent-field default remains the historical truncation behavior. Rejected counts stay in the
+manifest, and an empty accepted split is an error.

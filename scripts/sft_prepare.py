@@ -15,7 +15,7 @@ def parse_args(argv=None):
     )
     parser.add_argument("--restart", action="store_true", help="replace an incomplete staged build")
     parser.add_argument(
-        "--source-dir", help="directory containing pinned local prompt/completion Parquet files"
+        "--source-dir", help="directory containing pinned local conversation Parquet files"
     )
     return parser.parse_args(argv)
 

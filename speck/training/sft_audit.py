@@ -12,6 +12,7 @@ import pyarrow.parquet as pq
 
 from speck.provenance.io import file_sha256
 from speck.tokenization.chat import ChatFormatError
+from speck.tokenization.chat import decode_chat_record as decode_conversation
 
 
 def iter_local_rows(path):
@@ -28,33 +29,6 @@ def iter_local_rows(path):
                 yield from batch.to_pylist()
     else:
         raise ValueError("SFT audit inputs must be .arrow or .parquet files")
-
-
-def decode_conversation(row):
-    """Decode HF Json features without requiring the datasets runtime."""
-
-    if "messages" not in row:
-        raise ChatFormatError(
-            "input row is missing messages; index caches are not conversation data"
-        )
-    result = dict(row)
-    for key in ("messages", "tools"):
-        values = row.get(key) or []
-        if not isinstance(values, list):
-            raise ChatFormatError(f"{key} must be a list")
-        try:
-            result[key] = [
-                json.loads(value) if isinstance(value, str) else value for value in values
-            ]
-        except (ValueError, TypeError) as error:
-            raise ChatFormatError(f"invalid JSON in {key}") from error
-        if any(not isinstance(value, dict) for value in result[key]):
-            raise ChatFormatError(f"{key} entries must be objects")
-    result["messages"] = [
-        {key: value for key, value in message.items() if value is not None}
-        for message in result["messages"]
-    ]
-    return result
 
 
 def conversation_identity(row):

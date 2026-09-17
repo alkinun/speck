@@ -78,6 +78,33 @@ class ChatFormatError(ValueError):
     """Indicate that a conversation cannot satisfy the chat template."""
 
 
+def decode_chat_record(row):
+    """Decode HF Json features without requiring the datasets runtime."""
+
+    if "messages" not in row:
+        raise ChatFormatError(
+            "input row is missing messages; index caches are not conversation data"
+        )
+    result = dict(row)
+    for key in ("messages", "tools"):
+        values = row.get(key) or []
+        if not isinstance(values, list):
+            raise ChatFormatError(f"{key} must be a list")
+        try:
+            result[key] = [
+                json.loads(value) if isinstance(value, str) else value for value in values
+            ]
+        except (ValueError, TypeError) as error:
+            raise ChatFormatError(f"invalid JSON in {key}") from error
+        if any(not isinstance(value, dict) for value in result[key]):
+            raise ChatFormatError(f"{key} entries must be objects")
+    result["messages"] = [
+        {key: value for key, value in message.items() if value is not None}
+        for message in result["messages"]
+    ]
+    return result
+
+
 def validate_messages(messages, add_generation_prompt=False):
     """Validate the shared local-tokenizer and evaluation-server chat contract."""
 

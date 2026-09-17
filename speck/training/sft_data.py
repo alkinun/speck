@@ -17,7 +17,7 @@ from speck.data.loader import manifest_fingerprint
 from speck.operations.runtime import base_dir, dist_info
 from speck.provenance.io import atomic_json as _write_json
 from speck.provenance.io import file_sha256 as _file_hash
-from speck.tokenization.chat import ChatFormatError
+from speck.tokenization.chat import ChatFormatError, decode_chat_record
 from speck.training.step import assert_finite, set_optimizer_lr
 
 FORMAT_VERSION = 3
@@ -31,14 +31,14 @@ def resolve_sft_data_dir(config, output_dir=None):
         return Path(output_dir).expanduser()
     dataset_name = (
         config["name"]
-        if config.get("format") == "prompt_completion_v1"
+        if config.get("format") in {"prompt_completion_v1", "messages_v1"}
         else config["repo"].rsplit("/", 1)[-1]
     )
     return Path(base_dir()) / "data" / f"{dataset_name}-v{FORMAT_VERSION}"
 
 
 def _validate_dataset_config(config):
-    if config.get("format") == "prompt_completion_v1":
+    if config.get("format") in {"prompt_completion_v1", "messages_v1"}:
         if set(config) != {"format", "name", "files", "expected_samples", "validation_samples"}:
             raise ValueError("invalid local prompt/completion dataset settings")
         name = config["name"]
@@ -73,7 +73,9 @@ def _validate_dataset_config(config):
             raise ValueError("invalid local dataset sample counts")
         return
     required = {"repo", "revision", "files", "expected_samples", "validation_samples"}
-    if set(config) != required:
+    if config.get("long_sequences", "truncate") not in {"truncate", "reject"}:
+        raise ValueError("long_sequences must be truncate or reject")
+    if not required <= set(config) or set(config) - required - {"long_sequences"}:
         missing = sorted(required - set(config))
         unknown = sorted(set(config) - required)
         details = []
@@ -147,7 +149,8 @@ def prepare_sft_dataset(
     """Download and atomically publish length-bucketed, assistant-masked rows."""
 
     _validate_dataset_config(config)
-    local = config.get("format") == "prompt_completion_v1"
+    local = config.get("format") in {"prompt_completion_v1", "messages_v1"}
+    completion_format = config.get("format") == "prompt_completion_v1"
     if local and source_dir is None:
         raise ValueError("local prompt/completion preparation requires source_dir")
     if not local and source_dir is not None:
@@ -228,8 +231,10 @@ def prepare_sft_dataset(
                     repo_type="dataset",
                 )
             parquet = pq.ParquetFile(path)
-            columns = ["prompt", "completion", "source"] if local else ["messages", "source"]
-            if not local and "tools" in parquet.schema_arrow.names:
+            columns = (
+                ["prompt", "completion", "source"] if completion_format else ["messages", "source"]
+            )
+            if not completion_format and "tools" in parquet.schema_arrow.names:
                 columns.append("tools")
             for batch in parquet.iter_batches(columns=columns, batch_size=256):
                 for row in batch.to_pylist():
@@ -240,16 +245,20 @@ def prepare_sft_dataset(
                     )
                     stats[split]["input_samples"] += 1
                     try:
+                        if not completion_format:
+                            row = decode_chat_record(row)
                         if row.get("tools"):
                             raise ChatFormatError(
                                 "tool definitions require a tool-aware chat format"
                             )
-                        if local:
+                        if completion_format:
                             tokens, mask = encode_completion(row, tokenizer)
-                            if len(tokens) > sequence_lengths[-1] + 1:
-                                raise ChatFormatError("conversation exceeds sequence limit")
                         else:
                             tokens, mask = tokenizer.encode_messages(row["messages"])
+                        if (local or config.get("long_sequences") == "reject") and len(
+                            tokens
+                        ) > sequence_lengths[-1] + 1:
+                            raise ChatFormatError("conversation exceeds sequence limit")
                     except ChatFormatError as error:
                         stats[split]["rejected_samples"] += 1
                         stats[split]["rejection_reasons"][str(error)] += 1
