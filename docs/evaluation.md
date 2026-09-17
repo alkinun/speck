@@ -33,3 +33,21 @@ published leaderboard numbers are context, not directly comparable measurements.
 The full math/code/tool/reliability dashboard remains work to do. Candidate references and the reasons
 for them are in [research notes](research.md). Historical retrieval/long-context experiments are in
 [Git](../archive/README.md), outside the current experiment path.
+
+The first pilot pins GSM8K, IFEval, HumanEval+, ARC-Challenge, and HellaSwag in
+[its protocol](../experiments/pilot/evaluation.json), including dataset revisions and file hashes.
+Prepare the exact inputs with:
+
+```bash
+uv run --no-sync python -m scripts.evaluation_prepare experiments/pilot/evaluation.json \
+  --output /external/pilot/evaluation.json
+```
+
+This command verifies task counts and assigns approximately 20% to development and 80% to final
+by a seeded hash of the normalized prompt. Identical prompts share a partition. It produces task
+identities, not evaluation scores. These are custom subsets; full-benchmark leaderboard scores are
+not directly comparable. Near-duplicate task families across the two partitions remain a limitation.
+All benchmark inputs, including both partitions, are excluded from the pilot candidates using the
+existing exact-field and informative n-gram scanner. Sensitivity matches are also removed.
+The protocol pins lm-evaluation-harness and EvalPlus source revisions. Grader execution, a deterministic
+tool environment, compatible comparator revisions, and output-budget qualification still need work.

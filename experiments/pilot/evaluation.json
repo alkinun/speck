@@ -1,0 +1,109 @@
+{
+  "format": "speck_capability_protocol",
+  "format_version": 1,
+  "seed": 42,
+  "development_fraction": 0.2,
+  "decoding": {
+    "temperature": 0,
+    "samples_per_task": 1
+  },
+  "datasets": [
+    {
+      "id": "gsm8k",
+      "repo": "openai/gsm8k",
+      "revision": "740312add88f781978c0658806c59bc2815b9866",
+      "filename": "main/test-00000-of-00001.parquet",
+      "sha256": "ee7b8da9e381df27b9e3f7758a159ab2bdaa4dbaa910546cbbc47e0cb44e4f59",
+      "format": "parquet",
+      "text_fields": [
+        "question",
+        "answer"
+      ],
+      "task_id_field": null,
+      "expected_tasks": 1319,
+      "category": "math",
+      "max_output_tokens": 1024
+    },
+    {
+      "id": "ifeval",
+      "repo": "google/IFEval",
+      "revision": "966cd89545d6b6acfd7638bc708b98261ca58e84",
+      "filename": "ifeval_input_data.jsonl",
+      "sha256": "6a85310ca8ce15eff755aa08a3a4ff931c7e273e7515ebb3c492ea85fd8288f2",
+      "format": "jsonl",
+      "text_fields": [
+        "prompt"
+      ],
+      "task_id_field": "key",
+      "expected_tasks": 541,
+      "category": "instruction",
+      "max_output_tokens": 512
+    },
+    {
+      "id": "humanevalplus",
+      "repo": "evalplus/humanevalplus",
+      "revision": "d32357cf319e50e9c8d8dab5ea876c72b0fd321b",
+      "filename": "test.jsonl",
+      "sha256": "908377f1daf28dcb36846db73a5662b2e05a9907407c2696c89ad9d3b0b04492",
+      "format": "jsonl",
+      "text_fields": [
+        "prompt",
+        "canonical_solution"
+      ],
+      "task_id_field": "task_id",
+      "expected_tasks": 164,
+      "category": "code",
+      "max_output_tokens": 1024
+    },
+    {
+      "id": "arc_challenge",
+      "repo": "allenai/ai2_arc",
+      "revision": "210d026faf9955653af8916fad021475a3f00453",
+      "filename": "ARC-Challenge/test-00000-of-00001.parquet",
+      "sha256": "62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9",
+      "format": "parquet",
+      "text_fields": [
+        "question",
+        "choices"
+      ],
+      "task_id_field": "id",
+      "expected_tasks": 1172,
+      "category": "knowledge",
+      "max_output_tokens": 0
+    },
+    {
+      "id": "hellaswag",
+      "repo": "Rowan/hellaswag",
+      "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "filename": "data/validation-00000-of-00001.parquet",
+      "sha256": "899813071e1e95efafec90f856e1987d2150fa4d020fc005df6962c259f660cd",
+      "format": "parquet",
+      "text_fields": [
+        "ctx",
+        "endings"
+      ],
+      "task_id_field": null,
+      "expected_tasks": 10042,
+      "category": "commonsense",
+      "max_output_tokens": 0
+    }
+  ],
+  "scorers": {
+    "lm_eval_commit": "64f3d0924fc695efd6d776a5ac91f97138085516",
+    "evalplus_commit": "26d6d00bb1fd0fa37f39c99d5290da67891d1c5e"
+  },
+  "exclusion_policy": {
+    "normalization": "NFKC+lower+unicode-word-punctuation",
+    "token_pattern": "\\w+|[^\\w\\s]",
+    "primary_ngram": 13,
+    "sensitivity_ngram": 8,
+    "minimum_alphanumeric_tokens": 4,
+    "minimum_unique_tokens": 4,
+    "maximum_tasks_per_ngram": 1,
+    "critical_primary_matches": 1,
+    "sensitivity_matches": 2,
+    "minimum_exact_field_characters": 40,
+    "minimum_exact_field_tokens": 8,
+    "exact_anchor_tokens": 4
+  }
+}
