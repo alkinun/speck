@@ -25,6 +25,21 @@ def tiny_request():
 def _phase_worker(rank, world_size, request, base, phase):
     import torch.distributed as dist
 
+    if request.get("simulate_lazy_python_rng"):
+        import random
+
+        from speck.model import SpeckForCausalLM
+
+        forward = SpeckForCausalLM.forward
+
+        def lazy_forward(self, *args, **kwargs):
+            if not getattr(self, "_backend_initialized", False):
+                random.random()
+                self._backend_initialized = True
+            return forward(self, *args, **kwargs)
+
+        SpeckForCausalLM.forward = lazy_forward
+
     torch.set_num_threads(1)
     output = Path(base) / phase
     if world_size > 1:
@@ -60,6 +75,7 @@ def phase(request, base, name, workers):
 def test_fresh_process_optimizer_cursor_rng_and_distributed_parity(tiny_request, tmp_path, workers):
     tiny_request["restart_protocol"] = "fresh_process_next_step_v1"
     tiny_request["world_size"] = workers
+    tiny_request["simulate_lazy_python_rng"] = True
     before = phase(tiny_request, tmp_path, "initial", workers)
     assert all(r["status"] == "restart_reference_ready" for r in before), before
     after = phase(tiny_request, tmp_path, "restart", workers)
@@ -70,8 +86,9 @@ def test_fresh_process_optimizer_cursor_rng_and_distributed_parity(tiny_request,
         assert b["reference_producer_pid"] == a["pid"]
         assert b["checkpoint_next_step_parity_pass"] is None  # No in-process result substituted.
         assert b["gpu_fit_pass"] is None
-        assert a["input_batches"][-1]["sha256"] == b["input_batches"][0]["sha256"]
-        assert a["steps"][-1]["loss"] == b["steps"][0]["loss"]
+        assert b["restart_backend_warmup_steps"] == tiny_request["settings"]["warmup_steps"]
+        assert a["input_batches"][-1]["sha256"] == b["input_batches"][-1]["sha256"]
+        assert a["steps"][-1]["loss"] == b["steps"][-1]["loss"]
     if workers > 1:
         assert len({r["final_model_sha256"] for r in after}) == 1
 
@@ -106,6 +123,7 @@ def test_two_phase_plan_binding_and_budget_reserves_both_generations(
 
     request = prepare_request(ROOT / "experiments/qualification/plan.json", "baseline-4096", 4, 4)
     assert request["restart_protocol"] == "fresh_process_next_step_v1"
+    assert "speck/operations/runtime.py" in {row["path"] for row in request["implementation"]}
     tiny_request["restart_protocol"] = request["restart_protocol"]
     calls = []
 

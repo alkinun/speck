@@ -119,6 +119,7 @@ def prepare_request(plan_path, case_id, workers, allocated_gpus, root=None):
     paths = [
         *sorted((root / "speck/model").glob("*.py")),
         *sorted((root / "speck/operations").glob("r0_*.py")),
+        root / "speck/operations/runtime.py",
         root / "speck/training/optimizers.py",
         root / "speck/training/step.py",
         root / "speck/training/checkpoint.py",

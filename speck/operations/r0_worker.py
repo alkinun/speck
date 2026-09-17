@@ -242,6 +242,15 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
         if restart_from is not None:
             publish("fresh_process_load")
             reference = verified_reference(restart_from, request, rank, world_size)
+            # Lazy CUDA/backend initialization can consume Python RNG on the first call.
+            # Initialize with synthetic scratch steps before restoring any persisted state.
+            for index in range(settings["warmup_steps"]):
+                step(index, "restart_backend_warmup")
+            report["restart_backend_warmup_steps"] = settings["warmup_steps"]
+            optimizer.zero_grad(set_to_none=True)
+            for member in optimizer.optimizers.values():
+                member.state.clear()
+            publish("fresh_process_load")
             baseline = reference["baseline"]
             restored_model, restored_optimizer, metadata = checkpoint.load(
                 baseline["directory"], count, "cpu", mmap=True

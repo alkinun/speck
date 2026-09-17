@@ -29,7 +29,10 @@ It reserves both worker generations against the 70-hour ceiling, enforces timeou
 free-space floor, preserves failures, and refuses unresolved prior attempts.
 
 Initial workers optimize synthetic shifted-token inputs, save model/optimizer/cursor/RNG state and
-an uninterrupted reference, then exit. Fresh workers reload and compare the next step. Source hashes,
+an uninterrupted reference, then exit. Fresh workers first initialize the backend with the declared
+number of synthetic warmup steps, discard their optimizer state, then restore the saved model,
+optimizer, cursor, and RNG before comparing the next step. This keeps first-use backend initialization
+from consuming the restored Python RNG. Warmup costs are included in the attempt accounting. Source hashes,
 input hashes, memory, step timings, checkpoint costs, and failures remain in the attempt directory.
 The learning rate and batch are diagnostic settings. The probe does not establish model quality,
 sustained corpus throughput, hard-crash recovery, cached-generation parity, or Slurm/requeue behavior.
