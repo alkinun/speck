@@ -20,6 +20,9 @@ from speck.model.architecture import (
     SwiGLUSpec,
 )
 from speck.operations.runtime import base_dir
+from speck.provenance.io import atomic_json
+from speck.tokenization.chat import ChatTokenizer
+from speck.tokenization.tokenizer import Tokenizer
 from speck.training.checkpoint import checkpoint_identity, latest, load_model
 
 CODE_REPO = "specklabs/Speck1-140M-Instruct"
@@ -50,6 +53,7 @@ NATIVE_SOURCES = (
 )
 CURRENT_CONFIGURATION_SOURCE = PACKAGE_SOURCE / "transformers_configuration.py"
 CURRENT_MODELING_SOURCE = PACKAGE_SOURCE / "transformers_modeling.py"
+CURRENT_TOKENIZATION_SOURCE = PACKAGE_SOURCE / "transformers_tokenization.py"
 PADDING_DESTINATION = "padding_speck.py"
 MODEL_IMPORT = "from .configuration_speck import SpeckConfig\n"
 PATCHED_MODEL_IMPORT = MODEL_IMPORT + "from .padding_speck import validate_right_padding\n"
@@ -343,7 +347,18 @@ def prepare_current_release_code(output_dir):
     (output_dir / "native_speck.py").write_text(native, encoding="utf-8")
     shutil.copy2(CURRENT_CONFIGURATION_SOURCE, output_dir / "configuration_speck.py")
     shutil.copy2(CURRENT_MODELING_SOURCE, output_dir / "modeling_speck.py")
+    shutil.copy2(CURRENT_TOKENIZATION_SOURCE, output_dir / "tokenization_speck.py")
     shutil.copy2(PADDING_SOURCE, output_dir / PADDING_DESTINATION)
+    for path in (
+        ARCHITECTURE_SOURCE,
+        CURRENT_CONFIGURATION_SOURCE,
+        CURRENT_MODELING_SOURCE,
+        CURRENT_TOKENIZATION_SOURCE,
+        PADDING_SOURCE,
+    ):
+        identities[str(path.relative_to(PACKAGE_SOURCE))] = hashlib.sha256(
+            path.read_bytes()
+        ).hexdigest()
     (output_dir / "native_sources.json").write_text(
         json.dumps(identities, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -518,6 +533,65 @@ def validate_parity(output_dir, state, metadata):
     return report
 
 
+def validate_tokenizer_parity(output_dir, metadata, *, base_fingerprint=None):
+    """Check exported text/chat token IDs against the tokenizer used during training."""
+
+    from transformers import AutoTokenizer
+
+    output_dir = Path(output_dir)
+    base = Tokenizer(output_dir / "tokenizer.model")
+    chat_metadata = metadata.get("resolved", {}).get("tokenizer", {})
+    is_chat = metadata.get("training_phase") == "sft"
+    expected = chat_metadata["base_fingerprint"] if is_chat else base_fingerprint
+    if expected is None or base.fingerprint() != expected:
+        raise ValueError("export tokenizer differs from the checkpoint")
+    exported = AutoTokenizer.from_pretrained(output_dir, trust_remote_code=True)
+    texts = [
+        "Hello, world!",
+        "\nA second line.\n",
+        "def f(x):\n    return x + 1",
+        "İstanbul café 日本語",
+    ]
+    for text in texts:
+        if exported.encode(text, add_special_tokens=True) != base.encode(text, bos=True):
+            raise ValueError("exported text token IDs differ from native tokenization")
+    chat_cases = 0
+    if is_chat:
+        native = ChatTokenizer.from_metadata(base, chat_metadata)
+        if json.loads((output_dir / "tokenizer_metadata.json").read_text()) != chat_metadata:
+            raise ValueError("exported chat metadata differs from the checkpoint")
+        if (output_dir / "chat_template.jinja").read_text() != native.chat_template:
+            raise ValueError("exported chat template differs from the checkpoint")
+        messages = [
+            {"role": "system", "content": "Be concise."},
+            {"role": "user", "content": "One plus one?"},
+            {"role": "assistant", "content": "Context", "weight": 0},
+            {"role": "user", "content": "Try again."},
+            {"role": "assistant", "content": "Two.", "weight": 1},
+        ]
+        if native.format_version == 1:
+            messages[2].pop("weight")
+        for conversation, generation in ((messages, False), (messages[:-1], True)):
+            expected_ids, _ = native.encode_messages(conversation, add_generation_prompt=generation)
+            actual = exported.apply_chat_template(
+                conversation, tokenize=True, add_generation_prompt=generation, return_dict=True
+            )
+            if actual["input_ids"] != expected_ids:
+                raise ValueError("exported chat token IDs differ from native tokenization")
+            chat_cases += 1
+    report = {
+        "format": "speck_tokenizer_export_parity",
+        "format_version": 1,
+        "passed": True,
+        "base_fingerprint": base.fingerprint(),
+        "text_cases": len(texts),
+        "chat_cases": chat_cases,
+        "chat_format_version": chat_metadata.get("format_version") if is_chat else None,
+    }
+    atomic_json(output_dir / "tokenizer_parity.json", report)
+    return report
+
+
 def main():
     args = arguments()
     checkpoint_dir = args.checkpoint_dir.expanduser().resolve()
@@ -540,6 +614,7 @@ def main():
     prepare_export(checkpoint_dir, step, output_dir, metadata, state)
     validate_export(output_dir, metadata)
     validate_parity(output_dir, state, metadata)
+    validate_tokenizer_parity(output_dir, metadata)
     unit = "epoch" if epochs == 1 else "epochs"
     print(f"Exported step {step:,} ({epochs} {unit}) to {output_dir}")
     if args.no_upload:

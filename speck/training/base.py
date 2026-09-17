@@ -668,6 +668,7 @@ class BaseTrainer:
             **vars(self.args),
             "experiment": str(Path(self.cli.experiment).resolve()),
             "tokenizer": self.configs["tokenizer"],
+            "tokenizer_fingerprint": self.tokenizer.fingerprint(),
             "model": self.config.export(),
             "parameters": self.model.parameter_count(),
             "active_parameters": self.model.active_parameter_count(),

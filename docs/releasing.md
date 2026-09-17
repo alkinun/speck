@@ -15,7 +15,15 @@ uploading. The pinned compatibility-code provenance refers to an older published
 new artifact must identify its own source checkpoint and producing revision.
 
 The export vendors architecture, model layers/state, and optimizer definitions and records their
-hashes. Check native/exported logits, generation, padding support, tokenizer, and chat template.
+hashes, including the maintained exact SentencePiece backend. Both export entry points check
+native/exported logits, generation, text token IDs, and (for assistants) complete chat token IDs.
+The tokenizer check writes `tokenizer_parity.json`; weighted assistant context and the checkpoint's
+chat format version are included in that check.
+
+Base exports use the original prepared tokenizer, bound to the checkpoint's recorded fingerprint.
+Use `--tokenizer-dir` if those same bytes have moved. Older checkpoints without an explicit tokenizer
+fingerprint additionally require their original hash-bound packed manifest. A tokenizer is never
+substituted from an older published model.
 Right-padded likelihood batches are supported without caching; cached padded inference is not.
 A production tool parser and accelerated KDA backend still require their own qualification.
 

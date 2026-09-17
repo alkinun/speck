@@ -9,13 +9,17 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from safetensors.torch import save_file
 
+from speck.data.loader import manifest_fingerprint
 from speck.export.transformers import (
     prepare_current_release_code,
     release_config,
     release_state,
     validate_export,
     validate_parity,
+    validate_tokenizer_parity,
 )
+from speck.provenance.io import atomic_json
+from speck.tokenization.tokenizer import get_tokenizer
 from speck.training.checkpoint import checkpoint_identity, latest, load_model
 
 TEMPLATE_REPO = "specklabs/Speck1-140M"
@@ -24,8 +28,6 @@ TEMPLATE_FILES = (
     "LICENSE",
     "LICENSE.tokenizer",
     "tokenization_speck.py",
-    "tokenizer.model",
-    "tokenizer_config.json",
 )
 
 
@@ -34,6 +36,7 @@ def arguments():
     parser.add_argument("checkpoint_dir", type=Path)
     parser.add_argument("--step", type=int, default=None)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--tokenizer-dir", type=Path, help="relocated original prepared tokenizer")
     parser.add_argument("--force", action="store_true")
     return parser.parse_args()
 
@@ -72,7 +75,29 @@ def load_source(checkpoint_dir, step):
     return load_model(checkpoint_dir, step, "cpu"), metadata, f"step {step:,}", provenance
 
 
-def export(state, output_dir, metadata, provenance):
+def checkpoint_tokenizer(metadata, directory=None):
+    """Resolve tokenizer bytes against the training identity, including older checkpoints."""
+
+    resolved = metadata["resolved"]
+    config = dict(resolved["tokenizer"])
+    if directory is not None:
+        config["directory"] = str(directory)
+    tokenizer = get_tokenizer(**config)
+    expected = resolved.get("tokenizer_fingerprint")
+    if expected is None:
+        # Older checkpoints bind the tokenizer through their complete packed manifest.
+        manifest_path = Path(resolved["data_dir"]) / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        if manifest_fingerprint(manifest) != metadata["manifest"]:
+            raise ValueError("original packed manifest differs from the checkpoint")
+        expected = manifest["tokenizer"]["fingerprint"]
+    if tokenizer.fingerprint() != expected:
+        raise ValueError("export tokenizer differs from the checkpoint")
+    return tokenizer
+
+
+def export(state, output_dir, metadata, provenance, tokenizer_dir=None):
+    tokenizer = checkpoint_tokenizer(metadata, tokenizer_dir)
     building = output_dir.with_name(output_dir.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
     building.mkdir(parents=True)
@@ -86,6 +111,26 @@ def export(state, output_dir, metadata, provenance):
         )
         for filename in TEMPLATE_FILES:
             shutil.copy2(template / filename, building / filename)
+        shutil.copy2(tokenizer.model_path, building / "tokenizer.model")
+        atomic_json(
+            building / "tokenizer_config.json",
+            {
+                "auto_map": {"AutoTokenizer": ["tokenization_speck.SpeckTokenizer", None]},
+                "tokenizer_class": "SpeckTokenizer",
+                "add_bos_token": True,
+                "add_eos_token": False,
+                "bos_token": tokenizer.processor.id_to_piece(tokenizer.bos_id),
+                "eos_token": tokenizer.processor.id_to_piece(tokenizer.eos_id),
+                "unk_token": tokenizer.processor.id_to_piece(tokenizer.unk_id),
+                "model_max_length": metadata["config"]["max_position_embeddings"],
+                "clean_up_tokenization_spaces": False,
+                "legacy": True,
+            },
+        )
+        atomic_json(
+            building / "tokenizer_metadata.json",
+            {"fingerprint": tokenizer.fingerprint(), "vocab_size": tokenizer.vocab_size},
+        )
 
         prepare_current_release_code(building)
 
@@ -110,6 +155,7 @@ def export(state, output_dir, metadata, provenance):
     except BaseException:
         shutil.rmtree(building, ignore_errors=True)
         raise
+    return tokenizer
 
 
 def main():
@@ -122,9 +168,10 @@ def main():
             raise FileExistsError(f"export already exists (use --force): {output_dir}")
         shutil.rmtree(output_dir)
     output_dir.parent.mkdir(parents=True, exist_ok=True)
-    export(state, output_dir, metadata, provenance)
+    tokenizer = export(state, output_dir, metadata, provenance, args.tokenizer_dir)
     validate_export(output_dir, metadata)
     validate_parity(output_dir, state, metadata)
+    validate_tokenizer_parity(output_dir, metadata, base_fingerprint=tokenizer.fingerprint())
     if json.loads((output_dir / "speck_source.json").read_text(encoding="utf-8")) != provenance:
         raise ValueError("exported source provenance does not match its input")
     print(f"Exported {source} to {output_dir}")

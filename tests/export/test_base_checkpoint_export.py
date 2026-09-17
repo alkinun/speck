@@ -1,7 +1,10 @@
+import json
+
 import pytest
 import torch
 
-from speck.export.checkpoint import load_source
+from speck.data.loader import manifest_fingerprint
+from speck.export.checkpoint import checkpoint_tokenizer, load_source
 from speck.training.checkpoint import save
 
 
@@ -38,3 +41,37 @@ def test_base_export_rejects_partial_or_nonfinal_checkpoint(tmp_path, metadata):
 
     with pytest.raises(ValueError, match="non-partial resolved final"):
         load_source(checkpoints, 2)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_base_export_tokenizer_identity_survives_relocation_and_rejects_drift(
+    tmp_path, monkeypatch, legacy
+):
+    class Tokenizer:
+        def fingerprint(self):
+            return "original"
+
+    def load(*, directory):
+        assert directory == str(tmp_path)
+        return Tokenizer()
+
+    monkeypatch.setattr("speck.export.checkpoint.get_tokenizer", load)
+    manifest = {"tokenizer": {"fingerprint": "original"}}
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest))
+    metadata = {
+        "manifest": manifest_fingerprint(manifest),
+        "resolved": {"tokenizer": {"directory": "old-machine"}, "data_dir": str(tmp_path)},
+    }
+    if not legacy:
+        metadata["resolved"]["tokenizer_fingerprint"] = "original"
+        path.unlink()  # New checkpoints need neither packed data nor the old machine's path.
+    assert checkpoint_tokenizer(metadata, tmp_path).fingerprint() == "original"
+    if legacy:
+        path.write_text(json.dumps({"tokenizer": {"fingerprint": "other"}}))
+        message = "manifest differs"
+    else:
+        metadata["resolved"]["tokenizer_fingerprint"] = "other"
+        message = "tokenizer differs"
+    with pytest.raises(ValueError, match=message):
+        checkpoint_tokenizer(metadata, tmp_path)
