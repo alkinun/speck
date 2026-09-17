@@ -58,3 +58,16 @@ Chat format v2 preserves `weight: 0` assistant turns as context and supervises o
 not be reused. Set `chat_format_version: 1` in an SFT tokenizer configuration only to reproduce
 a historical unweighted run. Inference restores the version recorded in checkpoint metadata.
 The current format rejects tool fields and separate `reasoning_content` instead of dropping them.
+
+Audit local post-training stock before selecting a recipe:
+
+```bash
+uv run --no-sync python -m scripts.sft_audit /external/cache/generator-train-*.arrow \
+  --tokenizer /external/tokenizer/tokenizer.model --lengths 4096 8192 16384 \
+  --output /external/reports/sft-audit.json
+```
+
+The audit counts every row and tokenizes a deterministic sample per source/subset. It records file
+hashes, tokenizer identity, rejection reasons, and complete-conversation fit without truncation.
+Pass conversation shards only: Hugging Face `cache-*.arrow` files can contain shuffle indices.
+A sample's fit percentage is an estimate, not a prepared training count or quality score.

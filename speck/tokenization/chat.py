@@ -56,18 +56,18 @@ CHAT_TEMPLATE = (
     "{%- if tools %}{{- raise_exception('tool definitions require a tool-aware chat format') }}{%- endif %}"
     + LEGACY_CHAT_TEMPLATE.replace(
         "{%- if message['role'] == 'assistant' %}",
-        "{%- if message['role'] == 'assistant' and message.get('weight', 1) == 1 %}",
+        "{%- if message['role'] == 'assistant' and message.get('weight') in [none, 1] %}",
     ).replace(
         "{%- for message in messages %}",
         """{%- for message in messages %}
     {%- if message.get('tool_calls') or message.get('tool_call_id') or message.get('reasoning_content') %}
         {{- raise_exception('unserialized tool or reasoning fields') }}
     {%- endif %}
-    {%- set weight = message.get('weight', 1) %}
+    {%- set weight = 1 if message.get('weight') is none else message['weight'] %}
     {%- if weight is not number or weight is boolean or weight not in [0, 1] %}
         {{- raise_exception('message weight must be zero or one') }}
     {%- endif %}
-    {%- if message['role'] != 'assistant' and 'weight' in message %}
+    {%- if message['role'] != 'assistant' and message.get('weight') is not none %}
         {{- raise_exception('only assistant messages may specify weight') }}
     {%- endif %}""",
     )
@@ -95,11 +95,11 @@ def validate_messages(messages, add_generation_prompt=False):
             raise ChatFormatError(
                 "reasoning_content must be serialized into content before training"
             )
-        weight = message.get("weight", 1)
+        weight = 1 if message.get("weight") is None else message["weight"]
         if type(weight) not in (int, float) or weight not in (0, 1):
             raise ChatFormatError("message weight must be zero or one")
         role = message.get("role")
-        if role != "assistant" and "weight" in message:
+        if role != "assistant" and message.get("weight") is not None:
             raise ChatFormatError("only assistant messages may specify weight")
         content = message.get("content")
         if not isinstance(role, str) or role not in ROLE_TOKENS:
@@ -171,9 +171,9 @@ class ChatTokenizer:
         for message in messages:
             role = message["role"]
             content = self.base.encode("\n" + message["content"])
-            if self.format_version == 1 and message.get("weight", 1) != 1:
+            if self.format_version == 1 and message.get("weight") not in (None, 1):
                 raise ChatFormatError("legacy chat format cannot mask weighted assistant turns")
-            supervised = role == "assistant" and message.get("weight", 1) == 1
+            supervised = role == "assistant" and message.get("weight") in (None, 1)
             if content[: len(self._newline)] != self._newline:
                 raise ChatFormatError("tokenizer does not preserve the chat newline delimiter")
             tokens.append(self.role_ids[role])

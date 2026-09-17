@@ -129,7 +129,7 @@ def test_context_only_assistant_turn_is_never_supervised(tmp_path):
         legacy.encode_messages(messages)
 
 
-@pytest.mark.parametrize("weight", [None, True, -1, 0.5, "0", float("nan")])
+@pytest.mark.parametrize("weight", [True, -1, 0.5, "0", float("nan")])
 def test_invalid_message_weights_are_rejected(tmp_path, weight):
     tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
     with pytest.raises(ValueError, match="weight"):
@@ -177,3 +177,10 @@ def test_exported_template_preserves_text_and_weighted_generation_spans(tmp_path
     assert [rendered[start:end] for start, end in spans] == ["Target</s>"]
     with pytest.raises(Exception, match="tool definitions"):
         compiled.render(messages=messages, tools=[{"name": "lookup"}])
+
+
+def test_arrow_null_optional_weights_use_the_default_mask(tmp_path):
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    messages = [{"role": "user", "content": "Q"}, {"role": "assistant", "content": "A"}]
+    nullable = [{**message, "weight": None} for message in messages]
+    assert tokenizer.encode_messages(nullable) == tokenizer.encode_messages(messages)
