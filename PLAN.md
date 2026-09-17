@@ -9,9 +9,10 @@ Build an English-first, broadly useful small model with strengths in math, codin
 reliable instruction following. General knowledge, writing, and conversation remain requirements.
 "Good at everything" is an ambition; each capability needs its own evidence.
 
-The next deliverable is a reproducible training baseline and a capability report. The previous
+The immediate deliverable is a reproducible training baseline. The first flagship release includes
+identified base/assistant checkpoints and a companion [technical report](docs/report.md). The previous
 long-context paper, mixture-selection funnels, tokenizer competition, and architecture sweeps are
-historical. Longer context and a paper can follow measured needs and results.
+historical. A focused research claim or longer context requires its own measured justification.
 
 ## Starting point
 
@@ -83,9 +84,18 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   not interchangeable with restricted Stack v3. Both finite preparation services exited successfully.
 - Other retained sources include FineMath, Cosmopedia, peS2o, FineWiki, and approved natural
   UltraData-Math. Existing counts are not a globally deduplicated training union.
-- Exact pilot data/weights, benchmark versions, site settings, and post-training recipe remain open.
+- The [105M-token pilot](experiments/pilot/README.md) fixes initial source weights, optimization,
+  checkpoint milestones, and a 50-hour cost ceiling. Retained candidate selection has completed;
+  joint exclusion and packing are in progress. This is not yet a GPU launch qualification.
+- Five public evaluation inputs and scorer revisions are pinned; development/final task identities
+  are materialized. Grader execution, tools, public comparators, and site settings remain open.
+- A full 500,000-row post-training census and 256-row-per-subset length sample are complete.
+  The text-only 4K fit estimate is approximately 249,000 rows; 110,000 tool-bearing rows require
+  a tool-aware format. New SFT masks preserve context-only assistant turns; local parent loading
+  and complete-conversation packing exist. The actual assistant recipe is still to be evaluated.
 
-**Next:** reconcile the retained source manifests into one pilot data configuration and pin a compact
-capability evaluation set. Hardware qualification can proceed on synthetic inputs once access arrives.
+**Next:** finish joint pilot exclusion/packing and verify production-loader replay. Qualify grader
+execution and integrate the assistant/tool protocol. Hardware qualification can proceed on synthetic
+inputs once access arrives.
 Preparation procedures and artifact locations are in [data](docs/data.md); supporting evidence is in
 [research notes](docs/research.md). Historical result bytes remain in [Git](archive/README.md).
