@@ -165,6 +165,39 @@ def assistant_experiment(root, configs, parent):
     return experiment
 
 
+def export_arguments(phase, checkpoint, output, tokenizer):
+    """Select the phase-specific exporter and keep rental artifacts local."""
+    if phase == "base":
+        return [
+            "-m",
+            "scripts.base_checkpoint_export",
+            str(checkpoint),
+            "--step",
+            "4",
+            "--output-dir",
+            str(output),
+            "--tokenizer-dir",
+            str(tokenizer),
+        ]
+    if phase == "sft":
+        return [
+            "-m",
+            "scripts.model_publish",
+            "--checkpoint-dir",
+            str(checkpoint),
+            "--step",
+            "4",
+            "--output-dir",
+            str(output),
+            "--repo",
+            "local/rental-rehearsal",
+            "--expected-epochs",
+            "1",
+            "--no-upload",
+        ]
+    raise ValueError(f"unsupported export phase: {phase}")
+
+
 def run(root, output, seconds, *, allow_other_gpu=False):
     import torch
 
@@ -182,7 +215,7 @@ def run(root, output, seconds, *, allow_other_gpu=False):
         device = torch.cuda.get_device_properties(0)
         if not allow_other_gpu and (platform.machine() != "aarch64" or "GH200" not in device.name):
             raise ValueError(
-                "expected an ARM64 GH200; --allow-other-gpu is for local engineering checks"
+                "expected an ARM64 GH200; --allow-other-gpu permits other engineering hardware"
             )
         if shutil.disk_usage(output).free < 128 * 1024**3:
             raise ValueError("at least 128 GiB of free checkpoint storage is required")
@@ -303,17 +336,9 @@ def run(root, output, seconds, *, allow_other_gpu=False):
             )
             command(
                 f"{phase}-export",
-                [
-                    "-m",
-                    "scripts.base_checkpoint_export",
-                    str(checkpoint),
-                    "--step",
-                    "4",
-                    "--output-dir",
-                    str(output / f"{phase}-exported"),
-                    "--tokenizer-dir",
-                    str(root / "tokenizer"),
-                ],
+                export_arguments(
+                    phase, checkpoint, output / f"{phase}-exported", root / "tokenizer"
+                ),
             )
         result["status"] = "pass"
     except BaseException as error:

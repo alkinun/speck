@@ -1,9 +1,33 @@
 import json
 import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
-from speck.operations.gh200 import bind, bundle
+from speck.operations.gh200 import bind, bundle, export_arguments
+
+
+@pytest.mark.parametrize("phase", ["base", "sft"])
+def test_rental_export_uses_matching_cli_and_never_uploads(phase, tmp_path, monkeypatch):
+    from speck.export import checkpoint, transformers
+
+    command = export_arguments(
+        phase, tmp_path / "checkpoint", tmp_path / "export", tmp_path / "tokenizer"
+    )
+    monkeypatch.setattr(sys, "argv", command[1:])
+    if phase == "base":
+        assert command[1] == "scripts.base_checkpoint_export"
+        args = checkpoint.arguments()
+        assert args.tokenizer_dir == tmp_path / "tokenizer"
+    else:
+        assert command[1] == "scripts.model_publish"
+        args = transformers.arguments()
+        assert args.no_upload is True
+        assert args.expected_epochs == 1
+    assert args.checkpoint_dir == Path(tmp_path / "checkpoint")
+    assert args.output_dir == tmp_path / "export"
+    assert args.step == 4
 
 
 def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path, monkeypatch):
