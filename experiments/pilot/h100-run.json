@@ -101,6 +101,24 @@
     "validation_step_0_loss": 10.77551
   },
   "launch_utc": "2026-09-18T17:53:24.982649+00:00",
+  "midpoint_observations": {
+    "boundary": "Partial training observations; final training, capability evaluation and backup remain pending.",
+    "global_tokens": 52428800,
+    "metadata_path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/midpoint-evidence/metadata_000400.json",
+    "metadata_sha256": "36a6fb17699f5b3db880c73f54f0a5ad102dcbd485c66394b032b9bd3d2a7e0e",
+    "peak_allocated_bytes": 20721609728,
+    "step": 400,
+    "steps_301_to_400_tokens_per_second": 13582.3135552837,
+    "validation_loss": 3.7845447063446045,
+    "validation_source_losses": {
+      "cosmopedia_v2": 3.944324493408203,
+      "finemath_4plus": 3.5941543579101562,
+      "fineweb_edu": 4.573143482208252,
+      "finewiki_en": 2.905017375946045,
+      "pes2o_v3": 4.479456901550293,
+      "stack_edu": 3.2111709117889404
+    }
+  },
   "packet_sha256": "cf9e7565c3fe34497be0dae33a7fc685a017b0b3643de61f041c3e0e09bc7105",
   "pilot_budget_gpu_hours": 50,
   "prior_reservation_basis": "Conservatively charge all elapsed calendar time since the frozen pilot preparation, rounded up, including stopped/CPU-only gaps and separately measured rehearsal work. This is an over-reservation for pilot-related prior usage, not a provider bill.",
