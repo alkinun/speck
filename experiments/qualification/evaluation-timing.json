@@ -1,0 +1,18 @@
+{
+  "format": "speck_evaluation_timing_sample",
+  "format_version": 1,
+  "protocol": "experiments/pilot/evaluation.json",
+  "partition": "development",
+  "selection": "first source-order development rows, using the frozen task prompt and continuation builders",
+  "tasks": {"gsm8k": 2, "ifeval": 2, "humanevalplus": 2, "arc_challenge": 32, "hellaswag": 32},
+  "backend": "pinned lm_eval HFLM with the parity-checked local Speck base export",
+  "checkpoint": "H100 four-step production recovery rehearsal, 502fc18",
+  "dtype": "bfloat16",
+  "batch_size": 1,
+  "max_length": 4096,
+  "temperature": 0,
+  "output_caps": {"gsm8k": 1024, "ifeval": 512, "humanevalplus": 1024},
+  "timeout_seconds": 900,
+  "overall_training_inference_evaluation_timeout_seconds": 2400,
+  "boundary": "Sequential after training/inference timing. Measures generation and continuation scoring, without running task graders or opening final task contents. Exact request payload and standalone drivers retained with external evidence. Timing sample is small and source-order-biased; projections are scenarios, not measured full-suite runtimes or quality scores."
+}
