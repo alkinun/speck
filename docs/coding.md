@@ -23,7 +23,7 @@ The [inspection receipt](../experiments/corpus-audit/code-preview.json) binds da
 `85182d829f2ce7ea07cca72ebfc509deea1d9f5f`, four revision-checked responses, and local artifacts.
 Two seeded, contiguous 16-row Python windows were downloaded, plus one schema row per tier.
 This is a schema and feasibility inspection, not a representative quality estimate. Six sampled
-records received head-excerpt inspection; no corpus code was executed.
+records received head-excerpt inspection; that static inspection executed no corpus code.
 
 - L2 has repository/path identifiers and quality scores, but no commit or license columns.
   Five of the 16 sampled paths explicitly indicate vendored or installed packages. This motivates
@@ -32,11 +32,30 @@ records received head-excerpt inspection; no corpus code was executed.
   Establish a verified link to the original source before admission; shared UUID semantics and
   a usable cross-tier join have not been established by this inspection.
 - All 16 L3 solutions and tests parse under the local Python runtime. This is only syntax checking;
-  correctness, useful test coverage, dependencies, and execution success remain unmeasured.
+  the subsequent execution check below tests self-consistency, with independent correctness and
+  useful test coverage still open.
 - With our frozen tokenizer and BOS/EOS, all 16 L3 `content` fields fit 4K. Their combined size is
   15,685 tokens, versus 34,274 for `full_content`; one full record exceeds 4K. Choose the serialized
   fields deliberately and measure coverage at larger scale. Packing preserves tokens but can split
   a task across context windows. Do not blindly concatenate every representation of the same example.
+
+### Isolated execution follow-up
+
+[code-execution.json](../experiments/corpus-audit/code-execution.json) binds the next CPU check on
+the same 16 L3 records. Under Python 3.10.20 and the existing non-root namespace sandbox, **seven
+solutions pass their supplied tests and nine fail** (eight assertion failures and one type error).
+Every record contains immediate top-level assertions; this adapter is not a general pytest collector.
+Known-good, known-wrong, early-exit, deadline, hidden-host-path and unavailable-network controls pass.
+All seven passing originals reject a version with explicit return values replaced by `None`.
+That gross-bug check is not a measurement of test coverage or independent correctness.
+
+Two failed records were then inspected in full. Row 11273901's required empty dictionary construction
+calls an update method that immediately raises on zero arguments. Row 11273888 includes a generated
+test comment disputing its own expected result while leaving the assertion active. Both solution
+and test defects need review; a failing suite cannot automatically assign fault to the solution.
+The 16 rows form one contiguous window, so these counts do not estimate corpus-wide pass rates.
+Keep all records outside training for now, including the seven that passed. Resolve provenance,
+independent checks, benchmark exclusion and broader coverage before admission.
 
 ## Data work to do next
 

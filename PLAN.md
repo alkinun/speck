@@ -34,6 +34,32 @@ historical. A focused research claim or longer context requires its own measured
 These are starting choices that reuse working code. None proves an advantage over a dense model.
 Change one only when a measured failure or capability comparison justifies the work.
 
+## Immediate order of work
+
+The single-H100 rehearsal and planning measurements are complete. Local data preparation can
+continue while the next pilot launch is prepared; finishing the main-corpus recipe is not a
+prerequisite for running the already frozen engineering pilot.
+
+| Work | Current state | Concrete next deliverable |
+| --- | --- | --- |
+| Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
+| Code data | Static preview and 16-row isolated execution check complete; no admission | Resolve source lineage for a bounded candidate, freeze added benchmark exclusions, then expand stratified verification and count accepted tokens |
+| Rental launch | Pilot data/configuration ready; a one-H100 launch is not yet budget-bound | One reviewed launch packet: exact source/input hashes, fresh output path, command, environment, cumulative cost ledger, enforced deadline, stop conditions and backup paths |
+| Next paid experiment | Full 800-step pilot not completed | Run the unchanged 105M-token pilot and one development evaluation, retain receipts/checkpoints, then release rental compute |
+| Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
+
+Keep CPU work local and rent when the executable launch packet is ready. Use six single-H100 hours
+as the working reservation for the pilot plus one development pass; it is a projection with margin,
+not an enforced cap. Bind a deadline and account for prior attempts before execution. Start the pilot
+in a fresh run directory; preserve the 48-step timing experiment as separate evidence. Stop for
+nonfinite loss/gradients, data or checkpoint failures, or the bound budget; inspect before restarting.
+Back up the resulting evidence before the user stops/deletes the rental. Provider billing continues
+until the instance is stopped/deleted; process deadlines do not stop billing.
+
+The immediate data work prioritizes code verification. Broad synthetic-source replacement and
+main mixture weights remain open. Freeze new evaluation identities before producing candidate
+training packs. A passing generated test suite alone is not sufficient for data admission.
+
 ## Sequence
 
 1. **Qualify the runtime.** Run the offline smoke workflow, then the bounded 4K hardware probe on
@@ -120,7 +146,8 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   checkpoint milestones, and a 50-hour cost ceiling. Selection, joint exclusion, packing, and reopen
   checks are complete. Full one- and four-rank CPU loader scans consumed the planned tokens without
   repetition and passed fresh-process replay. The [preparation receipt](experiments/pilot/preparation.json)
-  records actual source/language exposures and artifact hashes. GPU launch qualification remains open.
+  records actual source/language exposures and artifact hashes. H100 single-worker recovery is now
+  qualified; budget-bound pilot launch and allocation-specific distributed checks remain open.
 - Five public evaluation inputs and scorer revisions are pinned; development/final task identities
   are materialized. Golden grader checks pass, including all 33 development code canonical solutions
   in an isolated runner and five scripted tool episodes. A pinned Qwen3-0.6B reference completed
@@ -173,13 +200,10 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.
 
-**Next:** on the eventual allocation, repeat the rehearsal on ARM64 GH200, qualify four-worker
-execution and scheduler recovery, and measure its pilot batch before the bounded pilot. If continuing
-on rented H100 hardware, bind a one-worker launch and its cumulative budget using the measurements
-above; the timing run stopped at 48 of 800 steps. Expand and jointly exclude
-main-corpus supply before choosing its token
-horizon: the retained code-language mixture has a pre-exclusion single-pass ceiling of about 2.76B
-total mixture tokens, and post-exclusion eligibility will be lower. Main training scale and
-model-quality claims require the pilot's measurements.
+Follow the immediate order above. On the eventual allocation, qualify ARM64 GH200, four-worker
+execution and scheduler recovery, and measure its pilot batch before running there. Main-corpus
+expansion and joint exclusions remain necessary: the retained code-language mixture has a
+pre-exclusion single-pass ceiling of about 2.76B total mixture tokens, and post-exclusion eligibility
+will be lower. Main training scale and model-quality claims require the pilot's measurements.
 Preparation procedures and artifact locations are in [data](docs/data.md); supporting evidence is in
 [research notes](docs/research.md). Historical result bytes remain in [Git](archive/README.md).

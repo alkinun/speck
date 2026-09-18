@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "failure-review.json": {
+      "bytes": 722,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/execution-v1/failure-review.json",
+      "sha256": "5a8d1ca78e24a47b39aba3ff2a27882dbab91ff9c8f7cd760c21cc268ae8b088"
+    },
+    "result.json": {
+      "bytes": 11485,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/execution-v1/result.json",
+      "sha256": "0917d7f0bd1bb68be8411ba8088b69c41f2b8dce765408afb3760ce6519c4127"
+    },
+    "run.py": {
+      "bytes": 4561,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/execution-v1/run.py",
+      "sha256": "4f78303622b430941f94677557c9394fc66c570d573d8c690d309ada9851c724"
+    }
+  },
+  "controls": {
+    "deadline": "timeout",
+    "early_exit": "failed",
+    "host_home_hidden": "pass",
+    "known_good": "pass",
+    "known_wrong": "failed",
+    "network_unavailable": "pass"
+  },
+  "counts": {
+    "failed": 9,
+    "pass": 7
+  },
+  "dataset_revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+  "date": "2026-09-18",
+  "decision": "Require execution filtering and review of both generated solutions and tests. No sample admitted, including passing samples; provenance, independent correctness, exclusions and representative coverage remain open.",
+  "execution_contract": {
+    "adapter": "Execute unmodified supplied tests at module scope through the sandbox; all 16 have immediate top-level assertions. No dependency installation or test repair.",
+    "address_space_gib": 4,
+    "cpu_seconds_soft": 10,
+    "mutation": "Replace all explicit return values with None; gross-bug smoke only, not mutation-coverage measurement. Only originally passing programs can establish rejection of a broken solution.",
+    "runner": "speck/evaluation/code_runner.py",
+    "wall_seconds_per_sample": 5
+  },
+  "failure_review": {
+    "records": [
+      {
+        "observation": "Required empty construction calls update with no arguments, which raises TypeError. The generated tests begin with empty construction. The update implementation also indexes positional arguments inconsistently with a bound instance method.",
+        "row_idx": 11273901
+      },
+      {
+        "observation": "A test asserts an all-bomb grid at t=5 while its own generated comment disputes that expectation and says to skip it; the assertion remains active. This is a concrete test-generation artifact, not a full diagnosis of every failing assertion.",
+        "row_idx": 11273888
+      }
+    ],
+    "scope": "Full task, solution and supplied-test inspection for two failed records only."
+  },
+  "failure_types": {
+    "AssertionError": 8,
+    "TypeError": 1
+  },
+  "gpu_jobs_launched": false,
+  "implementation_revision": "7c6316dcd140fbb007b21d6f3a7ab74297f6327b",
+  "passing_originals_rejecting_gross_mutation": 7,
+  "pilot_changed": false,
+  "preview_receipt": "experiments/corpus-audit/code-preview.json",
+  "python_version": "3.10.20",
+  "runner_sha256": "0e07280a5dd3bebcca634e9489383393ab57236112947838873edff1b0a02882",
+  "sample_rows": 16,
+  "sampling": "Same contiguous Python L3 window as code-preview.json; not a population estimate.",
+  "source_sha256": "16f1036e2905bfeaaf3106bb33d645875af1922a7b3a2868d7fc0fd91c48820b",
+  "status": "bounded_execution_inspection_complete",
+  "training_authority": false,
+  "wall_seconds": 1.6577955710235983
+}

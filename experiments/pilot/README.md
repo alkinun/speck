@@ -1,14 +1,18 @@
 # First real-data pilot
 
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
-No real-data pilot training has run. It is not a model-quality result or an architecture comparison.
+The full 800-step pilot has not run. A separate H100 timing experiment completed 48 production
+steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
+and timing check, not a model-quality result or an architecture comparison.
 
 The [local preparation receipt](preparation.json) records a completed corpus and full one- and
 four-rank CPU loader scans, with exact fresh-process replay of eight saved microbatches per rank.
 The packed corpus contains 105,652,323 training tokens including reserve and whole-document
 overshoot, plus 799,536 validation tokens. Both loader geometries consume exactly 104,857,600
-training tokens in the declared mixture without repetition. CUDA transfers, collectives, optimizer
-restart in the production training loop, and scheduler recovery remain hardware checks.
+training tokens in the declared mixture without repetition. The
+[H100 rehearsal](../qualification/h100-result.json) now verifies single-worker CUDA execution and
+production model/optimizer/loader/RNG recovery. GH200, collectives, distributed restart, and scheduler
+recovery remain checks on the actual allocation.
 
 ## Recipe
 
@@ -71,6 +75,14 @@ The existing joint-exclusion stage supports checkpointed resume with the same co
 
 ## Before GPU execution
 
+For the current work order, follow [PLAN.md](../../PLAN.md#immediate-order-of-work). The next H100
+rental should run the full pilot once its one-worker launch and cumulative cost are bound. The
+measured projection is 2.20 hours for training/validation/checkpoints plus approximately 2.15 hours
+for one development backend pass. Reserve six single-H100 hours including margin; grading, setup,
+transfer and failures still need accounting. This reservation is not an executable billing guard.
+Keep the full run in a fresh output directory and preserve the earlier timing experiment separately.
+The main-corpus research and expanded coding protocol do not alter this frozen engineering run.
+
 Follow the [hardware qualification](../qualification/README.md), then test numerical/cache parity,
 the production loader, and scheduler recovery. Transfer the completed packed corpus and frozen
 tokenizer; preserve hashes and update machine-specific paths before binding the scheduler wave.
@@ -79,7 +91,8 @@ The pilot ceiling is **50 allocated GPU-hours including failed attempts and over
 job's initial wall limit must be at most 12 hours (48 GPU-hours), reduced for prior usage. The
 remaining margin covers shutdown/accounting uncertainty. `budget.json` describes that envelope;
 it is not an executable budget guard. Bind it through the existing Slurm accounting workflow before
-launch. A raw `speck train` command does not enforce a cumulative GPU-hour limit.
+launch. These four-GPU Slurm settings are not a ready-to-run one-H100 rental binding. A raw
+`speck train` command does not enforce a cumulative GPU-hour limit.
 
 Inspect source-wise loss, gradient health, checkpoint replay, samples, actual mixture exposures,
 and end-to-end throughput. Retain intermediate checkpoints. Public capability results at this short

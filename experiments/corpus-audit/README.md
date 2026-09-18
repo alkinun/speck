@@ -189,3 +189,10 @@ data comparison. [code-preview.json](code-preview.json) binds a separate UltraDa
 Raw records remain outside Git. Static tokenization and syntax checks identify preparation needs;
 no sampled code was executed, no new source was admitted, and no GPU experiment was launched.
 The plan separates publisher results, local observations, and proposed evaluation work.
+
+The subsequent [isolated execution receipt](code-execution.json) tests those 16 L3 Python solutions
+against their supplied tests: seven pass and nine fail. All seven passing originals reject a
+grossly broken return-value mutation. Sandbox controls pass. This measures sample self-consistency,
+not independent correctness, overall source quality, or training eligibility; all records remain
+outside training. The [coding notes](../../docs/coding.md#isolated-execution-follow-up) retain the
+limitations and two concrete failure reviews.
