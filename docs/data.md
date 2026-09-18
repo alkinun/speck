@@ -56,6 +56,12 @@ These finite pilot counts do not establish eligible supply for the main training
 
 ## Main-corpus headroom
 
+The [initial content audit](../experiments/corpus-audit/README.md) now adds a reproducible
+924-document review packet, 34 qualitative excerpt reviews, a full FineMath host census, and
+document-length measurements. It identifies concrete selection questions; it does not certify
+corpus quality. Main training needs a labeled quality/coverage audit and one costed data comparison
+alongside the supply and integrity checks below. The frozen engineering pilot remains unchanged.
+
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger peS2o v2 bank once; its v1 predecessor
 is not additional supply. Stack-Edu below is the archived acquisition receipt, before full exclusion.

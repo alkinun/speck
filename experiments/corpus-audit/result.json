@@ -1,0 +1,166 @@
+{
+  "artifacts": {
+    "Ultra-FineWeb-L3-README.md": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/Ultra-FineWeb-L3-README.md",
+      "sha256": "8ec3729c5058d8381f9bbcc0fac24c6b25202796dd079de52ac158e045db0a0a"
+    },
+    "Ultra-FineWeb-L3-metadata.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/Ultra-FineWeb-L3-metadata.json",
+      "sha256": "5878149e0b558c13d996c20c4243b5031a6c7796a8c8e7cd31e46f848e8a65ba"
+    },
+    "UltraData-Code-README.md": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/UltraData-Code-README.md",
+      "sha256": "2dd14e3b1dd88637d24e006a8a19f68e68c88e286e91aabd3511cedf068aeea4"
+    },
+    "UltraData-Code-metadata.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/UltraData-Code-metadata.json",
+      "sha256": "4130cb775a5d43d6f6ade64180493ee2ff2f2b34f02a73cf81af25e4c99a7a88"
+    },
+    "UltraX-Preview-README.md": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/UltraX-Preview-README.md",
+      "sha256": "7462e78180223590d2350286ede716b42c5c6e5de2dda6069c6f5bbae737314c"
+    },
+    "UltraX-Preview-metadata.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/UltraX-Preview-metadata.json",
+      "sha256": "bad93b9824424fc6741a6dec45e153525695f57a63c4bcdd49b692f15e5a5b87"
+    },
+    "math-domain-census.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/math-domain-census.json",
+      "sha256": "d3a598d86108c59706551853d2c1b8909540575677bf9c991a2297683d61535e"
+    },
+    "math-domain-census.py": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/math-domain-census.py",
+      "sha256": "9119558f8f5ed2749666dc6ddc2071049e46d933217f45c766085b2fac7b6610"
+    },
+    "packet/report.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/packet/report.json",
+      "sha256": "1b4da0b67e4b128f7ce0ce9096f3663abdf1853de7a4d720ba227c71397cfc19"
+    },
+    "packet/samples.jsonl": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/packet/samples.jsonl",
+      "sha256": "c53d468082d4cbad77435f795e84ce50a59a965b1b2db9519d4e7c403b082714"
+    },
+    "plan.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/plan.json",
+      "sha256": "5728155c3876f4a4492efd41f4fe746879a20fcb37d6919fbda65680cee83f10"
+    },
+    "python-syntax.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/python-syntax.json",
+      "sha256": "0ffb2879f1b38a1c94006a0fc4b75951c752b91f3b5f3edfbacb74d95e7c50f1"
+    },
+    "quality.log": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/quality.log",
+      "sha256": "1b2f2252f012246289220ff4444390c2ec52abd84e8105c6fc81ca6e0b41325d"
+    },
+    "record-review.py": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/record-review.py",
+      "sha256": "1d61bbe587b25eff31126605bd33733ebb63b48cb9b59a18c3702301918f239b"
+    },
+    "review-excerpts.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/review-excerpts.json",
+      "sha256": "8bcbda72813c8298fac601806ab8250c39d93efcee2da50a875af6c9d7c28ce6"
+    },
+    "review-observations.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/review-observations.json",
+      "sha256": "0ad1e130788798354f5cbe475cfd8e550432fc6a64189b5adc5a8f4601e5bf84"
+    },
+    "review.py": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/review.py",
+      "sha256": "1de8c1922b1b366e1efb2c446b0a22cb02e5dc7ba23d05bc8f9c19ee53f4c025"
+    }
+  },
+  "date": "2026-09-18",
+  "gpu_jobs_launched": false,
+  "implementation_revision": "e919bc52cb1e220c370820af4879c17241658e3c",
+  "limits": [
+    "No population quality estimate from equal-stratum samples.",
+    "Code scope is pilot candidates, not full retained code.",
+    "New candidate metadata only; no corpus admission.",
+    "No causal or downstream-quality comparison."
+  ],
+  "pilot_changed": false,
+  "qualitative_excerpt_reviews": 34,
+  "sample_documents": 924,
+  "sources": [
+    {
+      "documents": 2097270,
+      "id": "fineweb_edu",
+      "long_document_token_percent": 22.998814283443362,
+      "sample_documents": 64,
+      "scope": "Retained single-source stock before joint main-corpus eligibility.",
+      "tokens": 2306703052,
+      "tokens_in_documents_over_4096": 530514351
+    },
+    {
+      "documents": 753071,
+      "id": "finemath_4plus",
+      "long_document_token_percent": 27.311267284204074,
+      "sample_documents": 64,
+      "scope": "Retained single-source stock before joint main-corpus eligibility.",
+      "tokens": 1124167472,
+      "tokens_in_documents_over_4096": 307024383
+    },
+    {
+      "documents": 1851034,
+      "id": "cosmopedia_v2",
+      "long_document_token_percent": 0.0,
+      "sample_documents": 48,
+      "scope": "Retained single-source stock before joint main-corpus eligibility.",
+      "tokens": 1489288743,
+      "tokens_in_documents_over_4096": 0
+    },
+    {
+      "documents": 113232,
+      "id": "pes2o_v3",
+      "long_document_token_percent": 91.6733849837534,
+      "sample_documents": 58,
+      "scope": "Retained single-source stock before joint main-corpus eligibility.",
+      "tokens": 820097493,
+      "tokens_in_documents_over_4096": 751811132
+    },
+    {
+      "documents": 387313,
+      "id": "finewiki_en",
+      "long_document_token_percent": 45.75376158379254,
+      "sample_documents": 64,
+      "scope": "Retained single-source stock before joint main-corpus eligibility.",
+      "tokens": 582070378,
+      "tokens_in_documents_over_4096": 266319093
+    },
+    {
+      "documents": 169058,
+      "id": "ultradata_math_l2_preview",
+      "long_document_token_percent": 53.168881395820314,
+      "sample_documents": 64,
+      "scope": "Separate retained natural-math candidate; not in frozen pilot.",
+      "tokens": 384788210,
+      "tokens_in_documents_over_4096": 204587587
+    },
+    {
+      "documents": 49686,
+      "id": "stack_edu_pilot_candidates",
+      "long_document_token_percent": null,
+      "sample_documents": 562,
+      "scope": "49,686 benchmark-screened pilot candidate documents, not the full 476.8M-token retained code acquisition or the final packed pilot.",
+      "tokens": null,
+      "tokens_in_documents_over_4096": null
+    }
+  ],
+  "status": "initial_diagnostic_complete_main_corpus_selection_open",
+  "syntax_screen": {
+    "documents": 58,
+    "failure_boundary": "All failures reported Python 2-style print syntax; not behavioral verification.",
+    "language": "Python",
+    "parse_failure": 4,
+    "parse_pass": 54,
+    "version": "3.14.6"
+  },
+  "training_authority": false,
+  "validation": {
+    "archive": "verified",
+    "command": "make quality",
+    "deselected": 10,
+    "passed": 707,
+    "skipped": 10
+  }
+}

@@ -44,7 +44,12 @@ Change one only when a measured failure or capability comparison justifies the w
    If measured runtime cannot fit, freeze a smaller experiment before launching. Inspect losses by
    source, gradient health, samples, checkpoint recovery, and cost. This is an engineering baseline,
    not a causal comparison or claim about architecture quality.
-4. **Develop useful behavior.** Once the base learns reliably, prepare a costed SFT baseline with
+4. **Establish the main data recipe.** Complete the [corpus quality and coverage work](experiments/corpus-audit/README.md)
+   before committing the main training budget. Preserve the engineering pilot, inspect retained
+   text, validate candidate sources and eligible supply, and freeze one affordable data comparison.
+   Quality labels, mixture weights, repetition, and staged use of refined material need evidence;
+   correct packing and upstream dataset branding do not supply it.
+5. **Develop useful behavior.** Once the base learns reliably, prepare a costed SFT baseline with
    verified math/code solutions, ordinary assistance, and structured tool interactions. Reuse the
    separate post-training work where compatible. Audit source/answer quality, measure direct versus
    reasoning supervision by tokens, and interleave general/tool examples under one inference protocol.
@@ -52,7 +57,7 @@ Change one only when a measured failure or capability comparison justifies the w
    capability-focused continuation with broad replay only if pilot measurements justify its cost.
    Add distillation or RL only after a clear baseline,
    working graders, and an affordable experiment exist.
-5. **Scale what works.** Decide the main token horizon and stage budgets from measured data supply,
+6. **Scale what works.** Decide the main token horizon and stage budgets from measured data supply,
    learning curves, and all-in runtime. Keep time for post-training and final evaluation. The old
    320B/400B targets are historical estimates, not current commitments.
 
