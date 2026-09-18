@@ -3,7 +3,36 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from speck.operations.training_replay import compare_state, replay
+from speck.operations.training_replay import compare_metadata, compare_state, replay
+
+
+@pytest.mark.parametrize(
+    "phase,counters",
+    [
+        ("base", {"global_step": 4, "global_tokens": 16384}),
+        ("sft", {"trained_supervised_tokens": 60413}),
+    ],
+)
+def test_replay_metadata_requires_matching_production_counters(phase, counters):
+    expected = {
+        "step": 4,
+        "training_phase": phase,
+        "manifest": "frozen-data",
+        "rng_state": {},
+        "data_state": {},
+        **counters,
+    }
+    compare_metadata(expected, dict(expected))
+    for key, value in counters.items():
+        with pytest.raises(AssertionError, match=key):
+            compare_metadata(expected, {**expected, key: value + 1})
+        missing = {k: v for k, v in expected.items() if k != key}
+        with pytest.raises(AssertionError, match=key):
+            compare_metadata(expected, missing)
+        with pytest.raises(AssertionError, match=key):
+            compare_metadata(missing, missing)
+    with pytest.raises(AssertionError, match="manifest"):
+        compare_metadata(expected, {**expected, "manifest": "other-data"})
 
 
 def test_complete_optimizer_comparison_rejects_scalar_or_tensor_drift():

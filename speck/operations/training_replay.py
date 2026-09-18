@@ -45,6 +45,23 @@ def compare_state(expected, actual, *, rtol, atol, path="state"):
     return 0
 
 
+def compare_metadata(expected, actual):
+    """Compare the counters actually emitted by each production trainer."""
+    required = ["rng_state", "data_state", "step", "training_phase", "manifest"]
+    phase = expected.get("training_phase")
+    if phase == "base":
+        required += ["global_step", "global_tokens"]
+    elif phase == "sft":
+        required += ["trained_supervised_tokens"]
+    else:
+        raise AssertionError(f"unsupported checkpoint training phase: {phase}")
+    for key in required:
+        if key not in expected or key not in actual:
+            raise AssertionError(f"production checkpoint is missing {key}")
+        if expected[key] != actual[key]:
+            raise AssertionError(f"checkpoint {key} differs after fresh-process restart")
+
+
 def compare_checkpoints(first, second, step, device):
     tolerance = {"rtol": 0, "atol": 0} if device == "cpu" else {"rtol": 1e-5, "atol": 1e-6}
     result = {"tolerance": tolerance, "tensor_counts": {}}
@@ -55,11 +72,7 @@ def compare_checkpoints(first, second, step, device):
         result["tensor_counts"][kind] = compare_state(expected, actual, **tolerance, path=kind)
         del expected, actual
     expected, actual = load_metadata(first, step), load_metadata(second, step)
-    if "rng_state" not in expected or "data_state" not in expected:
-        raise AssertionError("production checkpoint is missing RNG or loader state")
-    for key in ("rng_state", "data_state", "step", "trained_tokens", "trained_supervised_tokens"):
-        if expected.get(key) != actual.get(key):
-            raise AssertionError(f"checkpoint {key} differs after fresh-process restart")
+    compare_metadata(expected, actual)
     result["rng_and_loader"] = "exact"
     return result
 
