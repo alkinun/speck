@@ -14,7 +14,7 @@ the remaining six-hour deadline; it does not retrain. Export checks passed; deve
 started after removing supervisor rank variables that incorrectly triggered distributed startup.
 The endpoint later refused SSH and the gateway reported container not found. Provider status and
 evaluation completion are unknown. The final checkpoint is verified locally; CPU export
-reconstruction and a connection-restoration watcher continue. Do not interpret lost SSH as proof
+reconstruction is verified, and a connection-restoration watcher remains active. Do not interpret lost SSH as proof
 that billing stopped or that all remote artifacts are backed up. Use the recorded implementation commit
 for each phase even when documentation on main advances.
 

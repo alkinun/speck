@@ -47,7 +47,7 @@ Evaluation completion and remaining remote backups are unconfirmed. Main-corpus 
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Static preview and 16-row isolated execution check complete; no admission | Resolve source lineage for a bounded candidate, freeze added benchmark exclusions, then expand stratified verification and count accepted tokens |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
-| Current paid experiment | Training/export qualified; remote endpoint unavailable; final checkpoint retained locally | Reconstruct final export on CPU, recover provider access, then inspect evaluation and remaining backups before any further GPU action |
+| Current paid experiment | Training/export qualified; remote endpoint unavailable; final checkpoint retained locally | Recover provider access, then inspect evaluation and remaining backups; verified final export has been reconstructed locally |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
@@ -55,7 +55,8 @@ offline template lookup, separated BF16 wrapper identity from FP32 cache consist
 singleton rank variables before evaluation. All failed attempts are retained; export checks pass and
 development evaluation was running within the remaining original deadline when SSH became
 unavailable. The gateway now reports container not found; provider status and evaluation completion
-are unknown. A persistent CPU job reconstructs the final export from the verified local checkpoint. The migrated container blocks user namespaces, so generated code is graded locally.
+are unknown. The final export has been reconstructed on CPU, with source identities, model/tokenizer checks
+and all 18 output-file hashes verified locally. The migrated container blocks user namespaces, so generated code is graded locally.
 The supervisor enforces a shared six-hour
 execution deadline and conservatively reserves six GPU-hours against the 50-hour pilot ceiling.
 Record cumulative external usage before execution; provider billing is separate. Start the pilot

@@ -6,7 +6,7 @@ Training completed all 800 steps / 104,857,600 tokens in **2.27 hours**. Final v
 Export and tokenizer checks passed after inspected recovery. The remote endpoint subsequently
 became unavailable, so capability completion and the remaining backup are unconfirmed.
 Complete checkpoints 100, 200, 300 and 800 are verified locally, including the final model and optimizer.
-A persistent CPU job reconstructs the final export from retained inputs. The
+The final export has been reconstructed and verified on CPU from retained inputs. The
 [execution receipt](h100-run.json) retains measurements and the original export failure.
 A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning

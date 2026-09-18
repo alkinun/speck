@@ -372,10 +372,131 @@
   },
   "launch_utc": "2026-09-18T17:53:24.982649+00:00",
   "local_export_reconstruction": {
-    "boundary": "New CPU reconstruction from verified local checkpoint800; not a completed capability evaluation or a byte-for-byte remote export backup.",
-    "service": "speck-pilot-local-export-80ffc9d0",
-    "state_path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/local-export-state.json",
-    "status": "running"
+    "boundary": "New CPU reconstruction from verified local checkpoint800, with model/tokenizer checks and file hashes verified. It is not a remote-export backup or a completed capability evaluation.",
+    "device": "cpu",
+    "directory": "/mnt/speck-data/speck/h100-pilot-execution-20260918/local-export",
+    "files": 18,
+    "finished_utc": "2026-09-18T21:17:20.484506+00:00",
+    "hash_manifest_path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/local-export-hashes.json",
+    "hash_manifest_sha256": "cf7cb55e8f389bf323b99573dc6e2cb884f16408717a34a83ad031b21f0136af",
+    "hashes": {
+      "LICENSE": {
+        "bytes": 1072,
+        "sha256": "42bb09f339a8af8b90d3b4969b6f6e4ba4aff3b5c614103b031fccdf71c8f772"
+      },
+      "LICENSE.tokenizer": {
+        "bytes": 11710,
+        "sha256": "62cb476a954bd6cd4b894cd2c002ed091cb69a982a458ca578f470e3e88b1a88"
+      },
+      "architecture_speck.py": {
+        "bytes": 17624,
+        "sha256": "7806e7a1c02f6db07301242c4250fdb653e6fbb7e6c7bba5cf0bb435fab04bdc"
+      },
+      "config.json": {
+        "bytes": 9268,
+        "sha256": "92151bae5773b13171de0458f93035d8178667dd68ebf791c5a00620650f1ba3"
+      },
+      "configuration_speck.py": {
+        "bytes": 1472,
+        "sha256": "04512e1d9d834f9dffdce48ffd7e0bb9c215f194111060e3409ae6f5fba29b64"
+      },
+      "generation_config.json": {
+        "bytes": 170,
+        "sha256": "a2db2e9576d9f40c85b7a40ee51c5f2d75ef3fc4a14e09f4cae50cb12586836d"
+      },
+      "model.safetensors": {
+        "bytes": 2391817216,
+        "sha256": "dbfcf04baac3eb5ec263ee82385ffc3d56f50630640037acf37c7e3d03d4bbf3"
+      },
+      "modeling_speck.py": {
+        "bytes": 6431,
+        "sha256": "ba800994c9486d82e3a05c3ee44fecabde148394d1c91ecdcef46aa294d49586"
+      },
+      "native_sources.json": {
+        "bytes": 862,
+        "sha256": "b2d38dccdef969fff926db7c0b8be66a05987b60bf6cf34ecc62e34bb4f65ce7"
+      },
+      "native_speck.py": {
+        "bytes": 79541,
+        "sha256": "f2ae37becaea2ec4e78c99b921ca49c7eb01660c3a9a6d5d2490882946cdd85a"
+      },
+      "padding_speck.py": {
+        "bytes": 898,
+        "sha256": "ac12c54b1835d68f7baed53b2e3aaf45f8a98d4f34793180b1749296db654cb2"
+      },
+      "speck_parity.json": {
+        "bytes": 780,
+        "sha256": "7d4e83085883a1b547f6d326e8584a371a118a14bf747db6c3f0eebc5b934acb"
+      },
+      "speck_source.json": {
+        "bytes": 526,
+        "sha256": "e12e0d0ebb0d2ee9798b94ce6c287e1e020bd57031ef02b68984997200a55fcb"
+      },
+      "tokenization_speck.py": {
+        "bytes": 2767,
+        "sha256": "cdea45ba8dd55557ee1636cdd0b95dfe5f29682da32412703ffa89b0dd111ff8"
+      },
+      "tokenizer.model": {
+        "bytes": 493443,
+        "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+      },
+      "tokenizer_config.json": {
+        "bytes": 353,
+        "sha256": "79528b104f4101f02b189ca1f16e8acdf78b076b1d77238d4f6e6c0575369451"
+      },
+      "tokenizer_metadata.json": {
+        "bytes": 111,
+        "sha256": "5e1abd49c3020560bc3246711d05a289274c825ecfdb2b76e0cf6aea0bc9810a"
+      },
+      "tokenizer_parity.json": {
+        "bytes": 276,
+        "sha256": "3c6b950918ab9a43cee8b379d3fd447ac4a574214248440232c7625543edbb03"
+      }
+    },
+    "implementation_commit": "41097247da3972c2a88abad752997d82cdeb5166",
+    "parity": {
+      "comparison_policy": {
+        "bf16_cached_full": "Measured separately; not the wrapper identity comparison.",
+        "cached_full_fp32": {
+          "atol": 0.0001,
+          "rtol": 0.0001
+        },
+        "native_export_bf16": {
+          "atol": 0.02,
+          "paths": [
+            "full",
+            "cached"
+          ],
+          "rtol": 0.02
+        }
+      },
+      "compute_dtype": "bfloat16",
+      "format": "speck_export_parity",
+      "format_version": 2,
+      "fp32_cached_full_max_absolute_error": 5.7220458984375e-06,
+      "generation_smoke_new_tokens": 2,
+      "incremental_logits_max_absolute_error": 0.0,
+      "logits_max_absolute_error": 0.0,
+      "native_export_cached_max_absolute_error": 0.0,
+      "parameters": 1195884576,
+      "passed": true,
+      "tokens_sha256": "e36555b6b258ffeb818451285a0968f5d139c60e305e247538ebb7d7ce5dfcf2"
+    },
+    "reason": "Provided remote container no longer resolves; reconstruct from verified local final checkpoint. No retraining or evaluation.",
+    "source_identity_matches_final_checkpoint": true,
+    "source_verified": true,
+    "started_utc": "2026-09-18T21:14:44.776442+00:00",
+    "status": "complete",
+    "tokenizer_parity": {
+      "base_fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+      "chat_cases": 0,
+      "chat_format_version": null,
+      "control_token_cases": 2,
+      "format": "speck_tokenizer_export_parity",
+      "format_version": 1,
+      "passed": true,
+      "text_cases": 4
+    }
   },
   "midpoint_observations": {
     "boundary": "Partial training observations; final training, capability evaluation and backup remain pending.",
