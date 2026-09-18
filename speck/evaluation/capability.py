@@ -17,6 +17,29 @@ TASK_FILES = {
 }
 
 
+def model_settings(args):
+    """Bind either a pinned Hub reference or an explicitly selected local export."""
+    local_export = getattr(args, "local_export", None)
+    if local_export is not None:
+        from speck.evaluation.open_slm import _validate_local_export
+        from speck.training.checkpoint import directory_identity
+
+        path = _validate_local_export(local_export)
+        identity = directory_identity(path)
+        return {
+            "pretrained": str(path),
+            "trust_remote_code": True,
+            "local_files_only": True,
+        }, identity
+    if len(args.revision) != 40 or any(c not in "0123456789abcdef" for c in args.revision):
+        raise ValueError("reference model revision must be a full commit hash")
+    return {
+        "pretrained": args.model,
+        "revision": args.revision,
+        "trust_remote_code": False,
+    }, None
+
+
 def verify_scorers(protocol):
     versions = {}
     for package, key in (("lm_eval", "lm_eval_commit"), ("evalplus", "evalplus_commit")):
@@ -173,16 +196,13 @@ def evaluate(args, prepared, protocol):
     from lm_eval.models.huggingface import HFLM
 
     scorers = verify_scorers(protocol)
-    if len(args.revision) != 40 or any(c not in "0123456789abcdef" for c in args.revision):
-        raise ValueError("reference model revision must be a full commit hash")
+    backend, local_identity = model_settings(args)
     model = HFLM(
-        pretrained=args.model,
-        revision=args.revision,
+        **backend,
         dtype="bfloat16",
         device=args.device,
         batch_size=1,
         max_length=4096,
-        trust_remote_code=False,
     )
     if args.device == "cuda":
         torch.cuda.reset_peak_memory_stats()
@@ -277,8 +297,9 @@ def evaluate(args, prepared, protocol):
     return {
         "status": "pass",
         "scorers": scorers,
-        "model": args.model,
-        "revision": args.revision,
+        "model": backend["pretrained"],
+        "revision": backend.get("revision"),
+        "local_model_identity": local_identity,
         "partition": args.partition,
         "limit": args.limit,
         "chat": args.chat,
@@ -320,6 +341,11 @@ def main(argv=None):
     parser.add_argument("--qualify", action="store_true")
     parser.add_argument("--model", default="Qwen/Qwen3-0.6B")
     parser.add_argument("--revision", default="c1899de289a04d12100db370d81485cdf75e47ca")
+    parser.add_argument(
+        "--local-export",
+        type=Path,
+        help="parity-checked local Speck export; replaces the Hub model/revision and runs its local code",
+    )
     parser.add_argument("--partition", choices=("development", "final"), default="development")
     parser.add_argument(
         "--limit", type=int, default=8, help="0 evaluates the complete chosen partition"
@@ -345,7 +371,7 @@ def main(argv=None):
         "prepared_sha256": file_sha256(args.prepared),
         "implementation": {
             name: file_sha256(Path(__file__).with_name(name))
-            for name in ("capability.py", "code_runner.py", "tools.py")
+            for name in ("capability.py", "code_runner.py", "tools.py", "open_slm.py")
         },
     }
     atomic_json(output / "result.json", result)

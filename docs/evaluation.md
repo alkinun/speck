@@ -63,7 +63,14 @@ python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pi
 python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
   --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca \
   --chat --limit 8 --output /external/reference-smoke
+python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
+  --local-export /external/pilot/base-export --limit 8 --output /external/pilot-base-smoke
 ```
+
+`--local-export` replaces the Hub reference, requires a passing native/Transformers parity receipt,
+hashes the complete export, and loads its explicitly selected local model/tokenizer code offline.
+Use only an export whose code you intend to execute. Add `--chat` for an assistant export. The same
+frozen tasks, output caps, non-root code sandbox, and partition rules apply to local checkpoints.
 
 Qualification checks the pinned GSM8K strict/flexible extraction, IFEval constraints, both
 multiple-choice scorers, all 33 development code tasks' canonical solutions, deliberate wrong
