@@ -73,19 +73,75 @@
   "attempt_id": "80ffc9d0f93d4dc8a71adf4c616cbb24",
   "backup": {
     "boundary": "All eight complete checkpoints are still required locally. Remote step100 weights and marker were reclaimed only after both copies were verified; its complete local copy remains.",
-    "checkpoint_300_partial_retained": true,
+    "checkpoint_300_partial_retained": false,
+    "checkpoint_400_partial_retained": true,
     "final_checkpoint_prioritized": true,
     "remote_checkpoint_100_reclaimed_after_dual_hash_verification": {
       "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/remote-checkpoint-100-reclaim.json",
       "sha256": "70f578636e5ee4a42e8cc19d890bef7d8e6f98e94da53148652b9a5ede643c0e"
     },
-    "status": "in_progress",
+    "status": "interrupted_connection_unavailable",
     "verified_steps": [
       100,
-      200
+      200,
+      300,
+      800
     ]
   },
   "code_grading": "Deferred to local isolated runner because provider blocks namespaces; same frozen tasks and tests.",
+  "connection_incident": {
+    "artifacts": {
+      "backup-journal.log": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/backup-journal.log",
+        "sha256": "9f70f94702e74f3964a1351b6bd478e26c264983484290c385168cee76e975fd"
+      },
+      "backup-state.json": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/backup-state.json",
+        "sha256": "e5c4d596475aee9e7be60d10583c1f3d98c6c637d8f8a0eb8fdef46e914d7db7"
+      },
+      "checkpoint-300-receipt.json": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/checkpoint-300-receipt.json",
+        "sha256": "cf3e4e06fed06f04d9d9bf930270edf62d17b2ca2af06d1b9942c15e3220f96b"
+      },
+      "checkpoint-800-receipt.json": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/checkpoint-800-receipt.json",
+        "sha256": "adefdf54b790fe04f502acc34a24b7cb90907795ed9c066e5667d2fc632cc9d7"
+      },
+      "continuation-state.json": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/continuation-state.json",
+        "sha256": "8bdfb693398be6eb60d945448cb0150d1280a955f617dc240dcb4e4b55bc9a3d"
+      },
+      "grading-journal.log": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/grading-journal.log",
+        "sha256": "6a47a999be3c8ed9c5b4e03fc5d4ff6707e7fbc085f21402210078d7813954fa"
+      },
+      "grading-state.json": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/grading-state.json",
+        "sha256": "f1d4d0b11c86d7e92ce8f22b278a72d88a01d3f4cac0a75746c5c5317fc719a4"
+      },
+      "incident.json": {
+        "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/connection-evidence/incident.json",
+        "sha256": "bfc0eb03a51e34b30363554d3b24dcbd3a278fbc1ddba9c82fa6000d3f9a28c0"
+      }
+    },
+    "direct_ssh": "Connection refused at103.207.149.153:11213",
+    "gateway_ssh": "container not found for0nfvif7niy86zi-64412120@ssh.runpod.io",
+    "missing_remote_artifacts": [
+      "remaining checkpoint400..700 weights",
+      "remote export weights",
+      "completed capability outputs/results"
+    ],
+    "observed_utc": "2026-09-18T21:16:35.036682+00:00",
+    "provider_status": "unknown",
+    "recovery": "CPU reconstruction of final export; watcher queues connection restoration; no new GPU work",
+    "remote_evaluation_status": "unobservable; last observed running",
+    "verified_local_checkpoints": [
+      100,
+      200,
+      300,
+      800
+    ]
+  },
   "conservative_prior_reservation_gpu_hours": 21,
   "continuation": {
     "boundary": "Local computer and Codex must remain available. Watcher queues this task at phase changes and distinct failures, with worker liveness checks. Provider billing is not stopped by these services.",
@@ -315,6 +371,12 @@
     "validation_step_0_loss": 10.77551
   },
   "launch_utc": "2026-09-18T17:53:24.982649+00:00",
+  "local_export_reconstruction": {
+    "boundary": "New CPU reconstruction from verified local checkpoint800; not a completed capability evaluation or a byte-for-byte remote export backup.",
+    "service": "speck-pilot-local-export-80ffc9d0",
+    "state_path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/local-export-state.json",
+    "status": "running"
+  },
   "midpoint_observations": {
     "boundary": "Partial training observations; final training, capability evaluation and backup remain pending.",
     "global_tokens": 52428800,
@@ -455,7 +517,7 @@
   },
   "reserved_current_gpu_hours": 6,
   "session_deadline_seconds": 21600,
-  "status": "training_completed_export_passed_evaluation_running",
+  "status": "training_completed_remote_connection_unavailable",
   "training_evidence": {
     "checkpoints/metadata_000800.json": {
       "bytes": 68147,

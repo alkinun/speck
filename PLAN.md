@@ -38,20 +38,24 @@ Change one only when a measured failure or capability comparison justifies the w
 
 The single-H100 rehearsal and planning measurements are complete. The frozen engineering pilot
 completed 800 steps on the migrated H100; its [execution receipt](experiments/pilot/h100-run.json)
-records 2.27 training hours, final validation loss 3.379 and 19.3 GiB peak allocated memory. Main-corpus research remains a separate follow-up.
+records 2.27 training hours, final validation loss 3.379 and 19.3 GiB peak allocated memory.
+The remote endpoint is now unavailable; the final model and optimizer are hash-verified locally.
+Evaluation completion and remaining remote backups are unconfirmed. Main-corpus research remains a separate follow-up.
 
 | Work | Current state | Concrete next deliverable |
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Static preview and 16-row isolated execution check complete; no admission | Resolve source lineage for a bounded candidate, freeze added benchmark exclusions, then expand stratified verification and count accepted tokens |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
-| Current paid experiment | 800-step training complete; export checks passed; capability evaluation running and backup pending | Complete development evaluation and isolated local code grading, verify backups, then release rental compute |
+| Current paid experiment | Training/export qualified; remote endpoint unavailable; final checkpoint retained locally | Reconstruct final export on CPU, recover provider access, then inspect evaluation and remaining backups before any further GPU action |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
 offline template lookup, separated BF16 wrapper identity from FP32 cache consistency, and removed
 singleton rank variables before evaluation. All failed attempts are retained; export checks pass and
-development evaluation now runs within the remaining original deadline. The migrated container blocks user namespaces, so generated code is graded locally.
+development evaluation was running within the remaining original deadline when SSH became
+unavailable. The gateway now reports container not found; provider status and evaluation completion
+are unknown. A persistent CPU job reconstructs the final export from the verified local checkpoint. The migrated container blocks user namespaces, so generated code is graded locally.
 The supervisor enforces a shared six-hour
 execution deadline and conservatively reserves six GPU-hours against the 50-hour pilot ceiling.
 Record cumulative external usage before execution; provider billing is separate. Start the pilot
@@ -207,7 +211,8 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   fresh Git clone, relocated launch preview and all golden graders pass locally, including 33
   canonical code tasks. The new supervisor has CPU tests for budget, tampering, failure and timeout
   behavior. Training completed all 800 steps; export checks pass after inspected recovery and
-  capability evaluation is running under the original deadline. The [execution receipt](experiments/pilot/h100-run.json)
+  capability evaluation was running under the original deadline before remote access was lost.
+  Local complete checkpoints 100, 200, 300 and 800 are verified; remaining remote artifacts are unconfirmed. The [execution receipt](experiments/pilot/h100-run.json)
   distinguishes verified training evidence from pending capability results.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does

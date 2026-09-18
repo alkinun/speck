@@ -10,8 +10,12 @@ source commit and validation. Relocation and offline grader checks passed locall
 GPU workflow completed training, then failed offline export template enumeration. The
 [execution receipt](../experiments/pilot/h100-run.json) preserves that failure and the separate
 recovery implementations. Recovery uses staged template files and the original checkpoint under
-the remaining six-hour deadline; it does not retrain. Export checks now pass; development evaluation
-is running after removing supervisor rank variables that incorrectly triggered distributed startup. Use the recorded implementation commit
+the remaining six-hour deadline; it does not retrain. Export checks passed; development evaluation
+started after removing supervisor rank variables that incorrectly triggered distributed startup.
+The endpoint later refused SSH and the gateway reported container not found. Provider status and
+evaluation completion are unknown. The final checkpoint is verified locally; CPU export
+reconstruction and a connection-restoration watcher continue. Do not interpret lost SSH as proof
+that billing stopped or that all remote artifacts are backed up. Use the recorded implementation commit
 for each phase even when documentation on main advances.
 
 

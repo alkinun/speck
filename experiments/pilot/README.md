@@ -3,8 +3,10 @@
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
 Training completed all 800 steps / 104,857,600 tokens in **2.27 hours**. Final validation loss was
 **3.379**, steady throughput **13,595 tokens/s**, and peak allocated memory **19.3 GiB**.
-Export and tokenizer checks pass after inspected recovery; capability evaluation is running and
-final backup remains pending. The
+Export and tokenizer checks passed after inspected recovery. The remote endpoint subsequently
+became unavailable, so capability completion and the remaining backup are unconfirmed.
+Complete checkpoints 100, 200, 300 and 800 are verified locally, including the final model and optimizer.
+A persistent CPU job reconstructs the final export from retained inputs. The
 [execution receipt](h100-run.json) retains measurements and the original export failure.
 A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
