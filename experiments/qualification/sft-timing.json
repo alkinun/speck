@@ -1,0 +1,19 @@
+{
+  "format": "speck_sft_timing_probe",
+  "format_version": 1,
+  "input": "64 training and 16 validation conversations from the qualified assistant rehearsal",
+  "pretrained": "parity/recovery-qualified H100 four-step base checkpoint",
+  "epochs": 4,
+  "steps": 16,
+  "batch_tokens": 65536,
+  "device_batch_size": 1,
+  "sequence_lengths": [4096],
+  "accumulation": 16,
+  "eval_every": 16,
+  "save_every": 16,
+  "log_every": 1,
+  "steady_steps": [11, 12, 13, 14, 15, 16],
+  "timeout_seconds": 240,
+  "overall_measurement_timeout_seconds": 2400,
+  "boundary": "Time the unchanged production SFT path beyond its first ten steps. Four deliberate repetitions of the tiny engineering corpus, not a proposed training recipe or quality experiment. Count padded context positions separately from supervised tokens. Sequential after the microbatch comparison."
+}
