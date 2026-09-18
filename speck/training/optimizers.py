@@ -165,6 +165,9 @@ class BatchedMuon(torch.optim.Muon):
                         for update, transpose in zip(updates, transposed)
                     ]
                 )
+                # The FP32 Nesterov copies are no longer needed once the BF16 batch exists.
+                # Keeping them through Newton-Schulz needlessly raises restart peak memory.
+                del updates
                 norms = torch.linalg.vector_norm(orthogonal, dim=(1, 2), keepdim=True)
                 orthogonal.div_(norms.clamp(min=group["eps"]))
                 a, b, c = group["ns_coefficients"]
@@ -172,6 +175,7 @@ class BatchedMuon(torch.optim.Muon):
                     gram = torch.bmm(orthogonal, orthogonal.transpose(1, 2))
                     gram_update = torch.baddbmm(gram, gram, gram, beta=b, alpha=c)
                     orthogonal = torch.baddbmm(orthogonal, gram_update, orthogonal, beta=a)
+                    del gram, gram_update
                 torch._foreach_mul_(parameters, 1 - group["lr"] * group["weight_decay"])
                 final_updates = [
                     update.T if transpose else update
@@ -180,6 +184,7 @@ class BatchedMuon(torch.optim.Muon):
                 adjusted_lr = group["lr"] * lr_ratio
                 for parameter, update in zip(parameters, final_updates):
                     parameter.add_(update.to(parameter.dtype) * (-adjusted_lr))
+                del orthogonal, final_updates, update
         return loss
 
 

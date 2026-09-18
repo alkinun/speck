@@ -64,9 +64,16 @@ def arguments():
 
 
 def _settings(value):
-    value = {"deterministic": False, **value}
+    value = {
+        "deterministic": False,
+        "activation_checkpointing": False,
+        "loss_backend": "torch",
+        **value,
+    }
     required = {
         "deterministic",
+        "activation_checkpointing",
+        "loss_backend",
         "batch_tokens",
         "data_dir",
         "dataset",
@@ -96,6 +103,11 @@ def _settings(value):
     args = SimpleNamespace(**value)
     if type(args.deterministic) is not bool:
         raise ValueError("SFT deterministic must be boolean")
+    if type(args.activation_checkpointing) is not bool or args.loss_backend not in {
+        "torch",
+        "liger",
+    }:
+        raise ValueError("invalid SFT activation checkpointing or loss backend")
     integer_positive = (
         "batch_tokens",
         "device_batch_size",
@@ -226,6 +238,7 @@ class SFTTrainer:
                 self.tokenizer.base.vocab_size,
                 self.tokenizer.bos_id,
                 self.tokenizer.eos_id,
+                loss_backend=args.loss_backend,
             )
             self.pretrained = load_pretrained(
                 self.model,
@@ -235,6 +248,7 @@ class SFTTrainer:
             self.model.resize_token_embeddings(self.tokenizer.vocab_size)
             self.config = self.model.config
         self.model = self.model.to(self.device)
+        self.model.set_gradient_checkpointing(args.activation_checkpointing)
         self.parameters = tuple(self.model.parameters())
         self.optimizer = self.model.optimizer(args.lr, args.weight_decay, args.optimizer)
         if checkpoint_state is not None:
@@ -271,7 +285,7 @@ class SFTTrainer:
             values.pop("expected_active_parameters", None)
         if actual_settings != expected_settings:
             raise ValueError("SFT checkpoint architecture does not match the experiment")
-        return SpeckForCausalLM(config), config, pretrained
+        return SpeckForCausalLM(config, loss_backend=self.args.loss_backend), config, pretrained
 
     def _restore_checkpoint_state(self, checkpoint_state):
         metadata = self.metadata
@@ -317,6 +331,8 @@ class SFTTrainer:
         if self.metadata:
             immutable = (
                 "deterministic",
+                "activation_checkpointing",
+                "loss_backend",
                 "sequence_length",
                 "device_batch_size",
                 "batch_tokens",
@@ -334,7 +350,14 @@ class SFTTrainer:
             changed = [
                 key
                 for key in immutable
-                if self.metadata["resolved"].get(key, False if key == "deterministic" else None)
+                if self.metadata["resolved"].get(
+                    key,
+                    {
+                        "deterministic": False,
+                        "activation_checkpointing": False,
+                        "loss_backend": "torch",
+                    }.get(key),
+                )
                 != self.resolved.get(key)
             ]
             if changed:
