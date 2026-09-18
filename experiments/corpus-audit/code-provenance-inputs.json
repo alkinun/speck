@@ -1,0 +1,101 @@
+{
+  "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+  "acquisition_receipt": {
+    "path": "/mnt/speck-data/speck/openbmb-code-20260918/receipt.json",
+    "bytes": 1933,
+    "sha256": "88ace955c098d2d7da5d954b7921bc0fead82a0fa8c886c111123ac1df1d8373"
+  },
+  "primary_sources": [
+    {
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/README.md",
+      "url": "https://huggingface.co/datasets/openbmb/UltraData-Code/raw/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/README.md",
+      "bytes": 14951,
+      "sha256": "2dd14e3b1dd88637d24e006a8a19f68e68c88e286e91aabd3511cedf068aeea4",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"c0cd0baaeecffa172170d44c4033f04a4ccafbfb\"",
+        "X-Repo-Commit": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f"
+      }
+    },
+    {
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/LICENSE",
+      "url": "https://huggingface.co/datasets/openbmb/UltraData-Code/raw/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/LICENSE",
+      "bytes": 11335,
+      "sha256": "202d02b14796563546e1a1d1e761410fa9e399bf7e1b85d8b43c972658341202",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"b5ff00dcf3d8024db285692aecd4340017875c06\"",
+        "X-Repo-Commit": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f"
+      }
+    },
+    {
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/root-tree.json",
+      "url": "https://huggingface.co/api/datasets/openbmb/UltraData-Code/tree/85182d829f2ce7ea07cca72ebfc509deea1d9f5f?recursive=false&limit=100",
+      "bytes": 582,
+      "sha256": "870f3cab40446e50794745ee49b7b85b2aee1dc551f0a02439421e0457c38936",
+      "headers": {
+        "Content-Type": "application/json; charset=utf-8",
+        "ETag": "W/\"246-KL0e1H8sjab3OnDIzG16NBjHWBg\""
+      }
+    },
+    {
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-commits.json",
+      "url": "https://api.github.com/repos/stroxler/tdxutil/commits?path=tdxutil/exceptions.py&per_page=1",
+      "sha256": "6a5b8034bc8c47f21b27fd220fb4e0d8cb4b1659592e88b2edebbe7d086ec6b1",
+      "bytes": 3471
+    },
+    {
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-tdxutil-exceptions.py",
+      "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/tdxutil/exceptions.py",
+      "bytes": 1002,
+      "sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+      "git_blob_sha1": "427316eb7383aa1ada1b7abcc893da62995b9cc7"
+    },
+    {
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-LICENSE",
+      "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE",
+      "bytes": 1273,
+      "sha256": "774850fc0b9971b20b23df53e2fc326614b077c3250d5da5b442b6a1357326e8",
+      "git_blob_sha1": "f4aac881bb43361235fefb1378c30b6fb1afb94e"
+    }
+  ],
+  "natural_code_manifest": {
+    "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-v1/units/stack_edu_metadata__Python__eligible_000000000/manifest.json",
+    "bytes": 719,
+    "sha256": "3adb8375f4ead9734395e35f67407b6c7f19dcfae043e7c323ea4f34e47bc0c4"
+  },
+  "route_ordinal": 29,
+  "route_revision": "8d21cb9c9a489da4c138dd05dd578ffea7765c2a",
+  "route_source": {
+    "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-tdxutil-exceptions.py",
+    "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/tdxutil/exceptions.py",
+    "bytes": 1002,
+    "sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+    "git_blob_sha1": "427316eb7383aa1ada1b7abcc893da62995b9cc7"
+  },
+  "route_license": {
+    "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-LICENSE",
+    "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE",
+    "bytes": 1273,
+    "sha256": "774850fc0b9971b20b23df53e2fc326614b077c3250d5da5b442b6a1357326e8",
+    "git_blob_sha1": "f4aac881bb43361235fefb1378c30b6fb1afb94e"
+  },
+  "route_remaining_gates": [
+    "Retain the upstream copyright/permission/no-name-use notice and review intended-use eligibility; dataset detected MIT label alone is insufficient.",
+    "Select a bounded practical-code cohort with similarly verified origin, immutable revision, bytes and license; unresolved cases stay out.",
+    "Freeze source-family partitions and new evaluation exclusions before generating or selecting exercises.",
+    "Record derivation parent hash, generator revision/settings and serialization; verify independent hidden edge cases in the existing sandbox.",
+    "Deduplicate all representations, count eligible tokens and CPU cost; no source admission or paid experiment from this receipt."
+  ],
+  "manual_primary_source_findings": {
+    "card_matches_previous_acquisition_sha256": true,
+    "dataset_pin_is_not_source_repository_commit": true,
+    "card_uuid_description_both_tiers": "unique file identifier; does not explicitly define a shared key, mapping, cardinality or lookup",
+    "card_raw_content_description": "original generated record before serialization",
+    "observed_raw_content": "implementation-like Python including imports, comments and module code; no verified origin established by this observation",
+    "license_scope": "Apache-2.0 project declaration plus source repository terms and additional unchanged-redistribution restriction in card; no legal acceptance inferred",
+    "release_tree_scope": "root listing only: assets, data, .gitattributes, LICENSE, README.md, README_ZH.md; no root-level mapping file. Not a recursive absence claim.",
+    "l0_traceability_claim": "Publisher says L0 archives provenance; this is not evidence that released L3 rows expose it.",
+    "candidate_notice_review": "The retained Stack-Edu row labels MIT; pinned upstream LICENSE includes a copyright/permission notice and additional prohibition on promotional use of the author name. Preserve exact notice; no automated license approval."
+  }
+}

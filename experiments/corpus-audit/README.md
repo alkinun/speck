@@ -196,3 +196,34 @@ grossly broken return-value mutation. Sandbox controls pass. This measures sampl
 not independent correctness, overall source quality, or training eligibility; all records remain
 outside training. The [coding notes](../../docs/coding.md#isolated-execution-follow-up) retain the
 limitations and two concrete failure reviews.
+
+## Code lineage decision — 2026-09-19
+
+[code-provenance.json](code-provenance.json) records a bounded offline audit of the same preview:
+all 16 L3 records remain outside training because source origin, revision and license evidence
+are unresolved. A cross-tier UUID join is not established by the published schema/card or these
+samples. No-overlap in 17 retained rows per tier is not evidence against a global join. Two L3
+raw fields are byte-identical despite different UUIDs. The original dataset revision is preserved;
+no candidate code was executed and the frozen pilot/evaluation were not changed.
+
+The next route is a 16-file practical Python cohort qualified from retained natural-code stock.
+One concrete Stack-Edu candidate now has an exact byte match to an immutable upstream commit
+and a retained license notice; its remaining eligibility, deduplication, exclusion and independent
+test gates are explicit in the [coding plan](../../docs/coding.md#source-lineage-follow-up--2026-09-19).
+The inspected 354-row natural-code unit itself has no populated commits; do not treat it as
+already qualified. This follow-up does not admit sources or authorize a GPU comparison.
+
+Reproduce with the retained external artifacts (no network or dataset imports needed):
+
+```sh
+python experiments/corpus-audit/audit_code_provenance.py \
+  experiments/corpus-audit/code-provenance-inputs.json > /tmp/code-provenance.json
+cmp /tmp/code-provenance.json experiments/corpus-audit/code-provenance.json
+```
+
+The replay verifies acquisition/response hashes, revisions, schema consistency, primary-source
+snapshots, archived natural-code evidence and the upstream byte match. Manual card/license
+interpretations are explicitly retained in the input receipt; replay does not automate legal
+approval or discover a global join. [code-provenance-validation.json](code-provenance-validation.json)
+records replay and fault-injection checks. Raw data and source notices remain outside Git under
+`/mnt/speck-data/speck/openbmb-code-provenance-20260919/` and the original acquisition roots.

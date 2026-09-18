@@ -90,6 +90,11 @@ training packs. A passing generated test suite alone is not sufficient for data 
    correct packing and upstream dataset branding do not supply it.
    Prioritize the [code-data comparison](docs/coding.md#first-comparison-to-prepare), keeping general
    coverage fixed. Ultra-FineWeb-L3 remains a candidate, not an established Cosmopedia replacement.
+   The [L3 provenance audit](experiments/corpus-audit/code-provenance.json) holds all 16 preview
+   records outside training: source revision/license and a supported L2 join remain unresolved.
+   Next qualify 16 practical Python files from retained natural-code stock; one exact upstream
+   commit/content match and license notice are now retained. Complete origin, eligibility,
+   source-family exclusion and independent-test checks before deriving an admitted exercise set.
 5. **Develop useful behavior.** Once the base learns reliably, prepare a costed SFT baseline with
    verified math/code solutions, ordinary assistance, and structured tool interactions. Reuse the
    separate post-training work where compatible. Audit source/answer quality, measure direct versus

@@ -1,0 +1,423 @@
+{
+  "corpus_code_executed": false,
+  "format_version": 1,
+  "inputs": {
+    "acquisition_receipt": {
+      "bytes": 1933,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/receipt.json",
+      "sha256": "88ace955c098d2d7da5d954b7921bc0fead82a0fa8c886c111123ac1df1d8373"
+    },
+    "manual_primary_source_findings": {
+      "candidate_notice_review": "The retained Stack-Edu row labels MIT; pinned upstream LICENSE includes a copyright/permission notice and additional prohibition on promotional use of the author name. Preserve exact notice; no automated license approval.",
+      "card_matches_previous_acquisition_sha256": true,
+      "card_raw_content_description": "original generated record before serialization",
+      "card_uuid_description_both_tiers": "unique file identifier; does not explicitly define a shared key, mapping, cardinality or lookup",
+      "dataset_pin_is_not_source_repository_commit": true,
+      "l0_traceability_claim": "Publisher says L0 archives provenance; this is not evidence that released L3 rows expose it.",
+      "license_scope": "Apache-2.0 project declaration plus source repository terms and additional unchanged-redistribution restriction in card; no legal acceptance inferred",
+      "observed_raw_content": "implementation-like Python including imports, comments and module code; no verified origin established by this observation",
+      "release_tree_scope": "root listing only: assets, data, .gitattributes, LICENSE, README.md, README_ZH.md; no root-level mapping file. Not a recursive absence claim."
+    },
+    "natural_code_manifest": {
+      "bytes": 719,
+      "path": "/mnt/speck-data/speck/stack-edu-e1s-ordered-v1/units/stack_edu_metadata__Python__eligible_000000000/manifest.json",
+      "sha256": "3adb8375f4ead9734395e35f67407b6c7f19dcfae043e7c323ea4f34e47bc0c4"
+    },
+    "primary_sources": [
+      {
+        "bytes": 14951,
+        "headers": {
+          "Content-Type": "text/plain; charset=utf-8",
+          "ETag": "\"c0cd0baaeecffa172170d44c4033f04a4ccafbfb\"",
+          "X-Repo-Commit": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f"
+        },
+        "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/README.md",
+        "sha256": "2dd14e3b1dd88637d24e006a8a19f68e68c88e286e91aabd3511cedf068aeea4",
+        "url": "https://huggingface.co/datasets/openbmb/UltraData-Code/raw/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/README.md"
+      },
+      {
+        "bytes": 11335,
+        "headers": {
+          "Content-Type": "text/plain; charset=utf-8",
+          "ETag": "\"b5ff00dcf3d8024db285692aecd4340017875c06\"",
+          "X-Repo-Commit": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f"
+        },
+        "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/LICENSE",
+        "sha256": "202d02b14796563546e1a1d1e761410fa9e399bf7e1b85d8b43c972658341202",
+        "url": "https://huggingface.co/datasets/openbmb/UltraData-Code/raw/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/LICENSE"
+      },
+      {
+        "bytes": 582,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8",
+          "ETag": "W/\"246-KL0e1H8sjab3OnDIzG16NBjHWBg\""
+        },
+        "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/root-tree.json",
+        "sha256": "870f3cab40446e50794745ee49b7b85b2aee1dc551f0a02439421e0457c38936",
+        "url": "https://huggingface.co/api/datasets/openbmb/UltraData-Code/tree/85182d829f2ce7ea07cca72ebfc509deea1d9f5f?recursive=false&limit=100"
+      },
+      {
+        "bytes": 3471,
+        "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-commits.json",
+        "sha256": "6a5b8034bc8c47f21b27fd220fb4e0d8cb4b1659592e88b2edebbe7d086ec6b1",
+        "url": "https://api.github.com/repos/stroxler/tdxutil/commits?path=tdxutil/exceptions.py&per_page=1"
+      },
+      {
+        "bytes": 1002,
+        "git_blob_sha1": "427316eb7383aa1ada1b7abcc893da62995b9cc7",
+        "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-tdxutil-exceptions.py",
+        "sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+        "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/tdxutil/exceptions.py"
+      },
+      {
+        "bytes": 1273,
+        "git_blob_sha1": "f4aac881bb43361235fefb1378c30b6fb1afb94e",
+        "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-LICENSE",
+        "sha256": "774850fc0b9971b20b23df53e2fc326614b077c3250d5da5b442b6a1357326e8",
+        "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE"
+      }
+    ],
+    "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+    "route_license": {
+      "bytes": 1273,
+      "git_blob_sha1": "f4aac881bb43361235fefb1378c30b6fb1afb94e",
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-LICENSE",
+      "sha256": "774850fc0b9971b20b23df53e2fc326614b077c3250d5da5b442b6a1357326e8",
+      "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE"
+    },
+    "route_ordinal": 29,
+    "route_remaining_gates": [
+      "Retain the upstream copyright/permission/no-name-use notice and review intended-use eligibility; dataset detected MIT label alone is insufficient.",
+      "Select a bounded practical-code cohort with similarly verified origin, immutable revision, bytes and license; unresolved cases stay out.",
+      "Freeze source-family partitions and new evaluation exclusions before generating or selecting exercises.",
+      "Record derivation parent hash, generator revision/settings and serialization; verify independent hidden edge cases in the existing sandbox.",
+      "Deduplicate all representations, count eligible tokens and CPU cost; no source admission or paid experiment from this receipt."
+    ],
+    "route_revision": "8d21cb9c9a489da4c138dd05dd578ffea7765c2a",
+    "route_source": {
+      "bytes": 1002,
+      "git_blob_sha1": "427316eb7383aa1ada1b7abcc893da62995b9cc7",
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-tdxutil-exceptions.py",
+      "sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+      "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/tdxutil/exceptions.py"
+    }
+  },
+  "join": {
+    "documented_shared_uuid_semantics": false,
+    "exact_l2_content_l3_raw_content_sha256_intersection": [],
+    "interpretation": "No supported join established; no overlap does not disprove a global join.",
+    "scope": "17 retained rows per tier including schema probes; not a global search",
+    "uuid_intersection": [],
+    "verified_origin_join": false
+  },
+  "next_source_route": {
+    "admitted": false,
+    "candidate": {
+      "commit_id": null,
+      "content_id": "e21c9dee11e21d0141aefa42a06617ac844ac23e",
+      "detected_English_probability": 1.0,
+      "eligible_ordinal": 29,
+      "file_path": "/tdxutil/exceptions.py",
+      "host": null,
+      "language": "Python",
+      "metadata": {
+        "blob_id": "e21c9dee11e21d0141aefa42a06617ac844ac23e",
+        "detected_licenses": [
+          "MIT"
+        ],
+        "int_score": 4,
+        "language": "Python",
+        "length_bytes": 1002,
+        "license_type": "permissive",
+        "path": "/tdxutil/exceptions.py",
+        "repo_name": "stroxler/tdxutil",
+        "score": 3.625,
+        "src_encoding": "UTF-8"
+      },
+      "metadata_file_sha256": "f0e25975bff184163a7ff1aca53678617c6eace1328b1b2c51a39ff79a6262bd",
+      "prose_status": "English",
+      "released_content_sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+      "repo_path": "stroxler/tdxutil",
+      "source": "stack_edu",
+      "source_file": "Python/train-00000-of-00005.parquet",
+      "source_repo": "HuggingFaceTB/stack-edu",
+      "source_revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+      "source_row": 1612,
+      "swh_blob": {
+        "path": "/home/alkin/speck-working/stack-edu-e1s-ordered-v1/cache/e2/e21c9dee11e21d0141aefa42a06617ac844ac23e/manifest.json",
+        "sha256": "46b19667df201b321616374ede5c53638ca1f1b5ef13c6896d9a5cff56061f03"
+      },
+      "url": null,
+      "vendor_metadata": "not_released_path_rule_only"
+    },
+    "content_id_algorithm_verified": "SHA1 of plain file bytes, not Git blob SHA1",
+    "inspected_unit_rows": 354,
+    "remaining_gates": [
+      "Retain the upstream copyright/permission/no-name-use notice and review intended-use eligibility; dataset detected MIT label alone is insufficient.",
+      "Select a bounded practical-code cohort with similarly verified origin, immutable revision, bytes and license; unresolved cases stay out.",
+      "Freeze source-family partitions and new evaluation exclusions before generating or selecting exercises.",
+      "Record derivation parent hash, generator revision/settings and serialization; verify independent hidden edge cases in the existing sandbox.",
+      "Deduplicate all representations, count eligible tokens and CPU cost; no source admission or paid experiment from this receipt."
+    ],
+    "rows_with_commit_id": 0,
+    "source_license_notice_available": true,
+    "upstream_bytes_equal_retained_text": true,
+    "verified_matching_upstream_revision": "8d21cb9c9a489da4c138dd05dd578ffea7765c2a"
+  },
+  "rejections": [
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "d1695540cd25eed9f7daeefd328ba3128933f032229b190d43d6ebf3b1ab04e5",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273888,
+      "uuid": "1dc556eb-3da1-4169-bf9b-4c52513427db"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "1694c271d72b57a7c84fe6a6f41d55eaffa227a375bc702dccc6312fa70b65a9",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273889,
+      "uuid": "27e7372b-11ba-4d86-83f1-c9673b120a45"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "1fc6be65a0ec66da4ce324eb1a18cbe529ad9c0fda06e88c68d5a112f5be7f79",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273890,
+      "uuid": "5ae12fff-b662-4895-936a-71d6ee0ef2cc"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "318388cdedb46fda42a704a3c5b537ca949c1aab2d9932d9b5485b00f6cd4fc0",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273891,
+      "uuid": "ea4aa1ea-e4f5-405f-9ae7-26b1f3048b7d"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "2052e64c6318a3f4bd244d5989ffd5dd8ad96e5a9f3c170311b3b463fcbb3ee3",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273892,
+      "uuid": "76e4a36d-6580-488a-81b2-bc55e1974c53"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "b4c5dd2e495de8f0033a436479828207f05e345bf68bcd3a7b2a9360ca0b0ec9",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273893,
+      "uuid": "2e277ec1-a0ac-47c0-ab56-eb06f44e63f3"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "a57736e85de57b179e389bdb72f9a5e18d1df831af77a34974e3751151882f6f",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273894,
+      "uuid": "b325df18-a437-4d73-89db-5580fd29660e"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "ca428b09d46f6203f203f2f6643f0fe5ffcfea2c4cf916ccb400345a2f1250b4",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273895,
+      "uuid": "fdc81472-929f-4b25-98f0-69d0cbded5bb"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "7ee682b5fbe94441fd7f8ed6c471437f4c5db1ec14fad5fd3458fd0398ea9507",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273896,
+      "uuid": "7e5bd31a-d1f5-4aa5-8c9e-f4bc0c48006b"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "7fb82c3b6d5506d6b695c40d8fbd904be152948af910185a79f21592f71c001a",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273897,
+      "uuid": "0b14ca77-969e-4147-bf62-693101c528ab"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "a57736e85de57b179e389bdb72f9a5e18d1df831af77a34974e3751151882f6f",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273898,
+      "uuid": "c0f8a9de-6e47-4f46-b085-4f1da43e2103"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "9e28bc2a186fc5636b3f7c96c56c8e5593b939c3a50f88ea9320867065e1015b",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273899,
+      "uuid": "17accfdd-52de-4e19-a26a-8840d2cc9a5a"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "0e03cd6160b176bb44868d20c41deeeac5cb7302fecaf698668e93a84949f46e",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273900,
+      "uuid": "ac867695-c9e7-4452-9c6f-55c2db759583"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "9716507349a406cdb37f2b91d5db893aeb8151845a4e9ceb1a2d05513f9c62c8",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273901,
+      "uuid": "b8358d4c-d1e8-4a10-91ac-550daae32ab2"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "c6517fbd3f5679821a495ebcfa3f5f12f401f6871656c401e89552f3a54600a7",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273902,
+      "uuid": "e0135117-1167-4a23-9b60-530b4cdfce73"
+    },
+    {
+      "decision": "hold_outside_training",
+      "raw_content_sha256": "d674f29bf83013acc4a8d0a76a579e270856424c4d722c3cb7ac3385d9cbc7b7",
+      "reason_codes": [
+        "unverified_source_origin",
+        "missing_source_revision",
+        "missing_source_license_evidence",
+        "unverified_l2_join"
+      ],
+      "row_idx": 11273903,
+      "uuid": "261a9cd6-0ef3-4ea1-9857-a7ecb6645c9c"
+    }
+  ],
+  "status": "bounded_lineage_audit_complete_candidates_not_admitted",
+  "tiers": {
+    "L2": {
+      "nonempty_field_counts": {
+        "algo_rel_score": 16,
+        "category": 16,
+        "content": 16,
+        "quality_score": 16,
+        "relative_path": 16,
+        "repo_name": 16,
+        "uuid": 16
+      },
+      "raw_text_distinct_sha256": 16,
+      "raw_text_duplicate_group_sizes": [],
+      "raw_text_field": "content",
+      "raw_text_license_marker_rows": [],
+      "sample_rows": 16,
+      "schema_fields": [
+        "algo_rel_score",
+        "category",
+        "content",
+        "quality_score",
+        "relative_path",
+        "repo_name",
+        "uuid"
+      ]
+    },
+    "L3": {
+      "nonempty_field_counts": {
+        "analysis": 16,
+        "content": 16,
+        "content_format": 16,
+        "full_content": 16,
+        "full_content_format": 16,
+        "raw_content": 16,
+        "solution": 16,
+        "task": 16,
+        "test": 16,
+        "uuid": 16
+      },
+      "raw_text_distinct_sha256": 15,
+      "raw_text_duplicate_group_sizes": [
+        2
+      ],
+      "raw_text_field": "raw_content",
+      "raw_text_license_marker_rows": [],
+      "sample_rows": 16,
+      "schema_fields": [
+        "analysis",
+        "content",
+        "content_format",
+        "full_content",
+        "full_content_format",
+        "raw_content",
+        "solution",
+        "task",
+        "test",
+        "uuid"
+      ]
+    }
+  },
+  "training_authority": false
+}

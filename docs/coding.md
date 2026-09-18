@@ -57,11 +57,62 @@ The 16 rows form one contiguous window, so these counts do not estimate corpus-w
 Keep all records outside training for now, including the seven that passed. Resolve provenance,
 independent checks, benchmark exclusion and broader coverage before admission.
 
+### Source lineage follow-up — 2026-09-19
+
+The [offline provenance receipt](../experiments/corpus-audit/code-provenance.json) verifies the
+four retained responses and the pinned release card/license. All **16 L3 candidates remain on
+hold** for missing verified origin, source revision and license evidence. This is an admission
+decision for the preview, not a finding that the entire release is unusable.
+
+| Evidence | What it establishes | What remains missing |
+| --- | --- | --- |
+| Dataset revision `85182d8…` | Identity of the acquired release | Original repository revision |
+| L2 `repo_name`, `relative_path`, `uuid` | Named repository and file path in every sampled L2 row | Source commit and license columns |
+| L3 `uuid` and generated representations | Identity within the release; retained exercise content | Repository/path, source commit, license columns and verified L2 mapping |
+| Card's L0 provenance claim | Publisher describes retaining provenance internally | A usable link from these released L3 records to that archive |
+
+The [pinned card](https://huggingface.co/datasets/openbmb/UltraData-Code/blob/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/README.md)
+does not explicitly specify shared UUID semantics, join cardinality or a lookup procedure.
+There are no UUID or exact L2-content/L3-raw-content matches across our 17 retained rows per tier
+(including schema probes). These unrelated small windows cannot disprove a global join. A root
+listing contains no mapping file; we did not scan every shard or recursively prove absence.
+Even a future UUID match must bind the original bytes and repository revision, then license evidence.
+
+The card describes `raw_content` as a generated record before serialization, while the inspected
+values contain implementation-like Python. Do not assume this field is an authenticated original.
+No `copyright`, `license` or `SPDX` marker appears in these 16 raw fields; that limited text scan
+is not license identification. Rows 11273894 and 11273898 have identical raw bytes but different
+UUIDs, reinforcing the need for content/source-family deduplication.
+
+The project Apache declaration does not resolve source eligibility: the same card calls for
+source-repository terms and adds an unchanged-redistribution restriction. Retain this evidence
+and keep raw samples outside Git; this audit makes no legal acceptance decision.
+
+**Next route: qualify a small cohort from retained natural code, then derive checked exercises.**
+The first archived Python Stack-Edu unit contains 354 retained records with repository/path,
+content identities and detected-license metadata, but zero populated `commit_id` values. Thus
+existing stock is more traceable, not automatically qualified for the new intervention.
+As a concrete starting point, ordinal 29 (`stroxler/tdxutil`, `tdxutil/exceptions.py`) exactly matches
+[upstream source at commit `8d21cb9…`](https://github.com/stroxler/tdxutil/blob/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/tdxutil/exceptions.py).
+The full SHA256 and plain-file SHA1 match the retained text/content ID. This identifies a matching
+immutable revision, not necessarily the revision originally crawled. The
+[license notice at that revision](https://github.com/stroxler/tdxutil/blob/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE)
+is saved with its hash. The dataset's MIT label is less specific than the full notice, which also
+contains a restriction on promotional use of the author's name; preserve the exact notice.
+
+Next qualify 16 practical Python source files with this origin/revision/byte/license evidence,
+retaining attribution and rejecting unresolved or vendored origins. Establish source-family
+partitions and benchmark exclusions before synthesis, record each exercise's parent hash and
+generation recipe, and run independent edge-case checks in the existing sandbox. Exception
+handling offers a concrete practical topic, but this single source is neither sufficient supply
+nor an admitted exercise. Count eligible tokens only after the remaining gates pass.
+
 ## Data work to do next
 
-1. Establish source eligibility and provenance for a bounded L3 candidate. The dataset's project
-   license does not override original repository terms. If lineage cannot be established, use
-   an eligible alternative or derive checked exercises from our traceable natural-code stock.
+1. Follow the natural-code qualification route above. The retained L3 preview remains on hold;
+   reopen it when an authoritative mapping or independently verified origin becomes available.
+   Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
+   stock nor passing generated tests alone grants eligibility for the new intervention.
 2. Expand inspection across languages, file roles, lengths, and upstream quality scores. Keep
    implementation, tests, documentation, practical library use, and repair examples visible in the
    inventory. Algorithm puzzles alone do not cover practical coding.
