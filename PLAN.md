@@ -44,13 +44,14 @@ prerequisite for running the already frozen engineering pilot.
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Static preview and 16-row isolated execution check complete; no admission | Resolve source lineage for a bounded candidate, freeze added benchmark exclusions, then expand stratified verification and count accepted tokens |
-| Rental launch | Pilot data/configuration ready; a one-H100 launch is not yet budget-bound | One reviewed launch packet: exact source/input hashes, fresh output path, command, environment, cumulative cost ledger, enforced deadline, stop conditions and backup paths |
+| Rental launch | Private packet built and CPU-validated; six-hour supervisor and cumulative ledger implemented | Transfer the [verified packet](experiments/pilot/rental-readiness.json), install locked dependencies, record external usage, and pass host preflight before training |
 | Next paid experiment | Full 800-step pilot not completed | Run the unchanged 105M-token pilot and one development evaluation, retain receipts/checkpoints, then release rental compute |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
 
-Keep CPU work local and rent when the executable launch packet is ready. Use six single-H100 hours
-as the working reservation for the pilot plus one development pass; it is a projection with margin,
-not an enforced cap. Bind a deadline and account for prior attempts before execution. Start the pilot
+The [executable launch packet](docs/pilot-rental.md) is ready for transport. Keep data work local;
+the next rental can run this pilot after host preflight. The supervisor enforces a shared six-hour
+execution deadline and conservatively reserves six GPU-hours against the 50-hour pilot ceiling.
+Record cumulative external usage before execution; provider billing is separate. Start the pilot
 in a fresh run directory; preserve the 48-step timing experiment as separate evidence. Stop for
 nonfinite loss/gradients, data or checkpoint failures, or the bound budget; inspect before restarting.
 Back up the resulting evidence before the user stops/deletes the rental. Provider billing continues
@@ -147,7 +148,8 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   checks are complete. Full one- and four-rank CPU loader scans consumed the planned tokens without
   repetition and passed fresh-process replay. The [preparation receipt](experiments/pilot/preparation.json)
   records actual source/language exposures and artifact hashes. H100 single-worker recovery is now
-  qualified; budget-bound pilot launch and allocation-specific distributed checks remain open.
+  qualified; the [one-H100 launcher](docs/pilot-rental.md) now binds a shared deadline and cumulative
+  reservations. Host preflight and allocation-specific distributed checks remain open.
 - Five public evaluation inputs and scorer revisions are pinned; development/final task identities
   are materialized. Golden grader checks pass, including all 33 development code canonical solutions
   in an isolated runner and five scripted tool episodes. A pinned Qwen3-0.6B reference completed
@@ -158,7 +160,7 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   A complete, benchmark-filtered rehearsal contains 64 training and 16 validation conversations,
   balanced between text and tools. The final assistant mixture and teacher correctness remain open.
 - The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
-  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 713
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 726
   tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
 - Full-size production base training on actual pilot data now passes fresh-process model/optimizer
   replay at the original CUDA tolerance, with exact loader/RNG state. A resumed Muon allocation
@@ -196,6 +198,11 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   decoding that silently stopped generation after one token, and base generation of undecodable
   reserved assistant IDs. The local-export evaluator and refreshed transfer bundle contain the fixes.
   All 138 new evidence files are verified locally; historical exports/results remain unchanged.
+- The [pilot launch receipt](experiments/pilot/rental-readiness.json) binds a private 152 MiB archive
+  containing source, frozen data, benchmark inputs and offline export/grading assets. Extraction,
+  fresh Git clone, relocated launch preview and all golden graders pass locally, including 33
+  canonical code tasks. The new supervisor has CPU tests for budget, tampering, failure and timeout
+  behavior; its full GPU workflow has not run. No new rental or training was launched.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.

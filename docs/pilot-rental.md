@@ -5,6 +5,10 @@ one complete development partition. The earlier H100 rehearsal and timing runs a
 separately. No final-test evaluation, SFT, architecture change, microbatch-four trial, or automatic
 retry is included. The implementation is `scripts.pilot_rental`.
 
+The [local readiness receipt](../experiments/pilot/rental-readiness.json) records the built archive,
+source commit and validation. Relocation and offline grader checks passed locally; the new complete
+GPU workflow has not run. Use the bundled commit even when documentation on main advances.
+
 ## Local packet preparation
 
 After committing a clean checkout, build the private archive on the retained-data machine:
@@ -56,6 +60,7 @@ Run in a persistent terminal with a complete console log. Replace `ACCOUNTED_EXT
 the cumulative allocated GPU-hours outside this ledger: earlier pilot-related work, setup, transfers,
 and idle time. Do not count ledger attempts twice. Record provider instance ID, rate, start time,
 and storage/network charges beside the ledger. Never assume that unknown earlier usage is zero.
+When changing providers or instances, restore the same cumulative ledger before another attempt.
 
 ```bash
 uv run --no-sync python -m scripts.pilot_rental run .. \
@@ -109,3 +114,15 @@ and verify it against the copied files locally; do not infer backup success from
 command alone. If bandwidth requires keeping fewer checkpoints, preserve the final model/optimizer,
 recovery metadata, all small evidence and every failed artifact needed for diagnosis first, and
 record exactly what was omitted. The user controls rental shutdown after backup verification.
+
+With every attempt stopped and no writer active, produce the inventory on the rental:
+
+```bash
+cd /workspace/pilot-runs
+rg --files --hidden -g '!SHA256SUMS' -0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+sha256sum --check SHA256SUMS
+```
+
+Copy that entire directory through the rental's SSH transport. On the durable local copy, run
+`sha256sum --check SHA256SUMS` again from its root, and require every file to pass before shutdown.
+Retain both verification logs and account for inventory/copy time as provider usage.

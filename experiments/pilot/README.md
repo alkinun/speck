@@ -75,11 +75,13 @@ The existing joint-exclusion stage supports checkpointed resume with the same co
 
 ## Before GPU execution
 
-For the current work order, follow [PLAN.md](../../PLAN.md#immediate-order-of-work). The next H100
-rental should run the full pilot once its one-worker launch and cumulative cost are bound. The
+For the current work order, follow [PLAN.md](../../PLAN.md#immediate-order-of-work). The
+[one-H100 launch packet](../../docs/pilot-rental.md) is built and CPU-validated, with a six-hour
+supervisor and cumulative budget reservations. The next rental must pass host preflight first. The
 measured projection is 2.20 hours for training/validation/checkpoints plus approximately 2.15 hours
 for one development backend pass. Reserve six single-H100 hours including margin; grading, setup,
-transfer and failures still need accounting. This reservation is not an executable billing guard.
+transfer and failures still need accounting. The supervisor bounds execution; it does not stop
+provider billing. [rental-readiness.json](rental-readiness.json) records the archive and local checks.
 Keep the full run in a fresh output directory and preserve the earlier timing experiment separately.
 The main-corpus research and expanded coding protocol do not alter this frozen engineering run.
 
