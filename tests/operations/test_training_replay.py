@@ -1,7 +1,9 @@
+from types import SimpleNamespace
+
 import pytest
 import torch
 
-from speck.operations.training_replay import compare_state
+from speck.operations.training_replay import compare_state, replay
 
 
 def test_complete_optimizer_comparison_rejects_scalar_or_tensor_drift():
@@ -18,3 +20,9 @@ def test_complete_optimizer_comparison_rejects_scalar_or_tensor_drift():
     ):
         with pytest.raises(AssertionError):
             compare_state(state, other, rtol=1e-5, atol=1e-6)
+
+
+@pytest.mark.parametrize("seconds", [float("nan"), float("inf")])
+def test_replay_requires_a_finite_deadline(seconds):
+    with pytest.raises(ValueError, match="positive"):
+        replay(SimpleNamespace(workers=1, seconds=seconds, checkpoint_step=1))

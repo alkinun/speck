@@ -1,3 +1,4 @@
+import os
 import shutil
 
 import pyarrow as pa
@@ -5,7 +6,7 @@ import pyarrow.parquet as pq
 import pytest
 
 from speck.evaluation.capability import selected_rows
-from speck.evaluation.code_runner import run_python
+from speck.evaluation.code_runner import check_sandbox, run_python
 from speck.provenance.io import file_sha256
 
 
@@ -40,3 +41,10 @@ def test_code_execution_refuses_missing_isolation(monkeypatch):
     monkeypatch.setattr(shutil, "which", lambda name: None)
     with pytest.raises(RuntimeError, match="refusing unsandboxed"):
         run_python("raise Exception()", "", "f")
+
+
+def test_code_execution_requires_enforceable_process_limits(monkeypatch):
+    monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/bwrap")
+    monkeypatch.setattr(os, "geteuid", lambda: 0)
+    with pytest.raises(RuntimeError, match="non-root"):
+        check_sandbox()

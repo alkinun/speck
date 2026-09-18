@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import math
 import os
 import shutil
 import socket
@@ -64,7 +65,12 @@ def compare_checkpoints(first, second, step, device):
 
 
 def replay(args):
-    if args.workers < 1 or args.seconds <= 0 or args.checkpoint_step < 1:
+    if (
+        args.workers < 1
+        or not math.isfinite(args.seconds)
+        or args.seconds <= 0
+        or args.checkpoint_step < 1
+    ):
         raise ValueError("workers, seconds, and checkpoint step must be positive")
     if args.allocated_gpus < args.workers:
         raise ValueError("allocated GPU count must include every worker and idle allocated GPU")

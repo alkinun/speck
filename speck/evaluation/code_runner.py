@@ -31,11 +31,18 @@ print(json.dumps(report), flush=True)
 """
 
 
-def run_python(code, test, entry_point, *, seconds=15):
-    """Expose only read-only Python/runtime files; no host home, network, or corpus."""
+def check_sandbox():
     executable = shutil.which("bwrap")
     if executable is None:
         raise RuntimeError("bubblewrap is required; refusing unsandboxed code execution")
+    if os.geteuid() == 0:
+        raise RuntimeError("run code grading as a non-root user so the process-count limit applies")
+    return executable
+
+
+def run_python(code, test, entry_point, *, seconds=15):
+    """Expose only read-only Python/runtime files; no host home, network, or corpus."""
+    executable = check_sandbox()
     if not 0 < seconds <= 60:
         raise ValueError("code timeout must be in (0, 60] seconds")
     with tempfile.TemporaryDirectory(prefix="speck-code-") as temporary:

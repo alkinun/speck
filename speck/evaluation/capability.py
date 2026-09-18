@@ -6,7 +6,7 @@ import json
 import time
 from pathlib import Path
 
-from speck.evaluation.code_runner import run_python
+from speck.evaluation.code_runner import check_sandbox, run_python
 from speck.provenance.io import atomic_json, file_sha256
 
 TASK_FILES = {
@@ -329,6 +329,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if args.limit < 0:
         raise ValueError("limit must be nonnegative")
+    check_sandbox()
     protocol, prepared = (
         json.loads(Path(args.protocol).read_text()),
         json.loads(Path(args.prepared).read_text()),

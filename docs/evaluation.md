@@ -53,7 +53,9 @@ The protocol pins lm-evaluation-harness and EvalPlus source revisions. The `capa
 group installs those exact commits plus IFEval's optional dependencies. Keep this environment separate
 from training (`UV_PROJECT_ENVIRONMENT=.venv-capability uv sync --extra gpu --group capability`).
 IFEval requires NLTK's `punkt_tab` resource; acquire it before an offline run. Bubblewrap (`bwrap`) and
-working Linux user namespaces are required for code execution. There is no unsandboxed fallback.
+working Linux user namespaces and a non-root grading account are required for code execution.
+The process-count limit does not apply to root, so root execution is rejected. There is no
+unsandboxed fallback.
 
 ```bash
 python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
