@@ -147,6 +147,7 @@ def main(argv=None):
         device=device,
         temperature=args.temperature,
         top_k=args.top_k,
+        vocab_size=tokenizer.vocab_size,
     )
 
     if isinstance(tokenizer, ChatTokenizer):

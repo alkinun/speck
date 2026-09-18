@@ -137,6 +137,9 @@ def export(state, output_dir, metadata, provenance, tokenizer_dir=None):
             "bos_token_id": config["bos_token_id"],
             "eos_token_id": config["eos_token_id"],
             "transformers_version": config["transformers_version"],
+            # Base models reserve assistant rows without assigning them base
+            # tokenizer pieces. They must not be emitted during base generation.
+            "suppress_tokens": list(range(tokenizer.vocab_size, config["vocab_size"])),
         }
         (building / "generation_config.json").write_text(
             json.dumps(generation, indent=2, sort_keys=True) + "\n", encoding="utf-8"

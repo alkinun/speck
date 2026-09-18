@@ -63,6 +63,22 @@ def test_generation_clamps_top_k_to_vocabulary_size():
     ) == [3]
 
 
+@pytest.mark.parametrize("temperature", [0.0, 0.5])
+def test_base_generation_cannot_emit_unassigned_assistant_rows(temperature):
+    model = ScriptedModel([7])
+    generated = generate_tokens(
+        model,
+        [1],
+        max_tokens=1,
+        eos_token_id=2,
+        device="cpu",
+        temperature=temperature,
+        top_k=1,
+        vocab_size=6,
+    )
+    assert all(token < 6 for token in generated)
+
+
 @pytest.mark.parametrize(
     "overrides",
     (
@@ -73,6 +89,9 @@ def test_generation_clamps_top_k_to_vocabulary_size():
         {"temperature": float("nan")},
         {"temperature": -1.0},
         {"top_k": 0},
+        {"vocab_size": 0},
+        {"vocab_size": True},
+        {"vocab_size": 2},
     ),
 )
 def test_invalid_generation_fails_before_allocating_cache(overrides):

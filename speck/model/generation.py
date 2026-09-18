@@ -20,7 +20,9 @@ def validate_sampling(max_tokens, temperature, top_k):
 
 
 @torch.inference_mode()
-def generate_tokens(model, tokens, *, max_tokens, eos_token_id, device, temperature=0.0, top_k=50):
+def generate_tokens(
+    model, tokens, *, max_tokens, eos_token_id, device, temperature=0.0, top_k=50, vocab_size=None
+):
     """Return up to max_tokens new IDs, excluding EOS, from a nonempty prompt.
 
     Callers supply an evaluation-mode model on the requested device. Temperature
@@ -28,6 +30,10 @@ def generate_tokens(model, tokens, *, max_tokens, eos_token_id, device, temperat
     """
 
     validate_sampling(max_tokens, temperature, top_k)
+    if vocab_size is not None and (
+        type(vocab_size) is not int or vocab_size < 1 or not 0 <= eos_token_id < vocab_size
+    ):
+        raise ValueError("generation vocabulary must be positive and contain EOS")
     if not tokens:
         raise ValueError("generation requires a nonempty prompt")
     length = len(tokens) + max_tokens
@@ -38,6 +44,10 @@ def generate_tokens(model, tokens, *, max_tokens, eos_token_id, device, temperat
     generated = []
     for _ in range(max_tokens):
         logits = model(inputs, state=state, last_token_only=True)[:, -1]
+        if vocab_size is not None:
+            if vocab_size > logits.size(-1):
+                raise ValueError("generation vocabulary exceeds model output rows")
+            logits = logits[:, :vocab_size]
         if temperature == 0:
             token = logits.argmax(dim=-1)
         else:
