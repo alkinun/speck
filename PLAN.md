@@ -9,6 +9,10 @@ Build an English-first, broadly useful small model with strengths in math, codin
 reliable instruction following. General knowledge, writing, and conversation remain requirements.
 "Good at everything" is an ambition; each capability needs its own evidence.
 
+Coding is a first-release priority. The [coding plan](docs/coding.md) makes checked code exercises
+the first substantive data-comparison candidate, with practical repair and multilingual evaluation.
+OpenBMB is a primary data-research reference; source adoption still requires our own evidence.
+
 The immediate deliverable is a reproducible training baseline. The first flagship release includes
 identified base/assistant checkpoints and a companion [technical report](docs/report.md). The previous
 long-context paper, mixture-selection funnels, tokenizer competition, and architecture sweeps are
@@ -49,6 +53,8 @@ Change one only when a measured failure or capability comparison justifies the w
    text, validate candidate sources and eligible supply, and freeze one affordable data comparison.
    Quality labels, mixture weights, repetition, and staged use of refined material need evidence;
    correct packing and upstream dataset branding do not supply it.
+   Prioritize the [code-data comparison](docs/coding.md#first-comparison-to-prepare), keeping general
+   coverage fixed. Ultra-FineWeb-L3 remains a candidate, not an established Cosmopedia replacement.
 5. **Develop useful behavior.** Once the base learns reliably, prepare a costed SFT baseline with
    verified math/code solutions, ordinary assistance, and structured tool interactions. Reuse the
    separate post-training work where compatible. Audit source/answer quality, measure direct versus

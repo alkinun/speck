@@ -3,6 +3,11 @@
 Use the capability table in [PLAN.md](../PLAN.md) as the reporting outline. Measure math, coding,
 tools, reliability, and broad usefulness separately; keep cost alongside quality.
 
+Coding is a first-release priority. The [coding evaluation roadmap](coding.md#evidence-for-a-coding-claim)
+adds Python breadth, multilingual checks, and practical repair to prepare after the engineering
+pilot. Those additions need their own frozen protocol and training exclusions; they are not yet
+implemented, and the pilot's 33 development code tasks do not establish broad coding strength.
+
 ## Available checks
 
 ```bash

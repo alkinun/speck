@@ -66,6 +66,10 @@ keep FineMath, prepare a reversible 8,563-document topic-directory exclusion can
 prioritize consistency checks on English L3 Q&A before any synthetic-source replacement.
 No blanket numeric-deduplication rule or new main mixture has been adopted.
 
+The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
+UltraData-Code preview establishes schema and serialization questions, not training eligibility
+or correctness. Preserve practical and multilingual code coverage while preparing that candidate.
+
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger peS2o v2 bank once; its v1 predecessor
 is not additional supply. Stack-Edu below is the archived acquisition receipt, before full exclusion.

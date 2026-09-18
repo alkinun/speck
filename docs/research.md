@@ -3,6 +3,10 @@
 Reviewed 2026-09-18 using primary papers and official releases. These are lessons and comparisons,
 not a promise to reproduce another lab's scores or compute budget. The decisions live in [PLAN.md](../PLAN.md).
 
+OpenBMB is a primary ongoing reference for our data work. The [coding plan](coding.md) records the
+specific UltraData-Code evidence, bounded local inspection, first comparison to prepare, and review
+cadence. This prioritizes one testable data intervention while preserving independent baselines.
+
 | Source | What it supports | Implication for Speck |
 | --- | --- | --- |
 | [Qwen3 report](https://arxiv.org/abs/2505.09388), sections 3 and 4.5–4.7 | Broad pretraining precedes capability-focused data and post-training. Small models use response and on-policy distillation. The reported 8B comparison favors distillation over direct RL in its tested setting. | Preserve general coverage while improving math/code. Start with supervised behavior and verified teacher examples; do not assume the reported distillation cost advantage transfers to 1.2B or our teachers. |

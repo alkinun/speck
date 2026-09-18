@@ -1,0 +1,209 @@
+{
+  "artifacts": {
+    "UltraData-Code-L2-sample.json": {
+      "bytes": 54819,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L2-sample.json",
+      "sha256": "765080034190beaba49ebb9f490396ec409576234e19339753e1208d946b6e28"
+    },
+    "UltraData-Code-L2-schema.json": {
+      "bytes": 2387,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L2-schema.json",
+      "sha256": "a61a8e6e2a0d6f837e7b5a9c417d33ec326109744948abf3feacc1ce2c971f7d"
+    },
+    "UltraData-Code-L3-sample.json": {
+      "bytes": 336272,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L3-sample.json",
+      "sha256": "16f1036e2905bfeaaf3106bb33d645875af1922a7b3a2868d7fc0fd91c48820b"
+    },
+    "UltraData-Code-L3-schema.json": {
+      "bytes": 11736,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L3-schema.json",
+      "sha256": "564a77720e66a63de182b559b803255d2a9b782c107dce89a26fcc891a1123cc"
+    },
+    "analyze.py": {
+      "bytes": 2473,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/analyze.py",
+      "sha256": "38c6639fa878f565bb97079455b31b1f13a75f13813d86d9e2bd42b89b24aacd"
+    },
+    "dataset-card": {
+      "bytes": 14951,
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/UltraData-Code-README.md",
+      "sha256": "2dd14e3b1dd88637d24e006a8a19f68e68c88e286e91aabd3511cedf068aeea4"
+    },
+    "receipt.json": {
+      "bytes": 1933,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/receipt.json",
+      "sha256": "88ace955c098d2d7da5d954b7921bc0fead82a0fa8c886c111123ac1df1d8373"
+    },
+    "samples.jsonl": {
+      "bytes": 390490,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/samples.jsonl",
+      "sha256": "d5832d722f47616373a02fc36668804b4bcce37e94b3a48ced9c341d5570065e"
+    },
+    "static-summary.json": {
+      "bytes": 2142,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/static-summary.json",
+      "sha256": "56fb67bcd690718de163b5fcf0028669711077a4b222ed84b2f28d3e9b6e7f7e"
+    }
+  },
+  "corpus_code_executed": false,
+  "date": "2026-09-18",
+  "gpu_jobs_launched": false,
+  "pilot_changed": false,
+  "python_version_for_syntax_check": "3.10.20",
+  "repository": "openbmb/UltraData-Code",
+  "requests": [
+    {
+      "bytes": 2387,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L2-schema.json",
+      "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+      "sha256": "a61a8e6e2a0d6f837e7b5a9c417d33ec326109744948abf3feacc1ce2c971f7d",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=openbmb%2FUltraData-Code&config=UltraData-Code-L2&split=py&offset=0&length=1"
+    },
+    {
+      "bytes": 54819,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L2-sample.json",
+      "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+      "sha256": "765080034190beaba49ebb9f490396ec409576234e19339753e1208d946b6e28",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=openbmb%2FUltraData-Code&config=UltraData-Code-L2&split=py&offset=46296163&length=16"
+    },
+    {
+      "bytes": 11736,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L3-schema.json",
+      "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+      "sha256": "564a77720e66a63de182b559b803255d2a9b782c107dce89a26fcc891a1123cc",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=openbmb%2FUltraData-Code&config=UltraData-Code-L3&split=py&offset=0&length=1"
+    },
+    {
+      "bytes": 336272,
+      "path": "/mnt/speck-data/speck/openbmb-code-20260918/UltraData-Code-L3-sample.json",
+      "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+      "sha256": "16f1036e2905bfeaaf3106bb33d645875af1922a7b3a2868d7fc0fd91c48820b",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=openbmb%2FUltraData-Code&config=UltraData-Code-L3&split=py&offset=11273888&length=16"
+    }
+  ],
+  "response_bytes": 405214,
+  "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+  "sampling": {
+    "additional_schema_rows": 2,
+    "head_excerpt_reviewed_sample_rows": [
+      46296163,
+      46296164,
+      46296165,
+      11273888,
+      11273889,
+      11273890
+    ],
+    "method": "One seeded 16-row Python window per tier; not representative quality measurement.",
+    "population_quality_estimate": false,
+    "sample_rows": 32,
+    "seed": "20260918:<config>"
+  },
+  "static_summary": {
+    "corpus_code_executed": false,
+    "scope": "Two clustered 16-row Python samples, not population quality or length estimates.",
+    "tiers": {
+      "L2": {
+        "columns": [
+          "algo_rel_score",
+          "category",
+          "content",
+          "quality_score",
+          "relative_path",
+          "repo_name",
+          "uuid"
+        ],
+        "documents": 16,
+        "explicit_vendor_path_hint_rows": [
+          46296163,
+          46296164,
+          46296166,
+          46296169,
+          46296171
+        ],
+        "field_tokens_with_bos_eos": {
+          "content": {
+            "max": 2907,
+            "median": 704.5,
+            "min": 241,
+            "over_4096": 0,
+            "sum": 15289
+          }
+        },
+        "first_row_idx": 46296163
+      },
+      "L3": {
+        "columns": [
+          "analysis",
+          "content",
+          "content_format",
+          "full_content",
+          "full_content_format",
+          "raw_content",
+          "solution",
+          "task",
+          "test",
+          "uuid"
+        ],
+        "documents": 16,
+        "field_tokens_with_bos_eos": {
+          "analysis": {
+            "max": 3567,
+            "median": 286.5,
+            "min": 185,
+            "over_4096": 0,
+            "sum": 8301
+          },
+          "content": {
+            "max": 2262,
+            "median": 784.5,
+            "min": 354,
+            "over_4096": 0,
+            "sum": 15685
+          },
+          "full_content": {
+            "max": 5381,
+            "median": 1688.0,
+            "min": 782,
+            "over_4096": 1,
+            "sum": 34274
+          },
+          "solution": {
+            "max": 1770,
+            "median": 563.0,
+            "min": 162,
+            "over_4096": 0,
+            "sum": 11367
+          },
+          "test": {
+            "max": 1443,
+            "median": 609.5,
+            "min": 202,
+            "over_4096": 0,
+            "sum": 10307
+          }
+        },
+        "first_row_idx": 11273888,
+        "syntax_only": {
+          "solution": {
+            "failed": [],
+            "passed": 16
+          },
+          "test": {
+            "failed": [],
+            "passed": 16
+          }
+        }
+      }
+    },
+    "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "status": "bounded_schema_and_static_inspection_complete",
+  "training_authority": false,
+  "unresolved": [
+    "Original source commit/license identity and verified L3 lineage join.",
+    "Representative role/language/length coverage.",
+    "Execution correctness and independent test quality.",
+    "Joint deduplication, benchmark exclusion and eligible token supply."
+  ]
+}

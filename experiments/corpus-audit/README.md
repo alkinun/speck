@@ -180,3 +180,12 @@ schema are `uid`, `content`, and `style`; there is no separate original URL/sour
 Establish lineage/overlap as far as possible, reject editing artifacts and inconsistent answers,
 and measure surviving tokens before proposing a substitution for any of the 10% synthetic share.
 Main mixture weights and new-source admission remain undecided.
+
+## Coding priority and bounded preview — 2026-09-18
+
+The [coding plan](../../docs/coding.md) prioritizes checked exercises for our first substantive
+data comparison. [code-preview.json](code-preview.json) binds a separate UltraData-Code inspection:
+16 Python rows per tier, two schema probes, and 405,214 response bytes at a checked revision.
+Raw records remain outside Git. Static tokenization and syntax checks identify preparation needs;
+no sampled code was executed, no new source was admitted, and no GPU experiment was launched.
+The plan separates publisher results, local observations, and proposed evaluation work.
