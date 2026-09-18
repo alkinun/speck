@@ -36,20 +36,21 @@ Change one only when a measured failure or capability comparison justifies the w
 
 ## Immediate order of work
 
-The single-H100 rehearsal and planning measurements are complete. Local data preparation can
-continue while the next pilot launch is prepared; finishing the main-corpus recipe is not a
-prerequisite for running the already frozen engineering pilot.
+The single-H100 rehearsal and planning measurements are complete. The frozen engineering pilot
+is now running on the migrated H100; its [execution receipt](experiments/pilot/h100-run.json) records
+the launch and grading arrangement. Main-corpus research remains a separate follow-up.
 
 | Work | Current state | Concrete next deliverable |
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Static preview and 16-row isolated execution check complete; no admission | Resolve source lineage for a bounded candidate, freeze added benchmark exclusions, then expand stratified verification and count accepted tokens |
-| Rental launch | Private packet built and CPU-validated; six-hour supervisor and cumulative ledger implemented | Transfer the [verified packet](experiments/pilot/rental-readiness.json), install locked dependencies, record external usage, and pass host preflight before training |
-| Next paid experiment | Full 800-step pilot not completed | Run the unchanged 105M-token pilot and one development evaluation, retain receipts/checkpoints, then release rental compute |
+| Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
+| Current paid experiment | Full 800-step pilot running; completion and capability results pending | Finish training/export/development generation, grade code in the local sandbox, verify backups, then release rental compute |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
 
-The [executable launch packet](docs/pilot-rental.md) is ready for transport. Keep data work local;
-the next rental can run this pilot after host preflight. The supervisor enforces a shared six-hour
+The [executable launch packet](docs/pilot-rental.md) is running under the supervisor. The migrated
+container blocks user namespaces, so generated code will be graded locally after verified transfer.
+The supervisor enforces a shared six-hour
 execution deadline and conservatively reserves six GPU-hours against the 50-hour pilot ceiling.
 Record cumulative external usage before execution; provider billing is separate. Start the pilot
 in a fresh run directory; preserve the 48-step timing experiment as separate evidence. Stop for
@@ -202,7 +203,8 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   containing source, frozen data, benchmark inputs and offline export/grading assets. Extraction,
   fresh Git clone, relocated launch preview and all golden graders pass locally, including 33
   canonical code tasks. The new supervisor has CPU tests for budget, tampering, failure and timeout
-  behavior; its full GPU workflow has not run. No new rental or training was launched.
+  behavior. The full GPU workflow is now running under a shared six-hour deadline; its
+  [execution receipt](experiments/pilot/h100-run.json) distinguishes launch evidence from final results.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.

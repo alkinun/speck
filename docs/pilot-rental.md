@@ -6,8 +6,10 @@ separately. No final-test evaluation, SFT, architecture change, microbatch-four 
 retry is included. The implementation is `scripts.pilot_rental`.
 
 The [local readiness receipt](../experiments/pilot/rental-readiness.json) records the built archive,
-source commit and validation. Relocation and offline grader checks passed locally; the new complete
-GPU workflow has not run. Use the bundled commit even when documentation on main advances.
+source commit and validation. Relocation and offline grader checks passed locally. The complete
+GPU workflow is now running; the [execution receipt](../experiments/pilot/h100-run.json) records its
+updated implementation commit and launch provenance. Use that bundled commit even when
+documentation on main advances.
 
 The migrated Runpod container denies user-namespace creation. For that host, pass
 `--defer-code-grading` to both `check` and `run`: model generation and non-code scoring stay on the

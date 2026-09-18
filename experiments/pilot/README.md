@@ -1,7 +1,8 @@
 # First real-data pilot
 
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
-The full 800-step pilot has not run. A separate H100 timing experiment completed 48 production
+The full 800-step pilot is running; export, capability results and final backup remain pending.
+The [execution receipt](h100-run.json) records its launch. A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
 and timing check, not a model-quality result or an architecture comparison.
 
@@ -77,7 +78,7 @@ The existing joint-exclusion stage supports checkpointed resume with the same co
 
 For the current work order, follow [PLAN.md](../../PLAN.md#immediate-order-of-work). The
 [one-H100 launch packet](../../docs/pilot-rental.md) is built and CPU-validated, with a six-hour
-supervisor and cumulative budget reservations. The next rental must pass host preflight first. The
+supervisor and cumulative budget reservations. The active H100 passed host preflight. The
 measured projection is 2.20 hours for training/validation/checkpoints plus approximately 2.15 hours
 for one development backend pass. Reserve six single-H100 hours including margin; grading, setup,
 transfer and failures still need accounting. The supervisor bounds execution; it does not stop
