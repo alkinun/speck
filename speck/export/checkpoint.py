@@ -6,7 +6,7 @@ import os
 import shutil
 from pathlib import Path
 
-from huggingface_hub import snapshot_download
+from huggingface_hub import constants, snapshot_download
 from safetensors.torch import save_file
 
 from speck.export.pretrained import checkpoint_tokenizer_fingerprint
@@ -89,19 +89,24 @@ def checkpoint_tokenizer(metadata, directory=None):
     return tokenizer
 
 
+def template_snapshot():
+    return Path(
+        snapshot_download(
+            repo_id=TEMPLATE_REPO,
+            revision=TEMPLATE_REVISION,
+            allow_patterns=list(TEMPLATE_FILES),
+            local_files_only=constants.HF_HUB_OFFLINE,
+        )
+    )
+
+
 def export(state, output_dir, metadata, provenance, tokenizer_dir=None):
     tokenizer = checkpoint_tokenizer(metadata, tokenizer_dir)
     building = output_dir.with_name(output_dir.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
     building.mkdir(parents=True)
     try:
-        template = Path(
-            snapshot_download(
-                repo_id=TEMPLATE_REPO,
-                revision=TEMPLATE_REVISION,
-                allow_patterns=list(TEMPLATE_FILES),
-            )
-        )
+        template = template_snapshot()
         for filename in TEMPLATE_FILES:
             shutil.copy2(template / filename, building / filename)
         shutil.copy2(tokenizer.model_path, building / "tokenizer.model")
