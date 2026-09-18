@@ -47,3 +47,13 @@ The earlier OOM, nondeterministic-gradient failure, and cold-backend RNG failure
 Synthetic step throughput is about 1,937 tokens/s on that machine; it is not corpus throughput or
 a GH200 projection. The four supervised attempts consumed 0.585 local allocated GPU-hours;
 standalone kernel/tests are outside that ledger. Repeat qualification on the actual allocation.
+
+## H100 rental result
+
+The [single-H100 receipt](h100-result.json) records passing production-data base and assistant
+fresh-process recovery, numerical/kernel checks, native CUDA generation, and CPU export parity.
+The 131,072-token batch also completed a four-step timing probe with 32 accumulated microbatches.
+Its approximately 13.7K tokens/s is a short one-worker measurement, not sustained throughput or a
+GH200/distributed projection. The receipt preserves failures, corrected verification, source commits,
+all-in cost boundaries, local evidence hashes, and the latest portable bundle. Use the
+[rental runbook](../../docs/gh200.md) for execution; actual allocation qualification remains open.

@@ -106,7 +106,7 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   A complete, benchmark-filtered rehearsal contains 64 training and 16 validation conversations,
   balanced between text and tools. The final assistant mixture and teacher correctness remain open.
 - The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
-  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 688
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 692
   tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
 - Full-size production base training on actual pilot data now passes fresh-process model/optimizer
   replay at the original CUDA tolerance, with exact loader/RNG state. A resumed Muon allocation
@@ -117,15 +117,26 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   warmed before SFT restore. The [readiness receipt](experiments/qualification/readiness.json)
   records failures, source identities, checks, and the portable transfer archive.
 - The [GH200 rental runbook](docs/gh200.md) has a verified portable bundle, locked ARM64 dependency
-  resolution, relocated inputs, and a bounded loader/kernel/base/SFT/export sequence. No machine has
-  been rented and no GH200 result is claimed. Installation and target-hardware execution remain open.
+  resolution, relocated inputs, and a bounded loader/kernel/base/SFT/export sequence. The rebuilt
+  bundle includes the phase-specific assistant exporter and stricter recovery-counter checks.
+- A rented [single H100 SXM passed the full rehearsal](experiments/qualification/h100-result.json):
+  loader/replay, KDA numerics/gradients/recurrence, full-size base/SFT fresh-process recovery, native
+  CUDA generation, and CPU native/Transformers export parity. Each recovery check compared 321 model
+  and 588 optimizer tensors, with exact RNG/loader state. Additional metadata checks pass too.
+  A separate four-step probe at the 131,072-token pilot batch (32 accumulated 4K microbatches) completed
+  524,288 tokens, averaging 13,724 tokens/s over its last three logged steps with 19.3 GiB peak allocated
+  GPU memory. This is a short timing diagnostic, not sustained throughput or model-quality evidence.
+  The original supplemental verifier error and its corrected check are retained. All 113 evidence
+  files are verified locally; ARM64 GH200 and four-worker execution remain unqualified.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.
 
-**Next:** run the prepared one-GH200 rental rehearsal when SSH access is available. On the eventual
-allocation, qualify four-worker execution and scheduler recovery, measure the actual pilot batch,
-then run the bounded pilot. Expand and jointly exclude main-corpus supply before choosing its token
+**Next:** on the eventual allocation, repeat the rehearsal on ARM64 GH200, qualify four-worker
+execution and scheduler recovery, and measure its pilot batch before the bounded pilot. If continuing
+on rented H100 hardware, first bind its worker count, full pilot evaluation and all-in cost to an
+explicit execution plan; the short rehearsal did not launch that pilot. Expand and jointly exclude
+main-corpus supply before choosing its token
 horizon: the retained code-language mixture has a pre-exclusion single-pass ceiling of about 2.76B
 total mixture tokens, and post-exclusion eligibility will be lower. Main training scale and
 model-quality claims require the pilot's measurements.

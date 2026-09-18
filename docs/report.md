@@ -10,6 +10,10 @@ The [pre-rental receipt](../experiments/qualification/readiness.json) adds four-
 and assistant recovery checks on real data, executed golden graders, a small public-model integration
 run, and a finite tool-aware assistant rehearsal.
 These are reproducibility checks; report them separately from any eventual Speck capability results.
+The [single-H100 receipt](../experiments/qualification/h100-result.json) adds passing full-size
+base/SFT recovery, native CUDA generation, CPU native/Transformers export parity, and a four-step
+timing probe at the pilot batch. It retains the supplemental verifier failure and corrected check.
+These measurements do not qualify GH200/ARM64, distributed scaling, or sustained training quality.
 
 Working title: **Speck: Developing a 1.2B Hybrid Assistant Under a Fixed Compute Budget**.
 

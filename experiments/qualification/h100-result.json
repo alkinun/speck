@@ -1,0 +1,261 @@
+{
+  "artifacts": {
+    "evidence_archive": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/h100-evidence.tar.gz",
+      "sha256": "1cc36a9beff668c7432e553937d522425a1e173b165017dc2a55af46bc54a414"
+    },
+    "metadata_verification": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/metadata-verification.json",
+      "sha256": "0f941600584f0d7578ef3637907bf22ca966f840c5700964926c1f71370830ef"
+    },
+    "rehearsal": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/attempt-1/result.json",
+      "sha256": "54a2b86b6352aa21d4dc596011237fa26d6e605a9ecbe6c8242e731867fb8682"
+    },
+    "rental_record": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/rental.json",
+      "sha256": "ba23d11e7bbe1043b8537c588d7659c7e992d1d30aa9604c84e0bd533a3c3f8c"
+    },
+    "root": "/mnt/speck-data/speck/h100-rehearsal-20260918",
+    "verified_evidence_files": 113
+  },
+  "checks": {
+    "export": {
+      "base": {
+        "native_generation": "pass",
+        "native_generation_device": "H100 CUDA",
+        "parity": {
+          "compute_dtype": "bfloat16",
+          "format": "speck_export_parity",
+          "format_version": 1,
+          "generation_smoke_new_tokens": 2,
+          "incremental_logits_max_absolute_error": 0.0,
+          "logits_max_absolute_error": 0.0,
+          "parameters": 1195884576,
+          "passed": true,
+          "tokens_sha256": "e36555b6b258ffeb818451285a0968f5d139c60e305e247538ebb7d7ce5dfcf2"
+        },
+        "parity_device": "CPU",
+        "tokenizer_parity": {
+          "base_fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+          "chat_cases": 0,
+          "chat_format_version": null,
+          "format": "speck_tokenizer_export_parity",
+          "format_version": 1,
+          "passed": true,
+          "text_cases": 4
+        }
+      },
+      "sft": {
+        "native_generation": "pass",
+        "native_generation_device": "H100 CUDA",
+        "parity": {
+          "compute_dtype": "bfloat16",
+          "format": "speck_export_parity",
+          "format_version": 1,
+          "generation_smoke_new_tokens": 2,
+          "incremental_logits_max_absolute_error": 0.0,
+          "logits_max_absolute_error": 0.0,
+          "parameters": 1195884576,
+          "passed": true,
+          "tokens_sha256": "e36555b6b258ffeb818451285a0968f5d139c60e305e247538ebb7d7ce5dfcf2"
+        },
+        "parity_device": "CPU",
+        "tokenizer_parity": {
+          "base_fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+          "chat_cases": 2,
+          "chat_format_version": 2,
+          "format": "speck_tokenizer_export_parity",
+          "format_version": 1,
+          "passed": true,
+          "text_cases": 4
+        }
+      }
+    },
+    "kda": {
+      "gradients": "pass",
+      "lengths": [
+        64,
+        256,
+        4096
+      ],
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/attempt-1/kernels/result.json",
+        "sha256": "1f50596d98553eab2f41a650cd25b738ff675a7d54a06dee5da54ea4b828a0dd"
+      },
+      "recurrent_decode": "pass",
+      "repeatability": "exact",
+      "status": "pass"
+    },
+    "loader": {
+      "batches": 64,
+      "fresh_process_replay": "pass",
+      "scan": "pass"
+    },
+    "production_recovery": {
+      "base": {
+        "comparison": {
+          "rng_and_loader": "exact",
+          "tensor_counts": {
+            "model": 321,
+            "optimizer": 588
+          },
+          "tolerance": {
+            "atol": 1e-06,
+            "rtol": 1e-05
+          }
+        },
+        "receipt": {
+          "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/attempt-1/base/result.json",
+          "sha256": "2314f21a906245b0f4758aca1b4a0625a6f8ed5f7ef579354865a299994d5a72"
+        },
+        "status": "pass",
+        "steps": 4,
+        "wall_seconds": 291.0606995690614
+      },
+      "sft": {
+        "comparison": {
+          "rng_and_loader": "exact",
+          "tensor_counts": {
+            "model": 321,
+            "optimizer": 588
+          },
+          "tolerance": {
+            "atol": 1e-06,
+            "rtol": 1e-05
+          }
+        },
+        "receipt": {
+          "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/attempt-1/sft/result.json",
+          "sha256": "9ecc2322b77191c15801a84fd513a6778ab804f0fd27650ae2088164f8471a17"
+        },
+        "status": "pass",
+        "steps": 4,
+        "wall_seconds": 148.36337454989552
+      }
+    }
+  },
+  "cost": {
+    "advertised_gpu_usd_per_hour": 3.49,
+    "boundary": "Execution hours exclude setup, transfers, idle time and independent verification. Observed window starts after instance creation and ends before any user termination; neither estimate is a final bill. Storage, tax, network and later idle charges are excluded. User controls termination.",
+    "combined_execution_gpu_hours": 0.22448831603707123,
+    "execution_gpu_usd_at_advertised_rate": 0.7834642229693787,
+    "observed_inventory_to_evidence_capture_seconds": 1419.625618,
+    "observed_window_gpu_usd_at_advertised_rate": 1.3762481685611112,
+    "pilot_batch_gpu_hours": 0.018099557026806806,
+    "rehearsal_gpu_hours": 0.20638875901026443,
+    "rehearsal_seconds": 742.999532436952
+  },
+  "date": "2026-09-18",
+  "engineering_only": true,
+  "environment": {
+    "commit": "502fc18d40215d2ea6817a7ee5804fca201593ae",
+    "cuda": "12.8",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "machine": "x86_64",
+    "packages": {
+      "flash-linear-attention": "0.5.0",
+      "liger-kernel": "0.8.2",
+      "numpy": "2.2.6",
+      "pyarrow": "25.0.1",
+      "triton": "3.5.1"
+    },
+    "python": "3.10.20 (main, Jul 23 2026, 14:44:19) [Clang 22.1.3 ]",
+    "torch": "2.9.1+cu128",
+    "vram_bytes": 85017493504
+  },
+  "format": "speck_h100_rehearsal_summary",
+  "format_version": 1,
+  "issues_retained": [
+    "Resizing the initial 50GB volume to 200GB restarted the pod and interrupted initial setup/transfer.",
+    "Preflight review found SFT incorrectly dispatched to the base-only exporter; fixed before the hardware run, with regression coverage.",
+    "The supplemental timing-probe verifier requested trained_tokens instead of global_tokens. Training exited successfully; original failed verification and driver remain in evidence, and a separate verification passes without repeating training.",
+    "The same audit strengthened permanent replay checks to require phase-specific production counters and data manifest identity; both H100 metadata pairs pass these additional checks."
+  ],
+  "pilot_batch": {
+    "accumulation": 32,
+    "batch_tokens": 131072,
+    "boundary": "Random initialization; shortened four-step schedule and validation. Timing excludes evaluation/checkpoint work in the logged step rates. No sustained-throughput, long-run stability, quality, GH200, or distributed-scaling claim.",
+    "configuration": {
+      "data": {
+        "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/pilot-batch/experiment/data.json",
+        "sha256": "f3fa314e72013ab99ba344734a3ad1b73e6aa3da802c34738d2f5336f686fa6a"
+      },
+      "model": {
+        "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/pilot-batch/experiment/model.json",
+        "sha256": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6"
+      },
+      "tokenizer": {
+        "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/pilot-batch/experiment/tokenizer.json",
+        "sha256": "e051b0543f5314d172e71238f5fdef282dbc6af4afbb1d14d3c20bbfa73fb374"
+      },
+      "train": {
+        "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/pilot-batch/experiment/train.json",
+        "sha256": "18ad3c0465e0e2695b9ed9f8c8b5bef8c0cb857f6c70ebc839e87364b24c02a8"
+      }
+    },
+    "device_batch_size": 1,
+    "global_tokens": 524288,
+    "logged_tokens_per_second": [
+      13384,
+      13706,
+      13734,
+      13732
+    ],
+    "mean_last_three_logged_tokens_per_second": 13724,
+    "peak_allocated_bytes": 20721609728,
+    "peak_allocated_gib": 19.298502922058105,
+    "sequence_length": 4096,
+    "source_result": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/pilot-batch/result.json",
+      "sha256": "94349a73f7d10b04fe519b57a1f07310c195cbeb8ed69f06fd72d9071087e69f"
+    },
+    "status": "pass_after_verifier_correction",
+    "steps": 4,
+    "verification": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/evidence/h100-results/pilot-batch/verification.json",
+      "sha256": "48b610afab4d09dc15cd8edfe8e34264fd5b1f81c98fcc6f908c80539e7c1719"
+    },
+    "wall_seconds": 65.1584052965045
+  },
+  "portable_checks": {
+    "archive": "verified",
+    "deselected": 10,
+    "format": "pass",
+    "lint": "pass",
+    "passed": 692,
+    "skipped": 10
+  },
+  "remaining": [
+    "Actual ARM64 GH200 installation, kernels, restart and hardware-specific performance",
+    "Four-worker collectives, recovery and scheduler interruption/requeue",
+    "Sustained training, pilot evaluation and the complete bounded 105M-token pilot",
+    "Main-corpus supply, teacher quality, final assistant recipe and release-quality model evaluations"
+  ],
+  "source": {
+    "hardware_execution_commit": "502fc18d40215d2ea6817a7ee5804fca201593ae",
+    "note": "The later change strengthens phase-specific metadata checks; it does not change model or training updates. Applied successfully to the retained H100 metadata.",
+    "subsequent_metadata_verifier_commit": "9c7b732ebc0236eddb20259aa891f900ce45d6cb"
+  },
+  "status": "pass",
+  "transfer": {
+    "archive": "/mnt/speck-data/speck/h100-rehearsal-20260918/gh200-transfer.tar.gz",
+    "archive_verification": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/final-bundle-verification.json",
+      "sha256": "70070b74c77b19e37495792e932ba81e31fd614cf48e4ed9c21e0e73bd3527c0"
+    },
+    "branch": "codex/h100-rehearsal",
+    "bytes": 152443768,
+    "commit": "9c7b732ebc0236eddb20259aa891f900ce45d6cb",
+    "note": "Supersedes the original pre-rental bundle. Contains the exporter fix and strengthened counter verifier; data/tokenizer/assistant payloads are unchanged.",
+    "receipt": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/gh200-transfer.transfer.json",
+      "sha256": "f3e39387e248faf915175fa0d804df285c4ea5a682381162c5bc531d7aac719a"
+    },
+    "relocated_bind": {
+      "path": "/mnt/speck-data/speck/h100-rehearsal-20260918/final-bundle-bind.json",
+      "sha256": "085ae4bf2230c86d71c12e2bb1a2aaadf9a99c6ee3394f0e430a5de628f7fb28"
+    },
+    "sha256": "13aba3f705aa8bdac13be5ec5861a4b8b64bb9534d76227f08ec8fea77ef3204"
+  }
+}
