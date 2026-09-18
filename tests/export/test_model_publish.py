@@ -236,7 +236,7 @@ def test_current_transformers_parity_writes_attestation(tmp_path, cache_fault):
         source = wrapper.read_text()
         source = source.replace(
             "        return CausalLMOutputWithPast(",
-            f"        if use_cache and position > 0 and logits.dtype == torch.{cache_fault}:\n"
+            f"        if use_cache and position > 0 and self.dtype == torch.{cache_fault}:\n"
             "            logits = logits + 1\n"
             "        return CausalLMOutputWithPast(",
         )
