@@ -1,0 +1,117 @@
+{
+  "allocated_gpus": 1,
+  "artifacts": {
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/environment.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/environment.json",
+      "sha256": "dc9b09429ee188f4388a78f0a51f686b3960092ad901d0d86d281c7abc052aba"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/data.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/data.json",
+      "sha256": "cfbd0007124d7753763e6925d916e8adb210a66ecb245a0878ff05f7ced8c454"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/model.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/model.json",
+      "sha256": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/tokenizer.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/tokenizer.json",
+      "sha256": "58dc12910c143d94bcf8944df7a8549f892faea48738ef15f26c7223b50220ec"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/train.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/experiment/train.json",
+      "sha256": "63ee0a82a210b0cfd8f1a0a50d6b34c7a624e44f84f29f5384641089ede7d8fd"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/grader-check/result.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/grader-check/result.json",
+      "sha256": "17651d91e6da75a57b0f90cf8305929f72e16fa0295d037b9e8c95e9e3eb717e"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/launch.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/launch.json",
+      "sha256": "c9d3d47203ec4cde25a444f7a6d787134ba0ba433b78ef74d2f31db5a0b5a207"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/logs/graders/processes.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/logs/graders/processes.json",
+      "sha256": "16e7945df06cef73198e11b238ffc8b85f07a4b80a1fc77018519d8aa45d1054"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/logs/graders/worker.log": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/logs/graders/worker.log",
+      "sha256": "59169afab62c524e26c3dedb488ed042ae02a58073cf753aae32110c7de46bfe"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/logs/preflight/processes.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/logs/preflight/processes.json",
+      "sha256": "1cd0edf0e746d1967e1c6fa8e5d85acc56365c9f5993956bb289d9a7b42f2b13"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/logs/preflight/worker.log": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/logs/preflight/worker.log",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/phases.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/phases.json",
+      "sha256": "3aecef76eb374e99715ab5c98ef1c5759c5c38778fa95366d850520cd42c4406"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/prepared.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/prepared.json",
+      "sha256": "d8bbed10ee7bbbacd81cbc55b4da6bd5c6a4132f41a11cc3ec35fd3c8db77ecd"
+    },
+    "80ffc9d0f93d4dc8a71adf4c616cbb24/result.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/80ffc9d0f93d4dc8a71adf4c616cbb24/result.json",
+      "sha256": "6711ba34a8999e88217c3975e7ae99952859ba1fbaac35852e9b772250915163"
+    },
+    "external-accounting.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/external-accounting.json",
+      "sha256": "7328d2a7b508003f6944538210a01b92a184c9c0a51b347f5a6e8b8cf5ef24d9"
+    },
+    "ledger.json": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/ledger.json",
+      "sha256": "c264767cbd03b001fab9cf9d95ad455210efa6d74e7722aacac8fa86ba9bc938"
+    },
+    "lock": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/launch-evidence/lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "attempt_id": "80ffc9d0f93d4dc8a71adf4c616cbb24",
+  "backup": "Live verified copy of durable checkpoints; final verification pending.",
+  "code_grading": "Deferred to local isolated runner because provider blocks namespaces; same frozen tasks and tests.",
+  "conservative_prior_reservation_gpu_hours": 21,
+  "date": "2026-09-18",
+  "environment": {
+    "cuda": "12.8",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "machine": "x86_64",
+    "nvidia_smi": "Fri Sep 18 17:53:30 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA H100 80GB HBM3          On  |   00000000:19:00.0 Off |                    0 |\n| N/A   36C    P0             79W /  700W |     527MiB /  81559MiB |      3%      Default |\n|                                         |                        |             Disabled |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+    "packages": {
+      "evalplus": "0.4.0.dev44",
+      "flash-linear-attention": "0.5.0",
+      "liger-kernel": "0.8.2",
+      "lm_eval": "0.4.13.dev0",
+      "torch": "2.9.1+cu128",
+      "transformers": "5.1.0",
+      "triton": "3.5.1"
+    },
+    "python": "3.10.18 (main, Jun  4 2025, 08:56:00) [GCC 13.3.0]",
+    "vram_bytes": 85017493504
+  },
+  "frozen_pilot_changed": false,
+  "implementation_commit": "87ddab4de5a9dae621d34b83a6aa1ae85274fed9",
+  "initial_observations": {
+    "boundary": "Early engineering observations; not a completed pilot or model-quality result.",
+    "step_30_loss": 8.79134,
+    "step_30_tokens_per_second": 13479,
+    "validation_step_0_loss": 10.77551
+  },
+  "launch_utc": "2026-09-18T17:53:24.982649+00:00",
+  "packet_sha256": "cf9e7565c3fe34497be0dae33a7fc685a017b0b3643de61f041c3e0e09bc7105",
+  "pilot_budget_gpu_hours": 50,
+  "prior_reservation_basis": "Conservatively charge all elapsed calendar time since the frozen pilot preparation, rounded up, including stopped/CPU-only gaps and separately measured rehearsal work. This is an over-reservation for pilot-related prior usage, not a provider bill.",
+  "provider_bill_known": false,
+  "reserved_current_gpu_hours": 6,
+  "session_deadline_seconds": 21600,
+  "status": "running",
+  "validation": {
+    "deferred_grader_controls": "Two canonical solutions pass and one deliberately wrong solution fails in the local sandbox.",
+    "portable_suite_deselected": 10,
+    "portable_suite_passed": 734,
+    "portable_suite_skipped": 10
+  }
+}
