@@ -30,7 +30,7 @@ Report correctness and failures with denominators, output budgets, latency, and 
 with base and assistant with assistant. Re-run public baselines under the same declared protocol;
 published leaderboard numbers are context, not directly comparable measurements.
 
-The full math/code/tool/reliability dashboard remains work to do. Candidate references and the reasons
+The broader math/code/tool/reliability dashboard remains work to do. Candidate references and the reasons
 for them are in [research notes](research.md). Historical retrieval/long-context experiments are in
 [Git](../archive/README.md), outside the current experiment path.
 
@@ -49,5 +49,39 @@ identities, not evaluation scores. These are custom subsets; full-benchmark lead
 not directly comparable. Near-duplicate task families across the two partitions remain a limitation.
 All benchmark inputs, including both partitions, are excluded from the pilot candidates using the
 existing exact-field and informative n-gram scanner. Sensitivity matches are also removed.
-The protocol pins lm-evaluation-harness and EvalPlus source revisions. Grader execution, a deterministic
-tool environment, compatible comparator revisions, and output-budget qualification still need work.
+The protocol pins lm-evaluation-harness and EvalPlus source revisions. The `capability` dependency
+group installs those exact commits plus IFEval's optional dependencies. Keep this environment separate
+from training (`UV_PROJECT_ENVIRONMENT=.venv-capability uv sync --extra gpu --group capability`).
+IFEval requires NLTK's `punkt_tab` resource; acquire it before an offline run. Bubblewrap (`bwrap`) and
+working Linux user namespaces are required for code execution. There is no unsandboxed fallback.
+
+```bash
+python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
+  --qualify --output /external/grader-check
+python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
+  --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca \
+  --chat --limit 8 --output /external/reference-smoke
+```
+
+Qualification checks the pinned GSM8K strict/flexible extraction, IFEval constraints, both
+multiple-choice scorers, all 33 development code tasks' canonical solutions, deliberate wrong
+answers, timeout/early-exit handling, and filesystem/network isolation. Five scripted
+[tool episodes](assistant.md) check the deterministic tool environment separately.
+
+The model runner reuses pinned task prompts, filters, scoring, aggregation, and continuation
+log-likelihoods. It verifies frozen input hashes, selects only the declared partition, records raw
+responses and task IDs, and rejects prompts that exceed the 4K context plus output budget.
+Greedy output caps are 1,024 tokens for GSM8K/code and 512 for IFEval. `--chat` applies the model's
+chat template with `enable_thinking=False`; omit it for a base comparator. Scores from chat and
+plain completion protocols must be labeled separately. `--limit 0` runs the full selected partition;
+the default eight examples per benchmark is only an integration check. `--partition final` is an
+explicit held-out evaluation action, not part of development qualification.
+
+The frozen Hugging Face HumanEval+ file contains compiled `check(candidate)` programs, rather
+than EvalPlus's `base_input`/`plus_input` representation. The runner uses the pinned EvalPlus code
+sanitizer and executes those exact compiled tests with a 15-second wall deadline, 10-second CPU
+limit, 4 GiB address-space limit, read-only Python/runtime mounts, no host home/corpus mounts, and
+no network namespace access. It reports `compiled_plus_pass@1`, retaining execution failures in
+the denominator. This is not the adaptive per-test timing protocol of the standard EvalPlus CLI;
+do not compare it directly with published leaderboard scores. OS isolation reduces the consequences
+of faulty generated programs; these are correctness benchmarks, not an adversarial grading system.

@@ -42,6 +42,12 @@ open-slm = [
     "lm-eval[hf] @ git+https://github.com/EleutherAI/lm-evaluation-harness.git@64f3d0924fc695efd6d776a5ac91f97138085516",
     "transformers==5.1.0",
 ]
+capability = [
+    { include-group = "open-slm" },
+    "evalplus @ git+https://github.com/evalplus/evalplus.git@26d6d00bb1fd0fa37f39c99d5290da67891d1c5e",
+    "langdetect==1.0.9",
+    "immutabledict==4.3.1",
+]
 
 transformers = [
     "transformers==5.1.0",
