@@ -510,21 +510,53 @@ def validate_parity(output_dir, state, metadata):
             use_cache=True,
         ).logits[:, -1]
         reference = native(torch.cat((prompt, next_token), dim=1))[:, -1]
-    torch.testing.assert_close(incremental, reference, rtol=2e-2, atol=2e-2)
+    # Compare the same execution path for wrapper identity. BF16 GEMMs with
+    # different sequence shapes can round differently even within the native model.
+    with torch.no_grad():
+        native_cache = native.state(batch_size=1, device=prompt.device, dtype=torch.bfloat16)
+        native(prompt, state=native_cache)
+        native_incremental = native(next_token, state=native_cache)[:, -1]
+    torch.testing.assert_close(incremental, native_incremental, rtol=2e-2, atol=2e-2)
     generated = exported.generate(
         prompt,
         max_new_tokens=2,
         do_sample=False,
         pad_token_id=architecture.eos_token_id,
     )
+    # Independently check cache/full-pass semantics in FP32 on the same rounded
+    # release weights. Retain the observed BF16 cross-path drift in the report.
+    native.float()
+    exported.float()
+    with torch.no_grad():
+        fp32_prefill = exported(input_ids=prompt, use_cache=True)
+        fp32_incremental = exported(
+            input_ids=next_token,
+            past_key_values=fp32_prefill.past_key_values,
+            use_cache=True,
+        ).logits[:, -1]
+        fp32_reference = native(torch.cat((prompt, next_token), dim=1))[:, -1]
+    torch.testing.assert_close(fp32_incremental, fp32_reference, rtol=1e-4, atol=1e-4)
     report = {
         "format": "speck_export_parity",
-        "format_version": 1,
+        "format_version": 2,
         "passed": True,
         "parameters": expected_parameters,
         "compute_dtype": "bfloat16",
         "logits_max_absolute_error": (exported_logits - native_logits).abs().max().item(),
         "incremental_logits_max_absolute_error": (incremental - reference).abs().max().item(),
+        "native_export_cached_max_absolute_error": (incremental - native_incremental)
+        .abs()
+        .max()
+        .item(),
+        "fp32_cached_full_max_absolute_error": (fp32_incremental - fp32_reference)
+        .abs()
+        .max()
+        .item(),
+        "comparison_policy": {
+            "native_export_bf16": {"rtol": 2e-2, "atol": 2e-2, "paths": ["full", "cached"]},
+            "cached_full_fp32": {"rtol": 1e-4, "atol": 1e-4},
+            "bf16_cached_full": "Measured separately; not the wrapper identity comparison.",
+        },
         "generation_smoke_new_tokens": generated.size(1) - prompt.size(1),
         "tokens_sha256": hashlib.sha256(tokens.numpy().tobytes()).hexdigest(),
     }

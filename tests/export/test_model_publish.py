@@ -220,7 +220,8 @@ def test_current_transformers_wrapper_restores_derived_rotary_buffer(tmp_path):
     assert_current_transformers_parity(tmp_path, values)
 
 
-def test_current_transformers_parity_writes_attestation(tmp_path):
+@pytest.mark.parametrize("cache_fault", [None, "bfloat16", "float32"])
+def test_current_transformers_parity_writes_attestation(tmp_path, cache_fault):
     values = metadata()
     architecture = ArchitectureConfig.from_dict(values["config"])
     native = SpeckForCausalLM(architecture)
@@ -230,11 +231,29 @@ def test_current_transformers_parity_writes_attestation(tmp_path):
     (tmp_path / "config.json").write_text(json.dumps(release_config(values)), encoding="utf-8")
     save_file(release_state(native.state_dict()), tmp_path / "model.safetensors")
 
+    if cache_fault:
+        wrapper = tmp_path / "modeling_speck.py"
+        source = wrapper.read_text()
+        source = source.replace(
+            "        return CausalLMOutputWithPast(",
+            f"        if use_cache and position > 0 and logits.dtype == torch.{cache_fault}:\n"
+            "            logits = logits + 1\n"
+            "        return CausalLMOutputWithPast(",
+        )
+        wrapper.write_text(source)
+        with pytest.raises(AssertionError):
+            validate_parity(tmp_path, native.state_dict(), values)
+        assert not (tmp_path / "speck_parity.json").exists()
+        return
+
     report = validate_parity(tmp_path, native.state_dict(), values)
 
     assert report["passed"] is True
     assert report["parameters"] == native.parameter_count()
     assert report["incremental_logits_max_absolute_error"] >= 0
+    assert report["native_export_cached_max_absolute_error"] == 0
+    assert report["fp32_cached_full_max_absolute_error"] < 1e-4
+    assert report["format_version"] == 2
     assert 0 < report["generation_smoke_new_tokens"] <= 2
     assert json.loads((tmp_path / "speck_parity.json").read_text()) == report
 
