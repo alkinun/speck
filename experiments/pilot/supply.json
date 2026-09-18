@@ -1,0 +1,82 @@
+{
+  "artifact": {
+    "path": "/mnt/speck-data/speck/gh200-readiness-20260918/supply-reopen.json",
+    "sha256": "380904fdca9f3203fdec124218837334f6a008ccb34c486420e2f9eaa6a2f562"
+  },
+  "boundary": "Separate retained stocks, not a jointly excluded training union. Code supply is recorded separately; peS2o v1 is superseded, not additive to v2.",
+  "code": {
+    "language_upper_bounds": {
+      "C": 2865846000,
+      "C++": 3216597208,
+      "Go": 2755093600,
+      "Java": 3132969133,
+      "JavaScript": 3071996755,
+      "Markdown": 3992006666,
+      "Python": 2940243333,
+      "Rust": 3748766583,
+      "SQL": 3999167666,
+      "Shell": 3995635333,
+      "TypeScript": 3431238333
+    },
+    "receipt_path": "results/data/stack-edu-e1s-ordered-acquisition-v2-20260916.json",
+    "receipt_revision": "f5f4c915e744275f2a6677c722255c23525783bf",
+    "reopen": "prior archived acquisition receipt; full code archives not reopened in this audit",
+    "tokens_before_full_exclusion": 476774847
+  },
+  "retained_source_tokens_before_joint_eligibility": 6799101985,
+  "single_pass_mixture_upper_bound_before_exclusions": 2755093600,
+  "sources": [
+    {
+      "documents": 2097270,
+      "manifest": "/mnt/speck-data/speck/document-token-stock-e1s-v1/fineweb_edu/manifest.json",
+      "pre_exclusion_single_pass_horizon": 4613406104,
+      "reopen": "full_shard_hashes_and_contiguous_document_index",
+      "sha256": "109241b301b182678a09f01edca91c1bb67ea1cee6aafe93d0a5ac9b6a5e0a2b",
+      "source": "fineweb_edu",
+      "tokens": 2306703052,
+      "weight_percent": 50
+    },
+    {
+      "documents": 753071,
+      "manifest": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
+      "pre_exclusion_single_pass_horizon": 7494449813,
+      "reopen": "full_shard_hashes_and_contiguous_document_index",
+      "sha256": "fd528ccdb15626eae55d110ca064852d4938a5f733b9e0255c220cd2369adf65",
+      "source": "finemath_4plus",
+      "tokens": 1124167472,
+      "weight_percent": 15
+    },
+    {
+      "documents": 1851034,
+      "manifest": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
+      "pre_exclusion_single_pass_horizon": 14892887430,
+      "reopen": "full_shard_hashes_and_contiguous_document_index",
+      "sha256": "2a09fc9ee92924815de5c833b94276af2e3bf5f50e059603ada844c372c371d6",
+      "source": "cosmopedia_v2",
+      "tokens": 1489288743,
+      "weight_percent": 10
+    },
+    {
+      "documents": 113232,
+      "manifest": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/manifest.json",
+      "pre_exclusion_single_pass_horizon": 16401949860,
+      "reopen": "full_shard_hashes_and_contiguous_document_index",
+      "sha256": "bd5fae28d15014a67624d583785ec92e09f88a0a13a84de306b069e4869e77df",
+      "source": "pes2o_v3",
+      "tokens": 820097493,
+      "weight_percent": 5
+    },
+    {
+      "documents": 387313,
+      "manifest": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
+      "pre_exclusion_single_pass_horizon": 11641407560,
+      "reopen": "full_shard_hashes_and_contiguous_document_index",
+      "sha256": "483277cfc8f2ab043169539b19e341e4dfbeac8b8d2c6094dc6245dbeddafaf0",
+      "source": "finewiki_en",
+      "tokens": 582070378,
+      "weight_percent": 5
+    }
+  ],
+  "status": "pass",
+  "wall_seconds": 432.138774912979
+}

@@ -23,8 +23,9 @@ historical. A focused research claim or longer context requires its own measured
 - Begin at 4K context. Use BF16 activations with existing FP32 parameter/optimizer storage and
   Muon/AdamW. The hardware probe's learning rate is diagnostic, not a chosen training recipe.
 - Preserve base and assistant checkpoints separately. The intended assistant can reason in
-  `<think>...</think>` before its answer; training format, reasoning budget, and tool protocol still
-  need an evaluated recipe. Existing post-training work in the sibling project must be reconciled.
+  `<think>...</think>` before its answer. The [rehearsal contract](docs/assistant.md) defines its
+  initial serialization and tool protocol; reasoning budgets and learned behavior still need an
+  evaluated recipe. The sibling project's retained stock supplies the finite rehearsal.
 
 These are starting choices that reuse working code. None proves an advantage over a dense model.
 Change one only when a measured failure or capability comparison justifies the work.
@@ -92,18 +93,30 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   repetition and passed fresh-process replay. The [preparation receipt](experiments/pilot/preparation.json)
   records actual source/language exposures and artifact hashes. GPU launch qualification remains open.
 - Five public evaluation inputs and scorer revisions are pinned; development/final task identities
-  are materialized. Grader execution, tools, public comparators, and site settings remain open.
+  are materialized. Golden grader checks pass, including all 33 development code canonical solutions
+  in an isolated runner and five scripted tool episodes. A pinned Qwen3-0.6B reference completed
+  eight development examples per benchmark. This validates the pipeline, not comparative quality.
 - A full 500,000-row post-training census and 256-row-per-subset length sample are complete.
   The text-only 4K fit estimate is approximately 249,000 rows; 110,000 tool-bearing rows require
-  a tool-aware format. New SFT masks preserve context-only assistant turns; local parent loading
-  and complete-conversation packing exist. The actual assistant recipe is still to be evaluated.
+  a tool-aware format. The versioned adapter preserves explicit calls/results and assistant weights.
+  A complete, benchmark-filtered rehearsal contains 64 training and 16 validation conversations,
+  balanced between text and tools. The final assistant mixture and teacher correctness remain open.
 - The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
-  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 668
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 685
   tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
+- Full-size production base training on actual pilot data now passes fresh-process model/optimizer
+  replay at the original CUDA tolerance, with exact loader/RNG state. A resumed Muon allocation
+  failure exposed avoidable temporary-tensor retention; the fix passed the same check. This four-step
+  diagnostic does not replace the 800-step pilot or establish model quality.
+- The [GH200 rental runbook](docs/gh200.md) has a verified portable bundle, locked ARM64 dependency
+  resolution, relocated inputs, and a bounded loader/kernel/base/SFT/export sequence. No machine has
+  been rented and no GH200 result is claimed. Installation and target-hardware execution remain open.
 
-**Next:** qualify grader execution and integrate the assistant/tool protocol. Once access arrives,
-repeat hardware qualification on one and four GH200 workers, check the production CUDA training
-loop and scheduler recovery, then run the bounded pilot. Main training scale and model-quality
-claims require its measurements.
+**Next:** run the prepared one-GH200 rental rehearsal when SSH access is available. On the eventual
+allocation, qualify four-worker execution and scheduler recovery, measure the actual pilot batch,
+then run the bounded pilot. Expand and jointly exclude main-corpus supply before choosing its token
+horizon: the retained code-language mixture has a pre-exclusion single-pass ceiling of about 2.76B
+total mixture tokens, and post-exclusion eligibility will be lower. Main training scale and
+model-quality claims require the pilot's measurements.
 Preparation procedures and artifact locations are in [data](docs/data.md); supporting evidence is in
 [research notes](docs/research.md). Historical result bytes remain in [Git](archive/README.md).

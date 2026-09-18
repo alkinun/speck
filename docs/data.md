@@ -54,6 +54,36 @@ exposure. Benchmark matching removed 3,838 candidate documents before joint excl
 conservative matches, not proven leakage. Joint exclusion subsequently removed 19 code documents.
 These finite pilot counts do not establish eligible supply for the main training horizon.
 
+## Main-corpus headroom
+
+The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
+retained token stocks used by the pilot. It counts the larger peS2o v2 bank once; its v1 predecessor
+is not additional supply. Stack-Edu below is the archived acquisition receipt, before full exclusion.
+
+| Source | Retained tokens | Pilot share |
+| --- | ---: | ---: |
+| FineWeb-Edu | 2,306,703,052 | 50% |
+| Stack-Edu | 476,774,847 | 15% |
+| FineMath 4+ | 1,124,167,472 | 15% |
+| Cosmopedia v2 | 1,489,288,743 | 10% |
+| peS2o v3 | 820,097,493 | 5% |
+| FineWiki English | 582,070,378 | 5% |
+
+These are 6,799,101,985 source tokens before joint eligibility, not a 6.8B training manifest.
+At the frozen pilot weights, total code supply gives a 3.18B-token single-pass mixture upper bound;
+the 5% Go share within code lowers it to **2,755,093,600 total mixture tokens**. Validation reserves,
+benchmark exclusions, and joint duplicates reduce that ceiling. FineWeb's corresponding ceiling
+is 4.61B. A long run needs additional approved source acquisition, explicitly permitted repetition,
+or a separately frozen mixture; existing specialist stocks cannot fill arbitrary missing code/web
+quotas. Natural UltraData-Math remains separate and is not silently added to this mixture.
+
+At uint16 storage, each billion packed tokens requires about 2 GB for token IDs, before indexes,
+validation, preparation intermediates, and duplicate databases. Keep raw acquisition, exclusion
+outputs, packed data, and recovery checkpoints separately budgeted. The rental needs only the
+236 MiB pilot directory and small assistant pack; it does not need the full retained stock.
+After the pilot, choose the main horizon from measured all-in throughput and eligible supply,
+then run the same source-rights, joint-exclusion, partition, pack, and full-loader checks at that scale.
+
 ## Artifact discipline
 
 Keep source revisions, filters, counts, hashes, tokenizer identity, data order, and output locations

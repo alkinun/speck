@@ -32,9 +32,10 @@ not a promise to reproduce another lab's scores or compute budget. The decisions
 [IFEval](https://arxiv.org/abs/2311.07911) measures verifiable instruction constraints. Use these as
 starting references alongside checked math answers and a small deterministic tool environment.
 The [pilot protocol](../experiments/pilot/evaluation.json) pins five dataset inputs, exclusions,
-scorer revisions, and output limits. Executable grader qualification and tool tasks remain open.
-The current toolkit has loss, generation, serving, and export checks; the complete math/code/tool/
-reliability dashboard is not implemented or claimed to have run.
+scorer revisions, and output limits. [Executable golden checks](evaluation.md) now pass for all five
+graders, including 33 development code tasks and five scripted tool-environment episodes. A pinned
+Qwen3-0.6B run exercises eight development tasks per benchmark. Those tiny denominators test the
+pipeline and do not rank models. The broader dashboard and learned tool behavior remain open.
 
 Start comparisons with MiniCPM5-1B and a pinned small Qwen release; use MiniCPM5-2B as a stronger
 reference only when evaluation cost permits. Select exact revisions and compatible runtimes before
