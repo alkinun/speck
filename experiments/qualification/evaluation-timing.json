@@ -14,5 +14,5 @@
   "output_caps": {"gsm8k": 1024, "ifeval": 512, "humanevalplus": 1024},
   "timeout_seconds": 900,
   "overall_training_inference_evaluation_timeout_seconds": 2400,
-  "boundary": "Sequential after training/inference timing. Measures generation and continuation scoring, without running task graders or opening final task contents. Exact request payload and standalone drivers retained with external evidence. Timing sample is small and source-order-biased; projections are scenarios, not measured full-suite runtimes or quality scores."
+  "boundary": "Sequential with other measurements, under the shared deadline. Final attempt regenerates the same checkpoint export at 533383e: visible EOS decoding, default cache disabled for likelihood scoring, explicit generation caching, and unassigned base vocabulary rows suppressed. Earlier failures remain in evidence. Measures generation and continuation scoring without task graders or final task contents. Exact requests and drivers are retained externally. Small source-order sample; projections are scenarios, not full-suite measurements or quality scores."
 }

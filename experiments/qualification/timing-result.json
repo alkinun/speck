@@ -1,0 +1,369 @@
+{
+  "format": "speck_h100_planning_measurements",
+  "format_version": 1,
+  "status": "pass_after_preserved_fixes",
+  "date": "2026-09-18",
+  "engineering_only": true,
+  "source": {
+    "training_commit": "f17b2f28ad8656bdcacc03dddfbdf841dc89f9c8",
+    "evaluation_commit": "533383e003032e4f0efc87b08491ca635f689831",
+    "model_config_sha256": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
+    "data_manifest": "3d2d57d3b58eae2d935ef91c9fc9c34f608e27d3924161867c2bc0cb7c103820",
+    "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "hardware": {
+    "gpu": "NVIDIA H100 80GB HBM3 (SXM)",
+    "machine": "x86_64",
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "training": "deterministic eager, FP32 parameters/optimizer and BF16 activations",
+    "inference": "BF16 eager; existing Triton cache reused"
+  },
+  "training": {
+    "global_tokens": 6291456,
+    "optimizer_steps": 48,
+    "steady": {
+      "step_seconds": {
+        "samples": 28,
+        "mean": 9.627177978001003,
+        "median": 9.624369179829955,
+        "minimum": 9.476165793836117,
+        "maximum": 9.759979795664549
+      },
+      "tokens_per_second": 13614.789328660145
+    },
+    "peak_allocated_gib": 19.298502922058105,
+    "validation_loss_start": 10.7755126953125,
+    "validation_loss_end": 7.107263565063477
+  },
+  "validation": {
+    "tokens_per_pass": 786432,
+    "initial_seconds": 15.922098439186811,
+    "warm_pass_seconds": [
+      14.217112610116601,
+      14.211007315665483,
+      14.264961540699005
+    ]
+  },
+  "checkpoint": {
+    "durable_save_seconds": [
+      10.658275811001658,
+      10.990046368911862,
+      11.034713419154286
+    ],
+    "median_bytes": 9831398293,
+    "fresh_resume_process_overhead_seconds": 16.885785838589072,
+    "state_restore_seconds": 4.006147807464004,
+    "boundary": "Resume overhead excludes resumed optimizer/validation/save work; includes interpreter, model initialization and restoration. GPU/kernel caches and filesystem caches were warm. Earlier four-step exact replay remains the correctness evidence."
+  },
+  "microbatch_4": {
+    "steady": {
+      "step_seconds": {
+        "samples": 6,
+        "mean": 7.992938963696361,
+        "median": 7.963159592822194,
+        "minimum": 7.957042394205928,
+        "maximum": 8.07629619538784
+      },
+      "tokens_per_second": 16398.473777333253
+    },
+    "speedup": 1.2044603395230835,
+    "peak_allocated_gib": 19.298686027526855,
+    "global_tokens": 2097152,
+    "boundary": "Six steady steps only; no microbatch-four restart or long-run qualification"
+  },
+  "sft": {
+    "steady": {
+      "step_seconds": {
+        "samples": 6,
+        "mean": 4.857098168383042,
+        "median": 4.817330798134208,
+        "minimum": 4.799330266192555,
+        "maximum": 4.956031123176217
+      },
+      "tokens_per_second": 13492.830024849454
+    },
+    "padded_context_positions": 1048576,
+    "supervised_tokens": 241652,
+    "supervised_fraction": 0.23045730590820312,
+    "approximate_steady_supervised_tokens_per_second": 3109.5212566041187,
+    "approximate_steady_gpu_hours_per_million_supervised": 0.08933136481631146,
+    "boundary": "Four repetitions of the 64-conversation rehearsal; transfer this rate only with actual destination corpus padding and supervision counts"
+  },
+  "inference": {
+    "prefix_tokens": 1024,
+    "decode_tokens": 256,
+    "repeats": 3,
+    "measurements": [
+      {
+        "batch_size": 1,
+        "prefill_milliseconds": 39.1808208078146,
+        "decode_tokens_per_second": 54.937506005337895,
+        "decode_peak_allocated_gib": 2.392139434814453
+      },
+      {
+        "batch_size": 8,
+        "prefill_milliseconds": 96.38739190995693,
+        "decode_tokens_per_second": 428.1720754195105,
+        "decode_peak_allocated_gib": 3.3111305236816406
+      }
+    ],
+    "boundary": "Fixed-length synthetic native serving; batch-eight token rate is aggregate, not per-user speed or a measured batched capability run."
+  },
+  "evaluation": {
+    "requests": 70,
+    "partition": "development",
+    "sample": {
+      "arc_challenge": {
+        "seconds_per_task": {
+          "samples": 32,
+          "mean": 0.16487373120617121,
+          "median": 0.16423031128942966,
+          "minimum": 0.1155431978404522,
+          "maximum": 0.2474806122481823
+        },
+        "generated_tokens": 0,
+        "budgeted_tokens": 0,
+        "prompt_tokens": {
+          "samples": 32,
+          "mean": 35.3125,
+          "median": 31.0,
+          "minimum": 16,
+          "maximum": 76
+        },
+        "full_budget_seconds_per_task": 0.16487373120617121
+      },
+      "gsm8k": {
+        "seconds_per_task": {
+          "samples": 2,
+          "mean": 22.188405093736947,
+          "median": 22.188405093736947,
+          "minimum": 21.085390612483025,
+          "maximum": 23.29141957499087
+        },
+        "generated_tokens": 2048,
+        "budgeted_tokens": 2048,
+        "prompt_tokens": {
+          "samples": 2,
+          "mean": 71.5,
+          "median": 71.5,
+          "minimum": 61,
+          "maximum": 82
+        },
+        "full_budget_seconds_per_task": 22.188405093736947
+      },
+      "hellaswag": {
+        "seconds_per_task": {
+          "samples": 32,
+          "mean": 0.15916732040932402,
+          "median": 0.1546011669561267,
+          "minimum": 0.1526157483458519,
+          "maximum": 0.1861974634230137
+        },
+        "generated_tokens": 0,
+        "budgeted_tokens": 0,
+        "prompt_tokens": {
+          "samples": 32,
+          "mean": 30.90625,
+          "median": 30.5,
+          "minimum": 14,
+          "maximum": 47
+        },
+        "full_budget_seconds_per_task": 0.15916732040932402
+      },
+      "humanevalplus": {
+        "seconds_per_task": {
+          "samples": 2,
+          "mean": 20.934505939483643,
+          "median": 20.934505939483643,
+          "minimum": 20.9264370277524,
+          "maximum": 20.942574851214886
+        },
+        "generated_tokens": 2048,
+        "budgeted_tokens": 2048,
+        "prompt_tokens": {
+          "samples": 2,
+          "mean": 131,
+          "median": 131.0,
+          "minimum": 130,
+          "maximum": 132
+        },
+        "full_budget_seconds_per_task": 20.934505939483643
+      },
+      "ifeval": {
+        "seconds_per_task": {
+          "samples": 2,
+          "mean": 6.18840594496578,
+          "median": 6.18840594496578,
+          "minimum": 1.8748138770461082,
+          "maximum": 10.501998012885451
+        },
+        "generated_tokens": 602,
+        "budgeted_tokens": 1024,
+        "prompt_tokens": {
+          "samples": 2,
+          "mean": 59,
+          "median": 59.0,
+          "minimum": 32,
+          "maximum": 86
+        },
+        "full_budget_seconds_per_task": 10.501998012885451
+      }
+    },
+    "projection": {
+      "development": {
+        "backend_sample_extrapolation_seconds": 7286.062467510463,
+        "backend_gpu_hours": 2.0239062409751285,
+        "full_budget_scenario_gpu_hours": 2.144926462880653,
+        "code_grading_wall_cap_seconds": 495,
+        "task_counts": {
+          "arc_challenge": 222,
+          "gsm8k": 253,
+          "hellaswag": 2010,
+          "humanevalplus": 33,
+          "ifeval": 101
+        }
+      },
+      "final": {
+        "backend_sample_extrapolation_seconds": 30553.22068595444,
+        "backend_gpu_hours": 8.487005746098456,
+        "full_budget_scenario_gpu_hours": 9.014222554399748,
+        "code_grading_wall_cap_seconds": 1965,
+        "task_counts": {
+          "arc_challenge": 950,
+          "gsm8k": 1066,
+          "hellaswag": 8032,
+          "humanevalplus": 131,
+          "ifeval": 440
+        }
+      }
+    },
+    "boundary": "Measured 70 requests with pinned HFLM on the four-step base export, batch one. No grading or quality scores. Source-order sample of 2 per generative task and 32 per MC task. Observed-length extrapolations preserve sample early EOS; full-budget scenarios use cap-completing samples and assume similar prompt lengths. Neither is a measured full-suite runtime or guaranteed bound; final task contents not read. Add grading, setup, transfers, idle, failures; model termination behavior changes as it learns."
+  },
+  "pilot_projection": {
+    "steps": 800,
+    "validation_passes": 9,
+    "checkpoints": 8,
+    "seconds": 7932.509747319323,
+    "gpu_hours": 2.203474929810923,
+    "gpu_usd_at_3_49_per_hour": 7.690127505040121,
+    "retained_checkpoint_gib": 73.24962536245584,
+    "maximum_work_since_periodic_checkpoint_seconds": 962.7177978001002,
+    "restart_extra_seconds": 16.885785838589072,
+    "formula": "800*mean steady step + initial validation + 8*median warm validation + 8*median durable checkpoint + initial process/setup residual + observed startup-step excess",
+    "boundary": "Single H100, original microbatch one. Projection, not a completed 105M pilot. Excludes capability evaluation, export, transfer, setup outside the process, idle and failures. No distributed/GH200 extrapolation."
+  },
+  "scaling": {
+    "unassigned_gpu_hours": 3991,
+    "ideal_h100_equivalent_compute_only_tokens": 195611847158.4575,
+    "current_pre_exclusion_single_pass_tokens": 2755093600,
+    "compute_hours_for_current_stock_upper_bound": 56.21120968554074,
+    "boundary": "Arithmetic scenario only, assuming unchanged H100 rate per allocated GPU and no additional overhead or post-training budget. Not measured GH200/four-worker capacity or a main-token commitment."
+  },
+  "cost": {
+    "phase_seconds": {
+      "train": 386.96958984807134,
+      "resume": 196.5645112246275,
+      "inference": 102.50713987275958,
+      "microbatch_4": 202.99983376450837,
+      "sft": 115.16435915976763,
+      "evaluation_launcher_failure": 14.252418665215373,
+      "evaluation_cache_eos_failure": 13.779615264385939,
+      "first_fixed_export": 31.102404357865453,
+      "evaluation_reserved_id_failure": 43.57840369269252,
+      "final_fixed_export": 30.099693462252617,
+      "evaluation_pass": 121.1881363876164,
+      "initial_directory_launch_failure": 0.00046532414853572845
+    },
+    "execution_gpu_hours": 0.3495018252844198,
+    "execution_gpu_usd_at_3_49_per_hour": 1.219761370242625,
+    "observed_window_start": "2026-09-18T15:47:03+00:00",
+    "observed_window_end": "2026-09-18T16:26:45.336124+00:00",
+    "observed_window_gpu_hours": 0.6617600344444444,
+    "observed_window_gpu_usd_at_3_49_per_hour": 2.309542520211111,
+    "boundary": "One rented GPU, including failed phases. Observed window includes setup/fix/idle time between the first current-turn inventory and evidence capture; it excludes earlier rental time, later idle, storage, network and tax and is not a final bill. No instance deletion performed."
+  },
+  "issues_fixed": [
+    "A standalone supervisor omitted its log directory; failed before worker launch.",
+    "HFLM interpreted supervisor-injected LOCAL_RANK as distributed execution; removed single-worker launcher variables only in the measurement process.",
+    "Local likelihood calls inherited generation-cache defaults and returned only final-token logits; local evaluator now disables that default, while HFLM explicitly enables generation caching.",
+    "Exported SentencePiece control IDs decoded to empty text, making HFLM EOS stopping end after one token; special-token decoding and export/evaluator gates now check visible EOS.",
+    "Long base generation could emit reserved assistant IDs absent from its tokenizer; native and exported base generation now exclude unassigned rows. Old exports require regeneration."
+  ],
+  "checks": {
+    "portable_tests_passed": 700,
+    "skipped": 10,
+    "deselected": 10,
+    "format": "pass",
+    "lint": "pass",
+    "archive": "verified",
+    "reexport_parity": {
+      "compute_dtype": "bfloat16",
+      "format": "speck_export_parity",
+      "format_version": 1,
+      "generation_smoke_new_tokens": 2,
+      "incremental_logits_max_absolute_error": 0.0,
+      "logits_max_absolute_error": 0.0,
+      "parameters": 1195884576,
+      "passed": true,
+      "tokens_sha256": "e36555b6b258ffeb818451285a0968f5d139c60e305e247538ebb7d7ce5dfcf2"
+    },
+    "reexport_tokenizer": {
+      "base_fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+      "chat_cases": 0,
+      "chat_format_version": null,
+      "control_token_cases": 2,
+      "format": "speck_tokenizer_export_parity",
+      "format_version": 1,
+      "passed": true,
+      "text_cases": 4
+    },
+    "development_context_overflows": 0
+  },
+  "artifacts": {
+    "root": "/mnt/speck-data/speck/h100-measurements-20260918",
+    "verified_evidence_files": 138,
+    "evidence_archive": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/measurements-evidence.tar.gz",
+      "sha256": "154383180e475b5f7a395c0531a3d27fee886af40b0c92dca6ad724d991bcd85"
+    },
+    "evidence_verification": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/evidence-verification.json",
+      "sha256": "1fa7cc6c3bd3c45f2cb253ac8c5e0840078b6ffba7d40aa62683d963929e7db8"
+    },
+    "full_summary": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/summary.json",
+      "sha256": "6a7d943d0cbb53beaed4d536c4cc999bd9bedc825ea87482739d2125bf600627"
+    },
+    "development_context_audit": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/development-audit.json",
+      "sha256": "1093d205d50b06fb2bcf1b12e8ad22cd8dee50a999ac726882fd8c5844edf083"
+    },
+    "analysis_driver": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/summarize.py",
+      "sha256": "8fc4defcc1bdb131cf38122d1fba7865bb33a975592f281bad57d5e521432f2b"
+    }
+  },
+  "transfer": {
+    "archive": "/mnt/speck-data/speck/h100-measurements-20260918/gh200-transfer-final.tar.gz",
+    "bytes": 152459534,
+    "commit": "533383e003032e4f0efc87b08491ca635f689831",
+    "sha256": "8e4bf1da0486c1f5d02e8adb5b54fc0f8615b3b414f3263a10afb72f81f1fb19",
+    "branch": "codex/h100-measurements",
+    "verification": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/bundle-final-verification.json",
+      "sha256": "c057c204004741280f36a18dfb2f2d67afc50d3624d6965935760eb707028f88"
+    },
+    "relocated_clone_bind": {
+      "path": "/mnt/speck-data/speck/h100-measurements-20260918/bundle-final-clone-bind.json",
+      "sha256": "f582cdd264624df51bf40cfbad8c718f7f7f9f41f72665fe5fd36bf348373ebd"
+    }
+  },
+  "remaining": [
+    "Actual ARM64 GH200 and four-worker throughput/collectives/recovery/scheduler tests",
+    "Completed 105M-token pilot and scored full capability evaluations",
+    "Microbatch-four restart/long-run qualification before changing the frozen pilot",
+    "Final SFT corpus counts, padding/supervision density, correctness and rights",
+    "Main-corpus expansion and joint eligibility before committing a token horizon"
+  ]
+}

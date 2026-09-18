@@ -14,6 +14,12 @@ The [single-H100 receipt](../experiments/qualification/h100-result.json) adds pa
 base/SFT recovery, native CUDA generation, CPU native/Transformers export parity, and a four-step
 timing probe at the pilot batch. It retains the supplemental verifier failure and corrected check.
 These measurements do not qualify GH200/ARM64, distributed scaling, or sustained training quality.
+The [longer H100 measurements](../experiments/qualification/timing-result.json) add 48 real-data
+steps, full validation/save/restart timings, a microbatch comparison, padded-versus-supervised SFT
+accounting, and native/evaluation-backend speed. Report the measured samples separately from the
+2.20-hour pilot and 2.15/9.01-hour full-budget evaluation projections. Actual evaluator execution
+exposed and fixed likelihood-cache, EOS-decoding and reserved-vocabulary failures; their original
+attempts remain in the evidence. These are engineering results, not capability scores.
 
 Working title: **Speck: Developing a 1.2B Hybrid Assistant Under a Fixed Compute Budget**.
 

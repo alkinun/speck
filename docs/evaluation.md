@@ -71,6 +71,11 @@ python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pi
 hashes the complete export, and loads its explicitly selected local model/tokenizer code offline.
 Use only an export whose code you intend to execute. Add `--chat` for an assistant export. The same
 frozen tasks, output caps, non-root code sandbox, and partition rules apply to local checkpoints.
+Local likelihood scoring disables the model's default generation cache so all continuation logits
+are returned; HFLM explicitly enables caching for generation. The runner rejects an empty decoded
+EOS stop string. Re-export older checkpoints with the current tokenizer: control tokens must retain
+their spelling when special-token skipping is disabled. Base generation suppresses the model's
+reserved assistant rows, which have no base-tokenizer pieces; assistant exports retain their roles.
 
 Qualification checks the pinned GSM8K strict/flexible extraction, IFEval constraints, both
 multiple-choice scorers, all 33 development code tasks' canonical solutions, deliberate wrong

@@ -65,6 +65,15 @@ per wall hour even when some are idle. Qualification is capped at 70 hours; the 
 capped at 50. Allocate the remaining work after those measurements, rather than
 maintaining speculative budgets for multiple research programs. No GH200 jobs have been launched.
 
+The [measured H100 planning inputs](experiments/qualification/timing-result.json) put the original
+one-worker pilot at about **2.20 GPU-hours** for training, validation and checkpoints. One full
+development capability pass adds roughly **2.15 GPU-hours** at the full output caps, before grading
+and operational overhead. Use **6 single-H100 GPU-hours as a working reservation** for that combined
+workflow, including margin; this is not a launched job or a replacement for the frozen 50-hour
+ceiling. A full final capability pass is a roughly **9-hour backend scenario per checkpoint**, not a
+measured full-suite runtime. Account for every allocated GPU if evaluation leaves others idle.
+GH200 rates and four-worker scaling still require measurements on the allocation.
+
 ## What success means
 
 | Capability | Evidence to collect |
@@ -106,7 +115,7 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   A complete, benchmark-filtered rehearsal contains 64 training and 16 validation conversations,
   balanced between text and tools. The final assistant mixture and teacher correctness remain open.
 - The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
-  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 692
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 700
   tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
 - Full-size production base training on actual pilot data now passes fresh-process model/optimizer
   replay at the original CUDA tolerance, with exact loader/RNG state. A resumed Muon allocation
@@ -128,14 +137,30 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   GPU memory. This is a short timing diagnostic, not sustained throughput or model-quality evidence.
   The original supplemental verifier error and its corrected check are retained. All 113 evidence
   files are verified locally; ARM64 GH200 and four-worker execution remain unqualified.
+- Longer H100 measurements cover 48 production steps (6.29M tokens), a fresh-process restart,
+  four full 786K-token validation passes, three durable saves, SFT and inference timing, and 70
+  development evaluation requests. The 28 steady base steps average **13,615 tokens/s**, using
+  **19.3 GiB** peak allocated memory; validation takes **14.2 seconds**, a save **11 seconds / 9.16 GiB**,
+  and fresh-process resume overhead about **17 seconds**. The [timing receipt](experiments/qualification/timing-result.json)
+  retains exact configurations, failed attempts, hashes and projection formulas. Four sequences per
+  microbatch reached **16,398 tokens/s (+20%)** in six steady observations; qualify its restart and
+  longer behavior before changing the frozen pilot. SFT reached 13.5K padded positions/s, but only
+  23% of positions in this rehearsal are supervised. Measure the final corpus and existing length
+  buckets before assigning an SFT budget. Batched native decode reached 428 aggregate tokens/s at
+  batch eight versus 55 at batch one; the capability runner remains serial and needs separate parity
+  checks before adopting batching. These measurements establish engineering costs, not model quality.
+- Real evaluator execution exposed and fixed missing full-sequence likelihood logits, empty EOS
+  decoding that silently stopped generation after one token, and base generation of undecodable
+  reserved assistant IDs. The local-export evaluator and refreshed transfer bundle contain the fixes.
+  All 138 new evidence files are verified locally; historical exports/results remain unchanged.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.
 
 **Next:** on the eventual allocation, repeat the rehearsal on ARM64 GH200, qualify four-worker
 execution and scheduler recovery, and measure its pilot batch before the bounded pilot. If continuing
-on rented H100 hardware, first bind its worker count, full pilot evaluation and all-in cost to an
-explicit execution plan; the short rehearsal did not launch that pilot. Expand and jointly exclude
+on rented H100 hardware, bind a one-worker launch and its cumulative budget using the measurements
+above; the timing run stopped at 48 of 800 steps. Expand and jointly exclude
 main-corpus supply before choosing its token
 horizon: the retained code-language mixture has a pre-exclusion single-pass ceiling of about 2.76B
 total mixture tokens, and post-exclusion eligibility will be lower. Main training scale and

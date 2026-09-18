@@ -57,3 +57,62 @@ Its approximately 13.7K tokens/s is a short one-worker measurement, not sustaine
 GH200/distributed projection. The receipt preserves failures, corrected verification, source commits,
 all-in cost boundaries, local evidence hashes, and the latest portable bundle. Use the
 [rental runbook](../../docs/gh200.md) for execution; actual allocation qualification remains open.
+
+## Measured planning inputs
+
+The [longer H100 receipt](timing-result.json) supersedes the short probe for cost estimation.
+[timing.json](timing.json) keeps the pilot's 800-step learning-rate schedule but stops after 32 steps,
+resumes to 48, and increases validation/save frequency for measurement. The
+[microbatch comparison](microbatch-timing.json), [SFT probe](sft-timing.json), and
+[evaluation sample](evaluation-timing.json) run sequentially under the same 40-minute execution
+deadline. Full resolved configurations, commands, supervisors, raw timings and failures are in the
+receipt's external evidence archive. `scripts.training_timing` observes the production trainer;
+it does not replace a deadline supervisor or cumulative GPU-hour ledger.
+
+| Measurement on one H100 SXM | Result |
+| --- | --- |
+| Base, batch 131,072, microbatch 1, 4K | 13,615 tokens/s; 28 steady steps; 19.3 GiB peak allocated |
+| Same token batch, microbatch 4 | 16,398 tokens/s; six steady steps; 19.3 GiB peak allocated |
+| Full 786,432-token validation | 15.9 seconds initially, 14.2 seconds warm |
+| Durable model + optimizer checkpoint | 10.7–11.0 seconds; 9.16 GiB |
+| Fresh-process restart overhead | 16.9 seconds beyond optimizer/validation/save work; state restore itself 4.0 seconds |
+| SFT at fixed 4K | 13,493 padded positions/s; about 3,110 supervised tokens/s at this sample's density |
+| Native cached decode, 1K prefix + 256 tokens | 55 tokens/s at batch 1; 428 aggregate tokens/s at batch 8 |
+
+The base run completed 6,291,456 tokens; held-out loss fell from 10.78 to 7.11. This is a short
+engineering learning check, not the completed pilot or evidence of useful capabilities. The
+microbatch-four comparison is not yet restart-qualified. The SFT probe repeats 64 conversations
+four times deliberately: 1,048,576 computed positions contain 241,652 supervised tokens (23%).
+Its roughly 5.4 optimizer minutes per million supervised tokens is specific to that padding/masking
+density. Final SFT cost requires actual corpus counts, length buckets, epochs and checkpoint cadence.
+
+For the unchanged microbatch-one pilot, `800 × 9.627 seconds`, nine validation passes, eight saves
+and measured process/startup overhead give **2.20 GPU-hours**, about **$7.69** at the screenshot's
+$3.49/GPU-hour. Eight retained checkpoints need **73.25 GiB** before data, environments and exports.
+An interruption can lose up to about **16 minutes** between 100-step checkpoints, plus restart work.
+These are projections using warm caches; add cold setup, transfers, failures and idle time.
+
+The corrected pinned HFLM backend completed 70 development requests: two each for GSM8K, IFEval
+and HumanEval+, and 32 each for ARC-Challenge and HellaSwag. Full-cap samples took about 22.2 seconds
+for 1,024-token GSM8K responses, 20.9 seconds for 1,024-token code responses, and 10.5 seconds for
+512-token IFEval responses. Four-choice likelihood requests averaged 0.165 and 0.159 seconds/task.
+The full-budget scenario is **2.15 hours for development / 9.01 hours for final per checkpoint**.
+Observed early stopping instead gives 2.02 / 8.49 hours. Neither is a measured full-suite runtime or
+a guaranteed bound: samples are small and source-order biased; model output lengths and final
+prompt lengths can differ. Grading, setup and transfer are additional. The code grader alone allows
+up to 8.25 / 32.75 minutes of execution time for development/final, excluding sandbox overhead.
+All development prompts/options fit 4K including a BOS and the output budget; no final task contents
+were selected. No capability scores or generated-code execution were performed on this root-run pod.
+
+This run found evaluator failures that tiny generation checks missed: likelihood scoring inherited
+last-token-only cache defaults, EOS decoded to an empty stop string, and base generation could emit
+unassigned assistant rows. Fixed exports pass parity and the full timing sample. Old evidence is
+preserved; re-export checkpoints before using the corrected evaluator. The new transfer archive pins
+the fixes at `533383e`. Portable checks pass **700 tests**. Supervised phases, including failures,
+used **0.350 allocated GPU-hours**; the observed setup/fix/idle window used **0.662 hours**. This is
+not a provider bill and excludes earlier/later rental time and non-GPU charges.
+
+At the original H100 rate, all 3,991 unassigned GPU-hours would imply 195.6B compute-only tokens
+under ideal per-GPU scaling and zero additional overhead/post-training cost. That is an arithmetic
+reference, not a GH200 forecast or token commitment. Current mixture stock is capped near 2.76B
+before exclusions—only about 56 H100 optimizer-hours—so data expansion remains necessary.
