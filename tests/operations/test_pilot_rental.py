@@ -178,3 +178,18 @@ def test_deferred_grading_is_explicit_in_all_relevant_commands(tmp_path):
     )
     assert all("--defer-code-grading" not in phases[name] for name in ("train", "export"))
     assert "--partition" in phases["development"] and "development" in phases["development"]
+
+
+def test_single_gpu_development_does_not_initialize_accidental_distributed_state(tmp_path):
+    command = dict(rental.commands(tmp_path / "packet", tmp_path / "attempt"))["development"]
+    prefix = command[: command.index(sys.executable)]
+    probe = [
+        *prefix,
+        sys.executable,
+        "-c",
+        "import os; assert not ({'RANK', 'LOCAL_RANK', 'WORLD_SIZE'} & os.environ.keys())",
+    ]
+    result = rental.execute_phases(
+        [("development", probe)], tmp_path / "probe", time.monotonic() + 30
+    )
+    assert result["development"]["returncode"] == 0

@@ -250,6 +250,15 @@ def commands(root, output, *, defer_code_grading=False):
         (
             "development",
             [
+                # The supervisor tags even a singleton with LOCAL_RANK=0;
+                # Accelerate interprets that as a distributed launch.
+                "env",
+                "-u",
+                "RANK",
+                "-u",
+                "LOCAL_RANK",
+                "-u",
+                "WORLD_SIZE",
                 sys.executable,
                 "-m",
                 "scripts.capability_eval",
