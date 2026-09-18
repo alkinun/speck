@@ -102,12 +102,16 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   A complete, benchmark-filtered rehearsal contains 64 training and 16 validation conversations,
   balanced between text and tools. The final assistant mixture and teacher correctness remain open.
 - The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
-  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 685
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 688
   tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
 - Full-size production base training on actual pilot data now passes fresh-process model/optimizer
   replay at the original CUDA tolerance, with exact loader/RNG state. A resumed Muon allocation
   failure exposed avoidable temporary-tensor retention; the fix passed the same check. This four-step
   diagnostic does not replace the 800-step pilot or establish model quality.
+- The full-size model also completes the finite assistant rehearsal and fresh-process SFT recovery
+  with exact loader/RNG state and the same model/optimizer tolerance. Masked sum-loss kernels are
+  warmed before SFT restore. The [readiness receipt](experiments/qualification/readiness.json)
+  records failures, source identities, checks, and the portable transfer archive.
 - The [GH200 rental runbook](docs/gh200.md) has a verified portable bundle, locked ARM64 dependency
   resolution, relocated inputs, and a bounded loader/kernel/base/SFT/export sequence. No machine has
   been rented and no GH200 result is claimed. Installation and target-hardware execution remain open.

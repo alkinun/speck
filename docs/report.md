@@ -6,8 +6,9 @@ This document is an outline and evidence checklist, not a completed paper or a c
 Preparation evidence is retained in the [corpus/software receipt](../experiments/pilot/preparation.json)
 and the [local full-size CUDA result](../experiments/qualification/local-result.json). They establish
 bounded engineering behavior; real-data learning curves and capability results are still pending.
-The pre-rental work adds a four-step production base recovery check on real pilot data, executed
-golden graders, a small public-model integration run, and a finite tool-aware assistant rehearsal.
+The [pre-rental receipt](../experiments/qualification/readiness.json) adds four-step production base
+and assistant recovery checks on real data, executed golden graders, a small public-model integration
+run, and a finite tool-aware assistant rehearsal.
 These are reproducibility checks; report them separately from any eventual Speck capability results.
 
 Working title: **Speck: Developing a 1.2B Hybrid Assistant Under a Fixed Compute Budget**.
