@@ -126,7 +126,7 @@ def score_text(task, doc, response):
     }
 
 
-def qualify(prepared, protocol):
+def qualify(prepared, protocol, *, defer_code_grading=False):
     """Check graders with known answers, faults, and isolation probes; no model scores."""
     from evalplus.sanitize import sanitize
 
@@ -163,6 +163,10 @@ def qualify(prepared, protocol):
         scores = [(-1000.0 if i == target else -1.0, False) for i in range(len(scores))]
         assert not any(task.process_results(doc, scores).values())
         result["checks"][f"{name}_correct_and_wrong"] = True
+    if defer_code_grading:
+        result.update(status="code_grading_pending", code_execution="deferred_to_isolated_host")
+        result["tool_episodes"] = golden_checks()
+        return result
     benchmark = next(item for item in prepared["benchmarks"] if item["id"] == "humanevalplus")
     checks = []
     for row in selected_rows(prepared, benchmark, "development", 0):
@@ -262,8 +266,12 @@ def evaluate(args, prepared, protocol):
                         response if args.chat else doc["prompt"] + response,
                         entrypoint=doc["entry_point"],
                     )
-                    execution = run_python(code, doc["test"], doc["entry_point"])
-                    metrics = {"compiled_plus_pass@1": execution["status"] == "pass"}
+                    if args.defer_code_grading:
+                        execution = {"status": "pending_local_grading"}
+                        metrics = {}
+                    else:
+                        execution = run_python(code, doc["test"], doc["entry_point"])
+                        metrics = {"compiled_plus_pass@1": execution["status"] == "pass"}
                 else:
                     execution = None
                     metrics = score_text(task, doc, response)
@@ -306,7 +314,8 @@ def evaluate(args, prepared, protocol):
             aggregates[key] = aggregate(items)
         summaries[name] = {"tasks": len(docs), "metrics": aggregates, "max_output_tokens": budget}
     return {
-        "status": "pass",
+        "status": "code_grading_pending" if args.defer_code_grading else "pass",
+        "defer_code_grading": args.defer_code_grading,
         "scorers": scorers,
         "model": backend["pretrained"],
         "revision": backend.get("revision"),
@@ -350,6 +359,11 @@ def main(argv=None):
     parser.add_argument("prepared")
     parser.add_argument("--output", required=True)
     parser.add_argument("--qualify", action="store_true")
+    parser.add_argument(
+        "--defer-code-grading",
+        action="store_true",
+        help="generate code without executing it; a separate isolated host must finalize the pending score",
+    )
     parser.add_argument("--model", default="Qwen/Qwen3-0.6B")
     parser.add_argument("--revision", default="c1899de289a04d12100db370d81485cdf75e47ca")
     parser.add_argument(
@@ -366,7 +380,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if args.limit < 0:
         raise ValueError("limit must be nonnegative")
-    check_sandbox()
+    if not args.defer_code_grading:
+        check_sandbox()
     protocol, prepared = (
         json.loads(Path(args.protocol).read_text()),
         json.loads(Path(args.prepared).read_text()),
@@ -388,7 +403,9 @@ def main(argv=None):
     atomic_json(output / "result.json", result)
     try:
         result.update(
-            qualify(prepared, protocol) if args.qualify else evaluate(args, prepared, protocol)
+            qualify(prepared, protocol, defer_code_grading=args.defer_code_grading)
+            if args.qualify
+            else evaluate(args, prepared, protocol)
         )
     except BaseException as error:
         result.update(status="failed", error=f"{type(error).__name__}: {error}")

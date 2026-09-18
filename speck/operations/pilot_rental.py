@@ -190,10 +190,10 @@ def bind(root, output):
     durable_json(output / "prepared.json", prepared)
 
 
-def commands(root, output):
+def commands(root, output, *, defer_code_grading=False):
     root, output = Path(root).resolve(), Path(output).resolve()
     evaluation = [str(root / "protocol.json"), str(output / "prepared.json")]
-    return [
+    phases = [
         (
             "preflight",
             [
@@ -265,6 +265,11 @@ def commands(root, output):
             ],
         ),
     ]
+    if defer_code_grading:
+        for name, command in phases:
+            if name in ("preflight", "graders", "development"):
+                command.append("--defer-code-grading")
+    return phases
 
 
 def launch_environment(root):
@@ -275,9 +280,9 @@ def launch_environment(root):
     }
 
 
-def write_launch(root, output, manifest):
+def write_launch(root, output, manifest, *, defer_code_grading=False):
     bind(root, output)
-    phases = commands(root, output)
+    phases = commands(root, output, defer_code_grading=defer_code_grading)
     environment = launch_environment(root)
     durable_json(
         Path(output) / "launch.json",
@@ -286,7 +291,7 @@ def write_launch(root, output, manifest):
     return phases, environment
 
 
-def preflight(root, output):
+def preflight(root, output, *, defer_code_grading=False):
     import importlib.metadata
     import platform
 
@@ -295,7 +300,8 @@ def preflight(root, output):
 
     from speck.evaluation.code_runner import check_sandbox
 
-    check_sandbox()
+    if not defer_code_grading:
+        check_sandbox()
     if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
         raise ValueError("exactly one visible allocated GPU is required")
     device = torch.cuda.get_device_properties(0)
@@ -364,7 +370,7 @@ def check_ledger(ledger, prior, directory):
     for row in ledger["attempts"]:
         if row["state"] == "reserved_or_running":
             raise ValueError("unresolved attempt: inspect processes and reconcile before execution")
-        if row["state"] not in ("completed", "failed"):
+        if row["state"] not in ("completed", "awaiting_local_code_grading", "failed"):
             raise ValueError("invalid ledger attempt state")
         for name in ("reserved_gpu_hours", "observed_gpu_hours"):
             value = row[name]
@@ -405,7 +411,7 @@ def execute_phases(phases, output, deadline):
     return results
 
 
-def run(root, ledger_dir, prior):
+def run(root, ledger_dir, prior, *, defer_code_grading=False):
     root, ledger_dir = Path(root).resolve(), Path(ledger_dir).resolve()
     manifest = verify_packet(root)
     ledger_dir.mkdir(parents=True, exist_ok=True)
@@ -445,7 +451,9 @@ def run(root, ledger_dir, prior):
         durable_json(output / "result.json", result)
         previous_environment = dict(os.environ)
         try:
-            phases, environment = write_launch(root, output, manifest)
+            phases, environment = write_launch(
+                root, output, manifest, defer_code_grading=defer_code_grading
+            )
             os.environ.update(environment)
             result["phases"] = execute_phases(phases, output, started + SESSION_SECONDS)
             summary = json.loads((output / "checkpoints/run_summary.json").read_text())
@@ -456,7 +464,7 @@ def run(root, ledger_dir, prior):
                 or summary.get("partial") is not False
             ):
                 raise ValueError("pilot endpoint did not match the frozen experiment")
-            result["status"] = "completed"
+            result["status"] = "awaiting_local_code_grading" if defer_code_grading else "completed"
         except BaseException as error:
             result.update(status="failed", error=f"{type(error).__name__}: {error}")
             raise
@@ -486,6 +494,7 @@ def main(argv=None):
     for action in ("check", "run", "preflight"):
         command = sub.add_parser(action)
         command.add_argument("root", type=Path)
+        command.add_argument("--defer-code-grading", action="store_true")
         if action == "check":
             command.add_argument(
                 "--output", type=Path, help="write a CPU-only launch preview to a fresh directory"
@@ -502,9 +511,16 @@ def main(argv=None):
         result = verify_packet(args.root)
         if args.output is not None:
             args.output.mkdir(parents=True, exist_ok=False)
-            write_launch(args.root.resolve(), args.output.resolve(), result)
+            write_launch(
+                args.root.resolve(),
+                args.output.resolve(),
+                result,
+                defer_code_grading=args.defer_code_grading,
+            )
     elif args.action == "preflight":
-        result = preflight(args.root, args.output)
+        result = preflight(args.root, args.output, defer_code_grading=args.defer_code_grading)
     else:
-        result = run(args.root, args.ledger, args.prior_gpu_hours)
+        result = run(
+            args.root, args.ledger, args.prior_gpu_hours, defer_code_grading=args.defer_code_grading
+        )
     print(json.dumps(result, indent=2))

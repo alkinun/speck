@@ -9,6 +9,15 @@ The [local readiness receipt](../experiments/pilot/rental-readiness.json) record
 source commit and validation. Relocation and offline grader checks passed locally; the new complete
 GPU workflow has not run. Use the bundled commit even when documentation on main advances.
 
+The migrated Runpod container denies user-namespace creation. For that host, pass
+`--defer-code-grading` to both `check` and `run`: model generation and non-code scoring stay on the
+GPU host, while generated Python is never executed there. Remote completion is explicitly
+`awaiting_local_code_grading`. Copy its `development` directory and the attempt's `prepared.json`
+to the local sandbox host, then finalize with `scripts.code_grade` using the same protocol and a
+local prepared-input file. The finalizer verifies source hashes, task identities and complete code
+coverage before scoring. It preserves the original pending result and writes a separate result.
+This split changes execution location, not tasks, decoding, code tests, or their denominator.
+
 ## Local packet preparation
 
 After committing a clean checkout, build the private archive on the retained-data machine:
@@ -66,6 +75,17 @@ When changing providers or instances, restore the same cumulative ledger before 
 uv run --no-sync python -m scripts.pilot_rental run .. \
   --ledger /workspace/pilot-runs \
   --prior-gpu-hours ACCOUNTED_EXTERNAL_HOURS
+```
+
+For a host without namespaces, append `--defer-code-grading`; finalize on the local host after copy:
+
+```bash
+.venv-open-slm/bin/python -m scripts.code_grade \
+  --protocol experiments/pilot/evaluation.json \
+  --prepared /mnt/speck-data/speck/flagship-preparation-20260917/evaluation.json \
+  --source-prepared /external/copied-attempt/prepared.json \
+  --pending /external/copied-attempt/development \
+  --output /external/copied-attempt/graded-development
 ```
 
 One attempt reserves **six GPU-hours** against the pilot's existing **50-hour cumulative ceiling**.

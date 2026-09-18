@@ -167,3 +167,14 @@ def test_failed_run_is_accounted_and_environment_restored(tmp_path, monkeypatch)
         (tmp_path / "ledger" / ledger["attempts"][0]["id"] / "result.json").read_text()
     )
     assert "deliberate failure" in result["error"]
+
+
+def test_deferred_grading_is_explicit_in_all_relevant_commands(tmp_path):
+    phases = dict(
+        rental.commands(tmp_path / "packet", tmp_path / "attempt", defer_code_grading=True)
+    )
+    assert all(
+        "--defer-code-grading" in phases[name] for name in ("preflight", "graders", "development")
+    )
+    assert all("--defer-code-grading" not in phases[name] for name in ("train", "export"))
+    assert "--partition" in phases["development"] and "development" in phases["development"]
