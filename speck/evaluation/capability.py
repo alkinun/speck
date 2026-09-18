@@ -30,6 +30,9 @@ def model_settings(args):
             "pretrained": str(path),
             "trust_remote_code": True,
             "local_files_only": True,
+            # HFLM likelihood calls require logits at every input position. Its
+            # generation path explicitly enables the cache again.
+            "use_cache": False,
         }, identity
     if len(args.revision) != 40 or any(c not in "0123456789abcdef" for c in args.revision):
         raise ValueError("reference model revision must be a full commit hash")
@@ -49,6 +52,13 @@ def verify_scorers(protocol):
             raise ValueError(f"install the pinned {package} source revision")
         versions[package] = {"version": dist.version, "commit": protocol["scorers"][key]}
     return versions
+
+
+def validate_eos_boundary(model):
+    # The pinned harness adds this decoded text to its stop strings. An empty
+    # value matches every continuation and silently stops after the first token.
+    if not model.tok_decode(model.eot_token_id, skip_special_tokens=False):
+        raise ValueError("tokenizer decodes EOS to empty text; repair/re-export before evaluation")
 
 
 def selected_rows(prepared, benchmark, partition, limit):
@@ -204,6 +214,7 @@ def evaluate(args, prepared, protocol):
         batch_size=1,
         max_length=4096,
     )
+    validate_eos_boundary(model)
     if args.device == "cuda":
         torch.cuda.reset_peak_memory_stats()
     summaries, outputs = {}, []

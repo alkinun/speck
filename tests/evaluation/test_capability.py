@@ -7,7 +7,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from speck.evaluation.capability import model_settings, selected_rows
+from speck.evaluation.capability import model_settings, selected_rows, validate_eos_boundary
 from speck.evaluation.code_runner import check_sandbox, run_python
 from speck.provenance.io import file_sha256
 
@@ -29,6 +29,7 @@ def test_local_capability_model_requires_parity_and_binds_payload(tmp_path):
         "pretrained": str(tmp_path.resolve()),
         "trust_remote_code": True,
         "local_files_only": True,
+        "use_cache": False,
     }
     (tmp_path / "model.safetensors").write_bytes(b"different weights")
     assert model_settings(args)[1]["sha256"] != identity["sha256"]
@@ -46,6 +47,14 @@ def test_hub_capability_model_stays_commit_pinned_without_custom_code():
     args.revision = "main"
     with pytest.raises(ValueError, match="full commit hash"):
         model_settings(args)
+
+
+def test_evaluator_rejects_an_empty_eos_stop_string():
+    model = SimpleNamespace(eot_token_id=2, tok_decode=lambda *args, **kwargs: "")
+    with pytest.raises(ValueError, match="EOS to empty"):
+        validate_eos_boundary(model)
+    model.tok_decode = lambda *args, **kwargs: "</s>"
+    validate_eos_boundary(model)
 
 
 def test_frozen_rows_keep_grading_fields_and_reject_changed_bytes(tmp_path):

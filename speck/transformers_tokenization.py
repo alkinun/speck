@@ -56,7 +56,7 @@ class SpeckTokenizer(SentencePieceBackend):
             return self.sp_model.decode(token_ids)
         output, ordinary = [], []
         for token in token_ids:
-            if token < self.sp_model.vocab_size():
+            if token < self.sp_model.vocab_size() and token not in self.all_special_ids:
                 ordinary.append(token)
                 continue
             if ordinary:

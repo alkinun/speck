@@ -546,6 +546,14 @@ def validate_tokenizer_parity(output_dir, metadata, *, base_fingerprint=None):
     if expected is None or base.fingerprint() != expected:
         raise ValueError("export tokenizer differs from the checkpoint")
     exported = AutoTokenizer.from_pretrained(output_dir, trust_remote_code=True)
+    for token, identity in (
+        (exported.bos_token, exported.bos_token_id),
+        (exported.eos_token, exported.eos_token_id),
+    ):
+        if not token or exported.decode([identity], skip_special_tokens=False) != token:
+            raise ValueError("exported control token decoding loses its visible spelling")
+        if exported.decode([identity], skip_special_tokens=True) != "":
+            raise ValueError("exported control tokens are not skipped when requested")
     texts = [
         "Hello, world!",
         "\nA second line.\n",
@@ -585,6 +593,7 @@ def validate_tokenizer_parity(output_dir, metadata, *, base_fingerprint=None):
         "passed": True,
         "base_fingerprint": base.fingerprint(),
         "text_cases": len(texts),
+        "control_token_cases": 2,
         "chat_cases": chat_cases,
         "chat_format_version": chat_metadata.get("format_version") if is_chat else None,
     }
