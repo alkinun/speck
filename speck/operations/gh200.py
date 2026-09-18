@@ -42,6 +42,7 @@ def bundle(output, data, tokenizer, assistant):
         for path in sorted(source.rglob("*")):
             if path.is_file() and path.suffix in {
                 ".json",
+                ".jsonl",
                 ".model",
                 ".bin",
                 ".idx",

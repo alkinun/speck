@@ -102,7 +102,7 @@ def restore_training_rng(value, device, rank, world_size):
     return True
 
 
-def warmup_resume_backend(model, device, shapes, vocab_size):
+def warmup_resume_backend(model, device, shapes, vocab_size, *, loss_reduction=None):
     """Initialize lazy forward/backward kernels before loading saved tensors and RNG.
 
     No optimizer step or loader advancement occurs. Eager CUDA restart is the initial
@@ -114,8 +114,13 @@ def warmup_resume_backend(model, device, shapes, vocab_size):
             tokens[:-1].reshape(batch_size, length),
             tokens[1:].reshape(batch_size, length),
         )
+        options = {}
+        if loss_reduction is not None:
+            options["loss_reduction"] = loss_reduction
+            targets = targets.clone()
+            targets[:, 1::2] = -100
         for _ in range(2):
             model.zero_grad(set_to_none=True)
-            loss = model(inputs, targets)
+            loss = model(inputs, targets, **options)
             loss.backward()
     model.zero_grad(set_to_none=True)

@@ -1,9 +1,11 @@
 import json
+import sys
 
 import pytest
 import torch
 
 from speck.operations import random_state
+from speck.operations.r0_executor import supervise
 from speck.operations.r0_replay import rng_probe
 
 
@@ -67,3 +69,51 @@ def test_backend_warmup_does_not_modify_model_or_keep_gradients():
     random_state.warmup_resume_backend(model, torch.device("cpu"), [(2, 8), (1, 16)], 32)
     assert model.weight.item() == 0.5
     assert model.weight.grad is None
+
+
+def test_assistant_warmup_initializes_masked_sum_loss():
+    observed = []
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.tensor(0.5))
+
+        def forward(self, inputs, targets, loss_reduction):
+            observed.append((loss_reduction, bool((targets == -100).any())))
+            return (inputs.float() * self.weight).sum()
+
+    model = Model()
+    random_state.warmup_resume_backend(
+        model, torch.device("cpu"), [(1, 8)], 32, loss_reduction="sum"
+    )
+    assert observed == [("sum", True), ("sum", True)]
+    assert model.weight.item() == 0.5 and model.weight.grad is None
+
+
+def test_real_two_rank_collective_preserves_each_cpu_rng(tmp_path):
+    worker = tmp_path / "worker.py"
+    store = (tmp_path / "gloo-store").as_uri()
+    worker.write_text("""import json, os, sys
+from pathlib import Path
+import torch
+import torch.distributed as dist
+from speck.operations.random_state import seed_generators, gather_training_rng, restore_training_rng
+from speck.operations.r0_replay import rng_probe
+rank = int(os.environ['RANK'])
+dist.init_process_group('gloo', init_method=sys.argv[1], rank=rank, world_size=2)
+device = torch.device('cpu')
+seed_generators(42 + rank)
+state = json.loads(json.dumps(gather_training_rng(device, 2)))
+expected = rng_probe(device)
+seed_generators(999)
+restore_training_rng(state, device, rank, 2)
+assert rng_probe(device) == expected
+Path(sys.argv[2], f'rank-{rank}.json').write_text(json.dumps(state))
+dist.destroy_process_group()
+""")
+    execution = supervise([sys.executable, str(worker), store, str(tmp_path)], tmp_path, 30, 2, 2)
+    assert execution["returncode"] == 0, (tmp_path / "worker.log").read_text()
+    first = json.loads((tmp_path / "rank-0.json").read_text())
+    assert first == json.loads((tmp_path / "rank-1.json").read_text())
+    assert first["ranks"][0] != first["ranks"][1]

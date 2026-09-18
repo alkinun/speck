@@ -68,6 +68,8 @@ def replay(args):
         raise ValueError("workers, seconds, and checkpoint step must be positive")
     if args.allocated_gpus < args.workers:
         raise ValueError("allocated GPU count must include every worker and idle allocated GPU")
+    if args.device == "cpu" and args.workers > 1:
+        raise ValueError("production distributed training requires CUDA; use one CPU worker")
     if args.steps <= args.checkpoint_step:
         raise ValueError("steps must exceed checkpoint step")
     root = Path(args.output).resolve()

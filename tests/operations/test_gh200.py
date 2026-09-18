@@ -40,9 +40,11 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
         path = tmp_path / name
         path.mkdir()
         (path / "payload.bin").write_bytes(b"frozen")
+        (path / "documents.jsonl").write_text('{"ordinal":0}\n')
         inputs.append(path)
     output = tmp_path / "rental"
     result = bundle(output, *inputs)
+    assert (output / "pilot-data/documents.jsonl").read_text() == '{"ordinal":0}\n'
     subprocess.run(
         [
             "git",

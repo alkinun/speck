@@ -342,6 +342,10 @@ def main(argv=None):
         "status": "running",
         "protocol_sha256": file_sha256(args.protocol),
         "prepared_sha256": file_sha256(args.prepared),
+        "implementation": {
+            name: file_sha256(Path(__file__).with_name(name))
+            for name in ("capability.py", "code_runner.py", "tools.py")
+        },
     }
     atomic_json(output / "result.json", result)
     try:

@@ -258,6 +258,7 @@ class SFTTrainer:
                     self.device,
                     [(self.device_tokens // length, length) for length in args.sequence_lengths],
                     self.tokenizer.vocab_size,
+                    loss_reduction="sum",
                 )
             self._restore_checkpoint_state(checkpoint_state)
 
