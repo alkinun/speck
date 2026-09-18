@@ -1,0 +1,166 @@
+{
+  "artifacts": {
+    "finemath-templates/directory-candidate-v1/excluded-documents.jsonl": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/directory-candidate-v1/excluded-documents.jsonl",
+      "sha256": "4469d5d49e7ead93fb1dbcc5abebef0bde2985a07057e88198721310ba66e880"
+    },
+    "finemath-templates/directory-candidate-v1/view.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/directory-candidate-v1/view.json",
+      "sha256": "22c1f680639e4660e101de3992b71b1611d5f3a940b602177ec682df826384d6"
+    },
+    "finemath-templates/directory-review.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/directory-review.json",
+      "sha256": "1c7d6165fcba0eaff362383387e9ac56a1e82869d12d23f711dcc979d9b2e6ed"
+    },
+    "finemath-templates/examples.jsonl": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/examples.jsonl",
+      "sha256": "b30d3f6728e5bbdd529ca7ecb21fa000ed87c258fd49ff81491c4c12c6c91833"
+    },
+    "finemath-templates/families.sqlite": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/families.sqlite",
+      "sha256": "713644595cdc6a152264b662bf8da5dd81acdd037cb19bf4e1f26631c62239a7"
+    },
+    "finemath-templates/materialize-candidate.py": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/materialize-candidate.py",
+      "sha256": "11b9daf503a33837c7430e76690d18d35de381b2696e68aa85523450ab2c518b"
+    },
+    "finemath-templates/report.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/finemath-templates/report.json",
+      "sha256": "0af925c3ac721e046104aa6a6abbfcd784218dd6b716a17b29cf5fe72433df04"
+    },
+    "template-quality.log": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/template-quality.log",
+      "sha256": "9da850c46e458553e1aea6189001f651c714a9c950789f4d9f8de563e8341eff"
+    },
+    "ultrafineweb-preview/analyze.py": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/ultrafineweb-preview/analyze.py",
+      "sha256": "7e1532b9e8cda27b263e5dd9b9853008a66f365ab6f0fcbdc27989a7fa890f34"
+    },
+    "ultrafineweb-preview/fetch_preview.py": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/ultrafineweb-preview/fetch_preview.py",
+      "sha256": "3a9c52810badfb662a54cab9ab15cb3f456c0216814ca058c81689e7d209e94c"
+    },
+    "ultrafineweb-preview/receipt.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/ultrafineweb-preview/receipt.json",
+      "sha256": "138c29310c62a4e29564717973f220d886560f64e01a95d12ed122b24a73a9a0"
+    },
+    "ultrafineweb-preview/review.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/ultrafineweb-preview/review.json",
+      "sha256": "d25b346f01db29d4d99305c4c9d08c2412b478bcaaa1206453251638673dc47c"
+    },
+    "ultrafineweb-preview/samples.jsonl": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/ultrafineweb-preview/samples.jsonl",
+      "sha256": "25c0847e44da7652c577f39de78b62f29f272d5fa78d7333037e8154789e5a46"
+    },
+    "ultrafineweb-preview/token-summary.json": {
+      "path": "/mnt/speck-data/speck/corpus-quality-20260918/ultrafineweb-preview/token-summary.json",
+      "sha256": "f7f9539d3d073b25431060a36404d96c11837911cc52dba1d35b5cdee7407605"
+    }
+  },
+  "candidate_inspection": {
+    "boundary": "Clustered inspection sample; new source not admitted.",
+    "operational_note": "An inspection helper initially named inspect.py shadowed the Python standard library, triggering one repeated fetch before the existing-output guard stopped it. Renamed fetch_preview.py; all original capture hashes reverified. Unique rows unchanged.",
+    "repository": "openbmb/Ultra-FineWeb-L3",
+    "response_bytes_including_repeated_fetch_and_probe": 689587,
+    "retained_unique_response_bytes_excluding_probe": 334432,
+    "reviewed_head_tail_excerpts": 8,
+    "revision": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
+    "revision_checked_on_all_responses": true,
+    "rows": 96,
+    "token_summary": {
+      "scope": "96 clustered inspection rows, not a population quality or length estimate.",
+      "subsets": {
+        "Ultra-FineWeb-L3-en-Multi-Style-Synthetic": {
+          "columns": [
+            "config",
+            "content",
+            "row_idx",
+            "style",
+            "uid"
+          ],
+          "documents": 48,
+          "max": 1106,
+          "median": 462.0,
+          "min": 155,
+          "over_4096": 0,
+          "tokens": 22953
+        },
+        "Ultra-FineWeb-L3-en-QA-Synthetic": {
+          "columns": [
+            "config",
+            "content",
+            "row_idx",
+            "style",
+            "uid"
+          ],
+          "documents": 48,
+          "max": 1362,
+          "median": 961.0,
+          "min": 490,
+          "over_4096": 0,
+          "tokens": 46476
+        }
+      },
+      "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    }
+  },
+  "date": "2026-09-18",
+  "decisions": [
+    "Keep FineMath; no blanket numeric-deduplication rule.",
+    "Prepare conservative topic-directory exclusion as a candidate view, not a training corpus.",
+    "Prioritize English L3 Q&A consistency/lineage inspection; do not replace Cosmopedia yet.",
+    "Do not spend a separate GPU comparison solely on this small directory cleanup."
+  ],
+  "directory_candidate": {
+    "qualitative_review": {
+      "additional_directory_formats_observed_in_unmatched": 5,
+      "matched_excerpts": 12,
+      "unmatched_same_host_excerpts": 6
+    },
+    "remaining_documents": 744508,
+    "remaining_tokens": 1105391968,
+    "removed_documents": 8563,
+    "removed_token_percent": 1.6701696560029982,
+    "removed_tokens": 18775504,
+    "scope": "Conservative v1, incomplete recall. Before joint exclusions/holdouts; no downstream quality claim."
+  },
+  "gpu_jobs_launched": false,
+  "implementation_revision": "90ca5f73d83b571082ba42c0b39cb0e12d40953a",
+  "math_census": {
+    "counts": {
+      "documents": 753071,
+      "tokens": 1124167472
+    },
+    "documents_in_repeated_families": 4,
+    "elapsed_seconds": 122.0293602530146,
+    "repeated_families": 2,
+    "roles": [
+      {
+        "documents": 4085,
+        "role": "conversion_exposition",
+        "tokens": 5193431
+      },
+      {
+        "documents": 8563,
+        "role": "nrich_topic_directory",
+        "tokens": 18775504
+      },
+      {
+        "documents": 740423,
+        "role": "unclassified",
+        "tokens": 1100198537
+      }
+    ],
+    "tokens_in_repeated_families": 1967
+  },
+  "pilot_changed": false,
+  "status": "census_and_candidate_view_complete_main_recipe_open",
+  "training_authority": false,
+  "validation": {
+    "archive": "verified",
+    "command": "make quality",
+    "deselected": 10,
+    "passed": 713,
+    "skipped": 10
+  }
+}

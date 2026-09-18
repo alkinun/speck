@@ -81,6 +81,7 @@ or increase model context based on this statistic alone.
 ## Candidate decisions
 
 Pinned metadata and dataset cards are retained locally; full corpora were not downloaded.
+The follow-up below adds a small, revision-checked English L3 content inspection.
 Published token totals use upstream tokenizers and do not count as our eligible supply.
 
 | Candidate | Pinned revision | Decision |
@@ -99,10 +100,12 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
 1. Expand the qualitative review into a labeled, stratified audit. Distinguish extraction,
    completeness, usefulness, correctness (verified/unverified), and template repetition. Calibrate
    any model-based scorer against reviewed examples; report source and length denominators.
-2. Audit numeric-template families in FineMath and code roles/versions in the full retained code
-   acquisition. Recount unique eligible supply after proposed changes. Preserve the frozen pilot.
-3. Inspect bounded English refined-web samples and source-eligible code candidates. Establish
-   domain coverage and overlap with current stocks before assigning main-training weights.
+2. The FineMath numeric-template census and first directory-exclusion candidate are complete
+   (below). Audit code roles/versions in the full retained code acquisition next. Recount unique
+   eligible supply after proposed changes. Preserve the frozen pilot.
+3. Extend the bounded English refined-web inspection into source/answer consistency checks and
+   inspect source-eligible code candidates. Establish domain coverage and overlap with current
+   stocks before assigning main-training weights.
 4. Freeze **one** two-arm data screening comparison: a common base checkpoint, fixed architecture,
    optimizer, global batch, LR schedule, token budget, and development evaluations. Change one
    source component at a time; preserve broad replay and keep final tests untouched. Count data
@@ -119,3 +122,61 @@ affordable endpoint and primary metric before viewing the comparison results.
 Main training still requires sufficient eligible supply, justified repetition and weights,
 quality evidence, and measured all-in runtime. The present audit completes an initial diagnostic;
 it does not close those requirements.
+
+## Follow-up decisions — 2026-09-18
+
+[followup.json](followup.json) binds the new census, candidate view, inspection captures, and
+validation. These decisions change preparation priorities; they do not change the frozen pilot.
+
+**Keep FineMath; do not introduce blanket numeric deduplication.** A complete scan of its
+753,071 documents / 1,124,167,472 tokens took 122.03 seconds locally. Grouping full text within
+each hostname after numeric normalization found only **two repeated families: four documents,
+1,967 tokens**. This strict test misses fuzzy templates and number words, and normalization can
+merge distinct useful math problems. It does not establish a material benefit from a numeric
+deduplication rule. Conversion-related text matching the diagnostic markers totals 4,085 documents
+/ 5,193,431 tokens; that is a role hint, not a low-quality classification.
+
+**Prepare a narrow directory exclusion for the next corpus candidate.** The exact host/path/text
+predicate in `scripts.corpus_templates.role_hint` matches 8,563 topic-directory pages containing
+18,775,504 tokens: **1.6702% of this FineMath stock**, or roughly 0.25% of total exposure if the
+current 15% math share were retained. Twelve matched excerpts and six same-host unmatched excerpts
+were inspected. All twelve matched excerpts are activity directories; five of the six unmatched
+excerpts show additional directory formats, so this conservative v1 knowingly has incomplete recall.
+These are qualitative checks, not formal precision/recall or downstream-quality estimates.
+
+The materialized `finemath-templates/directory-candidate-v1/view.json` and hashed exclusion list
+retain **744,508 documents / 1,105,391,968 tokens** by complementing excluded ordinals within the
+exact original manifest. Original text and pilot artifacts remain intact. This is a reversible
+candidate selection view, not a training manifest or a human-reviewed removal/rights ledger.
+Joint exclusions, holdouts, and a future explicit packing plan remain necessary. Preserve useful
+NRICH lesson pages; do not blacklist the host. Do not spend a separate two-arm GPU experiment
+solely on this small cleanup; review its coverage and apply the same selected policy to both arms
+of a larger comparison if it is adopted.
+
+**Inspect English L3 Q&A first; no wholesale synthetic-data replacement.** We captured 96 rows
+from the pinned Ultra-FineWeb-L3 revision, using four seeded 12-row windows per English format.
+Every response supplied the expected `x-revision`; responses were complete and untruncated.
+The ten retained response payloads total 334,432 bytes, excluding the initial four-row schema probe
+and one repeated fetch caused by a helper-name collision; hashes remained identical after the fix.
+Captures, request identities, and scripts stay outside Git. This clustered sample is not a
+population quality estimate.
+
+| English subset | Inspected rows | Mistral tokens, including BOS/EOS | Median tokens | Maximum tokens |
+| --- | ---: | ---: | ---: | ---: |
+| Q&A | 48 | 46,476 | 961 | 1,362 |
+| Multi-style | 48 | 22,953 | 462 | 1,106 |
+
+All 96 sampled records fit 4K; this does not prove corpus-wide fit. Eight head/tail excerpt
+reviews include useful technical material and concrete defects. One generated Q&A equates
+3.5 kilograms with approximately one tonne, changing the source's ambiguous quantity into an
+inconsistent answer. One multi-style record contains a refusal/editorial assessment of the input
+instead of a finished rewrite. Other examples retain missing-figure references or promotional
+prose. These observations do not estimate relative quality versus Cosmopedia.
+
+Prioritize the Q&A subset for further checks because the source passage is visible in the
+inspected serialization, permitting source-to-answer consistency review. This is an inspectability
+decision, not evidence that Q&A trains a better model. Released structured fields in the inspected
+schema are `uid`, `content`, and `style`; there is no separate original URL/source-document ID.
+Establish lineage/overlap as far as possible, reject editing artifacts and inconsistent answers,
+and measure surviving tokens before proposing a substitution for any of the 10% synthetic share.
+Main mixture weights and new-source admission remain undecided.

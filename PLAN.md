@@ -105,6 +105,11 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   not interchangeable with restricted Stack v3. Both finite preparation services exited successfully.
 - Other retained sources include FineMath, Cosmopedia, peS2o, FineWiki, and approved natural
   UltraData-Math. Existing counts are not a globally deduplicated training union.
+- The [corpus audit follow-up](experiments/corpus-audit/README.md#follow-up-decisions--2026-09-18)
+  keeps FineMath and prepares a narrow topic-directory exclusion candidate (18.78M source tokens).
+  Numeric normalization did not reveal material strict-template repetition. A bounded English L3
+  inspection found answer/refinement defects; prioritize Q&A consistency checks before admitting
+  new synthetic data. Main mixture weights remain open and the frozen pilot is unchanged.
 - The [105M-token pilot](experiments/pilot/README.md) fixes initial source weights, optimization,
   checkpoint milestones, and a 50-hour cost ceiling. Selection, joint exclusion, packing, and reopen
   checks are complete. Full one- and four-rank CPU loader scans consumed the planned tokens without
@@ -120,7 +125,7 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   A complete, benchmark-filtered rehearsal contains 64 training and 16 validation conversations,
   balanced between text and tools. The final assistant mixture and teacher correctness remain open.
 - The tiny offline base-to-assistant workflow passes exact resume for both stages. Native/export
-  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 700
+  tokenizer and generation checks pass for both tiny checkpoints. The portable suite passes 713
   tests; separate local CUDA tests and the full-size synthetic probe are recorded above.
 - Full-size production base training on actual pilot data now passes fresh-process model/optimizer
   replay at the original CUDA tolerance, with exact loader/RNG state. A resumed Muon allocation

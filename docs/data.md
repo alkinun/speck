@@ -61,6 +61,10 @@ The [initial content audit](../experiments/corpus-audit/README.md) now adds a re
 document-length measurements. It identifies concrete selection questions; it does not certify
 corpus quality. Main training needs a labeled quality/coverage audit and one costed data comparison
 alongside the supply and integrity checks below. The frozen engineering pilot remains unchanged.
+The [follow-up decisions](../experiments/corpus-audit/README.md#follow-up-decisions--2026-09-18)
+keep FineMath, prepare a reversible 8,563-document topic-directory exclusion candidate, and
+prioritize consistency checks on English L3 Q&A before any synthetic-source replacement.
+No blanket numeric-deduplication rule or new main mixture has been adopted.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger peS2o v2 bank once; its v1 predecessor
