@@ -37,19 +37,21 @@ Change one only when a measured failure or capability comparison justifies the w
 ## Immediate order of work
 
 The single-H100 rehearsal and planning measurements are complete. The frozen engineering pilot
-is now running on the migrated H100; its [execution receipt](experiments/pilot/h100-run.json) records
-the launch and grading arrangement. Main-corpus research remains a separate follow-up.
+completed 800 steps on the migrated H100; its [execution receipt](experiments/pilot/h100-run.json)
+records 2.27 training hours, final validation loss 3.379 and 19.3 GiB peak allocated memory. Main-corpus research remains a separate follow-up.
 
 | Work | Current state | Concrete next deliverable |
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Static preview and 16-row isolated execution check complete; no admission | Resolve source lineage for a bounded candidate, freeze added benchmark exclusions, then expand stratified verification and count accepted tokens |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
-| Current paid experiment | Full 800-step pilot running; completion and capability results pending | Finish training/export/development generation, grade code in the local sandbox, verify backups, then release rental compute |
+| Current paid experiment | 800-step training complete; export checks passed; capability evaluation running and backup pending | Complete development evaluation and isolated local code grading, verify backups, then release rental compute |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
 
-The [executable launch packet](docs/pilot-rental.md) is running under the supervisor. The migrated
-container blocks user namespaces, so generated code will be graded locally after verified transfer.
+The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
+offline template lookup, separated BF16 wrapper identity from FP32 cache consistency, and removed
+singleton rank variables before evaluation. All failed attempts are retained; export checks pass and
+development evaluation now runs within the remaining original deadline. The migrated container blocks user namespaces, so generated code is graded locally.
 The supervisor enforces a shared six-hour
 execution deadline and conservatively reserves six GPU-hours against the 50-hour pilot ceiling.
 Record cumulative external usage before execution; provider billing is separate. Start the pilot
@@ -105,10 +107,11 @@ capped at 50. Allocate the remaining work after those measurements, rather than
 maintaining speculative budgets for multiple research programs. No GH200 jobs have been launched.
 
 The [measured H100 planning inputs](experiments/qualification/timing-result.json) put the original
-one-worker pilot at about **2.20 GPU-hours** for training, validation and checkpoints. One full
+one-worker pilot at about **2.20 GPU-hours** for training, validation and checkpoints; the completed
+800-step run measured **2.27 hours** including cold startup. One full
 development capability pass adds roughly **2.15 GPU-hours** at the full output caps, before grading
 and operational overhead. Use **6 single-H100 GPU-hours as a working reservation** for that combined
-workflow, including margin; this is not a launched job or a replacement for the frozen 50-hour
+workflow, including margin; the current run uses this reservation within the frozen 50-hour
 ceiling. A full final capability pass is a roughly **9-hour backend scenario per checkpoint**, not a
 measured full-suite runtime. Account for every allocated GPU if evaluation leaves others idle.
 GH200 rates and four-worker scaling still require measurements on the allocation.
@@ -203,8 +206,9 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   containing source, frozen data, benchmark inputs and offline export/grading assets. Extraction,
   fresh Git clone, relocated launch preview and all golden graders pass locally, including 33
   canonical code tasks. The new supervisor has CPU tests for budget, tampering, failure and timeout
-  behavior. The full GPU workflow is now running under a shared six-hour deadline; its
-  [execution receipt](experiments/pilot/h100-run.json) distinguishes launch evidence from final results.
+  behavior. Training completed all 800 steps; export checks pass after inspected recovery and
+  capability evaluation is running under the original deadline. The [execution receipt](experiments/pilot/h100-run.json)
+  distinguishes verified training evidence from pending capability results.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.

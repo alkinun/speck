@@ -71,9 +71,30 @@
     }
   },
   "attempt_id": "80ffc9d0f93d4dc8a71adf4c616cbb24",
-  "backup": "Live verified copy of durable checkpoints; final verification pending.",
+  "backup": {
+    "boundary": "All eight complete checkpoints are still required locally. Remote step100 weights and marker were reclaimed only after both copies were verified; its complete local copy remains.",
+    "checkpoint_300_partial_retained": true,
+    "final_checkpoint_prioritized": true,
+    "remote_checkpoint_100_reclaimed_after_dual_hash_verification": {
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/remote-checkpoint-100-reclaim.json",
+      "sha256": "70f578636e5ee4a42e8cc19d890bef7d8e6f98e94da53148652b9a5ede643c0e"
+    },
+    "status": "in_progress",
+    "verified_steps": [
+      100,
+      200
+    ]
+  },
   "code_grading": "Deferred to local isolated runner because provider blocks namespaces; same frozen tasks and tests.",
   "conservative_prior_reservation_gpu_hours": 21,
+  "continuation": {
+    "boundary": "Local computer and Codex must remain available. Watcher queues this task at phase changes and distinct failures, with worker liveness checks. Provider billing is not stopped by these services.",
+    "service_units": [
+      "speck-pilot-backup-80ffc9d0",
+      "speck-pilot-grading-80ffc9d0",
+      "speck-pilot-continuation-80ffc9d0"
+    ]
+  },
   "date": "2026-09-18",
   "environment": {
     "cuda": "12.8",
@@ -91,6 +112,199 @@
     },
     "python": "3.10.18 (main, Jun  4 2025, 08:56:00) [GCC 13.3.0]",
     "vram_bytes": 85017493504
+  },
+  "export_recovery": {
+    "accounting": "All inspected recoveries and diagnostics use the remaining original six-hour reservation. Original failed-attempt ledger is retained; original observed time alone does not include recovery/idle/transfer.",
+    "attempts": [
+      {
+        "reason": "Offline template lookup fixed; then existing CPU BF16 cache/full-path comparison failed.",
+        "result": {
+          "boundary": "Inspected export/evaluation recovery only. Original failed result and ledger are preserved. Uses remaining time in original six-hour reservation; no retraining.",
+          "deadline_utc": "2026-09-18T23:53:24.982649+00:00",
+          "error": "RuntimeError: pilot phase failed: export: worker_failure",
+          "finished_utc": "2026-09-18T20:19:37.298178+00:00",
+          "implementation_commit": "3a00db265885f9e7cc745181cadbc7f60c00900b",
+          "observed_gpu_hours": 0.011371219460335043,
+          "original_result_sha256": "2d489a5bf4f746b58595b9dacc9aa6ded4612f06c60c19a1ca46542d6fff50a4",
+          "remaining_seconds_at_launch": 12868.625067949295,
+          "started_utc": "2026-09-18T20:18:56.360130+00:00",
+          "status": "failed"
+        }
+      },
+      {
+        "reason": "Export and revised numerical checks passed; development startup failed because inherited LOCAL_RANK selected distributed initialization.",
+        "result": {
+          "boundary": "Inspected export/evaluation recovery only. Original failed result and ledger are preserved. Uses remaining time in original six-hour reservation; no retraining.",
+          "deadline_utc": "2026-09-18T23:53:24.982649+00:00",
+          "error": "RuntimeError: pilot phase failed: development: worker_failure",
+          "finished_utc": "2026-09-18T20:26:38.201729+00:00",
+          "implementation_commit": "65cbda848c090423ebd5f2959fdea612f9caf8b2",
+          "observed_gpu_hours": 0.013287312706104584,
+          "original_result_sha256": "2d489a5bf4f746b58595b9dacc9aa6ded4612f06c60c19a1ca46542d6fff50a4",
+          "previous_recovery_result_sha256": "5449edf66f4eeae2db6fed75bda0a3177aa65378fc7b3ae2cff40d45300920d3",
+          "remaining_seconds_at_launch": 12454.626691818237,
+          "started_utc": "2026-09-18T20:25:50.360553+00:00",
+          "status": "failed"
+        }
+      },
+      {
+        "reason": "Only development evaluation resumed after clearing singleton rank variables; qualified export reused.",
+        "result_snapshot": {
+          "boundary": "Inspected single-GPU development launch recovery. Qualified export reused; no training/export repeated. Original failed results retained. Shares remaining original six-hour reservation.",
+          "deadline_utc": "2026-09-18T23:53:24.982649+00:00",
+          "export_parity_sha256": "c03d96e54034d3623989573b082ad7f5157c71614bc42f309366403cf37d3093",
+          "implementation_commit": "26676fda55f4fb65bce3e3fdacc264ed2dd4682d",
+          "original_result_sha256": "2d489a5bf4f746b58595b9dacc9aa6ded4612f06c60c19a1ca46542d6fff50a4",
+          "previous_recovery_result_sha256": "90522ce24948805fa07253d89cc1fe3878d77d345488388f1666ac3abc1742b3",
+          "remaining_seconds_at_launch": 12232.884694576263,
+          "started_utc": "2026-09-18T20:29:32.102571+00:00",
+          "status": "running"
+        }
+      }
+    ],
+    "comparison_change": "Native/exported full and cached BF16 paths retain 0.02 absolute/relative tolerances. Cache-versus-full semantics are checked separately in FP32 with 0.0001 tolerances on rounded release weights. BF16 cache/full drift remains explicitly reported; weights, model implementation and frozen decoding protocol are unchanged.",
+    "diagnostic": {
+      "cases": {
+        "cpu_torch.bfloat16": {
+          "export_cached_full": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0625,
+            "mean_abs": 0.011297415941953659,
+            "outside_existing_tolerance": 297
+          },
+          "native_cached_full": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0625,
+            "mean_abs": 0.011297415941953659,
+            "outside_existing_tolerance": 297
+          },
+          "native_export_cached": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "outside_existing_tolerance": 0
+          },
+          "native_export_full": {
+            "argmax_equal": true,
+            "elements": 512048,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "outside_existing_tolerance": 0
+          },
+          "seconds": 2.8185801673680544
+        },
+        "cpu_torch.float32": {
+          "export_cached_full": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 4.76837158203125e-06,
+            "mean_abs": 6.873816573715885e-07,
+            "outside_existing_tolerance": 0
+          },
+          "native_cached_full": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 4.76837158203125e-06,
+            "mean_abs": 6.873816573715885e-07,
+            "outside_existing_tolerance": 0
+          },
+          "native_export_cached": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "outside_existing_tolerance": 0
+          },
+          "native_export_full": {
+            "argmax_equal": true,
+            "elements": 512048,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "outside_existing_tolerance": 0
+          },
+          "seconds": 9.714415911585093
+        },
+        "cuda_torch.bfloat16": {
+          "export_cached_full": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0625,
+            "mean_abs": 0.011945093050599098,
+            "outside_existing_tolerance": 368
+          },
+          "native_cached_full": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0625,
+            "mean_abs": 0.011945093050599098,
+            "outside_existing_tolerance": 368
+          },
+          "native_export_cached": {
+            "argmax_equal": true,
+            "elements": 32003,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "outside_existing_tolerance": 0
+          },
+          "native_export_full": {
+            "argmax_equal": true,
+            "elements": 512048,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "outside_existing_tolerance": 0
+          },
+          "seconds": 18.8202371224761
+        }
+      }
+    },
+    "original_deadline_utc": "2026-09-18T23:53:24.982649+00:00",
+    "original_failure_preserved": true,
+    "training_repeated": false
+  },
+  "export_result": {
+    "implementation_commit": "65cbda848c090423ebd5f2959fdea612f9caf8b2",
+    "parity": {
+      "comparison_policy": {
+        "bf16_cached_full": "Measured separately; not the wrapper identity comparison.",
+        "cached_full_fp32": {
+          "atol": 0.0001,
+          "rtol": 0.0001
+        },
+        "native_export_bf16": {
+          "atol": 0.02,
+          "paths": [
+            "full",
+            "cached"
+          ],
+          "rtol": 0.02
+        }
+      },
+      "compute_dtype": "bfloat16",
+      "format": "speck_export_parity",
+      "format_version": 2,
+      "fp32_cached_full_max_absolute_error": 4.76837158203125e-06,
+      "generation_smoke_new_tokens": 2,
+      "incremental_logits_max_absolute_error": 0.0625,
+      "logits_max_absolute_error": 0.0,
+      "native_export_cached_max_absolute_error": 0.0,
+      "parameters": 1195884576,
+      "passed": true,
+      "tokens_sha256": "e36555b6b258ffeb818451285a0968f5d139c60e305e247538ebb7d7ce5dfcf2"
+    },
+    "status": "passed",
+    "tokenizer_parity": {
+      "base_fingerprint": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+      "chat_cases": 0,
+      "chat_format_version": null,
+      "control_token_cases": 2,
+      "format": "speck_tokenizer_export_parity",
+      "format_version": 1,
+      "passed": true,
+      "text_cases": 4
+    }
   },
   "frozen_pilot_changed": false,
   "implementation_commit": "87ddab4de5a9dae621d34b83a6aa1ae85274fed9",
@@ -119,17 +333,454 @@
       "stack_edu": 3.2111709117889404
     }
   },
+  "operational_incidents": [
+    "The 200 GiB volume filled; roughly97GiB of old rehearsal artifacts were observed alongside the new pilot. Reclaimed only hash-verified remote step100 copy to provide export space.",
+    "Original local exec-based backup/grading workers ended between turns with stale running state. Preserved prior states/partial transfer and replaced them with persistent systemd user services.",
+    "Offline template lookup, BF16 cross-path parity gate and singleton distributed environment each exposed separate failures. Every failure was preserved and diagnosed before a bounded recovery; no retraining."
+  ],
+  "original_attempt_result": {
+    "allocated_gpus": 1,
+    "boundary": "One allocated GPU. Provider idle/setup/transfer and earlier untracked usage must be accounted separately; this supervisor never stops provider billing. No automatic retry or resume.",
+    "error": "RuntimeError: pilot phase failed: export: worker_failure",
+    "observed_gpu_hours": 2.271850242705809,
+    "packet_sha256": "cf9e7565c3fe34497be0dae33a7fc685a017b0b3643de61f041c3e0e09bc7105",
+    "session_seconds": 21600,
+    "status": "failed"
+  },
   "packet_sha256": "cf9e7565c3fe34497be0dae33a7fc685a017b0b3643de61f041c3e0e09bc7105",
   "pilot_budget_gpu_hours": 50,
   "prior_reservation_basis": "Conservatively charge all elapsed calendar time since the frozen pilot preparation, rounded up, including stopped/CPU-only gaps and separately measured rehearsal work. This is an over-reservation for pilot-related prior usage, not a provider bill.",
   "provider_bill_known": false,
+  "recovery_evidence": {
+    "development-failed-distributed/result.json": {
+      "bytes": 785,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/development-failed-distributed/result.json",
+      "sha256": "4461a86ff71c34db78725583e84e7f71daecda9cf0b60a228f0192f0e4ea8d8b"
+    },
+    "export/speck_parity.json": {
+      "bytes": 784,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/export/speck_parity.json",
+      "sha256": "c03d96e54034d3623989573b082ad7f5157c71614bc42f309366403cf37d3093"
+    },
+    "export/speck_source.json": {
+      "bytes": 482,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/export/speck_source.json",
+      "sha256": "9fe03abd9476bcd51ca421c9116b1c79dc0d830f8c88b3534377ad355604c16e"
+    },
+    "export/tokenizer_parity.json": {
+      "bytes": 276,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/export/tokenizer_parity.json",
+      "sha256": "3c6b950918ab9a43cee8b379d3fd447ac4a574214248440232c7625543edbb03"
+    },
+    "parity-diagnostic.json": {
+      "bytes": 2617,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/parity-diagnostic.json",
+      "sha256": "d275449dfd59a60fa18fa31e70f00c4717795f4d1b964fc8a0e1867fb6a4dcce"
+    },
+    "recovery-offline-export-attempt1/launch.json": {
+      "bytes": 2052,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt1/launch.json",
+      "sha256": "5d1f1b7b6ed3bec2531809d87c4d0f1b7e4cf70755eb7197970c50e00c85bf21"
+    },
+    "recovery-offline-export-attempt1/logs/export/processes.json": {
+      "bytes": 331,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt1/logs/export/processes.json",
+      "sha256": "3cecd1c90ec169579720a3e6c24c5b18000f057d415d03afdae1b1fab16c6e9f"
+    },
+    "recovery-offline-export-attempt1/logs/export/worker.log": {
+      "bytes": 115389,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt1/logs/export/worker.log",
+      "sha256": "ace45ad4fa8437b2a76d8ac7fad2f14cf7a737b7fb00385d452e14c2e1541fa3"
+    },
+    "recovery-offline-export-attempt1/phases.json": {
+      "bytes": 197,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt1/phases.json",
+      "sha256": "4e8683b06714a2fccd69a5ee146a05c9374d041d767bf5cf27a439963683b54d"
+    },
+    "recovery-offline-export-attempt1/result.json": {
+      "bytes": 701,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt1/result.json",
+      "sha256": "5449edf66f4eeae2db6fed75bda0a3177aa65378fc7b3ae2cff40d45300920d3"
+    },
+    "recovery-offline-export-attempt2/launch.json": {
+      "bytes": 2157,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/launch.json",
+      "sha256": "45ffb02bc9e99f8c4e9b06caf927cb5caa0d16c495f8343645564ab57e8c498c"
+    },
+    "recovery-offline-export-attempt2/logs/development/processes.json": {
+      "bytes": 331,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/logs/development/processes.json",
+      "sha256": "a383a7643a68fb7dba6ed983ba5c710363c148149a4f19e665d27b8bfe2e0d43"
+    },
+    "recovery-offline-export-attempt2/logs/development/worker.log": {
+      "bytes": 2420,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/logs/development/worker.log",
+      "sha256": "4aeb191abbf846ea659ae23626c848c1fb203ef21c2b3799ae422c106e4902bb"
+    },
+    "recovery-offline-export-attempt2/logs/export/processes.json": {
+      "bytes": 331,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/logs/export/processes.json",
+      "sha256": "4153ccabb39e07ece13ead9dee068aaf1bf5dc1936ee39fd67e6cbd9ea674064"
+    },
+    "recovery-offline-export-attempt2/logs/export/worker.log": {
+      "bytes": 114605,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/logs/export/worker.log",
+      "sha256": "82510ea791577fec57d0c0a52796fe8abba884172dfb878a9eb0369e03f38ce1"
+    },
+    "recovery-offline-export-attempt2/phases.json": {
+      "bytes": 383,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/phases.json",
+      "sha256": "ef95f6870a5d2636ab3d83a3bd40216fccee10dd8f95771acc6ee17e859aecef"
+    },
+    "recovery-offline-export-attempt2/result.json": {
+      "bytes": 811,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export-attempt2/result.json",
+      "sha256": "90522ce24948805fa07253d89cc1fe3878d77d345488388f1666ac3abc1742b3"
+    },
+    "recovery-offline-export/launch.json": {
+      "bytes": 1928,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export/launch.json",
+      "sha256": "a6bc829faed95cc2740619da61938c1861537886df99a328fd47a4f36b1e0882"
+    },
+    "recovery-offline-export/phases.json": {
+      "bytes": 243,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export/phases.json",
+      "sha256": "9f669a2cef8c93aec722f6b1089ca9abb2ea68653fc42ff69f1531c24bd56547"
+    },
+    "recovery-offline-export/result.json": {
+      "bytes": 755,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/recovery-evidence/recovery-offline-export/result.json",
+      "sha256": "d70ddb3e0190024ec5e7c22c948550dc2d4ab4ea8691847b974766f94e7c7663"
+    }
+  },
   "reserved_current_gpu_hours": 6,
   "session_deadline_seconds": 21600,
-  "status": "running",
+  "status": "training_completed_export_passed_evaluation_running",
+  "training_evidence": {
+    "checkpoints/metadata_000800.json": {
+      "bytes": 68147,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/metadata_000800.json",
+      "sha256": "b6246ce13ffc1625bb01e8b26baaa2ac0311ccbff9c0a14eb9332b2c7bd43f2a"
+    },
+    "checkpoints/run_summary.json": {
+      "bytes": 5666,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/run_summary.json",
+      "sha256": "e207a4ad2176819e9b7900139b83d9111848e2558781da1bff50377f331ffb15"
+    },
+    "checkpoints/timing_000100.json": {
+      "bytes": 223,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000100.json",
+      "sha256": "8135522485bec99f751f4a9129858df6448f791c609776db0bfc69d7c842ca56"
+    },
+    "checkpoints/timing_000200.json": {
+      "bytes": 220,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000200.json",
+      "sha256": "0b5b498d1d36f4fd49bbd7258d43b287ba8a310a18f8bba824d6cb9363042263"
+    },
+    "checkpoints/timing_000300.json": {
+      "bytes": 221,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000300.json",
+      "sha256": "02fe2058e742efdfda5ca5951e73f073a229e3f3cc050cfd0d31a0a09ae48c7f"
+    },
+    "checkpoints/timing_000400.json": {
+      "bytes": 221,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000400.json",
+      "sha256": "39ff32ab3b90472206bac27168a74d2487dc448f42ae4df610c4bf3202dde3ad"
+    },
+    "checkpoints/timing_000500.json": {
+      "bytes": 222,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000500.json",
+      "sha256": "0e4099a86fbc0f5abc6c5e658120ade3128a750121faae012237d01b488b2900"
+    },
+    "checkpoints/timing_000600.json": {
+      "bytes": 220,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000600.json",
+      "sha256": "a890454a244018c1013d17f22f3dd17b604625ae0c2085240cb84acdbde1e9bf"
+    },
+    "checkpoints/timing_000700.json": {
+      "bytes": 222,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000700.json",
+      "sha256": "3518ad8b5121ec4da25c0ad8e10401e2834c172dfb140f93368d2367009fbee7"
+    },
+    "checkpoints/timing_000800.json": {
+      "bytes": 221,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/checkpoints/timing_000800.json",
+      "sha256": "907020ef7e4b30c826a42f0df72ceb1ce6535005254452461b70693649bf7b4d"
+    },
+    "logs/export/processes.json": {
+      "bytes": 331,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/logs/export/processes.json",
+      "sha256": "8d4e95fb885f51de4f84ff09618bf790ea9b60e206e11fab469d7b16e643b972"
+    },
+    "logs/export/worker.log": {
+      "bytes": 3000,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/logs/export/worker.log",
+      "sha256": "edb50e7a94affa87d01eb2d89799b73640a247f5204cc5eb57e529cc939f1456"
+    },
+    "logs/train/processes.json": {
+      "bytes": 331,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/logs/train/processes.json",
+      "sha256": "773ffb4a348abb1a89949c2b1ce0d912a026b0b0d37591e14fcdb45da478eebe"
+    },
+    "logs/train/worker.log": {
+      "bytes": 17907,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/logs/train/worker.log",
+      "sha256": "d47fdeceb6e122c0e1623959d6b75ad145537b3ed2a97409073577ce4e6a67c7"
+    },
+    "phases.json": {
+      "bytes": 755,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/phases.json",
+      "sha256": "260acb935272cc8a049f2718f962c28a6ce4153f416cfbae1a20a4e720145bb4"
+    },
+    "result.json": {
+      "bytes": 476,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/training-evidence/result.json",
+      "sha256": "2d489a5bf4f746b58595b9dacc9aa6ded4612f06c60c19a1ca46542d6fff50a4"
+    }
+  },
+  "training_result": {
+    "active_seconds": 8145.1258814409375,
+    "checkpoint_seconds": 100.75678859464824,
+    "checkpoint_timing_snapshots": {
+      "100": {
+        "active_seconds": 1208.936095720157,
+        "checkpoint_seconds": 11.007764726877213,
+        "evaluation_seconds": 101.39779426902533,
+        "optimizer_seconds": 1088.6539243590087,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "200": {
+        "active_seconds": 2197.93019891344,
+        "checkpoint_seconds": 22.03482822701335,
+        "evaluation_seconds": 115.65103919990361,
+        "optimizer_seconds": 2052.336480377242,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "300": {
+        "active_seconds": 3190.213216064498,
+        "checkpoint_seconds": 35.64850613474846,
+        "evaluation_seconds": 129.90117990411818,
+        "optimizer_seconds": 3016.721985708922,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "400": {
+        "active_seconds": 4180.358057981357,
+        "checkpoint_seconds": 46.494453785941005,
+        "evaluation_seconds": 144.148615706712,
+        "optimizer_seconds": 3981.7416744865477,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "500": {
+        "active_seconds": 5171.484340956435,
+        "checkpoint_seconds": 60.121903121471405,
+        "evaluation_seconds": 158.39519403129816,
+        "optimizer_seconds": 4944.962461868301,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "600": {
+        "active_seconds": 6161.334721958265,
+        "checkpoint_seconds": 72.91319161094725,
+        "evaluation_seconds": 172.6440029963851,
+        "optimizer_seconds": 5907.742194065824,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "700": {
+        "active_seconds": 7156.7268978934735,
+        "checkpoint_seconds": 89.94067566655576,
+        "evaluation_seconds": 186.89881864376366,
+        "optimizer_seconds": 6871.819910624996,
+        "startup_optimizer_seconds": 218.50590968504548
+      },
+      "800": {
+        "active_seconds": 8145.031662130728,
+        "checkpoint_seconds": 100.68012392148376,
+        "evaluation_seconds": 201.1491865105927,
+        "optimizer_seconds": 7835.102939698845,
+        "startup_optimizer_seconds": 218.50590968504548
+      }
+    },
+    "completed_steps": 800,
+    "evaluation_seconds": 201.1491865105927,
+    "format": "speck_base_run_summary",
+    "format_version": 1,
+    "global_step": 800,
+    "global_tokens": 104857600,
+    "optimizer_seconds": 7835.102939698845,
+    "partial": false,
+    "peak_allocated_bytes": 20721609728,
+    "startup_optimizer_seconds": 218.50590968504548,
+    "status": "completed",
+    "steady_tokens": 103546880,
+    "steady_tokens_per_second": 13594.900661275025,
+    "steady_training_seconds": 7616.5970300138,
+    "steps": 800,
+    "stop_at_tokens": null,
+    "timing_boundary": "Steady timing excludes the first ten optimizer steps. startup_optimizer_seconds includes their useful work as well as cold overhead; it is not pure compilation time. active_seconds includes validation and checkpointing; supervisor process wall time additionally includes process startup/shutdown.",
+    "trainer_process_wall_seconds": 8154.287573102862,
+    "training_phase": "base",
+    "validation_history": [
+      {
+        "global_step": 0,
+        "optimizer_seconds": 0.0,
+        "steady_training_seconds": 0.0,
+        "step": 0,
+        "training_tokens": 0,
+        "validation_loss": 10.7755126953125,
+        "validation_source_losses": {
+          "cosmopedia_v2": 10.778696060180664,
+          "finemath_4plus": 10.770137786865234,
+          "fineweb_edu": 10.783721923828125,
+          "finewiki_en": 10.764036178588867,
+          "pes2o_v3": 10.777870178222656,
+          "stack_edu": 10.77861213684082
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 100,
+        "optimizer_seconds": 1088.6539243590087,
+        "steady_training_seconds": 870.1480146739632,
+        "step": 100,
+        "training_tokens": 13107200,
+        "validation_loss": 5.644996643066406,
+        "validation_source_losses": {
+          "cosmopedia_v2": 6.398411273956299,
+          "finemath_4plus": 5.2995123863220215,
+          "fineweb_edu": 6.341621398925781,
+          "finewiki_en": 4.511901378631592,
+          "pes2o_v3": 6.314365386962891,
+          "stack_edu": 5.004168510437012
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 200,
+        "optimizer_seconds": 2052.336480377242,
+        "steady_training_seconds": 1833.8305706921965,
+        "step": 200,
+        "training_tokens": 26214400,
+        "validation_loss": 4.450869560241699,
+        "validation_source_losses": {
+          "cosmopedia_v2": 4.7973737716674805,
+          "finemath_4plus": 4.228357791900635,
+          "fineweb_edu": 5.218267440795898,
+          "finewiki_en": 3.460000514984131,
+          "pes2o_v3": 5.1085309982299805,
+          "stack_edu": 3.8926854133605957
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 300,
+        "optimizer_seconds": 3016.721985708922,
+        "steady_training_seconds": 2798.2160760238767,
+        "step": 300,
+        "training_tokens": 39321600,
+        "validation_loss": 4.0404744148254395,
+        "validation_source_losses": {
+          "cosmopedia_v2": 4.251171112060547,
+          "finemath_4plus": 3.8591554164886475,
+          "fineweb_edu": 4.805582523345947,
+          "finewiki_en": 3.1749699115753174,
+          "pes2o_v3": 4.697758197784424,
+          "stack_edu": 3.454209089279175
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 400,
+        "optimizer_seconds": 3981.7416744865477,
+        "steady_training_seconds": 3763.2357648015022,
+        "step": 400,
+        "training_tokens": 52428800,
+        "validation_loss": 3.7845447063446045,
+        "validation_source_losses": {
+          "cosmopedia_v2": 3.944324493408203,
+          "finemath_4plus": 3.5941543579101562,
+          "fineweb_edu": 4.573143482208252,
+          "finewiki_en": 2.905017375946045,
+          "pes2o_v3": 4.479456901550293,
+          "stack_edu": 3.2111709117889404
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 500,
+        "optimizer_seconds": 4944.962461868301,
+        "steady_training_seconds": 4726.456552183256,
+        "step": 500,
+        "training_tokens": 65536000,
+        "validation_loss": 3.6141841411590576,
+        "validation_source_losses": {
+          "cosmopedia_v2": 3.7529444694519043,
+          "finemath_4plus": 3.424407720565796,
+          "fineweb_edu": 4.412990093231201,
+          "finewiki_en": 2.746201992034912,
+          "pes2o_v3": 4.317935466766357,
+          "stack_edu": 3.030625104904175
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 600,
+        "optimizer_seconds": 5907.742194065824,
+        "steady_training_seconds": 5689.236284380779,
+        "step": 600,
+        "training_tokens": 78643200,
+        "validation_loss": 3.4965591430664062,
+        "validation_source_losses": {
+          "cosmopedia_v2": 3.627925395965576,
+          "finemath_4plus": 3.3055853843688965,
+          "fineweb_edu": 4.312266826629639,
+          "finewiki_en": 2.6119983196258545,
+          "pes2o_v3": 4.206587791442871,
+          "stack_edu": 2.9149913787841797
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 700,
+        "optimizer_seconds": 6871.819910624996,
+        "steady_training_seconds": 6653.31400093995,
+        "step": 700,
+        "training_tokens": 91750400,
+        "validation_loss": 3.4237825870513916,
+        "validation_source_losses": {
+          "cosmopedia_v2": 3.5484583377838135,
+          "finemath_4plus": 3.2365758419036865,
+          "fineweb_edu": 4.249157428741455,
+          "finewiki_en": 2.530716896057129,
+          "pes2o_v3": 4.14378023147583,
+          "stack_edu": 2.834007740020752
+        },
+        "validation_tokens": 786432
+      },
+      {
+        "global_step": 800,
+        "optimizer_seconds": 7835.102939698845,
+        "steady_training_seconds": 7616.5970300138,
+        "step": 800,
+        "training_tokens": 104857600,
+        "validation_loss": 3.379338502883911,
+        "validation_source_losses": {
+          "cosmopedia_v2": 3.498830795288086,
+          "finemath_4plus": 3.1945714950561523,
+          "fineweb_edu": 4.210184574127197,
+          "finewiki_en": 2.4817731380462646,
+          "pes2o_v3": 4.101082801818848,
+          "stack_edu": 2.7895896434783936
+        },
+        "validation_tokens": 786432
+      }
+    ]
+  },
   "validation": {
+    "cache_fault_controls": "Deliberate BF16 and FP32 cached-logit corruption both prevent export attestation.",
     "deferred_grader_controls": "Two canonical solutions pass and one deliberately wrong solution fails in the local sandbox.",
+    "offline_export_regression": "Staged offline cache works without Hub API calls; absent cache fails closed.",
     "portable_suite_deselected": 10,
-    "portable_suite_passed": 734,
-    "portable_suite_skipped": 10
+    "portable_suite_passed": 739,
+    "portable_suite_skipped": 10,
+    "single_worker_environment_control": "Real supervisor subprocess verifies rank variables are removed before development evaluation."
   }
 }

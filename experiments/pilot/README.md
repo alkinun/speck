@@ -1,8 +1,12 @@
 # First real-data pilot
 
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
-The full 800-step pilot is running; export, capability results and final backup remain pending.
-The [execution receipt](h100-run.json) records its launch. A separate H100 timing experiment completed 48 production
+Training completed all 800 steps / 104,857,600 tokens in **2.27 hours**. Final validation loss was
+**3.379**, steady throughput **13,595 tokens/s**, and peak allocated memory **19.3 GiB**.
+Export and tokenizer checks pass after inspected recovery; capability evaluation is running and
+final backup remains pending. The
+[execution receipt](h100-run.json) retains measurements and the original export failure.
+A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
 and timing check, not a model-quality result or an architecture comparison.
 

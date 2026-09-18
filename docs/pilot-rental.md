@@ -7,9 +7,26 @@ retry is included. The implementation is `scripts.pilot_rental`.
 
 The [local readiness receipt](../experiments/pilot/rental-readiness.json) records the built archive,
 source commit and validation. Relocation and offline grader checks passed locally. The complete
-GPU workflow is now running; the [execution receipt](../experiments/pilot/h100-run.json) records its
-updated implementation commit and launch provenance. Use that bundled commit even when
-documentation on main advances.
+GPU workflow completed training, then failed offline export template enumeration. The
+[execution receipt](../experiments/pilot/h100-run.json) preserves that failure and the separate
+recovery implementations. Recovery uses staged template files and the original checkpoint under
+the remaining six-hour deadline; it does not retrain. Export checks now pass; development evaluation
+is running after removing supervisor rank variables that incorrectly triggered distributed startup. Use the recorded implementation commit
+for each phase even when documentation on main advances.
+
+
+Export parity now compares native and exported BF16 logits on matching full and cached paths,
+then checks cached/full-pass semantics in FP32 on the same rounded release weights. The report
+retains BF16 cross-path drift separately: trained weights exposed ordinary reduced-precision
+shape-dependent rounding that the earlier combined comparison conflated with wrapper drift.
+The trained checkpoint matched its export exactly on both CPU and CUDA BF16 paths in the retained
+diagnostic; CPU FP32 cached/full error was 4.77e-6. This does not establish long-context accuracy.
+
+Use persistent job supervision for local transfers and deferred grading: this run's original
+exec workers ended between task turns. Their states and partial files were preserved before
+migration to systemd user services. The phase watcher also checks worker liveness. Reclaim remote
+checkpoint files only after matching their complete local backup against remote hashes; remove
+the remote completion marker before weights. The step100 reclaim is recorded in the execution receipt.
 
 The migrated Runpod container denies user-namespace creation. For that host, pass
 `--defer-code-grading` to both `check` and `run`: model generation and non-code scoring stay on the
