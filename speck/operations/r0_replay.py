@@ -9,33 +9,9 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from speck.operations.random_state import capture_rng, restore_rng  # noqa: F401
 from speck.provenance.io import durable_json, file_sha256
 from speck.training import checkpoint
-
-
-def capture_rng(device):
-    name, keys, position, has_gauss, cached_gaussian = np.random.get_state()
-    return {
-        "torch_cpu": torch.get_rng_state(),
-        "torch_cuda": torch.cuda.get_rng_state(device) if device.type == "cuda" else None,
-        "python": random.getstate(),
-        "numpy": (name, keys.tolist(), position, has_gauss, cached_gaussian),
-    }
-
-
-def restore_rng(value, device):
-    torch.set_rng_state(value["torch_cpu"])
-    if device.type == "cuda":
-        if value["torch_cuda"] is None:
-            raise ValueError("CUDA restart is missing its RNG state")
-        torch.cuda.set_rng_state(value["torch_cuda"], device)
-    elif value["torch_cuda"] is not None:
-        raise ValueError("checkpoint RNG device differs")
-    random.setstate(value["python"])
-    name, keys, position, has_gauss, cached_gaussian = value["numpy"]
-    np.random.set_state(
-        (name, np.asarray(keys, dtype=np.uint32), position, has_gauss, cached_gaussian)
-    )
 
 
 def rng_probe(device):

@@ -20,6 +20,12 @@ from speck.data.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.data.loader import manifest_fingerprint, packed_loader
 from speck.model import CausalLMTrainingOutput, build_model
 from speck.model.architecture import ArchitectureConfig
+from speck.operations.random_state import (
+    gather_training_rng,
+    restore_training_rng,
+    seed_generators,
+    warmup_resume_backend,
+)
 from speck.operations.runtime import (
     NullRun,
     base_dir,
@@ -474,7 +480,7 @@ class BaseTrainer:
 
     def _initialize_model_and_geometry(self):
         args = self.args
-        torch.manual_seed(args.seed)
+        seed_generators(args.seed)
         self.model = build_model(
             self.configs["model"],
             self.tokenizer.vocab_size,
@@ -585,7 +591,7 @@ class BaseTrainer:
             if metadata is None:
                 raise RuntimeError("resume metadata was not loaded")
             model_state, optimizer_state, loaded_metadata = load(
-                args.output_dir, args.resume, self.device
+                args.output_dir, args.resume, "cpu", mmap=True
             )
             if loaded_metadata != metadata:
                 raise ValueError("checkpoint metadata changed while loading")
@@ -595,6 +601,13 @@ class BaseTrainer:
                 or metadata["manifest"] != self.manifest_hash
             ):
                 raise ValueError("checkpoint does not match the model or dataset")
+            if self.device.type == "cuda" and metadata.get("rng_state"):
+                warmup_resume_backend(
+                    self.model,
+                    self.device,
+                    [(args.device_batch_size, args.sequence_length)],
+                    self.tokenizer.vocab_size,
+                )
             self.model.load_state_dict(model_state)
             self.optimizer.load_state_dict(optimizer_state)
             self.start_step = metadata["step"]
@@ -645,10 +658,17 @@ class BaseTrainer:
         if changed:
             raise ValueError(f"branch settings changed: {', '.join(changed)}")
         model_state, optimizer_state, loaded_parent = load(
-            self.parent_directory, self.cli.branch_step, self.device
+            self.parent_directory, self.cli.branch_step, "cpu", mmap=True
         )
         if loaded_parent != parent_metadata:
             raise ValueError("parent checkpoint metadata changed while loading")
+        if self.device.type == "cuda" and parent_metadata.get("rng_state"):
+            warmup_resume_backend(
+                self.model,
+                self.device,
+                [(self.args.device_batch_size, self.args.sequence_length)],
+                self.tokenizer.vocab_size,
+            )
         self.model.load_state_dict(model_state)
         self.optimizer.load_state_dict(optimizer_state)
         if context_branch:
@@ -761,6 +781,11 @@ class BaseTrainer:
         self.flops = self.model.flops_per_token(args.sequence_length)
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)
+        rng_metadata = self.metadata or self.parent_metadata
+        if rng_metadata:
+            restore_training_rng(
+                rng_metadata.get("rng_state"), self.device, self.rank, self.world_size
+            )
 
     def _validate(self, step):
         started = time.perf_counter()
@@ -836,10 +861,12 @@ class BaseTrainer:
             if step != self.steps:
                 raise ValueError("only the resolved final step can publish a completed checkpoint")
             assert_finite_parameters(self.parameters, self.distributed)
+        rng_state = gather_training_rng(self.device, self.world_size)
         if self.master:
             global_tokens = args.global_token_offset + step * args.batch_tokens
             state = {
                 "step": step,
+                "rng_state": rng_state,
                 "global_step": self.global_step_offset + step,
                 "global_tokens": global_tokens,
                 "training_phase": args.training_phase,
@@ -894,6 +921,7 @@ class BaseTrainer:
             )
         if self.distributed:
             dist.barrier()
+        restore_training_rng(rng_state, self.device, self.rank, self.world_size)
         self.elapsed_checkpoint += time.perf_counter() - started
 
     def _initial_validation(self):

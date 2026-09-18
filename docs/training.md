@@ -7,6 +7,13 @@ variation without it. The setting is immutable on resume. Older recipes default 
 compatibility; deterministic execution and its throughput cost still require checks on the target
 hardware, distributed geometry, and compiled path.
 
+New base and SFT checkpoints include every rank's Python, NumPy, CPU, and local CUDA RNG state
+inside the atomic metadata publication. Resume restores those generators after runtime/loader
+initialization; CUDA resumes warm the eager forward/backward kernels before loading saved tensors.
+Older checkpoints without RNG metadata remain readable but cannot establish full RNG continuity.
+The synthetic probe and the production trainer have separate restart checks. The initial GH200
+rehearsal uses `--no-compile`; compiled and multi-GPU continuation require measured qualification.
+
 `make setup` installs the CPU environment. CUDA uses `uv sync --extra gpu --extra linear`;
 the allocation's arm64/CUDA environment must be checked on site.
 

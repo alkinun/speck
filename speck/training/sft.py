@@ -19,6 +19,12 @@ from speck.data.loader import manifest_fingerprint
 from speck.export.pretrained import load_pretrained, pretrained_source_matches
 from speck.model import SpeckForCausalLM, build_model
 from speck.model.architecture import ArchitectureConfig
+from speck.operations.random_state import (
+    gather_training_rng,
+    restore_training_rng,
+    seed_generators,
+    warmup_resume_backend,
+)
 from speck.operations.runtime import (
     NullRun,
     base_dir,
@@ -162,6 +168,7 @@ class SFTTrainer:
         self.rank, self.local_rank, self.world_size, self.device = init_runtime(self.args.device)
         self.distributed = self.world_size > 1
         self.master = self.rank == 0
+        seed_generators(getattr(self.args, "seed", 42))
 
     def _load_and_verify_data(self):
         args = self.args
@@ -210,7 +217,7 @@ class SFTTrainer:
         self.metadata = None
         checkpoint_state = None
         if args.resume is not None:
-            checkpoint_state = load(args.output_dir, args.resume, self.device)
+            checkpoint_state = load(args.output_dir, args.resume, "cpu", mmap=True)
             self.metadata = checkpoint_state[2]
             self.model, self.config, self.pretrained = self._resumed_model()
         else:
@@ -231,6 +238,13 @@ class SFTTrainer:
         self.parameters = tuple(self.model.parameters())
         self.optimizer = self.model.optimizer(args.lr, args.weight_decay, args.optimizer)
         if checkpoint_state is not None:
+            if self.device.type == "cuda" and self.metadata.get("rng_state"):
+                warmup_resume_backend(
+                    self.model,
+                    self.device,
+                    [(self.device_tokens // length, length) for length in args.sequence_lengths],
+                    self.tokenizer.vocab_size,
+                )
             self._restore_checkpoint_state(checkpoint_state)
 
     def _resumed_model(self):
@@ -385,6 +399,11 @@ class SFTTrainer:
             )
         )
 
+        if self.metadata:
+            restore_training_rng(
+                self.metadata.get("rng_state"), self.device, self.rank, self.world_size
+            )
+
     def _validate(self, step):
         validation_plan = sft_plan(
             self.manifest,
@@ -418,8 +437,10 @@ class SFTTrainer:
         return loss
 
     def _checkpoint(self, step, validation_loss):
+        rng_state = gather_training_rng(self.device, self.world_size)
         if self.master:
             state = {
+                "rng_state": rng_state,
                 "format_version": 1,
                 "training_phase": "sft",
                 "step": step,
@@ -442,6 +463,8 @@ class SFTTrainer:
             prune(self.args.output_dir, self.args.keep_checkpoints)
         if self.distributed:
             dist.barrier()
+
+        restore_training_rng(rng_state, self.device, self.rank, self.world_size)
 
     def _run_steps(self):
         args = self.args
