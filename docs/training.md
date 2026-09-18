@@ -14,6 +14,13 @@ Older checkpoints without RNG metadata remain readable but cannot establish full
 The synthetic probe and the production trainer have separate restart checks. The initial GH200
 rehearsal uses `--no-compile`; compiled and multi-GPU continuation require measured qualification.
 
+`python -m scripts.training_replay EXPERIMENT --output /external/new-attempt --seconds 1800`
+exercises the production base trainer with four diagnostic steps and a restart after two. It
+compares every model/optimizer tensor and exact loader/RNG state. `--phase sft` uses a supplied
+finite SFT recipe whose computed step count must match `--steps`. Declare all allocated GPUs with
+`--allocated-gpus`; failed runs retain logs and checkpoints. See the [rental runbook](gh200.md)
+for the complete transferable workflow.
+
 `make setup` installs the CPU environment. CUDA uses `uv sync --extra gpu --extra linear`;
 the allocation's arm64/CUDA environment must be checked on site.
 
@@ -65,9 +72,11 @@ uv run --no-sync python -m scripts.infer "Explain this result:" \
   --experiment PATH_TO_EXPERIMENT --checkpoint-dir CHECKPOINT_DIRECTORY --max-tokens 128
 ```
 
-The current chat implementation is not yet a qualified tool-calling or reasoning protocol. Reconcile
-the separate post-training work, parser/template, loss masks, and output limits before making those
-claims. Keep base and assistant checkpoints separately identifiable.
+The [assistant rehearsal contract](assistant.md) now defines tool envelopes, reasoning serialization,
+loss masks, and a deterministic tool environment. Actual learned tool/reasoning capability remains
+unmeasured. Keep base and assistant checkpoints separately identifiable. SFT supports explicit
+`activation_checkpointing` and `loss_backend` settings; its defaults preserve historical behavior,
+and changing them on resume is rejected.
 
 Chat format v2 preserves `weight: 0` assistant turns as context and supervises only `weight: 1`
 (default) turns, including their EOS. Its fingerprint differs from v1, so old prepared masks must
