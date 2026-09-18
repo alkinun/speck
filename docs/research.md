@@ -1,6 +1,6 @@
 # Research informing the first baseline
 
-Reviewed 2026-09-17 using primary papers and official releases. These are lessons and comparisons,
+Reviewed 2026-09-18 using primary papers and official releases. These are lessons and comparisons,
 not a promise to reproduce another lab's scores or compute budget. The decisions live in [PLAN.md](../PLAN.md).
 
 | Source | What it supports | Implication for Speck |
@@ -25,6 +25,79 @@ not a promise to reproduce another lab's scores or compute budget. The decisions
    Long reasoning can consume both training and inference budgets without improving answers.
 5. Compare base with base and assistant with assistant. A parameter-matched public model can have
    vastly different data, compute, context, and distillation history.
+
+## ZGCM-1 review — 2026-09-18
+
+Reviewed [report v1](https://arxiv.org/html/2609.13356v1), the public
+[dataset card](https://huggingface.co/datasets/zgcagi/ZGCM-1-Data/tree/a2e96e71e6d8316f7f40ca53bec15dad49b845cb),
+[model card](https://huggingface.co/zgcagi/ZGCM-1-7B/tree/a0e10af50e6d11e3a3fd3575aec80deb98666489),
+and [code documentation](https://github.com/zgcagi/ZGCM-1/tree/8c9677a03b1ae556f93b5cf6afa62b4bc0176d28).
+No weights, gated corpus, or upstream implementation were imported or executed.
+
+The model card describes 7.39B parameters, sliding-window/global attention, 4.19T pretraining
+tokens, approximately 600B mid-training tokens, and 256K context. This is a much larger training
+program than Speck's proposed allocation. Its attention is not KDA. Similar use of hybrid layers
+and Muon does not validate our architecture or predict our quality.
+
+Important qualifications from the report:
+
+- Table 10's SFT filtering reduces approximately 2.08M examples to 1.145M: six-task mean
+  67.78 → 68.83, but HumanEval+ 73.78 → 67.56 and IFEval 72.64 → 71.94.
+- Section 3.1.3's 4.2× efficiency claim multiplies component estimates. Section 2.2 reports
+  1.13× SWA/full-attention throughput at 4K; it does not compare against our KDA implementation.
+- Table 6 implies 192 H100s for general pretraining (TP 2 × DP 96), not a GPU-hour total.
+- Section 10.4's thinking/direct transfer is an observational checkpoint comparison.
+- Section 5.1 allows 258,048 generated tokens and generally averages pass@1 across 32 runs;
+  this is not best-of-32. Appendix 14 identifies external comparison values as cited releases.
+
+### Changes to prioritize for Speck
+
+These are proposed work after runtime qualification, not executed experiments or additions to the
+frozen pilot. They refine the existing baseline rather than create another architecture search.
+
+1. **Audit supervision before scaling it.** For our retained assistant stock, preserve each source
+   identity and distinguish structural validity, answer verification, and actual environment success.
+   Build a bounded, stratified manual audit before trusting a model-based quality score. Count
+   accepted/rejected rows, total and supervised tokens, and domain coverage. Never set a blanket
+   rejection percentage from another model's result.
+2. **Make response style measurable.** Inventory direct answers and reasoning examples separately,
+   including assistant reasoning-token share and length. Interleave ordinary assistance and tool
+   examples in the first useful SFT recipe; the rehearsal's 50/50 row split is only coverage.
+   Evaluate instruction compliance, correctness, and output length together. Treat any claim that
+   reasoning supervision improves concise answers as a hypothesis requiring a matched comparison.
+3. **Evaluate learned tool decisions.** Use `speck_tools_v1` for both training and inference.
+   Extend our scripted environment checks with model rollouts, held-out task families, and explicit
+   task-completion outcomes. Keep malformed calls, missing information, failed tools, and corrections
+   in the score breakdown. A bounded local retrieval task is a possible later addition; live search
+   requires its own provider, observation, judge, and cost contract.
+4. **Cost a capability-focused continuation only after the pilot.** Consider a separate 4K phase
+   mixing verified math/code/instruction data with broad replay, before SFT. Price its data supply
+   and GPU-hours against simply extending base training. Keep this optional until our curves justify
+   it. Longer context, lexical-difficulty curricula, FP8, and changing attention each need separate
+   evidence; none belongs in the imminent rental rehearsal.
+5. **Choose one scientific comparison.** A candidate is structurally valid SFT versus additionally
+   verified SFT, from the same base, with fixed supervised-token budgets, domain/length strata,
+   optimizer settings, and evaluation conditions. Report input-token cost and repetition as well.
+   This tests the selection policy as a whole; it cannot isolate an abstract notion of quality.
+   Freeze the question and affordable budget before viewing results; keep final tests untouched.
+
+### Dataset reuse
+
+The public card mixes full-text records with index-only locators, per-source terms, and sources
+requiring separate access. The dataset is gated. Published token counts use GLM-5.1 tokenization;
+they cannot be added to our Mistral-tokenized stock. The card's approximately 4.57M SFT rows also
+differ from the report's 4,921,933; bind any future subset to its own immutable manifest.
+
+Use its source inventory to investigate our measured supply bottlenecks, especially code. For any
+candidate, first establish access and intended-use eligibility, then inspect a bounded sample,
+retokenize, jointly deduplicate against retained sources, and run benchmark exclusions. Count only
+materialized eligible tokens. A locator or already-held upstream document adds no new supply.
+Prefer extending an already understood source when it resolves the same bottleneck.
+
+The public [data pipeline README](https://github.com/zgcagi/ZGCM-1/blob/8c9677a03b1ae556f93b5cf6afa62b4bc0176d28/data-process/README.md)
+describes a scaffold with representative adapters; tokenizer, quota, and indexed-writer integration
+remain environment-specific. Borrow its traceable decision pattern where useful, rather than add a
+second ingestion framework to Speck.
 
 ## Evaluation references
 

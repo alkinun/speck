@@ -56,6 +56,10 @@ learning rate are starting choices, not optimized findings.
 For SFT, count both total context and supervised tokens. Describe masked context turns, complete
 conversation length coverage, reasoning format and output limits, and executable tool supervision.
 Structural validity of a teacher trace does not establish answer correctness.
+Report direct-response and reasoning shares by both rows and supervised tokens, plus executable
+verification coverage by source. Separate successfully executed trajectories from unexecuted or
+unsuccessful traces. Record any capability-focused continuation as its own phase with broad-data
+replay, distinct from masked SFT.
 
 ## 4. Evaluation
 
@@ -77,6 +81,11 @@ custom subsets; published full-benchmark numbers are not directly comparable.
 Record base and assistant results separately. Compare models under the same evaluated conditions.
 Report sampling uncertainty and acknowledge that one training seed does not establish robustness
 across training runs. Any narrowly controlled follow-up needs its question and cost fixed before outputs.
+The [ZGCM-1 review](research.md#zgcm-1-review--2026-09-18) proposes a possible SFT selection-policy
+comparison; it is not scheduled or evidence of an effect. If executed, disclose token/compute matching,
+domain and length differences, repetition, and per-capability regressions alongside aggregate changes.
+For reasoning and tools, record actual generated tokens, budget-exhaustion rates, tool calls, and
+environment failures. Distinguish mean pass@1 over repeated samples from pass@k and best-of-k selection.
 
 ## 5. Results and limitations
 

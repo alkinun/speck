@@ -46,7 +46,11 @@ Change one only when a measured failure or capability comparison justifies the w
    not a causal comparison or claim about architecture quality.
 4. **Develop useful behavior.** Once the base learns reliably, prepare a costed SFT baseline with
    verified math/code solutions, ordinary assistance, and structured tool interactions. Reuse the
-   separate post-training work where compatible. Add distillation or RL only after a clear baseline,
+   separate post-training work where compatible. Audit source/answer quality, measure direct versus
+   reasoning supervision by tokens, and interleave general/tool examples under one inference protocol.
+   Score model-driven tool completion separately from scripted environment checks. Consider a 4K
+   capability-focused continuation with broad replay only if pilot measurements justify its cost.
+   Add distillation or RL only after a clear baseline,
    working graders, and an affordable experiment exist.
 5. **Scale what works.** Decide the main token horizon and stage budgets from measured data supply,
    learning curves, and all-in runtime. Keep time for post-training and final evaluation. The old
@@ -115,6 +119,9 @@ not evidence of successful tool use. Match decoding budgets when comparing model
 - The [GH200 rental runbook](docs/gh200.md) has a verified portable bundle, locked ARM64 dependency
   resolution, relocated inputs, and a bounded loader/kernel/base/SFT/export sequence. No machine has
   been rented and no GH200 result is claimed. Installation and target-hardware execution remain open.
+- The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
+  supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
+  not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.
 
 **Next:** run the prepared one-GH200 rental rehearsal when SSH access is available. On the eventual
 allocation, qualify four-worker execution and scheduler recovery, measure the actual pilot batch,
