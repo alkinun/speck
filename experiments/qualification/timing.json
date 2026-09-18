@@ -1,0 +1,35 @@
+{
+  "format": "speck_h100_planning_measurements",
+  "format_version": 1,
+  "source_experiment": "experiments/pilot",
+  "allocated_gpus": 1,
+  "timeout_seconds": 2400,
+  "minimum_free_disk_bytes": 64424509440,
+  "training": {
+    "batch_tokens": 131072,
+    "device_batch_size": 1,
+    "sequence_length": 4096,
+    "train_tokens": 104857600,
+    "eval_tokens": 786432,
+    "final_eval_tokens": 786432,
+    "eval_every": 16,
+    "save_every": 16,
+    "log_every": 1,
+    "diagnostics_every": 16,
+    "checkpoint_tokens": [2097152, 4194304, 6291456],
+    "wandb_project": null
+  },
+  "sessions": [
+    {"stop_at_tokens": 4194304, "resume": null},
+    {"stop_at_tokens": 6291456, "resume": 32}
+  ],
+  "inference": {
+    "batch_sizes": [1, 8],
+    "prefill_length": 1024,
+    "decode_prefix_length": 1024,
+    "decode_tokens": 256,
+    "warmups": 1,
+    "repeats": 3
+  },
+  "boundary": "Bounded partial pilot timing only. Preserve model, data, tokenizer, 800-step LR schedule and deterministic eager training. Increase validation/save/diagnostic frequency for measurement; stop after 48 steps (6,291,456 tokens). Inference is fixed-length synthetic BF16 eager native serving, not a measured capability evaluation or quality claim. Existing serving benchmark performs at least five decode warmups per batch."
+}
