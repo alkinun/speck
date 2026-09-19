@@ -84,6 +84,10 @@ The subsequent [variant inspection](web-variants.json) pins the distinct default
 English v1.4 and L1-derived English HQ directories at the same UltraFineWeb release. The
 [qualification packet](../main-data/QUALIFICATION.md) keeps their source populations and schemas
 separate for the next comparison; no corpus payload or quality result follows from that metadata.
+The [subsequent natural-web inspection](NATURAL_WEB.md) adds six hash-verified HQ shards and
+bounded default/control samples. HQ is now the priority for further qualification because its
+records preserve page/WARC origins. High-score extraction failures keep quality gates open;
+no source is admitted and no quality ranking is established.
 
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
 [its frozen recipe](../pilot/README.md#recipe). This is not the final flagship mixture.
@@ -99,16 +103,17 @@ over another source. The DCLM Parquet release has its own revision, distinct fro
 
 | Source | Matching revision prefix | Main-data role and next check |
 | --- | --- | --- |
-| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | Leading natural-web candidate to qualify; FineWeb-Edu remains the control. Bind scored English versus English HQ paths, then inspect provenance, coverage and overlap |
+| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | Prioritize L1-derived English HQ for recoverable page/WARC origins; FineWeb-Edu remains the control. Complete inventory, stratified quality/coverage, eligibility and overlap checks |
 | [DCLM baseline Parquet](https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet) | `817d6752765f` | Independent natural-web candidate; bounded quality/coverage and source-use audit before acquisition |
 | [DCLM-Edu](https://huggingface.co/datasets/HuggingFaceTB/dclm-edu) | `dbad8ad71224` | Separately selected DCLM candidate; assess score threshold and avoid counting parent/filtered overlap as extra supply |
 | [Ultra-FineWeb-L3](https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3) | `bc3b1ba986fc` | Synthetic candidate for the Cosmopedia comparison; continue the source/answer checks below |
 
 The [September 19 paper review](../../docs/research.md#openbmb-web-data-review--2026-09-19)
 prioritizes natural Ultra-FineWeb on matched published evidence: nine of nine English benchmarks
-improve over FineWeb-Edu. The next web-data step is a bounded, comparable audit against retained
-FineWeb-Edu, retaining DCLM/DCLM-Edu as independent candidates, with declared language, source
-paths, score filters and length/domain coverage. The archived Ultra-FineWeb cutoff of 0.8 differs
+improve over FineWeb-Edu. The first bounded inspection above does not reproduce that training
+comparison or establish the newer HQ route's quality. Continue against retained FineWeb-Edu,
+retaining DCLM/DCLM-Edu as independent candidates, with declared language, source paths,
+score filters and length/domain coverage. The archived Ultra-FineWeb cutoff of 0.8 differs
 from the paper's 0.5; do not assume stricter filtering preserves its result or coverage.
 Keep the synthetic L3-versus-Cosmopedia question separate. Published results justify this priority;
 eligibility, supply and main weights remain open. No bulk acquisition or additional GPU

@@ -73,6 +73,11 @@ prioritizes natural Ultra-FineWeb qualification following the
 the control, DCLM baseline/DCLM-Edu as independent candidates, and synthetic L3 assessed separately.
 Their historical pins match current repository heads as checked September 19. None is in the
 frozen pilot; the main mixture still needs a comparable content/coverage audit and source eligibility.
+The [first natural-web inspection](../experiments/corpus-audit/NATURAL_WEB.md) now prioritizes
+the newer L1-derived HQ route for its observed URL/WARC metadata. Six hash-verified shards
+provide 144,876 inspected records; default English exposes no equivalent original-page identity.
+High-scoring extraction defects and template-heavy examples reinforce separate quality controls.
+This is source qualification progress, not a demonstrated learning-quality win or training admission.
 
 The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
@@ -186,15 +191,18 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Produce a bounded natural Ultra-FineWeb/FineWeb-Edu comparison packet using the existing audit
-   pipeline. Report accepted unique tokens, language/domain and length distributions, extraction
-   defects, overlap and source eligibility. Inspect differing cutoff choices before acquisition.
+1. Extend the completed bounded Ultra-FineWeb/FineWeb-Edu inspection into an HQ inventory and
+   score/crawl/host/length-stratified qualification. Resolve source-use evidence, repair/reject
+   broken extraction, measure overlap and count accepted unique tokens. Add DCLM as an independent
+   comparison before freezing allocations; neither the default split nor a stricter score cutoff
+   inherits the newer HQ route's observed provenance or an assumed quality advantage.
 2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including
    useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,
    16–32K and 32–128K. Keep longer examples separately. Prioritize answer correctness, useful
    reasoning, tool-result consistency, concise ordinary assistance and source identity.
-3. Complete the already planned practical-code qualification. Admit only traceable material with
-   independent checks; do not turn every source on the shortlist into a separate GPU experiment.
+3. Extend the completed bounded practical-code checks to corpus-scale source eligibility and
+   benchmark/family exclusions. Admit only traceable material with independent checks; do not
+   turn every source on the shortlist into a separate GPU experiment.
 4. Recount usable supply and freeze token-based domain, source, length and reasoning-depth weights
    for the relevant phase. SFT needs both supervised-token and total-context counts. Final
    percentages depend on those measurements; the working allocation guides preparation.

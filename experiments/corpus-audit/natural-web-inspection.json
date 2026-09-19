@@ -1,0 +1,337 @@
+{
+  "format": "speck_bounded_natural_web_inspection",
+  "format_version": 1,
+  "date": "2026-09-19",
+  "status": "hq_prioritized_for_further_qualification_not_admitted",
+  "training_admitted": false,
+  "repository": "openbmb/Ultra-FineWeb",
+  "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+  "artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/acquire.py",
+      "sha256": "975b3081bebea88c79b896d8b6e45963724ae8557646ffe5b5c90671d8b95c3d",
+      "bytes": 4878
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/acquisition.json",
+      "sha256": "bbf7d1585ed055a4f058a560c69026140b6b016def79bd96def0bb9cb96812a3",
+      "bytes": 13377
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/analyze.py",
+      "sha256": "db1acd1eb7764964eb1e7166063fd8d7973b77525a72dac57de67038650a9a87",
+      "bytes": 9396
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/analysis-v2/summary.json",
+      "sha256": "6c9dffa8428b3e3624c2e6922f9ffe90939e89b0f0189b11acfaddce97478430",
+      "bytes": 13968
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/analysis-v2/samples.jsonl",
+      "sha256": "cdbdb6f965e6e7b9bfe16017f3ccbd545cd992dea5f4b556b247aef3740d3868",
+      "bytes": 4956167
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/prepare_review.py",
+      "sha256": "67a9317fa160706fbe82534637059204811fdf2b6521964eaef1a2c4ffb59123",
+      "bytes": 1079
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/review-packet.json",
+      "sha256": "ae61afc40e79b9bca1fa08700eb555ba1b80a9e69c8c79700666e7028c5fe386",
+      "bytes": 37802
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/review-observations.json",
+      "sha256": "7bbf0dfa2fc5a7e1fe92e0b5ba254d09227b25dddacd2ea37d848b82a8bb7e00",
+      "bytes": 7390
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-comparison/analysis-repeat/summary.json",
+      "sha256": "20c349f4f33155139882de6077e25f1e581714e337648b129cc67e96ececaf85",
+      "bytes": 13972
+    }
+  ],
+  "parent_receipts": [
+    {
+      "path": "experiments/corpus-audit/web-variants.json",
+      "sha256": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
+      "bytes": 4104
+    },
+    {
+      "path": "experiments/corpus-audit/result.json",
+      "sha256": "f3a7bb554ebdfc3ad245063ee6cc0565541d1995358228cf51f089c31136e65e",
+      "bytes": 6744
+    }
+  ],
+  "acquisition": {
+    "bytes": 476607129,
+    "elapsed_seconds": 111.66507119202288,
+    "hq_shards": 6,
+    "all_hq_lfs_hashes_verified": true,
+    "viewer_revision_verified": true,
+    "default_sampling": "Four seeded 12-row windows across the viewer split; cluster sample, not representative quality estimate",
+    "hq_sampling": "One seeded shard among the first 100 listed files of each of six crawls; remaining pages not enumerated; cluster convenience sample"
+  },
+  "schemas": {
+    "default": [
+      "content",
+      "score",
+      "source"
+    ],
+    "hq": [
+      "uid",
+      "content",
+      "meta",
+      "dataset_index"
+    ],
+    "hq_metadata": [
+      "language",
+      "language_score",
+      "pii_credit_cards",
+      "pii_emails",
+      "pii_id_cards",
+      "pii_ips",
+      "pii_phones",
+      "pred_label",
+      "pred_score",
+      "source_file",
+      "url",
+      "warc_date",
+      "warc_record_id"
+    ],
+    "hq_all_metadata_fields_present_in_rows": 144876,
+    "hq_source_file_is_warc_basename": true,
+    "hq_per_document_license_field": false,
+    "default_original_url_or_warc_identity": false,
+    "control_original_url_and_warc_identity_in_samples": 64
+  },
+  "inspected_scopes": {
+    "fineweb_edu": {
+      "documents": 64,
+      "sample_documents": 64,
+      "sample_tokens": 251210,
+      "length_bands": {
+        "bytes_gt_32768": 16,
+        "bytes_le_2048": 16,
+        "bytes_le_32768": 16,
+        "bytes_le_8192": 16
+      },
+      "unique_hosts": 63,
+      "exact_duplicate_documents": 0,
+      "score_min": 3.0,
+      "score_max": 4.0,
+      "sample_documents_over_4096": 19,
+      "sample_documents_over_32768": 0
+    },
+    "ultrafineweb_default": {
+      "documents": 48,
+      "sample_documents": 48,
+      "sample_tokens": 34334,
+      "length_bands": {
+        "bytes_le_2048": 25,
+        "bytes_le_32768": 4,
+        "bytes_le_8192": 19
+      },
+      "unique_hosts": 0,
+      "exact_duplicate_documents": 0,
+      "score_min": 0.5024999976158142,
+      "score_max": 0.9993000030517578,
+      "sample_documents_over_4096": 0,
+      "sample_documents_over_32768": 0
+    },
+    "ultrafineweb_hq": {
+      "documents": 144876,
+      "sample_documents": 64,
+      "sample_tokens": 259134,
+      "length_bands": {
+        "bytes_gt_32768": 1232,
+        "bytes_le_2048": 40571,
+        "bytes_le_32768": 25306,
+        "bytes_le_8192": 77767
+      },
+      "unique_hosts": 111416,
+      "exact_duplicate_documents": 38,
+      "score_min": 0.5000103116035461,
+      "score_max": 1.0,
+      "sample_documents_over_4096": 19,
+      "sample_documents_over_32768": 0
+    }
+  },
+  "score_cutoff_check": {
+    "source": "ultrafineweb_hq",
+    "scope": "Six inspected shards only",
+    "documents": 144876,
+    "documents_score_at_least_0_8": 82166,
+    "documents_below_0_8": 62710,
+    "threshold_adopted": false,
+    "interpretation": "Document retention only; not retained tokens or a quality result. Preserve lower-score coverage for inspection."
+  },
+  "sample_tokens_total": 544678,
+  "sample_token_serialization": "Unchanged content, frozen Mistral SentencePiece, BOS and EOS per document; sample tokens only, not eligible stock",
+  "sample_documents_total": 176,
+  "eligible_tokens_established": 0,
+  "review": {
+    "documents": 11,
+    "full_text_documents": 6,
+    "excerpt_documents": 5,
+    "reviewer": "assistant; not independent human annotation",
+    "rubric": [
+      "Extraction completeness and boundary artifacts",
+      "Information density and useful domain diversity",
+      "Source identity and attribution recoverability",
+      "Separate factual correctness from presentation quality"
+    ],
+    "observations": [
+      {
+        "source": "fineweb_edu",
+        "id": "fineweb_edu:681370",
+        "sha256": "492d91693e3db72dd4e86c23781bdaadc98648183a5eedd1d3d14260113eeb33",
+        "scope": "full_text",
+        "topic": "Catholic social philosophy",
+        "decision": "retain_for_broadness_review",
+        "observation": "Complete short argumentative passage; distinguish perspective from general scientific exposition. No extraction defect observed.",
+        "limitation": "No external factual verification; source-use and exclusions remain open.",
+        "training_admitted": false
+      },
+      {
+        "source": "fineweb_edu",
+        "id": "fineweb_edu:408329",
+        "sha256": "257632b27282d0b29ba72cf6b037148315be8f727789220f62ff5ced651fdf59",
+        "scope": "full_text",
+        "topic": "Energy and architecture reporting",
+        "decision": "retain_for_broadness_review",
+        "observation": "Coherent dated report with formatting and grammar noise; preserves numerical and geographic claims.",
+        "limitation": "Claims were not checked; educational score is not a correctness certificate.",
+        "training_admitted": false
+      },
+      {
+        "source": "fineweb_edu",
+        "id": "fineweb_edu:1661109",
+        "sha256": "5bcab9925e46be842ba7ba69509753802e4e898920f15cc76725719a0fc08a40",
+        "scope": "head_3000_tail_1500_characters",
+        "topic": "Literary history and travel",
+        "decision": "hold_for_extraction_repair",
+        "observation": "Substantive biographical opening but large unrelated navigation/article directory at the tail.",
+        "limitation": "Excerpt review; strip verified navigation only, preserving historical prose and attribution.",
+        "training_admitted": false
+      },
+      {
+        "source": "fineweb_edu",
+        "id": "fineweb_edu:294080",
+        "sha256": "1a58f2d60a5121ade20b1a90c5117374d1951f62be4f96ee0fc336870b3ec79b",
+        "scope": "head_3000_tail_1500_characters",
+        "topic": "Religious history lecture",
+        "decision": "retain_for_full_document_review",
+        "observation": "Structured long lecture with attribution and course context, readable beginning and end.",
+        "limitation": "Only head/tail reviewed; continuity and middle content remain unchecked.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_default",
+        "id": "default:en:218544598",
+        "sha256": "3b173164669b8c40027d979656332997280dd3c7c16174108545d121ddafb0db",
+        "scope": "full_text",
+        "topic": "Research workshop agenda",
+        "decision": "lower_priority_not_blanket_reject",
+        "observation": "Intact agenda but sparse knowledge and unresolved references to Terms of Reference; classifier score 0.9733 does not establish high information density.",
+        "limitation": "Do not discard all short procedural documents; keep as a coverage/utility contrast.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_default",
+        "id": "default:en:218544604",
+        "sha256": "c5143ce1cbc9a00f8608c98172af92c1ffdd46c398d2807a851917ead4c67bc3",
+        "scope": "full_text",
+        "topic": "Sustainability research overview",
+        "decision": "retain_for_broadness_review",
+        "observation": "Coherent overview of research programmes, with specific named projects and readable paragraphs.",
+        "limitation": "Origin unresolved in the released fields; cannot promote to eligible bank from text alone.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_default",
+        "id": "default:en:747353267",
+        "sha256": "46546ba88b2becefe584c6dae1a0d76de613656c745186b62e2e8942cb2e73d8",
+        "scope": "head_3000_tail_1500_characters",
+        "topic": "Neuroscience reference article",
+        "decision": "hold_for_attribution_and_boundary_review",
+        "observation": "Substantive exposition and bibliography, navigation preamble and explicit Wikipedia-derived attribution footer.",
+        "limitation": "Preserve attribution and resolve original page/version; excerpt review does not validate scientific claims.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_hq",
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0063-of-1000.parquet:1879",
+        "sha256": "a32bf1a689583e6167c1535e5674549851bdb5338a38818a354ebd319d890705",
+        "scope": "full_text",
+        "topic": "Emergency response training module",
+        "decision": "lower_priority_not_blanket_reject",
+        "observation": "Mostly module teaser questions, with empty reading-time labels; little actual instruction.",
+        "limitation": "No operational safety assessment; distinguish intact short descriptions from substantive learning content.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_hq",
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0063-of-1000.parquet:20666",
+        "sha256": "19461333aeb2b4cbd4803a3b36f13a8df2b650bd794cd6ac734d03b1ca58dfa4",
+        "scope": "full_text",
+        "topic": "Business policy statement",
+        "decision": "retain_with_template_diversity_control",
+        "observation": "Readable modern-slavery policy, but generic repeated commitments illustrate that score 0.9971 need not mean technical depth.",
+        "limitation": "No check of the firm or legal claims; count template families before giving this genre much weight.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_hq",
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0038-of-1000.parquet:7309",
+        "sha256": "727cd25c76626f9beec74c347950d1cff6636f23e6bbd65339e07c4a48245e76",
+        "scope": "head_3000_tail_1500_characters",
+        "topic": "Tax explainer",
+        "decision": "hold_for_density_and_fact_review",
+        "observation": "Head/tail repeatedly restate topic and importance; detailed financial claims need separate verification.",
+        "limitation": "Excerpt-based utility concern; no claim that facts are correct/incorrect or that text is synthetic.",
+        "training_admitted": false
+      },
+      {
+        "source": "ultrafineweb_hq",
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0021-of-1000.parquet:22134",
+        "sha256": "b4807f4254d11815009b579a7c6b75e98f2df5c7ef5158928a9fbf4200996c09",
+        "scope": "head_3000_tail_1500_characters",
+        "topic": "Gravitational-wave review",
+        "decision": "reject_unchanged_extraction_for_technical_bank",
+        "observation": "Prose references a metric, perturbation, wave equation and strain value where displayed expressions are missing. Score 0.9557 did not prevent this visible extraction loss.",
+        "limitation": "Reject this serialization for the technical bank; recover equations from traceable origin if feasible, preserving scientific topic coverage. Middle not fully reviewed.",
+        "training_admitted": false
+      }
+    ]
+  },
+  "validation": {
+    "offline_replay": "Identical sample bytes and census/metadata/token results, excluding output path",
+    "fineweb_sample_tokens": "All 64 match retained document-index token counts",
+    "cross_source_exact_matches": 0,
+    "cross_source_scope": "Six HQ shards, 48 default rows, 64 FineWeb-Edu samples only; not whole-corpus overlap"
+  },
+  "decision": {
+    "priority_variant": "data/ultrafineweb_l1_en_hq",
+    "basis": "Observed original-page/WARC metadata makes lineage and extraction recovery more tractable; quality superiority not established.",
+    "control": "Retained FineWeb-Edu",
+    "default": "Keep comparison evidence; require demonstrated original-FineWeb identity/content join before promotion to a provenance-resolved bank.",
+    "v1_4": "Not inspected or conflated with either route.",
+    "license": "Pinned publisher card says Apache-2.0 for the project and instructs checking component dataset licenses; no per-document license clearance follows from metadata.",
+    "next": "Complete HQ shard inventory; design score/crawl/host/length-stratified source inspection and origin/family deduplication; retain intact scientific/technical material and repair extraction where possible. Then add bounded DCLM control before source allocation freeze.",
+    "unchanged": "Model, eight-bank weights, token goals, pilot, evaluation and GPU budget."
+  },
+  "limitations": [
+    "Diagnostics are review hints, not rejection or factual correctness.",
+    "Exact overlap is limited to six HQ shards, 48 default documents and 64 retained control samples; no near-duplicate or parent-stock matching.",
+    "Classifier scores across sources are not calibrated to each other.",
+    "HQ first-page shard selection and viewer windows do not establish domain representativeness.",
+    "Language labels are upstream, not independent language verification.",
+    "No bulk-source license clearance, training exclusion screen, eligible-token count or model comparison.",
+    "No quality or benchmark comparison across these differently sampled populations.",
+    "No 32K/128K source-supply qualification from these samples.",
+    "No repeated full-corpus scan or GPU experiment was needed."
+  ]
+}

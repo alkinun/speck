@@ -98,9 +98,17 @@ The [pinned UltraFineWeb variant inspection](../corpus-audit/web-variants.json) 
 `data/ultrafineweb_l1_en_hq` (the publisher's newer L1-derived selected route, claiming crawl coverage
 through CC-MAIN-2025-51). Inspect both against FineWeb-Edu before choosing a bank. The separate
 `ultrafineweb_en_v1_4` directory remains unqualified; its name alone does not establish selection
-semantics or superiority. Only metadata/card bytes were acquired. The card's default fields
-`content`, `score`, `source` must not be assumed to describe the other variants. Some directory
-listings are partial, and no full shard inventory, schema, corpus quality or eligible supply is claimed.
+semantics or superiority. That initial inspection acquired only metadata/card bytes.
+
+The subsequent [bounded natural-web inspection](../corpus-audit/NATURAL_WEB.md) verifies six HQ
+shards (144,876 documents), 48 default viewer rows and the existing 64-document FineWeb-Edu
+control. HQ actually provides `uid`, `content`, JSON `meta` and `dataset_index`; its metadata
+retains URLs and WARC identities throughout the inspected shards. Default English has only
+`content`, `score`, `source`. Prioritize HQ for further provenance-resolved qualification;
+quality superiority and eligible supply remain unestablished. Eleven assistant-reviewed examples
+include missing equations despite a high classifier score, template-heavy text and navigation
+tails. The full inventory, score/domain-stratified comparison, source-use review and joint
+deduplication remain open. No corpus-wide quality ranking follows from these sampling frames.
 
 For each new source, pin release/card/serialization first, then take a deterministic sample across
 length, domain/language and upstream-score bands before labeling. Use the same bands and review

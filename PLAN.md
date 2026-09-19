@@ -68,7 +68,9 @@ historical; do not repeat the completed pilot because a preparation document sti
    and defines family separation. LiveCodeBench release-v6 public-text coverage is now pinned;
    finish the full source-family graph and intended scoring coverage before exercise derivation.
    The 16-row UltraData-Code L3 preview remains held for lineage.
-2. **Qualify the data recipe.** Audit pinned natural Ultra-FineWeb against FineWeb-Edu; keep DCLM
+2. **Qualify the data recipe.** The [bounded web inspection](experiments/corpus-audit/NATURAL_WEB.md)
+   prioritizes newer UltraFineWeb HQ for its page/WARC metadata, with FineWeb-Edu as control;
+   complete the inventory and score/domain-stratified quality and eligibility checks. Keep DCLM
    as an independent coverage candidate and synthetic L3 separate. Review math correctness and
    source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work
    one bounded packet at a time; close code supply feasibility before bulk packing.
