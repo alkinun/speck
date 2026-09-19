@@ -7,11 +7,11 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- Common full-read coverage is **173 files / 342,499 tokens** across the fixed 218 records.
-  The [latest Markdown review](../corpus-audit/markdown-cohort-review.json) adds eighteen readings,
-  distinguishing tutorials, reference/test excerpts and personal/project prose. Document boundaries
-  remain intact; no new or reused verified origins are available for this batch.
-  There are 44 held records and three unheld records still unread; source labels and weights remain intact.
+- Common full-read coverage is **176 files / 412,974 tokens** across the fixed 218 records.
+  The [stylesheet closeout](../corpus-audit/stylesheet-cohort-review.json) adds the final three readings,
+  distinguishing page, template and component roles. All 174 currently unheld records are now read;
+  two earlier reads are now held, so the 176 readings overlap the 44 family holds. Original labels,
+  weights and document boundaries remain intact; this batch adds no verified origins.
   The [coding guide](../../docs/coding.md#common-cohort-review) links the frozen earlier readings.
   The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial;
   the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
@@ -120,10 +120,27 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 173 records;
-read the remaining three CSS/SCSS records at their original lengths with the same origin/notice,
-intended-use, content and family gates. Keep this sampling frame fixed; reconcile observed file roles
-and unresolved eligibility into the dataset inventory rather than replacing difficult outcomes.
+The fixed-cohort reading pass is complete. Reuse its retained evidence for source-use and inventory
+qualification; do not open another reading sample without a concrete unresolved coverage question.
+The closeout reconciles the original observed tokens without treating held/read counts as disjoint:
+
+| Cohort | Original files / tokens | Unheld, read files / tokens | Held, previously read files / tokens | Held, unread files / tokens |
+| --- | --- | --- | --- | --- |
+| Retained Stack-Edu | 138 / 459,615 | 104 / 287,668 | 1 / 596 | 33 / 171,351 |
+| Stack v3 | 80 / 133,211 | 70 / 122,559 | 1 / 2,151 | 9 / 8,501 |
+
+Neither cohort has unheld unread records. These are observed sample counts, not eligible-token
+estimates or comparable quality rates. The next deliverable uses the existing inventory and receipts:
+
+| Qualification gate | Evidence needed before a decision |
+| --- | --- |
+| Identity and source use | Resolve host/upstream revisions, consumed transformations and applicable notices; retain explicit unresolved outcomes |
+| Families and exclusions | Extend known links to copied/transformed families and near-duplicates; freeze graph and scoring coverage before partitioning |
+| Intended use | Record document role and contextual limitations; require independent oracles only for claimed verified exercises |
+| Finite supply | Count deduplicated eligible tokens, exclusions and acquisition costs separately per bank; use supply and runtime to bound the shared study horizon |
+
+Keep the original sampling frames fixed and reconcile roles and unresolved outcomes into the
+inventory. Reading completion does not close any of these gates by itself.
 Resolve observed restrictive notices alongside host/upstream attribution; file headers and dataset
 license metadata do not independently authorize source use. Review embedded application data in
 dumps separately from schema quality; a test path or snapshot is not an independent result oracle.
@@ -150,7 +167,7 @@ examples need a declared selection rule rather than ad hoc removal.
 Report each cohort against its own sampling frame and weights. The retained Stack-Edu and release
 Stack v3 samples do not support raw pass-percentage comparisons or pooled eligible yield.
 Use completed gates to prepare finite candidate inventories for the
-[proposed study](README.md#research-before-the-main-run); the current partial review cannot select a
+[proposed study](README.md#research-before-the-main-run); the completed reading pass cannot select a
 corpus winner or supply the full confirmation horizon. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |

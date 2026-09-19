@@ -399,8 +399,18 @@ completing all unheld records with those labels. It brought coverage to 155 file
 44 held and 21 unheld records then unread. Signal-validation assumptions, framework dependencies
 and notice applicability remain unresolved; no new or reused verified origins or holds result.
 The [Markdown review](markdown-cohort-review.json) adds eighteen readings / 58,611 tokens,
-completing all 22 unheld Markdown records. Current coverage is 173 files / 342,499 tokens, with
-44 held and three unheld CSS/SCSS records still unread. Tutorials, reference/test excerpts and
+completing all 22 unheld Markdown records. It brought coverage to 173 files / 342,499 tokens, with
+44 held and three unheld CSS/SCSS records then unread. Tutorials, reference/test excerpts and
 personal/project prose retain complete document boundaries; no new origins, holds or admissions result.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.
+
+The [stylesheet closeout](stylesheet-cohort-review.json) adds the final three readings / 70,475 tokens.
+All 174 currently unheld records are now read. Cumulative coverage is 176 files / 412,974 tokens,
+including two earlier reads now held; all 44 family holds remain intact. Page, template and component
+roles, unresolved template attribution and a file notice referring to missing NOTICE context are
+recorded. No browser, compiler, asset fetch or corpus code ran; no new or reused verified origins
+are available for this batch. Disjoint per-cohort counts reconcile all 218 original records and
+592,826 observed tokens. Reading completion does not establish source use, eligible supply or a
+source ranking. The existing [qualification packet](../main-data/QUALIFICATION.md#next-bounded-data-packet)
+owns the remaining provenance, family, intended-use and finite-inventory work before data-study selection.

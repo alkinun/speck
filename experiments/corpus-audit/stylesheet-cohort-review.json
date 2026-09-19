@@ -1,0 +1,140 @@
+{
+  "format": "speck_stylesheet_cohort_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "5e97da93182f6b3f89799b6c871bd3f257104903",
+  "status": "fixed_unheld_code_reading_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/markdown-cohort-review.json",
+    "sha256": "7f6f00f2256b2f553629b790005b5ffa774d2822684aa7118de2580b3d0f0999"
+  },
+  "selection_rule": "Every remaining unheld CSS or SCSS record in the fixed cohorts, at all lengths; no substitutions.",
+  "summary": {
+    "cohorts": {
+      "stack_edu": {
+        "new_full_read_files": 0,
+        "new_full_read_tokens": 0
+      },
+      "stack_v3": {
+        "new_full_read_files": 3,
+        "new_full_read_tokens": 70475
+      }
+    },
+    "corpus_execution": false,
+    "cumulative_common_full_read_files": 176,
+    "cumulative_common_full_read_tokens": 412974,
+    "eligible_tokens_established": 0,
+    "eligible_yield_estimate": null,
+    "family_held_files": 44,
+    "gpu_hours": 0,
+    "languages": {
+      "CSS": {
+        "held_files": 0,
+        "original_files": 2,
+        "unheld_full_read_files": 2
+      },
+      "SCSS": {
+        "held_files": 0,
+        "original_files": 1,
+        "unheld_full_read_files": 1
+      }
+    },
+    "network_requests": 0,
+    "new_family_holds": 0,
+    "new_full_read_files": 3,
+    "new_full_read_tokens": 70475,
+    "new_origin_checks": 0,
+    "observed_roles": {
+      "component_scss": {
+        "files": 1,
+        "tokens": 436
+      },
+      "ecommerce_template_stylesheet": {
+        "files": 1,
+        "tokens": 69312
+      },
+      "page_stylesheet": {
+        "files": 1,
+        "tokens": 727
+      }
+    },
+    "original_files": 218,
+    "reading_closeout": {
+      "stack_edu": {
+        "held_read": {
+          "files": 1,
+          "tokens": 596
+        },
+        "held_unread": {
+          "files": 33,
+          "tokens": 171351
+        },
+        "original": {
+          "files": 138,
+          "tokens": 459615
+        },
+        "unheld_read": {
+          "files": 104,
+          "tokens": 287668
+        },
+        "unheld_unread": {
+          "files": 0,
+          "tokens": 0
+        }
+      },
+      "stack_v3": {
+        "held_read": {
+          "files": 1,
+          "tokens": 2151
+        },
+        "held_unread": {
+          "files": 9,
+          "tokens": 8501
+        },
+        "original": {
+          "files": 80,
+          "tokens": 133211
+        },
+        "unheld_read": {
+          "files": 70,
+          "tokens": 122559
+        },
+        "unheld_unread": {
+          "files": 0,
+          "tokens": 0
+        }
+      }
+    },
+    "reading_complete_for_currently_unheld_records": true,
+    "remaining_unheld_outside_common_full_reads": 0,
+    "reused_git_verified_origins_for_this_batch": 0,
+    "source_ranking": null,
+    "training_admitted": false
+  },
+  "findings": [
+    "The final three unheld records are a 727-token page stylesheet, a 69,312-token eCommerce template stylesheet and a 436-token component SCSS file. Every supplied line was read; no length cutoff, document splitting or substitution was used.",
+    "The large CSS header names Ororus, Codexin and version 1.1; this supplies a template-lineage question, not verified upstream attribution. Shared selectors, four color schemes and vendor-prefixed declarations do not establish generated provenance or independent examples. Host metadata says no_license with no license labels.",
+    "Global focus-outline removal coexists with selected focus styles; DOM, cascade, plugin versions and assets are required to assess rendered behavior. The small page has a media query, while the SCSS has nested rules and fixed image spacing; no browser, compiler, script, import or asset fetch ran.",
+    "The component file contains an Apache-2.0 SPDX/header notice naming BMW and Eclipse contributors and referring to NOTICE files. Dataset labels CC-BY-4.0 and Apache-2.0 are preserved separately; neither dual licensing nor applicable permission is established. No new or reused verified origins are available for this batch.",
+    "Reading is complete for all 174 currently unheld records. Two additional previously read records are now held, so cumulative 176 full reads overlap the 44 family holds. Disjoint counts and observed tokens are reported separately for each original cohort; they are not eligibility estimates.",
+    "All source-use, family/near-duplicate, semantic-context and finite-supply gates remain open where unresolved in earlier receipts. No source winner, general filter, independently verified exercise, training admission or GPU result follows from this closeout."
+  ],
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/stylesheet-cohort-review",
+    "manifest_sha256": "25ac6c90d92788bbc15c07a95c2b05dde522e1acac3d102eb8b91e461f983b5c",
+    "artifacts": 9,
+    "bytes": 258276,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "changed_consumed_identity",
+      "rewritten_original_language_label",
+      "missing_selection",
+      "held_selection_substitution"
+    ]
+  },
+  "boundaries": [
+    "Full static assistant reading; observations are replay inputs, not independent annotations or behavioral verification. No corpus execution, acquisition or GPU work.",
+    "All 218 original identities, token counts, language/license metadata and sampling weights retained; all 44 family holds preserved. Only three common_full_text_read flags changed.",
+    "Reading completion is not dataset qualification. Held records remain in denominators; no held task text was displayed for this batch. No eligible yield, source ranking or training admission."
+  ],
+  "next": "Use the existing qualification packet to resolve source origins/notices and broader family/near-duplicate links, record intended-use decisions and establish finite eligible inventory per source before choosing data-study arms and a common horizon."
+}

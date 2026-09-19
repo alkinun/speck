@@ -195,10 +195,11 @@ manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit
 ## Common cohort review
 
 The fixed cohorts retain **218 original records**, their sampling factors and observed tokens.
-Common full-text review now covers **173 files / 342,499 tokens**. There are **44 family-held records**
-and **three currently unheld records outside full-read coverage**. Review completion does not establish
+Common full-text review now covers **176 files / 412,974 tokens**. There are **44 family-held records**
+and **no currently unheld records outside full-read coverage**. Review completion does not establish
 source use, correctness, eligible yield or a source ranking; the two sampling frames remain distinct.
-Two previously read records are now held, so reading and hold counts overlap.
+All 174 currently unheld records are read. Two previously read records are now held, so reading
+and hold counts overlap.
 
 | Evidence | Completed scope | Practical implication |
 | --- | --- | --- |
@@ -214,6 +215,7 @@ Two previously read records are now held, so reading and hold counts overlap.
 | [SQL-labelled follow-up](../experiments/corpus-audit/sql-cohort-review.json) | 11 more texts / 37,430 tokens; all unheld records carrying the SQL label read | Schemas, notebooks, dumps and test roles distinguished; one CQL fixture; no new origins or holds |
 | [MATLAB/Objective-C/PHP follow-up](../experiments/corpus-audit/application-cohort-review.json) | Six more texts / 5,546 tokens; all unheld records carrying these labels read | Signal-validation assumptions, framework/configuration dependencies and notice context recorded; no new origins or holds |
 | [Markdown follow-up](../experiments/corpus-audit/markdown-cohort-review.json) | 18 more texts / 58,611 tokens; all 22 unheld Markdown records read | Tutorials, reference/test excerpts and personal/project prose distinguished; no new origins or holds |
+| [Stylesheet closeout](../experiments/corpus-audit/stylesheet-cohort-review.json) | Three more texts / 70,475 tokens; all currently unheld records now read | Page, template and component roles distinguished; no new origins or holds |
 
 All batches preserve held selections rather than replacing them. Assistant observations are recorded
 replay inputs, not independent annotations. Offline replay and corruption/selection controls pass;
@@ -254,6 +256,9 @@ relabelling or splitting. Markdown includes reference notes with defective examp
 security demonstrations, profiles and six minimal project descriptions. Preserve teaching intent and
 document boundaries: an article’s algorithm table is not a set of independently verified exercises.
 Historical setup instructions and author-reported outputs require their original context.
+Stylesheets span a short page, a 69,312-token eCommerce template and component SCSS. Shared selectors
+and vendor prefixes do not prove generated provenance or independent examples. Browser behavior,
+keyboard focus, nested-style compilation and asset dependencies need their surrounding context.
 
 **Families and package attribution.** A previously unflagged GoLLIE test contains evaluation examples;
 both sampled GoLLIE records remain held. Those examples are exposed material, not blind evaluation
@@ -271,6 +276,9 @@ notice wording in a `toothlou/nature` file sampled as `no_license`. Placeholder 
 not settle applicability or permission; source-use review remains open and family partitions are unchanged.
 Two Objective-C files carry generated-style all-rights-reserved headers alongside permissive/Apache-2.0
 dataset metadata. Applicable notices need verification; neither permission nor a conflict is inferred.
+The Ororus stylesheet names Codexin as its author; template origin/notice applicability is unverified.
+The component SCSS contains an Apache-2.0 notice referring to NOTICE files, while dataset labels
+include CC-BY-4.0 and Apache-2.0. This does not establish dual licensing or resolved source use.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while
@@ -278,8 +286,9 @@ its same-version source archive omits it. A package/version label or ancestor no
 Stringutils notice applicability and both upstream commits remain unresolved; GitHub rate-limit
 responses and the oversized Arcade wheel remain recorded acquisition limits.
 
-**Next:** review the remaining **three unheld CSS/SCSS records** at their original lengths, resolve
-origins/notices and complete broader family/near-duplicate discovery. Natural-code eligibility is
+**Next:** use the existing [qualification packet](../experiments/main-data/QUALIFICATION.md#next-bounded-data-packet)
+to resolve origins/notices, complete broader family/near-duplicate discovery and establish finite
+eligible inventories. The fixed-cohort reading pass is complete. Natural-code eligibility is
 separate from independent exercise verification. The retained 0.477B code stock supports at most
 **1.59B total one-pass tokens at 30% natural code**, before exclusions, validation and other bank
 constraints. Qualified supply and runtime cost jointly set the experiment horizon; longer confirmation

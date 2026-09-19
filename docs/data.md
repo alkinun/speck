@@ -104,21 +104,23 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-The [current cohort assessment](../experiments/corpus-audit/markdown-cohort-review.json) records
-**173 full texts / 342,499 tokens reviewed**, **44 family-held records**, and **three unheld records still
+The [current cohort assessment](../experiments/corpus-audit/stylesheet-cohort-review.json) records
+**176 full texts / 412,974 tokens reviewed**, **44 family-held records**, and **no unheld records still
 unread**. Original sampling factors and source labels are preserved; observed language, dialect
 and file role are recorded separately. A family hold alone does not establish an exact benchmark
-match or justify replacing a sampled record.
+match or justify replacing a sampled record. All 174 currently unheld records are read; the other
+two full reads are now held, so reading and hold counts overlap.
 
 The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
-checks and package/family evidence. Latest Markdown readings distinguish tutorials, reference/test
-excerpts and personal/project prose. Preserve teaching context and complete documents; algorithm
-tables and printed outputs do not establish independent verification. No new or reused verified
-origins are available for this batch; attribution and earlier source-use questions remain open.
+checks and package/family evidence. The final stylesheet readings distinguish page, template and
+component roles. Template attribution, referenced notices, assets and rendered behavior remain
+unresolved; repetition and file length do not independently establish quality or generated provenance.
+No new or reused verified origins are available for this batch. Fixed-cohort reading is complete;
+source-use and broader family qualification remain open.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment
-inventories. No source ranking, eligible yield or bulk-filter adoption follows from this partial review.
+inventories. No source ranking, eligible yield or bulk-filter adoption follows from this completed reading pass.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`
