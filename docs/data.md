@@ -65,6 +65,10 @@ The [follow-up decisions](../experiments/corpus-audit/README.md#follow-up-decisi
 keep FineMath, prepare a reversible 8,563-document topic-directory exclusion candidate, and
 prioritize consistency checks on English L3 Q&A before any synthetic-source replacement.
 No blanket numeric-deduplication rule or new main mixture has been adopted.
+The [web candidate shortlist](../experiments/corpus-audit/README.md#candidate-decisions) explicitly
+retains natural Ultra-FineWeb, DCLM baseline and DCLM-Edu alongside the synthetic L3 candidate.
+Their historical pins match current repository heads as checked September 19. None is in the
+frozen pilot; the main mixture still needs a comparable content/coverage audit and source eligibility.
 
 The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
 UltraData-Code preview establishes schema and serialization questions, not training eligibility

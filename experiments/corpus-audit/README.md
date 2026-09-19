@@ -80,6 +80,31 @@ or increase model context based on this statistic alone.
 
 ## Candidate decisions
 
+The 105M-token engineering pilot intentionally uses the six retained sources listed in
+[its frozen recipe](../pilot/README.md#recipe). This is not the final flagship mixture.
+Natural Ultra-FineWeb, DCLM and DCLM-Edu were present in archived experiment configurations;
+their absence from the current pilot does not record a quality rejection. Their qualification
+for the current main-data plan remains open, and they should be explicit candidates here.
+
+[web-candidate-versions.json](web-candidate-versions.json) records a September 19 check against
+the Hugging Face dataset API: all four historical pins below still match their repository heads.
+That verifies repository revision freshness, not the age of the underlying pages or superiority
+over another source. The DCLM Parquet release has its own revision, distinct from the original
+`dclm-baseline-1.0` repository; do not compare hashes across repositories.
+
+| Source | Matching revision prefix | Main-data role and next check |
+| --- | --- | --- |
+| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | Natural-web candidate alongside FineWeb-Edu; explicitly bind scored English versus English HQ paths, then inspect provenance, coverage and overlap |
+| [DCLM baseline Parquet](https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet) | `817d6752765f` | Independent natural-web candidate; bounded quality/coverage and source-use audit before acquisition |
+| [DCLM-Edu](https://huggingface.co/datasets/HuggingFaceTB/dclm-edu) | `dbad8ad71224` | Separately selected DCLM candidate; assess score threshold and avoid counting parent/filtered overlap as extra supply |
+| [Ultra-FineWeb-L3](https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3) | `bc3b1ba986fc` | Synthetic candidate for the Cosmopedia comparison; continue the source/answer checks below |
+
+The next web-data step is a bounded, comparable audit of natural Ultra-FineWeb, DCLM/DCLM-Edu
+and retained FineWeb-Edu, with declared language, source paths, score filters and length/domain
+coverage. Keep the synthetic L3-versus-Cosmopedia question separate. Newer repository dates and
+publisher scores do not by themselves settle our mixture. No bulk acquisition or additional GPU
+comparison is authorized by this shortlist; the already planned coding comparison stays separate.
+
 Pinned metadata and dataset cards are retained locally; full corpora were not downloaded.
 The follow-up below adds a small, revision-checked English L3 content inspection.
 Published token totals use upstream tokenizers and do not count as our eligible supply.
