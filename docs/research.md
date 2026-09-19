@@ -217,6 +217,10 @@ This review adds a qualification candidate, not another training arm or infrastr
 Keep the 200-hour architecture study and 600/150/150-hour data research split. No mixture weights,
 production reservations, frozen evidence or training admissions change.
 
+The subsequent [Stack v3 feasibility probe](coding.md#stack-v3-feasibility--2026-09-19) completes
+the revision/schema check and selects the current corrected release for further qualification.
+It records measured metadata/identity limitations; Marin's historical pin remains a reference.
+
 ## Evaluation references
 
 [EvalPlus](https://github.com/evalplus/evalplus) supplies stronger execution tests for generated code.

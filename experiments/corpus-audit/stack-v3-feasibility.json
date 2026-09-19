@@ -1,0 +1,83 @@
+{
+  "format": "speck_stack_v3_feasibility",
+  "date": "2026-09-19",
+  "status": "pinned_inventory_and_bounded_schema_probe_not_training_admission",
+  "repository_revision_before_changes": "61f389ebd066da7540590e8e7788921c44b86e39",
+  "source_dataset": "HuggingFaceCode/stack-v3-train",
+  "upstream_inventory": {
+    "marin": {
+      "revision": "bb2fa95033c00931906761bed7bc37b525155db6",
+      "files": 8196,
+      "bytes": 4711367393671,
+      "min_shard_bytes": 306728467,
+      "max_shard_bytes": 2235058803
+    },
+    "current": {
+      "revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+      "files": 8192,
+      "bytes": 3546040375792,
+      "min_shard_bytes": 272393747,
+      "max_shard_bytes": 1653215347
+    },
+    "shared_payload_sha256": 0
+  },
+  "selected_candidate_revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+  "selection": "Use current corrected release for further qualification; Marin pin retained for comparison only",
+  "probe": {
+    "seed": "speck-stack-v3-schema-v1-20260919",
+    "shards": 2,
+    "row_groups": 2,
+    "range_bytes_retained": 65644101,
+    "row_group_selection": "Two lowest SHA256(seed:path) shards, then one lowest SHA256(seed:path:row_group_index) row group per shard; no replacement",
+    "counts": {
+      "commit_id_40_hex": 2699,
+      "detected_licenses_nonempty": 1841,
+      "file_entries": 47826,
+      "fork_parent_present": 6,
+      "forks": 6,
+      "num_files_mismatch": 0,
+      "redaction_marker_entries": 6557,
+      "repeated_content_ids_in_probe": 0,
+      "repeated_path_content_within_repository": 0,
+      "repo_path_present": 2699,
+      "repositories": 2699,
+      "sha1_matches_content_id": 40742,
+      "sha1_mismatch_with_markers": 6557,
+      "sha1_mismatch_without_markers": 527,
+      "size_bytes_matches_utf8": 47826,
+      "unique_repository_commit_pairs": 2699,
+      "utf8_bytes": 199253042,
+      "vendor_entries": 400
+    },
+    "license_labels": {
+      "no_license": 45985,
+      "permissive": 1841
+    },
+    "language_labels": 156
+  },
+  "token_probe": {
+    "selection": "16 lowest SHA256(seed:tokens:shard:group:row:file) entries per UTF-8 byte band: <=2048, <=8192, <=32768, larger; only within the two row groups",
+    "files": 64,
+    "tokens_with_bos_eos": 1267417,
+    "files_over_4096": 26,
+    "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/stack-v3",
+    "manifest_sha256": "c941cd58d8f541b56e14b801600ce37d6d7d99b8c83b4dcb9f74a25aa079d62c",
+    "offline_replay_identical": true,
+    "integrity": "Pinned HTTP Content-Range checks and cached byte hashes; complete shard publisher hashes not verified"
+  },
+  "limits": [
+    "Clustered two-shard feasibility sample; no full-corpus license, quality or eligible-yield estimate",
+    "Declared commits, fork parents and license labels are not independent origin/source-use verification",
+    "7084 content-ID mismatches: 6557 have explicit redaction markers; 527 do not; no automatic acceptance or corruption conclusion",
+    "No content/benchmark exclusion or global near-deduplication performed on this candidate",
+    "Full-repository serialization and truncation at 4K remain untested"
+  ],
+  "next": "Resolve source-use and original-versus-redacted identity semantics on this fixed probe, then cost a broader stratified sample; separate source choice from serialization",
+  "gpu_hours": 0,
+  "corpus_code_executed": false,
+  "training_admitted": false,
+  "eligible_tokens_established": 0
+}

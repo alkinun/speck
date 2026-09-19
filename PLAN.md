@@ -60,6 +60,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Code expansion feasibility | Upstream inventories pinned; one new Python metadata shard scanned, 16 blobs recovered, 13 length-matched / 9,541 tokens | [Receipt](experiments/corpus-audit/code-expansion.json); four content flags; four application modules selected for follow-up; no qualified yield or admission |
 | Application origin/test review | All four source revisions, complete trees and MIT notices recovered; 29 response hashes verified | [Receipt](experiments/corpus-audit/code-application-origins.json); one direct but stale test link, no independent verification or admission |
 | Stratified code preflight | 138 files / 459,615 tokens across 11 languages and 72 strata; exact offline replay | [Receipt](experiments/corpus-audit/code-yield-result.json); 30 content flags, 31 sample family holds; full eligibility and usable yield remain unresolved |
+| Stack v3 feasibility | Two revisions inventoried; current-pin range probe covers 2,699 repository rows / 47,826 file entries; exact offline replay | [Receipt](experiments/corpus-audit/stack-v3-feasibility.json); source use, transformed content identities and eligible yield remain unresolved; no admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -87,9 +88,10 @@ historical; do not repeat the completed pilot because a preparation document sti
    matches and resolve family links. Track ordinary natural-code eligibility separately from
    independently verified exercise eligibility, including unresolved outcomes and review cost.
    The 0.477B retained tokens cannot supply 30B natural-code exposure; close scalable supply
-   feasibility before bulk acquisition or packing. The [Marin review](docs/research.md#marin-corpus-review--2026-09-19)
-   adds a bounded Stack v3 revision/schema and supply review as a candidate with repository/commit
-   metadata; it changes neither the frozen audit nor training admission. The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
+   feasibility before bulk acquisition or packing. The [Stack v3 probe](docs/coding.md#stack-v3-feasibility--2026-09-19)
+   completes revision/schema inspection and selects the current corrected pin for further review.
+   Resolve source-use and redacted/original identity semantics on the fixed probe before broader
+   sampling; the retained-stock audit and training admission remain unchanged. The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
    keeps flags review-only and the HQ cutoff unchanged. Resolve web source use, family/near-duplicate
    exclusions and usable tokens; acquire DCLM originals only for a concrete coverage question.
    Then compare math correctness/overlap and assistant reasoning/tool outcomes and missing long

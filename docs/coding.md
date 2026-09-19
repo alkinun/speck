@@ -371,6 +371,43 @@ independent oracles and deliberately wrong controls. Keep unassessed/unresolved/
 separate. Only completed assessments can support weighted natural-code yield or checked-exercise
 feasibility estimates; no training data is admitted by this first pass.
 
+## Stack v3 feasibility — 2026-09-19
+
+The [Marin review](research.md#marin-corpus-review--2026-09-19) led to a bounded
+[revision/schema probe](../experiments/corpus-audit/stack-v3-feasibility.json). Complete pinned
+inventories distinguish Marin's `bb2fa95033c00931906761bed7bc37b525155db6` (8,196 shards /
+4,711,367,393,671 compressed bytes) from current `8f3f25d86e44fd691428131efd17af75d4716499`
+(8,192 shards / 3,546,040,375,792 bytes). No shard payload hashes overlap. The current
+[card](https://huggingface.co/datasets/HuggingFaceCode/stack-v3-train/blob/8f3f25d86e44fd691428131efd17af75d4716499/README.md)
+describes the v3.1 exact-duplicate correction. Use this current pin for further qualification;
+neither compressed size nor publisher token estimates establish eligible Mistral supply.
+
+Two hash-selected shards and one hash-selected row group per shard yielded 2,699 distinct
+repository/commit pairs and 47,826 file entries across 156 language labels. All rows have
+40-hex commit IDs; file counts reconcile, with no repeated content IDs inside this probe.
+These are supplied metadata, not independently verified origin or complete repository snapshots.
+Only 65,644,101 Parquet bytes were retained through range reads. Complete shard publisher hashes
+were not verified; range boundaries and cached byte hashes were checked. The old pin's selected
+file returned HTTP 403; current-pin range reads succeeded. No upstream or corpus code ran.
+
+- **Source use remains open:** 45,985 entries are labeled `no_license`, 1,841 `permissive`.
+  Neither label establishes acceptance. Review exact notices and intended use before admission.
+- **Content identities need distinct fields:** 7,084 supplied texts do not match their content-ID
+  SHA1. Of these, 6,557 contain explicit redaction markers and 527 do not. The card describes
+  redaction, but this does not explain each mismatch. Preserve both upstream identity and the hash
+  of consumed text; resolve transformations before asserting original-byte equivalence.
+- **Length handling needs measurement:** a separate 64-file token probe takes 16 entries from
+  each of four byte-length bands. It contains 1,267,417 Mistral tokens with BOS/EOS; 26 files exceed
+  4K. Length bands are deliberately overrepresented, so these are not population proportions.
+  Full-repository packing, truncation, source quality and benchmark exclusions remain untested.
+
+Artifacts and acquisition/inspection scripts live under
+`/mnt/speck-data/speck/data-qualification-20260919/stack-v3`; the receipt binds their manifest.
+Offline replay with network disabled reproduced the range plan, token sample and result exactly.
+Next resolve source-use and redacted/original identity semantics on this fixed probe, then cost a
+broader stratified sample. Keep source comparisons separate from repository serialization. This
+candidate does not replace the frozen retained-Stack-Edu audit, change the mixture, or admit data.
+
 ## Data work to do next
 
 1. Freeze broader code-evaluation exclusions and family separation before exercise derivation;

@@ -107,10 +107,11 @@ remainder as qualified exercises. No corpus code ran or new data entered trainin
 [qualification packet](../experiments/main-data/QUALIFICATION.md) now owns the next exclusion,
 family-separation and comparable source-review work; no main corpus is admitted.
 
-The [Marin review](research.md#marin-corpus-review--2026-09-19) identifies Stack v3 as a scalable
-natural-code candidate with repository/commit metadata. Qualify its pinned revision and usable
-supply before acquisition at scale; keep source and repository-serialization comparisons separate.
-Its catalog size does not establish Speck eligibility or independently verified exercise supply.
+The [Stack v3 feasibility probe](coding.md#stack-v3-feasibility--2026-09-19), following the Marin
+review, inventories two revisions and inspects 2,699 repository rows at the current corrected pin.
+Commit metadata is populated, but source-use labels and transformed content identities require
+resolution before broader sampling. Keep source and repository-serialization comparisons separate;
+catalog size and this probe establish neither eligible supply nor independently verified exercises.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`
