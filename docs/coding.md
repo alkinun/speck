@@ -199,35 +199,22 @@ finite experiment arms before bulk packing; source and serialization contrasts r
 
 ## First comparison to prepare
 
-Run a bounded **baseline versus candidate pretraining recipe** study before the main 100B working
-run. Use the fixed 1.2B model and paired fresh initializations, with identical initial weights within
-each pair and fresh optimizer/data state. It does not require a useful pretrained base. Freeze one
-contrast after the source/supply audit; current mixture weights are preparation hypotheses.
+The [research design](../experiments/main-data/README.md#research-before-the-main-run) owns the
+screening/confirmation matrix, shared controls, cost caps and decision rules before main pretraining.
+On the frozen backbone, screening permits one code-bank candidate alongside one natural-web candidate,
+each against the same qualified baseline. Confirm one selected intervention on fresh paired seeds.
 
-Natural code versus natural code plus independently checked exercises remains one candidate.
-If feasible, hold total code share, non-Python code and non-code sources fixed, changing only the
-declared Python substitution. Replacing half the Python tokens is a hypothesis, not a selected
-recipe. This measures the combined intervention, not separate synthesis/selection/verification
-effects. If qualified checked supply is insufficient, predeclare a different feasible source,
-filter or mixture contrast rather than silently changing arms or repeating a tiny bank.
+Use the fixed Stack-Edu and Stack v3 audits to choose a feasible natural-source contrast.
+Natural code plus independently checked exercises remains an alternative if qualified supply
+supports it. Keep total code share, non-intervened language coverage, non-code banks and serialization
+fixed. A declared Python substitution can change its selected source without silently changing
+the whole mixture. Do not add an extra checked-code arm or fill its quota by repeating a tiny bank.
 
-Freeze manifests, source-family splits, serialized fields, exposure, schedule, validation mixture,
-development endpoints, regression tolerances and cost before execution. Compare fixed held-out
-source/domain losses and development capability curves at matched exposures; keep final tests
-untouched. Short-run gains do not establish an optimal mixture or guarantee full-run rankings.
-If measurements are uninformative or inconsistent, record an inconclusive result and a justified
-baseline decision, or revise the experiment within its remaining budget before the main launch.
-
-The approved pretraining research cap is **600 hours**, within **900 total data-research hours**.
-Freeze a staged screening and confirmation matrix after the 200-hour architecture/efficiency study
-and source qualification. Reserve confirmation and evaluation costs before allocating screening
-arms. Exact seeds, run lengths and contrast count remain unfrozen; do not treat the larger budget
-as permission for an unbounded sweep. Main production starts fresh after recipe selection.
-
-Mid-training and post-training data studies each receive **150 hours**, using appropriate useful
-parent checkpoints before their production stages. A continuation study needs the
-[changed-data continuation path](training.md#mid-training-readiness) and cannot substitute for
-pretraining mixture research. Fresh-run arms use the normal new-run base-training path.
+The contrast tests its declared source/selection recipe. Checked-code substitution does not isolate
+synthesis, selection and verification separately; a source swap does not test repository packing.
+Freeze the chosen contrast and eligibility before training, preserve inconclusive results, and keep
+final benchmarks untouched. Mid-training and SFT questions use useful parent checkpoints under their
+separate caps; they do not replace the from-scratch pretraining comparison.
 
 ## Evidence for a coding claim
 

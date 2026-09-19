@@ -119,7 +119,15 @@ and content screen complete. Next assess this sample’s origins/notices, source
 and unresolved families, keeping natural-code and checked-exercise gates separate. Only completed
 gates support a weighted yield estimate; 107 no-family-hit sample files remain unresolved. Apply
 the same criteria to the fixed 80-file Stack v3 cohort, preserving each sample's design and weights.
-The proposed code horizon needs substantially more qualified supply. Remaining source comparisons are:
+The proposed code horizon needs substantially more qualified supply. The next deliverable is a
+comparison of the fixed cohorts, with each selected record's immutable identity, source/notice
+evidence, intended-use status, intactness/practical role, transformation effects, family holds and
+measured tokens/cost. Keep pass, hold and unresolved outcomes distinct; no-hit does not mean pass.
+Report each cohort against its own sampling frame and weights. The Stack-Edu retained-stock and
+Stack v3 release samples do not support a naive comparison of raw pass percentages or pooled yield.
+Use those findings to choose a finite candidate inventory for the
+[proposed study](README.md#research-before-the-main-run); training quality still requires that
+controlled study. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |

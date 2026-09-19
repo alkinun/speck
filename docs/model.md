@@ -46,6 +46,37 @@ Keep the full geometry and runtime settings reproducible, with detailed kernel/e
 the appendix where appropriate. The [evaluation guide](evaluation.md) defines efficiency evidence;
 the [program overview](program.md#model-and-runtime) owns runtime qualification and budget decisions.
 
+## Proposed control and decision
+
+The proposed control uses 24 global GQA layers, width 2048, 16 query heads / four KV heads,
+head dimension 128, full RoPE (theta 1,000,000), and SwiGLU width 5888. Keep tied 32,003-row
+embeddings, the tokenizer, normalization and initialization policy. A meta-device construction using
+the current model code counts **1,185,527,808 all-active parameters**, 0.866% below the reference.
+Choose the closest parameter match on a 256-wide feed-forward grid; this is arithmetic, not a
+quality-based geometry sweep. The control remains proposed and has not run or qualified on a GPU.
+
+This is a comparison of complete backbone designs: the wider feed-forward layers and positional
+policy are explicit differences. It cannot isolate KDA, NoPE or feed-forward width. Equal parameters
+also do not equalize FLOPs. Use the same eligible corpus/order, token horizon, optimizer policy,
+precision, update size and schedule; disclose shape-dependent initialization/optimizer differences.
+The common seed does not make differently shaped model tensors identical.
+
+The proposed 200h envelope assigns 120h to one seed pair (60h per arm), 40h to training/inference
+profiling and 40h to qualification, evaluation and recovery. Select a common token horizon from
+measured cost before running either arm. Measure fixed-pack loss and development regressions, then
+training throughput/memory and prefill/decode at batch sizes one/eight, prefix lengths
+512/2048/3840 and a 256-token output cap within 4K. Freeze timing repetitions, warmup and environment;
+longer synthetic timings establish cost only, not learned long-context ability.
+
+Before results, declare the acceptable quality regression and which deployment costs matter.
+Choose a qualified, affordable design that passes those gates; if trade-offs are inconclusive and
+the reference passes, retain it. If neither passes, stop and document a scope revision. One seed
+supports a bounded design decision, not general architectural superiority. Remeasure the selected
+backbone for data-study costing; preserve the original H100 configurations and receipts. The
+[numeric plan](../experiments/main-data/plan.json) owns the proposed geometry/caps, and the
+[research design](../experiments/main-data/README.md#measurements-and-selection) defines common
+measurement, failure and claim rules.
+
 ## Later architecture research
 
 MoE, attention residuals, broad attention-layout searches and model-size sweeps remain future work.

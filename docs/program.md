@@ -78,7 +78,9 @@ The user-approved research-and-release allocation is:
 | **Total** | **5,000** | **100%** | **1,250h** |
 
 Data research totals 900 hours; its 600/150/150 caps include experiment preparation, evaluation,
-retries and allocated idle time. Freeze screening and confirmation costs before launching arms.
+retries and allocated idle time. The [research design](../experiments/main-data/README.md#research-cost-envelopes)
+proposes subcaps and run counts, protecting pretraining confirmation before screening. The numeric
+plan owns these ceilings; exact launch costs remain to be measured.
 The 800-hour post-training and 400-hour protected subdivisions are planning caps, not measured
 requirements. Charge every job once; production-stage tokens do not include discarded research
 arms. A 200-hour RL cap includes rollouts and scoring, not just gradient updates.
@@ -269,8 +271,9 @@ Use checked math answers and sandboxed executable code tests first; add reposito
 only when environments, reset/replay and rewards are reliable. UltraData-RL supplies candidate
 problems/reference material, not ready-made successful rollouts.
 Treat task difficulty, reference/test validity, source-family overlap and verifiable outcomes as
-part of the data recipe. Retain rollout success/failure and rejection counts by task family; report
-held-out transfer rather than relying on training reward alone.
+part of the data recipe. The post-training research design includes a conditional fixed-policy
+prompt/rollout feasibility slot; it does not promise an RL training-data ablation. Retain success,
+failure and rejection counts by task family; report held-out transfer beyond training reward.
 
 Propose a 16K total-context ceiling initially, considering 32K only after measured benefit/cost.
 Freeze prompt/output limits, sample-group size, tool-step caps, reward normalization, reference/KL

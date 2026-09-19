@@ -69,7 +69,9 @@ A changed recipe requires an explicitly supported new run, not an edited resume.
 The pretraining data study uses separate fresh runs with paired initialization seeds; verify initial
 model tensor identities within each pair. It precedes main pretraining and does not use checkpoint
 branching. Freeze manifests, schedules and evaluation inputs for each arm; study tokens and cost
-remain separate from the production run. These design rules are not executable launch manifests.
+remain separate from the production run. The [research design](../experiments/main-data/README.md#runtime-and-launch-requirements)
+records proposed run counts, finite-epoch SFT exposure matching and remaining runtime/scoring work.
+These design rules are not executable launch manifests.
 
 ## Mid-training readiness
 

@@ -40,7 +40,7 @@ measure. The [program overview](docs/program.md#training-lifecycle) defines stag
 | Context mid-training | 300-hour production cap; 16K then 32K qualification, with 128K stretch and token counts unset | Memory, useful-context learning, positional behavior and stage costs |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
 | Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
-| Architecture/efficiency study | 200-hour bounded reference-versus-control comparison before backbone freeze | Exact matched control, parameter/FLOP accounting, training/inference endpoints and cost |
+| Architecture/efficiency study | 200-hour bounded reference-versus-control comparison; proposed 1.186B all-GQA/RoPE control shape-checked | GPU qualification, FLOP accounting, numeric quality/cost thresholds and final configuration |
 | Data research | 900 hours: 600 pretraining, 150 mid-training, 150 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
 
 The [main data plan](experiments/main-data/README.md) specifies candidate sources and counting rules.
@@ -139,14 +139,20 @@ Exact launch settings still depend on the evidence below; preparation receipts a
 | --- | --- | --- |
 | Direction and budget | Data-centered report; bounded architecture study; stage ownership totals 5,000 hours | Costed arms, confirmation allowance and stop rules within each cap |
 | Data | Pinned candidates, deterministic samples, exclusion methods and retained-stock counts | Qualified finite arm manifests, source-use decisions, family splits, eligible tokens and packing checks |
-| Backbone and runtime | 1.2B reference and completed H100 engineering baseline | Exact matched attention control, parameter/FLOP accounting, GH200 recovery and measured cost; freeze backbone before data comparisons |
+| Backbone and runtime | 1.2B reference, proposed parameter-matched GQA control and completed H100 engineering baseline | Control/GH200 qualification, FLOP accounting, recovery and measured cost; freeze backbone before data comparisons |
 | Evaluation | Pilot development evidence and pinned exclusion inputs | Primary endpoints, development/final partitions, regression tolerances and comparator protocol |
 | Downstream stages | Stage objectives and separate research/production reservations | Useful parent checkpoints; qualified changed-data continuation, context and conditional RL paths |
 
-The next design pass should specify the scientific question, varied factor, fixed controls,
-measurement and decision rule for each proposed comparison. Freeze seeds, token horizons and the
-number of arms after eligible supply and hardware timing establish what the caps can support.
-Audit downstream sources now; run their model comparisons when useful parents exist.
+The [proposed research design](experiments/main-data/README.md#research-before-the-main-run) now
+specifies contrasts, controls, endpoints, maximum run counts and protected confirmation costs.
+The [architecture control](docs/model.md#proposed-control-and-decision) has a checked parameter count;
+its runtime and production selection remain open. Numeric subcaps live in the existing plan.
+
+Next complete the fixed source reviews and produce a qualified finite baseline/candidate inventory,
+then bind evaluation packs and numeric decision thresholds. Measure GH200 costs before freezing
+seed values, common token horizons and executable configs. Reduce the proposed matrix if needed
+without silently spending confirmation or production funds. Audit downstream sources now; run their
+comparisons from useful parents only after the recorded runtime gaps are closed.
 
 ## Compute
 

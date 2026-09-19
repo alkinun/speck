@@ -31,28 +31,140 @@ supply, and exposure/replay is distinct from unique eligible material.
 
 ## Research before the main run
 
-Audit sources/exclusions and qualify runtime first. Complete the **200-hour architecture/efficiency
-study**, then freeze the backbone before data experiments. Pretraining data research has **600 hours**
-for a costed screening matrix and confirmation before spending the main 2,300-hour reservation.
-Use matched fresh initializations, declared schedules/exposure and fixed validation/development
-endpoints. Predeclare which sources, filters or weights vary; a combined recipe contrast does not
-isolate individual source effects. Keep final tests untouched and report inconclusive findings.
+This is the proposed experiment design, with numeric caps in [plan.json](plan.json). Exact datasets,
+seed values, horizons, learning rates and decision thresholds must be bound before execution.
+Complete runtime qualification and the [architecture study](../../docs/model.md#proposed-control-and-decision)
+before pretraining data runs. Audit sources for every stage now; downstream runs require useful
+parent checkpoints. The full production corpus need not be materialized to design a finite study.
 
-Reserve confirmation/evaluation/preparation/recovery costs before screening. Exact arms, seeds and
-horizons remain unset until eligible supply and informative learning signals are established.
-Short-run rankings do not guarantee 100B results.
+| Study | Proposed comparison and controls | Decision evidence |
+| --- | --- | --- |
+| Pretraining screening | One qualified baseline plus at most two single-factor candidates: one code-bank contrast and one natural-web-bank contrast. Same fresh initialization, other banks, domain shares, packing, objective and exposure. | Fixed source losses and development curves rank candidates for confirmation; one screening seed establishes no robust winner. |
+| Pretraining confirmation | Baseline versus one selected candidate, each from two new paired initialization seeds. Identical initial tensors within each pair; fresh optimizer/data state. | Predeclared primary endpoint, consistent paired effects, acceptable regressions and affordable supply. Publish both seed pairs and inconclusive outcomes. |
+| Capability mid-training | Preceding mixture versus targeted code/math/repair plus replay at 4K. Same useful parent, next-token objective, optimizer policy, LR schedule and exposure; one paired data-order seed. | Target development-task success, source losses and general retention. This tests the combined mixture, not each ingredient. |
+| Context mid-training | At 16K, coherent records in preceding domain proportions versus proposed long-domain reweighting. Same parent, short replay, packing and token exposure; one paired seed. | Fixed-suffix loss at matched long prefix length, related-prefix benefit, positional/multifile checks and short-task retention. This does not isolate coherent packing or context length. |
+| Thinking SFT | Eligible baseline versus outcome-verification selection from the same candidate pool. Same parent, task/length strata, masking, serialization and schedule; two paired data-order seeds with fresh optimizers. | One declared code/math or tool-task success endpoint, with general/protocol regressions and supervision density reported. Known-invalid examples enter neither arm. |
+| RL prompt feasibility | Conditional fixed-policy rollouts from the selected SFT checkpoint on candidate eligible prompt strata. | Verifier reliability, solvable difficulty, nontrivial success/failure groups and rollout cost. No RL training-data ablation is promised by this slot. |
 
-The **900-hour total data-research budget** also contains **150 hours for mid-training** and
-**150 for post-training** comparisons on useful parent checkpoints, before their production stages.
-Audit all stage datasets now. Charge each experimental arm and overhead once to its research cap;
-production SFT/RL and continuation tokens remain separate. The report distinguishes source audits,
-controlled experiments and descriptive stage progression.
+The baseline must itself pass eligibility. The 35/25/40 domain envelope and eight banks below remain
+preparation hypotheses. If a bank lacks qualified supply, explicitly revise the experimental baseline
+before making all arms; an unqualified checked-code bank is not a valid control. Within the code
+candidate, choose either a natural-source contrast (Stack-Edu versus Stack v3) or checked-code
+substitution after the fixed audits. Do not run both as undeclared extra arms. The natural-web
+candidate compares a qualified FineWeb-Edu control with selected Ultra-FineWeb HQ at fixed bank share;
+do not simultaneously tune the score threshold or serialization. DCLM/math alternatives enter only
+through a recorded replacement before launch, not an expanding sweep.
+
+A shared screening baseline is valid only if both candidates have the same unchanged settings.
+If both candidates meet their frozen screening criteria, prioritize code for confirmation; raw loss
+deltas from different domains are not directly comparable. If neither passes, keep the eligible
+baseline or record a redesign within the remaining cap. Do not combine two individually favorable
+changes without testing that combined recipe. Confirmation
+uses fresh runs and seeds, not extensions of selected screening checkpoints. It may reuse qualified
+training families, with exposure reported; these are not new independent source samples. Main
+pretraining starts fresh after the recipe decision. Neither research exposure nor discarded arms count toward
+the main model's 100B horizon.
+
+Capability arms branch from the same preserved 4K production milestone before final LR decay.
+Context arms use the selected capability-production endpoint; SFT arms use the same qualified
+post-context base, and RL prompt checks use the selected production SFT checkpoint. After each
+downstream research decision, production starts again from its unchanged parent using the selected
+recipe. Research checkpoints do not silently become extra production exposure.
+
+### Research cost envelopes
+
+These are proposed ceilings within existing reservations, not measured durations or runnable jobs.
+
+| Reservation | Training / study slots | Shared support | Total GPU-hours |
+| --- | --- | ---: | ---: |
+| Architecture | Two arms × one seed × 60h = 120h; profiling 40h | 40h | 200 |
+| Pretraining data | Up to three screening arms × 40h = 120h; two confirmation arms × two new seeds × 90h = 360h | 120h | 600 |
+| Mid-training data | Capability pair: two × 35h = 70h; context pair: two × 25h = 50h | 30h | 150 |
+| Post-training data | SFT: two arms × two seeds × 25h = 100h; conditional RL prompt feasibility 20h | 30h | 150 |
+
+Training slots include trainer startup, inline validation and saves. Shared support covers other
+on-allocation preparation, capability scoring, qualification and recovery. Each operation is charged
+once; CPU/storage and external API costs are separate. Production caps remain 2,300h base/capability,
+300h context and 800h post-training, with 400h protected evaluation/recovery. The RL prompt study
+does not fund optimizer updates; conditional RL implementation qualification, rollouts and production
+updates must fit its separate 200h production subdivision.
+
+Freeze one common token horizon per base-training comparison from the slowest arm's measured cost,
+qualified unique supply and required learning signal, rounded to complete updates. Equal per-arm
+hour caps are safety ceilings, not instructions to train each arm until its clock expires.
+At the historical H100 rate, 40h and 90h correspond to approximately 1.85B and 4.17B tokens before
+external scoring/setup costs. These illustrate scale only; they are not GH200 forecasts or selected
+horizons. A longer confirmation horizon needs its own schedule frozen before it starts.
+
+Protect confirmation first. If timing or supply does not support the proposed matrix, drop the
+secondary screening candidate or revise the common horizon before launch. Do not silently spend
+confirmation, production or recovery funds on more screening. If a scientifically informative study
+cannot fit, record the limitation and revise scope explicitly. An inconclusive comparison can support
+a documented baseline choice; it cannot support a positive data-efficiency claim.
+
+### Measurements and selection
+
+1. Freeze the union of exclusions and source-family partitions across all candidate arms and stages.
+   Keep validation and development families disjoint from training and final evaluation. Freeze a
+   common validation pack independent of arm manifests, including declared target-source coverage.
+   The existing loss evaluator accepts a separate data experiment; an arm's own validation mixture
+   must not be used as its comparator's score.
+2. Before screening, name one primary endpoint per contrast, its direction, aggregation weights and
+   minimum useful effect. For source substitutions, use held-out target-domain next-token loss;
+   report code, math and supporting-domain losses separately. Capability outcomes and broad retention
+   are guardrails. For capability/SFT studies, use the declared target task-success metric. Set numeric
+   tolerances from baseline measurement noise and practical requirements before viewing treatment
+   results. Do not choose a favorable metric or loss weighting after results arrive.
+3. Use baseline and matched quarter/half/final exposure checkpoints for base-training loss curves;
+   cost capability scoring at declared milestones rather than every save. Freeze exact update-aligned
+   checkpoints and optional early-stop rules. A safety stop, failed arm or budget overrun stays in the
+   result ledger; do not replace failures with undisclosed reruns or call a partial pair complete.
+4. Screening is exploratory. Lock the selected contrast, longer-horizon schedule, primary endpoint,
+   regression tolerances and new seeds before confirmation. Report paired differences for each seed
+   and task/source-family uncertainty separately. Bootstrap task families or documents, not correlated
+   tokens or translated rows. Two seeds give limited run-to-run evidence; one-seed architecture and
+   mid-training pairs remain explicitly exploratory. Disclose development reuse and selection.
+5. Promote a candidate only if the frozen useful-effect criterion, guardrails, seed-consistency rule
+   and cost/supply gates pass. Otherwise retain the qualified baseline or report an explicit redesign.
+   A floor-level code/math result cannot establish capability improvement; loss-only gains remain
+   loss findings. Final tasks are scored only after recipe/checkpoint decisions are frozen.
+
+Do not average unrelated loss, accuracy and latency into an improvised efficiency score. Report
+quality versus tokens and allocated GPU-hours, and inference cost at declared quality/protocol.
+Family-level uncertainty output, fixed-suffix context scoring and expanded task protocols still need
+qualification; existing aggregate loss output does not provide them automatically.
+For context, score the identical held-out suffix with matched long prefixes across arms. Also compare
+related prefixes with short/irrelevant-prefix controls; a larger prefix benefit caused only by worse
+short-prefix loss is not a context improvement.
+
+### Runtime and launch requirements
+
+Fresh pretraining and separate fixed-pack loss evaluation exist. Exact-initial-tensor checks belong
+in the run packet. The [training guide](../../docs/training.md#mid-training-readiness) records the
+changed-data capability branch gap; context branches cannot be used to bypass it. Qualify that path
+before either capability arm. Context studies additionally need useful long records, memory/restart
+checks and the fixed-suffix scorer; do not spend the production context cap to hide research overruns.
+
+SFT currently derives steps from complete epochs and bucket cycles. Construct finite arms with
+matched processed positions and bucket schedules; predeclare and verify a supervised-token mismatch
+tolerance. Match reasoning-length/task distributions as far as possible and report residual differences.
+If that cannot be achieved, qualify an explicit exposure-control change before launch or narrow the
+claim to a combined data/exposure intervention. Equal row counts alone do not match training exposure.
+SFT research arms are small finite studies, not four repetitions of the full 1.5M-conversation target.
+
+Before each launch, retain the exact source/config revision, parent or initialization identities,
+qualified data/exclusion manifests, objective/masks, exposure/batch/schedule, evaluation identities,
+numeric decision/stop thresholds, run seeds, all-in cost estimate and recovery destination. Check the
+remaining ledger before each job. These design notes do not replace the existing execution guards.
 
 ## Base mixture
 
 These are explicit starting hypotheses chosen for the code/math/agent target, not measured optimal
 weights. The table extrapolates the initial mixture across the base horizon. Freeze capability
 mid-training weights separately and update aggregate bank exposures if a staged mixture is adopted.
+The source names below are production hypotheses; the experimental baseline deliberately substitutes
+its declared control source in the bank under study. Update the production source choices after
+confirmation rather than assuming every preferred candidate wins.
 
 | Component | Share | 100B exposure | Eligible unique preparation | Candidate sources / admission condition |
 | --- | ---: | ---: | ---: | --- |

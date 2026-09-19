@@ -121,8 +121,9 @@ establish an optimal size, attention ratio, architecture advantage or scaling la
 
 ## 5. Controlled data study and evaluation
 
-The [bounded recipe study](coding.md#first-comparison-to-prepare) compares a baseline and candidate
-from matched fresh initializations before the main pretraining run. Freeze the data contrast,
+The [research design](../experiments/main-data/README.md#research-before-the-main-run) proposes a
+baseline and at most two single-factor screening candidates, followed by baseline-versus-selected
+confirmation on two fresh paired seeds before main pretraining. Freeze the data contrast,
 manifests, exposure, schedule, validation mixture, development endpoints and all-in cost. Report
 seed variation, source/domain loss and capability curves, including uninformative endpoints.
 If several data components change together, attribute results to the combined recipe, not one source.
@@ -132,8 +133,11 @@ runs to 100B. A later useful-checkpoint continuation study answers a separate qu
 retroactively justify the original mixture. The 600-hour pretraining study includes screening and
 confirmation, evaluations and overhead. Mid-training and post-training data studies each have
 150 hours: start comparison arms from the same useful parent, hold the objective and exposure fixed
-where testing data effects, and declare any combined intervention. Charge comparisons separately
-from production. Report inconclusive results and downstream recipe decisions as well as gains.
+where testing data effects, and declare any combined intervention. The proposed mid-training pairs
+have one seed each; SFT has two paired seeds with processed/supervised exposure differences reported.
+RL research currently covers fixed-policy prompt/verifier feasibility, not a policy-training data
+ablation. Charge comparisons separately from production. Report inconclusive results and downstream
+recipe decisions as well as gains.
 
 Evaluate base, mid-trained, SFT and any RL checkpoints separately. Report source-held-out loss,
 executable code, checked math, instructions, model-driven tools, useful context and general regressions.
