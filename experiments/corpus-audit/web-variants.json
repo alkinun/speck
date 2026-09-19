@@ -1,0 +1,97 @@
+{
+  "format_version": 1,
+  "repository": "openbmb/Ultra-FineWeb",
+  "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+  "artifacts": [
+    {
+      "id": "root",
+      "url": "https://huggingface.co/api/datasets/openbmb/Ultra-FineWeb/tree/02c85641e3d19a854be2e09139c25adaa9518063",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-variants/root.json",
+      "bytes": 680,
+      "sha256": "a34072bffb8b0e150084b8873a1d83a990216a11c8c94d5e810dd98588f61218",
+      "has_more_pages": false
+    },
+    {
+      "id": "data",
+      "url": "https://huggingface.co/api/datasets/openbmb/Ultra-FineWeb/tree/02c85641e3d19a854be2e09139c25adaa9518063/data",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-variants/data.json",
+      "bytes": 448,
+      "sha256": "1b376dd611499ca2d74fce88bcb250a4896008b568ae45de3e833953b259d096",
+      "has_more_pages": false
+    },
+    {
+      "id": "card",
+      "url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb/raw/02c85641e3d19a854be2e09139c25adaa9518063/README.md",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-variants/card.md",
+      "bytes": 11806,
+      "sha256": "b93fcf284a97f9fb9b1e34b66c052b544e7bb2c8b564cbc10cfc7224b7aa0ab1",
+      "has_more_pages": false
+    },
+    {
+      "id": "ultrafineweb_en",
+      "url": "https://huggingface.co/api/datasets/openbmb/Ultra-FineWeb/tree/02c85641e3d19a854be2e09139c25adaa9518063/data/ultrafineweb_en?limit=100",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-variants/ultrafineweb_en.json",
+      "bytes": 34901,
+      "sha256": "dcfb350f6f6fe24a0261be1077706e56dc37a2c70cf8608e2a74f5080c9ebf2b",
+      "has_more_pages": true
+    },
+    {
+      "id": "ultrafineweb_en_v1_4",
+      "url": "https://huggingface.co/api/datasets/openbmb/Ultra-FineWeb/tree/02c85641e3d19a854be2e09139c25adaa9518063/data/ultrafineweb_en_v1_4?limit=100",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-variants/ultrafineweb_en_v1_4.json",
+      "bytes": 13001,
+      "sha256": "879969cd89d7a823a75e33735f5494559370ad425d0670796d5e66c2fdd4d9db",
+      "has_more_pages": true
+    },
+    {
+      "id": "ultrafineweb_l1_en_hq",
+      "url": "https://huggingface.co/api/datasets/openbmb/Ultra-FineWeb/tree/02c85641e3d19a854be2e09139c25adaa9518063/data/ultrafineweb_l1_en_hq?limit=100",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-variants/ultrafineweb_l1_en_hq.json",
+      "bytes": 787,
+      "sha256": "7afb8b2f0098bfe08957bff2c44de6f7838db99c3c70b4881a040a458ecc1a11",
+      "has_more_pages": false
+    }
+  ],
+  "variants": [
+    {
+      "path": "data/ultrafineweb_en",
+      "listed_entries": 100,
+      "inventory_complete": false,
+      "first_file": {
+        "type": "file",
+        "oid": "7268b6c49e869fa3ca6b18ae395688c3ac89e901",
+        "size": 1300415046,
+        "lfs": {
+          "oid": "2fd70197e66dff7b568e46fc578aedfdb20b35245dd191c5f912e09c6184aac7",
+          "size": 1300415046,
+          "pointerSize": 135
+        },
+        "xetHash": "7cd4ffcf455a8ca6b2844b03474af53d41a820aa80e199204241fb601da071ea",
+        "path": "data/ultrafineweb_en/ultrafineweb-en-part-0001-of-2048.parquet"
+      }
+    },
+    {
+      "path": "data/ultrafineweb_en_v1_4",
+      "listed_entries": 100,
+      "inventory_complete": false,
+      "first_file": null
+    },
+    {
+      "path": "data/ultrafineweb_l1_en_hq",
+      "listed_entries": 6,
+      "inventory_complete": true,
+      "first_file": null
+    }
+  ],
+  "default_english_path": "data/ultrafineweb_en/*",
+  "default_card_fields": [
+    "content",
+    "score",
+    "source"
+  ],
+  "publisher_described_new_selected_route": "data/ultrafineweb_l1_en_hq",
+  "publisher_claimed_latest_crawl": "CC-MAIN-2025-51",
+  "v1_4_semantics": "not established by inspected card; keep distinct until schema/provenance review",
+  "boundary": "Metadata and pinned card only. No corpus payload downloaded or quality comparison made. Directory lists may be partial. Default config schema is not assumed to describe every variant.",
+  "training_admitted": false
+}

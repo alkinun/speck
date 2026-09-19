@@ -80,6 +80,11 @@ or increase model context based on this statistic alone.
 
 ## Candidate decisions
 
+The subsequent [variant inspection](web-variants.json) pins the distinct default English,
+English v1.4 and L1-derived English HQ directories at the same UltraFineWeb release. The
+[qualification packet](../main-data/QUALIFICATION.md) keeps their source populations and schemas
+separate for the next comparison; no corpus payload or quality result follows from that metadata.
+
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
 [its frozen recipe](../pilot/README.md#recipe). This is not the final flagship mixture.
 Natural Ultra-FineWeb, DCLM and DCLM-Edu were present in archived experiment configurations;

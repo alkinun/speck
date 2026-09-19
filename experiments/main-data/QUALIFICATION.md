@@ -75,6 +75,15 @@ spot checks. Prepare comparable source-level evidence in the following order:
 | Natural code | Retained Stack-Edu; source-resolved UltraData-Code L2 | Multilingual practical roles, source/test/docs linkage, immutable origins, dependency cost and eligible token yield |
 | Generated material | Web/math L3 and checked code derivatives | Source grounding, independent answer/test verification, teacher lineage and rejection rates; held separately from natural stock |
 
+The [pinned UltraFineWeb variant inspection](../corpus-audit/web-variants.json) distinguishes
+`data/ultrafineweb_en` (the default English split, described as FineWeb-derived) from
+`data/ultrafineweb_l1_en_hq` (the publisher's newer L1-derived selected route, claiming crawl coverage
+through CC-MAIN-2025-51). Inspect both against FineWeb-Edu before choosing a bank. The separate
+`ultrafineweb_en_v1_4` directory remains unqualified; its name alone does not establish selection
+semantics or superiority. Only metadata/card bytes were acquired. The card's default fields
+`content`, `score`, `source` must not be assumed to describe the other variants. Some directory
+listings are partial, and no full shard inventory, schema, corpus quality or eligible supply is claimed.
+
 For each new source, pin release/card/serialization first, then take a deterministic sample across
 length, domain/language and upstream-score bands before labeling. Use the same bands and review
 rubric for comparisons; report sample denominators and sampling weights. Keep independent correctness
