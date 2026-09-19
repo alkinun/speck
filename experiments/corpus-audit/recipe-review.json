@@ -1,0 +1,230 @@
+{
+  "checked_utc": "2026-09-19T06:59:19.606204+00:00",
+  "sources": [
+    {
+      "repository": "openbmb/UltraData-SFT-2605",
+      "revision": "affda6aca75e7cff78e73f93ad08d4c3b01f097c",
+      "last_modified": "2026-05-28T17:18:14.000Z",
+      "gated": "auto",
+      "card_url": "https://huggingface.co/datasets/openbmb/UltraData-SFT-2605/resolve/affda6aca75e7cff78e73f93ad08d4c3b01f097c/README.md",
+      "card_sha256": "9f6848a1b662fe94ad55057b52ecd0c62232c177eb3914c1f355bdc5137465f9",
+      "metadata_sha256": "0191c0bf115340b8df8fd8eeedbd5ec0416d11b78b6961bd244cb356f6a62c92",
+      "metadata_url": "https://huggingface.co/api/datasets/openbmb/UltraData-SFT-2605",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/openbmb--UltraData-SFT-2605",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    },
+    {
+      "repository": "openbmb/UltraData-SFT-Agent-2609",
+      "revision": "f684cc1a9f3e19f6f4929102cd9b06cc0b895b8a",
+      "last_modified": "2026-09-06T01:59:01.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/openbmb/UltraData-SFT-Agent-2609/resolve/f684cc1a9f3e19f6f4929102cd9b06cc0b895b8a/README.md",
+      "card_sha256": "3f7291f4c2b11d0b17f77a6b72ae1c4472449e1a2d7fa6b0376146cde8772229",
+      "metadata_sha256": "7beca6109477867a5ee6788df93bfa3d3c4b0e95a44bc5bc903cfc6a67fad3d3",
+      "metadata_url": "https://huggingface.co/api/datasets/openbmb/UltraData-SFT-Agent-2609",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/openbmb--UltraData-SFT-Agent-2609",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    },
+    {
+      "repository": "openbmb/UltraData-RL-2609",
+      "revision": "e6ecfa733708a4c54b5a98c3ca0fd16fc6923790",
+      "last_modified": "2026-09-07T12:18:58.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/openbmb/UltraData-RL-2609/resolve/e6ecfa733708a4c54b5a98c3ca0fd16fc6923790/README.md",
+      "card_sha256": "c9e13e938e28adeb3e5529f5c78b2f81d060044eb6d645964dc2dcdae910e556",
+      "metadata_sha256": "c973da7f398d1a7beaf6dd5198930e5d3f08ebda8e10105172f93ef80698b088",
+      "metadata_url": "https://huggingface.co/api/datasets/openbmb/UltraData-RL-2609",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/openbmb--UltraData-RL-2609",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    },
+    {
+      "repository": "HuggingFaceTB/smoltalk2",
+      "revision": "fc6cc2103c066455aade5d7fbb346039ae36ca5e",
+      "last_modified": "2025-10-31T13:49:55.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/HuggingFaceTB/smoltalk2/resolve/fc6cc2103c066455aade5d7fbb346039ae36ca5e/README.md",
+      "card_sha256": "8bdc71dea7688d0b57e7eeb463f468641b460e5e512b2c57f8b45a070588b2c7",
+      "metadata_sha256": "fc0bc1fb533511ea4417cee5a48a6c9365c89c38292907dd41f41a996bd23b54",
+      "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceTB/smoltalk2",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/HuggingFaceTB--smoltalk2",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    },
+    {
+      "repository": "allenai/Dolci-Instruct-SFT",
+      "revision": "bd3c8f3a9b2cc5a9682e44b96ddd0bb2ff027221",
+      "last_modified": "2026-02-03T00:08:38.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT/resolve/bd3c8f3a9b2cc5a9682e44b96ddd0bb2ff027221/README.md",
+      "card_sha256": "db0307ffbeab4a90bb41cb966fcc2bca09ce3495afcdb8e173c0370287002a5b",
+      "metadata_sha256": "c716e3607a992389a95441d80ef8dcc8e83a6b65af242091b8484c84f5093b64",
+      "metadata_url": "https://huggingface.co/api/datasets/allenai/Dolci-Instruct-SFT",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/allenai--Dolci-Instruct-SFT",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    },
+    {
+      "repository": "HuggingFaceFW/finepdfs-edu",
+      "revision": "9cfabe2127faca99b3d5c4dc6d1fcb397399ebde",
+      "last_modified": "2025-11-11T18:49:02.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu/resolve/9cfabe2127faca99b3d5c4dc6d1fcb397399ebde/README.md",
+      "card_sha256": "83950c5b703d8917bffcffe159d318e42f4d2b6e3527099b14747d22a8874943",
+      "metadata_sha256": "143909918f6dc6a5f49d668956b7c7e4457ee9654d6c22092001d1771407ec06",
+      "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceFW/finepdfs-edu",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/HuggingFaceFW--finepdfs-edu",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    },
+    {
+      "repository": "nvidia/Nemotron-CC-Math-v1",
+      "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa",
+      "last_modified": "2025-12-23T00:17:16.000Z",
+      "gated": "auto",
+      "card_url": "https://huggingface.co/datasets/nvidia/Nemotron-CC-Math-v1/resolve/397a2502f2028c659ba411a6c4935b464a7f03aa/README.md",
+      "card_sha256": "e34457ea97edceb31d0385759ecc88d9cac38db11e704878243c6039b6e23a3f",
+      "metadata_sha256": "d49c348f0cf582962665c85cd342c2121fbbad5641b7d9a60093e81e4e9d762b",
+      "metadata_url": "https://huggingface.co/api/datasets/nvidia/Nemotron-CC-Math-v1",
+      "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/nvidia--Nemotron-CC-Math-v1",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false
+    }
+  ],
+  "boundary": "Public metadata/cards only; no new dataset payloads, access acceptance, training admission, or GPU jobs. Pins describe this review, not the identity of older retained stock.",
+  "local_evidence": {
+    "sft_stock_audit": {
+      "original_path": "/mnt/speck-data/speck/flagship-preparation-20260917/sft-audit.json",
+      "snapshot_path": "/mnt/speck-data/speck/data-recipe-review-20260919/sft_stock_audit.json",
+      "sha256": "dee88a3a4433fc399cb45a52f720f55f3210b1ae75423bc8f884c03a82a93ffe"
+    },
+    "sft_build_report": {
+      "original_path": "/home/alkin/Desktop/speck-posttrain/speck-output/report.json",
+      "snapshot_path": "/mnt/speck-data/speck/data-recipe-review-20260919/sft_build_report.json",
+      "sha256": "372c86efb1a4f9a649024349b3b64a6a6137cd56219829c29a09fe928ca76d58"
+    },
+    "tool_aware_rehearsal": {
+      "original_path": "/mnt/speck-data/speck/gh200-readiness-20260918/assistant-rehearsal-2/receipt.json",
+      "snapshot_path": "/mnt/speck-data/speck/data-recipe-review-20260919/tool_aware_rehearsal.json",
+      "sha256": "11ca2bcd3bb1e8f42f1dfbc54964edce641ff52831d41db1a2f456907f9b7ee8"
+    }
+  },
+  "retained_sft_stock": {
+    "rows": 500000,
+    "source_revisions": {
+      "openbmb/UltraData-SFT-2605": "affda6aca75e7cff78e73f93ad08d4c3b01f097c",
+      "openbmb/UltraData-SFT-Agent-2609": "f684cc1a9f3e19f6f4929102cd9b06cc0b895b8a",
+      "glaiveai/reasoning-v1-20m": "da6bb3d0ff8fd8ea5abacee8519762ca6aaf367e",
+      "PrimeIntellect/SYNTHETIC-2-SFT-verified": "fce247fe48af8ff9624fb51d1de63aa1b2332cef"
+    },
+    "build_length_policy": {
+      "percentile": 98,
+      "max_chars": 200000,
+      "max_thinking_chars": 64000
+    },
+    "subsets": [
+      {
+        "source": "PrimeIntellect/SYNTHETIC-2-SFT-verified",
+        "subset": "default/train",
+        "rows": 50000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 80,
+        "original_audit_rejections": {}
+      },
+      {
+        "source": "glaiveai/reasoning-v1-20m",
+        "subset": "default/train",
+        "rows": 120000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 256,
+        "original_audit_rejections": {}
+      },
+      {
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Code/think",
+        "rows": 70000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 89,
+        "original_audit_rejections": {}
+      },
+      {
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "IF/think",
+        "rows": 40000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 247,
+        "original_audit_rejections": {}
+      },
+      {
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Knowledge/think",
+        "rows": 50000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 64,
+        "original_audit_rejections": {}
+      },
+      {
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Math/think",
+        "rows": 60000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 164,
+        "original_audit_rejections": {}
+      },
+      {
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Code-Agent/train",
+        "rows": 20000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 0,
+        "original_audit_rejections": {
+          "tool definitions require a tool-aware chat format": 256
+        }
+      },
+      {
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "General-Agent/train",
+        "rows": 40000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 0,
+        "original_audit_rejections": {
+          "tool definitions require a tool-aware chat format": 256
+        }
+      },
+      {
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Search-Agent/train",
+        "rows": 5000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 0,
+        "original_audit_rejections": {
+          "tool definitions require a tool-aware chat format": 256
+        }
+      },
+      {
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Tool-Use/train",
+        "rows": 45000,
+        "sampled_rows": 256,
+        "sample_complete_4k_fit": 0,
+        "original_audit_rejections": {
+          "tool definitions require a tool-aware chat format": 256
+        }
+      }
+    ],
+    "boundary": "Existing census and sampled length audit, not a new scan or answer verification. Original tool-format rejections predate the successful tool-aware 64-train/16-validation rehearsal. 4K fit is stage compatibility, not quality or permanent eligibility. Retained stock already excludes upstream long tails via character/percentile limits."
+  },
+  "context_plan": {
+    "initial_context_tokens": 4096,
+    "target_context_tokens_approximate": 131072,
+    "candidate_length_band_upper_bounds": [
+      4096,
+      16384,
+      32768,
+      131072
+    ],
+    "policy": "Retain complete long records for the extension/later SFT phases; count prompt, tool context and response together. No truncation to force early fit. Current runtime/evaluation remains 4K; target needs qualification."
+  }
+}

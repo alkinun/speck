@@ -42,3 +42,63 @@ no-tool responses, missing information, tool failure, correction, malformed call
 answers. Its scripted golden episodes verify the environment; they are not model capability scores.
 The broader stock still needs source-rights review, teacher-answer verification, semantic deduplication,
 and a measured reasoning/output-budget recipe before a release-quality SFT run.
+
+## Main assistant data direction — 2026-09-19
+
+The planned context extension targets approximately 128K. The 4K rehearsal above is an initial
+engineering phase, not a maximum length policy for future SFT. Preserve complete long reasoning,
+document QA and agent trajectories for extension and later SFT. Keep short interactions represented
+throughout. Do not truncate solutions, detach tool results or delete long examples merely because
+they cannot run in the initial phase. Measure length after our chat/tool serialization, including
+prompt, observations, reasoning and final answer; characterize <=4K, 4–16K, 16–32K, 32–128K and
+over-target records separately. Current validated runtime remains 4K until extension is qualified.
+
+The [inventory receipt](../experiments/corpus-audit/recipe-review.json) binds the earlier audit of
+500,000 retained conversations and its upstream build report:
+
+| Retained source | Rows | Current evidence |
+| --- | ---: | --- |
+| UltraData-SFT-2605: Code / Math / Knowledge / IF, all `think` | 220,000 | Source census and sampled serialization/length audit |
+| UltraData-SFT-Agent-2609: four agent/tool subsets | 110,000 | Source census; selected examples pass the later tool-aware rehearsal |
+| glaiveai/reasoning-v1-20m | 120,000 | Source census and sampled serialization/length audit |
+| PrimeIntellect/SYNTHETIC-2-SFT-verified | 50,000 | Source census, publisher reward filter and sampled serialization/length audit |
+
+The OpenBMB stock pins still match the reviewed release heads. The first audit rejected tool
+formats before `speck_tools_v1` existed; those zero-fit entries are not current long-context
+measurements. The later successful 64-training/16-validation rehearsal demonstrates selected
+format compatibility, not the quality or compatibility of all 110,000 tool trajectories.
+
+For the sampled text records, 89/256 Code and 64/256 Knowledge examples fit 4K, while 164/256
+Math and 247/256 IF examples fit. These are early-phase compatibility counts, not quality
+rejections. Moreover, the upstream local build already excluded length tails using a 98th-percentile
+policy and 200,000 conversation / 64,000 thinking character limits. It therefore cannot represent
+the full long-context source distribution. Keep this stock intact; qualify a separate acquisition
+of missing long examples at pinned sources with token-based budgets. Do not inherit those old
+character limits as a 128K policy or claim discarded examples are still retained.
+
+Prioritize these additions and checks:
+
+1. Inspect [UltraData-SFT-2605](https://huggingface.co/datasets/openbmb/UltraData-SFT-2605)
+   `no_think` variants alongside retained `think` rows. The release provides both modes for core
+   math/code/knowledge/instruction domains. Verify answers and source overlap before weighting;
+   a publisher's training-validation claim does not independently verify every retained answer.
+2. Inspect selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) SFT
+   components for everyday conversation, writing, rewriting, summarization, tabular understanding
+   and multi-turn instructions. Its Mid/SFT/Preference sets have different purposes and shared
+   upstream sources. Keep source tags and modes; do not concatenate the collections blindly.
+3. Use [Dolci-Instruct-SFT](https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT) as a second
+   general-assistant comparison with source/category labels. Check component terms, duplication
+   and benchmark overlap. It is a candidate, not an established winner over retained sources.
+4. Continue [UltraData-SFT-Agent-2609](https://huggingface.co/datasets/openbmb/UltraData-SFT-Agent-2609)
+   checks with complete tool traces, loss masks and task outcomes. Preserve long trajectories;
+   teacher-reported success is not equivalent to replay in our actual environment. Include when
+   to ask for clarification, avoid unnecessary calls and recover from tool errors.
+5. Reserve [UltraData-RL-2609](https://huggingface.co/datasets/openbmb/UltraData-RL-2609) for later
+   verified-reward work. Its questions, reference answers and code test cases are not successful
+   assistant traces; generating and verifying such traces has a separate cost. No RL launch follows
+   from listing it. Do not make lengthy reasoning the default for simple requests.
+
+The first main SFT recipe should balance direct assistance, reasoning, practical code and tool
+interactions by supervised tokens, while accounting for total context cost and length coverage.
+Freeze quantities after the content audit. The [main data work order](data.md#recipe-direction--2026-09-19)
+keeps one bounded comparison at a time and protects independent development/final evaluations.
