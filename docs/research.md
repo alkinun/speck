@@ -163,6 +163,60 @@ do not identify it with the separately released UltraData-Code preview.
 This changes preparation priority, not training admission or mixture weights. The frozen pilot and
 current rental evaluation remain unchanged; they cannot resolve the web-corpus comparison.
 
+## Marin corpus review — 2026-09-19
+
+Reviewed upstream commit `d2d97e888ce1a59b0e344bfbaca9cc4871f4148a`, including source importers,
+Datakit, and the 8B/32B retrospectives. Static checkout:
+`/mnt/speck-data/speck/research-reviews/marin-20260919`. No upstream code or corpus was executed
+or admitted. The [source-pool guide](https://marin.readthedocs.io/en/latest/reproducibility/pretraining-source-pool/)
+describes acquisition recipes, not one ready-made public training corpus; some inputs need separate
+hydration. A source catalog is not evidence of a particular model's actual mixture.
+
+The [8B retrospective](https://github.com/marin-community/marin/blob/d2d97e888ce1a59b0e344bfbaca9cc4871f4148a/docs/reports/marin-8b-retro.md)
+starts with 92.6% DCLM, 6.1% StarCoderData and 1.3% ProofPile 2; later stages change the recipe.
+Its short cooldown comparisons found that lower validation loss from supposedly higher-quality
+data could accompany worse task performance. Task-formatted data helped in some mixtures but
+underperformed alone. These are stage-dependent results, not universal mixing ratios or evidence
+that the full evolving training trajectory was a controlled data ablation.
+
+The [current catalog](https://github.com/marin-community/marin/blob/d2d97e888ce1a59b0e344bfbaca9cc4871f4148a/lib/marin/src/marin/datakit/sources.py)
+adds Nemotron-CC v2/v2.1 quality and synthetic subsets, HPLT, Common Pile, PDFs, Stack v3,
+hydrated Nemotron code, math/STEM data and agent trajectories. Its token counts include estimates
+and measurements with Marin's tokenizer; they are not Speck's eligible supply. Natural documents,
+synthetic rewrites and task trajectories require separate lineage and evaluation treatment.
+
+### Useful next work within the existing allocation
+
+- **Qualify Stack v3 as a scalable natural-code candidate.** Marin's
+  [importer](https://github.com/marin-community/marin/blob/d2d97e888ce1a59b0e344bfbaca9cc4871f4148a/lib/marin/src/marin/datakit/download/stack_v3.py)
+  pins `HuggingFaceCode/stack-v3-train` at `bb2fa95033c00931906761bed7bc37b525155db6`, retains
+  commit/file/license metadata, removes repeated file entries and groups files by directory.
+  This addresses metadata gaps in retained Stack-Edu, but does not establish executable tests,
+  dependency order or eligibility. Start with a bounded revision/schema/duplicate review and costed
+  stratified sample. Check original versus redacted content identities and file-level source use;
+  the [current dataset card](https://huggingface.co/datasets/HuggingFaceCode/stack-v3-train)
+  includes unlicensed files and describes a v3.1 duplicate fix. Verify these at the chosen revision.
+  Preserve the existing frozen audit and its unresolved outcomes; this candidate does not replace it.
+- **Separate source selection from serialization.** Compare eligible source alternatives with
+  fixed background data, tokenizer, serialization, horizon and training settings. Test repository
+  grouping separately if affordable, measuring truncation and file-boundary behavior at 4K.
+  Rank candidates by code/math outcomes and general retention alongside per-domain loss and cost.
+- **Use useful parents for mid-training comparisons.** Short cooldowns can screen targeted data
+  and task-format/replay interactions after base capability exists. They do not replace the planned
+  fresh-seed pretraining comparisons. Confirm promising rankings at a longer affordable horizon;
+  [Delphi](https://openathena.ai/blog/delphi/) illustrates the limits of short-run extrapolation.
+- **Bind processing changes to consumed artifacts.** The
+  [32B retrospective](https://github.com/marin-community/marin/blob/d2d97e888ce1a59b0e344bfbaca9cc4871f4148a/docs/reports/marin-32b-retro.md)
+  reports cached GSM8K test contamination surviving a preprocessing fix, and correlated shuffling.
+  Check exclusion versions against actual packs and inspect observed source order. Datakit's
+  [reference pipeline](https://github.com/marin-community/marin/blob/d2d97e888ce1a59b0e344bfbaca9cc4871f4148a/experiments/datakit/README.md)
+  separates reusable per-source work from global deduplication and changes store identity when
+  the source set changes. Apply those principles through our existing pipeline.
+
+This review adds a qualification candidate, not another training arm or infrastructure framework.
+Keep the 200-hour architecture study and 600/150/150-hour data research split. No mixture weights,
+production reservations, frozen evidence or training admissions change.
+
 ## Evaluation references
 
 [EvalPlus](https://github.com/evalplus/evalplus) supplies stronger execution tests for generated code.

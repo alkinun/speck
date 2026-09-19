@@ -87,7 +87,9 @@ historical; do not repeat the completed pilot because a preparation document sti
    matches and resolve family links. Track ordinary natural-code eligibility separately from
    independently verified exercise eligibility, including unresolved outcomes and review cost.
    The 0.477B retained tokens cannot supply 30B natural-code exposure; close scalable supply
-   feasibility before bulk acquisition or packing. The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
+   feasibility before bulk acquisition or packing. The [Marin review](docs/research.md#marin-corpus-review--2026-09-19)
+   adds a bounded Stack v3 revision/schema and supply review as a candidate with repository/commit
+   metadata; it changes neither the frozen audit nor training admission. The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
    keeps flags review-only and the HQ cutoff unchanged. Resolve web source use, family/near-duplicate
    exclusions and usable tokens; acquire DCLM originals only for a concrete coverage question.
    Then compare math correctness/overlap and assistant reasoning/tool outcomes and missing long
