@@ -56,6 +56,7 @@
     },
     {
       "benchmark_match_counts": {
+        "livecodebench_v6_public": 1,
         "mbppplus": 2,
         "multipl_mbpp_go": 2,
         "multipl_mbpp_js": 2,
@@ -477,7 +478,7 @@
     }
   ],
   "remaining_gates": [
-    "LiveCodeBench payload/window and adapter are not yet acquired/qualified; its immutable release and file identities are recorded.",
+    "LiveCodeBench public-text exclusion covers the pinned release_v6 only; additional releases/date windows, private tests and external solution mirrors are not comprehensively screened. Freeze intended final scoring coverage before training admission.",
     "Repository-repair coverage is only SWE-bench Verified; choose and exclude additional intended repair/agent benchmarks before task derivation.",
     "Whole-corpus alias, source-family and near-duplicate graph has not been built.",
     "Source eligibility, serialization and independently reviewed quality/coverage are not complete.",
@@ -485,8 +486,8 @@
   ],
   "status": "bounded_screen_complete_main_admission_blocked",
   "summary": {
-    "benchmark_lanes": 21,
-    "benchmark_rows": 17903,
+    "benchmark_lanes": 22,
+    "benchmark_rows": 18958,
     "content_flagged_files": 7,
     "files": 37,
     "held_repository_names": 12,
@@ -495,8 +496,8 @@
   "training_admitted": false,
   "inputs": {
     "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-inputs.json",
-    "sha256": "6b429a7ce29673455f06805c07a669fa4c0cffa96bee6a1ff084bb169efcce61",
-    "bytes": 14719
+    "sha256": "e7b2577f1e0fbed7824a002b3c32525ed97dde6b97685b704f04c390785a496c",
+    "bytes": 17164
   },
   "implementation": [
     {
@@ -510,20 +511,24 @@
       "bytes": 4472
     }
   ],
-  "acquisition_script": {
-    "path": "/mnt/speck-data/speck/data-qualification-20260919/acquire_exclusions.py",
-    "sha256": "4a5225a41c1988343cd1cffa3808a11ee30d11abbfad61a2cc93adfff749b992",
-    "bytes": 3721
+  "projection_receipt": {
+    "path": "/home/alkin/Desktop/speck/experiments/main-data/livecodebench-exclusion.json",
+    "sha256": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
+    "bytes": 5732
   },
   "validation": {
-    "offline_repeat_matches": true,
-    "unit_tests": 13,
-    "full_suite_before_final_policy_guard": {
-      "passed": 758,
+    "full_suite": {
+      "passed": 774,
       "skipped": 10,
       "deselected": 10
     },
-    "final_policy_guard_and_focused_tests_passed": true,
+    "focused_qualification_checks_passed": 28,
+    "projection_controls": {
+      "positive_self_match": true,
+      "negative_control": true,
+      "first_511_rows_match_independent_partial_projection": true,
+      "task_text_displayed": false
+    },
     "lint": "pass"
   }
 }

@@ -28,11 +28,12 @@ The existing exact/fragment matcher is a conservative screen, not proof of seman
 or its absence. Any language/domain-specific improvement requires versioned controls and a new
 receipt. Test-derived output should report match counts, not held-out task text.
 
-The [bounded result](qualification-result.json) screens 37 files against 21 lanes / 17,903 rows
+The [bounded result](qualification-result.json) screens 37 files against 22 lanes / 18,958 rows
 (including translated tasks). Seven files trigger content flags; family propagation quarantines
 22 files. The other 15 have candidate partitions only and remain outside training. The `frans`
 test file and task-queue README trigger additional flags even though their implementation-only
 pilot screen was clear. This is a reason to screen complete bundles, not a claim of proven leakage.
+The added LiveCodeBench lane flags one already-held file; the total held-file count remains 22.
 
 ## Reproduce the bounded screen
 
@@ -49,12 +50,29 @@ Hash/row-count mismatches fail closed. New records require a new input snapshot 
 
 ## Remaining exclusion work
 
-LiveCodeBench is pinned to `0fe84c3912ea0c4d4a78037083943e8f0c4dd505`, including hashes and sizes
-of six raw files totaling 4,485,994,821 bytes. Payloads were not downloaded. Before deriving tasks,
-choose a declared release/date window and acquire an authenticated text/identity projection or
-bounded payload route; verify complete row coverage and build its exclusion adapter. Reading an
-arbitrary prefix of a large file is not complete exclusion. Do not execute its dataset script or
-deserialize opaque private-test objects during inspection.
+LiveCodeBench is pinned to `0fe84c3912ea0c4d4a78037083943e8f0c4dd505`, `release_v6`. All six
+raw files (4,485,994,821 bytes) are retained and checked against the pinned publisher hashes.
+The [projection receipt](livecodebench-exclusion.json) binds the compact public-text index to every
+raw row. Its file set is checked against literal release metadata in the pinned loader, without
+executing that loader. Task identities use platform plus question ID. Private-test strings remain
+opaque and are omitted from the index; task text, starter code and public tests are retained.
+The verified projection contains 1,055 tasks from 2023-05-07 through 2025-04-06 in 2,281,423 bytes.
+Observed cumulative counts match the card's releases v1–v5 (400, 511, 612, 713, 880), followed by
+1,055 at v6. Positive/negative exclusion controls pass, and the first 511 projected rows exactly
+match the independently produced two-file schema-check output. No benchmark tasks were scored.
+
+Rebuild into a fresh directory with the pinned raw files and preparation manifest retained locally:
+
+```bash
+PYTHONPATH=. python -m scripts.livecodebench_exclusion \
+  /mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection-inputs.json \
+  /mnt/speck-data/speck/data-qualification-20260919/livecodebench/acquisition.json \
+  /mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection-repeat
+```
+
+This closes public-text coverage of this release. A final scoring window, subsequent releases,
+private-test matching and external solution-mirror coverage are separate decisions. Do not claim
+comprehensive contamination removal or a fresh live evaluation from this fixed historical release.
 
 SWE-bench Verified is the initial repository hold list, not a complete agentic-coding protocol.
 Freeze any additional repair/agent benchmarks before related acquisition or synthesis. Resolve

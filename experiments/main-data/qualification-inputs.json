@@ -7,8 +7,8 @@
   },
   "rules": {
     "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-rules.json",
-    "sha256": "7d37ce3d66dbc50e7405ae8f946448865aef717667d9447b1d88a4a1a9117265",
-    "bytes": 3069
+    "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0",
+    "bytes": 3189
   },
   "evidence": [
     {
@@ -40,6 +40,26 @@
       "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/practical-code-checks.json",
       "sha256": "4fb16e23039659f13cf575440cbeea098a8922895a507f43bec95ff1ffcb7e34",
       "bytes": 28048
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection/receipt.json",
+      "sha256": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
+      "bytes": 5732
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/acquisition.json",
+      "sha256": "61c1eaa1c51740eddb82f527199fe671eed8a31463317d4048024fbeed5e1a8e",
+      "bytes": 2924
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection-inputs.json",
+      "sha256": "db65b5a8e06cf9b2159579363dabadbfca05a5e877f9a72bd4872a2647ec6821",
+      "bytes": 15196
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/livecodebench-exclusion.json",
+      "sha256": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
+      "bytes": 5732
     }
   ],
   "benchmarks": [
@@ -344,6 +364,23 @@
       "expected_tasks": 382,
       "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_sh.parquet",
       "sha256": "f9eb6e1bc0a8e999cd153d44e1d635a37663f573f89198e240f08f6a8cd366b5"
+    },
+    {
+      "id": "livecodebench_v6_public",
+      "repo": "livecodebench/code_generation_lite",
+      "revision": "0fe84c3912ea0c4d4a78037083943e8f0c4dd505",
+      "release": "release_v6",
+      "format": "jsonl",
+      "task_id_field": "task_id",
+      "text_fields": [
+        "question_title",
+        "question_content",
+        "starter_code",
+        "public_test_cases"
+      ],
+      "expected_tasks": 1055,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection/public-text.jsonl",
+      "sha256": "c18d7e5dc9f42d81f5c3c38d6b51c54e0c5e3e8c2fb59c8999b8486a622ed982"
     }
   ],
   "aliases": [
@@ -415,7 +452,28 @@
         "sha256": "bb4c364f71921c4495a6ad15abe1a927350b720009f4933e2e71f8af0f6fd1f5"
       }
     ],
-    "status": "metadata_pinned_payload_not_acquired",
-    "total_bytes": 4485994821
+    "status": "payload_and_public_text_projection_verified",
+    "total_bytes": 4485994821,
+    "card": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/README.md",
+      "sha256": "fbf0df23c9fb430778f037691bd191ece41d49373c0695151d87549b6f45d809",
+      "bytes": 3390
+    },
+    "loader": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/code_generation_lite.py",
+      "sha256": "973e37989fed0f069c8246776e918d0d96600d64a3730cd6242dd76bccf2f7bb",
+      "bytes": 5013
+    },
+    "release": "release_v6",
+    "projection_receipt": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection/receipt.json",
+      "sha256": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
+      "bytes": 5732
+    },
+    "acquisition": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/acquisition.json",
+      "sha256": "61c1eaa1c51740eddb82f527199fe671eed8a31463317d4048024fbeed5e1a8e",
+      "bytes": 2924
+    }
   }
 }

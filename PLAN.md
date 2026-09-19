@@ -51,6 +51,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Development scoring | 2,619 tasks in 2.12 evaluation hours: GSM8K strict 0/253, compiled code pass@1 0/33, IFEval strict prompts 12/101, ARC normalized 44/222, HellaSwag normalized 530/2,010 | [Results](experiments/pilot/development-result.json); weak base capability, custom subsets, no final-partition scoring |
 | Backup closeout | Eight model/optimizer checkpoints, both exports, evaluation outputs and recovery logs retained locally | [Backup receipt](experiments/pilot/backup-result.json); pilot closed, no further rental work needed; provider billing/stop state not verified |
 | Natural-code audit | 16 exact upstream matches, 13 with license-notice evidence; ten files clear preliminary lineage/syntax/benchmark checks | [Cohort receipt](experiments/corpus-audit/natural-code-cohort.json); zero new training admissions |
+| Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
@@ -64,8 +65,9 @@ historical; do not repeat the completed pilot because a preparation document sti
 1. **Complete main-data eligibility and coverage.** The bounded Python/JS/TS practical checks are
    complete and [recorded](experiments/corpus-audit/practical-code-checks.json). The
    [qualification packet](experiments/main-data/QUALIFICATION.md) pins broader exclusion inputs
-   and defines family separation. Finish LiveCodeBench coverage and the full source-family graph
-   before exercise derivation. The 16-row UltraData-Code L3 preview remains held for lineage.
+   and defines family separation. LiveCodeBench release-v6 public-text coverage is now pinned;
+   finish the full source-family graph and intended scoring coverage before exercise derivation.
+   The 16-row UltraData-Code L3 preview remains held for lineage.
 2. **Qualify the data recipe.** Audit pinned natural Ultra-FineWeb against FineWeb-Edu; keep DCLM
    as an independent coverage candidate and synthetic L3 separate. Review math correctness and
    source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work

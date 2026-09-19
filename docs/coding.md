@@ -175,8 +175,8 @@ installation, a TypeScript type check, or a full repository build. The pinned de
 preserved; no checked example is admitted and no repair exercise has been generated.
 
 **Next: finish the [qualification packet](../experiments/main-data/QUALIFICATION.md), then qualify
-supply across the main data banks.** Broader inputs and family rules are pinned, with LiveCodeBench
-payload coverage and the full source-family graph still open. Repeating more tiny helpers is not the next
+supply across the main data banks.** Broader inputs, LiveCodeBench release-v6 public text and family
+rules are pinned; the full source-family graph and final scoring coverage remain open. Repeating more tiny helpers is not the next
 milestone. Preserve practical behavior, repository context and exact notices. These examples do not
 establish scalable code supply.
 

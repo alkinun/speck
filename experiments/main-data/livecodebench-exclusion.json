@@ -1,0 +1,152 @@
+{
+  "format_version": 1,
+  "inputs": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/test.jsonl",
+      "filename": "test.jsonl",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test.jsonl",
+      "sha256": "2bd02b38beb48e8c46b5b9987095d999ff38cd8efc255ea5d58974317c48f63f",
+      "bytes": 1252609773,
+      "cached": false,
+      "seconds": 432.158,
+      "rows": 400
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/test2.jsonl",
+      "filename": "test2.jsonl",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test2.jsonl",
+      "sha256": "095df7c5daf15f882c51a9deb84085cff1e073495a5dbcf95015a564d485f3a3",
+      "bytes": 713377060,
+      "cached": false,
+      "seconds": 291.945,
+      "rows": 111
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/test3.jsonl",
+      "filename": "test3.jsonl",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test3.jsonl",
+      "sha256": "28ed26cc83363ce3f1fe2d5fad9f8393077beb1907b167a31bd3b32f80801b79",
+      "bytes": 623360766,
+      "cached": false,
+      "seconds": 226.088,
+      "rows": 101
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/test4.jsonl",
+      "filename": "test4.jsonl",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test4.jsonl",
+      "sha256": "d711138ddaebfcf5f8ec6a4283ee677298c0f5c5d374a235af92aaf0584510da",
+      "bytes": 1204644685,
+      "cached": false,
+      "seconds": 424.034,
+      "rows": 101
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/test5.jsonl",
+      "filename": "test5.jsonl",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test5.jsonl",
+      "sha256": "7f77571c2a6df0c2a72a3277650309f67e01e0008e18117e624633df53f81214",
+      "bytes": 557699297,
+      "cached": false,
+      "seconds": 228.328,
+      "rows": 167
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/test6.jsonl",
+      "filename": "test6.jsonl",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test6.jsonl",
+      "sha256": "bb4c364f71921c4495a6ad15abe1a927350b720009f4933e2e71f8af0f6fd1f5",
+      "bytes": 134303240,
+      "cached": false,
+      "seconds": 60.391,
+      "rows": 175
+    }
+  ],
+  "output": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection/public-text.jsonl",
+    "bytes": 2281423,
+    "sha256": "c18d7e5dc9f42d81f5c3c38d6b51c54e0c5e3e8c2fb59c8999b8486a622ed982"
+  },
+  "rows": 1055,
+  "platform_counts": {
+    "atcoder": 602,
+    "codeforces": 9,
+    "leetcode": 444
+  },
+  "date_min": "2023-05-07",
+  "date_max": "2025-04-06",
+  "text_fields": [
+    "question_title",
+    "question_content",
+    "starter_code",
+    "public_test_cases"
+  ],
+  "private_tests_decoded": false,
+  "dataset_code_executed": false,
+  "training_admitted": false,
+  "repository": "livecodebench/code_generation_lite",
+  "revision": "0fe84c3912ea0c4d4a78037083943e8f0c4dd505",
+  "release": "release_v6",
+  "input_manifest_sha256": "db65b5a8e06cf9b2159579363dabadbfca05a5e877f9a72bd4872a2647ec6821",
+  "acquisition_sha256": "61c1eaa1c51740eddb82f527199fe671eed8a31463317d4048024fbeed5e1a8e",
+  "loader_sha256": "973e37989fed0f069c8246776e918d0d96600d64a3730cd6242dd76bccf2f7bb",
+  "boundary": "Entire pinned release for exclusion only. Private tests, canonical solutions and future releases are not covered by this public-text projection. No scoring protocol.",
+  "release_count_control": {
+    "publisher_card_cumulative_v1_to_v5": [
+      400,
+      511,
+      612,
+      713,
+      880
+    ],
+    "observed_cumulative_counts": [
+      400,
+      511,
+      612,
+      713,
+      880,
+      1055
+    ],
+    "matches": true
+  },
+  "implementation": [
+    {
+      "path": "/home/alkin/Desktop/speck/scripts/livecodebench_exclusion.py",
+      "sha256": "c0865b72a5a5d1bd445c9d0306dc4bd113fc4dae89deeca3b9fecfe79d247051",
+      "bytes": 3941
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/speck/data/sources/livecodebench_exclusion.py",
+      "sha256": "43e60581371871a6cdeab8e28fe34ca6e6eb11c0409c4787cb0fd7a2e65d6afc",
+      "bytes": 4700
+    }
+  ],
+  "acquisition_script": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/acquire_livecodebench.py",
+    "sha256": "5b847e5031a045f5176deb37cb4d6da4d0db3b5d39bdef28aea172a0b2c6d929",
+    "bytes": 2774
+  },
+  "controls": {
+    "positive_self_match": true,
+    "negative_control": true,
+    "first_511_rows_match_independent_partial_projection": true,
+    "task_text_displayed": false
+  },
+  "control_artifact": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/projection-controls.json",
+    "sha256": "ed7416c8069b7afee0b529aa502d126150381ae3b902294212d2129590ac54ac",
+    "bytes": 157
+  },
+  "schema_check_artifact": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/livecodebench/first-two-schema-check.json",
+    "sha256": "ffea2103a6220c91047c21e582e1caf2bd1d05d0eb30fbade84863dae48537ae",
+    "bytes": 1114
+  },
+  "validation": {
+    "full_suite_passed": 774,
+    "skipped": 10,
+    "deselected": 10,
+    "focused_qualification_checks_passed": 28,
+    "lint": "pass"
+  }
+}

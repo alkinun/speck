@@ -37,7 +37,7 @@
     "No repetition or bank replacement without explicit recipe revision."
   ],
   "remaining_gates": [
-    "LiveCodeBench payload/window and adapter are not yet acquired/qualified; its immutable release and file identities are recorded.",
+    "LiveCodeBench public-text exclusion covers the pinned release_v6 only; additional releases/date windows, private tests and external solution mirrors are not comprehensively screened. Freeze intended final scoring coverage before training admission.",
     "Repository-repair coverage is only SWE-bench Verified; choose and exclude additional intended repair/agent benchmarks before task derivation.",
     "Whole-corpus alias, source-family and near-duplicate graph has not been built.",
     "Source eligibility, serialization and independently reviewed quality/coverage are not complete.",
