@@ -66,8 +66,10 @@ learning rate are starting choices, not optimized findings.
 For SFT, count both total context and supervised tokens. Describe masked context turns, complete
 conversation length coverage, reasoning format and output limits, and executable tool supervision.
 Structural validity of a teacher trace does not establish answer correctness.
-Report direct-response and reasoning shares by both rows and supervised tokens, plus executable
-verification coverage by source. Separate successfully executed trajectories from unexecuted or
+Report brief/deep reasoning coverage and reasoning/final-answer token shares, plus executable
+verification coverage by source. The final assistant follows one always-thinking protocol; report
+adherence and measured behavior without claiming that formatting proves reasoning quality.
+Separate successfully executed trajectories from unexecuted or
 unsuccessful traces. Record any capability-focused continuation as its own phase with broad-data
 replay, distinct from masked SFT.
 

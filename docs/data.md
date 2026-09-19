@@ -125,6 +125,24 @@ endpoint, not a causal verdict on its datasets or architecture.
 | UltraData-Code L2/L3 | Bounded preview, isolated L3 tests and lineage audit | All 16 L3 preview rows remain held; seven passing supplied tests do not establish independent correctness |
 | UltraX-Preview; ZGCM-1 | Release/report review | Secondary references, not admitted training supply |
 
+The flagship target is always-thinking agentic coding, general coding, math reasoning and tool
+use. High-quality code and reasoning must be present during pretraining, not deferred entirely to
+SFT. Prioritize these forms in the main corpus:
+
+- Natural implementation code with useful tests, documentation, API usage and project context;
+  preserve Python and other target languages, including JavaScript/TypeScript.
+- Correct worked math, derivations and scientific explanations spanning elementary foundations
+  through harder problems; inspect intermediate reasoning as well as final answers.
+- Checked code explanations, algorithm derivations, debugging/repair examples and exercises with
+  independent tests. Preserve mistakes only when clearly identified and followed by valid correction.
+- Coherent repository/document bundles for context extension. Complete observed tool trajectories
+  belong in the separately serialized reasoning/agent training stage; planning prose alone does
+  not establish an agent's ability to inspect, edit, test and recover.
+
+Selected natural web and reference material provide language, knowledge and task diversity. Do not
+equate educational score, reasoning length or a passing generated test with quality. Main code/math
+exposure should reflect the target capabilities; the pilot's 15%/15% shares are not final quotas.
+
 Post-training is more developed than an empty shortlist: the retained 500,000-row stock already
 includes 220,000 UltraData-SFT-2605 reasoning conversations, 110,000 UltraData-SFT-Agent-2609
 trajectories, 120,000 Glaive reasoning rows and 50,000 SYNTHETIC-2-SFT-verified rows. These are
@@ -142,10 +160,10 @@ payloads were not acquired. These revision pins are separate from older stock id
 | --- | --- | --- |
 | First: natural web | Natural Ultra-FineWeb versus retained FineWeb-Edu | Does the selected English path/threshold preserve broad topics and useful unique supply? Keep DCLM independent. |
 | First: code | Retained Stack-Edu plus checked exercises | Can we improve practical coding with verified task/solution pairs while retaining languages, libraries, tests and documentation? Follow the existing code plan. |
-| First: assistant balance | UltraData-SFT `no_think` plus selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) SFT components | Fill concise assistance, writing, rewriting, summarization and multi-turn instruction gaps; do not import its whole overlapping mixture. |
-| Next: math | UltraData-Math L2/L3 and [Nemotron-CC-Math-v1](https://huggingface.co/datasets/nvidia/Nemotron-CC-Math-v1) `4plus` against FineMath | Compare extraction, worked-solution correctness and unique source coverage. Nemotron's published continuation comparison uses an 8B model, not ours. |
+| First: thinking assistant | UltraData-SFT `think`, retained agent traces and selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) reasoning components | Qualify code/math reasoning and complete tool trajectories; retain brief reasoning for simple tasks, with no non-thinking mode. |
+| First: math | UltraData-Math L2/L3 and [Nemotron-CC-Math-v1](https://huggingface.co/datasets/nvidia/Nemotron-CC-Math-v1) `4plus` against FineMath | Compare extraction, worked-solution correctness and unique source coverage. Nemotron's published continuation comparison uses an 8B model, not ours. |
 | Next: documents | English [FinePDFs-Edu](https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu), alongside retained papers/reference material | Inspect educational document coverage, extraction/figure dependencies and intact long-document supply for context extension. Educational filtering alone does not certify long-range coherence. |
-| Secondary assistant comparison | [Dolci-Instruct-SFT](https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT) | Inspect explicit source/category slices for ordinary assistance, precise instructions and practical code; count overlapping upstream examples once. |
+| Secondary task/reference pool | [Dolci-Instruct-SFT](https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT), UltraData-SFT `no_think` | Candidate tasks/reference answers only; any derived thinking examples need verified reasoning. Do not directly import a non-thinking response mode. |
 | Later reward training | [UltraData-RL-2609](https://huggingface.co/datasets/openbmb/UltraData-RL-2609) | Task/reference pool for math, STEM, code and document QA; not ready-made successful SFT trajectories. Use only after a useful SFT baseline and checked rewards. |
 
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
@@ -159,13 +177,13 @@ can represent the same underlying information. Review source-use evidence per co
 1. Produce a bounded natural Ultra-FineWeb/FineWeb-Edu comparison packet using the existing audit
    pipeline. Report accepted unique tokens, language/domain and length distributions, extraction
    defects, overlap and source eligibility. Inspect differing cutoff choices before acquisition.
-2. In assistant preparation, audit retained reasoning/tool examples and a bounded direct-answer
-   candidate packet. Include complete examples in each available length band: <=4K, 4–16K,
+2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including
+   useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,
    16–32K and 32–128K. Keep longer examples separately. Prioritize answer correctness, useful
    reasoning, tool-result consistency, concise ordinary assistance and source identity.
 3. Complete the already planned practical-code qualification. Admit only traceable material with
    independent checks; do not turn every source on the shortlist into a separate GPU experiment.
-4. Recount usable supply and freeze token-based domain, source, length and reasoning-mode weights
+4. Recount usable supply and freeze token-based domain, source, length and reasoning-depth weights
    for the relevant phase. SFT needs both supervised-token and total-context counts. No final
    percentages are chosen before those measurements; training stock is not the same as exposure.
 5. Price one controlled comparison from a useful common base with a fixed evaluation protocol.

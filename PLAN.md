@@ -5,9 +5,11 @@ Git retains earlier decisions. Concrete run settings belong beside their experim
 
 ## Goal
 
-Build an English-first, broadly useful small model with strengths in math, coding, tool use, and
-reliable instruction following. General knowledge, writing, and conversation remain requirements.
-"Good at everything" is an ambition; each capability needs its own evidence.
+Build an English-first thinking model primarily for agentic coding, general coding, mathematical
+reasoning and tool-mediated tasks. The final assistant always uses the reasoning protocol; a
+non-thinking switch or purely instruct release is not a product objective. Reasoning effort may
+vary with task difficulty while preserving thinking behavior. General language and knowledge
+support these priorities and remain regression checks.
 
 Coding is a first-release priority. The [coding plan](docs/coding.md) makes checked code exercises
 the first substantive data-comparison candidate, with practical repair and multilingual evaluation.
@@ -35,8 +37,9 @@ claim still requires its own evidence.
 - Extend toward approximately 128K after establishing the base, then support short and long SFT
   examples. Retain complete long records now; 4K fit only controls eligibility for the initial
   phase. Freeze extension stages and cost after measuring memory, throughput and context quality.
-- Preserve base and assistant checkpoints separately. The intended assistant can reason in
-  `<think>...</think>` before its answer. The [rehearsal contract](docs/assistant.md) defines its
+- Preserve base and assistant checkpoints separately for training provenance. The final assistant
+  reasons in `<think>...</think>` before answers or tool actions, with brief or deeper reasoning
+  appropriate to the task. The [rehearsal contract](docs/assistant.md) defines its
   initial serialization and tool protocol; reasoning budgets and learned behavior still need an
   evaluated recipe. The sibling project's retained stock supplies the finite rehearsal.
 
@@ -61,7 +64,7 @@ Provider billing remains unknown. Main-corpus research remains a separate follow
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Preview, isolated execution and lineage audit complete; all 16 L3 rows held outside training | Qualify 16 practical natural-code files with origin/revision/license evidence, freeze exclusions, then derive independently checked exercises |
 | Web data | Matched published evidence favors natural Ultra-FineWeb; now the leading candidate to qualify | Audit the pinned English subset against retained FineWeb-Edu, checking selection threshold, coverage, overlap and eligible supply; keep DCLM as an independent comparator |
-| Assistant data and context | 500K retained conversations inventoried; finite tool-aware rehearsal qualified; target approximately 128K | Audit answers and reasoning/direct balance, inspect direct-answer candidates, retain long trajectories and recover missing source tails in a separately qualified acquisition |
+| Assistant data and context | 500K retained conversations inventoried; finite tool-aware rehearsal qualified; always-thinking target at approximately 128K | Audit reasoning quality, code/math correctness and agent outcomes; balance brief/deep reasoning, retain long trajectories and recover missing source tails in a separately qualified acquisition |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
 | Current paid experiment | Training/export qualified; restored H100 running the complete frozen development evaluation; backups resumed | Finish local code grading, verify all remaining artifacts and report when the GPU can be stopped |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
@@ -119,9 +122,10 @@ training packs. A passing generated test suite alone is not sufficient for data 
    retrieval across positions, cross-document reasoning and short-task retention before claiming
    support. Preserve full long reasoning/tool trajectories for the later SFT stages; initial 4K
    compatibility is not a permanent data filter. Prepare a costed SFT baseline with
-   verified math/code solutions, ordinary assistance, and structured tool interactions. Reuse the
-   separate post-training work where compatible. Audit source/answer quality, measure direct versus
-   reasoning supervision by tokens, and interleave general/tool examples under one inference protocol.
+   verified reasoning for math/code solutions, structured tool interactions and supporting ordinary
+   assistance. Reuse the separate post-training work where compatible. Audit source/answer quality,
+   measure reasoning/final-answer/tool-context tokens and balance brief versus deep reasoning under
+   one always-thinking inference protocol. Do not train a separate non-thinking response mode.
    Score model-driven tool completion separately from scripted environment checks. Consider a 4K
    capability-focused continuation with broad replay only if pilot measurements justify its cost.
    Add distillation or RL only after a clear baseline,
@@ -156,7 +160,9 @@ GH200 rates and four-worker scaling still require measurements on the allocation
 | Broad usefulness | Held-out loss by source, general knowledge, writing, and conversation samples |
 | Math | Checked final answers; report easy and harder problems separately |
 | Coding | Execution-based correctness on held-out tests; include repair tasks |
+| Agentic coding | Held-out repository tasks: inspect, edit, test and repair; measure actual completion and regressions |
 | Tools | Valid arguments, correct tool selection, correct use of results, and task completion |
+| Thinking behavior | Reasoning-protocol adherence, correctness versus reasoning budget, useful correction and bounded tool loops |
 | Reliability | Instruction/format compliance, appropriate abstention, correction after errors, and grounded answers |
 | Efficiency | End-to-end GPU-hours, output-token budget, latency, and memory |
 

@@ -1,5 +1,11 @@
 # Assistant rehearsal contract
 
+The final product is an always-thinking assistant focused on agentic coding, general coding,
+mathematical reasoning and tool-mediated tasks. It has no supported non-thinking toggle or purely
+instruct mode. Short tasks may need brief reasoning; difficult tasks may need deeper reasoning and
+multiple tool steps. A possible hybrid effort policy must preserve the thinking contract. This is
+a release/training objective, not an established capability of the current base checkpoint.
+
 The first hardware rehearsal uses complete 4K conversations, the frozen 32K base tokenizer,
 and chat format v2 with its existing three role IDs. Context-only assistant turns retain weight
 zero. Supervision covers assistant content and EOS; system, user, and tool-result content is masked.
@@ -78,17 +84,21 @@ character limits as a 128K policy or claim discarded examples are still retained
 
 Prioritize these additions and checks:
 
-1. Inspect [UltraData-SFT-2605](https://huggingface.co/datasets/openbmb/UltraData-SFT-2605)
-   `no_think` variants alongside retained `think` rows. The release provides both modes for core
-   math/code/knowledge/instruction domains. Verify answers and source overlap before weighting;
-   a publisher's training-validation claim does not independently verify every retained answer.
+1. Prioritize the retained [UltraData-SFT-2605](https://huggingface.co/datasets/openbmb/UltraData-SFT-2605)
+   `think` math/code/instruction examples and independently checked reasoning. Balance brief and
+   deep reasoning by task difficulty. The earlier proposal to add `no_think` as a response mode is
+   superseded by the user's always-thinking requirement. Such sources may supply candidate tasks
+   or reference answers, but need separately generated/verified reasoning before reasoning-SFT
+   admission. Do not fabricate a rationale or insert an empty thinking block to relabel a record.
 2. Inspect selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) SFT
-   components for everyday conversation, writing, rewriting, summarization, tabular understanding
-   and multi-turn instructions. Its Mid/SFT/Preference sets have different purposes and shared
-   upstream sources. Keep source tags and modes; do not concatenate the collections blindly.
+   reasoning components for multi-turn instructions and supporting general skills. Audit reasoning
+   usefulness and outcome correctness. Its Mid/SFT/Preference sets have different purposes and shared
+   upstream sources. Non-thinking components can be task/reference candidates only, not an alternate
+   final response mode. Keep source tags and do not concatenate the collections blindly.
 3. Use [Dolci-Instruct-SFT](https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT) as a second
-   general-assistant comparison with source/category labels. Check component terms, duplication
-   and benchmark overlap. It is a candidate, not an established winner over retained sources.
+   secondary task/reference pool with source/category labels, rather than directly adopting its
+   non-thinking assistant targets. Check component terms, duplication and benchmark overlap;
+   any new reasoning supervision needs its own correctness and cost checks.
 4. Continue [UltraData-SFT-Agent-2609](https://huggingface.co/datasets/openbmb/UltraData-SFT-Agent-2609)
    checks with complete tool traces, loss masks and task outcomes. Preserve long trajectories;
    teacher-reported success is not equivalent to replay in our actual environment. Include when
@@ -96,9 +106,10 @@ Prioritize these additions and checks:
 5. Reserve [UltraData-RL-2609](https://huggingface.co/datasets/openbmb/UltraData-RL-2609) for later
    verified-reward work. Its questions, reference answers and code test cases are not successful
    assistant traces; generating and verifying such traces has a separate cost. No RL launch follows
-   from listing it. Do not make lengthy reasoning the default for simple requests.
+   from listing it. Keep simple-task reasoning brief without switching reasoning off.
 
-The first main SFT recipe should balance direct assistance, reasoning, practical code and tool
-interactions by supervised tokens, while accounting for total context cost and length coverage.
+The first main SFT recipe should prioritize code/math reasoning and complete agent/tool trajectories,
+with supporting general tasks following the same thinking protocol. Balance brief/deep reasoning
+by supervised tokens, while accounting for total context cost, final-answer tokens and length coverage.
 Freeze quantities after the content audit. The [main data work order](data.md#recipe-direction--2026-09-19)
 keeps one bounded comparison at a time and protects independent development/final evaluations.

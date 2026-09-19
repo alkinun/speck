@@ -3,6 +3,12 @@
 Use the capability table in [PLAN.md](../PLAN.md) as the reporting outline. Measure math, coding,
 tools, reliability, and broad usefulness separately; keep cost alongside quality.
 
+The final assistant target always uses the thinking protocol for coding, math and agent tasks.
+Evaluate brief/deep reasoning budgets within that protocol, including cap exhaustion, correctness,
+tool loops and end-to-end task completion. A concise final answer does not mean reasoning is off.
+This future assistant contract does not change the frozen base pilot or external reference-model
+protocols below. A thinking tag alone is not evidence of useful reasoning.
+
 Coding is a first-release priority. The [coding evaluation roadmap](coding.md#evidence-for-a-coding-claim)
 adds Python breadth, multilingual checks, and practical repair to prepare after the engineering
 pilot. Those additions need their own frozen protocol and training exclusions; they are not yet

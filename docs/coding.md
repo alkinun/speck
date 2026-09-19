@@ -1,8 +1,17 @@
 # Coding priority
 
-Decision updated 2026-09-18. Coding is a first-release priority alongside broad usefulness.
+Decision updated 2026-09-19. Agentic coding, general coding and math reasoning are primary
+first-release targets for the always-thinking assistant. General usefulness supports these targets.
 The first substantive data comparison should test a code-data intervention. This is preparation
 for a future experiment; the frozen engineering pilot and its evaluation protocol remain intact.
+
+Code quality is a pretraining requirement as well as a post-training concern. Natural code,
+tests, documentation and correct worked explanations should establish useful foundations before
+reasoning-SFT. Preserve practical API use, debugging and repository relationships alongside
+algorithmic exercises. The pilot's code weight is an engineering setting, not the final target.
+Long-context preparation should retain coherent repository units and dependencies toward 128K;
+an arbitrary concatenation of unrelated files is not repository-level supervision. Split original
+repositories and derived tasks together to protect held-out repair and agent evaluations.
 
 ## What we are taking from OpenBMB
 
