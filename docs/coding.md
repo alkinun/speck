@@ -109,16 +109,58 @@ immutable revision, not necessarily the revision originally crawled. The
 is saved with its hash. The dataset's MIT label is less specific than the full notice, which also
 contains a restriction on promotional use of the author's name; preserve the exact notice.
 
-Next qualify 16 practical Python source files with this origin/revision/byte/license evidence,
-retaining attribution and rejecting unresolved or vendored origins. Establish source-family
-partitions and benchmark exclusions before synthesis, record each exercise's parent hash and
-generation recipe, and run independent edge-case checks in the existing sandbox. Exception
-handling offers a concrete practical topic, but this single source is neither sufficient supply
-nor an admitted exercise. Count eligible tokens only after the remaining gates pass.
+### Natural-code cohort qualification — 2026-09-19
+
+The [16-file cohort receipt](../experiments/corpus-audit/natural-code-cohort.json) now extends that
+single-source result. We froze a purposeful practical-code selection from the first 125 retained
+rows before new upstream lookups; this is a feasibility cohort, not a representative quality sample.
+Each lookup considered at most five recent commits affecting the named path. All 16 retained files
+match immutable upstream bytes, with SHA256, plain-file SHA1 and Git tree/blob checks. These are
+matching revisions, not proof of the original crawl commits.
+
+| Gate | Result |
+| --- | --- |
+| Exact source/revision match | 16/16 |
+| Matching revision with ancestor license-notice evidence | 13/16 |
+| Python 3.10 syntax | 14/16 |
+| Existing frozen benchmark exclusion | One conservative overlap flag |
+| Ready for independent quality review after those gates | 10 files / 8,702 BOS/EOS-inclusive tokens |
+| Admitted to the new training intervention | Zero |
+
+The full cohort contains 22,976 candidate tokens under the frozen Mistral tokenizer. Three files
+have no conventionally named license file in the inspected revision's ancestor scope: Tesserect's
+entry point, navtools' location encoder and minimal-text-diffusion's progress utility. This does
+not prove absence of license terms elsewhere; their notices remain unresolved. Exact notices for
+the other 13 are retained, including Flytesnacks' NOTICE. Presence is not automatic legal acceptance.
+
+The book-model file has malformed Python; the game-level file uses Python 2 print syntax. Keep
+runtime incompatibility separate from a quality judgment about Python 2 code. The compiler allocator
+triggers the existing exact/fragment benchmark filter; treat it as held, not proven contamination.
+That filter uses the existing five pinned benchmark inputs, both partitions, solely for exclusion.
+No final tasks were scored or exposed for manual inspection. The broader planned coding benchmarks
+and repository repair families still need pinned exclusions before synthesis/admission.
+
+GitHub metadata resolves the two forks to `windelbouwman/ppci` and `fooof-tools/fooof`, and the
+renamed game project to `0xd3adcafe/basinboa`. Preserve those family keys across original, fork and
+derived records. All 16 families remain in quarantine; no cross-corpus near-deduplication or final
+train/evaluation family split is claimed. There are no exact duplicate files within this cohort.
+
+[Static quality notes](../experiments/corpus-audit/natural-code-review.json) cover eight full files.
+For example, one test module casts elements before checking their types and retains only the last
+membership result; its tests alone would not establish correct outputs. The exception helper indexes
+the first exception argument, motivating a zero-argument exception test. These observations reinforce
+that traceable natural code still needs quality checks. No cohort code has been executed.
+
+**Next: independently check three small candidates**, exception handling (ordinal 29), dice parsing
+(50) and entropy calculation (64), in the existing sandbox. Specify edge cases and dependencies,
+retain exact notices and parent hashes, then freeze broader exclusions and family splits before
+deriving exercises. Preserve practical behavior instead of turning everything into algorithm puzzles.
+Neither these 8,702 review-candidate tokens nor the 16-file cohort establishes scalable supply.
 
 ## Data work to do next
 
-1. Follow the natural-code qualification route above. The retained L3 preview remains on hold;
+1. Complete independent checks for the three natural-code candidates above and freeze the broader
+   code-evaluation exclusions before exercise derivation. The retained L3 preview remains on hold;
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.

@@ -73,17 +73,18 @@ pass@1 0/33, IFEval strict prompts 12/101, ARC normalized 44/222 and HellaSwag n
 flagship. All eight checkpoints, the original remote export, CPU reconstruction and final recovery
 logs are verified locally; [backup closeout](experiments/pilot/backup-result.json) is complete.
 The Runpod instance can be stopped for this pilot. Provider billing remains unknown and has not
-been stopped by the agent. Next qualify the existing 16-file natural-code cohort and continue the
-bounded architecture/data preparation; no new GPU run is authorized by pilot completion.
+been stopped by the agent. The 16-file natural-code audit is now complete: ten files clear lineage,
+syntax and existing benchmark checks for independent quality review. Next test the three bounded
+practical-code candidates; no new GPU run is authorized by pilot completion.
 
 | Work | Current state | Concrete next deliverable |
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
-| Code data | Preview, isolated execution and lineage audit complete; all 16 L3 rows held outside training | Qualify 16 practical natural-code files with origin/revision/license evidence, freeze exclusions, then derive independently checked exercises |
+| Code data | Natural-code cohort audited: 16 exact upstream matches, 13 with notice evidence, ten preliminary review candidates; L3 remains held | Independently test exception handling, dice parsing and entropy candidates; freeze broader benchmark exclusions/family splits before derivation |
 | Web data | Matched published evidence favors natural Ultra-FineWeb; now the leading candidate to qualify | Audit the pinned English subset against retained FineWeb-Edu, checking selection threshold, coverage, overlap and eligible supply; keep DCLM as an independent comparator |
 | Assistant data and context | 500K retained conversations inventoried; finite tool-aware rehearsal qualified; always-thinking target at approximately 128K | Audit reasoning quality, code/math correctness and agent outcomes; balance brief/deep reasoning, retain long trajectories and recover missing source tails in a separately qualified acquisition |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
-| Current paid experiment | Training, export, all 2,619 development scores and complete backups verified | Pilot closed; Runpod can be stopped. Qualify the existing natural-code cohort next |
+| Current paid experiment | Training, export, all 2,619 development scores and complete backups verified | Pilot closed; Runpod can be stopped. Continue CPU data qualification |
 | Main training | Desired 320–400B mixture recorded; current 5,000-GPU-hour envelope needs higher measured throughput or more compute | Qualify new supply against the 35% code / 25% math targets; freeze measured manifests and runtime before launch |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed

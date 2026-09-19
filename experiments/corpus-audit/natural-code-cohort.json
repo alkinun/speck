@@ -1,0 +1,661 @@
+{
+  "corpus_code_executed": false,
+  "exclusion_boundary": "Existing frozen five-benchmark exclusion only, both partitions; no scoring or exposure of final tasks. MBPP+, MultiPL-E, LiveCodeBench and repository repair exclusions remain unqualified.",
+  "format_version": 1,
+  "inputs": {
+    "acquisition": {
+      "bytes": 99316,
+      "path": "/mnt/speck-data/speck/natural-code-cohort-20260919/acquisition.json",
+      "sha256": "9fc0acf43bb445eb9ccf9d6f9d4b1fdd3dd4a079c5f1b605c1b0e7f6e86cfe2c"
+    },
+    "acquisition_script": {
+      "bytes": 4262,
+      "path": "/mnt/speck-data/speck/natural-code-cohort-20260919/acquire.py",
+      "sha256": "66f89f90b088e5867d33773fcf6b5f5f923c936a4ddb99ff5b4ef0a78f98f80b"
+    },
+    "benchmark_protocol": {
+      "bytes": 227624,
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/evaluation.json",
+      "sha256": "05a75ffdb936dc8df6f6d92fe2b576fddf5c4bd0b2e51da8042875003fb419f0"
+    },
+    "repair_script": {
+      "bytes": 1760,
+      "path": "/mnt/speck-data/speck/natural-code-cohort-20260919/repair-tree.py",
+      "sha256": "d74f33a0f86dc7bb0dd2117dc56fbedb151cad7ba516794def65613765d9b382"
+    },
+    "selection": {
+      "bytes": 5729,
+      "path": "/mnt/speck-data/speck/natural-code-cohort-20260919/selection.json",
+      "sha256": "413c79964d9bcf882144e4c39ece61433734b963894fddf442af6766dbc7faae"
+    },
+    "tokenizer_model": {
+      "bytes": 493443,
+      "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+      "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    }
+  },
+  "license_boundary": "Notice evidence presence and identity; no automated legal acceptance. Missing conventional files does not prove absence of a license.",
+  "records": [
+    {
+      "benchmark_match_count": 0,
+      "content_id": "9df23fbde85f293e598e5e644550e6f837b7c845",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "932a0bd55561f8015b8a339c371ee31fb913c2a0fa29e3db715005b34db1fc27",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1063,
+          "repository_path": "LICENSE",
+          "sha256": "084471aa3112e328e36a2df83b02fc1c3378c75c8baa8c07e87643e43e2fc9d1",
+          "url": "https://raw.githubusercontent.com/mjdroz/StatisticsCalculator/67882075e9fd0d33206b729e3cb16f1ed992be5e/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "67882075e9fd0d33206b729e3cb16f1ed992be5e",
+      "ordinal": 9,
+      "path": "UnitTests/test_random_generator.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "mjdroz/StatisticsCalculator",
+      "repository_family": "mjdroz/statisticscalculator",
+      "role": "random-generator tests",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 1223,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "dcc8303f2f2c9683080515a40ce2af10afa0c328",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "5938b525efc57372185db386d69c8ad6df3d430e33affe75a5f5ad2f008f1b58",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1073,
+          "repository_path": "LICENSE",
+          "sha256": "b0ee2a379eef74beac831ed12fe2bc93bb731df4004b92cc0bf5b7c8a8c4fdaf",
+          "url": "https://raw.githubusercontent.com/Stihotvor/python3_magic_method_examples/a23940833480eb08f25452062717a7ef9fe39911/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "a23940833480eb08f25452062717a7ef9fe39911",
+      "ordinal": 10,
+      "path": "representation_and_validations.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "Stihotvor/python3_magic_method_examples",
+      "repository_family": "stihotvor/python3_magic_method_examples",
+      "role": "object representation and validation",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 350,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "d1ec62316dd6eeb0af2e2c6e7002d36de8f02ded",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "c333d92ca838069c878da24570ede82c99a9a97dfa0dbf005731b2bbc1ca66ee",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1070,
+          "repository_path": "LICENSE.txt",
+          "sha256": "620a97c7e3a49701ff8dc301e2601ceb4ef6d810ffc8e537cd70c1de8918e435",
+          "url": "https://raw.githubusercontent.com/akulikova64/cgm_3d_cnn/8f1f6e02208fb94859af816ad5569b87e0b6b75d/LICENSE.txt"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "8f1f6e02208fb94859af816ad5569b87e0b6b75d",
+      "ordinal": 11,
+      "path": "src/rotations.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "akulikova64/cgm_3d_cnn",
+      "repository_family": "akulikova64/cgm_3d_cnn",
+      "role": "3D rotation utility",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 873,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "67ab18d2844c9bf312c82362758b7e7f85b210cc",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "7b048390515ee488c1d0a7b222a63646fc9de53881a51608ec74ddcc4e9e99da",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [],
+      "lineage_evidence_ready": false,
+      "lineage_hold_reasons": [
+        "no_license_file_in_inspected_ancestor_scope"
+      ],
+      "matching_revision": "25bc5bd80ba261f63d4249d693fe479501405149",
+      "ordinal": 24,
+      "path": "run.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": false,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "brianwachira/Tesserect",
+      "repository_family": "brianwachira/tesserect",
+      "role": "application entry point",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 980,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "e21c9dee11e21d0141aefa42a06617ac844ac23e",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1273,
+          "repository_path": "LICENSE",
+          "sha256": "774850fc0b9971b20b23df53e2fc326614b077c3250d5da5b442b6a1357326e8",
+          "url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "8d21cb9c9a489da4c138dd05dd578ffea7765c2a",
+      "ordinal": 29,
+      "path": "tdxutil/exceptions.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "stroxler/tdxutil",
+      "repository_family": "stroxler/tdxutil",
+      "role": "exception handling",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 291,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "f21e5e1b717aafdc415ce0384e76b2bf8551dfef",
+      "dataset_detected_licenses": [
+        "BSD-3-Clause"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "7fb30e06ed98268682de11ee7c683d72876a589c57df6d8eb4b313d21a26f6cc",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1459,
+          "repository_path": "LICENSE",
+          "sha256": "62fe31cc3a68f68231ede7634cf56779defc74066a0349e597bc5e7e82d2f4f3",
+          "url": "https://raw.githubusercontent.com/kenaryn/arkheia/910b0b9c3eb4338375d47c23229e1ce9c0772f32/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "910b0b9c3eb4338375d47c23229e1ce9c0772f32",
+      "ordinal": 32,
+      "path": "book.py",
+      "python_syntax": "SyntaxError at line 21",
+      "ready_for_independent_quality_review": false,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks",
+        "python_runtime_compatibility"
+      ],
+      "repo": "kenaryn/arkheia",
+      "repository_family": "kenaryn/arkheia",
+      "role": "book model",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 272,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "4043513921a71bd2f619ae6a66e9e010ec894662",
+      "dataset_detected_licenses": [
+        "BSD-3-Clause"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "36fb20902d62805c90a8afec64ecc3233ff98f6f804e8081b1eb7d8ce3c58a8b",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [],
+      "lineage_evidence_ready": false,
+      "lineage_hold_reasons": [
+        "no_license_file_in_inspected_ancestor_scope"
+      ],
+      "matching_revision": "0bac7cb79dce8e4f103b1810267375806bd7b9b8",
+      "ordinal": 35,
+      "path": "navtools/olc.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": false,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "slott56/navtools",
+      "repository_family": "slott56/navtools",
+      "role": "location-code conversion",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 3443,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 1,
+      "content_id": "551a6f003f0061c7b26f74efa36fad6acc5cf67e",
+      "dataset_detected_licenses": [
+        "BSD-2-Clause"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "4e43e76c1b137bece4d3d5c6f99f17a9925431e45342fdb03935ac9d071d6fbd",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1299,
+          "repository_path": "license.txt",
+          "sha256": "f21c576a0ab7b19d7185c8c7a15b814d8ed46b9a6951ef5e053b1777272c9f11",
+          "url": "https://raw.githubusercontent.com/obround/ppci/aeda64dcc4c2043870bf23f941c63eb3cb7f4313/license.txt"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "aeda64dcc4c2043870bf23f941c63eb3cb7f4313",
+      "ordinal": 36,
+      "path": "ppci/codegen/registerallocator.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": false,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks",
+        "existing_benchmark_overlap"
+      ],
+      "repo": "obround/ppci",
+      "repository_family": "windelbouwman/ppci",
+      "role": "compiler register allocation",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 8422,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "8306f28381c1b9433b9273dc2101ad2acd9de478",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "13fecf2c3ae21bbd33bcfbce1ebfc1fea7bb1da97b967138a51f4259c8acb0fc",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1079,
+          "repository_path": "LICENSE",
+          "sha256": "149528cb3ae1c6d35f3ef57b01f7b4390c37b4228f5e8c48cb93322d81e3d2cc",
+          "url": "https://raw.githubusercontent.com/marlboromoo/basinboa/dda85fe2054733eeb5267dd4e5df964f597fbe10/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "dda85fe2054733eeb5267dd4e5df964f597fbe10",
+      "ordinal": 42,
+      "path": "basinboa/d20/level.py",
+      "python_syntax": "SyntaxError at line 76",
+      "ready_for_independent_quality_review": false,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks",
+        "python_runtime_compatibility"
+      ],
+      "repo": "marlboromoo/basinboa",
+      "repository_family": "0xd3adcafe/basinboa",
+      "role": "game level model",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 603,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "f2443989bfa65edce94d65f953d2b579265351bb",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "fabd2a81f0b21db55d3d1ad5a64c6d381e6ffec351edee813964c42973225cc2",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1073,
+          "repository_path": "LICENSE",
+          "sha256": "f02c5b79f11b94330bec2cd97f2e32823b6da7ad91ec9329671e8a35557df02e",
+          "url": "https://raw.githubusercontent.com/jmanuel1/dice/20c9cc26eb9f0f5af675c29eb8946bcb1570eee9/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "20c9cc26eb9f0f5af675c29eb8946bcb1570eee9",
+      "ordinal": 50,
+      "path": "dice.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "jmanuel1/dice",
+      "repository_family": "jmanuel1/dice",
+      "role": "dice parser",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 1512,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "291fb6c3d36dc89483af428cf73c99c1888f105c",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "27d78d0137fe13e169ea381a4b57611c3e3ce6211606dc46596807217a50e54b",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1065,
+          "repository_path": "LICENSE",
+          "sha256": "ab6e4d542d90b212e4cca469d8e47bfe284d42d79da3ee1629baa037fe506018",
+          "url": "https://raw.githubusercontent.com/Aggraxis/killer-bot/1f42e39c3d4d20df070e1c9066aaf50a4572d189/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "1f42e39c3d4d20df070e1c9066aaf50a4572d189",
+      "ordinal": 55,
+      "path": "utilities.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "Aggraxis/killer-bot",
+      "repository_family": "aggraxis/killer-bot",
+      "role": "bot utilities",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 359,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "c3b9d8ddd9d30c182aea5ed3735e2d1ba95c7761",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "8bbb1acf023ca1286ea82600ab05c3e2f636c77a825e3a94d1e9dc6ce0a41326",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1068,
+          "repository_path": "LICENSE",
+          "sha256": "a1fd8c725bb35645f63c1bee120c472cd36272d3498248f8d6c976e4c1fae30d",
+          "url": "https://raw.githubusercontent.com/duykienvp/sigspatial-2021-quantify-voi-of-trajectories/9dd9f3362454c3b2285583ecac9ea1498c8aa0c3/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "9dd9f3362454c3b2285583ecac9ea1498c8aa0c3",
+      "ordinal": 64,
+      "path": "pup/common/information_gain.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "duykienvp/sigspatial-2021-quantify-voi-of-trajectories",
+      "repository_family": "duykienvp/sigspatial-2021-quantify-voi-of-trajectories",
+      "role": "information-gain calculation",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 161,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "64a15837d59be63689799da54c288c3ee7aaa988",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "6d96c0b3c938243b3bbbcb3e786983535ec4f23830385adbc57413942edd4bd3",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 1061,
+          "repository_path": "LICENSE",
+          "sha256": "a2df1d6513ffa89456eed257d4a3b3f881dfcd36056e908224dccc869abdfba1",
+          "url": "https://raw.githubusercontent.com/zhy0/dmarket_rl/113c9c940aec8712658dc54c9ddc1d1bb435d821/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "113c9c940aec8712658dc54c9ddc1d1bb435d821",
+      "ordinal": 86,
+      "path": "dmarket/agents.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "zhy0/dmarket_rl",
+      "repository_family": "zhy0/dmarket_rl",
+      "role": "market simulation agents",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 2349,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "24e27095d424238016503bf239e515f5e70765be",
+      "dataset_detected_licenses": [
+        "Apache-2.0"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "260f28f543d2718a8c06a07a76ac0127b102b40bb05526b203a4da83ed764f48",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 11341,
+          "repository_path": "LICENSE",
+          "sha256": "e3cf595de5bd1bdd2ea7a7a9f83d67fa526093d722353db2c57a458114a276d9",
+          "url": "https://raw.githubusercontent.com/flyteorg/flytesnacks/0cc5f52e43d856488a851567e75a4a7bdb589eda/LICENSE"
+        },
+        {
+          "bytes": 184,
+          "repository_path": "NOTICE",
+          "sha256": "dbb0506f396790f8e152fbec2a7ed3c2f6a3d1e66630a6453c2c1f49b68b7e82",
+          "url": "https://raw.githubusercontent.com/flyteorg/flytesnacks/0cc5f52e43d856488a851567e75a4a7bdb589eda/NOTICE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "0cc5f52e43d856488a851567e75a4a7bdb589eda",
+      "ordinal": 87,
+      "path": "examples/type_system/type_system/typed_schema.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "flyteorg/flytesnacks",
+      "repository_family": "flyteorg/flytesnacks",
+      "role": "typed workflow example",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 646,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "32eded7d550c7a8e1ccb61d1894a6c7759a36350",
+      "dataset_detected_licenses": [
+        "Apache-2.0"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "39fdf39b112749cce17e41d08e2e6201e2ee005e20641e8013776620a2c22216",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [
+        {
+          "bytes": 11340,
+          "repository_path": "LICENSE",
+          "sha256": "67b387cc26376f6420a43979d427384e822a2b5ab0a7cf3055418d2386acd819",
+          "url": "https://raw.githubusercontent.com/anchandm/fooof/969973c777714b4e4ab32e4256a0523f3e00be13/LICENSE"
+        }
+      ],
+      "lineage_evidence_ready": true,
+      "lineage_hold_reasons": [],
+      "matching_revision": "969973c777714b4e4ab32e4256a0523f3e00be13",
+      "ordinal": 88,
+      "path": "tutorials/plot_01-ModelDescription.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": true,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "anchandm/fooof",
+      "repository_family": "fooof-tools/fooof",
+      "role": "scientific library tutorial",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 938,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    },
+    {
+      "benchmark_match_count": 0,
+      "content_id": "3b7d206d3ea38fa0e080bbb4a44088262c4c0603",
+      "dataset_detected_licenses": [
+        "MIT"
+      ],
+      "decision": "hold_outside_new_training_intervention",
+      "expected_sha256": "69120393c7f6fcaaec49cbfef7ad824d2816dc34cfb75870ee528d801e41619a",
+      "family_basis": "observed GitHub source/full_name",
+      "license_notices": [],
+      "lineage_evidence_ready": false,
+      "lineage_hold_reasons": [
+        "no_license_file_in_inspected_ancestor_scope"
+      ],
+      "matching_revision": "9dabd3a2db9f86f8fdcaa7532eeaa3fc25ec8215",
+      "ordinal": 109,
+      "path": "src/utils/show_sampling_progress.py",
+      "python_syntax": "pass",
+      "ready_for_independent_quality_review": false,
+      "remaining_gates": [
+        "file_license_and_attribution_review",
+        "broader_code_benchmark_and_repository_exclusions",
+        "source_family_split_and_near_deduplication",
+        "independent_quality_and_dependency_checks"
+      ],
+      "repo": "madaan/minimal-text-diffusion",
+      "repository_family": "madaan/minimal-text-diffusion",
+      "role": "sampling progress utility",
+      "source_family_partition": "quarantine",
+      "tokens_with_bos_eos": 554,
+      "tree_and_notice_inventory_complete": true,
+      "upstream_bytes_match": true
+    }
+  ],
+  "revision_boundary": "Matching immutable revision, not necessarily the original crawl commit.",
+  "selection_boundary": "Purposeful 16-file feasibility cohort chosen from first 125 retained rows by repository/path and practical roles, before new upstream requests; includes prior verified ordinal29. Not random or corpus representative. No replacement of failures.",
+  "status": "bounded_lineage_qualification_complete_not_training_admission",
+  "summary": {
+    "admitted_files": 0,
+    "admitted_tokens": 0,
+    "benchmark_flagged_files": 1,
+    "candidate_tokens_with_bos_eos": 22976,
+    "candidates": 16,
+    "distinct_observed_families": 16,
+    "exact_duplicate_groups": 0,
+    "exact_upstream_matches": 16,
+    "lineage_evidence_ready": 13,
+    "quality_review_candidate_tokens_with_bos_eos": 8702,
+    "ready_for_independent_quality_review": 10,
+    "syntax_pass_files": 14
+  },
+  "syntax_runtime": "3.10.20 (main, Jun 11 2026, 04:03:45) [Clang 22.1.3 ]",
+  "training_authority": false
+}

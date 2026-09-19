@@ -235,7 +235,7 @@ samples. No-overlap in 17 retained rows per tier is not evidence against a globa
 raw fields are byte-identical despite different UUIDs. The original dataset revision is preserved;
 no candidate code was executed and the frozen pilot/evaluation were not changed.
 
-The next route is a 16-file practical Python cohort qualified from retained natural-code stock.
+The next route was a 16-file practical Python cohort qualified from retained natural-code stock.
 One concrete Stack-Edu candidate now has an exact byte match to an immutable upstream commit
 and a retained license notice; its remaining eligibility, deduplication, exclusion and independent
 test gates are explicit in the [coding plan](../../docs/coding.md#source-lineage-follow-up--2026-09-19).
@@ -256,3 +256,35 @@ interpretations are explicitly retained in the input receipt; replay does not au
 approval or discover a global join. [code-provenance-validation.json](code-provenance-validation.json)
 records replay and fault-injection checks. Raw data and source notices remain outside Git under
 `/mnt/speck-data/speck/openbmb-code-provenance-20260919/` and the original acquisition roots.
+
+## Natural-code cohort — 2026-09-19
+
+[natural-code-cohort.json](natural-code-cohort.json) records the completed lineage/initial-quality
+audit of 16 practical Python files from that stock. All match immutable upstream bytes; 13 have
+license-file evidence at the matching revision, 14 parse under Python 3.10, and one triggers the
+existing conservative benchmark-exclusion filter. Ten files, totaling 8,702 Mistral tokens including
+BOS/EOS, clear those preliminary checks. None is admitted to the new training intervention.
+This purposeful cohort is not a source-wide quality or supply estimate.
+
+The [coding plan](../../docs/coding.md#natural-code-cohort-qualification--2026-09-19) records the
+three missing-notice cases, two syntax outcomes, observed fork/rename families and next independent
+tests. [Static notes](natural-code-review.json) cover eight files; no corpus code was executed.
+All source bytes, complete license/NOTICE files, lookup responses and the original interrupted
+tree-download receipt remain outside Git in `/mnt/speck-data/speck/natural-code-cohort-20260919/`.
+
+Replay using retained evidence and the repository environment, without network access:
+
+```sh
+PYTHONPATH=. .venv/bin/python experiments/corpus-audit/audit_natural_code.py \
+  experiments/corpus-audit/natural-code-inputs.json > /tmp/natural-code-cohort.json
+cmp /tmp/natural-code-cohort.json experiments/corpus-audit/natural-code-cohort.json
+.venv/bin/pytest -q tests/test_natural_code_audit.py
+```
+
+Replay verifies archived bytes, all captured responses, source/path/commit/tree/blob and notice
+bindings, family identities, tokenizer and frozen benchmark inputs. It does not grant license
+approval, prove correctness, freeze the expanded benchmark set, or execute dataset code. Syntax
+runtime is recorded, so exact replay comparisons use the recorded Python environment.
+[Validation](natural-code-validation.json) records an identical offline replay in 10.30 seconds
+(12.08 child CPU seconds), seven focused tests, and rejection of altered payloads, revisions,
+origins and tree bindings. Missing notices and truncated inventories remain held.
