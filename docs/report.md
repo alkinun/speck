@@ -71,7 +71,7 @@ capability versus tokens and cost at declared checkpoints.
 Describe from-scratch initialization, broad code/math/general coverage and the realized recipe.
 Explain deterministic data order, packing boundaries and continuation checkpoints. Starting weights
 and the engineering pilot's schedule are not optimized findings. State the achieved horizon and
-its feasibility relative to the desired 320–400B base target.
+its feasibility relative to the 100B working base horizon and 2,300-hour base reservation.
 
 ### Mid-training
 

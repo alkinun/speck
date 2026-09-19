@@ -104,8 +104,10 @@ The [full retained-code census](code-supply.json) subsequently reopens all 1,999
 do not resolve missing commit fields; existing benchmark/content-family evidence holds 123 files.
 The [bundle follow-up](code-bundles.json) recovers 19 linked files at four pinned revisions;
 four content flags hold 15 files by family, and static review exposes test-oracle weaknesses.
-Next, pin expansion routes and eligible yield by language/practical role, requiring explicit
-linkage and independent tests. The
+The [expansion inventory/probe](code-expansion.json) subsequently verifies one new Python metadata
+shard and retrieves sixteen blobs: thirteen length-matched files / 9,541 tokens, with four content
+flags and no admission. Next, qualify the four observed application modules' origins, notices and
+linked tests before measuring eligible yield. The
 [coding plan](../../docs/coding.md#retained-supply-census--2026-09-19) contains the language/role tables
 and the gap to proposed exposure; no main-code supply is admitted.
 

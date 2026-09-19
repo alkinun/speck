@@ -5,8 +5,8 @@ The selected flagship is the existing 1.2B-total, all-active KDA/GQA model with 
 layers. MoE investigation and architectural comparison arms are outside this release program.
 The user clarified that developing our own pretraining capability is essential; pretrained
 adaptation is not an alternative first-release route.
-A 100B budget-fit projection is not evidence that the result will be competitive. The desired
-320–400B horizon also does not establish parity with current releases.
+The 100B working first-release horizon is a cost-based preparation target, not evidence that the
+result will be competitive. Larger deferred horizons do not establish parity with current releases.
 
 ## Primary-source comparison
 
@@ -35,7 +35,7 @@ The first release develops a data and training recipe across pretraining, mid-tr
 post-training on the selected 1.2B backbone. The [model notes](model.md) explain attention/size
 choices and their measured limitations. MoE, attention residuals and broader architectural research
 belong to later releases with larger allocations. Qualify the current runtime, improve the data and
-measure useful thinking/code/tool behavior. The 91-hour bounded comparison is a data intervention.
+measure useful thinking/code/tool behavior. The 141-hour bounded comparison is a data intervention.
 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
 claim. A narrow competitive product is a hypothesis to test: reliable Python/JavaScript/TypeScript
@@ -51,11 +51,11 @@ input/validation/checkpoint overhead, then measure four-worker communication. Pr
 semantics and validate numerical/recovery behavior for any production change. These are bounded
 runtime qualification tasks, not an assumed 3–4x gain or a new GPU launch.
 
-Keep the existing phase reservations until measured costs justify a revision. The 2,300-hour base
-reservation needs 38.6K/48.3K effective tokens/s per allocated GPU for 320B/400B; four workers alone
-do not close that per-GPU gap. All projections and protected stages remain in the
-[scale plan](../experiments/main-data/README.md). An unchanged throughput result requires a smaller
-horizon, measured budget reallocation or more compute; it cannot justify a quality promise.
+The 2,300-hour base reservation needs 12,077 effective tokens/s per allocated GPU for the 100B
+working horizon. Four workers do not improve GPU-hour efficiency automatically. The completed
+pilot releases its unused 50-hour future reservation into the data comparison; other stage
+reservations remain protected in the [scale plan](../experiments/main-data/README.md). Reduce the
+horizon if measured cost or qualified supply requires it; do not promise quality from token count.
 
 ## Before committing the main training budget
 

@@ -98,7 +98,7 @@ The bounded practical CPU checks are complete in [coding](coding.md). The subseq
 [full retained-code census](../experiments/corpus-audit/code-supply.json) verifies 714,369 files /
 476,774,847 tokens across both acquisition batches. No commit fields are populated; test/docs
 co-presence is not same-version linkage. Existing benchmark/content-family evidence holds at
-least 123 files. This stock is under 0.5% of proposed natural-code exposure before joint eligibility;
+least 123 files. This stock is 1.59% of the revised 30B natural-code exposure before joint eligibility;
 it is not a checked-exercise bank or evidence of full-release supply. The subsequent
 [bundle follow-up](../experiments/corpus-audit/code-bundles.json) recovers 19 linked files at four
 pinned revisions; family exclusions hold 15, and static test weaknesses prevent treating the
@@ -142,12 +142,13 @@ trade-offs support the paper, while broader architecture research belongs to lat
 The [program lifecycle](program.md#training-lifecycle) defines capability continuation, context
 extension toward approximately 128K, thinking SFT and conditional RL with separate data objectives.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
-The [main mixture and scale plan](../experiments/main-data/README.md) retains a desired 320B base target and 400B stretch:
+The [main mixture and scale plan](../experiments/main-data/README.md) uses a 100B working base horizon:
 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
-400B eligible unique tokens as selection headroom for 320B exposure (500B for the stretch); the plan distinguishes proposed exposure from
+125B eligible unique tokens as selection headroom for 100B exposure; the plan distinguishes proposed exposure from
 materialized supply and reserves separate context-extension/post-training budgets. These are working
-weights to qualify, not proven optima or source admission. The 100B case remains the current
-measurement-based budget-fit scenario; 320–400B requires more effective throughput or compute.
+weights to qualify, not proven optima or source admission. The H100 reference projects to 2,160 base GPU-hours;
+GH200 qualification must confirm the cost or reduce the horizon. The old 320–400B ambitions are
+deferred scale comparisons, not first-allocation targets.
 The weak [pilot completions](../experiments/pilot/completion-preview.json) establish an immature
 endpoint, not a causal verdict on its datasets or architecture.
 
@@ -213,10 +214,11 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Use the completed census and bundle follow-up to pin expansion routes with measured eligible
-   yield by language and practical role. Require source/test/docs linkage and independent oracles;
+1. Use the [pinned expansion inventory and new-shard probe](../experiments/corpus-audit/code-expansion.json)
+   to qualify the four application-module candidates and measure eligible yield by language and
+   practical role. Require source/test/docs linkage and independent oracles;
    repository co-presence alone is insufficient. The 0.477B retained tokens
-   do not establish the proposed 96B natural-code exposure or the separate checked-exercise bank.
+   do not establish the proposed 30B natural-code exposure or the separate checked-exercise bank.
    For web, resolve source-use evidence, source families, overlap and source-aware extraction
    repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ
    cutoff unchanged. Exact sample-token retention is not full-corpus yield. Extend DCLM previews

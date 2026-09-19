@@ -7,6 +7,10 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
+- The [expansion packet](../corpus-audit/code-expansion.json) pins both candidate inventories,
+  verifies one new Python metadata shard and recovers 16 blobs. Thirteen length-matched files
+  contain 9,541 tokens; four content flags and unresolved origin/notice/test checks prevent
+  admission. Four application-module candidates now define the next practical qualification step.
 - The [immutable bundle follow-up](../corpus-audit/code-bundles.json) recovers 19 linked files /
   5,650 tokens across four repositories. Four content flags propagate to 15 quarantined files.
   Static review finds weak Python assertions and a contradictory Go test expectation; the Go
@@ -94,10 +98,10 @@ a fresh blind evaluation set.
 ## Next bounded data packet
 
 Reuse retained packets and current receipts rather than repeating the same spot checks. The web
-diagnosis, full retained-code census and four-repository bundle follow-up are complete. Next, pin
-expansion routes with measured eligible yield by language and practical role, using explicit
-source/test/docs linkage and independent oracles. The proposed code horizon needs substantially
-more qualified supply. Remaining source comparisons are:
+diagnosis, full retained-code census, bundle follow-up and initial expansion inventory/probe are
+complete. Next, resolve origins, notices and linked tests for the four application-module candidates,
+then measure eligible yield by language and practical role with independent checks. The proposed
+code horizon needs substantially more qualified supply. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |
@@ -143,7 +147,7 @@ Record raw tokens, deduplicated unique tokens, eligible tokens, rejected counts/
 coverage and CPU/storage/teacher cost separately. Use the frozen Mistral tokenizer and retain exact
 serialization. Overlapping parent/filtered releases count once. The working eight-bank weights in
 [plan.json](plan.json) remain hypotheses; the chat suggestion of an 80/20 staged mixture has not
-become a launch recipe. No 320B supply or compute feasibility claim follows from this packet.
+become a launch recipe. No 100B qualified supply or GH200 compute-feasibility claim follows from this packet.
 
 The deliverable is one source-comparison table with auditable accepted/rejected examples and a
 costed acquisition route. Only then freeze the eligible banks and one equal-budget data comparison.

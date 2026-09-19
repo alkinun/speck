@@ -25,29 +25,28 @@
     "selection_status": "selected for first flagship; runtime and long-context qualification remain open"
   },
   "main_pretraining": {
-    "target_tokens": 320000000000,
+    "target_tokens": 100000000000,
     "initial_context_tokens": 4096,
     "mixture": [
       {
         "id": "selected_web",
         "role": "Natural Ultra-FineWeb English",
         "weight_percent": 25,
-        "exposure_tokens": 80000000000,
-        "eligible_unique_token_preparation_target": 100000000000,
+        "exposure_tokens": 25000000000,
+        "eligible_unique_token_preparation_target": 31250000000,
         "candidate_sources": [
           "openbmb/Ultra-FineWeb"
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 100000000000,
         "qualification_priority": "data/ultrafineweb_l1_en_hq at 02c85641e3d19a854be2e09139c25adaa9518063; twelve-shard audit and three matching archived captures complete. Frozen 32-document comparison keeps candidate flags review-only. Source-use/family exclusions, source-aware repair and eligible tokens remain open. No stricter cutoff or training admission."
       },
       {
         "id": "independent_web",
         "role": "FineWeb-Edu / DCLM coverage component",
         "weight_percent": 5,
-        "exposure_tokens": 16000000000,
-        "eligible_unique_token_preparation_target": 20000000000,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
         "candidate_sources": [
           "HuggingFaceFW/fineweb-edu",
           "mlfoundations/dclm-baseline-1.0-parquet",
@@ -55,106 +54,97 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 20000000000,
         "candidate_filter_review": "DCLM-Edu stricter candidate uses edu_int_score >= 3; edu_score >= 3 is a different filter. Neither is admitted; partial-viewer previews do not establish full-release retention."
       },
       {
         "id": "natural_code",
         "role": "Qualified natural code, tests and documentation",
         "weight_percent": 30,
-        "exposure_tokens": 96000000000,
-        "eligible_unique_token_preparation_target": 120000000000,
+        "exposure_tokens": 30000000000,
+        "eligible_unique_token_preparation_target": 37500000000,
         "candidate_sources": [
           "HuggingFaceTB/stack-edu",
           "openbmb/UltraData-Code:L2"
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 120000000000,
-        "qualification_priority": "Retained census: 714369 files / 476774847 tokens before joint eligibility; missing commits and at least 123 known family-held files. Four-repository bundle follow-up: 19 linked files / 5650 tokens, 15 family-quarantined; static test weaknesses, no execution or admission. Pin expansion routes and eligible yield by language/practical role with explicit linkage and independent oracles. Retained stock is under 0.5% of proposed natural-code exposure."
+        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; retained 0.477B is 1.59% before joint eligibility. Stack-Edu and UltraData-Code inventories pinned. One new Python metadata shard: 102603/5057204 rows pass historical metadata predicates. Sixteen blobs recovered, thirteen length-matched / 9541 tokens; four content flags, no admission. Resolve origins, notices and linked tests for four application-module candidates and measure qualified yield before bulk expansion. UltraData-Code lineage holds remain."
       },
       {
         "id": "checked_code",
         "role": "Checked code explanations, exercises and repair",
         "weight_percent": 5,
-        "exposure_tokens": 16000000000,
-        "eligible_unique_token_preparation_target": 20000000000,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
         "candidate_sources": [
           "qualified natural-code derivatives",
           "openbmb/UltraData-Code:L3 if lineage resolved"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 20000000000
+        "admitted_by_this_plan": false
       },
       {
         "id": "natural_math",
         "role": "Selected natural math and worked solutions",
         "weight_percent": 20,
-        "exposure_tokens": 64000000000,
-        "eligible_unique_token_preparation_target": 80000000000,
+        "exposure_tokens": 20000000000,
+        "eligible_unique_token_preparation_target": 25000000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L2",
           "HuggingFaceTB/finemath:finemath-4plus",
           "nvidia/Nemotron-CC-Math-v1:4plus"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 80000000000
+        "admitted_by_this_plan": false
       },
       {
         "id": "refined_math",
         "role": "Checked refined math explanations and derivations",
         "weight_percent": 5,
-        "exposure_tokens": 16000000000,
-        "eligible_unique_token_preparation_target": 20000000000,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L3"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 20000000000
+        "admitted_by_this_plan": false
       },
       {
         "id": "reference_science",
         "role": "Reference, science and technical documents",
         "weight_percent": 5,
-        "exposure_tokens": 16000000000,
-        "eligible_unique_token_preparation_target": 20000000000,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
         "candidate_sources": [
           "retained FineWiki",
           "retained peS2o",
           "HuggingFaceFW/finepdfs-edu:English if qualified"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 20000000000
+        "admitted_by_this_plan": false
       },
       {
         "id": "refined_web",
         "role": "Selected synthetic educational text",
         "weight_percent": 5,
-        "exposure_tokens": 16000000000,
-        "eligible_unique_token_preparation_target": 20000000000,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
         "candidate_sources": [
           "openbmb/Ultra-FineWeb-L3",
           "retained Cosmopedia v2 comparator"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 20000000000
+        "admitted_by_this_plan": false
       }
     ],
     "code_percent": 35,
     "math_percent": 25,
-    "target_unique_eligible_tokens": 400000000000,
+    "target_unique_eligible_tokens": 125000000000,
     "default_passes": 1,
     "repetition_policy": "No automatic repetition. Any repeated source needs declared unique tokens, exposure, passes and revised freeze.",
     "synthetic_shortfall_policy": "Do not count held/rejected records or invent an undocumented join. Re-freeze within-domain natural/refined allocations or reduce horizon after measuring supply; no silent replacement.",
-    "checkpoint_policy": "Retain continuation and endpoint checkpoints. Treat 100B as a budget-fit scenario or intermediate checkpoint, not an automatic final horizon; freeze a continuation-compatible schedule before launch.",
-    "stretch_target_tokens": 400000000000,
-    "budget_fit_scenario_tokens": 100000000000,
-    "target_status": "desired flagship scale; hardware, eligible supply and funding not yet qualified",
+    "checkpoint_policy": "Retain continuation and endpoint checkpoints. Plan the first release around 100B combined base tokens; freeze schedule, staged mixture and endpoint decay after qualified supply and measured GH200 cost. Any expansion requires a revised budget and manifest.",
+    "target_status": "100B first-allocation working horizon based on H100 cost; conditional on eligible supply and GH200/multiworker qualification, not a launch commitment",
     "horizon_scope": "Combined pretraining and capability mid-training exposure. Initial bank totals assume the starting mixture; revise aggregate exposures when a staged mixture is frozen."
   },
   "mid_training": {
@@ -284,26 +274,25 @@
     }
   },
   "compute": {
-    "allocation_status": "requested_not_confirmed",
+    "allocation_status": "user_confirmed_envelope_provider_access_unconfirmed",
     "requested_gpus": 4,
     "requested_total_gpu_hours": 5000,
     "reservations_gpu_hours": {
       "runtime_qualification": 70,
-      "engineering_pilot": 50,
       "main_4k_pretraining": 2300,
       "context_extension": 800,
       "post_training": 800,
-      "bounded_data_comparison": 91,
+      "bounded_data_comparison": 141,
       "protected_recovery_and_evaluation": 889
     },
     "h100_full_trainer_tokens_per_second": 12859.198189903878,
     "h100_steady_optimizer_tokens_per_second": 13594.900661275025,
-    "main_pretraining_reference_gpu_hours": 6912.475224052311,
-    "main_reference_four_gpu_days_at_perfect_scaling": 72.00495025054491,
+    "main_pretraining_reference_gpu_hours": 2160.1485075163473,
+    "main_reference_four_gpu_days_at_perfect_scaling": 22.501546953295286,
     "main_scenarios": [
       {
         "tokens": 100000000000,
-        "role": "budget-fit scenario, not revised flagship target",
+        "role": "first-allocation working horizon, conditional on measured cost and supply",
         "reference_gpu_hours": 2160.1485075163473,
         "reference_four_gpu_days_perfect_scaling": 22.501546953295286,
         "reference_four_gpu_days_at_80_percent_scaling": 28.126933691619104,
@@ -312,7 +301,7 @@
       },
       {
         "tokens": 320000000000,
-        "role": "desired flagship target",
+        "role": "deferred scale comparison; not a first-allocation target",
         "reference_gpu_hours": 6912.475224052311,
         "reference_four_gpu_days_perfect_scaling": 72.00495025054491,
         "reference_four_gpu_days_at_80_percent_scaling": 90.00618781318114,
@@ -321,7 +310,7 @@
       },
       {
         "tokens": 400000000000,
-        "role": "stretch target",
+        "role": "deferred scale comparison; not a first-allocation target",
         "reference_gpu_hours": 8640.59403006539,
         "reference_four_gpu_days_perfect_scaling": 90.00618781318114,
         "reference_four_gpu_days_at_80_percent_scaling": 112.50773476647642,
@@ -341,16 +330,22 @@
       "comparative_and_final_evaluation": 300,
       "recovery_and_unresolved_cost_reserve": 589
     },
-    "breakdown_status": "Planning subdivisions of existing 800h post-training and 889h protected reservations, not measured requirements or launch authorization. If SFT needs more, revise the split before launch; RL remains conditional."
+    "breakdown_status": "Planning subdivisions of existing 800h post-training and 889h protected reservations, not measured requirements or launch authorization. If SFT needs more, revise the split before launch; RL remains conditional.",
+    "reservation_revision": "Retire the unused 50-hour engineering-pilot reservation from the future allocation and add it to the bounded data comparison (91 to 141). Completed H100 rental work remains in its separate actual-cost ledger; no repeat pilot or additional spend authorized.",
+    "main_budget_feasibility": {
+      "h100_rate_tokens_in_reserved_hours": 106474161012.40411,
+      "reference_margin_gpu_hours": 139.8514924836527,
+      "illustrative_80_percent_rate_tokens_in_reserved_hours": 85179328809.9233,
+      "boundary": "Linear H100 full-trainer extrapolation; not a guaranteed GH200 ceiling. At illustrative 80% of this effective per-allocated-GPU rate the horizon must shrink to about 85.2B to preserve the base reservation. Do not borrow protected stage budgets."
+    },
+    "architecture_search_gpu_hours": 0
   },
   "storage": {
-    "base_uint16_token_id_bytes": 640000000000,
+    "base_uint16_token_id_bytes": 200000000000,
     "context_uint16_token_id_bytes": 16000000000,
     "local_scratch_working_allowance_bytes": 2000000000000,
     "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed.",
-    "prepared_400b_uint16_token_id_bytes": 800000000000,
-    "stretch_base_uint16_token_id_bytes": 800000000000,
-    "stretch_prepared_500b_uint16_token_id_bytes": 1000000000000
+    "prepared_125b_uint16_token_id_bytes": 250000000000
   },
   "input_receipts": {
     "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
@@ -370,7 +365,8 @@
     "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
     "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
     "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
-    "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036"
+    "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
+    "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

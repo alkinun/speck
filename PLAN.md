@@ -35,7 +35,7 @@ not results. The [program overview](docs/program.md#training-lifecycle) defines 
 
 | Area | Preparation target | Still to resolve |
 | --- | --- | --- |
-| Pretraining | 320B desired / 400B stretch base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material | Qualified source supply and measured cost; 100B remains the present budget-fit scenario |
+| Pretraining | 100B working base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material | Qualified source supply and measured GH200 cost; H100 reference implies 106.5B within the base reservation |
 | Capability mid-training | Targeted code/math/repair continuation with broad-data replay, within the base horizon | Token split, mixture, objective and changed-data continuation support remain to be qualified |
 | Context mid-training | Proposed 8B additional tokens: 2B up to 16K, 2B up to 32K, 4B toward 128K, including short replay | Memory, useful-context learning, positional behavior and stage costs |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
@@ -54,8 +54,9 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Engineering pilot | 800 steps / 104,857,600 tokens; 2.265 trainer hours, 12,859 full-trainer tokens/s, 13,595 steady optimizer tokens/s, 19.3 GiB peak allocated memory | [Execution receipt](experiments/pilot/h100-run.json); engineering evidence, not an optimized ceiling |
 | Development scoring | 2,619 tasks in 2.12 evaluation hours: GSM8K strict 0/253, compiled code pass@1 0/33, IFEval strict prompts 12/101, ARC normalized 44/222, HellaSwag normalized 530/2,010 | [Results](experiments/pilot/development-result.json); weak base capability, custom subsets, no final-partition scoring |
 | Backup closeout | Eight model/optimizer checkpoints, both exports, evaluation outputs and recovery logs retained locally | [Backup receipt](experiments/pilot/backup-result.json); pilot closed, no further rental work needed; provider billing/stop state not verified |
-| Natural-code supply | All 1,999 retained archives reopened; 714,369 files / 476,774,847 retokenized tokens; 123 files under known benchmark/family holds | [Census](experiments/corpus-audit/code-supply.json), [lineage cohort](experiments/corpus-audit/natural-code-cohort.json); no new training admissions; stock covers under 0.5% of proposed natural-code exposure |
+| Natural-code supply | All 1,999 retained archives reopened; 714,369 files / 476,774,847 retokenized tokens; 123 files under known benchmark/family holds | [Census](experiments/corpus-audit/code-supply.json), [lineage cohort](experiments/corpus-audit/natural-code-cohort.json); no new training admissions; stock covers 1.59% of the revised 30B natural-code exposure |
 | Code bundle linkage | Four pinned repositories; 19 linked files / 5,650 tokens; four content flags hold 15 files by family | [Receipt](experiments/corpus-audit/code-bundles.json); static test weaknesses, no execution or admission; repository co-presence alone is insufficient |
+| Code expansion feasibility | Upstream inventories pinned; one new Python metadata shard scanned, 16 blobs recovered, 13 length-matched / 9,541 tokens | [Receipt](experiments/corpus-audit/code-expansion.json); four content flags; four application modules for origin/test follow-up; no qualified yield or admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -85,8 +86,10 @@ historical; do not repeat the completed pilot because a preparation document sti
    now reconciles both retained acquisition batches and records role hints, missing commit fields
    and partial exclusion coverage. The [bundle follow-up](experiments/corpus-audit/code-bundles.json)
    now resolves four pinned examples, exposing weak test oracles and limited practical coverage.
-   Next, pin expansion routes with measured eligible yield by language and practical role;
-   require linked modules and independent tests. The proposed 96B natural-code
+   The [expansion inventory and probe](experiments/corpus-audit/code-expansion.json) now pin the
+   remaining metadata and recover new Python candidates. Next, resolve origins, notices and linked
+   tests for the four application modules, then measure eligible yield by language/practical role.
+   The proposed 30B natural-code
    exposure is not supported by 0.477B retained tokens. Close supply feasibility before bulk
    packing. Web source-use, family/near-duplicate exclusions and usable-token counts remain
    open. Acquire DCLM originals for a concrete remaining coverage question; keep synthetic L3
@@ -98,7 +101,8 @@ historical; do not repeat the completed pilot because a preparation document sti
 4. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to freeze the main schedule,
-   batch, token horizon, data manifests and budget. Resolve the 320–400B feasibility gap explicitly.
+   batch, token horizon, data manifests and budget. Reduce the 100B working horizon if measured
+   cost or supply requires it.
 5. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
    continuation and context extension separately, with their data, objectives and budget ownership.
    Preserve stage checkpoints and source-wise learning curves. Run the bounded data comparison only when its base,
@@ -112,17 +116,20 @@ checks and bounded supervisors, not frequent manual progress polling or duplicat
 ## Compute
 
 The [numeric plan](experiments/main-data/plan.json) reserves 70 GPU-hours for runtime qualification,
-50 for engineering pilot work, 91 for the bounded data comparison, 2,300 for pretraining and capability
+141 for the bounded data comparison, 2,300 for pretraining and capability
 mid-training, 800 for context mid-training, 800 for post-training and 889 for protected
 evaluation/recovery: **5,000 total**. Capability mid-training has no additional token/hour allowance;
 its split within the base horizon remains unfrozen.
 The [overview](docs/program.md#compute-and-allocation) proposes subdivisions of the existing
 post-training and protected envelopes; these do not add budget or promise that every stage fits.
-Completed external rental costs are recorded separately from the future grant ledger. The 50-hour
-pilot ceiling is not an instruction to repeat the H100 run; reconcile unused reservations at launch.
+Completed external rental costs are recorded separately from the future grant ledger. The completed
+pilot needs no new allocation: its former 50-hour reservation now extends the data comparison from
+91 to 141 hours. Architecture search receives zero hours; runtime qualification is engineering work.
 
 At the measured H100 full-trainer rate, 2,300 GPU-hours corresponds to about 106.5B base tokens.
-320B/400B requires about 38.6K/48.3K effective tokens/s per allocated GPU within that reservation.
+The 100B working horizon projects to 2,160 hours, leaving about 140 hours of margin. At an
+illustrative 80% of the H100 effective rate, only 85.2B fits; measure before freezing the horizon.
+The old 320B/400B scales are deferred comparisons, not first-allocation targets.
 Four GPUs increase aggregate speed while consuming four GPU-hours per elapsed hour; they do not
 close the per-GPU efficiency gap. No GH200 or distributed speedup is assumed. The rough 90-calendar-day
 application window is not 90 days of continuous four-GPU funding. No GH200 jobs have launched.

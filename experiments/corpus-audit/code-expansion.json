@@ -1,0 +1,439 @@
+{
+  "format": "speck_code_expansion_feasibility",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "81cb73d0caf978a3031b9dd67fdeee69e8235f5e",
+  "status": "pinned_inventory_and_bounded_new_shard_probe_not_training_admission",
+  "training_admitted": false,
+  "eligible_tokens_established": 0,
+  "corpus_code_executed": false,
+  "gpu_hours": 0,
+  "working_demand": {
+    "base_horizon_tokens": 100000000000,
+    "natural_code_exposure_tokens": 30000000000,
+    "natural_code_unique_preparation_tokens": 37500000000,
+    "checked_code_exposure_tokens": 5000000000,
+    "checked_code_unique_preparation_tokens": 6250000000,
+    "retained_natural_code_tokens_before_joint_eligibility": 476774847,
+    "retained_share_of_natural_exposure_percent": 1.5892494900000003,
+    "natural_unique_preparation_gap_even_if_all_stock_qualified": 37023225153,
+    "boundary": "Current working plan arithmetic, not admission or automatic repetition. Original census receipt retains its historical denominator."
+  },
+  "upstream_inventory": {
+    "stack_edu": {
+      "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+      "metadata_files": 42,
+      "metadata_bytes": 17465393334,
+      "previously_retained_files_rehashed": 28,
+      "retained_files_after_probe": 29,
+      "by_language": [
+        {
+          "language": "C",
+          "upstream_metadata_files": 2,
+          "upstream_metadata_bytes": 571816053,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 1,
+          "remaining_metadata_bytes": 285920259,
+          "historical_28_file_metadata_pass_rows": 52059,
+          "historical_28_file_declared_bytes": 94694955
+        },
+        {
+          "language": "CSharp",
+          "upstream_metadata_files": 3,
+          "upstream_metadata_bytes": 1232015539,
+          "retained_metadata_files_after_probe": 0,
+          "remaining_metadata_files": 3,
+          "remaining_metadata_bytes": 1232015539,
+          "historical_28_file_metadata_pass_rows": null,
+          "historical_28_file_declared_bytes": null
+        },
+        {
+          "language": "C++",
+          "upstream_metadata_files": 4,
+          "upstream_metadata_bytes": 1632803797,
+          "retained_metadata_files_after_probe": 4,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 153489,
+          "historical_28_file_declared_bytes": 343255950
+        },
+        {
+          "language": "Go",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 179388495,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 42092,
+          "historical_28_file_declared_bytes": 73593127
+        },
+        {
+          "language": "Java",
+          "upstream_metadata_files": 11,
+          "upstream_metadata_bytes": 5291667797,
+          "retained_metadata_files_after_probe": 11,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 133726,
+          "historical_28_file_declared_bytes": 283281786
+        },
+        {
+          "language": "JavaScript",
+          "upstream_metadata_files": 3,
+          "upstream_metadata_bytes": 1287066511,
+          "retained_metadata_files_after_probe": 3,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 163403,
+          "historical_28_file_declared_bytes": 330831192
+        },
+        {
+          "language": "Markdown",
+          "upstream_metadata_files": 5,
+          "upstream_metadata_bytes": 2058772192,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 4,
+          "remaining_metadata_bytes": 1646979934,
+          "historical_28_file_metadata_pass_rows": 85799,
+          "historical_28_file_declared_bytes": 399141818
+        },
+        {
+          "language": "PHP",
+          "upstream_metadata_files": 2,
+          "upstream_metadata_bytes": 983498806,
+          "retained_metadata_files_after_probe": 0,
+          "remaining_metadata_files": 2,
+          "remaining_metadata_bytes": 983498806,
+          "historical_28_file_metadata_pass_rows": null,
+          "historical_28_file_declared_bytes": null
+        },
+        {
+          "language": "Python",
+          "upstream_metadata_files": 5,
+          "upstream_metadata_bytes": 2500795086,
+          "retained_metadata_files_after_probe": 4,
+          "remaining_metadata_files": 1,
+          "remaining_metadata_bytes": 500100572,
+          "historical_28_file_metadata_pass_rows": 305889,
+          "historical_28_file_declared_bytes": 603556622
+        },
+        {
+          "language": "Ruby",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 284535771,
+          "retained_metadata_files_after_probe": 0,
+          "remaining_metadata_files": 1,
+          "remaining_metadata_bytes": 284535771,
+          "historical_28_file_metadata_pass_rows": null,
+          "historical_28_file_declared_bytes": null
+        },
+        {
+          "language": "Rust",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 103158397,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 37875,
+          "historical_28_file_declared_bytes": 175957811
+        },
+        {
+          "language": "SQL",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 261176608,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 96247,
+          "historical_28_file_declared_bytes": 331566962
+        },
+        {
+          "language": "Shell",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 394872047,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 412291,
+          "historical_28_file_declared_bytes": 1159957595
+        },
+        {
+          "language": "Swift",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 257883733,
+          "retained_metadata_files_after_probe": 0,
+          "remaining_metadata_files": 1,
+          "remaining_metadata_bytes": 257883733,
+          "historical_28_file_metadata_pass_rows": null,
+          "historical_28_file_declared_bytes": null
+        },
+        {
+          "language": "TypeScript",
+          "upstream_metadata_files": 1,
+          "upstream_metadata_bytes": 425942502,
+          "retained_metadata_files_after_probe": 1,
+          "remaining_metadata_files": 0,
+          "remaining_metadata_bytes": 0,
+          "historical_28_file_metadata_pass_rows": 53336,
+          "historical_28_file_declared_bytes": 137795638
+        }
+      ]
+    },
+    "ultradata_code": {
+      "revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f",
+      "tiers": {
+        "data/UltraData-Code-L2": {
+          "files": 561,
+          "bytes": 611281767530
+        },
+        "data/UltraData-Code-L3": {
+          "files": 560,
+          "bytes": 604712398631
+        }
+      },
+      "separate_typescript_directory": false,
+      "boundary": "Compressed payload sizes only; L2 and L3 are separate representations, not additive unique eligible supply. Existing source-repository lineage holds remain. No payload acquired in this inventory."
+    },
+    "missing_current_language_files_after_probe": [
+      {
+        "path": "C/train-00001-of-00002.parquet",
+        "bytes": 285920259,
+        "sha256": "85e65a2630e6627f50e2e8443097d780549509a9b24960c0fb5c914c37f68b25"
+      },
+      {
+        "path": "Markdown/train-00001-of-00005.parquet",
+        "bytes": 411841484,
+        "sha256": "b71e8fcf5c1d014263dad9c29c48ee6dffdee9d8bd23c7fb37d9761643c8f35e"
+      },
+      {
+        "path": "Markdown/train-00002-of-00005.parquet",
+        "bytes": 411702146,
+        "sha256": "6722d8f2dcae6ae29ef9901697d187d5eb6d5740e4544c9496126d7f380e5691"
+      },
+      {
+        "path": "Markdown/train-00003-of-00005.parquet",
+        "bytes": 411676452,
+        "sha256": "507b202eab2a3f45faaf559fa8b7feea470ac1f008bdd3d390d70edec6e7bf07"
+      },
+      {
+        "path": "Markdown/train-00004-of-00005.parquet",
+        "bytes": 411759852,
+        "sha256": "972ca726fe5583d8db5731b7b1670a7a349a93bdf195a7d0abf1f7a32121a628"
+      },
+      {
+        "path": "Python/train-00004-of-00005.parquet",
+        "bytes": 500100572,
+        "sha256": "6190c01cdb603cf602ac01f770a476f7b924630f2a46b1bed89622903d869a73"
+      }
+    ],
+    "scope": "Complete pinned listings; retained metadata rehashed and matched to publisher LFS identities. Metadata predicates are distinct from content eligibility and token yield."
+  },
+  "new_shard": {
+    "source": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/python-unseen-shard.parquet",
+      "sha256": "81d0de22657b77282312e38db7b1ea4edaf0fcb5e04d4fa0b276f2e4e68872b8",
+      "bytes": 500169900,
+      "repository": "HuggingFaceTB/stack-edu",
+      "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+      "source_file": "Python/train-00003-of-00005.parquet",
+      "url": "https://huggingface.co/datasets/HuggingFaceTB/stack-edu/resolve/eeec5caac5cc3758a18f1d3ba4416837a9ba814c/Python/train-00003-of-00005.parquet",
+      "seconds": 96.757,
+      "metadata_only": true
+    },
+    "historical_policy_revision": "f5f4c915e744275f2a6677c722255c23525783bf",
+    "physical_rows": 5057204,
+    "metadata_pass_rows": 102603,
+    "metadata_pass_declared_bytes": 202500235,
+    "distinct_passing_blob_ids": 102603,
+    "rejections": {
+      "coarse_score_or_license_type": 4947981,
+      "metadata_license": 6121,
+      "metadata_size": 322,
+      "metadata_encoding": 167,
+      "declared_vendor_path": 10
+    },
+    "role_hint_rows": {
+      "other": 98862,
+      "test": 2084,
+      "docs_example": 1575,
+      "vendor": 82
+    },
+    "role_hint_declared_bytes": {
+      "other": 193666106,
+      "test": 4580392,
+      "docs_example": 3817811,
+      "vendor": 435926
+    },
+    "known_family_held_rows": 64,
+    "known_family_held_declared_bytes": 421535,
+    "sample_seed": "speck-code-expansion-v1",
+    "boundary": "Metadata predicates and path hints only. Declared bytes are not tokens; labels are not source-use approval. This entire shard is one deterministic next file, not a random release sample. Partial family graph; zero training admission."
+  },
+  "probe": {
+    "selected": 16,
+    "hash_verified": 16,
+    "length_matched": 13,
+    "tokens_with_bos_eos": 9541,
+    "content_flagged_files": 4,
+    "training_admitted": false,
+    "eligible_tokens_established": 0,
+    "boundary": "Bounded acquisition and content-screen probe only; no source commit/license-notice resolution, full security/language filters, family partitions or independent behavior checks. Path hints do not prove practical value. No corpus code executed."
+  },
+  "selection": "Fixed 16 lowest SHA256(seed:blob_id) ranks after the historical metadata predicate, known family holds, 1000\u201316000 declared bytes, module-like Python paths and a predeclared exercise-name exclusion regex. Exact predicates and original rows remain external; selection was not retuned after content inspection. This is a restricted convenience frame, not an unbiased shard sample.",
+  "review": {
+    "method": "Assistant static reading of all 13 length-matched files; no execution, dependency installation or independent correctness claim. Role labels overlap semantically; assign one primary role for this bounded description only.",
+    "role_counts": {
+      "library_api_tutorial": 1,
+      "algorithm_exercise": 5,
+      "language_learning": 2,
+      "application_module": 4,
+      "library_implementation": 1
+    },
+    "role_tokens_with_bos_eos": {
+      "library_api_tutorial": 1075,
+      "algorithm_exercise": 2604,
+      "language_learning": 1627,
+      "application_module": 3416,
+      "library_implementation": 819
+    },
+    "decision": "Keep Stack-Edu as a bounded natural-code candidate, not an established 30B supply route. Metadata/path selection alone does not deliver verified practical tasks. Before another acquisition, resolve immutable origins, notices and linked tests for application modules; quantify family exclusions and eligible token yield. UltraData-Code remains held for origin mapping; do not bulk-fetch it to infer lineage."
+  },
+  "decision": "No bulk expansion yet. Stack-Edu is a retrievable natural-code candidate, but 30B eligible exposure is not established. Next resolve immutable origins, notices, dependency/test links and full exclusion/security checks for the four application-module candidates before measuring qualified yield. Educational/API material may remain useful natural code; it is not automatically verified exercise or repair data. UltraData-Code L2/L3 remain on origin/lineage holds; no token supply credited from compressed sizes.",
+  "implementation": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/audit_code_supply.py",
+      "bytes": 13579,
+      "sha256": "e521b2d8f96cc78e03083f8e32215426894729422a93b80514691aaf5197f85d"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/check_qualification.py",
+      "bytes": 3413,
+      "sha256": "c63decb4fbbc89c3e1304ba632fe1935b763a61d5a3d457b8dcd9f160628e286"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/speck/data/code_families.py",
+      "bytes": 4472,
+      "sha256": "83a6338b455ec1931330addaa98848ecf8f4d9507dbd67113661279a275491a1"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-inputs.json",
+      "bytes": 17164,
+      "sha256": "e7b2577f1e0fbed7824a002b3c32525ed97dde6b97685b704f04c390785a496c"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-rules.json",
+      "bytes": 3189,
+      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/code-bundles.json",
+      "bytes": 12112,
+      "sha256": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/code-supply.json",
+      "bytes": 18680,
+      "sha256": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe"
+    }
+  ],
+  "external_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/inventory.py",
+      "bytes": 2099,
+      "sha256": "8716019b6df3c012525c474a8aed876165bf9c366b0716aa79ff635d42f2dba3"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/upstream-inventory.json",
+      "bytes": 563289,
+      "sha256": "6c24d9151da89ba00e32b2e330a8f7f5f5e7a20f70e2e6f31758cc0d29fa3827"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/reconcile_inventory.py",
+      "bytes": 3489,
+      "sha256": "d586caca6b6ecff0e09cc7a4bc388193810cb290e804190331966f7facb4f29a"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/inventory-reconciliation.json",
+      "bytes": 7682,
+      "sha256": "fe9c44c3256c14ff2ef9371f144a2f4db7350fcb2d5e4efa38a468f54a9b8455"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-acquisition.json",
+      "bytes": 42145,
+      "sha256": "9bc5a447904c919b236e13a0ac4e5bad31546ba72f9a4c4f3904b2a614643ecf"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-feasibility.json",
+      "bytes": 29848,
+      "sha256": "e42e301d9a75b7538082c288cb1fd7df4f6c20379f0da27786417e7225dda0de"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-plan.json",
+      "bytes": 2515,
+      "sha256": "9696f8dbff656eae9931a0930b90f46cf9dcb05299ce59ffa7353755babf8a25"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/acquire_metadata.py",
+      "bytes": 1089,
+      "sha256": "939f6d5ab56474756f854d3edddfd32c25b03e075edabb76529a31e6b795423b"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-download.json",
+      "bytes": 567,
+      "sha256": "fc23d5126b2e54b5ad751945cb3eda9be06065d078875905595544476d124b4f"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/scan_metadata.py",
+      "bytes": 5208,
+      "sha256": "a2414ea813f07055843246da494d3dd2a2faad2a6ae19b923b103ecae94229b0"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/historical_metadata_predicate.py",
+      "bytes": 1352,
+      "sha256": "e325820eae1a3c66e8273282eb37bdd82a1a4b4b338e19959191bbded05bc538"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-policy.json",
+      "bytes": 876,
+      "sha256": "cb4df9d268622d68643a9c09839bb188dbb406247ac8cde0f2fc7629f8b9349d"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-scan.json",
+      "bytes": 7962,
+      "sha256": "8dd2de0d584365c3aec06d764a6b4bf61508cbe9b33a3f425bcc9a6c176abaec"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/probe_content.py",
+      "bytes": 3776,
+      "sha256": "80c1dfe6bc03f0fd69c827ea48928b947bdd1d2cd44c7dba8a563164ba29bd1e"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/content-acquisition.json",
+      "bytes": 13457,
+      "sha256": "9edbf07a28e18721a734a09383e6d4765b7864216de7882310dd0665ee567a74"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/content-probe.json",
+      "bytes": 3931,
+      "sha256": "65856ffa92f859a0627c107de0c92ab0fae52bccfdb4a7d09a24af79148418d7"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/review.json",
+      "bytes": 3686,
+      "sha256": "57e5a0e7a945ae312d4ac3599f209c15d640afe5991ec2ee6bb677bf193ef237"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/validation.json",
+      "bytes": 693,
+      "sha256": "ca9d4486e8f9b9fed0a09e59aa8c65e38446053b804b20cc59aabe46aa412210"
+    }
+  ],
+  "limits": [
+    "One deterministic Python shard and 16 restricted path candidates cannot estimate full-release or multilingual yield.",
+    "Three retrieved blobs match their content hashes but disagree with declared lengths; they are held and excluded from token/screen totals.",
+    "Four content flags are conservative matches, not proof of semantic contamination. Nine no-hit files are not admitted.",
+    "Source license notices, immutable repository revisions, complete family/near-duplicate graphs, English/security filters and behavior checks remain unresolved.",
+    "Local metadata counts and upstream compressed byte totals are not qualified Mistral token counts."
+  ]
+}

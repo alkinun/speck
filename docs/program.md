@@ -14,7 +14,7 @@ No GPU run starts from this document.
 | Selected | 1.2B total/all-active KDA/GQA model with dense feed-forward layers; no MoE investigation or architecture sweep |
 | Selected | Pretrain from scratch; preserve base and thinking-assistant releases; one thinking protocol with variable effort |
 | Confirmed envelope | 5,000 total GPU-hours across four GH200s; access/site details remain unconfirmed |
-| Working recipe | 35% code, 25% math, 40% supporting data; 320B desired / 400B stretch, subject to supply and cost |
+| Working recipe | 35% code, 25% math, 40% supporting data; 100B working horizon, subject to supply and measured GH200 cost |
 | Working stages | Capability mid-training within the base horizon; approximately 128K context via an additional proposed 8B extension; 1.5M SFT conversations within 1–2M; RL conditional |
 | Measured | H100 engineering pilot, development evaluation and backups complete; the 105M-token base is weak |
 | Unresolved | Main eligible supply, GH200/distributed speed, final token horizon, long-context cost/quality and useful thinking/tool performance |
@@ -33,7 +33,7 @@ attention-layout/model-size research belong to later releases with separately fu
 
 | Stage | Purpose and objective | Budget ownership and readiness |
 | --- | --- | --- |
-| Pretraining | Broad code/math/general foundations using next-token prediction | Shares the 320B desired / 400B stretch base horizon and 2,300 hours with capability mid-training; main data/runtime not yet qualified |
+| Pretraining | Broad code/math/general foundations using next-token prediction | Shares the 100B working base horizon and 2,300 hours with capability mid-training; main data/runtime not yet qualified |
 | Capability mid-training | Targeted code/math/repair continuation with broad-data replay | A separately reported portion of that base horizon, not extra tokens/hours; split, objective and changed-data branch remain to qualify |
 | Context mid-training | Learn to use coherent longer repositories/documents while retaining short tasks | Proposed additional 8B tokens / 800 hours; length stages and runtime unqualified |
 | Post-training: SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | Working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
@@ -57,7 +57,8 @@ protected-reserve subdivisions are new planning proposals, not measured costs:
 
 | Work | GPU-hours | Share | Four-GPU elapsed equivalent |
 | --- | ---: | ---: | ---: |
-| Runtime qualification, engineering pilot and one bounded data comparison | 211 | 4.22% | 52.75h |
+| Runtime qualification | 70 | 1.4% | 17.5h |
+| Bounded data comparison | 141 | 2.82% | 35.25h |
 | Pretraining and capability mid-training | 2,300 | 46% | 575h |
 | Context mid-training | 800 | 16% | 200h |
 | Thinking SFT | 500 | 10% | 125h |
@@ -67,8 +68,8 @@ protected-reserve subdivisions are new planning proposals, not measured costs:
 | Recovery and unresolved-cost reserve | 589 | 11.78% | 147.25h |
 | **Total** | **5,000** | **100%** | **1,250h** |
 
-The first row is the existing 70 + 50 + 91 reservations, not a direction to repeat completed pilot
-work. The ledger must distinguish prior external rentals from consumption of the new allocation.
+The completed pilot releases its former 50-hour future reservation into the comparison (91 → 141);
+prior external rental costs remain separate. Architecture search receives zero GPU-hours.
 The final two rows divide the existing protected 889 hours. Reallocate only after actual needs and
 remaining commitments are known; this is a conservative preparation envelope, not a proven optimal
 split. A 200-hour RL allocation must be enforced including generation, not merely gradient updates.
@@ -76,6 +77,8 @@ If long SFT consumes more than 500 hours, revise the post-training split; no pro
 at their maximum data volume follows from this table. Unused reserve is not a requirement to spend.
 Capability mid-training has no additional reservation: freeze its token/hour split within the base
 horizon before launch. The 8B context extension remains separate. These labels do not add compute.
+The sum is budget-consistent, but only short-context training has a measured cost reference.
+Context extension, the full SFT length mix and RL rollouts need measured stop budgets before launch.
 
 ## Model and runtime
 
@@ -138,18 +141,19 @@ audit findings and acquisition gates; [research notes](research.md) distinguish 
 Candidate releases are not automatically admitted supply. Freeze source eligibility, deduplication,
 benchmark exclusions, source-family partitions, language coverage and actual token counts first.
 
-Preparation targets 400B eligible unique tokens for 320B exposure (500B for the 400B stretch),
+Preparation targets 125B eligible unique tokens for 100B exposure,
 allowing selection headroom and normally one pass. Current retained pilot-source stocks total only
 6.799B before joint eligibility, including 0.477B code tokens. A 16-file code audit or passing generated
 tests cannot close that supply gap. Keep raw stock, qualified unique supply, exposure/replay and
 rejected material as separate counts. If refined supply fails, explicitly revise within-domain
 shares or shorten the horizon; do not silently repeat examples or assume unbudgeted teacher generation.
 
-Within 2,300 GPU-hours, 12,859 effective tokens/s/GPU would process about 106.5B tokens; the 100B
-scenario leaves limited margin. Effective rates of 20K, 30K, 40K and 48.3K correspond to approximately
-165.6B, 248.4B, 331.2B and 399.9B. These are conditional arithmetic, not GH200 predictions. Rates
-must divide aggregate useful throughput by all allocated GPUs and include base-stage overhead.
-The desired 320B/400B targets require 38.6K/48.3K per GPU within this reservation.
+Within 2,300 GPU-hours, the measured H100 full-trainer rate projects to about 106.5B tokens.
+The 100B working horizon takes about 2,160 hours, leaving 140 hours of margin. At an illustrative
+80% of that effective rate, only 85.2B fits; the horizon must shrink if GH200 qualification does
+not sustain the required 12,077 tokens/s per allocated GPU. Rates divide aggregate useful
+throughput by every allocated GPU and include base-stage overhead. The former 320B/400B scales
+remain deferred comparisons, not current supply targets or promised throughput gains.
 
 Freeze a continuation-compatible learning-rate schedule, update size, cadence and horizon before
 launch. Retain optimizer/loader/RNG state at selected milestones and before endpoint decay.
@@ -167,7 +171,7 @@ token exposure. Start with the existing next-token objective; any prompt/patch m
 objective needs an explicit adapter and qualification. Plain token packing does not implement it.
 
 The capability portion, mixture, replay share and LR/optimizer policy remain unfrozen. Allocate it
-inside the 320B/400B base horizon and 2,300-hour reservation. The existing bank totals are initial
+inside the 100B working base horizon and 2,300-hour reservation. The existing bank totals are initial
 mixture scenarios; update them if a staged mixture changes aggregate exposure. Do not count the same
 tokens as both pretraining and an additional mid-training allowance.
 
@@ -303,9 +307,8 @@ selection but do not become training ablations automatically; each extra arm nee
 
 ## Storage, recovery and operational gates
 
-At uint16, 320B token IDs alone take 640GB decimal; the 400B eligible bank takes 800GB. The stretch
-500B bank takes 1TB. Masks, indexes, raw text, deduplication databases, environments, checkpoints
-and backups are additional. The numeric plan's 2TB scratch allowance is provisional, not a measured
+At uint16, 100B token IDs alone take 200GB decimal; the 125B eligible bank takes 250GB. Masks,
+indexes, raw text, deduplication databases, environments, checkpoints and backups are additional. The numeric plan's 2TB scratch allowance is provisional, not a measured
 full footprint. Acquire in bounded units, verify hashes and manifests, and avoid staging every raw
 source simultaneously without a storage budget. Keep corpus/checkpoint payloads outside Git.
 
@@ -326,7 +329,7 @@ accelerated serving integration is assumed qualified merely because base trainin
    recovery and inference. Reconcile prior external rentals and unused reservation headroom.
 3. **Before main training:** freeze actual admitted manifests, mixture, repetition, batch, optimizer
    schedule, checkpoint cadence and affordable horizon. Run the data comparison only when its
-   common-base/supply/cost gates pass; its 91-hour reservation is not a second full pretraining run.
+   common-base/supply/cost gates pass; its 141-hour reservation is not a second full pretraining run.
 4. **After a useful pretraining checkpoint:** execute qualified capability continuation within the
    base horizon, then qualify context stages and short-task retention. Prepare and train verified
    thinking SFT. Attempt RL only with working verifiers, runtime and a bounded budget.

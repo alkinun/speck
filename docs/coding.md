@@ -234,12 +234,13 @@ raises the known hold to **123 files / 209,751 tokens**; six previously content-
 present. This propagates existing evidence, without claiming a new complete content scan. Removing
 only these files would not establish a qualified remainder or complete family separation.
 
-At the working 320B horizon, natural code proposes **96B exposure / 120B eligible unique-token
-preparation**, separate from 16B checked-code exposure. Retained stock covers only **0.49664%**
-of natural-code exposure before further exclusions. Filling that exposure from this stock would
-require about 201 passes; that is arithmetic, not an approved repetition recipe. Even if every
-retained token qualified, the preparation gap would be 119,523,225,153 tokens. This audit establishes
-no checked-exercise supply and makes no claim about total upstream availability.
+At the revised 100B working horizon, natural code proposes **30B exposure / 37.5B eligible
+unique-token preparation**, separate from 5B checked-code exposure. Retained stock covers only
+**1.58925%** of natural-code exposure before further exclusions. Filling that exposure from this
+stock would require about 63 passes; this is not an approved repetition recipe. Even if every
+retained token qualified, the preparation gap would be 37,023,225,153 tokens. The original census
+receipt preserves its then-current 320B planning denominator; these revised ratios do not rewrite
+that evidence. The census establishes no checked-exercise supply or full upstream availability.
 
 Replay aggregate accounting from the verified external document index:
 
@@ -284,6 +285,41 @@ open. Initial unrelated role samples and license notices are provenance evidence
 proposed payload screen. Raw files, complete responses, review and byte-identical offline replay
 remain under `/mnt/speck-data/speck/data-qualification-20260919/code-bundles`.
 
+## Expansion feasibility — 2026-09-19
+
+The [expansion receipt](../experiments/corpus-audit/code-expansion.json) uses the revised 100B
+working horizon: 30B natural-code exposure and 37.5B eligible unique preparation, plus a separate
+5B checked-code exposure slot. It pins complete upstream listings and rehashes all 28 previously
+retained Stack-Edu metadata shards against publisher identities. The release has 42 shards across
+15 language directories; metadata bytes are not source-code tokens.
+
+One additional Python shard is now retained and verified: **5,057,204 rows**, of which **102,603
+(2.03%)** pass the historical metadata predicate. Their 202.5MB declared source size is not eligible
+token yield. After this acquisition, six unretained metadata shards remain in our existing language
+set: one C, one Python and four Markdown, totaling 2.433GB compressed. Other language directories
+are separate coverage decisions. Stack-Edu metadata for JavaScript, TypeScript, Go and several
+other existing lanes was already complete; more metadata in those lanes is not an expansion route.
+
+A frozen 16-file module-path probe retrieves all blobs with matching content hashes; three disagree
+with declared lengths and stay held. The other **13 files total 9,541 Mistral tokens** and four
+trigger the existing content screen. Complete static reading finds four application modules,
+one library implementation, one API tutorial, five algorithm exercises and two language-learning
+files. These roles do not certify quality: the library's decoder is unfinished, application files
+need missing context/dependencies, and no independent tests ran. Neither score nor module-like
+paths guarantee practical task coverage. No-hit files remain unqualified; this restricted sample
+does not estimate whole-shard or multilingual yield.
+
+The pinned [UltraData-Code listing](https://huggingface.co/datasets/openbmb/UltraData-Code/tree/85182d829f2ce7ea07cca72ebfc509deea1d9f5f)
+contains 561 L2 shards / 611.3GB and 560 L3 shards / 604.7GB compressed, with no separate TypeScript
+directory. These are separate representations with unresolved origin/lineage gates, not additive
+eligible tokens. No UltraData-Code payload was acquired for this inventory.
+
+**Decision:** no bulk expansion yet. Resolve immutable origins, notices, linked tests and full
+content/family/security checks for the four application-module candidates before measuring qualified
+yield. Keep useful tutorials as natural-code candidates; they do not become verified repair data.
+Raw metadata, blobs, review and offline replay remain outside Git under
+`/mnt/speck-data/speck/data-qualification-20260919/code-expansion`.
+
 ## Data work to do next
 
 1. Freeze broader code-evaluation exclusions and family separation before exercise derivation;
@@ -291,8 +327,9 @@ remain under `/mnt/speck-data/speck/data-qualification-20260919/code-bundles`.
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.
-2. Pin expansion routes and measure eligible yield by language and practical role before larger
-   acquisition or freezing the main horizon. The bounded bundle follow-up is complete: require
+2. Use the pinned expansion inventory and qualify the four application-module candidates above
+   before larger acquisition or freezing the main horizon. Measure eligible yield by language
+   and practical role. The bounded bundle follow-up is complete: require
    explicit module/import/behavioral linkage and independent test oracles, not just co-present
    filenames. Prioritize library use, debugging and repository repair over more tiny algorithm
    exercises; apply known family holds before selection. Algorithm puzzles alone do not cover
@@ -330,7 +367,7 @@ than silently repeat examples. The 105M engineering pilot alone is not evidence 
 At the recorded 12,859 full-trainer tokens/s, 1B total mixture tokens per arm projects to about 43.2
 single-H100 trainer hours for both arms at the pilot's overhead rate. Add common-base training,
 evaluation and data generation/verification to the appropriate ledgers. Both arms and their
-evaluations must fit the 91-hour comparison reservation. This is a planning scenario, not a frozen
+evaluations must fit the 141-hour comparison reservation. This is a planning scenario, not a frozen
 run length or GH200 forecast. Qualify the [changed-data continuation path](training.md#mid-training-readiness)
 before executing either arm; an ordinary same-manifest branch cannot run this experiment.
 
@@ -382,4 +419,4 @@ Before training on change examples, specify how pre-change context is loss-maske
 other targets are supervised. Audit processed-context and supervised-token totals independently;
 the current plain pretraining pack does not automatically implement that objective. Reuse compatible
 masking infrastructure only after adapter validation. Freeze any bank-share or objective changes
-explicitly, within the existing desired 320–400B scale and its unresolved compute feasibility gate.
+explicitly, within the 100B working base horizon and its measured-cost gate.
