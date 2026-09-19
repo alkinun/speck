@@ -377,9 +377,14 @@ tokens, completing all unheld records with those labels. It brought coverage to 
 with 43 held and 100 unheld records then unread. Declarations, translated algorithms, tests and
 teaching scaffolds require different context; this batch has no new or reused verified origins.
 The [shell/build/config review](build-config-cohort-review.json) adds 24 readings / 36,832 tokens.
-Current coverage is 101 files / 159,514 tokens, with 43 held and 76 unheld records still unread.
+It brought coverage to 101 files / 159,514 tokens, with 43 held and 76 unheld records then unread.
 Its twelve scripts, eight authored configs, two generated build files and two localization files show
 why observed role must accompany language labels. It reuses one verified origin and one earlier
 unavailable-original outcome, without new acquisition or corpus execution.
+The [C/C++ review](c-cpp-cohort-review.json) adds 22 readings / 54,222 tokens and a metadata-only
+hold for a record under `svcomp`, whose task text was not displayed or semantically reviewed.
+Current coverage is 123 files / 213,736 tokens, with 44 held and 53 unheld records still unread.
+Test-harness limitations, template instantiation and SDK context remain distinct from validated
+behavior or performance; this batch has no new or reused verified origins.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.
