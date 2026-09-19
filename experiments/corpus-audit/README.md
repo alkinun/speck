@@ -1,8 +1,17 @@
-# Pretraining corpus review
+# Corpus and downstream data review
 
 2026-09-18. The first local audit is complete; main-corpus quality selection remains open.
 The frozen 105M engineering pilot is unchanged. No GPU rental, training, corpus replacement,
 or bulk candidate acquisition is needed for this review.
+
+## Current data closeout
+
+[data-readiness.json](data-readiness.json) consolidates the later retained-bank token/overlap work,
+full assistant format census, sampled complete context lengths and bounded RL prompt/reference
+inventory. It preserves the earlier receipts below. The current
+[qualification packet](../main-data/QUALIFICATION.md#retained-inventory-closeout--2026-09-19) records
+supply bounds and remaining decisions; [assistant data](../../docs/assistant.md) owns downstream
+format/length details. No source is admitted by these CPU measurements, and no GPU work ran.
 
 ## Evidence and scope
 

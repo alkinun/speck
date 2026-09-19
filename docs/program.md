@@ -242,7 +242,8 @@ record becomes training data merely to fill a quota.
 
 Row quotas guide acquisition; they are not token sampling weights. The retained 500K stock contains
 220K UltraData-SFT-2605 thinking rows, 110K UltraData-SFT-Agent-2609 rows, 120K glaive reasoning
-rows and 50K SYNTHETIC-2-SFT-verified rows. Its census and tiny rehearsal do not certify correctness.
+rows and 50K SYNTHETIC-2-SFT-verified rows. The [data-readiness closeout](../experiments/corpus-audit/data-readiness.json) adds full structural
+checks, tool-aware sampled lengths and cross-stage prompt links; none certifies correctness.
 Prioritize code/math answer checks, useful reasoning, tool-observation consistency and actual task
 completion. Recover long tails filtered by the old acquisition limits separately. Selected SmolTalk2
 reasoning components are additional candidates; Dolci/non-thinking components can provide tasks or

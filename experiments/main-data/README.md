@@ -353,10 +353,12 @@ separates inputs available for detailed design from the requirements for launchi
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
-3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
-   distinct from merely well-formed text. Measure source overlap and complete-document lengths.
-4. Audit the retained SFT stock and long-source gaps against the 1.5M task/length targets. Build a
-   unique-task inventory; do not assume all existing 500K will survive qualification.
+3. Use the [retained-data closeout](../corpus-audit/data-readiness.json) for exact overlap, math
+   normalization links and complete-document length inventory. Check solution correctness and
+   source families before selecting math/refined candidates; well-formed text is not a checked answer.
+4. Use full SFT format checks, sampled serialized lengths and RL prompt links to prepare stage packs.
+   Resolve adapter/completeness issues and verify outcomes; recover missing long tails separately.
+   Do not assume all existing 500K will survive qualification or count RL tasks as SFT trajectories.
 5. Freeze actual admitted source manifests, weights, repetitions, exclusions and hardware cost
    before launch. Learning-rate schedule, batch geometry and checkpoint cadence belong to that
    run's contract. This plan starts preparation, not a new GPU run or bulk download.

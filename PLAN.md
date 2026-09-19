@@ -63,8 +63,9 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Stack v3 preflight | All 16 frozen groups acquired; 29,347 repository rows / 379,942 entries; fixed 44-repository / 80-file cohort screened | [Receipt](experiments/corpus-audit/stack-v3-broader.json); four content flags, eight known-family holds; source use, quality and eligible yield unresolved; exact offline replay, no admission |
 | Common code review | 176 complete texts / 412,974 tokens reviewed; 44 of 218 records family-held; all 174 currently unheld records read (plus two now-held records) | [Reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json); page/template/component roles and notice questions recorded; all holds preserved; no yield estimate or admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
-| Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
+| Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions; later full token census below |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
+| Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured, source use/correctness/family eligibility and missing banks remain open |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
@@ -81,33 +82,19 @@ historical; do not repeat the completed pilot because a preparation document sti
    and defines family separation. LiveCodeBench release-v6 public-text coverage is now pinned;
    finish the full source-family graph and intended scoring coverage before exercise derivation.
    The 16-row UltraData-Code L3 preview remains held for lineage.
-2. **Qualify finite inventories across code, web and math.** The original
-   [Stack-Edu sample](experiments/corpus-audit/code-yield-result.json) has 138 files and the
-   [Stack v3 sample](experiments/corpus-audit/stack-v3-broader.json) has 80. Their exclusions and
-   sampling frames remain distinct. The [reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json)
-   covers all 174 currently unheld records plus two now-held records, preserving all 44 holds.
-   Page, template and component stylesheets join the previously recorded file roles. Original source labels, weights
-   and document boundaries remain intact; no correctness or training eligibility follows from reading.
-   Installed Arcade/stringutils identities are verified; stringutils also matches its published wheel.
-   The [retained-origin follow-up](experiments/corpus-audit/retained-code-origins.json) adds ten
-   exact-match host origins. Current coverage is 28/104 unheld Stack-Edu and 68/70 unheld Stack v3.
-   GitHub quota exhaustion blocks 75 Stack-Edu records; one earlier unresolved record and two
-   Stack v3 source 404s remain separate. Resume quota-blocked work only after access changes;
-   advance independent web/math qualification meanwhile. Do not treat request failures or the
-   C++-only successful prefix as source-quality evidence. Use the existing
-   [qualification packet](experiments/main-data/QUALIFICATION.md#next-bounded-data-packet); record
-   natural-code and verified-exercise gates separately. The fixed-cohort reading pass is complete.
-   The pair-aware syntax diagnostic passes 14 controls on each of two Python versions and confirms
-   one redaction-induced failure; parsing does not establish semantic preservation or eligibility.
-   No general filter is adopted. Do not restore redacted originals or declare a source winner.
-   The 0.477B retained code tokens imply at most 1.59B total one-pass training tokens at a 30%
-   natural-code share, before eligibility and other banks. Establish additional qualified supply
-   or shorten the common study horizon; GPU-hour ceilings alone do not provide finite arm data.
-   The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
-   keeps flags review-only and the HQ cutoff unchanged. Resolve web source use, family/near-duplicate
-   exclusions and usable tokens; acquire DCLM originals only for a concrete coverage question.
-   Then compare math correctness/overlap and assistant reasoning/tool outcomes and missing long
-   examples. The [coding notes](docs/coding.md) retain the completed census, bundle and origin findings.
+2. **Turn the completed data inventory into finite eligible arms.** The
+   [data-readiness closeout](experiments/corpus-audit/data-readiness.json) measures full retained HQ
+   tokens, retained-bank exact overlap, math normalization links, assistant format/context coverage
+   and a bounded RL prompt/reference inventory. The
+   [qualification packet](experiments/main-data/QUALIFICATION.md#next-bounded-data-packet) owns
+   the remaining source-use, family/exclusion, correctness and finite-supply decisions. Do not repeat
+   the completed code reading pass or infer quality from format, length, classifier scores or notices.
+   GitHub origin recovery remains quota-blocked; preserve all 44 family holds and separate source 404s.
+   The working eight-bank mixture still lacks qualified checked-code/refined-math supply. Retained
+   HQ and natural-code totals also bound one-pass horizons below the maximum study-hour envelopes.
+   Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay
+   or reassignment of synthetic shares. Use the measured assistant lengths and RL prompt links before
+   selecting downstream packs. Adapter compatibility does not establish tool-task success.
 3. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
    do not treat its old source commit as the current release. No paid run starts from this outline.
@@ -156,7 +143,7 @@ specifies contrasts, controls, endpoints, maximum run counts and protected confi
 The [architecture control](docs/model.md#proposed-control-and-decision) has a checked parameter count;
 its runtime and production selection remain open. Numeric subcaps live in the existing plan.
 
-Next complete the fixed source reviews and produce a qualified finite baseline/candidate inventory,
+The fixed code reading pass and retained-data closeout are complete. Next produce eligible finite arms,
 then bind evaluation packs and numeric decision thresholds. Measure GH200 costs before freezing
 seed values, common token horizons and executable configs. Reduce the proposed matrix if needed
 without silently spending confirmation or production funds. Audit downstream sources now; run their

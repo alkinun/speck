@@ -1,0 +1,742 @@
+{
+  "artifact_manifest": {
+    "bytes": 14999,
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/data-readiness-artifact-manifest.json",
+    "sha256": "415ac9a1fa8f4ce2b918b68f3c6b2b75ec92eeb417ee796688f181695213f3ae"
+  },
+  "assistant": {
+    "boundary": "Full structural counts, sampled token lengths. No source answers verified or tools executed. Historical samples preserved; raw records and old length-tail exclusions unchanged. Prompt equality is a conservative split link, not a unique-task count.",
+    "cross_source_prompt_groups": 448,
+    "exact_conversation_duplicate_copies": 0,
+    "format_rejected": 75537,
+    "full_census": [
+      {
+        "counts": {
+          "rejected:message content contains a reserved chat token": 2,
+          "rows": 50000,
+          "structurally_serializable": 49998
+        },
+        "source": "PrimeIntellect/SYNTHETIC-2-SFT-verified",
+        "subset": "default/train"
+      },
+      {
+        "counts": {
+          "rows": 120000,
+          "structurally_serializable": 120000
+        },
+        "source": "glaiveai/reasoning-v1-20m",
+        "subset": "default/train"
+      },
+      {
+        "counts": {
+          "rejected:message content contains a reserved chat token": 1,
+          "rows": 70000,
+          "structurally_serializable": 69999
+        },
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Code/think"
+      },
+      {
+        "counts": {
+          "rows": 40000,
+          "structurally_serializable": 40000
+        },
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "IF/think"
+      },
+      {
+        "counts": {
+          "rows": 50000,
+          "structurally_serializable": 50000
+        },
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Knowledge/think"
+      },
+      {
+        "counts": {
+          "rows": 60000,
+          "structurally_serializable": 60000
+        },
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Math/think"
+      },
+      {
+        "counts": {
+          "rejected:message content contains a reserved chat token": 38,
+          "rejected:tool calls with non-reasoning prose need an explicit adapter": 5079,
+          "rows": 20000,
+          "structurally_serializable": 14883
+        },
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Code-Agent/train"
+      },
+      {
+        "counts": {
+          "rejected:conversation ends with unresolved tool calls": 3633,
+          "rejected:conversation roles must alternate user/assistant": 12,
+          "rejected:tool calls with non-reasoning prose need an explicit adapter": 35973,
+          "rows": 40000,
+          "structurally_serializable": 382
+        },
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "General-Agent/train"
+      },
+      {
+        "counts": {
+          "rejected:conversation ends with unresolved tool calls": 3273,
+          "rows": 5000,
+          "structurally_serializable": 1727
+        },
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Search-Agent/train"
+      },
+      {
+        "counts": {
+          "rejected:conversation ends with unresolved tool calls": 2687,
+          "rejected:conversation roles must alternate user/assistant": 2340,
+          "rejected:tool calls with non-reasoning prose need an explicit adapter": 16755,
+          "rejected:tool definitions need parameter schemas": 5744,
+          "rows": 45000,
+          "structurally_serializable": 17474
+        },
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Tool-Use/train"
+      }
+    ],
+    "normalized_first_user_prompt_duplicate_copies": 89956,
+    "rows": 500000,
+    "sampled_context": [
+      {
+        "complete_rows_fitting_context": {
+          "131072": 256,
+          "16384": 226,
+          "32768": 256,
+          "4096": 80
+        },
+        "rejections": {},
+        "sampled_rows": 256,
+        "serializable_rows": 256,
+        "source": "PrimeIntellect/SYNTHETIC-2-SFT-verified",
+        "subset": "default/train"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 256,
+          "16384": 256,
+          "32768": 256,
+          "4096": 256
+        },
+        "rejections": {},
+        "sampled_rows": 256,
+        "serializable_rows": 256,
+        "source": "glaiveai/reasoning-v1-20m",
+        "subset": "default/train"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 256,
+          "16384": 227,
+          "32768": 256,
+          "4096": 89
+        },
+        "rejections": {},
+        "sampled_rows": 256,
+        "serializable_rows": 256,
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Code/think"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 256,
+          "16384": 256,
+          "32768": 256,
+          "4096": 247
+        },
+        "rejections": {},
+        "sampled_rows": 256,
+        "serializable_rows": 256,
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "IF/think"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 256,
+          "16384": 249,
+          "32768": 256,
+          "4096": 64
+        },
+        "rejections": {},
+        "sampled_rows": 256,
+        "serializable_rows": 256,
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Knowledge/think"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 256,
+          "16384": 239,
+          "32768": 256,
+          "4096": 164
+        },
+        "rejections": {},
+        "sampled_rows": 256,
+        "serializable_rows": 256,
+        "source": "openbmb/UltraData-SFT-2605",
+        "subset": "Math/think"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 195,
+          "16384": 27,
+          "32768": 86,
+          "4096": 0
+        },
+        "rejections": {
+          "tool calls with non-reasoning prose need an explicit adapter": 61
+        },
+        "sampled_rows": 256,
+        "serializable_rows": 195,
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Code-Agent/train"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 1,
+          "16384": 0,
+          "32768": 1,
+          "4096": 0
+        },
+        "rejections": {
+          "conversation ends with unresolved tool calls": 29,
+          "tool calls with non-reasoning prose need an explicit adapter": 226
+        },
+        "sampled_rows": 256,
+        "serializable_rows": 1,
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "General-Agent/train"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 96,
+          "16384": 23,
+          "32768": 56,
+          "4096": 0
+        },
+        "rejections": {
+          "conversation ends with unresolved tool calls": 160
+        },
+        "sampled_rows": 256,
+        "serializable_rows": 96,
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Search-Agent/train"
+      },
+      {
+        "complete_rows_fitting_context": {
+          "131072": 98,
+          "16384": 90,
+          "32768": 92,
+          "4096": 40
+        },
+        "rejections": {
+          "conversation ends with unresolved tool calls": 14,
+          "conversation roles must alternate user/assistant": 14,
+          "tool calls with non-reasoning prose need an explicit adapter": 104,
+          "tool definitions need parameter schemas": 26
+        },
+        "sampled_rows": 256,
+        "serializable_rows": 98,
+        "source": "openbmb/UltraData-SFT-Agent-2609",
+        "subset": "Tool-Use/train"
+      }
+    ],
+    "structurally_serializable": 424463,
+    "tool_protocol": "speck_tools_v1"
+  },
+  "completed_utc": "2026-09-19T20:31:08.518590+00:00",
+  "cost_and_failures": {
+    "accounting": "Durations cover the named successful passes, not cumulative CPU or total failed-attempt cost. Interrupted attempt drivers, logs and interruption times are retained; exact CPU utilization was not metered. Zero GPU hours and no paid model/teacher calls.",
+    "acquisition_response_bytes_including_retried_small_rl_files": 65863760,
+    "failures": [
+      "Initial generic SFT audit rejected supported tool data; fixed through the existing training adapter.",
+      "RL acquisition initially expected LFS for small Git blobs; retained the failed attempt, retried with Git blob verification and reused prefixes. Total transferred payload stayed within 64MiB.",
+      "Seek-bound SQLite summaries/indexing were interrupted; repeated SFT structural census and rebuilt metadata indices with covering indices/cache, using NVMe for bulk diagnostics. Input corpus bytes were preserved."
+    ],
+    "successful_pass_wall_seconds": {
+      "math_replay": 206.41522312304005,
+      "retained_supply_summary_recovery": 71.93613629601896,
+      "rl_audit": 9.976922748959623,
+      "sft_sample": 95.59805517602945,
+      "sft_structural": 165.2808062909753
+    }
+  },
+  "decisions": [
+    "Keep data as the release headline and preserve all existing compute reservations.",
+    "Keep HQ cutoff and review-only web flags unchanged; exact overlap alone cannot select a source winner.",
+    "Keep all current source-use/admission decisions open; preserve original code holds and source frames.",
+    "Use full assistant format census and measured complete sample lengths before selecting packs; do not convert format rejection into quality rejection or truncate to fit.",
+    "Keep long-context RL probe outside initial 16K scope; reconcile reference and cross-stage prompt links before verifier/policy work."
+  ],
+  "finite_inventory": {
+    "bytes": 1728,
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/finite-inventory.json",
+    "sha256": "1375562e665cb1091576645fe69a4d5fcbc0f72edb10b0530dba688b32fc27d7"
+  },
+  "format": "speck_data_readiness_closeout",
+  "format_version": 1,
+  "gpu_hours": 0,
+  "implementation": [
+    {
+      "bytes": 7369,
+      "path": "/home/alkin/Desktop/speck/speck/training/sft_audit.py",
+      "sha256": "9715d78eb530a7b5ae00d665947c3f7f8d041b41bb6ec4548c050566ec9b477b"
+    },
+    {
+      "bytes": 8211,
+      "path": "/home/alkin/Desktop/speck/speck/tokenization/tools.py",
+      "sha256": "5594cfeb547f1336f18e555923a0112e85932a83bedd0585b4ba1330c017a279"
+    },
+    {
+      "bytes": 13946,
+      "path": "/home/alkin/Desktop/speck/speck/tokenization/chat.py",
+      "sha256": "6b096b975e3812d9b58d97d41619ab4e0fb807eab2b9b888b76d2a7522aa6a00"
+    }
+  ],
+  "mid_training": {
+    "boundary": "Full retained-index lengths including document BOS/EOS; not coherent cross-document/repository bundles, useful-context evidence or a qualified training ceiling.",
+    "complete_document_length_bands": {
+      "cosmopedia_v2": {
+        "1-4096": {
+          "documents": 1851034,
+          "tokens": 1489288743
+        },
+        "16385-32768": {
+          "documents": 0,
+          "tokens": 0
+        },
+        "32769-131072": {
+          "documents": 0,
+          "tokens": 0
+        },
+        "4097-16384": {
+          "documents": 0,
+          "tokens": 0
+        },
+        "over_131072": {
+          "documents": 0,
+          "tokens": 0
+        }
+      },
+      "finemath_4plus": {
+        "1-4096": {
+          "documents": 710894,
+          "tokens": 817143089
+        },
+        "16385-32768": {
+          "documents": 1526,
+          "tokens": 32159169
+        },
+        "32769-131072": {
+          "documents": 112,
+          "tokens": 4516414
+        },
+        "4097-16384": {
+          "documents": 40539,
+          "tokens": 270348800
+        },
+        "over_131072": {
+          "documents": 0,
+          "tokens": 0
+        }
+      },
+      "fineweb_edu": {
+        "1-4096": {
+          "documents": 2028019,
+          "tokens": 1776188701
+        },
+        "16385-32768": {
+          "documents": 3466,
+          "tokens": 69306533
+        },
+        "32769-131072": {
+          "documents": 7,
+          "tokens": 244978
+        },
+        "4097-16384": {
+          "documents": 65778,
+          "tokens": 460962840
+        },
+        "over_131072": {
+          "documents": 0,
+          "tokens": 0
+        }
+      },
+      "finewiki_en": {
+        "1-4096": {
+          "documents": 354766,
+          "tokens": 315751285
+        },
+        "16385-32768": {
+          "documents": 2027,
+          "tokens": 41888610
+        },
+        "32769-131072": {
+          "documents": 41,
+          "tokens": 1592651
+        },
+        "4097-16384": {
+          "documents": 30479,
+          "tokens": 222837832
+        },
+        "over_131072": {
+          "documents": 0,
+          "tokens": 0
+        }
+      },
+      "pes2o_v3": {
+        "1-4096": {
+          "documents": 23702,
+          "tokens": 68286361
+        },
+        "16385-32768": {
+          "documents": 2928,
+          "tokens": 55871705
+        },
+        "32769-131072": {
+          "documents": 0,
+          "tokens": 0
+        },
+        "4097-16384": {
+          "documents": 86602,
+          "tokens": 695939427
+        },
+        "over_131072": {
+          "documents": 0,
+          "tokens": 0
+        }
+      },
+      "ultradata_math_l2_preview": {
+        "1-4096": {
+          "documents": 141761,
+          "tokens": 180200623
+        },
+        "16385-32768": {
+          "documents": 105,
+          "tokens": 1901506
+        },
+        "32769-131072": {
+          "documents": 0,
+          "tokens": 0
+        },
+        "4097-16384": {
+          "documents": 27192,
+          "tokens": 202686081
+        },
+        "over_131072": {
+          "documents": 0,
+          "tokens": 0
+        }
+      },
+      "ultrafineweb_hq": {
+        "1-4096": {
+          "documents": 280381,
+          "tokens": 283739924
+        },
+        "16385-32768": {
+          "documents": 167,
+          "tokens": 3595284
+        },
+        "32769-131072": {
+          "documents": 43,
+          "tokens": 2261258
+        },
+        "4097-16384": {
+          "documents": 10169,
+          "tokens": 61978713
+        },
+        "over_131072": {
+          "documents": 1,
+          "tokens": 143076
+        }
+      }
+    }
+  },
+  "new_source_inventories": {
+    "HuggingFaceFW--finepdfs-edu": {
+      "bytes": 298670229506,
+      "files": 100,
+      "repository": "HuggingFaceFW/finepdfs-edu",
+      "revision": "9cfabe2127faca99b3d5c4dc6d1fcb397399ebde",
+      "unusable_lfs_hashes": 0
+    },
+    "nvidia--Nemotron-CC-Math-v1": {
+      "bytes": 62189080483,
+      "files": 46,
+      "repository": "nvidia/Nemotron-CC-Math-v1",
+      "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa",
+      "unusable_lfs_hashes": 46
+    },
+    "openbmb--UltraData-RL-2609": {
+      "bytes": 187631831955,
+      "files": 20,
+      "repository": "openbmb/UltraData-RL-2609",
+      "revision": "e6ecfa733708a4c54b5a98c3ca0fd16fc6923790",
+      "unusable_lfs_hashes": 0
+    }
+  },
+  "pretraining": {
+    "cross_source_exact_overlap": [
+      {
+        "a": "fineweb_edu",
+        "b": "ultrafineweb_hq",
+        "shared_unique_contents": 313,
+        "tokens_a": 317562,
+        "tokens_b": 317562
+      }
+    ],
+    "exact_unique_non_code_union": {
+      "documents": 5661264,
+      "tokens": 7058353273
+    },
+    "hq": {
+      "cutoff_changed": false,
+      "distinct_from_retained_fineweb_tokens": 351237925,
+      "exact_unique_tokens": 351555487,
+      "raw_tokens": 351718255,
+      "threshold_token_counts": {
+        "0.5": {
+          "documents": 290761,
+          "tokens": 351718255
+        },
+        "0.65": {
+          "documents": 227501,
+          "tokens": 277648221
+        },
+        "0.8": {
+          "documents": 166027,
+          "tokens": 203851627
+        },
+        "0.95": {
+          "documents": 82128,
+          "tokens": 101643307
+        }
+      }
+    },
+    "math": {
+      "boundary": "No byte-identical FineMath/L2 overlap in these retained slices. One normalized full-document link; normalization may change math meaning and is not an automatic removal. All L2 host metadata missing; near-duplicate/source-family closure and independent solution correctness remain open.",
+      "cross_source_normalized": {
+        "a_tokens_using_max_per_group": 1216,
+        "b_tokens_using_max_per_group": 1309,
+        "unique_contents": 1
+      },
+      "sources": {
+        "finemath_4plus": {
+          "documents": 753071,
+          "host_missing": 0,
+          "tokens": 1124167472
+        },
+        "ultradata_math_l2_preview": {
+          "documents": 169058,
+          "host_missing": 169058,
+          "tokens": 384788210
+        }
+      },
+      "within_normalized_duplicates": {
+        "finemath_4plus": {
+          "duplicate_copies": 0,
+          "duplicate_tokens": 0
+        },
+        "ultradata_math_l2_preview": {
+          "duplicate_copies": 0,
+          "duplicate_tokens": 0
+        }
+      }
+    },
+    "retained_non_code_banks": {
+      "cosmopedia_v2": {
+        "documents": 1851034,
+        "tokens": 1489288743
+      },
+      "finemath_4plus": {
+        "documents": 753071,
+        "tokens": 1124167472
+      },
+      "fineweb_edu": {
+        "documents": 2097270,
+        "tokens": 2306703052
+      },
+      "finewiki_en": {
+        "documents": 387313,
+        "tokens": 582070378
+      },
+      "pes2o_v3": {
+        "documents": 113232,
+        "tokens": 820097493
+      },
+      "ultradata_math_l2_preview": {
+        "documents": 169058,
+        "tokens": 384788210
+      },
+      "ultrafineweb_hq": {
+        "documents": 290761,
+        "tokens": 351718255,
+        "utf8_bytes": 1614709043
+      }
+    },
+    "within_source_exact_duplicates": {
+      "cosmopedia_v2": {
+        "duplicate_copies": 0,
+        "duplicate_tokens": 0
+      },
+      "finemath_4plus": {
+        "duplicate_copies": 0,
+        "duplicate_tokens": 0
+      },
+      "fineweb_edu": {
+        "duplicate_copies": 0,
+        "duplicate_tokens": 0
+      },
+      "finewiki_en": {
+        "duplicate_copies": 0,
+        "duplicate_tokens": 0
+      },
+      "pes2o_v3": {
+        "duplicate_copies": 0,
+        "duplicate_tokens": 0
+      },
+      "ultradata_math_l2_preview": {
+        "duplicate_copies": 0,
+        "duplicate_tokens": 0
+      },
+      "ultrafineweb_hq": {
+        "duplicate_copies": 162,
+        "duplicate_tokens": 162768
+      }
+    }
+  },
+  "remaining_gates": [
+    "Named source-use decisions and broader family/near-duplicate/benchmark partitions before training admission.",
+    "Independent math/reasoning correctness and tool-task outcome checks; adapter decisions for unsupported complete formats, preservation of incomplete trajectories, and missing upstream long tails.",
+    "Qualified checked-code/refined-math supply or explicit research-recipe revision; joint finite eligible bank manifests and measured GH200 costs.",
+    "Code origin API access remains exhausted at the retained check; preserve 75 quota-blocked Stack-Edu outcomes, one earlier unresolved outcome, two Stack v3 404s and all 44 family holds.",
+    "Useful parent checkpoints plus qualified changed-data, context and conditional RL runtimes before downstream comparisons."
+  ],
+  "reward_data": {
+    "acquisition_boundary": "Small complete files verified against publisher Git blob identities. Large-file prefixes have pinned URL/range and retained SHA256 identities, but no whole-object LFS hash verification or representative sampling claim.",
+    "boundary": "Full Math/Knowledge lanes and convenience Code/Long_Context prefixes only. Query-only lengths exclude chat/rollout overhead. Complete line/schema/test-array validity does not establish correctness, independent oracle strength, family/benchmark exclusion, useful context, source rights, qualified RL runtime or successful SFT traces. No source code/tests/tools executed; no task text displayed. Prompt overlap uses exact normalized first-user strings only.",
+    "code_test_payload": {
+      "call_type:std": 25,
+      "fn_name_nonnull": 0,
+      "test_cases": 808,
+      "test_payload_utf8_bytes": 5910357
+    },
+    "different_reference_string_groups": 8,
+    "groups": {
+      "Code": {
+        "duplicate_uuid": 0,
+        "normalized_prompt_duplicate_copies": 0,
+        "prompt_also_in_retained_sft": 0,
+        "query_only_fits_131072": 25,
+        "query_only_fits_16384": 25,
+        "query_only_fits_32768": 25,
+        "query_only_fits_4096": 25,
+        "rows": 25,
+        "structural_test_arrays_valid": 25
+      },
+      "Knowledge": {
+        "duplicate_uuid": 0,
+        "nonempty_reference": 11872,
+        "normalized_prompt_duplicate_copies": 1,
+        "prompt_also_in_retained_sft": 43,
+        "query_only_fits_131072": 11872,
+        "query_only_fits_16384": 11872,
+        "query_only_fits_32768": 11872,
+        "query_only_fits_4096": 11872,
+        "rows": 11872
+      },
+      "Long_Context": {
+        "duplicate_uuid": 0,
+        "nonempty_reference": 60,
+        "normalized_prompt_duplicate_copies": 0,
+        "prompt_also_in_retained_sft": 0,
+        "query_only_fits_131072": 60,
+        "query_only_fits_16384": 0,
+        "query_only_fits_32768": 0,
+        "query_only_fits_4096": 0,
+        "rows": 60
+      },
+      "Math": {
+        "duplicate_uuid": 0,
+        "nonempty_reference": 32412,
+        "normalized_prompt_duplicate_copies": 415,
+        "prompt_also_in_retained_sft": 0,
+        "query_only_fits_131072": 32412,
+        "query_only_fits_16384": 32412,
+        "query_only_fits_32768": 32412,
+        "query_only_fits_4096": 32412,
+        "rows": 32412
+      }
+    },
+    "query_only_lengths": {
+      "Code": {
+        "max": 1571,
+        "min": 313,
+        "p50": 615.0,
+        "p95": 1003.3999999999997,
+        "total": 16142
+      },
+      "Knowledge": {
+        "max": 1502,
+        "min": 8,
+        "p50": 106.0,
+        "p95": 446.4499999999989,
+        "total": 1868787
+      },
+      "Long_Context": {
+        "max": 59234,
+        "min": 32936,
+        "p50": 34699.5,
+        "p95": 40050.3,
+        "total": 2122730
+      },
+      "Math": {
+        "max": 1497,
+        "min": 24,
+        "p50": 94.0,
+        "p95": 205.0,
+        "total": 3480020
+      }
+    },
+    "reference_consistency": {
+      "distinct_numeric_values": 1,
+      "equal_numeric_values": 5,
+      "requires_nontrivial_reference_review": 2
+    },
+    "reference_review_records": 17,
+    "repeated_prompt_groups": 333,
+    "repository": "openbmb/UltraData-RL-2609",
+    "revision": "e6ecfa733708a4c54b5a98c3ca0fd16fc6923790",
+    "source_lineage": "All inspected source labels name only UltraData-RL-2609; row-level upstream attribution unresolved."
+  },
+  "source_commit": "aae683a0d67334e934f52e7b420c0bab02ed18ec",
+  "status": "bounded_data_preparation_complete_training_eligibility_open",
+  "training_admitted": false,
+  "validation": {
+    "bytes": 1395,
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/closeout-validation.json",
+    "sha256": "c81ee47d11f6a3a3f34fd008c2fc0b1a53701da035ecf60eb98bf9f6499a827e"
+  },
+  "verification": {
+    "quality": "798 passed, 10 skipped, 10 deselected; Ruff and historical archive integrity passed.",
+    "reconciliation": {
+      "downstream_trees_reconcile_pinned_metadata_file_sets": true,
+      "full_sft_structural_counts_reconciled": true,
+      "hq_inventory_plan_replayed": true,
+      "math_normalized_link_is_not_byte_identical": true,
+      "prior_hq_sample_token_counts_identical": 192,
+      "prior_sft_inputs_and_2560_sample_identities_preserved": true,
+      "retained_supply_and_context_bands_reconciled": true,
+      "rl_counts_and_reference_groups_reconciled": true,
+      "rl_transport_bytes_including_small_file_retry": 65863760
+    }
+  }
+}

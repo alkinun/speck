@@ -210,7 +210,9 @@ exposure should reflect the target capabilities; the pilot's 15%/15% shares are 
 Post-training is more developed than an empty shortlist: the retained 500,000-row stock already
 includes 220,000 UltraData-SFT-2605 reasoning conversations, 110,000 UltraData-SFT-Agent-2609
 trajectories, 120,000 Glaive reasoning rows and 50,000 SYNTHETIC-2-SFT-verified rows. These are
-source/format inventory counts, not 500,000 independently verified answers. See the
+source/format inventory counts, not 500,000 independently verified answers. The
+[data-readiness closeout](../experiments/corpus-audit/data-readiness.json) adds full format checks,
+sampled tool-aware lengths and RL prompt links. See the
 [assistant recipe](assistant.md#main-assistant-data-direction--2026-09-19) for the missing balance
 and the existing stock's length-selection bias.
 
@@ -249,7 +251,7 @@ can represent the same underlying information. Review source-use evidence per co
    cutoff unchanged. Exact sample-token retention is not full-corpus yield. Extend DCLM previews
    into comparable source-file evidence only for a concrete coverage/eligibility question before
    freezing allocations; no unqualified split or stricter cutoff inherits a quality advantage.
-2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including
+2. Use the completed format/context audit to verify retained code/math reasoning and tool trajectories, including
    useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,
    16–32K and 32–128K. Keep longer examples separately. Prioritize answer correctness, useful
    reasoning, tool-result consistency, concise ordinary assistance and source identity.

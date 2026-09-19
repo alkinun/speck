@@ -113,7 +113,7 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "data/ultrafineweb_l1_en_hq at 02c85641e3d19a854be2e09139c25adaa9518063; twelve-shard audit and three matching archived captures complete. Frozen 32-document comparison keeps candidate flags review-only. Source-use/family exclusions, source-aware repair and eligible tokens remain open. No stricter cutoff or training admission."
+        "qualification_priority": "Prioritize the pinned HQ route. Twelve-shard full token census and exact overlap with retained FineWeb-Edu are recorded in experiments/corpus-audit/data-readiness.json. Preserve the unchanged cutoff and review-only extraction flags. Source-use, broader family/near-duplicate exclusions, extraction quality and eligible supply remain open; no admission."
       },
       {
         "id": "independent_web",
@@ -143,7 +143,7 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; 0.477B retained tokens before eligibility. Fixed cohorts: 138 Stack-Edu and 80 Stack v3 files at 8f3f25d86e44fd691428131efd17af75d4716499. Reading complete for all 174 unheld records; 176 total full reads include two now-held records; all 44 family holds preserved. Latest origin accounting: experiments/corpus-audit/retained-code-origins.json; 28/104 unheld Stack-Edu and 68/70 unheld Stack v3 origins verified. Stack-Edu has 75 quota-blocked outcomes plus one prior unresolved record; Stack v3 has two pinned-source 404s. Recovered Stack-Edu revisions do not reconstruct the missing dataset snapshot. Resume quota-blocked work only after access changes; continue independent web/math qualification. The C++-only successful prefix is not a representative recovery rate. The existing qualification packet owns copied-source attribution, notice applicability, four incomplete Stack v3 ancestor searches, embedded-data suitability, broader family/near-duplicate checks and finite inventory decisions. Host identity and dataset labels do not establish source-use permission. Natural-code and independently verified-exercise gates remain separate; UltraData-Code lineage holds remain. All original labels, weights and assessment fields preserved; no eligible yield, source ranking, bulk filter or training admission. At 30% natural code, retained stock bounds one-pass total exposure at 1.59B before joint eligibility; qualify more supply or shorten study horizons."
+        "qualification_priority": "Retained stock is 0.477B tokens before eligibility, bounding 30% one-pass exposure at 1.59B total tokens. Fixed-cohort reading is complete; preserve all 44 family holds and original frames. Origin coverage remains 28/104 unheld Stack-Edu and 68/70 unheld Stack v3; 75 Stack-Edu outcomes are quota-blocked, one earlier outcome unresolved, and two pinned Stack v3 sources return 404. Resume only after access changes. experiments/main-data/QUALIFICATION.md owns notice/lineage, family and finite-supply gates; experiments/corpus-audit/retained-code-origins.json binds the origin inventory. Natural code and verified exercises have separate gates; no eligible yield or admission."
       },
       {
         "id": "checked_code",
@@ -170,7 +170,8 @@
           "nvidia/Nemotron-CC-Math-v1:4plus"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "qualification_priority": "Full retained FineMath/L2 text-index and overlap checks are recorded in experiments/corpus-audit/data-readiness.json. One normalized link is not an automatic exclusion; L2 row-level host attribution and independent solution correctness remain open. Nemotron inventory has unusable masked object hashes; no shards acquired."
       },
       {
         "id": "refined_math",
@@ -276,7 +277,8 @@
       "per_arm_training_gpu_hour_cap": 25,
       "primary_endpoint": "Candidate-versus-control fixed-suffix loss at the same long prefix length; also require benefit from related versus short/irrelevant prefixes, positional/multifile performance and short-task retention.",
       "limits": "Requires qualified fixed-suffix scoring and context/restart runtime. This pair does not isolate coherent packing or compare context lengths; 32K follows a separate production gate."
-    }
+    },
+    "inventory_status": "Complete-document length bands for retained non-code banks are bound in experiments/corpus-audit/data-readiness.json. Lengths do not establish coherent bundles or useful context. The bounded RL long-context probe exceeds the initial RL ceiling and remains separate from context production."
   },
   "post_training": {
     "target_unique_training_conversations": 1500000,
@@ -366,7 +368,8 @@
       "sft_primary_endpoint": "Predeclared held-out code/math or tool-task success metric matching the selected intervention; protocol compliance and other capabilities are guardrails.",
       "rl_scope": "Conditional fixed-SFT-policy prompt/rollout and verifier feasibility only in the 20-hour research slot. No RL training-data ablation promised. Policy optimization belongs to the separate 200-hour production cap after runtime/reward qualification.",
       "limits": "Selection changes task distribution and possibly supervision density; disclose remaining differences rather than attributing everything to verification. Final tests remain untouched."
-    }
+    },
+    "qualification_status": "experiments/corpus-audit/data-readiness.json records the full retained SFT structural census, unchanged deterministic samples at four serialized context ceilings, prompt links and bounded RL reference/schema inventory. Format compatibility is not answer quality or thinking/tool success. Preserve source records and missing-tail limitations; no admission or RL launch."
   },
   "compute": {
     "allocation_status": "user_confirmed_envelope_provider_access_unconfirmed",
@@ -491,7 +494,8 @@
     "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
     "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
     "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
-    "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94"
+    "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
+    "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

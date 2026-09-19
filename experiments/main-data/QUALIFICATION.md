@@ -243,6 +243,36 @@ are partial, so their samples establish schema/content questions only. Score/dom
 comparison, source-use review and joint deduplication remain open. No corpus-wide quality
 ranking follows from these sampling frames.
 
+### Retained inventory closeout — 2026-09-19
+
+The [data-readiness receipt](../corpus-audit/data-readiness.json) binds the completed CPU work,
+replay scripts, metadata ledgers, failures and source identities. It adds no training admissions.
+
+| Lane | Completed measurement | Consequence for preparation |
+| --- | --- | --- |
+| Natural web | All 290,761 retained HQ documents: 351,718,255 tokens; 162 exact duplicate copies / 162,768 tokens; 313 unique contents / 317,562 tokens shared with retained FineWeb-Edu | Count shared content once. Cutoff and review-only flags remain unchanged; no quality ranking follows. |
+| Retained non-code union | Six existing banks plus HQ: 5,661,264 byte-distinct documents / 7,058,353,273 tokens | Includes alternative Math L2 stock; excludes code. This is exact-content accounting, not an eligible production union or a replacement for the historical pilot-supply total. |
+| Math | All 753,071 FineMath and 169,058 L2 texts match their indices. No exact cross-source copies; one normalized full-document link | Normalization may change math meaning; do not automatically remove that pair. Every retained L2 row lacks host metadata, so source-family attribution and correctness remain open. |
+| Context inventory | Complete-document length bands for all seven non-code banks; existing science/reference stocks contain longer documents | Length alone cannot establish coherent bundles, useful context or a qualified runtime ceiling. Inspect retained material before opening the 298.67 GB English FinePDFs inventory. |
+| Thinking/tool SFT | All 500K rows checked structurally; 424,463 compatible, 75,537 first-failure rejections. Original 2,560-row sample retokenized through the training adapter | Keep unsupported and incomplete trajectories intact. Shared prompts need split links; sampled lengths do not establish full-stock token totals or task success. |
+| Conditional RL | Full 32,412 Math / 11,872 Knowledge rows; 25 Code / 60 Long-Context prefix records | Reconcile prompt/reference links before verifier work. All inspected long-context queries exceed 32K before responses; none enters initial 16K RL unchanged. |
+
+The external finite inventory accounts for FineWeb-Edu as one pool even when it supplies both web
+roles. After within-HQ and exact FineWeb overlap accounting, **351,237,925 HQ tokens** remain distinct
+from the retained control, bounding a 25% candidate bank at **1,404,951,700 total one-pass tokens**
+before further exclusions. Natural code separately bounds 30% exposure at **1,589,249,490** tokens.
+These are stock upper bounds, not an executable common horizon: qualified checked-code and
+refined-math inventories are still missing. Obtain qualified supply or explicitly revise the bounded
+research recipe/horizon. Never silently replace refined shares, repeat scarce sources or treat the
+40/90-hour arm caps as guaranteed token supply. Compute reservations and main working weights are unchanged.
+
+The pinned downstream inventories reconcile against their release metadata. The Nemotron 4plus
+listing has 46 files / 62.19 GB but unusable masked LFS hashes; no shard was acquired or verified.
+The RL code files total about 184 GB, making bounded test-payload inspection preferable to an
+unpriced full download. The [assistant contract](../../docs/assistant.md) owns complete fit counts,
+reference discrepancies and the retained stock's missing long tails. The source cards' verification
+claims do not replace our independent answer/environment checks.
+
 For each new source, pin release/card/serialization first, then take a deterministic sample across
 length, domain/language and upstream-score bands before labeling. Use the same bands and review
 rubric for comparisons; report sample denominators and sampling weights. Keep independent correctness
@@ -255,9 +285,9 @@ serialization. Overlapping parent/filtered releases count once. The working eigh
 [plan.json](plan.json) remain hypotheses; the chat suggestion of an 80/20 staged mixture has not
 become a launch recipe. No 100B qualified supply or GH200 compute-feasibility claim follows from this packet.
 
-The deliverable is one source-comparison table with auditable accepted/rejected examples and a
-costed acquisition route. Only then freeze the eligible banks and a bounded baseline/candidate
-comparison from matched fresh initializations. Run it before main pretraining and record the
+The retained-data table and acquisition routes are now recorded; source-use, family and correctness
+decisions still gate accepted/rejected inventory and usable yield. Then freeze the eligible banks and
+a bounded baseline/candidate comparison from matched fresh initializations. Run it before main pretraining and record the
 starting-recipe decision before freezing the production manifest. Neither source inspection nor
 a later continuation comparison substitutes for this gate.
 Post-training still needs reasoning/tool verification and complete long examples; its 1.5M working

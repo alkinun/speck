@@ -84,18 +84,41 @@ The [inventory receipt](../experiments/corpus-audit/recipe-review.json) binds th
 | glaiveai/reasoning-v1-20m | 120,000 | Source census and sampled serialization/length audit |
 | PrimeIntellect/SYNTHETIC-2-SFT-verified | 50,000 | Source census, publisher reward filter and sampled serialization/length audit |
 
-The OpenBMB stock pins matched the release heads in the September 19 review. The first audit rejected tool
-formats before `speck_tools_v1` existed; those zero-fit entries are not current long-context
-measurements. The later successful 64-training/16-validation rehearsal demonstrates selected
-format compatibility, not the quality or compatibility of all 110,000 tool trajectories.
+The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json) now applies the
+same `speck_tools_v1` adapter used by training to the original deterministic sample: 256 rows per
+subset, with every prior sample identity preserved. Complete conversations fitting each ceiling are:
 
-For the sampled text records, 89/256 Code and 64/256 Knowledge examples fit 4K, while 164/256
-Math and 247/256 IF examples fit. These are early-phase compatibility counts, not quality
-rejections. Moreover, the upstream local build already excluded length tails using a 98th-percentile
-policy and 200,000 conversation / 64,000 thinking character limits. It therefore cannot represent
-the full long-context source distribution. Keep this stock intact; qualify a separate acquisition
-of missing long examples at pinned sources with token-based budgets. Do not inherit those old
-character limits as a 128K policy or claim discarded examples are still retained.
+| Subset | 4K | 16K | 32K | 128K | Format rejections / 256 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| SYNTHETIC-2 verified | 80 | 226 | 256 | 256 | 0 |
+| Glaive reasoning | 256 | 256 | 256 | 256 | 0 |
+| UltraData Code/think | 89 | 227 | 256 | 256 | 0 |
+| UltraData Math/think | 164 | 239 | 256 | 256 | 0 |
+| UltraData Knowledge/think | 64 | 249 | 256 | 256 | 0 |
+| UltraData IF/think | 247 | 256 | 256 | 256 | 0 |
+| Code-Agent | 0 | 27 | 86 | 195 | 61 |
+| General-Agent | 0 | 0 | 1 | 1 | 255 |
+| Search-Agent | 0 | 23 | 56 | 96 | 160 |
+| Tool-Use | 40 | 90 | 92 | 98 | 158 |
+
+A separate full-stock structural pass accepts **424,463 of 500,000 rows** under the current adapter
+and records the first format failure for 75,537. This is format compatibility only, independent of
+context fit, thinking quality, source use and answer correctness. Exact conversation copies are absent,
+but 89,956 repeated normalized first-user prompts and 448 prompt groups spanning sources require
+shared split handling. Prompt equality is a conservative link, not proof of identical tasks.
+
+The context-fit table reports sample counts, not full-stock token totals, answer-quality scores or
+qualified runtime lengths. Lengths include schemas, observations and context-only turns; supervision
+counts remain separate. Most rejected agent samples contain prose beside structured calls or end with unresolved
+calls. Preserve those records for an explicit adapter/completeness decision; do not silently turn
+prose into reasoning, fabricate observations or truncate trajectories. The historical audit's blanket
+tool rejection is superseded for current planning; its receipt remains unchanged.
+
+The local build already excluded length tails using a 98th-percentile policy and 200,000 conversation /
+64,000 thinking character limits. It cannot represent the full upstream long-context distribution.
+The new sample includes complete 32–128K agent examples, but does not recover previously discarded
+examples or establish 128K capability. Keep the stock intact and acquire missing long examples
+separately at pinned sources with token-based budgets.
 
 Prioritize these additions and checks:
 
@@ -128,6 +151,26 @@ with supporting general tasks following the same thinking protocol. Balance brie
 by supervised tokens, while accounting for total context cost, final-answer tokens and length coverage.
 Freeze quantities after the content audit. The [main data work order](data.md#recipe-direction--2026-09-19)
 keeps one bounded comparison at a time and protects independent development/final evaluations.
+
+## Reward-data preparation
+
+The same [receipt](../experiments/corpus-audit/data-readiness.json) binds all 32,412 Math and
+11,872 Knowledge rows from the pinned UltraData-RL release, plus bounded prefixes containing
+25 Code and 60 Long-Context rows. The latter are schema probes, not representative samples.
+All acquired complete rows pass the checked field/reference shape; no supplied tests were executed.
+
+There are 416 repeated normalized prompt copies in 333 groups. Eight groups have different reference
+strings: strict rational parsing finds five numerically equivalent groups, one with unequal numeric
+values and two needing further interpretation. Preserve those identities for reference review; do not
+automatically relabel answers. Also, 43 Knowledge prompts match retained SFT first-user prompts. Link these across stage splits. Exact prompt equality does not close
+paraphrase, source-family or benchmark overlap. Source labels in all inspected rows identify only
+the aggregate release, so row-level upstream attribution remains unresolved.
+
+All inspected Math/Knowledge queries fit 4K, excluding chat and rollout overhead. All 60 inspected
+Long-Context queries exceed 32K (32,936–59,234 query tokens), so keep that probe outside the proposed
+initial 16K RL path. The Code probe has 808 paired test cases; schema validity does not prove oracle
+strength or executable correctness. Retain prompt/reference inventories separately from successful
+SFT trajectories. Verifier qualification, source-use decisions and a useful parent policy still gate RL.
 
 ## Stage and budget ownership
 
