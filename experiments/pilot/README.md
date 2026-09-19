@@ -35,6 +35,27 @@ training tokens in the declared mixture without repetition. The
 production model/optimizer/loader/RNG recovery. GH200, collectives, distributed restart, and scheduler
 recovery remain checks on the actual allocation.
 
+## Local qualitative preview — 2026-09-19
+
+The user-requested [completion preview](completion-preview.json) ran eight newly written plain
+completion prompts on the local RTX 3090 using the reconstructed final export. All 18 export
+file hashes were reverified before loading. BF16 greedy decoding with a 64-token limit completed
+in 11.98 seconds including identity checks, loading and cold startup; peak allocated memory was
+2.55 GiB. These short local completions do not forecast the full rental evaluation's runtime.
+
+All eight outputs reach the cap and show repetition, including repeated blank lines. The factual
+prompt does not name France's capital, both simple arithmetic prompts fail, and the explanatory
+prose is unreliable. The Python addition completion starts correctly with `a + b`, then repeats
+function definitions. No generated code was executed. The current base does not demonstrate
+useful general completion ability in this preview. Its 105M-token training exposure is small;
+these observations alone do not isolate training scale, data, decoding or implementation effects.
+
+Complete prompts, token IDs, unedited outputs, runner and hashes are retained under
+`/mnt/speck-data/speck/h100-pilot-execution-20260918/local-completion-preview-20260919`;
+open `samples.md` for all eight prompt/completion pairs. Preserve this packet as a qualitative
+development baseline, not a benchmark accuracy score or final-test set. The frozen H100 evaluation,
+training recipe and live backup/grading jobs were not changed.
+
 ## Recipe
 
 The endpoint is **104,857,600 training tokens**, 800 optimizer steps of 131,072 tokens.
