@@ -322,5 +322,21 @@
     "measured long-context memory/runtime",
     "post-training full-context and supervised token counts",
     "frozen optimizer schedule and stop budget"
-  ]
+  ],
+  "program_objective": {
+    "initialization": "from scratch; external pretrained base adaptation excluded by user on 2026-09-19",
+    "first_program_gpu_hours": 5000,
+    "release_targets": [
+      "base checkpoint",
+      "always-thinking assistant checkpoint",
+      "open technical report and reproducibility artifacts"
+    ],
+    "future_program_aspiration_gpu_hours": 50000,
+    "future_compute_status": "aspiration; not confirmed allocation or spend authorization",
+    "success_dimensions": [
+      "task capability",
+      "training and inference efficiency",
+      "transparent evidence enabling later scaling"
+    ]
+  }
 }

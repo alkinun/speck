@@ -1,9 +1,16 @@
-# Speck: first useful baseline
+# SpeckLabs: first from-scratch model program
 
 Updated 2026-09-19. This is the single current plan. Change it in place as evidence arrives;
 Git retains earlier decisions. Concrete run settings belong beside their experiment.
 
 ## Goal
+
+The user clarified on 2026-09-19 that this is SpeckLabs' first from-scratch foundation-model
+program. Use the 5,000-total-GPU-hour allowance to ship a useful, competitive and efficient model
+and establish the data, training and evaluation capability needed for a future 50,000-GH200-hour
+program and beyond. Future compute is an ambition, not confirmed access or authorization to spend.
+Pretrain our own weights; adapting an external pretrained base is not the first-release route.
+Published models remain comparators and eligible teachers, with their contributions disclosed.
 
 Build an English-first thinking model primarily for agentic coding, general coding, mathematical
 reasoning and tool-mediated tasks. The final assistant always uses the reasoning protocol; a
@@ -23,9 +30,9 @@ The [main data working plan](experiments/main-data/README.md) now sets concrete 
 measurement-based budget-fit scenario; a provisional 8B context extension; and 1.5M unique
 thinking/agent conversations within a 1–2M range. The existing 500K conversations are starting stock.
 The [competitive strategy](docs/competitive.md) separates this budget fit from release quality:
-retain 1.2B as the research candidate, measure runtime headroom, and require matched task/efficiency
-evidence before a competitive flagship claim. Pretrained adaptation is a proposed alternative if
-product competitiveness takes precedence; no architecture or initialization change is selected.
+retain 1.2B as the first from-scratch candidate, measure runtime headroom, and require matched
+task/efficiency evidence before a competitive flagship claim. Model size and token horizon remain
+subject to this evidence; pretrained adaptation is excluded by the clarified program objective.
 
 The immediate deliverable is a reproducible training baseline. The first flagship release includes
 identified base/assistant checkpoints and a companion [technical report](docs/report.md). The previous

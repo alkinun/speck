@@ -1,7 +1,9 @@
 # Competitive release strategy — 2026-09-19
 
 Status: strategy and proposed release gates, not measured Speck capability or a new launch.
-Keep the current 1.2B KDA/GQA candidate while deciding whether a competitive release is feasible.
+Keep the current 1.2B KDA/GQA candidate for SpeckLabs' first from-scratch release program.
+The user clarified that developing our own pretraining capability is essential; pretrained
+adaptation is not an alternative first-release route.
 A 100B budget-fit projection is not evidence that the result will be competitive. The desired
 320–400B horizon also does not establish parity with current releases.
 
@@ -50,7 +52,7 @@ Keep the existing phase reservations until measured costs justify a revision. Th
 reservation needs 38.6K/48.3K effective tokens/s per allocated GPU for 320B/400B; four workers alone
 do not close that per-GPU gap. All projections and protected stages remain in the
 [scale plan](../experiments/main-data/README.md). An unchanged throughput result requires a smaller
-horizon, more compute, or a different initialization strategy; it cannot justify a quality promise.
+horizon, measured budget reallocation or more compute; it cannot justify a quality promise.
 
 ## Before committing the main training budget
 
@@ -71,21 +73,42 @@ horizon, more compute, or a different initialization strategy; it cannot justify
    checkpoint comparison can reject a poor route but cannot promise the final ranking. Charge
    qualification/comparison work to existing reservations and avoid an architecture sweep.
 
-## If product competitiveness is the priority
+## SpeckLabs first-step objective
 
-Adapting an eligible pretrained small model is the stronger route to investigate under a hard
-compute cap: it reuses the upstream language foundation and spends our allocation on task data,
-verified reasoning/tool supervision, context where needed and evaluation. Compare eligible base
-and already-thinking starting checkpoints before choosing. This is a recommendation to consider,
-not an authorized replacement for the current architecture or a guarantee of gains.
+The user clarified on September 19 that the 5,000-GPU-hour program must develop our own pretrained
+model and the capability to scale to a future 50,000 GH200-hours and beyond. This supersedes the
+previous recommendation to consider adapting an external base for a competitive product.
+Keep external models as demanding comparators and, where qualified, teachers; disclose teacher
+sources and generation/verification costs. Our base weights start from scratch.
 
-Such a release is a derivative with explicit upstream attribution. It cannot claim our from-scratch
-architecture or training efficiency; disclose inherited pretraining separately from incremental
-compute. The always-thinking interface remains a product requirement. The from-scratch candidate
-could remain a bounded research artifact, but do not automatically fund two full model programs.
+Success has three parts: useful task capability, measured efficiency, and an open technical record.
+Training efficiency means capability at a declared all-in training budget and throughput under a
+specified workload. Inference efficiency means latency, memory and cost per successful task under
+comparable quality, context and output conditions. More tokens/s or a larger context setting alone
+does not establish either kind of advantage. The current hybrid must earn efficiency claims through
+measurement; its global-attention layers still require a growing cache at longer context.
 
-If owning the full from-scratch architecture is essential, retain 1.2B and use the report to establish
-an honest measured contribution: data selection at a fixed budget, reproducible training, or a
-verified quality/efficiency tradeoff. Publish a research checkpoint if competitive gates fail; do not
-rename it a flagship solely because training completed. More compute can support a stronger attempt,
-but 320–400B is not itself a release-quality threshold.
+Keep 1.2B as the initial model, the working data recipe and always-thinking post-training target.
+Freeze the final token horizon after profiling, supply qualification and bounded learning evidence.
+Do not automatically shrink to maximize token count, enlarge to imply capacity, or make 100B/400B
+an unconditional release threshold. Phase reservations may be revised from measured needs while
+keeping the 5,000-hour total and adequate evaluation/recovery coverage.
+
+Ship identifiable base and thinking-assistant checkpoints with source manifests, exact training
+configs, code/environment identities, token and compute ledgers, learning curves, evaluation
+protocols and failure analysis. Publish data derivatives only where redistribution is permitted;
+otherwise publish source identities, processing instructions and permitted manifests. Distinguish
+an openly documented process from redistributing every underlying dataset.
+
+Design this run to inform the next allocation: retain intermediate model/optimizer checkpoints,
+source-wise loss, capability versus tokens/compute, length-dependent runtime and memory, and
+recovery/distributed measurements. Freeze checkpoint/evaluation cadence before launch; do not
+return to frequent progress polling. One 1.2B run supplies a learning curve, not a parameter-scaling
+law. A larger model or future MoA design needs separate controlled evidence and a new budget.
+A tenfold compute increase must be divided among size, tokens, data work and post-training; it
+cannot be promised as a tenfold token or quality increase.
+
+A competitive flagship is the goal, with release claims set by results. If the first run misses the
+capability/efficiency gates, report that outcome and preserve a reusable research release rather
+than claiming an advantage that was not measured. No additional compute or parallel full-model
+program is authorized by this strategy update.

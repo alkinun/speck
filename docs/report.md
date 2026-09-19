@@ -39,8 +39,12 @@ The first release is a model-development report. An architectural advantage, cau
 or general scaling claim needs an explicitly controlled experiment beyond the engineering pilot.
 The inherited KDA/GQA building blocks are described as prior work.
 The [competitive strategy](competitive.md) requires contemporary product comparisons as well as
-compute/token-matched research references. Report inherited pretraining separately if an adapted
-upstream model is chosen later; no such initialization change has been made.
+compute/token-matched research references. SpeckLabs' first-step objective is an independently
+pretrained base and a thinking assistant, with a reusable record for future larger allocations.
+Disclose any teacher supervision separately; external pretrained weights are not the initialization
+route. Measure both training efficiency and inference cost at useful quality. Publish exact configs,
+manifests, evaluation definitions, costs and limitations alongside the checkpoints, with corpus
+redistribution limited to eligible material. A single model's learning curve is not a scaling law.
 
 ## 2. Architecture and implementation
 

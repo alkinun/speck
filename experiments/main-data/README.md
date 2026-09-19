@@ -3,6 +3,9 @@
 2026-09-19. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
 This is not a launch configuration or a claim that the required corpus is already qualified.
 The current pilot and rented-H100 evaluation remain unchanged.
+The first 5,000-GPU-hour program will pretrain SpeckLabs' own base and develop its thinking
+assistant, with an open technical record for future scaling. External pretrained-base adaptation
+is excluded by the clarified objective; the proposed future 50,000-hour allocation is not yet confirmed in this plan.
 
 ## Scale
 
