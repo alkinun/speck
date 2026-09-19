@@ -38,6 +38,9 @@ output budget, and tool protocol from executed tests. Preserve distinct base and
 The first release is a model-development report. An architectural advantage, causal data effect,
 or general scaling claim needs an explicitly controlled experiment beyond the engineering pilot.
 The inherited KDA/GQA building blocks are described as prior work.
+The [competitive strategy](competitive.md) requires contemporary product comparisons as well as
+compute/token-matched research references. Report inherited pretraining separately if an adapted
+upstream model is chosen later; no such initialization change has been made.
 
 ## 2. Architecture and implementation
 

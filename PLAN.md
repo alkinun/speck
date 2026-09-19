@@ -19,8 +19,13 @@ current architecture. The [data recipe direction](docs/data.md#recipe-direction-
 and [assistant inventory](docs/assistant.md#main-assistant-data-direction--2026-09-19) cover both
 pretraining and post-training, including the newly confirmed approximately 128K context target.
 The [main data working plan](experiments/main-data/README.md) now sets concrete preparation targets:
-100B base tokens (35% code, 25% math), a provisional 8B context extension, and 1.5M unique
+320B desired / 400B stretch base tokens (35% code, 25% math), with 100B as the current
+measurement-based budget-fit scenario; a provisional 8B context extension; and 1.5M unique
 thinking/agent conversations within a 1–2M range. The existing 500K conversations are starting stock.
+The [competitive strategy](docs/competitive.md) separates this budget fit from release quality:
+retain 1.2B as the research candidate, measure runtime headroom, and require matched task/efficiency
+evidence before a competitive flagship claim. Pretrained adaptation is a proposed alternative if
+product competitiveness takes precedence; no architecture or initialization change is selected.
 
 The immediate deliverable is a reproducible training baseline. The first flagship release includes
 identified base/assistant checkpoints and a companion [technical report](docs/report.md). The previous
