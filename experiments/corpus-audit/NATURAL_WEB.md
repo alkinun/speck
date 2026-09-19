@@ -29,6 +29,8 @@ All six Parquet files match pinned publisher LFS hashes. Their selection was see
 the first 100 listed files per crawl**; the remaining listing pages were not enumerated. These
 are a bounded inspection population, not a representative estimate of the full HQ release.
 Do not extrapolate full storage, eligible supply or topic proportions from it.
+The [subsequent complete inventory](WEB_INVENTORY_DCLM.md) establishes 6,000 shards and
+477.97 GB compressed from file metadata; it does not change this inspection's sampling limits.
 
 ## Findings that change preparation
 
@@ -86,10 +88,11 @@ Raw corpus text remains outside Git. The original FineWeb stock and frozen pilot
 
 ## Next bounded decision
 
-Enumerate the complete HQ shard inventory before any bulk download, then use crawl, host,
-length and score bands to design the next review. Resolve source-use evidence and parent/duplicate
+The [follow-up](WEB_INVENTORY_DCLM.md) closes the full HQ file inventory, pins a 12-shard sample
+across that inventory, and adds partial-viewer DCLM previews. Acquire that bounded HQ sample,
+then review crawl, host, length and score coverage. Resolve source-use evidence and parent/duplicate
 families; check equation/list/table preservation, template concentration and topic coverage.
-Only then measure retained unique tokens under proposed filters. Add a bounded DCLM comparison
-as the independent candidate before freezing source allocations. The working 25% selected-web
+Only then measure retained unique tokens under proposed filters. DCLM still needs a comparable
+source-file-based packet before freezing source allocations. The working 25% selected-web
 share remains a hypothesis; this inspection neither changes it nor establishes its 100B-token
 eligible-bank target.

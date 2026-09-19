@@ -78,6 +78,10 @@ the newer L1-derived HQ route for its observed URL/WARC metadata. Six hash-verif
 provide 144,876 inspected records; default English exposes no equivalent original-page identity.
 High-scoring extraction defects and template-heavy examples reinforce separate quality controls.
 This is source qualification progress, not a demonstrated learning-quality win or training admission.
+The [follow-up inventory and DCLM preview](../experiments/corpus-audit/WEB_INVENTORY_DCLM.md)
+completes the HQ listing and pins a 959 MB sample across it. Both DCLM variants expose URLs and
+document IDs in their partial viewer indexes. DCLM-Edu's integer and continuous score cutoffs
+select different records; any stricter candidate must name the exact field and operator.
 
 The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
@@ -191,11 +195,11 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Extend the completed bounded Ultra-FineWeb/FineWeb-Edu inspection into an HQ inventory and
+1. Use the completed HQ inventory to acquire the pinned 12-shard sample for
    score/crawl/host/length-stratified qualification. Resolve source-use evidence, repair/reject
-   broken extraction, measure overlap and count accepted unique tokens. Add DCLM as an independent
-   comparison before freezing allocations; neither the default split nor a stricter score cutoff
-   inherits the newer HQ route's observed provenance or an assumed quality advantage.
+   broken extraction, measure overlap and count accepted unique tokens. Extend DCLM's partial-viewer
+   previews into comparable source-file evidence before freezing allocations; neither the default
+   UltraFineWeb split nor a stricter score cutoff inherits HQ's provenance or a quality advantage.
 2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including
    useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,
    16–32K and 32–128K. Keep longer examples separately. Prioritize answer correctness, useful

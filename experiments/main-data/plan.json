@@ -44,7 +44,8 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 20000000000
+        "stretch_exposure_tokens": 20000000000,
+        "candidate_filter_review": "DCLM-Edu stricter candidate uses edu_int_score >= 3; edu_score >= 3 is a different filter. Neither is admitted; partial-viewer previews do not establish full-release retention."
       },
       {
         "id": "natural_code",
@@ -339,7 +340,8 @@
     "experiments/main-data/qualification-result.json": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d",
     "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
     "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
-    "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681"
+    "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681",
+    "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

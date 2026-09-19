@@ -70,7 +70,8 @@ historical; do not repeat the completed pilot because a preparation document sti
    The 16-row UltraData-Code L3 preview remains held for lineage.
 2. **Qualify the data recipe.** The [bounded web inspection](experiments/corpus-audit/NATURAL_WEB.md)
    prioritizes newer UltraFineWeb HQ for its page/WARC metadata, with FineWeb-Edu as control;
-   complete the inventory and score/domain-stratified quality and eligibility checks. Keep DCLM
+   the [full HQ inventory and DCLM previews](experiments/corpus-audit/WEB_INVENTORY_DCLM.md) are
+   now recorded. Acquire the pinned 12-shard sample and complete score/domain-stratified checks. Keep DCLM
    as an independent coverage candidate and synthetic L3 separate. Review math correctness and
    source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work
    one bounded packet at a time; close code supply feasibility before bulk packing.

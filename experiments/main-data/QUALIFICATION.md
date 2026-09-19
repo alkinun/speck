@@ -107,8 +107,13 @@ retains URLs and WARC identities throughout the inspected shards. Default Englis
 `content`, `score`, `source`. Prioritize HQ for further provenance-resolved qualification;
 quality superiority and eligible supply remain unestablished. Eleven assistant-reviewed examples
 include missing equations despite a high classifier score, template-heavy text and navigation
-tails. The full inventory, score/domain-stratified comparison, source-use review and joint
-deduplication remain open. No corpus-wide quality ranking follows from these sampling frames.
+tails. The [follow-up inventory and DCLM preview](../corpus-audit/WEB_INVENTORY_DCLM.md) now
+closes the HQ inventory at 6,000 files / 477.97 GB compressed and pins a 959 MB, 12-shard sample
+across the full inventory. It also distinguishes DCLM-Edu's `edu_int_score >= 3` from
+`edu_score >= 3`; the two predicates retain different preview records. DCLM viewer indexes
+are partial, so their samples establish schema/content questions only. Score/domain-stratified
+comparison, source-use review and joint deduplication remain open. No corpus-wide quality
+ranking follows from these sampling frames.
 
 For each new source, pin release/card/serialization first, then take a deterministic sample across
 length, domain/language and upstream-score bands before labeling. Use the same bands and review
