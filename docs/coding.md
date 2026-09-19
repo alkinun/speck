@@ -194,82 +194,56 @@ manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit
 
 ## Common cohort review
 
-The [review receipt](../experiments/corpus-audit/code-cohort-review.json) binds all 218 original
-records and their sampling factors. A frozen first batch selects two currently unheld, <=4K files
-per cohort in Java, JavaScript, Markdown, Python, Rust and Shell: **24 full texts / 18,609 tokens**.
-This length/language/hold-restricted assistant review is not independent annotation or a yield sample.
+The fixed cohorts retain **218 original records**, their sampling factors and observed tokens.
+Common full-text review now covers **49 files / 67,461 tokens**. There are **42 family-held records**
+and **129 currently unheld records outside full-read coverage**. Review completion does not establish
+source use, correctness, eligible yield or a source ranking; the two sampling frames remain distinct.
 
-| Follow-up | Stack-Edu | Stack v3 |
-| --- | ---: | ---: |
-| Full supplied texts reviewed | 12 | 12 |
-| Originals requested, including the separate transformation check | 12 | 18 |
-| Originals verified against pinned Git blobs | 11 | 17 |
-| Files with verified ancestor-notice evidence | 10 | 11 |
+| Evidence | Completed scope | Practical implication |
+| --- | --- | --- |
+| [Initial common review](../experiments/corpus-audit/code-cohort-review.json) | 24 texts / 18,609 tokens across six shared languages; 28 of 30 requested originals Git-verified | Length/language-restricted reading; origin failures remain in denominators |
+| [Python follow-up](../experiments/corpus-audit/python-cohort-validation.json) | 12 more texts / 20,218 tokens; all 16 Python files unheld at selection time read | Redaction checks need original/consumed pairs and contextual review |
+| [Family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json) | Known links assessed across all 218 records; three dependency edges | Two GoLLIE holds and a vendored Pylint hold bring the total to 42 |
+| [Go/Rust follow-up](../experiments/corpus-audit/go-rust-cohort-review.json) | 13 more texts / 28,634 tokens; all eight unheld Go and nine unheld Rust files now read | Static concerns and useful coverage recorded; origins/notices remain unresolved |
 
-One Stack-Edu repository lookup and one pinned Stack v3 file returned 404; neither was replaced.
-A matching Stack-Edu revision need not be its original crawl revision. Notice presence is not an
-intended-use decision. Original/consumed identities, notices, failures and all review observations
-remain external, bound by the receipt; cached replay is byte-identical and copied-cache corruption
-is rejected.
+All batches preserve held selections rather than replacing them. Assistant observations are recorded
+replay inputs, not independent annotations. Offline replay and corruption/selection controls pass;
+no corpus code, tests, examples or package setup ran. Historical receipts retain their original bytes.
 
-Nine of the ten Stack v3 mismatches are explained by placeholder substitutions. In
-`opipoy/file-locker: locker.py`, the original parses under CPython 3.14.6 but the supplied text
-fails at line 49 because redaction changed executable expressions. Keep that representation on hold;
-do not silently restore redacted originals. Explanation of a transformation does not establish
-semantic preservation. The tenth original remains unavailable.
+**Transformations and behavior.** Nine of ten Stack v3 identity mismatches are explained by
+placeholder substitutions; one original is unavailable. In `opipoy/file-locker: locker.py`, redaction
+changes executable expressions so the original parses and consumed text fails. Fourteen synthetic
+controls pass on each of CPython 3.10.20 and 3.14.6. Require a verified parseable original and exact
+placeholder-only changes before assigning that diagnosis. Parsing cannot validate runtime behavior,
+embedded doctests, redacted assertion meaning or contamination. No bulk filter is adopted, and
+redacted originals must not be silently restored.
 
-Both batches contain practical modules, tests and documentation needing repository or environment
-context. Static observations also include instructional/edge-case defects, incomplete test coverage,
-a proprietary/confidential-looking template header requiring notice review, a link directory and a
-project stub. These are individual findings, not comparable corpus defect rates or a source ranking.
-No code ran, verified exercise was established or training data admitted.
+The Go/Rust batch adds static findings in a table update that removes a row before replacement
+validation, a rectangle helper that reports some zero-width intersections as nonempty, and an ARN
+helper that indexes components without checking their count. Tests range from substantive assertions
+to logging-only examples; test names or counts do not establish independent oracles. Chinese
+identifiers/Unicode cases and intentionally limited ownership/Drop tutorials need contextual review,
+not blanket prose-language or defect filters. No new origin checks were made for these thirteen files;
+none has a reused Git-verified origin in the current review receipts. Do not treat reading as provenance.
 
-The [Python follow-up](../experiments/corpus-audit/python-cohort-validation.json) reads the remaining
-12 initially unheld Python files at all lengths: **20,218 additional tokens**, bringing common review
-coverage to **36 files / 38,827 tokens**. All 16 Python files unheld at selection time are now read;
-the nine previously held Python files remain held. Eleven of twelve requested originals are
-Git-verified and nine have ancestor notices. One additional Stack-Edu repository lookup returned
-404 and remains unresolved. Three files are vendored packages whose upstream attribution,
-versions and duplicate families require separate review; a root/ancestor notice does not settle this.
+**Families and package attribution.** A previously unflagged GoLLIE test contains evaluation examples;
+both sampled GoLLIE records remain held. Those examples are exposed material, not blind evaluation
+evidence. The vendored Pylint file matches an upstream Git blob from an already-held family; its
+installed version and host revision remain unresolved. Dependency parents are distinct from rename
+aliases. No exact consumed-byte duplicates were found in the fixed cohorts, which says nothing about
+undiscovered near-duplicates or original/transformed copies. The graph remains partial.
 
-A GoLLIE test contains evaluation examples missed by the earlier screen. Both sampled GoLLIE
-records now have a family-review hold pending alias/derivative and intended-evaluation coverage
-checks. The encountered examples are exposed material, not blind evaluation evidence; do not
-inspect more task text to tune filters or claim the frozen earlier screen was comprehensive.
+Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
+notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while
+its same-version source archive omits it. A package/version label or ancestor notice is insufficient.
+Stringutils notice applicability and both upstream commits remain unresolved; GitHub rate-limit
+responses and the oversized Arcade wheel remain recorded acquisition limits.
 
-An external, pair-aware diagnostic passes **14 synthetic controls on each of CPython 3.10.20 and
-3.14.6**. Both versions report thirteen unchanged parseable pairs, one changed parseable pair,
-the known syntax-damaged pair and one unavailable original across those 16 Python records.
-Only a verified parseable original, exact changes confined to declared placeholder spans, and a
-failing consumed parse establish introduced syntax damage. Comments, quoted markers, legacy
-syntax, deliberately invalid fixtures and missing originals have distinct review outcomes.
-Parsing cannot check runtime behavior, embedded doctests or redacted assertion meaning. This
-diagnostic remains an audit tool; no bulk filter or training admission follows. Offline replay is
-byte-identical and rejects a corrupted cache copy; recorded judgments are not independent labels.
-
-The [family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json) applies
-the existing family splitter to all 218 records, retaining their weights and tokens. Known repository,
-alias and dependency links propagate the two GoLLIE holds and add one vendored Pylint hold:
-**42 records are now family-held**. The Pylint file exactly matches an upstream Git blob from an
-already-held family; its installed version and host revision remain unresolved. Dependency parents
-are distinct from repository rename aliases. There are no exact consumed-byte duplicates within
-this fixed cohort; that does not establish absence of original/transformed copies or near-duplicates.
-
-Pinned installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's
-package-specific notice is recovered. The publisher-hash-verified stringutils wheel contains the
-exact sampled file, while its same-version source archive omits it; a package/version label alone
-is therefore insufficient. Stringutils notice applicability and both upstream commits remain
-unresolved. GitHub rate-limit responses and the oversized Arcade wheel are retained as bounded
-acquisition limits. No package was installed or executed. Graph-order and synthetic propagation
-controls pass, offline replay is identical, and a corrupted cache copy is rejected.
-
-**Next:** review the **142 currently unheld records** outside common full-read coverage using the
-updated assessment, then complete unresolved provenance and broader family/near-duplicate discovery.
-This partial graph does not establish full exclusion coverage or authorize data admission.
-Keep natural-code eligibility separate from independent exercise verification. The retained 0.477B
-code stock supports at most **1.59B total one-pass tokens at 30% natural code**, before exclusions,
-validation and other bank constraints. Qualified supply must set the experiment horizon alongside
-runtime cost; longer confirmation runs need more eligible baseline data.
+**Next:** review the remaining **129 unheld records**, resolve origins/notices and complete broader
+family/near-duplicate discovery. Natural-code eligibility is separate from independent exercise
+verification. The retained 0.477B code stock supports at most **1.59B total one-pass tokens at 30%
+natural code**, before exclusions, validation and other bank constraints. Qualified supply and runtime
+cost jointly set the experiment horizon; longer confirmation runs need more eligible baseline data.
 
 ## First comparison to prepare
 

@@ -7,23 +7,16 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- The [common cohort review](../corpus-audit/code-cohort-review.json) reads 24 full texts / 18,609
-  tokens, selected deterministically from six shared languages and currently unheld <=4K files.
-  It verifies 28 of 30 requested originals and ancestor notices for 21 files. Nine Stack v3
-  transformations are explained; one breaks Python syntax, and one original is unavailable.
-  A separate Stack-Edu repository lookup returned 404. The
-  [Python follow-up](../corpus-audit/python-cohort-validation.json) adds twelve readings / 20,218
-  tokens, completing all 16 initially unheld Python files and bringing common coverage to 36 files.
-  Eleven of twelve follow-up originals are Git-verified; one additional lookup returned 404.
-  Fourteen diagnostic controls pass on each of two Python versions. Two sampled GoLLIE records
-  gain family-review holds after a previously unflagged evaluation fixture was encountered.
-  These examples are exposed material; record that when freezing final scoring coverage.
-  The [family/provenance follow-up](../corpus-audit/code-family-provenance.json) applies known
-  repository links and three dependency edges, preserving GoLLIE holds and adding a Pylint hold. There are now
-  42 family-held records. Installed Arcade/stringutils metadata and file hashes are verified;
-  stringutils matches its published wheel, while its source archive omits the file. Broader lineage
-  discovery, upstream commits and remaining notice applicability are still unresolved.
-  All 218 original records/weights stay intact. No eligible yield, source ranking or admission follows.
+- Common full-read coverage is **49 files / 67,461 tokens** across the fixed 218 records.
+  The [initial review](../corpus-audit/code-cohort-review.json),
+  [Python follow-up](../corpus-audit/python-cohort-validation.json) and
+  [Go/Rust follow-up](../corpus-audit/go-rust-cohort-review.json) retain their frozen selections.
+  All Go/Rust files currently unheld are read; Python coverage includes all files unheld at its
+  selection time. The latest thirteen readings add static observations, not new origin verification.
+  [Family/provenance assessment](../corpus-audit/code-family-provenance.json) establishes 42 known
+  family-held records; 129 unheld records remain outside full-read coverage. The GoLLIE examples
+  encountered earlier are exposed material; record that when freezing final scoring coverage.
+  All original records/weights remain intact. No eligible yield, source ranking or admission follows.
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
@@ -128,8 +121,8 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 36 records;
-continue the 142 currently unheld records outside that coverage with the same origin/notice,
+Reuse retained packets and current receipts. Common full-read coverage now includes 49 records;
+continue the 129 currently unheld records outside that coverage with the same origin/notice,
 intended-use, content and family gates. Use the updated 42-record family holds, including GoLLIE
 and the vendored Pylint sample, before further selection. Extend the partial graph beyond known
 repository/alias/dependency links; no exact consumed-byte duplicates in the 218 records does not

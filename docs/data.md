@@ -115,7 +115,10 @@ Arcade/stringutils installed identities are verified; stringutils matches its pu
 Broader lineage discovery and remaining upstream revision/notice checks stay open.
 Fourteen syntax controls pass on each of two Python versions, but parser success cannot certify
 behavior, semantic preservation or eligibility.
-Continue the 142 currently unheld records outside common coverage and source-use/family checks in the
+The [Go/Rust review](../experiments/corpus-audit/go-rust-cohort-review.json) adds thirteen full texts,
+bringing common coverage to 49 files / 67,461 tokens. All currently unheld Go/Rust files are read;
+the latest batch adds static findings without new origin checks. Continue the 129 unheld records
+outside common coverage and source-use/family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md), retaining original sampling factors.
 No source ranking, eligible yield or bulk-filter adoption follows; keep source and serialization contrasts separate.
 

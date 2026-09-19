@@ -359,10 +359,14 @@ The [Python follow-up](python-cohort-validation.json) adds twelve full readings,
 coverage to 36 files and completing all 16 initially unheld Python records. It verifies eleven
 additional requested originals (one was also checked previously), records two new GoLLIE family
 holds and checks fourteen syntax controls on each of two Python versions. The diagnostic is not
-a bulk eligibility filter; 142 currently unheld files remain outside common full-read coverage.
+a bulk eligibility filter.
 The [family/provenance follow-up](code-family-provenance.json) replays known links with the existing
 splitter and brings family-held records to 42, including a vendored Pylint file matching upstream
 bytes. Arcade/stringutils installed identities are verified; the sampled stringutils file matches
 its wheel but is absent from its same-version source archive. Full lineage and remaining notice/revision checks stay open.
+The [Go/Rust review](go-rust-cohort-review.json) adds thirteen complete readings / 28,634 tokens,
+covering all remaining unheld Go/Rust records. Common coverage is now 49 files / 67,461 tokens;
+129 unheld records remain unread and 42 family holds persist. Static findings do not replace
+provenance: no new origin checks or corpus execution occurred in this batch.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from this restricted batch.

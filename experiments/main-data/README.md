@@ -340,8 +340,8 @@ separates inputs available for detailed design from the requirements for launchi
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
    Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
-   [Python follow-up](../corpus-audit/python-cohort-validation.json): common full-read coverage is
-   36 files, with 142 currently unheld files still outside it. The
+   [Go/Rust follow-up](../corpus-audit/go-rust-cohort-review.json): common full-read coverage is
+   49 files, with 129 currently unheld files still outside it. These latest readings add no origin checks. The
    [family assessment](../corpus-audit/code-family-provenance.json) propagates GoLLIE and vendored
    Pylint holds, bringing family-held records to 42; installed package identities are partially resolved.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
