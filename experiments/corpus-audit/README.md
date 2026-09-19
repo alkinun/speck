@@ -387,8 +387,12 @@ It brought coverage to 123 files / 213,736 tokens, with 44 held and 53 unheld re
 Test-harness limitations, template instantiation and SDK context remain distinct from validated
 behavior or performance; this batch has no new or reused verified origins.
 The [Java review](java-cohort-review.json) adds fifteen readings / 27,176 tokens, completing all
-nineteen unheld Java records. Current coverage is 138 files / 240,912 tokens, with 44 held and 38
-unheld records still unread. Caller/test context and a restrictive notice needing applicability review
+nineteen unheld Java records. It brought coverage to 138 files / 240,912 tokens, with 44 held and 38
+unheld records then unread. Caller/test context and a restrictive notice needing applicability review
 remain unresolved; one prior verified original is reused without a recovered notice or new lookup.
+The [SQL-labelled review](sql-cohort-review.json) adds eleven readings / 37,430 tokens, completing
+all unheld records with that label. Current coverage is 149 files / 278,342 tokens, with 44 held and
+27 unheld records still unread. Schemas, notebooks, dumps and test roles need distinct context; one
+file contains CQL definitions. No new or reused verified origins, family holds or admissions result.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.

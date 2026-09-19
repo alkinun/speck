@@ -1,0 +1,110 @@
+{
+  "format": "speck_sql_cohort_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "a650c4ec8920ae2557a2a6fe95e47a65b5765315",
+  "status": "fixed_unheld_sql_label_reading_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/java-cohort-review.json",
+    "sha256": "f2fd7a704bb4715273c37ffdac2f4d2f27360f66169a9aa3bf86f9f5dcb33906"
+  },
+  "selection_rule": "Every remaining unheld SQL record in the fixed cohorts, at all lengths; no substitutions.",
+  "summary": {
+    "cohorts": {
+      "stack_edu": {
+        "new_full_read_files": 11,
+        "new_full_read_tokens": 37430
+      },
+      "stack_v3": {
+        "new_full_read_files": 0,
+        "new_full_read_tokens": 0
+      }
+    },
+    "corpus_execution": false,
+    "cumulative_common_full_read_files": 149,
+    "cumulative_common_full_read_tokens": 278342,
+    "eligible_tokens_established": 0,
+    "eligible_yield_estimate": null,
+    "family_held_files": 44,
+    "gpu_hours": 0,
+    "languages": {
+      "SQL": {
+        "held_files": 1,
+        "original_files": 12,
+        "unheld_full_read_files": 11
+      }
+    },
+    "network_requests": 0,
+    "new_family_holds": 0,
+    "new_full_read_files": 11,
+    "new_full_read_tokens": 37430,
+    "new_origin_checks": 0,
+    "observed_non_sql_files": 1,
+    "observed_roles": {
+      "analysis_notebook": {
+        "files": 1,
+        "tokens": 5507
+      },
+      "database_export": {
+        "files": 1,
+        "tokens": 4481
+      },
+      "query_snapshot": {
+        "files": 1,
+        "tokens": 130
+      },
+      "regression_input": {
+        "files": 2,
+        "tokens": 14568
+      },
+      "schema_ddl": {
+        "files": 2,
+        "tokens": 6795
+      },
+      "schema_migration": {
+        "files": 1,
+        "tokens": 379
+      },
+      "test_database_setup": {
+        "files": 2,
+        "tokens": 5044
+      },
+      "worked_query_example": {
+        "files": 1,
+        "tokens": 526
+      }
+    },
+    "original_files": 218,
+    "remaining_unheld_outside_common_full_reads": 27,
+    "reused_git_verified_origins_for_this_batch": 0,
+    "source_ranking": null,
+    "training_admitted": false
+  },
+  "findings": [
+    "Original SQL labels cover schema DDL, a worked query example, an analysis notebook, a database export, a migration, test setup, regression inputs and a query snapshot. Preserve these roles rather than treating every file as a standalone verified program.",
+    "One SQL-labelled .cql file contains Clinical Quality Language date/time test definitions. Repeated names may rely on a section loader; the original language label and sampling factors remain unchanged, with observed language recorded separately.",
+    "A SQLite-style DDL file lacks closing table delimiters. A PostgreSQL-style analysis notebook mixes repeated table creation, an unbound alias, missing separators and a drop-before-read sequence. These are static supplied-text observations, not measured failures or diagnosed redaction.",
+    "CUBRID cast inputs and an Impala query snapshot require their surrounding harness and expected outputs. Materialized-view setup needs refresh/tie-policy context. A test path or optimization example does not establish independent correctness or efficiency evidence.",
+    "A database export embeds user-related identifiers, resource URLs and placeholder content alongside its schema. Their synthetic/real status and data-use suitability remain unresolved; literal identifiers are not reproduced in the notes.",
+    "No new or reused verified origins for this batch. All previous source-notice questions, family holds and source-use gates remain unresolved."
+  ],
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/sql-cohort-review",
+    "manifest_sha256": "8194775f804345fcfa6263eee4fb4a28b57d9f152aab1948a9ff867056682066",
+    "artifacts": 9,
+    "bytes": 272682,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "changed_consumed_identity",
+      "rewritten_original_language_label",
+      "missing_selection",
+      "held_selection_substitution",
+      "rewritten_observed_language"
+    ]
+  },
+  "boundaries": [
+    "Full static assistant reading, not independent annotation or behavioral verification. No corpus code, database statements, fixtures, compilers, parsers or tests executed; no database, website or external service contacted.",
+    "All 218 original identities, token counts, language/license metadata and sampling weights retained; all 44 family holds preserved. No replacement selection, automatic repair, notebook splitting, language relabelling or general rejection filter.",
+    "No new acquisition, source-use approval, eligible yield, source ranking, training admission or GPU work. Exact replay validates bookkeeping and recorded inputs, not independent semantic judgments."
+  ],
+  "next": "Finish the remaining 27 unheld records in the fixed cohort, then reconcile provenance, notices, embedded-data suitability, file roles and finite eligible supply in the existing qualification packet before selecting data-study arms."
+}
