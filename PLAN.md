@@ -18,6 +18,9 @@ Data quality, diversity and learnability are the main development priority while
 current architecture. The [data recipe direction](docs/data.md#recipe-direction--2026-09-19)
 and [assistant inventory](docs/assistant.md#main-assistant-data-direction--2026-09-19) cover both
 pretraining and post-training, including the newly confirmed approximately 128K context target.
+The [main data working plan](experiments/main-data/README.md) now sets concrete preparation targets:
+100B base tokens (35% code, 25% math), a provisional 8B context extension, and 1.5M unique
+thinking/agent conversations within a 1–2M range. The existing 500K conversations are starting stock.
 
 The immediate deliverable is a reproducible training baseline. The first flagship release includes
 identified base/assistant checkpoints and a companion [technical report](docs/report.md). The previous
@@ -67,7 +70,7 @@ Provider billing remains unknown. Main-corpus research remains a separate follow
 | Assistant data and context | 500K retained conversations inventoried; finite tool-aware rehearsal qualified; always-thinking target at approximately 128K | Audit reasoning quality, code/math correctness and agent outcomes; balance brief/deep reasoning, retain long trajectories and recover missing source tails in a separately qualified acquisition |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
 | Current paid experiment | Training/export qualified; restored H100 running the complete frozen development evaluation; backups resumed | Finish local code grading, verify all remaining artifacts and report when the GPU can be stopped |
-| Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
+| Main training | Working 100B mixture and 5,000-hour allocation recorded; source admission and hardware fit still open | Qualify new supply against the 35% code / 25% math targets; freeze measured manifests and runtime before launch |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
 offline template lookup, separated BF16 wrapper identity from FP32 cache consistency, and removed
@@ -131,8 +134,10 @@ training packs. A passing generated test suite alone is not sufficient for data 
    Add distillation or RL only after a clear baseline,
    working graders, and an affordable experiment exist.
 6. **Scale what works.** Decide the main token horizon and stage budgets from measured data supply,
-   learning curves, and all-in runtime. Keep time for post-training and final evaluation. The old
-   320B/400B targets are historical estimates, not current commitments.
+   learning curves, and all-in runtime. Start preparation from the [100B working mixture](experiments/main-data/README.md),
+   with an 80B fallback and 120B/160B options only if measured throughput fits the same base budget.
+   Preserve context extension, post-training and final evaluation. The old 320B/400B targets remain
+   historical estimates.
 
 ## Compute
 
@@ -140,8 +145,10 @@ The application is recorded as under evaluation; access and site details are unc
 The requested envelope is four GH200s, 5,000 GPU-hours, roughly 90 calendar days.
 Retain 889 hours as protected recovery/evaluation reserve. Four allocated GPUs cost four GPU-hours
 per wall hour even when some are idle. Qualification is capped at 70 hours; the initial pilot is
-capped at 50. Allocate the remaining work after those measurements, rather than
-maintaining speculative budgets for multiple research programs. No GH200 jobs have been launched.
+capped at 50. The working allocation reserves 2,300 hours for base pretraining, 800 for context
+extension, 800 for post-training and 91 for a bounded data comparison, alongside the protected
+889-hour reserve. These sum to 5,000; confirm actual hardware rates and usable supply before launch.
+No GH200 jobs have been launched.
 
 The [measured H100 planning inputs](experiments/qualification/timing-result.json) put the original
 one-worker pilot at about **2.20 GPU-hours** for training, validation and checkpoints; the completed

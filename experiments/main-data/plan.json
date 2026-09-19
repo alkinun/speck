@@ -1,0 +1,298 @@
+{
+  "format": "speck_main_data_working_plan",
+  "format_version": 1,
+  "date": "2026-09-19",
+  "status": "working_preparation_targets_not_launch_manifest",
+  "model": {
+    "parameters": 1195884576,
+    "architecture": "existing 24-layer KDA/GQA hybrid",
+    "tokenizer": "frozen Mistral 32K",
+    "final_behavior": "always thinking"
+  },
+  "main_pretraining": {
+    "target_tokens": 100000000000,
+    "initial_context_tokens": 4096,
+    "mixture": [
+      {
+        "id": "selected_web",
+        "role": "Natural Ultra-FineWeb English",
+        "weight_percent": 25,
+        "exposure_tokens": 25000000000,
+        "eligible_unique_token_preparation_target": 31250000000,
+        "candidate_sources": [
+          "openbmb/Ultra-FineWeb"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "independent_web",
+        "role": "FineWeb-Edu / DCLM coverage component",
+        "weight_percent": 5,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
+        "candidate_sources": [
+          "HuggingFaceFW/fineweb-edu",
+          "mlfoundations/dclm-baseline-1.0-parquet",
+          "HuggingFaceTB/dclm-edu"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "natural_code",
+        "role": "Qualified natural code, tests and documentation",
+        "weight_percent": 30,
+        "exposure_tokens": 30000000000,
+        "eligible_unique_token_preparation_target": 37500000000,
+        "candidate_sources": [
+          "HuggingFaceTB/stack-edu",
+          "openbmb/UltraData-Code:L2"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "checked_code",
+        "role": "Checked code explanations, exercises and repair",
+        "weight_percent": 5,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
+        "candidate_sources": [
+          "qualified natural-code derivatives",
+          "openbmb/UltraData-Code:L3 if lineage resolved"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "natural_math",
+        "role": "Selected natural math and worked solutions",
+        "weight_percent": 20,
+        "exposure_tokens": 20000000000,
+        "eligible_unique_token_preparation_target": 25000000000,
+        "candidate_sources": [
+          "openbmb/UltraData-Math:L2",
+          "HuggingFaceTB/finemath:finemath-4plus",
+          "nvidia/Nemotron-CC-Math-v1:4plus"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "refined_math",
+        "role": "Checked refined math explanations and derivations",
+        "weight_percent": 5,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
+        "candidate_sources": [
+          "openbmb/UltraData-Math:L3"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "reference_science",
+        "role": "Reference, science and technical documents",
+        "weight_percent": 5,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
+        "candidate_sources": [
+          "retained FineWiki",
+          "retained peS2o",
+          "HuggingFaceFW/finepdfs-edu:English if qualified"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      },
+      {
+        "id": "refined_web",
+        "role": "Selected synthetic educational text",
+        "weight_percent": 5,
+        "exposure_tokens": 5000000000,
+        "eligible_unique_token_preparation_target": 6250000000,
+        "candidate_sources": [
+          "openbmb/Ultra-FineWeb-L3",
+          "retained Cosmopedia v2 comparator"
+        ],
+        "source_allocations_frozen": false,
+        "admitted_by_this_plan": false
+      }
+    ],
+    "code_percent": 35,
+    "math_percent": 25,
+    "target_unique_eligible_tokens": 125000000000,
+    "default_passes": 1,
+    "repetition_policy": "No automatic repetition. Any repeated source needs declared unique tokens, exposure, passes and revised freeze.",
+    "synthetic_shortfall_policy": "Do not count held/rejected records or invent an undocumented join. Re-freeze within-domain natural/refined allocations or reduce horizon after measuring supply; no silent replacement.",
+    "checkpoint_policy": "Retain continuation and endpoint checkpoints; optimizer/schedule/evaluation cadence require separate run freeze."
+  },
+  "context_extension": {
+    "target_tokens": 8000000000,
+    "target_context_tokens": 131072,
+    "stages": [
+      {
+        "maximum_context_tokens": 16384,
+        "exposure_tokens": 2000000000
+      },
+      {
+        "maximum_context_tokens": 32768,
+        "exposure_tokens": 2000000000
+      },
+      {
+        "maximum_context_tokens": 131072,
+        "exposure_tokens": 4000000000
+      }
+    ],
+    "short_replay_token_percent": 25,
+    "long_content_token_percent": 75,
+    "proposed_long_content_percent": {
+      "coherent_repositories": 50,
+      "math_science_technical_documents": 30,
+      "cross_document_grounded_material": 20
+    },
+    "minimum_effective_tokens_per_second_per_allocated_gpu_to_fit": 2777.777777777778,
+    "boundary": "Proposed stage token counts include short replay. Each maximum is a ceiling, not a fixed padded length. Measure length-bucket costs and useful context; no long-context throughput has been established. Source overlap/replay with base must be disclosed."
+  },
+  "post_training": {
+    "target_unique_training_conversations": 1500000,
+    "planning_range": [
+      1000000,
+      2000000
+    ],
+    "existing_stock_rows_before_final_qualification": 500000,
+    "default_exposure_passes": 1,
+    "primary_task_row_targets": {
+      "coding_with_reasoning": 600000,
+      "math_reasoning": 375000,
+      "agent_and_tool_trajectories": 375000,
+      "supporting_general_and_instruction_tasks_with_reasoning": 150000
+    },
+    "counting": "Deduplicate tasks/source families; assign each conversation one primary category. Agentic coding counts in agent category, not twice. Held-outs excluded from target. Row shares are acquisition targets, not final token sampling weights.",
+    "length_policy": "Keep complete examples across <=4K, 4-16K, 16-32K, 32-128K; preserve over-target records separately. Reacquire upstream long tails omitted from existing stock.",
+    "runtime_scenarios": [
+      {
+        "conversations": 1000000,
+        "mean_total_context_tokens": 4000,
+        "one_pass_context_tokens": 4000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 82.34826267467994
+      },
+      {
+        "conversations": 1000000,
+        "mean_total_context_tokens": 8000,
+        "one_pass_context_tokens": 8000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 164.6965253493599
+      },
+      {
+        "conversations": 1000000,
+        "mean_total_context_tokens": 16000,
+        "one_pass_context_tokens": 16000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 329.3930506987198
+      },
+      {
+        "conversations": 1500000,
+        "mean_total_context_tokens": 4000,
+        "one_pass_context_tokens": 6000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 123.5223940120199
+      },
+      {
+        "conversations": 1500000,
+        "mean_total_context_tokens": 8000,
+        "one_pass_context_tokens": 12000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 247.0447880240398
+      },
+      {
+        "conversations": 1500000,
+        "mean_total_context_tokens": 16000,
+        "one_pass_context_tokens": 24000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 494.0895760480796
+      },
+      {
+        "conversations": 2000000,
+        "mean_total_context_tokens": 4000,
+        "one_pass_context_tokens": 8000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 164.6965253493599
+      },
+      {
+        "conversations": 2000000,
+        "mean_total_context_tokens": 8000,
+        "one_pass_context_tokens": 16000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 329.3930506987198
+      },
+      {
+        "conversations": 2000000,
+        "mean_total_context_tokens": 16000,
+        "one_pass_context_tokens": 32000000000,
+        "gpu_hours_at_4k_padded_position_rate_only": 658.7861013974396
+      }
+    ],
+    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT and any on-allocation teacher/verification/preference/RL work; additions must fit or displace work. No multi-epoch commitment."
+  },
+  "compute": {
+    "allocation_status": "requested_not_confirmed",
+    "requested_gpus": 4,
+    "requested_total_gpu_hours": 5000,
+    "reservations_gpu_hours": {
+      "runtime_qualification": 70,
+      "engineering_pilot": 50,
+      "main_4k_pretraining": 2300,
+      "context_extension": 800,
+      "post_training": 800,
+      "bounded_data_comparison": 91,
+      "protected_recovery_and_evaluation": 889
+    },
+    "h100_full_trainer_tokens_per_second": 12859.198189903878,
+    "h100_steady_optimizer_tokens_per_second": 13594.900661275025,
+    "main_pretraining_reference_gpu_hours": 2160.1485075163473,
+    "main_reference_four_gpu_days_at_perfect_scaling": 22.501546953295286,
+    "main_scenarios": [
+      {
+        "tokens": 80000000000,
+        "reference_gpu_hours": 1728.1188060130778,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 9661.83574879227
+      },
+      {
+        "tokens": 100000000000,
+        "reference_gpu_hours": 2160.1485075163473,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 12077.294685990339
+      },
+      {
+        "tokens": 120000000000,
+        "reference_gpu_hours": 2592.178209019617,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 14492.753623188404
+      },
+      {
+        "tokens": 160000000000,
+        "reference_gpu_hours": 3456.2376120261556,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 19323.67149758454
+      }
+    ],
+    "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected context/SFT/evaluation budgets on base expansion."
+  },
+  "storage": {
+    "base_uint16_token_id_bytes": 200000000000,
+    "prepared_125b_uint16_token_id_bytes": 250000000000,
+    "context_uint16_token_id_bytes": 16000000000,
+    "local_scratch_working_allowance_bytes": 2000000000000,
+    "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed."
+  },
+  "input_receipts": {
+    "experiments/pilot/h100-run.json": "1af7bc5fa0ba2e126d862bb4c661e352b14a19d5e62dabc5ddbbd9df1cf2e44c",
+    "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0",
+    "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
+    "experiments/corpus-audit/recipe-review.json": "2ce92d8093bd0e1f2ced7cc14a15c8ebca68bf7b12a58d2722a5843cfba05140"
+  },
+  "unchanged": [
+    "frozen pilot",
+    "running H100 evaluation",
+    "live backup/grading workers"
+  ],
+  "launch_requirements": [
+    "confirmed hardware and measured multiworker runtime",
+    "qualified per-source supply and revised manifest",
+    "joint source-family exclusions and validation split",
+    "measured long-context memory/runtime",
+    "post-training full-context and supervised token counts",
+    "frozen optimizer schedule and stop budget"
+  ]
+}

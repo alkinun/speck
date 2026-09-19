@@ -51,6 +51,14 @@ and a measured reasoning/output-budget recipe before a release-quality SFT run.
 
 ## Main assistant data direction — 2026-09-19
 
+The working target is **1.5M unique qualified training conversations**, with a **1–2M range**;
+the existing 500K are starting stock, not a final-size constraint. The
+[scale plan](../experiments/main-data/README.md#post-training-scale) targets 600K code reasoning,
+375K math reasoning, 375K agent/tool trajectories and 150K supporting thinking/instruction tasks.
+Assign one primary category per conversation, exclude holdouts and task-family duplicates, and
+choose final training weights from supervised/total-context tokens rather than these row quotas.
+The initial cost model assumes one pass; 128K is a context ceiling, not an average conversation size.
+
 The planned context extension targets approximately 128K. The 4K rehearsal above is an initial
 engineering phase, not a maximum length policy for future SFT. Preserve complete long reasoning,
 document QA and agent trajectories for extension and later SFT. Keep short interactions represented

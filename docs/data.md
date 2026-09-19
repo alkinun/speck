@@ -109,6 +109,11 @@ then run the same source-rights, joint-exclusion, partition, pack, and full-load
 Prioritize data quality, coverage and learnability over additional architecture searches. Keep the
 current hybrid while qualifying data and the planned extension from 4K toward approximately 128K.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
+The [main mixture and scale plan](../experiments/main-data/README.md) now proposes 100B base tokens:
+35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
+125B eligible unique tokens as selection headroom; the plan distinguishes proposed exposure from
+materialized supply and reserves separate context-extension/post-training budgets. These are working
+weights to qualify, not proven optima or source admission.
 The weak [pilot completions](../experiments/pilot/completion-preview.json) establish an immature
 endpoint, not a causal verdict on its datasets or architecture.
 
@@ -184,8 +189,9 @@ can represent the same underlying information. Review source-use evidence per co
 3. Complete the already planned practical-code qualification. Admit only traceable material with
    independent checks; do not turn every source on the shortlist into a separate GPU experiment.
 4. Recount usable supply and freeze token-based domain, source, length and reasoning-depth weights
-   for the relevant phase. SFT needs both supervised-token and total-context counts. No final
-   percentages are chosen before those measurements; training stock is not the same as exposure.
+   for the relevant phase. SFT needs both supervised-token and total-context counts. Final
+   percentages depend on those measurements; the working allocation guides preparation.
+   Training stock is not the same as exposure.
 5. Price one controlled comparison from a useful common base with a fixed evaluation protocol.
    Track capability versus trained tokens and GPU-hours, plus preparation/verification cost and
    regressions by capability. Better data can improve learning per token without raising tokens/s.
