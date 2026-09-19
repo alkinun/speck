@@ -1,0 +1,421 @@
+{
+  "format_version": 1,
+  "records": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/candidate-records.json",
+    "sha256": "0816e0ca4c221f8f4cc162f14335f67b9561ef7d51e622f907113564ca4204aa",
+    "bytes": 107171
+  },
+  "rules": {
+    "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-rules.json",
+    "sha256": "7d37ce3d66dbc50e7405ae8f946448865aef717667d9447b1d88a4a1a9117265",
+    "bytes": 3069
+  },
+  "evidence": [
+    {
+      "path": "/mnt/speck-data/speck/flagship-preparation-20260917/evaluation.json",
+      "sha256": "05a75ffdb936dc8df6f6d92fe2b576fddf5c4bd0b2e51da8042875003fb419f0",
+      "bytes": 227624
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/acquisition.json",
+      "sha256": "d60dd22e70f89b6744f0f41327b06745b7877eb427f65c49fc8f46932b3a7ac9",
+      "bytes": 26300
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/js-lineage.jsonl",
+      "sha256": "54a0be843f68f840e1c43fea9f912d9517fad3f720e8d8f8b722a7a2eef78b72",
+      "bytes": 26333
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/js-linked-files.jsonl",
+      "sha256": "1906f0c429bbfae86d3c1e45a29209751815f911c83d0080d6ce7eaf187e6ad5",
+      "bytes": 7886
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/natural-code-cohort.json",
+      "sha256": "a21c229e369f1fdacdeb0f217656fc3c646c3e7071d3eab919bb92542e8d5e77",
+      "bytes": 27409
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/practical-code-checks.json",
+      "sha256": "4fb16e23039659f13cf575440cbeea098a8922895a507f43bec95ff1ffcb7e34",
+      "bytes": 28048
+    }
+  ],
+  "benchmarks": [
+    {
+      "expected_tasks": 1319,
+      "format": "parquet",
+      "id": "gsm8k",
+      "path": "/home/alkin/.cache/huggingface/hub/datasets--openai--gsm8k/blobs/ee7b8da9e381df27b9e3f7758a159ab2bdaa4dbaa910546cbbc47e0cb44e4f59",
+      "sha256": "ee7b8da9e381df27b9e3f7758a159ab2bdaa4dbaa910546cbbc47e0cb44e4f59",
+      "task_id_field": null,
+      "text_fields": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "expected_tasks": 541,
+      "format": "jsonl",
+      "id": "ifeval",
+      "path": "/home/alkin/.cache/huggingface/hub/datasets--google--IFEval/blobs/7c875005c09550bc3fd94c7f42867f78490bc554",
+      "sha256": "6a85310ca8ce15eff755aa08a3a4ff931c7e273e7515ebb3c492ea85fd8288f2",
+      "task_id_field": "key",
+      "text_fields": [
+        "prompt"
+      ]
+    },
+    {
+      "expected_tasks": 164,
+      "format": "jsonl",
+      "id": "humanevalplus",
+      "path": "/home/alkin/.cache/huggingface/hub/datasets--evalplus--humanevalplus/blobs/908377f1daf28dcb36846db73a5662b2e05a9907407c2696c89ad9d3b0b04492",
+      "sha256": "908377f1daf28dcb36846db73a5662b2e05a9907407c2696c89ad9d3b0b04492",
+      "task_id_field": "task_id",
+      "text_fields": [
+        "prompt",
+        "canonical_solution"
+      ]
+    },
+    {
+      "expected_tasks": 1172,
+      "format": "parquet",
+      "id": "arc_challenge",
+      "path": "/home/alkin/.cache/huggingface/hub/datasets--allenai--ai2_arc/blobs/62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9",
+      "sha256": "62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9",
+      "task_id_field": "id",
+      "text_fields": [
+        "question",
+        "choices"
+      ]
+    },
+    {
+      "expected_tasks": 10042,
+      "format": "parquet",
+      "id": "hellaswag",
+      "path": "/home/alkin/.cache/huggingface/hub/datasets--Rowan--hellaswag/blobs/899813071e1e95efafec90f856e1987d2150fa4d020fc005df6962c259f660cd",
+      "sha256": "899813071e1e95efafec90f856e1987d2150fa4d020fc005df6962c259f660cd",
+      "task_id_field": null,
+      "text_fields": [
+        "ctx",
+        "endings"
+      ]
+    },
+    {
+      "id": "mbppplus",
+      "repo": "evalplus/mbppplus",
+      "revision": "b2d74c91837c3f2a20c1299ae98133cbe7cfa077",
+      "filename": "data/test-00000-of-00001-d5781c9c51e02795.parquet",
+      "format": "parquet",
+      "task_id_field": "task_id",
+      "text_fields": [
+        "prompt",
+        "code",
+        "test_list",
+        "test_imports"
+      ],
+      "expected_tasks": 378,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/mbppplus.parquet",
+      "sha256": "dc20030b3788fccf617444edcb34138ef13d7e4fafd17bfcb8c1279dbb12399b"
+    },
+    {
+      "id": "swe_verified",
+      "repo": "princeton-nlp/SWE-bench_Verified",
+      "revision": "c104f840cc67f8b6eec6f759ebc8b2693d585d4a",
+      "filename": "data/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "instance_id",
+      "text_fields": [
+        "problem_statement",
+        "patch",
+        "test_patch"
+      ],
+      "expected_tasks": 500,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/swe_verified.parquet",
+      "sha256": "a45b1fe4e2f0c8390b2b2938ac83e92ed5979000856808f3679c07812e9e6dcd"
+    },
+    {
+      "id": "multipl_humaneval_cpp",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-cpp/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 161,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_cpp.parquet",
+      "sha256": "f4492dd06d3280dd32aa6245d806f00553350be3fc45454aeff3c71b29196ce6"
+    },
+    {
+      "id": "multipl_mbpp_cpp",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-cpp/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 397,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_cpp.parquet",
+      "sha256": "1f1c96f54f381b70f71ade353cb2754b1429181adb814b18f6b0a823f6ec438a"
+    },
+    {
+      "id": "multipl_humaneval_java",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-java/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 158,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_java.parquet",
+      "sha256": "b9cce8fdfc46963aa9c9db85eaa8411d151fb9cb82e94b57b4106884eab28b6c"
+    },
+    {
+      "id": "multipl_mbpp_java",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-java/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 386,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_java.parquet",
+      "sha256": "bdcd577b56a0a66b340c6326569e9b4234c21860a373474d7d5c1d93658e620f"
+    },
+    {
+      "id": "multipl_humaneval_js",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-js/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 161,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_js.parquet",
+      "sha256": "037debd61e3e98ee9da684054ef522d45200ce622ae36b2fab3bbb27769fa51d"
+    },
+    {
+      "id": "multipl_mbpp_js",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-js/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 397,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_js.parquet",
+      "sha256": "2e30c57e2e31be8b30af2b18fce6245730a3a520cd79fe16088066c55330ed1d"
+    },
+    {
+      "id": "multipl_humaneval_ts",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-ts/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 159,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_ts.parquet",
+      "sha256": "b9090cc4e5a0c06e671811f63d7c35737f8393f1b9d44685472d5a7b1877d136"
+    },
+    {
+      "id": "multipl_mbpp_ts",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-ts/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 390,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_ts.parquet",
+      "sha256": "5c1568f14e601ed3cf94219c9cc4f5de4cb3c46e790ded9c54ad4b11b5c8edd1"
+    },
+    {
+      "id": "multipl_humaneval_go",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-go/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 154,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_go.parquet",
+      "sha256": "0ea500a7b7a05e80d42512d77a9a8362ba3372d1792a19cd5da79818aa0bb5a2"
+    },
+    {
+      "id": "multipl_mbpp_go",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-go/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 374,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_go.parquet",
+      "sha256": "bd55cddf40ac595e8cd7b7788f6f4684c31e130c90fc451b450ac911dc5628b7"
+    },
+    {
+      "id": "multipl_humaneval_rs",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-rs/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 156,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_rs.parquet",
+      "sha256": "92dba15e4da4deb4dbae5e15ce1712c95ec5a63c3ead69886271470309d9d314"
+    },
+    {
+      "id": "multipl_mbpp_rs",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-rs/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 354,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_rs.parquet",
+      "sha256": "e1a8bad3f3dd05b465ab9545331c30a25a48779bb60a356c84a7954837ae7e4e"
+    },
+    {
+      "id": "multipl_humaneval_sh",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "humaneval-sh/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 158,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_humaneval_sh.parquet",
+      "sha256": "a472100ae3a45b51ee445ab40343aa19950b58081565f3e75bbe0f0979012901"
+    },
+    {
+      "id": "multipl_mbpp_sh",
+      "repo": "nuprl/MultiPL-E",
+      "revision": "28441b6024e71d4a1c1c0f6bf171c935cd5a43f2",
+      "filename": "mbpp-sh/test-00000-of-00001.parquet",
+      "format": "parquet",
+      "task_id_field": "name",
+      "text_fields": [
+        "prompt",
+        "tests"
+      ],
+      "expected_tasks": 382,
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/multipl_mbpp_sh.parquet",
+      "sha256": "f9eb6e1bc0a8e999cd153d44e1d635a37663f573f89198e240f08f6a8cd366b5"
+    }
+  ],
+  "aliases": [
+    [
+      "obround/ppci",
+      "windelbouwman/ppci"
+    ],
+    [
+      "marlboromoo/basinboa",
+      "0xd3adcafe/basinboa"
+    ],
+    [
+      "anchandm/fooof",
+      "fooof-tools/fooof"
+    ]
+  ],
+  "held_repositories": [
+    "astropy/astropy",
+    "django/django",
+    "matplotlib/matplotlib",
+    "mwaskom/seaborn",
+    "pallets/flask",
+    "psf/requests",
+    "pydata/xarray",
+    "pylint-dev/pylint",
+    "pytest-dev/pytest",
+    "scikit-learn/scikit-learn",
+    "sphinx-doc/sphinx",
+    "sympy/sympy"
+  ],
+  "livecodebench": {
+    "repo": "livecodebench/code_generation_lite",
+    "revision": "0fe84c3912ea0c4d4a78037083943e8f0c4dd505",
+    "metadata": {
+      "url": "https://huggingface.co/api/datasets/livecodebench/code_generation_lite/tree/0fe84c3912ea0c4d4a78037083943e8f0c4dd505",
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/exclusions/livecodebench.tree.json",
+      "sha256": "54b67e772af57014b62aa7c9858ad7f8af9dd83db4d6f3e920bac0d95e2d2e0d",
+      "bytes": 2182
+    },
+    "files": [
+      {
+        "filename": "test.jsonl",
+        "bytes": 1252609773,
+        "sha256": "2bd02b38beb48e8c46b5b9987095d999ff38cd8efc255ea5d58974317c48f63f"
+      },
+      {
+        "filename": "test2.jsonl",
+        "bytes": 713377060,
+        "sha256": "095df7c5daf15f882c51a9deb84085cff1e073495a5dbcf95015a564d485f3a3"
+      },
+      {
+        "filename": "test3.jsonl",
+        "bytes": 623360766,
+        "sha256": "28ed26cc83363ce3f1fe2d5fad9f8393077beb1907b167a31bd3b32f80801b79"
+      },
+      {
+        "filename": "test4.jsonl",
+        "bytes": 1204644685,
+        "sha256": "d711138ddaebfcf5f8ec6a4283ee677298c0f5c5d374a235af92aaf0584510da"
+      },
+      {
+        "filename": "test5.jsonl",
+        "bytes": 557699297,
+        "sha256": "7f77571c2a6df0c2a72a3277650309f67e01e0008e18117e624633df53f81214"
+      },
+      {
+        "filename": "test6.jsonl",
+        "bytes": 134303240,
+        "sha256": "bb4c364f71921c4495a6ad15abe1a927350b720009f4933e2e71f8af0f6fd1f5"
+      }
+    ],
+    "status": "metadata_pinned_payload_not_acquired",
+    "total_bytes": 4485994821
+  }
+}

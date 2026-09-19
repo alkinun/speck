@@ -333,7 +333,9 @@
     "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
     "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
     "experiments/corpus-audit/natural-code-cohort.json": "a21c229e369f1fdacdeb0f217656fc3c646c3e7071d3eab919bb92542e8d5e77",
-    "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6"
+    "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
+    "experiments/corpus-audit/practical-code-checks.json": "4fb16e23039659f13cf575440cbeea098a8922895a507f43bec95ff1ffcb7e34",
+    "experiments/main-data/qualification-result.json": "e15880508da8c6924ca05d6517d46fcc29ac5d1774f3c63a4acbc6637fe61dbf"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

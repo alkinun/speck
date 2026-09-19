@@ -1,0 +1,47 @@
+{
+  "format_version": 1,
+  "status": "qualification_rules_v1_not_launch_authority",
+  "training_admitted": false,
+  "content_exclusion": {
+    "critical_primary_matches": 1,
+    "exact_anchor_tokens": 4,
+    "maximum_tasks_per_ngram": 1,
+    "minimum_alphanumeric_tokens": 4,
+    "minimum_exact_field_characters": 40,
+    "minimum_exact_field_tokens": 8,
+    "minimum_unique_tokens": 4,
+    "normalization": "NFKC+lower+unicode-word-punctuation",
+    "primary_ngram": 13,
+    "sensitivity_matches": 2,
+    "sensitivity_ngram": 8,
+    "token_pattern": "\\w+|[^\\w\\s]"
+  },
+  "indexing": "One benchmark lane per index; union all matches. Translations remain the same task family for future evaluation splits.",
+  "family_split": {
+    "seed": "speck-main-code-family-v1-20260919",
+    "train_buckets": 9000,
+    "development_buckets": 500,
+    "final_buckets": 500,
+    "total_buckets": 10000,
+    "algorithm": "SHA256(seed:SHA256(newline-joined sorted connected repository names)); first 8 digest bytes as big-endian integer modulo 10000; final <500; development <1000; otherwise train.",
+    "scope": "Candidate partition only; freeze the complete alias/parent/duplicate graph and its hash before production selection.",
+    "unresolved": "Quarantine entire connected component if any source origin or parent is unresolved."
+  },
+  "eligibility_gates": [
+    "Exact source revision and bytes; preserve original attribution and notices; review source-specific eligibility.",
+    "All intended benchmark representations and families excluded before synthesis, selection or training.",
+    "Resolve fork/rename aliases from evidence; join originals, derivatives and exact/near-duplicate groups before assigning partitions.",
+    "Keep natural code distinct from verified exercises; useful source code need not pass every invented robustness policy.",
+    "Verified exercises require independent correctness tests, non-vacuous collection, dependency/runtime binding, deliberately wrong controls and clear specifications.",
+    "Record accepted unique Mistral tokens, rejected tokens/reasons, language/domain/length coverage and processing cost.",
+    "No repetition or bank replacement without explicit recipe revision."
+  ],
+  "remaining_gates": [
+    "LiveCodeBench payload/window and adapter are not yet acquired/qualified; its immutable release and file identities are recorded.",
+    "Repository-repair coverage is only SWE-bench Verified; choose and exclude additional intended repair/agent benchmarks before task derivation.",
+    "Whole-corpus alias, source-family and near-duplicate graph has not been built.",
+    "Source eligibility, serialization and independently reviewed quality/coverage are not complete.",
+    "No final evaluation scoring protocol or main training manifest is authorized by this packet."
+  ],
+  "exposure_note": "Public dataset cards can display example tasks; MBPP+ card previews were exposed during metadata research. Do not claim a blind final evaluation from these previews; record exposure when selecting a future final protocol."
+}

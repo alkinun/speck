@@ -61,10 +61,11 @@ historical; do not repeat the completed pilot because a preparation document sti
 
 ## Immediate order of work
 
-1. **Finish the bounded practical-code checks on CPU.** Independently test the exception-handling,
-   dice-parsing and entropy candidates in the existing sandbox. Pin dependencies, retain notices
-   and parent identities. Freeze broader coding-benchmark exclusions and family splits before
-   exercise derivation. The 16-row UltraData-Code L3 preview remains held for unresolved lineage.
+1. **Complete main-data eligibility and coverage.** The bounded Python/JS/TS practical checks are
+   complete and [recorded](experiments/corpus-audit/practical-code-checks.json). The
+   [qualification packet](experiments/main-data/QUALIFICATION.md) pins broader exclusion inputs
+   and defines family separation. Finish LiveCodeBench coverage and the full source-family graph
+   before exercise derivation. The 16-row UltraData-Code L3 preview remains held for lineage.
 2. **Qualify the data recipe.** Audit pinned natural Ultra-FineWeb against FineWeb-Edu; keep DCLM
    as an independent coverage candidate and synthetic L3 separate. Review math correctness and
    source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work

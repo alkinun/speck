@@ -263,7 +263,8 @@ accelerated serving integration is assumed qualified merely because base trainin
 
 ## Execution gates and next work
 
-1. **Now, on CPU:** finish the three practical-code checks, freeze broader benchmark/family
+1. **Now, on CPU:** use the completed practical-code checks and the
+   [qualification packet](../experiments/main-data/QUALIFICATION.md) to finish benchmark/family
    exclusions, then audit web/math and assistant quality/long-tail supply in bounded packets.
    Prepare one selected-model hardware packet, not another architecture branch.
 2. **On GH200 access:** qualify one worker, then four; measure sustained effective throughput,

@@ -186,10 +186,10 @@ preparation coverage, not five simultaneous studies.
 
 1. Audit the pinned natural Ultra-FineWeb candidate and its chosen threshold against retained
    FineWeb-Edu using the existing sampler; report content coverage, overlap and eligible tokens.
-2. Complete independent sandbox checks for the three candidates selected by the
-   [finished 16-file audit](../corpus-audit/natural-code-cohort.json). Ten files cleared preliminary
-   lineage/syntax/benchmark checks; none is admitted. Freeze broader exclusions and family splits,
-   establish a scalable acquisition route, then measure a bounded larger shard before bulk packing.
+2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
+   [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
+   No examples are admitted. Establish a scalable acquisition route, then measure a bounded
+   larger shard before bulk packing.
 3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
    distinct from merely well-formed text. Measure source overlap and complete-document lengths.
 4. Audit the retained SFT stock and long-source gaps against the 1.5M task/length targets. Build a
@@ -197,3 +197,9 @@ preparation coverage, not five simultaneous studies.
 5. Freeze actual admitted source manifests, weights, repetitions, exclusions and hardware cost
    before launch. Learning-rate schedule, batch geometry and checkpoint cadence belong to that
    run's contract. This plan starts preparation, not a new GPU run or bulk download.
+
+## Qualification work
+
+The [CPU qualification packet](QUALIFICATION.md) records eligibility rules, pinned exclusion inputs,
+family separation and the next comparable source audit. It does not authorize training or change
+the working numeric recipe above.

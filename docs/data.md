@@ -78,7 +78,9 @@ The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pi
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
 or correctness. The [natural-code cohort](../experiments/corpus-audit/natural-code-cohort.json)
 now has 16 immutable byte matches and ten preliminary review candidates; none is admitted.
-Next independently check the three practical candidates named in [coding](coding.md).
+The bounded practical CPU checks are complete in [coding](coding.md). The
+[qualification packet](../experiments/main-data/QUALIFICATION.md) now owns the next exclusion,
+family-separation and comparable source-review work; no main corpus is admitted.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`
@@ -127,7 +129,7 @@ endpoint, not a causal verdict on its datasets or architecture.
 | Component | Evidence already available | Decision |
 | --- | --- | --- |
 | FineWeb-Edu, FineMath 4+, Cosmopedia v2, peS2o, FineWiki | Retained stocks, pilot preparation, index census and stratified excerpt audit | Keep useful content and controls; improve selection rather than discard all existing stock |
-| Stack-Edu | Retained multilingual code; 16-file audit with exact upstream matches, 13 notices and ten preliminary review candidates | Independently test the three selected practical candidates; freeze expanded exclusions/family splits before derivation |
+| Stack-Edu | Retained multilingual code; lineage cohort, broader archive sample and bounded Python/JS/TS execution checks | Complete expanded exclusions and the source-family graph, then measure eligible supply |
 | Natural Ultra-FineWeb | Paper reviewed, historical/current revision checked; comparable local natural-web content audit still pending | Leading candidate for the main web component |
 | DCLM baseline / DCLM-Edu | Historical configurations and current revisions checked | Independent comparison and coverage options; no claimed local quality ranking |
 | Ultra-FineWeb-L3 | 96 retained Q&A/multi-style records, length measurements and eight excerpt reviews | Promising synthetic component; check source/answer consistency before replacing Cosmopedia |
