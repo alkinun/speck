@@ -195,16 +195,17 @@ manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit
 ## Common cohort review
 
 The fixed cohorts retain **218 original records**, their sampling factors and observed tokens.
-Common full-text review now covers **49 files / 67,461 tokens**. There are **42 family-held records**
-and **129 currently unheld records outside full-read coverage**. Review completion does not establish
+Common full-text review now covers **63 files / 97,401 tokens**. There are **43 family-held records**
+and **114 currently unheld records outside full-read coverage**. Review completion does not establish
 source use, correctness, eligible yield or a source ranking; the two sampling frames remain distinct.
 
 | Evidence | Completed scope | Practical implication |
 | --- | --- | --- |
 | [Initial common review](../experiments/corpus-audit/code-cohort-review.json) | 24 texts / 18,609 tokens across six shared languages; 28 of 30 requested originals Git-verified | Length/language-restricted reading; origin failures remain in denominators |
 | [Python follow-up](../experiments/corpus-audit/python-cohort-validation.json) | 12 more texts / 20,218 tokens; all 16 Python files unheld at selection time read | Redaction checks need original/consumed pairs and contextual review |
-| [Family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json) | Known links assessed across all 218 records; three dependency edges | Two GoLLIE holds and a vendored Pylint hold bring the total to 42 |
+| [Family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json) | Known links assessed across all 218 records; three dependency edges | Established 42 holds before the later metadata-only hold |
 | [Go/Rust follow-up](../experiments/corpus-audit/go-rust-cohort-review.json) | 13 more texts / 28,634 tokens; all eight unheld Go and nine unheld Rust files now read | Static concerns and useful coverage recorded; origins/notices remain unresolved |
+| [JS/TSX/Vue follow-up](../experiments/corpus-audit/javascript-cohort-review.json) | 14 more texts / 29,940 tokens; all unheld records carrying these labels read | One metadata-only hold added; language/dialect observations remain separate from source labels |
 
 All batches preserve held selections rather than replacing them. Assistant observations are recorded
 replay inputs, not independent annotations. Offline replay and corruption/selection controls pass;
@@ -218,13 +219,17 @@ placeholder-only changes before assigning that diagnosis. Parsing cannot validat
 embedded doctests, redacted assertion meaning or contamination. No bulk filter is adopted, and
 redacted originals must not be silently restored.
 
-The Go/Rust batch adds static findings in a table update that removes a row before replacement
-validation, a rectangle helper that reports some zero-width intersections as nonempty, and an ARN
-helper that indexes components without checking their count. Tests range from substantive assertions
-to logging-only examples; test names or counts do not establish independent oracles. Chinese
-identifiers/Unicode cases and intentionally limited ownership/Drop tutorials need contextual review,
-not blanket prose-language or defect filters. No new origin checks were made for these thirteen files;
-none has a reused Git-verified origin in the current review receipts. Do not treat reading as provenance.
+Static findings include mutation before validation, geometry edge cases, browser callback capture
+and staffing calculations. Tests range from substantive assertions to logging-only examples; an
+observer-pattern exercise directly sets assertion flags without dispatching callbacks. Test names,
+counts or passing assertions alone do not establish independent oracles. Reading is not provenance:
+the JS/TSX/Vue batch reuses two previously verified originals and makes no new origin checks.
+
+**Language and execution context.** A JavaScript-labelled `.pde` file is a Processing Java-mode
+example; two other fixtures use symbolic-verification or extended syntax. Preserve original labels
+and sampling weights, recording observed language/dialect separately. Toolchain-specific parsing,
+Chinese identifiers/Unicode cases and intentionally limited tutorials need contextual review before
+selection rules are adopted; ordinary-language parser failure alone does not establish corruption.
 
 **Families and package attribution.** A previously unflagged GoLLIE test contains evaluation examples;
 both sampled GoLLIE records remain held. Those examples are exposed material, not blind evaluation
@@ -232,6 +237,9 @@ evidence. The vendored Pylint file matches an upstream Git blob from an already-
 installed version and host revision remain unresolved. Dependency parents are distinct from rename
 aliases. No exact consumed-byte duplicates were found in the fixed cohorts, which says nothing about
 undiscovered near-duplicates or original/transformed copies. The graph remains partial.
+Repository/path metadata additionally identifies a LeetCode solution collection; its one sampled
+record is conservatively held for lineage/evaluation-coverage review. Its solution text was not
+displayed or semantically reviewed, and no exact benchmark match is claimed.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while
@@ -239,7 +247,7 @@ its same-version source archive omits it. A package/version label or ancestor no
 Stringutils notice applicability and both upstream commits remain unresolved; GitHub rate-limit
 responses and the oversized Arcade wheel remain recorded acquisition limits.
 
-**Next:** review the remaining **129 unheld records**, resolve origins/notices and complete broader
+**Next:** review the remaining **114 unheld records**, resolve origins/notices and complete broader
 family/near-duplicate discovery. Natural-code eligibility is separate from independent exercise
 verification. The retained 0.477B code stock supports at most **1.59B total one-pass tokens at 30%
 natural code**, before exclusions, validation and other bank constraints. Qualified supply and runtime

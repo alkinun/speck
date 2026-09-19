@@ -361,12 +361,16 @@ additional requested originals (one was also checked previously), records two ne
 holds and checks fourteen syntax controls on each of two Python versions. The diagnostic is not
 a bulk eligibility filter.
 The [family/provenance follow-up](code-family-provenance.json) replays known links with the existing
-splitter and brings family-held records to 42, including a vendored Pylint file matching upstream
+splitter and brought family-held records to 42, including a vendored Pylint file matching upstream
 bytes. Arcade/stringutils installed identities are verified; the sampled stringutils file matches
 its wheel but is absent from its same-version source archive. Full lineage and remaining notice/revision checks stay open.
 The [Go/Rust review](go-rust-cohort-review.json) adds thirteen complete readings / 28,634 tokens,
-covering all remaining unheld Go/Rust records. Common coverage is now 49 files / 67,461 tokens;
-129 unheld records remain unread and 42 family holds persist. Static findings do not replace
+covering all remaining unheld Go/Rust records. It brought common coverage to 49 files / 67,461 tokens;
+at that stage, 129 unheld records remained unread and 42 family holds persisted. Static findings do not replace
 provenance: no new origin checks or corpus execution occurred in this batch.
+The [JS/TSX/Vue review](javascript-cohort-review.json) adds fourteen readings / 29,940 tokens and
+one metadata-only LeetCode-family hold. Current coverage is 63 files / 97,401 tokens, with 43 held
+and 114 unheld records still unread. A Processing example and two dialect fixtures demonstrate
+why observed language/context must remain separate from original labels and sampling weights.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from this restricted batch.

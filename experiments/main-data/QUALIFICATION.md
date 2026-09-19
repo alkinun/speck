@@ -7,15 +7,17 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- Common full-read coverage is **49 files / 67,461 tokens** across the fixed 218 records.
+- Common full-read coverage is **63 files / 97,401 tokens** across the fixed 218 records.
   The [initial review](../corpus-audit/code-cohort-review.json),
   [Python follow-up](../corpus-audit/python-cohort-validation.json) and
   [Go/Rust follow-up](../corpus-audit/go-rust-cohort-review.json) retain their frozen selections.
-  All Go/Rust files currently unheld are read; Python coverage includes all files unheld at its
-  selection time. The latest thirteen readings add static observations, not new origin verification.
-  [Family/provenance assessment](../corpus-audit/code-family-provenance.json) establishes 42 known
-  family-held records; 129 unheld records remain outside full-read coverage. The GoLLIE examples
-  encountered earlier are exposed material; record that when freezing final scoring coverage.
+  The [JS/TSX/Vue follow-up](../corpus-audit/javascript-cohort-review.json) completes reading all
+  currently unheld records carrying those labels and adds one metadata-only LeetCode-family hold:
+  43 records are held, and 114 unheld records remain unread. Processing/dialect annotations preserve
+  original source labels and weights. Two verified originals are reused; no new origins are checked.
+  The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial.
+  The GoLLIE examples encountered earlier are exposed material; record that when freezing final
+  scoring coverage.
   All original records/weights remain intact. No eligible yield, source ranking or admission follows.
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
@@ -121,11 +123,12 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 49 records;
-continue the 129 currently unheld records outside that coverage with the same origin/notice,
-intended-use, content and family gates. Use the updated 42-record family holds, including GoLLIE
-and the vendored Pylint sample, before further selection. Extend the partial graph beyond known
-repository/alias/dependency links; no exact consumed-byte duplicates in the 218 records does not
+Reuse retained packets and current receipts. Common full-read coverage now includes 63 records;
+continue the 114 currently unheld records outside that coverage with the same origin/notice,
+intended-use, content and family gates. Use the updated 43-record family holds, including GoLLIE,
+vendored Pylint and the metadata-identified LeetCode collection. That last hold is conservative,
+not a proven task match; do not inspect solution text to tune exclusions. Extend the partial graph
+beyond known repository/alias/dependency links; no exact consumed-byte duplicates in the 218 records does not
 settle near-duplicates or transformed copies. Arcade 2.5.7 and stringutils 0.3.0 installed identities
 are verified, but complete upstream revision/notice applicability remains open. Keep package
 artifact hashes, host origins and consumed identities separate; ancestor notices alone are insufficient.

@@ -104,23 +104,19 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-The [initial common review](../experiments/corpus-audit/code-cohort-review.json) covers 24 complete texts
-across six shared languages, with 28 of 30 requested originals verified against Git blobs. Nine
-Stack v3 mismatches are placeholder transformations, including one that breaks Python syntax;
-one original is unavailable. The [Python follow-up](../experiments/corpus-audit/python-cohort-validation.json)
-adds twelve readings, completing all 16 initially unheld Python files and bringing common coverage
-to 36. The [family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json)
-propagates the two GoLLIE holds and adds a vendored Pylint hold: 42 records are now family-held.
-Arcade/stringutils installed identities are verified; stringutils matches its published wheel.
-Broader lineage discovery and remaining upstream revision/notice checks stay open.
-Fourteen syntax controls pass on each of two Python versions, but parser success cannot certify
-behavior, semantic preservation or eligibility.
-The [Go/Rust review](../experiments/corpus-audit/go-rust-cohort-review.json) adds thirteen full texts,
-bringing common coverage to 49 files / 67,461 tokens. All currently unheld Go/Rust files are read;
-the latest batch adds static findings without new origin checks. Continue the 129 unheld records
-outside common coverage and source-use/family checks in the
-[qualification packet](../experiments/main-data/QUALIFICATION.md), retaining original sampling factors.
-No source ranking, eligible yield or bulk-filter adoption follows; keep source and serialization contrasts separate.
+The [current cohort assessment](../experiments/corpus-audit/javascript-cohort-review.json) records
+**63 full texts / 97,401 tokens reviewed**, **43 family-held records**, and **114 unheld records still
+unread**. It preserves all original sampling factors and source labels. A Processing Java-mode
+example is labelled JavaScript, and two fixtures use tool-specific syntax; observed language/dialect
+is recorded separately. A repository/path-based LeetCode-family hold is conservative, not a proven
+benchmark match, and its solution text was not displayed or semantically reviewed.
+
+The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
+checks and package/family evidence. Latest readings reuse two previously verified originals without
+new acquisition. Parser success and passing test assertions cannot certify behavior, semantic
+preservation or eligibility. Complete source-use, provenance and family checks in the
+[qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment
+inventories. No source ranking, eligible yield or bulk-filter adoption follows from this partial review.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`

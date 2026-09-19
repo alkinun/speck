@@ -1,0 +1,92 @@
+{
+  "format": "speck_javascript_cohort_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "93f5f78f6a6b11073475075e234b9353eb28c344",
+  "status": "fixed_unheld_javascript_tsx_vue_reading_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/go-rust-cohort-review.json",
+    "sha256": "35424205d0352c7d15dc118eec857f933fb4be8af4e1584ae7773f1a9bc4fe33"
+  },
+  "selection_rule": "All remaining unheld JavaScript, TSX and Vue records, at all lengths, after a metadata-only repository-family hold; no substitutions.",
+  "summary": {
+    "cohorts": {
+      "stack_edu": {
+        "new_full_read_files": 7,
+        "new_full_read_tokens": 20558
+      },
+      "stack_v3": {
+        "new_full_read_files": 7,
+        "new_full_read_tokens": 9382
+      }
+    },
+    "corpus_execution": false,
+    "cumulative_common_full_read_files": 63,
+    "cumulative_common_full_read_tokens": 97401,
+    "eligible_tokens_established": 0,
+    "eligible_yield_estimate": null,
+    "family_held_files": 43,
+    "gpu_hours": 0,
+    "languages": {
+      "JavaScript": {
+        "held_files": 5,
+        "original_files": 19,
+        "unheld_full_read_files": 14
+      },
+      "TSX": {
+        "held_files": 0,
+        "original_files": 3,
+        "unheld_full_read_files": 3
+      },
+      "Vue": {
+        "held_files": 0,
+        "original_files": 1,
+        "unheld_full_read_files": 1
+      }
+    },
+    "network_requests": 0,
+    "new_full_read_files": 14,
+    "new_full_read_tokens": 29940,
+    "new_metadata_only_family_holds": 1,
+    "new_origin_checks": 0,
+    "observed_language_label_mismatches": 1,
+    "original_files": 218,
+    "remaining_unheld_outside_common_full_reads": 114,
+    "reused_git_verified_origins_for_this_batch": 2,
+    "source_ranking": null,
+    "tool_dialect_context_flags": 2,
+    "training_admitted": false
+  },
+  "metadata_only_family_hold": {
+    "repository": "hijiangtao/leetcode-with-javascript",
+    "sampled_records": 1,
+    "basis": "Repository and path explicitly identify a LeetCode solution collection; conservative lineage/evaluation-coverage hold, not a proven task match. Solution text was not displayed or semantically reviewed."
+  },
+  "findings": [
+    "One JavaScript-labelled record is a vendored Processing Java-mode .pde example. Original label and sampling weight are preserved; observed language is recorded separately.",
+    "Two fixtures require symbolic-verification or extended-syntax toolchains; stock JavaScript syntax rejection would not establish corruption.",
+    "A browser inventory has a shared-loop-variable callback bug; a staffing simulation rounds capacity down and leaves one updated view stale.",
+    "An observer-pattern exercise directly sets assertion flags instead of invoking observers, so its assertions do not establish observer dispatch.",
+    "Math edge cases, UI scaffolding and conditional hook-state behavior need context; no corpus-wide defect rates or source ranking follow."
+  ],
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/javascript-cohort-review",
+    "manifest_sha256": "8b0d464d8af1634a647988308e464e3fcc5e709fb00fa2cfd3a546e45e934088",
+    "artifacts": 11,
+    "bytes": 580387,
+    "network_disabled_replay_identical": true,
+    "graph_order_invariant": true,
+    "negative_controls": [
+      "changed_consumed_identity",
+      "rewritten_original_language_label",
+      "missing_selection",
+      "removed_family_hold"
+    ]
+  },
+  "boundaries": [
+    "Static assistant reading, not independent annotation or behavioral verification. No corpus tests, dialect tools, setup scripts or benchmarks executed.",
+    "Two previously Git-verified originals reused; no new origin checks, source-use approvals or notice resolution. The remaining twelve files in this reading batch have no reused Git-verified origins in the current receipts.",
+    "All 218 original records, token counts, language labels and sampling weights retained. No automatic language relabeling or general rejection filter adopted.",
+    "All prior holds preserved, one metadata-only hold added. No network requests, eligible yield, training admission or GPU work."
+  ],
+  "next": "Continue the 114 unheld records outside common full-read coverage, carrying the updated holds. Resolve observed language/dialect, source lineage/notices and finite eligible token supply before data-study launch."
+}
