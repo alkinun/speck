@@ -4,17 +4,24 @@ This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate
 Training completed all 800 steps / 104,857,600 tokens in **2.27 hours**. Final validation loss was
 **3.379**, steady throughput **13,595 tokens/s**, and peak allocated memory **19.3 GiB**.
 Export and tokenizer checks passed after inspected recovery. The remote endpoint subsequently
-became unavailable, so capability completion and the remaining backup are unconfirmed.
+became unavailable; access was restored on September 19 and the disk survived. The interrupted
+evaluation had only 84 GSM8K outputs and no complete result. A fresh, separate development
+evaluation is now running from the same export, alongside resumed checkpoint backups.
 Complete checkpoints 100, 200, 300 and 800 are verified locally, including the final model and optimizer.
 The final export has been reconstructed and verified on CPU from retained inputs. The
 [execution receipt](h100-run.json) retains measurements and the original export failure.
-The eight-hour watcher ended at **2026-09-19 04:11 UTC** without observing restored access;
-it is now inactive. Its last successful remote observation was September 18 at 20:57 UTC.
+The original eight-hour watcher ended at **2026-09-19 04:11 UTC** without observing restored access.
+Its last successful remote observation before the outage was September 18 at 20:57 UTC.
 Terminal states/logs and backup receipts are preserved in a hashed local evidence snapshot.
 Checkpoints 400–700, the remote export backup and complete capability outputs remain unconfirmed;
 the CPU reconstruction is a separate verified artifact. The original execution deadline has
-expired. Current provider status/SSH is needed to inspect and recover remaining artifacts;
-no new GPU job, worker restart or replacement watcher was launched. Billing status is unknown.
+expired. After the user restarted one H100, a **new four-hour evaluation reservation** was bound
+through **09:59:06 UTC on September 19**; the original reservation was not reused. No training or
+export regeneration is needed. The evaluator has no resume support, so the prior 84 rows remain
+separate and the complete frozen partition is rerun. Existing backup/grading services and the
+bounded milestone watcher were resumed without duplicates. Provider billing remains unknown;
+21 prior conservative hours + 6 original hours + 4 restored-session hours are reservation records,
+not the actual bill. [h100-run.json](h100-run.json) binds the preserved files and new launch.
 A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
 and timing check, not a model-quality result or an architecture comparison.

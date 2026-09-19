@@ -12,15 +12,18 @@ GPU workflow completed training, then failed offline export template enumeration
 recovery implementations. Recovery uses staged template files and the original checkpoint under
 the remaining six-hour deadline; it does not retrain. Export checks passed; development evaluation
 started after removing supervisor rank variables that incorrectly triggered distributed startup.
-The endpoint later refused SSH and the gateway reported container not found. Provider status and
-evaluation completion are unknown. The final checkpoint is verified locally; CPU export
-reconstruction is verified. The eight-hour connection-restoration watcher ended at
-2026-09-19 04:11 UTC without observing recovery and is now inactive. Its terminal evidence is
-preserved in the execution receipt; no replacement watcher or worker was launched. Current
-provider status/SSH is needed before inspecting remaining evaluation outputs and backups.
-The original six-hour execution deadline has expired; do not restart training or evaluation
-under that old reservation. Do not interpret lost SSH as proof that billing stopped or that all
-remote artifacts are backed up. Use the recorded implementation commit
+The endpoint later refused SSH and the gateway reported container not found. The final checkpoint
+and CPU export reconstruction are verified locally. The original eight-hour watcher ended at
+2026-09-19 04:11 UTC without observing recovery. Its terminal evidence is
+preserved in the execution receipt. The user subsequently restarted one H100 and supplied access.
+The retained disk contains only 84 partial GSM8K evaluation rows; the old evaluator is no longer
+running. A fresh complete development pass now uses `development-restored-20260919/`, supervised
+under `recovery-after-restart-20260919/`, with a new four-hour reservation ending September 19
+at 09:59:06 UTC. Training and export are reused. The previous partial attempt is preserved;
+the frozen evaluator has no resume support. Existing backup/grading services and the milestone
+watcher have been resumed against direct SSH port 13431, without duplicate workers.
+The original six-hour execution deadline has expired and is not reused. Do not interpret lost SSH
+as proof that billing stopped or that all remote artifacts are backed up. Use the recorded implementation commit
 for each phase even when documentation on main advances.
 
 

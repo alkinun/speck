@@ -80,7 +80,7 @@
       "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/remote-checkpoint-100-reclaim.json",
       "sha256": "70f578636e5ee4a42e8cc19d890bef7d8e6f98e94da53148652b9a5ede643c0e"
     },
-    "status": "interrupted_connection_unavailable",
+    "status": "resumed_after_provider_restart",
     "verified_steps": [
       100,
       200,
@@ -144,13 +144,13 @@
   },
   "conservative_prior_reservation_gpu_hours": 21,
   "continuation": {
-    "boundary": "The bounded eight-hour watcher ended at 2026-09-19T04:11:12Z. No further automatic restoration events will be queued by it; no replacement watcher or worker was started. Provider billing and remote process state remain unknown.",
+    "boundary": "Original eight-hour watcher ended; same service rearmed for a new bounded four-hour restoration interval. Existing backup/grading workers resumed, no duplicate workers. GPU supervisor deadline09:59:06UTC; provider billing is separate.",
     "service_units": [
       "speck-pilot-backup-80ffc9d0",
       "speck-pilot-grading-80ffc9d0",
       "speck-pilot-continuation-80ffc9d0"
     ],
-    "status": "deadline_reached_watcher_inactive"
+    "status": "restoration_watching"
   },
   "date": "2026-09-18",
   "environment": {
@@ -686,8 +686,61 @@
     }
   },
   "reserved_current_gpu_hours": 6,
+  "restoration_20260919": {
+    "accounting_boundary": "21 prior conservative hours +6 original reservation +4 restored session =31 reserved hours, not a provider bill. Provider setup/idle outside observations and actual charges remain unknown.",
+    "authorization": "User restarted one H100 and supplied SSH after authorizing inspection, recovery and remaining frozen evaluation.",
+    "completion_notifier": "Queues evaluation_complete and backup_complete; quiet on unchanged state. Separate restoration deadline event. Local computer and Codex must remain available.",
+    "conservative_reservations_total_gpu_hours": 31,
+    "container_hostname": "211ef9e635ed",
+    "deadline_utc": "2026-09-19T09:59:06+00:00",
+    "direct_ssh": "ssh -p 13431 -i ~/.ssh/id_ed25519 root@103.207.149.153",
+    "evidence_manifest": {
+      "bytes": 39400,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/restoration-20260919/manifest.json",
+      "sha256": "98f6dc1efb4f19468f6f40bea5d04594b511aeabc1becb7ed531f5bd0caecade"
+    },
+    "export_repeated": false,
+    "fresh_reservation_gpu_hours": 4,
+    "frozen_protocol_changed": false,
+    "gateway_ssh": "ssh -tt -i ~/.ssh/id_ed25519 0nfvif7niy86zi-64412120@ssh.runpod.io",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "implementation_commit": "26676fda55f4fb65bce3e3fdacc264ed2dd4682d",
+    "launch": {
+      "bytes": 2416,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/restoration-20260919/launch-snapshot/launch.json",
+      "sha256": "8c403d8b3595a8cffb1d335efe8f51eaecc389024fc6ada688ea31a2a6e69e68"
+    },
+    "observed_free_workspace_gib_approximate": 4.7,
+    "observed_utc": "2026-09-19T06:06:18.698533+00:00",
+    "original_evaluation": "Interrupted; stale running status, no evaluator process, 84 complete GSM8K rows and no complete result.",
+    "partial_benchmark": "gsm8k",
+    "partial_output_sha256": "d41097986cd9e8ba50e8ad9e2da114fb16212ca3b91ab4bba6f02fc905b6e5a6",
+    "partial_row_wall_seconds_sum": 1847.6388640329242,
+    "partial_rows": 84,
+    "pod_id": "0nfvif7niy86zi",
+    "prelaunch_guard_correction": "First helper used the reconstructed CPU export metadata hash for the original remote export. Identity assertion stopped before evaluator launch. Corrected to retained remote receipt9fe03abd; original helper/log preserved.",
+    "prior_gpu_processes_found": false,
+    "recovered_environment": "Container user speck UID/GID1001 disappeared on restart; restored matching retained file ownership without changing corpus/code.",
+    "remote_development_directory": "/workspace/pilot-runs/80ffc9d0f93d4dc8a71adf4c616cbb24/development-restored-20260919",
+    "remote_recovery_directory": "/workspace/pilot-runs/80ffc9d0f93d4dc8a71adf4c616cbb24/recovery-after-restart-20260919",
+    "restart_reason": "Frozen evaluator has no resume support. Preserve all 84 prior rows separately; rerun development from the same verified export in a new directory. No mixing of attempts or changed denominator.",
+    "started_utc": "2026-09-19T06:03:32.698383+00:00",
+    "torch": "2.9.1+cu128",
+    "training_repeated": false,
+    "verification": {
+      "helper_files_hash_verified": 19,
+      "missing_optional_helper_names": [],
+      "no_remote_model_or_corpus_code_executed_by_snapshot": true,
+      "retained_remote_small_files_hash_verified": 95,
+      "status": "pass",
+      "utc": "2026-09-19T06:05:14.703189+00:00"
+    },
+    "volume_survived": true,
+    "whole_pilot_complete": false,
+    "worker_state": "Existing backup and local grading services resumed only after inspecting failure states; existing milestone watcher rearmed for four hours. All three active."
+  },
   "session_deadline_seconds": 21600,
-  "status": "training_completed_remote_connection_unavailable",
+  "status": "evaluation_restarted_after_provider_restart",
   "training_evidence": {
     "checkpoints/metadata_000800.json": {
       "bytes": 68147,
@@ -1014,6 +1067,7 @@
     "portable_suite_deselected": 10,
     "portable_suite_passed": 739,
     "portable_suite_skipped": 10,
+    "restoration_20260919": "95 retained remote small-file hashes and19helper-file hashes matched downloaded copies. Protocol/prepared/export-source identities and clean implementation commit checked before launch. New helpers syntax-checked; no production implementation change or full-suite rerun.",
     "single_worker_environment_control": "Real supervisor subprocess verifies rank variables are removed before development evaluation."
   }
 }

@@ -39,27 +39,28 @@ Change one only when a measured failure or capability comparison justifies the w
 The single-H100 rehearsal and planning measurements are complete. The frozen engineering pilot
 completed 800 steps on the migrated H100; its [execution receipt](experiments/pilot/h100-run.json)
 records 2.27 training hours, final validation loss 3.379 and 19.3 GiB peak allocated memory.
-The remote endpoint is now unavailable; the final model and optimizer are hash-verified locally.
-Evaluation completion and remaining remote backups are unconfirmed. Main-corpus research remains a separate follow-up.
-The eight-hour watcher ended on September 19 at 04:11 UTC without observing restored access.
-It is inactive; further remote recovery needs current provider status/SSH from the user.
-Terminal evidence is preserved, and the original execution reservation has expired. No automatic
-GPU retry or replacement watcher was started; provider billing status remains unknown.
+The final model and optimizer are hash-verified locally. The user restored remote access on
+September 19; the disk survived, but evaluation had stopped after 84 GSM8K examples. A fresh
+complete development evaluation is running from the same export under a new four-hour bound
+ending at 09:59:06 UTC. Remaining backups are transferring in parallel; completion is still pending.
+The original watcher reached its deadline and its terminal evidence is preserved. Existing
+backup/grading services and the same bounded notifier are now resumed for the restored session.
+Provider billing remains unknown. Main-corpus research remains a separate follow-up.
 
 | Work | Current state | Concrete next deliverable |
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Preview, isolated execution and lineage audit complete; all 16 L3 rows held outside training | Qualify 16 practical natural-code files with origin/revision/license evidence, freeze exclusions, then derive independently checked exercises |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
-| Current paid experiment | Training/export qualified; remote endpoint unavailable; final checkpoint retained locally | Recover provider access, then inspect evaluation and remaining backups; verified final export has been reconstructed locally |
+| Current paid experiment | Training/export qualified; restored H100 running the complete frozen development evaluation; backups resumed | Finish local code grading, verify all remaining artifacts and report when the GPU can be stopped |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
 offline template lookup, separated BF16 wrapper identity from FP32 cache consistency, and removed
 singleton rank variables before evaluation. All failed attempts are retained; export checks pass and
 development evaluation was running within the remaining original deadline when SSH became
-unavailable. The gateway now reports container not found; provider status and evaluation completion
-are unknown. The final export has been reconstructed on CPU, with source identities, model/tokenizer checks
+unavailable. Restored access confirmed that evaluation was interrupted; its stale running result and
+84 partial rows are retained separately. The final export has been reconstructed on CPU, with source identities, model/tokenizer checks
 and all 18 output-file hashes verified locally. The migrated container blocks user namespaces, so generated code is graded locally.
 The supervisor enforces a shared six-hour
 execution deadline and conservatively reserves six GPU-hours against the 50-hour pilot ceiling.
