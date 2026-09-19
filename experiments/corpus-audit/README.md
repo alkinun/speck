@@ -102,7 +102,10 @@ the flags review-only. Web eligibility and usable-token counts remain open. See 
 The [full retained-code census](code-supply.json) subsequently reopens all 1,999 v1/v2 archives:
 714,369 files / 476,774,847 tokens, with exact aggregate replay. Role hints and repository co-presence
 do not resolve missing commit fields; existing benchmark/content-family evidence holds 123 files.
-Next, qualify immutable bundles and language-specific expansion yield. The
+The [bundle follow-up](code-bundles.json) recovers 19 linked files at four pinned revisions;
+four content flags hold 15 files by family, and static review exposes test-oracle weaknesses.
+Next, pin expansion routes and eligible yield by language/practical role, requiring explicit
+linkage and independent tests. The
 [coding plan](../../docs/coding.md#retained-supply-census--2026-09-19) contains the language/role tables
 and the gap to proposed exposure; no main-code supply is admitted.
 

@@ -93,9 +93,9 @@ The [follow-up](WEB_INVENTORY_DCLM.md) closes the HQ inventory and now records t
 It also adds partial-viewer DCLM previews. The [extraction follow-up](web-filter-validation.json)
 now recovers all three matching archived captures and compares frozen flags on 32 previously
 unreviewed documents. False alarms and missed defects keep those flags review-only. The retained
-code census is now [complete](code-supply.json); immutable bundle linkage and expansion yield
-are the next code steps. Web source-use evidence, parent/duplicate families and source-aware repair
-remain open while preserving technical and everyday topic coverage.
+code census and [bounded bundle follow-up](code-bundles.json) are complete; expansion yield and
+practical coverage are the next code steps. Web source-use evidence, parent/duplicate families
+and source-aware repair remain open while preserving technical and everyday topic coverage.
 Only then count accepted unique tokens. DCLM needs comparable source-file evidence for any
 concrete coverage/eligibility decision before freezing allocations. The working 25% selected-web
 share remains a hypothesis; this inspection neither changes it nor establishes its 100B-token

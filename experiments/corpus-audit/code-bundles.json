@@ -1,0 +1,267 @@
+{
+  "format": "speck_immutable_code_bundle_audit",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "84f38d368e39fd5dfd21e041fe7d7a87893d72e5",
+  "status": "bounded_static_linkage_and_exclusion_audit_not_training_admission",
+  "training_admitted": false,
+  "eligible_unique_tokens_established": 0,
+  "gpu_hours": 0,
+  "corpus_code_executed": false,
+  "dependencies_installed": false,
+  "selection": {
+    "seed": "speck-immutable-code-bundles-v1",
+    "source": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2/documents.jsonl",
+      "sha256": "26319e69275907168478c5db6220a8a5eff1c6403312d2708bf7baf483c4a92e"
+    },
+    "selection": "One lowest hash-ranked repository per language in fixed Python/JavaScript/TypeScript/Go order, disjoint repositories; one lowest hash-ranked file per role, 100-3000 tokens. Exclude known held and previously reviewed repository names and supplied aliases. Docs may be another language. These are path-hint candidates, not verified bundles.",
+    "candidate_repository_counts": {
+      "Python": 83,
+      "JavaScript": 57,
+      "TypeScript": 44,
+      "Go": 33
+    },
+    "bounds": {
+      "repositories": 4,
+      "path_history_commits": 5,
+      "response_bytes": 8388608,
+      "source_file_bytes": 262144,
+      "maximum_requests_per_repository": 30
+    }
+  },
+  "lineage": {
+    "matching_retained_tests": 4,
+    "matching_original_triplet_files": 7,
+    "original_triplet_files": 12,
+    "complete_matching_triplets": 1,
+    "scope": "First exact test revision recovered within at most five test-path commits. The complete Python triplet concerns different exercises; failed joins do not prove no common revision exists elsewhere.",
+    "notices": "MIT notice retained at each pinned revision; source-use approval remains open.",
+    "new_verified_family_alias": [
+      "vbassini/typescript-data-structures",
+      "trungvose/typescript-data-structures"
+    ],
+    "alias_scope": "GitHub source/fork metadata; graph remains partial. Package-manifest repository URLs alone are not verified aliases."
+  },
+  "bundles": [
+    {
+      "candidate_partition": "quarantine",
+      "content_flagged_files": 1,
+      "family": "bootcamperscollective/coders-workshop",
+      "language": "Python",
+      "notice_paths": [
+        "LICENSE"
+      ],
+      "payload_files": 3,
+      "repository": "bootcamperscollective/coders-workshop",
+      "retained_triplet_matches": 3,
+      "retained_triplet_size": 3,
+      "revision": "ca0242b0a31bc4fd3756ae826d3ad8dfb9974120",
+      "tokens_with_bos_eos": 739,
+      "triplet_scope": "At the first recovered matching test revision, searching at most five test-path commits; failures do not prove no common revision exists elsewhere."
+    },
+    {
+      "candidate_partition": "quarantine",
+      "content_flagged_files": 2,
+      "family": "hibasalem/data-structures-and-algorithms",
+      "language": "JavaScript",
+      "notice_paths": [
+        "LICENSE"
+      ],
+      "payload_files": 6,
+      "repository": "hibasalem/data-structures-and-algorithms",
+      "retained_triplet_matches": 1,
+      "retained_triplet_size": 3,
+      "revision": "93b779b61976b6a5d264b48976705796ece3ee0f",
+      "tokens_with_bos_eos": 1607,
+      "triplet_scope": "At the first recovered matching test revision, searching at most five test-path commits; failures do not prove no common revision exists elsewhere."
+    },
+    {
+      "candidate_partition": "quarantine",
+      "content_flagged_files": 1,
+      "family": "trungvose/typescript-data-structures",
+      "language": "TypeScript",
+      "notice_paths": [
+        "LICENSE"
+      ],
+      "payload_files": 6,
+      "repository": "vbassini/typescript-data-structures",
+      "retained_triplet_matches": 1,
+      "retained_triplet_size": 3,
+      "revision": "0f180b01813059040f729daa29036c1ff62e3d05",
+      "tokens_with_bos_eos": 2054,
+      "triplet_scope": "At the first recovered matching test revision, searching at most five test-path commits; failures do not prove no common revision exists elsewhere."
+    },
+    {
+      "candidate_partition": "train",
+      "content_flagged_files": 0,
+      "family": "miku/aboutgo",
+      "language": "Go",
+      "notice_paths": [
+        "LICENSE"
+      ],
+      "payload_files": 4,
+      "repository": "miku/aboutgo",
+      "retained_triplet_matches": 2,
+      "retained_triplet_size": 3,
+      "revision": "1c39ece07d549b0cc2021cbf50916a5bee6fb1dd",
+      "tokens_with_bos_eos": 1250,
+      "triplet_scope": "At the first recovered matching test revision, searching at most five test-path commits; failures do not prove no common revision exists elsewhere."
+    }
+  ],
+  "payload": {
+    "payload_files": 19,
+    "payload_tokens_with_bos_eos": 5650,
+    "benchmark_lanes": 22,
+    "benchmark_rows": 18958,
+    "content_flagged_files": 4,
+    "quarantined_files": 15,
+    "scope": "Screen reconstructed test/source/docs/config files. Initial unrelated role samples and license notices are provenance evidence, not proposed training payload. Source family and near-duplicate graph remains partial. No execution, dependency closure or correctness approval."
+  },
+  "content_flags": [
+    {
+      "repository": "bootcamperscollective/coders-workshop",
+      "path": "Coding-Challenges/digitalRoot/README.md",
+      "benchmark_match_counts": {
+        "hellaswag": 1
+      }
+    },
+    {
+      "repository": "hibasalem/data-structures-and-algorithms",
+      "path": "javascript/17-tree-breadth-first/README.md",
+      "benchmark_match_counts": {
+        "mbppplus": 1
+      }
+    },
+    {
+      "repository": "hibasalem/data-structures-and-algorithms",
+      "path": "javascript/17-tree-breadth-first/package.json",
+      "benchmark_match_counts": {
+        "mbppplus": 1
+      }
+    },
+    {
+      "repository": "vbassini/typescript-data-structures",
+      "path": "data-structures/queue/README.md",
+      "benchmark_match_counts": {
+        "hellaswag": 1
+      }
+    }
+  ],
+  "review": {
+    "method": "Complete static reading of the 19 payload files and retained notices; no source execution or dependency installation. Observations are bounded examples, not population rates.",
+    "findings": {
+      "Python": "Four positive-number tests pass the expected number as assertTrue failure message, checking truthiness rather than equality; two type cases assert None. Needs independent output assertions.",
+      "JavaScript": "One balanced seven-node BFS fixture; implementation dereferences both children without guards, so single-node and sparse trees are unsupported. Static counterexamples, not execution results.",
+      "TypeScript": "Queue exercise with six test cases and resolved local type import; no independent correctness or practical repository-repair evidence.",
+      "Go": "MinInt(1,0) returns 0 by inspection but the supplied test expects 1. Contradictory test oracle despite no content flag."
+    },
+    "controls": {
+      "python_assertTrue_calls_with_two_arguments": 4,
+      "stdlib_assertTrue_signature": "(self, expr, msg=None)"
+    },
+    "decision": "Admit none. Stop selecting bundles on repository co-presence alone. Require semantic linkage, practical task coverage, independent oracles and source/family eligibility before execution or training."
+  },
+  "limits": [
+    "Conservative exact/fragment matches are not proof of semantic contamination; no hits are not proof of cleanliness.",
+    "All four examples are educational exercises, not an estimate of practical corpus coverage or source-wide defect rates.",
+    "Dependency closure, independent tests, complete family/near-duplicate exclusions and source-use review remain open.",
+    "A candidate train partition does not establish training admission."
+  ],
+  "next_step": "Pin expansion routes and measure eligible yield by language and practical role. Require explicit module/import/behavioral linkage and independent test oracles; prioritize library use, debugging and repository repair over more tiny algorithm exercises.",
+  "implementation": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/check_qualification.py",
+      "bytes": 3413,
+      "sha256": "c63decb4fbbc89c3e1304ba632fe1935b763a61d5a3d457b8dcd9f160628e286"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/speck/data/code_families.py",
+      "bytes": 4472,
+      "sha256": "83a6338b455ec1931330addaa98848ecf8f4d9507dbd67113661279a275491a1"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-inputs.json",
+      "bytes": 17164,
+      "sha256": "e7b2577f1e0fbed7824a002b3c32525ed97dde6b97685b704f04c390785a496c"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-rules.json",
+      "bytes": 3189,
+      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/code-supply.json",
+      "bytes": 18680,
+      "sha256": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/assessment.json",
+      "bytes": 12318,
+      "sha256": "dc3569812940c8f91869903de7dc75930d94737b7f7e9a1ff85086c88aa36391"
+    }
+  ],
+  "external_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/select.py",
+      "bytes": 2848,
+      "sha256": "8d9dd68b5e7c79aa83324616e6385533e3cf8e86275c4c3b174f4c7e9d5e71d5"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/selection.json",
+      "bytes": 10710,
+      "sha256": "ecb0b4edc9926c38ea12c945af4a0a62019219d86e24c4c78f22e05379669d45"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/acquire.py",
+      "bytes": 6363,
+      "sha256": "1244dfecddeb849997ebdfb3f37575f2d73ec729add3963a959340f96003374a"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/acquisition.json",
+      "bytes": 64658,
+      "sha256": "d4bdcd0ab5abeea9067a9734bbac196e61f0c6c3d2859687e1d97e3545b53c46"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/link_files.py",
+      "bytes": 2395,
+      "sha256": "7ab0340433fd679f443ef66f1de56f2b50d15af62877984624e16b1e3063db14"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/linked-files.json",
+      "bytes": 8014,
+      "sha256": "be0caed4040ce5987d7574151f8bdaa75b2e37a02f882998ac72327cc6dae3f2"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/audit.py",
+      "bytes": 6189,
+      "sha256": "324c04e75fd52dd86db05c56c4fbd09c8661ec9abfa2f6ab80027ce5e7be13fd"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/candidate-records.json",
+      "bytes": 29005,
+      "sha256": "5e2ed55e38591b9d4dad2c80b0d442660a704ac7d95a7b0e7a1afaa42f470a99"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/result.json",
+      "bytes": 18010,
+      "sha256": "022b344927704974fbcad7fdd3f51babe27e161a707734f6ac580ed31d7a4d15"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/review.json",
+      "bytes": 1271,
+      "sha256": "2e6dc321be9711074a7a65fee887fecfb3ce648b1d3077ad9317674a1c0aaf79"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/validation.json",
+      "bytes": 624,
+      "sha256": "2ec76ea668b331a112a43f80e71724b69b01e3a8c652376b30178b1d88374f76"
+    }
+  ],
+  "offline_replay": {
+    "command": "PYTHONPATH=. .venv/bin/python /mnt/speck-data/speck/data-qualification-20260919/code-bundles/audit.py",
+    "result_and_candidate_records_byte_identical": true,
+    "scope": "Requires retained external artifacts and pinned project dependencies. Verifies input/source/tree/tokenizer/benchmark identities and reproduces linkage accounting and exclusions. Static review is not automated correctness approval."
+  }
+}

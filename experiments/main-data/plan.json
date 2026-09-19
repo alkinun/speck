@@ -71,7 +71,7 @@
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
         "stretch_exposure_tokens": 120000000000,
-        "qualification_priority": "Complete retained Stack-Edu census: 714369 files / 476774847 tokens before joint eligibility; no populated commit fields and at least 123 files under known benchmark/content-family holds. Qualify immutable implementation/test/docs bundles and pin expansion routes with measured eligible yield by language. No main training admission; retained stock is under 0.5% of proposed natural-code exposure."
+        "qualification_priority": "Retained census: 714369 files / 476774847 tokens before joint eligibility; missing commits and at least 123 known family-held files. Four-repository bundle follow-up: 19 linked files / 5650 tokens, 15 family-quarantined; static test weaknesses, no execution or admission. Pin expansion routes and eligible yield by language/practical role with explicit linkage and independent oracles. Retained stock is under 0.5% of proposed natural-code exposure."
       },
       {
         "id": "checked_code",
@@ -369,7 +369,8 @@
     "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
     "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
     "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
-    "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe"
+    "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
+    "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

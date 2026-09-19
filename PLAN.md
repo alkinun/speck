@@ -55,6 +55,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Development scoring | 2,619 tasks in 2.12 evaluation hours: GSM8K strict 0/253, compiled code pass@1 0/33, IFEval strict prompts 12/101, ARC normalized 44/222, HellaSwag normalized 530/2,010 | [Results](experiments/pilot/development-result.json); weak base capability, custom subsets, no final-partition scoring |
 | Backup closeout | Eight model/optimizer checkpoints, both exports, evaluation outputs and recovery logs retained locally | [Backup receipt](experiments/pilot/backup-result.json); pilot closed, no further rental work needed; provider billing/stop state not verified |
 | Natural-code supply | All 1,999 retained archives reopened; 714,369 files / 476,774,847 retokenized tokens; 123 files under known benchmark/family holds | [Census](experiments/corpus-audit/code-supply.json), [lineage cohort](experiments/corpus-audit/natural-code-cohort.json); no new training admissions; stock covers under 0.5% of proposed natural-code exposure |
+| Code bundle linkage | Four pinned repositories; 19 linked files / 5,650 tokens; four content flags hold 15 files by family | [Receipt](experiments/corpus-audit/code-bundles.json); static test weaknesses, no execution or admission; repository co-presence alone is insufficient |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -82,8 +83,10 @@ historical; do not repeat the completed pilot because a preparation document sti
    recovers all three matching captures and compares frozen flags on 32 fresh documents. Keep
    flags review-only and the HQ cutoff unchanged. The [code census](experiments/corpus-audit/code-supply.json)
    now reconciles both retained acquisition batches and records role hints, missing commit fields
-   and partial exclusion coverage. Next, qualify immutable implementation/test/docs bundles and
-   pin expansion routes with measured eligible yield by language; the proposed 96B natural-code
+   and partial exclusion coverage. The [bundle follow-up](experiments/corpus-audit/code-bundles.json)
+   now resolves four pinned examples, exposing weak test oracles and limited practical coverage.
+   Next, pin expansion routes with measured eligible yield by language and practical role;
+   require linked modules and independent tests. The proposed 96B natural-code
    exposure is not supported by 0.477B retained tokens. Close supply feasibility before bulk
    packing. Web source-use, family/near-duplicate exclusions and usable-token counts remain
    open. Acquire DCLM originals for a concrete remaining coverage question; keep synthetic L3

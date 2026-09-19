@@ -7,6 +7,11 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
+- The [immutable bundle follow-up](../corpus-audit/code-bundles.json) recovers 19 linked files /
+  5,650 tokens across four repositories. Four content flags propagate to 15 quarantined files.
+  Static review finds weak Python assertions and a contradictory Go test expectation; the Go
+  candidate partition is not admission. No corpus code ran. Co-presence alone fails as a bundle
+  criterion; practical coverage, explicit linkage and independent oracles are the next gates.
 - The [retained-code census](../corpus-audit/code-supply.json) reopens all 1,999 v1/v2 archives,
   reproducing 714,369 files / 476,774,847 tokens. It records role hints and named-repository
   co-presence, with no populated commit fields. The twelve benchmark names hold 84 files;
@@ -89,10 +94,10 @@ a fresh blind evaluation set.
 ## Next bounded data packet
 
 Reuse retained packets and current receipts rather than repeating the same spot checks. The web
-diagnosis and full retained-code census are complete. Next, qualify immutable implementation/test/docs
-bundles from named co-presence candidates and pin expansion routes with measured eligible yield by
-language. The proposed code horizon needs substantially more qualified supply. Remaining source
-comparisons are:
+diagnosis, full retained-code census and four-repository bundle follow-up are complete. Next, pin
+expansion routes with measured eligible yield by language and practical role, using explicit
+source/test/docs linkage and independent oracles. The proposed code horizon needs substantially
+more qualified supply. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |

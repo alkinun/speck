@@ -252,6 +252,38 @@ PYTHONPATH=. .venv/bin/python experiments/corpus-audit/audit_code_supply.py summ
 The summary replays byte-for-byte. Use `scan` with a fresh external output directory to reopen and
 retokenize all archives. Raw text, paths and the detailed inventory remain outside Git.
 
+## Immutable bundle follow-up — 2026-09-19
+
+The [bounded receipt](../experiments/corpus-audit/code-bundles.json) follows four new repositories
+from the census, one each for Python, JavaScript, TypeScript and Go. Selection used frozen hash
+ranks and 100–3,000-token role candidates, excluding known held and previously reviewed families.
+At each recovered test revision, only seven of twelve original role-selected files match retained
+bytes; only the Python triplet matches completely, and its files concern different exercises.
+The search covered at most five test-path commits per repository, not every possible revision.
+Repository co-presence is therefore insufficient evidence of a coherent bundle.
+
+Following test imports and related documentation recovers **19 files / 5,650 Mistral tokens**,
+including BOS/EOS, at four immutable revisions. Complete Git trees bind their blob identities.
+All four repositories have retained MIT notices; that does not complete source-use approval.
+GitHub fork metadata connects the TypeScript repository to `trungvose/typescript-data-structures`.
+The existing 22-lane exclusion screen flags four files; family propagation quarantines 15.
+These are conservative matches, not proof of semantic contamination.
+
+| Language | Payload files | Static finding | Exclusion outcome |
+| --- | ---: | --- | --- |
+| Python | 3 | Four positive-number tests use `assertTrue(actual, expected)`, which checks truthiness and treats the second argument as a failure message | Whole family held |
+| JavaScript | 6 | A balanced-tree fixture misses unguarded child dereferences for single-node/sparse trees | Whole family held |
+| TypeScript | 6 | Queue exercise with six test cases and a resolved local type import; no independent correctness result | Whole family held |
+| Go | 4 | Supplied test expects `MinInt(1, 0) == 1`, contradicting the implementation's return of 0 | No content flag; still unqualified |
+
+No corpus code ran, no dependencies were installed, and **nothing is admitted**. The Go
+`train` candidate partition is only a splitter output, not an eligibility decision. All four
+examples are educational exercises; this small selection cannot estimate corpus defect rates or
+establish practical API/debugging/repair coverage. Dependency closure and independent tests remain
+open. Initial unrelated role samples and license notices are provenance evidence, outside the
+proposed payload screen. Raw files, complete responses, review and byte-identical offline replay
+remain under `/mnt/speck-data/speck/data-qualification-20260919/code-bundles`.
+
 ## Data work to do next
 
 1. Freeze broader code-evaluation exclusions and family separation before exercise derivation;
@@ -259,10 +291,12 @@ retokenize all archives. Raw text, paths and the detailed inventory remain outsi
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.
-2. Use the complete retained census to qualify a bounded set of immutable implementation/test/docs
-   bundles from named co-presence candidates, excluding known held components first. Pin expansion
-   routes and measure eligible yield by language before larger acquisition or freezing the main
-   horizon. Algorithm puzzles alone do not cover practical coding.
+2. Pin expansion routes and measure eligible yield by language and practical role before larger
+   acquisition or freezing the main horizon. The bounded bundle follow-up is complete: require
+   explicit module/import/behavioral linkage and independent test oracles, not just co-present
+   filenames. Prioritize library use, debugging and repository repair over more tiny algorithm
+   exercises; apply known family holds before selection. Algorithm puzzles alone do not cover
+   practical coding.
 3. Validate the Python lane first, using the existing non-root, isolated, resource-limited runner.
    Check task/solution consistency, dependencies, test discovery, empty or vacuous tests, and
    deliberately incorrect solutions. Add independently checked edge cases: generated solutions

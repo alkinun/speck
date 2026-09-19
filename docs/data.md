@@ -99,7 +99,10 @@ The bounded practical CPU checks are complete in [coding](coding.md). The subseq
 476,774,847 tokens across both acquisition batches. No commit fields are populated; test/docs
 co-presence is not same-version linkage. Existing benchmark/content-family evidence holds at
 least 123 files. This stock is under 0.5% of proposed natural-code exposure before joint eligibility;
-it is not a checked-exercise bank or evidence of full-release supply. The
+it is not a checked-exercise bank or evidence of full-release supply. The subsequent
+[bundle follow-up](../experiments/corpus-audit/code-bundles.json) recovers 19 linked files at four
+pinned revisions; family exclusions hold 15, and static test weaknesses prevent treating the
+remainder as qualified exercises. No corpus code ran or new data entered training. The
 [qualification packet](../experiments/main-data/QUALIFICATION.md) now owns the next exclusion,
 family-separation and comparable source-review work; no main corpus is admitted.
 
@@ -153,7 +156,7 @@ endpoint, not a causal verdict on its datasets or architecture.
 | Component | Evidence already available | Decision |
 | --- | --- | --- |
 | FineWeb-Edu, FineMath 4+, Cosmopedia v2, peS2o, FineWiki | Retained stocks, pilot preparation, index census and stratified excerpt audit | Keep useful content and controls; improve selection rather than discard all existing stock |
-| Stack-Edu | Full retained census: 714,369 files / 476.8M tokens; role/linkage gaps and known family holds measured; bounded execution checks | Qualify immutable bundles, expanded exclusions and language-specific expansion yield |
+| Stack-Edu | Full retained census: 714,369 files / 476.8M tokens; four-repository linkage follow-up and bounded earlier execution checks | Measure expansion yield by language/practical role; require explicit linkage, independent tests and family exclusions |
 | Natural Ultra-FineWeb | HQ inventory, twelve-shard census, stratified review and matching-capture extraction follow-up complete | Qualification candidate; no stricter cutoff or automatic review-flag rejection |
 | DCLM baseline / DCLM-Edu | Pinned partial-viewer schema/content previews; score predicates distinguished | Source-file evidence needed for concrete coverage decisions; no local quality ranking |
 | Ultra-FineWeb-L3 | 96 retained Q&A/multi-style records, length measurements and eight excerpt reviews | Promising synthetic component; check source/answer consistency before replacing Cosmopedia |
@@ -210,8 +213,9 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Use the completed retained-code census to qualify immutable implementation/test/docs bundles
-   and pin expansion routes with measured eligible yield by language. The 0.477B retained tokens
+1. Use the completed census and bundle follow-up to pin expansion routes with measured eligible
+   yield by language and practical role. Require source/test/docs linkage and independent oracles;
+   repository co-presence alone is insufficient. The 0.477B retained tokens
    do not establish the proposed 96B natural-code exposure or the separate checked-exercise bank.
    For web, resolve source-use evidence, source families, overlap and source-aware extraction
    repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ
