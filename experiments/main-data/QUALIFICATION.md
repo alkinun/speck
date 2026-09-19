@@ -11,8 +11,14 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   tokens, selected deterministically from six shared languages and currently unheld <=4K files.
   It verifies 28 of 30 requested originals and ancestor notices for 21 files. Nine Stack v3
   transformations are explained; one breaks Python syntax, and one original is unavailable.
-  A separate Stack-Edu repository lookup returned 404. The original 218-file cohorts stay intact;
-  194 records are outside this reading batch. No eligible yield, source ranking or admission follows.
+  A separate Stack-Edu repository lookup returned 404. The
+  [Python follow-up](../corpus-audit/python-cohort-validation.json) adds twelve readings / 20,218
+  tokens, completing all 16 initially unheld Python files and bringing common coverage to 36 files.
+  Eleven of twelve follow-up originals are Git-verified; one additional lookup returned 404.
+  Fourteen diagnostic controls pass on each of two Python versions. Two sampled GoLLIE records
+  gain family-review holds after a previously unflagged evaluation fixture was encountered.
+  These examples are exposed material; record that when freezing final scoring coverage.
+  All 218 original records/weights stay intact. No eligible yield, source ranking or admission follows.
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
@@ -117,18 +123,23 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. The first common reading batch is complete; continue
-the remaining unheld records with the same origin/notice, intended-use, content and family gates.
+Reuse retained packets and current receipts. Common full-read coverage now includes 36 records;
+continue the 142 currently unheld records outside that coverage with the same origin/notice,
+intended-use, content and family gates. Carry GoLLIE's two new holds into alias/derivative review
+before further selection. Resolve upstream attribution/version/deduplication for the three vendored
+Python dependencies; ancestor notices alone do not establish applicability.
 Held records stay in their original denominators; do not replace them or expose held-out task text.
 The external assessment retains every original identity/weight, observed token count, existing
 hold and unresolved outcome. Resolve conservative matches and source-family links before admission;
 natural code does not require independent tests, while claimed verified exercises do.
 
-The redaction-induced syntax failure requires a transformation-aware content check with explicit
-positive/negative controls before adopting a general filter. Preserve original notices and consumed
-identities; do not repair samples by silently restoring redacted source text. A parser success is not
-proof of behavioral equivalence or correctness, and low-information examples need a declared
-selection rule rather than ad hoc removal.
+The pair-aware Python diagnostic passes fourteen controls on each of CPython 3.10.20 and 3.14.6;
+it confirms the known redaction-induced syntax failure but is not a general content filter.
+Require a verified parseable original and exact placeholder-only changes before assigning that
+diagnosis. Preserve notices and consumed identities; do not restore redacted source text.
+Parser success cannot validate runtime behavior, embedded doctests, redacted assertion meaning
+or contamination. Legacy syntax and intentionally invalid fixtures need context. Low-information
+examples need a declared selection rule rather than ad hoc removal.
 
 Report each cohort against its own sampling frame and weights. The retained Stack-Edu and release
 Stack v3 samples do not support raw pass-percentage comparisons or pooled eligible yield.

@@ -355,5 +355,10 @@ Its external manifest binds acquisition, selection and screen artifacts with exa
 The [common review](code-cohort-review.json) adds 24 full-text readings and 30 bounded origin
 checks, with 28 Git-verified originals. Nine Stack v3 transformations are explained; one breaks
 Python syntax and one original is unavailable. All original cohorts and weights remain intact.
+The [Python follow-up](python-cohort-validation.json) adds twelve full readings, bringing common
+coverage to 36 files and completing all 16 initially unheld Python records. It verifies eleven
+additional requested originals (one was also checked previously), records two new GoLLIE family
+holds and checks fourteen syntax controls on each of two Python versions. The diagnostic is not
+a bulk eligibility filter; 142 currently unheld files remain outside common full-read coverage.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from this restricted batch.

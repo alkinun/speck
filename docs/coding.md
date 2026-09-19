@@ -224,8 +224,31 @@ a proprietary/confidential-looking template header requiring notice review, a li
 project stub. These are individual findings, not comparable corpus defect rates or a source ranking.
 No code ran, verified exercise was established or training data admitted.
 
-**Next:** review remaining unheld records without replacing held selections, resolve notices and family
-exclusions, and validate a transformation-aware content rule on fixed controls before bulk packing.
+The [Python follow-up](../experiments/corpus-audit/python-cohort-validation.json) reads the remaining
+12 initially unheld Python files at all lengths: **20,218 additional tokens**, bringing common review
+coverage to **36 files / 38,827 tokens**. All 16 Python files unheld at selection time are now read;
+the nine previously held Python files remain held. Eleven of twelve requested originals are
+Git-verified and nine have ancestor notices. One additional Stack-Edu repository lookup returned
+404 and remains unresolved. Three files are vendored packages whose upstream attribution,
+versions and duplicate families require separate review; a root/ancestor notice does not settle this.
+
+A GoLLIE test contains evaluation examples missed by the earlier screen. Both sampled GoLLIE
+records now have a family-review hold pending alias/derivative and intended-evaluation coverage
+checks. The encountered examples are exposed material, not blind evaluation evidence; do not
+inspect more task text to tune filters or claim the frozen earlier screen was comprehensive.
+
+An external, pair-aware diagnostic passes **14 synthetic controls on each of CPython 3.10.20 and
+3.14.6**. Both versions report thirteen unchanged parseable pairs, one changed parseable pair,
+the known syntax-damaged pair and one unavailable original across those 16 Python records.
+Only a verified parseable original, exact changes confined to declared placeholder spans, and a
+failing consumed parse establish introduced syntax damage. Comments, quoted markers, legacy
+syntax, deliberately invalid fixtures and missing originals have distinct review outcomes.
+Parsing cannot check runtime behavior, embedded doctests or redacted assertion meaning. This
+diagnostic remains an audit tool; no bulk filter or training admission follows. Offline replay is
+byte-identical and rejects a corrupted cache copy; recorded judgments are not independent labels.
+
+**Next:** review the **142 currently unheld records** outside common full-read coverage, carry new
+family holds forward, and resolve notice/dependency attribution without replacing selections.
 Keep natural-code eligibility separate from independent exercise verification. The retained 0.477B
 code stock supports at most **1.59B total one-pass tokens at 30% natural code**, before exclusions,
 validation and other bank constraints. Qualified supply must set the experiment horizon alongside

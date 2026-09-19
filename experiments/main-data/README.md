@@ -340,8 +340,10 @@ separates inputs available for detailed design from the requirements for launchi
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
    Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
-   [24-file common review](../corpus-audit/code-cohort-review.json). Resolve source-use/family gates
-   and validate transformation-aware content checks; one redaction breaks executable syntax.
+   [Python follow-up](../corpus-audit/python-cohort-validation.json): common full-read coverage is
+   36 files, with 142 currently unheld files still outside it. Carry two new GoLLIE holds forward
+   and resolve vendored-package attribution. The controlled syntax diagnostic confirms one
+   redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
 3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
    distinct from merely well-formed text. Measure source overlap and complete-document lengths.
