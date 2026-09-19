@@ -204,8 +204,8 @@ can represent the same underlying information. Review source-use evidence per co
    and mixed-page boundaries, then compare extraction/template checks with retained FineWeb-Edu.
    Resolve source-use evidence, source families and overlap before counting accepted unique tokens.
    Keep the score cutoff unfrozen; the audit measures document/byte retention, not token yield.
-   Extend DCLM's partial-viewer
-   previews into comparable source-file evidence before freezing allocations; neither the default
+   Extend DCLM's partial-viewer previews into comparable source-file evidence before freezing
+   allocations; neither the default
    UltraFineWeb split nor a stricter score cutoff inherits HQ's provenance or a quality advantage.
 2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including
    useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,

@@ -75,12 +75,12 @@ historical; do not repeat the completed pilot because a preparation document sti
    The 16-row UltraData-Code L3 preview remains held for lineage.
 2. **Qualify the data recipe.** The [bounded web inspection](experiments/corpus-audit/NATURAL_WEB.md)
    prioritizes newer UltraFineWeb HQ for its page/WARC metadata, with FineWeb-Edu as control;
-   the [full HQ inventory and DCLM previews](experiments/corpus-audit/WEB_INVENTORY_DCLM.md) are
+   the [full HQ inventory and DCLM previews](experiments/corpus-audit/WEB_INVENTORY_DCLM.md)
    now include the completed 12-shard census (290,761 documents), 192-record stratified sample and
    24-document/excerpt review. Recover source context for the identified missing-graphic/list and
    mixed-page cases, then test extraction/template checks against FineWeb-Edu; no stricter score
-   cutoff is selected. Keep DCLM as an independent coverage candidate and synthetic L3 separate. Review math correctness and
-   source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work
+   cutoff is selected. Keep DCLM as an independent coverage candidate and synthetic L3 separate.
+   Review math correctness and source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work
    one bounded packet at a time; close code supply feasibility before bulk packing.
 3. **Prepare the single-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
