@@ -30,7 +30,14 @@ so its non-embedding count is approximately 1.130B, unlike some nominally simila
 
 ## Recommendation
 
-Keep 1.2B as the from-scratch research candidate; no evidence currently justifies shrinking it to
+The clarified objective is to develop SpeckLabs' first architecture and competitive flagship,
+including its pretraining and post-training. The [architecture program](architecture-program.md)
+sets the starting hypothesis, a bounded all-GQA control and distinct token/FLOP/runtime efficiency
+measurements. Open reporting and reusable infrastructure support this objective; they are not
+substitutes for model quality. Treat the current hybrid as a candidate we can improve, not a frozen
+architecture whose only open question is how many tokens to train.
+
+Keep 1.2B as the initial from-scratch flagship candidate; no evidence currently justifies shrinking it to
 improve target-task performance at fixed compute. Equally, larger capacity does not prove superiority
 over a smaller model trained longer. Do not select a size to enter an easier comparison bracket.
 
@@ -71,7 +78,8 @@ horizon, measured budget reallocation or more compute; it cannot justify a quali
    broad parity requires broad results. Passing a schema or nominal context limit is insufficient.
 4. Assess the optimized runtime, eligible corpus and bounded learning evidence together. An early
    checkpoint comparison can reject a poor route but cannot promise the final ranking. Charge
-   qualification/comparison work to existing reservations and avoid an architecture sweep.
+   qualification/comparison work to existing reservations. Prioritize one costed architecture control
+   rather than a broad sweep; it competes with the existing data comparison for the same envelope.
 
 ## SpeckLabs first-step objective
 

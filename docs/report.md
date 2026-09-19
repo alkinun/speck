@@ -57,6 +57,12 @@ checkpointing, recurrent state and attention cache, and supported export/runtime
 Relevant foundations include [Kimi Linear](https://arxiv.org/abs/2510.26692),
 [MiniCPM](https://arxiv.org/abs/2404.06395), and the sources in [research notes](research.md).
 Separate inherited methods from the project's own measurements and implementation choices.
+The [architecture comparison brief](architecture-program.md) defines the evidence to support design
+choices. Report equal-token, equal-FLOP and equal-wall-time comparisons separately; they are not
+interchangeable. Include the conventional GQA control only if actually run, and disclose its geometry,
+optimizer policy, implementation effort and evaluation horizon. Show quality-versus-cost curves,
+not an isolated throughput ratio or accuracy/FLOPs quotient. Attribute architecture, data and
+post-training improvements only through the relevant controlled comparison.
 
 ## 3. Data and training
 
