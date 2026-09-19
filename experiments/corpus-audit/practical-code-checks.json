@@ -1,0 +1,918 @@
+{
+  "format_version": 1,
+  "status": "bounded_cpu_checks_complete_not_training_admission",
+  "training_admitted": false,
+  "replay_artifacts": [
+    {
+      "name": "controls",
+      "exit_code": 0,
+      "seconds": 1.199,
+      "artifacts": [
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/controls.py",
+          "sha256": "0c2a1bb8a452f718533145fb63ed1b921191619f741e87444253e6624a90d5ff",
+          "bytes": 5126
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/controls.stdout",
+          "sha256": "1fb5dd7a1b89b3e502040de5fd1c89fe0e09d3982cb57cd74bf5a99aec88aefe",
+          "bytes": 603
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/controls.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "frans",
+      "exit_code": 0,
+      "seconds": 5.924,
+      "artifacts": [
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/frans.py",
+          "sha256": "1617f96c5392efea7e0964b59c3def07d38e257c64f847e7fe9ab55b7ff27afc",
+          "bytes": 9862
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/frans.stdout",
+          "sha256": "7cea5af220e908d948762608dcada9a2f90ec74835812faa2cb041a0b4f1cfdf",
+          "bytes": 6668
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/frans.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "validate_task_queue",
+      "exit_code": 0,
+      "seconds": 16.332,
+      "artifacts": [
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/validate_task_queue.py",
+          "sha256": "6cf525bc57184ca8f0dae3f8d26817daa3955337c189f94d411c4c875dda03b1",
+          "bytes": 9739
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/validate_task_queue.stdout",
+          "sha256": "c53e3b15feb4c5355b7000f5a68170a13fa88ccd179dbe57c1348e65d6bc264f",
+          "bytes": 4118
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/validate_task_queue.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "coverage",
+      "exit_code": 0,
+      "seconds": 5.971,
+      "artifacts": [
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/coverage.py",
+          "sha256": "6d3126a9d5f58aa4243f9b95927c4f79b7eac516cca1e0f33c62b9a8be048e44",
+          "bytes": 4712
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/coverage.stdout",
+          "sha256": "e658fba7b67328e1b104ec060b37df115fad532e97514bc5422e9d9f8f164448",
+          "bytes": 14475
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/coverage.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "python-examples",
+      "exit_code": 0,
+      "seconds": 1.285,
+      "artifacts": [
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/python-examples.py",
+          "sha256": "a4553d21f5d31d2f87999a92d6c44623c3f705be48b0fd3ebd53e729212f2040",
+          "bytes": 8912
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/python-examples.stdout",
+          "sha256": "74736b424e62414ec6595000f358b2f96c34086d0264c5c775271a4c439fb247",
+          "bytes": 5054
+        },
+        {
+          "path": "/mnt/speck-data/speck/data-qualification-20260919/python-examples.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    }
+  ],
+  "source_linkage_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/js-lineage.jsonl",
+      "bytes": 26333,
+      "sha256": "54a0be843f68f840e1c43fea9f912d9517fad3f720e8d8f8b722a7a2eef78b72"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/js-linked-files.jsonl",
+      "bytes": 7886,
+      "sha256": "1906f0c429bbfae86d3c1e45a29209751815f911c83d0080d6ce7eaf187e6ad5"
+    }
+  ],
+  "checks": {
+    "frans": [
+      {
+        "label": "supplied_tests_adapted",
+        "ordinal": null,
+        "status": "pass",
+        "pass": 4,
+        "failed": 0,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "independent",
+        "ordinal": null,
+        "status": "pass",
+        "pass": 8,
+        "failed": 0,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION always_true",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 3,
+        "failed": 5,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION empty_false",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 6,
+        "failed": 2,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION no_short_circuit",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 5,
+        "failed": 3,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION dependency_skips_last",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 4,
+        "failed": 4,
+        "proposed_policy_checks": 0
+      }
+    ],
+    "validate_task_queue": [
+      {
+        "label": "ORIGINAL",
+        "ordinal": null,
+        "status": "pass",
+        "pass": 6,
+        "failed": 0,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION concurrent_start",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 4,
+        "failed": 2,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION reverse_pending_order",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 4,
+        "failed": 2,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION swallowed_rejection",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 5,
+        "failed": 1,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "PROPOSED_ROBUSTNESS_POLICY",
+        "ordinal": null,
+        "status": "failed",
+        "pass": 0,
+        "failed": 1,
+        "proposed_policy_checks": 0
+      }
+    ],
+    "python-examples": [
+      {
+        "label": "SOURCE_CHECKS",
+        "ordinal": 29,
+        "status": "complete",
+        "pass": 4,
+        "failed": 1,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "SOURCE_CHECKS",
+        "ordinal": 50,
+        "status": "complete",
+        "pass": 14,
+        "failed": 3,
+        "proposed_policy_checks": 3
+      },
+      {
+        "label": "SOURCE_CHECKS",
+        "ordinal": 64,
+        "status": "complete",
+        "pass": 5,
+        "failed": 6,
+        "proposed_policy_checks": 4
+      },
+      {
+        "label": "MUTATION_REJECTED",
+        "ordinal": 29,
+        "status": "complete",
+        "pass": 0,
+        "failed": 1,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION_REJECTED",
+        "ordinal": 50,
+        "status": "complete",
+        "pass": 0,
+        "failed": 1,
+        "proposed_policy_checks": 0
+      },
+      {
+        "label": "MUTATION_REJECTED",
+        "ordinal": 64,
+        "status": "complete",
+        "pass": 0,
+        "failed": 1,
+        "proposed_policy_checks": 0
+      }
+    ]
+  },
+  "coverage": [
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "C",
+        "archive_units_available": 102,
+        "sampled_units": [
+          "stack_edu_metadata__C__eligible_000011264",
+          "stack_edu_metadata__C__eligible_000018944",
+          "stack_edu_metadata__C__eligible_000031744",
+          "stack_edu_metadata__C__eligible_000045056"
+        ],
+        "counts": {
+          "documents": 1481,
+          "tokens": 841210,
+          "origin_repo_and_path": 1481,
+          "commit_populated": 0,
+          "license_label_present": 1481,
+          "vendor_path": 0,
+          "test_path": 24,
+          "doc_example_path": 24,
+          "generated_header_hint": 0,
+          "over_4k": 7,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1204,
+          "max_tokens": 9065,
+          "p50_tokens": 385,
+          "p90_tokens": 1173,
+          "p99_tokens": 2972
+        },
+        "score_labels": {
+          "4": 1443,
+          "5": 38
+        },
+        "top_named_repos": [
+          [
+            "qeedquan/challenges",
+            55
+          ],
+          [
+            "elsys/po-homework-2015-1",
+            8
+          ],
+          [
+            "bhishanpdl/programming",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "Cpp",
+        "archive_units_available": 303,
+        "sampled_units": [
+          "stack_edu_metadata__Cpp__eligible_000020480",
+          "stack_edu_metadata__Cpp__file_1__eligible_000004608",
+          "stack_edu_metadata__Cpp__file_2__eligible_000020992",
+          "stack_edu_metadata__Cpp__file_3__eligible_000011264"
+        ],
+        "counts": {
+          "documents": 1509,
+          "tokens": 1033286,
+          "origin_repo_and_path": 1509,
+          "commit_populated": 0,
+          "license_label_present": 1509,
+          "vendor_path": 0,
+          "test_path": 25,
+          "doc_example_path": 27,
+          "generated_header_hint": 2,
+          "over_4k": 13,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1241,
+          "max_tokens": 10196,
+          "p50_tokens": 506,
+          "p90_tokens": 1240,
+          "p99_tokens": 3731
+        },
+        "score_labels": {
+          "4": 1506,
+          "5": 3
+        },
+        "top_named_repos": [
+          [
+            "adityanjr/code-ds-algo",
+            11
+          ],
+          [
+            "shoaibrayeen/programmers-community",
+            7
+          ],
+          [
+            "sureshmangs/code",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "Go",
+        "archive_units_available": 83,
+        "sampled_units": [
+          "stack_edu_metadata__Go__eligible_000007680",
+          "stack_edu_metadata__Go__eligible_000018944",
+          "stack_edu_metadata__Go__eligible_000024064",
+          "stack_edu_metadata__Go__eligible_000039424"
+        ],
+        "counts": {
+          "documents": 1652,
+          "tokens": 989471,
+          "origin_repo_and_path": 1652,
+          "commit_populated": 0,
+          "license_label_present": 1652,
+          "vendor_path": 0,
+          "test_path": 120,
+          "doc_example_path": 35,
+          "generated_header_hint": 3,
+          "over_4k": 5,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1412,
+          "max_tokens": 6565,
+          "p50_tokens": 441,
+          "p90_tokens": 1106,
+          "p99_tokens": 2950
+        },
+        "score_labels": {
+          "4": 1643,
+          "5": 9
+        },
+        "top_named_repos": [
+          [
+            "qeedquan/challenges",
+            24
+          ],
+          [
+            "harkhuang/harkcode",
+            7
+          ],
+          [
+            "codefreezr/gobyes",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "Java",
+        "archive_units_available": 264,
+        "sampled_units": [
+          "stack_edu_metadata__Java__eligible_000005120",
+          "stack_edu_metadata__Java__file_3__eligible_000011264",
+          "stack_edu_metadata__Java__file_5__eligible_000000512",
+          "stack_edu_metadata__Java__file_7__eligible_000011264"
+        ],
+        "counts": {
+          "documents": 1232,
+          "tokens": 718482,
+          "origin_repo_and_path": 1232,
+          "commit_populated": 0,
+          "license_label_present": 1232,
+          "vendor_path": 0,
+          "test_path": 22,
+          "doc_example_path": 23,
+          "generated_header_hint": 21,
+          "over_4k": 2,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1085,
+          "max_tokens": 8675,
+          "p50_tokens": 468,
+          "p90_tokens": 1027,
+          "p99_tokens": 2284
+        },
+        "score_labels": {
+          "4": 1228,
+          "5": 4
+        },
+        "top_named_repos": [
+          [
+            "balajiboggaram/algorithms",
+            7
+          ],
+          [
+            "usmanqd/leetcode",
+            6
+          ],
+          [
+            "prdp89/interview",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "JavaScript",
+        "archive_units_available": 321,
+        "sampled_units": [
+          "stack_edu_metadata__JavaScript__eligible_000034816",
+          "stack_edu_metadata__JavaScript__file_1__eligible_000011264",
+          "stack_edu_metadata__JavaScript__file_2__eligible_000011776",
+          "stack_edu_metadata__JavaScript__file_2__eligible_000050688"
+        ],
+        "counts": {
+          "documents": 1480,
+          "tokens": 834223,
+          "origin_repo_and_path": 1480,
+          "commit_populated": 0,
+          "license_label_present": 1480,
+          "vendor_path": 0,
+          "test_path": 38,
+          "doc_example_path": 25,
+          "generated_header_hint": 1,
+          "over_4k": 3,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1323,
+          "max_tokens": 5038,
+          "p50_tokens": 370,
+          "p90_tokens": 1187,
+          "p99_tokens": 2997
+        },
+        "score_labels": {
+          "4": 1386,
+          "5": 94
+        },
+        "top_named_repos": [
+          [
+            "bgoonz/usefulresourcerepo2.0",
+            18
+          ],
+          [
+            "zhang1pr/leetcode.js",
+            10
+          ],
+          [
+            "automedon/codewars",
+            9
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "Markdown",
+        "archive_units_available": 5,
+        "sampled_units": [
+          "stack_edu_metadata__Markdown__eligible_000000000",
+          "stack_edu_metadata__Markdown__eligible_000000512",
+          "stack_edu_metadata__Markdown__eligible_000001024",
+          "stack_edu_metadata__Markdown__eligible_000001536"
+        ],
+        "counts": {
+          "documents": 1025,
+          "tokens": 957572,
+          "origin_repo_and_path": 1025,
+          "commit_populated": 0,
+          "license_label_present": 1025,
+          "vendor_path": 0,
+          "test_path": 8,
+          "doc_example_path": 986,
+          "generated_header_hint": 4,
+          "over_4k": 18,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 930,
+          "max_tokens": 17555,
+          "p50_tokens": 640,
+          "p90_tokens": 1908,
+          "p99_tokens": 4692
+        },
+        "score_labels": {
+          "4": 1021,
+          "5": 4
+        },
+        "top_named_repos": [
+          [
+            "bgoonz/usefulresourcerepo2.0",
+            10
+          ],
+          [
+            "javadev/leetcode-in-java",
+            8
+          ],
+          [
+            "stdstring/leetcode",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "Python",
+        "archive_units_available": 599,
+        "sampled_units": [
+          "stack_edu_metadata__Python__eligible_000004608",
+          "stack_edu_metadata__Python__file_1__eligible_000050176",
+          "stack_edu_metadata__Python__file_1__eligible_000077824",
+          "stack_edu_metadata__Python__file_2__eligible_000034816"
+        ],
+        "counts": {
+          "documents": 1410,
+          "tokens": 825168,
+          "origin_repo_and_path": 1410,
+          "commit_populated": 0,
+          "license_label_present": 1410,
+          "vendor_path": 2,
+          "test_path": 37,
+          "doc_example_path": 21,
+          "generated_header_hint": 7,
+          "over_4k": 10,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1304,
+          "max_tokens": 8396,
+          "p50_tokens": 352,
+          "p90_tokens": 1188,
+          "p99_tokens": 3465
+        },
+        "score_labels": {
+          "4": 1360,
+          "5": 50
+        },
+        "top_named_repos": [
+          [
+            "erjan/coding_exercises",
+            7
+          ],
+          [
+            "qeedquan/challenges",
+            6
+          ],
+          [
+            "bgoonz/usefulresourcerepo2.0",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "Rust",
+        "archive_units_available": 74,
+        "sampled_units": [
+          "stack_edu_metadata__Rust__eligible_000007168",
+          "stack_edu_metadata__Rust__eligible_000012800",
+          "stack_edu_metadata__Rust__eligible_000025088",
+          "stack_edu_metadata__Rust__eligible_000034304"
+        ],
+        "counts": {
+          "documents": 1800,
+          "tokens": 2552524,
+          "origin_repo_and_path": 1800,
+          "commit_populated": 0,
+          "license_label_present": 1800,
+          "vendor_path": 0,
+          "test_path": 17,
+          "doc_example_path": 35,
+          "generated_header_hint": 7,
+          "over_4k": 105,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1479,
+          "max_tokens": 23588,
+          "p50_tokens": 811,
+          "p90_tokens": 2962,
+          "p99_tokens": 10584
+        },
+        "score_labels": {
+          "4": 1797,
+          "5": 3
+        },
+        "top_named_repos": [
+          [
+            "qeedquan/challenges",
+            16
+          ],
+          [
+            "aylei/leetcode-rust",
+            12
+          ],
+          [
+            "rust-rosetta/rust-rosetta",
+            9
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "LANGUAGE",
+      "value": {
+        "language": "TypeScript",
+        "archive_units_available": 105,
+        "sampled_units": [
+          "stack_edu_metadata__TypeScript__eligible_000012288",
+          "stack_edu_metadata__TypeScript__eligible_000025600",
+          "stack_edu_metadata__TypeScript__eligible_000032768",
+          "stack_edu_metadata__TypeScript__eligible_000045568"
+        ],
+        "counts": {
+          "documents": 1647,
+          "tokens": 1206090,
+          "origin_repo_and_path": 1647,
+          "commit_populated": 0,
+          "license_label_present": 1647,
+          "vendor_path": 0,
+          "test_path": 91,
+          "doc_example_path": 16,
+          "generated_header_hint": 2,
+          "over_4k": 22,
+          "over_32k": 0,
+          "over_128k": 0,
+          "unique_named_repositories": 1421,
+          "max_tokens": 17535,
+          "p50_tokens": 432,
+          "p90_tokens": 1531,
+          "p99_tokens": 4489
+        },
+        "score_labels": {
+          "4": 1641,
+          "5": 6
+        },
+        "top_named_repos": [
+          [
+            "jiangshanmeta/meta",
+            12
+          ],
+          [
+            "remeda/remeda",
+            8
+          ],
+          [
+            "viktor286/code-samples",
+            8
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "TOTAL",
+      "value": {
+        "documents": 13236,
+        "tokens": 9958026,
+        "origin_repo_and_path": 13236,
+        "commit_populated": 0,
+        "license_label_present": 13236,
+        "vendor_path": 2,
+        "test_path": 382,
+        "doc_example_path": 1192,
+        "generated_header_hint": 47,
+        "over_4k": 185,
+        "over_32k": 0,
+        "over_128k": 0
+      }
+    },
+    {
+      "kind": "EXACT_DUPLICATES",
+      "value": {
+        "duplicate_groups": 0,
+        "extra_copies": 0,
+        "examples": []
+      }
+    },
+    {
+      "kind": "REPLAY",
+      "value": {
+        "seed": "speck-code-coverage-20260919-v1",
+        "selection": "sort manifests by path within language; partition into four equal-count contiguous buckets; choose minimum SHA256(seed|unitname) from each bucket; inspect every retained records.jsonl row",
+        "selection_manifest_digest": "192581ef833819b0381c4eebad109a8d9c16dce1ac5bcd4d3ea63d224eadd5f2",
+        "selected_manifest_identities": [
+          [
+            "stack_edu_metadata__C__eligible_000011264",
+            "01e4cc3597a79e56d204030d7ff71671ef1fbc9b01192d88a736dfb4da412d06"
+          ],
+          [
+            "stack_edu_metadata__C__eligible_000018944",
+            "7e304b6b1992cb79ad5cc5f49e0a61cca469cdb9d77bd792cc7299715608fe41"
+          ],
+          [
+            "stack_edu_metadata__C__eligible_000031744",
+            "1ee660a32a46cdb5368ddbe6568ee95459ad0dbed62147941b8d391d5ae91da2"
+          ],
+          [
+            "stack_edu_metadata__C__eligible_000045056",
+            "1503e148fe464948102c6a3f36c10db3f766890dbec457a219f4c0e30659f7c4"
+          ],
+          [
+            "stack_edu_metadata__Cpp__eligible_000020480",
+            "ee049d7e5513ff638ef1d34463a9e9929a8033b69e3af858d00fb62637f6853e"
+          ],
+          [
+            "stack_edu_metadata__Cpp__file_1__eligible_000004608",
+            "40a02f44d9fed283c7ceb2555dafee8215c140986b970cbbeb653954b886316f"
+          ],
+          [
+            "stack_edu_metadata__Cpp__file_2__eligible_000020992",
+            "edc134ba9dbc8a10795cc44948c757189232edefb50fdcc9b7fe6d11f0e21547"
+          ],
+          [
+            "stack_edu_metadata__Cpp__file_3__eligible_000011264",
+            "952c328735ffa177379f4c203b6530d71092e47605c945242f40d9571abe21e6"
+          ],
+          [
+            "stack_edu_metadata__Go__eligible_000007680",
+            "0e7cc7dea79dbe0768979636db639fadab3b06ff1d26472e14129d9f3b439b1e"
+          ],
+          [
+            "stack_edu_metadata__Go__eligible_000018944",
+            "6bd3e8f8d469a465b296c6a2a15186a5846f95fac2480a5812bde2255c059222"
+          ],
+          [
+            "stack_edu_metadata__Go__eligible_000024064",
+            "f9e0e6245a1c338a3a8da0360405cbc7d3806552d6bb3b8e61e9eb64bbc808a7"
+          ],
+          [
+            "stack_edu_metadata__Go__eligible_000039424",
+            "36b5b09a9f5029d148dbc860040d7191d69137d4dcf30c7bc3decbd3d2df404f"
+          ],
+          [
+            "stack_edu_metadata__Java__eligible_000005120",
+            "17ae4a78a73b11f72c3296d29660a045c76ca03967fb337c4092b9227c5142c0"
+          ],
+          [
+            "stack_edu_metadata__Java__file_3__eligible_000011264",
+            "005f47d154f0c5e82364c61ab9acd582b3a4fe03e04c45d4473754f53de13103"
+          ],
+          [
+            "stack_edu_metadata__Java__file_5__eligible_000000512",
+            "a609a2b114cbedf9773fa250d9544dade9335d89a87b5d3641a1e6e7bbb20a92"
+          ],
+          [
+            "stack_edu_metadata__Java__file_7__eligible_000011264",
+            "834209c28abed9d1ff49e25de1c1ab0e25b750d9f4bd04bbee9157e031c7f612"
+          ],
+          [
+            "stack_edu_metadata__JavaScript__eligible_000034816",
+            "89114eedbfef50d447b9bc2a276be70768d287834bb65d91992f8b40ebcab794"
+          ],
+          [
+            "stack_edu_metadata__JavaScript__file_1__eligible_000011264",
+            "573a495b11dcc48d4b51365f2581c482abbd0302b997550ed20d597063c1c0e9"
+          ],
+          [
+            "stack_edu_metadata__JavaScript__file_2__eligible_000011776",
+            "7adb4218063711669da9b5172d4a69cc15e99066643fdfb43d7b615b2fedb04d"
+          ],
+          [
+            "stack_edu_metadata__JavaScript__file_2__eligible_000050688",
+            "82c6aa9aa09f772393644f08c4b75bf480e6c0f0a9cd6a3d4fc784a07d2e7e3d"
+          ],
+          [
+            "stack_edu_metadata__Markdown__eligible_000000000",
+            "9cd3ce5eff7ed59792ee2321fcf5f1f97215500ab5f488c35a680f8853154884"
+          ],
+          [
+            "stack_edu_metadata__Markdown__eligible_000000512",
+            "bfa8866703f5e0040c8ce6ce133c283e71fad7191de66d7398b32b84e1846546"
+          ],
+          [
+            "stack_edu_metadata__Markdown__eligible_000001024",
+            "bf23d694e0da53efb8e6ad95d20dad2e35cc98b34c13180ac6e870f3f8cfdd2a"
+          ],
+          [
+            "stack_edu_metadata__Markdown__eligible_000001536",
+            "ed72754689702d63a885c54fa6eb9dab3520f3ebae83ec83a5c5f21c3ac5dba3"
+          ],
+          [
+            "stack_edu_metadata__Python__eligible_000004608",
+            "633d26577ddb457ac838dc349a84ef35036021abc9a85a9c6219e65e0353fbf4"
+          ],
+          [
+            "stack_edu_metadata__Python__file_1__eligible_000050176",
+            "6634dcfc4eee35f9ff31c056f7f79c9e660ecdd1af33b8f67e0b31ef5b017710"
+          ],
+          [
+            "stack_edu_metadata__Python__file_1__eligible_000077824",
+            "4951413e50fb00edf81009dbf454482b48fe86aaeaaf152b712d3b9a35969558"
+          ],
+          [
+            "stack_edu_metadata__Python__file_2__eligible_000034816",
+            "f1ed97497f310127fb89215f0fa351aa71d3902b1c12a556778ff39389b7b379"
+          ],
+          [
+            "stack_edu_metadata__Rust__eligible_000007168",
+            "4169ed40be16f86652b5641eadb5fc845da68a6d45846221abe959b83523ee8b"
+          ],
+          [
+            "stack_edu_metadata__Rust__eligible_000012800",
+            "d81dbd5f06cdc8fcaa898e4252a184faa822e0960d8cd09bdc9053b3a5052192"
+          ],
+          [
+            "stack_edu_metadata__Rust__eligible_000025088",
+            "cea441e9d0f6e93c5d6776625dae121826c395111c8ef4f738a78ed3fb8fdf14"
+          ],
+          [
+            "stack_edu_metadata__Rust__eligible_000034304",
+            "a02124905d4dea03aa555449eb3a022b59ddd9ef8d5103f0c1da2867e51a5111"
+          ],
+          [
+            "stack_edu_metadata__TypeScript__eligible_000012288",
+            "07220e7ad37af386bb8e5b5258559365f7763f6158a0520edb78b911d5b5e936"
+          ],
+          [
+            "stack_edu_metadata__TypeScript__eligible_000025600",
+            "f0e13cde53c51c9d1a796d12313f36eace5af32c5d50bf12ab1244b44468a991"
+          ],
+          [
+            "stack_edu_metadata__TypeScript__eligible_000032768",
+            "a552084fc290f1b59215336ae3beebaf8087b4a3ac5fd5b199087de1a00d7419"
+          ],
+          [
+            "stack_edu_metadata__TypeScript__eligible_000045568",
+            "234380fbd76dc34023ff1e8384cf7386f55bd9b3875e3b3233c58cd62186f809"
+          ]
+        ],
+        "seconds": 5.927008709986694,
+        "files_written": false,
+        "training_admitted": false
+      }
+    }
+  ],
+  "boundaries": [
+    "Purposeful practical examples and stratified archive units; no corpus-wide correctness rate.",
+    "Node 26.4.0 type stripping with small Jest adapter, not original dependency installation or type checking.",
+    "All corpus code executed only inside non-root bubblewrap isolation.",
+    "Sources and tests remain outside Git; scripts bind immutable revisions and content hashes.",
+    "Synchronous task-queue throw and unspecified Python domain behavior are proposed robustness policies, distinct from documented contract failures.",
+    "Pilot-only exclusion checks on two implementation files were incomplete; expanded qualification is separate.",
+    "Replay scripts themselves do not write files; the outer recorder writes these logs.",
+    "JavaScript replay requires network to retrieve pinned source; source hashes fail closed. Python/coverage replays use retained local assets."
+  ],
+  "replay_note": "Initial archive script queue.py shadowed the Python standard library; renamed validate_task_queue.py and reran successfully. Failed first attempt retained locally."
+}

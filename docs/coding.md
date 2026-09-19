@@ -149,18 +149,40 @@ train/evaluation family split is claimed. There are no exact duplicate files wit
 For example, one test module casts elements before checking their types and retains only the last
 membership result; its tests alone would not establish correct outputs. The exception helper indexes
 the first exception argument, motivating a zero-argument exception test. These observations reinforce
-that traceable natural code still needs quality checks. No cohort code has been executed.
+that traceable natural code still needs quality checks. Subsequent isolated execution is recorded below.
 
-**Next: independently check three small candidates**, exception handling (ordinal 29), dice parsing
-(50) and entropy calculation (64), in the existing sandbox. Specify edge cases and dependencies,
-retain exact notices and parent hashes, then freeze broader exclusions and family splits before
-deriving exercises. Preserve practical behavior instead of turning everything into algorithm puzzles.
-Neither these 8,702 review-candidate tokens nor the 16-file cohort establishes scalable supply.
+### Practical CPU checks and broader coverage — 2026-09-19
+
+[practical-code-checks.json](../experiments/corpus-audit/practical-code-checks.json) binds replay
+scripts and logs outside Git. The three Python candidates have now been checked in isolation:
+the exception helper masks a zero-argument exception; dice passes its 14 documented-behavior checks;
+entropy passes ordinary inputs but overflows/underflows at extreme positive standard deviations.
+Unspecified invalid-input policies are reported separately from demonstrated contract failures.
+
+A deterministic 36-unit archive sample covers 13,236 files / 9,958,026 Mistral tokens across eight
+programming languages and Markdown. All have repository/path and license-label metadata, none a
+populated source commit; 185 exceed 4K tokens and none exceed 32K. No exact duplicates occur within
+this sample. Archive units are stratified by language and position; unweighted counts are not
+population estimates, and path-role hints do not establish executable tests or useful content.
+
+Three JS/TS files match immutable upstream revisions and exact license notices. The `frans` example
+passes four supplied tests through a small adapter and eight independent checks, including 1,456
+dense-array oracle comparisons; all four intentionally broken variants fail. The task queue passes
+six async checks and rejects three broken variants. Synchronous task throws leave it stuck under an
+additional proposed robustness policy. Node-stories remains a lower-priority historical-runtime
+example. These checks use Node 26.4.0 type stripping and bubblewrap isolation, not the upstream Jest
+installation, a TypeScript type check, or a full repository build. The pinned dependency closure is
+preserved; no checked example is admitted and no repair exercise has been generated.
+
+**Next: freeze broader exclusions and family separation, then qualify supply across the main data
+banks.** The bounded practical checks are complete; repeating more tiny helpers is not the next
+milestone. Preserve practical behavior, repository context and exact notices. These examples do not
+establish scalable code supply.
 
 ## Data work to do next
 
-1. Complete independent checks for the three natural-code candidates above and freeze the broader
-   code-evaluation exclusions before exercise derivation. The retained L3 preview remains on hold;
+1. Freeze broader code-evaluation exclusions and family separation before exercise derivation;
+   the bounded independent checks above are complete. The retained L3 preview remains on hold;
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.
