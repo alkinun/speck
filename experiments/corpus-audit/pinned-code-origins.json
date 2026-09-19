@@ -1,0 +1,118 @@
+{
+  "format": "speck_pinned_code_origins",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "71a2815cf67f976d6804785e3bcd07dbbd0e7ef0",
+  "status": "remaining_unheld_stack_v3_origin_attempts_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/code-notice-provenance.json",
+    "sha256": "f7b8c05d26ceb1ebce7186fc3434b583219fbc3995e3e029e488391a34d6e26a"
+  },
+  "selection_rule": "Every currently unheld Stack v3 record without a Git-verified host origin in the linked evidence; all 44 pinned records, no substitutions or ranking.",
+  "summary": {
+    "common_full_read_files": 176,
+    "complete_repository_trees": 27,
+    "corpus_execution": false,
+    "coverage": {
+      "stack_edu": {
+        "attempted_unresolved": {
+          "files": 1,
+          "observed_tokens": 731
+        },
+        "family_held": {
+          "files": 34,
+          "observed_tokens": 171947
+        },
+        "host_verified": {
+          "files": 18,
+          "observed_tokens": 22253
+        },
+        "not_attempted_in_linked_receipts": {
+          "files": 85,
+          "observed_tokens": 264684
+        }
+      },
+      "stack_v3": {
+        "attempted_unresolved": {
+          "files": 2,
+          "observed_tokens": 1162
+        },
+        "family_held": {
+          "files": 10,
+          "observed_tokens": 10652
+        },
+        "host_verified": {
+          "files": 68,
+          "observed_tokens": 121397
+        },
+        "not_attempted_in_linked_receipts": {
+          "files": 0,
+          "observed_tokens": 0
+        }
+      }
+    },
+    "distinct_verified_ancestor_notices": 15,
+    "eligible_tokens_established": 0,
+    "failures": [
+      {
+        "path": "docker-compose.yml",
+        "reason": "pinned_source_http_404",
+        "repository": "gokberkgunduzz/thesis-project"
+      },
+      {
+        "path": "prometheus/prometheus.yml",
+        "reason": "pinned_source_http_404",
+        "repository": "gokberkgunduzz/thesis-project"
+      }
+    ],
+    "family_held_files": 44,
+    "files_verified_via_path_metadata": 4,
+    "files_with_incomplete_notice_search": 4,
+    "gpu_hours": 0,
+    "new_git_verified_host_origins": 42,
+    "original_files": 218,
+    "selected_files": 44,
+    "selected_files_with_verified_notices": 22,
+    "selected_observed_tokens": 30400,
+    "selected_statuses": {
+      "git_blob_verified": 42,
+      "pinned_source_unavailable": 2
+    },
+    "training_admitted": false
+  },
+  "findings": [
+    "All 44 remaining unheld Stack v3 records were attempted at their original pinned commits, without replacement or branch-head substitution. Forty-two new host origins match consumed SHA256, upstream plain SHA1 and Git blob identity.",
+    "Twenty-seven complete repository trees establish 38 file identities. Four files from huihuang-chen/code and kaist-ina/Extractocol have recursive trees exceeding the 2 MiB response cap. Smaller contents-API requests at the same pinned revisions verify their path, blob identity and exact decoded bytes within the original request budget. Their ancestor-notice searches remain incomplete; path verification does not imply a complete tree or complete notice coverage.",
+    "Two gokberkgunduzz/thesis-project files return HTTP 404 at their pinned revision. They remain unresolved and outside training; no newer revision or substitute file was used. One had a prior failed attempt, preserved in the earlier receipt.",
+    "Fifteen distinct ancestor notice files are Git-verified for 22 selected records. This is notice availability, not a new notice-applicability review. An empty notice list after a complete bounded filename search differs from an incomplete tree search and does not prove the absence of terms elsewhere.",
+    "A metadata-only view joins origin evidence to all 218 existing assessment records. Unheld Stack v3 coverage is 68 verified / two attempted unresolved / zero unattempted. Unheld Stack-Edu coverage remains 18 verified / one attempted unresolved / 85 not attempted in linked receipts. Held records remain a separate disjoint category; all original denominators and observed tokens reconcile.",
+    "Host provenance does not resolve copied-source attribution, dependency notices, family/near-duplicate exclusions or intended-use suitability. Observed tokens in each evidence category are not eligible supply. No sample quality ranking or extrapolated corpus yield follows."
+  ],
+  "acquisition": {
+    "api_requests": 33,
+    "automatic_retries": 0,
+    "request_seconds": 58.5463,
+    "response_bytes": 6800357,
+    "unique_requests": 92
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/pinned-code-origins",
+    "manifest_sha256": "319835ad696149e9a53f1be19bb85401e8abdedebbb0b1f4d31f90dbba39f0f4",
+    "artifacts": 236,
+    "bytes": 3542917,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "corrupt_source_bytes",
+      "missing_selected_record",
+      "wrong_pinned_revision",
+      "false_notice_blob",
+      "changed_source_label",
+      "wrong_path_proof"
+    ]
+  },
+  "boundaries": [
+    "The complete 218-record assessment is byte-identical to its input; all original metadata/weights, 176 reads and 44 family holds are preserved. The derived inventory adds evidence fields only.",
+    "No corpus code execution, new semantic-reading claims, held-task inspection, source-use approval, eligible supply estimate, source ranking, training admission or GPU work.",
+    "All prior receipts remain immutable. Acquisition uses pinned revisions, bounded requests and cached offline replay; no automatic HTTP retries."
+  ],
+  "next": "Use the existing qualification packet to address the 85 unattempted Stack-Edu origins and one unresolved attempt; retain the two Stack v3 404s outside training absent new evidence. Resolve copied-source and notice applicability separately, including four incomplete ancestor searches, before any eligible-token accounting. This fixed-cohort work does not by itself qualify the retained full stock."
+}

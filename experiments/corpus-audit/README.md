@@ -419,5 +419,13 @@ The [notice follow-up](code-notice-provenance.json) checks all eight sampled fil
 with recorded notice questions. Seven host origins are newly verified and one is reconfirmed; four
 complete trees and four distinct ancestor notices are retained. Eclipse's NOTICE explains separate
 code/non-code licenses, while Java restrictive wording and Ororus template attribution remain open.
-Linked cohort-origin coverage is 18/104 unheld Stack-Edu and 26/70 unheld Stack v3 records. All reading
+It brought linked cohort-origin coverage to 18/104 unheld Stack-Edu and 26/70 unheld Stack v3 records. All reading
 counts, holds and assessment fields remain unchanged. No source-use approval or admission follows.
+
+The [pinned-origin follow-up](pinned-code-origins.json) checks all 44 remaining unheld Stack v3
+records at pinned commits: 42 new verified origins and two source 404s. Four identities use smaller
+path-specific metadata after recursive trees exceed the cap; ancestor-notice searches remain open
+for those files. Fifteen distinct notices are recovered for 22 selected records without deciding
+applicability. Current linked origin coverage is 18/104 unheld Stack-Edu and 68/70 unheld Stack v3.
+The derived metadata inventory separates held, verified, attempted-unresolved and unattempted records,
+reconciling original counts/tokens. It adds no semantic readings, holds, eligible tokens or admissions.

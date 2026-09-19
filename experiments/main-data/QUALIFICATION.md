@@ -21,9 +21,15 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   eight purpose-selected records in four repositories: seven new origins and one reconfirmed origin.
   Four complete trees and four distinct Git-verified ancestor notices recover the Objective-C root
   license and Eclipse's code/non-code declaration. The Java files and CSS template retain unresolved
-  notice/attribution questions. Across the linked cohort-origin receipts, 18/104 unheld Stack-Edu
-  and 26/70 unheld Stack v3 records have verified host origins; 86 and 44 remain without that evidence.
+  notice/attribution questions. It brought linked origin coverage to 18/104 unheld Stack-Edu
+  and 26/70 unheld Stack v3 records before the complete pinned-origin follow-up below.
   All assessment fields and holds remain unchanged; these counts do not establish eligible yield.
+
+- The [pinned-origin follow-up](../corpus-audit/pinned-code-origins.json) attempts all 44 remaining
+  unheld Stack v3 records at pinned commits and verifies 42 new origins. Two source files return 404.
+  Four successful identities use path-specific metadata after recursive trees exceed the cap; their
+  ancestor-notice searches remain incomplete. Fifteen distinct verified notices cover 22 selected
+  records, without deciding applicability. A metadata-only inventory reconciles the existing cohort.
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
@@ -149,7 +155,18 @@ estimates or comparable quality rates. The next deliverable uses the existing in
 
 Keep the original sampling frames fixed and reconcile roles and unresolved outcomes into the
 inventory. Reading completion does not close any of these gates by itself.
-Prioritize the 86 Stack-Edu and 44 Stack v3 host-origin evidence gaps without substituting records.
+The derived origin inventory reports disjoint evidence states, retaining each source's own frame:
+
+| Cohort | Family-held files / observed tokens | Verified host files / observed tokens | Attempted unresolved files / observed tokens | Unattempted files / observed tokens |
+| --- | --- | --- | --- | --- |
+| Retained Stack-Edu | 34 / 171,947 | 18 / 22,253 | 1 / 731 | 85 / 264,684 |
+| Stack v3 | 10 / 10,652 | 68 / 121,397 | 2 / 1,162 | 0 / 0 |
+
+These are evidence categories, not eligible supply or pass rates. Prioritize the 85 unattempted
+Stack-Edu origins and its one unresolved attempt. Keep the two Stack v3 404s outside training absent
+new evidence; do not substitute revisions or repeat failed requests without a changed recovery route.
+Four Stack v3 path-verified files need ancestor-notice searches using bounded path traversal.
+Host verification does not resolve copied or vendored source provenance.
 The recovered Eclipse NOTICE explains its code/non-code labels; dependency applicability remains open.
 Resolve the Java restrictive wording and Ororus template attribution alongside host/upstream context;
 file headers and dataset license metadata do not independently authorize source use. Review embedded application data in

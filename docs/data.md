@@ -116,8 +116,11 @@ checks and package/family evidence. The final stylesheet readings distinguish pa
 component roles. The [notice follow-up](../experiments/corpus-audit/code-notice-provenance.json)
 adds seven verified host origins and reconfirms one, recovering Objective-C repository and Eclipse
 notice context. Eclipse declares separate code/non-code licenses; template attribution and restrictive
-Java wording remain unresolved. Linked evidence covers 18/104 unheld Stack-Edu and 26/70 unheld
-Stack v3 host origins. These are coverage counts, not eligible yield. Fixed-cohort reading is complete;
+Java wording remain unresolved. The [pinned-origin follow-up](../experiments/corpus-audit/pinned-code-origins.json)
+adds 42 verified origins: coverage is now 18/104 unheld Stack-Edu and 68/70 unheld Stack v3 records.
+Two pinned Stack v3 sources return 404; four path-verified files still need ancestor-notice searches.
+Stack-Edu has 85 unattempted origins and one unresolved attempt in the linked evidence.
+These are coverage counts, not eligible yield. Fixed-cohort reading is complete;
 source-use and broader family qualification remain open.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the

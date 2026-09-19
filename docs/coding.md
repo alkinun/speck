@@ -285,10 +285,18 @@ to these records. Eclipse's recovered NOTICE distinguishes Apache-2.0 for code f
 non-code, consistent with the sampled TSX/SCSS headers. Its referenced dependency context still
 needs review; repository labels do not establish dual licensing of each file or training admission.
 
-Across the linked cohort-origin evidence, **18/104 unheld Stack-Edu** and **26/70 unheld Stack v3**
-records have Git-verified host origins. The remaining **86 and 44** are evidence gaps, not rejected
-files or source-quality estimates. Host identity alone does not establish copied-source provenance.
-All 218 assessment records, 176 full reads and 44 family holds remain unchanged.
+The [pinned-origin follow-up](../experiments/corpus-audit/pinned-code-origins.json) attempts all 44
+remaining unheld Stack v3 records, verifying 42 new origins. Thirty-eight identities use complete
+trees; four use smaller path-specific metadata at the same pinned commits after tree responses
+exceed the cap. Those four still lack complete ancestor-notice searches. Two pinned source files
+return 404 and remain unresolved, without revision substitution. Fifteen distinct notice files are
+recovered for 22 records; availability alone is not a notice-applicability decision.
+
+Across the linked cohort-origin evidence, **18/104 unheld Stack-Edu** and **68/70 unheld Stack v3**
+records have Git-verified host origins. Stack-Edu has one unresolved attempt and 85 unattempted
+records; Stack v3 has two unresolved attempts and none unattempted. A derived metadata inventory
+reconciles all 218 original records and observed tokens without changing assessment fields, 176
+full reads or 44 holds. These counts do not establish eligible yield or copied-source provenance.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while

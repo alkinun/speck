@@ -344,8 +344,10 @@ separates inputs available for detailed design from the requirements for launchi
    full reads include two now-held records; all 44 family holds remain intact. Page, template and
    component stylesheets retain their original labels, weights and document boundaries. The
    [notice follow-up](../corpus-audit/code-notice-provenance.json) adds seven verified host origins and
-   reconfirms one; linked origin coverage is 18/104 unheld Stack-Edu and 26/70 unheld Stack v3 records.
-   Recovered repository notices clarify context without admitting records.
+   reconfirms one. The [pinned-origin follow-up](../corpus-audit/pinned-code-origins.json) adds 42 more:
+   coverage is 18/104 unheld Stack-Edu and 68/70 unheld Stack v3 records, with two pinned-source 404s.
+   Stack-Edu still has 85 unattempted origins and one unresolved attempt. Four path-verified Stack v3
+   records need complete ancestor-notice searches. No source-use approval or admission follows.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
