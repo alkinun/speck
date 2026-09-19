@@ -3,6 +3,17 @@
   "format_version": 2,
   "date": "2026-09-19",
   "status": "working_preparation_targets_not_launch_manifest",
+  "research_scope": {
+    "focus": "Data and actual training across pretraining, mid-training and post-training on the selected model",
+    "architecture_role": "Supporting rationale and measured trade-offs for attention, size and implementation; fixed backbone for data comparisons",
+    "deferred_research": [
+      "MoE",
+      "attention residuals",
+      "attention-layout searches",
+      "model-size sweeps"
+    ],
+    "primary_controlled_study": "Natural code versus natural code plus independently checked exercises from a useful common checkpoint"
+  },
   "model": {
     "parameters": 1195884576,
     "architecture": "selected 1.2B all-active 24-layer KDA/GQA hybrid with dense SwiGLU",
@@ -142,7 +153,20 @@
     "checkpoint_policy": "Retain continuation and endpoint checkpoints. Treat 100B as a budget-fit scenario or intermediate checkpoint, not an automatic final horizon; freeze a continuation-compatible schedule before launch.",
     "stretch_target_tokens": 400000000000,
     "budget_fit_scenario_tokens": 100000000000,
-    "target_status": "desired flagship scale; hardware, eligible supply and funding not yet qualified"
+    "target_status": "desired flagship scale; hardware, eligible supply and funding not yet qualified",
+    "horizon_scope": "Combined pretraining and capability mid-training exposure. Initial bank totals assume the starting mixture; revise aggregate exposures when a staged mixture is frozen."
+  },
+  "mid_training": {
+    "capability_continuation": {
+      "status": "planned_not_launch_ready",
+      "purpose": "Targeted code/math/repair learning with broad-data replay",
+      "target_tokens": null,
+      "budget_ownership": "A portion of main_pretraining target_tokens and the main_pretraining GPU-hour reservation; no additional allowance",
+      "data_recipe": "Qualify task difficulty, source families, independent correctness, overlap/replay and language/task coverage; mixture and replay share remain unfrozen",
+      "objective": "Existing next-token objective initially; any masked repair objective requires an explicit qualified adapter",
+      "runtime_boundary": "Predeclared mixture phases exist; a dedicated changed-data checkpoint continuation contract remains to implement and qualify. Do not use a context-extension label for a data intervention."
+    },
+    "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct"
   },
   "context_extension": {
     "target_tokens": 8000000000,
@@ -191,7 +215,7 @@
       "agent_and_tool_trajectories": 375000,
       "supporting_general_and_instruction_tasks_with_reasoning": 150000
     },
-    "counting": "Deduplicate tasks/source families; assign each conversation one primary category. Agentic coding counts in agent category, not twice. Held-outs excluded from target. Row shares are acquisition targets, not final token sampling weights.",
+    "counting": "Deduplicate tasks/source families; assign each conversation one primary category. Agentic coding counts in agent category, not twice. Held-outs excluded from target. Row shares are acquisition targets, not final token sampling weights. Conversation quotas describe SFT only; RL task and rollout inventories are separate.",
     "length_policy": "Keep complete examples across <=4K, 4-16K, 16-32K, 32-128K; preserve over-target records separately. Reacquire upstream long tails omitted from existing stock.",
     "runtime_scenarios": [
       {

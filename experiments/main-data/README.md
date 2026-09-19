@@ -4,14 +4,18 @@
 This is not a launch configuration or a claim that the required corpus is already qualified.
 The frozen H100 pilot, development evaluation and backups are complete. This working plan does
 not change their configurations or historical result receipts.
-The first 5,000-GPU-hour program will pretrain SpeckLabs' own base and develop its thinking
-assistant, with an open technical record for future scaling. External pretrained-base adaptation
-is excluded by the clarified objective; the proposed future 50,000-hour allocation is not yet confirmed in this plan.
+The first 5,000-GPU-hour program studies data and training across pretraining, mid-training and
+post-training on the selected 1.2B backbone. The [program](../../docs/program.md#training-lifecycle)
+defines stage boundaries; [model notes](../../docs/model.md) cover supporting attention/size analysis.
+Broader architecture research belongs to later releases. Our base starts from scratch; the future
+50,000-hour allocation is not assumed funded.
 
 ## Scale
 
-Keep **320B base-pretraining tokens as the desired flagship target, with 400B as the stretch
-scenario**. Follow with a provisional **8B-token context extension toward 128K** and **1.5M unique
+Keep **320B base-training tokens as the desired flagship target, with 400B as the stretch
+scenario**, including pretraining and capability mid-training. Their token split remains unfrozen;
+capability mid-training is not an additional allowance. Follow with a provisional **8B-token context
+mid-training extension toward 128K** and **1.5M unique
 post-training conversations**, with a 1–2M planning range. The retained 500K rows are starting stock
 before qualification. These desired targets are conditional on eligible supply and measured compute.
 
@@ -25,7 +29,8 @@ resolve the throughput/funding gap explicitly before freezing a launch horizon.
 ## Base mixture
 
 These are explicit starting hypotheses chosen for the code/math/agent target, not measured optimal
-weights. Keep the mixture fixed for the first candidate; separate any later curriculum decision.
+weights. The table extrapolates the initial mixture across the base horizon. Freeze capability
+mid-training weights separately and update aggregate bank exposures if a staged mixture is adopted.
 
 | Component | Share | 320B exposure | 400B exposure | Candidate sources / admission condition |
 | --- | ---: | ---: | ---: | --- |
@@ -79,6 +84,18 @@ A 2TB local scratch allowance is a working envelope, not a measured dataset size
 filesystem check showed approximately 4.5TiB available. Stream bounded acquisitions and retain
 qualified packs; do not mirror all upstream datasets or assume the rental's 200GB disk can hold this.
 
+## Mid-training data
+
+Capability continuation uses selected code/math explanations, independently checked exercises and
+repair material with broad-data replay. Specify difficulty, source families, actual correctness
+coverage and overlap/reuse from pretraining. Tokens and GPU-hours come from the existing base
+horizon and 2,300-hour reservation; the targeted portion and replay weights remain to be frozen.
+The [training guide](../../docs/training.md#mid-training-readiness) records the changed-data branch
+and objective limitations. Data acquisition does not make this a runnable continuation recipe.
+
+Keep the controlled natural-code/checked-exercise study within its separate 91-hour reservation.
+Do not count experimental arm tokens as main-model exposure unless that arm is actually continued.
+
 ## Context extension
 
 Working stages: **2B tokens up to 16K, 2B up to 32K, 4B up to 128K**. These stage ceilings do not
@@ -123,15 +140,16 @@ distributed execution, stage promotion criteria and release evaluation.
 
 ## Compute allocation
 
-The requested four-GH200 / 5,000-GPU-hour allocation is not yet confirmed. Use this full-envelope
-reservation without treating previous rental reservations as actual provider billing:
+The user confirmed the four-GH200 / 5,000-total-GPU-hour envelope; provider access and hardware
+throughput remain unconfirmed. Use this reservation without treating previous rental reservations
+as actual provider billing:
 
 | Work | GPU-hours reserved |
 | --- | ---: |
 | Runtime qualification | 70 |
 | Engineering pilot | 50 |
-| Main 4K pretraining | 2,300 |
-| Context extension | 800 |
+| Pretraining and capability mid-training | 2,300 |
+| Context mid-training | 800 |
 | Post-training, including any on-allocation teacher/reward work | 800 |
 | Bounded data comparison | 91 |
 | Protected evaluation and recovery | 889 |

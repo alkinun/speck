@@ -1,8 +1,8 @@
 # SpeckLabs first program: execution overview
 
-2026-09-19. This is the connected outline for SpeckLabs' first flagship: our own pretrained base,
-an always-thinking assistant, and an open technical report. Primary tasks are agentic coding,
-normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
+2026-09-19. SpeckLabs' first model and paper center on data and training across pretraining,
+mid-training and post-training: our own pretrained base and an always-thinking assistant for
+agentic coding, normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
 current status and work order. The [numeric plan](../experiments/main-data/plan.json) owns working
 quantities, while experiment configs and verified receipts own actual execution and measurements.
 No GPU run starts from this document.
@@ -15,14 +15,34 @@ No GPU run starts from this document.
 | Selected | Pretrain from scratch; preserve base and thinking-assistant releases; one thinking protocol with variable effort |
 | Confirmed envelope | 5,000 total GPU-hours across four GH200s; access/site details remain unconfirmed |
 | Working recipe | 35% code, 25% math, 40% supporting data; 320B desired / 400B stretch, subject to supply and cost |
-| Working stages | Approximately 128K context via a proposed 8B extension; 1.5M SFT conversations within 1–2M; RL conditional |
+| Working stages | Capability mid-training within the base horizon; approximately 128K context via an additional proposed 8B extension; 1.5M SFT conversations within 1–2M; RL conditional |
 | Measured | H100 engineering pilot, development evaluation and backups complete; the 105M-token base is weak |
 | Unresolved | Main eligible supply, GH200/distributed speed, final token horizon, long-context cost/quality and useful thinking/tool performance |
 
 The future 50K-GPU-hour program is an ambition, not part of this allocation. Prior external rental
 receipts are separate from grant consumption. The completed pilot is evidence to reuse, not the
-next training job. The [architecture decision](architecture-program.md) fixes the first model;
+next training job. The [model notes](model.md) explain the fixed backbone and supporting attention/size analysis;
 [competitive strategy](competitive.md) defines how its release claims must be measured.
+
+## Training lifecycle
+
+The paper's main subject is how selected data and actual training develop useful capabilities.
+Keep the selected architecture fixed so data comparisons are interpretable. Explain its attention,
+size and measured trade-offs as supporting analysis. MoE, attention residuals and broader
+attention-layout/model-size research belong to later releases with separately funded experiments.
+
+| Stage | Purpose and objective | Budget ownership and readiness |
+| --- | --- | --- |
+| Pretraining | Broad code/math/general foundations using next-token prediction | Shares the 320B desired / 400B stretch base horizon and 2,300 hours with capability mid-training; main data/runtime not yet qualified |
+| Capability mid-training | Targeted code/math/repair continuation with broad-data replay | A separately reported portion of that base horizon, not extra tokens/hours; split, objective and changed-data branch remain to qualify |
+| Context mid-training | Learn to use coherent longer repositories/documents while retaining short tasks | Proposed additional 8B tokens / 800 hours; length stages and runtime unqualified |
+| Post-training: SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | Working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
+| Post-training: RL | Improve outcomes using checkable tasks, reliable rewards and policy rollouts | Conditional within post-training's 800 hours; trainer, verifiers and rollout integration remain to qualify |
+
+Record each stage's parent, data families, unique supply, actual exposure/replay, objective, schedule
+and cost. Preserve checkpoints at transitions. Share family exclusions across all stages, including
+teacher generation and RL prompts. Stage progression and matched external evaluations describe the
+resulting model; controlled data arms are needed to attribute a gain to a data intervention.
 
 ## Compute and allocation
 
@@ -38,8 +58,8 @@ protected-reserve subdivisions are new planning proposals, not measured costs:
 | Work | GPU-hours | Share | Four-GPU elapsed equivalent |
 | --- | ---: | ---: | ---: |
 | Runtime qualification, engineering pilot and one bounded data comparison | 211 | 4.22% | 52.75h |
-| Main 4K pretraining | 2,300 | 46% | 575h |
-| Context extension | 800 | 16% | 200h |
+| Pretraining and capability mid-training | 2,300 | 46% | 575h |
+| Context mid-training | 800 | 16% | 200h |
 | Thinking SFT | 500 | 10% | 125h |
 | Conditional verified-reward RL | 200 | 4% | 50h |
 | On-allocation teacher / verification work | 100 | 2% | 25h |
@@ -54,6 +74,8 @@ remaining commitments are known; this is a conservative preparation envelope, no
 split. A 200-hour RL allocation must be enforced including generation, not merely gradient updates.
 If long SFT consumes more than 500 hours, revise the post-training split; no promise of all stages
 at their maximum data volume follows from this table. Unused reserve is not a requirement to spend.
+Capability mid-training has no additional reservation: freeze its token/hour split within the base
+horizon before launch. The 8B context extension remains separate. These labels do not add compute.
 
 ## Model and runtime
 
@@ -131,11 +153,35 @@ The desired 320B/400B targets require 38.6K/48.3K per GPU within this reservatio
 
 Freeze a continuation-compatible learning-rate schedule, update size, cadence and horizon before
 launch. Retain optimizer/loader/RNG state at selected milestones and before endpoint decay.
-The pilot's learning rate and 800-step cosine schedule are not a production recipe. Any focused
-late code/math continuation must be included within declared base/extension exposure and budgets,
-not added as an uncosted phase. Use source losses and task learning curves to justify changes.
+The pilot's learning rate and 800-step cosine schedule are not a production recipe. Use source
+losses and task learning curves to choose the transition to capability mid-training within the
+declared base horizon, with any revised weights recorded separately from the initial mixture.
 
-## Context extension
+## Mid-training
+
+### Capability continuation
+
+Develop code/math/repair capability using selected, independently checked material and broad-data
+replay. Specify source-family overlap with pretraining, difficulty, language/task coverage and actual
+token exposure. Start with the existing next-token objective; any prompt/patch masking or alternative
+objective needs an explicit adapter and qualification. Plain token packing does not implement it.
+
+The capability portion, mixture, replay share and LR/optimizer policy remain unfrozen. Allocate it
+inside the 320B/400B base horizon and 2,300-hour reservation. The existing bank totals are initial
+mixture scenarios; update them if a staged mixture changes aggregate exposure. Do not count the same
+tokens as both pretraining and an additional mid-training allowance.
+
+The loader supports predeclared mixture phases. Ordinary checkpoint branches require the same data
+manifest; changed-data branches currently use the context-extension contract. A dedicated data
+continuation path must be qualified before either new-data capability continuation or the bounded
+code comparison. Do not relabel those runs as context extension to bypass the contract. See
+[training](training.md#mid-training-readiness) for current implementation boundaries.
+
+Separate capability changes from length changes when drawing causal conclusions. Keep source-wise
+loss and short-task checks at both transitions. Context extension follows below; these two parts of
+mid-training have distinct data questions and accounting.
+
+### Context extension
 
 Base 4K → up to 16K → up to 32K → toward 128K. Current proposed exposures are 2B + 2B + 4B tokens,
 including short replay. Use 8K/64K probes or intermediate stages if memory, stability or learning
@@ -159,7 +205,11 @@ Eight billion tokens in 800 hours needs an average 2,778 effective tokens/s/GPU.
 measured. Freeze actual stage lengths/exposures after qualification; do not advertise 128K from a
 configuration field alone. Preserve both the short-context and extended base identities for release.
 
-## Thinking SFT
+## Post-training
+
+SFT and the conditional RL stage below together constitute post-training.
+
+### Thinking SFT
 
 Start from our qualified base and target 1.5M unique accepted conversations (1–2M range): 600K code
 reasoning, 375K math, 375K agent/tool trajectories and 150K supporting instruction/general thinking.
@@ -196,7 +246,7 @@ outcomes and consistency of reasoning/tool observations. One pass over 1.5M conv
 positions separately. The measured 4K SFT rate is not a long-context throughput prediction, so the
 500-hour subdivision needs validation against the actual length mixture and workflow overhead.
 
-## Conditional RL
+### Conditional RL
 
 RL is planned, not implemented/qualified as a production pipeline here. The working candidate is
 GRPO-style training with verifiable rewards, after a useful SFT baseline. The primary reference is
@@ -204,6 +254,9 @@ GRPO-style training with verifiable rewards, after a useful SFT baseline. The pr
 Use checked math answers and sandboxed executable code tests first; add repository/tool episodes
 only when environments, reset/replay and rewards are reliable. UltraData-RL supplies candidate
 problems/reference material, not ready-made successful rollouts.
+Treat task difficulty, reference/test validity, source-family overlap and verifiable outcomes as
+part of the data recipe. Retain rollout success/failure and rejection counts by task family; report
+held-out transfer rather than relying on training reward alone.
 
 Propose a 16K total-context ceiling initially, considering 32K only after measured benefit/cost.
 Freeze prompt/output limits, sample-group size, tool-step caps, reward normalization, reference/KL
@@ -245,6 +298,8 @@ source manifests and processing recipes, actual exposure and compute ledgers, cu
 that were actually run, limitations and failed attempts. Keep source bytes private where their
 terms prohibit redistribution. A first report can establish a reproducible quality/efficiency
 tradeoff without claiming an untested architecture advantage or universal leadership.
+Keep the bounded code intervention as the primary controlled data study. Other source audits guide
+selection but do not become training ablations automatically; each extra arm needs a declared cost.
 
 ## Storage, recovery and operational gates
 
@@ -272,8 +327,9 @@ accelerated serving integration is assumed qualified merely because base trainin
 3. **Before main training:** freeze actual admitted manifests, mixture, repetition, batch, optimizer
    schedule, checkpoint cadence and affordable horizon. Run the data comparison only when its
    common-base/supply/cost gates pass; its 91-hour reservation is not a second full pretraining run.
-4. **After a useful base:** qualify context stages and short-task retention; prepare and train
-   verified thinking SFT. Attempt RL only with working verifiers, runtime and a bounded budget.
+4. **After a useful pretraining checkpoint:** execute qualified capability continuation within the
+   base horizon, then qualify context stages and short-task retention. Prepare and train verified
+   thinking SFT. Attempt RL only with working verifiers, runtime and a bounded budget.
 5. **Before release:** finish matched development comparisons, freeze the selected checkpoint/recipe,
    then score final tests and publish measured capability, efficiency and limitations with artifacts.
 

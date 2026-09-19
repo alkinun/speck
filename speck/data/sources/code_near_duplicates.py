@@ -195,13 +195,6 @@ def validate_duplicate_config(config, *, config_dir=None):
     return normalized
 
 
-def load_duplicate_config(path):
-    path = Path(path).resolve()
-    return validate_duplicate_config(
-        json.loads(path.read_text(encoding="utf-8")), config_dir=path.parent
-    )
-
-
 def _validated_config(config):
     if "plan_fingerprint" not in config:
         return validate_duplicate_config(config)

@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use Speck, cite the software release."
-title: "Speck: a training toolkit for small general-purpose language models"
+title: "Speck: a data and training toolkit for small language models"
 type: software
 authors:
   - family-names: Unlu

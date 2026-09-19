@@ -1,7 +1,8 @@
 # Coding priority
 
 Decision updated 2026-09-19. Agentic coding, general coding and math reasoning are primary
-first-release targets for the always-thinking assistant. General usefulness supports these targets.
+first-release targets for the always-thinking assistant. The paper studies their data and training
+across pretraining, mid-training and post-training on the fixed backbone. General usefulness supports these targets.
 The first substantive data comparison should test a code-data intervention. This is preparation
 for a future experiment; the frozen engineering pilot and its evaluation protocol remain intact.
 
@@ -205,8 +206,9 @@ establish scalable code supply.
 ## First comparison to prepare
 
 Prepare **retained natural code versus natural code plus checked exercises**, starting from the
-same useful base checkpoint. For a bounded first experiment, keep the current 15% total code share
-in both arms and all non-code sources fixed. Keep non-Python code unchanged. In the treatment,
+same useful base checkpoint. Use the flagship's working 35% total code share as the starting
+proposal for both arms, with all non-code sources fixed; freeze actual shares after supply checks.
+The pilot's 15% code share is not the main recipe. Keep non-Python code unchanged. In the treatment,
 replace half of the Python code tokens with eligible, checked exercises; the control uses natural
 Python throughout. The 50% replacement is a testable starting hypothesis, not a chosen main recipe.
 This tests the complete checked-exercise intervention, not the separate effects of synthesis,
@@ -219,10 +221,12 @@ tolerances, and the total cost ceiling. Both arms use the same code-token budget
 protocol. If checked supply is insufficient, reduce the experimental horizon before launch rather
 than silently repeat examples. The 105M engineering pilot alone is not evidence of a useful base.
 
-At the measured 13,615 tokens/s, 1B total mixture tokens per arm would cost approximately 40.8
-single-H100 optimization hours for both arms. That excludes common-base training, evaluation,
-verification, checkpointing, and startup. It is a planning scenario, not an approved run length or
-a GH200 forecast. Cost a smaller development experiment first if pilot learning curves support it.
+At the recorded 12,859 full-trainer tokens/s, 1B total mixture tokens per arm projects to about 43.2
+single-H100 trainer hours for both arms at the pilot's overhead rate. Add common-base training,
+evaluation and data generation/verification to the appropriate ledgers. Both arms and their
+evaluations must fit the 91-hour comparison reservation. This is a planning scenario, not a frozen
+run length or GH200 forecast. Qualify the [changed-data continuation path](training.md#mid-training-readiness)
+before executing either arm; an ordinary same-manifest branch cannot run this experiment.
 
 ## Evidence for a coding claim
 

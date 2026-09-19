@@ -1,5 +1,9 @@
 # Training and inference
 
+The [program lifecycle](program.md#training-lifecycle) defines pretraining, capability/context
+mid-training and post-training on the fixed model. This guide describes implemented training paths;
+working stage plans are not launch configurations.
+
 Set `deterministic: true` in base or SFT settings when qualifying reproducible CUDA restart.
 This enables deterministic PyTorch algorithms and a reproducible cuBLAS workspace before training.
 The pilot and hardware probe enable it after a local attention-backward diagnostic showed gradient
@@ -59,8 +63,27 @@ uv run --no-sync torchrun --standalone --nproc-per-node=4 \
 Use `--device cpu --no-compile` for small CPU experiments. Run name `dummy` disables W&B.
 Resume explicitly with `--resume STEP`; use `--branch-from DIRECTORY --branch-step STEP` for a
 new branch. Resume checks the original model, data cursor, optimizer, tokenizer, and schedule.
-A changed recipe is a new run, not an edited resume. See `--help` for branch options and
+A changed recipe requires an explicitly supported new run, not an edited resume. See `--help` for branch options and
 [Slurm](slurm.md) for scheduler interruption/requeue.
+
+## Mid-training readiness
+
+The base loader supports token-endpoint mixture phases declared in one immutable packed manifest.
+This can express a preplanned curriculum using the existing next-token objective. Keep source supply,
+phase boundaries, replay and aggregate token exposure explicit. It does not make a new dataset
+compatible with an ordinary checkpoint branch.
+
+`--branch-kind same` requires the parent's model and data manifest, and inherits optimizer/data
+state. `--branch-kind context` allows a changed manifest and context configuration under
+`training_phase: context_extension`, resets the data cursor and retains optimizer state. Qualify
+actual long-context workloads separately. A dedicated changed-data continuation contract remains
+to be implemented/qualified for capability mid-training and the controlled code-data arms; do not
+mislabel those as context runs. Any new masked repair objective also requires a validated adapter.
+
+Before executing either part of mid-training, freeze parent identity, objective, data, schedule,
+optimizer policy and cost, and qualify resume. Capability continuation consumes a portion of the
+base horizon; context extension uses its separately declared exposure. No production RL trainer
+exists yet; its data, rollout and verifier requirements are in [the program](program.md#conditional-rl).
 
 ## Assistant training and generation
 

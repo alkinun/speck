@@ -1,7 +1,6 @@
 """Validate, but never make, human source-rights decisions."""
 
 import json
-import re
 from pathlib import Path
 
 from speck.provenance.io import durable_json as _write_json
@@ -234,67 +233,3 @@ def finalize_human_acceptance(template, output_path, *, config_dir=None):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     _write_json(output_path, acceptance)
     return acceptance
-
-
-def load_source_use_extension(path):
-    """Validate an explicitly approved additive source decision, without changing D5 inputs."""
-
-    path = Path(path).resolve()
-    value = json.loads(path.read_text())
-    if (
-        value.get("format") != "speck_human_source_use_extension"
-        or value.get("format_version") != 1
-        or value.get("status") != "human_approved_source_extension"
-        or value.get("decision") != "approve"
-        or value.get("automated_approval_made") is not False
-        or value.get("training_authority") is not False
-    ):
-        raise ValueError("source extension requires an explicit human source-use decision")
-    parent_identity = value["parent_acceptance"]
-    parent_path = _resolve(parent_identity["path"], path.parent, "parent acceptance")
-    if _sha256(parent_path) != parent_identity["sha256"]:
-        raise ValueError("source extension parent identity mismatch")
-    parent = json.loads(parent_path.read_text())
-    if (
-        parent.get("status") != "all_sources_human_approved"
-        or parent.get("automated_approval_made") is not False
-    ):
-        raise ValueError("source extension parent is not a human acceptance")
-    if value.get("scope_details") != parent.get("scope_details"):
-        raise ValueError("source extension cannot silently expand the parent scope")
-    authority = value.get("authority", {})
-    if authority.get("authority_type") != "human" or any(
-        not isinstance(authority.get(key), str) or not authority[key]
-        for key in ("name", "role", "organization")
-    ):
-        raise ValueError("source extension needs a named human authority")
-    if not value.get("signed_at") or not value.get("approval_basis"):
-        raise ValueError("source extension needs its human approval basis and date")
-    source = value.get("source", {})
-    if (
-        not source.get("id")
-        or source["id"] in parent["approved_source_ids"]
-        or source.get("category") not in CATEGORIES
-        or any(
-            not isinstance(source.get(key), str) or not source[key]
-            for key in ("id", "repo", "revision", "config", "content_field")
-        )
-        or not re.fullmatch(r"[0-9a-f]{40}", source["revision"])
-    ):
-        raise ValueError("source extension must identify exactly one new source")
-    for key in (
-        "attribution_plan",
-        "redistribution_policy",
-        "removal_policy",
-        "conditions",
-        "rationale",
-    ):
-        if not value.get(key):
-            raise ValueError(f"source extension is missing {key}")
-    for identity in value.get("evidence", []):
-        evidence = _resolve(identity["path"], path.parent, "source evidence")
-        if _sha256(evidence) != identity["sha256"]:
-            raise ValueError("source extension evidence identity mismatch")
-    if not value.get("evidence"):
-        raise ValueError("source extension needs checked evidence")
-    return {**value, "identity": {"path": str(path), "sha256": _sha256(path)}}

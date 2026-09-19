@@ -31,13 +31,11 @@ so its non-embedding count is approximately 1.130B, unlike some nominally simila
 
 ## Recommendation
 
-The clarified objective is to develop SpeckLabs' first architecture and competitive flagship,
-including its pretraining and post-training. The [architecture program](architecture-program.md)
-records the selected 1.2B all-active design and distinct token/FLOP/runtime efficiency measurements.
-The user has closed the MoE branch of investigation to focus this program on one model. Optimize
-and qualify that model, improve its data, and establish useful thinking/code/tool performance.
-The 91-hour bounded comparison remains a data study, not an architecture competition. Open reporting
-and reusable infrastructure support the flagship objective; model quality still requires evidence.
+The first release develops a data and training recipe across pretraining, mid-training and
+post-training on the selected 1.2B backbone. The [model notes](model.md) explain attention/size
+choices and their measured limitations. MoE, attention residuals and broader architectural research
+belong to later releases with larger allocations. Qualify the current runtime, improve the data and
+measure useful thinking/code/tool behavior. The 91-hour bounded comparison is a data intervention.
 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
 claim. A narrow competitive product is a hypothesis to test: reliable Python/JavaScript/TypeScript
@@ -79,42 +77,20 @@ horizon, measured budget reallocation or more compute; it cannot justify a quali
    runtime qualification and the bounded data comparison to their existing reservations. Keep the
    selected architecture fixed; no MoE or all-GQA comparison arm is planned.
 
-## SpeckLabs first-step objective
+## Release evidence and later scaling
 
-The user clarified on September 19 that the 5,000-GPU-hour program must develop our own pretrained
-model and the capability to scale to a future 50,000 GH200-hours and beyond. This supersedes the
-previous recommendation to consider adapting an external base for a competitive product.
-Keep external models as demanding comparators and, where qualified, teachers; disclose teacher
-sources and generation/verification costs. Our base weights start from scratch.
+Success combines useful capability, measured cost and an open account of data and training.
+Release identifiable base and thinking-assistant checkpoints with stage lineage, source manifests,
+processing recipes, exact training/evaluation configurations, token/compute ledgers and failure
+analysis. The [report outline](report.md) distinguishes controlled data results from stage progression
+and matched product comparisons. Share permitted manifests and recipes without redistributing
+restricted corpus bytes.
 
-Success has three parts: useful task capability, measured efficiency, and an open technical record.
-Training efficiency means capability at a declared all-in training budget and throughput under a
-specified workload. Inference efficiency means latency, memory and cost per successful task under
-comparable quality, context and output conditions. More tokens/s or a larger context setting alone
-does not establish either kind of advantage. The current hybrid must earn efficiency claims through
-measurement; its global-attention layers still require a growing cache at longer context.
+Preserve intermediate model/optimizer checkpoints, source-wise loss, capability versus tokens/cost,
+and length-dependent runtime measurements. These inform later data and architecture studies as
+compute/model sizes grow; a single 1.2B run cannot establish a scaling law. The future 50,000-hour
+ambition is not funded by this allocation, and a tenfold compute increase does not promise a tenfold
+quality improvement. Detailed stage/budget decisions belong in the [program overview](program.md).
 
-Keep the selected 1.2B all-active model, working data recipe and always-thinking post-training target.
-Freeze the final token horizon after profiling, supply qualification and bounded learning evidence.
-Do not automatically shrink to maximize token count, enlarge to imply capacity, or make 100B/400B
-an unconditional release threshold. Phase reservations may be revised from measured needs while
-keeping the 5,000-hour total and adequate evaluation/recovery coverage.
-
-Ship identifiable base and thinking-assistant checkpoints with source manifests, exact training
-configs, code/environment identities, token and compute ledgers, learning curves, evaluation
-protocols and failure analysis. Publish data derivatives only where redistribution is permitted;
-otherwise publish source identities, processing instructions and permitted manifests. Distinguish
-an openly documented process from redistributing every underlying dataset.
-
-Design this run to inform the next allocation: retain intermediate model/optimizer checkpoints,
-source-wise loss, capability versus tokens/compute, length-dependent runtime and memory, and
-recovery/distributed measurements. Freeze checkpoint/evaluation cadence before launch; do not
-return to frequent progress polling. One 1.2B run supplies a learning curve, not a parameter-scaling
-law. A future larger model needs separate controlled evidence and a new budget.
-A tenfold compute increase must be divided among size, tokens, data work and post-training; it
-cannot be promised as a tenfold token or quality increase.
-
-A competitive flagship is the goal, with release claims set by results. If the first run misses the
-capability/efficiency gates, report that outcome and preserve a reusable research release rather
-than claiming an advantage that was not measured. No additional compute or parallel full-model
-program is authorized by this strategy update.
+If capability or efficiency falls short, publish that result and its limitations. Release claims
+follow measured evidence; openness alone does not establish a competitive advantage.

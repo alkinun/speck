@@ -1,11 +1,14 @@
 # Speck
 
-SpeckLabs is developing its first from-scratch **1.2B all-active model**, with a base release and an
-always-thinking assistant for **agentic coding, coding, math and tools**. The model uses a KDA/GQA
-backbone with dense feed-forward layers; no MoE investigation is planned for this release.
+SpeckLabs' first model and paper focus on **data and training across pretraining, mid-training,
+and post-training**. We are training a **1.2B all-active model from scratch**, with a base release
+and an always-thinking assistant for **agentic coding, coding, math and tools**. The selected
+KDA/GQA backbone stays fixed while we develop and measure the data recipe and training stages.
+The paper explains attention, model size and their measured trade-offs; broader architecture
+research, including MoE and attention residuals, belongs to later releases with larger allocations.
 
-Start with the [program overview](docs/program.md) for architecture, pretraining/post-training data,
-compute, context extension and release. [PLAN.md](PLAN.md) gives current status and the next work;
+Start with the [program overview](docs/program.md) for the training lifecycle, data, compute and
+release, and the [model notes](docs/model.md) for the fixed backbone. [PLAN.md](PLAN.md) gives current status and the next work;
 the [main data plan](experiments/main-data/README.md) records numeric targets and feasibility.
 The H100 pilot and backups are complete; GH200/four-worker qualification and flagship training are ahead.
 [Research notes](docs/research.md) distinguish publisher findings from our own evidence.

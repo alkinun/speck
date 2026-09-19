@@ -211,13 +211,6 @@ def validate_refinement_config(config, *, config_dir=None):
     return normalized
 
 
-def load_refinement_config(path):
-    path = Path(path).resolve()
-    return validate_refinement_config(
-        json.loads(path.read_text(encoding="utf-8")), config_dir=path.parent
-    )
-
-
 def _validated_config(config):
     if "plan_fingerprint" not in config:
         return validate_refinement_config(config)

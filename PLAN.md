@@ -8,10 +8,11 @@ Update these in place. Historical proposals and failures remain in Git and their
 
 ## Goal and selected decisions
 
-Pretrain SpeckLabs' own useful, competitive and efficient model from scratch, then release the
-base and an always-thinking assistant with an open technical report. Primary uses are agentic
-coding, normal coding, math reasoning and tools; general usefulness remains a regression check.
-External models are comparators or qualified teachers, not our base initialization.
+Develop a useful model from scratch through a measured data recipe spanning pretraining,
+mid-training and post-training, then release the base and an always-thinking assistant with an
+open technical report. Primary uses are agentic coding, normal coding, math reasoning and tools;
+general usefulness remains a regression check. The first paper centers on data, training and
+capability development. External models are comparators or qualified teachers, not our base initialization.
 
 - **Model selected:** 1,195,884,576 total/active parameters; 24 layers, width 2048; three KDA
   recurrent blocks then one global NoPE GQA block, repeated six times. Dense SwiGLU throughout,
@@ -24,16 +25,19 @@ External models are comparators or qualified teachers, not our base initializati
 - **Context target:** start at 4K, extend toward approximately 128K after measured qualification.
 - **Future ambition:** 50,000 GH200-hours and larger models; no future allocation is assumed funded.
 
-The [architecture decision](docs/architecture-program.md) fixes one model. Remaining experiments
-concern implementation, data and training recipes. Report a measured need for a structural departure
-before changing that choice. Competitive quality and useful 128K context are targets, not results.
+The [model notes](docs/model.md) record the fixed backbone and the paper's supporting discussion of
+attention, size and measured trade-offs. MoE, attention residuals and broader architecture research
+are deferred to later releases as compute and model sizes grow. Current experiments concern data,
+training recipes and runtime qualification. Competitive quality and useful 128K context are targets,
+not results. The [program overview](docs/program.md#training-lifecycle) defines stage boundaries.
 
 ## Working recipes, not launch settings
 
 | Area | Preparation target | Still to resolve |
 | --- | --- | --- |
-| Base training | 320B desired / 400B stretch; 35% code, 25% math, 40% supporting material | Qualified source supply and measured cost; 100B remains the present budget-fit scenario |
-| Context extension | Proposed 8B tokens: 2B up to 16K, 2B up to 32K, 4B toward 128K, including short replay | Memory, useful-context learning, positional behavior and stage costs |
+| Pretraining | 320B desired / 400B stretch base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material | Qualified source supply and measured cost; 100B remains the present budget-fit scenario |
+| Capability mid-training | Targeted code/math/repair continuation with broad-data replay, within the base horizon | Token split, mixture, objective and changed-data continuation support remain to be qualified |
+| Context mid-training | Proposed 8B additional tokens: 2B up to 16K, 2B up to 32K, 4B toward 128K, including short replay | Memory, useful-context learning, positional behavior and stage costs |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
 | Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
 | Data comparison | One bounded natural-code versus checked-exercise comparison | Useful common base, enough qualified examples, frozen endpoints and all-in cost |
@@ -82,20 +86,23 @@ historical; do not repeat the completed pilot because a preparation document sti
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to freeze the main schedule,
    batch, token horizon, data manifests and budget. Resolve the 320–400B feasibility gap explicitly.
-5. **Train, extend context, post-train, evaluate and release through gates.** Preserve continuation
-   checkpoints and source-wise learning curves. Run the bounded data comparison only when its base,
+5. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
+   continuation and context extension separately, with their data, objectives and budget ownership.
+   Preserve stage checkpoints and source-wise learning curves. Run the bounded data comparison only when its base,
    supply and cost gates pass. Qualify context stages before long SFT. Promote reward training only
    for measured gains. Pin final endpoints/comparators before selection; keep final tests untouched.
 
-Runtime and data preparation are the active tracks. Long-context and assistant designs can be
+Runtime and data preparation are the active tracks. Mid-training and assistant designs can be
 prepared now; their expensive execution depends on a useful base and measured costs. Use milestone
 checks and bounded supervisors, not frequent manual progress polling or duplicate workers.
 
 ## Compute
 
 The [numeric plan](experiments/main-data/plan.json) reserves 70 GPU-hours for runtime qualification,
-50 for engineering pilot work, 91 for the bounded data comparison, 2,300 for base training, 800 for
-context extension, 800 for post-training and 889 for protected evaluation/recovery: **5,000 total**.
+50 for engineering pilot work, 91 for the bounded data comparison, 2,300 for pretraining and capability
+mid-training, 800 for context mid-training, 800 for post-training and 889 for protected
+evaluation/recovery: **5,000 total**. Capability mid-training has no additional token/hour allowance;
+its split within the base horizon remains unfrozen.
 The [overview](docs/program.md#compute-and-allocation) proposes subdivisions of the existing
 post-training and protected envelopes; these do not add budget or promise that every stage fits.
 Completed external rental costs are recorded separately from the future grant ledger. The 50-hour

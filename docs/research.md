@@ -1,7 +1,10 @@
-# Research informing the first baseline
+# Research informing data and training
 
 Reviewed 2026-09-19 using primary papers and official releases. These are lessons and comparisons,
 not a promise to reproduce another lab's scores or compute budget. The decisions live in [PLAN.md](../PLAN.md).
+Use these references to inform pretraining, mid-training and post-training data and actual training.
+Attention/size choices provide supporting context; MoE, attention residuals and broader architecture
+research are deferred to later releases. A reviewed paper does not create another experiment arm.
 
 OpenBMB is a primary ongoing reference for our data work. The [coding plan](coding.md) records the
 specific UltraData-Code evidence, bounded local inspection, first comparison to prepare, and review
@@ -21,8 +24,8 @@ cadence. This prioritizes one testable data intervention while preserving indepe
 
 1. Quality and coverage of data, optimization, post-training, and evaluation all matter. Keep one
    model candidate while establishing the pipeline; do not turn each paper into another sweep.
-2. Separate general pretraining from explicit instruction/reasoning/tool behavior. Domain emphasis
-   must preserve enough broad data and replay to avoid losing ordinary usefulness.
+2. Distinguish broad pretraining, capability/context mid-training, and SFT/RL post-training.
+   Domain emphasis must preserve enough broad data and replay to retain ordinary usefulness.
 3. Verified answers and executable code tests are useful supervision and evaluation signals. Include
    failed solutions, tool errors, corrections, and unanswerable cases in a carefully checked recipe.
 4. Count input and output tokens, teacher/generation effort, verification, and failed attempts.

@@ -1,5 +1,9 @@
 # Experiments and evidence
 
+The first release studies data and pretraining, mid-training and post-training on one fixed model.
+The table distinguishes runnable work and completed evidence from preparation plans. Broader
+architecture studies belong to later programs; no architecture search is active here.
+
 | Directory | Role | Current status |
 | --- | --- | --- |
 | [qualification](qualification/README.md) | Exact selected 1.2B model and finite hardware checks | Single-H100 rehearsal/timing complete; GH200 and four-worker qualification ahead |

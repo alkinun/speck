@@ -2,6 +2,10 @@
 
 Use the capability table in [PLAN.md](../PLAN.md#what-success-means) as the reporting outline. Measure math, coding,
 tools, reliability, and broad usefulness separately; keep cost alongside quality.
+Evaluate the [training lifecycle](program.md#training-lifecycle) with identified pretraining,
+mid-training, SFT and any RL checkpoints. Stage-to-stage changes describe progression; attributing
+a gain to data requires a controlled comparison with the model, training exposure and other recipe
+settings held fixed. The primary planned control is the [code-data intervention](coding.md#first-comparison-to-prepare).
 
 The final assistant target always uses the thinking protocol for coding, math and agent tasks.
 Evaluate brief/deep reasoning budgets within that protocol, including cap exhaustion, correctness,
@@ -29,6 +33,24 @@ Every script accepts `--help`.
 Use `benchmark` for optimization cost, `inference_benchmark` for prefill/decode measurements,
 `evaluation_server` for a local export endpoint, and `logprob_parity` for backend comparison.
 Report hardware, precision, batch, sequence/output lengths, startup, steady throughput, and memory.
+
+## Quality and cost evidence
+
+Report source-wise loss and capability against processed tokens and all-in GPU-hours, with unique
+data and replay disclosed. Compare cost to reach a declared quality target and show absolute quality.
+Equal-token, equal-FLOP and equal-wall-time comparisons answer different questions; do not treat
+accuracy divided by cost as a universal efficiency score.
+
+For FLOPs, declare the counting convention and included operations. The coarse 6*N*D reference
+does not fully account for global attention, recurrent/chunk work, vocabulary projection or
+recomputation. Separate model FLOP estimates from hardware time and measured kernel work.
+
+For inference, separate prefill and decode, count reasoning and final-answer tokens, and disclose
+context length, tool access, output caps and stopping policy. Agent cost per success includes failed
+attempts and environment costs alongside success rate. SFT supervised tokens, processed context,
+padding and RL rollout tokens are distinct quantities. Report teacher/verification costs separately.
+Attention/size analysis describes the selected model's behavior; architectural superiority and
+parameter scaling are outside the claims supported by this fixed-model program.
 
 ## Frozen pilot protocol and future evaluations
 

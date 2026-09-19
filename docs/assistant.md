@@ -1,5 +1,10 @@
 # Assistant data and serialization
 
+Thinking SFT and conditional verified-reward RL form the post-training part of the
+[data/training program](program.md#training-lifecycle), following pretraining and mid-training.
+The conversation targets below are for SFT. RL needs a separately qualified inventory of task
+prompts, reference answers/tests, verifiers and policy outcomes; it is not counted as SFT rows.
+
 The final product is an always-thinking assistant focused on agentic coding, general coding,
 mathematical reasoning and tool-mediated tasks. It has no supported non-thinking toggle or purely
 instruct mode. Short tasks may need brief reasoning; difficult tasks may need deeper reasoning and

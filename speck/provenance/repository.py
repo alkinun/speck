@@ -11,16 +11,3 @@ def repository_root(path=None):
         if (candidate / "pyproject.toml").is_file() and (candidate / "speck").is_dir():
             return candidate
     raise ValueError(f"cannot locate the Speck repository from {path}")
-
-
-def repository_artifact(value, root=None):
-    """Resolve an explicitly named input in the current checkout.
-
-    Callers retain their normal digest checks. Original Python source is recovered
-    through Git, rather than silently substituted into current execution.
-    """
-    path = Path(value).expanduser()
-    if path.is_absolute():
-        return path
-    root = Path(root) if root is not None else repository_root()
-    return root / path

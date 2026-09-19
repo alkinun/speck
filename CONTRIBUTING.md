@@ -4,6 +4,9 @@ Read [PLAN.md](PLAN.md) for current decisions and work order; [the program overv
 connects the stages, and [main-data plan.json](experiments/main-data/plan.json) owns working numeric
 targets. Keep one configuration per runnable experiment.
 A new idea belongs in a short discussion or Git issue until it becomes the next measured experiment.
+The first release studies data and pretraining, mid-training and post-training on a fixed backbone.
+Keep attention/size rationale and measured limitations documented; reserve MoE, attention residuals
+and broader architecture research for later programs with separate compute and experiment plans.
 
 ## Development
 
@@ -22,6 +25,9 @@ The `speck` package owns behavior; `scripts` provides command entry points. Pack
 import command scripts. Keep data order, checkpoint tensor names, optimizer state, and resume
 semantics stable unless a behavioral change is explicit and tested. Model variants retained in the
 runtime support checkpoint compatibility; they do not imply active architecture searches.
+Remove unreferenced helpers and superseded active documentation rather than adding compatibility
+wrappers or parallel plans. Check callers, export dependencies and historical fixtures before
+removing runtime functionality. Preserve completed evidence in its original form.
 
 ## Records and history
 

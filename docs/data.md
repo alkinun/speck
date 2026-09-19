@@ -121,8 +121,11 @@ then run the same source-rights, joint-exclusion, partition, pack, and full-load
 
 ## Recipe direction — 2026-09-19
 
-Prioritize data quality, coverage and learnability over additional architecture searches. Keep the
-current hybrid while qualifying data and the planned extension from 4K toward approximately 128K.
+The first model and paper center on data quality, coverage and learnability through pretraining,
+mid-training and post-training. Keep the selected model fixed; attention/size rationale and measured
+trade-offs support the paper, while broader architecture research belongs to later releases.
+The [program lifecycle](program.md#training-lifecycle) defines capability continuation, context
+extension toward approximately 128K, thinking SFT and conditional RL with separate data objectives.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
 The [main mixture and scale plan](../experiments/main-data/README.md) retains a desired 320B base target and 400B stretch:
 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
@@ -215,8 +218,10 @@ can represent the same underlying information. Review source-use evidence per co
    Track capability versus trained tokens and GPU-hours, plus preparation/verification cost and
    regressions by capability. Better data can improve learning per token without raising tokens/s.
 
-Plan broad base training, then measured context extension toward approximately 128K with short
-replay, followed by an SFT recipe spanning short and long interactions. Exact extension stages,
+Plan broad pretraining, capability-focused mid-training within the base horizon, then measured
+context mid-training toward approximately 128K with short replay, followed by an SFT recipe spanning
+short and long interactions. Preserve source-family identity and exclusions across every stage,
+including derived exercises, teacher traces and RL prompts. Exact continuation/extension stages,
 budgets and any later preference/RL phase remain to be frozen. Long-context qualification must
 measure retrieval across positions, cross-document reasoning, sustained generation and short-task
 retention, alongside memory/runtime. A configured maximum alone does not establish usable context.
