@@ -104,17 +104,17 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-The [current cohort assessment](../experiments/corpus-audit/application-cohort-review.json) records
-**155 full texts / 283,888 tokens reviewed**, **44 family-held records**, and **21 unheld records still
+The [current cohort assessment](../experiments/corpus-audit/markdown-cohort-review.json) records
+**173 full texts / 342,499 tokens reviewed**, **44 family-held records**, and **three unheld records still
 unread**. Original sampling factors and source labels are preserved; observed language, dialect
 and file role are recorded separately. A family hold alone does not establish an exact benchmark
 match or justify replacing a sampled record.
 
 The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
-checks and package/family evidence. Latest MATLAB/Objective-C/PHP readings record signal-validation
-assumptions and framework/configuration dependencies. Printed accuracy is not verified evaluation;
-headers and dataset license labels do not settle notice applicability. No new or reused verified
-origins are available for this batch; embedded-data and earlier source-use questions remain open.
+checks and package/family evidence. Latest Markdown readings distinguish tutorials, reference/test
+excerpts and personal/project prose. Preserve teaching context and complete documents; algorithm
+tables and printed outputs do not establish independent verification. No new or reused verified
+origins are available for this batch; attribution and earlier source-use questions remain open.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment

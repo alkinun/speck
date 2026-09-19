@@ -195,8 +195,8 @@ manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit
 ## Common cohort review
 
 The fixed cohorts retain **218 original records**, their sampling factors and observed tokens.
-Common full-text review now covers **155 files / 283,888 tokens**. There are **44 family-held records**
-and **21 currently unheld records outside full-read coverage**. Review completion does not establish
+Common full-text review now covers **173 files / 342,499 tokens**. There are **44 family-held records**
+and **three currently unheld records outside full-read coverage**. Review completion does not establish
 source use, correctness, eligible yield or a source ranking; the two sampling frames remain distinct.
 Two previously read records are now held, so reading and hold counts overlap.
 
@@ -213,6 +213,7 @@ Two previously read records are now held, so reading and hold counts overlap.
 | [Java follow-up](../experiments/corpus-audit/java-cohort-review.json) | 15 more texts / 27,176 tokens; all nineteen unheld Java records read | Source-notice applicability and caller/test context recorded; one prior verified original reused, no new holds |
 | [SQL-labelled follow-up](../experiments/corpus-audit/sql-cohort-review.json) | 11 more texts / 37,430 tokens; all unheld records carrying the SQL label read | Schemas, notebooks, dumps and test roles distinguished; one CQL fixture; no new origins or holds |
 | [MATLAB/Objective-C/PHP follow-up](../experiments/corpus-audit/application-cohort-review.json) | Six more texts / 5,546 tokens; all unheld records carrying these labels read | Signal-validation assumptions, framework/configuration dependencies and notice context recorded; no new origins or holds |
+| [Markdown follow-up](../experiments/corpus-audit/markdown-cohort-review.json) | 18 more texts / 58,611 tokens; all 22 unheld Markdown records read | Tutorials, reference/test excerpts and personal/project prose distinguished; no new origins or holds |
 
 All batches preserve held selections rather than replacing them. Assistant observations are recorded
 replay inputs, not independent annotations. Offline replay and corruption/selection controls pass;
@@ -233,10 +234,10 @@ channel when granularity exceeds one; validation resets prediction offsets acros
 depends on the preprocessor ordering contract. None of these observations is a measured execution result.
 
 Test evidence also needs context: some examples only log output, bypass the behavior under test,
-check stale results or mislabel timings. Regression inputs and query snapshots need their harness
-and expected outputs; printed accuracy needs a documented data split. Test presence and printed
-metrics alone establish neither independent correctness nor efficiency. Batch receipts retain the
-specific findings and origin-check outcomes.
+check stale results, compare values with themselves or mislabel timings. Regression inputs and
+query snapshots need their harness and expected outputs; printed accuracy needs a documented data
+split. Test presence and printed metrics alone establish neither independent correctness nor
+efficiency. Batch receipts retain the specific findings and origin-check outcomes.
 
 **Language and execution context.** Preserve original labels and sampling weights while recording
 observed language, dialect and role separately. A JavaScript-labelled `.pde` file uses Processing
@@ -249,7 +250,10 @@ to standalone implementations. C++ templates need relevant instantiations; UIKit
 adapters need surrounding implementations and contracts. TODO comments can accompany implemented
 methods. Database dumps embed application data, including identifiers whose synthetic/real status
 and suitability remain unresolved. Record those distinctions without automatic rejection, repair,
-relabelling or splitting.
+relabelling or splitting. Markdown includes reference notes with defective examples, intentional
+security demonstrations, profiles and six minimal project descriptions. Preserve teaching intent and
+document boundaries: an article’s algorithm table is not a set of independently verified exercises.
+Historical setup instructions and author-reported outputs require their original context.
 
 **Families and package attribution.** A previously unflagged GoLLIE test contains evaluation examples;
 both sampled GoLLIE records remain held. Those examples are exposed material, not blind evaluation
@@ -274,7 +278,7 @@ its same-version source archive omits it. A package/version label or ancestor no
 Stringutils notice applicability and both upstream commits remain unresolved; GitHub rate-limit
 responses and the oversized Arcade wheel remain recorded acquisition limits.
 
-**Next:** review the remaining **21 unheld records** (18 Markdown and three CSS/SCSS), resolve
+**Next:** review the remaining **three unheld CSS/SCSS records** at their original lengths, resolve
 origins/notices and complete broader family/near-duplicate discovery. Natural-code eligibility is
 separate from independent exercise verification. The retained 0.477B code stock supports at most
 **1.59B total one-pass tokens at 30% natural code**, before exclusions, validation and other bank

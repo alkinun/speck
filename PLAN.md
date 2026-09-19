@@ -61,7 +61,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Application origin/test review | All four source revisions, complete trees and MIT notices recovered; 29 response hashes verified | [Receipt](experiments/corpus-audit/code-application-origins.json); one direct but stale test link, no independent verification or admission |
 | Stratified code preflight | 138 files / 459,615 tokens across 11 languages and 72 strata; exact offline replay | [Receipt](experiments/corpus-audit/code-yield-result.json); 30 content flags, 31 sample family holds; full eligibility and usable yield remain unresolved |
 | Stack v3 preflight | All 16 frozen groups acquired; 29,347 repository rows / 379,942 entries; fixed 44-repository / 80-file cohort screened | [Receipt](experiments/corpus-audit/stack-v3-broader.json); four content flags, eight known-family holds; source use, quality and eligible yield unresolved; exact offline replay, no admission |
-| Common code review | 155 complete texts / 283,888 tokens reviewed; 44 of 218 records family-held; 21 unheld records unread | [MATLAB/Objective-C/PHP review](experiments/corpus-audit/application-cohort-review.json); signal-validation, dependency and notice questions recorded; all holds preserved; no yield estimate or admission |
+| Common code review | 173 complete texts / 342,499 tokens reviewed; 44 of 218 records family-held; three unheld records unread | [Markdown review](experiments/corpus-audit/markdown-cohort-review.json); document roles, teaching context and test limitations recorded; all holds preserved; no yield estimate or admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -84,12 +84,12 @@ historical; do not repeat the completed pilot because a preparation document sti
 2. **Complete the fixed code-cohort assessment, then compare other banks.** The original
    [Stack-Edu sample](experiments/corpus-audit/code-yield-result.json) has 138 files and the
    [Stack v3 sample](experiments/corpus-audit/stack-v3-broader.json) has 80. Their exclusions and
-   sampling frames remain distinct. The [MATLAB/Objective-C/PHP follow-up](experiments/corpus-audit/application-cohort-review.json)
-   extends common full-text coverage to 155 records, preserving all 44 holds. Signal-validation
-   assumptions, framework dependencies and notice applicability remain unresolved. Original source
-   labels and weights remain intact; no measured accuracy or training eligibility follows.
+   sampling frames remain distinct. The [Markdown follow-up](experiments/corpus-audit/markdown-cohort-review.json)
+   extends common full-text coverage to 173 records, preserving all 44 holds. Tutorials, test excerpts,
+   reference notes and personal/project prose need distinct treatment. Original source labels, weights
+   and document boundaries remain intact; no correctness or training eligibility follows from reading.
    Installed Arcade/stringutils identities are verified; stringutils also matches its published wheel.
-   Continue the 21 currently unheld records: 18 Markdown and three CSS/SCSS. Complete broader lineage
+   Read the remaining three unheld CSS/SCSS records at their original lengths. Complete broader lineage
    discovery and unresolved notice/revision checks; record natural-code and verified-exercise gates separately.
    The pair-aware syntax diagnostic passes 14 controls on each of two Python versions and confirms
    one redaction-induced failure; parsing does not establish semantic preservation or eligibility.

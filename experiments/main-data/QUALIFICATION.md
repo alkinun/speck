@@ -7,11 +7,11 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- Common full-read coverage is **155 files / 283,888 tokens** across the fixed 218 records.
-  The [latest MATLAB/Objective-C/PHP review](../corpus-audit/application-cohort-review.json) adds six
-  readings, recording signal-validation assumptions, framework dependencies and header/notice context.
-  No accuracy was measured; no new or reused verified origins are available for this batch.
-  There are 44 held records and 21 unheld records still unread; source labels and weights remain intact.
+- Common full-read coverage is **173 files / 342,499 tokens** across the fixed 218 records.
+  The [latest Markdown review](../corpus-audit/markdown-cohort-review.json) adds eighteen readings,
+  distinguishing tutorials, reference/test excerpts and personal/project prose. Document boundaries
+  remain intact; no new or reused verified origins are available for this batch.
+  There are 44 held records and three unheld records still unread; source labels and weights remain intact.
   The [coding guide](../../docs/coding.md#common-cohort-review) links the frozen earlier readings.
   The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial;
   the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
@@ -120,8 +120,8 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 155 records;
-continue the remaining 18 Markdown and three CSS/SCSS records with the same origin/notice,
+Reuse retained packets and current receipts. Common full-read coverage now includes 173 records;
+read the remaining three CSS/SCSS records at their original lengths with the same origin/notice,
 intended-use, content and family gates. Keep this sampling frame fixed; reconcile observed file roles
 and unresolved eligibility into the dataset inventory rather than replacing difficult outcomes.
 Resolve observed restrictive notices alongside host/upstream attribution; file headers and dataset

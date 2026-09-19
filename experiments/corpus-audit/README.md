@@ -395,8 +395,12 @@ all unheld records with that label. It brought coverage to 149 files / 278,342 t
 27 unheld records then unread. Schemas, notebooks, dumps and test roles need distinct context; one
 file contains CQL definitions. No new or reused verified origins, family holds or admissions result.
 The [MATLAB/Objective-C/PHP review](application-cohort-review.json) adds six readings / 5,546 tokens,
-completing all unheld records with those labels. Current coverage is 155 files / 283,888 tokens, with
-44 held and 21 unheld records still unread. Signal-validation assumptions, framework dependencies
+completing all unheld records with those labels. It brought coverage to 155 files / 283,888 tokens, with
+44 held and 21 unheld records then unread. Signal-validation assumptions, framework dependencies
 and notice applicability remain unresolved; no new or reused verified origins or holds result.
+The [Markdown review](markdown-cohort-review.json) adds eighteen readings / 58,611 tokens,
+completing all 22 unheld Markdown records. Current coverage is 173 files / 342,499 tokens, with
+44 held and three unheld CSS/SCSS records still unread. Tutorials, reference/test excerpts and
+personal/project prose retain complete document boundaries; no new origins, holds or admissions result.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.

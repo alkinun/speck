@@ -340,10 +340,10 @@ separates inputs available for detailed design from the requirements for launchi
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
    Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
-   [MATLAB/Objective-C/PHP follow-up](../corpus-audit/application-cohort-review.json): coverage is 155 files,
-   with 21 unheld files still outside it and 44 records family-held. Signal-validation assumptions,
-   framework dependencies and notice applicability remain unresolved. No new or reused verified
-   origins are available for this batch; original labels/weights and holds remain intact.
+   [Markdown follow-up](../corpus-audit/markdown-cohort-review.json): coverage is 173 files, with three
+   unheld CSS/SCSS files still unread and 44 records family-held. Tutorials, reference/test excerpts
+   and personal/project prose retain their original labels, weights and document boundaries. No new
+   or reused verified origins are available for this batch; all holds remain intact.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
