@@ -32,8 +32,9 @@ so its non-embedding count is approximately 1.130B, unlike some nominally simila
 
 The clarified objective is to develop SpeckLabs' first architecture and competitive flagship,
 including its pretraining and post-training. The [architecture program](architecture-program.md)
-sets the starting hypothesis, a bounded all-GQA control and distinct token/FLOP/runtime efficiency
-measurements. Open reporting and reusable infrastructure support this objective; they are not
+sets the starting hypothesis and distinct token/FLOP/runtime efficiency measurements. The
+latest MoE investigation prioritizes one dense-FFN versus interleaved-MoE comparison while holding
+attention fixed; the all-GQA control is deferred to avoid multiplying experiments. Open reporting and reusable infrastructure support this objective; they are not
 substitutes for model quality. Treat the current hybrid as a candidate we can improve, not a frozen
 architecture whose only open question is how many tokens to train.
 
