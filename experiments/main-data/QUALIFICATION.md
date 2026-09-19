@@ -7,11 +7,11 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- Common full-read coverage is **123 files / 213,736 tokens** across the fixed 218 records.
-  The [latest C/C++ review](../corpus-audit/c-cpp-cohort-review.json) adds 22 readings, identifying
-  test-harness limitations and template/SDK context. It has no new or reused verified origins. One
-  record under `svcomp` was held from metadata without displaying or semantically reviewing task text.
-  There are 44 held records and 53 unheld records still unread; source labels and weights remain intact.
+- Common full-read coverage is **138 files / 240,912 tokens** across the fixed 218 records.
+  The [latest Java review](../corpus-audit/java-cohort-review.json) adds fifteen readings, identifying
+  caller/test-context limitations and restrictive notice wording in a `no_license` record. Applicability
+  remains unresolved. One prior verified original is reused without a recovered notice or new lookup.
+  There are 44 held records and 38 unheld records still unread; source labels and weights remain intact.
   The [coding guide](../../docs/coding.md#common-cohort-review) links the frozen earlier readings.
   The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial;
   the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
@@ -120,10 +120,12 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 123 records;
-continue the 53 currently unheld records outside that coverage with the same origin/notice,
+Reuse retained packets and current receipts. Common full-read coverage now includes 138 records;
+continue the 38 currently unheld records outside that coverage with the same origin/notice,
 intended-use, content and family gates. Keep this sampling frame fixed; reconcile observed file roles
 and unresolved eligibility into the dataset inventory rather than replacing difficult outcomes.
+Resolve observed restrictive notices alongside host/upstream attribution; file headers and dataset
+license metadata do not independently authorize source use.
 Use the updated 44-record family holds, including GoLLIE, vendored Pylint and the metadata-identified
 LeetCode collection and Borealis `svcomp` record. The metadata-only holds are conservative, not proven
 matches to the intended scoring suite; do not inspect their task text to tune exclusions. Extend the

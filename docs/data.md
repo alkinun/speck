@@ -104,17 +104,18 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-The [current cohort assessment](../experiments/corpus-audit/c-cpp-cohort-review.json) records
-**123 full texts / 213,736 tokens reviewed**, **44 family-held records**, and **53 unheld records still
+The [current cohort assessment](../experiments/corpus-audit/java-cohort-review.json) records
+**138 full texts / 240,912 tokens reviewed**, **44 family-held records**, and **38 unheld records still
 unread**. Original sampling factors and source labels are preserved; observed language, dialect
 and file role are recorded separately. A family hold alone does not establish an exact benchmark
 match or justify replacing a sampled record.
 
 The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
-checks and package/family evidence. Latest C/C++ readings identify test-harness limitations and
-template/SDK context; no new or reused verified origins are available for this batch. A record under
-`svcomp` was held using metadata alone; its task text was not displayed or reviewed. Parser success
-and passing test assertions cannot certify behavior, semantic preservation or eligibility. Complete source-use, provenance and family checks in the
+checks and package/family evidence. Latest Java readings distinguish implementations, teaching
+fragments, demos and framework-dependent code. A restrictive notice in a `no_license` record needs
+applicability review. One prior verified original is reused, with no recovered notice or new lookup.
+Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
+Complete source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment
 inventories. No source ranking, eligible yield or bulk-filter adoption follows from this partial review.
 

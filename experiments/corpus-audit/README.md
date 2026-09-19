@@ -383,8 +383,12 @@ why observed role must accompany language labels. It reuses one verified origin 
 unavailable-original outcome, without new acquisition or corpus execution.
 The [C/C++ review](c-cpp-cohort-review.json) adds 22 readings / 54,222 tokens and a metadata-only
 hold for a record under `svcomp`, whose task text was not displayed or semantically reviewed.
-Current coverage is 123 files / 213,736 tokens, with 44 held and 53 unheld records still unread.
+It brought coverage to 123 files / 213,736 tokens, with 44 held and 53 unheld records then unread.
 Test-harness limitations, template instantiation and SDK context remain distinct from validated
 behavior or performance; this batch has no new or reused verified origins.
+The [Java review](java-cohort-review.json) adds fifteen readings / 27,176 tokens, completing all
+nineteen unheld Java records. Current coverage is 138 files / 240,912 tokens, with 44 held and 38
+unheld records still unread. Caller/test context and a restrictive notice needing applicability review
+remain unresolved; one prior verified original is reused without a recovered notice or new lookup.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.

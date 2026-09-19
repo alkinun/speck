@@ -195,8 +195,8 @@ manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit
 ## Common cohort review
 
 The fixed cohorts retain **218 original records**, their sampling factors and observed tokens.
-Common full-text review now covers **123 files / 213,736 tokens**. There are **44 family-held records**
-and **53 currently unheld records outside full-read coverage**. Review completion does not establish
+Common full-text review now covers **138 files / 240,912 tokens**. There are **44 family-held records**
+and **38 currently unheld records outside full-read coverage**. Review completion does not establish
 source use, correctness, eligible yield or a source ranking; the two sampling frames remain distinct.
 Two previously read records are now held, so reading and hold counts overlap.
 
@@ -210,6 +210,7 @@ Two previously read records are now held, so reading and hold counts overlap.
 | [TypeScript/C#/Kotlin follow-up](../experiments/corpus-audit/typed-language-cohort-review.json) | 14 more texts / 25,281 tokens; all unheld records carrying these labels read | Declarations, translated code, tests and teaching scaffolds distinguished; no new origins or holds |
 | [Shell/build/config follow-up](../experiments/corpus-audit/build-config-cohort-review.json) | 24 more texts / 36,832 tokens; all unheld Shell/CMake/Git Config/JSON/YAML/Dockerfile/Makefile records read | 12 scripts, eight authored configs, two generated build files and two localization files; no new origins or holds |
 | [C/C++ follow-up](../experiments/corpus-audit/c-cpp-cohort-review.json) | 22 more texts / 54,222 tokens; all nine unheld C and thirteen unheld C++ records read | Test-harness limitations and template/SDK context recorded; one metadata-only hold added |
+| [Java follow-up](../experiments/corpus-audit/java-cohort-review.json) | 15 more texts / 27,176 tokens; all nineteen unheld Java records read | Source-notice applicability and caller/test context recorded; one prior verified original reused, no new holds |
 
 All batches preserve held selections rather than replacing them. Assistant observations are recorded
 replay inputs, not independent annotations. Offline replay and corruption/selection controls pass;
@@ -230,8 +231,10 @@ counts or passing assertions alone do not establish independent oracles. A Set t
 `find()` calls `some()` instead; a shell functional test checks an earlier listing after computing a
 new one. Deployment scripts and filenames containing `test` do not establish independent oracles.
 A map suite dereferences end iterators and labels custom-map timings as standard-map timings;
-compiler-test helpers narrow results before comparison. The C/C++ batch has no new or reused
-verified origins. Neither test presence nor printed timings establish correctness or efficiency.
+compiler-test helpers narrow results before comparison. Java browser demos have no result assertions,
+and a task queue's thread-safety claim is unsupported by its unsynchronized mutable state. The latest
+batch reuses one verified original without a recovered notice. Neither test presence nor printed
+timings establish correctness or efficiency.
 
 **Language and execution context.** A JavaScript-labelled `.pde` file is a Processing Java-mode
 example; two other fixtures use symbolic-verification or extended syntax. Preserve original labels
@@ -243,7 +246,9 @@ translator attribution. Explicit TODO scaffolds and concatenated lesson snippets
 not verified complete applications. Generated build maps and localized UI strings also occur under
 code-language labels. Configuration can embed commands and depend on external schemas or services;
 syntax alone cannot qualify it. C++ templates need relevant instantiations, and custom container
-contracts differ from built-in types. Record observed roles without automatic rejection, repair or splitting.
+contracts differ from built-in types. Java lesson fragments differ from single compilation units,
+while IDE-generated TODO comments can accompany fully implemented method bodies. Record observed
+roles without automatic rejection, repair or splitting.
 
 **Families and package attribution.** A previously unflagged GoLLIE test contains evaluation examples;
 both sampled GoLLIE records remain held. Those examples are exposed material, not blind evaluation
@@ -256,7 +261,9 @@ record is conservatively held for lineage/evaluation-coverage review. Its soluti
 displayed or semantically reviewed, and no exact benchmark match is claimed. A later metadata-only
 hold covers the one sampled `belyaev-mikhail/borealis` record under `test/testcases/svcomp/`, bringing
 held records to 44. Its task text was also not displayed or semantically reviewed; correspondence
-with the intended scoring suite remains unresolved.
+with the intended scoring suite remains unresolved. The Java review additionally records restrictive
+notice wording in a `toothlou/nature` file sampled as `no_license`. Placeholder organization text does
+not settle applicability or permission; source-use review remains open and family partitions are unchanged.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while
@@ -264,7 +271,7 @@ its same-version source archive omits it. A package/version label or ancestor no
 Stringutils notice applicability and both upstream commits remain unresolved; GitHub rate-limit
 responses and the oversized Arcade wheel remain recorded acquisition limits.
 
-**Next:** review the remaining **53 unheld records**, resolve origins/notices and complete broader
+**Next:** review the remaining **38 unheld records**, resolve origins/notices and complete broader
 family/near-duplicate discovery. Natural-code eligibility is separate from independent exercise
 verification. The retained 0.477B code stock supports at most **1.59B total one-pass tokens at 30%
 natural code**, before exclusions, validation and other bank constraints. Qualified supply and runtime

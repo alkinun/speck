@@ -1,0 +1,92 @@
+{
+  "format": "speck_java_cohort_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "a093292232d751ce5cb5e608c989d2183cd60cac",
+  "status": "fixed_unheld_java_reading_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/c-cpp-cohort-review.json",
+    "sha256": "36bb3c62728fc1c509b23ae3152f4d39ef28a79d7522730dfa1c85bcb3032bcc"
+  },
+  "selection_rule": "Every remaining unheld Java record in the fixed cohorts, at all lengths; no substitutions.",
+  "summary": {
+    "cohorts": {
+      "stack_edu": {
+        "new_full_read_files": 5,
+        "new_full_read_tokens": 18963
+      },
+      "stack_v3": {
+        "new_full_read_files": 10,
+        "new_full_read_tokens": 8213
+      }
+    },
+    "corpus_execution": false,
+    "cumulative_common_full_read_files": 138,
+    "cumulative_common_full_read_tokens": 240912,
+    "eligible_tokens_established": 0,
+    "eligible_yield_estimate": null,
+    "family_held_files": 44,
+    "gpu_hours": 0,
+    "languages": {
+      "Java": {
+        "held_files": 5,
+        "original_files": 24,
+        "unheld_full_read_files": 19
+      }
+    },
+    "network_requests": 0,
+    "new_family_holds": 0,
+    "new_full_read_files": 15,
+    "new_full_read_tokens": 27176,
+    "new_origin_checks": 0,
+    "original_files": 218,
+    "remaining_unheld_outside_common_full_reads": 38,
+    "restrictive_notice_observations": 1,
+    "reused_git_verified_origins_for_this_batch": 1,
+    "source_ranking": null,
+    "training_admitted": false
+  },
+  "findings": [
+    "A task queue described as thread-safe mutates unsynchronized collections and execution state; an uncaught task exception bypasses its reset. A binary-search-tree root removal compares a key with a null parent-sentinel key.",
+    "Operator notes concatenate instructional fragments rather than form one verified compilation unit. Conversely, an Android widget has implemented methods despite IDE-generated TODO comments; keyword-only completeness judgments would lose context.",
+    "Selenium examples have no result assertions and depend on historical page/driver state. Small JUnit teaching examples provide limited checks, not independent behavior or coverage certification.",
+    "A file in the no_license stratum carries restrictive notice wording with placeholder organization text. Applicability and original attribution remain unresolved; neither permission nor unauthorized publication is inferred.",
+    "Vendored Netty code delegates reference-count semantics to helpers and subclasses. Static-analysis code requires invocation/caller contracts, and one application-specific semantic branch makes no active state update.",
+    "One previously Git-verified browser-demo original is reused, with no recovered notice. Consumed redaction is preserved; no new origin lookup or corpus execution occurred."
+  ],
+  "source_notice_observation": {
+    "repository": "toothlou/nature",
+    "path": "nature-indexaccess/src/main/java/pers/linhai/nature/indexaccess/model/analysis/analyzers/PatternAnalyzer.java",
+    "original_license_type": "no_license",
+    "original_license_labels": [],
+    "status": "restrictive_notice_applicability_pending",
+    "changes_family_partition": false
+  },
+  "reused_origin_evidence": {
+    "repository": "iyi0la/automationTest",
+    "path": "demo1.java",
+    "origin_receipt": "/mnt/speck-data/speck/data-qualification-20260919/code-cohort-review/origins.json",
+    "status": "git_blob_verified",
+    "recovered_notice": false
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/java-cohort-review",
+    "manifest_sha256": "74eceb738ecece3a3814df01c6fe73778d9ec69a6625c467a789f1262a215161",
+    "artifacts": 9,
+    "bytes": 277039,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "changed_consumed_identity",
+      "rewritten_original_language_label",
+      "missing_selection",
+      "held_selection_substitution",
+      "rewritten_source_license_metadata"
+    ]
+  },
+  "boundaries": [
+    "Full static assistant reading, not independent annotation or behavioral verification. No corpus code, tests, JVM/compiler tools, Android devices, browsers, websites or application analysis ran.",
+    "All 218 original identities, token counts, language/license metadata and sampling weights retained; all 44 family holds preserved. The observed source notice is a pending source-use question, not a new family partition or eligibility decision.",
+    "One earlier verified original reused; no new origin checks, source-use approvals or notice resolution. No automatic repair, tutorial splitting, general rejection filter or replacement selection.",
+    "No network requests, eligible yield, training admission, source ranking or GPU work. Exact replay validates bookkeeping and recorded inputs, not independent semantic judgments."
+  ],
+  "next": "Finish the remaining 38 unheld records in the fixed cohort, then reconcile source notice applicability, provenance, file roles and finite eligible supply in the existing qualification packet before selecting data-study arms."
+}
