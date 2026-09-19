@@ -336,10 +336,40 @@ report cannot establish coverage of this implementation. This is a static mismat
 test result. Dependencies, independent oracles and full family/content checks remain open.
 
 No corpus code ran and no example is admitted. This closes the four-example feasibility check:
-immutable origin and co-present tests are insufficient verification gates. Next freeze a stratified
-language/role yield audit with explicit natural-code and checked-exercise admission criteria;
-additional hand-picked examples cannot estimate scalable supply. Raw files remain outside Git at
+immutable origin and co-present tests are insufficient verification gates. The stratified audit
+below now provides the next fixed sample; additional hand-picked examples cannot estimate scalable
+supply. Raw files remain outside Git at
 `/mnt/speck-data/speck/data-qualification-20260919/code-application-origins`.
+
+## Stratified retained-code audit — 2026-09-19
+
+The [frozen protocol](../experiments/corpus-audit/code-yield-plan.json) samples the complete finite
+census by language, existing path role and <=4K/>4K tokens. Two lowest hash-ranked records per
+nonempty group (or the sole member) produce **138 files / 459,615 tokens**, across **11 languages
+and 72 strata**. Known holds and previously reviewed files stay in the frame; no failed selection
+is replaced. Preserve each group's population and inclusion probability. Neither equal per-group
+counts nor this retained acquisition are a representative sample of the entire upstream release.
+
+The [first-pass result](../experiments/corpus-audit/code-yield-result.json) reopens 129 archives,
+verifies full selected bytes and Mistral token counts, and applies the existing 22-lane exclusion
+screen. **30 files trigger conservative content matches; 31 are held after named-family propagation.**
+The other 107 remain unresolved. Combining prior and new named-family evidence holds 5,325 files /
+3,858,264 tokens in retained stock; this is propagation of known flags, not a full-stock content
+scan or proof of semantic leakage. Exact sample, source and screen replay succeeds; a changed
+source hash is rejected. The first pass took 43.25 seconds locally, replay 35.79; no GPU or network
+was used and no corpus code executed.
+
+An exploratory assistant reading of all eight short `other` files in Python/JavaScript/TypeScript/Go
+finds three algorithm exercises, a language tutorial, a browser tutorial, a scientific script, a
+library implementation and an application module. It also records possible defects and missing
+context. This is static reading, not independent annotation or a practical-role/correctness rate.
+
+**Next:** complete source/origin/use and semantic-quality assessment on this frozen sample, review
+conservative matches and record family links and cost. Missing tests do not alone reject ordinary
+natural code. Verified exercises additionally require specifications, dependency/test linkage,
+independent oracles and deliberately wrong controls. Keep unassessed/unresolved/held/passed gates
+separate. Only completed assessments can support weighted natural-code yield or checked-exercise
+feasibility estimates; no training data is admitted by this first pass.
 
 ## Data work to do next
 
@@ -348,9 +378,9 @@ additional hand-picked examples cannot estimate scalable supply. Raw files remai
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.
-2. Use the pinned inventory and completed origin/test feasibility findings to freeze a stratified
-   yield audit before larger acquisition or the main horizon. Measure eligible yield by language
-   and practical role. The bounded bundle and origin follow-ups are complete: require
+2. Complete eligibility assessment on the frozen stratified sample before larger acquisition or
+   the main horizon. Measure eligible yield by language and practical role with sampling weights
+   and uncertainty. The bounded bundle and origin follow-ups are complete: require
    explicit module/import/behavioral linkage and independent test oracles, not just co-present
    filenames. Prioritize library use, debugging and repository repair over more tiny algorithm
    exercises; apply known family holds before selection. Algorithm puzzles alone do not cover

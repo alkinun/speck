@@ -9,8 +9,12 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 - The [expansion packet](../corpus-audit/code-expansion.json) pins both candidate inventories,
   verifies one new Python metadata shard and recovers 16 blobs. Thirteen length-matched files
-  contain 9,541 tokens; four content flags and unresolved origin/notice/test checks prevent
-  admission. Four application-module candidates now define the next practical qualification step.
+  contain 9,541 tokens; four content flags and unresolved eligibility prevent admission. The
+  [origin follow-up](../corpus-audit/code-application-origins.json) recovers all four application
+  revisions/notices but establishes no independently verified examples.
+- The [stratified preflight](../corpus-audit/code-yield-result.json) recovers 138 files / 459,615
+  tokens across 11 languages and 72 strata. Thirty content flags hold 31 sampled files by known
+  family. Exact replay succeeds; full source-use/quality/behavioral assessment remains open.
 - The [immutable bundle follow-up](../corpus-audit/code-bundles.json) recovers 19 linked files /
   5,650 tokens across four repositories. Four content flags propagate to 15 quarantined files.
   Static review finds weak Python assertions and a contradictory Go test expectation; the Go
@@ -101,9 +105,11 @@ Reuse retained packets and current receipts rather than repeating the same spot 
 diagnosis, full retained-code census, bundle follow-up and initial expansion inventory/probe are
 complete. The [application-origin review](../corpus-audit/code-application-origins.json) now resolves
 all four source revisions/notices; its single direct test link is stale and no example is verified.
-Next freeze a stratified language/role yield audit with independent checks and separate natural-code
-and checked-exercise gates. The proposed
-code horizon needs substantially more qualified supply. Remaining source comparisons are:
+The [stratified protocol](../corpus-audit/code-yield-plan.json) is now frozen and its offline recovery
+and content screen complete. Next assess this sample’s origins/notices, source use, semantic quality
+and unresolved families, keeping natural-code and checked-exercise gates separate. Only completed
+gates support a weighted yield estimate; 107 no-family-hit sample files remain unresolved. The
+proposed code horizon needs substantially more qualified supply. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |

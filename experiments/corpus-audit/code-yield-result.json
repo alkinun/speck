@@ -1,0 +1,184 @@
+{
+  "format": "speck_stratified_code_yield_preflight",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "385003ca04870674a78d92b41844007ec8c98de3",
+  "status": "first_stratified_preflight_complete_full_eligibility_audit_pending",
+  "protocol": {
+    "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/code-yield-plan.json",
+    "sha256": "fb45b169389fa9d3e24deb8e86603d167faf55f069bffc2d7ab8e5ad9af41818"
+  },
+  "implementation": {
+    "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/audit_code_yield.py",
+    "sha256": "df22f9b61309d97b0d130556c3cd5e21688dfc8f345a24bbab4244f48a4fa2a6"
+  },
+  "scope": "Retained Stack-Edu v1+v2 finite stock only; not an upstream-release or expansion-yield estimate. No new network acquisition, corpus execution or training.",
+  "sampling": {
+    "seed": "speck-code-yield-v1-20260919",
+    "per_stratum": 2,
+    "nonempty_strata": 72,
+    "population_documents": 714369,
+    "population_tokens": 476774847,
+    "selected_files": 138,
+    "selected_archives": 129,
+    "selected_tokens": 459615,
+    "selected_named_repositories": 137,
+    "boundary": "Finite retained acquisition is not a random release sample. Complete denominator and n/N weights per stratum are bound in selection.json; never use unweighted sample fractions as yield."
+  },
+  "screen": {
+    "benchmark_lanes": 22,
+    "benchmark_rows": 18958,
+    "content_flagged_files": 30,
+    "named_family_held_files": 31,
+    "unresolved_no_named_family_hold_files": 107,
+    "by_language": {
+      "C++": {
+        "sample_files": 14,
+        "sample_tokens": 47623,
+        "content_flagged_files": 2,
+        "named_family_held_files": 2
+      },
+      "C": {
+        "sample_files": 11,
+        "sample_tokens": 30623,
+        "content_flagged_files": 2,
+        "named_family_held_files": 2
+      },
+      "Go": {
+        "sample_files": 10,
+        "sample_tokens": 28747,
+        "content_flagged_files": 3,
+        "named_family_held_files": 3
+      },
+      "Java": {
+        "sample_files": 12,
+        "sample_tokens": 32206,
+        "content_flagged_files": 5,
+        "named_family_held_files": 5
+      },
+      "JavaScript": {
+        "sample_files": 13,
+        "sample_tokens": 52392,
+        "content_flagged_files": 3,
+        "named_family_held_files": 3
+      },
+      "Markdown": {
+        "sample_files": 13,
+        "sample_tokens": 63873,
+        "content_flagged_files": 1,
+        "named_family_held_files": 1
+      },
+      "Python": {
+        "sample_files": 16,
+        "sample_tokens": 50371,
+        "content_flagged_files": 6,
+        "named_family_held_files": 6
+      },
+      "Rust": {
+        "sample_files": 12,
+        "sample_tokens": 41716,
+        "content_flagged_files": 4,
+        "named_family_held_files": 5
+      },
+      "SQL": {
+        "sample_files": 12,
+        "sample_tokens": 43739,
+        "content_flagged_files": 1,
+        "named_family_held_files": 1
+      },
+      "Shell": {
+        "sample_files": 13,
+        "sample_tokens": 31249,
+        "content_flagged_files": 0,
+        "named_family_held_files": 0
+      },
+      "TypeScript": {
+        "sample_files": 12,
+        "sample_tokens": 37076,
+        "content_flagged_files": 3,
+        "named_family_held_files": 3
+      }
+    },
+    "boundary": "Exact/fragment screening is conservative; counts do not prove semantic contamination, correctness or source eligibility. The full family/near-duplicate graph remains unresolved."
+  },
+  "propagation_to_retained_stock": {
+    "previous_known_holds": {
+      "documents": 555,
+      "tokens": 433725
+    },
+    "after_sample_known_holds": {
+      "documents": 5325,
+      "tokens": 3858264
+    },
+    "boundary": "Named repositories and recorded aliases only; propagates these sample discoveries, not a whole-stock content scan or a complete family graph. Holds are conservative and pending review."
+  },
+  "static_review": {
+    "files": 8,
+    "roles": {
+      "language_tutorial": 1,
+      "algorithm_exercise": 3,
+      "browser_application_tutorial": 1,
+      "scientific_script": 1,
+      "library_implementation": 1,
+      "application_module": 1
+    },
+    "selection": "Exploratory post-selection reading of all eight short/other records in Go/JavaScript/Python/TypeScript. Not a preregistered semantic-quality endpoint; no inferred corpus practical-role rate.",
+    "boundary": "Assistant reading only, no corpus execution or independent correctness certification. Role and possible-defect observations are not acceptance rates."
+  },
+  "validation": {
+    "byte_identical_replay": [
+      "selection.json",
+      "records.json",
+      "screen.json"
+    ],
+    "first_seconds": 43.251241391000804,
+    "replay_seconds": 35.79469054599758,
+    "mutated_source_binding_rejected": true,
+    "script_identity": {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/audit_code_yield.py",
+      "sha256": "df22f9b61309d97b0d130556c3cd5e21688dfc8f345a24bbab4244f48a4fa2a6"
+    }
+  },
+  "training_admitted": false,
+  "eligible_unique_tokens_established": 0,
+  "eligible_yield_estimate": null,
+  "gpu_hours": 0,
+  "next_decision": "Complete source/origin/use and semantic-quality assessment for this frozen sample with recorded outcomes; review conservative matches before changing exclusion rules. Resolve family links and estimate review/acquisition cost. Only then estimate natural-code yield separately from checked-exercise feasibility. Do not expand bulk acquisition or silently repeat the retained bank to meet 30B/37.5B targets.",
+  "external_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/frozen-plan.json",
+      "sha256": "fb45b169389fa9d3e24deb8e86603d167faf55f069bffc2d7ab8e5ad9af41818"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/run-1/summary.json",
+      "sha256": "aeefb78f1fef823cdf845353055c9dce40a0287e2639a880dd00ad0002f2dcba"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/run-1/selection.json",
+      "sha256": "b17a47159c80e9b2b63e8db6217c2afdbf34d27661444fa8bc32168c9a16de75"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/run-1/records.json",
+      "sha256": "5fa1a1f177581cad8967e023b3aecc9e85b3e9093d82ec7cde1ea871ef2ca8b9"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/run-1/screen.json",
+      "sha256": "6cf801ea2904b0d2cc0c9404d7feca725d778b4be116d88c29e6cf64108cb024"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/replay/summary.json",
+      "sha256": "e4be3c23b9833f221a7b50704db17edc7bdc651d2170aa1683952cc9924f5858"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/review.json",
+      "sha256": "d95a238e5d883ef877702a37df55b709a3dc309cf48e64a4349a24416ad1856e"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/validation.json",
+      "sha256": "b8c94a954b0f2500c4c26ab3e5d009b2882d0d69d4000c33c046656d3a201b75"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-yield/closeout.py",
+      "sha256": "ca4d45241794120ad87b32272813301a8195d3134d5d987360a68e3858b6cc3d"
+    }
+  ]
+}

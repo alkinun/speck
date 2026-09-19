@@ -1,0 +1,59 @@
+{
+  "format": "speck_stratified_code_yield_protocol",
+  "format_version": 1,
+  "date": "2026-09-19",
+  "scope": "Retained Stack-Edu v1+v2 finite stock only; not an upstream-release or expansion-yield estimate. No new network acquisition, corpus execution or training.",
+  "scan": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2/scan.json",
+    "sha256": "4d503f9a40fc738288cbc3d9dc411fd55bcf46fc287dda1586c96d30c5386a0c"
+  },
+  "qualification_inputs": {
+    "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-inputs.json",
+    "sha256": "e7b2577f1e0fbed7824a002b3c32525ed97dde6b97685b704f04c390785a496c"
+  },
+  "prior_hold_assessment": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/assessment.json",
+    "sha256": "dc3569812940c8f91869903de7dc75930d94737b7f7e9a1ff85086c88aa36391"
+  },
+  "seed": "speck-code-yield-v1-20260919",
+  "per_stratum": 2,
+  "strata": "Census language x existing path role (vendor/test/docs_example/other) x tokens <=4096 or >4096; preserve census role semantics. Other is not a practical-code label.",
+  "sampling": "Within each nonempty stratum take min(2,N) lowest SHA256(seed:record_id), tie-break by record_id. All finite-stock records remain in the frame; do not exclude holds, prior reviews or failures, and never replace a failed selection. Freeze before source inspection.",
+  "measurements": [
+    "Population files/tokens and selected files/tokens per stratum; retain n/N inclusion probabilities and N/n expansion weights.",
+    "Verify archive/member/source identities, source metadata and exact token counts; recover complete selected text outside Git.",
+    "Apply the existing 22-lane exclusion screen, then propagate known/new holds through named repositories and supplied aliases. Record missing full-family/near-duplicate coverage.",
+    "Report preflight outcomes separately from natural-code eligibility and independently verified-exercise eligibility. No-hit is not approval."
+  ],
+  "review_protocol": {
+    "natural_code": "Require exact source/origin and notice evidence, source-use review, exclusions/near-deduplication and useful intact content. Complete independent executable tests are not a blanket natural-code requirement.",
+    "verified_exercise": "Additionally require a clear task specification, same-revision implementation/test linkage, bound dependencies, non-vacuous tests, independent oracles and deliberately wrong controls in isolation.",
+    "statuses": [
+      "not_assessed",
+      "unresolved",
+      "hold",
+      "pass"
+    ],
+    "first_pass": "Offline recovery/content screening only. Origin, source-use, semantic quality, security and behavioral gates remain unassessed unless a separately bound review supplies evidence.",
+    "failure_policy": "Hash mismatch invalidates the run. Unavailable sources and failed eligibility checks remain in their original selected strata and denominators.",
+    "estimation": "Unweighted sample proportions are not corpus yield. Any later document-yield estimate must use stratum expansion weights; token estimates must expand token-weighted outcomes, not multiply a file pass rate by all tokens. Account for repository clustering and tiny cells in uncertainty. Do not publish an eligible-yield estimate from incomplete gate assessment."
+  },
+  "resource_bounds": {
+    "gpu_hours": 0,
+    "maximum_selected_files": 176,
+    "maximum_selected_archives": 176,
+    "network_requests": 0,
+    "corpus_code_execution": false
+  },
+  "training_admitted": false,
+  "additional_prior_screens": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-bundles/result.json",
+      "sha256": "022b344927704974fbcad7fdd3f51babe27e161a707734f6ac580ed31d7a4d15"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/content-probe.json",
+      "sha256": "65856ffa92f859a0627c107de0c92ab0fae52bccfdb4a7d09a24af79148418d7"
+    }
+  ]
+}

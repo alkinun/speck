@@ -107,8 +107,10 @@ four content flags hold 15 files by family, and static review exposes test-oracl
 The [expansion inventory/probe](code-expansion.json) subsequently verifies one new Python metadata
 shard and retrieves sixteen blobs: thirteen length-matched files / 9,541 tokens, with four content
 flags and no admission. The [origin/test review](code-application-origins.json) resolves all four
-application revisions/notices, but the single direct test link is stale. Next freeze a stratified
-language/role yield audit with independent checks. The
+application revisions/notices, but the single direct test link is stale. The
+[stratified preflight](code-yield-result.json) now recovers/screens 138 files across 11 languages
+and 72 strata: 30 content flags, 31 sample family holds, no admission. Complete source-use/quality
+gates on this frozen sample before estimating yield. The
 [coding plan](../../docs/coding.md#retained-supply-census--2026-09-19) contains the language/role tables
 and the gap to proposed exposure; no main-code supply is admitted.
 
@@ -163,8 +165,8 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
    completeness, usefulness, correctness (verified/unverified), and template repetition. Calibrate
    any model-based scorer against reviewed examples; report source and length denominators.
 2. The FineMath numeric-template census, retained-code census and initial expansion probe are
-   complete, along with the four-module origin/test review. Freeze a stratified yield audit with
-   separate natural-code and checked-exercise gates, then count eligible supply after exclusions.
+   complete, along with the four-module origin/test review. The stratified sample is now frozen
+   and screened; complete separate natural-code and checked-exercise gates before estimating yield.
    Preserve the frozen pilot.
 3. Extend the bounded English refined-web inspection into source/answer consistency checks and
    inspect source-eligible code candidates. Establish domain coverage and overlap with current
@@ -329,4 +331,19 @@ all four implementations match immutable revisions with complete trees and retai
 One has a direct test link whose API is stale; three have no test-named paths. Static review and
 29 verified response hashes establish provenance evidence, not independently checked examples.
 No code ran and nothing is admitted. [Coding notes](../../docs/coding.md#application-origin-and-test-review--2026-09-19)
-record the findings and next stratified language/role yield audit. Raw files stay outside Git.
+record the findings. Raw files stay outside Git.
+
+## Stratified code-yield preflight
+
+[Protocol](code-yield-plan.json), [result](code-yield-result.json), and
+[coding notes](../../docs/coding.md#stratified-retained-code-audit--2026-09-19) define the sample,
+separate eligibility gates and next assessment. Replay into a fresh external directory:
+
+```bash
+PYTHONPATH=. uv run --no-sync python experiments/corpus-audit/audit_code_yield.py \
+  experiments/corpus-audit/code-yield-plan.json /external/code-yield-replay
+```
+
+The command verifies input identities, original sampling denominators, selected source bytes and
+tokens, then screens the sample. Output includes raw code and stays outside Git. It neither runs
+corpus code nor admits training data. Keep incomplete gates unresolved; a clean screen is not yield.

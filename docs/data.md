@@ -216,10 +216,11 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Use the [pinned expansion inventory](../experiments/corpus-audit/code-expansion.json) and
-   [completed origin/test review](../experiments/corpus-audit/code-application-origins.json) to freeze
-   a stratified language/role yield audit. Require source/test/docs linkage and independent oracles;
-   repository co-presence alone is insufficient. The 0.477B retained tokens
+1. Complete origin/source-use and semantic-quality assessment on the
+   [frozen stratified sample](../experiments/corpus-audit/code-yield-result.json). Its first pass
+   recovers/screens 138 files across 11 languages; no-hit records remain unresolved. Natural code
+   needs traceable, useful content; verified exercises additionally need test linkage and independent
+   oracles. Record weighted yield only after assessing the gates. The 0.477B retained tokens
    do not establish the proposed 30B natural-code exposure or the separate checked-exercise bank.
    For web, resolve source-use evidence, source families, overlap and source-aware extraction
    repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ

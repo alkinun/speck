@@ -99,7 +99,7 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; retained 0.477B is 1.59% before joint eligibility. Stack-Edu and UltraData-Code inventories pinned. One new Python metadata shard: 102603/5057204 rows pass historical metadata predicates. Sixteen blobs recovered, thirteen length-matched / 9541 tokens; four content flags, no admission. All four application origins/notices now recovered; the only direct test link is stale, no independent verification or admission. Freeze a stratified language/role yield audit with separate natural-code and checked-exercise gates before bulk expansion. UltraData-Code lineage holds remain."
+        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; 0.477B retained tokens before eligibility. Inventories and four application origins/notices recovered. Frozen stratified preflight: 138 files / 459615 tokens across 11 languages and 72 strata; 30 conservative content flags, 31 sample family holds, exact replay. Complete origin/source-use and semantic-quality assessment on this sample with separate natural-code and verified-exercise gates before weighted yield estimates or bulk expansion. UltraData-Code lineage holds remain."
       },
       {
         "id": "checked_code",
@@ -400,7 +400,8 @@
     "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
     "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
     "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
-    "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8"
+    "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
+    "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
