@@ -1,4 +1,4 @@
-# Assistant rehearsal contract
+# Assistant data and serialization
 
 The final product is an always-thinking assistant focused on agentic coding, general coding,
 mathematical reasoning and tool-mediated tasks. It has no supported non-thinking toggle or purely
@@ -6,7 +6,7 @@ instruct mode. Short tasks may need brief reasoning; difficult tasks may need de
 multiple tool steps. A possible hybrid effort policy must preserve the thinking contract. This is
 a release/training objective, not an established capability of the current base checkpoint.
 
-The first hardware rehearsal uses complete 4K conversations, the frozen 32K base tokenizer,
+The completed hardware rehearsal used complete 4K conversations, the frozen 32K base tokenizer,
 and chat format v2 with its existing three role IDs. Context-only assistant turns retain weight
 zero. Supervision covers assistant content and EOS; system, user, and tool-result content is masked.
 Nothing is truncated to manufacture a fitting example.
@@ -77,7 +77,7 @@ The [inventory receipt](../experiments/corpus-audit/recipe-review.json) binds th
 | glaiveai/reasoning-v1-20m | 120,000 | Source census and sampled serialization/length audit |
 | PrimeIntellect/SYNTHETIC-2-SFT-verified | 50,000 | Source census, publisher reward filter and sampled serialization/length audit |
 
-The OpenBMB stock pins still match the reviewed release heads. The first audit rejected tool
+The OpenBMB stock pins matched the release heads in the September 19 review. The first audit rejected tool
 formats before `speck_tools_v1` existed; those zero-fit entries are not current long-context
 measurements. The later successful 64-training/16-validation rehearsal demonstrates selected
 format compatibility, not the quality or compatibility of all 110,000 tool trajectories.
@@ -121,3 +121,11 @@ with supporting general tasks following the same thinking protocol. Balance brie
 by supervised tokens, while accounting for total context cost, final-answer tokens and length coverage.
 Freeze quantities after the content audit. The [main data work order](data.md#recipe-direction--2026-09-19)
 keeps one bounded comparison at a time and protects independent development/final evaluations.
+
+## Stage and budget ownership
+
+The [program overview](program.md#thinking-sft) connects this data/format contract to length-bucketed
+SFT and conditional reward training. Proposed subdivisions are 500 GPU-hours SFT, 200 RL and 100
+on-allocation teacher/verification work within the existing 800-hour post-training envelope. These
+are planning bounds, not measured costs. RL and long-context runtime remain unqualified; retain
+the SFT thinking assistant if reward training does not justify its cost or causes regressions.

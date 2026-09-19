@@ -1,7 +1,8 @@
 # Data
 
-The goal and next corpus are defined in [PLAN.md](../PLAN.md). Prepare one pilot with broad text,
-math, and code; choose weights from actual eligible supply. Old source quotas are historical.
+The goal and next work are defined in [PLAN.md](../PLAN.md), with the complete outline in
+[the program overview](program.md). The engineering pilot is complete. Prepare the main corpus
+against the working mixture and actual eligible supply; frozen pilot shares are historical.
 
 ## Pipeline
 
@@ -64,7 +65,8 @@ alongside the supply and integrity checks below. The frozen engineering pilot re
 The [follow-up decisions](../experiments/corpus-audit/README.md#follow-up-decisions--2026-09-18)
 keep FineMath, prepare a reversible 8,563-document topic-directory exclusion candidate, and
 prioritize consistency checks on English L3 Q&A before any synthetic-source replacement.
-No blanket numeric-deduplication rule or new main mixture has been adopted.
+No blanket numeric-deduplication rule has been adopted. The main mixture below is a preparation
+hypothesis; it has not been admitted or materialized as a training corpus.
 The [web candidate shortlist](../experiments/corpus-audit/README.md#candidate-decisions) explicitly
 prioritizes natural Ultra-FineWeb qualification following the
 [matched paper results](research.md#openbmb-web-data-review--2026-09-19), with FineWeb-Edu as
@@ -74,11 +76,13 @@ frozen pilot; the main mixture still needs a comparable content/coverage audit a
 
 The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
-or correctness. Preserve practical and multilingual code coverage while preparing that candidate.
+or correctness. The [natural-code cohort](../experiments/corpus-audit/natural-code-cohort.json)
+now has 16 immutable byte matches and ten preliminary review candidates; none is admitted.
+Next independently check the three practical candidates named in [coding](coding.md).
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
-retained token stocks used by the pilot. It counts the larger peS2o v2 bank once; its v1 predecessor
-is not additional supply. Stack-Edu below is the archived acquisition receipt, before full exclusion.
+retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`
+peS2o-v3 bank once; the earlier local stock version is not additional supply. Stack-Edu below is the archived acquisition receipt, before full exclusion.
 
 | Source | Retained tokens | Pilot share |
 | --- | ---: | ---: |
@@ -99,9 +103,9 @@ quotas. Natural UltraData-Math remains separate and is not silently added to thi
 
 At uint16 storage, each billion packed tokens requires about 2 GB for token IDs, before indexes,
 validation, preparation intermediates, and duplicate databases. Keep raw acquisition, exclusion
-outputs, packed data, and recovery checkpoints separately budgeted. The rental needs only the
-236 MiB pilot directory and small assistant pack; it does not need the full retained stock.
-After the pilot, choose the main horizon from measured all-in throughput and eligible supply,
+outputs, packed data, and recovery checkpoints separately budgeted. The completed rental used the small pilot directory and
+assistant pack; main-run storage must be measured separately.
+Choose the main horizon from measured all-in throughput and eligible supply,
 then run the same source-rights, joint-exclusion, partition, pack, and full-loader checks at that scale.
 
 ## Recipe direction — 2026-09-19
@@ -123,7 +127,7 @@ endpoint, not a causal verdict on its datasets or architecture.
 | Component | Evidence already available | Decision |
 | --- | --- | --- |
 | FineWeb-Edu, FineMath 4+, Cosmopedia v2, peS2o, FineWiki | Retained stocks, pilot preparation, index census and stratified excerpt audit | Keep useful content and controls; improve selection rather than discard all existing stock |
-| Stack-Edu | Retained multilingual code, bounded role/syntax audit, one exact upstream provenance match | Preserve practical code; qualify the next 16-file cohort and independent exercises |
+| Stack-Edu | Retained multilingual code; 16-file audit with exact upstream matches, 13 notices and ten preliminary review candidates | Independently test the three selected practical candidates; freeze expanded exclusions/family splits before derivation |
 | Natural Ultra-FineWeb | Paper reviewed, historical/current revision checked; comparable local natural-web content audit still pending | Leading candidate for the main web component |
 | DCLM baseline / DCLM-Edu | Historical configurations and current revisions checked | Independent comparison and coverage options; no claimed local quality ranking |
 | Ultra-FineWeb-L3 | 96 retained Q&A/multi-style records, length measurements and eight excerpt reviews | Promising synthetic component; check source/answer consistency before replacing Cosmopedia |

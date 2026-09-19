@@ -1,6 +1,6 @@
 # Evaluation
 
-Use the capability table in [PLAN.md](../PLAN.md) as the reporting outline. Measure math, coding,
+Use the capability table in [PLAN.md](../PLAN.md#what-success-means) as the reporting outline. Measure math, coding,
 tools, reliability, and broad usefulness separately; keep cost alongside quality.
 
 The final assistant target always uses the thinking protocol for coding, math and agent tasks.
@@ -30,9 +30,12 @@ Use `benchmark` for optimization cost, `inference_benchmark` for prefill/decode 
 `evaluation_server` for a local export endpoint, and `logprob_parity` for backend comparison.
 Report hardware, precision, batch, sequence/output lengths, startup, steady throughput, and memory.
 
-## Before the pilot
+## Frozen pilot protocol and future evaluations
 
-Pin a compact evaluation set and graders before training. Keep development and final-test data
+The pilot development evaluation and isolated code grading are complete: [results](../experiments/pilot/development-result.json)
+cover 2,619 tasks; final tests remain untouched. The preparation commands below describe the frozen
+protocol, not unfinished pilot work. For each new training study, pin evaluation inputs and graders
+before training. Keep development and final-test data
 separate from training and from each other. Verify final math answers, execute code in an isolated
 resource-limited runner, and evaluate tools in a deterministic environment. Include missing
 information, malformed calls, tool failures, corrections, and cases where no tool should be called.
@@ -98,7 +101,10 @@ log-likelihoods. It verifies frozen input hashes, selects only the declared part
 responses and task IDs, and rejects prompts that exceed the 4K context plus output budget.
 Greedy output caps are 1,024 tokens for GSM8K/code and 512 for IFEval. `--chat` applies the model's
 chat template with `enable_thinking=False`; omit it for a base comparator. Scores from chat and
-plain completion protocols must be labeled separately. `--limit 0` runs the full selected partition;
+plain completion protocols must be labeled separately. The frozen `enable_thinking=False` chat
+path is not the future always-thinking assistant evaluation protocol. Prepare and qualify an explicit
+thinking/tool-aware evaluator before assistant comparisons; preserve this historical base/reference
+protocol and its results. `--limit 0` runs the full selected partition;
 the default eight examples per benchmark is only an integration check. `--partition final` is an
 explicit held-out evaluation action, not part of development qualification.
 

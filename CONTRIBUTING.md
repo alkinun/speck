@@ -1,6 +1,8 @@
 # Contributing
 
-Read [PLAN.md](PLAN.md) for scope. Keep one current plan and one configuration per runnable experiment.
+Read [PLAN.md](PLAN.md) for current decisions and work order; [the program overview](docs/program.md)
+connects the stages, and [main-data plan.json](experiments/main-data/plan.json) owns working numeric
+targets. Keep one configuration per runnable experiment.
 A new idea belongs in a short discussion or Git issue until it becomes the next measured experiment.
 
 ## Development
@@ -27,6 +29,9 @@ Update the status/next step in PLAN.md after a meaningful transition. Store exac
 data, tokenizer, and training settings with the experiment. Keep a small result summary containing
 Git revision, input identities, metrics, costs, failures, and external output locations. Do not create
 another catalog, claim registry, or chain of successor documents for routine engineering changes.
+When a decision changes, update the overview, status and affected numeric fields together. Recheck
+mixture/budget sums, receipt identities and local links; distinguish selected choices, proposed
+recipes and measured outcomes. Historical result receipts retain their original bytes.
 
 Large corpora, checkpoints, caches, and logs stay outside Git. Preserve historical result bytes and
 expensive artifacts. The [archive guide](archive/README.md) restores old workflows at their original

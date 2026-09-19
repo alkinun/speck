@@ -36,7 +36,7 @@ from consuming the restored Python RNG. Warmup costs are included in the attempt
 input hashes, memory, step timings, checkpoint costs, and failures remain in the attempt directory.
 The learning rate and batch are diagnostic settings. The probe does not establish model quality,
 sustained corpus throughput, hard-crash recovery, cached-generation parity, or Slurm/requeue behavior.
-Those need separate checks before the real pilot. No 32K/128K sweep is part of this first step.
+Those need separate checks before a new corpus run; the later H100 pilot is already complete. No 32K/128K sweep is part of this first step.
 
 ## Local preparation result
 
@@ -60,7 +60,9 @@ all-in cost boundaries, local evidence hashes, and the latest portable bundle. U
 
 ## Measured planning inputs
 
-The [longer H100 receipt](timing-result.json) supersedes the short probe for cost estimation.
+The [longer H100 receipt](timing-result.json) supersedes the short probe for detailed component
+timing. The later [completed pilot](../pilot/h100-run.json) supplies actual full-trainer and
+development evaluation totals; the estimates below remain historical planning evidence.
 [timing.json](timing.json) keeps the pilot's 800-step learning-rate schedule but stops after 32 steps,
 resumes to 48, and increases validation/save frequency for measurement. The
 [microbatch comparison](microbatch-timing.json), [SFT probe](sft-timing.json), and

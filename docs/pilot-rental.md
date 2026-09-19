@@ -26,15 +26,16 @@ The endpoint later refused SSH and the gateway reported container not found. The
 and CPU export reconstruction are verified locally. The original eight-hour watcher ended at
 2026-09-19 04:11 UTC without observing recovery. Its terminal evidence is
 preserved in the execution receipt. The user subsequently restarted one H100 and supplied access.
-The retained disk contains only 84 partial GSM8K evaluation rows; the old evaluator is no longer
-running. A fresh complete development pass now uses `development-restored-20260919/`, supervised
-under `recovery-after-restart-20260919/`, with a new four-hour reservation ending September 19
-at 09:59:06 UTC. Training and export are reused. The previous partial attempt is preserved;
-the frozen evaluator has no resume support. Existing backup/grading services and the milestone
-watcher have been resumed against direct SSH port 13431, without duplicate workers.
-The original six-hour execution deadline has expired and is not reused. Do not interpret lost SSH
-as proof that billing stopped or that all remote artifacts are backed up. Use the recorded implementation commit
-for each phase even when documentation on main advances.
+The retained disk had 84 partial GSM8K evaluation rows and no live evaluator. A fresh complete
+development pass used `development-restored-20260919/`, supervised under
+`recovery-after-restart-20260919/`, within a new four-hour reservation ending September 19 at
+09:59:06 UTC. Training and export were reused; the partial attempt was preserved because the
+frozen evaluator has no resume support. Backup/grading services and the milestone watcher were
+resumed against direct SSH port 13431 without duplicate workers. Evaluation, grading and all
+backups subsequently completed; the completion marker closed the milestone workflow.
+The original six-hour deadline was not reused. Provider billing/stop state remains separate from
+verified local backups. Use the recorded implementation commit for each historical phase even
+when current documentation advances. No service restart or further GPU job is needed for this pilot.
 
 
 Export parity now compares native and exported BF16 logits on matching full and cached paths,

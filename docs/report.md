@@ -1,25 +1,24 @@
 # Speck technical report — working outline
 
-**Status: pre-results.** Release the report alongside the identified base and assistant checkpoints.
-This document is an outline and evidence checklist, not a completed paper or a claim of model quality.
+**Status: engineering results available; flagship training and final evaluation ahead.**
+Release the report alongside identified base and always-thinking assistant checkpoints. This is
+an outline, not a completed paper or a claim of flagship quality.
 
-Preparation evidence is retained in the [corpus/software receipt](../experiments/pilot/preparation.json)
-and the [local full-size CUDA result](../experiments/qualification/local-result.json). They establish
-bounded engineering behavior; real-data learning curves and capability results are still pending.
-The [pre-rental receipt](../experiments/qualification/readiness.json) adds four-step production base
-and assistant recovery checks on real data, executed golden graders, a small public-model integration
-run, and a finite tool-aware assistant rehearsal.
-These are reproducibility checks; report them separately from any eventual Speck capability results.
-The [single-H100 receipt](../experiments/qualification/h100-result.json) adds passing full-size
-base/SFT recovery, native CUDA generation, CPU native/Transformers export parity, and a four-step
-timing probe at the pilot batch. It retains the supplemental verifier failure and corrected check.
-These measurements do not qualify GH200/ARM64, distributed scaling, or sustained training quality.
-The [longer H100 measurements](../experiments/qualification/timing-result.json) add 48 real-data
-steps, full validation/save/restart timings, a microbatch comparison, padded-versus-supervised SFT
-accounting, and native/evaluation-backend speed. Report the measured samples separately from the
-2.20-hour pilot and 2.15/9.01-hour full-budget evaluation projections. Actual evaluator execution
-exposed and fixed likelihood-cache, EOS-decoding and reserved-vocabulary failures; their original
-attempts remain in the evidence. These are engineering results, not capability scores.
+The [preparation receipt](../experiments/pilot/preparation.json),
+[H100 rehearsal](../experiments/qualification/h100-result.json) and
+[timing study](../experiments/qualification/timing-result.json) establish software/recovery behavior
+and bounded performance measurements. The [completed pilot](../experiments/pilot/h100-run.json)
+adds 800 steps / 104,857,600 tokens, source-wise learning curves and actual trainer timing.
+[Development scoring](../experiments/pilot/development-result.json) covers all 2,619 frozen tasks;
+results remain weak, including 0/253 GSM8K strict and 0/33 custom compiled code pass@1. This is an
+engineering endpoint, not release-quality evidence. No final partition was evaluated.
+
+All eight checkpoints, both exports and recovery/evaluation records are verified in the
+[backup closeout](../experiments/pilot/backup-result.json). Preserve original failures, interruption
+and recovery history. The earlier 2.20-hour training and 2.15-hour development scoring projections
+are superseded by actual 2.265 trainer and 2.123 supervised evaluation hours for pilot accounting;
+the approximately nine-hour final-partition estimate remains unmeasured. GH200/ARM64, distributed
+scaling, long-context quality and flagship capability still require their own evidence.
 
 Working title: **Speck: Developing a 1.2B Hybrid Assistant Under a Fixed Compute Budget**.
 
@@ -49,7 +48,7 @@ redistribution limited to eligible material. A single model's learning curve is 
 ## 2. Architecture and implementation
 
 Record the exact producing revision and model configuration: 24 layers, width 2048, 18 KDA and six
-NoPE GQA layers, SwiGLU, tied embeddings, and frozen Mistral tokenization. The starting configuration
+NoPE GQA layers, SwiGLU, tied embeddings, and frozen Mistral tokenization. The selected all-active configuration
 has 1,195,884,576 parameters and 32,003 embedding rows. Report actual released geometry if it changes.
 Describe parameter/activation precision, optimizer groups, loss implementation, activation
 checkpointing, recurrent state and attention cache, and supported export/runtime behavior.

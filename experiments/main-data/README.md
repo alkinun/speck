@@ -2,7 +2,8 @@
 
 2026-09-19. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
 This is not a launch configuration or a claim that the required corpus is already qualified.
-The current pilot and rented-H100 evaluation remain unchanged.
+The frozen H100 pilot, development evaluation and backups are complete. This working plan does
+not change their configurations or historical result receipts.
 The first 5,000-GPU-hour program will pretrain SpeckLabs' own base and develop its thinking
 assistant, with an open technical record for future scaling. External pretrained-base adaptation
 is excluded by the clarified objective; the proposed future 50,000-hour allocation is not yet confirmed in this plan.
@@ -117,6 +118,9 @@ At 1.5M conversations, a mean **8K total tokens** implies **12B context tokens p
 positions, long attention, verification, teachers, evaluation and repeated passes can increase cost.
 Measure the actual length mixture before claiming that 1.5M or 2M conversations fit the budget.
 
+See the [program overview](../../docs/program.md) for the proposed SFT/RL subdivision,
+distributed execution, stage promotion criteria and release evaluation.
+
 ## Compute allocation
 
 The requested four-GH200 / 5,000-GPU-hour allocation is not yet confirmed. Use this full-envelope
@@ -175,12 +179,17 @@ must be charged to their relevant preparation or post-training budget; CPU/stora
 teacher API costs need separate accounting. Prefer existing eligible data over unbudgeted mass
 synthesis. No optional RL phase or extra experiments are implicitly funded beyond these limits.
 
-## Next bounded work
+## Preparation workstreams
+
+The ordered next task is in [PLAN.md](../../PLAN.md#immediate-order-of-work); the items below are
+preparation coverage, not five simultaneous studies.
 
 1. Audit the pinned natural Ultra-FineWeb candidate and its chosen threshold against retained
    FineWeb-Edu using the existing sampler; report content coverage, overlap and eligible tokens.
-2. Qualify the 16-file practical-code cohort, establish a scalable acquisition/provenance route,
-   then measure a bounded larger shard. Close code supply feasibility before bulk packing.
+2. Complete independent sandbox checks for the three candidates selected by the
+   [finished 16-file audit](../corpus-audit/natural-code-cohort.json). Ten files cleared preliminary
+   lineage/syntax/benchmark checks; none is admitted. Freeze broader exclusions and family splits,
+   establish a scalable acquisition route, then measure a bounded larger shard before bulk packing.
 3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
    distinct from merely well-formed text. Measure source overlap and complete-document lengths.
 4. Audit the retained SFT stock and long-source gaps against the 1.5M task/length targets. Build a

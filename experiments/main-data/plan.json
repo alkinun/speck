@@ -8,7 +8,10 @@
     "architecture": "selected 1.2B all-active 24-layer KDA/GQA hybrid with dense SwiGLU",
     "moe_in_scope": false,
     "tokenizer": "frozen Mistral 32K",
-    "final_behavior": "always thinking"
+    "final_behavior": "always thinking",
+    "configuration": "experiments/qualification/model.json",
+    "active_parameters": 1195884576,
+    "selection_status": "selected for first flagship; runtime and long-context qualification remain open"
   },
   "main_pretraining": {
     "target_tokens": 320000000000,
@@ -244,7 +247,14 @@
         "gpu_hours_at_4k_padded_position_rate_only": 658.7861013974396
       }
     ],
-    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT and any on-allocation teacher/verification/preference/RL work; additions must fit or displace work. No multi-epoch commitment."
+    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT and any on-allocation teacher/verification/preference/RL work; additions must fit or displace work. No multi-epoch commitment.",
+    "stage_design": {
+      "sft": "Length-bucketed assistant-masked thinking and tool supervision; shorter qualified buckets first, then mixed short and long examples through the validated context ceiling. One unique-task inventory, explicit exposure and replay accounting.",
+      "rl": "Proposed bounded GRPO-style verifiable-reward training after a useful SFT baseline; qualify implementation, rollout engine, task verifiers and recovery first. No qualified RL trainer currently exists in the repo.",
+      "rl_initial_scope": "Checkable math and sandboxed code tasks; proposed initial total context ceiling 16K, then 32K only if useful and affordable. Output and tool-step caps frozen separately. Agent/environment RL conditional on reliable executable tasks.",
+      "rl_cost_boundary": "Charge rollout generation, reference-policy/scoring passes, updates, evaluation, retries and allocated idle GPUs. CPU sandbox costs recorded separately; no 128K RL commitment.",
+      "release_selection": "Retain base and SFT checkpoints. Promote RL checkpoint only for measured gains without unacceptable regressions; otherwise release the SFT thinking assistant."
+    }
   },
   "compute": {
     "allocation_status": "requested_not_confirmed",
@@ -294,7 +304,17 @@
     ],
     "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected context/SFT/evaluation budgets on base expansion.",
     "allocation_interpretation": "User confirmed 2026-09-19: 5,000 total GPU-hours across four GH200s, equivalent to 1,250 four-GPU elapsed hours. Provider access remains unconfirmed.",
-    "scaling_boundary": "Illustrative 80% efficiency is not measured. Four GPUs at H100 per-device speed yield 51,437 aggregate tokens/s at perfect scaling or 41,149 at 80%; GPU-hour cost is invariant at perfect scaling and rises with inefficiency. GH200 per-device gains require measurement."
+    "scaling_boundary": "Illustrative 80% efficiency is not measured. Four GPUs at H100 per-device speed yield 51,437 aggregate tokens/s at perfect scaling or 41,149 at 80%; GPU-hour cost is invariant at perfect scaling and rises with inefficiency. GH200 per-device gains require measurement.",
+    "proposed_post_training_breakdown_gpu_hours": {
+      "sft": 500,
+      "conditional_verified_reward_rl": 200,
+      "on_allocation_teacher_and_verification_work": 100
+    },
+    "proposed_protected_breakdown_gpu_hours": {
+      "comparative_and_final_evaluation": 300,
+      "recovery_and_unresolved_cost_reserve": 589
+    },
+    "breakdown_status": "Planning subdivisions of existing 800h post-training and 889h protected reservations, not measured requirements or launch authorization. If SFT needs more, revise the split before launch; RL remains conditional."
   },
   "storage": {
     "base_uint16_token_id_bytes": 640000000000,
@@ -306,16 +326,15 @@
     "stretch_prepared_500b_uint16_token_id_bytes": 1000000000000
   },
   "input_receipts": {
-    "experiments/pilot/h100-run.json": "1af7bc5fa0ba2e126d862bb4c661e352b14a19d5e62dabc5ddbbd9df1cf2e44c",
+    "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
     "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0",
     "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
-    "experiments/corpus-audit/recipe-review.json": "2ce92d8093bd0e1f2ced7cc14a15c8ebca68bf7b12a58d2722a5843cfba05140"
+    "experiments/corpus-audit/recipe-review.json": "2ce92d8093bd0e1f2ced7cc14a15c8ebca68bf7b12a58d2722a5843cfba05140",
+    "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
+    "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
+    "experiments/corpus-audit/natural-code-cohort.json": "a21c229e369f1fdacdeb0f217656fc3c646c3e7071d3eab919bb92542e8d5e77",
+    "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6"
   },
-  "unchanged": [
-    "frozen pilot",
-    "running H100 evaluation",
-    "live backup/grading workers"
-  ],
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
     "qualified per-source supply and revised manifest",
@@ -339,5 +358,12 @@
       "training and inference efficiency",
       "transparent evidence enabling later scaling"
     ]
-  }
+  },
+  "preserved_evidence": {
+    "engineering_pilot": "completed with training, export, development evaluation and verified backups",
+    "pilot_configurations": "frozen; this working plan does not rewrite the pilot recipe",
+    "historical_failures": "retained in original receipts",
+    "external_rental_billing": "actual bill and provider stop state unconfirmed; no remaining pilot GPU task"
+  },
+  "input_receipt_policy": "Current working-plan input identities refreshed at plan revision; completed experiment receipts remain unchanged."
 }

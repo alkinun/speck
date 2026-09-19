@@ -45,9 +45,10 @@ Actual corpus training has separate data and sustained-throughput requirements.
 
 A complete experiment supplies `model.json`, `tokenizer.json`, `data.json`, and `train.json`.
 The [pilot](../experiments/pilot/README.md) freezes those settings for 104,857,600 tokens and has a
-verified local packed corpus. Launch it with `--no-compile` after the target hardware and scheduler
-checks. Its 50 GPU-hour ceiling must be enforced through the Slurm accounting workflow; these raw
-training commands do not enforce that cumulative budget.
+verified local packed corpus; that engineering run and its backups are complete. Reuse its
+configuration as an identified reference, not an instruction to repeat it. A new training run needs
+its own frozen recipe, hardware/scheduler checks and enforced cost ceiling; these raw commands
+do not enforce cumulative budgets. The historical H100 pilot used its bounded rental supervisor.
 
 ```bash
 uv run --no-sync python -m scripts.base_train PATH_TO_EXPERIMENT
@@ -82,7 +83,9 @@ Chat format v2 preserves `weight: 0` assistant turns as context and supervises o
 (default) turns, including their EOS. Its fingerprint differs from v1, so old prepared masks must
 not be reused. Set `chat_format_version: 1` in an SFT tokenizer configuration only to reproduce
 a historical unweighted run. Inference restores the version recorded in checkpoint metadata.
-The current format rejects tool fields and separate `reasoning_content` instead of dropping them.
+The chat tokenizer itself rejects raw tool fields and separate `reasoning_content` instead of
+dropping them. Apply the existing `speck_tools_v1` adapter first for supported structured records;
+see the assistant contract for loss masks, accepted fields and rejection rules.
 
 Audit local post-training stock before selecting a recipe:
 

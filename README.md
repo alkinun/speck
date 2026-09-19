@@ -1,10 +1,14 @@
 # Speck
 
-Speck is a small-language-model training project. We want a broadly useful assistant with particular
-strength in **math, coding, tool use, and reliable instruction following**.
+SpeckLabs is developing its first from-scratch **1.2B all-active model**, with a base release and an
+always-thinking assistant for **agentic coding, coding, math and tools**. The model uses a KDA/GQA
+backbone with dense feed-forward layers; no MoE investigation is planned for this release.
 
-Start with [the plan](PLAN.md). It contains the current direction, status, and next experiment.
-[Research notes](docs/research.md) explain what we take from Qwen, MiniCPM, and DeepSeek.
+Start with the [program overview](docs/program.md) for architecture, pretraining/post-training data,
+compute, context extension and release. [PLAN.md](PLAN.md) gives current status and the next work;
+the [main data plan](experiments/main-data/README.md) records numeric targets and feasibility.
+The H100 pilot and backups are complete; GH200/four-worker qualification and flagship training are ahead.
+[Research notes](docs/research.md) distinguish publisher findings from our own evidence.
 
 ## Get a working baseline
 
@@ -46,8 +50,8 @@ PLAN.md        One current direction and next step
 speck/         Model, data, training, evaluation, export, and runtime code
 scripts/       Maintained command entry points
 tests/         Behavioral and integration checks
-experiments/   Concrete runnable configurations
-docs/          Short operational guides and research notes
+experiments/   Runnable configurations, clearly labeled preparation plans, and result receipts
+docs/          Program outline, operational guides, and research notes
 archive/       Pointer to the complete historical Git snapshot
 ```
 
