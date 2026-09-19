@@ -6,6 +6,7 @@ import pytest
 
 from speck.tokenization.chat import ChatTokenizer
 from speck.training.sft_audit import audit_sft, decode_conversation
+from tests.tokenization.test_tools import fixture as tool_fixture
 from tests.training.test_sft import BaseTokenizer
 
 
@@ -69,6 +70,37 @@ def test_invalid_json_features_fail_loudly():
         decode_conversation({"messages": ["{broken"]})
     with pytest.raises(ValueError, match="objects"):
         decode_conversation({"messages": ["null"]})
+
+
+def test_tool_audit_counts_complete_context_and_masks_observations(tmp_path):
+    valid = {**tool_fixture(), "source": "fixture", "subset": "tools"}
+    valid["messages"][1]["content"] = ""
+    valid["messages"][1]["reasoning_content"] = "Use the tool."
+    broken = json.loads(json.dumps(valid))
+    broken["messages"].pop(2)
+    path = tmp_path / "tools.parquet"
+    # JSON feature encoding preserves heterogeneous message/tool fields exactly.
+    encoded = [
+        {
+            **row,
+            "messages": [json.dumps(m) for m in row["messages"]],
+            "tools": [json.dumps(t) for t in row["tools"]],
+        }
+        for row in (valid, broken)
+    ]
+    pq.write_table(pa.Table.from_pylist(encoded), path)
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    result = audit_sft([path], tokenizer, lengths=(16, 4096))
+    subset = result["subsets"][0]
+    assert result["tool_protocol"] == "speck_tools_v1"
+    assert subset["census"]["with_thinking"] == 2
+    assert subset["serializable_rows"] == 1
+    assert subset["rejections"] == {"all tool calls must receive results before the next turn": 1}
+    assert subset["complete_rows_fitting_context"] == {"16": 0, "4096": 1}
+    measurement = next(m for m in subset["sample_measurements"] if "tokens" in m)
+    # Only the final answer plus EOS is supervised; definitions, calls and results add context.
+    assert measurement["supervised_tokens"] == len(tokenizer.base.encode("3 and 6")) + 1
+    assert measurement["tokens"] > measurement["supervised_tokens"]
 
 
 def test_shuffle_index_caches_are_not_accepted_as_conversations():

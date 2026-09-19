@@ -13,6 +13,7 @@ import pyarrow.parquet as pq
 from speck.provenance.io import file_sha256
 from speck.tokenization.chat import ChatFormatError
 from speck.tokenization.chat import decode_chat_record as decode_conversation
+from speck.tokenization.tools import PROTOCOL, adapt_conversation
 
 
 def iter_local_rows(path):
@@ -84,7 +85,9 @@ def audit_sft(paths, tokenizer, *, samples_per_subset=256, seed=42, lengths=(409
                 for message in messages
             )
             counts["with_thinking"] += any(
-                "<think>" in (message.get("content") or "") for message in messages
+                "<think>" in (message.get("content") or "")
+                or bool(message.get("reasoning_content"))
+                for message in messages
             )
             digest = conversation_identity(row)
             priority = int(hashlib.sha256(f"{seed}:{digest}".encode()).hexdigest(), 16)
@@ -105,20 +108,23 @@ def audit_sft(paths, tokenizer, *, samples_per_subset=256, seed=42, lengths=(409
     summaries = []
     for key, group in sorted(groups.items()):
         failures, fits = Counter(), {str(length): 0 for length in sorted(set(lengths))}
-        token_lengths, supervised_lengths, identities = [], [], []
+        token_lengths, supervised_lengths, identities, measurements = [], [], [], []
         for _, _, digest, row in sorted(group["sample"], key=lambda item: item[2]):
             identities.append(digest)
             try:
-                if row["tools"]:
-                    raise ChatFormatError("tool definitions require a tool-aware chat format")
-                tokens, mask = tokenizer.encode_messages(row["messages"])
+                adapted = adapt_conversation(row)
+                tokens, mask = tokenizer.encode_messages(adapted["messages"])
                 if not any(mask):
                     raise ChatFormatError("conversation has no assistant target")
             except ChatFormatError as error:
                 failures[str(error)] += 1
+                measurements.append({"sha256": digest, "rejection": str(error)})
                 continue
             token_lengths.append(len(tokens))
             supervised_lengths.append(sum(mask))
+            measurements.append(
+                {"sha256": digest, "tokens": len(tokens), "supervised_tokens": sum(mask)}
+            )
             for length in fits:
                 fits[length] += len(tokens) <= int(length) + 1
         source, subset = json.loads(key)
@@ -134,13 +140,16 @@ def audit_sft(paths, tokenizer, *, samples_per_subset=256, seed=42, lengths=(409
                 "tokens": _quantiles(token_lengths),
                 "supervised_tokens": _quantiles(supervised_lengths),
                 "complete_rows_fitting_context": fits,
+                "sample_measurements": measurements,
             }
         )
         if progress is not None:
             progress(f"Tokenized sample: {source} / {subset}")
     return {
         "format": "speck_sft_stock_audit",
-        "format_version": 1,
+        "format_version": 2,
+        "tool_protocol": PROTOCOL,
+        "adapter_sha256": file_sha256(Path(__file__).parents[1] / "tokenization/tools.py"),
         "inputs": inputs,
         "tokenizer": tokenizer.metadata(),
         "settings": {
