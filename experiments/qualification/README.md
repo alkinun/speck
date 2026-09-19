@@ -114,7 +114,11 @@ the fixes at `533383e`. Portable checks pass **700 tests**. Supervised phases, i
 used **0.350 allocated GPU-hours**; the observed setup/fix/idle window used **0.662 hours**. This is
 not a provider bill and excludes earlier/later rental time and non-GPU charges.
 
-At the original H100 rate, all 3,991 unassigned GPU-hours would imply 195.6B compute-only tokens
-under ideal per-GPU scaling and zero additional overhead/post-training cost. That is an arithmetic
-reference, not a GH200 forecast or token commitment. Current mixture stock is capped near 2.76B
-before exclusions—only about 56 H100 optimizer-hours—so data expansion remains necessary.
+The timing study’s historical 3,991-unassigned-hour scenario implied 195.6B compute-only tokens
+under ideal per-GPU scaling and zero additional overhead/post-training cost. Its then-current
+mixture stock was capped near 2.76B before exclusions. These historical figures do not describe
+the revised allocation or supply; use the [current plan](../../PLAN.md#compute) for both.
+
+The current program reserves 100 hours for all hardware/runtime qualification. This frozen
+rehearsal retains its original 70-hour ceiling; it is a bounded subset, not the entire new phase.
+New probes need their own identified settings and must fit the remaining program reservation.

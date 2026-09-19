@@ -1,9 +1,10 @@
 # Speck technical report — working outline
 
-**Focus: data and training across pretraining, mid-training and post-training on a fixed 1.2B model.**
+**Focus: data and training across pretraining, mid-training and post-training near 1.2B parameters.**
 Release the report alongside identified base and always-thinking assistant checkpoints. The model's
 attention, size and implementation choices provide supporting context. Broader architectural research
-belongs to later releases with larger allocations; no architecture search is scheduled here.
+remains later work. The first release includes a bounded 200-hour architecture/efficiency comparison
+before backbone freeze and 900 hours of data research across training stages.
 
 **Status: engineering results available; flagship training and final evaluation ahead.** The
 [preparation receipt](../experiments/pilot/preparation.json),
@@ -30,8 +31,13 @@ Develop a useful English-first coding, math and tool assistant from scratch unde
 budget. Explain how data coverage, checked supervision and training stages contribute to capability,
 while retaining general usefulness. External models are comparators or disclosed teachers.
 
-The main empirical question is whether a bounded checked-code data intervention improves held-out
-capability at matched training exposure. The complete training account additionally documents what
+The main empirical question is how a declared pretraining-data choice changes learning at matched
+exposure on the fixed model. Run the bounded baseline/candidate comparison before selecting the main
+starting recipe after costed screening; a checked-code intervention is one candidate after source
+qualification. Downstream studies compare data on matched useful parent checkpoints before each
+production stage. Report the
+scope and limits of recipe selection rather than claiming a globally optimal mixture.
+The complete training account additionally documents what
 changes across pretraining, capability/context mid-training, SFT and any executed RL stage. Before/after
 stage results describe progression; extra compute and changed objectives prevent automatic causal
 attribution to data alone. The [program](program.md#training-lifecycle) defines stage and budget ownership.
@@ -78,7 +84,8 @@ its feasibility relative to the 100B working base horizon and 2,300-hour base re
 Separate capability-focused continuation from context extension. Describe selected code/math/repair
 material and broad replay, then coherent long data and short-task retention. Freeze each transition's
 objective, mixture, length, optimizer/schedule policy and cost. Capability continuation is a portion
-of the declared base horizon; the proposed 8B context extension is additional. Report actual splits.
+of the declared base horizon; context production has a separate 300-hour cap with token counts
+unfrozen. Qualify 16K/32K, treat 128K as stretch, and report actual splits.
 
 Use related-prefix benefit, positional retrieval and multi-file/document tasks to establish useful
 context. A configured ceiling does not establish 128K capability. Document any unexecuted stage as
@@ -98,9 +105,13 @@ RL remains planned until its runtime and verifiers are qualified; an RL dataset 
 
 ## 4. Model choices and implementation
 
-Give a concise account of the selected size, attention pattern and their rationale under the budget:
-1,195,884,576 all-active parameters; 24 layers, width 2048, 18 KDA and six NoPE GQA layers, dense SwiGLU,
-tied embeddings and frozen Mistral tokenization with 32,003 rows. Bind the producing config/revision.
+Give a concise account of the selected size, attention pattern and their rationale under the budget.
+The reference has 1,195,884,576 all-active parameters; 24 layers, width 2048, 18 KDA and six NoPE GQA
+layers, dense SwiGLU, tied embeddings and frozen Mistral tokenization with 32,003 rows. The production
+backbone remains to be selected. Bind each producing config/revision and report the 200-hour study:
+one attention control, identical qualified corpus/exposure, actual parameter/FLOP counts, quality,
+training cost/memory and prefill/decode/cache measurements at declared lengths and batch sizes.
+Disclose positional-policy and backend differences; separate implementation effects from architecture.
 The [model notes](model.md) distinguish inherited methods, design rationale and measured trade-offs.
 
 Report training memory/throughput, cache behavior and supported context; explain limitations as well
@@ -110,11 +121,19 @@ establish an optimal size, attention ratio, architecture advantage or scaling la
 
 ## 5. Controlled data study and evaluation
 
-The [bounded code study](coding.md#first-comparison-to-prepare) compares natural code against natural
-code plus checked exercises from a useful common checkpoint. Freeze both arms' manifests, code
-share, exposure, schedule, evaluation endpoints and all-in cost before execution. It tests the
-combined intervention; it does not isolate synthesis, selection and verification separately.
-Do not expand this into a source/architecture sweep. Publish unfavorable or inconclusive results too.
+The [bounded recipe study](coding.md#first-comparison-to-prepare) compares a baseline and candidate
+from matched fresh initializations before the main pretraining run. Freeze the data contrast,
+manifests, exposure, schedule, validation mixture, development endpoints and all-in cost. Report
+seed variation, source/domain loss and capability curves, including uninformative endpoints.
+If several data components change together, attribute results to the combined recipe, not one source.
+Checked-code substitution does not isolate synthesis, selection and verification separately.
+Publish the selection decision, unfavorable/inconclusive results and limits on extrapolating short
+runs to 100B. A later useful-checkpoint continuation study answers a separate question and cannot
+retroactively justify the original mixture. The 600-hour pretraining study includes screening and
+confirmation, evaluations and overhead. Mid-training and post-training data studies each have
+150 hours: start comparison arms from the same useful parent, hold the objective and exposure fixed
+where testing data effects, and declare any combined intervention. Charge comparisons separately
+from production. Report inconclusive results and downstream recipe decisions as well as gains.
 
 Evaluate base, mid-trained, SFT and any RL checkpoints separately. Report source-held-out loss,
 executable code, checked math, instructions, model-driven tools, useful context and general regressions.

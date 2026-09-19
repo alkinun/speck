@@ -3,7 +3,8 @@
 Export only a completed, identified checkpoint. Keep the base and assistant artifacts distinct.
 Release notes and model cards follow the [report](report.md): identify pretraining, mid-training
 and post-training lineage, actual data/exposure, cost and measured capabilities. Explain attention
-and size choices without implying an architecture-search result. Unexecuted stages remain plans.
+and size choices with the bounded control results and measured efficiency trade-offs. Scope claims
+to those comparisons; unexecuted stages remain plans.
 The maintained path bundles native model code behind a Transformers wrapper and checks logit parity.
 An export is not evidence of tool-use capability or accelerated serving support.
 

@@ -4,25 +4,56 @@
   "date": "2026-09-19",
   "status": "working_preparation_targets_not_launch_manifest",
   "research_scope": {
-    "focus": "Data and actual training across pretraining, mid-training and post-training on the selected model",
-    "architecture_role": "Supporting rationale and measured trade-offs for attention, size and implementation; fixed backbone for data comparisons",
+    "focus": "Data across pretraining, mid-training and post-training, supported by controlled architecture and measured training/inference efficiency.",
+    "architecture_role": "200-hour bounded comparison before the backbone is frozen for data studies; one consequential question, initially hybrid versus matched attention baseline near 1.2B. No broad search.",
     "deferred_research": [
       "MoE",
       "attention residuals",
-      "attention-layout searches",
+      "broad attention-layout searches",
       "model-size sweeps"
     ],
-    "primary_controlled_study": "Natural code versus natural code plus independently checked exercises from a useful common checkpoint"
+    "primary_controlled_study": "Before main pretraining, screen qualified source/filter/mixture contrasts and confirm the selected candidate against a baseline from matched fresh initializations on the frozen backbone near 1.2B. Predeclare each contrast after source/supply audits; fit screening and confirmation within 600 hours.",
+    "research_order": [
+      "Audit pretraining, mid-training and post-training sources and freeze exclusion/evaluation protocols before data selection.",
+      "Qualify hardware/runtime, complete the bounded architecture/efficiency comparison and freeze the backbone; then run pretraining-data screening and confirmation before main pretraining.",
+      "Record the comparison result and limitations, select a supported starting recipe, then freeze and launch main pretraining.",
+      "Use useful stage checkpoints for capability/context and SFT/RL data comparisons before committing each downstream stage; charge each to its declared reservation."
+    ],
+    "candidate_contrast": "Natural code versus natural code plus independently checked exercises, with non-code sources and code share fixed, remains a candidate only if eligibility and supply pass. Otherwise select and predeclare another feasible source/filter/mixture contrast; do not silently substitute or run a wide sweep."
   },
   "model": {
     "parameters": 1195884576,
-    "architecture": "selected 1.2B all-active 24-layer KDA/GQA hybrid with dense SwiGLU",
+    "architecture": "1.2B all-active 24-layer KDA/GQA reference model with dense SwiGLU",
     "moe_in_scope": false,
     "tokenizer": "frozen Mistral 32K",
     "final_behavior": "always thinking",
     "configuration": "experiments/qualification/model.json",
     "active_parameters": 1195884576,
-    "selection_status": "selected for first flagship; runtime and long-context qualification remain open"
+    "selection_status": "Reference for the bounded architecture study; freeze the production backbone before data comparisons. The historical qualification configuration remains immutable."
+  },
+  "architecture_study": {
+    "budget_reservation": "compute.reservations_gpu_hours.architecture_and_efficiency",
+    "status": "bounded_design_to_freeze_before_data_studies",
+    "question": "Training and inference quality/cost trade-off of the reference KDA/GQA hybrid versus one matched attention baseline near 1.2B; exact control configuration and positional policy remain to freeze.",
+    "controls": "Use the same qualified corpus, tokenizer, declared token horizon and evaluation protocol. Report actual total/active/non-embedding parameters, estimated FLOPs, precision, implementation, hardware and measured allocated GPU-hours; matching parameters does not imply matching FLOPs.",
+    "measurements": [
+      "Held-out source/domain loss and development capability at matched exposure",
+      "End-to-end training tokens per allocated GPU-hour and peak memory",
+      "Prefill latency, time to first token, decode latency/throughput and cache memory across declared lengths and batch sizes",
+      "Numerical/restart behavior and backend qualifications"
+    ],
+    "decision": "Freeze one backbone before data screening and production. Report uncertainty and unfavorable results; no high-efficiency claim before a matched measurement. Any selected change requires new configurations and throughput evidence; preserve historical pilot receipts."
+  },
+  "pretraining_data_study": {
+    "status": "design_to_freeze_after_source_and_runtime_qualification",
+    "timing": "before_main_pretraining",
+    "budget_reservation": "compute.data_experiments_breakdown_gpu_hours.pretraining",
+    "initialization": "Paired fresh initialization seeds; identical initial model tensors within each baseline/candidate pair, checked by hash. Fresh optimizer and data state per run; no trained common checkpoint.",
+    "controls": "Fixed architecture/tokenizer/context/objective, matched total training tokens and schedule; predeclare the data contrast, domain weights, source families, validation mixture, endpoints and cost. Report actual GPU-hours separately.",
+    "selection": "Use fixed held-out source/domain loss and development capability/retention curves at matched exposures. Keep final tests untouched. If endpoints are uninformative or gains inconsistent, report inconclusive; retain a justified baseline or revise the design within the remaining budget before recording the main recipe decision. Short-run rankings do not establish a global optimum or guarantee 100B rankings.",
+    "accounting": "All fresh-arm training, screening/confirmation evaluations, preparation, retries and allocated idle time charge to the 600-hour pretraining study cap. Main production starts fresh after selection; research tokens are not production exposure.",
+    "scope": "Pretraining study is 600 of the 900 data-research hours. Mid-training comparisons have 150 hours on useful base checkpoints; post-training comparisons have 150 hours on appropriate base/SFT parents. Freeze each stage recipe before its production work; these arms do not draw silently from production budgets.",
+    "design": "Within 600 hours, freeze a staged source/filter/mixture screening matrix and a confirmation comparison after architecture and source qualification. Reserve confirmation and evaluation cost before screening; do not spend the entire cap on many unreplicated arms. Exact arms, seeds and horizons remain unset until supply and informative learning signals are established."
   },
   "main_pretraining": {
     "target_tokens": 100000000000,
@@ -68,7 +99,7 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; retained 0.477B is 1.59% before joint eligibility. Stack-Edu and UltraData-Code inventories pinned. One new Python metadata shard: 102603/5057204 rows pass historical metadata predicates. Sixteen blobs recovered, thirteen length-matched / 9541 tokens; four content flags, no admission. Resolve origins, notices and linked tests for four application-module candidates and measure qualified yield before bulk expansion. UltraData-Code lineage holds remain."
+        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; retained 0.477B is 1.59% before joint eligibility. Stack-Edu and UltraData-Code inventories pinned. One new Python metadata shard: 102603/5057204 rows pass historical metadata predicates. Sixteen blobs recovered, thirteen length-matched / 9541 tokens; four content flags, no admission. All four application origins/notices now recovered; the only direct test link is stale, no independent verification or admission. Freeze a stratified language/role yield audit with separate natural-code and checked-exercise gates before bulk expansion. UltraData-Code lineage holds remain."
       },
       {
         "id": "checked_code",
@@ -145,7 +176,8 @@
     "synthetic_shortfall_policy": "Do not count held/rejected records or invent an undocumented join. Re-freeze within-domain natural/refined allocations or reduce horizon after measuring supply; no silent replacement.",
     "checkpoint_policy": "Retain continuation and endpoint checkpoints. Plan the first release around 100B combined base tokens; freeze schedule, staged mixture and endpoint decay after qualified supply and measured GH200 cost. Any expansion requires a revised budget and manifest.",
     "target_status": "100B first-allocation working horizon based on H100 cost; conditional on eligible supply and GH200/multiworker qualification, not a launch commitment",
-    "horizon_scope": "Combined pretraining and capability mid-training exposure. Initial bank totals assume the starting mixture; revise aggregate exposures when a staged mixture is frozen."
+    "horizon_scope": "Combined pretraining and capability mid-training exposure. Initial bank totals assume the starting mixture; revise aggregate exposures when a staged mixture is frozen.",
+    "recipe_selection_gate": "Complete the bounded pretraining-data study and document selection or inconclusive outcome before freezing the main starting mixture. No useful pretrained base is required for these fresh-initialization arms. Current weights are preparation hypotheses."
   },
   "mid_training": {
     "capability_continuation": {
@@ -160,20 +192,16 @@
     "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct"
   },
   "context_extension": {
-    "target_tokens": 8000000000,
-    "target_context_tokens": 131072,
+    "target_tokens": null,
+    "target_context_tokens": 32768,
     "stages": [
       {
         "maximum_context_tokens": 16384,
-        "exposure_tokens": 2000000000
+        "exposure_tokens": null
       },
       {
         "maximum_context_tokens": 32768,
-        "exposure_tokens": 2000000000
-      },
-      {
-        "maximum_context_tokens": 131072,
-        "exposure_tokens": 4000000000
+        "exposure_tokens": null
       }
     ],
     "short_replay_token_percent": 25,
@@ -183,14 +211,14 @@
       "math_science_technical_documents": 30,
       "cross_document_grounded_material": 20
     },
-    "minimum_effective_tokens_per_second_per_allocated_gpu_to_fit": 2777.777777777778,
-    "boundary": "Proposed stage token counts include short replay. Each maximum is a ceiling, not a fixed padded length. Measure length-bucket costs and useful context; no long-context throughput has been established. Source overlap/replay with base must be disclosed.",
+    "boundary": "300-hour production reservation, starting from 4K and qualifying 16K then 32K. Stage tokens remain unset until measured cost/quality. 128K is a stretch requiring an explicit affordable revision; the former 8B/800h curriculum is retired. The separate 150-hour mid-training research cap covers comparisons, not additional production tokens.",
     "mixture_control": "Compare unchanged preceding-stage domain weights repacked into coherent longer records against the proposed long-material/replay weights; neither has been validated for Speck.",
     "evaluation_additions": [
       "Held-out fixed-suffix NLL with increasing related prefix length",
       "Retrieval/QA stratified by answer position and distractor distance",
       "Existing short-task retention and multi-file repair"
-    ]
+    ],
+    "stretch_context_tokens": 131072
   },
   "post_training": {
     "target_unique_training_conversations": 1500000,
@@ -207,7 +235,7 @@
       "supporting_general_and_instruction_tasks_with_reasoning": 150000
     },
     "counting": "Deduplicate tasks/source families; assign each conversation one primary category. Agentic coding counts in agent category, not twice. Held-outs excluded from target. Row shares are acquisition targets, not final token sampling weights. Conversation quotas describe SFT only; RL task and rollout inventories are separate.",
-    "length_policy": "Keep complete examples across <=4K, 4-16K, 16-32K, 32-128K; preserve over-target records separately. Reacquire upstream long tails omitted from existing stock.",
+    "length_policy": "Inventory complete <=4K, 4-16K, 16-32K and 32-128K examples. Train only within the qualified context ceiling; 32-128K stock is stretch inventory, not promised first-release exposure.",
     "runtime_scenarios": [
       {
         "conversations": 1000000,
@@ -264,7 +292,7 @@
         "gpu_hours_at_4k_padded_position_rate_only": 658.7861013974396
       }
     ],
-    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT and any on-allocation teacher/verification/preference/RL work; additions must fit or displace work. No multi-epoch commitment.",
+    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT and any on-allocation teacher/verification/preference/RL work; additions must fit or displace work. No multi-epoch commitment. The separate 150-hour post-training data-research cap covers comparison arms and their overhead, not production SFT/RL exposure; charge every job once.",
     "stage_design": {
       "sft": "Length-bucketed assistant-masked thinking and tool supervision; shorter qualified buckets first, then mixed short and long examples through the validated context ceiling. One unique-task inventory, explicit exposure and replay accounting.",
       "rl": "Proposed bounded GRPO-style verifiable-reward training after a useful SFT baseline; qualify implementation, rollout engine, task verifiers and recovery first. No qualified RL trainer currently exists in the repo.",
@@ -278,12 +306,13 @@
     "requested_gpus": 4,
     "requested_total_gpu_hours": 5000,
     "reservations_gpu_hours": {
-      "runtime_qualification": 70,
+      "runtime_qualification": 100,
+      "architecture_and_efficiency": 200,
+      "data_experiments": 900,
       "main_4k_pretraining": 2300,
-      "context_extension": 800,
+      "context_extension": 300,
       "post_training": 800,
-      "bounded_data_comparison": 141,
-      "protected_recovery_and_evaluation": 889
+      "protected_recovery_and_evaluation": 400
     },
     "h100_full_trainer_tokens_per_second": 12859.198189903878,
     "h100_steady_optimizer_tokens_per_second": 13594.900661275025,
@@ -327,22 +356,26 @@
       "on_allocation_teacher_and_verification_work": 100
     },
     "proposed_protected_breakdown_gpu_hours": {
-      "comparative_and_final_evaluation": 300,
-      "recovery_and_unresolved_cost_reserve": 589
+      "comparative_and_final_evaluation": 200,
+      "recovery_and_unresolved_cost_reserve": 200
     },
-    "breakdown_status": "Planning subdivisions of existing 800h post-training and 889h protected reservations, not measured requirements or launch authorization. If SFT needs more, revise the split before launch; RL remains conditional.",
-    "reservation_revision": "Retire the unused 50-hour engineering-pilot reservation from the future allocation and add it to the bounded data comparison (91 to 141). Completed H100 rental work remains in its separate actual-cost ledger; no repeat pilot or additional spend authorized.",
+    "breakdown_status": "User-approved 5000-hour research-and-release envelope; stage subdivisions are planning caps, not measured requirements or job authorization. Research includes each experiment's evaluation/preparation/retries; production phases have separate exposure ledgers.",
+    "reservation_revision": "Approved research-first revision: runtime 100, architecture/efficiency 200, data research 900 (600/150/150), base/capability production 2300, context production 300, post-training production 800, protected evaluation/recovery 400. External H100 rentals remain separate; no repeat engineering pilot.",
     "main_budget_feasibility": {
       "h100_rate_tokens_in_reserved_hours": 106474161012.40411,
       "reference_margin_gpu_hours": 139.8514924836527,
       "illustrative_80_percent_rate_tokens_in_reserved_hours": 85179328809.9233,
       "boundary": "Linear H100 full-trainer extrapolation; not a guaranteed GH200 ceiling. At illustrative 80% of this effective per-allocated-GPU rate the horizon must shrink to about 85.2B to preserve the base reservation. Do not borrow protected stage budgets."
     },
-    "architecture_search_gpu_hours": 0
+    "data_experiments_breakdown_gpu_hours": {
+      "pretraining": 600,
+      "mid_training": 150,
+      "post_training": 150
+    }
   },
   "storage": {
     "base_uint16_token_id_bytes": 200000000000,
-    "context_uint16_token_id_bytes": 16000000000,
+    "context_uint16_token_id_bytes": null,
     "local_scratch_working_allowance_bytes": 2000000000000,
     "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed.",
     "prepared_125b_uint16_token_id_bytes": 250000000000
@@ -366,11 +399,14 @@
     "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
     "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
     "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
-    "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48"
+    "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
+    "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
+    "completed architecture/efficiency comparison and frozen backbone before pretraining-data experiments",
     "qualified per-source supply and revised manifest",
+    "completed pretraining-data comparison and documented starting-recipe decision before main pretraining",
     "joint source-family exclusions and validation split",
     "measured long-context memory/runtime",
     "post-training full-context and supervised token counts",

@@ -1,0 +1,141 @@
+{
+  "format": "speck_code_application_origin_review",
+  "date": "2026-09-19",
+  "status": "bounded_origin_and_static_test_review_complete_not_admission",
+  "selection": "All four application modules from the frozen prior expansion review; no substitution. Purposeful Python-only feasibility cohort, not representative yield.",
+  "input_receipts": {
+    "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
+    "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036"
+  },
+  "external_artifacts": {
+    "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/selection.json": "d4c687a636c7a3dd5e47cf81c0dbf572ba7fd0e0ee527ea11a9c3e4332a56ca5",
+    "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/acquisition.json": "0aa997effa5cb64c1d1f608f4bbc9b82a3b2efb6ec2b66e5ecff27a26218d455",
+    "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/context.json": "00e9927edf92b8b8e9e3f967f9d624689ee549a377f85db531495ffd51b7cbdd",
+    "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/acquire.py": "05694a4d69ec9893854fbeaab37aa8755ef9379e98fb9625ce095de87423e33a",
+    "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/inspect_context.py": "1f13f89f9a0569ef4bfb1d746dcca136096a9991db0e8b49980838e35f37e917",
+    "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/summarize.py": "1be9a2b1f68d8072f465da35296e3d47d6c5d80d24e6c81a805912d0e8d76e61",
+    "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/content-acquisition.json": "9edbf07a28e18721a734a09383e6d4765b7864216de7882310dd0665ee567a74"
+  },
+  "protocol": "At most five path commits and 20 origin requests per repository, complete Git tree required, 8MiB API/256KiB source caps. Then seven bounded context reads at matched revisions. Rehash every response; compare source SHA256, plain SHA1 and Git blob SHA1; bind notices/context to tree blobs. Read only; no installation or corpus execution.",
+  "counts": {
+    "selected_implementations": 4,
+    "exact_matching_revisions": 4,
+    "complete_trees": 4,
+    "retained_mit_notices": 4,
+    "direct_test_links_found": 1,
+    "direct_test_links_with_static_api_mismatch": 1,
+    "independently_verified_examples": 0,
+    "rehash_verified_responses": 29,
+    "eligible_tokens_established": 0
+  },
+  "gpu_hours": 0,
+  "corpus_code_executed": false,
+  "training_admitted": false,
+  "results": [
+    {
+      "repository": "explorerplan/alien-invasion",
+      "canonical_repository": "ExplorerPlan/alien-invasion",
+      "github_is_fork_at_lookup": false,
+      "matching_revision": "ef23843d33061d151df99ddec035916b413c7044",
+      "source_path": "/src/bullet.py",
+      "source_plain_sha1": "516c069d1dd620cf433805b847258f7065b83de1",
+      "source_sha256": "9a8ec3068f8ab8657761991b0e5730e622e7e954bf4b6bb5e907cc31c7fed8ba",
+      "source_git_blob_sha1": "31ad9516a1c234bb5e597103ea27708c388f7b4e",
+      "tree_sha256": "f2f871e94367d1fc098e7577b800cec4d6b09fe5e461c31e86408e1e940b14dc",
+      "tree_truncated": false,
+      "license_notice": {
+        "path": "LICENSE",
+        "sha256": "ed7fba08ca54e6c467d7d3748aafb2fd8e8256a78e2a8bc2ac3e6c4d9356b308",
+        "observed_heading": "MIT License",
+        "source_use_approved": false
+      },
+      "inspected_context_paths": [
+        "README.md"
+      ],
+      "test_linkage": "No test-named paths in complete tree; README describes the game only.",
+      "quality_boundary": "Pygame sprite uses settings, screen and ship objects; their source paths and image assets exist, but dependency closure and behavior are unverified."
+    },
+    {
+      "repository": "yamanama/codemonkeyapplication",
+      "canonical_repository": "Yamanama/CodeMonkeyApplication",
+      "github_is_fork_at_lookup": false,
+      "matching_revision": "f35fa485e1a32346333cfd26bc7a053af100d34a",
+      "source_path": "/src/Player.py",
+      "source_plain_sha1": "063a0f7042697129cef719e8ea35035bac89624a",
+      "source_sha256": "c8f65ae455c0ba8e6241cfe022251913e0fb5f7344e4f39a00c10823953bc131",
+      "source_git_blob_sha1": "c00df11cb9377b3dbbdb3da381fbf7c7c92950ec",
+      "tree_sha256": "9d3bcc1cbcc8d6a16d0d97c5127410f395d3151eaa06db27cf1fb4f2a6e9361f",
+      "tree_truncated": false,
+      "license_notice": {
+        "path": "LICENSE",
+        "sha256": "43b722e533bd8bfc71391c83ea9beaab647864195b8ab57f264a45b1fefcc0a4",
+        "observed_heading": "MIT License",
+        "source_use_approved": false
+      },
+      "inspected_context_paths": [
+        "README.md",
+        "src/TestPlayer.py",
+        "src/TestSuite.py",
+        "requirements.txt"
+      ],
+      "test_linkage": "TestPlayer.py imports Player and is included by TestSuite.py, but calls Player() without the required name and calls absent set_name. Static API mismatch; no execution.",
+      "quality_boundary": "requirements.txt pins coverage/pandas but omits imported pygame. README coverage output does not establish coverage of the recovered implementation; do not treat the stale test as a verified oracle."
+    },
+    {
+      "repository": "rafyakbar02/studentmanagement",
+      "canonical_repository": "Rafyakbar02/StudentManagement",
+      "github_is_fork_at_lookup": false,
+      "matching_revision": "baba31664bf36c75d25c345673b373103912e5cd",
+      "source_path": "/src/main.py",
+      "source_plain_sha1": "399db5e19e557d9bbaa2167bb0f34abb6331c45b",
+      "source_sha256": "b6f1487bdb149a862cebf1aa57c2c6512f2c792bb2f35120e98399bd9c1b6c4d",
+      "source_git_blob_sha1": "84706643602591bc0103f1af2672d95e1442b610",
+      "tree_sha256": "020f82556e1f29a16ad0b1720c8cf56b09efef2f7c787377a023a8cc5f1315b2",
+      "tree_truncated": false,
+      "license_notice": {
+        "path": "LICENSE",
+        "sha256": "d8beec729dc9d2fd00a9967adfdddcddd38c742a3c78faacb646c05338c78456",
+        "observed_heading": "MIT License",
+        "source_use_approved": false
+      },
+      "inspected_context_paths": [
+        "README.md"
+      ],
+      "test_linkage": "No test-named paths in complete tree; README lists intended features only.",
+      "quality_boundary": "Interactive main module executes its input loop on import; local student_list/data_access paths exist. Dependencies, persistence behavior and independent oracles remain unverified."
+    },
+    {
+      "repository": "martinstiles/tdt4310-master-thesis-recommendation-tool",
+      "canonical_repository": "martinstiles/TDT4310-Master-Thesis-Recommendation-Tool",
+      "github_is_fork_at_lookup": false,
+      "matching_revision": "c197e993537b5b806b0b6a80c39ccdbef0aaf09c",
+      "source_path": "/src/summarization/summarizer.py",
+      "source_plain_sha1": "d119dd30edd1d2f6463ca3a3fb3dcde53ffc3a9d",
+      "source_sha256": "6d3fe54b82648e652f3224ee8462009eeb72e8890ef2ac233cf8da87512bf9b9",
+      "source_git_blob_sha1": "b27f30272a0190bb7b2913ce7a456cdf5d0a9edb",
+      "tree_sha256": "5a49529203121b389f021cc264092ed246d9d193a0a7361a7096be6844159e68",
+      "tree_truncated": false,
+      "license_notice": {
+        "path": "LICENSE",
+        "sha256": "ca0a3e5cd4eb08400b88fd8aad9e2e9032b32b70ca3083a2c09e541e8c54a7c0",
+        "observed_heading": "MIT License",
+        "source_use_approved": false
+      },
+      "inspected_context_paths": [
+        "README.md",
+        "src/recommendation/evaluate_recommender.py",
+        "requirements.txt"
+      ],
+      "test_linkage": "No test-named paths in complete tree. Inspected evaluate_recommender.py scores a different module; it does not check the summarizer.",
+      "quality_boundary": "Unpinned requirements include sklearn; summarizer uses get_feature_names and local JSON. Static reading suggests a top-two ranking defect: a new maximum does not demote the old maximum. No executable correctness claim."
+    }
+  ],
+  "decision": "Origin recovery succeeded; none is independently verified or admitted. Do not use test filenames or README coverage as checked-code gates. Close this feasibility packet; next freeze a stratified language/role yield audit with explicit exclusions, dependency/test discovery and independent oracle gates before bulk expansion. Keep natural-code eligibility separate from verified-exercise eligibility.",
+  "limitations": [
+    "Matching revision is not proof of original crawl revision.",
+    "MIT notice recovery does not establish complete source-use acceptance.",
+    "GitHub fork metadata is not a complete source-family/near-duplicate graph.",
+    "Source implementations retain only the prior bounded content screen; newly recovered context is provenance evidence, not screened training payload.",
+    "No dependency installation, sandbox execution, derived task generation, full security review, or corpus-scale eligible token estimate."
+  ]
+}

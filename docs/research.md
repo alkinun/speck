@@ -206,8 +206,8 @@ come from a substantially larger model/program and different attention architect
   Count full processed context separately from loss-bearing targets. This requires an explicit
   adapter/objective contract before admission; pasting raw patches into a pack is not equivalent.
 - Add unchanged-domain repacking as the context-extension control, plus fixed-suffix loss and
-  position-stratified task checks. Retain the provisional 8B budget until our runtime/quality evidence
-  establishes the needed horizon. No claim of inherited 128K behavior follows from this paper.
+  position-stratified task checks. Under the revised 300-hour context cap, leave stage tokens unset
+  until measured qualification; 128K is a stretch. No context behavior is inherited from this paper.
 - Preserve our supervised thinking baseline and bounded natural/refined comparisons. The report
   does not establish that abandoning synthetic data or starting our small model with RL is better.
   Its private processing pipeline is a research reference, not an acquired corpus.

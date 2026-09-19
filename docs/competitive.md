@@ -1,8 +1,9 @@
 # Competitive release strategy — 2026-09-19
 
 Status: strategy and proposed release gates, not measured Speck capability or a new launch.
-The selected flagship is the existing 1.2B-total, all-active KDA/GQA model with dense feed-forward
-layers. MoE investigation and architectural comparison arms are outside this release program.
+The reference is the existing 1.2B-total, all-active KDA/GQA model with dense feed-forward
+layers. One bounded matched attention-control study is in scope; MoE and broad
+architecture/size searches remain later work.
 The user clarified that developing our own pretraining capability is essential; pretrained
 adaptation is not an alternative first-release route.
 The 100B working first-release horizon is a cost-based preparation target, not evidence that the
@@ -32,16 +33,18 @@ so its non-embedding count is approximately 1.130B, unlike some nominally simila
 ## Recommendation
 
 The first release develops a data and training recipe across pretraining, mid-training and
-post-training on the selected 1.2B backbone. The [model notes](model.md) explain attention/size
+post-training, with the backbone frozen after a 200-hour architecture/efficiency study near 1.2B. The [model notes](model.md) explain attention/size
 choices and their measured limitations. MoE, attention residuals and broader architectural research
 belong to later releases with larger allocations. Qualify the current runtime, improve the data and
-measure useful thinking/code/tool behavior. The 141-hour bounded comparison is a data intervention.
+measure useful thinking/code/tool behavior. Allocate 900 hours to data experiments: 600 before
+main pretraining and 150 each before mid-training and post-training production. Predeclare
+matched controls and screening/confirmation endpoints; do not assume efficiency gains.
 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
 claim. A narrow competitive product is a hypothesis to test: reliable Python/JavaScript/TypeScript
 repository repair and tool execution with bounded reasoning cost. Math and general instruction
-following remain required capabilities/regression checks. Approximately 128K remains a development
-target, not an advertised advantage until useful-context and cost tests pass against current models.
+following remain required capabilities/regression checks. Qualify 16K/32K within 300 context hours;
+128K is a stretch, with no advertised advantage before useful-context and cost measurements.
 
 The first hardware work should establish whether our execution is unnecessarily limiting scale.
 The H100 measurements used deterministic eager execution, FP32 parameters/optimizer and BF16
@@ -53,8 +56,8 @@ runtime qualification tasks, not an assumed 3–4x gain or a new GPU launch.
 
 The 2,300-hour base reservation needs 12,077 effective tokens/s per allocated GPU for the 100B
 working horizon. Four workers do not improve GPU-hour efficiency automatically. The completed
-pilot releases its unused 50-hour future reservation into the data comparison; other stage
-reservations remain protected in the [scale plan](../experiments/main-data/README.md). Reduce the
+pilot is separate from the new 200-hour architecture and 900-hour data research allocation. The
+300-hour context and 400-hour evaluation/recovery reservations remain protected in the [scale plan](../experiments/main-data/README.md). Reduce the
 horizon if measured cost or qualified supply requires it; do not promise quality from token count.
 
 ## Before committing the main training budget
@@ -72,10 +75,11 @@ horizon if measured cost or qualified supply requires it; do not promise quality
    strongest selected comparator on the primary task endpoint, or an explicit useful efficiency
    tradeoff at an agreed quality floor. Report paired uncertainty and every declared endpoint;
    broad parity requires broad results. Passing a schema or nominal context limit is insufficient.
-4. Assess the optimized runtime, eligible corpus and bounded learning evidence together. An early
-   checkpoint comparison can reject a poor route but cannot promise the final ranking. Charge
+4. Assess the optimized runtime, eligible corpus and bounded learning evidence together. Run the
+   fresh-initialization data comparison before main pretraining and document the recipe decision;
+   its early learning curves cannot promise the final ranking. Charge
    runtime qualification and the bounded data comparison to their existing reservations. Keep the
-   selected architecture fixed; no MoE or all-GQA comparison arm is planned.
+   chosen architecture fixed after the bounded hybrid/attention comparison; no MoE search is planned.
 
 ## Release evidence and later scaling
 

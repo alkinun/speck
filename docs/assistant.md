@@ -62,9 +62,11 @@ the existing 500K are starting stock, not a final-size constraint. The
 375K math reasoning, 375K agent/tool trajectories and 150K supporting thinking/instruction tasks.
 Assign one primary category per conversation, exclude holdouts and task-family duplicates, and
 choose final training weights from supervised/total-context tokens rather than these row quotas.
-The initial cost model assumes one pass; 128K is a context ceiling, not an average conversation size.
+The initial cost model assumes one pass. Inventory lengths do not set the qualified context ceiling
+or the average conversation size.
 
-The planned context extension targets approximately 128K. The 4K rehearsal above is an initial
+Context production qualifies 16K/32K within 300 hours; approximately 128K is a stretch.
+Longer inventory remains separate from the qualified training ceiling. The 4K rehearsal above is an initial
 engineering phase, not a maximum length policy for future SFT. Preserve complete long reasoning,
 document QA and agent trajectories for extension and later SFT. Keep short interactions represented
 throughout. Do not truncate solutions, detach tool results or delete long examples merely because

@@ -4,9 +4,10 @@ Read [PLAN.md](PLAN.md) for current decisions and work order; [the program overv
 connects the stages, and [main-data plan.json](experiments/main-data/plan.json) owns working numeric
 targets. Keep one configuration per runnable experiment.
 A new idea belongs in a short discussion or Git issue until it becomes the next measured experiment.
-The first release studies data and pretraining, mid-training and post-training on a fixed backbone.
-Keep attention/size rationale and measured limitations documented; reserve MoE, attention residuals
-and broader architecture research for later programs with separate compute and experiment plans.
+The first release centers on data across pretraining, mid-training and post-training. Complete a
+bounded architecture/efficiency comparison, freeze the backbone, then run data experiments before
+each production stage. Keep training/inference claims tied to measurements. Reserve MoE, attention
+residuals and broad architecture/size searches for later programs.
 
 ## Development
 

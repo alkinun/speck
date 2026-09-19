@@ -66,6 +66,11 @@ new branch. Resume checks the original model, data cursor, optimizer, tokenizer,
 A changed recipe requires an explicitly supported new run, not an edited resume. See `--help` for branch options and
 [Slurm](slurm.md) for scheduler interruption/requeue.
 
+The pretraining data study uses separate fresh runs with paired initialization seeds; verify initial
+model tensor identities within each pair. It precedes main pretraining and does not use checkpoint
+branching. Freeze manifests, schedules and evaluation inputs for each arm; study tokens and cost
+remain separate from the production run. These design rules are not executable launch manifests.
+
 ## Mid-training readiness
 
 The base loader supports token-endpoint mixture phases declared in one immutable packed manifest.
@@ -77,7 +82,7 @@ compatible with an ordinary checkpoint branch.
 state. `--branch-kind context` allows a changed manifest and context configuration under
 `training_phase: context_extension`, resets the data cursor and retains optimizer state. Qualify
 actual long-context workloads separately. A dedicated changed-data continuation contract remains
-to be implemented/qualified for capability mid-training and the controlled code-data arms; do not
+to be implemented/qualified for capability mid-training and any later continuation-data arms; do not
 mislabel those as context runs. Any new masked repair objective also requires a validated adapter.
 
 Before executing either part of mid-training, freeze parent identity, objective, data, schedule,

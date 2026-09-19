@@ -1,24 +1,26 @@
-# Selected model and architectural context
+# Reference model and bounded architecture study
 
-The first release studies data and training on a fixed model. These notes support the
+The first release studies data and training, supported by a bounded architecture/efficiency study.
+Freeze the chosen backbone before data experiments. These notes support the
 [program overview](program.md) and [paper](report.md): explain the attention and size choices,
 their implementation, measured costs and limitations. Architectural novelty is not the paper's
 central contribution. Broader design searches belong to later, separately budgeted releases.
 
-## Selected flagship architecture
+## Reference architecture
 
-The selected **1.2B-total, all-active model** is defined in the
-[qualification configuration](../experiments/qualification/model.json). Keep its geometry and
-tokenizer fixed for data comparisons; qualify implementation changes independently.
+The reference **1.2B-total, all-active model** is defined in the
+[qualification configuration](../experiments/qualification/model.json). Freeze the selected geometry
+and tokenizer for data comparisons after the architecture decision; qualify implementation changes
+independently and preserve this historical reference configuration.
 
 - 1,195,884,576 total/active parameters; 24 layers, model width 2048.
 - Three KDA recurrent blocks followed by one global GQA block, repeated six times.
 - Dense SwiGLU feed-forward layers throughout, intermediate width 5120; no expert routing.
 - Tied embeddings and the frozen Mistral tokenizer, with 32,003 embedding rows including role IDs.
-- Start at 4K context; extend toward approximately 128K only through measured qualification.
+- Start at 4K; qualify 16K then 32K. Approximately 128K is a stretch within an explicit cost revision.
 
 Dense here describes the all-active feed-forward computation. The KDA/GQA token-mixing hybrid
-remains the selected backbone. Its recurring layers and global layers are not an MoE mechanism.
+is the reference backbone for the study. Its recurring layers and global layers are not an MoE mechanism.
 KDA is inherited from [Kimi Linear](https://arxiv.org/abs/2510.26692v2); distinguish inherited building
 blocks from Speck's configuration, implementation and evidence. No attention ratio or 128K capability
 is proven by the engineering pilot. Global layers still retain length-growing caches and quadratic
@@ -32,8 +34,12 @@ Report actual parameter counts, attention/cache behavior, supported context and 
 are design choices to document, not experimentally established optima.
 
 Use measured training throughput, memory, prefill/decode cost and length-dependent behavior to
-discuss trade-offs. A single size cannot establish a scaling law; no architecture control is planned,
-so the paper cannot attribute quality gains to the KDA/GQA ratio or superiority over another backbone.
+discuss trade-offs. The 200-hour study compares the hybrid with one matched attention baseline near
+1.2B; freeze exact geometry, positional policy, corpus, horizon and endpoints before execution.
+Report actual parameter counts and FLOPs rather than assuming equal parameters imply equal cost.
+Measure training cost/memory and prefill/decode latency, throughput and cache memory over declared
+lengths and batch sizes. Separate implementation tuning from architectural effects. A single size
+cannot establish a scaling law, and superiority requires matched evidence.
 Numerical/restart qualification supports implementation claims. Data controls support data claims.
 
 Keep the full geometry and runtime settings reproducible, with detailed kernel/export material in
@@ -42,9 +48,8 @@ the [program overview](program.md#model-and-runtime) owns runtime qualification 
 
 ## Later architecture research
 
-MoE, attention residuals, attention-layout searches and model-size sweeps are future lab work as
-compute and model sizes grow. No such comparison arm or implementation project is scheduled in the
-first release. A measured blocker requiring a structural change must be recorded as a change to the
+MoE, attention residuals, broad attention-layout searches and model-size sweeps remain future work.
+The first release permits only the bounded reference/control study described above. A measured blocker requiring a structural change must be recorded as a change to the
 selected model, with its data-comparison implications addressed explicitly.
 
 Existing runtime variants serve historical checkpoint/export compatibility and behavioral fixtures.

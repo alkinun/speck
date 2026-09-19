@@ -106,8 +106,9 @@ The [bundle follow-up](code-bundles.json) recovers 19 linked files at four pinne
 four content flags hold 15 files by family, and static review exposes test-oracle weaknesses.
 The [expansion inventory/probe](code-expansion.json) subsequently verifies one new Python metadata
 shard and retrieves sixteen blobs: thirteen length-matched files / 9,541 tokens, with four content
-flags and no admission. Next, qualify the four observed application modules' origins, notices and
-linked tests before measuring eligible yield. The
+flags and no admission. The [origin/test review](code-application-origins.json) resolves all four
+application revisions/notices, but the single direct test link is stale. Next freeze a stratified
+language/role yield audit with independent checks. The
 [coding plan](../../docs/coding.md#retained-supply-census--2026-09-19) contains the language/role tables
 and the gap to proposed exposure; no main-code supply is admitted.
 
@@ -161,24 +162,24 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
 1. Expand the qualitative review into a labeled, stratified audit. Distinguish extraction,
    completeness, usefulness, correctness (verified/unverified), and template repetition. Calibrate
    any model-based scorer against reviewed examples; report source and length denominators.
-2. The FineMath numeric-template census and first directory-exclusion candidate are complete
-   (below). Audit code roles/versions in the full retained code acquisition next. Recount unique
-   eligible supply after proposed changes. Preserve the frozen pilot.
+2. The FineMath numeric-template census, retained-code census and initial expansion probe are
+   complete, along with the four-module origin/test review. Freeze a stratified yield audit with
+   separate natural-code and checked-exercise gates, then count eligible supply after exclusions.
+   Preserve the frozen pilot.
 3. Extend the bounded English refined-web inspection into source/answer consistency checks and
    inspect source-eligible code candidates. Establish domain coverage and overlap with current
    stocks before assigning main-training weights.
-4. Freeze **one** two-arm data screening comparison: a common base checkpoint, fixed architecture,
-   optimizer, global batch, LR schedule, token budget, and development evaluations. Change one
-   source component at a time; preserve broad replay and keep final tests untouched. Count data
-   preparation and evaluation costs as well as optimization. A single seed is a screening result,
-   not a conclusive causal or paper-quality claim.
+4. Freeze a bounded baseline/candidate pretraining comparison from paired fresh initializations,
+   with fixed architecture, schedule, total token exposure and development evaluations. Run it
+   before choosing the main starting mixture. Predeclare the contrast; a combined recipe comparison
+   cannot attribute improvement to an individual changed source. Keep final tests untouched and
+   count all training, preparation and evaluation costs within the study reservation.
 
-For budgeting only, **1B additional tokens per arm** at the measured baseline H100 rate of
-13,614.8 tokens/s is **40.81 GPU-hours total optimization**, plus the shared base checkpoint,
-validation, saves, preparation, and evaluations. Two full-cap development backend scenarios add
-about 4.29 hours before grading. This is a provisional scale, not a frozen or launched experiment,
-a GH200 forecast, or evidence that a 1B-token comparison will resolve the question. Decide the
-affordable endpoint and primary metric before viewing the comparison results.
+The [current study design](../../docs/coding.md#first-comparison-to-prepare) and
+[numeric plan](../main-data/plan.json) own the 600-hour pretraining study cap within 900 data-research hours and the H100 cost scenarios.
+They do not freeze a run length or guarantee that short-run learning will resolve the question.
+Record the result, uncertainty and recipe decision before main pretraining; later continuation
+comparisons answer a separate question.
 
 Main training still requires sufficient eligible supply, justified repetition and weights,
 quality evidence, and measured all-in runtime. The present audit completes an initial diagnostic;
@@ -320,3 +321,12 @@ runtime is recorded, so exact replay comparisons use the recorded Python environ
 [Validation](natural-code-validation.json) records an identical offline replay in 10.30 seconds
 (12.08 child CPU seconds), seven focused tests, and rejection of altered payloads, revisions,
 origins and tree bindings. Missing notices and truncated inventories remain held.
+
+## Application origins and test linkage
+
+The [four-module receipt](code-application-origins.json) closes the expansion probe's origin follow-up:
+all four implementations match immutable revisions with complete trees and retained MIT notices.
+One has a direct test link whose API is stale; three have no test-named paths. Static review and
+29 verified response hashes establish provenance evidence, not independently checked examples.
+No code ran and nothing is admitted. [Coding notes](../../docs/coding.md#application-origin-and-test-review--2026-09-19)
+record the findings and next stratified language/role yield audit. Raw files stay outside Git.

@@ -2,15 +2,17 @@
 
 Decision updated 2026-09-19. Agentic coding, general coding and math reasoning are primary
 first-release targets for the always-thinking assistant. The paper studies their data and training
-across pretraining, mid-training and post-training on the fixed backbone. General usefulness supports these targets.
-The first substantive data comparison should test a code-data intervention. This is preparation
-for a future experiment; the frozen engineering pilot and its evaluation protocol remain intact.
+across pretraining, mid-training and post-training after a bounded architecture study and backbone freeze. General usefulness supports these targets.
+Code-data selection is a candidate contrast for the pretraining recipe study, which must precede
+main pretraining. Freeze its question after source/supply audits; the frozen engineering pilot and
+its evaluation protocol remain intact.
 
 Code quality is a pretraining requirement as well as a post-training concern. Natural code,
 tests, documentation and correct worked explanations should establish useful foundations before
 reasoning-SFT. Preserve practical API use, debugging and repository relationships alongside
 algorithmic exercises. The pilot's code weight is an engineering setting, not the final target.
-Long-context preparation should retain coherent repository units and dependencies toward 128K;
+Long-context preparation should retain coherent repository units and dependencies for 16K/32K
+qualification, with 128K as a stretch;
 an arbitrary concatenation of unrelated files is not repository-level supervision. Split original
 repositories and derived tasks together to protect held-out repair and agent evaluations.
 
@@ -314,11 +316,30 @@ contains 561 L2 shards / 611.3GB and 560 L3 shards / 604.7GB compressed, with no
 directory. These are separate representations with unresolved origin/lineage gates, not additive
 eligible tokens. No UltraData-Code payload was acquired for this inventory.
 
-**Decision:** no bulk expansion yet. Resolve immutable origins, notices, linked tests and full
-content/family/security checks for the four application-module candidates before measuring qualified
-yield. Keep useful tutorials as natural-code candidates; they do not become verified repair data.
+**Decision:** no bulk expansion yet. The origin/test follow-up below closes this feasibility packet.
+Measure qualified yield with full content/family/security checks before expanding acquisition.
+Keep useful tutorials as natural-code candidates; they do not become verified repair data.
 Raw metadata, blobs, review and offline replay remain outside Git under
 `/mnt/speck-data/speck/data-qualification-20260919/code-expansion`.
+
+## Application origin and test review — 2026-09-19
+
+The [origin receipt](../experiments/corpus-audit/code-application-origins.json) resolves all four
+application modules to matching immutable revisions, complete trees and exact MIT notices.
+All 29 fetched responses rehash correctly; source, notice and context bytes bind to Git blobs.
+Matching revisions do not establish original crawl revisions or complete source-use acceptance.
+
+Three trees have no test-named paths; the recommendation project's separate evaluation script
+does not test its summarizer. The fourth repository has a direct `TestPlayer` import, but the test
+calls `Player()` without the required name and calls an absent `set_name`. Its README coverage
+report cannot establish coverage of this implementation. This is a static mismatch, not an executed
+test result. Dependencies, independent oracles and full family/content checks remain open.
+
+No corpus code ran and no example is admitted. This closes the four-example feasibility check:
+immutable origin and co-present tests are insufficient verification gates. Next freeze a stratified
+language/role yield audit with explicit natural-code and checked-exercise admission criteria;
+additional hand-picked examples cannot estimate scalable supply. Raw files remain outside Git at
+`/mnt/speck-data/speck/data-qualification-20260919/code-application-origins`.
 
 ## Data work to do next
 
@@ -327,9 +348,9 @@ Raw metadata, blobs, review and offline replay remain outside Git under
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.
-2. Use the pinned expansion inventory and qualify the four application-module candidates above
-   before larger acquisition or freezing the main horizon. Measure eligible yield by language
-   and practical role. The bounded bundle follow-up is complete: require
+2. Use the pinned inventory and completed origin/test feasibility findings to freeze a stratified
+   yield audit before larger acquisition or the main horizon. Measure eligible yield by language
+   and practical role. The bounded bundle and origin follow-ups are complete: require
    explicit module/import/behavioral linkage and independent test oracles, not just co-present
    filenames. Prioritize library use, debugging and repository repair over more tiny algorithm
    exercises; apply known family holds before selection. Algorithm puzzles alone do not cover
@@ -348,28 +369,35 @@ Raw metadata, blobs, review and offline replay remain outside Git under
 
 ## First comparison to prepare
 
-Prepare **retained natural code versus natural code plus checked exercises**, starting from the
-same useful base checkpoint. Use the flagship's working 35% total code share as the starting
-proposal for both arms, with all non-code sources fixed; freeze actual shares after supply checks.
-The pilot's 15% code share is not the main recipe. Keep non-Python code unchanged. In the treatment,
-replace half of the Python code tokens with eligible, checked exercises; the control uses natural
-Python throughout. The 50% replacement is a testable starting hypothesis, not a chosen main recipe.
-This tests the complete checked-exercise intervention, not the separate effects of synthesis,
-selection, or verification. L2 natural-code replacement and a higher total code share are later
-questions, avoiding multiple simultaneous changes in the first comparison.
+Run a bounded **baseline versus candidate pretraining recipe** study before the main 100B working
+run. Use the fixed 1.2B model and paired fresh initializations, with identical initial weights within
+each pair and fresh optimizer/data state. It does not require a useful pretrained base. Freeze one
+contrast after the source/supply audit; current mixture weights are preparation hypotheses.
 
-Before launch, freeze source manifests, no-overlap partitions, language shares, serialized fields,
-repetition, optimizer and token schedule, development endpoints, general-capability regression
-tolerances, and the total cost ceiling. Both arms use the same code-token budget and inference
-protocol. If checked supply is insufficient, reduce the experimental horizon before launch rather
-than silently repeat examples. The 105M engineering pilot alone is not evidence of a useful base.
+Natural code versus natural code plus independently checked exercises remains one candidate.
+If feasible, hold total code share, non-Python code and non-code sources fixed, changing only the
+declared Python substitution. Replacing half the Python tokens is a hypothesis, not a selected
+recipe. This measures the combined intervention, not separate synthesis/selection/verification
+effects. If qualified checked supply is insufficient, predeclare a different feasible source,
+filter or mixture contrast rather than silently changing arms or repeating a tiny bank.
 
-At the recorded 12,859 full-trainer tokens/s, 1B total mixture tokens per arm projects to about 43.2
-single-H100 trainer hours for both arms at the pilot's overhead rate. Add common-base training,
-evaluation and data generation/verification to the appropriate ledgers. Both arms and their
-evaluations must fit the 141-hour comparison reservation. This is a planning scenario, not a frozen
-run length or GH200 forecast. Qualify the [changed-data continuation path](training.md#mid-training-readiness)
-before executing either arm; an ordinary same-manifest branch cannot run this experiment.
+Freeze manifests, source-family splits, serialized fields, exposure, schedule, validation mixture,
+development endpoints, regression tolerances and cost before execution. Compare fixed held-out
+source/domain losses and development capability curves at matched exposures; keep final tests
+untouched. Short-run gains do not establish an optimal mixture or guarantee full-run rankings.
+If measurements are uninformative or inconsistent, record an inconclusive result and a justified
+baseline decision, or revise the experiment within its remaining budget before the main launch.
+
+The approved pretraining research cap is **600 hours**, within **900 total data-research hours**.
+Freeze a staged screening and confirmation matrix after the 200-hour architecture/efficiency study
+and source qualification. Reserve confirmation and evaluation costs before allocating screening
+arms. Exact seeds, run lengths and contrast count remain unfrozen; do not treat the larger budget
+as permission for an unbounded sweep. Main production starts fresh after recipe selection.
+
+Mid-training and post-training data studies each receive **150 hours**, using appropriate useful
+parent checkpoints before their production stages. A continuation study needs the
+[changed-data continuation path](training.md#mid-training-readiness) and cannot substitute for
+pretraining mixture research. Fresh-run arms use the normal new-run base-training path.
 
 ## Evidence for a coding claim
 

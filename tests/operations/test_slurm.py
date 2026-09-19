@@ -22,9 +22,6 @@ from speck.operations.slurm import (
     retry_job,
     submit_wave,
 )
-from tests.reference import historical_repository
-
-ROOT = historical_repository()
 
 
 def _sha256(path):
@@ -42,7 +39,24 @@ def wave(tmp_path):
     repository = tmp_path / "repository"
     repository.mkdir()
     plan = repository / "plan.json"
-    plan.write_bytes((ROOT / "research" / "flagship" / "plan.json").read_bytes())
+    plan.write_text(
+        json.dumps(
+            {
+                "format": "speck_flagship_execution_plan",
+                "budget": {
+                    "gpu_hours": 5000,
+                    "mandatory_gpu_hours": 4600,
+                    "reserve_gpu_hours": 400,
+                    "full_node_days": 5000 / 96,
+                },
+                "phases": [
+                    {"id": "P1", "gpu_hours": 100, "conditional": False},
+                    {"id": "P5", "gpu_hours": 4500, "conditional": False},
+                    {"id": "P7", "gpu_hours": 400, "conditional": True},
+                ],
+            }
+        )
+    )
     config = tmp_path / "config.json"
     data = tmp_path / "data.json"
     config.write_text('{"frozen": true}\n')
@@ -73,8 +87,8 @@ def wave(tmp_path):
         "created_at_utc": "2026-09-08T00:00:00Z",
         "budget": {
             "total_gpu_hours": 5_000,
-            "mandatory_gpu_hours": 4_111,
-            "reserve_gpu_hours": 889,
+            "mandatory_gpu_hours": 4_600,
+            "reserve_gpu_hours": 400,
         },
         "plan": {"path": str(plan), "sha256": _sha256(plan)},
         "repository": {"path": str(repository), "commit": commit, "require_clean": True},
@@ -336,7 +350,8 @@ def test_retry_is_same_manifest_mechanical_and_bounded(wave, tmp_path):
         retry_job(path, "flagship", submission, observation, runtime, runner=runner)
 
 
-def test_manual_reserve_registration_accounts_without_calling_slurm(wave, tmp_path):
+@pytest.mark.parametrize("prior_reserve", [0, 387, 388])
+def test_manual_reserve_registration_enforces_protected_pool(wave, tmp_path, prior_reserve):
     _, value, _, _ = wave
     authorization = tmp_path / "reserve-approval.json"
     authorization.write_text('{"approved_by": "human operator"}\n')
@@ -353,13 +368,27 @@ def test_manual_reserve_registration_accounts_without_calling_slurm(wave, tmp_pa
     path = tmp_path / "reserve-wave.json"
     path.write_text(json.dumps(value))
     scheduler_jobs = {"screen": "501", "flagship": "502", "collect": "503"}
+    runtime = tmp_path / "runtime"
+    commitments = runtime / "commitments"
+    commitments.mkdir(parents=True)
+    (commitments / "prior.json").write_text(
+        json.dumps({"gpu_hours": {"mandatory": 0, "reserve": prior_reserve}})
+    )
+    if prior_reserve + 13 > 400:
+        with pytest.raises(ValueError, match="exceed a protected GPU-hour commitment pool"):
+            register_manual_reserve(
+                path, scheduler_jobs, authorization, _sha256(authorization), runtime
+            )
+        assert len(list(commitments.glob("*.json"))) == 1
+        assert not list((runtime / "submissions").glob("*.json"))
+        return
 
     record, record_path = register_manual_reserve(
         path,
         scheduler_jobs,
         authorization,
         _sha256(authorization),
-        tmp_path / "runtime",
+        runtime,
     )
 
     assert record["jobs"] == scheduler_jobs
@@ -368,7 +397,7 @@ def test_manual_reserve_registration_accounts_without_calling_slurm(wave, tmp_pa
     assert Path(record_path).is_file()
     assert daily_summary(tmp_path / "runtime")["committed_maximum_gpu_hours"] == {
         "mandatory": 0.0,
-        "reserve": 13.0,
+        "reserve": prior_reserve + 13.0,
     }
 
 
@@ -401,8 +430,8 @@ def test_daily_summary_keeps_mandatory_and_reserve_usage_separate(tmp_path):
     )
     summary = daily_summary(tmp_path, day="2026-09-08")
     assert summary["observed_gpu_hours"] == {"mandatory": 10.0, "reserve": 2.0}
-    assert summary["mandatory_remaining_gpu_hours"] == 4_101
-    assert summary["reserve_remaining_gpu_hours"] == 887
+    assert summary["mandatory_remaining_gpu_hours"] == 4_590
+    assert summary["reserve_remaining_gpu_hours"] == 398
     assert summary["ended_today"] == 1
 
 

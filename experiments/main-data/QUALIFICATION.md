@@ -99,8 +99,10 @@ a fresh blind evaluation set.
 
 Reuse retained packets and current receipts rather than repeating the same spot checks. The web
 diagnosis, full retained-code census, bundle follow-up and initial expansion inventory/probe are
-complete. Next, resolve origins, notices and linked tests for the four application-module candidates,
-then measure eligible yield by language and practical role with independent checks. The proposed
+complete. The [application-origin review](../corpus-audit/code-application-origins.json) now resolves
+all four source revisions/notices; its single direct test link is stale and no example is verified.
+Next freeze a stratified language/role yield audit with independent checks and separate natural-code
+and checked-exercise gates. The proposed
 code horizon needs substantially more qualified supply. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
@@ -150,6 +152,9 @@ serialization. Overlapping parent/filtered releases count once. The working eigh
 become a launch recipe. No 100B qualified supply or GH200 compute-feasibility claim follows from this packet.
 
 The deliverable is one source-comparison table with auditable accepted/rejected examples and a
-costed acquisition route. Only then freeze the eligible banks and one equal-budget data comparison.
+costed acquisition route. Only then freeze the eligible banks and a bounded baseline/candidate
+comparison from matched fresh initializations. Run it before main pretraining and record the
+starting-recipe decision before freezing the production manifest. Neither source inspection nor
+a later continuation comparison substitutes for this gate.
 Post-training still needs reasoning/tool verification and complete long examples; its 1.5M working
 target is not supplied by these pretraining checks.

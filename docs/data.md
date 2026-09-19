@@ -90,7 +90,8 @@ boundaries alongside image dependency. A fresh 32-document comparison shows fals
 missed defects; all candidate flags remain review-only. Sample token retention is measured,
 but eligible full-corpus supply and a better score cutoff remain unestablished.
 
-The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
+The [coding plan](coding.md) treats checked exercises as one candidate for the pretraining recipe
+comparison, to run before the main base-training allocation. A pinned, bounded
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
 or correctness. The [natural-code cohort](../experiments/corpus-audit/natural-code-cohort.json)
 now has 16 immutable byte matches and ten preliminary review candidates; none is admitted.
@@ -138,9 +139,10 @@ then run the same source-rights, joint-exclusion, partition, pack, and full-load
 
 The first model and paper center on data quality, coverage and learnability through pretraining,
 mid-training and post-training. Keep the selected model fixed; attention/size rationale and measured
-trade-offs support the paper, while broader architecture research belongs to later releases.
+trade-offs have a bounded 200-hour study before backbone freeze. Broader architecture research
+belongs to later releases; data experiments have a separate 900-hour allocation.
 The [program lifecycle](program.md#training-lifecycle) defines capability continuation, context
-extension toward approximately 128K, thinking SFT and conditional RL with separate data objectives.
+16K/32K context qualification with 128K stretch, thinking SFT and conditional RL with separate data objectives.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
 The [main mixture and scale plan](../experiments/main-data/README.md) uses a 100B working base horizon:
 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
@@ -214,9 +216,9 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Use the [pinned expansion inventory and new-shard probe](../experiments/corpus-audit/code-expansion.json)
-   to qualify the four application-module candidates and measure eligible yield by language and
-   practical role. Require source/test/docs linkage and independent oracles;
+1. Use the [pinned expansion inventory](../experiments/corpus-audit/code-expansion.json) and
+   [completed origin/test review](../experiments/corpus-audit/code-application-origins.json) to freeze
+   a stratified language/role yield audit. Require source/test/docs linkage and independent oracles;
    repository co-presence alone is insufficient. The 0.477B retained tokens
    do not establish the proposed 30B natural-code exposure or the separate checked-exercise bank.
    For web, resolve source-use evidence, source families, overlap and source-aware extraction
@@ -235,12 +237,14 @@ can represent the same underlying information. Review source-use evidence per co
    for the relevant phase. SFT needs both supervised-token and total-context counts. Final
    percentages depend on those measurements; the working allocation guides preparation.
    Training stock is not the same as exposure.
-5. Price one controlled comparison from a useful common base with a fixed evaluation protocol.
-   Track capability versus trained tokens and GPU-hours, plus preparation/verification cost and
-   regressions by capability. Better data can improve learning per token without raising tokens/s.
+5. Price and run a bounded baseline/candidate comparison from matched fresh initializations before
+   main pretraining. Freeze the contrast after source qualification and record the recipe decision
+   before launch. Track held-out source loss and development capability versus tokens/GPU-hours,
+   preparation cost and regressions. Audit post-training sources now; evaluate their training
+   recipes on useful parent checkpoints before committing the downstream stage budgets.
 
 Plan broad pretraining, capability-focused mid-training within the base horizon, then measured
-context mid-training toward approximately 128K with short replay, followed by an SFT recipe spanning
+context mid-training toward 16K/32K, with 128K stretch, with short replay, followed by an SFT recipe spanning
 short and long interactions. Preserve source-family identity and exclusions across every stage,
 including derived exercises, teacher traces and RL prompts. Exact continuation/extension stages,
 budgets and any later preference/RL phase remain to be frozen. Long-context qualification must

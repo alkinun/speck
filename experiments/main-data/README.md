@@ -5,7 +5,7 @@ This is not a launch configuration or a claim that the required corpus is alread
 The frozen H100 pilot, development evaluation and backups are complete. This working plan does
 not change their configurations or historical result receipts.
 The first 5,000-GPU-hour program studies data and training across pretraining, mid-training and
-post-training on the selected 1.2B backbone. The [program](../../docs/program.md#training-lifecycle)
+post-training after a bounded architecture/efficiency study and backbone freeze near 1.2B. The [program](../../docs/program.md#training-lifecycle)
 defines stage boundaries; [model notes](../../docs/model.md) cover supporting attention/size analysis.
 Broader architecture research belongs to later releases. Our base starts from scratch; the future
 50,000-hour allocation is not assumed funded.
@@ -23,10 +23,30 @@ acquisition targets. Better data does not prove equal quality at different token
 first release studies data and staged training within the confirmed 5,000-hour envelope.
 
 Capability mid-training's split within the 100B horizon remains unfrozen; it is not an additional
-allowance. Follow with a provisional **8B-token context extension toward 128K** and **1.5M unique
+allowance. Follow with **300 hours of context qualification toward 16K/32K**, with tokens unfrozen
+and 128K a stretch, and **1.5M unique
 post-training conversations**, within a 1–2M planning range. These require their own cost and
 quality qualification. All tokens use the frozen Mistral tokenizer; holdouts are outside training
 supply, and exposure/replay is distinct from unique eligible material.
+
+## Research before the main run
+
+Audit sources/exclusions and qualify runtime first. Complete the **200-hour architecture/efficiency
+study**, then freeze the backbone before data experiments. Pretraining data research has **600 hours**
+for a costed screening matrix and confirmation before spending the main 2,300-hour reservation.
+Use matched fresh initializations, declared schedules/exposure and fixed validation/development
+endpoints. Predeclare which sources, filters or weights vary; a combined recipe contrast does not
+isolate individual source effects. Keep final tests untouched and report inconclusive findings.
+
+Reserve confirmation/evaluation/preparation/recovery costs before screening. Exact arms, seeds and
+horizons remain unset until eligible supply and informative learning signals are established.
+Short-run rankings do not guarantee 100B results.
+
+The **900-hour total data-research budget** also contains **150 hours for mid-training** and
+**150 for post-training** comparisons on useful parent checkpoints, before their production stages.
+Audit all stage datasets now. Charge each experimental arm and overhead once to its research cap;
+production SFT/RL and continuation tokens remain separate. The report distinguishes source audits,
+controlled experiments and descriptive stage progression.
 
 ## Base mixture
 
@@ -94,28 +114,23 @@ horizon and 2,300-hour reservation; the targeted portion and replay weights rema
 The [training guide](../../docs/training.md#mid-training-readiness) records the changed-data branch
 and objective limitations. Data acquisition does not make this a runnable continuation recipe.
 
-Keep the controlled natural-code/checked-exercise study within its separate 141-hour reservation.
-Do not count experimental arm tokens as main-model exposure unless that arm is actually continued.
+The pretraining recipe study precedes the main run and uses 600 of the 900 data-research hours.
+Its fresh-run tokens do not count as main-model exposure; production starts fresh after selection.
+Mid-training comparisons use their separate 150-hour research cap and cannot replace the initial study.
 
 ## Context extension
 
-Working stages: **2B tokens up to 16K, 2B up to 32K, 4B up to 128K**. These stage ceilings do not
-mean every example is padded to the maximum. Within each stage reserve 25% of tokens for short
-replay; the remaining 75% comes from coherent long material. Initially target half of the long
-material from repositories, 30% from math/science/technical documents and 20% from grounded
-cross-document material. These are preparation weights requiring content/length qualification. Use the preceding stage's
-unchanged domain mixture, repacked into coherent longer records, as the control before adopting
-these long-material weights. The [MAI review](../../docs/research.md#mai-thinking-1-review--2026-09-19)
-supports testing this simpler control; it does not validate our KDA/GQA context extension.
+Qualify **4K → 16K → 32K within 300 production GPU-hours**. Keep stage token counts unset until
+measured cost, useful-context learning and short-task retention justify them. Approximately 128K
+is a stretch; the old 8B/800-hour curriculum is retired. Retain complete longer records as inventory
+without counting them as first-release training exposure.
 
-Use repository relationships, imports, tests and documentation; preserve intact long reasoning
-and agent traces for their relevant training phases. Record any reuse of base documents explicitly.
-Freeze stage transitions only after measuring memory/runtime and evaluating retrieval across
-positions, multi-file repair, cross-document reasoning and short-task retention. Also compare
-held-out loss on the same suffix as related prefix length increases; stratify retrieval/QA by answer
-position and distractor distance. The current model
-has not been qualified at these lengths. Eight billion tokens is a budgeted hypothesis, not proof
-that 128K will work. Add an intermediate length only if measured stability/cost calls for it.
+Short replay at 25% remains a hypothesis. For the long portion, compare unchanged domain weights
+repacked into coherent longer records against the proposed 50% repository / 30% math/science /
+20% grounded cross-document mix. Charge these comparisons to the 150-hour mid-training research
+cap, distinct from the selected context production run. Preserve repository/import/document
+relationships and record source-family reuse. Evaluate fixed-suffix loss with related prefixes,
+retrieval across positions, multi-file tasks and short-task retention before advancing length.
 
 ## Post-training scale
 
@@ -147,12 +162,13 @@ as actual provider billing:
 
 | Work | GPU-hours reserved |
 | --- | ---: |
-| Runtime qualification | 70 |
+| Runtime qualification | 100 |
+| Architecture and efficiency study | 200 |
 | Pretraining and capability mid-training | 2,300 |
-| Context mid-training | 800 |
+| Context production | 300 |
 | Post-training, including any on-allocation teacher/reward work | 800 |
-| Bounded data comparison | 141 |
-| Protected evaluation and recovery | 889 |
+| Data experiments: 600 pretraining / 150 mid-training / 150 post-training | 900 |
+| Protected evaluation and recovery | 400 |
 | **Total** | **5,000** |
 
 The completed pilot measured **12,859 tokens/s** over the full trainer process, including cold
@@ -187,16 +203,16 @@ engineering pilot is an optimized throughput ceiling or promise a particular spe
 The 100B horizon is now the working preparation baseline, conditional on cost and supply; the
 larger comparisons do not authorize expansion. Preserve continuation checkpoints and choose a
 compatible learning-rate schedule before training; a fully decayed run does not extend at no cost.
-The retired 50-hour future pilot reservation now increases the bounded data study from 91 to
-141 hours. Historical H100 rental costs stay separate. There is no architecture-search allocation.
-The separate 8B context target needs an effective average of 2,778 tokens/s per allocated GPU to
-fit 800 hours; its actual rate is unknown.
+The approved research allocation reserves 200 hours for architecture/efficiency and 900 for data
+experiments, while preserving 2,300 base and 800 post-training production hours. Context production
+is reduced to 300 hours and protected evaluation/recovery to 400. Historical H100 rental costs are
+separate. Remeasure throughput if the architecture decision changes the reference model.
 
-Charge shared-base creation to the main allocation once. Charge additional data-comparison arms
-and their evaluations to the 141-hour comparison reservation. Synthesis/verification GPU costs
-must be charged to their relevant preparation or post-training budget; CPU/storage and external
-teacher API costs need separate accounting. Prefer existing eligible data over unbudgeted mass
-synthesis. No optional RL phase or extra experiments are implicitly funded beyond these limits.
+Charge experimental training, evaluation, retries and on-allocation preparation to the appropriate
+research cap; charge selected production runs to their production phase. CPU/storage and external
+teacher API costs remain separate. Context token counts are deliberately unset; the 300-hour cap
+cannot inherit the former 8B curriculum without evidence. No extra experiment, 128K stage or RL
+campaign is implicitly funded beyond the declared caps.
 
 ## Preparation workstreams
 

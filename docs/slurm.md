@@ -16,9 +16,12 @@ uv run --no-sync python -m scripts.slurm_ops render /shared/wave.json \
 A wave binds the exact clean Git revision, experiment/data hashes, commands, resources, and retry
 limits. Build it only after pilot settings and cost are chosen. `speck_slurm_wave` v1 is validated in
 [speck/operations/slurm.py](../speck/operations/slurm.py); tests contain minimal complete fixtures.
-The bound budget plan retains the 5,000-hour total and 889-hour reserve. Phase names come from that
+The bound execution budget uses 5,000 total hours: 4,600 scheduled and 400 protected for
+evaluation/recovery, matching the [current plan](../experiments/main-data/plan.json). Phase names come from that
 plan; a phase's `conditional` field marks reserve, and zero-hour phases cannot launch compute.
-Historical P1–P8 labels are not required.
+Historical P1–P8 labels are not required. Old 4,111/889 wave plans must be replayed with their
+original checkout; they cannot authorize current launches. Planning reservations still need a
+frozen execution manifest and per-stage cost checks before submission.
 
 Training jobs use `torchrun -m scripts.slurm_base_train ... --slurm-requeue-resume`. Signals request
 an optimizer-boundary checkpoint; requeue resumes the last complete checkpoint explicitly. SFT

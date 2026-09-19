@@ -14,22 +14,22 @@ open technical report. Primary uses are agentic coding, normal coding, math reas
 general usefulness remains a regression check. The first paper centers on data, training and
 capability development. External models are comparators or qualified teachers, not our base initialization.
 
-- **Model selected:** 1,195,884,576 total/active parameters; 24 layers, width 2048; three KDA
+- **Reference model:** 1,195,884,576 total/active parameters; 24 layers, width 2048; three KDA
   recurrent blocks then one global NoPE GQA block, repeated six times. Dense SwiGLU throughout,
-  intermediate width 5120, tied embeddings, sigmoid KDA gates. No MoE investigation or model sweep.
+  intermediate width 5120, tied embeddings, sigmoid KDA gates. One bounded architecture/efficiency comparison before backbone freeze; no MoE or size sweep.
 - **Tokenizer fixed:** Mistral 32K; 32,003 embedding rows include three assistant role IDs.
 - **Compute envelope confirmed by the user:** 5,000 total GPU-hours across four GH200s, equivalent
   to 1,250 hours with all four allocated. Site/access and GH200 throughput remain unconfirmed.
 - **Behavior selected:** one always-thinking protocol with brief/deep reasoning and tool actions;
   no supported non-thinking response mode. Preserve separate base and assistant checkpoints.
-- **Context target:** start at 4K, extend toward approximately 128K after measured qualification.
+- **Context target:** start at 4K, qualify 16K then 32K within 300 production GPU-hours; 128K is a stretch.
 - **Future ambition:** 50,000 GH200-hours and larger models; no future allocation is assumed funded.
 
-The [model notes](docs/model.md) record the fixed backbone and the paper's supporting discussion of
-attention, size and measured trade-offs. MoE, attention residuals and broader architecture research
-are deferred to later releases as compute and model sizes grow. Current experiments concern data,
-training recipes and runtime qualification. Competitive quality and useful 128K context are targets,
-not results. The [program overview](docs/program.md#training-lifecycle) defines stage boundaries.
+The [model notes](docs/model.md) define the reference backbone and 200-hour architecture/efficiency
+study. Freeze the chosen backbone before the data experiments. MoE, attention residuals and broad
+searches remain later work. The first report centers on datasets and training, with controlled
+training/inference efficiency evidence. High efficiency and competitive quality are hypotheses to
+measure. The [program overview](docs/program.md#training-lifecycle) defines stage boundaries.
 
 ## Working recipes, not launch settings
 
@@ -37,10 +37,11 @@ not results. The [program overview](docs/program.md#training-lifecycle) defines 
 | --- | --- | --- |
 | Pretraining | 100B working base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material | Qualified source supply and measured GH200 cost; H100 reference implies 106.5B within the base reservation |
 | Capability mid-training | Targeted code/math/repair continuation with broad-data replay, within the base horizon | Token split, mixture, objective and changed-data continuation support remain to be qualified |
-| Context mid-training | Proposed 8B additional tokens: 2B up to 16K, 2B up to 32K, 4B toward 128K, including short replay | Memory, useful-context learning, positional behavior and stage costs |
+| Context mid-training | 300-hour production cap; 16K then 32K qualification, with 128K stretch and token counts unset | Memory, useful-context learning, positional behavior and stage costs |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
 | Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
-| Data comparison | One bounded natural-code versus checked-exercise comparison | Useful common base, enough qualified examples, frozen endpoints and all-in cost |
+| Architecture/efficiency study | 200-hour bounded reference-versus-control comparison before backbone freeze | Exact matched control, parameter/FLOP accounting, training/inference endpoints and cost |
+| Data research | 900 hours: 600 pretraining, 150 mid-training, 150 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
 
 The [main data plan](experiments/main-data/README.md) specifies candidate sources and counting rules.
 Retained stock, admitted data and training exposure are different quantities. No small preview or
@@ -56,7 +57,8 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Backup closeout | Eight model/optimizer checkpoints, both exports, evaluation outputs and recovery logs retained locally | [Backup receipt](experiments/pilot/backup-result.json); pilot closed, no further rental work needed; provider billing/stop state not verified |
 | Natural-code supply | All 1,999 retained archives reopened; 714,369 files / 476,774,847 retokenized tokens; 123 files under known benchmark/family holds | [Census](experiments/corpus-audit/code-supply.json), [lineage cohort](experiments/corpus-audit/natural-code-cohort.json); no new training admissions; stock covers 1.59% of the revised 30B natural-code exposure |
 | Code bundle linkage | Four pinned repositories; 19 linked files / 5,650 tokens; four content flags hold 15 files by family | [Receipt](experiments/corpus-audit/code-bundles.json); static test weaknesses, no execution or admission; repository co-presence alone is insufficient |
-| Code expansion feasibility | Upstream inventories pinned; one new Python metadata shard scanned, 16 blobs recovered, 13 length-matched / 9,541 tokens | [Receipt](experiments/corpus-audit/code-expansion.json); four content flags; four application modules for origin/test follow-up; no qualified yield or admission |
+| Code expansion feasibility | Upstream inventories pinned; one new Python metadata shard scanned, 16 blobs recovered, 13 length-matched / 9,541 tokens | [Receipt](experiments/corpus-audit/code-expansion.json); four content flags; four application modules selected for follow-up; no qualified yield or admission |
+| Application origin/test review | All four source revisions, complete trees and MIT notices recovered; 29 response hashes verified | [Receipt](experiments/corpus-audit/code-application-origins.json); one direct but stale test link, no independent verification or admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -87,44 +89,55 @@ historical; do not repeat the completed pilot because a preparation document sti
    and partial exclusion coverage. The [bundle follow-up](experiments/corpus-audit/code-bundles.json)
    now resolves four pinned examples, exposing weak test oracles and limited practical coverage.
    The [expansion inventory and probe](experiments/corpus-audit/code-expansion.json) now pin the
-   remaining metadata and recover new Python candidates. Next, resolve origins, notices and linked
-   tests for the four application modules, then measure eligible yield by language/practical role.
+   remaining metadata and recover new Python candidates. The [origin/test review](experiments/corpus-audit/code-application-origins.json)
+   now resolves all four application modules but establishes no verified examples. Next freeze
+   a stratified language/role yield audit with separate natural-code and checked-exercise gates.
    The proposed 30B natural-code
    exposure is not supported by 0.477B retained tokens. Close supply feasibility before bulk
    packing. Web source-use, family/near-duplicate exclusions and usable-token counts remain
    open. Acquire DCLM originals for a concrete remaining coverage question; keep synthetic L3
    separate. Then review math correctness/overlap and assistant reasoning/tool outcomes and
    missing long-example tails, one bounded packet at a time.
-3. **Prepare the single-model GH200 packet before access.** Bind current source and exact inputs,
+3. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
    do not treat its old source commit as the current release. No paid run starts from this outline.
 4. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
-   Declare every allocated GPU, including idle devices. Use results to freeze the main schedule,
-   batch, token horizon, data manifests and budget. Reduce the 100B working horizon if measured
+   Declare every allocated GPU, including idle devices. Use results to cost the architecture/data
+   studies and inform the main schedule, batch and horizon before the subsequent research gates.
+   Reduce the 100B working horizon if measured
    cost or supply requires it.
-5. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
+5. **Complete the bounded architecture study, then research the starting recipe.** Use the
+   200-hour architecture/efficiency cap to answer one consequential question and freeze the backbone.
+   Run data screening and confirmation from
+   matched fresh initializations after source/runtime qualification. Use fixed held-out source losses
+   and development capability curves; keep final tests untouched. Record the result and limitations,
+   then freeze the main mixture and schedule. Pretraining data research has 600 hours; reserve
+   confirmation/evaluation cost before screening. The other 300 data-research hours belong to
+   mid-training and post-training comparisons, 150 each, on useful parent checkpoints.
+6. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
    continuation and context extension separately, with their data, objectives and budget ownership.
-   Preserve stage checkpoints and source-wise learning curves. Run the bounded data comparison only when its base,
-   supply and cost gates pass. Qualify context stages before long SFT. Promote reward training only
-   for measured gains. Pin final endpoints/comparators before selection; keep final tests untouched.
+   Preserve stage checkpoints and source-wise learning curves. Use useful stage checkpoints for
+   downstream data comparisons before committing their stage budgets. Qualify context stages before
+   long SFT. Promote reward training only for measured gains. Pin final endpoints/comparators before
+   selection; keep final tests untouched.
 
-Runtime and data preparation are the active tracks. Mid-training and assistant designs can be
-prepared now; their expensive execution depends on a useful base and measured costs. Use milestone
-checks and bounded supervisors, not frequent manual progress polling or duplicate workers.
+Runtime and data preparation are the active tracks. Audit sources for all stages now. The starting
+mixture study precedes main pretraining; mid-training and assistant model comparisons need useful
+parent checkpoints and measured costs. Use milestone checks and bounded supervisors, not frequent
+manual progress polling or duplicate workers.
 
 ## Compute
 
-The [numeric plan](experiments/main-data/plan.json) reserves 70 GPU-hours for runtime qualification,
-141 for the bounded data comparison, 2,300 for pretraining and capability
-mid-training, 800 for context mid-training, 800 for post-training and 889 for protected
-evaluation/recovery: **5,000 total**. Capability mid-training has no additional token/hour allowance;
-its split within the base horizon remains unfrozen.
-The [overview](docs/program.md#compute-and-allocation) proposes subdivisions of the existing
-post-training and protected envelopes; these do not add budget or promise that every stage fits.
-Completed external rental costs are recorded separately from the future grant ledger. The completed
-pilot needs no new allocation: its former 50-hour reservation now extends the data comparison from
-91 to 141 hours. Architecture search receives zero hours; runtime qualification is engineering work.
+The [numeric plan](experiments/main-data/plan.json) reserves **100 hours for runtime qualification,
+200 for architecture/efficiency, 900 for data experiments, 2,300 for base/capability production,
+300 for context production, 800 for post-training production and 400 for evaluation/recovery:
+5,000 total**. Data research divides into 600/150/150 hours across pretraining/mid-training/post-training.
+Each experiment includes its preparation, evaluations, retries and allocated idle time; production
+exposures are separate. Capability production remains inside the 100B base horizon and 2,300 hours.
+The [overview](docs/program.md#compute-and-allocation) records subdivisions and gates. Context tokens
+remain unset until measured qualification; 128K is optional. The protected reserve is smaller and
+must remain explicit. Completed external rental costs stay separate from this allocation.
 
 At the measured H100 full-trainer rate, 2,300 GPU-hours corresponds to about 106.5B base tokens.
 The 100B working horizon projects to 2,160 hours, leaving about 140 hours of margin. At an

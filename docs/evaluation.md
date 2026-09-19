@@ -5,7 +5,9 @@ tools, reliability, and broad usefulness separately; keep cost alongside quality
 Evaluate the [training lifecycle](program.md#training-lifecycle) with identified pretraining,
 mid-training, SFT and any RL checkpoints. Stage-to-stage changes describe progression; attributing
 a gain to data requires a controlled comparison with the model, training exposure and other recipe
-settings held fixed. The primary planned control is the [code-data intervention](coding.md#first-comparison-to-prepare).
+settings held fixed. The primary planned control is the
+[pretraining recipe study](coding.md#first-comparison-to-prepare), before main pretraining;
+code-data substitution is one candidate contrast after source qualification.
 
 The final assistant target always uses the thinking protocol for coding, math and agent tasks.
 Evaluate brief/deep reasoning budgets within that protocol, including cap exhaustion, correctness,
