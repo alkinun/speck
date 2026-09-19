@@ -94,15 +94,19 @@ over another source. The DCLM Parquet release has its own revision, distinct fro
 
 | Source | Matching revision prefix | Main-data role and next check |
 | --- | --- | --- |
-| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | Natural-web candidate alongside FineWeb-Edu; explicitly bind scored English versus English HQ paths, then inspect provenance, coverage and overlap |
+| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | Leading natural-web candidate to qualify; FineWeb-Edu remains the control. Bind scored English versus English HQ paths, then inspect provenance, coverage and overlap |
 | [DCLM baseline Parquet](https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet) | `817d6752765f` | Independent natural-web candidate; bounded quality/coverage and source-use audit before acquisition |
 | [DCLM-Edu](https://huggingface.co/datasets/HuggingFaceTB/dclm-edu) | `dbad8ad71224` | Separately selected DCLM candidate; assess score threshold and avoid counting parent/filtered overlap as extra supply |
 | [Ultra-FineWeb-L3](https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3) | `bc3b1ba986fc` | Synthetic candidate for the Cosmopedia comparison; continue the source/answer checks below |
 
-The next web-data step is a bounded, comparable audit of natural Ultra-FineWeb, DCLM/DCLM-Edu
-and retained FineWeb-Edu, with declared language, source paths, score filters and length/domain
-coverage. Keep the synthetic L3-versus-Cosmopedia question separate. Newer repository dates and
-publisher scores do not by themselves settle our mixture. No bulk acquisition or additional GPU
+The [September 19 paper review](../../docs/research.md#openbmb-web-data-review--2026-09-19)
+prioritizes natural Ultra-FineWeb on matched published evidence: nine of nine English benchmarks
+improve over FineWeb-Edu. The next web-data step is a bounded, comparable audit against retained
+FineWeb-Edu, retaining DCLM/DCLM-Edu as independent candidates, with declared language, source
+paths, score filters and length/domain coverage. The archived Ultra-FineWeb cutoff of 0.8 differs
+from the paper's 0.5; do not assume stricter filtering preserves its result or coverage.
+Keep the synthetic L3-versus-Cosmopedia question separate. Published results justify this priority;
+eligibility, supply and main weights remain open. No bulk acquisition or additional GPU
 comparison is authorized by this shortlist; the already planned coding comparison stays separate.
 
 Pinned metadata and dataset cards are retained locally; full corpora were not downloaded.

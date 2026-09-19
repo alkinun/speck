@@ -1,6 +1,6 @@
 # Speck: first useful baseline
 
-Updated 2026-09-18. This is the single current plan. Change it in place as evidence arrives;
+Updated 2026-09-19. This is the single current plan. Change it in place as evidence arrives;
 Git retains earlier decisions. Concrete run settings belong beside their experiment.
 
 ## Goal
@@ -51,6 +51,7 @@ Provider billing remains unknown. Main-corpus research remains a separate follow
 | --- | --- | --- |
 | Runtime qualification | H100 single-worker rehearsal and timing complete | On changed hardware, verify environment/input identities and relevant recovery checks; GH200 and four-worker qualification remain separate |
 | Code data | Preview, isolated execution and lineage audit complete; all 16 L3 rows held outside training | Qualify 16 practical natural-code files with origin/revision/license evidence, freeze exclusions, then derive independently checked exercises |
+| Web data | Matched published evidence favors natural Ultra-FineWeb; now the leading candidate to qualify | Audit the pinned English subset against retained FineWeb-Edu, checking selection threshold, coverage, overlap and eligible supply; keep DCLM as an independent comparator |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
 | Current paid experiment | Training/export qualified; restored H100 running the complete frozen development evaluation; backups resumed | Finish local code grading, verify all remaining artifacts and report when the GPU can be stopped |
 | Main training | Mixture, eligible supply and horizon open | Use pilot learning/runtime results and a costed code-data comparison before selecting the main recipe |
@@ -94,7 +95,10 @@ training packs. A passing generated test suite alone is not sufficient for data 
    Quality labels, mixture weights, repetition, and staged use of refined material need evidence;
    correct packing and upstream dataset branding do not supply it.
    Prioritize the [code-data comparison](docs/coding.md#first-comparison-to-prepare), keeping general
-   coverage fixed. Ultra-FineWeb-L3 remains a candidate, not an established Cosmopedia replacement.
+   coverage fixed. In web preparation, prioritize natural Ultra-FineWeb qualification based on the
+   [matched paper review](docs/research.md#openbmb-web-data-review--2026-09-19), retaining FineWeb-Edu
+   as the control and DCLM as an independent comparator. Ultra-FineWeb-L3 remains a separate
+   candidate, not an established Cosmopedia replacement. No new GPU experiment is launched here.
    The [L3 provenance audit](experiments/corpus-audit/code-provenance.json) holds all 16 preview
    records outside training: source revision/license and a supported L2 join remain unresolved.
    Next qualify 16 practical Python files from retained natural-code stock; one exact upstream

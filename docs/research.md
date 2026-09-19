@@ -1,6 +1,6 @@
 # Research informing the first baseline
 
-Reviewed 2026-09-18 using primary papers and official releases. These are lessons and comparisons,
+Reviewed 2026-09-19 using primary papers and official releases. These are lessons and comparisons,
 not a promise to reproduce another lab's scores or compute budget. The decisions live in [PLAN.md](../PLAN.md).
 
 OpenBMB is a primary ongoing reference for our data work. The [coding plan](coding.md) records the
@@ -102,6 +102,63 @@ The public [data pipeline README](https://github.com/zgcagi/ZGCM-1/blob/8c9677a0
 describes a scaffold with representative adapters; tokenizer, quota, and indexed-writer integration
 remain environment-specific. Borrow its traceable decision pattern where useful, rather than add a
 second ingestion framework to Speck.
+
+## OpenBMB web-data review — 2026-09-19
+
+The [Ultra-FineWeb paper v1](https://arxiv.org/html/2505.05427v1), Table 4, reports
+matched MiniCPM-1.2B runs at a nominal 100B tokens with zero-shot Lighteval:
+
+| Benchmark | FineWeb-Edu | Ultra-FineWeb-en |
+| --- | ---: | ---: |
+| MMLU | 31.80 | 32.24 |
+| ARC-C | 34.56 | 35.67 |
+| ARC-E | 69.95 | 70.62 |
+| CommonSenseQA | 31.53 | 36.45 |
+| HellaSwag | 42.17 | 42.76 |
+| OpenBookQA | 25.20 | 26.20 |
+| PIQA | 72.14 | 73.67 |
+| SIQA | 38.13 | 39.61 |
+| WinoGrande | 55.56 | 55.80 |
+| English mean | 44.560 | 45.891 |
+
+All nine improve: **+1.331 percentage points** on average. The paper's printed deltas compare
+against raw FineWeb, not FineWeb-Edu. Table 6's mixed-corpus English gain is smaller (+0.538),
+with regressions; both English and Chinese sources change. Table 7's large-model results are
+scaling predictions. These are publisher results, not a Speck replication or coding comparison.
+
+The methodological lesson is to select classifier seeds using downstream learning results.
+Their 10B-token verification uses 30% candidate / 70% background after a 1.1T-token base;
+the quoted 110 H100-hours excludes making that base. Our 105M pilot is not an equivalent
+foundation. Their classifier threshold is 0.5. Section 3.1 calls the budget 100B/104B, but its
+printed product `4096 * 1024 * 26000` equals 109,051,904,000; retain “nominal 100B.”
+
+The separate [Tiered Data Management paper v1](https://arxiv.org/html/2602.09003v1), Table 5,
+reports English means of 52.26 / 53.36 / 53.96 for L1 / L2 / L3 under its verification protocol.
+L3 improves the mean over L2 by 0.60, but ARC-C, ARC-E, BBH and PIQA regress. It does not
+compare against Cosmopedia. Its different evaluation protocol prevents comparing these means
+directly with the preceding table. Table 7 compares nominal 120B-token flat and staged mixtures:
+overall 30.17 → 31.66 and code 7.25 → 9.70, with some commonsense regressions. This supports
+testing a curriculum while retaining broad coverage. Its Code-L3 is a Stack-Edu rewrite;
+do not identify it with the separately released UltraData-Code preview.
+
+### Decisions for Speck
+
+- **Prioritize natural Ultra-FineWeb qualification** for the main web component. Retain
+  FineWeb-Edu as the control and DCLM as an independent comparator. Published matched evidence
+  is sufficient to set this preparation priority; no new GPU replication is needed to begin it.
+- Next prepare a bounded, comparable content/coverage audit using the
+  [checked release pins](../experiments/corpus-audit/web-candidate-versions.json). Bind the English
+  scored versus English HQ path explicitly. The archived scored-source cutoff was 0.8; quantify
+  retained tokens and domain/length coverage before inheriting it. A stricter cutoff is a changed
+  recipe, not an automatic improvement. Use released data first, preserving original text.
+- Keep synthetic L3 source/answer checks and the checked-code comparison separate. Preserve
+  source-family identity, joint deduplication and benchmark exclusions across candidate corpora.
+- Price any later continuation comparison from a common competent base, counting base creation,
+  preparation and evaluation. Use fixed background data and one changed component. Do not promise
+  that a tiny from-scratch run will reliably rank sources, or copy their learning rate into our hybrid.
+
+This changes preparation priority, not training admission or mixture weights. The frozen pilot and
+current rental evaluation remain unchanged; they cannot resolve the web-corpus comparison.
 
 ## Evaluation references
 

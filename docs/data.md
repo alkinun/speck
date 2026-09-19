@@ -66,7 +66,9 @@ keep FineMath, prepare a reversible 8,563-document topic-directory exclusion can
 prioritize consistency checks on English L3 Q&A before any synthetic-source replacement.
 No blanket numeric-deduplication rule or new main mixture has been adopted.
 The [web candidate shortlist](../experiments/corpus-audit/README.md#candidate-decisions) explicitly
-retains natural Ultra-FineWeb, DCLM baseline and DCLM-Edu alongside the synthetic L3 candidate.
+prioritizes natural Ultra-FineWeb qualification following the
+[matched paper results](research.md#openbmb-web-data-review--2026-09-19), with FineWeb-Edu as
+the control, DCLM baseline/DCLM-Edu as independent candidates, and synthetic L3 assessed separately.
 Their historical pins match current repository heads as checked September 19. None is in the
 frozen pilot; the main mixture still needs a comparable content/coverage audit and source eligibility.
 
