@@ -54,7 +54,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Engineering pilot | 800 steps / 104,857,600 tokens; 2.265 trainer hours, 12,859 full-trainer tokens/s, 13,595 steady optimizer tokens/s, 19.3 GiB peak allocated memory | [Execution receipt](experiments/pilot/h100-run.json); engineering evidence, not an optimized ceiling |
 | Development scoring | 2,619 tasks in 2.12 evaluation hours: GSM8K strict 0/253, compiled code pass@1 0/33, IFEval strict prompts 12/101, ARC normalized 44/222, HellaSwag normalized 530/2,010 | [Results](experiments/pilot/development-result.json); weak base capability, custom subsets, no final-partition scoring |
 | Backup closeout | Eight model/optimizer checkpoints, both exports, evaluation outputs and recovery logs retained locally | [Backup receipt](experiments/pilot/backup-result.json); pilot closed, no further rental work needed; provider billing/stop state not verified |
-| Natural-code audit | 16 exact upstream matches, 13 with license-notice evidence; ten files clear preliminary lineage/syntax/benchmark checks | [Cohort receipt](experiments/corpus-audit/natural-code-cohort.json); zero new training admissions |
+| Natural-code supply | All 1,999 retained archives reopened; 714,369 files / 476,774,847 retokenized tokens; 123 files under known benchmark/family holds | [Census](experiments/corpus-audit/code-supply.json), [lineage cohort](experiments/corpus-audit/natural-code-cohort.json); no new training admissions; stock covers under 0.5% of proposed natural-code exposure |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -80,9 +80,12 @@ historical; do not repeat the completed pilot because a preparation document sti
    now include the completed 12-shard census (290,761 documents), 192-record stratified sample and
    24-document/excerpt review. The [extraction follow-up](experiments/corpus-audit/web-filter-validation.json)
    recovers all three matching captures and compares frozen flags on 32 fresh documents. Keep
-   flags review-only and the HQ cutoff unchanged. Next, quantify natural-code supply by language
-   and role, source/test/docs linkage and exclusion coverage; close supply feasibility before
-   bulk packing. Web source-use, family/near-duplicate exclusions and usable-token counts remain
+   flags review-only and the HQ cutoff unchanged. The [code census](experiments/corpus-audit/code-supply.json)
+   now reconciles both retained acquisition batches and records role hints, missing commit fields
+   and partial exclusion coverage. Next, qualify immutable implementation/test/docs bundles and
+   pin expansion routes with measured eligible yield by language; the proposed 96B natural-code
+   exposure is not supported by 0.477B retained tokens. Close supply feasibility before bulk
+   packing. Web source-use, family/near-duplicate exclusions and usable-token counts remain
    open. Acquire DCLM originals for a concrete remaining coverage question; keep synthetic L3
    separate. Then review math correctness/overlap and assistant reasoning/tool outcomes and
    missing long-example tails, one bounded packet at a time.

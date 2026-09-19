@@ -1,0 +1,504 @@
+{
+  "format": "speck_retained_code_supply_audit",
+  "date": "2026-09-19",
+  "status": "complete_finite_retained_stock_census_not_training_admission",
+  "repository_revision_before_changes": "0818637bff5acabce3aa31c04cee801964cda059",
+  "training_admitted": false,
+  "eligible_unique_tokens_established": 0,
+  "gpu_hours": 0,
+  "corpus_code_executed": false,
+  "environment": {
+    "python": "3.10.20",
+    "sentencepiece": "0.2.2",
+    "workers": 4
+  },
+  "archived_acquisition": {
+    "revision": "f5f4c915e744275f2a6677c722255c23525783bf",
+    "repository_path": "results/data/stack-edu-e1s-ordered-acquisition-v2-20260916.json",
+    "external_copy": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/acquisition.json",
+      "bytes": 9440962,
+      "sha256": "7226f676529217047028e7ae4983f8739866054e4ad7cda19123eb89a551addf"
+    }
+  },
+  "implementation": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/audit_code_supply.py",
+      "bytes": 13579,
+      "sha256": "e521b2d8f96cc78e03083f8e32215426894729422a93b80514691aaf5197f85d"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/speck/data/code_families.py",
+      "bytes": 4472,
+      "sha256": "83a6338b455ec1931330addaa98848ecf8f4d9507dbd67113661279a275491a1"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/speck/provenance/io.py",
+      "bytes": 1938,
+      "sha256": "87cb191c6b2775c728f85aab81b08493f107d2915dde5db92168f866bdb611d2"
+    }
+  ],
+  "external_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/plan.json",
+      "bytes": 708,
+      "sha256": "aaaca78c62844ded04a9c9b05e4313543a7c1433603400b646d32591d5234f00"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/historical-contamination-plan.json",
+      "bytes": 16738,
+      "sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2/scan.json",
+      "bytes": 1015,
+      "sha256": "4d503f9a40fc738288cbc3d9dc411fd55bcf46fc287dda1586c96d30c5386a0c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2/documents.jsonl",
+      "bytes": 402256689,
+      "sha256": "26319e69275907168478c5db6220a8a5eff1c6403312d2708bf7baf483c4a92e"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2/summary.json",
+      "bytes": 13550,
+      "sha256": "567fa1574c5a5b3cc82ecba057cfeec310b0174de97e181546cabcb283f6fce7"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/assess.py",
+      "bytes": 5323,
+      "sha256": "800b6d065f045c53eb10f55ccc907be3fe98f0624b7bcd72aaa8df2bc7d91f0d"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/assessment.json",
+      "bytes": 12318,
+      "sha256": "dc3569812940c8f91869903de7dc75930d94737b7f7e9a1ff85086c88aa36391"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/validation.json",
+      "bytes": 580,
+      "sha256": "2214f9db4bc55fffdf8d7f9b7658df6b9ce896962e09ab79eed693772baa802b"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-inputs.json",
+      "bytes": 17164,
+      "sha256": "e7b2577f1e0fbed7824a002b3c32525ed97dde6b97685b704f04c390785a496c"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-result.json",
+      "bytes": 18093,
+      "sha256": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/pilot/supply.json",
+      "bytes": 3341,
+      "sha256": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070"
+    }
+  ],
+  "scan": {
+    "acquisition": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/acquisition.json",
+      "sha256": "7226f676529217047028e7ae4983f8739866054e4ad7cda19123eb89a551addf"
+    },
+    "archive_bytes": 12383211520,
+    "documents": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2/documents.jsonl",
+      "sha256": "26319e69275907168478c5db6220a8a5eff1c6403312d2708bf7baf483c4a92e"
+    },
+    "historical_contamination_plan_units": {
+      "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db": 1999
+    },
+    "script": {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/audit_code_supply.py",
+      "sha256": "e521b2d8f96cc78e03083f8e32215426894729422a93b80514691aaf5197f85d"
+    },
+    "seconds": 140.06489995797165,
+    "tokenizer": {
+      "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+      "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+    },
+    "training_admitted": false,
+    "units": 1999
+  },
+  "summary": {
+    "documents": 714369,
+    "eligible_unique_tokens_established": 0,
+    "exact_text": {
+      "distinct_text_tokens": 476774847,
+      "distinct_texts": 714369,
+      "extra_copies": 0,
+      "extra_copy_tokens": 0
+    },
+    "known_benchmark_repository_holds": {
+      "direct_name_documents": 84,
+      "direct_name_tokens": 174977,
+      "name_alias_exact_component_documents": 84,
+      "name_alias_exact_component_tokens": 174977
+    },
+    "limitations": [
+      "Complete retained finite acquisition, not the entire Stack-Edu release or a random sample.",
+      "Path roles and generated-header wording are hints; other does not mean practical implementation.",
+      "Repository-name co-presence does not establish same-commit linkage, runnable bundles or complete repositories.",
+      "Exact equality and the existing aliases/hold names are only a partial family graph; no production partitions assigned.",
+      "No new benchmark content scan, near-duplicate screen, license determination, execution or training admission."
+    ],
+    "named_repositories": 259257,
+    "named_repository_co_presence": {
+      "docs_and_other_repositories": 3507,
+      "docs_and_other_tokens": 27261770,
+      "test_and_other_repositories": 5127,
+      "test_and_other_tokens": 31839627,
+      "test_docs_and_other_repositories": 326,
+      "test_docs_and_other_tokens": 6019590
+    },
+    "source_revisions": [
+      "eeec5caac5cc3758a18f1d3ba4416837a9ba814c"
+    ],
+    "tokens_with_bos_eos": 476774847,
+    "training_admitted": false
+  },
+  "by_language": {
+    "C": {
+      "documents": 37344,
+      "tokens_with_bos_eos": 21493845,
+      "role_hints": {
+        "docs_example_documents": 499,
+        "docs_example_tokens": 261979,
+        "other_documents": 36074,
+        "other_tokens": 20756576,
+        "test_documents": 771,
+        "test_tokens": 475290
+      }
+    },
+    "C++": {
+      "documents": 113007,
+      "tokens_with_bos_eos": 77198333,
+      "role_hints": {
+        "docs_example_documents": 1704,
+        "docs_example_tokens": 1055389,
+        "other_documents": 109369,
+        "other_tokens": 74174807,
+        "test_documents": 1921,
+        "test_tokens": 1952871,
+        "vendor_documents": 13,
+        "vendor_tokens": 15266
+      }
+    },
+    "Go": {
+      "documents": 33145,
+      "tokens_with_bos_eos": 20663202,
+      "role_hints": {
+        "docs_example_documents": 576,
+        "docs_example_tokens": 261490,
+        "other_documents": 29885,
+        "other_tokens": 17834711,
+        "test_documents": 2684,
+        "test_tokens": 2567001
+      }
+    },
+    "Java": {
+      "documents": 80057,
+      "tokens_with_bos_eos": 46994537,
+      "role_hints": {
+        "docs_example_documents": 1394,
+        "docs_example_tokens": 725628,
+        "other_documents": 77340,
+        "other_tokens": 45402383,
+        "test_documents": 1322,
+        "test_tokens": 865512,
+        "vendor_documents": 1,
+        "vendor_tokens": 1014
+      }
+    },
+    "JavaScript": {
+      "documents": 117696,
+      "tokens_with_bos_eos": 69119927,
+      "role_hints": {
+        "docs_example_documents": 1668,
+        "docs_example_tokens": 879776,
+        "other_documents": 112982,
+        "other_tokens": 66070924,
+        "test_documents": 3045,
+        "test_tokens": 2168936,
+        "vendor_documents": 1,
+        "vendor_tokens": 291
+      }
+    },
+    "Markdown": {
+      "documents": 17791,
+      "tokens_with_bos_eos": 17964030,
+      "role_hints": {
+        "docs_example_documents": 17078,
+        "docs_example_tokens": 17187495,
+        "other_documents": 645,
+        "other_tokens": 701344,
+        "test_documents": 67,
+        "test_tokens": 74473,
+        "vendor_documents": 1,
+        "vendor_tokens": 718
+      }
+    },
+    "Python": {
+      "documents": 209564,
+      "tokens_with_bos_eos": 123490220,
+      "role_hints": {
+        "docs_example_documents": 3376,
+        "docs_example_tokens": 2407042,
+        "other_documents": 201550,
+        "other_tokens": 117810109,
+        "test_documents": 4482,
+        "test_tokens": 3082712,
+        "vendor_documents": 156,
+        "vendor_tokens": 190357
+      }
+    },
+    "Rust": {
+      "documents": 32949,
+      "tokens_with_bos_eos": 44985199,
+      "role_hints": {
+        "docs_example_documents": 707,
+        "docs_example_tokens": 529842,
+        "other_documents": 31921,
+        "other_tokens": 44198192,
+        "test_documents": 321,
+        "test_tokens": 257165
+      }
+    },
+    "SQL": {
+      "documents": 14766,
+      "tokens_with_bos_eos": 11997503,
+      "role_hints": {
+        "docs_example_documents": 228,
+        "docs_example_tokens": 244506,
+        "other_documents": 13917,
+        "other_tokens": 11229573,
+        "test_documents": 621,
+        "test_tokens": 523424
+      }
+    },
+    "Shell": {
+      "documents": 14710,
+      "tokens_with_bos_eos": 11986906,
+      "role_hints": {
+        "docs_example_documents": 165,
+        "docs_example_tokens": 115407,
+        "other_documents": 13839,
+        "other_tokens": 11280107,
+        "test_documents": 703,
+        "test_tokens": 588568,
+        "vendor_documents": 3,
+        "vendor_tokens": 2824
+      }
+    },
+    "TypeScript": {
+      "documents": 43340,
+      "tokens_with_bos_eos": 30881145,
+      "role_hints": {
+        "docs_example_documents": 504,
+        "docs_example_tokens": 320045,
+        "other_documents": 40576,
+        "other_tokens": 28519773,
+        "test_documents": 2260,
+        "test_tokens": 2041327
+      }
+    }
+  },
+  "assessment": {
+    "current_preparation_gap": {
+      "boundary": "Stock is not qualified or a checked-exercise bank. Ratios are optimistic arithmetic bounds, not repetition authorization or full-release supply estimates.",
+      "checked_code_exposure_tokens": 16000000000,
+      "checked_code_supply_established_by_this_audit": 0,
+      "hypothetical_passes_for_natural_exposure": 201.35290400502188,
+      "minimum_preparation_gap_even_if_every_retained_token_qualified": 119523225153,
+      "natural_code_exposure_tokens": 96000000000,
+      "natural_code_unique_preparation_target": 120000000000,
+      "retained_share_of_natural_exposure_percent": 0.496640465625,
+      "retained_tokens_before_joint_eligibility": 476774847
+    },
+    "held_named_repositories": {
+      "astropy/astropy": {
+        "documents": 3,
+        "tokens": 4242
+      },
+      "scikit-learn/scikit-learn": {
+        "documents": 31,
+        "tokens": 45104
+      },
+      "sphinx-doc/sphinx": {
+        "documents": 3,
+        "tokens": 3046
+      },
+      "sympy/sympy": {
+        "documents": 47,
+        "tokens": 122585
+      }
+    },
+    "historical_exclusion": {
+      "benchmark_ids": [
+        "hellaswag",
+        "arc-easy",
+        "arc-challenge",
+        "piqa",
+        "winogrande-xl",
+        "lambada-openai-en",
+        "mmlu-all",
+        "commonsenseqa",
+        "triviaqa-rc-nocontext",
+        "gsm8k-main",
+        "math-algebra",
+        "math-counting-and-probability",
+        "math-geometry",
+        "math-intermediate-algebra",
+        "math-number-theory",
+        "math-prealgebra",
+        "math-precalculus",
+        "humaneval",
+        "mbpp",
+        "bigcodebench-v0.1.4"
+      ],
+      "benchmark_lanes": 20,
+      "boundary": "Original per-file content/security filtering is preserved, not re-executed. The newer 22-lane screen applies only to the separately reviewed 37 files; it has not been run across this stock.",
+      "plan_sha256": "f9133feb1530afdc1cf49e00ede0604996431e0ee45a2f80abd59c128f1bf7db",
+      "rejection_counts_from_acquisition_manifests": {
+        "benchmark_contamination": 19304,
+        "code_character_envelope": 13752,
+        "code_high_confidence_secret": 3,
+        "code_non_English_prose": 150938,
+        "content_length_metadata_mismatch": 106032,
+        "duplicate_lines": 10656,
+        "gitleaks": 381,
+        "raw_email_or_ipv4": 1191
+      }
+    },
+    "known_content_and_family_holds": {
+      "boundary": "Union the twelve benchmark repository names with previously recorded content-held repository components and supplied aliases. This propagates existing evidence only; no new benchmark matching or complete source-family graph.",
+      "bounded_content_flagged_texts_present": 6,
+      "by_named_repository": {
+        "adambrgmn/frans": {
+          "documents": 5,
+          "tokens": 1710
+        },
+        "adefrutoscasado/task-queue": {
+          "documents": 1,
+          "tokens": 365
+        },
+        "astropy/astropy": {
+          "documents": 3,
+          "tokens": 4242
+        },
+        "madaan/minimal-text-diffusion": {
+          "documents": 1,
+          "tokens": 554
+        },
+        "mjdroz/statisticscalculator": {
+          "documents": 1,
+          "tokens": 1223
+        },
+        "obround/ppci": {
+          "documents": 29,
+          "tokens": 27188
+        },
+        "scikit-learn/scikit-learn": {
+          "documents": 31,
+          "tokens": 45104
+        },
+        "slott56/navtools": {
+          "documents": 1,
+          "tokens": 3443
+        },
+        "sphinx-doc/sphinx": {
+          "documents": 3,
+          "tokens": 3046
+        },
+        "stroxler/tdxutil": {
+          "documents": 1,
+          "tokens": 291
+        },
+        "sympy/sympy": {
+          "documents": 47,
+          "tokens": 122585
+        }
+      },
+      "documents": 123,
+      "qualification_result": {
+        "path": "/home/alkin/Desktop/speck/experiments/main-data/qualification-result.json",
+        "sha256": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d"
+      },
+      "tokens": 209751
+    },
+    "metadata_and_length_counts": {
+      "blob_sha1_matches_text_documents": 714369,
+      "blob_sha1_matches_text_tokens": 476774847,
+      "documents": 714369,
+      "generated_header_hint_documents": 2836,
+      "generated_header_hint_tokens": 2658115,
+      "license_label_present_documents": 714369,
+      "license_label_present_tokens": 476774847,
+      "over_32768_documents": 4,
+      "over_32768_tokens": 156963,
+      "over_4096_documents": 7171,
+      "over_4096_tokens": 48063679,
+      "repository_and_path_documents": 714369,
+      "repository_and_path_tokens": 476774847,
+      "tokens": 476774847,
+      "utf8_bytes": 1399103844
+    },
+    "role_hints": {
+      "docs_example_documents": 27899,
+      "docs_example_tokens": 23988599,
+      "other_documents": 668098,
+      "other_tokens": 437978499,
+      "test_documents": 18197,
+      "test_tokens": 14597279,
+      "vendor_documents": 175,
+      "vendor_tokens": 210470
+    },
+    "same_source_row_extra_copies": 0
+  },
+  "bounded_cohort_overlap": {
+    "exact_text_matches": 17,
+    "boundary": "Identity only. Existing lineage/execution evidence applies to its recorded origins and versions, not automatically to every stock record or a new training admission."
+  },
+  "role_rules": {
+    "priority": [
+      "vendor",
+      "test",
+      "docs_example",
+      "other"
+    ],
+    "definition": "Exact regexes in the audit script. Path hints are mutually exclusive; generated-header hints overlap roles. Documentation includes examples/tutorials and .md/.rst. Tests use directory and test_/suffix patterns; some language conventions are missed. Other is unclassified, not a practical-implementation label.",
+    "repository_linkage": "Co-presence under lowercase owner/repository names; no same-commit, dependency, import or executable linkage inferred."
+  },
+  "decision": {
+    "stock_recount": "Historical 476,774,847-token total is reproduced from every retained file; no additional supply discovered. Zero exact duplicate text in this finite stock is not near-duplicate clearance.",
+    "exclusions": "At least 123 files / 209,751 tokens fall under currently known benchmark-name/content-family holds. Removing these alone would not establish eligibility; the full current content screen and family/near-duplicate graph remain open.",
+    "scale": "Retained stock covers 0.49664% of the proposed 96B natural-code exposure, even before eligibility losses. Do not silently repeat it about 201 times or count it as the separate 16B checked-code bank. No inference about total upstream release supply.",
+    "next": "Prepare a bounded immutable implementation/test/docs bundle audit from named co-presence candidates and the existing lineage method, excluding known held components first. In parallel preparation, pin expansion source routes and measure language-specific eligible yield before larger acquisition or freezing the main horizon; no bulk download is authorized by this receipt."
+  },
+  "validation": {
+    "offline_summary_replay_identical": true,
+    "summary_sha256": "567fa1574c5a5b3cc82ecba057cfeec310b0174de97e181546cabcb283f6fce7",
+    "initial_attempt": {
+      "directory": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/census",
+      "outcome": "Stopped before completed scan or summary; config_sha256 stores canonical JSON, not pretty-printed file bytes. Corrected verifier to match archived digest semantics; all completed results are from census-v2."
+    },
+    "corpus_code_executed": false,
+    "archive_hashes_and_unit_document_token_byte_totals_verified": 1999,
+    "portable_checks": {
+      "tests_passed": 787,
+      "skipped": 10,
+      "evidence_tests_deselected": 10,
+      "format_and_lint": "pass",
+      "archive_integrity": "pass",
+      "focused_tests": "Exact-text/alias transitive holds, altered-index rejection and acquisition-total reconciliation."
+    }
+  },
+  "metadata_observations": {
+    "repository_and_path_records": 714369,
+    "commit_populated_records": 0,
+    "license_label_present_records": 714369,
+    "sha1_content_identity_matches": 714369
+  }
+}

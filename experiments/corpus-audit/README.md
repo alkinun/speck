@@ -96,8 +96,15 @@ use partial viewer indexes; integer and continuous educational cutoffs differ.
 The [extraction follow-up](web-filter-validation.json) recovers all three matching archived
 captures and compares frozen review flags on 16 fresh HQ and 16 fresh FineWeb-Edu documents.
 Missing lists and mixed page boundaries are confirmed; false alarms and missed defects keep
-the flags review-only. Next, quantify natural-code supply and exclusions; web eligibility and
-usable-token counts remain open. See the [current findings](WEB_INVENTORY_DCLM.md).
+the flags review-only. Web eligibility and usable-token counts remain open. See the
+[current findings](WEB_INVENTORY_DCLM.md).
+
+The [full retained-code census](code-supply.json) subsequently reopens all 1,999 v1/v2 archives:
+714,369 files / 476,774,847 tokens, with exact aggregate replay. Role hints and repository co-presence
+do not resolve missing commit fields; existing benchmark/content-family evidence holds 123 files.
+Next, qualify immutable bundles and language-specific expansion yield. The
+[coding plan](../../docs/coding.md#retained-supply-census--2026-09-19) contains the language/role tables
+and the gap to proposed exposure; no main-code supply is admitted.
 
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
 [its frozen recipe](../pilot/README.md#recipe). This is not the final flagship mixture.

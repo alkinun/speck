@@ -181,6 +181,77 @@ rules are pinned; the full source-family graph and final scoring coverage remain
 milestone. Preserve practical behavior, repository context and exact notices. These examples do not
 establish scalable code supply.
 
+## Retained supply census — 2026-09-19
+
+The [complete retained-stock census](../experiments/corpus-audit/code-supply.json) reopens both
+finite Stack-Edu acquisition batches: **1,999 archives / 12,383,211,520 archive bytes**. All archive
+hashes verify; every retained file was retokenized with the frozen Mistral tokenizer, including
+BOS/EOS. Document, byte and token totals reconcile with every original unit. This took 140 seconds
+with four local CPU workers and executed no corpus code. The earlier 13,236-file coverage sample
+covered only the first batch; these are complete finite-stock counts, not full-release estimates.
+
+| Language | Retained files | Tokens before joint eligibility |
+| --- | ---: | ---: |
+| C | 37,344 | 21,493,845 |
+| C++ | 113,007 | 77,198,333 |
+| Go | 33,145 | 20,663,202 |
+| Java | 80,057 | 46,994,537 |
+| JavaScript | 117,696 | 69,119,927 |
+| Markdown | 17,791 | 17,964,030 |
+| Python | 209,564 | 123,490,220 |
+| Rust | 32,949 | 44,985,199 |
+| SQL | 14,766 | 11,997,503 |
+| Shell | 14,710 | 11,986,906 |
+| TypeScript | 43,340 | 30,881,145 |
+| **Total** | **714,369** | **476,774,847** |
+
+Every record has a named repository/path, upstream license labels and a matching SHA1 content ID.
+Every `commit_id` field is empty. Content identity does not establish a repository version or
+source-use acceptance. There are 259,257 named repositories, no repeated source rows and no exact
+text duplicates within this stock; fork relationships and near-duplicates remain unresolved.
+Seventeen texts match the previously reviewed 37-file cohort, whose evidence remains tied to its
+recorded origins and versions. No new training admission follows from that overlap.
+
+| Mutually exclusive path hint | Files | Tokens |
+| --- | ---: | ---: |
+| Test | 18,197 | 14,597,279 |
+| Documentation/example | 27,899 | 23,988,599 |
+| Vendor | 175 | 210,470 |
+| Other/unclassified | 668,098 | 437,978,499 |
+
+The script fixes priority as vendor, test, documentation/example, then other. These are filename
+hints, not semantic role labels: `other` can include algorithm exercises, and test naming conventions
+are incompletely covered. Generated-header wording appears in 2,836 files; it does not establish
+LLM generation. Under the same repository name, 5,127 repositories have test and other files,
+3,507 have documentation/example and other files, and **326 have all three**, totaling 6,019,590
+tokens. These are candidates for linkage work, not complete or runnable same-commit bundles.
+Only four files exceed 32K tokens; this stock alone does not establish long-repository supply.
+
+All acquisition units bind the original 20-lane content screen. The newer 22-lane screen was run
+on the separate 37-file cohort, not this whole stock. The twelve benchmark repository names match
+84 stock files / 174,977 tokens. Adding previously recorded content-held components and aliases
+raises the known hold to **123 files / 209,751 tokens**; six previously content-flagged texts are
+present. This propagates existing evidence, without claiming a new complete content scan. Removing
+only these files would not establish a qualified remainder or complete family separation.
+
+At the working 320B horizon, natural code proposes **96B exposure / 120B eligible unique-token
+preparation**, separate from 16B checked-code exposure. Retained stock covers only **0.49664%**
+of natural-code exposure before further exclusions. Filling that exposure from this stock would
+require about 201 passes; that is arithmetic, not an approved repetition recipe. Even if every
+retained token qualified, the preparation gap would be 119,523,225,153 tokens. This audit establishes
+no checked-exercise supply and makes no claim about total upstream availability.
+
+Replay aggregate accounting from the verified external document index:
+
+```bash
+PYTHONPATH=. .venv/bin/python experiments/corpus-audit/audit_code_supply.py summarize \
+  /mnt/speck-data/speck/data-qualification-20260919/code-supply/plan.json \
+  /mnt/speck-data/speck/data-qualification-20260919/code-supply/census-v2
+```
+
+The summary replays byte-for-byte. Use `scan` with a fresh external output directory to reopen and
+retokenize all archives. Raw text, paths and the detailed inventory remain outside Git.
+
 ## Data work to do next
 
 1. Freeze broader code-evaluation exclusions and family separation before exercise derivation;
@@ -188,9 +259,10 @@ establish scalable code supply.
    reopen it when an authoritative mapping or independently verified origin becomes available.
    Do not spend on a bulk L3 acquisition to infer an undocumented join. Neither existing natural
    stock nor passing generated tests alone grants eligibility for the new intervention.
-2. Expand inspection across languages, file roles, lengths, and upstream quality scores. Keep
-   implementation, tests, documentation, practical library use, and repair examples visible in the
-   inventory. Algorithm puzzles alone do not cover practical coding.
+2. Use the complete retained census to qualify a bounded set of immutable implementation/test/docs
+   bundles from named co-presence candidates, excluding known held components first. Pin expansion
+   routes and measure eligible yield by language before larger acquisition or freezing the main
+   horizon. Algorithm puzzles alone do not cover practical coding.
 3. Validate the Python lane first, using the existing non-root, isolated, resource-limited runner.
    Check task/solution consistency, dependencies, test discovery, empty or vacuous tests, and
    deliberately incorrect solutions. Add independently checked edge cases: generated solutions

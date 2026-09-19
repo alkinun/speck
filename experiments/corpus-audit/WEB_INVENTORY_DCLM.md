@@ -146,8 +146,8 @@ quality. The complete 32 observations and artifact identities are in the
 
 **Decision:** keep all candidates review-only, with no stricter HQ score cutoff. Prefer source-aware
 list preservation and boundary repair, then measure useful-content retention on fresh material.
-The bounded web diagnosis is complete; the next packet should quantify **natural-code supply by
-language/role, immutable source linkage and exclusion coverage**. Web eligibility, near-duplicate
+The bounded web diagnosis and subsequent [natural-code supply census](code-supply.json) are
+complete; next qualify immutable code bundles and expansion yield. Web eligibility, near-duplicate
 work and usable token counts remain launch gates, not a reason for an indefinite preview loop.
 
 ```bash

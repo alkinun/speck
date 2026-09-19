@@ -94,7 +94,12 @@ The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pi
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
 or correctness. The [natural-code cohort](../experiments/corpus-audit/natural-code-cohort.json)
 now has 16 immutable byte matches and ten preliminary review candidates; none is admitted.
-The bounded practical CPU checks are complete in [coding](coding.md). The
+The bounded practical CPU checks are complete in [coding](coding.md). The subsequent
+[full retained-code census](../experiments/corpus-audit/code-supply.json) verifies 714,369 files /
+476,774,847 tokens across both acquisition batches. No commit fields are populated; test/docs
+co-presence is not same-version linkage. Existing benchmark/content-family evidence holds at
+least 123 files. This stock is under 0.5% of proposed natural-code exposure before joint eligibility;
+it is not a checked-exercise bank or evidence of full-release supply. The
 [qualification packet](../experiments/main-data/QUALIFICATION.md) now owns the next exclusion,
 family-separation and comparable source-review work; no main corpus is admitted.
 
@@ -148,9 +153,9 @@ endpoint, not a causal verdict on its datasets or architecture.
 | Component | Evidence already available | Decision |
 | --- | --- | --- |
 | FineWeb-Edu, FineMath 4+, Cosmopedia v2, peS2o, FineWiki | Retained stocks, pilot preparation, index census and stratified excerpt audit | Keep useful content and controls; improve selection rather than discard all existing stock |
-| Stack-Edu | Retained multilingual code; lineage cohort, broader archive sample and bounded Python/JS/TS execution checks | Complete expanded exclusions and the source-family graph, then measure eligible supply |
-| Natural Ultra-FineWeb | Paper reviewed, historical/current revision checked; comparable local natural-web content audit still pending | Leading candidate for the main web component |
-| DCLM baseline / DCLM-Edu | Historical configurations and current revisions checked | Independent comparison and coverage options; no claimed local quality ranking |
+| Stack-Edu | Full retained census: 714,369 files / 476.8M tokens; role/linkage gaps and known family holds measured; bounded execution checks | Qualify immutable bundles, expanded exclusions and language-specific expansion yield |
+| Natural Ultra-FineWeb | HQ inventory, twelve-shard census, stratified review and matching-capture extraction follow-up complete | Qualification candidate; no stricter cutoff or automatic review-flag rejection |
+| DCLM baseline / DCLM-Edu | Pinned partial-viewer schema/content previews; score predicates distinguished | Source-file evidence needed for concrete coverage decisions; no local quality ranking |
 | Ultra-FineWeb-L3 | 96 retained Q&A/multi-style records, length measurements and eight excerpt reviews | Promising synthetic component; check source/answer consistency before replacing Cosmopedia |
 | Natural UltraData-Math | Retained index census, length profile and excerpt inspection | Compare with FineMath; qualify selected/refined tiers separately |
 | UltraData-Code L2/L3 | Bounded preview, isolated L3 tests and lineage audit | All 16 L3 preview rows remain held; seven passing supplied tests do not establish independent correctness |
@@ -205,8 +210,9 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Following the completed web source recovery and review-flag comparison, quantify natural-code
-   supply by language and practical role, source/test/docs linkage and exclusion coverage.
+1. Use the completed retained-code census to qualify immutable implementation/test/docs bundles
+   and pin expansion routes with measured eligible yield by language. The 0.477B retained tokens
+   do not establish the proposed 96B natural-code exposure or the separate checked-exercise bank.
    For web, resolve source-use evidence, source families, overlap and source-aware extraction
    repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ
    cutoff unchanged. Exact sample-token retention is not full-corpus yield. Extend DCLM previews

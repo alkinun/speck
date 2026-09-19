@@ -40,7 +40,7 @@
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
         "stretch_exposure_tokens": 100000000000,
-        "qualification_priority": "data/ultrafineweb_l1_en_hq at 02c85641e3d19a854be2e09139c25adaa9518063; twelve-shard audit and three matching archived captures complete. Frozen 32-document comparison keeps candidate flags review-only. Source-use/family exclusions, source-aware repair and eligible tokens remain open; next bounded packet quantifies natural-code supply. No stricter cutoff or training admission."
+        "qualification_priority": "data/ultrafineweb_l1_en_hq at 02c85641e3d19a854be2e09139c25adaa9518063; twelve-shard audit and three matching archived captures complete. Frozen 32-document comparison keeps candidate flags review-only. Source-use/family exclusions, source-aware repair and eligible tokens remain open. No stricter cutoff or training admission."
       },
       {
         "id": "independent_web",
@@ -70,7 +70,8 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "stretch_exposure_tokens": 120000000000
+        "stretch_exposure_tokens": 120000000000,
+        "qualification_priority": "Complete retained Stack-Edu census: 714369 files / 476774847 tokens before joint eligibility; no populated commit fields and at least 123 files under known benchmark/content-family holds. Qualify immutable implementation/test/docs bundles and pin expansion routes with measured eligible yield by language. No main training admission; retained stock is under 0.5% of proposed natural-code exposure."
       },
       {
         "id": "checked_code",
@@ -367,7 +368,8 @@
     "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681",
     "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
     "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
-    "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879"
+    "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
+    "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
