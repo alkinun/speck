@@ -195,8 +195,8 @@ manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit
 ## Common cohort review
 
 The fixed cohorts retain **218 original records**, their sampling factors and observed tokens.
-Common full-text review now covers **149 files / 278,342 tokens**. There are **44 family-held records**
-and **27 currently unheld records outside full-read coverage**. Review completion does not establish
+Common full-text review now covers **155 files / 283,888 tokens**. There are **44 family-held records**
+and **21 currently unheld records outside full-read coverage**. Review completion does not establish
 source use, correctness, eligible yield or a source ranking; the two sampling frames remain distinct.
 Two previously read records are now held, so reading and hold counts overlap.
 
@@ -212,6 +212,7 @@ Two previously read records are now held, so reading and hold counts overlap.
 | [C/C++ follow-up](../experiments/corpus-audit/c-cpp-cohort-review.json) | 22 more texts / 54,222 tokens; all nine unheld C and thirteen unheld C++ records read | Test-harness limitations and template/SDK context recorded; one metadata-only hold added |
 | [Java follow-up](../experiments/corpus-audit/java-cohort-review.json) | 15 more texts / 27,176 tokens; all nineteen unheld Java records read | Source-notice applicability and caller/test context recorded; one prior verified original reused, no new holds |
 | [SQL-labelled follow-up](../experiments/corpus-audit/sql-cohort-review.json) | 11 more texts / 37,430 tokens; all unheld records carrying the SQL label read | Schemas, notebooks, dumps and test roles distinguished; one CQL fixture; no new origins or holds |
+| [MATLAB/Objective-C/PHP follow-up](../experiments/corpus-audit/application-cohort-review.json) | Six more texts / 5,546 tokens; all unheld records carrying these labels read | Signal-validation assumptions, framework/configuration dependencies and notice context recorded; no new origins or holds |
 
 All batches preserve held selections rather than replacing them. Assistant observations are recorded
 replay inputs, not independent annotations. Offline replay and corruption/selection controls pass;
@@ -225,36 +226,30 @@ placeholder-only changes before assigning that diagnosis. Parsing cannot validat
 embedded doctests, redacted assertion meaning or contamination. No bulk filter is adopted, and
 redacted originals must not be silently restored.
 
-Static findings include mutation before validation, geometry edge cases, browser callback capture
-and staffing calculations. Tests range from substantive assertions to logging-only examples; an
-observer-pattern exercise directly sets assertion flags without dispatching callbacks. Test names,
-counts or passing assertions alone do not establish independent oracles. A Set test named for
-`find()` calls `some()` instead; a shell functional test checks an earlier listing after computing a
-new one. Deployment scripts and filenames containing `test` do not establish independent oracles.
-A map suite dereferences end iterators and labels custom-map timings as standard-map timings;
-compiler-test helpers narrow results before comparison. Java browser demos have no result assertions,
-and a task queue's thread-safety claim is unsupported by its unsynchronized mutable state. The Java
-batch reuses one verified original without a recovered notice. SQL readings identify missing table
-delimiters and inconsistent notebook execution order; regression inputs and query snapshots still
-need their harness and expected outputs. Neither test presence nor printed timings establish
-correctness or efficiency; the SQL batch has no new or reused verified origins.
+Static readings record implementation defects separately from missing context. Examples include
+mutation before validation, unsynchronized shared state, missing SQL delimiters and contradictory
+notebook execution order. MATLAB feature selection ORs its proximity bounds, rejecting an entire
+channel when granularity exceeds one; validation resets prediction offsets across files, whose effect
+depends on the preprocessor ordering contract. None of these observations is a measured execution result.
 
-**Language and execution context.** A JavaScript-labelled `.pde` file is a Processing Java-mode
-example; two other fixtures use symbolic-verification or extended syntax. Preserve original labels
-and sampling weights, recording observed language/dialect separately. Toolchain-specific parsing,
-Chinese identifiers/Unicode cases and intentionally limited tutorials need contextual review before
-selection rules are adopted; ordinary-language parser failure alone does not establish corruption.
-Ambient declarations are not implementation bodies; translated algorithms need original-source and
-translator attribution. Explicit TODO scaffolds and concatenated lesson snippets are teaching material,
-not verified complete applications. Generated build maps and localized UI strings also occur under
-code-language labels. Configuration can embed commands and depend on external schemas or services;
-syntax alone cannot qualify it. C++ templates need relevant instantiations, and custom container
-contracts differ from built-in types. Java lesson fragments differ from single compilation units,
-while IDE-generated TODO comments can accompany fully implemented method bodies. A SQL-labelled
-`.cql` file contains Clinical Quality Language definitions with test-section markers, not generic SQL.
-Database dumps also embed application data: one includes user-related identifiers whose synthetic/real
-status and data-use suitability remain unresolved. Record observed roles without automatic rejection,
-repair, relabelling or splitting.
+Test evidence also needs context: some examples only log output, bypass the behavior under test,
+check stale results or mislabel timings. Regression inputs and query snapshots need their harness
+and expected outputs; printed accuracy needs a documented data split. Test presence and printed
+metrics alone establish neither independent correctness nor efficiency. Batch receipts retain the
+specific findings and origin-check outcomes.
+
+**Language and execution context.** Preserve original labels and sampling weights while recording
+observed language, dialect and role separately. A JavaScript-labelled `.pde` file uses Processing
+Java mode, while a SQL-labelled `.cql` file contains Clinical Quality Language test definitions.
+Extended syntax, translated algorithms and Unicode cases need relevant toolchains and attribution;
+ordinary-language parser failure alone does not establish corruption.
+
+Declarations, tutorials, generated build maps, localized strings and configuration are not equivalent
+to standalone implementations. C++ templates need relevant instantiations; UIKit entrypoints and PHP
+adapters need surrounding implementations and contracts. TODO comments can accompany implemented
+methods. Database dumps embed application data, including identifiers whose synthetic/real status
+and suitability remain unresolved. Record those distinctions without automatic rejection, repair,
+relabelling or splitting.
 
 **Families and package attribution.** A previously unflagged GoLLIE test contains evaluation examples;
 both sampled GoLLIE records remain held. Those examples are exposed material, not blind evaluation
@@ -270,6 +265,8 @@ held records to 44. Its task text was also not displayed or semantically reviewe
 with the intended scoring suite remains unresolved. The Java review additionally records restrictive
 notice wording in a `toothlou/nature` file sampled as `no_license`. Placeholder organization text does
 not settle applicability or permission; source-use review remains open and family partitions are unchanged.
+Two Objective-C files carry generated-style all-rights-reserved headers alongside permissive/Apache-2.0
+dataset metadata. Applicable notices need verification; neither permission nor a conflict is inferred.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while
@@ -277,11 +274,12 @@ its same-version source archive omits it. A package/version label or ancestor no
 Stringutils notice applicability and both upstream commits remain unresolved; GitHub rate-limit
 responses and the oversized Arcade wheel remain recorded acquisition limits.
 
-**Next:** review the remaining **27 unheld records**, resolve origins/notices and complete broader
-family/near-duplicate discovery. Natural-code eligibility is separate from independent exercise
-verification. The retained 0.477B code stock supports at most **1.59B total one-pass tokens at 30%
-natural code**, before exclusions, validation and other bank constraints. Qualified supply and runtime
-cost jointly set the experiment horizon; longer confirmation runs need more eligible baseline data.
+**Next:** review the remaining **21 unheld records** (18 Markdown and three CSS/SCSS), resolve
+origins/notices and complete broader family/near-duplicate discovery. Natural-code eligibility is
+separate from independent exercise verification. The retained 0.477B code stock supports at most
+**1.59B total one-pass tokens at 30% natural code**, before exclusions, validation and other bank
+constraints. Qualified supply and runtime cost jointly set the experiment horizon; longer confirmation
+runs need more eligible baseline data.
 
 ## First comparison to prepare
 

@@ -104,17 +104,17 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-The [current cohort assessment](../experiments/corpus-audit/sql-cohort-review.json) records
-**149 full texts / 278,342 tokens reviewed**, **44 family-held records**, and **27 unheld records still
+The [current cohort assessment](../experiments/corpus-audit/application-cohort-review.json) records
+**155 full texts / 283,888 tokens reviewed**, **44 family-held records**, and **21 unheld records still
 unread**. Original sampling factors and source labels are preserved; observed language, dialect
 and file role are recorded separately. A family hold alone does not establish an exact benchmark
 match or justify replacing a sampled record.
 
 The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
-checks and package/family evidence. Latest SQL-labelled readings distinguish schema scripts,
-notebooks, dumps, regression inputs and query snapshots; one file contains CQL definitions.
-Embedded-data suitability and earlier notice questions remain open; no new or reused origins
-are available for this batch.
+checks and package/family evidence. Latest MATLAB/Objective-C/PHP readings record signal-validation
+assumptions and framework/configuration dependencies. Printed accuracy is not verified evaluation;
+headers and dataset license labels do not settle notice applicability. No new or reused verified
+origins are available for this batch; embedded-data and earlier source-use questions remain open.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment

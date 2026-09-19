@@ -391,8 +391,12 @@ nineteen unheld Java records. It brought coverage to 138 files / 240,912 tokens,
 unheld records then unread. Caller/test context and a restrictive notice needing applicability review
 remain unresolved; one prior verified original is reused without a recovered notice or new lookup.
 The [SQL-labelled review](sql-cohort-review.json) adds eleven readings / 37,430 tokens, completing
-all unheld records with that label. Current coverage is 149 files / 278,342 tokens, with 44 held and
-27 unheld records still unread. Schemas, notebooks, dumps and test roles need distinct context; one
+all unheld records with that label. It brought coverage to 149 files / 278,342 tokens, with 44 held and
+27 unheld records then unread. Schemas, notebooks, dumps and test roles need distinct context; one
 file contains CQL definitions. No new or reused verified origins, family holds or admissions result.
+The [MATLAB/Objective-C/PHP review](application-cohort-review.json) adds six readings / 5,546 tokens,
+completing all unheld records with those labels. Current coverage is 155 files / 283,888 tokens, with
+44 held and 21 unheld records still unread. Signal-validation assumptions, framework dependencies
+and notice applicability remain unresolved; no new or reused verified origins or holds result.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.
