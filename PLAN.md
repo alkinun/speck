@@ -70,7 +70,7 @@ Provider billing remains unknown. Main-corpus research remains a separate follow
 | Assistant data and context | 500K retained conversations inventoried; finite tool-aware rehearsal qualified; always-thinking target at approximately 128K | Audit reasoning quality, code/math correctness and agent outcomes; balance brief/deep reasoning, retain long trajectories and recover missing source tails in a separately qualified acquisition |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
 | Current paid experiment | Training/export qualified; restored H100 running the complete frozen development evaluation; backups resumed | Finish local code grading, verify all remaining artifacts and report when the GPU can be stopped |
-| Main training | Working 100B mixture and 5,000-hour allocation recorded; source admission and hardware fit still open | Qualify new supply against the 35% code / 25% math targets; freeze measured manifests and runtime before launch |
+| Main training | Desired 320–400B mixture recorded; current 5,000-GPU-hour envelope needs higher measured throughput or more compute | Qualify new supply against the 35% code / 25% math targets; freeze measured manifests and runtime before launch |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
 offline template lookup, separated BF16 wrapper identity from FP32 cache consistency, and removed
@@ -134,10 +134,11 @@ training packs. A passing generated test suite alone is not sufficient for data 
    Add distillation or RL only after a clear baseline,
    working graders, and an affordable experiment exist.
 6. **Scale what works.** Decide the main token horizon and stage budgets from measured data supply,
-   learning curves, and all-in runtime. Start preparation from the [100B working mixture](experiments/main-data/README.md),
-   with an 80B fallback and 120B/160B options only if measured throughput fits the same base budget.
-   Preserve context extension, post-training and final evaluation. The old 320B/400B targets remain
-   historical estimates.
+   learning curves, and all-in runtime. Prepare the [320B desired / 400B stretch mixture](experiments/main-data/README.md).
+   The 100B scenario fits the current H100-rate base reservation; it is not a replacement flagship
+   target. Resolve the throughput or funding gap before launch while preserving context extension,
+   post-training and final evaluation. Count four allocated GPUs as four GPU-hours per wall hour;
+   confirm the provider's allowance units and measure GH200 per-device speed and distributed scaling.
 
 ## Compute
 

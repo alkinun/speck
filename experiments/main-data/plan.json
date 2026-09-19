@@ -1,6 +1,6 @@
 {
   "format": "speck_main_data_working_plan",
-  "format_version": 1,
+  "format_version": 2,
   "date": "2026-09-19",
   "status": "working_preparation_targets_not_launch_manifest",
   "model": {
@@ -10,122 +10,133 @@
     "final_behavior": "always thinking"
   },
   "main_pretraining": {
-    "target_tokens": 100000000000,
+    "target_tokens": 320000000000,
     "initial_context_tokens": 4096,
     "mixture": [
       {
         "id": "selected_web",
         "role": "Natural Ultra-FineWeb English",
         "weight_percent": 25,
-        "exposure_tokens": 25000000000,
-        "eligible_unique_token_preparation_target": 31250000000,
+        "exposure_tokens": 80000000000,
+        "eligible_unique_token_preparation_target": 100000000000,
         "candidate_sources": [
           "openbmb/Ultra-FineWeb"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 100000000000
       },
       {
         "id": "independent_web",
         "role": "FineWeb-Edu / DCLM coverage component",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 16000000000,
+        "eligible_unique_token_preparation_target": 20000000000,
         "candidate_sources": [
           "HuggingFaceFW/fineweb-edu",
           "mlfoundations/dclm-baseline-1.0-parquet",
           "HuggingFaceTB/dclm-edu"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 20000000000
       },
       {
         "id": "natural_code",
         "role": "Qualified natural code, tests and documentation",
         "weight_percent": 30,
-        "exposure_tokens": 30000000000,
-        "eligible_unique_token_preparation_target": 37500000000,
+        "exposure_tokens": 96000000000,
+        "eligible_unique_token_preparation_target": 120000000000,
         "candidate_sources": [
           "HuggingFaceTB/stack-edu",
           "openbmb/UltraData-Code:L2"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 120000000000
       },
       {
         "id": "checked_code",
         "role": "Checked code explanations, exercises and repair",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 16000000000,
+        "eligible_unique_token_preparation_target": 20000000000,
         "candidate_sources": [
           "qualified natural-code derivatives",
           "openbmb/UltraData-Code:L3 if lineage resolved"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 20000000000
       },
       {
         "id": "natural_math",
         "role": "Selected natural math and worked solutions",
         "weight_percent": 20,
-        "exposure_tokens": 20000000000,
-        "eligible_unique_token_preparation_target": 25000000000,
+        "exposure_tokens": 64000000000,
+        "eligible_unique_token_preparation_target": 80000000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L2",
           "HuggingFaceTB/finemath:finemath-4plus",
           "nvidia/Nemotron-CC-Math-v1:4plus"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 80000000000
       },
       {
         "id": "refined_math",
         "role": "Checked refined math explanations and derivations",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 16000000000,
+        "eligible_unique_token_preparation_target": 20000000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L3"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 20000000000
       },
       {
         "id": "reference_science",
         "role": "Reference, science and technical documents",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 16000000000,
+        "eligible_unique_token_preparation_target": 20000000000,
         "candidate_sources": [
           "retained FineWiki",
           "retained peS2o",
           "HuggingFaceFW/finepdfs-edu:English if qualified"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 20000000000
       },
       {
         "id": "refined_web",
         "role": "Selected synthetic educational text",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 16000000000,
+        "eligible_unique_token_preparation_target": 20000000000,
         "candidate_sources": [
           "openbmb/Ultra-FineWeb-L3",
           "retained Cosmopedia v2 comparator"
         ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "admitted_by_this_plan": false,
+        "stretch_exposure_tokens": 20000000000
       }
     ],
     "code_percent": 35,
     "math_percent": 25,
-    "target_unique_eligible_tokens": 125000000000,
+    "target_unique_eligible_tokens": 400000000000,
     "default_passes": 1,
     "repetition_policy": "No automatic repetition. Any repeated source needs declared unique tokens, exposure, passes and revised freeze.",
     "synthetic_shortfall_policy": "Do not count held/rejected records or invent an undocumented join. Re-freeze within-domain natural/refined allocations or reduce horizon after measuring supply; no silent replacement.",
-    "checkpoint_policy": "Retain continuation and endpoint checkpoints; optimizer/schedule/evaluation cadence require separate run freeze."
+    "checkpoint_policy": "Retain continuation and endpoint checkpoints. Treat 100B as a budget-fit scenario or intermediate checkpoint, not an automatic final horizon; freeze a continuation-compatible schedule before launch.",
+    "stretch_target_tokens": 400000000000,
+    "budget_fit_scenario_tokens": 100000000000,
+    "target_status": "desired flagship scale; hardware, eligible supply and funding not yet qualified"
   },
   "context_extension": {
     "target_tokens": 8000000000,
@@ -152,7 +163,13 @@
       "cross_document_grounded_material": 20
     },
     "minimum_effective_tokens_per_second_per_allocated_gpu_to_fit": 2777.777777777778,
-    "boundary": "Proposed stage token counts include short replay. Each maximum is a ceiling, not a fixed padded length. Measure length-bucket costs and useful context; no long-context throughput has been established. Source overlap/replay with base must be disclosed."
+    "boundary": "Proposed stage token counts include short replay. Each maximum is a ceiling, not a fixed padded length. Measure length-bucket costs and useful context; no long-context throughput has been established. Source overlap/replay with base must be disclosed.",
+    "mixture_control": "Compare unchanged preceding-stage domain weights repacked into coherent longer records against the proposed long-material/replay weights; neither has been validated for Speck.",
+    "evaluation_additions": [
+      "Held-out fixed-suffix NLL with increasing related prefix length",
+      "Retrieval/QA stratified by answer position and distractor distance",
+      "Existing short-task retention and multi-file repair"
+    ]
   },
   "post_training": {
     "target_unique_training_conversations": 1500000,
@@ -243,38 +260,49 @@
     },
     "h100_full_trainer_tokens_per_second": 12859.198189903878,
     "h100_steady_optimizer_tokens_per_second": 13594.900661275025,
-    "main_pretraining_reference_gpu_hours": 2160.1485075163473,
-    "main_reference_four_gpu_days_at_perfect_scaling": 22.501546953295286,
+    "main_pretraining_reference_gpu_hours": 6912.475224052311,
+    "main_reference_four_gpu_days_at_perfect_scaling": 72.00495025054491,
     "main_scenarios": [
       {
-        "tokens": 80000000000,
-        "reference_gpu_hours": 1728.1188060130778,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 9661.83574879227
-      },
-      {
         "tokens": 100000000000,
+        "role": "budget-fit scenario, not revised flagship target",
         "reference_gpu_hours": 2160.1485075163473,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 12077.294685990339
+        "reference_four_gpu_days_perfect_scaling": 22.501546953295286,
+        "reference_four_gpu_days_at_80_percent_scaling": 28.126933691619104,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 12077.294685990339,
+        "program_gpu_hours_with_other_reservations": 4860.148507516347
       },
       {
-        "tokens": 120000000000,
-        "reference_gpu_hours": 2592.178209019617,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 14492.753623188404
+        "tokens": 320000000000,
+        "role": "desired flagship target",
+        "reference_gpu_hours": 6912.475224052311,
+        "reference_four_gpu_days_perfect_scaling": 72.00495025054491,
+        "reference_four_gpu_days_at_80_percent_scaling": 90.00618781318114,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 38647.34299516908,
+        "program_gpu_hours_with_other_reservations": 9612.475224052312
       },
       {
-        "tokens": 160000000000,
-        "reference_gpu_hours": 3456.2376120261556,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 19323.67149758454
+        "tokens": 400000000000,
+        "role": "stretch target",
+        "reference_gpu_hours": 8640.59403006539,
+        "reference_four_gpu_days_perfect_scaling": 90.00618781318114,
+        "reference_four_gpu_days_at_80_percent_scaling": 112.50773476647642,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 48309.178743961354,
+        "program_gpu_hours_with_other_reservations": 11340.59403006539
       }
     ],
-    "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected context/SFT/evaluation budgets on base expansion."
+    "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected context/SFT/evaluation budgets on base expansion.",
+    "allocation_interpretation": "User confirmed 2026-09-19: 5,000 total GPU-hours across four GH200s, equivalent to 1,250 four-GPU elapsed hours. Provider access remains unconfirmed.",
+    "scaling_boundary": "Illustrative 80% efficiency is not measured. Four GPUs at H100 per-device speed yield 51,437 aggregate tokens/s at perfect scaling or 41,149 at 80%; GPU-hour cost is invariant at perfect scaling and rises with inefficiency. GH200 per-device gains require measurement."
   },
   "storage": {
-    "base_uint16_token_id_bytes": 200000000000,
-    "prepared_125b_uint16_token_id_bytes": 250000000000,
+    "base_uint16_token_id_bytes": 640000000000,
     "context_uint16_token_id_bytes": 16000000000,
     "local_scratch_working_allowance_bytes": 2000000000000,
-    "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed."
+    "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed.",
+    "prepared_400b_uint16_token_id_bytes": 800000000000,
+    "stretch_base_uint16_token_id_bytes": 800000000000,
+    "stretch_prepared_500b_uint16_token_id_bytes": 1000000000000
   },
   "input_receipts": {
     "experiments/pilot/h100-run.json": "1af7bc5fa0ba2e126d862bb4c661e352b14a19d5e62dabc5ddbbd9df1cf2e44c",

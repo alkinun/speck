@@ -109,11 +109,12 @@ then run the same source-rights, joint-exclusion, partition, pack, and full-load
 Prioritize data quality, coverage and learnability over additional architecture searches. Keep the
 current hybrid while qualifying data and the planned extension from 4K toward approximately 128K.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
-The [main mixture and scale plan](../experiments/main-data/README.md) now proposes 100B base tokens:
+The [main mixture and scale plan](../experiments/main-data/README.md) retains a desired 320B base target and 400B stretch:
 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
-125B eligible unique tokens as selection headroom; the plan distinguishes proposed exposure from
+400B eligible unique tokens as selection headroom for 320B exposure (500B for the stretch); the plan distinguishes proposed exposure from
 materialized supply and reserves separate context-extension/post-training budgets. These are working
-weights to qualify, not proven optima or source admission.
+weights to qualify, not proven optima or source admission. The 100B case remains the current
+measurement-based budget-fit scenario; 320–400B requires more effective throughput or compute.
 The weak [pilot completions](../experiments/pilot/completion-preview.json) establish an immature
 endpoint, not a causal verdict on its datasets or architecture.
 

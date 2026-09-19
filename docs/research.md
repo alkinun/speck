@@ -175,3 +175,39 @@ Start comparisons with MiniCPM5-1B and a pinned small Qwen release; use MiniCPM5
 reference only when evaluation cost permits. Select exact revisions and compatible runtimes before
 execution. Training benchmark answers or adapting recipes to final-test failures invalidates the
 comparison. Earlier surveys and the long-context study remain available in [history](../archive/README.md).
+
+## MAI-Thinking-1 review — 2026-09-19
+
+Primary source: [Microsoft report](https://microsoft.ai/pdf/mai-thinking-1.pdf), focusing on
+sections 2.4–2.6, 3.2–3.3 and appendices B.4/C. Local PDF receipt:
+`/mnt/speck-data/speck/literature-reviews/mai-thinking-1-20260919/report.pdf`, SHA-256
+`a267d745b1eb3792a8abf58e71e204a6f44f9c18eeb5ad8671320deae71986bd`.
+This is a focused data/training review, not replication of all report results.
+
+The report describes a 35B-active/~1T-total model trained on 30T natural pretraining tokens.
+Table 5 assigns 54.6% exposure to code and separates unique supply from repeated exposure.
+Its mixture experiments show rankings can change with scale and horizon. Appendix B.4 includes
+repository files, commits and pull requests; pre-change file context is loss-masked for patches.
+Section 3.3 verifies repair environments with empty-patch failure, golden-patch success and repeated
+checks, while filtering ambiguous task statements. Appendix C finds repacking the preceding mixture
+sufficient in its experiments; it evaluates fixed-suffix loss and positional retrieval. These results
+come from a substantially larger model/program and different attention architecture.
+
+### Decisions for our existing plan
+
+- Keep 35% code / 25% math as an initial hypothesis. Qualify useful diversity within each bank and
+  report unique tokens, exposure and repetition separately. Do not copy another model's percentages
+  or treat our 105M-token engineering pilot as a mixture-ranking study.
+- Extend the planned code qualification beyond isolated files: prepare source-linked changes and
+  executable repair cases as described in [coding.md](coding.md#repository-change-data).
+  Count full processed context separately from loss-bearing targets. This requires an explicit
+  adapter/objective contract before admission; pasting raw patches into a pack is not equivalent.
+- Add unchanged-domain repacking as the context-extension control, plus fixed-suffix loss and
+  position-stratified task checks. Retain the provisional 8B budget until our runtime/quality evidence
+  establishes the needed horizon. No claim of inherited 128K behavior follows from this paper.
+- Preserve our supervised thinking baseline and bounded natural/refined comparisons. The report
+  does not establish that abandoning synthetic data or starting our small model with RL is better.
+  Its private processing pipeline is a research reference, not an acquired corpus.
+
+These changes refine preparation and evaluation. They launch no experiments, alter no frozen pilot
+records, and do not add compute to the confirmed 5,000-total-GPU-hour planning allowance.

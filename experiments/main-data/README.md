@@ -6,36 +6,41 @@ The current pilot and rented-H100 evaluation remain unchanged.
 
 ## Scale
 
-Prepare for **100B base-pretraining tokens**, followed by a provisional **8B-token context
-extension toward 128K**. Aim for **1.5M unique post-training conversations**, with a 1–2M planning
-range. The retained 500K rows are starting stock before final qualification, not the final target.
-All token quantities use our frozen Mistral tokenizer; count actual exposure separately from unique
-eligible supply. Holdouts are outside these training targets. A larger base horizon requires measured
-throughput headroom; it must not consume the context-extension or post-training allocations.
+Keep **320B base-pretraining tokens as the desired flagship target, with 400B as the stretch
+scenario**. Follow with a provisional **8B-token context extension toward 128K** and **1.5M unique
+post-training conversations**, with a 1–2M planning range. The retained 500K rows are starting stock
+before qualification. These desired targets are conditional on eligible supply and measured compute.
+
+The earlier 100B proposal conflated the present budget-fit calculation with the intended flagship
+scale. **100B remains a conservative compute scenario or intermediate checkpoint**, not an agreed
+replacement for 320–400B. Better data does not establish equivalence between these training horizons.
+All token quantities use our frozen Mistral tokenizer; count exposure separately from unique eligible
+supply. Holdouts are outside training targets. Preserve context, post-training and evaluation budgets;
+resolve the throughput/funding gap explicitly before freezing a launch horizon.
 
 ## Base mixture
 
 These are explicit starting hypotheses chosen for the code/math/agent target, not measured optimal
 weights. Keep the mixture fixed for the first candidate; separate any later curriculum decision.
 
-| Component | Share | Exposure | Candidate sources / admission condition |
-| --- | ---: | ---: | --- |
-| Selected broad natural web | 25% | 25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
-| Independent web coverage | 5% | 5B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
-| Natural code, tests and documentation | 30% | 30B | Qualified Stack-Edu and source-resolved UltraData-Code L2; preserve practical and multilingual coverage |
-| Checked code explanations, exercises and repair | 5% | 5B | Qualified natural-code derivatives; UltraData-Code L3 only if lineage and independent checks succeed |
-| Selected natural math / worked solutions | 20% | 20B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit |
-| Refined math explanations / derivations | 5% | 5B | Qualified UltraData-Math L3 and verified derivatives |
-| Reference / science / technical documents | 5% | 5B | FineWiki, peS2o and qualified English FinePDFs-Edu |
-| Refined educational web | 5% | 5B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
-| **Total** | **100%** | **100B** | **35% code, 25% math, 40% supporting web/reference/refined education** |
+| Component | Share | 320B exposure | 400B exposure | Candidate sources / admission condition |
+| --- | ---: | ---: | ---: | --- |
+| Selected broad natural web | 25% | 80B | 100B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
+| Independent web coverage | 5% | 16B | 20B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
+| Natural code, tests and documentation | 30% | 96B | 120B | Qualified Stack-Edu and source-resolved UltraData-Code L2; preserve practical and multilingual coverage |
+| Checked code explanations, exercises and repair | 5% | 16B | 20B | Qualified natural-code derivatives; UltraData-Code L3 only if lineage and independent checks succeed |
+| Selected natural math / worked solutions | 20% | 64B | 80B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit |
+| Refined math explanations / derivations | 5% | 16B | 20B | Qualified UltraData-Math L3 and verified derivatives |
+| Reference / science / technical documents | 5% | 16B | 20B | FineWiki, peS2o and qualified English FinePDFs-Edu |
+| Refined educational web | 5% | 16B | 20B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
+| **Total** | **100%** | **320B** | **400B** | **35% code, 25% math, 40% supporting web/reference/refined education** |
 
 Every document has one primary bank, including cross-domain material such as mathematical code.
 Deduplicate across banks and original/derived families before counting supply. Candidate names
 are not interchangeable licenses or evidence that content is already downloaded.
 
 Use existing released content first; this plan does not assume we can afford generating billions
-of new teacher tokens ourselves. The 5B checked-code slot is a preparation target with a substantial
+of new teacher tokens ourselves. The 16B checked-code slot (20B at the stretch horizon) is a preparation target with a substantial
 unresolved supply gap. All inspected UltraData-Code L3 rows remain held. If a refined source fails
 qualification or is too small, explicitly re-freeze its share into eligible natural material in the
 same domain, or shorten the horizon. Never silently repeat a small set to fill the target.
@@ -51,8 +56,8 @@ and harder derivations, rather than exclusively competition problems or lengthy 
 
 The current pilot-source stocks total **6.799B tokens before joint eligibility**, including only
 **0.477B code tokens**. The separate natural UltraData-Math preview adds 0.385B before joint checks.
-These figures do not establish qualified supply for the new recipe. Prepare a **125B eligible unique
-token bank** as a 25% selection margin over 100B exposure: each bank's target is 1.25 times its
+These figures do not establish qualified supply for the new recipe. Prepare a **400B eligible unique
+token bank** as a 25% selection margin over 320B exposure (500B for the 400B stretch scenario): each bank's target is 1.25 times its
 exposure in the table. Default to one pass through the selected training documents; the unused
 margin is not a requirement to train everything. Holdouts and rejected raw records are additional.
 
@@ -62,7 +67,9 @@ be included. [UltraData-Code](https://huggingface.co/datasets/openbmb/UltraData-
 candidate, subject to the existing lineage hold. Publisher corpus sizes and tokenizer counts do
 not establish our eligible supply. The natural-code 16-file cohort qualifies the process, not scale.
 
-At uint16, 100B token IDs occupy **200GB decimal**; the 125B candidate bank occupies 250GB.
+At uint16, 320B token IDs occupy **640GB decimal**; the 400B candidate bank occupies 800GB.
+The 400B stretch exposure occupies 800GB and its 500B candidate bank 1TB. The 100B budget-fit
+scenario would need 200GB for training IDs and 250GB for its 125B candidate bank.
 Budget indexes, masks, source text, deduplication workspaces, checkpoints and backups separately.
 A 2TB local scratch allowance is a working envelope, not a measured dataset size. The September19
 filesystem check showed approximately 4.5TiB available. Stream bounded acquisitions and retain
@@ -74,12 +81,17 @@ Working stages: **2B tokens up to 16K, 2B up to 32K, 4B up to 128K**. These stag
 mean every example is padded to the maximum. Within each stage reserve 25% of tokens for short
 replay; the remaining 75% comes from coherent long material. Initially target half of the long
 material from repositories, 30% from math/science/technical documents and 20% from grounded
-cross-document material. These are preparation weights requiring content/length qualification.
+cross-document material. These are preparation weights requiring content/length qualification. Use the preceding stage's
+unchanged domain mixture, repacked into coherent longer records, as the control before adopting
+these long-material weights. The [MAI review](../../docs/research.md#mai-thinking-1-review--2026-09-19)
+supports testing this simpler control; it does not validate our KDA/GQA context extension.
 
 Use repository relationships, imports, tests and documentation; preserve intact long reasoning
 and agent traces for their relevant training phases. Record any reuse of base documents explicitly.
 Freeze stage transitions only after measuring memory/runtime and evaluating retrieval across
-positions, multi-file repair, cross-document reasoning and short-task retention. The current model
+positions, multi-file repair, cross-document reasoning and short-task retention. Also compare
+held-out loss on the same suffix as related prefix length increases; stratify retrieval/QA by answer
+position and distractor distance. The current model
 has not been qualified at these lengths. Eight billion tokens is a budgeted hypothesis, not proof
 that 128K will work. Add an intermediate length only if measured stability/cost calls for it.
 
@@ -125,18 +137,34 @@ at perfect scaling would take 22.5 days; this is arithmetic, not measured GH200 
 all allocated GPUs, including idle workers. Hardware, communication, input loading and cadence
 can change the rate. GH200/multiworker qualification is still required.
 
-| Base target | H100 full-trainer-rate extrapolation | Effective tokens/s per allocated GPU needed within 2,300h |
-| --- | ---: | ---: |
-| 80B fallback | 1,728h | 9,662 |
-| **100B working target** | **2,160h** | **12,077** |
-| 120B conditional extension | 2,592h | 14,493 |
-| 160B conditional extension | 3,456h | 19,324 |
+| Base scenario | H100-rate GPU-hours | Four-GPU elapsed days, ideal / illustrative 80% scaling | Effective tokens/s per GPU needed within 2,300h |
+| --- | ---: | ---: | ---: |
+| 100B budget-fit scenario | 2,160h | 22.5 / 28.1 | 12,077 |
+| **320B desired target** | **6,912h** | **72.0 / 90.0** | **38,647** |
+| 400B stretch | 8,641h | 90.0 / 112.5 | 48,309 |
 
-The effective-rate thresholds include all work charged to the base reservation. Expand only after
-measured throughput, usable supply and learning curves justify it while preserving the other
-reservations. If 100B does not fit, reduce the base horizon or improve measured execution; do not
-quietly sacrifice 128K or the thinking-model training. The separate 8B context target needs an
-effective average of 2,778 tokens/s per allocated GPU to fit 800 hours; its actual rate is unknown.
+These elapsed times assume each device matches the measured H100 before communication losses;
+80% scaling is an illustration, not a measurement. Four devices would deliver about 51.4K tokens/s
+in aggregate at perfect scaling, or 41.1K at 80%. They consume four GPU-hours per elapsed hour:
+5,000 aggregate GPU-hours permit 1,250 four-GPU hours (52.1 days), not 5,000 machine-hours.
+The recorded 90-day access window does not establish 90 days of continuous four-GPU funding.
+The user confirmed on September 19 that the allowance is **5,000 total GPU-hours**.
+Provider access remains unconfirmed; the budget interpretation is now explicit.
+
+At the H100 reference rate, keeping the other 2,700 reserved GPU-hours brings the full program to
+approximately **9,612 GPU-hours for 320B** or **11,341 for 400B**, before any distributed penalty.
+Alternatively, fitting the base into its current 2,300-hour reservation requires about **3.0× / 3.8×
+more effective throughput per allocated GPU**. Merely adding four workers does not deliver that
+per-GPU improvement. GH200 hardware gains, larger batches and implementation improvements remain
+unmeasured; qualify single-worker efficiency and four-worker scaling separately. Do not assume the
+engineering pilot is an optimized throughput ceiling or promise a particular speedup.
+
+Desired scale and budget fit are separate gates. Before launch, either establish the required
+throughput, obtain more compute, or explicitly agree a smaller training horizon. Preserve useful
+continuation checkpoints and choose a compatible learning-rate schedule before training; do not
+assume a fully decayed 100B run extends at no cost. No quality claim equates 100B to 320–400B.
+The separate 8B context target needs an effective average of 2,778 tokens/s per allocated GPU to
+fit 800 hours; its actual rate is unknown.
 
 Charge shared-base creation to the main allocation once. Charge additional data-comparison arms
 and their evaluations to the 91-hour comparison reservation. Synthesis/verification GPU costs

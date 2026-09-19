@@ -186,3 +186,25 @@ Record exact revisions, matched ablations, verification methods, token definitio
 and processing cost; check errata and negative results. Review relevant new releases when surfaced
 during project work. This is a project review practice, not an automatic background monitor.
 Keep independent baselines from other teams and promote a recipe only through our own evidence.
+
+## Repository change data
+
+The [MAI review](research.md#mai-thinking-1-review--2026-09-19) motivates a bounded follow-up to
+our existing 16-file provenance cohort: qualify 8–16 repository repair cases before any bulk route.
+This is a planned cohort, not admitted training data or a new running job.
+
+Retain origin, license evidence, immutable parent/fix commits, issue specification, changed files,
+patch and environment/dependency identities. Exclude benchmark/task families before acquisition.
+Deduplicate commits that also occur in pull requests and group related files/changes by repository
+for partitioning. Prevent post-fix state or hidden-test answers from leaking into task inputs.
+
+Run checks only in the existing sandbox: at least one relevant test must fail before the fix and
+pass after it, while declared regression tests remain passing. Verify empty-patch failure and
+reference-patch success repeatedly; reject flaky or underspecified cases. Record environment/setup
+failures separately from incorrect solutions. Natural code remains distinct from verified exercises.
+
+Before training on change examples, specify how pre-change context is loss-masked and patches or
+other targets are supervised. Audit processed-context and supervised-token totals independently;
+the current plain pretraining pack does not automatically implement that objective. Reuse compatible
+masking infrastructure only after adapter validation. Freeze any bank-share or objective changes
+explicitly, within the existing desired 320–400B scale and its unresolved compute feasibility gate.
