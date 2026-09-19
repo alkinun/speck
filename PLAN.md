@@ -66,13 +66,15 @@ Change one only when a measured failure or capability comparison justifies the w
 The single-H100 rehearsal and planning measurements are complete. The frozen engineering pilot
 completed 800 steps on the migrated H100; its [execution receipt](experiments/pilot/h100-run.json)
 records 2.27 training hours, final validation loss 3.379 and 19.3 GiB peak allocated memory.
-The final model and optimizer are hash-verified locally. The user restored remote access on
-September 19; the disk survived, but evaluation had stopped after 84 GSM8K examples. A fresh
-complete development evaluation is running from the same export under a new four-hour bound
-ending at 09:59:06 UTC. Remaining backups are transferring in parallel; completion is still pending.
-The original watcher reached its deadline and its terminal evidence is preserved. Existing
-backup/grading services and the same bounded notifier are now resumed for the restored session.
-Provider billing remains unknown. Main-corpus research remains a separate follow-up.
+The restored complete development evaluation and isolated local code grading are now finished:
+2,619 tasks in 2.12 evaluation hours. Results remain weak: GSM8K strict 0/253, compiled code
+pass@1 0/33, IFEval strict prompts 12/101, ARC normalized 44/222 and HellaSwag normalized
+530/2,010. These frozen development subsets establish a scored engineering endpoint, not a useful
+flagship. All eight checkpoints, the original remote export, CPU reconstruction and final recovery
+logs are verified locally; [backup closeout](experiments/pilot/backup-result.json) is complete.
+The Runpod instance can be stopped for this pilot. Provider billing remains unknown and has not
+been stopped by the agent. Next qualify the existing 16-file natural-code cohort and continue the
+bounded architecture/data preparation; no new GPU run is authorized by pilot completion.
 
 | Work | Current state | Concrete next deliverable |
 | --- | --- | --- |
@@ -81,7 +83,7 @@ Provider billing remains unknown. Main-corpus research remains a separate follow
 | Web data | Matched published evidence favors natural Ultra-FineWeb; now the leading candidate to qualify | Audit the pinned English subset against retained FineWeb-Edu, checking selection threshold, coverage, overlap and eligible supply; keep DCLM as an independent comparator |
 | Assistant data and context | 500K retained conversations inventoried; finite tool-aware rehearsal qualified; always-thinking target at approximately 128K | Audit reasoning quality, code/math correctness and agent outcomes; balance brief/deep reasoning, retain long trajectories and recover missing source tails in a separately qualified acquisition |
 | Rental launch | Migrated H100 passed host preflight; locked environment and frozen payloads verified | Preserve launch provenance, shared deadline and cumulative accounting |
-| Current paid experiment | Training/export qualified; restored H100 running the complete frozen development evaluation; backups resumed | Finish local code grading, verify all remaining artifacts and report when the GPU can be stopped |
+| Current paid experiment | Training, export, all 2,619 development scores and complete backups verified | Pilot closed; Runpod can be stopped. Qualify the existing natural-code cohort next |
 | Main training | Desired 320–400B mixture recorded; current 5,000-GPU-hour envelope needs higher measured throughput or more compute | Qualify new supply against the 35% code / 25% math targets; freeze measured manifests and runtime before launch |
 
 The [executable launch packet](docs/pilot-rental.md) completed training. Inspected recovery fixed
@@ -266,9 +268,10 @@ not evidence of successful tool use. Match decoding budgets when comparing model
   fresh Git clone, relocated launch preview and all golden graders pass locally, including 33
   canonical code tasks. The new supervisor has CPU tests for budget, tampering, failure and timeout
   behavior. Training completed all 800 steps; export checks pass after inspected recovery and
-  capability evaluation was running under the original deadline before remote access was lost.
-  Local complete checkpoints 100, 200, 300 and 800 are verified; remaining remote artifacts are unconfirmed. The [execution receipt](experiments/pilot/h100-run.json)
-  distinguishes verified training evidence from pending capability results.
+  capability evaluation was interrupted by remote access loss, then completed in the restored session.
+  All eight checkpoints, both exports, graded development outputs and recovery records are verified.
+  The [execution receipt](experiments/pilot/h100-run.json) preserves the failures and completed
+  engineering outcome; [development scores](experiments/pilot/development-result.json) remain weak.
 - The [ZGCM-1 review](docs/research.md#zgcm-1-review--2026-09-18) prioritizes verified assistant
   supervision, response-budget measurements, and learned tool evaluation after the pilot. It does
   not change the frozen pilot, tokenizer, or rental bundle. No ZGCM data has been admitted.

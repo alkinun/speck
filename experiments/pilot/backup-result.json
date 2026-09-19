@@ -1,0 +1,75 @@
+{
+  "format": "speck_pilot_backup_closeout",
+  "format_version": 1,
+  "status": "complete",
+  "verified_utc": "2026-09-19T08:26:10.888361+00:00",
+  "attempt_id": "80ffc9d0f93d4dc8a71adf4c616cbb24",
+  "verified_checkpoints": [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800
+  ],
+  "checkpoint_files": 40,
+  "remote_export_files": 18,
+  "local_reconstructed_export_retained": true,
+  "small_evidence_files": 105,
+  "restoration_snapshot_files": 138,
+  "unique_local_files_verified_and_fsynced": 285,
+  "unique_bytes_verified": 83446556723,
+  "small_files_rehashed_at_closeout": 267,
+  "large_file_verification_boundary": "Full SHA256 checks were performed by transfer/export workers before completion. Closeout reconciles their receipts, checks current sizes and flushes files; it does not repeat all large-file hashes.",
+  "historical_helper_files": 19,
+  "final_remote_helper_files": 3,
+  "manifest": {
+    "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/backup-complete-20260919/manifest.json",
+    "sha256": "ccf8f6838c26583bab371db70c54911539292144a62025f9df91db4371f56c04"
+  },
+  "full_local_verification": {
+    "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/backup-complete-20260919/local-verification.json",
+    "sha256": "e886d10864b4de191877adda3d2228ac5a3f995755c10f283c297202f2354dfb"
+  },
+  "development_result_sha256": "30fb828261ea906475560783f5f1ce064b4ec41464118174bfd6e13423b40cec",
+  "evaluation_tasks": 2619,
+  "backup_worker_finished_utc": "2026-09-19T08:15:32.671776+00:00",
+  "code_grading_finished_utc": "2026-09-19T08:11:36.635578+00:00",
+  "transfer_accounting": {
+    "checkpoint_receipt_seconds": {
+      "100": 2057.037167686969,
+      "200": 2073.377201229974,
+      "800": 1974.8293810650357,
+      "300": 262.41653962899,
+      "400": 1696.9394420780009,
+      "500": 1851.9472209420055,
+      "600": 1860.8726098299958,
+      "700": 1857.2170230519841
+    },
+    "export_receipt_seconds": 370.47391387901735,
+    "boundary": "Receipt intervals include transfer/hash work and may cover resumed copies. They overlap GPU work; sums are neither elapsed program duration nor billed GPU-hours."
+  },
+  "compute_accounting": {
+    "trainer_process_hours": 2.2650798814174617,
+    "fresh_evaluation_supervised_hours": 2.1231984054897395,
+    "conservative_reserved_gpu_hours": 31,
+    "pilot_ceiling_gpu_hours": 50,
+    "provider_bill_known": false,
+    "boundary": "31 = prior21 + original6 + restored4 conservative reservations. Actual provider bill, unobserved idle and stopped intervals remain unknown."
+  },
+  "runpod_stop_safe_for_this_pilot": true,
+  "runpod_stopped_by_agent": false,
+  "git_cleanup": {
+    "status": "deferred_unrelated_worktree_changes",
+    "preserved": [
+      "PLAN.md program-overview addition",
+      "experiments/main-data/README.md",
+      "experiments/main-data/plan.json",
+      "docs/program.md"
+    ],
+    "boundary": "Pilot completion does not require merging unrelated unfinished planning. Keep task branch and main unchanged; no push."
+  },
+  "next_bounded_cpu_task": "Qualify the existing 16-file natural-code provenance cohort; frozen pilot/evaluation remain unchanged."
+}

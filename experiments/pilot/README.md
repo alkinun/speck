@@ -31,10 +31,12 @@ GSM8K generation consumed 5,470.00 seconds, IFEval 1,082.45 and code 715.42. Out
 All 33 code executions failed (24 AssertionError, nine KeyError); none timed out. The existing local
 sandbox control passed before grading. No generated code was re-executed during reconciliation.
 
-The final model/optimizer and reconstructed export remain verified locally. The backup worker now
-reports all eight checkpoints and remote export verified; final backup evidence closeout is a
-separate milestone. Do not interpret this evaluation acknowledgement as a provider shutdown notice.
-The [execution receipt](h100-run.json) preserves original failures, recovery and the new results.
+**The pilot is now closed out.** All eight model/optimizer checkpoints, the remote export, the
+CPU-reconstructed export, grading outputs and recovery evidence are verified locally. The
+[backup receipt](backup-result.json) reconciles full post-transfer payload SHA checks with fresh
+small-file hashes, current sizes and filesystem flushes. Final Runpod helper/log snapshots are saved.
+**It is safe to stop the Runpod instance for this pilot.** The agent has not stopped provider billing.
+The [execution receipt](h100-run.json) preserves original failures, recovery and measured results.
 The restored evaluation used a new four-hour reservation ending at 09:59:06 UTC, without retraining
 or export regeneration. The 21 + 6 + 4 conservative reserved hours are not an actual provider bill.
 A separate H100 timing experiment completed 48 production
