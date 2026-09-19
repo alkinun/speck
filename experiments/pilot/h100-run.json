@@ -133,7 +133,7 @@
     ],
     "observed_utc": "2026-09-18T21:16:35.036682+00:00",
     "provider_status": "unknown",
-    "recovery": "CPU reconstruction of final export; watcher queues connection restoration; no new GPU work",
+    "recovery": "CPU reconstruction of final export complete; restoration watcher expired without observing recovery. Await current provider status/SSH; no new GPU work.",
     "remote_evaluation_status": "unobservable; last observed running",
     "verified_local_checkpoints": [
       100,
@@ -144,12 +144,13 @@
   },
   "conservative_prior_reservation_gpu_hours": 21,
   "continuation": {
-    "boundary": "Local computer and Codex must remain available. Watcher queues this task at phase changes and distinct failures, with worker liveness checks. Provider billing is not stopped by these services.",
+    "boundary": "The bounded eight-hour watcher ended at 2026-09-19T04:11:12Z. No further automatic restoration events will be queued by it; no replacement watcher or worker was started. Provider billing and remote process state remain unknown.",
     "service_units": [
       "speck-pilot-backup-80ffc9d0",
       "speck-pilot-grading-80ffc9d0",
       "speck-pilot-continuation-80ffc9d0"
-    ]
+    ],
+    "status": "deadline_reached_watcher_inactive"
   },
   "date": "2026-09-18",
   "environment": {
@@ -516,10 +517,58 @@
       "stack_edu": 3.2111709117889404
     }
   },
+  "monitor_deadline": {
+    "assessment": {
+      "bytes": 30463,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/deadline-evidence/assessment.json",
+      "sha256": "460788280b4bb1bee4f1450bf73179163455ebe16e0561468dc06d8433e2d569"
+    },
+    "capability_completion": "unconfirmed",
+    "captured_at_utc": "2026-09-19T04:12:59.748207+00:00",
+    "consecutive_probe_errors_recorded_by_watcher": 86,
+    "entire_pilot_complete": false,
+    "evidence_manifest": {
+      "bytes": 5420,
+      "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/deadline-evidence/manifest.json",
+      "sha256": "e183a4b1eca86f6e96bbd6bf0c7492f44168ee0fddddcc934415dde88d91a543"
+    },
+    "gpu_jobs_or_workers_started": false,
+    "large_payloads_presence_and_size_checked": 9,
+    "last_observed_remote_status": "running",
+    "last_successful_remote_observation_utc": "2026-09-18T20:57:18.888979+00:00",
+    "local_export_reconstruction_complete": true,
+    "missing_complete_checkpoint_steps": [
+      400,
+      500,
+      600,
+      700
+    ],
+    "monitor_finished_utc": "2026-09-19T04:11:12.181514+00:00",
+    "monitor_started_utc": "2026-09-18T20:09:31.141315+00:00",
+    "next_action": "User supplies current provider status/SSH. Inspect retained remote state and original deadline before resuming artifact transfer or deferred grading; no blind training/evaluation relaunch. No watcher remains active.",
+    "original_execution_deadline_utc": "2026-09-18T23:53:24+00:00",
+    "partial_checkpoint_400_preserved": true,
+    "pilot_branch_finalization": "Deferred: whole pilot/evaluation and all-eight-checkpoint backup not complete.",
+    "preserved_files": 22,
+    "provider_status_and_billing": "unknown",
+    "remote_export_backup_complete": false,
+    "remote_probe_performed_this_followup": false,
+    "small_artifacts_sha256_reverified": 90,
+    "status": "local_evidence_preserved_remote_completion_unconfirmed",
+    "verification_boundary": "Small evidence hashes reverified now; large payload presence/size checked against existing verified SHA256 receipts. No model deserialization or repeat GPU work.",
+    "verified_complete_checkpoint_steps": [
+      100,
+      200,
+      300,
+      800
+    ],
+    "watcher_active": false
+  },
   "operational_incidents": [
     "The 200 GiB volume filled; roughly97GiB of old rehearsal artifacts were observed alongside the new pilot. Reclaimed only hash-verified remote step100 copy to provide export space.",
     "Original local exec-based backup/grading workers ended between turns with stale running state. Preserved prior states/partial transfer and replaced them with persistent systemd user services.",
-    "Offline template lookup, BF16 cross-path parity gate and singleton distributed environment each exposed separate failures. Every failure was preserved and diagnosed before a bounded recovery; no retraining."
+    "Offline template lookup, BF16 cross-path parity gate and singleton distributed environment each exposed separate failures. Every failure was preserved and diagnosed before a bounded recovery; no retraining.",
+    "The eight-hour continuation watcher reached its deadline on 2026-09-19 at04:11:12UTC after86consecutive probe errors. Local terminal evidence preserved; complete capability results and remaining remote backups are still unconfirmed. The watcher is inactive and was not restarted."
   ],
   "original_attempt_result": {
     "allocated_gpus": 1,
@@ -960,6 +1009,7 @@
   "validation": {
     "cache_fault_controls": "Deliberate BF16 and FP32 cached-logit corruption both prevent export attestation.",
     "deferred_grader_controls": "Two canonical solutions pass and one deliberately wrong solution fails in the local sandbox.",
+    "monitor_deadline_evidence": "90 small-artifact SHA256 checks and9large-payload presence/size checks passed against existing receipts;22terminal evidence files saved and fsynced. No model loading or new GPU experiment.",
     "offline_export_regression": "Staged offline cache works without Hub API calls; absent cache fails closed.",
     "portable_suite_deselected": 10,
     "portable_suite_passed": 739,

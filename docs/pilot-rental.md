@@ -14,8 +14,13 @@ the remaining six-hour deadline; it does not retrain. Export checks passed; deve
 started after removing supervisor rank variables that incorrectly triggered distributed startup.
 The endpoint later refused SSH and the gateway reported container not found. Provider status and
 evaluation completion are unknown. The final checkpoint is verified locally; CPU export
-reconstruction is verified, and a connection-restoration watcher remains active. Do not interpret lost SSH as proof
-that billing stopped or that all remote artifacts are backed up. Use the recorded implementation commit
+reconstruction is verified. The eight-hour connection-restoration watcher ended at
+2026-09-19 04:11 UTC without observing recovery and is now inactive. Its terminal evidence is
+preserved in the execution receipt; no replacement watcher or worker was launched. Current
+provider status/SSH is needed before inspecting remaining evaluation outputs and backups.
+The original six-hour execution deadline has expired; do not restart training or evaluation
+under that old reservation. Do not interpret lost SSH as proof that billing stopped or that all
+remote artifacts are backed up. Use the recorded implementation commit
 for each phase even when documentation on main advances.
 
 

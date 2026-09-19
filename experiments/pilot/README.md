@@ -8,6 +8,13 @@ became unavailable, so capability completion and the remaining backup are unconf
 Complete checkpoints 100, 200, 300 and 800 are verified locally, including the final model and optimizer.
 The final export has been reconstructed and verified on CPU from retained inputs. The
 [execution receipt](h100-run.json) retains measurements and the original export failure.
+The eight-hour watcher ended at **2026-09-19 04:11 UTC** without observing restored access;
+it is now inactive. Its last successful remote observation was September 18 at 20:57 UTC.
+Terminal states/logs and backup receipts are preserved in a hashed local evidence snapshot.
+Checkpoints 400–700, the remote export backup and complete capability outputs remain unconfirmed;
+the CPU reconstruction is a separate verified artifact. The original execution deadline has
+expired. Current provider status/SSH is needed to inspect and recover remaining artifacts;
+no new GPU job, worker restart or replacement watcher was launched. Billing status is unknown.
 A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
 and timing check, not a model-quality result or an architecture comparison.
