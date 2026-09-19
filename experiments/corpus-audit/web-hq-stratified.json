@@ -1,0 +1,614 @@
+{
+  "format": "speck_web_hq_stratified_qualification",
+  "format_version": 1,
+  "date": "2026-09-19",
+  "status": "bounded_acquisition_census_and_review_complete_not_training_admission",
+  "training_admitted": false,
+  "eligible_tokens_established": 0,
+  "repository": "openbmb/Ultra-FineWeb",
+  "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+  "parent_receipt": {
+    "path": "experiments/corpus-audit/web-inventory-dclm.json",
+    "bytes": 18429,
+    "sha256": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906"
+  },
+  "source_card_receipt": {
+    "path": "experiments/corpus-audit/web-variants.json",
+    "bytes": 4104,
+    "sha256": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf"
+  },
+  "script": {
+    "path": "experiments/corpus-audit/audit_web_hq.py",
+    "bytes": 15158,
+    "sha256": "4c6eee4c95f5dc60630a770e6dd2df3f627cc6d8e468f6257b99b7bf8ae8fc99"
+  },
+  "artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/acquisition.json",
+      "bytes": 9548,
+      "sha256": "c4f3a532583c04f302e1b62f5290cc1dfcfe12f8b6fb841c2b17099d86c1ba03"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/analysis/summary.json",
+      "bytes": 53289,
+      "sha256": "20384c4b51148de4cd48f1e9c75506a9557719d0fd4ee54bed62da7615278aec"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/analysis/samples.jsonl",
+      "bytes": 3414408,
+      "sha256": "74d088fc3484b64f865b8f51aa0027e46da6c98e3cbd51148bd9efa7c097a0d6"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/analysis/review-packet.json",
+      "bytes": 86297,
+      "sha256": "b4433fb6a13c4ee3da9f4d658a7fd080bea78a41663b5c70e392867749164e9c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/review-observations.json",
+      "bytes": 17008,
+      "sha256": "70fef31d2a0cee4b6be217e38d92977c2faf96609323d93b491d5ed6d27e809c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/replay/summary.json",
+      "bytes": 53285,
+      "sha256": "e763468cb2ba66619dc6b8898701d0ab2e4d9492e9240cca5f35406ab761a6d1"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-hq-stratified/validation.json",
+      "bytes": 469,
+      "sha256": "0fedb980641ad2f7638d0dfb15620f6d49259841b3b6f6c074f3039f38539273"
+    }
+  ],
+  "acquisition": {
+    "files": 12,
+    "compressed_bytes": 959301706,
+    "maximum_download_bytes": 1200000000,
+    "elapsed_seconds": 175.78202436002903,
+    "all_lfs_hashes_verified": true,
+    "selection": "Two hash-ranked shards per crawl from the complete inventory; two bottom-hash records per nonempty crawl/score/UTF-8-length cell. Cell weights describe only the acquired population. Twelve clusters do not establish full-release quality or eligible supply.",
+    "full_release_payload_downloaded": false
+  },
+  "census": {
+    "counts": {
+      "documents": 290761,
+      "exact_duplicate_copies": 162,
+      "normalized_duplicate_copies": 162,
+      "repeated_uid_copies": 0,
+      "repeated_url_copies": 109,
+      "repeated_warc_id_copies": 0,
+      "utf8_bytes": 1614709043
+    },
+    "shards": [
+      {
+        "documents": 23225,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-30/ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet"
+      },
+      {
+        "documents": 23289,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-30/ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0954-of-1000.parquet"
+      },
+      {
+        "documents": 23601,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-33/ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet"
+      },
+      {
+        "documents": 23293,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-33/ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0019-of-1000.parquet"
+      },
+      {
+        "documents": 23948,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-38/ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0951-of-1000.parquet"
+      },
+      {
+        "documents": 24039,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-38/ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0312-of-1000.parquet"
+      },
+      {
+        "documents": 27676,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-43/ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0196-of-1000.parquet"
+      },
+      {
+        "documents": 27635,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-43/ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0212-of-1000.parquet"
+      },
+      {
+        "documents": 24096,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-47/ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0551-of-1000.parquet"
+      },
+      {
+        "documents": 24202,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-47/ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0316-of-1000.parquet"
+      },
+      {
+        "documents": 22801,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-51/ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0377-of-1000.parquet"
+      },
+      {
+        "documents": 22956,
+        "source_path": "data/ultrafineweb_l1_en_hq/CC-MAIN-2025-51/ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet"
+      }
+    ],
+    "unique_hosts": 200262,
+    "top_hosts": [
+      [
+        "pubmed.ncbi.nlm.nih.gov",
+        482
+      ],
+      [
+        "pure.psu.edu",
+        289
+      ],
+      [
+        "collaborate.princeton.edu",
+        178
+      ],
+      [
+        "www.sciencedaily.com",
+        164
+      ],
+      [
+        "openreview.net",
+        135
+      ],
+      [
+        "experts.arizona.edu",
+        134
+      ],
+      [
+        "deepai.org",
+        114
+      ],
+      [
+        "pubs.rsc.org",
+        114
+      ],
+      [
+        "researchportalplus.anu.edu.au",
+        110
+      ],
+      [
+        "impact.ornl.gov",
+        105
+      ],
+      [
+        "www.reference.com",
+        102
+      ],
+      [
+        "research-repository.rmit.edu.au",
+        98
+      ],
+      [
+        "experts.umn.edu",
+        96
+      ],
+      [
+        "www.bartleby.com",
+        95
+      ],
+      [
+        "arxiv.org",
+        94
+      ],
+      [
+        "cris.iucc.ac.il",
+        89
+      ],
+      [
+        "cdnjs.deepai.org",
+        89
+      ],
+      [
+        "wayground.com",
+        88
+      ],
+      [
+        "api.deepai.org",
+        86
+      ],
+      [
+        "storables.com",
+        85
+      ]
+    ],
+    "metadata_nonempty_counts": {
+      "language": 290761,
+      "language_score": 290761,
+      "pii_credit_cards": 290761,
+      "pii_emails": 290761,
+      "pii_id_cards": 290761,
+      "pii_ips": 290761,
+      "pii_phones": 290761,
+      "pred_label": 290761,
+      "pred_score": 290761,
+      "source_file": 290761,
+      "url": 290761,
+      "warc_date": 290761,
+      "warc_record_id": 290761
+    },
+    "language_labels": {
+      "en": 290761
+    },
+    "diagnostic_flags": {
+      "html_markup": 15,
+      "possible_boilerplate": 5631,
+      "repeated_long_lines": 2,
+      "replacement_character": 1
+    }
+  },
+  "score_thresholds": [
+    {
+      "predicate": "pred_score >= 0.65",
+      "documents": 227501,
+      "document_fraction": 0.7824329947964136,
+      "utf8_bytes": 1283028582,
+      "utf8_byte_fraction": 0.7945880947171979,
+      "token_yield_established": false
+    },
+    {
+      "predicate": "pred_score >= 0.8",
+      "documents": 166027,
+      "document_fraction": 0.5710084915102094,
+      "utf8_bytes": 949786370,
+      "utf8_byte_fraction": 0.5882089867010177,
+      "token_yield_established": false
+    },
+    {
+      "predicate": "pred_score >= 0.95",
+      "documents": 82128,
+      "document_fraction": 0.2824587891773656,
+      "utf8_bytes": 480898747,
+      "utf8_byte_fraction": 0.29782377765503104,
+      "token_yield_established": false
+    }
+  ],
+  "sample": {
+    "documents": 192,
+    "nonempty_crawl_score_length_cells": 96,
+    "records_per_cell": 2,
+    "tokens_with_bos_eos": 682970,
+    "documents_over_4096_tokens": 57,
+    "documents_over_32768_tokens": 0,
+    "tokenizer_sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055",
+    "scope": "Unchanged sampled text only, frozen Mistral tokenizer plus BOS/EOS per document; not admitted supply or full-shard token totals"
+  },
+  "review": {
+    "status": "assistant_inspection_not_independent_human_annotation",
+    "reviewed_documents": 24,
+    "full_text_documents": 8,
+    "excerpt_documents": 16,
+    "training_admitted": false,
+    "selection": "Frozen deterministic crawl/score panel with rotating byte-length bands, drawn from the 192-record stratified sample.",
+    "rubric": [
+      "Extraction completeness and standalone context",
+      "Information density versus templates/promotion",
+      "Technical and everyday topic coverage across score bands",
+      "Separate presentation quality, factual correctness and source eligibility"
+    ],
+    "limitations": [
+      "No quality-rate estimate or independent factual verification.",
+      "Uninspected document middles may alter excerpt-based judgments.",
+      "Topics and dispositions are qualitative assistant annotations, not trained-classifier labels or training admissions."
+    ],
+    "observations": [
+      {
+        "panel_index": 0,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet:1155",
+        "sha256": "d175eceeebadffc58fc3440482c0106e3fa6bab309e288576890ccf1824f059d",
+        "cell": "CC-MAIN-2025-30/0/bytes_le_2048",
+        "score": 0.5284838676452637,
+        "scope": "full_text",
+        "topic": "Retirement policy explainer",
+        "decision": "hold_for_reference_accuracy_review",
+        "observation": "Country-specific policy claims lack dates/references in the full text; awkward phrasing and repetition. No legal or factual verification performed.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 1,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0954-of-1000.parquet:12693",
+        "sha256": "614d81a09fc7e602d39c15d4c91d579146f86059f89e2e7d908dc40916411544",
+        "cell": "CC-MAIN-2025-30/1/bytes_le_8192",
+        "score": 0.7559596300125122,
+        "scope": "full_text",
+        "topic": "School cheating opinion",
+        "decision": "retain_for_broadness_review",
+        "observation": "Coherent opinion essay with a proposed response to classroom cheating. Causal assertions remain opinion, not verified educational evidence.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 2,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet:12865",
+        "sha256": "b8cceeed8103e0a6d18366758559c1557d511c5eeda40cb03a55d2ce22bd4a90",
+        "cell": "CC-MAIN-2025-30/2/bytes_le_32768",
+        "score": 0.8184015154838562,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Numerology and spirituality",
+        "decision": "hold_for_extraction_and_claim_framing",
+        "observation": "The excerpt presents spiritual beliefs as scientific analysis and introduces a career list that is absent from the tail. Preserve belief/cultural context separately from scientific supervision.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 3,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet:1418",
+        "sha256": "4a2de920fd9c3e42fb3f14f8a652743c43dc0793f889043443df349b36e26c03",
+        "cell": "CC-MAIN-2025-30/3/bytes_gt_32768",
+        "score": 0.9507214426994324,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Media and political analysis",
+        "decision": "review_density_and_sources",
+        "observation": "High-scoring long overview repeats its framing in the inspected ends; demographic/influence claims need source review. Do not infer authorship or judge the uninspected middle.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 4,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet:5369",
+        "sha256": "6661102d9860db7c2107548c1b7997282e4267cefb962663ab23962951905579",
+        "cell": "CC-MAIN-2025-33/0/bytes_le_8192",
+        "score": 0.6425340175628662,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Digital advertising",
+        "decision": "review_promotional_density",
+        "observation": "Generic marketing exposition includes repeated promotional backlinks and an empty related-links lead-in. Topic usefulness and templated promotion should be separated.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 5,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet:1705",
+        "sha256": "6e8ccfdfbed706b6cdb8847b0853cd4bae0cdf4c24e3b9649f5ec0eb67f1302b",
+        "cell": "CC-MAIN-2025-33/1/bytes_le_32768",
+        "score": 0.6959521174430847,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Divorce mediation marketing",
+        "decision": "review_promotional_density",
+        "observation": "Keyword-heavy service promotion mixes general procedural claims and repeated calls to use a provider. No legal correctness check; do not use as verified task supervision.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 6,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0019-of-1000.parquet:4372",
+        "sha256": "6656947ba9db48112d8bccfb48156a3c7b3fce7f52692c6e42676c647f26e13c",
+        "cell": "CC-MAIN-2025-33/2/bytes_gt_32768",
+        "score": 0.9421460628509521,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Insurance-based financial strategy",
+        "decision": "review_claims_and_density",
+        "observation": "Long explanatory/promotional framing includes lists and forward-looking regulatory claims. Inspect sources and substantive detail before treating as a financial reference; no factual verification.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 7,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet:16920",
+        "sha256": "22ff2b9c29306c4759d8dec8effa258fcde1a4fe7199e717a588e8e37bb8fa50",
+        "cell": "CC-MAIN-2025-33/3/bytes_le_2048",
+        "score": 0.9999759197235107,
+        "scope": "full_text",
+        "topic": "Workflow translation tutorial",
+        "decision": "hold_for_source_recovery",
+        "observation": "The full tutorial requires properties shown in a graphic, but the property values/graphic are absent. A near-maximum classifier score does not make this standalone executable instruction.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 8,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0312-of-1000.parquet:4004",
+        "sha256": "65124fe3b3a8f8fe262dfab8fb0fadc1dc872ffd57adf7336fb8dd68cb9846ed",
+        "cell": "CC-MAIN-2025-38/0/bytes_le_32768",
+        "score": 0.595859944820404,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Applied AI and eye-surgery engineering",
+        "decision": "retain_for_technical_coverage_review",
+        "observation": "Low-score excerpt contains concrete methods, measurements and attributed discussion of an engineering application. Medical/outcome claims remain unchecked; review the complete article and sources.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 9,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0951-of-1000.parquet:15712",
+        "sha256": "c462a13ac44657b6f29fd05a12b6e50b38a85707b872729768da43b66d471ba2",
+        "cell": "CC-MAIN-2025-38/1/bytes_gt_32768",
+        "score": 0.7406027317047119,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Pest-control guide",
+        "decision": "review_language_and_density",
+        "observation": "Inspected prose contains repeated awkward substitutions and grammar problems, followed by polished FAQ text. Review coherence and duplication; do not infer generated or translated authorship from style.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 10,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0951-of-1000.parquet:18906",
+        "sha256": "cce4348ac9c62144b9b9cab20b1ac0afcc365961c7dfa2b6694a39e7d8826420",
+        "cell": "CC-MAIN-2025-38/2/bytes_le_2048",
+        "score": 0.9448986649513245,
+        "scope": "full_text",
+        "topic": "Software issue template",
+        "decision": "separate_template_from_solved_content",
+        "observation": "Full text contains problem/solution/acceptance prompts with no filled answers or implementation. Potential workflow-format value is distinct from completed technical examples.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 11,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0312-of-1000.parquet:21334",
+        "sha256": "c6438d23363f3ed6eebd0c624520ecf71543bf9abd532cb3ad9eb31af1b2dcdf",
+        "cell": "CC-MAIN-2025-38/3/bytes_le_8192",
+        "score": 0.9907940626144409,
+        "scope": "full_text",
+        "topic": "Intermittent-fasting explainer",
+        "decision": "hold_for_source_recovery",
+        "observation": "Several list and example introductions in the full text have no following items, including approaches, benefits and a meal example. Extraction completeness and medical correctness are separate checks.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 12,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0212-of-1000.parquet:27041",
+        "sha256": "d18cc7c0f6265ab26ceeb7a30e0d6b363dfd45fcf81b1c647e38fa6dfc88a409",
+        "cell": "CC-MAIN-2025-43/0/bytes_gt_32768",
+        "score": 0.5557482242584229,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Business software consulting",
+        "decision": "review_promotional_density",
+        "observation": "Long product/service overview has repeated introductory framing, fused words and a newsletter/provider promotion tail. Check density and boundaries before technical-bank selection.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 13,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0196-of-1000.parquet:9402",
+        "sha256": "b743b6fd6494f48873a92e57645f40d02c0bf703bc7046293a3d50c5bdd167b4",
+        "cell": "CC-MAIN-2025-43/1/bytes_le_2048",
+        "score": 0.7575544714927673,
+        "scope": "full_text",
+        "topic": "Clinical research abstract",
+        "decision": "retain_for_technical_coverage_review",
+        "observation": "Compact specialist abstract with concrete terminology and a classification footer occurs below 0.8. This is evidence of technical-topic coverage, not independent medical verification.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 14,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0196-of-1000.parquet:1517",
+        "sha256": "50f9d73ecd9e118c8a387501f6d66bf037e05d9530e0e64be4921c2b1e548023",
+        "cell": "CC-MAIN-2025-43/2/bytes_le_8192",
+        "score": 0.8335122466087341,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Research funding and climate commentary",
+        "decision": "hold_for_source_recovery",
+        "observation": "The excerpt opens mid-sentence and references figures not present in the text. Review extraction and claim attribution without using political/scientific viewpoint as a quality proxy.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 15,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0212-of-1000.parquet:16542",
+        "sha256": "92f5c1c981174a39431cb3d9ab8a30bca79a56df14807f805dd8595d35510888",
+        "cell": "CC-MAIN-2025-43/3/bytes_le_32768",
+        "score": 0.97700434923172,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "SEO learning guide",
+        "decision": "review_density_and_boundaries",
+        "observation": "High-score excerpt repeats general learning advice and contains related-article links. Check useful information density and article boundaries; no current SEO claims verified.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 16,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0551-of-1000.parquet:10697",
+        "sha256": "10859be1a1ff6b202cfe2ea33483aa3962ddf349e88a1bf1882785cefda2dc85",
+        "cell": "CC-MAIN-2025-47/0/bytes_le_2048",
+        "score": 0.521796703338623,
+        "scope": "full_text",
+        "topic": "Appliance specifications",
+        "decision": "retain_for_broadness_review",
+        "observation": "Full product text retains a structured specification list and operational descriptions at a low score. Product claims are unverified, but numeric/list coverage should not be lost solely to a score cutoff.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 17,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0551-of-1000.parquet:6908",
+        "sha256": "c790583aef011b8916a843c3c69c2545e1b62a6458e0a8e0210fef3d8cb2ea6a",
+        "cell": "CC-MAIN-2025-47/1/bytes_le_8192",
+        "score": 0.6706752777099609,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Historical political commentary",
+        "decision": "retain_for_dated_opinion_review",
+        "observation": "Persuasive political argument with an explicit historical election outlook. Preserve date, viewpoint and article boundaries; this is not a current legal or electoral reference.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 18,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0316-of-1000.parquet:10303",
+        "sha256": "9df11f723aeed0536cd5c76c64111cfa44b1bdb428b7127663efec9aa6a17e24",
+        "cell": "CC-MAIN-2025-47/2/bytes_le_32768",
+        "score": 0.8885809183120728,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Household cleaning guide",
+        "decision": "review_density_and_boundaries",
+        "observation": "Practical supplies list and household topic coexist with a long introduction, affiliate disclosure, and an apparently empty FAQ heading at the tail. Preserve useful everyday coverage while checking boundaries.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 19,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0316-of-1000.parquet:21875",
+        "sha256": "b51805a70b7a294d44022df9e4ca3268183f28eb69fbeeefd4e0ffba7e2074d7",
+        "cell": "CC-MAIN-2025-47/3/bytes_gt_32768",
+        "score": 0.9870322346687317,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Web-chat overview",
+        "decision": "review_density_and_sources",
+        "observation": "Very long high-score primer repeats generic communication benefits in the inspected ends and includes security assertions. Review the middle for substantive content; no security guarantees established.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 20,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:6001",
+        "sha256": "3341f9debe41510544dcab6374d2600212e72de68df793ba1125ec3360321d62",
+        "cell": "CC-MAIN-2025-51/0/bytes_le_8192",
+        "score": 0.6073501706123352,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "AI media-tool directory",
+        "decision": "review_promotional_density",
+        "observation": "Tool-listing prose contains promotional claims and an attributed user quote without inspected supporting evidence; ends with empty FAQ/analytics headings. No product recommendation or factual verification.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 21,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0377-of-1000.parquet:15104",
+        "sha256": "228d69331ef512b6f0ae7b17ea7136030a4205ff97a4a7f1a36bae2f7db0d7ee",
+        "cell": "CC-MAIN-2025-51/1/bytes_le_32768",
+        "score": 0.679544985294342,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Economics explainer",
+        "decision": "retain_for_broadness_review",
+        "observation": "Definitions, examples and FAQ structure support general educational coverage below 0.8. Contemporary market assertions remain unverified; inspect full text and related-link boundaries.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 22,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:12873",
+        "sha256": "058e98149bd5f0a4639a6d6935bd5b9dfb0d855eeec3fe463032cdf42feb6de0",
+        "cell": "CC-MAIN-2025-51/2/bytes_gt_32768",
+        "score": 0.9234442710876465,
+        "scope": "head_1800_tail_900_characters",
+        "topic": "Contract-law study page",
+        "decision": "hold_for_document_segmentation",
+        "observation": "Head combines contract-law framing, upload UI and unrelated macroeconomics/compliance study-guide teasers; tail contains legal Q&A. Segment actual lesson content before using it as task data; answers unchecked.",
+        "training_admitted": false
+      },
+      {
+        "panel_index": 23,
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:18161",
+        "sha256": "ef1fdc31bea23b754569aab1f8b970fbf5719d7b6c1e576bd7a634752770c4c3",
+        "cell": "CC-MAIN-2025-51/3/bytes_le_2048",
+        "score": 0.9808433055877686,
+        "scope": "full_text",
+        "topic": "Speech-technology promotion",
+        "decision": "separate_claims_from_verified_technical_data",
+        "observation": "Short high-score product pitch includes a WER claim and trial call-to-action without measurement conditions. Preserve it as promotional content rather than validated technical evidence.",
+        "training_admitted": false
+      }
+    ]
+  },
+  "decisions": [
+    "Keep HQ as a source-qualification candidate with FineWeb-Edu control; neither a corpus-wide ranking nor a training-source allocation is established.",
+    "Do not freeze a stricter score cutoff: high-score image/list/segmentation defects coexist with technical and everyday material below 0.8.",
+    "Test extraction completeness, empty-template separation and information density independently of classifier score; preserve broad topics and distinguish facts, opinions and promotion.",
+    "Use source-family and near-duplicate checks before counting supply. Exact duplicate copies are rare in these shards but do not establish novelty, factual correctness or disjointness from other banks.",
+    "Next bounded packet: inspect full documents and recover source context for the translation tutorial, missing-list explainer and mixed study page; compare extraction checks against retained FineWeb-Edu before defining filters.",
+    "Then qualify comparable source-file DCLM evidence. Keep baseline/Edu parent overlap explicit and retain their exact score predicates."
+  ],
+  "validation": [
+    "Recomputed the twelve shard selections from the complete hash-bound 6000-file inventory; total equals the frozen 959301706-byte plan.",
+    "All acquired files match publisher LFS SHA256 and size; all Parquet rows are censused.",
+    "All 96 crawl/score/length cells are populated and contribute exactly two sample records.",
+    "Offline replay reproduces identical samples and reading-packet bytes, and all summary fields except output artifact paths.",
+    "Pinned source card matches its retained receipt; its source-use limitations are unchanged.",
+    "Ten focused tests cover corrupt/truncated/oversized downloads and score-boundary validation; full quality suite passes."
+  ],
+  "limitations": [
+    "No near-duplicate or cross-corpus screen, source-use acceptance, benchmark exclusion or factual verification.",
+    "URL hostnames are not independent source families; upstream language labels are not independent language checks.",
+    "Threshold counts/bytes describe these acquired shards only; sample token counts are not full-corpus token yield.",
+    "Diagnostic flags are review hints, not automatic quality labels or rejection rules.",
+    "Only 24 of 192 sampled documents received qualitative review: eight full texts and sixteen head/tail excerpts. This is not a corpus defect-rate estimate.",
+    "No full-shard Mistral token census, parent-corpus overlap measurement, independent factual review or training admission.",
+    "No corpus-wide topic distribution, model comparison, synthesis, GPU run or changes to training budgets/mixtures."
+  ],
+  "test_script": {
+    "path": "tests/test_web_hq_audit.py",
+    "bytes": 1892,
+    "sha256": "b7de1d657ec224b5e17fad7735e68ff987c795829e837e540b52376bbd313f01"
+  }
+}

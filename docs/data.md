@@ -79,7 +79,9 @@ provide 144,876 inspected records; default English exposes no equivalent origina
 High-scoring extraction defects and template-heavy examples reinforce separate quality controls.
 This is source qualification progress, not a demonstrated learning-quality win or training admission.
 The [follow-up inventory and DCLM preview](../experiments/corpus-audit/WEB_INVENTORY_DCLM.md)
-completes the HQ listing and pins a 959 MB sample across it. Both DCLM variants expose URLs and
+completes the HQ listing and the 959 MB acquisition: 290,761 documents, 192 stratified samples and
+24 reviewed texts/excerpts. High-score extraction defects and lower-score coverage candidates leave
+cutoff selection open. Both DCLM variants expose URLs and
 document IDs in their partial viewer indexes. DCLM-Edu's integer and continuous score cutoffs
 select different records; any stricter candidate must name the exact field and operator.
 
@@ -198,9 +200,11 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Use the completed HQ inventory to acquire the pinned 12-shard sample for
-   score/crawl/host/length-stratified qualification. Resolve source-use evidence, repair/reject
-   broken extraction, measure overlap and count accepted unique tokens. Extend DCLM's partial-viewer
+1. Use the completed twelve-shard HQ audit to recover source context for missing graphics/lists
+   and mixed-page boundaries, then compare extraction/template checks with retained FineWeb-Edu.
+   Resolve source-use evidence, source families and overlap before counting accepted unique tokens.
+   Keep the score cutoff unfrozen; the audit measures document/byte retention, not token yield.
+   Extend DCLM's partial-viewer
    previews into comparable source-file evidence before freezing allocations; neither the default
    UltraFineWeb split nor a stricter score cutoff inherits HQ's provenance or a quality advantage.
 2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including

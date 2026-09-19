@@ -56,6 +56,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Backup closeout | Eight model/optimizer checkpoints, both exports, evaluation outputs and recovery logs retained locally | [Backup receipt](experiments/pilot/backup-result.json); pilot closed, no further rental work needed; provider billing/stop state not verified |
 | Natural-code audit | 16 exact upstream matches, 13 with license-notice evidence; ten files clear preliminary lineage/syntax/benchmark checks | [Cohort receipt](experiments/corpus-audit/natural-code-cohort.json); zero new training admissions |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
+| Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
@@ -75,8 +76,10 @@ historical; do not repeat the completed pilot because a preparation document sti
 2. **Qualify the data recipe.** The [bounded web inspection](experiments/corpus-audit/NATURAL_WEB.md)
    prioritizes newer UltraFineWeb HQ for its page/WARC metadata, with FineWeb-Edu as control;
    the [full HQ inventory and DCLM previews](experiments/corpus-audit/WEB_INVENTORY_DCLM.md) are
-   now recorded. Acquire the pinned 12-shard sample and complete score/domain-stratified checks. Keep DCLM
-   as an independent coverage candidate and synthetic L3 separate. Review math correctness and
+   now include the completed 12-shard census (290,761 documents), 192-record stratified sample and
+   24-document/excerpt review. Recover source context for the identified missing-graphic/list and
+   mixed-page cases, then test extraction/template checks against FineWeb-Edu; no stricter score
+   cutoff is selected. Keep DCLM as an independent coverage candidate and synthetic L3 separate. Review math correctness and
    source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work
    one bounded packet at a time; close code supply feasibility before bulk packing.
 3. **Prepare the single-model GH200 packet before access.** Bind current source and exact inputs,
