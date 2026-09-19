@@ -247,8 +247,25 @@ Parsing cannot check runtime behavior, embedded doctests or redacted assertion m
 diagnostic remains an audit tool; no bulk filter or training admission follows. Offline replay is
 byte-identical and rejects a corrupted cache copy; recorded judgments are not independent labels.
 
-**Next:** review the **142 currently unheld records** outside common full-read coverage, carry new
-family holds forward, and resolve notice/dependency attribution without replacing selections.
+The [family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json) applies
+the existing family splitter to all 218 records, retaining their weights and tokens. Known repository,
+alias and dependency links propagate the two GoLLIE holds and add one vendored Pylint hold:
+**42 records are now family-held**. The Pylint file exactly matches an upstream Git blob from an
+already-held family; its installed version and host revision remain unresolved. Dependency parents
+are distinct from repository rename aliases. There are no exact consumed-byte duplicates within
+this fixed cohort; that does not establish absence of original/transformed copies or near-duplicates.
+
+Pinned installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's
+package-specific notice is recovered. The publisher-hash-verified stringutils wheel contains the
+exact sampled file, while its same-version source archive omits it; a package/version label alone
+is therefore insufficient. Stringutils notice applicability and both upstream commits remain
+unresolved. GitHub rate-limit responses and the oversized Arcade wheel are retained as bounded
+acquisition limits. No package was installed or executed. Graph-order and synthetic propagation
+controls pass, offline replay is identical, and a corrupted cache copy is rejected.
+
+**Next:** review the **142 currently unheld records** outside common full-read coverage using the
+updated assessment, then complete unresolved provenance and broader family/near-duplicate discovery.
+This partial graph does not establish full exclusion coverage or authorize data admission.
 Keep natural-code eligibility separate from independent exercise verification. The retained 0.477B
 code stock supports at most **1.59B total one-pass tokens at 30% natural code**, before exclusions,
 validation and other bank constraints. Qualified supply must set the experiment horizon alongside

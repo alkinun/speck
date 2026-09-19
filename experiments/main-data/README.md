@@ -341,9 +341,11 @@ separates inputs available for detailed design from the requirements for launchi
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
    Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
    [Python follow-up](../corpus-audit/python-cohort-validation.json): common full-read coverage is
-   36 files, with 142 currently unheld files still outside it. Carry two new GoLLIE holds forward
-   and resolve vendored-package attribution. The controlled syntax diagnostic confirms one
-   redaction failure; semantic preservation and source-use/family gates remain unresolved.
+   36 files, with 142 currently unheld files still outside it. The
+   [family assessment](../corpus-audit/code-family-provenance.json) propagates GoLLIE and vendored
+   Pylint holds, bringing family-held records to 42; installed package identities are partially resolved.
+   Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
+   confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
 3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
    distinct from merely well-formed text. Measure source overlap and complete-document lengths.

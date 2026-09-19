@@ -18,6 +18,11 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   Fourteen diagnostic controls pass on each of two Python versions. Two sampled GoLLIE records
   gain family-review holds after a previously unflagged evaluation fixture was encountered.
   These examples are exposed material; record that when freezing final scoring coverage.
+  The [family/provenance follow-up](../corpus-audit/code-family-provenance.json) applies known
+  repository links and three dependency edges, preserving GoLLIE holds and adding a Pylint hold. There are now
+  42 family-held records. Installed Arcade/stringutils metadata and file hashes are verified;
+  stringutils matches its published wheel, while its source archive omits the file. Broader lineage
+  discovery, upstream commits and remaining notice applicability are still unresolved.
   All 218 original records/weights stay intact. No eligible yield, source ranking or admission follows.
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
@@ -125,9 +130,12 @@ a fresh blind evaluation set.
 
 Reuse retained packets and current receipts. Common full-read coverage now includes 36 records;
 continue the 142 currently unheld records outside that coverage with the same origin/notice,
-intended-use, content and family gates. Carry GoLLIE's two new holds into alias/derivative review
-before further selection. Resolve upstream attribution/version/deduplication for the three vendored
-Python dependencies; ancestor notices alone do not establish applicability.
+intended-use, content and family gates. Use the updated 42-record family holds, including GoLLIE
+and the vendored Pylint sample, before further selection. Extend the partial graph beyond known
+repository/alias/dependency links; no exact consumed-byte duplicates in the 218 records does not
+settle near-duplicates or transformed copies. Arcade 2.5.7 and stringutils 0.3.0 installed identities
+are verified, but complete upstream revision/notice applicability remains open. Keep package
+artifact hashes, host origins and consumed identities separate; ancestor notices alone are insufficient.
 Held records stay in their original denominators; do not replace them or expose held-out task text.
 The external assessment retains every original identity/weight, observed token count, existing
 hold and unresolved outcome. Resolve conservative matches and source-family links before admission;

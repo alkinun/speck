@@ -1,0 +1,91 @@
+{
+  "format": "speck_code_family_provenance",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "54e52561c2a6ede18826a05c4f634073a965d05e",
+  "status": "bounded_dependency_and_hold_propagation_complete_full_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/python-cohort-validation.json",
+    "sha256": "4b3f57d71438452debb97a6514a5c5f03fe39c43cb1b246b3b908acaba943bbb"
+  },
+  "cohort": {
+    "original_files": 218,
+    "common_full_read_files": 36,
+    "new_full_read_files": 0,
+    "prior_original_screen_family_holds": 39,
+    "family_held_files": 42,
+    "additional_holds_since_python_review": 1,
+    "remaining_unheld_outside_common_full_reads": 142,
+    "original_weights_and_tokens_preserved": true
+  },
+  "family_graph": {
+    "implementation": "speck/data/code_families.py",
+    "explicit_dependency_edges": 3,
+    "external_source_nodes_not_sample_observations": 3,
+    "exact_consumed_duplicate_groups": 0,
+    "existing_gollie_hold_records": 2,
+    "new_pylint_hold_records": 1,
+    "scope": "Same-repository links, previously evidenced aliases, declared dependency parents and exact consumed-byte hashes across the fixed cohorts. No comprehensive fork/derivative or near-duplicate discovery."
+  },
+  "packages": [
+    {
+      "installed_record_hash_match": true,
+      "installed_version": "2.5.7",
+      "intended_use": "unresolved",
+      "package": "arcade",
+      "package_notice": "Git-verified installed license.rst contains MIT notice",
+      "published_release_check": "38,280,613-byte wheel exceeds frozen 2 MiB response cap; not acquired",
+      "upstream_commit": "unresolved: GitHub 403 responses"
+    },
+    {
+      "installed_record_hash_match": true,
+      "installed_version": "0.3.0",
+      "intended_use": "unresolved",
+      "package": "stringutils",
+      "package_notice": "Metadata labels MIT; no full notice found in the bounded installed/release artifacts",
+      "published_release_check": "Publisher-SHA256-verified 5,477-byte wheel contains exact sampled bytes; verified 3,271-byte sdist omits the file",
+      "upstream_commit": "unresolved: GitHub 403 responses"
+    },
+    {
+      "family_decision": "Existing pylint-dev/pylint family hold propagates to the vendored sample",
+      "host_revision": "unavailable in prior bounded history lookup",
+      "installed_version": null,
+      "intended_use": "held",
+      "package": "pylint",
+      "upstream_git_blob_exact_match": true
+    }
+  ],
+  "acquisition": {
+    "api_requests": 10,
+    "automatic_retries": 0,
+    "request_seconds": 25.5279,
+    "response_bytes": 157576,
+    "statuses": {
+      "200": 12,
+      "403": 7
+    },
+    "unique_requests": 19
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/code-family-provenance",
+    "manifest_sha256": "38ec45ec780eba22408499e208727be20b0fed42c825174637b904e4c51240c6",
+    "artifacts": 62,
+    "bytes": 529907,
+    "offline_replay_identical": true,
+    "mutated_copied_cache_rejected": true,
+    "graph_order_invariant": true,
+    "synthetic_hold_propagation_controls_pass": true
+  },
+  "boundaries": [
+    "No complete fork/alias/derivative discovery; GoLLIE canonical metadata and in-cohort links only",
+    "Synthetic derivative/copy controls demonstrate propagation behavior, not discovery completeness",
+    "No new full-text review, benchmark exposure or scoring in this follow-up",
+    "All original sampling weights and observed tokens retained; external source nodes are not sample observations",
+    "No source-use approval, eligible yield or data admission"
+  ],
+  "next": "Continue the 142 currently unheld records outside common full-read coverage using the updated family assessment. Complete alias/derivative/near-duplicate discovery and unresolved upstream notice/revision checks before any admission; qualify finite eligible supply before study launch.",
+  "eligible_yield_estimate": null,
+  "source_ranking": null,
+  "eligible_tokens_established": 0,
+  "training_admitted": false,
+  "gpu_hours": 0
+}

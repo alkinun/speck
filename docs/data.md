@@ -109,9 +109,12 @@ across six shared languages, with 28 of 30 requested originals verified against 
 Stack v3 mismatches are placeholder transformations, including one that breaks Python syntax;
 one original is unavailable. The [Python follow-up](../experiments/corpus-audit/python-cohort-validation.json)
 adds twelve readings, completing all 16 initially unheld Python files and bringing common coverage
-to 36. Two GoLLIE records gain family-review holds after evaluation examples were encountered;
-three vendored packages need upstream attribution. Fourteen syntax controls pass on each of two
-Python versions, but parser success cannot certify behavior, semantic preservation or eligibility.
+to 36. The [family/provenance follow-up](../experiments/corpus-audit/code-family-provenance.json)
+propagates the two GoLLIE holds and adds a vendored Pylint hold: 42 records are now family-held.
+Arcade/stringutils installed identities are verified; stringutils matches its published wheel.
+Broader lineage discovery and remaining upstream revision/notice checks stay open.
+Fourteen syntax controls pass on each of two Python versions, but parser success cannot certify
+behavior, semantic preservation or eligibility.
 Continue the 142 currently unheld records outside common coverage and source-use/family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md), retaining original sampling factors.
 No source ranking, eligible yield or bulk-filter adoption follows; keep source and serialization contrasts separate.
